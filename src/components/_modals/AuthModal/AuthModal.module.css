@@ -1,0 +1,12 @@
+.modal-wrapper {
+  /* position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); */
+  background-color: white;
+  max-width: 30rem;
+  width: 25rem;
+  padding: var(--spacing-40);
+  mix-blend-mode: normal;
+  border-radius: var(--spacing-8);
+}

@@ -1,0 +1,167 @@
+.tab-btn {
+  text-transform: none;
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: rgba(var(--gray-100-rgb));
+  margin-right: 1rem;
+  border-radius: 0;
+  padding: 0;
+  height: max-content;
+  /* min-height: 32px; */
+  font-family: var(--font-poppins);
+}
+
+.social-login-btns {
+  margin-top: var(--spacing-24);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+}
+
+.social-login-btn {
+  width: 100%;
+  background: transparent;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  color: black;
+  text-transform: none;
+  border: 1px solid rgba(var(--primary-100-rgb));
+  padding: -1.25rem 1.5rem;
+  height: 40px;
+  position: relative;
+  text-transform: none;
+}
+
+.social-login-btn::before {
+  position: absolute;
+  top: 10px;
+  left: 24px;
+}
+.social-login-btn.google::before {
+  content: url('../../assets/vectors/google-icon.svg');
+}
+.social-login-btn.facebook::before {
+  content: url('../../assets/vectors/facebook-icon.svg');
+}
+
+.social-login-btn:hover {
+  background-color: #dfdce4;
+  -webkit-box-shadow: inset 0px 0px 0px 1px var(--color-primary-lighter);
+  box-shadow: inset 0px 0px 0px 1px var(--color-primary-lighter);
+}
+
+.divider {
+  margin: var(--spacing-24) auto;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+/* FORM  */
+
+.form-body {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing-16) + var(--spacing-8));
+}
+.form-body input {
+  background-color: rgba(var(--white-rgb));
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: rgba(var(--black-rgb));
+}
+.form-body label {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: rgba(var(--gray-100-rgb));
+}
+
+.password-field {
+  position: relative;
+}
+
+.password-field .show-pass-icon {
+  all: unset;
+  height: -webkit-fill-available;
+  cursor: pointer;
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.validation-messages {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(var(--black-rgb), 0.1);
+  padding: 5px 10px 5px 40px;
+  z-index: 20;
+}
+.validation-messages p {
+  position: relative;
+  margin: 10px 0;
+  font-size: 0.8rem;
+  color: red;
+  list-style: circle;
+}
+.validation-messages p::before {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-40%);
+  left: -25px;
+}
+.validation-messages p::before {
+  content: url('../../assets/vectors/error-icon.svg');
+}
+.validation-messages p.valid {
+  color: green;
+}
+.validation-messages p.valid::before {
+  content: url('../../assets/vectors/green-check-icon.svg');
+}
+
+/* Form Footer */
+.form-footer {
+  margin-top: var(--spacing-24);
+}
+
+.form-footer .form-footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.form-footer .form-footer-top .remember-me-btn span {
+  font-weight: 400;
+  font-size: 0.7rem;
+  line-height: 1rem;
+  padding: 5px;
+}
+.form-footer .form-footer-top .forgot-pass-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-8);
+  border: none;
+  background: none;
+  font-weight: 400;
+  font-size: 0.7rem;
+  line-height: 1rem;
+  cursor: pointer;
+}
+.form-footer .form-footer-top .agree-tnc-info {
+  font-weight: 400;
+  font-size: 0.7rem;
+  line-height: 18px;
+  color: rgba(var(--gray-50-rgb));
+  margin: auto;
+}
+
+.form-footer .submit-btn {
+  margin-top: var(--spacing-24);
+  width: 100%;
+}
