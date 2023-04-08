@@ -3,7 +3,7 @@ import type { AppProps } from 'next/app'
 import { Provider } from 'react-redux'
 import store from '@/redux/store'
 import Head from 'next/head'
-import { createTheme, ThemeProvider } from '@mui/material/styles'
+import { createTheme, StyledEngineProvider, ThemeProvider } from '@mui/material/styles'
 import { Navbar } from '@/components/Navbar/Navbar'
 import ModalManager from '@/components/_modals/ModalManager'
 
@@ -29,13 +29,15 @@ export default function App({ Component, pageProps }: AppProps) {
       <Head>
         <title>HobbyCue - Your Hobby, Your Community</title>
       </Head>
-      <ThemeProvider theme={theme}>
-        <Provider store={store}>
-          <Navbar />
-          <Component {...pageProps} />
-          <ModalManager />
-        </Provider>
-      </ThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <Provider store={store}>
+            <Navbar />
+            <Component {...pageProps} />
+            <ModalManager />
+          </Provider>
+        </ThemeProvider>
+      </StyledEngineProvider>
     </>
   )
 }
