@@ -67,6 +67,7 @@ const ALlHobbies: React.FC<Props> = (props) => {
     <>
       <div className={`site-container ${styles['page-container']}`}>
         <aside>
+          {/* Filters */}
           <div className={styles['filter-wrapper']}>
             <header>
               <h4 className={styles['heading']}>Filters</h4>
@@ -171,7 +172,7 @@ const ALlHobbies: React.FC<Props> = (props) => {
                 {categories.map((cat: any, i) => (
                   <tr key={i}>
                     <td className="">
-                      <Link href={`/hobbies/${cat.slug}`}>{cat.display}</Link>
+                      <Link href={`/hobby/${cat.slug}`}>{cat.display}</Link>
                     </td>
                     <td>
                       {subCategories.map((subCat: any) => {
@@ -187,7 +188,7 @@ const ALlHobbies: React.FC<Props> = (props) => {
                                     return (
                                       hobby.category._id === cat._id &&
                                       hobby.sub_category._id === subCat._id && (
-                                        <Link href={`/hobbies/${hobby.slug}`}>
+                                        <Link href={`/hobby/${hobby.slug}`}>
                                           <span> {hobby.display}, </span>
                                         </Link>
                                       )
