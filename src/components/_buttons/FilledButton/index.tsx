@@ -22,6 +22,7 @@ const FilledButton: React.FC<FilledButtonProps> = ({
       onClick={onClick}
       disabled={disabled}
       className={`${styles.button} ${className}`}
+      style={{ width: '100%' }}
     >
       {children}
     </button>

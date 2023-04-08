@@ -1,0 +1,31 @@
+.modal-wrapper {
+  display: grid;
+  place-items: center;
+  height: 100%;
+}
+
+.custom-backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  backdrop-filter: blur(4px);
+}
+
+.modal-wrapper main {
+  position: relative;
+}
+.modal-wrapper main .modal-close-icon {
+  position: absolute;
+  top: 0;
+  left: calc(100% + var(--spacing-8) + var(--spacing-4));
+  cursor: pointer;
+  border-radius: 100%;
+  padding: var(--spacing-2);
+}
+.modal-wrapper main .modal-close-icon:hover {
+  background: hsla(0, 0%, 93.3%, 0.4392156862745098);
+}

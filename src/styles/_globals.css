@@ -43,7 +43,9 @@ body {
   background: rgba(var(--white-rgb));
 }
 a {
-  text-decoration: none;
+  all: unset;
+  color: rgba(var(--primary-100-rgb));
+  cursor: pointer;
 }
 
 .site-container {

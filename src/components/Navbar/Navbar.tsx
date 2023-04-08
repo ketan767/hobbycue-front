@@ -50,7 +50,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                 fontSize: '15px',
               },
               '& .MuiInputBase-input::placeholder': {
-                fontSize: '13px',
+                fontSize: '12px',
                 color: 'black',
               },
             }}

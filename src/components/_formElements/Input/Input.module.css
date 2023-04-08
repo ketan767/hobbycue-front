@@ -1,0 +1,18 @@
+.input-field {
+  background: #f8f9fa;
+  border: 1px solid #ebedf0;
+  border-radius: 8px;
+  /* max-height: 2.5rem; */
+}
+.input-field input {
+  font-family: 'Poppins';
+  font-style: normal;
+
+  height: 100%;
+  border-radius: 8px;
+  height: 2.5rem;
+  box-sizing: border-box;
+  font-weight: 500;
+  font-size: 0.8rem;
+  line-height: 16px;
+}

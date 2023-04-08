@@ -4,9 +4,39 @@
   left: 50%;
   transform: translate(-50%, -50%); */
   background-color: white;
-  max-width: 30rem;
-  width: 25rem;
+  max-width: 31rem;
   padding: var(--spacing-40);
   mix-blend-mode: normal;
   border-radius: var(--spacing-8);
+  text-align: center;
+}
+
+.modal-wrapper h3 {
+  /* font-family: 'Poppins'; */
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 30px;
+  color: rgba(var(--primary-100-rgb));
+  text-decoration: 2px underline currentColor;
+  text-underline-offset: var(--spacing-8);
+}
+
+.modal-wrapper p {
+  /* font-family: 'Poppins'; */
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 22px;
+  color: rgba(var(--gray-50-rgb));
+
+  margin-top: var(--spacing-40);
+}
+
+.verify-code-input {
+  margin-top: var(--spacing-16);
+}
+
+.verify-btn {
+  margin-top: var(--spacing-32);
 }

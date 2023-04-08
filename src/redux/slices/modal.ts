@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-export type ModalType = 'auth' | 'email-verify' | null
+export type ModalType = null | 'auth' | 'email-verify'
 
 interface ModalState {
   activeModal: ModalType
 }
 
 const initialState: ModalState = {
-  activeModal: null,
+  activeModal: 'email-verify',
 }
 
 const modalSlice = createSlice({
