@@ -42,6 +42,9 @@ body {
   font-family: var(--font-poppins);
   background: rgba(var(--white-rgb));
 }
+a {
+  text-decoration: none;
+}
 
 .site-container {
   max-width: var(--max-width);
