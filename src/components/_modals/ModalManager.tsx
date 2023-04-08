@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { SignInModal } from './AuthModal'
 import { Dialog, Modal } from '@mui/material'
-import { closeModal } from '@/redux/slices/modalSlice'
+import { closeModal } from '@/redux/slices/modal'
 import { VerifyEmailModal } from './VerifyEmail'
 
 const ModalManager = () => {

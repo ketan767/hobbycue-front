@@ -4,7 +4,7 @@ import styles from './AuthModal.module.css'
 import { useDispatch } from 'react-redux'
 
 import { Modal } from '@mui/material'
-import { closeModal } from '@/redux/slices/modalSlice'
+import { closeModal } from '@/redux/slices/modal'
 import AuthForm from '@/components/AuthForm/AuthForm'
 
 export const SignInModal: React.FC<PropTypes> = (props) => {

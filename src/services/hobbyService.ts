@@ -1,5 +1,7 @@
 import axiosInstance, { operation } from './_axios'
 
+type callback = (err: any, res: any) => void
+
 // axios.get('https://example.com/api/data')
 //   .then((response) => {
 //     console.log('Response received:', response.data);
@@ -12,18 +14,9 @@ import axiosInstance, { operation } from './_axios'
 //     console.log('Max retries exceeded');
 //   });
 
-export const getAllHobbies = (q: string | null, cb: (err: any, res: any) => void) => {
-  operation.attempt((currentAttempt) => {
-    axiosInstance
-      .get(`/hobby?${q}`)
-      .then((res) => cb(null, res))
-      .catch((err) => {
-        if (operation.retry(err)) {
-          console.log(`Retry attempt ${currentAttempt} due to error: {err.message}`)
-          return
-        }
-        return
-        // cb(err, null)
-      })
-  })
+export const getAllHobbies = (query: string | null, cb: callback) => {
+  axiosInstance
+    .get(`/hobby?${query}`)
+    .then((res) => cb(null, res))
+    .catch((err) => cb(err, null))
 }

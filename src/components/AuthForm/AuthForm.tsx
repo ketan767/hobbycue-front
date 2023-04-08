@@ -15,14 +15,14 @@ import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded'
 import { GoogleLogin } from 'react-google-login'
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 
-import OutlinedButton from '../Buttons/OutlinedButton'
+import OutlinedButton from '../_buttons/OutlinedButton'
 
 import styles from './AuthForm.module.css'
 import { signIn } from '@/services/authService'
 
-type Props = {}
+interface Props {}
 
-const tabs = { SIGN_IN: 'Sign In', JOIN_IN: 'Join In' }
+type tabs = 'sign-in' | 'join-in'
 
 function validatePassword(password: string) {
   const validation = {
@@ -35,25 +35,27 @@ function validatePassword(password: string) {
   return validation
 }
 
-const AuthForm = (props: Props) => {
-  const [selectedTab, setSelectedTab] = useState(tabs.SIGN_IN)
-
+const AuthForm: React.FC<Props> = (props) => {
+  const [selectedTab, setSelectedTab] = useState<tabs>('sign-in')
   const [inputData, setInputData] = useState({ email: '', password: '', rememberMe: false })
   const [inputValidation, setInputValidation] = useState(validatePassword(inputData.password))
   const [showValidationConditions, setShowValidationConditions] = useState(false)
 
   const [showPassword, setShowPassword] = useState(false)
 
-  const handleTabChange = (event: any, value: string) => {
+  const handleTabChange = (value: tabs) => {
     setSelectedTab(value)
     setInputData({ email: '', password: '', rememberMe: false })
   }
 
   const handleSubmit = () => {
-    signIn({ email: inputData.email, password: inputData.password }, (err, res) => {
-      if (err) return console.log(err.response)
-      console.log(res)
-    })
+    if (selectedTab === 'sign-in') {
+      signIn({ email: inputData.email, password: inputData.password }, (err, res) => {
+        if (err) return console.log(err.response)
+        console.log(res)
+      })
+    } else {
+    }
   }
 
   // Social Login Handle
@@ -82,21 +84,12 @@ const AuthForm = (props: Props) => {
   return (
     <div className={styles['form-contanier']}>
       {/* Tab Switcher (SignIn / JoinIn )  */}
-      <Tabs value={selectedTab} onChange={handleTabChange}>
-        <Tab
-          sx={{ margin: 0 }}
-          label={tabs.SIGN_IN}
-          value={tabs.SIGN_IN}
-          className={styles['tab-btn']}
-        />
-        <Tab
-          sx={{ margin: 0 }}
-          label={tabs.JOIN_IN}
-          value={tabs.JOIN_IN}
-          className={styles['tab-btn']}
-        />
+      <Tabs value={selectedTab} onChange={(e, value: tabs) => handleTabChange(value)}>
+        <Tab sx={{ margin: 0 }} label={'Sign In'} value={'sign-in'} className={styles['tab-btn']} />
+        <Tab sx={{ margin: 0 }} label={'Join In'} value={'join-in'} className={styles['tab-btn']} />
       </Tabs>
 
+      {/* Google - Facebook Login Buttons */}
       <section className={styles['social-login-btns']}>
         <GoogleLogin
           clientId="795616019189-b0s94ri1i98355rjv1pg6ai588k0k87d.apps.googleusercontent.com"
@@ -125,11 +118,13 @@ const AuthForm = (props: Props) => {
         />
       </section>
 
+      {/* Divider */}
       <div className={styles['divider']}>
-        {selectedTab === tabs.SIGN_IN && <span>Or Sign In with Email</span>}
-        {selectedTab === tabs.JOIN_IN && <span>Or Join with Email</span>}
+        {selectedTab === 'sign-in' && <span>Or Sign In with Email</span>}
+        {selectedTab === 'join-in' && <span>Or Join with Email</span>}
       </div>
 
+      {/* Email - Password Fields */}
       <FormControl className={styles['form-body']}>
         <div className={styles['email-field']}>
           <TextField
@@ -152,14 +147,9 @@ const AuthForm = (props: Props) => {
             fullWidth
             label="Password"
             type={showPassword ? 'text' : 'password'}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                padding: 0,
-                background: 'white',
-              },
-            }}
+            sx={{ '& .MuiOutlinedInput-root': { padding: 0, background: 'white' } }}
             variant="outlined"
-            autoComplete={selectedTab === tabs.JOIN_IN ? 'new-password' : 'current-password'}
+            autoComplete={selectedTab === 'join-in' ? 'new-password' : 'current-password'}
             size="small"
             helperText=""
             onChange={(e) =>
@@ -172,29 +162,15 @@ const AuthForm = (props: Props) => {
             onBlur={() => setShowValidationConditions(false)}
             InputProps={{
               endAdornment: (
-                <IconButton
-                  // sx={{
-                  //   bgcolor: 'red',
-                  // }}
-                  onClick={() => setShowPassword(!showPassword)}
-                >
+                <IconButton onClick={() => setShowPassword(!showPassword)}>
                   {showPassword ? <VisibilityRoundedIcon /> : <VisibilityOffRoundedIcon />}
                 </IconButton>
               ),
             }}
           />
 
-          {/* <button
-            className={styles['show-pass-icon']}
-            onClick={() => {
-              passwordInputRef.current.type = 'text'
-            }}
-          >
-            <VisibilityRoundedIcon fontSize="small" />
-          </button> */}
-
           {/* Validation Conditions Box */}
-          {selectedTab === tabs.JOIN_IN && showValidationConditions && (
+          {selectedTab === 'join-in' && showValidationConditions && (
             <div className={styles['validation-messages']}>
               <p className={inputValidation.lowercase ? styles['valid'] : undefined}>
                 Must contain at least one lowercase letter
@@ -216,9 +192,10 @@ const AuthForm = (props: Props) => {
         </div>
       </FormControl>
 
+      {/* Remember Me - Forgot Password / Accept Terms & Submit Button */}
       <section className={styles['form-footer']}>
         <div className={styles['form-footer-top']}>
-          {selectedTab === tabs.SIGN_IN && (
+          {selectedTab === 'sign-in' && (
             <>
               <FormControlLabel
                 className={styles['remember-me-btn']}
@@ -255,7 +232,7 @@ const AuthForm = (props: Props) => {
               </button>
             </>
           )}
-          {selectedTab === tabs.JOIN_IN && (
+          {selectedTab === 'join-in' && (
             <p className={styles['agree-tnc-info']}>
               By continuing, you agree to our Terms of Service and Privacy Policy.
             </p>

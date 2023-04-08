@@ -4,8 +4,9 @@ import styles from '@/styles/Home.module.css'
 import React, { useEffect } from 'react'
 import landingIllustration from '@/assets/vectors/landing-illustration.svg'
 import AuthForm from '@/components/AuthForm/AuthForm'
-import OutlinedButton from '@/components/Buttons/OutlinedButton'
+import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import { getAllHobbies } from '@/services/hobbyService'
+import { useRouter } from 'next/router'
 
 const Home: React.FC<PropTypes> = function () {
   const getHobby = () => {
@@ -14,6 +15,7 @@ const Home: React.FC<PropTypes> = function () {
       console.log(res)
     })
   }
+  const router = useRouter()
 
   return (
     <>

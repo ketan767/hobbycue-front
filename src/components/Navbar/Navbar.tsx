@@ -9,9 +9,11 @@ import Image from 'next/image'
 import LogoFull from '@/assets/png/logo-full.png'
 
 import styles from './Navbar.module.css'
-import OutlinedButton from '../Buttons/OutlinedButton'
+import OutlinedButton from '../_buttons/OutlinedButton'
 import { useDispatch } from 'react-redux'
-import { openModal } from '@/redux/slices/modalSlice'
+import { openModal } from '@/redux/slices/modal'
+import { updateIsLoggedIn } from '@/redux/slices/user'
+import Link from 'next/link'
 
 type Props = {}
 
@@ -20,12 +22,14 @@ export const Navbar: React.FC<Props> = ({}) => {
   return (
     <header className={`${styles['navbar-wrappper']}`}>
       <nav className={`site-container `}>
-        <Image
-          src={LogoFull}
-          alt="HobbyCue Logo"
-          placeholder="blur" // Optional blur-up while loading
-          priority
-        />
+        <Link href={'/'}>
+          <Image
+            src={LogoFull}
+            alt="HobbyCue Logo"
+            placeholder="blur" // Optional blur-up while loading
+            priority
+          />
+        </Link>
 
         <TextField
           variant="outlined"

@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
-import blogsReducer from './slices/blogsSlice'
-import modalReducer from './slices/modalSlice'
+import blogsReducer from './slices/blogs'
+import modalReducer from './slices/modal'
+import userReducer from './slices/user'
 
 const store = configureStore({
   reducer: {
     blogs: blogsReducer,
     modal: modalReducer,
+    user: userReducer,
   },
 })
 
