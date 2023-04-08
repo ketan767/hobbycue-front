@@ -33,7 +33,9 @@ export default function App({ Component, pageProps }: AppProps) {
         <ThemeProvider theme={theme}>
           <Provider store={store}>
             <Navbar />
-            <Component {...pageProps} />
+            <div style={{ marginTop: 'var(--navbar-height-desktop)' }}>
+              <Component {...pageProps} />
+            </div>
             <ModalManager />
           </Provider>
         </ThemeProvider>

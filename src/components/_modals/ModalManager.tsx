@@ -1,10 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
-import { SignInModal } from './AuthModal'
+import { AuthModal } from './AuthModal'
 import { Dialog, Modal, Grow, Fade } from '@mui/material'
 import { closeModal } from '@/redux/slices/modal'
 import { VerifyEmailModal } from './VerifyEmail'
 import styles from './ModalManager.module.css'
+import MultiStepModal from '../../../chat-gpt/multistepmodal'
+import { UserOnboardingModal } from './UserOnboardingModal'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -30,8 +32,9 @@ const ModalManager: React.FC = () => {
         <Fade in={Boolean(activeModal)} exit={Boolean(activeModal)}>
           <div className={styles['modal-wrapper']}>
             <main>
-              {activeModal === 'auth' && <SignInModal />}
+              {activeModal === 'auth' && <AuthModal />}
               {activeModal === 'email-verify' && <VerifyEmailModal />}
+              {activeModal === 'user-onboarding' && <UserOnboardingModal />}
 
               {/* Modal Close Icon */}
               <svg

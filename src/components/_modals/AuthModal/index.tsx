@@ -7,7 +7,7 @@ import { Modal } from '@mui/material'
 import { closeModal } from '@/redux/slices/modal'
 import AuthForm from '@/components/AuthForm/AuthForm'
 
-export const SignInModal: React.FC<PropTypes> = (props) => {
+export const AuthModal: React.FC<PropTypes> = (props) => {
   return (
     <div className={styles['modal-wrapper']}>
       <AuthForm />

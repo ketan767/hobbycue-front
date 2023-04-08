@@ -1,0 +1,7 @@
+.modal-wrapper {
+  background-color: white;
+  max-width: 50rem;
+  padding: var(--spacing-16) var(--spacing-24);
+  border-radius: var(--spacing-8);
+  text-align: center;
+}
