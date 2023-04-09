@@ -4,13 +4,19 @@ import styles from '../../styles/HobbyDetail.module.css'
 
 import { getAllHobbies } from '@/services/hobbyService'
 
-import profile from '../../assets/png/hooby-profile.png'
-import cover from '../../assets/png/hobby-cover.png'
+import profile from '../../assets/temp/hooby-profile.png'
+import cover from '../../assets/temp/hobby-cover.png'
 import mailSvg from '../../Assets/Icons/mail.svg'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Image from 'next/image'
-import PageContentWrapper from '@/components/PageContentWrapper'
+import PageContentBox from '@/components/PageContentBox'
+import PageGridLayout from '@/components/_layouts/PageGridLayout'
+
+import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded'
+import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded'
+import ShareRoundedIcon from '@mui/icons-material/ShareRounded'
+import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded'
 
 type Props = {}
 
@@ -56,6 +62,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
 
   return (
     <section>
+      {/* Page Header  */}
       <header className={`site-container ${styles['header']}`}>
         <Image className={styles['profile-img']} src={profile} alt="" />
         <section className={styles['center-container']}>
@@ -76,61 +83,29 @@ const HobbyDetail: React.FC<Props> = (props) => {
           </p>
         </section>
         <div className={styles['action-btn-wrapper']}>
-          {/* <Tooltip
-            title="Mail"
-            // classes={{ tooltip: classes.customTooltip, arrow: classes.customArrow }}
-          >
-            <div onClick={(e) => console.log(e)} className={styles["action-btn"]}>
-              <img src={mailSvg} alt=""></img>
-            </div>
-          </Tooltip>
-          <Tooltip
-            title="Bookmark"
-            // classes={{ tooltip: classes.customTooltip, arrow: classes.customArrow }}
-          >
-            <div onClick={(e) => console.log(e)} className={styles["action-btn"]}>
-              <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 0H2C0.9 0 0 0.9 0 2V18L7 15L14 18V2C14 0.9 13.1 0 12 0ZM12 15L7 12.82L2 15V3C2 2.45 2.45 2 3 2H11C11.55 2 12 2.45 12 3V15Z" fill="#8064A2" />
-              </svg>
-            </div>
-          </Tooltip>
-          <Tooltip
-            title="Share"
-            // classes={{ tooltip: classes.customTooltip, arrow: classes.customArrow }}
-          >
-            <div onClick={(e) => console.log(e)} className={styles["action-btn"]}>
-              <svg width={24} height={24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx={12} cy={12} r="11.25" fill="#F7F5F9" stroke="#8064A2" strokeWidth="1.5" />
-                <g clipPath="url(#clip0_5455_25628)">
-                  <path
-                    d="M13.3333 9.99997V8.93997C13.3333 8.34664 14.0533 8.04664 14.4733 8.46664L17.5333 11.5266C17.7933 11.7866 17.7933 12.2066 17.5333 12.4666L14.4733 15.5266C14.0533 15.9466 13.3333 15.6533 13.3333 15.06V13.9333C10 13.9333 7.66667 15 6 17.3333C6.66667 14 8.66667 10.6666 13.3333 9.99997Z"
-                    fill="#8064A2"
-                  />
-                </g>
-                <defs>
-                  <clipPath id="clip0_5455_25628">
-                    <rect width={16} height={16} fill="white" transform="matrix(-1 0 0 1 20 4)" />
-                  </clipPath>
-                </defs>
-              </svg>
-            </div>
-          </Tooltip>
-          <Tooltip
-            title="More"
-            // classes={{ tooltip: classes.customTooltip, arrow: classes.customArrow }}
-          >
-            <div onClick={(e) => console.log(e)} className={styles["action-btn"]}>
-              <svg width="16" height="4" viewBox="0 0 16 4" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M12 2C12 3.1 12.9 4 14 4C15.1 4 16 3.1 16 2C16 0.9 15.1 -3.93402e-08 14 -8.74228e-08C12.9 -1.35505e-07 12 0.9 12 2ZM10 2C10 0.9 9.1 -3.01609e-07 8 -3.49691e-07C6.9 -3.97774e-07 6 0.9 6 2C6 3.1 6.9 4 8 4C9.1 4 10 3.1 10 2ZM4 2C4 0.899999 3.1 -5.63877e-07 2 -6.11959e-07C0.9 -6.60042e-07 -3.93403e-08 0.899999 -8.74228e-08 2C-1.35505e-07 3.1 0.899999 4 2 4C3.1 4 4 3.1 4 2Z"
-                  fill="#8064A2"
-                />
-              </svg>
-            </div>
-          </Tooltip> */}
+          {/* Send Email Button  */}
+          <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
+            <MailOutlineRoundedIcon color="primary" />
+          </div>
+
+          {/* Bookmark Button */}
+          <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
+            <BookmarkBorderRoundedIcon color="primary" />
+          </div>
+
+          {/* Share Button */}
+          <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
+            <ShareRoundedIcon color="primary" fontSize="small" />
+          </div>
+
+          {/* More Options Button */}
+          <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
+            <MoreHorizRoundedIcon color="primary" />
+          </div>
         </div>
       </header>
 
+      {/* Tabs */}
       <div className={styles['navigation-links']}>
         <a href="#" className={styles['active']}>
           About
@@ -142,34 +117,33 @@ const HobbyDetail: React.FC<Props> = (props) => {
         <a href="#">Blogs</a>
       </div>
 
-      <section className={` ${styles['body']}`}>
-        <div className="site-container">
-          <div className={styles['grid-container']}>
-            <aside>
-              <PageContentWrapper>
-                <h4 className={styles['heading']}>Hobbies Classification</h4>
-                <ul className={styles['classification-items']}>
-                  <Link href={`/hobby/${data?.category?.slug}`}>
-                    <li>{data?.category?.display}</li>
-                  </Link>
-                  <Link href={`/hobby/${data?.sub_category?.slug}`}>
-                    <li>{data?.sub_category?.display}</li>
-                  </Link>
-                  {data?.tags &&
-                    data?.tags.map((tag: any, idx: number) => {
-                      return (
-                        <Link key={idx} href={`/hobby/${tag?.slug}`}>
-                          <li>{tag.display}</li>
-                        </Link>
-                      )
-                    })}
-                  <li className={styles['active']}>{data?.display}</li>
-                </ul>
-              </PageContentWrapper>
-            </aside>
+      {/* Body / Main Content */}
+      <PageGridLayout column={3}>
+        <aside>
+          <PageContentBox>
+            <h4 className={styles['heading']}>Hobbies Classification</h4>
+            <ul className={styles['classification-items']}>
+              <Link href={`/hobby/${data?.category?.slug}`}>
+                <li>{data?.category?.display}</li>
+              </Link>
+              <Link href={`/hobby/${data?.sub_category?.slug}`}>
+                <li>{data?.sub_category?.display}</li>
+              </Link>
+              {data?.tags &&
+                data?.tags.map((tag: any, idx: number) => {
+                  return (
+                    <Link key={idx} href={`/hobby/${tag?.slug}`}>
+                      <li>{tag.display}</li>
+                    </Link>
+                  )
+                })}
+              <li className={styles['active']}>{data?.display}</li>
+            </ul>
+          </PageContentBox>
+        </aside>
 
-            <main>
-              {/* <div className={styles['start-post-btn']}>
+        <main>
+          {/* <div className={styles['start-post-btn']}>
                 <button>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                     <path
@@ -181,96 +155,99 @@ const HobbyDetail: React.FC<Props> = (props) => {
                 </button>
               </div> */}
 
-              <PageContentWrapper>
-                <h4>About</h4>
-                <div>{data?.description}</div>
-              </PageContentWrapper>
+          {/* About Section */}
+          <PageContentBox>
+            <h4>About</h4>
+            <div>{data?.description}</div>
+          </PageContentBox>
 
-              {data?.keywords?.length > 0 && (
-                <PageContentWrapper>
-                  <h4>Keywords :</h4>
-                  <ul className={styles['keyword-list']}>
-                    {data?.keywords?.map((item: any, idx: number) => (
-                      <li key={idx}>{item}</li>
-                    ))}
-                  </ul>
-                </PageContentWrapper>
-              )}
+          {/* Keywords Section */}
+          {data?.keywords?.length > 0 && (
+            <PageContentBox>
+              <h4>Keywords :</h4>
+              <ul className={styles['keyword-list']}>
+                {data?.keywords?.map((item: any, idx: number) => (
+                  <li key={idx}>{item}</li>
+                ))}
+              </ul>
+            </PageContentBox>
+          )}
 
-              <section
-                style={{ display: 'flex', gap: '24px', alignItems: 'start' }}
-                className={styles['']}
-              >
-                <PageContentWrapper>
-                  <h4>
-                    {data?.level === 0
-                      ? 'Sub-Categories'
-                      : data?.level === 1
-                      ? 'Hobbies'
-                      : data?.level === 2
-                      ? 'Hobbies'
-                      : data?.level === 3
-                      ? 'Genre/Styles'
-                      : data?.level === 5
-                      ? 'Next Level'
-                      : 'Next Level'}
-                  </h4>
-                  <div>
-                    {data.level !== 5 && nextLevels.length > 0 ? (
-                      <>
-                        <ul className={styles['next-level-items']}>
-                          {nextLevels.map((item: any, idx: number) => {
-                            return (
-                              <Link href={`/hobby/${item.slug}`} key={idx}>
-                                <li>{item.display}</li>
-                              </Link>
-                            )
-                          })}
-                        </ul>
-                      </>
-                    ) : (
-                      <span>No further sub-classification.</span>
-                    )}
-                  </div>
-                </PageContentWrapper>
-
-                <PageContentWrapper>
-                  <h4>Related</h4>
-                  <div>
-                    {data?.related_hobbies?.length > 0 ? (
-                      <>
-                        <ul className={styles['items']}>
-                          {data?.related_hobbies?.map((item: any, idx: number) => {
-                            return (
-                              <Link href={`/hobby/${item.slug}`} key={idx}>
-                                <li>{item.display}</li>
-                              </Link>
-                            )
-                          })}
-                        </ul>
-                      </>
-                    ) : (
-                      <span>No further information.</span>
-                    )}
-                  </div>
-                </PageContentWrapper>
-              </section>
-            </main>
-
-            <aside>
-              <div className={styles['members']}>
-                <h4 className={styles['heading']}>Members</h4>
-                <hr />
-                <div className={styles['member-list']}>
-                  {['Aditya', 'Prince', 'Devansh', 'Someone'].map((name: any, idx: number) => (
-                    <p key={idx}>{name}</p>
-                  ))}
-                </div>
+          {/* Next Levels and Related Hobbies */}
+          <section
+            style={{ display: 'flex', gap: '24px', alignItems: 'start' }}
+            className={styles['']}
+          >
+            {/* Next Levels */}
+            <PageContentBox>
+              <h4>
+                {data?.level === 0
+                  ? 'Sub-Categories'
+                  : data?.level === 1
+                  ? 'Hobbies'
+                  : data?.level === 2
+                  ? 'Hobbies'
+                  : data?.level === 3
+                  ? 'Genre/Styles'
+                  : data?.level === 5
+                  ? 'Next Level'
+                  : 'Next Level'}
+              </h4>
+              <div>
+                {data.level !== 5 && nextLevels.length > 0 ? (
+                  <>
+                    <ul className={styles['next-level-items']}>
+                      {nextLevels.map((item: any, idx: number) => {
+                        return (
+                          <Link href={`/hobby/${item.slug}`} key={idx}>
+                            <li>{item.display}</li>
+                          </Link>
+                        )
+                      })}
+                    </ul>
+                  </>
+                ) : (
+                  <span>No further sub-classification.</span>
+                )}
               </div>
-            </aside>
+            </PageContentBox>
+
+            {/* Related Hobbies */}
+            <PageContentBox>
+              <h4>Related</h4>
+              <div>
+                {data?.related_hobbies?.length > 0 ? (
+                  <>
+                    <ul className={styles['items']}>
+                      {data?.related_hobbies?.map((item: any, idx: number) => {
+                        return (
+                          <Link href={`/hobby/${item.slug}`} key={idx}>
+                            <li>{item.display}</li>
+                          </Link>
+                        )
+                      })}
+                    </ul>
+                  </>
+                ) : (
+                  <span>No further information.</span>
+                )}
+              </div>
+            </PageContentBox>
+          </section>
+        </main>
+
+        <aside>
+          <div className={styles['members']}>
+            <h4 className={styles['heading']}>Members</h4>
+            <hr />
+            <div className={styles['member-list']}>
+              {['Aditya', 'Prince', 'Devansh', 'Someone'].map((name: any, idx: number) => (
+                <p key={idx}>{name}</p>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </aside>
+      </PageGridLayout>
     </section>
   )
 }
