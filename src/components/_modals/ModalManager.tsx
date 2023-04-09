@@ -5,7 +5,6 @@ import { Dialog, Modal, Grow, Fade } from '@mui/material'
 import { closeModal } from '@/redux/slices/modal'
 import { VerifyEmailModal } from './VerifyEmail'
 import styles from './ModalManager.module.css'
-import MultiStepModal from '../../../chat-gpt/multistepmodal'
 import { UserOnboardingModal } from './UserOnboardingModal'
 
 const CustomBackdrop: React.FC = () => {
