@@ -201,7 +201,11 @@ export const Navbar: React.FC<Props> = ({}) => {
               </Link>
             ) : (
               <li>
-                <OutlinedButton onClick={() => dispatch(openModal('auth'))}>Sign In</OutlinedButton>{' '}
+                <OutlinedButton
+                  onClick={() => dispatch(openModal({ type: 'auth', closable: true }))}
+                >
+                  Sign In
+                </OutlinedButton>{' '}
               </li>
             )}
           </ul>

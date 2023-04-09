@@ -8,9 +8,9 @@ type Props = {
   value?: string
   placeholder?: string
   error?: boolean
-  helperText?: string
+  helperText?: string | null
   className?: string
-  onChange?: () => void
+  onChange?: (e: any) => void
 }
 
 const FormInput: React.FC<Props> = (props) => {

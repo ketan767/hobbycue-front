@@ -7,8 +7,8 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  isAuthenticated: true,
-  isLoggedIn: true,
+  isAuthenticated: false,
+  isLoggedIn: false,
   isRegistered: false,
 }
 

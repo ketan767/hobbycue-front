@@ -32,17 +32,15 @@ axiosInstance.interceptors.response.use(
     if (error.response.status === 401) {
       // Handle unauthorized error
       console.log('401')
-      console.log(error)
     }
 
     if (error.response.status === 404) {
       // Handle not found error
       console.log('404')
-      console.log(error)
     }
 
     // Handle other errors
-    console.log('Other')
+    console.log('Other Error')
     console.log(error)
     return Promise.reject(error)
   },

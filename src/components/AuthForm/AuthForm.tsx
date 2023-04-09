@@ -18,11 +18,17 @@ import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props
 import OutlinedButton from '../_buttons/OutlinedButton'
 
 import styles from './AuthForm.module.css'
-import { signIn } from '@/services/authService'
+import { joinIn, signIn } from '@/services/authService'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
+import { openModal, resetAuthModalData, updateAuthModalData } from '@/redux/slices/modal'
+import { useRouter } from 'next/router'
+import { updateIsLoggedIn } from '@/redux/slices/user'
 
 interface Props {}
 
 type tabs = 'sign-in' | 'join-in'
+type inputErrs = { email: null | string; password: null | string }
 
 function validatePassword(password: string) {
   const validation = {
@@ -36,25 +42,64 @@ function validatePassword(password: string) {
 }
 
 const AuthForm: React.FC<Props> = (props) => {
-  const [selectedTab, setSelectedTab] = useState<tabs>('sign-in')
-  const [inputData, setInputData] = useState({ email: '', password: '', rememberMe: false })
-  const [inputValidation, setInputValidation] = useState(validatePassword(inputData.password))
-  const [showValidationConditions, setShowValidationConditions] = useState(false)
+  const dispatch = useDispatch()
+  const router = useRouter()
 
+  const { authModalData } = useSelector((state: RootState) => state.modal)
+
+  const [selectedTab, setSelectedTab] = useState<tabs>('sign-in')
+  const [showValidationConditions, setShowValidationConditions] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+
+  const [inputErrors, setInputErrors] = useState<inputErrs>({ email: null, password: null })
+
+  const [inputValidation, setInputValidation] = useState(validatePassword(authModalData.password))
+
+  const handleInputChange = (key: any, value: any) => {
+    setInputErrors({ email: null, password: null })
+    let newData = { ...authModalData, [key]: value }
+    dispatch(updateAuthModalData(newData))
+  }
 
   const handleTabChange = (value: tabs) => {
     setSelectedTab(value)
-    setInputData({ email: '', password: '', rememberMe: false })
+    dispatch(resetAuthModalData())
   }
 
   const handleSubmit = () => {
+    // @TODO:: Email Password verification
     if (selectedTab === 'sign-in') {
-      signIn({ email: inputData.email, password: inputData.password }, (err, res) => {
-        if (err) return console.log(err.response)
-        console.log(res)
+      signIn({ email: authModalData.email, password: authModalData.password }, (err, res) => {
+        if (err) {
+          if (err.response.data.message === 'User not found!')
+            return setInputErrors({ email: err.response.data.message, password: null })
+          if (err.response.data.message === 'Invalid email or password')
+            return setInputErrors({
+              email: err.response.data.message,
+              password: err.response.data.message,
+            })
+          return alert(err.response?.data?.messgae)
+        }
+
+        if (res.status === 200 && res.data.success) {
+          dispatch(updateIsLoggedIn(true))
+          router.push('/profile/devansh')
+        }
       })
-    } else {
+    }
+    if (selectedTab === 'join-in') {
+      joinIn({ email: authModalData.email, password: authModalData.password }, (err, res) => {
+        if (err) {
+          if (err.response.data.message === 'User Already Exists!')
+            return setInputErrors({ email: err.response.data.message, password: null })
+          return alert(err.response?.data?.messgae)
+        }
+
+        if (res.status === 200 && res.data.success) {
+          alert(res.data.data.savedUser.otp)
+          dispatch(openModal({ type: 'email-verify', closable: false }))
+        }
+      })
     }
   }
 
@@ -133,12 +178,11 @@ const AuthForm: React.FC<Props> = (props) => {
             type="email"
             variant="outlined"
             size="small"
-            value={inputData.email}
-            onChange={(e) =>
-              setInputData((prev) => {
-                return { ...prev, email: e.target.value }
-              })
-            }
+            name="email"
+            value={authModalData.email}
+            onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+            error={Boolean(inputErrors.email)}
+            helperText={inputErrors.email}
           />
         </div>
 
@@ -151,13 +195,11 @@ const AuthForm: React.FC<Props> = (props) => {
             variant="outlined"
             autoComplete={selectedTab === 'join-in' ? 'new-password' : 'current-password'}
             size="small"
-            helperText=""
-            onChange={(e) =>
-              setInputData((prev) => {
-                return { ...prev, password: e.target.value }
-              })
-            }
-            value={inputData.password}
+            name="password"
+            value={authModalData.password}
+            onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+            error={Boolean(inputErrors.password)}
+            helperText={inputErrors.password}
             onFocus={() => setShowValidationConditions(true)}
             onBlur={() => setShowValidationConditions(false)}
             InputProps={{
@@ -204,12 +246,10 @@ const AuthForm: React.FC<Props> = (props) => {
                   <Checkbox
                     size="small"
                     color="primary"
-                    checked={inputData.rememberMe}
-                    onChange={(e) =>
-                      setInputData((prev) => {
-                        return { ...prev, rememberMe: !prev.rememberMe }
-                      })
-                    }
+                    name="rememberMe"
+                    value={!authModalData.rememberMe}
+                    checked={authModalData.rememberMe}
+                    onChange={(e) => handleInputChange(e.target.name, e.target.value === 'true')}
                   />
                 }
                 label={'Remember Me'}

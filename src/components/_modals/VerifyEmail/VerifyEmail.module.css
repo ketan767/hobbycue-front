@@ -22,7 +22,7 @@
   text-underline-offset: var(--spacing-8);
 }
 
-.modal-wrapper p {
+.modal-wrapper > p {
   /* font-family: 'Poppins'; */
   font-style: normal;
   font-weight: 500;
