@@ -6,8 +6,9 @@ import Head from 'next/head'
 import { createTheme, StyledEngineProvider, ThemeProvider } from '@mui/material/styles'
 import { Navbar } from '@/components/Navbar/Navbar'
 import ModalManager from '@/components/_modals/ModalManager'
+import Layout from '@/components/_layouts'
 
-export default function App({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
   const theme = createTheme({
     palette: {
       primary: {
@@ -32,14 +33,14 @@ export default function App({ Component, pageProps }: AppProps) {
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <Provider store={store}>
-            <Navbar />
-            <div style={{ marginTop: 'var(--navbar-height-desktop)' }}>
+            <Layout>
               <Component {...pageProps} />
-            </div>
-            <ModalManager />
+            </Layout>
           </Provider>
         </ThemeProvider>
       </StyledEngineProvider>
     </>
   )
 }
+
+export default App

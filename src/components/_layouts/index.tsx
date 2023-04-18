@@ -1,15 +1,18 @@
 import { ReactElement } from 'react'
 import { Navbar } from '../Navbar/Navbar'
 import ModalManager from '../_modals/ModalManager'
+import { withAuth } from '@/navigation/withAuth'
 
 // REVIEW: Not is use at present
-export default function Layout({ children }: { children: ReactElement }) {
+function Layout({ children }: { children: ReactElement }) {
   return (
     <>
       <Navbar />
-      <main>{children}</main>
       <ModalManager />
+      <main style={{ marginTop: 'var(--navbar-height-desktop)' }}>{children}</main>
       {/* <Footer /> */}
     </>
   )
 }
+
+export default withAuth(Layout)

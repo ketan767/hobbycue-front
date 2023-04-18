@@ -5,13 +5,13 @@ export type ModalType = null | 'auth' | 'email-verify' | 'user-onboarding'
 interface ModalState {
   activeModal: ModalType
   closable: boolean
-  authModalData: { email: string; password: string; rememberMe: boolean }
+  authFormData: { email: string; password: string; rememberMe: boolean }
 }
 
 const initialState: ModalState = {
   activeModal: null,
   closable: true,
-  authModalData: {
+  authFormData: {
     email: '',
     password: '',
     rememberMe: false,
@@ -28,16 +28,17 @@ const modalSlice = createSlice({
     },
     closeModal(state) {
       state.activeModal = null
+      state.closable = true
     },
-    updateAuthModalData(state, { payload }) {
-      state.authModalData = payload
+    updateAuthFormData(state, { payload }) {
+      state.authFormData = payload
     },
-    resetAuthModalData(state) {
-      state.authModalData = { email: '', password: '', rememberMe: false }
+    resetAuthFormData(state) {
+      state.authFormData = { email: '', password: '', rememberMe: false }
     },
   },
 })
 
-export const { openModal, closeModal, updateAuthModalData, resetAuthModalData } = modalSlice.actions
+export const { openModal, closeModal, updateAuthFormData, resetAuthFormData } = modalSlice.actions
 
 export default modalSlice.reducer

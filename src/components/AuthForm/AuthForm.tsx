@@ -21,16 +21,17 @@ import styles from './AuthForm.module.css'
 import { joinIn, signIn } from '@/services/authService'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
-import { openModal, resetAuthModalData, updateAuthModalData } from '@/redux/slices/modal'
+import { closeModal, openModal, resetAuthFormData, updateAuthFormData } from '@/redux/slices/modal'
 import { useRouter } from 'next/router'
 import { updateIsLoggedIn } from '@/redux/slices/user'
+import { validateEmail, validatePassword } from '@/utils'
 
 interface Props {}
 
 type tabs = 'sign-in' | 'join-in'
 type inputErrs = { email: null | string; password: null | string }
 
-function validatePassword(password: string) {
+function validatePasswordConditions(password: string) {
   const validation = {
     lowercase: /^(?=.*[a-z])/.test(password),
     uppercase: /^(?=.*[A-Z])/.test(password),
@@ -45,7 +46,7 @@ const AuthForm: React.FC<Props> = (props) => {
   const dispatch = useDispatch()
   const router = useRouter()
 
-  const { authModalData } = useSelector((state: RootState) => state.modal)
+  const { authFormData } = useSelector((state: RootState) => state.modal)
 
   const [selectedTab, setSelectedTab] = useState<tabs>('sign-in')
   const [showValidationConditions, setShowValidationConditions] = useState(false)
@@ -53,23 +54,31 @@ const AuthForm: React.FC<Props> = (props) => {
 
   const [inputErrors, setInputErrors] = useState<inputErrs>({ email: null, password: null })
 
-  const [inputValidation, setInputValidation] = useState(validatePassword(authModalData.password))
+  const [inputValidation, setInputValidation] = useState(
+    validatePasswordConditions(authFormData.password),
+  )
 
   const handleInputChange = (key: any, value: any) => {
     setInputErrors({ email: null, password: null })
-    let newData = { ...authModalData, [key]: value }
-    dispatch(updateAuthModalData(newData))
+    let newData = { ...authFormData, [key]: value }
+    dispatch(updateAuthFormData(newData))
   }
 
   const handleTabChange = (value: tabs) => {
     setSelectedTab(value)
-    dispatch(resetAuthModalData())
+    dispatch(resetAuthFormData())
   }
 
   const handleSubmit = () => {
     // @TODO:: Email Password verification
+    if (!validateEmail(authFormData.email))
+      return setInputErrors({ email: 'Invalid Email!', password: null })
+    if (!validatePassword(authFormData.password))
+      return setInputErrors({ email: null, password: 'Invalid Passowrd!' })
+
+    // Sign In
     if (selectedTab === 'sign-in') {
-      signIn({ email: authModalData.email, password: authModalData.password }, (err, res) => {
+      signIn({ email: authFormData.email, password: authFormData.password }, (err, res) => {
         if (err) {
           if (err.response.data.message === 'User not found!')
             return setInputErrors({ email: err.response.data.message, password: null })
@@ -82,20 +91,26 @@ const AuthForm: React.FC<Props> = (props) => {
         }
 
         if (res.status === 200 && res.data.success) {
+          // router.push('/profile/devansh')
+          localStorage.setItem('token', res.data.data.token)
+          console.log(res.data.data.token)
           dispatch(updateIsLoggedIn(true))
-          router.push('/profile/devansh')
+          dispatch(closeModal())
         }
       })
     }
+
+    // Join In
     if (selectedTab === 'join-in') {
-      joinIn({ email: authModalData.email, password: authModalData.password }, (err, res) => {
+      joinIn({ email: authFormData.email, password: authFormData.password }, (err, res) => {
         if (err) {
           if (err.response.data.message === 'User Already Exists!')
             return setInputErrors({ email: err.response.data.message, password: null })
-          return alert(err.response?.data?.messgae)
+          return alert(err.response?.data?.message)
         }
 
         if (res.status === 200 && res.data.success) {
+          // #FIX: Temporary - alert OTP
           alert(res.data.data.savedUser.otp)
           dispatch(openModal({ type: 'email-verify', closable: false }))
         }
@@ -125,6 +140,12 @@ const AuthForm: React.FC<Props> = (props) => {
     // )
     // console.log("New Resp", response);
   }
+
+  useEffect(() => {
+    if (selectedTab === 'join-in') {
+      setInputValidation(validatePasswordConditions(authFormData.password))
+    }
+  }, [authFormData.password])
 
   return (
     <div className={styles['form-contanier']}>
@@ -179,7 +200,7 @@ const AuthForm: React.FC<Props> = (props) => {
             variant="outlined"
             size="small"
             name="email"
-            value={authModalData.email}
+            value={authFormData.email}
             onChange={(e) => handleInputChange(e.target.name, e.target.value)}
             error={Boolean(inputErrors.email)}
             helperText={inputErrors.email}
@@ -196,7 +217,7 @@ const AuthForm: React.FC<Props> = (props) => {
             autoComplete={selectedTab === 'join-in' ? 'new-password' : 'current-password'}
             size="small"
             name="password"
-            value={authModalData.password}
+            value={authFormData.password}
             onChange={(e) => handleInputChange(e.target.name, e.target.value)}
             error={Boolean(inputErrors.password)}
             helperText={inputErrors.password}
@@ -247,8 +268,8 @@ const AuthForm: React.FC<Props> = (props) => {
                     size="small"
                     color="primary"
                     name="rememberMe"
-                    value={!authModalData.rememberMe}
-                    checked={authModalData.rememberMe}
+                    value={!authFormData.rememberMe}
+                    checked={authFormData.rememberMe}
                     onChange={(e) => handleInputChange(e.target.name, e.target.value === 'true')}
                   />
                 }

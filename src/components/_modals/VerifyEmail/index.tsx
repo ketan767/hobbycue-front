@@ -16,7 +16,7 @@ import { updateIsLoggedIn } from '@/redux/slices/user'
 export const VerifyEmailModal: React.FC<PropTypes> = (props) => {
   const dispatch = useDispatch()
   const router = useRouter()
-  const { email } = useSelector((state: RootState) => state.modal.authModalData)
+  const { email } = useSelector((state: RootState) => state.modal.authFormData)
 
   const [otp, setOtp] = React.useState('')
 
@@ -31,10 +31,12 @@ export const VerifyEmailModal: React.FC<PropTypes> = (props) => {
       }
 
       if (res.status === 200 && res.data.success) {
+        localStorage.setItem('token', res.data.data.token)
+        console.log(res.data.data.token)
         dispatch(updateIsLoggedIn(true))
-        // @TODO:
-        router.push('/profile/devansh')
         dispatch(closeModal())
+        // @TODO:
+        // router.push('/profile/devansh')
       }
     })
   }
