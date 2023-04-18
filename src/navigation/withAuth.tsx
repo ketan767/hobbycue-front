@@ -16,7 +16,7 @@ export const withAuth = <P extends object>(WrappedComponent: ComponentWithInitia
       if (!isLoggedIn) {
         const token = localStorage.getItem('token')
         if (!token) {
-          router.push('/login')
+          router.push('/')
         }
       }
     }, [isLoggedIn, router])

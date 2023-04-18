@@ -5,6 +5,7 @@
   gap: 24px;
   align-items: flex-end;
   padding: 24px 0;
+  /* background-color: white; */
 }
 .profile-img {
   width: 160px;

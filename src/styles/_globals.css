@@ -3,13 +3,16 @@
 
   --font-poppins: 'Poppins', Verdana, Geneva, Tahoma, sans-serif;
 
-  /* Primary Purple */
+  /* Primary - Purple */
   --primary-100-rgb: 127, 99, 161; /* #7f63a1  */
   --primary-50-rgb: 204, 193, 218; /* #CCC1DA  */
   --primary-10-rgb: 247, 245, 249; /* #F7F5F9  */
 
-  /* Secondary Sky Blue */
+  /* Secondary - Sky Blue */
   --secondary-rgb: 0, 150, 200; /* #0096c8 */
+
+  --bg-rgb: 248, 249, 250; /* #F8F9FA */
+
   --black-rgb: 0, 0, 0; /* #000 */
   --white-rgb: 255, 255, 255; /* #000 */
   --gray-100-rgb: 108, 115, 122; /* #939ca3 */
@@ -43,7 +46,7 @@ body {
   max-width: 100vw;
   overflow-x: hidden;
   font-family: var(--font-poppins);
-  background: rgba(var(--white-rgb));
+  /* background: rgba(var(--bg-rgb)); */
 }
 a {
   all: unset;
