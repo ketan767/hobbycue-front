@@ -23,8 +23,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { closeModal, openModal, resetAuthFormData, updateAuthFormData } from '@/redux/slices/modal'
 import { useRouter } from 'next/router'
-import { updateIsLoggedIn } from '@/redux/slices/user'
+import { updateIsAuthenticated, updateIsLoggedIn, updateUserDetail } from '@/redux/slices/user'
 import { validateEmail, validatePassword } from '@/utils'
+import { CircularProgress } from '@mui/material'
 
 interface Props {}
 
@@ -51,6 +52,7 @@ const AuthForm: React.FC<Props> = (props) => {
   const [selectedTab, setSelectedTab] = useState<tabs>('sign-in')
   const [showValidationConditions, setShowValidationConditions] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [submitBtnLoading, setSubmitBtnLoading] = useState(false)
 
   const [inputErrors, setInputErrors] = useState<inputErrs>({ email: null, password: null })
 
@@ -72,13 +74,17 @@ const AuthForm: React.FC<Props> = (props) => {
   const handleSubmit = () => {
     // @TODO:: Email Password verification
     if (!validateEmail(authFormData.email))
-      return setInputErrors({ email: 'Invalid Email!', password: null })
+      return setInputErrors({ email: 'Enter a Valid Email!', password: null })
     if (!validatePassword(authFormData.password))
-      return setInputErrors({ email: null, password: 'Invalid Passowrd!' })
+      return setInputErrors({ email: null, password: 'Enter a Valid Passowrd!' })
 
+    setSubmitBtnLoading(true)
+
+    const data = { email: authFormData.email, password: authFormData.password }
     // Sign In
     if (selectedTab === 'sign-in') {
-      signIn({ email: authFormData.email, password: authFormData.password }, (err, res) => {
+      signIn(data, (err, res) => {
+        setSubmitBtnLoading(false)
         if (err) {
           if (err.response.data.message === 'User not found!')
             return setInputErrors({ email: err.response.data.message, password: null })
@@ -95,6 +101,8 @@ const AuthForm: React.FC<Props> = (props) => {
           localStorage.setItem('token', res.data.data.token)
           console.log(res.data.data.token)
           dispatch(updateIsLoggedIn(true))
+          dispatch(updateIsAuthenticated(true))
+          dispatch(updateUserDetail(res.data.data.user))
           dispatch(closeModal())
         }
       })
@@ -102,7 +110,8 @@ const AuthForm: React.FC<Props> = (props) => {
 
     // Join In
     if (selectedTab === 'join-in') {
-      joinIn({ email: authFormData.email, password: authFormData.password }, (err, res) => {
+      joinIn(data, (err, res) => {
+        setSubmitBtnLoading(false)
         if (err) {
           if (err.response.data.message === 'User Already Exists!')
             return setInputErrors({ email: err.response.data.message, password: null })
@@ -299,8 +308,12 @@ const AuthForm: React.FC<Props> = (props) => {
             </p>
           )}
         </div>
-        <OutlinedButton onClick={handleSubmit} className={styles['submit-btn']}>
-          Continue
+        <OutlinedButton
+          disabled={submitBtnLoading}
+          onClick={handleSubmit}
+          className={styles['submit-btn']}
+        >
+          {submitBtnLoading ? <CircularProgress size={'16px'} /> : 'Continue'}
         </OutlinedButton>
       </section>
     </div>

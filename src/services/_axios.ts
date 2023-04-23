@@ -11,20 +11,20 @@ export const operation = retry.operation({
 
 // Create an Axios instance with the base URL and default config
 const axiosInstance: AxiosInstance = axios.create({
-  // baseURL: 'http://localhost:5000/api',
-  baseURL: 'https://hobbycue-back.onrender.com/api',
+  baseURL: 'http://localhost:5000/api',
+  // baseURL: 'https://hobbycue-back.onrender.com/api',
 })
 
 // Add a request interceptor to add the authentication token to every request
-axiosInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token')
+// axiosInstance.interceptors.request.use((config) => {
+//   const token = localStorage.getItem('token')
 
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
-  }
+//   if (token) {
+//     config.headers.Authorization = `Bearer ${token}`
+//   }
 
-  return config
-})
+//   return config
+// })
 
 // Add a response interceptor to handle errors
 axiosInstance.interceptors.response.use(

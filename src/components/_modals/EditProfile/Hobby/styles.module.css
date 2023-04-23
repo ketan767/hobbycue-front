@@ -1,0 +1,136 @@
+.modal-wrapper {
+  background-color: white;
+  border-radius: var(--spacing-8);
+  max-width: 50rem;
+  width: 38rem;
+  min-height: 40rem;
+  display: flex;
+  flex-direction: column;
+}
+.modal-wrapper .header,
+.modal-wrapper .body {
+  padding: var(--spacing-16) var(--spacing-24);
+}
+.modal-wrapper .footer {
+  padding: var(--spacing-16) var(--spacing-24);
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+.heading {
+  /* font-family: 'Poppins'; */
+  /* font-style: normal; */
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 26px;
+  /* identical to box height, or 144% */
+
+  color: #000000;
+}
+
+.input-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  /* margin-bottom: var(--spacing-32); */
+}
+.input-box label {
+  /* font-family: 'Poppins'; */
+  /* font-style: normal; */
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 22px;
+  color: #6d747a;
+}
+.input-box input[type='text'] {
+  width: 100%;
+  background: #f8f9fa;
+  border: 1px solid #ebedf0;
+  border-radius: 8px;
+  padding: calc(var(--spacing-8) + var(--spacing-4));
+
+  /* font-family: 'Poppins'; */
+  /* font-style: normal; */
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  /* color: #878c90; */
+  min-width: 6.25rem;
+}
+.input-box input[type='text']:focus-within {
+  outline: none;
+  border: 1px solid rgb(var(--primary-50-rgb));
+  outline: 1px solid rgb(var(--primary-10-rgb));
+}
+.input-box:has(input[required]) label::after {
+  content: '*';
+  color: rgba(192, 80, 77, 1);
+}
+
+.modal-wrapper .footer .submit {
+  margin-left: auto;
+}
+
+/* Hobbies */
+.add-hobbies-wrapper .info {
+  /* font-family: 'Poppins'; */
+  /* font-style: normal; */
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+
+  color: #6d747a;
+}
+.add-hobbies-wrapper .heading {
+  /* font-family: 'Poppins'; */
+  /* font-style: normal; */
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 22px;
+  color: #6d747a;
+
+  margin-top: var(--spacing-16);
+}
+
+.add-hobbies-wrapper .add-new-hobby {
+  margin-top: var(--spacing-8);
+  display: flex;
+  gap: calc(var(--spacing-8) + var(--spacing-4));
+  align-items: center;
+}
+
+.dropdown-warpper {
+  position: relative;
+}
+
+.dropdown-warpper .dropdown {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + var(--spacing-4));
+  background: #ffffff;
+  border-radius: var(--spacing-4);
+  padding: var(--spacing-4);
+  filter: drop-shadow(0px 0px 2px rgba(147, 156, 163, 0.36))
+    drop-shadow(0px 8px 12px rgba(147, 156, 163, 0.12));
+}
+.dropdown-warpper .dropdown p {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+
+  letter-spacing: 0.005em;
+
+  border-radius: 4px;
+  padding: var(--spacing-8);
+  color: #6d747a;
+  cursor: pointer;
+}
+.dropdown-warpper .dropdown p:hover {
+  background: #f7f5f9;
+  color: #8064a2;
+}

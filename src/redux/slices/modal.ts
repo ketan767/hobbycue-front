@@ -1,6 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-export type ModalType = null | 'auth' | 'email-verify' | 'user-onboarding'
+export type ModalType =
+  | null
+  | 'auth'
+  | 'email-verify'
+  | 'user-onboarding'
+  | 'profile-general-edit'
+  | 'profile-about-edit'
+  | 'profile-address-edit'
+  | 'profile-hobby-edit'
 
 interface ModalState {
   activeModal: ModalType

@@ -1,12 +1,12 @@
-import '@/styles/_globals.css'
-import type { AppProps } from 'next/app'
 import { Provider } from 'react-redux'
-import store from '@/redux/store'
 import Head from 'next/head'
 import { createTheme, StyledEngineProvider, ThemeProvider } from '@mui/material/styles'
-import { Navbar } from '@/components/Navbar/Navbar'
-import ModalManager from '@/components/_modals/ModalManager'
-import Layout from '@/components/_layouts'
+import type { AppProps } from 'next/app'
+
+import store from '@/redux/store'
+import MainLayout from '@/components/_layouts'
+
+import '@/styles/_globals.css'
 
 function App({ Component, pageProps }: AppProps) {
   const theme = createTheme({
@@ -25,6 +25,7 @@ function App({ Component, pageProps }: AppProps) {
       },
     },
   })
+
   return (
     <>
       <Head>
@@ -33,9 +34,9 @@ function App({ Component, pageProps }: AppProps) {
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <Provider store={store}>
-            <Layout>
+            <MainLayout>
               <Component {...pageProps} />
-            </Layout>
+            </MainLayout>
           </Provider>
         </ThemeProvider>
       </StyledEngineProvider>

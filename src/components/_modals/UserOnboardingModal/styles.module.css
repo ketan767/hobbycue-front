@@ -1,0 +1,17 @@
+.modal-container {
+  background-color: white;
+  border-radius: var(--spacing-8);
+}
+.modal-container .header {
+  padding: var(--spacing-16) var(--spacing-24);
+}
+
+.modal-heading {
+  /* font-family: 'Poppins'; */
+  /* font-style: normal; */
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 26px;
+  text-align: center;
+  color: #000000;
+}

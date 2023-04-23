@@ -12,3 +12,13 @@ export const validatePassword = (password: string) => {
   )
   return a !== null ? true : false
 }
+
+export const isEmptyField = (value: string) => {
+  let a = String(value).match(/((\r\n|\n|\r)$)|(^(\r\n|\n|\r))|^\s*$/gm)
+  return a !== null ? true : false
+}
+
+export const validatePhone = (phone: string) => {
+  let a = String(phone).match(/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/)
+  return a !== null ? true : false
+}

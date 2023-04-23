@@ -14,8 +14,8 @@ type callback = (err: any, res: any) => void
 //     console.log('Max retries exceeded');
 //   });
 
-export const getAllHobbies = (query: string | null, cb: callback) => {
-  axiosInstance
+export const getAllHobbies = async (query: string | null, cb: callback) => {
+  await axiosInstance
     .get(`/hobby?${query}`)
     .then((res) => cb(null, res))
     .catch((err) => cb(err, null))

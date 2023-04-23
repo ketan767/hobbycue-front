@@ -22,7 +22,8 @@ export const signIn = (data: signInPayload, cb: callback) => {
       })
   })
 }
-// Sign Up
+
+// Sign Up to get the OTP
 export const joinIn = (data: signInPayload, cb: callback) => {
   operation.attempt((currentAttempt) => {
     axiosInstance

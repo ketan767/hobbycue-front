@@ -9,12 +9,12 @@
   cursor: pointer;
 }
 
-.button:hover {
+.button:not(:disabled):hover {
   background-color: rgba(var(--primary-100-rgb));
   color: white;
 }
 
 .button:disabled {
-  opacity: 0.5;
+  opacity: 0.9;
   cursor: not-allowed;
 }

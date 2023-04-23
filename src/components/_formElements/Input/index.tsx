@@ -8,13 +8,14 @@ type Props = {
   value?: string
   placeholder?: string
   error?: boolean
+  disabled?: boolean
   helperText?: string | null
   className?: string
   onChange?: (e: any) => void
 }
 
 const FormInput: React.FC<Props> = (props) => {
-  const { type, value, placeholder, error, helperText, className, onChange } = props
+  const { type, value, placeholder, error, helperText, className, onChange, disabled } = props
   return (
     <>
       <TextField
@@ -24,6 +25,7 @@ const FormInput: React.FC<Props> = (props) => {
         type={type}
         error={error}
         helperText={helperText}
+        disabled={disabled}
         variant="outlined"
         size="small"
         value={value}

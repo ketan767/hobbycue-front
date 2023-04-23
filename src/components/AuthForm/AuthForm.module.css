@@ -39,10 +39,10 @@
   left: 24px;
 }
 .social-login-btn.google::before {
-  content: url('../../assets/vectors/google-icon.svg');
+  content: url('../../assets/svg/google-icon.svg');
 }
 .social-login-btn.facebook::before {
-  content: url('../../assets/vectors/facebook-icon.svg');
+  content: url('../../assets/svg/facebook-icon.svg');
 }
 
 .social-login-btn:hover {
@@ -116,13 +116,13 @@
   left: -25px;
 }
 .validation-messages p::before {
-  content: url('../../assets/vectors/error-icon.svg');
+  content: url('../../assets/svg/error-icon.svg');
 }
 .validation-messages p.valid {
   color: green;
 }
 .validation-messages p.valid::before {
-  content: url('../../assets/vectors/green-check-icon.svg');
+  content: url('../../assets/svg/green-check-icon.svg');
 }
 
 /* Form Footer */

@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { AuthModal } from './AuthModal'
@@ -6,6 +7,10 @@ import { closeModal } from '@/redux/slices/modal'
 import { VerifyEmailModal } from './VerifyEmail'
 import styles from './ModalManager.module.css'
 import { UserOnboardingModal } from './UserOnboardingModal'
+import ProfileAboutEditModal from './EditProfile/About'
+import ProfileGeneralEditModal from './EditProfile/General'
+import ProfileAddressEditModal from './EditProfile/Address'
+import ProfileHobbyEditModal from './EditProfile/Hobby'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -20,6 +25,11 @@ const ModalManager: React.FC = () => {
     dispatch(closeModal())
   }
 
+  useEffect(() => {
+    if (activeModal !== null) document.body.style.overflow = 'hidden'
+    else document.body.style.overflow = 'auto'
+  }, [activeModal])
+
   return (
     <>
       <Modal
@@ -28,12 +38,17 @@ const ModalManager: React.FC = () => {
         closeAfterTransition
         onClose={handleClose}
       >
-        <Fade in={Boolean(activeModal)} exit={Boolean(activeModal)}>
+        <Fade in={Boolean(activeModal)} exit={!Boolean(activeModal)}>
           <div className={styles['modal-wrapper']}>
             <main>
               {activeModal === 'auth' && <AuthModal />}
               {activeModal === 'email-verify' && <VerifyEmailModal />}
               {activeModal === 'user-onboarding' && <UserOnboardingModal />}
+
+              {activeModal === 'profile-general-edit' && <ProfileGeneralEditModal />}
+              {activeModal === 'profile-about-edit' && <ProfileAboutEditModal />}
+              {activeModal === 'profile-address-edit' && <ProfileAddressEditModal />}
+              {activeModal === 'profile-hobby-edit' && <ProfileHobbyEditModal />}
 
               {/* Modal Close Icon */}
               {closable && (
