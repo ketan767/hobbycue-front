@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { Button, CircularProgress } from '@mui/material'
 
-import { updateMyUserDetail } from '@/services/userService'
+import { getMyProfileDetail, updateMyProfileDetail } from '@/services/userService'
 
 import styles from './styles.module.css'
 import { isEmptyField } from '@/utils'
@@ -51,13 +51,21 @@ const ProfileAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
     }
 
     setSubmitBtnLoading(true)
-    updateMyUserDetail(data, (err, res) => {
-      setSubmitBtnLoading(false)
-      if (err) return console.log(err)
-      console.log(res)
-      dispatch(updateUserDetail(res.data.data.user))
-      if (onComplete) onComplete()
-      else dispatch(closeModal())
+    updateMyProfileDetail(data, (err, res) => {
+      if (err) {
+        setSubmitBtnLoading(false)
+        return console.log(err)
+      }
+
+      getMyProfileDetail('populate=_hobbies,_addresses,primary_address', (err, res) => {
+        setSubmitBtnLoading(false)
+        if (err) return console.log(err)
+        if (res.data.success) {
+          dispatch(updateUserDetail(res.data.data.user))
+          if (onComplete) onComplete()
+          else dispatch(closeModal())
+        }
+      })
     })
   }
 

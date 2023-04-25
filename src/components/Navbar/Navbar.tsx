@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
 import IconButton from '@mui/material/IconButton'
@@ -19,23 +19,35 @@ import Link from 'next/link'
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
 import { RootState } from '@/redux/store'
 
-import DefaultProfileImage from '@/assets/temp/default-profile.png'
+import DefaultProfileImage from '@/assets/image/default-profile.svg'
+import { useRouter } from 'next/router'
 
 type Props = {}
 
 export const Navbar: React.FC<Props> = ({}) => {
   const dispatch = useDispatch()
+  const router = useRouter()
 
   const { isLoggedIn, isAuthenticated, userDetail } = useSelector((state: RootState) => state.user)
 
   const [showDropdown, setShowDropdown] = useState<'user-menu' | null>(null)
+
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    dispatch(updateIsLoggedIn(false))
+    setShowDropdown(null)
+  }
+
+  useEffect(() => {
+    setShowDropdown(null)
+  }, [router.pathname])
 
   return (
     <>
       <header className={`${styles['navbar-wrappper']}`}>
         <nav className={`site-container `}>
           <section className={styles['navbar-left']}>
-            <Link href={'/'}>
+            <Link href={isLoggedIn ? '/community' : '/'}>
               <Image
                 src={LogoFull}
                 alt="HobbyCue Logo"
@@ -86,7 +98,7 @@ export const Navbar: React.FC<Props> = ({}) => {
 
           <section className={styles['navbar-right']}>
             <ul>
-              <Link href={'#'}>
+              <Link href={'/explore'}>
                 <li>
                   <Image src={ExploreIcon} alt="" />
                   <span>Explore</span>
@@ -191,18 +203,27 @@ export const Navbar: React.FC<Props> = ({}) => {
                         </Link>
                       </section>
 
+                      <span className={styles['divider']}></span>
+
+                      <section className={styles['manage']}>
+                        <h5>Manage</h5>
+                        <p>My Activity</p>
+                        <p>My Orders</p>
+                        <p>My Pages</p>
+                      </section>
+
+                      <span className={styles['divider']}></span>
+
+                      <Link href={'/add-listing'}>
+                        <h5 className={styles['add-listing']}>Add Listing Page</h5>
+                      </Link>
+
+                      <span className={styles['divider']}></span>
+
                       <section className={styles['account']}>
                         <h5>Account</h5>
                         <p>Settings</p>
-                        <p
-                          onClick={() => {
-                            localStorage.removeItem('token')
-                            dispatch(updateIsLoggedIn(false))
-                            setShowDropdown(null)
-                          }}
-                        >
-                          Sign Out
-                        </p>
+                        <p onClick={handleLogout}>Sign Out</p>
                       </section>
                     </div>
                   )}

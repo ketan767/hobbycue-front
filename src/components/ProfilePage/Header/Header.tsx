@@ -2,8 +2,8 @@ import React from 'react'
 import styles from './Header.module.css'
 import Image from 'next/image'
 
-import DefaultProfileImage from '@/assets/temp/default-profile.png'
-import DefaultCoverImage from '@/assets/temp/default-cover.png'
+import DefaultProfileImage from '@/assets/image/default-profile.svg'
+import DefaultCoverImage from '@/assets/image/default-cover.svg'
 
 import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded'
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded'
@@ -15,7 +15,6 @@ type Props = {
 }
 
 const ProfileHeader: React.FC<Props> = ({ detail }) => {
-  console.log('🚀 ~ file: Header.tsx:18 ~ detail:', detail)
   return (
     <>
       <header className={`site-container ${styles['header']}`}>

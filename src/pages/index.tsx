@@ -7,6 +7,8 @@ import AuthForm from '@/components/AuthForm/AuthForm'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import { getAllHobbies } from '@/services/hobbyService'
 import { useRouter } from 'next/router'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
 
 const Home: React.FC<PropTypes> = function () {
   const getHobby = () => {
@@ -16,6 +18,11 @@ const Home: React.FC<PropTypes> = function () {
     })
   }
   const router = useRouter()
+  const { isLoggedIn } = useSelector((state: RootState) => state.user)
+
+  useEffect(() => {
+    if (isLoggedIn) router.replace('/community')
+  }, [isLoggedIn])
 
   return (
     <>

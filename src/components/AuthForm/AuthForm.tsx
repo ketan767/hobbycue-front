@@ -69,6 +69,7 @@ const AuthForm: React.FC<Props> = (props) => {
   const handleTabChange = (value: tabs) => {
     setSelectedTab(value)
     dispatch(resetAuthFormData())
+    setInputErrors({ email: null, password: null })
   }
 
   const handleSubmit = () => {

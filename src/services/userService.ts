@@ -13,12 +13,12 @@ export const getAllUserDetail = async (query: string, cb?: CallbackFunction): Pr
 }
 
 // Get LoggedIn User Detail
-export const getMyUserDetail = async (cb: CallbackFunction) => {
+export const getMyProfileDetail = async (query: string, cb: CallbackFunction) => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
 
   await axiosInstance
-    .get(`/user/me`, { headers })
+    .get(`/user/me?${query}`, { headers })
     .then((res) => cb(null, res))
     .catch((err) => cb(err, null))
 }
@@ -48,7 +48,7 @@ export type UpdateProfileData = {
 }
 
 // Update User
-export const updateMyUserDetail = async (data: UpdateProfileData, cb: CallbackFunction) => {
+export const updateMyProfileDetail = async (data: UpdateProfileData, cb: CallbackFunction) => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
 
@@ -86,14 +86,30 @@ export type ProfileAddressData = {
   country: string
   latitude: string
   longitude: string
+  set_as_primary?: boolean
 }
-// Update User Hobby
+// Add new user address
 export const addUserAddress = async (data: ProfileAddressData, cb: CallbackFunction) => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
 
   await axiosInstance
     .post(`/user/address`, data, { headers })
+    .then((res) => cb(null, res))
+    .catch((err) => cb(err, null))
+}
+
+// Update User Address using ID
+export const updateUserAddress = async (
+  id: string,
+  data: ProfileAddressData,
+  cb: CallbackFunction,
+) => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  await axiosInstance
+    .patch(`/user/address/${id}`, data, { headers })
     .then((res) => cb(null, res))
     .catch((err) => cb(err, null))
 }

@@ -5,23 +5,28 @@ import { ReactNode } from 'react'
 import Link from 'next/link'
 import ProfileHeader from './Header/Header'
 import HomeTab from './HomeTab/HomeTab'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
 
 type Props = {
   profileUrl: string
   activeTab: 'Home' | 'Posts' | 'Media' | 'Pages' | 'Blogs'
   detail: any
 }
-type ProfileMode = 'view' | 'edit'
+export type ProfileMode = 'view' | 'edit'
 
 const ProfileLayout: React.FC<Props> = (props) => {
   const { profileUrl, activeTab, detail } = props
 
-  const [mode, setMode] = useState<ProfileMode>('view')
+  const { isLoggedIn, isAuthenticated, userDetail } = useSelector((state: RootState) => state.user)
+
+  const [profileMode, setProfileMode] = useState<ProfileMode>('view')
 
   useEffect(() => {
-    if (profileUrl) setMode('edit')
-    else setMode('view')
-  }, [profileUrl])
+    if (isLoggedIn && isAuthenticated && profileUrl === userDetail.profile_url)
+      setProfileMode('edit')
+    else setProfileMode('view')
+  }, [profileUrl, isLoggedIn, isAuthenticated, userDetail])
 
   return (
     <>
@@ -65,7 +70,7 @@ const ProfileLayout: React.FC<Props> = (props) => {
 
       {/*  */}
       <main>
-        {activeTab === 'Home' && <HomeTab detail={detail} />}
+        {activeTab === 'Home' && <HomeTab detail={detail} profileMode={profileMode} />}
         {activeTab === 'Posts' && <h1>Posts</h1>}
         {activeTab === 'Media' && <h1>Media</h1>}
       </main>

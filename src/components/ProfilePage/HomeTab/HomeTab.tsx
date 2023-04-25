@@ -6,12 +6,14 @@ import PageGridLayout from '@/components/_layouts/PageGridLayout'
 import styles from './HomeTab.module.css'
 import { openModal } from '@/redux/slices/modal'
 import { useDispatch } from 'react-redux'
+import { ProfileMode } from '../ProfileLayout'
 
 type Props = {
   detail: any
+  profileMode: ProfileMode
 }
 
-const HomeTab: React.FC<Props> = ({ detail }) => {
+const HomeTab: React.FC<Props> = ({ detail, profileMode }) => {
   const dispatch = useDispatch()
   return (
     <>
@@ -19,6 +21,7 @@ const HomeTab: React.FC<Props> = ({ detail }) => {
         <aside>
           {/* User Hobbies */}
           <PageContentBox
+            showEditButton={profileMode === 'edit'}
             onEditBtnClick={() =>
               dispatch(openModal({ type: 'profile-hobby-edit', closable: true }))
             }
@@ -41,6 +44,7 @@ const HomeTab: React.FC<Props> = ({ detail }) => {
         <main>
           {/* User About */}
           <PageContentBox
+            showEditButton={profileMode === 'edit'}
             onEditBtnClick={() =>
               dispatch(openModal({ type: 'profile-about-edit', closable: true }))
             }
@@ -51,6 +55,7 @@ const HomeTab: React.FC<Props> = ({ detail }) => {
 
           {/* User Information */}
           <PageContentBox
+            showEditButton={profileMode === 'edit'}
             onEditBtnClick={() =>
               dispatch(openModal({ type: 'profile-general-edit', closable: true }))
             }
@@ -65,6 +70,7 @@ const HomeTab: React.FC<Props> = ({ detail }) => {
         <aside>
           {/* User Locations */}
           <PageContentBox
+            showEditButton={profileMode === 'edit'}
             onEditBtnClick={() =>
               dispatch(openModal({ type: 'profile-address-edit', closable: true }))
             }
@@ -91,13 +97,15 @@ const HomeTab: React.FC<Props> = ({ detail }) => {
                     </clipPath>
                   </defs>
                 </svg>
-                <span>{typeof detail._addresses[0] === 'object' && detail._addresses[0].city}</span>
+                <span>
+                  {typeof detail._addresses[0] === 'object' && detail.primary_address?.city}
+                </span>
               </li>
             </ul>
           </PageContentBox>
 
           {/* User Contact Details */}
-          <PageContentBox>
+          <PageContentBox showEditButton={profileMode === 'edit'}>
             <h4 className={styles['heading']}>Contact Information</h4>
             <ul className={styles['contact-wrapper']}>
               {/* Phone */}

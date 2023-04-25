@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
-import { addUserHobby, updateMyUserDetail } from '@/services/userService'
+import { addUserHobby, getMyProfileDetail } from '@/services/userService'
 import FilledButton from '@/components/_buttons/FilledButton'
 
 // import debounce from 'lodash/debounce'
@@ -10,8 +10,9 @@ import FilledButton from '@/components/_buttons/FilledButton'
 import { FormControl, MenuItem, Select, TextField } from '@mui/material'
 import { getAllHobbies } from '@/services/hobbyService'
 import { isEmptyField } from '@/utils'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { updateUserDetail } from '@/redux/slices/user'
+import { RootState } from '@/redux/store'
 
 type Props = {
   onComplete?: () => void
@@ -37,6 +38,9 @@ type DropdownListItem = {
 
 const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
   const dispatch = useDispatch()
+
+  const { userDetail } = useSelector((state: RootState) => state.user)
+  console.log('🚀 ~ file: index.tsx:43 ~ userDetail :', userDetail)
 
   const [addHobbyBtnLoading, setAddHobbyBtnLoading] = useState<boolean>(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
@@ -83,15 +87,21 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
     if (!data.hobby || !data.genre) return
 
     setAddHobbyBtnLoading(true)
-    let formData = {
-      hobby: data.hobby?._id,
-      genre: data.genre?._id,
-      level: data.level,
-    }
-    addUserHobby(formData, (err, res) => {
-      setAddHobbyBtnLoading(false)
-      if (err) return console.log(err)
-      dispatch(updateUserDetail(res.data.data.user))
+
+    let jsonData = { hobby: data.hobby?._id, genre: data.genre?._id, level: data.level }
+    addUserHobby(jsonData, (err, res) => {
+      if (err) {
+        setAddHobbyBtnLoading(false)
+        return console.log(err)
+      }
+
+      getMyProfileDetail('populate=_hobbies,_addresses,primary_address', (err, res) => {
+        setAddHobbyBtnLoading(false)
+        if (err) return console.log(err)
+        if (res.data.success) {
+          dispatch(updateUserDetail(res.data.data.user))
+        }
+      })
     })
   }
 

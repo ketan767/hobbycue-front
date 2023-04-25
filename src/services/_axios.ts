@@ -11,8 +11,7 @@ export const operation = retry.operation({
 
 // Create an Axios instance with the base URL and default config
 const axiosInstance: AxiosInstance = axios.create({
-  // baseURL: 'http://localhost:5000/api',
-  baseURL: 'https://hobbycue-back.onrender.com/api',
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
 })
 
 // Add a request interceptor to add the authentication token to every request

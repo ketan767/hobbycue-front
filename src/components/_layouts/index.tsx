@@ -6,7 +6,7 @@ import { useEffect } from 'react'
 import { updateIsAuthenticated, updateIsLoggedIn, updateUserDetail } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import { useDispatch, useSelector } from 'react-redux'
-import { getMyUserDetail } from '@/services/userService'
+import { getMyProfileDetail } from '@/services/userService'
 import { openModal } from '@/redux/slices/modal'
 import PageLoader from '../PageLoader'
 
@@ -25,7 +25,7 @@ function MainLayout({ children }: { children: ReactElement }) {
       dispatch(updateIsLoggedIn(true))
 
       // @TODO:
-      getMyUserDetail((err, res) => {
+      getMyProfileDetail('populate=_hobbies,_addresses,primary_address', (err, res) => {
         if (err) return dispatch(updateIsAuthenticated(false))
         if (res.data.success) {
           dispatch(updateIsAuthenticated(true))

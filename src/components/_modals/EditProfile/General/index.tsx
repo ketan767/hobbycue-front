@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
-import { updateMyUserDetail } from '@/services/userService'
+import { getMyProfileDetail, updateMyProfileDetail } from '@/services/userService'
 import { isEmptyField } from '@/utils'
 import { closeModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
@@ -84,14 +84,25 @@ const ProfileGeneralEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
     }
 
     setSubmitBtnLoading(true)
-    updateMyUserDetail(data, (err, res) => {
-      setSubmitBtnLoading(false)
-      if (err) return console.log(err)
-      if (!res.data.success) return alert('Something went wrong!')
+    updateMyProfileDetail(data, async (err, res) => {
+      if (err) {
+        setSubmitBtnLoading(false)
+        return console.log(err)
+      }
+      if (!res.data.success) {
+        setSubmitBtnLoading(false)
+        return alert('Something went wrong!')
+      }
 
-      dispatch(updateUserDetail(res.data.data.user))
-      if (onComplete) onComplete()
-      else dispatch(closeModal())
+      getMyProfileDetail('populate=_hobbies,_addresses,primary_address', (err, res) => {
+        setSubmitBtnLoading(false)
+        if (err) return console.log(err)
+        if (res.data.success) {
+          dispatch(updateUserDetail(res.data.data.user))
+          if (onComplete) onComplete()
+          else dispatch(closeModal())
+        }
+      })
     })
   }
 

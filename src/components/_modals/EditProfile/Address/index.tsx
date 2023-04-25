@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
-import { ProfileAddressData, addUserAddress, updateMyUserDetail } from '@/services/userService'
+import {
+  ProfileAddressData,
+  addUserAddress,
+  getMyProfileDetail,
+  updateUserAddress,
+} from '@/services/userService'
 import { isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
@@ -29,6 +34,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
     country: '',
     latitude: '',
     longitude: '',
+    set_as_primary: false,
   })
 
   const [inputErrs, setInputErrs] = useState<{ [key: string]: string | null }>({
@@ -73,7 +79,6 @@ const ProfileAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
         return { ...prev, state: 'This field is required!' }
       })
     }
-
     if (isEmptyField(data.country)) {
       return setInputErrs((prev) => {
         return { ...prev, country: 'This field is required!' }
@@ -81,27 +86,61 @@ const ProfileAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
     }
 
     setSubmitBtnLoading(true)
-    addUserAddress(data, (err, res) => {
-      setSubmitBtnLoading(false)
-      if (err) return console.log(err)
-      if (!res.data.success) return alert('Something went wrong!')
-      dispatch(updateUserDetail(res.data.data.user))
-      if (onComplete) onComplete()
-      else dispatch(closeModal())
-    })
+    if (!userDetail.is_onboarded) {
+      data.set_as_primary = true
+      addUserAddress(data, (err, res) => {
+        if (err) {
+          setSubmitBtnLoading(false)
+          return console.log(err)
+        }
+        if (!res.data.success) {
+          setSubmitBtnLoading(false)
+          return alert('Something went wrong!')
+        }
+        getMyProfileDetail('populate=_hobbies,_addresses,primary_address', (err, res) => {
+          setSubmitBtnLoading(false)
+          if (err) return console.log(err)
+          if (res.data.success) {
+            dispatch(updateUserDetail(res.data.data.user))
+            if (onComplete) onComplete()
+            else dispatch(closeModal())
+          }
+        })
+      })
+    } else {
+      updateUserAddress(userDetail.primary_address._id, data, (err, res) => {
+        if (err) {
+          setSubmitBtnLoading(false)
+          return console.log(err)
+        }
+        if (!res.data.success) {
+          setSubmitBtnLoading(false)
+          return alert('Something went wrong!')
+        }
+        getMyProfileDetail('populate=_hobbies,_addresses,primary_address', (err, res) => {
+          setSubmitBtnLoading(false)
+          if (err) return console.log(err)
+          if (res.data.success) {
+            dispatch(updateUserDetail(res.data.data.user))
+            if (onComplete) onComplete()
+            else dispatch(closeModal())
+          }
+        })
+      })
+    }
   }
 
   useEffect(() => {
     setData({
-      street: userDetail.street,
-      society: userDetail.society,
-      locality: userDetail.locality,
-      city: userDetail.city,
-      pin_code: userDetail.pin_code,
-      state: userDetail.state,
-      country: userDetail.country,
-      latitude: userDetail.latitude,
-      longitude: userDetail.longitude,
+      street: userDetail.primary_address?.street,
+      society: userDetail.primary_address?.society,
+      locality: userDetail.primary_address?.locality,
+      city: userDetail.primary_address?.city,
+      pin_code: userDetail.primary_address?.pin_code,
+      state: userDetail.primary_address?.state,
+      country: userDetail.primary_address?.country,
+      latitude: userDetail.primary_address?.latitude,
+      longitude: userDetail.primary_address?.longitude,
     })
   }, [userDetail])
 

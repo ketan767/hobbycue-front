@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { closeModal } from '@/redux/slices/modal'
-import { updateMyUserDetail } from '@/services/userService'
+import { updateMyProfileDetail } from '@/services/userService'
 
 import ProfileGeneralEditModal from '../EditProfile/General'
 import ProfileAboutEditModal from '../EditProfile/About'
@@ -78,7 +78,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
 
   const handleCompleteOnboarding = () => {
     const data = { is_onboarded: true }
-    updateMyUserDetail(data, (err, res) => {
+    updateMyProfileDetail(data, (err, res) => {
       if (err) return console.log(err)
       if (res.data.success) {
         dispatch(closeModal())
