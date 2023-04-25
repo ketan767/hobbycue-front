@@ -120,7 +120,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
       {/* Body / Main Content */}
       <PageGridLayout column={3}>
         <aside>
-          <PageContentBox>
+          <PageContentBox showEditButton={false}>
             <h4 className={styles['heading']}>Hobbies Classification</h4>
             <ul className={styles['classification-items']}>
               <Link href={`/hobby/${data?.category?.slug}`}>
@@ -156,14 +156,14 @@ const HobbyDetail: React.FC<Props> = (props) => {
               </div> */}
 
           {/* About Section */}
-          <PageContentBox>
+          <PageContentBox showEditButton={false}>
             <h4>About</h4>
             <div>{data?.description}</div>
           </PageContentBox>
 
           {/* Keywords Section */}
           {data?.keywords?.length > 0 && (
-            <PageContentBox>
+            <PageContentBox showEditButton={false}>
               <h4>Keywords :</h4>
               <ul className={styles['keyword-list']}>
                 {data?.keywords?.map((item: any, idx: number) => (
@@ -179,7 +179,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
             className={styles['']}
           >
             {/* Next Levels */}
-            <PageContentBox>
+            <PageContentBox showEditButton={false}>
               <h4>
                 {data?.level === 0
                   ? 'Sub-Categories'
@@ -213,7 +213,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
             </PageContentBox>
 
             {/* Related Hobbies */}
-            <PageContentBox>
+            <PageContentBox showEditButton={false}>
               <h4>Related</h4>
               <div>
                 {data?.related_hobbies?.length > 0 ? (
