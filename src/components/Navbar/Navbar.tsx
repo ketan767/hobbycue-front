@@ -198,7 +198,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           <Image src={userDetail.profile_image || DefaultProfileImage} alt="" />
                           <h4>{userDetail.full_name}</h4>
                         </div>
-                        <Link href={`/profile/${userDetail.profile_url}`}>
+                        <Link prefetch={true} href={`/profile/${userDetail.profile_url}`}>
                           <button className={styles['view-profile-btn']}>View Profile</button>
                         </Link>
                       </section>
