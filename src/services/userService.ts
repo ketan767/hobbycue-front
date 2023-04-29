@@ -1,14 +1,12 @@
 import axiosInstance, { operation } from './_axios'
 
-type CallbackFunction = (err: any, res: any) => void
-
-export const getAllUserDetail = async (query: string, cb?: CallbackFunction): Promise<any> => {
+export const getAllUserDetail = async (query: string): Promise<ApiReturnObject> => {
   try {
     const res = await axiosInstance.get(`/user/?${query}`)
-    return res.data
+    return { res: res, err: null }
   } catch (error) {
     console.error(error)
-    return null
+    return { err: error, res: null }
   }
 }
 
@@ -62,7 +60,7 @@ export const updateMyProfileDetail = async (data: UpdateProfileData, cb: Callbac
 export const addUserHobby = async (
   data: {
     hobby: string
-    genre: string
+    genre?: string
     level: number
   },
   cb: CallbackFunction,
@@ -74,6 +72,19 @@ export const addUserHobby = async (
     .post(`/user/hobby`, data, { headers })
     .then((res) => cb(null, res))
     .catch((err) => cb(err, null))
+}
+
+// Delete User Hobby
+export const deleteUserHobby = async (id: string): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.delete(`/user/hobby/${id}`, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    return { err: error, res: null }
+  }
 }
 
 export type ProfileAddressData = {

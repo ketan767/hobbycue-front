@@ -8,8 +8,14 @@ const PageLoader = () => {
   const router = useRouter()
 
   useEffect(() => {
-    const handleStart = () => console.log('Loading Started..')
-    const handleComplete = () => console.log('Loading Completed..')
+    const handleStart = (url: any, { shallow }: any) => {
+      console.time('Loading Time!')
+      console.log(`App is changing to ${url} ${shallow ? 'with' : 'without'} shallow routing`)
+    }
+    const handleComplete = () => {
+      console.log('Loading Completed..')
+      console.timeEnd('Loading Time')
+    }
 
     router.events.on('routeChangeStart', handleStart)
     router.events.on('routeChangeComplete', handleComplete)

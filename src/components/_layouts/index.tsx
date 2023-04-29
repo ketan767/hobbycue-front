@@ -47,7 +47,7 @@ function MainLayout({ children }: { children: ReactElement }) {
     <>
       <Navbar />
       <ModalManager />
-      {/* <PageLoader /> */}
+      <PageLoader />
       <main style={{ marginTop: 'var(--navbar-height-desktop)' }}>{children}</main>
       {/* <Footer /> */}
     </>

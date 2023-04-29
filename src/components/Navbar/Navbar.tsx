@@ -19,7 +19,7 @@ import Link from 'next/link'
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
 import { RootState } from '@/redux/store'
 
-import DefaultProfileImage from '@/assets/image/default-profile.svg'
+import DefaultProfileImage from '@/assets/svg/default-profile.svg'
 import { useRouter } from 'next/router'
 
 type Props = {}
@@ -36,6 +36,7 @@ export const Navbar: React.FC<Props> = ({}) => {
     localStorage.removeItem('token')
     dispatch(updateIsLoggedIn(false))
     setShowDropdown(null)
+    // window.location = '/'
   }
 
   useEffect(() => {

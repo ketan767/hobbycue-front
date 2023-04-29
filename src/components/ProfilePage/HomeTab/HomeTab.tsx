@@ -6,7 +6,6 @@ import PageGridLayout from '@/components/_layouts/PageGridLayout'
 import styles from './HomeTab.module.css'
 import { openModal } from '@/redux/slices/modal'
 import { useDispatch } from 'react-redux'
-import { ProfileMode } from '../ProfileLayout'
 
 type Props = {
   detail: any
@@ -85,7 +84,7 @@ const HomeTab: React.FC<Props> = ({ detail, profileMode }) => {
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <g clip-path="url(#clip0_173_51417)">
+                  <g clipPath="url(#clip0_173_51417)">
                     <path
                       d="M12 2C7.8 2 4 5.22 4 10.2C4 13.38 6.45 17.12 11.34 21.43C11.72 21.76 12.29 21.76 12.67 21.43C17.55 17.12 20 13.38 20 10.2C20 5.22 16.2 2 12 2ZM12 12C10.9 12 10 11.1 10 10C10 8.9 10.9 8 12 8C13.1 8 14 8.9 14 10C14 11.1 13.1 12 12 12Z"
                       fill="#8064A2"
@@ -118,7 +117,7 @@ const HomeTab: React.FC<Props> = ({ detail, profileMode }) => {
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <g clip-path="url(#clip0_230_34018)">
+                    <g clipPath="url(#clip0_230_34018)">
                       <path
                         d="M19.23 15.2578L16.69 14.9678C16.08 14.8978 15.48 15.1078 15.05 15.5378L13.21 17.3778C10.38 15.9378 8.06004 13.6278 6.62004 10.7878L8.47004 8.93781C8.90004 8.50781 9.11004 7.90781 9.04004 7.29781L8.75004 4.77781C8.63004 3.76781 7.78004 3.00781 6.76004 3.00781H5.03004C3.90004 3.00781 2.96004 3.94781 3.03004 5.07781C3.56004 13.6178 10.39 20.4378 18.92 20.9678C20.05 21.0378 20.99 20.0978 20.99 18.9678V17.2378C21 16.2278 20.24 15.3778 19.23 15.2578Z"
                         fill="#8064A2"
@@ -167,7 +166,7 @@ const HomeTab: React.FC<Props> = ({ detail, profileMode }) => {
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <g clip-path="url(#clip0_230_34011)">
+                    <g clipPath="url(#clip0_230_34011)">
                       <path
                         d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM19.6 8.25L12.53 12.67C12.21 12.87 11.79 12.87 11.47 12.67L4.4 8.25C4.15 8.09 4 7.82 4 7.53C4 6.86 4.73 6.46 5.3 6.81L12 11L18.7 6.81C19.27 6.46 20 6.86 20 7.53C20 7.82 19.85 8.09 19.6 8.25Z"
                         fill="#8064A2"

@@ -51,15 +51,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   const { err, res } = await getAllUserDetail(
     `profile_url=${query['profile_url']}&populate=_hobbies,_addresses,primary_address`,
   )
-  console.log({ err, data: res?.data })
+  console.log({ err, data: res.data })
 
-  if (err) {
-    return {
-      notFound: true,
-    }
-  }
-
-  if (res?.data.success && res.data.data.no_of_users === 0) {
+  if (res.data.success && res.data.data.no_of_users === 0) {
     return {
       notFound: true,
     }

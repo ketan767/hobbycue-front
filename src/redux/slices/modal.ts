@@ -9,6 +9,13 @@ export type ModalType =
   | 'profile-about-edit'
   | 'profile-address-edit'
   | 'profile-hobby-edit'
+  | 'profile-contact-edit'
+  | 'listing-type-edit'
+  | 'listing-general-edit'
+  | 'listing-about-edit'
+  | 'listing-address-edit'
+  | 'listing-hobby-edit'
+  | 'listing-contact-edit'
 
 interface ModalState {
   activeModal: ModalType

@@ -3,10 +3,12 @@ import styles from '@/styles/AllHobbies.module.css'
 import { getAllHobbies } from '@/services/hobbyService'
 import { FormControl, MenuItem, Select, TextField } from '@mui/material'
 import Link from 'next/link'
+import { GetServerSideProps } from 'next'
 
-type Props = {}
-
-const ALlHobbies: React.FC<Props> = (props) => {
+type Props = {
+  data: any
+}
+const ALlHobbies: React.FC<Props> = ({ data }) => {
   const [categories, setCategories] = useState([])
   const [subCategories, setSubCategories] = useState([])
   const [hobbyData, setHobbyData] = useState([])
@@ -21,46 +23,34 @@ const ALlHobbies: React.FC<Props> = (props) => {
   })
 
   const params = new URLSearchParams()
-  const handleFilter = () => {
+  const handleFilter = async () => {
     if (filterData.category === '' && filterData.subCategory === '') resetHobbiesData()
     if (filterData.category !== '') {
       params.set('_id', filterData.category)
-      getAllHobbies(`level=0&${params.toString()}`, (err, res) => {
-        if (err) return console.log(err)
-        setCategories(res.data.hobbies)
-      })
+      const { err, res } = await getAllHobbies(`level=0&${params.toString()}`)
+      if (err) return console.log(err)
+      setCategories(res.data.hobbies)
     }
     if (filterData.subCategory !== '') {
       params.set('_id', filterData.subCategory)
-      getAllHobbies(
+
+      const { err, res } = await getAllHobbies(
         `level=1&${params.toString()}&populate=category,sub_category,tags`,
-        (err, res) => {
-          if (err) return console.log(err)
-          setSubCategories(res.data.hobbies)
-        },
       )
+      if (err) return console.log(err)
+      setSubCategories(res.data.hobbies)
     }
   }
 
-  const resetHobbiesData = () => {
-    getAllHobbies(`level=0`, (err, res) => {
-      if (err) return console.log(err)
-      setCategories(res.data.hobbies)
-      setFilterCategories(res.data.hobbies)
-    })
-    getAllHobbies(`level=1&populate=category,sub_category,tags`, (err, res) => {
-      if (err) return console.log(err)
-      setFilterSubCategories(res.data.hobbies)
-      setSubCategories(res.data.hobbies)
-    })
-    getAllHobbies(`level=3&populate=category,sub_category,tags`, (err, res) => {
-      if (err) return console.log(err)
-      setHobbyData(res.data.hobbies)
-    })
-  }
+  const resetHobbiesData = async () => {}
 
   useEffect(() => {
-    resetHobbiesData()
+    // resetHobbiesData()
+    setCategories(data.categories)
+    setFilterCategories(data.categories)
+    setSubCategories(data.sub_categories)
+    setFilterSubCategories(data.sub_categories)
+    setHobbyData(data.hobbies)
   }, [])
 
   return (
@@ -213,3 +203,21 @@ const ALlHobbies: React.FC<Props> = (props) => {
 }
 
 export default ALlHobbies
+
+export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
+  const { query } = context
+
+  const category = await getAllHobbies(`level=0`)
+  const subCategory = await getAllHobbies(`level=1&populate=category,sub_category,tags`)
+  const hobby = await getAllHobbies(`level=3&populate=category,sub_category,tags`)
+
+  return {
+    props: {
+      data: {
+        categories: category.res.data.hobbies,
+        sub_categories: subCategory.res.data.hobbies,
+        hobbies: hobby.res.data.hobbies,
+      },
+    },
+  }
+}

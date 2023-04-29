@@ -13,7 +13,6 @@ type Props = {
   activeTab: 'Home' | 'Posts' | 'Media' | 'Pages' | 'Blogs'
   detail: any
 }
-export type ProfileMode = 'view' | 'edit'
 
 const ProfileLayout: React.FC<Props> = (props) => {
   const { profileUrl, activeTab, detail } = props
@@ -30,7 +29,7 @@ const ProfileLayout: React.FC<Props> = (props) => {
 
   return (
     <>
-      <ProfileHeader detail={detail} />
+      <ProfileHeader detail={detail} profileMode={profileMode} />
 
       {/* Navigation Links */}
       <nav>

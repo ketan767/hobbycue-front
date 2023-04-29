@@ -28,6 +28,11 @@ const HobbyDetail: React.FC<Props> = (props) => {
   const [data, setData]: any = useState({})
   const [nextLevels, setNextLevels] = useState([])
 
+  const fetchHobbies = async (q: string, cb: any) => {
+    const { err, res } = await getAllHobbies(q)
+    cb(err, res)
+  }
+
   useEffect(() => {
     if (!data) return
     let query
@@ -39,7 +44,8 @@ const HobbyDetail: React.FC<Props> = (props) => {
     if (data.level === 3) query = `genre=${data?.sub_category?._id}&level=5`
 
     if (!query) return
-    getAllHobbies(`fields=display,slug&sort=level&${query}`, (err, res) => {
+
+    fetchHobbies(`fields=display,slug&sort=level&${query}`, (err: any, res: any) => {
       if (err) return router.push('/hobby')
       setNextLevels(res.data?.hobbies)
     })
@@ -50,9 +56,10 @@ const HobbyDetail: React.FC<Props> = (props) => {
       router.push('/hobby')
       return
     }
-    getAllHobbies(
+
+    fetchHobbies(
       `slug=${slug}&populate=category,sub_category,tags,related_hobbies`,
-      (err, res) => {
+      (err: any, res: any) => {
         if (err) return router.push('/hobby')
         if (res.data?.no_of_hobbies === 0) return
         setData(res.data?.hobbies?.[0])
