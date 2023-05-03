@@ -11,7 +11,7 @@ import FilledButton from '@/components/_buttons/FilledButton'
 import { RootState } from '@/redux/store'
 import { register } from '@/services/authService'
 import { useRouter } from 'next/router'
-import { updateIsAuthenticated, updateIsLoggedIn, updateUserDetail } from '@/redux/slices/user'
+import { updateIsAuthenticated, updateIsLoggedIn, updateUser } from '@/redux/slices/user'
 
 export const VerifyEmailModal: React.FC<PropTypes> = (props) => {
   const dispatch = useDispatch()
@@ -38,7 +38,8 @@ export const VerifyEmailModal: React.FC<PropTypes> = (props) => {
         console.log(res.data.data.token)
         dispatch(updateIsLoggedIn(true))
         dispatch(updateIsAuthenticated(true))
-        dispatch(updateUserDetail(res.data.data.user))
+        dispatch(updateUser(res.data.data.user))
+        router.push('/community', undefined, { shallow: false })
         // @TODO:
         // router.push('/profile/devansh')
       }

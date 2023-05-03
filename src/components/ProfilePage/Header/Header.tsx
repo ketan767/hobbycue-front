@@ -9,7 +9,7 @@ import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded'
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded'
 import ShareRoundedIcon from '@mui/icons-material/ShareRounded'
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded'
-import CameraIcon from '@/assets/svg/CameraIcon'
+import CameraIcon from '@/assets/icons/CameraIcon'
 
 type Props = {
   detail: any

@@ -23,7 +23,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { closeModal, openModal, resetAuthFormData, updateAuthFormData } from '@/redux/slices/modal'
 import { useRouter } from 'next/router'
-import { updateIsAuthenticated, updateIsLoggedIn, updateUserDetail } from '@/redux/slices/user'
+import { updateIsAuthenticated, updateIsLoggedIn, updateUser } from '@/redux/slices/user'
 import { validateEmail, validatePassword } from '@/utils'
 import { CircularProgress } from '@mui/material'
 
@@ -98,13 +98,13 @@ const AuthForm: React.FC<Props> = (props) => {
         }
 
         if (res.status === 200 && res.data.success) {
-          // router.push('/profile/devansh')
           localStorage.setItem('token', res.data.data.token)
           console.log(res.data.data.token)
           dispatch(updateIsLoggedIn(true))
           dispatch(updateIsAuthenticated(true))
-          dispatch(updateUserDetail(res.data.data.user))
+          dispatch(updateUser(res.data.data.user))
           dispatch(closeModal())
+          router.push('/community', undefined, { shallow: false })
         }
       })
     }

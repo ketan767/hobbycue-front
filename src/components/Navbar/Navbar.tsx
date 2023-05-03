@@ -28,7 +28,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   const dispatch = useDispatch()
   const router = useRouter()
 
-  const { isLoggedIn, isAuthenticated, userDetail } = useSelector((state: RootState) => state.user)
+  const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
 
   const [showDropdown, setShowDropdown] = useState<'user-menu' | null>(null)
 
@@ -190,16 +190,16 @@ export const Navbar: React.FC<Props> = ({}) => {
                   onMouseOver={() => setShowDropdown('user-menu')}
                   onMouseLeave={() => setShowDropdown(null)}
                 >
-                  <Image src={userDetail.profile_image || DefaultProfileImage} alt="" />
+                  <Image src={user.profile_image || DefaultProfileImage} alt="" />
                   <KeyboardArrowDownRoundedIcon htmlColor="#939CA3" />
                   {showDropdown === 'user-menu' && (
                     <div className={styles['user-menu-dropdown']}>
                       <section className={styles['general-info']}>
                         <div className={styles['profile-name']}>
-                          <Image src={userDetail.profile_image || DefaultProfileImage} alt="" />
-                          <h4>{userDetail.full_name}</h4>
+                          <Image src={user.profile_image || DefaultProfileImage} alt="" />
+                          <h4>{user.full_name}</h4>
                         </div>
-                        <Link prefetch={true} href={`/profile/${userDetail.profile_url}`}>
+                        <Link prefetch={true} href={`/profile/${user.profile_url}`}>
                           <button className={styles['view-profile-btn']}>View Profile</button>
                         </Link>
                       </section>

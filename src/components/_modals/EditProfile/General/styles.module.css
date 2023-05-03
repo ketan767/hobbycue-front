@@ -17,9 +17,6 @@
   display: flex;
   justify-content: space-between;
 }
-.modal-wrapper .footer .submit {
-  margin-left: auto;
-}
 
 .heading {
   /* font-family: 'Poppins'; */

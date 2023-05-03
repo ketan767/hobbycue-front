@@ -173,7 +173,7 @@ const Home: React.FC<PropTypes> = function () {
                 />
               </svg>
 
-              <span>Add Your Own Page</span>
+              <span>Add Your Own</span>
             </h3>
             <p className={styles['card-desc']}>
               Are you a teacher or expert? Do you sell or rent out equipment, venue or event

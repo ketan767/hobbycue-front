@@ -4,7 +4,7 @@ import React from 'react'
 import { GetServerSideProps } from 'next'
 import { getAllUserDetail } from '@/services/userService'
 import Head from 'next/head'
-import ProfileLayout from '@/components/ProfilePage/ProfileLayout'
+import ProfileLayout from '@/layouts/ProfilePageLayout'
 
 type Props = {
   data: any
@@ -16,9 +16,7 @@ const ProfilePostsPage: React.FC<Props> = (props) => {
   const detail = data.data.users[0]
   console.log('🚀 ~ file: [profile_url].tsx:31 ~ detail:', detail)
 
-  const router = useRouter()
-
-  // const { isLoggedIn, userDetail } = useSelector((state: RootState) => state.user)
+  // const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
 
   if (!detail) {
     return <h1>Loading...</h1>
@@ -26,14 +24,10 @@ const ProfilePostsPage: React.FC<Props> = (props) => {
   return (
     <>
       <Head>
-        <title>{detail.full_name}</title>
+        <title>{`Posts | ${detail.full_name} | HobbyCue`}</title>
       </Head>
 
-      <ProfileLayout
-        activeTab={'Posts'}
-        profileUrl={router.query.profile_url as string}
-        detail={detail}
-      />
+      <ProfileLayout activeTab={'posts'} detail={detail} />
     </>
   )
 }

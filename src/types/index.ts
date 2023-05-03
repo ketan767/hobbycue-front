@@ -1,6 +1,6 @@
-type ApiReturnObject = { res: any; err: any }
-
-type CallbackFunction = (err: any, res: any) => void
-
 // Profile Page
 type ProfileMode = 'view' | 'edit'
+type ProfilePageTabs = 'home' | 'posts' | 'media' | 'pages' | 'blogs'
+
+// Listing Page
+type ListingPageTabs = 'home' | 'posts' | 'media' | 'reviews' | 'events' | 'store'

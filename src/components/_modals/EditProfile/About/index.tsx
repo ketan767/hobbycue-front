@@ -9,7 +9,7 @@ import { isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
-import { updateUserDetail } from '@/redux/slices/user'
+import { updateUser } from '@/redux/slices/user'
 
 const CustomCKEditor = dynamic(() => import('./CustomCKEditor'), {
   ssr: false,
@@ -27,7 +27,7 @@ type ProfileAboutData = {
 
 const ProfileAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
   const dispatch = useDispatch()
-  const { userDetail } = useSelector((state: RootState) => state.user)
+  const { user } = useSelector((state: RootState) => state.user)
 
   const [data, setData] = useState<ProfileAboutData>({ about: '' })
 
@@ -61,7 +61,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
         setSubmitBtnLoading(false)
         if (err) return console.log(err)
         if (res.data.success) {
-          dispatch(updateUserDetail(res.data.data.user))
+          dispatch(updateUser(res.data.data.user))
           if (onComplete) onComplete()
           else dispatch(closeModal())
         }
@@ -71,9 +71,9 @@ const ProfileAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
 
   useEffect(() => {
     setData({
-      about: userDetail.about,
+      about: user.about,
     })
-  }, [userDetail])
+  }, [user])
 
   return (
     <>
@@ -94,20 +94,24 @@ const ProfileAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
 
         <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
-            <Button variant="outlined" size="medium" color="primary" onClick={onBackBtnClick}>
+            <button className="modal-footer-btn cancel" onClick={onBackBtnClick}>
               Back
-            </Button>
+            </button>
           )}
-          <Button
-            className={styles['submit']}
-            variant="contained"
-            size="medium"
-            color="primary"
+
+          <button
+            className="modal-footer-btn submit"
             onClick={handleSubmit}
             disabled={submitBtnLoading}
           >
-            {submitBtnLoading ? <CircularProgress color="inherit" size={'22px'} /> : 'Next'}
-          </Button>
+            {submitBtnLoading ? (
+              <CircularProgress color="inherit" size={'24px'} />
+            ) : onComplete ? (
+              'Next'
+            ) : (
+              'Save'
+            )}
+          </button>
         </footer>
       </div>
     </>
@@ -115,3 +119,9 @@ const ProfileAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
 }
 
 export default ProfileAboutEditModal
+
+/**
+ * @TODO:
+ * 1. Loading component untill the CK Editor loads.
+ * 2. Underline option in the editor
+ */

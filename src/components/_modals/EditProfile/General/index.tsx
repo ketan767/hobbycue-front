@@ -6,7 +6,8 @@ import { isEmptyField } from '@/utils'
 import { closeModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
-import { updateUserDetail } from '@/redux/slices/user'
+import { updateUser } from '@/redux/slices/user'
+import FilledButton from '@/components/_buttons/FilledButton'
 
 type Props = {
   onComplete?: () => void
@@ -25,7 +26,7 @@ type ProfileGeneralData = {
 const ProfileGeneralEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
   const dispatch = useDispatch()
 
-  const { userDetail } = useSelector((state: RootState) => state.user)
+  const { user } = useSelector((state: RootState) => state.user)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
@@ -98,7 +99,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
         setSubmitBtnLoading(false)
         if (err) return console.log(err)
         if (res.data.success) {
-          dispatch(updateUserDetail(res.data.data.user))
+          dispatch(updateUser(res.data.data.user))
           if (onComplete) onComplete()
           else dispatch(closeModal())
         }
@@ -108,14 +109,14 @@ const ProfileGeneralEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
 
   useEffect(() => {
     setData({
-      full_name: userDetail.full_name,
-      tagline: userDetail.tagline,
-      display_name: userDetail.display_name,
-      profile_url: userDetail.profile_url,
-      gender: userDetail.gender,
-      year_of_birth: userDetail.year_of_birth,
+      full_name: user.full_name,
+      tagline: user.tagline,
+      display_name: user.display_name,
+      profile_url: user.profile_url,
+      gender: user.gender,
+      year_of_birth: user.year_of_birth,
     })
-  }, [userDetail])
+  }, [user])
 
   return (
     <>
@@ -253,20 +254,24 @@ const ProfileGeneralEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
 
         <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
-            <Button variant="outlined" size="medium" color="primary" onClick={onBackBtnClick}>
-              Cancel
-            </Button>
+            <button className="modal-footer-btn cancel" onClick={onBackBtnClick}>
+              Back
+            </button>
           )}
-          <Button
-            className={styles['submit']}
-            variant="contained"
-            size="medium"
-            color="primary"
+
+          <button
+            className="modal-footer-btn submit"
             onClick={handleSubmit}
             disabled={submitBtnLoading}
           >
-            {submitBtnLoading ? <CircularProgress color="inherit" size={'22px'} /> : 'Next'}
-          </Button>
+            {submitBtnLoading ? (
+              <CircularProgress color="inherit" size={'24px'} />
+            ) : onComplete ? (
+              'Next'
+            ) : (
+              'Save'
+            )}
+          </button>
         </footer>
       </div>
     </>

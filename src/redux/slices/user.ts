@@ -1,17 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface AuthState {
-  isAuthenticated: Boolean
   isLoggedIn: Boolean
-  isRegistered: Boolean
-  userDetail: any
+  isAuthenticated: Boolean
+  user: any
 }
 
 const initialState: AuthState = {
-  isAuthenticated: false,
   isLoggedIn: false,
-  isRegistered: false,
-  userDetail: {},
+  isAuthenticated: false,
+  user: {},
 }
 
 const authSlice = createSlice({
@@ -24,16 +22,12 @@ const authSlice = createSlice({
     updateIsLoggedIn: (state, { payload }) => {
       state.isLoggedIn = payload
     },
-    updateIsRegistered: (state, { payload }) => {
-      state.isRegistered = payload
-    },
-    updateUserDetail: (state, { payload }) => {
-      state.userDetail = payload
+    updateUser: (state, { payload }) => {
+      state.user = payload
     },
   },
 })
 
-export const { updateIsAuthenticated, updateIsLoggedIn, updateIsRegistered, updateUserDetail } =
-  authSlice.actions
+export const { updateIsAuthenticated, updateIsLoggedIn, updateUser } = authSlice.actions
 
 export default authSlice.reducer

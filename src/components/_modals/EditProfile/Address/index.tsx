@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
-import {
-  ProfileAddressData,
-  addUserAddress,
-  getMyProfileDetail,
-  updateUserAddress,
-} from '@/services/userService'
+import { addUserAddress, getMyProfileDetail, updateUserAddress } from '@/services/userService'
 import { isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
-import { updateUserDetail } from '@/redux/slices/user'
+import { updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 
 type Props = {
@@ -20,11 +15,11 @@ type Props = {
 
 const ProfileAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
   const dispatch = useDispatch()
-  const { userDetail } = useSelector((state: RootState) => state.user)
+  const { user } = useSelector((state: RootState) => state.user)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
-  const [data, setData] = useState<ProfileAddressData>({
+  const [data, setData] = useState<ProfileAddressPayload>({
     street: '',
     society: '',
     locality: '',
@@ -86,7 +81,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
     }
 
     setSubmitBtnLoading(true)
-    if (!userDetail.is_onboarded) {
+    if (!user.is_onboarded) {
       data.set_as_primary = true
       addUserAddress(data, (err, res) => {
         if (err) {
@@ -101,14 +96,14 @@ const ProfileAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
           setSubmitBtnLoading(false)
           if (err) return console.log(err)
           if (res.data.success) {
-            dispatch(updateUserDetail(res.data.data.user))
+            dispatch(updateUser(res.data.data.user))
             if (onComplete) onComplete()
             else dispatch(closeModal())
           }
         })
       })
     } else {
-      updateUserAddress(userDetail.primary_address._id, data, (err, res) => {
+      updateUserAddress(user.primary_address._id, data, (err, res) => {
         if (err) {
           setSubmitBtnLoading(false)
           return console.log(err)
@@ -121,7 +116,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
           setSubmitBtnLoading(false)
           if (err) return console.log(err)
           if (res.data.success) {
-            dispatch(updateUserDetail(res.data.data.user))
+            dispatch(updateUser(res.data.data.user))
             if (onComplete) onComplete()
             else dispatch(closeModal())
           }
@@ -132,17 +127,17 @@ const ProfileAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
 
   useEffect(() => {
     setData({
-      street: userDetail.primary_address?.street,
-      society: userDetail.primary_address?.society,
-      locality: userDetail.primary_address?.locality,
-      city: userDetail.primary_address?.city,
-      pin_code: userDetail.primary_address?.pin_code,
-      state: userDetail.primary_address?.state,
-      country: userDetail.primary_address?.country,
-      latitude: userDetail.primary_address?.latitude,
-      longitude: userDetail.primary_address?.longitude,
+      street: user.primary_address?.street,
+      society: user.primary_address?.society,
+      locality: user.primary_address?.locality,
+      city: user.primary_address?.city,
+      pin_code: user.primary_address?.pin_code,
+      state: user.primary_address?.state,
+      country: user.primary_address?.country,
+      latitude: user.primary_address?.latitude,
+      longitude: user.primary_address?.longitude,
     })
-  }, [userDetail])
+  }, [user])
 
   return (
     <>
@@ -250,20 +245,24 @@ const ProfileAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
 
         <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
-            <Button variant="outlined" size="medium" color="primary" onClick={onBackBtnClick}>
+            <button className="modal-footer-btn cancel" onClick={onBackBtnClick}>
               Back
-            </Button>
+            </button>
           )}
-          <Button
-            className={styles['submit']}
-            variant="contained"
-            size="medium"
-            color="primary"
+
+          <button
+            className="modal-footer-btn submit"
             onClick={handleSubmit}
             disabled={submitBtnLoading}
           >
-            {submitBtnLoading ? <CircularProgress color="inherit" size={'22px'} /> : 'Next'}
-          </Button>
+            {submitBtnLoading ? (
+              <CircularProgress color="inherit" size={'24px'} />
+            ) : onComplete ? (
+              'Next'
+            ) : (
+              'Save'
+            )}
+          </button>
         </footer>
       </div>
     </>

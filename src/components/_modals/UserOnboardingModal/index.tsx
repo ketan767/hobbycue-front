@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { closeModal } from '@/redux/slices/modal'
+import { RootState } from '@/redux/store'
 import { updateMyProfileDetail } from '@/services/userService'
 
 import ProfileGeneralEditModal from '../EditProfile/General'
@@ -11,31 +12,30 @@ import ProfileAddressEditModal from '../EditProfile/Address'
 import ProfileHobbyEditModal from '../EditProfile/Hobby'
 
 import styles from './styles.module.css'
-import { RootState } from '@/redux/store'
+
+// type OnboardingData = {
+//   full_name: string
+//   tagline: string
+//   display_name: string
+//   profile_url: string
+//   gender: 'male' | 'female' | null
+//   year_of_birth: string
+//   phone: string
+//   website: string
+//   about: string
+//   street: string
+//   society: string
+//   locality: string
+//   city: string
+//   pin_code: string
+//   state: string
+//   country: string
+//   latitude: string
+//   longitude: string
+//   is_onboarded: boolean
+// }
 
 type steps = 'General' | 'About' | 'Address' | 'Hobbies'
-
-export type onboardingDataType = {
-  full_name: string
-  tagline: string
-  display_name: string
-  profile_url: string
-  gender: 'male' | 'female' | null
-  year_of_birth: string
-  phone: string
-  website: string
-  about: string
-  street: string
-  society: string
-  locality: string
-  city: string
-  pin_code: string
-  state: string
-  country: string
-  latitude: string
-  longitude: string
-  is_onboarded: boolean
-}
 
 export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
   const dispatch = useDispatch()
@@ -43,7 +43,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
 
   const router = useRouter()
 
-  const { userDetail } = useSelector((state: RootState) => state.user)
+  const { user } = useSelector((state: RootState) => state.user)
 
   const totalSteps: steps[] = ['General', 'About', 'Address', 'Hobbies']
 
@@ -53,28 +53,6 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
   const handleBack = () => {
     setActiveStep((prevActiveStep: steps) => totalSteps[totalSteps.indexOf(prevActiveStep) - 1])
   }
-
-  const [data, setData] = useState<onboardingDataType>({
-    full_name: '',
-    tagline: '',
-    display_name: '',
-    profile_url: '',
-    gender: null,
-    year_of_birth: '',
-    phone: '',
-    website: '',
-    about: '',
-    street: '',
-    society: '',
-    locality: '',
-    city: '',
-    pin_code: '',
-    state: '',
-    country: '',
-    latitude: '',
-    longitude: '',
-    is_onboarded: false,
-  })
 
   const handleCompleteOnboarding = () => {
     const data = { is_onboarded: true }
@@ -105,13 +83,18 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
         <ProfileHobbyEditModal onComplete={handleCompleteOnboarding} onBackBtnClick={handleBack} />
       )}
 
-      {/* <Stepper activeStep={totalSteps.indexOf(activeStep)}>
-        {totalSteps.map((label, index) => (
-          <Step key={label}>
-            <StepLabel></StepLabel>
-          </Step>
-        ))}
-      </Stepper> */}
+      <section className={styles['step-indicators']}>
+        {totalSteps.map((step) => {
+          return (
+            <span
+              key={step}
+              className={`${styles['step']} ${
+                totalSteps.indexOf(step) <= totalSteps.indexOf(activeStep) ? styles['active'] : ''
+              }`}
+            ></span>
+          )
+        })}
+      </section>
     </div>
   )
 }

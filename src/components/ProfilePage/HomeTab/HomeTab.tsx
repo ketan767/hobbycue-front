@@ -1,7 +1,7 @@
 import React from 'react'
 
-import PageContentBox from '@/components/PageContentBox'
-import PageGridLayout from '@/components/_layouts/PageGridLayout'
+import PageContentBox from '@/layouts/PageContentBox'
+import PageGridLayout from '@/layouts/PageGridLayout'
 
 import styles from './HomeTab.module.css'
 import { openModal } from '@/redux/slices/modal'

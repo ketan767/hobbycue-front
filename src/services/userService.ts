@@ -21,32 +21,8 @@ export const getMyProfileDetail = async (query: string, cb: CallbackFunction) =>
     .catch((err) => cb(err, null))
 }
 
-export type UpdateProfileData = {
-  full_name?: string
-  tagline?: string
-  display_name?: string
-  profile_url?: string
-  gender?: 'male' | 'female' | null
-  year_of_birth?: string
-  phone?: string
-  website?: string
-  about?: string
-
-  street?: string
-  society?: string
-  locality?: string
-  city?: string
-  pin_code?: string
-  state?: string
-  country?: string
-  latitude?: string
-  longitude?: string
-
-  is_onboarded?: boolean
-}
-
 // Update User
-export const updateMyProfileDetail = async (data: UpdateProfileData, cb: CallbackFunction) => {
+export const updateMyProfileDetail = async (data: UpdateProfilePayload, cb: CallbackFunction) => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
 
@@ -87,20 +63,8 @@ export const deleteUserHobby = async (id: string): Promise<ApiReturnObject> => {
   }
 }
 
-export type ProfileAddressData = {
-  street: string
-  society: string
-  locality: string
-  city: string
-  pin_code: string
-  state: string
-  country: string
-  latitude: string
-  longitude: string
-  set_as_primary?: boolean
-}
 // Add new user address
-export const addUserAddress = async (data: ProfileAddressData, cb: CallbackFunction) => {
+export const addUserAddress = async (data: ProfileAddressPayload, cb: CallbackFunction) => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
 
@@ -113,7 +77,7 @@ export const addUserAddress = async (data: ProfileAddressData, cb: CallbackFunct
 // Update User Address using ID
 export const updateUserAddress = async (
   id: string,
-  data: ProfileAddressData,
+  data: ProfileAddressPayload,
   cb: CallbackFunction,
 ) => {
   const token = localStorage.getItem('token')
@@ -134,23 +98,19 @@ export const checkProfileUrl = async (url: string, cb: CallbackFunction) => {
 }
 
 // @FIX
-interface registerPayload {
-  email: string
-  otp: string
-}
 
-// Register the user after Verifying the OTP
-export const register = (data: registerPayload, cb: CallbackFunction) => {
-  operation.attempt((currentAttempt) => {
-    axiosInstance
-      .post(`/auth/register`, data)
-      .then((res) => cb(null, res))
-      .catch((err) => {
-        if (!err.response?.data?.success && operation.retry(err)) {
-          console.log({ endPoint: '', attempt: currentAttempt, messgae: err.message })
-          return
-        }
-        cb(err, null)
-      })
-  })
-}
+// // Register the user after Verifying the OTP
+// export const register = (data: RegisterPayload, cb: CallbackFunction) => {
+//   operation.attempt((currentAttempt) => {
+//     axiosInstance
+//       .post(`/auth/register`, data)
+//       .then((res) => cb(null, res))
+//       .catch((err) => {
+//         if (!err.response?.data?.success && operation.retry(err)) {
+//           console.log({ endPoint: '', attempt: currentAttempt, messgae: err.message })
+//           return
+//         }
+//         cb(err, null)
+//       })
+//   })
+// }

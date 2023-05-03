@@ -2,17 +2,14 @@ import React, { useEffect, useState } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
 import { addUserHobby, deleteUserHobby, getMyProfileDetail } from '@/services/userService'
-import FilledButton from '@/components/_buttons/FilledButton'
-
-// import debounce from 'lodash/debounce'
-// import throttle from 'lodash/throttle'
 
 import { FormControl, MenuItem, Select, TextField } from '@mui/material'
 import { getAllHobbies } from '@/services/hobbyService'
 import { isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateUserDetail } from '@/redux/slices/user'
+import { updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
+import { closeModal } from '@/redux/slices/modal'
 
 type Props = {
   onComplete?: () => void
@@ -39,7 +36,7 @@ type DropdownListItem = {
 const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
   const dispatch = useDispatch()
 
-  const { userDetail } = useSelector((state: RootState) => state.user)
+  const { user } = useSelector((state: RootState) => state.user)
 
   const [addHobbyBtnLoading, setAddHobbyBtnLoading] = useState<boolean>(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
@@ -98,7 +95,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
         setAddHobbyBtnLoading(false)
         if (err) return console.log(err)
         if (res.data.success) {
-          dispatch(updateUserDetail(res.data.data.user))
+          dispatch(updateUser(res.data.data.user))
           setHobbyInputValue('')
           setGenreInputValue('')
         }
@@ -109,21 +106,20 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
     const { err, res } = await deleteUserHobby(id)
 
     if (err) {
-      setAddHobbyBtnLoading(false)
       return console.log(err)
     }
 
     getMyProfileDetail('populate=_hobbies,_addresses,primary_address', (err, res) => {
-      setAddHobbyBtnLoading(false)
       if (err) return console.log(err)
       if (res.data.success) {
-        dispatch(updateUserDetail(res.data.data.user))
+        dispatch(updateUser(res.data.data.user))
       }
     })
   }
 
   const handleSubmit = () => {
-    onComplete && onComplete()
+    if (onComplete) onComplete()
+    else dispatch(closeModal())
   }
 
   return (
@@ -273,7 +269,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
                     </tr>
                   </thead>
                   <tbody>
-                    {userDetail._hobbies?.map((hobby: any) => {
+                    {user._hobbies?.map((hobby: any) => {
                       return (
                         <tr key={hobby._id}>
                           <td>{hobby?.hobby?.display}</td>
@@ -326,20 +322,24 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
 
         <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
-            <Button variant="outlined" size="medium" color="primary" onClick={onBackBtnClick}>
+            <button className="modal-footer-btn cancel" onClick={onBackBtnClick}>
               Back
-            </Button>
+            </button>
           )}
-          <Button
-            className={styles['submit']}
-            variant="contained"
-            size="medium"
-            color="primary"
+
+          <button
+            className="modal-footer-btn submit"
             onClick={handleSubmit}
             disabled={submitBtnLoading}
           >
-            {submitBtnLoading ? <CircularProgress color="inherit" size={'22px'} /> : 'Next'}
-          </Button>
+            {submitBtnLoading ? (
+              <CircularProgress color="inherit" size={'24px'} />
+            ) : onComplete ? (
+              'Next'
+            ) : (
+              'Save'
+            )}
+          </button>
         </footer>
       </div>
     </>
@@ -347,3 +347,11 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
 }
 
 export default ProfileHobbyEditModal
+
+/**
+ * @TODO:
+ * 1. Debounce API req while typing in the hobby/genre search list.
+ * 2. Dropdown and Functionality to change the Level of an Hobby in the `Added Hobbies` list.
+ * 3. Chnage in query in the Genre search dropdown.
+ * 4. Delete button loading while deleting any hobby.
+ */

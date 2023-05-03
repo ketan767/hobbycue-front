@@ -29,5 +29,5 @@
   padding: var(--spacing-2);
 }
 .modal-wrapper main .modal-close-icon:hover {
-  background: hsla(0, 0%, 93.3%, 0.4392156862745098);
+  background: #ddd;
 }

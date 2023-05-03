@@ -24,7 +24,7 @@ interface ModalState {
 }
 
 const initialState: ModalState = {
-  activeModal: null,
+  activeModal: 'listing-type-edit',
   closable: true,
   authFormData: {
     email: '',

@@ -1,14 +1,7 @@
 import axiosInstance, { operation } from './_axios'
 
-type callback = (err: any, res: any) => void
-
-interface signInPayload {
-  email: string
-  password: string
-}
-
 // Sign In
-export const signIn = (data: signInPayload, cb: callback) => {
+export const signIn = (data: SignInPayload, cb: CallbackFunction) => {
   operation.attempt((currentAttempt) => {
     axiosInstance
       .post(`/auth/signin`, data)
@@ -24,7 +17,7 @@ export const signIn = (data: signInPayload, cb: callback) => {
 }
 
 // Sign Up to get the OTP
-export const joinIn = (data: signInPayload, cb: callback) => {
+export const joinIn = (data: SignInPayload, cb: CallbackFunction) => {
   operation.attempt((currentAttempt) => {
     axiosInstance
       .post(`/auth/signup`, data)
@@ -39,13 +32,8 @@ export const joinIn = (data: signInPayload, cb: callback) => {
   })
 }
 
-interface registerPayload {
-  email: string
-  otp: string
-}
-
 // Register the user after Verifying the OTP
-export const register = (data: registerPayload, cb: callback) => {
+export const register = (data: RegisterPayload, cb: CallbackFunction) => {
   operation.attempt((currentAttempt) => {
     axiosInstance
       .post(`/auth/register`, data)
