@@ -2,45 +2,33 @@ import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
 
 import { GetServerSideProps } from 'next'
-import { getAllUserDetail } from '@/services/userService'
+import { getAllUserDetail } from '@/services/user.service'
 import Head from 'next/head'
-import ProfileLayout from '@/components/ProfilePage/ProfileLayout'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
+import ListingPageLayout from '@/layouts/ListingPageLayout'
+import { getListingPageDetail } from '@/services/listing.service'
+import { updateListingPageData } from '@/redux/slices/site'
 
-type Props = {
-  data: any
-}
+type Props = { data: ListingPageData }
 
-const Profile: React.FC<Props> = (props) => {
-  const { data } = props
+const ListingHome: React.FC<Props> = (props) => {
+  const dispatch = useDispatch()
 
-  const [detail, setDetail] = useState(data?.data?.users[0])
-  console.log('🚀 ~ file: index.tsx:19 ~ detail:', detail)
-
-  const router = useRouter()
-
-  const { isLoggedIn, isAuthenticated, userDetail } = useSelector((state: RootState) => state.user)
-  console.log('🚀 ~ file: index.tsx:28 ~ useEffect ~ userDetail:', userDetail)
+  // const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
+  // const { listingPageData } = useSelector((state: RootState) => state.site)
 
   useEffect(() => {
-    if (isLoggedIn && isAuthenticated && detail._id === userDetail._id) setDetail(userDetail)
-  }, [userDetail])
+    dispatch(updateListingPageData(props.data.pageData))
+  }, [])
 
-  if (!detail) {
-    return <h1>Loading...</h1>
-  }
   return (
     <>
       <Head>
-        <title>{`${detail.full_name} | HobbyCue`}</title>
+        <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
       </Head>
 
-      <ProfileLayout
-        activeTab={'Home'}
-        profileUrl={router.query.profile_url as string}
-        detail={detail}
-      />
+      <ListingPageLayout activeTab={'home'} data={props.data} />
     </>
   )
 }
@@ -48,19 +36,27 @@ const Profile: React.FC<Props> = (props) => {
 export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
   const { query } = context
 
-  const { err, res } = await getAllUserDetail(
-    `profile_url=${query['profile_url']}&populate=_hobbies,_addresses,primary_address`,
-  )
-  console.log({ err, data: res.data })
+  const { err, res } = await getListingPageDetail(`page_url=${query['page_url']}`)
 
-  if (res.data.success && res.data.data.no_of_users === 0) {
+  if (res.data.success && res.data.data.no_of_listings === 0) {
     return {
       notFound: true,
     }
   }
+
+  const data = {
+    pageData: res.data.data.listings[0],
+    postsData: null,
+    mediaData: null,
+    reviewsData: null,
+    eventsData: null,
+    storeData: null,
+  }
   return {
-    props: { data: res.data },
+    props: {
+      data,
+    },
   }
 }
 
-export default Profile
+export default ListingHome

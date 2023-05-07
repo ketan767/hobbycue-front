@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
-import { addUserAddress, getMyProfileDetail, updateUserAddress } from '@/services/userService'
+import { addUserAddress, getMyProfileDetail, updateUserAddress } from '@/services/user.service'
 import { isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
@@ -92,7 +92,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
           setSubmitBtnLoading(false)
           return alert('Something went wrong!')
         }
-        getMyProfileDetail('populate=_hobbies,_addresses,primary_address', (err, res) => {
+        getMyProfileDetail('populate=_hobbies,_addresses,primary_address,_listings', (err, res) => {
           setSubmitBtnLoading(false)
           if (err) return console.log(err)
           if (res.data.success) {
@@ -112,7 +112,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
           setSubmitBtnLoading(false)
           return alert('Something went wrong!')
         }
-        getMyProfileDetail('populate=_hobbies,_addresses,primary_address', (err, res) => {
+        getMyProfileDetail('populate=_hobbies,_addresses,primary_address,_listings', (err, res) => {
           setSubmitBtnLoading(false)
           if (err) return console.log(err)
           if (res.data.success) {

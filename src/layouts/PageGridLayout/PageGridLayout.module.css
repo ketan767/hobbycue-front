@@ -1,7 +1,7 @@
 .container {
   background: #f8f9fa;
   min-height: 400px;
-  padding: 24px;
+  padding: var(--spacing-24);
 }
 
 .grid-container {
@@ -10,7 +10,7 @@
   gap: var(--spacing-24);
 }
 .grid-container[data-column='3'] {
-  grid-template-columns: 14rem auto 18rem;
+  grid-template-columns: 14.3rem auto 18.3rem;
 }
 .grid-container[data-column='2'] {
   grid-template-columns: 14rem auto;

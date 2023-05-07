@@ -22,3 +22,5 @@ export const validatePhone = (phone: string) => {
   let a = String(phone).match(/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/)
   return a !== null ? true : false
 }
+
+export const dateFormat = new Intl.DateTimeFormat('en-GB', { month: 'long', day: 'numeric' })

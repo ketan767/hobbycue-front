@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { closeModal } from '@/redux/slices/modal'
 import { RootState } from '@/redux/store'
-import { updateMyProfileDetail } from '@/services/userService'
+import { updateMyProfileDetail } from '@/services/user.service'
 
 import ProfileGeneralEditModal from '../EditProfile/General'
 import ProfileAboutEditModal from '../EditProfile/About'

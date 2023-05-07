@@ -18,14 +18,15 @@ import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props
 import OutlinedButton from '../_buttons/OutlinedButton'
 
 import styles from './AuthForm.module.css'
-import { joinIn, signIn } from '@/services/authService'
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '@/redux/store'
+import { joinIn, signIn } from '@/services/auth.service'
+import { useSelector } from 'react-redux'
+
 import { closeModal, openModal, resetAuthFormData, updateAuthFormData } from '@/redux/slices/modal'
 import { useRouter } from 'next/router'
 import { updateIsAuthenticated, updateIsLoggedIn, updateUser } from '@/redux/slices/user'
 import { validateEmail, validatePassword } from '@/utils'
 import { CircularProgress } from '@mui/material'
+import store, { RootState } from '@/redux/store'
 
 interface Props {}
 
@@ -44,7 +45,6 @@ function validatePasswordConditions(password: string) {
 }
 
 const AuthForm: React.FC<Props> = (props) => {
-  const dispatch = useDispatch()
   const router = useRouter()
 
   const { authFormData } = useSelector((state: RootState) => state.modal)
@@ -55,7 +55,6 @@ const AuthForm: React.FC<Props> = (props) => {
   const [submitBtnLoading, setSubmitBtnLoading] = useState(false)
 
   const [inputErrors, setInputErrors] = useState<inputErrs>({ email: null, password: null })
-
   const [inputValidation, setInputValidation] = useState(
     validatePasswordConditions(authFormData.password),
   )
@@ -63,12 +62,12 @@ const AuthForm: React.FC<Props> = (props) => {
   const handleInputChange = (key: any, value: any) => {
     setInputErrors({ email: null, password: null })
     let newData = { ...authFormData, [key]: value }
-    dispatch(updateAuthFormData(newData))
+    store.dispatch(updateAuthFormData(newData))
   }
 
   const handleTabChange = (value: tabs) => {
     setSelectedTab(value)
-    dispatch(resetAuthFormData())
+    store.dispatch(resetAuthFormData())
     setInputErrors({ email: null, password: null })
   }
 
@@ -100,10 +99,11 @@ const AuthForm: React.FC<Props> = (props) => {
         if (res.status === 200 && res.data.success) {
           localStorage.setItem('token', res.data.data.token)
           console.log(res.data.data.token)
-          dispatch(updateIsLoggedIn(true))
-          dispatch(updateIsAuthenticated(true))
-          dispatch(updateUser(res.data.data.user))
-          dispatch(closeModal())
+
+          store.dispatch(updateIsLoggedIn(true))
+          store.dispatch(updateIsAuthenticated(true))
+          store.dispatch(updateUser(res.data.data.user))
+          store.dispatch(closeModal())
           router.push('/community', undefined, { shallow: false })
         }
       })
@@ -122,7 +122,7 @@ const AuthForm: React.FC<Props> = (props) => {
         if (res.status === 200 && res.data.success) {
           // #FIX: Temporary - alert OTP
           alert(res.data.data.savedUser.otp)
-          dispatch(openModal({ type: 'email-verify', closable: false }))
+          store.dispatch(openModal({ type: 'email-verify', closable: false }))
         }
       })
     }

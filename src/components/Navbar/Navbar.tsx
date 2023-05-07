@@ -17,7 +17,7 @@ import { openModal } from '@/redux/slices/modal'
 import { updateIsLoggedIn } from '@/redux/slices/user'
 import Link from 'next/link'
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
-import { RootState } from '@/redux/store'
+import store, { RootState } from '@/redux/store'
 
 import DefaultProfileImage from '@/assets/svg/default-profile.svg'
 import { useRouter } from 'next/router'
@@ -29,6 +29,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   const router = useRouter()
 
   const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
+  // const { isLoggedIn, isAuthenticated, user } = store.getState().user
 
   const [showDropdown, setShowDropdown] = useState<'user-menu' | null>(null)
 

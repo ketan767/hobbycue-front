@@ -4,12 +4,14 @@ interface AuthState {
   isLoggedIn: Boolean
   isAuthenticated: Boolean
   user: any
+  listings: any
 }
 
 const initialState: AuthState = {
   isLoggedIn: false,
   isAuthenticated: false,
   user: {},
+  listings: [],
 }
 
 const authSlice = createSlice({

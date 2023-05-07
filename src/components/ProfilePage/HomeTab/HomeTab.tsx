@@ -7,12 +7,12 @@ import styles from './HomeTab.module.css'
 import { openModal } from '@/redux/slices/modal'
 import { useDispatch } from 'react-redux'
 
-type Props = {
-  detail: any
-  profileMode: ProfileMode
+interface Props {
+  data: ProfilePageData['pageData']
+  mode: ProfileLayoutMode
 }
 
-const HomeTab: React.FC<Props> = ({ detail, profileMode }) => {
+const HomeTab: React.FC<Props> = ({ data, mode }) => {
   const dispatch = useDispatch()
   return (
     <>
@@ -20,14 +20,14 @@ const HomeTab: React.FC<Props> = ({ detail, profileMode }) => {
         <aside>
           {/* User Hobbies */}
           <PageContentBox
-            showEditButton={profileMode === 'edit'}
+            showEditButton={mode === 'edit'}
             onEditBtnClick={() =>
               dispatch(openModal({ type: 'profile-hobby-edit', closable: true }))
             }
           >
             <h4 className={styles['heading']}>Hobbies</h4>
             <ul className={styles['hobby-list']}>
-              {detail._hobbies.map((item: any) => {
+              {data._hobbies.map((item: any) => {
                 if (typeof item === 'string') return
                 return (
                   <li key={item._id}>
@@ -43,33 +43,33 @@ const HomeTab: React.FC<Props> = ({ detail, profileMode }) => {
         <main>
           {/* User About */}
           <PageContentBox
-            showEditButton={profileMode === 'edit'}
+            showEditButton={mode === 'edit'}
             onEditBtnClick={() =>
               dispatch(openModal({ type: 'profile-about-edit', closable: true }))
             }
           >
             <h4>About</h4>
-            <div dangerouslySetInnerHTML={{ __html: detail?.about }}></div>
+            <div dangerouslySetInnerHTML={{ __html: data?.about }}></div>
           </PageContentBox>
 
           {/* User Information */}
           <PageContentBox
-            showEditButton={profileMode === 'edit'}
+            showEditButton={mode === 'edit'}
             onEditBtnClick={() =>
               dispatch(openModal({ type: 'profile-general-edit', closable: true }))
             }
           >
             <h4>Profile URL</h4>
-            <div>{detail.profile_url}</div>
+            <div>{data.profile_url}</div>
             <h4>Year Of Birth</h4>
-            <div>{detail.year_of_birth}</div>
+            <div>{data.year_of_birth}</div>
           </PageContentBox>
         </main>
 
         <aside>
           {/* User Locations */}
           <PageContentBox
-            showEditButton={profileMode === 'edit'}
+            showEditButton={mode === 'edit'}
             onEditBtnClick={() =>
               dispatch(openModal({ type: 'profile-address-edit', closable: true }))
             }
@@ -96,19 +96,17 @@ const HomeTab: React.FC<Props> = ({ detail, profileMode }) => {
                     </clipPath>
                   </defs>
                 </svg>
-                <span>
-                  {typeof detail._addresses[0] === 'object' && detail.primary_address?.city}
-                </span>
+                <span>{typeof data._addresses[0] === 'object' && data.primary_address?.city}</span>
               </li>
             </ul>
           </PageContentBox>
 
           {/* User Contact Details */}
-          <PageContentBox showEditButton={profileMode === 'edit'}>
+          <PageContentBox showEditButton={mode === 'edit'}>
             <h4 className={styles['heading']}>Contact Information</h4>
             <ul className={styles['contact-wrapper']}>
               {/* Phone */}
-              {detail.phone && (
+              {data.phone && (
                 <li>
                   <svg
                     width="24"
@@ -130,12 +128,12 @@ const HomeTab: React.FC<Props> = ({ detail, profileMode }) => {
                     </defs>
                   </svg>
 
-                  <span>{detail.phone} </span>
+                  <span>{data.phone} </span>
                 </li>
               )}
 
               {/* WhatsApp Number */}
-              {detail.whatsapp_number && (
+              {data.whatsapp_number && (
                 <li>
                   <svg
                     width="24"
@@ -152,12 +150,12 @@ const HomeTab: React.FC<Props> = ({ detail, profileMode }) => {
                     />
                   </svg>
 
-                  <span>{detail.whatsapp_number} </span>
+                  <span>{data.whatsapp_number} </span>
                 </li>
               )}
 
               {/* Email */}
-              {detail.email && (
+              {data.email && (
                 <li>
                   <svg
                     width="24"
@@ -179,12 +177,12 @@ const HomeTab: React.FC<Props> = ({ detail, profileMode }) => {
                     </defs>
                   </svg>
 
-                  <span>{detail.email} </span>
+                  <span>{data.email} </span>
                 </li>
               )}
 
               {/* Website */}
-              {detail.website && (
+              {data.website && (
                 <li>
                   <svg
                     width="24"
@@ -200,7 +198,7 @@ const HomeTab: React.FC<Props> = ({ detail, profileMode }) => {
                     />
                   </svg>
 
-                  <span>{detail.website} </span>
+                  <span>{data.website} </span>
                 </li>
               )}
             </ul>

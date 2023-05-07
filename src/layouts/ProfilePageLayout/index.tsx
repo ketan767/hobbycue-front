@@ -13,29 +13,28 @@ import { useRouter } from 'next/router'
 
 type Props = {
   activeTab: ProfilePageTabs
-  detail: any
+  data: ProfilePageData
 }
 
-const ProfileLayout: React.FC<Props> = (props) => {
+const ProfileLayout: React.FC<Props> = ({ activeTab, data }) => {
   const router = useRouter()
-  const { activeTab, detail } = props
 
   const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
 
   const tabs: ProfilePageTabs[] = ['home', 'posts', 'media', 'pages', 'blogs']
 
-  const [profileMode, setProfileMode] = useState<ProfileMode>('view')
+  const [layoutMode, setLayoutMode] = useState<ProfileLayoutMode>('view')
 
   useEffect(() => {
     if (isLoggedIn && isAuthenticated && router.query.profile_url === user.profile_url)
-      setProfileMode('edit')
-    else setProfileMode('view')
+      setLayoutMode('edit')
+    else setLayoutMode('view')
   }, [router.query.profile_url, isLoggedIn, isAuthenticated, user])
 
   return (
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
-      <ProfileHeader detail={detail} profileMode={profileMode} />
+      <ProfileHeader data={data.pageData} mode={layoutMode} />
 
       {/* Navigation Links */}
       <nav>
@@ -57,8 +56,10 @@ const ProfileLayout: React.FC<Props> = (props) => {
 
       {/* Profile Page Body, where all contents of different tabs appears. */}
       <main>
-        {activeTab === 'home' && <HomeTab detail={detail} profileMode={profileMode} />}
-        {activeTab === 'posts' && <PostsTab />}
+        {activeTab === 'home' && data.pageData && (
+          <HomeTab data={data.pageData} mode={layoutMode} />
+        )}
+        {activeTab === 'posts' && data.postsData && <PostsTab />}
         {activeTab === 'media' && <MediaTab />}
       </main>
     </>

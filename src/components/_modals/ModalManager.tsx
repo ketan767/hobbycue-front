@@ -14,6 +14,9 @@ import ProfileHobbyEditModal from './EditProfile/Hobby'
 import ListingTypeEditModal from './EditListing/ListingType'
 import Image from 'next/image'
 import CloseIcon from '@/assets/icons/CloseIcon'
+import ListingAboutEditModal from './EditListing/ListingAbout'
+import { ListingOnboardingModal } from './ListingOnboardingModal'
+import { CreatePost } from './CreatePost'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -30,7 +33,10 @@ const ModalManager: React.FC = () => {
 
   useEffect(() => {
     if (activeModal !== null) document.body.style.overflow = 'hidden'
-    else document.body.style.overflow = 'auto'
+    else
+      setTimeout(() => {
+        document.body.style.overflow = 'auto'
+      }, 200)
   }, [activeModal])
 
   return (
@@ -47,6 +53,9 @@ const ModalManager: React.FC = () => {
               {activeModal === 'auth' && <AuthModal />}
               {activeModal === 'email-verify' && <VerifyEmailModal />}
               {activeModal === 'user-onboarding' && <UserOnboardingModal />}
+              {activeModal === 'listing-onboarding' && <ListingOnboardingModal />}
+
+              {activeModal === 'create-post' && <CreatePost />}
 
               {activeModal === 'profile-general-edit' && <ProfileGeneralEditModal />}
               {activeModal === 'profile-about-edit' && <ProfileAboutEditModal />}
@@ -54,6 +63,8 @@ const ModalManager: React.FC = () => {
               {activeModal === 'profile-hobby-edit' && <ProfileHobbyEditModal />}
 
               {activeModal === 'listing-type-edit' && <ListingTypeEditModal />}
+              {activeModal === 'listing-about-edit' && <ListingAboutEditModal />}
+              {/* {activeModal === 'listing-type-edit' && <ListingTypeEditModal />} */}
 
               {/* Modal Close Icon */}
               {closable && (

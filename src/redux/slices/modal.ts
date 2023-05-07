@@ -5,6 +5,8 @@ export type ModalType =
   | 'auth'
   | 'email-verify'
   | 'user-onboarding'
+  | 'listing-onboarding'
+  | 'create-post'
   | 'profile-general-edit'
   | 'profile-about-edit'
   | 'profile-address-edit'
@@ -24,7 +26,7 @@ interface ModalState {
 }
 
 const initialState: ModalState = {
-  activeModal: 'listing-type-edit',
+  activeModal: null,
   closable: true,
   authFormData: {
     email: '',

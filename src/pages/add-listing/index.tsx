@@ -1,9 +1,17 @@
 import React from 'react'
 import styles from '@/styles/AddListing.module.css'
+import { openModal } from '@/redux/slices/modal'
+import { useDispatch } from 'react-redux'
+import { updateNewListingData } from '@/redux/slices/site'
 
 type Props = {}
 
 const AddListing: React.FC<Props> = (props) => {
+  const dispatch = useDispatch()
+  const handleClick = (type: ListingPages) => {
+    dispatch(updateNewListingData({ type, page_type: null }))
+    dispatch(openModal({ type: 'listing-type-edit', closable: true }))
+  }
   return (
     <>
       <section className={`site-container ${styles['add-listing-container']}`}>
@@ -30,7 +38,10 @@ const AddListing: React.FC<Props> = (props) => {
           <span>Add Your Listing</span>
         </h1>
         <div className={styles['cards-wrapper']}>
-          <section className={`${styles['card']} ${styles['people']}`}>
+          <section
+            onClick={() => handleClick(1)}
+            className={`${styles['card']} ${styles['people']}`}
+          >
             <h3>
               <svg
                 width="40"
@@ -51,7 +62,10 @@ const AddListing: React.FC<Props> = (props) => {
               Business or Association.
             </p>
           </section>
-          <section className={`${styles['card']} ${styles['place']}`}>
+          <section
+            onClick={() => handleClick(2)}
+            className={`${styles['card']} ${styles['place']}`}
+          >
             <h3>
               <svg
                 width="24"
@@ -72,7 +86,10 @@ const AddListing: React.FC<Props> = (props) => {
               Studio, School or Campus.
             </p>
           </section>
-          <section className={`${styles['card']} ${styles['product']}`}>
+          <section
+            onClick={() => handleClick(3)}
+            className={`${styles['card']} ${styles['product']}`}
+          >
             <h3>
               <svg
                 width="40"
@@ -102,7 +119,10 @@ const AddListing: React.FC<Props> = (props) => {
               Instrument or Activity Kit.
             </p>
           </section>
-          <section className={`${styles['card']} ${styles['program']}`}>
+          <section
+            onClick={() => handleClick(4)}
+            className={`${styles['card']} ${styles['program']}`}
+          >
             <h3>
               <svg
                 width="40"

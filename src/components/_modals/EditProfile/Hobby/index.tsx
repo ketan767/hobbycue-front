@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
-import { addUserHobby, deleteUserHobby, getMyProfileDetail } from '@/services/userService'
+import { addUserHobby, deleteUserHobby, getMyProfileDetail } from '@/services/user.service'
 
 import { FormControl, MenuItem, Select, TextField } from '@mui/material'
-import { getAllHobbies } from '@/services/hobbyService'
+import { getAllHobbies } from '@/services/hobby.service'
 import { isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateUser } from '@/redux/slices/user'
@@ -91,7 +91,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
         return console.log(err)
       }
 
-      getMyProfileDetail('populate=_hobbies,_addresses,primary_address', (err, res) => {
+      getMyProfileDetail('populate=_hobbies,_addresses,primary_address,_listings', (err, res) => {
         setAddHobbyBtnLoading(false)
         if (err) return console.log(err)
         if (res.data.success) {
@@ -109,7 +109,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
       return console.log(err)
     }
 
-    getMyProfileDetail('populate=_hobbies,_addresses,primary_address', (err, res) => {
+    getMyProfileDetail('populate=_hobbies,_addresses,primary_address,_listings', (err, res) => {
       if (err) return console.log(err)
       if (res.data.success) {
         dispatch(updateUser(res.data.data.user))

@@ -1,0 +1,38 @@
+.modal-container {
+  position: relative;
+  background-color: white;
+  border-radius: var(--spacing-8);
+}
+.modal-container .header {
+  padding: var(--spacing-16) var(--spacing-24);
+}
+
+.modal-heading {
+  /* font-family: 'Poppins'; */
+  /* font-style: normal; */
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 26px;
+  text-align: center;
+  color: #000000;
+}
+
+.step-indicators {
+  position: absolute;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+
+  display: flex;
+  gap: 27px;
+}
+
+.step-indicators .step {
+  width: 12px;
+  height: 12px;
+  border: 1px solid rgb(var(--primary-100-rgb));
+  border-radius: 100%;
+}
+.step-indicators .step.active {
+  background-color: rgb(var(--primary-100-rgb));
+}

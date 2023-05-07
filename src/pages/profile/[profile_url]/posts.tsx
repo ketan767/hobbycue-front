@@ -2,32 +2,24 @@ import { useRouter } from 'next/router'
 import React from 'react'
 
 import { GetServerSideProps } from 'next'
-import { getAllUserDetail } from '@/services/userService'
+import { getAllUserDetail } from '@/services/user.service'
 import Head from 'next/head'
 import ProfileLayout from '@/layouts/ProfilePageLayout'
 
-type Props = {
-  data: any
+interface Props {
+  data: ProfilePageData
 }
 
-const ProfilePostsPage: React.FC<Props> = (props) => {
-  const { data } = props
-
-  const detail = data.data.users[0]
-  console.log('🚀 ~ file: [profile_url].tsx:31 ~ detail:', detail)
-
+const ProfilePostsPage: React.FC<Props> = ({ data }) => {
   // const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
 
-  if (!detail) {
-    return <h1>Loading...</h1>
-  }
   return (
     <>
       <Head>
-        <title>{`Posts | ${detail.full_name} | HobbyCue`}</title>
+        <title>{`Posts | ${data.pageData.full_name} | HobbyCue`}</title>
       </Head>
 
-      <ProfileLayout activeTab={'posts'} detail={detail} />
+      <ProfileLayout activeTab={'posts'} data={data} />
     </>
   )
 }
@@ -36,11 +28,24 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   const { query } = context
 
   const { err, res } = await getAllUserDetail(
-    `profile_url=${query['profile_url']}&populate=_hobbies,_addresses`,
+    `profile_url=${query['profile_url']}&populate=_hobbies,_addresses,primary_address,_listings`,
   )
 
+  if (err) return { notFound: true }
+
+  if (res?.data.success && res.data.data.no_of_users === 0) return { notFound: true }
+
+  const data = {
+    pageData: res.data.data.users[0],
+    postsData: null,
+    mediaData: null,
+    pagesData: null,
+    blogsData: null,
+  }
   return {
-    props: { data: res.data },
+    props: {
+      data,
+    },
   }
 }
 

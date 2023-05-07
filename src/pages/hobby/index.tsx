@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styles from '@/styles/AllHobbies.module.css'
-import { getAllHobbies } from '@/services/hobbyService'
+import { getAllHobbies } from '@/services/hobby.service'
 import { FormControl, MenuItem, Select, TextField } from '@mui/material'
 import Link from 'next/link'
 import { GetServerSideProps } from 'next'

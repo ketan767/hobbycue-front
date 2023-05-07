@@ -9,7 +9,7 @@ import AuthForm from '@/components/AuthForm/AuthForm'
 import FormInput from '@/components/_formElements/Input'
 import FilledButton from '@/components/_buttons/FilledButton'
 import { RootState } from '@/redux/store'
-import { register } from '@/services/authService'
+import { register } from '@/services/auth.service'
 import { useRouter } from 'next/router'
 import { updateIsAuthenticated, updateIsLoggedIn, updateUser } from '@/redux/slices/user'
 

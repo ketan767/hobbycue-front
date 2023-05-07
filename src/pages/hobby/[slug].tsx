@@ -2,7 +2,7 @@ import React from 'react'
 import { useEffect, useState } from 'react'
 import styles from '../../styles/HobbyDetail.module.css'
 
-import { getAllHobbies } from '@/services/hobbyService'
+import { getAllHobbies } from '@/services/hobby.service'
 
 import profile from '../../assets/temp/hooby-profile.png'
 import cover from '../../assets/temp/hobby-cover.png'

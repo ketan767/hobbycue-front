@@ -5,37 +5,42 @@ import { ReactNode } from 'react'
 import Link from 'next/link'
 import ProfileHeader from '../../components/ProfilePage/Header/Header'
 import HomeTab from '../../components/ProfilePage/HomeTab/HomeTab'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import PostsTab from '../../components/ProfilePage/PostsTab/PostsTab'
 import MediaTab from '../../components/ProfilePage/MediaTab/MediaTab'
 import ListingHeader from '@/components/ListingPage/ListingHeader'
 import { useRouter } from 'next/router'
+import ListingHomeTab from '@/components/ListingPage/ListingHomeTab/ListingHomeTab'
+import { updateListingLayoutMode } from '@/redux/slices/site'
 
 type Props = {
   activeTab: ListingPageTabs
-  data: any
+  data: ListingPageData
 }
 
 const ListingPageLayout: React.FC<Props> = ({ activeTab, data }) => {
   const router = useRouter()
+  const dispatch = useDispatch()
 
   const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
 
   const tabs: ListingPageTabs[] = ['home', 'posts', 'media', 'reviews', 'events', 'store']
 
-  const [profileMode, setProfileMode] = useState<ProfileMode>('view')
-
   useEffect(() => {
-    if (isLoggedIn && isAuthenticated && router.query.profile_url === user.profile_url)
-      setProfileMode('edit')
-    else setProfileMode('view')
+    if (
+      isLoggedIn &&
+      isAuthenticated &&
+      Boolean(user._listings?.find((listing: any) => listing.page_url === router.query.page_url))
+    )
+      dispatch(updateListingLayoutMode('edit'))
+    else dispatch(updateListingLayoutMode('view'))
   }, [router, isLoggedIn, isAuthenticated, user])
 
   return (
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
-      <ListingHeader data={data} profileMode={profileMode} />
+      <ListingHeader data={data.pageData} />
 
       {/* Navigation Links */}
       <nav>
@@ -56,7 +61,7 @@ const ListingPageLayout: React.FC<Props> = ({ activeTab, data }) => {
       </nav>
 
       {/* Profile Page Body, where all contents of different tabs appears. */}
-      {/* <main>{activeTab === 'Home' && <HomeTab data={data} profileMode={profileMode} />}</main> */}
+      <main>{activeTab === 'home' && <ListingHomeTab data={data.pageData} />}</main>
     </>
   )
 }

@@ -12,23 +12,23 @@ import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded'
 import CameraIcon from '@/assets/icons/CameraIcon'
 
 type Props = {
-  detail: any
-  profileMode: ProfileMode
+  data: ProfilePageData['pageData']
+  mode: ProfileLayoutMode
 }
 
-const ProfileHeader: React.FC<Props> = ({ detail, profileMode }) => {
+const ProfileHeader: React.FC<Props> = ({ data, mode }) => {
   return (
     <>
       <header className={`site-container ${styles['header']}`}>
         {/* Profile Picture */}
         <div className={styles['profile-img-wrapper']}>
-          {detail.profile_image ? (
-            <Image className={styles['img']} src={detail.profile_image} alt="" />
+          {data.profile_image ? (
+            <Image className={styles['img']} src={data.profile_image} alt="" />
           ) : (
             <div className={`${styles['img']} ${styles['default']}`}></div>
           )}
 
-          {profileMode === 'edit' && (
+          {mode === 'edit' && (
             <div className={styles['edit-btn']}>
               <CameraIcon />
             </div>
@@ -38,21 +38,21 @@ const ProfileHeader: React.FC<Props> = ({ detail, profileMode }) => {
         {/* Center Elements */}
         <section className={styles['center-container']}>
           <div className={styles['cover-img-wrapper']}>
-            {detail.cover_image ? (
-              <Image className={styles['img']} src={detail.cover_image} alt="" />
+            {data.cover_image ? (
+              <Image className={styles['img']} src={data.cover_image} alt="" />
             ) : (
               <div className={`${styles['img']} ${styles['default']} `}></div>
             )}
 
-            {profileMode === 'edit' && (
+            {mode === 'edit' && (
               <div className={styles['edit-btn']}>
                 <CameraIcon />
               </div>
             )}
           </div>
 
-          <h1 className={styles['name']}>{detail.full_name}</h1>
-          <p className={styles['tagline']}>{detail.tagline}</p>
+          <h1 className={styles['name']}>{data.full_name}</h1>
+          <p className={styles['tagline']}>{data.tagline}</p>
         </section>
 
         {/* Action Buttons */}

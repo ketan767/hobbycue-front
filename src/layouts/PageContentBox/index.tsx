@@ -1,19 +1,29 @@
 import React from 'react'
 import styles from './PageContentBox.module.css'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
 
 type Props = {
   children: React.ReactNode
-  showEditButton: boolean
+  showEditButton?: boolean
 
   onEditBtnClick?: () => void
+  className?: string
 }
 
-const PageContentBox: React.FC<Props> = ({ children, onEditBtnClick, showEditButton }) => {
+const PageContentBox: React.FC<Props> = ({
+  children,
+  onEditBtnClick,
+  showEditButton,
+  className,
+}) => {
+  const { listingLayoutMode } = useSelector((state: RootState) => state.site)
+
   return (
-    <div className={styles['wrapper']}>
+    <div className={`${styles['wrapper']} ${className}`}>
       {children}
 
-      {showEditButton && (
+      {listingLayoutMode === 'edit' && (
         <svg
           onClick={onEditBtnClick}
           className={styles['edit-btn']}

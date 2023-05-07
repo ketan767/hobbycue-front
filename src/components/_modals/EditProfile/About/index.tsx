@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { Button, CircularProgress } from '@mui/material'
 
-import { getMyProfileDetail, updateMyProfileDetail } from '@/services/userService'
+import { getMyProfileDetail, updateMyProfileDetail } from '@/services/user.service'
 
 import styles from './styles.module.css'
 import { isEmptyField } from '@/utils'
@@ -11,7 +11,7 @@ import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 
-const CustomCKEditor = dynamic(() => import('./CustomCKEditor'), {
+const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
   loading: () => <h1>Loading...</h1>,
 })
@@ -57,7 +57,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
         return console.log(err)
       }
 
-      getMyProfileDetail('populate=_hobbies,_addresses,primary_address', (err, res) => {
+      getMyProfileDetail('populate=_hobbies,_addresses,primary_address,_listings', (err, res) => {
         setSubmitBtnLoading(false)
         if (err) return console.log(err)
         if (res.data.success) {

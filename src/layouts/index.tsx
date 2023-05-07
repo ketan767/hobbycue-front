@@ -6,7 +6,7 @@ import { useEffect } from 'react'
 import { updateIsAuthenticated, updateIsLoggedIn, updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import { useDispatch, useSelector } from 'react-redux'
-import { getMyProfileDetail } from '@/services/userService'
+import { getMyProfileDetail } from '@/services/user.service'
 import { openModal } from '@/redux/slices/modal'
 
 function SiteMainLayout({ children }: { children: ReactElement }) {
@@ -23,13 +23,16 @@ function SiteMainLayout({ children }: { children: ReactElement }) {
     } else {
       dispatch(updateIsLoggedIn(true))
       // @TODO:
-      getMyProfileDetail('populate=_hobbies,_addresses,primary_address', (err, res) => {
-        if (err) return dispatch(updateIsAuthenticated(false))
-        if (res.data.success) {
-          dispatch(updateIsAuthenticated(true))
-          dispatch(updateUser(res.data.data.user))
-        }
-      })
+      getMyProfileDetail(
+        'populate=_hobbies,_addresses,primary_address,_listings,_listings',
+        (err, res) => {
+          if (err) return dispatch(updateIsAuthenticated(false))
+          if (res.data.success) {
+            dispatch(updateIsAuthenticated(true))
+            dispatch(updateUser(res.data.data.user))
+          }
+        },
+      )
     }
   }, [isLoggedIn])
 

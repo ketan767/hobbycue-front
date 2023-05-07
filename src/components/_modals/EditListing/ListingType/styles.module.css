@@ -1,0 +1,143 @@
+.modal-wrapper {
+  background-color: white;
+  border-radius: var(--spacing-8);
+  max-width: 40rem;
+  width: 38rem;
+  min-height: 18rem;
+  display: flex;
+  flex-direction: column;
+}
+.modal-wrapper .header,
+.modal-wrapper .body {
+  padding: var(--spacing-16) var(--spacing-24);
+}
+.modal-wrapper .footer {
+  padding: var(--spacing-16) var(--spacing-24);
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+}
+.modal-wrapper .footer .submit {
+  margin-left: auto;
+}
+
+.heading {
+  /* font-family: 'Poppins'; */
+  /* font-style: normal; */
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 26px;
+  /* identical to box height, or 144% */
+
+  color: #000000;
+}
+
+.body .info {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+
+  /* Grey/Darker */
+
+  color: #6d747a;
+  margin-bottom: var(--spacing-4);
+}
+
+.input-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-32);
+}
+.input-box label {
+  /* font-family: 'Poppins'; */
+  /* font-style: normal; */
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 22px;
+  color: #6d747a;
+}
+.input-box input[type='text'] {
+  width: 100%;
+  /* all: unset; */
+  background: #f8f9fa;
+  /* Grey/Lighter */
+
+  border: 1px solid #ebedf0;
+  border-radius: 8px;
+  padding: calc(var(--spacing-8) + var(--spacing-4));
+
+  /* font-family: 'Poppins'; */
+  /* font-style: normal; */
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  /* color: #878c90; */
+  min-width: 6.25rem;
+}
+.input-box input[type='text']:focus-within {
+  outline: none;
+  border: 1px solid rgb(var(--primary-50-rgb));
+}
+.input-box:has(input[required]) label::after {
+  content: '*';
+  color: rgba(192, 80, 77, 1);
+}
+
+/* General Profile */
+.year-gender-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+.gender-radio-btns {
+  display: flex;
+  gap: var(--spacing-32);
+  height: 100%;
+}
+.gender-radio-btns p {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-8);
+
+  /* font-family: 'Poppins'; */
+  /* font-style: normal; */
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  color: #6d747a;
+  cursor: pointer;
+}
+.gender-radio-btns input {
+  display: none;
+}
+
+.profile-url-input {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+.profile-url-input p {
+  /* font-family: 'Poppins'; */
+  /* font-style: normal; */
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 22px;
+  color: #6d747a;
+}
+.profile-url-input input {
+  flex-grow: 1;
+}
+
+.error-msg {
+  /* font-family: 'Poppins'; */
+  /* font-style: normal; */
+
+  margin-top: var(--spacing-4);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+
+  color: #c0504d;
+}

@@ -3,10 +3,10 @@ import axiosInstance, { operation } from './_axios'
 export const getAllUserDetail = async (query: string): Promise<ApiReturnObject> => {
   try {
     const res = await axiosInstance.get(`/user/?${query}`)
-    return { res: res, err: null }
+    return Promise.resolve({ res: res, err: null })
   } catch (error) {
     console.error(error)
-    return { err: error, res: null }
+    return Promise.reject({ err: error, res: null })
   }
 }
 

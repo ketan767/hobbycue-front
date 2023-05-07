@@ -1,0 +1,111 @@
+/* Header */
+.header {
+  margin: auto;
+  display: grid;
+  grid-template-columns: 160px auto 160px;
+  gap: 24px;
+  align-items: flex-end;
+  padding: 24px 0;
+}
+
+.profile-img-wrapper {
+  position: relative;
+}
+.profile-img-wrapper .img {
+  width: 160px;
+  height: 160px;
+  filter: drop-shadow(0px 2px 12px rgba(0, 0, 0, 0.08));
+  border-radius: var(--spacing-8);
+  object-fit: cover;
+  border: 2px solid rgb(var(--primary-100-rgb));
+  background-color: rgb(var(--gray-50-rgb), 0.2);
+}
+.profile-img-wrapper .img.default {
+  background-image: url(../../../assets/svg/default-listing-profile.svg);
+  background-size: cover;
+}
+.profile-img-wrapper .edit-btn {
+  cursor: pointer;
+  position: absolute;
+  bottom: 0;
+  right: var(--spacing-8);
+
+  /* background: #d9d9d9;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
+  padding: 6px; */
+}
+
+.center-container .cover-img-wrapper {
+  position: relative;
+}
+.center-container .cover-img-wrapper .img {
+  width: 100%;
+  height: 296px;
+  border-radius: 8px;
+  object-fit: cover;
+  background-color: rgb(var(--gray-50-rgb), 0.2);
+}
+.center-container .cover-img-wrapper .img.default {
+  background-image: url(../../../assets/svg/default-cover.svg);
+  background-size: cover;
+}
+.center-container .cover-img-wrapper .edit-btn {
+  cursor: pointer;
+  position: absolute;
+  bottom: 0;
+  right: var(--spacing-8);
+}
+
+.center-container .name {
+  margin-top: 12px;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 30px;
+  color: #000000;
+}
+.center-container .tagline {
+  /* font-family: 'Poppins'; */
+  /* font-style: normal; */
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  color: #08090a;
+  margin-top: var(--spacing-8);
+}
+.center-container .category {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  color: #08090a;
+}
+
+.action-btn-wrapper {
+  width: 160px;
+  height: 160px;
+  background: #ffffff;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  justify-items: center;
+  align-items: center;
+}
+.action-btn-wrapper .action-btn {
+  background: #f7f5f9;
+  border-radius: 8px;
+  width: 48px;
+  height: 40px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
