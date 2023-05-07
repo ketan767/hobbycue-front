@@ -114,7 +114,12 @@ export const CreatePost: React.FC<Props> = (props) => {
           <div>
             <label>Posting As</label>
             <section className={` ${styles['profile-switcher']}`}>
-              <Image src={user?.profile_image || DefaultProfileImage} alt="" />
+              <Image
+                src={user?.profile_image || DefaultProfileImage}
+                alt=""
+                width={40}
+                height={40}
+              />
               <p className={styles['name']}>{user?.full_name}</p>
               <svg
                 width="24"

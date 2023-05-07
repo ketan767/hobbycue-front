@@ -191,13 +191,23 @@ export const Navbar: React.FC<Props> = ({}) => {
                   onMouseOver={() => setShowDropdown('user-menu')}
                   onMouseLeave={() => setShowDropdown(null)}
                 >
-                  <Image src={user.profile_image || DefaultProfileImage} alt="" />
+                  <Image
+                    src={user.profile_image || DefaultProfileImage}
+                    alt=""
+                    width={48}
+                    height={48}
+                  />
                   <KeyboardArrowDownRoundedIcon htmlColor="#939CA3" />
                   {showDropdown === 'user-menu' && (
                     <div className={styles['user-menu-dropdown']}>
                       <section className={styles['general-info']}>
                         <div className={styles['profile-name']}>
-                          <Image src={user.profile_image || DefaultProfileImage} alt="" />
+                          <Image
+                            src={user.profile_image || DefaultProfileImage}
+                            alt=""
+                            width={48}
+                            height={48}
+                          />
                           <h4>{user.full_name}</h4>
                         </div>
                         <Link prefetch={true} href={`/profile/${user.profile_url}`}>

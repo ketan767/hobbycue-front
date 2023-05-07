@@ -71,9 +71,9 @@ const HobbyDetail: React.FC<Props> = (props) => {
     <section>
       {/* Page Header  */}
       <header className={`site-container ${styles['header']}`}>
-        <Image className={styles['profile-img']} src={profile} alt="" />
+        <Image className={styles['profile-img']} src={profile} alt="" width={100} height={50} />
         <section className={styles['center-container']}>
-          <Image className={styles['cover-img']} src={cover} alt="" />
+          <Image className={styles['cover-img']} src={cover} alt="" width={100} height={50} />
           <h1 className={styles['name']}>{data?.display}</h1>
           <p className={styles['category']}>
             {data?.level === 0

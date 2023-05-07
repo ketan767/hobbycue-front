@@ -2,6 +2,7 @@ import React from 'react'
 import Image from 'next/image'
 import styles from './PostCard.module.css'
 import { dateFormat } from '@/utils'
+import Link from 'next/link'
 
 type Props = {
   data: any
@@ -14,10 +15,21 @@ const PostCard: React.FC<Props> = ({ data }) => {
     <>
       <div className={styles['post-card-wrapper']}>
         <header>
-          <div className={styles['default-profile-icon']}></div>
-          {/* <Image  /> */}
+          {data?._author?.profile_image ? (
+            <Image
+              className={styles['author-profile']}
+              src={data._author.profile_image}
+              alt="Author Profile"
+              width={40}
+              height={40}
+            />
+          ) : (
+            <div className={styles['default-profile-icon']}></div>
+          )}
           <div>
-            <p className={styles['author-name']}>{data?._author?.display_name}</p>
+            <Link href={`/profile/${data?._author?.profile_url}`}>
+              <p className={styles['author-name']}>{data?._author?.display_name}</p>
+            </Link>
             <p className={styles['post-other-info']}>{`${dateFormat.format(
               new Date('2023-05-07T20:09:37.986Z'),
             )} | ${data._hobby.display} ${

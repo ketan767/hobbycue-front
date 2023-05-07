@@ -14,10 +14,10 @@
   gap: var(--spacing-8);
 }
 
+.post-card-wrapper header .author-profile,
 .post-card-wrapper header .default-profile-icon {
   width: 40px;
   height: 40px;
-  background: rgba(128, 128, 128, 0.216);
   border-radius: 8px;
 }
 .post-card-wrapper header .author-name {

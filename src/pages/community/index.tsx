@@ -37,7 +37,7 @@ const Community: React.FC<Props> = ({}) => {
       <PageGridLayout column={3}>
         <aside className={styles['community-left-aside']}>
           <section className={`content-box-wrapper ${styles['profile-switcher']}`}>
-            <Image src={user?.profile_image || DefaultProfileImage} alt="" />
+            <Image src={user?.profile_image || DefaultProfileImage} alt="" width={40} height={40} />
             <p className={styles['name']}>{user?.full_name}</p>
             <svg
               width="24"
