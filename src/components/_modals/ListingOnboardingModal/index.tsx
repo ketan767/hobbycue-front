@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { closeModal } from '@/redux/slices/modal'
+import { closeModal, openModal } from '@/redux/slices/modal'
 import { RootState } from '@/redux/store'
 import { updateMyProfileDetail } from '@/services/user.service'
 
@@ -14,7 +14,10 @@ import ProfileHobbyEditModal from '../EditProfile/Hobby'
 import styles from './styles.module.css'
 import ListingGeneralEditModal from '../EditListing/ListingGeneral'
 import ListingAboutEditModal from '../EditListing/ListingAbout'
-import ListingAddressEditModal from '../EditListing/Address'
+import ListingAddressEditModal from '../EditListing/ListingAddress'
+import ListingContactEditModal from '../EditListing/ListingContact'
+import ListingHobbyEditModal from '../EditListing/ListingHobby'
+import { updateListing } from '@/services/listing.service'
 
 // type OnboardingData = {
 //   full_name: string
@@ -46,7 +49,7 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
 
   const router = useRouter()
 
-  const { user } = useSelector((state: RootState) => state.user)
+  const { listingModalData } = useSelector((state: RootState) => state.site)
 
   const totalSteps: Step[] = ['General', 'About', 'Contact', 'Address', 'Hobbies']
 
@@ -57,16 +60,14 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
     setActiveStep((prevActiveStep: Step) => totalSteps[totalSteps.indexOf(prevActiveStep) - 1])
   }
 
-  const handleCompleteOnboarding = () => {
-    // const data = { is_onboarded: true }
-    // updateMyProfileDetail(data, (err, res) => {
-    //   if (err) return console.log(err)
-    //   if (res.data.success) {
-    dispatch(closeModal())
-    //     console.log(res.data.data.user.profile_url)
-    //     router.push(`/profile/${res.data.data.user.profile_url}`)
-    //   }
-    // })
+  const handleCompleteOnboarding = async () => {
+    const { err, res } = await updateListing(listingModalData._id, { is_onboarded: true })
+    if (err) return console.log(err)
+    if (res?.data.success) {
+      dispatch(closeModal())
+      console.log(res)
+      router.push(`/page/${res.data.data.listing.page_url}`)
+    }
   }
 
   return (
@@ -75,19 +76,27 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
         <h2 className={styles['modal-heading']}>Complete your Listing Page</h2>
       </header>
 
-      {activeStep === 'General' && <ListingGeneralEditModal onComplete={handleNext} />}
+      {activeStep === 'General' && (
+        <ListingGeneralEditModal
+          onComplete={handleNext}
+          onBackBtnClick={() => dispatch(openModal({ type: 'listing-type-edit', closable: true }))}
+        />
+      )}
+
       {activeStep === 'About' && (
         <ListingAboutEditModal onComplete={handleNext} onBackBtnClick={handleBack} />
       )}
-      {/* #TODO: Contact Modal  @*/}
+
       {activeStep === 'Contact' && (
-        <ListingAddressEditModal onComplete={handleNext} onBackBtnClick={handleBack} />
+        <ListingContactEditModal onComplete={handleNext} onBackBtnClick={handleBack} />
       )}
+
       {activeStep === 'Address' && (
         <ListingAddressEditModal onComplete={handleNext} onBackBtnClick={handleBack} />
       )}
+
       {activeStep === 'Hobbies' && (
-        <ProfileHobbyEditModal onComplete={handleCompleteOnboarding} onBackBtnClick={handleBack} />
+        <ListingHobbyEditModal onComplete={handleCompleteOnboarding} onBackBtnClick={handleBack} />
       )}
 
       <section className={styles['step-indicators']}>

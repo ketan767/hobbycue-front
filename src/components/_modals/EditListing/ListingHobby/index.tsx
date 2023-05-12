@@ -10,38 +10,33 @@ import { useDispatch, useSelector } from 'react-redux'
 import { updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
+import { addListingHobby, deleteListingHobby } from '@/services/listing.service'
+import { getListingHobbies } from '@/services/listing.service'
 
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
 }
 
-// const levels = {
-//   BEGINNER: 1,
-//   INTERMEDIATE: 2,
-//   ADVANCED: 3,
-// }
-
-type ProfileHobbyData = {
-  hobby: DropdownListItem | null
-  genre: DropdownListItem | null
-  level: 1 | 2 | 3
-}
 type DropdownListItem = {
   _id: string
   display: string
   sub_category?: string
 }
 
-const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
+type ListingHobbyData = {
+  hobby: DropdownListItem | null
+  genre: DropdownListItem | null
+}
+
+const ListingHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
   const dispatch = useDispatch()
 
   const { user } = useSelector((state: RootState) => state.user)
+  const { listingModalData } = useSelector((state: RootState) => state.site)
 
-  const [addHobbyBtnLoading, setAddHobbyBtnLoading] = useState<boolean>(false)
-  const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
-
-  const [data, setData] = useState<ProfileHobbyData>({ hobby: null, genre: null, level: 1 })
+  const [hobbiesList, setHobbiesList] = useState([])
+  const [data, setData] = useState<ListingHobbyData>({ hobby: null, genre: null })
 
   const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
   const [showGenreDropdown, setShowGenreDropdown] = useState<boolean>(false)
@@ -51,6 +46,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
 
   const [hobbyDropdownList, setHobbyDropdownList] = useState<DropdownListItem[]>([])
   const [genreDropdownList, setGenreDropdownList] = useState<DropdownListItem[]>([])
+
+  const [addHobbyBtnLoading, setAddHobbyBtnLoading] = useState<boolean>(false)
 
   const handleHobbyInputChange = async (e: any) => {
     setHobbyInputValue(e.target.value)
@@ -79,55 +76,61 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
     setGenreDropdownList(res.data.hobbies)
   }
 
-  const handleAddHobby = () => {
-    if (!data.hobby) return
+  const handleAddHobby = async () => {
+    // @TODO: Error Handling
+    if (!data.hobby || !listingModalData._id) return
 
     setAddHobbyBtnLoading(true)
-
-    let jsonData = { hobby: data.hobby?._id, genre: data.genre?._id, level: data.level }
-    addUserHobby(jsonData, (err, res) => {
-      if (err) {
-        setAddHobbyBtnLoading(false)
-        return console.log(err)
-      }
-
-      getMyProfileDetail('populate=_hobbies,_addresses,primary_address,_listings', (err, res) => {
-        setAddHobbyBtnLoading(false)
-        if (err) return console.log(err)
-        if (res.data.success) {
-          dispatch(updateUser(res.data.data.user))
-          setHobbyInputValue('')
-          setGenreInputValue('')
-        }
-      })
-    })
-  }
-  const handleDeleteHobby = async (id: string) => {
-    const { err, res } = await deleteUserHobby(id)
-
+    let jsonData = { hobbyId: data.hobby?._id, genreId: data.genre?._id }
+    const { err, res } = await addListingHobby(listingModalData._id, jsonData)
     if (err) {
+      setAddHobbyBtnLoading(false)
       return console.log(err)
     }
+    await updateHobbyList()
+    setHobbyInputValue('')
+    setGenreInputValue('')
+    setData({ hobby: null, genre: null })
+    setAddHobbyBtnLoading(false)
+  }
 
-    getMyProfileDetail('populate=_hobbies,_addresses,primary_address,_listings', (err, res) => {
-      if (err) return console.log(err)
-      if (res.data.success) {
-        dispatch(updateUser(res.data.data.user))
-      }
-    })
+  const handleDeleteHobby = async (id: string) => {
+    if (!listingModalData._id) return console.error('Listing ID Not Found!')
+
+    // @TODO: Error Handling
+    const { err, res } = await deleteListingHobby(listingModalData._id, id)
+    if (err) return console.log(err)
+
+    await updateHobbyList()
   }
 
   const handleSubmit = () => {
     if (onComplete) onComplete()
-    else dispatch(closeModal())
+    else {
+      window.location.reload()
+      dispatch(closeModal())
+    }
   }
+
+  const updateHobbyList = async () => {
+    if (!listingModalData._id) return console.error('No Listing ID Found!')
+
+    const { err, res } = await getListingHobbies(listingModalData._id)
+    if (err) return console.log(err)
+
+    setHobbiesList(res?.data.data.hobbies)
+  }
+
+  useEffect(() => {
+    updateHobbyList()
+  }, [])
 
   return (
     <>
       <div className={styles['modal-wrapper']}>
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>{'Address'}</h4>
+          <h4 className={styles['heading']}>{'Hobbies'}</h4>
         </header>
 
         <hr />
@@ -137,6 +140,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
             <section className={styles['add-hobbies-wrapper']}>
               <p className={styles['info']}>Added hobbies appear in the table below.</p>
 
+              {/* Add New Hobbies Dropdown and Add Button */}
               <h3 className={styles['heading']}>Add Hobby</h3>
               <section className={styles['add-new-hobby']}>
                 {/* Hobby Input and Dropdown */}
@@ -219,70 +223,33 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
                   )}
                 </section>
 
-                <FormControl variant="outlined" size="small" sx={{ width: '150px' }}>
-                  <Select
-                    value={data.level}
-                    onChange={(e) => {
-                      setData((prev: any) => {
-                        return { ...prev, level: e.target.value }
-                      })
-                    }}
-                    displayEmpty
-                    inputProps={{ 'aria-label': 'Without label' }}
-                  >
-                    <MenuItem value={1}>{'Beginner'}</MenuItem>
-                    <MenuItem value={2}>{'Intermediate'}</MenuItem>
-                    <MenuItem value={3}>{'Advanced'}</MenuItem>
-                  </Select>
-                </FormControl>
-                {/* <div className={styles['input-box']}>
-                  <input
-                    type="text"
-                    placeholder="Full Name"
-                    autoComplete="name"
-                    required
-                    value={'data'}
-                    onChange={(e) =>
-                      setData((prev) => {
-                        return { ...prev, full_name: e.target.value }
-                      })
-                    }
-                  />
-                  <p className={styles['helper-text']}>{inputErrs.full_name}</p>
-                </div> */}
-
-                <Button disabled={addHobbyBtnLoading} variant="contained" onClick={handleAddHobby}>
+                <Button
+                  className={styles['add-btn']}
+                  disabled={addHobbyBtnLoading}
+                  variant="contained"
+                  onClick={handleAddHobby}
+                >
                   {addHobbyBtnLoading ? <CircularProgress color="inherit" size={'22px'} /> : 'Add'}
                 </Button>
               </section>
 
+              {/* Hobbies List, that are already Added */}
               <h3 className={styles['heading']}>Added Hobbies</h3>
-
               <section className={styles['added-hobby-list']}>
                 <table>
                   <thead>
                     <tr>
                       <td>Hobby</td>
                       <td>Genre/Style</td>
-                      <td>Level</td>
                       <td>Action</td>
                     </tr>
                   </thead>
                   <tbody>
-                    {user._hobbies?.map((hobby: any) => {
+                    {hobbiesList?.map((hobby: any) => {
                       return (
                         <tr key={hobby._id}>
                           <td>{hobby?.hobby?.display}</td>
                           <td>{hobby?.genre?.display || '-'}</td>
-                          <td>
-                            {hobby.level === 1
-                              ? 'Beginner'
-                              : hobby.level === 2
-                              ? 'Intermediate'
-                              : hobby.level === 3
-                              ? 'Advanced'
-                              : ''}
-                          </td>
                           <td>
                             <svg
                               width="24"
@@ -327,18 +294,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
             </button>
           )}
 
-          <button
-            className="modal-footer-btn submit"
-            onClick={handleSubmit}
-            disabled={submitBtnLoading}
-          >
-            {submitBtnLoading ? (
-              <CircularProgress color="inherit" size={'24px'} />
-            ) : onComplete ? (
-              'Next'
-            ) : (
-              'Save'
-            )}
+          <button className="modal-footer-btn submit" onClick={handleSubmit}>
+            {onComplete ? 'Next' : 'Save'}
           </button>
         </footer>
       </div>
@@ -346,7 +303,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
   )
 }
 
-export default ProfileHobbyEditModal
+export default ListingHobbyEditModal
 
 /**
  * @TODO:

@@ -7,9 +7,10 @@ import { getMyProfileDetail, updateMyProfileDetail } from '@/services/user.servi
 import styles from './styles.module.css'
 import { isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '@/redux/store'
+import store, { RootState } from '@/redux/store'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
+import { updateListingModalData } from '@/redux/slices/site'
 
 type Props = {
   onComplete?: () => void
@@ -20,7 +21,7 @@ const ListingTypeEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) =
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
 
-  const { newListingData } = useSelector((state: RootState) => state.site)
+  const { listingModalData } = useSelector((state: RootState) => state.site)
 
   const [list, setList] = useState<any>([])
 
@@ -28,18 +29,11 @@ const ListingTypeEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) =
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
-  const [inputErrs, setInputErrs] = useState()
-
-  const handleInputChange = (value: string) => {
-    // setList((prev) => {
-    //   return { ...prev, about: value }
-    // })
-    // setInputErrs()
-  }
-
   const handleSubmit = () => {
     // setSubmitBtnLoading(true)
-    // dispatch(openModal({ type: 'listing-onboarding', closable: false }))
+
+    dispatch(updateListingModalData({ ...listingModalData, page_type: value }))
+    dispatch(openModal({ type: 'listing-onboarding', closable: false }))
   }
 
   const peoplePageTypeList: PeoplePageType[] = [
@@ -70,7 +64,7 @@ const ListingTypeEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) =
   const programPageTypeList: ProgramPageType[] = ['Classes', 'Workshop', 'Performance', 'Event']
 
   useEffect(() => {
-    switch (newListingData.type) {
+    switch (listingModalData.type) {
       case 1:
         setList(peoplePageTypeList)
         break
@@ -84,7 +78,8 @@ const ListingTypeEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) =
         setList([])
         break
     }
-  }, [newListingData])
+    setValue(listingModalData.page_type as string)
+  }, [listingModalData])
 
   return (
     <>
@@ -93,7 +88,9 @@ const ListingTypeEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) =
         <header className={styles['header']}>
           <h4 className={styles['heading']}>{'Listing Type'}</h4>
         </header>
+
         <hr />
+
         <section className={styles['body']}>
           <p className={styles['info']}>
             Please select two of the most appropriate listing types. One type is recommended. Use
@@ -105,7 +102,7 @@ const ListingTypeEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) =
 
             <FormControl variant="outlined" size="small">
               <Select
-                multiple
+                // multiple
                 value={value}
                 onChange={(e) => {
                   setValue(e.target.value)
@@ -113,7 +110,7 @@ const ListingTypeEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) =
                 displayEmpty
                 inputProps={{ 'aria-label': 'Without label' }}
               >
-                <MenuItem value={''}>Select..</MenuItem>
+                {/* <MenuItem value={''}>Select..</MenuItem> */}
                 {list.map((item: string, idx: number) => {
                   return (
                     <MenuItem key={idx} value={item}>
@@ -138,7 +135,7 @@ const ListingTypeEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) =
             size="medium"
             color="primary"
             onClick={handleSubmit}
-            disabled={submitBtnLoading}
+            disabled={submitBtnLoading || value?.length === 0}
           >
             {submitBtnLoading ? <CircularProgress color="inherit" size={'22px'} /> : 'Next'}
           </Button>

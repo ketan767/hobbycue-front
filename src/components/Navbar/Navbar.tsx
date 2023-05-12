@@ -221,7 +221,9 @@ export const Navbar: React.FC<Props> = ({}) => {
                         <h5>Manage</h5>
                         <p>My Activity</p>
                         <p>My Orders</p>
-                        <p>My Pages</p>
+                        <Link href={'/my-pages'}>
+                          <p>My Pages</p>
+                        </Link>
                       </section>
 
                       <span className={styles['divider']}></span>

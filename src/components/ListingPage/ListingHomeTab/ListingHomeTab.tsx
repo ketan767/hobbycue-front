@@ -14,6 +14,7 @@ interface Props {
 }
 
 const ListingHomeTab: React.FC<Props> = ({ data }) => {
+  console.log('🚀 ~ file: ListingHomeTab.tsx:17 ~ data:', data)
   const dispatch = useDispatch()
 
   const { listingLayoutMode } = useSelector((state: RootState) => state.site)
@@ -25,7 +26,7 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
           {/* TODO: Listing Page Type */}
           <div></div>
 
-          {/* User Hobbies */}
+          {/* Listing Hobbies */}
           <PageContentBox
             showEditButton={listingLayoutMode === 'edit'}
             onEditBtnClick={() =>

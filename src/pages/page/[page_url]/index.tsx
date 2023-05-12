@@ -7,8 +7,8 @@ import Head from 'next/head'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import ListingPageLayout from '@/layouts/ListingPageLayout'
-import { getListingPageDetail } from '@/services/listing.service'
-import { updateListingPageData } from '@/redux/slices/site'
+import { getListingPages } from '@/services/listing.service'
+import { updateListingModalData, updateListingPageData } from '@/redux/slices/site'
 
 type Props = { data: ListingPageData }
 
@@ -20,6 +20,7 @@ const ListingHome: React.FC<Props> = (props) => {
 
   useEffect(() => {
     dispatch(updateListingPageData(props.data.pageData))
+    dispatch(updateListingModalData(props.data.pageData))
   }, [])
 
   return (
@@ -36,16 +37,18 @@ const ListingHome: React.FC<Props> = (props) => {
 export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
   const { query } = context
 
-  const { err, res } = await getListingPageDetail(`page_url=${query['page_url']}`)
+  const { err, res } = await getListingPages(
+    `page_url=${query['page_url']}&populate=_hobbies,_address`,
+  )
 
-  if (res.data.success && res.data.data.no_of_listings === 0) {
+  if (res?.data.success && res.data.data.no_of_listings === 0) {
     return {
       notFound: true,
     }
   }
 
   const data = {
-    pageData: res.data.data.listings[0],
+    pageData: res?.data.data.listings[0],
     postsData: null,
     mediaData: null,
     reviewsData: null,

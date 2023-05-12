@@ -17,6 +17,10 @@ import CloseIcon from '@/assets/icons/CloseIcon'
 import ListingAboutEditModal from './EditListing/ListingAbout'
 import { ListingOnboardingModal } from './ListingOnboardingModal'
 import { CreatePost } from './CreatePost'
+import ListingGeneralEditModal from './EditListing/ListingGeneral'
+import ListingContactEditModal from './EditListing/ListingContact'
+import ListingAddressEditModal from './EditListing/ListingAddress'
+import ListingHobbyEditModal from './EditListing/ListingHobby'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -36,7 +40,7 @@ const ModalManager: React.FC = () => {
     else
       setTimeout(() => {
         document.body.style.overflow = 'auto'
-      }, 200)
+      }, 500)
   }, [activeModal])
 
   return (
@@ -63,8 +67,11 @@ const ModalManager: React.FC = () => {
               {activeModal === 'profile-hobby-edit' && <ProfileHobbyEditModal />}
 
               {activeModal === 'listing-type-edit' && <ListingTypeEditModal />}
+              {activeModal === 'listing-general-edit' && <ListingGeneralEditModal />}
               {activeModal === 'listing-about-edit' && <ListingAboutEditModal />}
-              {/* {activeModal === 'listing-type-edit' && <ListingTypeEditModal />} */}
+              {activeModal === 'listing-contact-edit' && <ListingContactEditModal />}
+              {activeModal === 'listing-address-edit' && <ListingAddressEditModal />}
+              {activeModal === 'listing-hobby-edit' && <ListingHobbyEditModal />}
 
               {/* Modal Close Icon */}
               {closable && (

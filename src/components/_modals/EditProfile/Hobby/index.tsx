@@ -127,7 +127,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
       <div className={styles['modal-wrapper']}>
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>{'Address'}</h4>
+          <h4 className={styles['heading']}>{'Hobby'}</h4>
         </header>
 
         <hr />

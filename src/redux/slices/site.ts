@@ -1,29 +1,90 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-type NewListingData = {
+type ListingModalData = {
   /**
    * * `1 -> PERSON`
    * * `2 -> PLACE`
    * * `3 -> PROGRAM`
    * * `4 -> PRODUCT`
    */
-  type: ListingPages | null
-  page_type: PeoplePageType | PlacePageType | ProgramPageType | null
+  type?: ListingPages | null
+  page_type?: string | string[]
+  title?: string
+  page_url?: string
+  gender?: 'male' | 'female' | null
+  year?: string
+  admin_note?: string
+  tagline?: string
+  description?: string
+  public_email?: string
+  phone?: string
+  website?: string
+  whatsapp_number?: string
+  _address?: any
+  _hobbies?: any
+
+  _id?: string
+  is_published?: boolean
+  is_onboarded?: boolean
+  facebook_url?: string
+  instagram_url?: string
+  twitter_url?: string
+  linkedin_url?: string
+  profile_image?: string
+  cover_image?: string
 }
 interface AuthState {
   listingLayoutMode: ListingLayoutMode
   listingPageData: any
-  newListingData: NewListingData
+  listingModalData: ListingModalData
 }
 
 const initialState: AuthState = {
   listingLayoutMode: 'view',
   listingPageData: {},
-  newListingData: {
+  listingModalData: {
     type: null,
-    page_type: null,
+    page_type: '',
+    title: '',
+    page_url: '',
+    gender: null,
+    year: '',
+    admin_note: '',
+    tagline: '',
   },
 }
+
+/** Template Listing Data 
+ * {
+    "type": "1",
+    "is_published": false,
+    "is_onboarded": false,
+    "page_type": ["Specialist"],
+    "title": "okay",
+    "tagline": "tag",
+    "description": null,
+    "gender": "male",
+    "year": 2000,
+    "public_email": null,
+    "phone": null,
+    "website": null,
+    "whatsapp_number": null,
+    "facebook_url": null,
+    "instagram_url": null,
+    "twitter_url": null,
+    "linkedin_url": null,
+    "admin": "64441a500be57b65f6b6dabd",
+    "admin_note": "secret, shh..",
+    "profile_image": null,
+    "cover_image": null,
+    "_hobbies": [],
+    "_id": "645caa27528aee0c798052a5",
+    "page_url": "page-url",
+    "createdAt": "2023-05-11T08:41:11.550Z",
+    "updatedAt": "2023-05-11T08:41:11.550Z",
+    "__v": 0
+}
+ */
 
 const siteSlice = createSlice({
   name: 'site',
@@ -35,13 +96,13 @@ const siteSlice = createSlice({
     updateListingPageData: (state, { payload }) => {
       state.listingPageData = payload
     },
-    updateNewListingData: (state, { payload }: PayloadAction<NewListingData>) => {
-      state.newListingData = payload
+    updateListingModalData: (state, { payload }: PayloadAction<ListingModalData>) => {
+      state.listingModalData = payload
     },
   },
 })
 
-export const { updateListingLayoutMode, updateListingPageData, updateNewListingData } =
+export const { updateListingLayoutMode, updateListingPageData, updateListingModalData } =
   siteSlice.actions
 
 export default siteSlice.reducer

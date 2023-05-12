@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
+import { updateListing } from '@/services/listing.service'
+import { updateListingModalData } from '@/redux/slices/site'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -22,57 +24,50 @@ type Props = {
 }
 
 type ListingAboutData = {
-  about: string
+  description: InputData<string>
 }
 
 const ListingAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
-  const { listingPageData } = useSelector((state: RootState) => state.site)
+  const { listingModalData } = useSelector((state: RootState) => state.site)
 
-  const [data, setData] = useState<ListingAboutData>({ about: '' })
+  const [data, setData] = useState<ListingAboutData>({ description: { value: '', error: null } })
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
-  const [inputErrs, setInputErrs] = useState<{ about: string | null }>({ about: null })
-
   const handleInputChange = (value: string) => {
     setData((prev) => {
-      return { ...prev, about: value }
+      return { ...prev, description: { value, error: null } }
     })
-    setInputErrs({ about: null })
   }
 
-  const handleSubmit = () => {
-    if (isEmptyField(data.about)) {
-      setInputErrs((prev) => {
-        return { ...prev, about: 'This field is required!' }
+  const handleSubmit = async () => {
+    if (isEmptyField(data.description.value)) {
+      return setData((prev) => {
+        return { ...prev, description: { ...prev.description, error: 'This field is required!' } }
       })
-      return
     }
 
-    // setSubmitBtnLoading(true)
-    // updateMyProfileDetail(data, (err, res) => {
-    //   if (err) {
-    //     setSubmitBtnLoading(false)
-    //     return console.log(err)
-    //   }
-
-    //   getMyProfileDetail('populate=_hobbies,_addresses,primary_address,_listings', (err, res) => {
-    //     setSubmitBtnLoading(false)
-    //     if (err) return console.log(err)
-    //     if (res.data.success) {
-    //       dispatch(updateUser(res.data.data.user))
-    if (onComplete) onComplete()
-    //       else dispatch(closeModal())
-    //     }
-    //   })
-    // })
+    setSubmitBtnLoading(true)
+    const { err, res } = await updateListing(listingModalData._id, {
+      description: data.description.value,
+    })
+    setSubmitBtnLoading(false)
+    if (err) return console.log(err)
+    if (res?.data.success) {
+      dispatch(updateListingModalData(res.data.data.listing))
+      if (onComplete) onComplete()
+      else {
+        window.location.reload()
+        dispatch(closeModal())
+      }
+    }
   }
 
   useEffect(() => {
-    setData({
-      about: listingPageData.description,
+    setData((prev) => {
+      return { description: { ...prev.description, value: listingModalData.description as string } }
     })
   }, [user])
 
@@ -88,8 +83,10 @@ const ListingAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
           <div className={styles['input-box']}>
             <label>About</label>
             <input hidden required />
-            <CustomCKEditor value={data.about} onChange={handleInputChange} />
-            {inputErrs.about && <p className={styles['error-msg']}>{inputErrs.about}</p>}
+            <CustomCKEditor value={data.description.value as string} onChange={handleInputChange} />
+            {data.description.error && (
+              <p className={styles['error-msg']}>{data.description.error}</p>
+            )}
           </div>
         </section>
 

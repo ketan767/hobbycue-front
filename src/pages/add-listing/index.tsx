@@ -2,14 +2,16 @@ import React from 'react'
 import styles from '@/styles/AddListing.module.css'
 import { openModal } from '@/redux/slices/modal'
 import { useDispatch } from 'react-redux'
-import { updateNewListingData } from '@/redux/slices/site'
+import { updateListingModalData } from '@/redux/slices/site'
+import store from '@/redux/store'
 
 type Props = {}
 
 const AddListing: React.FC<Props> = (props) => {
   const dispatch = useDispatch()
+
   const handleClick = (type: ListingPages) => {
-    dispatch(updateNewListingData({ type, page_type: null }))
+    dispatch(updateListingModalData({ type }))
     dispatch(openModal({ type: 'listing-type-edit', closable: true }))
   }
   return (
@@ -119,10 +121,7 @@ const AddListing: React.FC<Props> = (props) => {
               Instrument or Activity Kit.
             </p>
           </section>
-          <section
-            onClick={() => handleClick(4)}
-            className={`${styles['card']} ${styles['program']}`}
-          >
+          <section onClick={() => {}} className={`${styles['card']} ${styles['program']}`}>
             <h3>
               <svg
                 width="40"

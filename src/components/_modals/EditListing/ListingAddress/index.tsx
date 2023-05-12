@@ -7,136 +7,130 @@ import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
+import { getListingAddress, updateListingAddress } from '@/services/listing.service'
 
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
 }
 
+type ListingAddressData = {
+  street: InputData<string>
+  society: InputData<string>
+  locality: InputData<string>
+  city: InputData<string>
+  pin_code: InputData<string>
+  state: InputData<string>
+  country: InputData<string>
+  latitude: InputData<string>
+  longitude: InputData<string>
+}
+
 const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
 
+  const { listingModalData } = useSelector((state: RootState) => state.site)
+  console.log('🚀 ~ file: index.tsx:35 ~ listingModalData:', listingModalData)
+
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
-  const [data, setData] = useState<ProfileAddressPayload>({
-    street: '',
-    society: '',
-    locality: '',
-    city: '',
-    pin_code: '',
-    state: '',
-    country: '',
-    latitude: '',
-    longitude: '',
-    set_as_primary: false,
-  })
-
-  const [inputErrs, setInputErrs] = useState<{ [key: string]: string | null }>({
-    street: null,
-    society: null,
-    locality: null,
-    city: null,
-    pin_code: null,
-    state: null,
-    country: null,
-    latitude: null,
-    longitude: null,
+  const [data, setData] = useState<ListingAddressData>({
+    street: { value: '', error: null },
+    society: { value: '', error: null },
+    locality: { value: '', error: null },
+    city: { value: '', error: null },
+    pin_code: { value: '', error: null },
+    state: { value: '', error: null },
+    country: { value: '', error: null },
+    latitude: { value: '', error: null },
+    longitude: { value: '', error: null },
   })
 
   const handleInputChange = (event: any) => {
     setData((prev) => {
-      return { ...prev, [event.target.name]: event.target.value }
-    })
-    setInputErrs((prev) => {
-      return { ...prev, [event.target.name]: null }
+      return { ...prev, [event.target.name]: { value: event.target.value, error: null } }
     })
   }
 
-  const handleSubmit = () => {
-    if (isEmptyField(data.street)) {
-      return setInputErrs((prev) => {
-        return { ...prev, street: 'This field is required!' }
+  const handleSubmit = async () => {
+    if (isEmptyField(data.street.value)) {
+      return setData((prev) => {
+        return { ...prev, street: { ...prev.street, error: 'This field is required!' } }
       })
     }
-    if (isEmptyField(data.city)) {
-      return setInputErrs((prev) => {
-        return { ...prev, city: 'This field is required!' }
+    if (isEmptyField(data.city.value)) {
+      return setData((prev) => {
+        return { ...prev, city: { ...prev.city, error: 'This field is required!' } }
       })
     }
-    if (isEmptyField(data.pin_code)) {
-      return setInputErrs((prev) => {
-        return { ...prev, pin_code: 'This field is required!' }
+    if (isEmptyField(data.pin_code.value)) {
+      return setData((prev) => {
+        return { ...prev, pin_code: { ...prev.pin_code, error: 'This field is required!' } }
       })
     }
-    if (isEmptyField(data.state)) {
-      return setInputErrs((prev) => {
-        return { ...prev, state: 'This field is required!' }
+    if (isEmptyField(data.state.value)) {
+      return setData((prev) => {
+        return { ...prev, state: { ...prev.state, error: 'This field is required!' } }
       })
     }
-    if (isEmptyField(data.country)) {
-      return setInputErrs((prev) => {
-        return { ...prev, country: 'This field is required!' }
+    if (isEmptyField(data.country.value)) {
+      return setData((prev) => {
+        return { ...prev, country: { ...prev.country, error: 'This field is required!' } }
       })
     }
 
-    // setSubmitBtnLoading(true)
-    // if (!user.is_onboarded) {
-    //   data.set_as_primary = true
-    //   addUserAddress(data, (err, res) => {
-    //     if (err) {
-    //       setSubmitBtnLoading(false)
-    //       return console.log(err)
-    //     }
-    //     if (!res.data.success) {
-    //       setSubmitBtnLoading(false)
-    //       return alert('Something went wrong!')
-    //     }
-    //     getMyProfileDetail('populate=_hobbies,_addresses,primary_address,_listings', (err, res) => {
-    //       setSubmitBtnLoading(false)
-    //       if (err) return console.log(err)
-    //       if (res.data.success) {
-    //         dispatch(updateUser(res.data.data.user))
+    const jsonData = {
+      street: data.street.value,
+      society: data.society.value,
+      locality: data.locality.value,
+      city: data.city.value,
+      pin_code: data.pin_code.value,
+      state: data.state.value,
+      country: data.country.value,
+      latitude: data.latitude.value,
+      longitude: data.longitude.value,
+    }
+    setSubmitBtnLoading(true)
+    const { err, res } = await updateListingAddress(listingModalData._address, jsonData)
+    if (err) return console.log(err)
     if (onComplete) onComplete()
-    //         else dispatch(closeModal())
-    //       }
-    //     })
-    //   })
-    // } else {
-    //   updateUserAddress(user.primary_address._id, data, (err, res) => {
-    //     if (err) {
-    //       setSubmitBtnLoading(false)
-    //       return console.log(err)
-    //     }
-    //     if (!res.data.success) {
-    //       setSubmitBtnLoading(false)
-    //       return alert('Something went wrong!')
-    //     }
-    //     getMyProfileDetail('populate=_hobbies,_addresses,primary_address,_listings', (err, res) => {
-    //       setSubmitBtnLoading(false)
-    //       if (err) return console.log(err)
-    //       if (res.data.success) {
-    //         dispatch(updateUser(res.data.data.user))
-    //         if (onComplete) onComplete()
-    //         else dispatch(closeModal())
-    //       }
-    //     })
-    //   })
-    // }
+    else {
+      window.location.reload()
+      dispatch(closeModal())
+    }
+  }
+
+  const updateAddress = async () => {
+    const { err, res } = await getListingAddress(listingModalData._address)
+    if (err) return console.log(err)
+
+    setData({
+      street: { value: res?.data.data.address.street, error: null },
+      society: { value: res?.data.data.address.society, error: null },
+      locality: { value: res?.data.data.address.locality, error: null },
+      city: { value: res?.data.data.address.city, error: null },
+      pin_code: { value: res?.data.data.address.pin_code, error: null },
+      state: { value: res?.data.data.address.state, error: null },
+      country: { value: res?.data.data.address.country, error: null },
+      latitude: { value: res?.data.data.address.latitude, error: null },
+      longitude: { value: res?.data.data.address.longitude, error: null },
+    })
   }
 
   useEffect(() => {
     setData({
-      street: user.primary_address?.street,
-      society: user.primary_address?.society,
-      locality: user.primary_address?.locality,
-      city: user.primary_address?.city,
-      pin_code: user.primary_address?.pin_code,
-      state: user.primary_address?.state,
-      country: user.primary_address?.country,
-      latitude: user.primary_address?.latitude,
-      longitude: user.primary_address?.longitude,
+      street: { value: '', error: null },
+      society: { value: '', error: null },
+      locality: { value: '', error: null },
+      city: { value: '', error: null },
+      pin_code: { value: '', error: null },
+      state: { value: '', error: null },
+      country: { value: '', error: null },
+      latitude: { value: '', error: null },
+      longitude: { value: '', error: null },
     })
+    updateAddress()
   }, [user])
 
   return (
@@ -158,11 +152,11 @@ const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
                 type="text"
                 placeholder={`Enter address or click the "locate me" icon to auto-detect`}
                 required
-                value={data.street}
+                value={data.street.value}
                 name="street"
                 onChange={handleInputChange}
               />
-              <p className={styles['helper-text']}>{inputErrs.street}</p>
+              <p className={styles['helper-text']}>{data.street.error}</p>
             </div>
             <section className={styles['two-column-grid']}>
               <div className={styles['input-box']}>
@@ -170,22 +164,22 @@ const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
                 <input
                   type="text"
                   placeholder={`Building Name`}
-                  value={data.society}
+                  value={data.society.value}
                   name="society"
                   onChange={handleInputChange}
                 />
-                <p className={styles['helper-text']}>{inputErrs.society}</p>
+                <p className={styles['helper-text']}>{data.society.error}</p>
               </div>
               <div className={styles['input-box']}>
                 <label>Locality</label>
                 <input
                   type="text"
                   placeholder={`Enter Locality`}
-                  value={data.locality}
+                  value={data.locality.value}
                   name="locality"
                   onChange={handleInputChange}
                 />
-                <p className={styles['helper-text']}>{inputErrs.locality}</p>
+                <p className={styles['helper-text']}>{data.locality.error}</p>
               </div>
             </section>
             <section className={styles['two-column-grid']}>
@@ -195,11 +189,11 @@ const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
                   type="text"
                   placeholder={`Enter City Name`}
                   required
-                  value={data.city}
+                  value={data.city.value}
                   name="city"
                   onChange={handleInputChange}
                 />
-                <p className={styles['helper-text']}>{inputErrs.city}</p>
+                <p className={styles['helper-text']}>{data.city.error}</p>
               </div>
               <div className={styles['input-box']}>
                 <label>PIN Code</label>
@@ -207,11 +201,11 @@ const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
                   type="text"
                   placeholder={`Enter PIN Code`}
                   required
-                  value={data.pin_code}
+                  value={data.pin_code.value}
                   name="pin_code"
                   onChange={handleInputChange}
                 />
-                <p className={styles['helper-text']}>{inputErrs.pin_code}</p>
+                <p className={styles['helper-text']}>{data.pin_code.error}</p>
               </div>
             </section>
             <section className={styles['two-column-grid']}>
@@ -221,11 +215,11 @@ const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
                   type="text"
                   placeholder={`Enter State Name`}
                   required
-                  value={data.state}
+                  value={data.state.value}
                   name="state"
                   onChange={handleInputChange}
                 />
-                <p className={styles['helper-text']}>{inputErrs.state}</p>
+                <p className={styles['helper-text']}>{data.state.error}</p>
               </div>
               <div className={styles['input-box']}>
                 <label>Country</label>
@@ -233,11 +227,11 @@ const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
                   type="text"
                   placeholder={`Enter Country Name`}
                   required
-                  value={data.country}
+                  value={data.country.value}
                   name="country"
                   onChange={handleInputChange}
                 />
-                <p className={styles['helper-text']}>{inputErrs.country}</p>
+                <p className={styles['helper-text']}>{data.country.error}</p>
               </div>
             </section>
           </>

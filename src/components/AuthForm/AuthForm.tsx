@@ -181,6 +181,8 @@ const AuthForm: React.FC<Props> = (props) => {
           onFailure={googleAuthFailure}
         />
         <FacebookLogin
+          // App ID: 1614660215286765
+          // App Secret: a4839f4438a6b3527ca60636cc5d76a6
           appId="1614660215286765"
           callback={facebookAuth}
           render={(renderProps: any) => (
