@@ -43,9 +43,9 @@
   margin: 0;
   font: inherit;
 }
-*:focus {
+/* *:focus {
   outline: 3px solid red !important;
-}
+} */
 
 html,
 body {

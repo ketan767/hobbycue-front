@@ -23,7 +23,7 @@ const PageContentBox: React.FC<Props> = ({
     <div className={`${styles['wrapper']} ${className}`}>
       {children}
 
-      {listingLayoutMode === 'edit' && (
+      {showEditButton && (
         <svg
           onClick={onEditBtnClick}
           className={styles['edit-btn']}

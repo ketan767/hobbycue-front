@@ -31,7 +31,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
   // const { isLoggedIn, isAuthenticated, user } = store.getState().user
 
-  const [showDropdown, setShowDropdown] = useState<'user-menu' | null>(null)
+  const [showDropdown, setShowDropdown] = useState<'user-menu' | 'hobby-list' | null>(null)
 
   const handleLogout = () => {
     localStorage.removeItem('token')
@@ -100,20 +100,90 @@ export const Navbar: React.FC<Props> = ({}) => {
 
           <section className={styles['navbar-right']}>
             <ul>
-              <Link href={'/explore'}>
-                <li>
+              {/* Explore */}
+              <li>
+                <Link href={'/explore'}>
                   <Image src={ExploreIcon} alt="" />
                   <span>Explore</span>
                   <KeyboardArrowDownRoundedIcon htmlColor="#939CA3" />
-                </li>
-              </Link>
-              <Link href={'/hobby'}>
-                <li>
+                </Link>
+              </li>
+
+              {/* Hobbies */}
+              <li
+                className={styles['hobby-icon']}
+                onMouseOver={() => setShowDropdown('hobby-list')}
+                onMouseLeave={() => setShowDropdown(null)}
+              >
+                <Link href={'/hobby'}>
                   <Image src={HobbyIcon} alt="" />
                   <span>Hobbies</span>
                   <KeyboardArrowDownRoundedIcon htmlColor="#939CA3" />
-                </li>
-              </Link>
+                </Link>
+                {showDropdown === 'hobby-list' && (
+                  <div className={styles['hobby-list-dropdown']}>
+                    <section className={styles['list']}>
+                      <h4>Art</h4>
+                      <ul>
+                        <li>Music</li>
+                        <li>Dance</li>
+                        <li>Literary</li>
+                        <li>Theatre</li>
+                        <li>Visual</li>
+                      </ul>
+                    </section>
+                    <section className={styles['list']}>
+                      <h4>Play</h4>
+
+                      <ul>
+                        <li>Fitness</li>
+                        <li>Games</li>
+                        <li>Sports</li>
+                      </ul>
+                    </section>
+                    <section className={styles['list']}>
+                      <h4>Making Things</h4>
+
+                      <ul>
+                        <li>Clothing</li>
+                        <li>Cooking</li>
+                        <li>Garden</li>
+                        <li>Model</li>
+                        <li>Utility</li>
+                      </ul>
+                    </section>
+                    <section className={styles['list']}>
+                      <h4>
+                        <Link href={'/hobby/activity'}>Activity</Link>
+                      </h4>
+
+                      <ul>
+                        <li>Animals</li>
+                        <li>Observe</li>
+                        <li>Outdoor</li>
+
+                        <Link href={'/hobby/traveling'}>
+                          <li>Travel</li>
+                        </Link>
+                        <Link href={'/hobby/wellness'}>
+                          <li>Wellness</li>
+                        </Link>
+                      </ul>
+                    </section>
+                    <section className={styles['list']}>
+                      <h4>Collecting</h4>
+
+                      <ul>
+                        <li>Items</li>
+                        <li>Record</li>
+                        <li>Spotting</li>
+                      </ul>
+                    </section>
+                  </div>
+                )}
+              </li>
+
+              {/* Bookmark */}
               <li>
                 <Link href={'#'}>
                   <svg
@@ -137,6 +207,8 @@ export const Navbar: React.FC<Props> = ({}) => {
                   </svg>
                 </Link>{' '}
               </li>
+
+              {/* Notification */}
               <li>
                 <Link href={'#'}>
                   <svg
@@ -160,6 +232,8 @@ export const Navbar: React.FC<Props> = ({}) => {
                   </svg>
                 </Link>{' '}
               </li>
+
+              {/* Cart */}
               <li>
                 <Link href={'#'}>
                   <svg
@@ -191,13 +265,20 @@ export const Navbar: React.FC<Props> = ({}) => {
                   onMouseOver={() => setShowDropdown('user-menu')}
                   onMouseLeave={() => setShowDropdown(null)}
                 >
-                  <Image
-                    src={user.profile_image || DefaultProfileImage}
-                    alt=""
-                    width={48}
-                    height={48}
-                  />
-                  <KeyboardArrowDownRoundedIcon htmlColor="#939CA3" />
+                  <Link
+                    href={'#'}
+                    onFocus={() => setShowDropdown('user-menu')}
+                    onBlur={() => setShowDropdown(null)}
+                  >
+                    <Image
+                      src={user.profile_image || DefaultProfileImage}
+                      alt=""
+                      width={48}
+                      height={48}
+                    />
+                    <KeyboardArrowDownRoundedIcon htmlColor="#939CA3" />
+                  </Link>
+
                   {showDropdown === 'user-menu' && (
                     <div className={styles['user-menu-dropdown']}>
                       <section className={styles['general-info']}>

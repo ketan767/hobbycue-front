@@ -10,6 +10,7 @@ import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded
 import ShareRoundedIcon from '@mui/icons-material/ShareRounded'
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded'
 import CameraIcon from '@/assets/icons/CameraIcon'
+import Link from 'next/link'
 
 type Props = {
   data: ProfilePageData['pageData']
@@ -17,6 +18,7 @@ type Props = {
 }
 
 const ProfileHeader: React.FC<Props> = ({ data, mode }) => {
+  console.log('🚀 ~ file: Header.tsx:20 ~ data:', data)
   return (
     <>
       <header className={`site-container ${styles['header']}`}>
@@ -70,9 +72,11 @@ const ProfileHeader: React.FC<Props> = ({ data, mode }) => {
         {/* Action Buttons */}
         <div className={styles['action-btn-wrapper']}>
           {/* Send Email Button  */}
-          <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
-            <MailOutlineRoundedIcon color="primary" />
-          </div>
+          <Link href={`mailto:${data.public_email || data.email}`}>
+            <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
+              <MailOutlineRoundedIcon color="primary" />
+            </div>
+          </Link>
 
           {/* Bookmark Button */}
           <div onClick={(e) => console.log(e)} className={styles['action-btn']}>

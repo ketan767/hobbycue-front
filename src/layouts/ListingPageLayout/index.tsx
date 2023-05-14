@@ -35,7 +35,7 @@ const ListingPageLayout: React.FC<Props> = ({ activeTab, data }) => {
     )
       dispatch(updateListingLayoutMode('edit'))
     else dispatch(updateListingLayoutMode('view'))
-  }, [router, isLoggedIn, isAuthenticated, user])
+  }, [router.pathname, isLoggedIn, isAuthenticated, user])
 
   return (
     <>
