@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './Header.module.css'
+import styles from './ProfileHeader.module.css'
 import Image from 'next/image'
 
 import DefaultProfileImage from '@/assets/svg/default-profile.svg'
@@ -11,14 +11,65 @@ import ShareRoundedIcon from '@mui/icons-material/ShareRounded'
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded'
 import CameraIcon from '@/assets/icons/CameraIcon'
 import Link from 'next/link'
+import { useDispatch, useSelector } from 'react-redux'
+import { updatePhotoEditModalData } from '@/redux/slices/site'
+import { openModal } from '@/redux/slices/modal'
+import { setTimeout } from 'timers/promises'
+import { uploadPhoto } from '@/services/user.service'
+import { RootState } from '@/redux/store'
 
 type Props = {
   data: ProfilePageData['pageData']
-  mode: ProfileLayoutMode
 }
 
-const ProfileHeader: React.FC<Props> = ({ data, mode }) => {
-  console.log('🚀 ~ file: Header.tsx:20 ~ data:', data)
+const ProfileHeader: React.FC<Props> = ({ data }) => {
+  const dispatch = useDispatch()
+
+  const { profileLayoutMode } = useSelector((state: RootState) => state.site)
+
+  const onChange = (e: any) => {
+    e.preventDefault()
+    let files = e.target.files
+
+    if (files.length === 0) return
+
+    const reader = new FileReader()
+    reader.onload = () => {
+      dispatch(
+        updatePhotoEditModalData({
+          type: 'profile',
+          image: reader.result,
+          onComplete: handleProfilePhotoUpload,
+        }),
+      )
+      dispatch(
+        openModal({
+          type: 'upload-profile',
+          closable: true,
+          // onModalClose: () =>
+          //   updatePhotoEditModalData({
+          //     type: null,
+          //     image: null,
+          //     onComplete: null,
+          //   }),
+        }),
+      )
+    }
+    reader.readAsDataURL(files[0])
+  }
+
+  const handleProfilePhotoUpload = async (image: any) => {
+    const response = await fetch(image)
+    const blob = await response.blob()
+
+    console.log('🚀 ~ file: Header.tsx:68 ~ handleProfilePhotoUpload ~ blob:', blob)
+
+    const formData = new FormData()
+    formData.append('image', blob)
+    const { err, res } = await uploadPhoto(formData)
+    console.log('🚀 ~ file: Header.tsx:62 ~ handleProfilePhotoUpload ~ res:', res)
+    console.log('🚀 ~ file: Header.tsx:62 ~ handleProfilePhotoUpload ~ err:', err)
+  }
   return (
     <>
       <header className={`site-container ${styles['header']}`}>
@@ -36,10 +87,11 @@ const ProfileHeader: React.FC<Props> = ({ data, mode }) => {
             <div className={`${styles['img']} ${styles['default']}`}></div>
           )}
 
-          {mode === 'edit' && (
-            <div className={styles['edit-btn']}>
+          {profileLayoutMode === 'edit' && (
+            <label className={styles['edit-btn']}>
+              <input type="file" hidden onChange={onChange} />
               <CameraIcon />
-            </div>
+            </label>
           )}
         </div>
 
@@ -58,7 +110,7 @@ const ProfileHeader: React.FC<Props> = ({ data, mode }) => {
               <div className={`${styles['img']} ${styles['default']} `}></div>
             )}
 
-            {mode === 'edit' && (
+            {profileLayoutMode === 'edit' && (
               <div className={styles['edit-btn']}>
                 <CameraIcon />
               </div>

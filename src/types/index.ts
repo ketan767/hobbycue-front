@@ -12,6 +12,6 @@ type ProfilePageData = {
   pageData: any //{ [key: string]: any }
   postsData: any //{ [key: string]: any }
   mediaData: any //{ [key: string]: any }
-  pagesData: any //{ [key: string]: any }
+  listingsData: any //{ [key: string]: any }
   blogsData: any //{ [key: string]: any }
 }

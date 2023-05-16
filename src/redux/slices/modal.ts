@@ -7,6 +7,7 @@ export type ModalType =
   | 'user-onboarding'
   | 'listing-onboarding'
   | 'create-post'
+  | 'upload-profile'
   | 'profile-general-edit'
   | 'profile-about-edit'
   | 'profile-address-edit'
@@ -22,6 +23,7 @@ export type ModalType =
 interface ModalState {
   activeModal: ModalType
   closable: boolean
+  onModalClose?: (() => void) | null
   authFormData: { email: string; password: string; rememberMe: boolean }
 }
 
@@ -39,13 +41,21 @@ const modalSlice = createSlice({
   name: 'modal',
   initialState,
   reducers: {
-    openModal(state, action: PayloadAction<{ type: ModalType; closable: boolean }>) {
+    openModal(
+      state,
+      action: PayloadAction<{ type: ModalType; closable: boolean; onModalClose?: () => void }>,
+    ) {
       state.activeModal = action.payload.type
       state.closable = action.payload.closable
+      state.onModalClose = action.payload.onModalClose
     },
     closeModal(state) {
       state.activeModal = null
       state.closable = true
+      if (state.onModalClose) {
+        state.onModalClose()
+        state.onModalClose = null
+      }
     },
     updateAuthFormData(state, { payload }) {
       state.authFormData = payload

@@ -6,10 +6,10 @@ export const getAllPosts = async (query: string): Promise<ApiReturnObject> => {
 
   try {
     const res = await axiosInstance.get(`/post/?${query}`, { headers })
-    return Promise.resolve({ res: res, err: null })
+    return { res: res, err: null }
   } catch (error) {
     console.error(error)
-    return Promise.reject({ err: error, res: null })
+    return { err: error, res: null }
   }
 }
 
@@ -19,9 +19,9 @@ export const createUserPost = async (data: any): Promise<ApiReturnObject> => {
 
   try {
     const res = await axiosInstance.post(`/post/user/`, data, { headers })
-    return Promise.resolve({ res: res, err: null })
+    return { res: res, err: null }
   } catch (error) {
     console.error(error)
-    return Promise.reject({ err: error, res: null })
+    return { err: error, res: null }
   }
 }

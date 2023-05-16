@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Provider } from 'react-redux'
 import Head from 'next/head'
 import { createTheme, StyledEngineProvider, ThemeProvider } from '@mui/material/styles'
@@ -9,6 +9,7 @@ import SiteMainLayout from '@/layouts'
 
 import '@/styles/_globals.css'
 import { useRouter } from 'next/router'
+import LoadingBackdrop from '@/components/LoadingBackdrop'
 
 function App({ Component, pageProps }: AppProps) {
   const theme = createTheme({
@@ -30,14 +31,18 @@ function App({ Component, pageProps }: AppProps) {
 
   const router = useRouter()
 
+  const [loading, setLoading] = useState(false)
+
   useEffect(() => {
     const handleStart = (url: any, { shallow }: any) => {
-      console.time('Loading Time!')
+      console.time('LoadingTime')
       console.log(`App is changing to ${url} ${shallow ? 'with' : 'without'} shallow routing`)
+      setLoading(true)
     }
     const handleComplete = () => {
       console.log('Loading Completed..')
-      console.timeEnd('Loading Time')
+      console.timeEnd('LoadingTime')
+      setLoading(false)
     }
 
     router.events.on('routeChangeStart', handleStart)
@@ -49,7 +54,7 @@ function App({ Component, pageProps }: AppProps) {
       router.events.off('routeChangeComplete', handleComplete)
       router.events.off('routeChangeError', handleComplete)
     }
-  }, [router])
+  }, [router.pathname])
 
   return (
     <>
@@ -60,7 +65,10 @@ function App({ Component, pageProps }: AppProps) {
         <ThemeProvider theme={theme}>
           <Provider store={store}>
             <SiteMainLayout>
-              <Component {...pageProps} />
+              <>
+                <Component {...pageProps} />
+                {loading && <LoadingBackdrop />}
+              </>
             </SiteMainLayout>
           </Provider>
         </ThemeProvider>

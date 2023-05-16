@@ -3,24 +3,26 @@ import React from 'react'
 import PageContentBox from '@/layouts/PageContentBox'
 import PageGridLayout from '@/layouts/PageGridLayout'
 
-import styles from './HomeTab.module.css'
+import styles from './ProfileHomeTab.module.css'
 import { openModal } from '@/redux/slices/modal'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
 
 interface Props {
   data: ProfilePageData['pageData']
-  mode: ProfileLayoutMode
 }
 
-const HomeTab: React.FC<Props> = ({ data, mode }) => {
+const ProfileHomeTab: React.FC<Props> = ({ data }) => {
   const dispatch = useDispatch()
+  const { profileLayoutMode } = useSelector((state: RootState) => state.site)
+
   return (
     <>
       <PageGridLayout column={3}>
         <aside>
           {/* User Hobbies */}
           <PageContentBox
-            showEditButton={mode === 'edit'}
+            showEditButton={profileLayoutMode === 'edit'}
             onEditBtnClick={() =>
               dispatch(openModal({ type: 'profile-hobby-edit', closable: true }))
             }
@@ -43,7 +45,7 @@ const HomeTab: React.FC<Props> = ({ data, mode }) => {
         <main>
           {/* User About */}
           <PageContentBox
-            showEditButton={mode === 'edit'}
+            showEditButton={profileLayoutMode === 'edit'}
             onEditBtnClick={() =>
               dispatch(openModal({ type: 'profile-about-edit', closable: true }))
             }
@@ -54,7 +56,7 @@ const HomeTab: React.FC<Props> = ({ data, mode }) => {
 
           {/* User Information */}
           <PageContentBox
-            showEditButton={mode === 'edit'}
+            showEditButton={profileLayoutMode === 'edit'}
             onEditBtnClick={() =>
               dispatch(openModal({ type: 'profile-general-edit', closable: true }))
             }
@@ -69,7 +71,7 @@ const HomeTab: React.FC<Props> = ({ data, mode }) => {
         <aside>
           {/* User Locations */}
           <PageContentBox
-            showEditButton={mode === 'edit'}
+            showEditButton={profileLayoutMode === 'edit'}
             onEditBtnClick={() =>
               dispatch(openModal({ type: 'profile-address-edit', closable: true }))
             }
@@ -102,7 +104,7 @@ const HomeTab: React.FC<Props> = ({ data, mode }) => {
           </PageContentBox>
 
           {/* User Contact Details */}
-          <PageContentBox showEditButton={mode === 'edit'}>
+          <PageContentBox showEditButton={profileLayoutMode === 'edit'}>
             <h4 className={styles['heading']}>Contact Information</h4>
             <ul className={styles['contact-wrapper']}>
               {/* Phone */}
@@ -209,4 +211,4 @@ const HomeTab: React.FC<Props> = ({ data, mode }) => {
   )
 }
 
-export default HomeTab
+export default ProfileHomeTab

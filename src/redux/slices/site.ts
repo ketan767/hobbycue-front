@@ -35,12 +35,20 @@ type ListingModalData = {
 }
 interface AuthState {
   listingLayoutMode: ListingLayoutMode
+  profileLayoutMode: ProfileLayoutMode
   listingPageData: any
   listingModalData: ListingModalData
+
+  editPhotoModalData: {
+    type: 'profile' | 'banner' | null
+    image: any
+    onComplete: any
+  }
 }
 
 const initialState: AuthState = {
   listingLayoutMode: 'view',
+  profileLayoutMode: 'view',
   listingPageData: {},
   listingModalData: {
     type: null,
@@ -51,6 +59,12 @@ const initialState: AuthState = {
     year: '',
     admin_note: '',
     tagline: '',
+  },
+
+  editPhotoModalData: {
+    image: null,
+    type: null,
+    onComplete: null,
   },
 }
 
@@ -93,16 +107,36 @@ const siteSlice = createSlice({
     updateListingLayoutMode: (state, { payload }: PayloadAction<ListingLayoutMode>) => {
       state.listingLayoutMode = payload
     },
+    updateProfileLayoutMode: (state, { payload }: PayloadAction<ProfileLayoutMode>) => {
+      state.profileLayoutMode = payload
+    },
     updateListingPageData: (state, { payload }) => {
       state.listingPageData = payload
     },
     updateListingModalData: (state, { payload }: PayloadAction<ListingModalData>) => {
       state.listingModalData = payload
     },
+    updatePhotoEditModalData: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{
+        type: 'profile' | 'banner' | null
+        image: any
+        onComplete: any
+      }>,
+    ) => {
+      state.editPhotoModalData = payload
+    },
   },
 })
 
-export const { updateListingLayoutMode, updateListingPageData, updateListingModalData } =
-  siteSlice.actions
+export const {
+  updateListingLayoutMode,
+  updateProfileLayoutMode,
+  updateListingPageData,
+  updateListingModalData,
+  updatePhotoEditModalData,
+} = siteSlice.actions
 
 export default siteSlice.reducer

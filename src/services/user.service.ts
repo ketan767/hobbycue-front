@@ -1,24 +1,29 @@
 import axiosInstance, { operation } from './_axios'
 
+/** Get User Details `GET /api/user/?{query}`  */
 export const getAllUserDetail = async (query: string): Promise<ApiReturnObject> => {
   try {
     const res = await axiosInstance.get(`/user/?${query}`)
-    return Promise.resolve({ res: res, err: null })
+    return { res: res, err: null }
   } catch (error) {
     console.error(error)
-    return Promise.reject({ err: error, res: null })
+    return { err: error, res: null }
   }
 }
 
 // Get LoggedIn User Detail
-export const getMyProfileDetail = async (query: string, cb: CallbackFunction) => {
+export const getMyProfileDetail = async () => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
 
-  await axiosInstance
-    .get(`/user/me?${query}`, { headers })
-    .then((res) => cb(null, res))
-    .catch((err) => cb(err, null))
+  const query = 'populate=_hobbies,_addresses,primary_address,_listings'
+  try {
+    const res = await axiosInstance.get(`/user/me?${query}`, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
 }
 
 // Update User
@@ -97,20 +102,13 @@ export const checkProfileUrl = async (url: string, cb: CallbackFunction) => {
     .catch((err) => cb(err, null))
 }
 
-// @FIX
-
-// // Register the user after Verifying the OTP
-// export const register = (data: RegisterPayload, cb: CallbackFunction) => {
-//   operation.attempt((currentAttempt) => {
-//     axiosInstance
-//       .post(`/auth/register`, data)
-//       .then((res) => cb(null, res))
-//       .catch((err) => {
-//         if (!err.response?.data?.success && operation.retry(err)) {
-//           console.log({ endPoint: '', attempt: currentAttempt, messgae: err.message })
-//           return
-//         }
-//         cb(err, null)
-//       })
-//   })
-// }
+// Update User Hobby
+export const uploadPhoto = async (formData: FormData) => {
+  try {
+    const res = await axiosInstance.post(`/upload-image`, formData)
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
