@@ -17,7 +17,7 @@ import PostCard from '@/components/PostCard/PostCard'
 type Props = {}
 
 const Community: React.FC<Props> = ({}) => {
-  const { user } = useSelector((state: RootState) => state.user)
+  const { user, activeProfile } = useSelector((state: RootState) => state.user)
   const { allPosts } = useSelector((state: RootState) => state.post)
 
   const getPost = async () => {
@@ -37,8 +37,13 @@ const Community: React.FC<Props> = ({}) => {
       <PageGridLayout column={3}>
         <aside className={styles['community-left-aside']}>
           <section className={`content-box-wrapper ${styles['profile-switcher']}`}>
-            <Image src={user?.profile_image || DefaultProfileImage} alt="" width={40} height={40} />
-            <p className={styles['name']}>{user?.full_name}</p>
+            <Image
+              src={activeProfile.data?.profile_image || DefaultProfileImage}
+              alt=""
+              width={40}
+              height={40}
+            />
+            <p className={styles['name']}>{activeProfile.data?.full_name}</p>
             <svg
               width="24"
               height="24"
@@ -68,7 +73,7 @@ const Community: React.FC<Props> = ({}) => {
             <span className={styles['divider']}></span>
             <section>
               <ul>
-                {user?._hobbies?.map((hobby: any) => {
+                {activeProfile.data?._hobbies?.map((hobby: any) => {
                   return <li key={hobby._id}>{hobby?.hobby?.display}</li>
                 })}
               </ul>
@@ -83,7 +88,7 @@ const Community: React.FC<Props> = ({}) => {
             <span className={styles['divider']}></span>
             <section>
               <ul>
-                {user?._addresses?.map((address: any) => {
+                {activeProfile.data?._addresses?.map((address: any) => {
                   return <li key={address._id}>{address?.city}</li>
                 })}
               </ul>

@@ -7,19 +7,20 @@ import Head from 'next/head'
 import ProfileLayout from '@/layouts/ProfilePageLayout'
 import { useSelector } from 'react-redux'
 import store, { RootState } from '@/redux/store'
+import ProfileHomeTab from '@/components/ProfilePage/ProfileHomeTab/ProfileHomeTab'
 
 interface Props {
   data: ProfilePageData
 }
 
 const ProfileHome: React.FC<Props> = ({ data }) => {
-  // const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
+  const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
 
   // useEffect(() => {
   //  if (isLoggedIn && isAuthenticated && data.pageData._id === user._id) setDetail(user)
   // }, [user])
 
-  const { isLoggedIn, isAuthenticated, user } = store.getState().user
+  // const { isLoggedIn, isAuthenticated, user } = store.getState().user
 
   return (
     <>
@@ -27,7 +28,9 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
         <title>{`${data.pageData.full_name} | HobbyCue`}</title>
       </Head>
 
-      <ProfileLayout activeTab={'home'} data={data} />
+      <ProfileLayout activeTab={'home'} data={data}>
+        {data.pageData && <ProfileHomeTab data={data.pageData} />}
+      </ProfileLayout>
     </>
   )
 }
@@ -47,7 +50,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     pageData: res.data.data.users[0],
     postsData: null,
     mediaData: null,
-    pagesData: null,
+    listingsData: null,
     blogsData: null,
   }
   return {
