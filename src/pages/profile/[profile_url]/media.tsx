@@ -19,7 +19,9 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
         <title>{`Posts | ${data.pageData.full_name} | HobbyCue`}</title>
       </Head>
 
-      <ProfileLayout activeTab={'media'} data={data} />
+      <ProfileLayout activeTab={'media'} data={data}>
+        <div></div>
+      </ProfileLayout>
     </>
   )
 }
@@ -39,7 +41,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     pageData: res.data.data.users[0],
     postsData: null,
     mediaData: null,
-    pagesData: null,
+    listingsData: null,
     blogsData: null,
   }
   return {
