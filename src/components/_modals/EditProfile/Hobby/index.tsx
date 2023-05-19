@@ -85,21 +85,20 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
     setAddHobbyBtnLoading(true)
 
     let jsonData = { hobby: data.hobby?._id, genre: data.genre?._id, level: data.level }
-    addUserHobby(jsonData, (err, res) => {
+    addUserHobby(jsonData, async (err, res) => {
       if (err) {
         setAddHobbyBtnLoading(false)
         return console.log(err)
       }
 
-      getMyProfileDetail('populate=_hobbies,_addresses,primary_address,_listings', (err, res) => {
-        setAddHobbyBtnLoading(false)
-        if (err) return console.log(err)
-        if (res.data.success) {
-          dispatch(updateUser(res.data.data.user))
-          setHobbyInputValue('')
-          setGenreInputValue('')
-        }
-      })
+      const { err: error, res: response } = await getMyProfileDetail()
+      setAddHobbyBtnLoading(false)
+      if (error) return console.log(error)
+      if (response?.data.success) {
+        dispatch(updateUser(response?.data.data.user))
+        setHobbyInputValue('')
+        setGenreInputValue('')
+      }
     })
   }
   const handleDeleteHobby = async (id: string) => {
@@ -109,12 +108,12 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
       return console.log(err)
     }
 
-    getMyProfileDetail('populate=_hobbies,_addresses,primary_address,_listings', (err, res) => {
-      if (err) return console.log(err)
-      if (res.data.success) {
-        dispatch(updateUser(res.data.data.user))
-      }
-    })
+    const { err: error, res: response } = await getMyProfileDetail()
+
+    if (error) return console.log(error)
+    if (response?.data.success) {
+      dispatch(updateUser(response?.data.data.user))
+    }
   }
 
   const handleSubmit = () => {

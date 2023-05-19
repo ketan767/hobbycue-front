@@ -23,27 +23,25 @@ export const VerifyEmailModal: React.FC<PropTypes> = (props) => {
   const [errMsg, setErrMsg] = useState(null)
   const [submitBtnLoading, setSubmitBtnLoading] = useState(false)
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     setSubmitBtnLoading(true)
-    register({ email, otp }, (err, res) => {
-      setSubmitBtnLoading(false)
-      if (err) {
-        if (err.response.data.message === 'Invalid or expired OTP')
-          return setErrMsg(err.response.data.message)
-        return setErrMsg(err.response?.data?.message)
-      }
+    const { err, res } = await register({ email, otp })
+    setSubmitBtnLoading(false)
+    if (err) {
+      if (err.response.data.message === 'Invalid or expired OTP')
+        return setErrMsg(err.response.data.message)
+      return setErrMsg(err.response?.data?.message)
+    }
 
-      if (res.status === 200 && res.data.success) {
-        localStorage.setItem('token', res.data.data.token)
-        console.log(res.data.data.token)
-        dispatch(updateIsLoggedIn(true))
-        dispatch(updateIsAuthenticated(true))
-        dispatch(updateUser(res.data.data.user))
-        router.push('/community', undefined, { shallow: false })
-        // @TODO:
-        // router.push('/profile/devansh')
-      }
-    })
+    if (res.status === 200 && res.data.success) {
+      localStorage.setItem('token', res.data.data.token)
+      dispatch(updateIsLoggedIn(true))
+      // dispatch(updateIsAuthenticated(true))
+      // dispatch(updateUser(res.data.data.user))
+      router.push('/community', undefined, { shallow: false })
+      // @TODO:
+      // router.push('/profile/devansh')
+    }
   }
 
   return (

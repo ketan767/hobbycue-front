@@ -42,7 +42,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
     setInputErrs({ about: null })
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (isEmptyField(data.about)) {
       setInputErrs((prev) => {
         return { ...prev, about: 'This field is required!' }
@@ -51,21 +51,21 @@ const ProfileAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
     }
 
     setSubmitBtnLoading(true)
-    updateMyProfileDetail(data, (err, res) => {
+    updateMyProfileDetail(data, async (err, res) => {
       if (err) {
         setSubmitBtnLoading(false)
         return console.log(err)
       }
 
-      getMyProfileDetail('populate=_hobbies,_addresses,primary_address,_listings', (err, res) => {
-        setSubmitBtnLoading(false)
-        if (err) return console.log(err)
-        if (res.data.success) {
-          dispatch(updateUser(res.data.data.user))
-          if (onComplete) onComplete()
-          else dispatch(closeModal())
-        }
-      })
+      const { err: error, res: response } = await getMyProfileDetail()
+      setSubmitBtnLoading(false)
+
+      if (error) return console.log(error)
+      if (response?.data.success) {
+        dispatch(updateUser(response.data.data.user))
+        if (onComplete) onComplete()
+        else dispatch(closeModal())
+      }
     })
   }
 

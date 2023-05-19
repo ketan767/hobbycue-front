@@ -1,3 +1,17 @@
+.listing-page-type {
+  margin: 0 !important;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+.listing-page-type p {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+
+  color: #0096c8;
+}
+
 .hobby-list {
   margin-top: var(--spacing-16);
   list-style: none;
@@ -38,21 +52,54 @@ ul.contact-wrapper {
   gap: var(--spacing-16);
 }
 
-ul.location-wrapper li,
-ul.contact-wrapper li {
+ul.location-wrapper li {
   display: flex;
-  align-items: center;
   gap: var(--spacing-8);
-
-  /* font-family: 'Poppins'; */
-  /* font-style: normal; */
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;
   color: #08090a;
 }
+ul.contact-wrapper li {
+  display: flex;
+  gap: var(--spacing-8);
+  align-items: center;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #08090a;
+}
+
 ul.location-wrapper svg,
 ul.contact-wrapper svg {
   width: 1.5rem;
   aspect-ratio: 1/1;
+}
+
+/* Seller Information  */
+ul.seller-info-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-40);
+}
+ul.seller-info-wrapper li {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-8);
+}
+ul.seller-info-wrapper li p {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 21px;
+  /* identical to box height */
+
+  /* Grey/Dark */
+
+  color: #939ca3;
+}
+
+ul.seller-info-wrapper li svg:last-child {
+  margin-left: var(--spacing-16);
 }

@@ -19,7 +19,7 @@ import OutlinedButton from '../_buttons/OutlinedButton'
 
 import styles from './AuthForm.module.css'
 import { joinIn, signIn } from '@/services/auth.service'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { closeModal, openModal, resetAuthFormData, updateAuthFormData } from '@/redux/slices/modal'
 import { useRouter } from 'next/router'
@@ -46,6 +46,7 @@ function validatePasswordConditions(password: string) {
 
 const AuthForm: React.FC<Props> = (props) => {
   const router = useRouter()
+  const dispatch = useDispatch()
 
   const { authFormData } = useSelector((state: RootState) => state.modal)
 
@@ -62,16 +63,16 @@ const AuthForm: React.FC<Props> = (props) => {
   const handleInputChange = (key: any, value: any) => {
     setInputErrors({ email: null, password: null })
     let newData = { ...authFormData, [key]: value }
-    store.dispatch(updateAuthFormData(newData))
+    dispatch(updateAuthFormData(newData))
   }
 
   const handleTabChange = (value: tabs) => {
     setSelectedTab(value)
-    store.dispatch(resetAuthFormData())
+    dispatch(resetAuthFormData())
     setInputErrors({ email: null, password: null })
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // @TODO:: Email Password verification
     if (!validateEmail(authFormData.email))
       return setInputErrors({ email: 'Enter a Valid Email!', password: null })
@@ -83,48 +84,46 @@ const AuthForm: React.FC<Props> = (props) => {
     const data = { email: authFormData.email, password: authFormData.password }
     // Sign In
     if (selectedTab === 'sign-in') {
-      signIn(data, (err, res) => {
-        setSubmitBtnLoading(false)
-        if (err) {
-          if (err.response.data.message === 'User not found!')
-            return setInputErrors({ email: err.response.data.message, password: null })
-          if (err.response.data.message === 'Invalid email or password')
-            return setInputErrors({
-              email: err.response.data.message,
-              password: err.response.data.message,
-            })
-          return alert(err.response?.data?.messgae)
-        }
+      const { err, res } = await signIn(data)
+      setSubmitBtnLoading(false)
+      if (err) {
+        if (err.response.data.message === 'User not found!')
+          return setInputErrors({ email: err.response.data.message, password: null })
+        if (err.response.data.message === 'Invalid email or password')
+          return setInputErrors({
+            email: err.response.data.message,
+            password: err.response.data.message,
+          })
+        return alert(err.response?.data?.messgae)
+      }
 
-        if (res.status === 200 && res.data.success) {
-          localStorage.setItem('token', res.data.data.token)
-          console.log(res.data.data.token)
+      if (res.status === 200 && res.data.success) {
+        localStorage.setItem('token', res.data.data.token)
+        console.log(res.data.data.token)
 
-          store.dispatch(updateIsLoggedIn(true))
-          store.dispatch(updateIsAuthenticated(true))
-          store.dispatch(updateUser(res.data.data.user))
-          store.dispatch(closeModal())
-          router.push('/community', undefined, { shallow: false })
-        }
-      })
+        dispatch(updateIsLoggedIn(true))
+        // dispatch(updateIsAuthenticated(true))
+        // dispatch(updateUser(res.data.data.user))
+        dispatch(closeModal())
+        router.push('/community', undefined, { shallow: false })
+      }
     }
 
     // Join In
     if (selectedTab === 'join-in') {
-      joinIn(data, (err, res) => {
-        setSubmitBtnLoading(false)
-        if (err) {
-          if (err.response.data.message === 'User Already Exists!')
-            return setInputErrors({ email: err.response.data.message, password: null })
-          return alert(err.response?.data?.message)
-        }
+      const { err, res } = await joinIn(data)
+      setSubmitBtnLoading(false)
+      if (err) {
+        if (err.response.data.message === 'User Already Exists!')
+          return setInputErrors({ email: err.response.data.message, password: null })
+        return alert(err.response?.data?.message)
+      }
 
-        if (res.status === 200 && res.data.success) {
-          // #FIX: Temporary - alert OTP
-          alert(res.data.data.savedUser.otp)
-          store.dispatch(openModal({ type: 'email-verify', closable: false }))
-        }
-      })
+      if (res.status === 200 && res.data.success) {
+        // #FIX: Temporary - alert OTP
+        alert(res.data.data.savedUser.otp)
+        dispatch(openModal({ type: 'email-verify', closable: false }))
+      }
     }
   }
 

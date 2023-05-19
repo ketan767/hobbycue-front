@@ -96,6 +96,7 @@ export const CreatePost: React.FC<Props> = (props) => {
       window.location.reload()
     }
   }
+
   return (
     <div className={styles['modal-wrapper']}>
       <h3 className={styles['modal-heading']}>Create Post</h3>

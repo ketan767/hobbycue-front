@@ -21,6 +21,7 @@ import ListingGeneralEditModal from './EditListing/ListingGeneral'
 import ListingContactEditModal from './EditListing/ListingContact'
 import ListingAddressEditModal from './EditListing/ListingAddress'
 import ListingHobbyEditModal from './EditListing/ListingHobby'
+import { UploadImageModal } from './UploadImageModal'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -60,6 +61,7 @@ const ModalManager: React.FC = () => {
               {activeModal === 'listing-onboarding' && <ListingOnboardingModal />}
 
               {activeModal === 'create-post' && <CreatePost />}
+              {activeModal === 'upload-image' && <UploadImageModal />}
 
               {activeModal === 'profile-general-edit' && <ProfileGeneralEditModal />}
               {activeModal === 'profile-about-edit' && <ProfileAboutEditModal />}

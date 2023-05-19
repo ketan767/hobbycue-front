@@ -83,7 +83,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
     setSubmitBtnLoading(true)
     if (!user.is_onboarded) {
       data.set_as_primary = true
-      addUserAddress(data, (err, res) => {
+      addUserAddress(data, async (err, res) => {
         if (err) {
           setSubmitBtnLoading(false)
           return console.log(err)
@@ -92,18 +92,18 @@ const ProfileAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
           setSubmitBtnLoading(false)
           return alert('Something went wrong!')
         }
-        getMyProfileDetail('populate=_hobbies,_addresses,primary_address,_listings', (err, res) => {
-          setSubmitBtnLoading(false)
-          if (err) return console.log(err)
-          if (res.data.success) {
-            dispatch(updateUser(res.data.data.user))
-            if (onComplete) onComplete()
-            else dispatch(closeModal())
-          }
-        })
+        const { err: error, res: response } = await getMyProfileDetail()
+
+        setSubmitBtnLoading(false)
+        if (error) return console.log(error)
+        if (response?.data.success) {
+          dispatch(updateUser(response.data.data.user))
+          if (onComplete) onComplete()
+          else dispatch(closeModal())
+        }
       })
     } else {
-      updateUserAddress(user.primary_address._id, data, (err, res) => {
+      updateUserAddress(user.primary_address._id, data, async (err, res) => {
         if (err) {
           setSubmitBtnLoading(false)
           return console.log(err)
@@ -112,15 +112,15 @@ const ProfileAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
           setSubmitBtnLoading(false)
           return alert('Something went wrong!')
         }
-        getMyProfileDetail('populate=_hobbies,_addresses,primary_address,_listings', (err, res) => {
-          setSubmitBtnLoading(false)
-          if (err) return console.log(err)
-          if (res.data.success) {
-            dispatch(updateUser(res.data.data.user))
-            if (onComplete) onComplete()
-            else dispatch(closeModal())
-          }
-        })
+        const { err: error, res: response } = await getMyProfileDetail()
+
+        setSubmitBtnLoading(false)
+        if (error) return console.log(error)
+        if (response?.data.success) {
+          dispatch(updateUser(response?.data.data.user))
+          if (onComplete) onComplete()
+          else dispatch(closeModal())
+        }
       })
     }
   }

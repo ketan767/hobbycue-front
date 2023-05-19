@@ -7,6 +7,8 @@ import styles from './ProfilePagesTab.module.css'
 import { openModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
+import Link from 'next/link'
+import ListingCard from '@/components/ListingCard/ListingCard'
 
 interface Props {
   data: ProfilePageData
@@ -45,7 +47,7 @@ const ProfilePagesTab: React.FC<Props> = ({ data }) => {
 
         <main>
           {data.listingsData.map((listing: any) => {
-            return <li key={listing._id}>{listing?.title}</li>
+            return <ListingCard key={listing._id} data={listing} />
           })}
         </main>
       </PageGridLayout>

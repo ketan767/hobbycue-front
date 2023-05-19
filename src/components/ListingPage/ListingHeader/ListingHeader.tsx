@@ -1,31 +1,27 @@
-import React, { useState } from 'react'
-import styles from './ProfileHeader.module.css'
+import React from 'react'
+import styles from './ListingHeader.module.css'
 import Image from 'next/image'
-
-import DefaultProfileImage from '@/assets/svg/default-profile.svg'
-import DefaultCoverImage from '@/assets/svg/default-cover.svg'
 
 import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded'
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded'
 import ShareRoundedIcon from '@mui/icons-material/ShareRounded'
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded'
 import CameraIcon from '@/assets/icons/CameraIcon'
-import Link from 'next/link'
 import { useDispatch, useSelector } from 'react-redux'
-import { updatePhotoEditModalData } from '@/redux/slices/site'
-import { closeModal, openModal } from '@/redux/slices/modal'
-import { setTimeout } from 'timers/promises'
-import { updateUserCover, updateUserProfile } from '@/services/user.service'
 import { RootState } from '@/redux/store'
+import Link from 'next/link'
+import { updateListingCover, updateListingProfile } from '@/services/listing.service'
+import { updatePhotoEditModalData } from '@/redux/slices/site'
+import { openModal } from '@/redux/slices/modal'
 
 type Props = {
-  data: ProfilePageData['pageData']
+  data: ListingPageData['pageData']
 }
 
-const ProfileHeader: React.FC<Props> = ({ data }) => {
+const ListingHeader: React.FC<Props> = ({ data }) => {
   const dispatch = useDispatch()
 
-  const { profileLayoutMode } = useSelector((state: RootState) => state.site)
+  const { listingLayoutMode } = useSelector((state: RootState) => state.site)
 
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
     e.preventDefault()
@@ -68,8 +64,8 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
     const blob = await response.blob()
 
     const formData = new FormData()
-    formData.append('user-profile', blob)
-    const { err, res } = await updateUserProfile(formData)
+    formData.append('listing-profile', blob)
+    const { err, res } = await updateListingProfile(data._id, formData)
     if (err) return console.log(err)
     if (res?.data.success) {
       window.location.reload()
@@ -82,8 +78,8 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
     const blob = await response.blob()
 
     const formData = new FormData()
-    formData.append('user-cover', blob)
-    const { err, res } = await updateUserCover(formData)
+    formData.append('listing-cover', blob)
+    const { err, res } = await updateListingCover(data._id, formData)
     if (err) return console.log(err)
     if (res?.data.success) {
       window.location.reload()
@@ -96,10 +92,10 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
       <header className={`site-container ${styles['header']}`}>
         {/* Profile Picture */}
         <div className={styles['profile-img-wrapper']}>
-          {data.profile_image ? (
+          {data?.profile_image ? (
             <Image
               className={styles['img']}
-              src={data.profile_image}
+              src={data?.profile_image}
               alt=""
               width={160}
               height={160}
@@ -108,7 +104,7 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
             <div className={`${styles['img']} ${styles['default']}`}></div>
           )}
 
-          {profileLayoutMode === 'edit' && (
+          {listingLayoutMode === 'edit' && (
             <label className={styles['edit-btn']}>
               <input
                 type="file"
@@ -124,10 +120,10 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
         {/* Center Elements */}
         <section className={styles['center-container']}>
           <div className={styles['cover-img-wrapper']}>
-            {data.cover_image ? (
+            {data?.cover_image ? (
               <Image
                 className={styles['img']}
-                src={data.cover_image}
+                src={data?.cover_image}
                 alt=""
                 height={296}
                 width={1000}
@@ -136,7 +132,7 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
               <div className={`${styles['img']} ${styles['default']} `}></div>
             )}
 
-            {profileLayoutMode === 'edit' && (
+            {listingLayoutMode === 'edit' && (
               <label className={styles['edit-btn']}>
                 <input
                   type="file"
@@ -149,14 +145,14 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
             )}
           </div>
 
-          <h1 className={styles['name']}>{data.full_name}</h1>
-          <p className={styles['tagline']}>{data.tagline}</p>
+          <h1 className={styles['name']}>{data?.title}</h1>
+          <p className={styles['tagline']}>{data?.tagline}</p>
         </section>
 
         {/* Action Buttons */}
         <div className={styles['action-btn-wrapper']}>
           {/* Send Email Button  */}
-          <Link href={`mailto:${data.public_email || data.email}`}>
+          <Link href={`mailto:${data.public_email}`}>
             <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
               <MailOutlineRoundedIcon color="primary" />
             </div>
@@ -182,4 +178,4 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
   )
 }
 
-export default ProfileHeader
+export default ListingHeader

@@ -19,8 +19,8 @@ import Link from 'next/link'
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
 import store, { RootState } from '@/redux/store'
 
-import DefaultProfileImage from '@/assets/svg/default-profile.svg'
 import { useRouter } from 'next/router'
+import { DEFAULT_PROFILE_IMAGES } from '@/utils'
 
 type Props = {}
 
@@ -37,7 +37,7 @@ export const Navbar: React.FC<Props> = ({}) => {
     localStorage.removeItem('token')
     dispatch(updateIsLoggedIn(false))
     setShowDropdown(null)
-    // window.location = '/'
+    window.location.pathname = '/'
   }
 
   useEffect(() => {
@@ -271,7 +271,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                     onBlur={() => setShowDropdown(null)}
                   >
                     <Image
-                      src={user.profile_image || DefaultProfileImage}
+                      src={user.profile_image || DEFAULT_PROFILE_IMAGES.user}
                       alt=""
                       width={48}
                       height={48}
@@ -284,7 +284,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                       <section className={styles['general-info']}>
                         <div className={styles['profile-name']}>
                           <Image
-                            src={user.profile_image || DefaultProfileImage}
+                            src={user.profile_image || DEFAULT_PROFILE_IMAGES.user}
                             alt=""
                             width={48}
                             height={48}
@@ -302,7 +302,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                         <h5>Manage</h5>
                         <p>My Activity</p>
                         <p>My Orders</p>
-                        <Link href={'/my-pages'}>
+                        <Link href={`/profile/${user.profile_url}/pages`}>
                           <p>My Pages</p>
                         </Link>
                       </section>

@@ -23,8 +23,35 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
     <>
       <PageGridLayout column={3}>
         <aside>
-          {/* TODO: Listing Page Type */}
-          <div></div>
+          <PageContentBox
+            showEditButton={listingLayoutMode === 'edit'}
+            onEditBtnClick={() =>
+              dispatch(openModal({ type: 'listing-hobby-edit', closable: true }))
+            }
+          >
+            <div className={styles['listing-page-type']}>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g clip-path="url(#clip0_173_56244)">
+                  <path
+                    d="M17 10.43V2H7V10.43C7 10.78 7.18 11.11 7.49 11.29L11.67 13.8L10.68 16.14L7.27 16.43L9.86 18.67L9.07 22L12 20.23L14.93 22L14.15 18.67L16.74 16.43L13.33 16.14L12.34 13.8L16.52 11.29C16.82 11.11 17 10.79 17 10.43ZM13 12.23L12 12.83L11 12.23V3H13V12.23Z"
+                    fill="#0096C8"
+                  />
+                </g>
+                <defs>
+                  <clipPath id="clip0_173_56244">
+                    <rect width="24" height="24" fill="white" />
+                  </clipPath>
+                </defs>
+              </svg>
+              <p>{data.page_type[0]}</p>
+            </div>
+          </PageContentBox>
 
           {/* Listing Hobbies */}
           <PageContentBox
@@ -226,6 +253,242 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
                   </svg>
 
                   <span>{data?.website} </span>
+                </li>
+              )}
+            </ul>
+          </PageContentBox>
+
+          {/* Seller Details */}
+          <PageContentBox
+            showEditButton={listingLayoutMode === 'edit'}
+            onEditBtnClick={() =>
+              dispatch(openModal({ type: 'listing-contact-edit', closable: true }))
+            }
+          >
+            <h4 className={styles['heading']}>Seller Information</h4>
+            <ul className={styles['seller-info-wrapper']}>
+              {/* KYC */}
+              <li>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g clip-path="url(#clip0_173_56271)">
+                    <rect width="24" height="24" fill="#8064A2" />
+                    <path
+                      d="M10 12C12.21 12 14 10.21 14 8C14 5.79 12.21 4 10 4C7.79 4 6 5.79 6 8C6 10.21 7.79 12 10 12ZM10 6C11.1 6 12 6.9 12 8C12 9.1 11.1 10 10 10C8.9 10 8 9.1 8 8C8 6.9 8.9 6 10 6Z"
+                      fill="white"
+                    />
+                    <path
+                      d="M4 18.003C4.22 17.283 7.31 16.003 10 16.003C10 15.303 10.13 14.633 10.35 14.013C7.62 13.913 2 15.273 2 18.003V20.003H11.54C11.02 19.423 10.61 18.753 10.35 18.003H4Z"
+                      fill="white"
+                    />
+                    <path
+                      d="M19.43 18.02C19.79 17.43 20 16.74 20 16C20 13.79 18.21 12 16 12C13.79 12 12 13.79 12 16C12 18.21 13.79 20 16 20C16.74 20 17.43 19.78 18.02 19.43C18.95 20.36 19.64 21.05 20.59 22L22 20.59C20.5 19.09 21.21 19.79 19.43 18.02ZM16 18C14.9 18 14 17.1 14 16C14 14.9 14.9 14 16 14C17.1 14 18 14.9 18 16C18 17.1 17.1 18 16 18Z"
+                      fill="white"
+                    />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_173_56271">
+                      <rect width="24" height="24" fill="white" />
+                    </clipPath>
+                  </defs>
+                </svg>
+                <p>KYC</p>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                    x="0.5"
+                    y="0.5"
+                    width="15"
+                    height="15"
+                    rx="1.5"
+                    fill="white"
+                    stroke="#8064A2"
+                  />
+                </svg>
+              </li>
+
+              {/* Bank */}
+              <li>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect width="24" height="24" fill="#8064A2" />
+                  <path
+                    d="M12.37 2.15375L21.37 5.75373C21.72 5.89373 22 6.31372 22 6.68372V10.0037C22 10.5537 21.55 11.0037 21 11.0037H3C2.45 11.0037 2 10.5537 2 10.0037V6.68372C2 6.31372 2.28 5.89373 2.63 5.75373L11.63 2.15375C11.83 2.07375 12.17 2.07375 12.37 2.15375Z"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M22 22H2V19C2 18.45 2.45 18 3 18H21C21.55 18 22 18.45 22 19V22Z"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M4 18V11"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M8 18V11"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M12 18V11"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M16 18V11"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M20 18V11"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M1 22H23"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M12 8.5C12.8284 8.5 13.5 7.82843 13.5 7C13.5 6.17157 12.8284 5.5 12 5.5C11.1716 5.5 10.5 6.17157 10.5 7C10.5 7.82843 11.1716 8.5 12 8.5Z"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+
+                <p>Bank</p>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                    x="0.5"
+                    y="0.5"
+                    width="15"
+                    height="15"
+                    rx="1.5"
+                    fill="white"
+                    stroke="#8064A2"
+                  />
+                </svg>
+              </li>
+            </ul>
+          </PageContentBox>
+
+          {/* User Location Details */}
+          <PageContentBox
+            showEditButton={listingLayoutMode === 'edit'}
+            onEditBtnClick={() =>
+              dispatch(openModal({ type: 'listing-address-edit', closable: true }))
+            }
+          >
+            <h4 className={styles['heading']}>Location</h4>
+            <ul className={styles['location-wrapper']}>
+              {/* Address */}
+              {data?._address && (
+                <li>
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g clip-path="url(#clip0_173_56226)">
+                      <path
+                        d="M12 2C7.8 2 4 5.22 4 10.2C4 13.38 6.45 17.12 11.34 21.43C11.72 21.76 12.29 21.76 12.67 21.43C17.55 17.12 20 13.38 20 10.2C20 5.22 16.2 2 12 2ZM12 12C10.9 12 10 11.1 10 10C10 8.9 10.9 8 12 8C13.1 8 14 8.9 14 10C14 11.1 13.1 12 12 12Z"
+                        fill="#8064A2"
+                      />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_173_56226">
+                        <rect width="24" height="24" fill="white" />
+                      </clipPath>
+                    </defs>
+                  </svg>
+
+                  <span>
+                    {`${data?._address.street},
+                      ${data?._address.society},
+                      ${data?._address.city},
+                      ${data?._address.state},
+                      ${data?._address.country}`}
+                  </span>
+                </li>
+              )}
+
+              {/* Working Hours  */}
+              {data?.working_hours && (
+                <li>
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g clip-path="url(#clip0_173_56222)">
+                      <path
+                        d="M12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2ZM15.55 15.8L11.47 13.29C11.17 13.11 10.99 12.79 10.99 12.44V7.75C11 7.34 11.34 7 11.75 7C12.16 7 12.5 7.34 12.5 7.75V12.2L16.34 14.51C16.7 14.73 16.82 15.2 16.6 15.56C16.38 15.91 15.91 16.02 15.55 15.8Z"
+                        fill="#8064A2"
+                      />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_173_56222">
+                        <rect width="24" height="24" fill="white" />
+                      </clipPath>
+                    </defs>
+                  </svg>
+
+                  <span>{data?.phone} </span>
                 </li>
               )}
             </ul>
