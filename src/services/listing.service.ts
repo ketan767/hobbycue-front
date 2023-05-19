@@ -113,3 +113,37 @@ export const deleteListingHobby = async (listingId: string, hobbyId: string) => 
     return { err: error, res: null }
   }
 }
+
+/** Update User Profile  `POST /api/user/?{query}`
+ * - FormData Required Key: `user-profile` */
+export const updateListingProfile = async (listingId: string, formData: FormData) => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(`/listing/${listingId}/profile-image`, formData, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+/** Update User Cover  `POST /api/user/?{query}`
+ * - FormData Required Key: `user-cover` */
+export const updateListingCover = async (listingId: string, formData: FormData) => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(`/listing/${listingId}/cover-image`, formData, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}

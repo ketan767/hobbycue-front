@@ -40,7 +40,7 @@ interface AuthState {
   listingModalData: ListingModalData
 
   editPhotoModalData: {
-    type: 'profile' | 'banner' | null
+    type: 'profile' | 'cover' | null
     image: any
     onComplete: any
   }
@@ -121,7 +121,7 @@ const siteSlice = createSlice({
       {
         payload,
       }: PayloadAction<{
-        type: 'profile' | 'banner' | null
+        type: 'profile' | 'cover' | null
         image: any
         onComplete: any
       }>,

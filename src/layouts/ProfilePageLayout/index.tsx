@@ -3,38 +3,38 @@ import styles from './ProfileLayout.module.css'
 
 import { ReactNode } from 'react'
 import Link from 'next/link'
-import ProfileHeader from '../../components/ProfilePage/Header/Header'
-import HomeTab from '../../components/ProfilePage/HomeTab/HomeTab'
-import { useSelector } from 'react-redux'
+import ProfileHeader from '../../components/ProfilePage/ProfileHeader/ProfileHeader'
+import ProfileHomeTab from '../../components/ProfilePage/ProfileHomeTab/ProfileHomeTab'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
-import PostsTab from '../../components/ProfilePage/PostsTab/PostsTab'
-import MediaTab from '../../components/ProfilePage/MediaTab/MediaTab'
 import { useRouter } from 'next/router'
+import ProfilePagesTab from '@/components/ProfilePage/ProfilePagesTab/ProfilePagesTab'
+import { updateProfileLayoutMode } from '@/redux/slices/site'
 
 type Props = {
   activeTab: ProfilePageTabs
   data: ProfilePageData
+  children: React.ReactNode
 }
 
-const ProfileLayout: React.FC<Props> = ({ activeTab, data }) => {
+const ProfileLayout: React.FC<Props> = ({ children, activeTab, data }) => {
   const router = useRouter()
+  const dispatch = useDispatch()
 
   const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
 
   const tabs: ProfilePageTabs[] = ['home', 'posts', 'media', 'pages', 'blogs']
 
-  const [layoutMode, setLayoutMode] = useState<ProfileLayoutMode>('view')
-
   useEffect(() => {
     if (isLoggedIn && isAuthenticated && router.query.profile_url === user.profile_url)
-      setLayoutMode('edit')
-    else setLayoutMode('view')
-  }, [router.query.profile_url, isLoggedIn, isAuthenticated, user])
+      dispatch(updateProfileLayoutMode('edit'))
+    else dispatch(updateProfileLayoutMode('view'))
+  }, [router.pathname, router.query.profile_url, isLoggedIn, isAuthenticated, user])
 
   return (
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
-      <ProfileHeader data={data.pageData} mode={layoutMode} />
+      <ProfileHeader data={data.pageData} />
 
       {/* Navigation Links */}
       <nav>
@@ -55,13 +55,7 @@ const ProfileLayout: React.FC<Props> = ({ activeTab, data }) => {
       </nav>
 
       {/* Profile Page Body, where all contents of different tabs appears. */}
-      <main>
-        {activeTab === 'home' && data.pageData && (
-          <HomeTab data={data.pageData} mode={layoutMode} />
-        )}
-        {activeTab === 'posts' && data.postsData && <PostsTab />}
-        {activeTab === 'media' && <MediaTab />}
-      </main>
+      <main>{children}</main>
     </>
   )
 }

@@ -1,3 +1,5 @@
+import DefaultProfileImage from '@/assets/svg/default-profile.svg'
+
 export const validateEmail = (email: string) => {
   let a = String(email)
     .toLowerCase()
@@ -24,3 +26,8 @@ export const validatePhone = (phone: string) => {
 }
 
 export const dateFormat = new Intl.DateTimeFormat('en-GB', { month: 'long', day: 'numeric' })
+
+// #TODO
+export const DEFAULT_PROFILE_IMAGES = {
+  user: DefaultProfileImage,
+}

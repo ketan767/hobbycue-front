@@ -1,7 +1,7 @@
 import { getMyProfileDetail } from '@/services/user.service'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-interface AuthState {
+export interface AuthState {
   isLoggedIn: Boolean
   isAuthenticated: Boolean
   user: any
@@ -36,19 +36,27 @@ const authSlice = createSlice({
     updateUser: (state, { payload }) => {
       state.user = payload
     },
+    updateUserListing: (state, { payload }) => {
+      state.listing = payload
+    },
     updateActiveProfile: (
       state,
       { payload }: PayloadAction<{ type: 'user' | 'listing'; data: any }>,
     ) => {
-      state.activeProfile = {
-        type: payload.type,
-        data: payload.data,
-      }
+      state.activeProfile = { type: payload.type, data: payload.data }
+
+      const data: LocalStorageActiveProfile = { type: payload.type, id: payload.data._id }
+      localStorage.setItem('active_profile', JSON.stringify(data))
     },
   },
 })
 
-export const { updateIsAuthenticated, updateIsLoggedIn, updateUser, updateActiveProfile } =
-  authSlice.actions
+export const {
+  updateIsAuthenticated,
+  updateIsLoggedIn,
+  updateUser,
+  updateActiveProfile,
+  updateUserListing,
+} = authSlice.actions
 
 export default authSlice.reducer

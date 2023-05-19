@@ -11,7 +11,7 @@ export const getAllUserDetail = async (query: string): Promise<ApiReturnObject> 
   }
 }
 
-// Get LoggedIn User Detail
+/** Get LoggedIn User Detail `GET /api/user/me/?{query}` */
 export const getMyProfileDetail = async () => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
@@ -102,10 +102,29 @@ export const checkProfileUrl = async (url: string, cb: CallbackFunction) => {
     .catch((err) => cb(err, null))
 }
 
-// Update User Hobby
-export const uploadPhoto = async (formData: FormData) => {
+/** Update User Profile  `POST /api/user/?{query}`
+ * - FormData Required Key: `user-profile` */
+export const updateUserProfile = async (formData: FormData) => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
   try {
-    const res = await axiosInstance.post(`/upload-image`, formData)
+    const res = await axiosInstance.post(`/user/me/profile-image`, formData, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+/** Update User Cover  `POST /api/user/?{query}`
+ * - FormData Required Key: `user-cover` */
+export const updateUserCover = async (formData: FormData) => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(`/user/me/cover-image`, formData, { headers })
     return { res: res, err: null }
   } catch (error) {
     console.error(error)

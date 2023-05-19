@@ -15,3 +15,8 @@ type ProfilePageData = {
   listingsData: any //{ [key: string]: any }
   blogsData: any //{ [key: string]: any }
 }
+
+type LocalStorageActiveProfile = {
+  type: 'user' | 'listing'
+  id: string
+}
