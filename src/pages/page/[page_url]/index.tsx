@@ -9,6 +9,7 @@ import { RootState } from '@/redux/store'
 import ListingPageLayout from '@/layouts/ListingPageLayout'
 import { getListingPages } from '@/services/listing.service'
 import { updateListingModalData, updateListingPageData } from '@/redux/slices/site'
+import ListingHomeTab from '@/components/ListingPage/ListingHomeTab/ListingHomeTab'
 
 type Props = { data: ListingPageData }
 
@@ -29,7 +30,9 @@ const ListingHome: React.FC<Props> = (props) => {
         <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
       </Head>
 
-      <ListingPageLayout activeTab={'home'} data={props.data} />
+      <ListingPageLayout activeTab={'home'} data={props.data}>
+        <ListingHomeTab data={props.data.pageData} />
+      </ListingPageLayout>
     </>
   )
 }

@@ -6,13 +6,13 @@ import styles from '@/styles/Community.module.css'
 import Image from 'next/image'
 import { useSelector } from 'react-redux'
 import store, { RootState } from '@/redux/store'
-import DefaultProfileImage from '@/assets/svg/default-profile.svg'
 import EditIcon from '@/assets/svg/edit-icon.svg'
 import { openModal } from '@/redux/slices/modal'
 import { getAllPosts } from '@/services/post.service'
 import { GetServerSideProps } from 'next'
 import { updatePosts } from '@/redux/slices/post'
 import PostCard from '@/components/PostCard/PostCard'
+import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 
 type Props = {}
 
@@ -36,35 +36,7 @@ const Community: React.FC<Props> = ({}) => {
     <>
       <PageGridLayout column={3}>
         <aside className={styles['community-left-aside']}>
-          <section className={`content-box-wrapper ${styles['profile-switcher']}`}>
-            <Image
-              src={activeProfile.data?.profile_image || DefaultProfileImage}
-              alt=""
-              width={40}
-              height={40}
-            />
-            <p className={styles['name']}>{activeProfile.data?.full_name}</p>
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g clip-path="url(#clip0_25_51286)">
-                <path
-                  d="M15.88 9.29055L12 13.1705L8.11998 9.29055C7.72998 8.90055 7.09998 8.90055 6.70998 9.29055C6.31998 9.68055 6.31998 10.3105 6.70998 10.7005L11.3 15.2905C11.69 15.6805 12.32 15.6805 12.71 15.2905L17.3 10.7005C17.69 10.3105 17.69 9.68055 17.3 9.29055C16.91 8.91055 16.27 8.90055 15.88 9.29055Z"
-                  fill="#08090A"
-                />
-              </g>
-              <defs>
-                <clipPath id="clip0_25_51286">
-                  <rect width="24" height="24" fill="white" />
-                </clipPath>
-              </defs>
-            </svg>
-          </section>
-
+          <ProfileSwitcher />
           <section className={`content-box-wrapper ${styles['hobbies-side-wrapper']}`}>
             <header>
               <h3>Hobbies</h3>

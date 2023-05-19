@@ -9,7 +9,7 @@ import SiteMainLayout from '@/layouts'
 
 import '@/styles/_globals.css'
 import { useRouter } from 'next/router'
-import LoadingBackdrop from '@/components/LoadingBackdrop'
+import LoadingBackdrop from '@/components/PageLoader'
 
 function App({ Component, pageProps }: AppProps) {
   const theme = createTheme({
@@ -29,33 +29,6 @@ function App({ Component, pageProps }: AppProps) {
     },
   })
 
-  const router = useRouter()
-
-  const [loading, setLoading] = useState(false)
-
-  useEffect(() => {
-    const handleStart = (url: any, { shallow }: any) => {
-      console.time('LoadingTime')
-      console.log(`App is changing to ${url} ${shallow ? 'with' : 'without'} shallow routing`)
-      setLoading(true)
-    }
-    const handleComplete = () => {
-      console.log('Loading Completed..')
-      console.timeEnd('LoadingTime')
-      setLoading(false)
-    }
-
-    router.events.on('routeChangeStart', handleStart)
-    router.events.on('routeChangeComplete', handleComplete)
-    router.events.on('routeChangeError', handleComplete)
-
-    return () => {
-      router.events.off('routeChangeStart', handleStart)
-      router.events.off('routeChangeComplete', handleComplete)
-      router.events.off('routeChangeError', handleComplete)
-    }
-  }, [router.pathname])
-
   return (
     <>
       <Head>
@@ -65,10 +38,7 @@ function App({ Component, pageProps }: AppProps) {
         <ThemeProvider theme={theme}>
           <Provider store={store}>
             <SiteMainLayout>
-              <>
-                <Component {...pageProps} />
-                {loading && <LoadingBackdrop />}
-              </>
+              <Component {...pageProps} />
             </SiteMainLayout>
           </Provider>
         </ThemeProvider>
