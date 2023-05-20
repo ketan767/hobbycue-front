@@ -18,9 +18,12 @@ import { openModal } from '@/redux/slices/modal'
 import PageLoader from '@/components/PageLoader'
 import { getListingPages } from '@/services/listing.service'
 import PreLoader from '@/components/PreLoader'
+import { logout } from '@/helper'
 
 function SiteMainLayout({ children }: { children: ReactElement }) {
-  const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
+  const { isLoggedIn, isAuthenticated, user } = useSelector(
+    (state: RootState) => state.user
+  )
 
   const dispatch = useDispatch()
   const router = useRouter()
@@ -34,17 +37,23 @@ function SiteMainLayout({ children }: { children: ReactElement }) {
 
     // Get Profile (User) Details
     const { err: profileErr, res: profileRes } = await getMyProfileDetail()
+    if (
+      profileErr?.response?.data?.success === false &&
+      profileErr?.response?.data?.message === 'Authentication failed'
+    ) {
+      logout()
+    }
 
     // If any error or !success, then set user as `not authenticated`
     if (profileErr || !profileRes || !profileRes.data.success)
       return dispatch(updateIsAuthenticated(false))
 
     dispatch(updateIsAuthenticated(true))
-    dispatch(updateUser(profileRes.data.data.user))
+    dispatch(updateUser(profileRes?.data.data.user))
 
     // Fetch the user Listings pages.
     const { err: listingErr, res: listingRes } = await getListingPages(
-      `populate=_hobbies,_address&admin=${profileRes.data.data.user._id}`,
+      `populate=_hobbies,_address&admin=${profileRes?.data.data.user._id}`
     )
 
     if (listingErr || !listingRes || !listingRes.data.success) return
@@ -54,7 +63,9 @@ function SiteMainLayout({ children }: { children: ReactElement }) {
     // Check the localStorage for `active profile`, then update the active profile using the data.
     const active_profile = localStorage.getItem('active_profile')
 
-    const activeProfile: LocalStorageActiveProfile = JSON.parse(active_profile as string)
+    const activeProfile: LocalStorageActiveProfile = JSON.parse(
+      active_profile as string
+    )
 
     let activeProfileData: AuthState['activeProfile'] = {
       type: 'user',
@@ -63,7 +74,7 @@ function SiteMainLayout({ children }: { children: ReactElement }) {
 
     if (activeProfile && activeProfile.type === 'listing') {
       const listing = listingRes.data.data.listings.find(
-        (listing: any) => listing._id === activeProfile.id,
+        (listing: any) => listing._id === activeProfile.id
       )
       if (listing) activeProfileData = { type: 'listing', data: listing }
     }

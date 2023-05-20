@@ -1,7 +1,9 @@
 import axiosInstance, { operation } from './_axios'
 
 /** Get User Details `GET /api/user/?{query}`  */
-export const getAllUserDetail = async (query: string): Promise<ApiReturnObject> => {
+export const getAllUserDetail = async (
+  query: string
+): Promise<ApiReturnObject> => {
   try {
     const res = await axiosInstance.get(`/user/?${query}`)
     return { res: res, err: null }
@@ -20,14 +22,17 @@ export const getMyProfileDetail = async () => {
   try {
     const res = await axiosInstance.get(`/user/me?${query}`, { headers })
     return { res: res, err: null }
-  } catch (error) {
+  } catch (error: any) {
     console.error(error)
     return { err: error, res: null }
   }
 }
 
 // Update User
-export const updateMyProfileDetail = async (data: UpdateProfilePayload, cb: CallbackFunction) => {
+export const updateMyProfileDetail = async (
+  data: UpdateProfilePayload,
+  cb: CallbackFunction
+) => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
 
@@ -44,7 +49,7 @@ export const addUserHobby = async (
     genre?: string
     level: number
   },
-  cb: CallbackFunction,
+  cb: CallbackFunction
 ) => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
@@ -69,7 +74,10 @@ export const deleteUserHobby = async (id: string): Promise<ApiReturnObject> => {
 }
 
 // Add new user address
-export const addUserAddress = async (data: ProfileAddressPayload, cb: CallbackFunction) => {
+export const addUserAddress = async (
+  data: ProfileAddressPayload,
+  cb: CallbackFunction
+) => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
 
@@ -83,7 +91,7 @@ export const addUserAddress = async (data: ProfileAddressPayload, cb: CallbackFu
 export const updateUserAddress = async (
   id: string,
   data: ProfileAddressPayload,
-  cb: CallbackFunction,
+  cb: CallbackFunction
 ) => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
@@ -109,7 +117,9 @@ export const updateUserProfile = async (formData: FormData) => {
   const headers = { Authorization: `Bearer ${token}` }
 
   try {
-    const res = await axiosInstance.post(`/user/me/profile-image`, formData, { headers })
+    const res = await axiosInstance.post(`/user/me/profile-image`, formData, {
+      headers,
+    })
     return { res: res, err: null }
   } catch (error) {
     console.error(error)
@@ -124,7 +134,9 @@ export const updateUserCover = async (formData: FormData) => {
   const headers = { Authorization: `Bearer ${token}` }
 
   try {
-    const res = await axiosInstance.post(`/user/me/cover-image`, formData, { headers })
+    const res = await axiosInstance.post(`/user/me/cover-image`, formData, {
+      headers,
+    })
     return { res: res, err: null }
   } catch (error) {
     console.error(error)

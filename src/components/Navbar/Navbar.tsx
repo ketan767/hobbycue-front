@@ -21,6 +21,7 @@ import store, { RootState } from '@/redux/store'
 
 import { useRouter } from 'next/router'
 import { DEFAULT_PROFILE_IMAGES } from '@/utils'
+import { logout } from '@/helper'
 
 type Props = {}
 
@@ -28,16 +29,18 @@ export const Navbar: React.FC<Props> = ({}) => {
   const dispatch = useDispatch()
   const router = useRouter()
 
-  const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
+  const { isLoggedIn, isAuthenticated, user } = useSelector(
+    (state: RootState) => state.user
+  )
   // const { isLoggedIn, isAuthenticated, user } = store.getState().user
 
-  const [showDropdown, setShowDropdown] = useState<'user-menu' | 'hobby-list' | null>(null)
+  const [showDropdown, setShowDropdown] = useState<
+    'user-menu' | 'hobby-list' | null
+  >(null)
 
   const handleLogout = () => {
-    localStorage.removeItem('token')
-    dispatch(updateIsLoggedIn(false))
+    logout()
     setShowDropdown(null)
-    window.location.pathname = '/'
   }
 
   useEffect(() => {
@@ -284,15 +287,22 @@ export const Navbar: React.FC<Props> = ({}) => {
                       <section className={styles['general-info']}>
                         <div className={styles['profile-name']}>
                           <Image
-                            src={user.profile_image || DEFAULT_PROFILE_IMAGES.user}
+                            src={
+                              user.profile_image || DEFAULT_PROFILE_IMAGES.user
+                            }
                             alt=""
                             width={48}
                             height={48}
                           />
                           <h4>{user.full_name}</h4>
                         </div>
-                        <Link prefetch={true} href={`/profile/${user.profile_url}`}>
-                          <button className={styles['view-profile-btn']}>View Profile</button>
+                        <Link
+                          prefetch={true}
+                          href={`/profile/${user.profile_url}`}
+                        >
+                          <button className={styles['view-profile-btn']}>
+                            View Profile
+                          </button>
                         </Link>
                       </section>
 
@@ -310,7 +320,9 @@ export const Navbar: React.FC<Props> = ({}) => {
                       <span className={styles['divider']}></span>
 
                       <Link href={'/add-listing'}>
-                        <h5 className={styles['add-listing']}>Add Listing Page</h5>
+                        <h5 className={styles['add-listing']}>
+                          Add Listing Page
+                        </h5>
                       </Link>
 
                       <span className={styles['divider']}></span>
@@ -326,7 +338,9 @@ export const Navbar: React.FC<Props> = ({}) => {
               ) : (
                 <li>
                   <OutlinedButton
-                    onClick={() => dispatch(openModal({ type: 'auth', closable: true }))}
+                    onClick={() =>
+                      dispatch(openModal({ type: 'auth', closable: true }))
+                    }
                   >
                     Sign In
                   </OutlinedButton>{' '}

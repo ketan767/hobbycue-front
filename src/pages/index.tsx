@@ -27,14 +27,16 @@ const Home: React.FC<PropTypes> = function () {
               Explore your <span>hobby</span> or <span>passion</span>
             </h1>
             <p>
-              Sign-in to interact with a community of fellow hobbyists and an eco-system of experts,
-              teachers, suppliers, classes, workshops, and places to practice, participate or
-              perform... Your hobby may be about visual or performing arts, sports, games,
-              gardening, model making, cooking, indoor or outdoor activities…
+              Sign-in to interact with a community of fellow hobbyists and an
+              eco-system of experts, teachers, suppliers, classes, workshops,
+              and places to practice, participate or perform... Your hobby may
+              be about visual or performing arts, sports, games, gardening,
+              model making, cooking, indoor or outdoor activities…
               <br />
               <br />
-              If you are an expert or a seller, you can Add your Listing and promote yourself, your
-              students, products, services or events. Hop on your hobbyhorse and enjoy the ride.
+              If you are an expert or a seller, you can Add your Listing and
+              promote yourself, your students, products, services or events. Hop
+              on your hobbyhorse and enjoy the ride.
             </p>
             <Image
               src={landingIllustration}
@@ -69,10 +71,12 @@ const Home: React.FC<PropTypes> = function () {
               <span>People</span>
             </h3>
             <p className={styles['card-desc']}>
-              Find a teacher, coach, or expert for your hobby interest in your locality. Find a
-              partner, teammate, accompanist or collaborator.
+              Find a teacher, coach, or expert for your hobby interest in your
+              locality. Find a partner, teammate, accompanist or collaborator.
             </p>
-            <OutlinedButton className={styles['card-btn']}>Connect</OutlinedButton>
+            <OutlinedButton className={styles['card-btn']}>
+              Connect
+            </OutlinedButton>
           </div>
 
           {/* Place Card */}
@@ -88,16 +92,24 @@ const Home: React.FC<PropTypes> = function () {
               <span>Place</span>
             </h3>
             <p className={styles['card-desc']}>
-              Find a class, school, playground, auditorium, studio, shop or an event venue. Book a
-              slot at venues that allow booking through hobbycue.
+              Find a class, school, playground, auditorium, studio, shop or an
+              event venue. Book a slot at venues that allow booking through
+              hobbycue.
             </p>
-            <OutlinedButton className={styles['card-btn']}>Meet up</OutlinedButton>
+            <OutlinedButton className={styles['card-btn']}>
+              Meet up
+            </OutlinedButton>
           </div>
 
           {/* Product Card */}
           <div className={`${styles['card']}`}>
             <h3 className={styles['card-title']}>
-              <svg width="35" viewBox="0 0 38 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                width="35"
+                viewBox="0 0 38 32"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path
                   d="M27.6833 11.9995L20.3833 1.06621C20.0667 0.599544 19.5333 0.366211 19 0.366211C18.4667 0.366211 17.9333 0.599544 17.6167 1.08288L10.3167 11.9995H2.33332C1.41666 11.9995 0.666656 12.7495 0.666656 13.6662C0.666656 13.8162 0.683323 13.9662 0.733323 14.1162L4.96666 29.5662C5.34999 30.9662 6.63332 31.9995 8.16666 31.9995H29.8333C31.3667 31.9995 32.65 30.9662 33.05 29.5662L37.2833 14.1162L37.3333 13.6662C37.3333 12.7495 36.5833 11.9995 35.6667 11.9995H27.6833ZM14 11.9995L19 4.66621L24 11.9995H14ZM19 25.3329C17.1667 25.3329 15.6667 23.8329 15.6667 21.9995C15.6667 20.1662 17.1667 18.6662 19 18.6662C20.8333 18.6662 22.3333 20.1662 22.3333 21.9995C22.3333 23.8329 20.8333 25.3329 19 25.3329Z"
                   fill="#C0504D"
@@ -107,16 +119,23 @@ const Home: React.FC<PropTypes> = function () {
               <span>Product</span>
             </h3>
             <p className={styles['card-desc']}>
-              Find equipment or supplies required for your hobby. Buy, rent or borrow from shops,
-              online stores or from community members.
+              Find equipment or supplies required for your hobby. Buy, rent or
+              borrow from shops, online stores or from community members.
             </p>
-            <OutlinedButton className={styles['card-btn']}>Get it</OutlinedButton>
+            <OutlinedButton className={styles['card-btn']}>
+              Get it
+            </OutlinedButton>
           </div>
 
           {/* Program Card */}
           <div className={`${styles['card']}`}>
             <h3 className={styles['card-title']}>
-              <svg width={30} viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                width={30}
+                viewBox="0 0 30 34"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <rect x="3" y="12" width="24" height="19" fill="#0096C8" />
                 <path
                   d="M21.6667 16.5498C21.1833 16.0665 20.3833 16.0665 19.9 16.5498L12.65 23.7998L10 21.1498C9.51667 20.6665 8.71667 20.6665 8.23333 21.1498C7.75 21.6332 7.75 22.4332 8.23333 22.9165L11.4667 26.1498C12.1167 26.7998 13.1667 26.7998 13.8167 26.1498L21.65 18.3165C22.15 17.8332 22.15 17.0332 21.6667 16.5498ZM26.6667 3.99984H25V2.33317C25 1.4165 24.25 0.666504 23.3333 0.666504C22.4167 0.666504 21.6667 1.4165 21.6667 2.33317V3.99984H8.33333V2.33317C8.33333 1.4165 7.58333 0.666504 6.66667 0.666504C5.75 0.666504 5 1.4165 5 2.33317V3.99984H3.33333C1.48333 3.99984 0.0166667 5.49984 0.0166667 7.33317L0 30.6665C0 32.4998 1.48333 33.9998 3.33333 33.9998H26.6667C28.5 33.9998 30 32.4998 30 30.6665V7.33317C30 5.49984 28.5 3.99984 26.6667 3.99984ZM25 30.6665H5C4.08333 30.6665 3.33333 29.9165 3.33333 28.9998V12.3332H26.6667V28.9998C26.6667 29.9165 25.9167 30.6665 25 30.6665Z"
@@ -131,10 +150,12 @@ const Home: React.FC<PropTypes> = function () {
               <span>Program</span>
             </h3>
             <p className={styles['card-desc']}>
-              Find events, meetups and workshops related to your hobby. Register or buy tickets
-              online.
+              Find events, meetups and workshops related to your hobby. Register
+              or buy tickets online.
             </p>
-            <OutlinedButton className={styles['card-btn']}>Attend</OutlinedButton>
+            <OutlinedButton className={styles['card-btn']}>
+              Attend
+            </OutlinedButton>
           </div>
         </section>
 
@@ -159,11 +180,13 @@ const Home: React.FC<PropTypes> = function () {
               <span>Add Your Own</span>
             </h3>
             <p className={styles['card-desc']}>
-              Are you a teacher or expert? Do you sell or rent out equipment, venue or event
-              tickets? Or, you know someone who should be on hobbycue? Go ahead and Add your Own
-              page..{' '}
+              Are you a teacher or expert? Do you sell or rent out equipment,
+              venue or event tickets? Or, you know someone who should be on
+              hobbycue? Go ahead and Add your Own page..{' '}
             </p>
-            <OutlinedButton className={styles['card-btn']}>Add new</OutlinedButton>
+            <OutlinedButton className={styles['card-btn']}>
+              Add new
+            </OutlinedButton>
           </div>
         </section>
       </section>
@@ -188,14 +211,17 @@ const Home: React.FC<PropTypes> = function () {
 
         <div className={styles['testimonial']}>
           <p className={styles['content']}>
-            In a fast growing and ever changing city like Bangalore, it sometimes becomes very
-            difficult to find or connect with like minded people. Websites like hobbycue.com is a
-            great service which helps me get in touch with, communicate, connect, and exchange ideas
-            with other dancers. It also provides the extra benefit of finding products and services
-            that I can avail, which I can be assured is going to be of great quality as it comes
-            recommended by people of the hobbycue community. To have discussions, to get visibility,
-            and to be able to safely explore various hobbies and activities in my city, all under
-            one roof, is an excellent idea and I highly recommend it.
+            In a fast growing and ever changing city like Bangalore, it
+            sometimes becomes very difficult to find or connect with like minded
+            people. Websites like hobbycue.com is a great service which helps me
+            get in touch with, communicate, connect, and exchange ideas with
+            other dancers. It also provides the extra benefit of finding
+            products and services that I can avail, which I can be assured is
+            going to be of great quality as it comes recommended by people of
+            the hobbycue community. To have discussions, to get visibility, and
+            to be able to safely explore various hobbies and activities in my
+            city, all under one roof, is an excellent idea and I highly
+            recommend it.
           </p>
           <div className={styles['testimonial-footer']}>
             <div className={styles['testimonial-audio']}>{/* TODO */}</div>
