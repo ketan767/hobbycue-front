@@ -7,6 +7,7 @@ import Head from 'next/head'
 import ProfileLayout from '@/layouts/ProfilePageLayout'
 import { getListingPages } from '@/services/listing.service'
 import ProfilePagesTab from '@/components/ProfilePage/ProfilePagesTab/ProfilePagesTab'
+import store from '@/redux/store'
 
 interface Props {
   data: ProfilePageData
@@ -29,11 +30,18 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
-  const { query } = context
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context
+) => {
+  const { query, req, res: ctxRes } = context
+
+  // ctxRes.setHeader(
+  //   'Cache-Control',
+  //   'public, s-maxage=10, stale-while-revalidate=59'
+  // )
 
   const { err, res } = await getAllUserDetail(
-    `profile_url=${query['profile_url']}&populate=_hobbies,_addresses,primary_address,_listings,_listings,_listings`,
+    `profile_url=${query['profile_url']}&populate=_hobbies,_addresses,primary_address,_listings,_listings,_listings`
   )
 
   if (err) return { notFound: true }
@@ -43,10 +51,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   if (!user) return { notFound: true }
 
   const { err: error, res: response } = await getListingPages(
-    `populate=_hobbies,_address&admin=${user._id}`,
+    `populate=_hobbies,_address&admin=${user._id}`
   )
 
-  if (response?.data.success && response.data.data.no_of_listings === 0) return { notFound: true }
+  // if (response?.data.success && response.data.data.no_of_listings === 0) return { notFound: true }
 
   const data = {
     pageData: user,

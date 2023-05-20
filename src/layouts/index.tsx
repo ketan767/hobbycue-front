@@ -39,7 +39,9 @@ function SiteMainLayout({ children }: { children: ReactElement }) {
     const { err: profileErr, res: profileRes } = await getMyProfileDetail()
     if (
       profileErr?.response?.data?.success === false &&
-      profileErr?.response?.data?.message === 'Authentication failed'
+      (profileErr?.response?.data?.message === 'Authentication failed' ||
+        profileErr?.response?.data?.message === 'User not found!' ||
+        profileErr?.response?.data?.message === 'Session expired!')
     ) {
       logout()
     }
