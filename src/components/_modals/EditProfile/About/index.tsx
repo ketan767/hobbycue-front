@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { Button, CircularProgress } from '@mui/material'
 
-import { getMyProfileDetail, updateMyProfileDetail } from '@/services/user.service'
+import {
+  getMyProfileDetail,
+  updateMyProfileDetail,
+} from '@/services/user.service'
 
 import styles from './styles.module.css'
 import { isEmptyField } from '@/utils'
@@ -25,7 +28,10 @@ type ProfileAboutData = {
   about: string
 }
 
-const ProfileAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
+const ProfileAboutEditModal: React.FC<Props> = ({
+  onComplete,
+  onBackBtnClick,
+}) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
 
@@ -33,7 +39,9 @@ const ProfileAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
-  const [inputErrs, setInputErrs] = useState<{ about: string | null }>({ about: null })
+  const [inputErrs, setInputErrs] = useState<{ about: string | null }>({
+    about: null,
+  })
 
   const handleInputChange = (value: string) => {
     setData((prev) => {
@@ -51,22 +59,22 @@ const ProfileAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
     }
 
     setSubmitBtnLoading(true)
-    updateMyProfileDetail(data, async (err, res) => {
-      if (err) {
-        setSubmitBtnLoading(false)
-        return console.log(err)
-      }
+    const { err, res } = await updateMyProfileDetail(data)
 
-      const { err: error, res: response } = await getMyProfileDetail()
+    if (err) {
       setSubmitBtnLoading(false)
+      return console.log(err)
+    }
 
-      if (error) return console.log(error)
-      if (response?.data.success) {
-        dispatch(updateUser(response.data.data.user))
-        if (onComplete) onComplete()
-        else dispatch(closeModal())
-      }
-    })
+    const { err: error, res: response } = await getMyProfileDetail()
+    setSubmitBtnLoading(false)
+
+    if (error) return console.log(error)
+    if (response?.data.success) {
+      dispatch(updateUser(response.data.data.user))
+      if (onComplete) onComplete()
+      else dispatch(closeModal())
+    }
   }
 
   useEffect(() => {
@@ -88,13 +96,18 @@ const ProfileAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
             <label>About</label>
             <input hidden required />
             <CustomCKEditor value={data.about} onChange={handleInputChange} />
-            {inputErrs.about && <p className={styles['error-msg']}>{inputErrs.about}</p>}
+            {inputErrs.about && (
+              <p className={styles['error-msg']}>{inputErrs.about}</p>
+            )}
           </div>
         </section>
 
         <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
-            <button className="modal-footer-btn cancel" onClick={onBackBtnClick}>
+            <button
+              className="modal-footer-btn cancel"
+              onClick={onBackBtnClick}
+            >
               Back
             </button>
           )}

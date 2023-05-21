@@ -24,7 +24,9 @@ const ProfileHomeTab: React.FC<Props> = ({ data }) => {
           <PageContentBox
             showEditButton={profileLayoutMode === 'edit'}
             onEditBtnClick={() =>
-              dispatch(openModal({ type: 'profile-hobby-edit', closable: true }))
+              dispatch(
+                openModal({ type: 'profile-hobby-edit', closable: true })
+              )
             }
           >
             <h4 className={styles['heading']}>Hobbies</h4>
@@ -47,7 +49,9 @@ const ProfileHomeTab: React.FC<Props> = ({ data }) => {
           <PageContentBox
             showEditButton={profileLayoutMode === 'edit'}
             onEditBtnClick={() =>
-              dispatch(openModal({ type: 'profile-about-edit', closable: true }))
+              dispatch(
+                openModal({ type: 'profile-about-edit', closable: true })
+              )
             }
           >
             <h4>About</h4>
@@ -58,7 +62,9 @@ const ProfileHomeTab: React.FC<Props> = ({ data }) => {
           <PageContentBox
             showEditButton={profileLayoutMode === 'edit'}
             onEditBtnClick={() =>
-              dispatch(openModal({ type: 'profile-general-edit', closable: true }))
+              dispatch(
+                openModal({ type: 'profile-general-edit', closable: true })
+              )
             }
           >
             <h4>Profile URL</h4>
@@ -73,7 +79,9 @@ const ProfileHomeTab: React.FC<Props> = ({ data }) => {
           <PageContentBox
             showEditButton={profileLayoutMode === 'edit'}
             onEditBtnClick={() =>
-              dispatch(openModal({ type: 'profile-address-edit', closable: true }))
+              dispatch(
+                openModal({ type: 'profile-address-edit', closable: true })
+              )
             }
           >
             <h4 className={styles['heading']}>Address</h4>
@@ -98,13 +106,23 @@ const ProfileHomeTab: React.FC<Props> = ({ data }) => {
                     </clipPath>
                   </defs>
                 </svg>
-                <span>{typeof data._addresses[0] === 'object' && data.primary_address?.city}</span>
+                <span>
+                  {typeof data._addresses[0] === 'object' &&
+                    data.primary_address?.city}
+                </span>
               </li>
             </ul>
           </PageContentBox>
 
           {/* User Contact Details */}
-          <PageContentBox showEditButton={profileLayoutMode === 'edit'}>
+          <PageContentBox
+            showEditButton={profileLayoutMode === 'edit'}
+            onEditBtnClick={() =>
+              dispatch(
+                openModal({ type: 'profile-contact-edit', closable: true })
+              )
+            }
+          >
             <h4 className={styles['heading']}>Contact Information</h4>
             <ul className={styles['contact-wrapper']}>
               {/* Phone */}
@@ -157,7 +175,7 @@ const ProfileHomeTab: React.FC<Props> = ({ data }) => {
               )}
 
               {/* Email */}
-              {data.email && (
+              {data.public_email && (
                 <li>
                   <svg
                     width="24"
@@ -179,7 +197,7 @@ const ProfileHomeTab: React.FC<Props> = ({ data }) => {
                     </defs>
                   </svg>
 
-                  <span>{data.email} </span>
+                  <span>{data.public_email} </span>
                 </li>
               )}
 

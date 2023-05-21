@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
-import { getMyProfileDetail, updateMyProfileDetail } from '@/services/user.service'
+import {
+  getMyProfileDetail,
+  updateMyProfileDetail,
+} from '@/services/user.service'
 import { isEmptyField } from '@/utils'
 import { closeModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
@@ -23,7 +26,10 @@ type ProfileGeneralData = {
   year_of_birth: string
 }
 
-const ProfileGeneralEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
+const ProfileGeneralEditModal: React.FC<Props> = ({
+  onComplete,
+  onBackBtnClick,
+}) => {
   const dispatch = useDispatch()
 
   const { user } = useSelector((state: RootState) => state.user)
@@ -57,7 +63,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
     })
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (isEmptyField(data.full_name)) {
       return setInputErrs((prev) => {
         return { ...prev, full_name: 'This field is required!' }
@@ -85,25 +91,24 @@ const ProfileGeneralEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
     }
 
     setSubmitBtnLoading(true)
-    updateMyProfileDetail(data, async (err, res) => {
-      if (err) {
-        setSubmitBtnLoading(false)
-        return console.log(err)
-      }
-      if (!res.data.success) {
-        setSubmitBtnLoading(false)
-        return alert('Something went wrong!')
-      }
-
-      const { err: error, res: response } = await getMyProfileDetail()
+    const { err, res } = await updateMyProfileDetail(data)
+    if (err) {
       setSubmitBtnLoading(false)
-      if (error) return console.log(error)
-      if (response?.data.success) {
-        dispatch(updateUser(response?.data.data.user))
-        if (onComplete) onComplete()
-        else dispatch(closeModal())
-      }
-    })
+      return console.log(err)
+    }
+    if (!res?.data.success) {
+      setSubmitBtnLoading(false)
+      return alert('Something went wrong!')
+    }
+
+    const { err: error, res: response } = await getMyProfileDetail()
+    setSubmitBtnLoading(false)
+    if (error) return console.log(error)
+    if (response?.data.success) {
+      dispatch(updateUser(response?.data.data.user))
+      if (onComplete) onComplete()
+      else dispatch(closeModal())
+    }
   }
 
   useEffect(() => {
@@ -202,7 +207,9 @@ const ProfileGeneralEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
                   name="year_of_birth"
                   onChange={handleInputChange}
                 />
-                <p className={styles['helper-text']}>{inputErrs.year_of_birth}</p>
+                <p className={styles['helper-text']}>
+                  {inputErrs.year_of_birth}
+                </p>
               </div>
 
               {/* Gender */}
@@ -221,7 +228,9 @@ const ProfileGeneralEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
                   >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <circle cx="8" cy="8" r="7.5" stroke="#8064A2" />
-                      {data.gender === 'male' && <circle cx="8" cy="8" r="4" fill="#8064A2" />}
+                      {data.gender === 'male' && (
+                        <circle cx="8" cy="8" r="4" fill="#8064A2" />
+                      )}
                     </svg>
                     Male
                     <input type="radio" required />
@@ -239,7 +248,9 @@ const ProfileGeneralEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
                   >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <circle cx="8" cy="8" r="7.5" stroke="#8064A2" />
-                      {data.gender === 'female' && <circle cx="8" cy="8" r="4" fill="#8064A2" />}
+                      {data.gender === 'female' && (
+                        <circle cx="8" cy="8" r="4" fill="#8064A2" />
+                      )}
                     </svg>
                     Female
                     <input type="radio" required />
@@ -253,7 +264,10 @@ const ProfileGeneralEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
 
         <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
-            <button className="modal-footer-btn cancel" onClick={onBackBtnClick}>
+            <button
+              className="modal-footer-btn cancel"
+              onClick={onBackBtnClick}
+            >
               Back
             </button>
           )}

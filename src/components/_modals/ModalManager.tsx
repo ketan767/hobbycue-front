@@ -22,6 +22,7 @@ import ListingContactEditModal from './EditListing/ListingContact'
 import ListingAddressEditModal from './EditListing/ListingAddress'
 import ListingHobbyEditModal from './EditListing/ListingHobby'
 import { UploadImageModal } from './UploadImageModal'
+import ProfileContactEditModal from './EditProfile/ProfileContact'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -30,7 +31,9 @@ const CustomBackdrop: React.FC = () => {
 const ModalManager: React.FC = () => {
   const dispatch = useDispatch()
 
-  const { activeModal, closable } = useSelector((state: RootState) => state.modal)
+  const { activeModal, closable } = useSelector(
+    (state: RootState) => state.modal
+  )
 
   function handleClose() {
     dispatch(closeModal())
@@ -58,26 +61,52 @@ const ModalManager: React.FC = () => {
               {activeModal === 'auth' && <AuthModal />}
               {activeModal === 'email-verify' && <VerifyEmailModal />}
               {activeModal === 'user-onboarding' && <UserOnboardingModal />}
-              {activeModal === 'listing-onboarding' && <ListingOnboardingModal />}
+              {activeModal === 'listing-onboarding' && (
+                <ListingOnboardingModal />
+              )}
 
               {activeModal === 'create-post' && <CreatePost />}
               {activeModal === 'upload-image' && <UploadImageModal />}
 
-              {activeModal === 'profile-general-edit' && <ProfileGeneralEditModal />}
-              {activeModal === 'profile-about-edit' && <ProfileAboutEditModal />}
-              {activeModal === 'profile-address-edit' && <ProfileAddressEditModal />}
-              {activeModal === 'profile-hobby-edit' && <ProfileHobbyEditModal />}
+              {activeModal === 'profile-general-edit' && (
+                <ProfileGeneralEditModal />
+              )}
+              {activeModal === 'profile-about-edit' && (
+                <ProfileAboutEditModal />
+              )}
+              {activeModal === 'profile-address-edit' && (
+                <ProfileAddressEditModal />
+              )}
+              {activeModal === 'profile-hobby-edit' && (
+                <ProfileHobbyEditModal />
+              )}
+              {activeModal === 'profile-contact-edit' && (
+                <ProfileContactEditModal />
+              )}
 
               {activeModal === 'listing-type-edit' && <ListingTypeEditModal />}
-              {activeModal === 'listing-general-edit' && <ListingGeneralEditModal />}
-              {activeModal === 'listing-about-edit' && <ListingAboutEditModal />}
-              {activeModal === 'listing-contact-edit' && <ListingContactEditModal />}
-              {activeModal === 'listing-address-edit' && <ListingAddressEditModal />}
-              {activeModal === 'listing-hobby-edit' && <ListingHobbyEditModal />}
+              {activeModal === 'listing-general-edit' && (
+                <ListingGeneralEditModal />
+              )}
+              {activeModal === 'listing-about-edit' && (
+                <ListingAboutEditModal />
+              )}
+              {activeModal === 'listing-contact-edit' && (
+                <ListingContactEditModal />
+              )}
+              {activeModal === 'listing-address-edit' && (
+                <ListingAddressEditModal />
+              )}
+              {activeModal === 'listing-hobby-edit' && (
+                <ListingHobbyEditModal />
+              )}
 
               {/* Modal Close Icon */}
               {closable && (
-                <CloseIcon className={styles['modal-close-icon']} onClick={handleClose} />
+                <CloseIcon
+                  className={styles['modal-close-icon']}
+                  onClick={handleClose}
+                />
               )}
             </main>
           </div>

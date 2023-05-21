@@ -48,22 +48,27 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
   const totalSteps: steps[] = ['General', 'About', 'Address', 'Hobbies']
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep: steps) => totalSteps[totalSteps.indexOf(prevActiveStep) + 1])
+    setActiveStep(
+      (prevActiveStep: steps) =>
+        totalSteps[totalSteps.indexOf(prevActiveStep) + 1]
+    )
   }
   const handleBack = () => {
-    setActiveStep((prevActiveStep: steps) => totalSteps[totalSteps.indexOf(prevActiveStep) - 1])
+    setActiveStep(
+      (prevActiveStep: steps) =>
+        totalSteps[totalSteps.indexOf(prevActiveStep) - 1]
+    )
   }
 
-  const handleCompleteOnboarding = () => {
+  const handleCompleteOnboarding = async () => {
     const data = { is_onboarded: true }
-    updateMyProfileDetail(data, (err, res) => {
-      if (err) return console.log(err)
-      if (res.data.success) {
-        dispatch(closeModal())
-        console.log(res.data.data.user.profile_url)
-        router.push(`/profile/${res.data.data.user.profile_url}`)
-      }
-    })
+    const { err, res } = await updateMyProfileDetail(data)
+    if (err) return console.log(err)
+    if (res?.data.success) {
+      dispatch(closeModal())
+      console.log(res.data.data.user.profile_url)
+      router.push(`/profile/${res.data.data.user.profile_url}`)
+    }
   }
 
   return (
@@ -72,15 +77,26 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
         <h2 className={styles['modal-heading']}>Complete your User Profile</h2>
       </header>
 
-      {activeStep === 'General' && <ProfileGeneralEditModal onComplete={handleNext} />}
+      {activeStep === 'General' && (
+        <ProfileGeneralEditModal onComplete={handleNext} />
+      )}
       {activeStep === 'About' && (
-        <ProfileAboutEditModal onComplete={handleNext} onBackBtnClick={handleBack} />
+        <ProfileAboutEditModal
+          onComplete={handleNext}
+          onBackBtnClick={handleBack}
+        />
       )}
       {activeStep === 'Address' && (
-        <ProfileAddressEditModal onComplete={handleNext} onBackBtnClick={handleBack} />
+        <ProfileAddressEditModal
+          onComplete={handleNext}
+          onBackBtnClick={handleBack}
+        />
       )}
       {activeStep === 'Hobbies' && (
-        <ProfileHobbyEditModal onComplete={handleCompleteOnboarding} onBackBtnClick={handleBack} />
+        <ProfileHobbyEditModal
+          onComplete={handleCompleteOnboarding}
+          onBackBtnClick={handleBack}
+        />
       )}
 
       <section className={styles['step-indicators']}>
@@ -89,7 +105,9 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
             <span
               key={step}
               className={`${styles['step']} ${
-                totalSteps.indexOf(step) <= totalSteps.indexOf(activeStep) ? styles['active'] : ''
+                totalSteps.indexOf(step) <= totalSteps.indexOf(activeStep)
+                  ? styles['active']
+                  : ''
               }`}
             ></span>
           )

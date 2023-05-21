@@ -28,18 +28,18 @@ export const getMyProfileDetail = async () => {
   }
 }
 
-// Update User
-export const updateMyProfileDetail = async (
-  data: UpdateProfilePayload,
-  cb: CallbackFunction
-) => {
+/** Update LoggedIn User Detail `PATCH /api/user/me/` */
+export const updateMyProfileDetail = async (data: UpdateProfilePayload) => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
 
-  await axiosInstance
-    .patch(`/user/me`, data, { headers })
-    .then((res) => cb(null, res))
-    .catch((err) => cb(err, null))
+  try {
+    const res = await axiosInstance.patch(`/user/me`, data, { headers })
+    return { res: res, err: null }
+  } catch (error: any) {
+    console.error(error)
+    return { err: error, res: null }
+  }
 }
 
 // Update User Hobby
