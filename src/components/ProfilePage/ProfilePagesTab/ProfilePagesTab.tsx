@@ -18,7 +18,7 @@ const ProfilePagesTab: React.FC<Props> = ({ data }) => {
   const dispatch = useDispatch()
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
 
-  console.log('🚀 ~ file: ProfilePagesTab.tsx:16 ~ data:', data.listingsData)
+  console.log('pages data:', data.listingsData)
   return (
     <>
       <PageGridLayout column={2}>
