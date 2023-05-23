@@ -128,7 +128,6 @@ const ListingContactEditModal: React.FC<Props> = ({
               <div className={styles.useEmailContainer}>
                 <p>Either Phone Number or Email ID is required.</p>
                 <OutlinedButton
-                  children="Use Mine"
                   onClick={() =>
                     setData((prev) => {
                       return {
@@ -137,7 +136,9 @@ const ListingContactEditModal: React.FC<Props> = ({
                       }
                     })
                   }
-                />
+                >
+                  Use Mine
+                </OutlinedButton>
               </div>
             ) : (
               <></>

@@ -153,6 +153,12 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
           onBackBtnClick={handleBack}
         />
       )}
+      {activeStep === 'EventHours' && (
+        <ListingEventHoursEditModal
+          onComplete={handleNext}
+          onBackBtnClick={handleBack}
+        />
+      )}
       {activeStep === 'Hobbies' && (
         <ListingHobbyEditModal
           onComplete={handleCompleteOnboarding}
