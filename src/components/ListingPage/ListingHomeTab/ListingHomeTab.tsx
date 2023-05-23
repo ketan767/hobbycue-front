@@ -14,7 +14,6 @@ import FacebookIcon from '../../../assets/svg/Facebook.svg'
 import TwitterIcon from '../../../assets/svg/Twitter.svg'
 import InstagramIcon from '../../../assets/svg/Instagram.svg'
 
-
 interface Props {
   data: ListingPageData['pageData']
 }
@@ -27,7 +26,6 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
 
   return (
     <>
-
       <main>
         {/* User About */}
         <PageContentBox
@@ -44,7 +42,9 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
         <PageContentBox
           showEditButton={listingLayoutMode === 'edit'}
           onEditBtnClick={() =>
-            dispatch(openModal({ type: 'listing-general-edit', closable: true }))
+            dispatch(
+              openModal({ type: 'listing-general-edit', closable: true })
+            )
           }
         >
           <h4>Profile URL</h4>
@@ -57,8 +57,6 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
           <div>{data?.admin_note}</div>
         </PageContentBox>
       </main>
-
-
     </>
   )
 }
