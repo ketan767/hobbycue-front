@@ -43,7 +43,14 @@ import ListingEventHoursEditModal from '../EditListing/ListingEventHours'
 //   is_onboarded: boolean
 // }
 
-type Step = 'General' | 'About' | 'Contact' | 'Address' | 'Hobbies' | 'WorkingHours' | 'EventHours'
+type Step =
+  | 'General'
+  | 'About'
+  | 'Contact'
+  | 'Address'
+  | 'Hobbies'
+  | 'WorkingHours'
+  | 'EventHours'
 
 export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
   const dispatch = useDispatch()
@@ -53,24 +60,43 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
 
   const { listingModalData } = useSelector((state: RootState) => state.site)
 
-  const totalSteps: Step[] = ['General', 'About', 'Contact', 'Address', 'Hobbies']
+  const totalSteps: Step[] = [
+    'General',
+    'About',
+    'Contact',
+    'Address',
+    'Hobbies',
+  ]
   let steps = [...totalSteps]
   if (listingModalData.type === 2) {
-    steps = ['General', 'About', 'Contact', 'Address', 'WorkingHours', 'Hobbies']
+    steps = [
+      'General',
+      'About',
+      'Contact',
+      'Address',
+      'WorkingHours',
+      'Hobbies',
+    ]
   }
   if (listingModalData.type === 4) {
     steps = ['General', 'About', 'Contact', 'Address', 'EventHours', 'Hobbies']
   }
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep: Step) => steps[steps.indexOf(prevActiveStep) + 1])
+    setActiveStep(
+      (prevActiveStep: Step) => steps[steps.indexOf(prevActiveStep) + 1]
+    )
   }
   const handleBack = () => {
-    setActiveStep((prevActiveStep: Step) => steps[steps.indexOf(prevActiveStep) - 1])
+    setActiveStep(
+      (prevActiveStep: Step) => steps[steps.indexOf(prevActiveStep) - 1]
+    )
   }
 
   const handleCompleteOnboarding = async () => {
-    const { err, res } = await updateListing(listingModalData._id, { is_onboarded: true })
+    const { err, res } = await updateListing(listingModalData._id, {
+      is_onboarded: true,
+    })
     if (err) return console.log(err)
     if (res?.data.success) {
       dispatch(closeModal())
@@ -88,40 +114,62 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
       {activeStep === 'General' && (
         <ListingGeneralEditModal
           onComplete={handleNext}
-          onBackBtnClick={() => dispatch(openModal({ type: 'listing-type-edit', closable: true }))}
+          onBackBtnClick={() =>
+            dispatch(openModal({ type: 'listing-type-edit', closable: true }))
+          }
         />
       )}
 
       {activeStep === 'About' && (
-        <ListingAboutEditModal onComplete={handleNext} onBackBtnClick={handleBack} />
+        <ListingAboutEditModal
+          onComplete={handleNext}
+          onBackBtnClick={handleBack}
+        />
       )}
 
       {activeStep === 'Contact' && (
-        <ListingContactEditModal onComplete={handleNext} onBackBtnClick={handleBack} />
+        <ListingContactEditModal
+          onComplete={handleNext}
+          onBackBtnClick={handleBack}
+        />
       )}
 
       {activeStep === 'Address' && (
-        <ListingAddressEditModal onComplete={handleNext} onBackBtnClick={handleBack} />
+        <ListingAddressEditModal
+          onComplete={handleNext}
+          onBackBtnClick={handleBack}
+        />
       )}
 
       {activeStep === 'WorkingHours' && (
-        <ListingWorkingHoursEditModal onComplete={handleNext} onBackBtnClick={handleBack} />
+        <ListingWorkingHoursEditModal
+          onComplete={handleNext}
+          onBackBtnClick={handleBack}
+        />
       )}
       {activeStep === 'EventHours' && (
-        <ListingEventHoursEditModal onComplete={handleNext} onBackBtnClick={handleBack} />
+        <ListingEventHoursEditModal
+          onComplete={handleNext}
+          onBackBtnClick={handleBack}
+        />
       )}
       {activeStep === 'Hobbies' && (
-        <ListingHobbyEditModal onComplete={handleCompleteOnboarding} onBackBtnClick={handleBack} />
+        <ListingHobbyEditModal
+          onComplete={handleCompleteOnboarding}
+          onBackBtnClick={handleBack}
+        />
       )}
-
 
       <section className={styles['step-indicators']}>
         {steps.map((step) => {
           return (
             <span
               key={step}
-              className={`${styles['step']} ${steps.indexOf(step) <= steps.indexOf(activeStep) ? styles['active'] : ''
-                }`}
+              className={`${styles['step']} ${
+                steps.indexOf(step) <= steps.indexOf(activeStep)
+                  ? styles['active']
+                  : ''
+              }`}
             ></span>
           )
         })}

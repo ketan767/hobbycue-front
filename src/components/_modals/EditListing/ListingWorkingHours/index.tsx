@@ -194,9 +194,9 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
             </div>
           </div>
           <div className={styles.listContainer}>
-            {workingHoursData.map((item: any, idx) => {
+            {workingHoursData.map((item: any) => {
               return (
-                <div key={idx} className={styles.listItem}>
+                <div key={} className={styles.listItem}>
                   <div className={styles.listSubItem}>
                     <label> From Day </label>
                     <InputSelect options={days} />
