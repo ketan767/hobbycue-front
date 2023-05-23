@@ -9,6 +9,7 @@ import { updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
+import OutlinedButton from '@/components/_buttons/OutlinedButton'
 
 type Props = {
   onComplete?: () => void
@@ -101,18 +102,59 @@ const ListingContactEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
         <section className={styles['body']}>
           <>
             {/* Public Email */}
-            <div className={styles['input-box']}>
-              <label>Email ID</label>
-              <input
-                type="text"
-                placeholder={`Enter alternate email ID`}
-                value={data.public_email.value}
-                name="public_email"
-                autoComplete="email"
-                onChange={handleInputChange}
-              />
-              <p className={styles['helper-text']}>{data.public_email.error}</p>
-            </div>
+            {
+              listingModalData.type === 1 &&
+              <div className={styles.useEmailContainer}>
+                <p>
+                  Either Phone Number or Email ID is required.
+                </p>
+                <OutlinedButton children='Use Mine' onClick={() => setData((prev) => {
+                  return { ...prev, public_email: { value: user.email, error: null } }
+                })} />
+              </div>
+            }
+            {
+              listingModalData.type === 2 ?
+                <div className={styles['two-column-grid']}>
+                  <div className={styles['input-box']}>
+                    <label> Page Admin </label>
+                    <input
+                      type="text"
+                      placeholder={`Page Admin`}
+                      // value={data.page_admin.value}
+                      name="page_admin"
+                      autoComplete="page_admin"
+                      onChange={handleInputChange}
+                    />
+                    {/* <p className={styles['helper-text']}>{data.page_admin.error}</p> */}
+                  </div>
+                  <div className={styles['input-box']}>
+                    <label>Email ID</label>
+                    <input
+                      type="text"
+                      placeholder={`Enter alternate email ID`}
+                      value={data.public_email.value}
+                      name="public_email"
+                      autoComplete="email"
+                      onChange={handleInputChange}
+                    />
+                    <p className={styles['helper-text']}>{data.public_email.error}</p>
+                  </div>
+                </div>
+                :
+                <div className={styles['input-box']}>
+                  <label>Email ID</label>
+                  <input
+                    type="text"
+                    placeholder={`Enter alternate email ID`}
+                    value={data.public_email.value}
+                    name="public_email"
+                    autoComplete="email"
+                    onChange={handleInputChange}
+                  />
+                  <p className={styles['helper-text']}>{data.public_email.error}</p>
+                </div>
+            }
 
             <section className={styles['two-column-grid']}>
               <div className={styles['input-box']}>
@@ -155,6 +197,8 @@ const ListingContactEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
               />
               <p className={styles['helper-text']}>{data.website.error}</p>
             </div>
+
+            <p className={styles.kycText}> Seller KYC and Bank details can be entered only on claimed and verified listing pages </p>
           </>
         </section>
 
