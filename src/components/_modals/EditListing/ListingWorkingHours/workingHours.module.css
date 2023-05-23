@@ -148,3 +148,58 @@
 .profile-url-input input {
    flex-grow: 1;
 }
+
+.sectionHead {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   font-weight: 500;
+   font-size: 14px;
+   line-height: 22px;
+   color: #6D747A;
+   margin-bottom: 20px;
+}
+
+.sectionHeadRight {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.sectionHeadRight p {
+   color: #8064A2;
+   margin-left: 6px;
+}
+
+.listItem {
+   display: flex;
+   align-items: center;
+   font-size: 14px;
+}
+
+
+.listSubItem {
+   display: flex;
+   flex-direction: column;
+   padding: 0 16px;
+}
+
+.listSubItem:first-child {
+   padding-left: 0;
+}
+
+.listSubItem:nth-child(3) select {
+   color: #000000;
+}
+
+.listSubItem:nth-child(4) select {
+   color: #000000;
+}
+
+.listSubItem label {
+   margin-bottom: 8px;
+   font-size: 12px;
+   line-height: 18px;
+   color: #6D747A;
+
+}
