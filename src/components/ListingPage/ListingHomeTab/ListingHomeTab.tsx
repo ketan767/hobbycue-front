@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from 'next/image'
 
 import PageContentBox from '@/layouts/PageContentBox'
 import PageGridLayout from '@/layouts/PageGridLayout'
@@ -8,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import styles from './ListingHomeTab.module.css'
 import { RootState } from '@/redux/store'
+import TimeIcon from '../../../assets/svg/Time.svg'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -79,7 +81,7 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
           </PageContentBox>
 
           {/* Tags */}
-          <PageContentBox showEditButton={listingLayoutMode === 'edit'} onEditBtnClick={() => {}}>
+          <PageContentBox showEditButton={listingLayoutMode === 'edit'} onEditBtnClick={() => { }}>
             <h4 className={styles['heading']}>Tags</h4>
             {!data || data._hobbies.length === 0 ? (
               <span>{'No tags!'}</span>
@@ -99,7 +101,7 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
           </PageContentBox>
 
           {/* Related Listing */}
-          <PageContentBox showEditButton={listingLayoutMode === 'edit'} onEditBtnClick={() => {}}>
+          <PageContentBox showEditButton={listingLayoutMode === 'edit'} onEditBtnClick={() => { }}>
             <h4 className={styles['heading']}>Related Listing</h4>
             {!data || data._hobbies.length === 0 ? (
               <span>{'No data!'}</span>
@@ -491,6 +493,13 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
                   <span>{data?.phone} </span>
                 </li>
               )}
+              {
+                data.time &&
+                <li>
+                  <Image src={TimeIcon} width={16} height={16} alt='time' />
+                  Event time
+                </li>
+              }
             </ul>
           </PageContentBox>
         </aside>
