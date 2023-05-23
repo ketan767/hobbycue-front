@@ -103,7 +103,7 @@ const ListingContactEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
           <>
             {/* Public Email */}
             {
-              listingModalData.type === 1 &&
+              listingModalData.type === 1 || listingModalData.type === 4 ?
               <div className={styles.useEmailContainer}>
                 <p>
                   Either Phone Number or Email ID is required.
@@ -111,7 +111,7 @@ const ListingContactEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
                 <OutlinedButton children='Use Mine' onClick={() => setData((prev) => {
                   return { ...prev, public_email: { value: user.email, error: null } }
                 })} />
-              </div>
+              </div> : <></>
             }
             {
               listingModalData.type === 2 ?

@@ -58,10 +58,12 @@ const ListingGeneralEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
         return { ...prev, page_url: { ...prev.page_url, error: 'This field is required!' } }
       })
     }
-    if (isEmptyField(data.year.value)) {
-      return setData((prev) => {
-        return { ...prev, year: { ...prev.year, error: 'This field is required!' } }
-      })
+    if (listingModalData.type !== 4) {
+      if (isEmptyField(data.year.value)) {
+        return setData((prev) => {
+          return { ...prev, year: { ...prev.year, error: 'This field is required!' } }
+        })
+      }
     }
     if (listingModalData.type === 1) {
       if (!data.gender.value) {
@@ -182,23 +184,26 @@ const ListingGeneralEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
 
             <div className={styles['year-gender-wrapper']}>
               {/* Year*/}
-              <div className={styles['input-box']}>
-                <label>
-                  {
-                    listingModalData.type === 2 ? 'Year Of Birth/Establishment' : 'Year'
-                  }
-                </label>
-                <input
-                  type="text"
-                  placeholder="Year"
-                  required
-                  autoComplete="year"
-                  value={data.year.value}
-                  name="year"
-                  onChange={handleInputChange}
-                />
-                <p className={styles['helper-text']}>{data.year.error}</p>
-              </div>
+              {
+                listingModalData.type !== 4 &&
+                <div className={styles['input-box']}>
+                  <label>
+                    {
+                      listingModalData.type === 2 ? 'Year Of Birth/Establishment' : 'Year'
+                    }
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Year"
+                    required
+                    autoComplete="year"
+                    value={data.year.value}
+                    name="year"
+                    onChange={handleInputChange}
+                  />
+                  <p className={styles['helper-text']}>{data.year.error}</p>
+                </div>
+              }
 
               {/* Gender */}
               {
