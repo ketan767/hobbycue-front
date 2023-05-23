@@ -1,0 +1,23 @@
+
+.select {
+   padding: 8px 12px;
+   background: #F7F5F9;
+   border-radius: 8px;
+   border: none;
+   color: #6D747A;
+}
+
+.select:active,
+.select:focus {
+   border: none;
+
+}
+
+.option {
+   background-color: white;
+}
+
+.option:hover {
+   background-color: white;
+   padding: 6px 2px;
+}
