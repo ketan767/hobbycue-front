@@ -18,6 +18,7 @@ import ListingAddressEditModal from '../EditListing/ListingAddress'
 import ListingContactEditModal from '../EditListing/ListingContact'
 import ListingHobbyEditModal from '../EditListing/ListingHobby'
 import { updateListing } from '@/services/listing.service'
+import ListingWorkingHoursEditModal from '../EditListing/ListingWorkingHours'
 
 // type OnboardingData = {
 //   full_name: string
@@ -41,7 +42,7 @@ import { updateListing } from '@/services/listing.service'
 //   is_onboarded: boolean
 // }
 
-type Step = 'General' | 'About' | 'Contact' | 'Address' | 'Hobbies'
+type Step = 'General' | 'About' | 'Contact' | 'Address' | 'Hobbies' | 'WorkingHours'
 
 export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
   const dispatch = useDispatch()
@@ -51,9 +52,13 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
 
   const { listingModalData } = useSelector((state: RootState) => state.site)
 
-  const totalSteps: Step[] = ['General', 'About', 'Contact', 'Address', 'Hobbies']
+  const totalSteps: Step[] = ['General', 'About', 'Contact', 'Address', 'WorkingHours', 'Hobbies']
 
   const handleNext = () => {
+    let steps = [...totalSteps]
+    if (listingModalData.type === 2) {
+      steps = ['General', 'About', 'Contact', 'Address', 'Hobbies']
+    }
     setActiveStep((prevActiveStep: Step) => totalSteps[totalSteps.indexOf(prevActiveStep) + 1])
   }
   const handleBack = () => {
@@ -95,18 +100,21 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
         <ListingAddressEditModal onComplete={handleNext} onBackBtnClick={handleBack} />
       )}
 
+      {activeStep === 'WorkingHours' && (
+        <ListingWorkingHoursEditModal onComplete={handleNext} onBackBtnClick={handleBack} />
+      )}
       {activeStep === 'Hobbies' && (
         <ListingHobbyEditModal onComplete={handleCompleteOnboarding} onBackBtnClick={handleBack} />
       )}
+
 
       <section className={styles['step-indicators']}>
         {totalSteps.map((step) => {
           return (
             <span
               key={step}
-              className={`${styles['step']} ${
-                totalSteps.indexOf(step) <= totalSteps.indexOf(activeStep) ? styles['active'] : ''
-              }`}
+              className={`${styles['step']} ${totalSteps.indexOf(step) <= totalSteps.indexOf(activeStep) ? styles['active'] : ''
+                }`}
             ></span>
           )
         })}
