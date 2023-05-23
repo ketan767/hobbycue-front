@@ -63,10 +63,12 @@ const ListingGeneralEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
         return { ...prev, year: { ...prev.year, error: 'This field is required!' } }
       })
     }
-    if (!data.gender.value) {
-      return setData((prev) => {
-        return { ...prev, gender: { ...prev.gender, error: 'This field is required!' } }
-      })
+    if (listingModalData.type === 1) {
+      if (!data.gender.value) {
+        return setData((prev) => {
+          return { ...prev, gender: { ...prev.gender, error: 'This field is required!' } }
+        })
+      }
     }
 
     let jsonData = {
@@ -181,7 +183,11 @@ const ListingGeneralEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
             <div className={styles['year-gender-wrapper']}>
               {/* Year*/}
               <div className={styles['input-box']}>
-                <label>Year</label>
+                <label>
+                  {
+                    listingModalData.type === 2 ? 'Year Of Birth/Establishment' : 'Year'
+                  }
+                </label>
                 <input
                   type="text"
                   placeholder="Year"
@@ -195,60 +201,67 @@ const ListingGeneralEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
               </div>
 
               {/* Gender */}
-              <div className={styles['input-box']}>
-                <label>Gender</label>
-                <div className={styles['gender-radio-btns']}>
-                  <p
-                    onClick={(e) => {
-                      setData((prev) => {
-                        return { ...prev, gender: { value: 'male', error: null } }
-                      })
-                    }}
-                  >
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <circle cx="8" cy="8" r="7.5" stroke="#8064A2" />
-                      {data.gender.value === 'male' && (
-                        <circle cx="8" cy="8" r="4" fill="#8064A2" />
-                      )}
-                    </svg>
-                    Male
-                    <input type="radio" required />
-                  </p>
+              {
+                listingModalData.type === 1 &&
+                <div className={styles['input-box']}>
+                  <label>Gender</label>
+                  <div className={styles['gender-radio-btns']}>
+                    <p
+                      onClick={(e) => {
+                        setData((prev) => {
+                          return { ...prev, gender: { value: 'male', error: null } }
+                        })
+                      }}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <circle cx="8" cy="8" r="7.5" stroke="#8064A2" />
+                        {data.gender.value === 'male' && (
+                          <circle cx="8" cy="8" r="4" fill="#8064A2" />
+                        )}
+                      </svg>
+                      Male
+                      <input type="radio" required />
+                    </p>
 
-                  <p
-                    onClick={(e) => {
-                      setData((prev) => {
-                        return { ...prev, gender: { value: 'female', error: null } }
-                      })
-                    }}
-                  >
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <circle cx="8" cy="8" r="7.5" stroke="#8064A2" />
-                      {data.gender.value === 'female' && (
-                        <circle cx="8" cy="8" r="4" fill="#8064A2" />
-                      )}
-                    </svg>
-                    Female
-                    <input type="radio" required />
-                  </p>
+                    <p
+                      onClick={(e) => {
+                        setData((prev) => {
+                          return { ...prev, gender: { value: 'female', error: null } }
+                        })
+                      }}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <circle cx="8" cy="8" r="7.5" stroke="#8064A2" />
+                        {data.gender.value === 'female' && (
+                          <circle cx="8" cy="8" r="4" fill="#8064A2" />
+                        )}
+                      </svg>
+                      Female
+                      <input type="radio" required />
+                    </p>
+                  </div>
+                  <p className={styles['helper-text']}>{data.gender.error}</p>
                 </div>
-                <p className={styles['helper-text']}>{data.gender.error}</p>
-              </div>
+              }
+
             </div>
 
             {/* Note */}
-            <div className={styles['input-box']}>
-              <label>Note</label>
-              <input
-                type="text"
-                placeholder="This information is visible only to Admins of this Page"
-                autoComplete="nickname"
-                value={data.admin_note.value}
-                name="admin_note"
-                onChange={handleInputChange}
-              />
-              <p className={styles['helper-text']}>{data.admin_note.error}</p>
-            </div>
+            {
+              listingModalData.type === 1 &&
+              <div className={styles['input-box']}>
+                <label>Note</label>
+                <input
+                  type="text"
+                  placeholder="This information is visible only to Admins of this Page"
+                  autoComplete="nickname"
+                  value={data.admin_note.value}
+                  name="admin_note"
+                  onChange={handleInputChange}
+                />
+                <p className={styles['helper-text']}>{data.admin_note.error}</p>
+              </div>
+            }
           </>
         </section>
 
