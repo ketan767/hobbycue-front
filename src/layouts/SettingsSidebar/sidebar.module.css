@@ -1,0 +1,35 @@
+.sidebarContainer {
+   background: #FFFFFF;
+   border: 1px solid #EBEDF0;
+   border-radius: 8px;
+   padding: 11px 15px;
+}
+
+.sidebarTitle {
+   font-weight: 600;
+   font-size: 16px;
+   line-height: 26px;
+   margin-bottom: 28px;
+}
+
+.text {
+   font-family: 'Poppins';
+}
+
+.listItem {
+   list-style: none;
+   font-weight: 400;
+   font-size: 14px;
+   line-height: 18px;
+   letter-spacing: 0.005em;
+   margin-bottom: 30px;
+   color: #6D747A;
+   display: block;
+   cursor: pointer;
+}
+.listItem:last-child{
+   margin-bottom: 20px;
+}
+.listItemSelected{
+   color: #8064A2;
+}
