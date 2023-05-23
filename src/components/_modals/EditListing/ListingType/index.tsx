@@ -74,6 +74,9 @@ const ListingTypeEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) =
       case 3:
         setList(programPageTypeList)
         break
+      case 4:
+        setList(programPageTypeList)
+        break
       default:
         setList([])
         break

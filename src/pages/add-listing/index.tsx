@@ -121,7 +121,7 @@ const AddListing: React.FC<Props> = (props) => {
               Instrument or Activity Kit.
             </p>
           </section>
-          <section onClick={() => {}} className={`${styles['card']} ${styles['program']}`}>
+          <section  onClick={() => handleClick(4)} className={`${styles['card']} ${styles['program']}`}>
             <h3>
               <svg
                 width="40"

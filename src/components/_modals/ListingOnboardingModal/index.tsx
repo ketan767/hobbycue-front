@@ -19,6 +19,7 @@ import ListingContactEditModal from '../EditListing/ListingContact'
 import ListingHobbyEditModal from '../EditListing/ListingHobby'
 import { updateListing } from '@/services/listing.service'
 import ListingWorkingHoursEditModal from '../EditListing/ListingWorkingHours'
+import ListingEventHoursEditModal from '../EditListing/ListingEventHours'
 
 // type OnboardingData = {
 //   full_name: string
@@ -42,7 +43,7 @@ import ListingWorkingHoursEditModal from '../EditListing/ListingWorkingHours'
 //   is_onboarded: boolean
 // }
 
-type Step = 'General' | 'About' | 'Contact' | 'Address' | 'Hobbies' | 'WorkingHours'
+type Step = 'General' | 'About' | 'Contact' | 'Address' | 'Hobbies' | 'WorkingHours' | 'EventHours'
 
 export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
   const dispatch = useDispatch()
@@ -52,17 +53,20 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
 
   const { listingModalData } = useSelector((state: RootState) => state.site)
 
-  const totalSteps: Step[] = ['General', 'About', 'Contact', 'Address', 'WorkingHours', 'Hobbies']
+  const totalSteps: Step[] = ['General', 'About', 'Contact', 'Address', 'Hobbies']
+  let steps = [...totalSteps]
+  if (listingModalData.type === 2) {
+    steps = ['General', 'About', 'Contact', 'Address', 'WorkingHours', 'Hobbies']
+  }
+  if (listingModalData.type === 4) {
+    steps = ['General', 'About', 'Contact', 'Address', 'EventHours', 'Hobbies']
+  }
 
   const handleNext = () => {
-    let steps = [...totalSteps]
-    if (listingModalData.type === 2) {
-      steps = ['General', 'About', 'Contact', 'Address', 'Hobbies']
-    }
-    setActiveStep((prevActiveStep: Step) => totalSteps[totalSteps.indexOf(prevActiveStep) + 1])
+    setActiveStep((prevActiveStep: Step) => steps[steps.indexOf(prevActiveStep) + 1])
   }
   const handleBack = () => {
-    setActiveStep((prevActiveStep: Step) => totalSteps[totalSteps.indexOf(prevActiveStep) - 1])
+    setActiveStep((prevActiveStep: Step) => steps[steps.indexOf(prevActiveStep) - 1])
   }
 
   const handleCompleteOnboarding = async () => {
@@ -103,17 +107,20 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
       {activeStep === 'WorkingHours' && (
         <ListingWorkingHoursEditModal onComplete={handleNext} onBackBtnClick={handleBack} />
       )}
+      {activeStep === 'EventHours' && (
+        <ListingEventHoursEditModal onComplete={handleNext} onBackBtnClick={handleBack} />
+      )}
       {activeStep === 'Hobbies' && (
         <ListingHobbyEditModal onComplete={handleCompleteOnboarding} onBackBtnClick={handleBack} />
       )}
 
 
       <section className={styles['step-indicators']}>
-        {totalSteps.map((step) => {
+        {steps.map((step) => {
           return (
             <span
               key={step}
-              className={`${styles['step']} ${totalSteps.indexOf(step) <= totalSteps.indexOf(activeStep) ? styles['active'] : ''
+              className={`${styles['step']} ${steps.indexOf(step) <= steps.indexOf(activeStep) ? styles['active'] : ''
                 }`}
             ></span>
           )
