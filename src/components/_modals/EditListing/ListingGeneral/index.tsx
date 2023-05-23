@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
-import { getMyProfileDetail, updateMyProfileDetail } from '@/services/user.service'
+import {
+  getMyProfileDetail,
+  updateMyProfileDetail,
+} from '@/services/user.service'
 import { isEmptyField } from '@/utils'
 import { closeModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
@@ -25,7 +28,10 @@ type ListingGeneralData = {
   admin_note: InputData<string>
 }
 
-const ListingGeneralEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
+const ListingGeneralEditModal: React.FC<Props> = ({
+  onComplete,
+  onBackBtnClick,
+}) => {
   const dispatch = useDispatch()
 
   const { listingModalData } = useSelector((state: RootState) => state.site)
@@ -43,32 +49,47 @@ const ListingGeneralEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
 
   const handleInputChange = (event: any) => {
     setData((prev) => {
-      return { ...prev, [event.target.name]: { value: event.target.value, error: null } }
+      return {
+        ...prev,
+        [event.target.name]: { value: event.target.value, error: null },
+      }
     })
   }
 
   const handleSubmit = async () => {
     if (isEmptyField(data.title.value)) {
       return setData((prev) => {
-        return { ...prev, title: { ...prev.title, error: 'This field is required!' } }
+        return {
+          ...prev,
+          title: { ...prev.title, error: 'This field is required!' },
+        }
       })
     }
     if (isEmptyField(data.page_url.value)) {
       return setData((prev) => {
-        return { ...prev, page_url: { ...prev.page_url, error: 'This field is required!' } }
+        return {
+          ...prev,
+          page_url: { ...prev.page_url, error: 'This field is required!' },
+        }
       })
     }
     if (listingModalData.type !== 4) {
       if (isEmptyField(data.year.value)) {
         return setData((prev) => {
-          return { ...prev, year: { ...prev.year, error: 'This field is required!' } }
+          return {
+            ...prev,
+            year: { ...prev.year, error: 'This field is required!' },
+          }
         })
       }
     }
     if (listingModalData.type === 1) {
       if (!data.gender.value) {
         return setData((prev) => {
-          return { ...prev, gender: { ...prev.gender, error: 'This field is required!' } }
+          return {
+            ...prev,
+            gender: { ...prev.gender, error: 'This field is required!' },
+          }
         })
       }
     }
@@ -184,13 +205,12 @@ const ListingGeneralEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
 
             <div className={styles['year-gender-wrapper']}>
               {/* Year*/}
-              {
-                listingModalData.type !== 4 &&
+              {listingModalData.type !== 4 && (
                 <div className={styles['input-box']}>
                   <label>
-                    {
-                      listingModalData.type === 2 ? 'Year Of Birth/Establishment' : 'Year'
-                    }
+                    {listingModalData.type === 2
+                      ? 'Year Of Birth/Establishment'
+                      : 'Year'}
                   </label>
                   <input
                     type="text"
@@ -203,22 +223,29 @@ const ListingGeneralEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
                   />
                   <p className={styles['helper-text']}>{data.year.error}</p>
                 </div>
-              }
+              )}
 
               {/* Gender */}
-              {
-                listingModalData.type === 1 &&
+              {listingModalData.type === 1 && (
                 <div className={styles['input-box']}>
                   <label>Gender</label>
                   <div className={styles['gender-radio-btns']}>
                     <p
                       onClick={(e) => {
                         setData((prev) => {
-                          return { ...prev, gender: { value: 'male', error: null } }
+                          return {
+                            ...prev,
+                            gender: { value: 'male', error: null },
+                          }
                         })
                       }}
                     >
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                      >
                         <circle cx="8" cy="8" r="7.5" stroke="#8064A2" />
                         {data.gender.value === 'male' && (
                           <circle cx="8" cy="8" r="4" fill="#8064A2" />
@@ -231,11 +258,19 @@ const ListingGeneralEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
                     <p
                       onClick={(e) => {
                         setData((prev) => {
-                          return { ...prev, gender: { value: 'female', error: null } }
+                          return {
+                            ...prev,
+                            gender: { value: 'female', error: null },
+                          }
                         })
                       }}
                     >
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                      >
                         <circle cx="8" cy="8" r="7.5" stroke="#8064A2" />
                         {data.gender.value === 'female' && (
                           <circle cx="8" cy="8" r="4" fill="#8064A2" />
@@ -247,13 +282,11 @@ const ListingGeneralEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
                   </div>
                   <p className={styles['helper-text']}>{data.gender.error}</p>
                 </div>
-              }
-
+              )}
             </div>
 
             {/* Note */}
-            {
-              listingModalData.type === 1 &&
+            {listingModalData.type === 1 && (
               <div className={styles['input-box']}>
                 <label>Note</label>
                 <input
@@ -266,13 +299,16 @@ const ListingGeneralEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
                 />
                 <p className={styles['helper-text']}>{data.admin_note.error}</p>
               </div>
-            }
+            )}
           </>
         </section>
 
         <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
-            <button className="modal-footer-btn cancel" onClick={onBackBtnClick}>
+            <button
+              className="modal-footer-btn cancel"
+              onClick={onBackBtnClick}
+            >
               Back
             </button>
           )}
