@@ -8,7 +8,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import ListingPageLayout from '@/layouts/ListingPageLayout'
 import { getListingPages } from '@/services/listing.service'
-import { updateListingModalData, updateListingPageData } from '@/redux/slices/site'
+import {
+  updateListingModalData,
+  updateListingPageData,
+} from '@/redux/slices/site'
 import ListingHomeTab from '@/components/ListingPage/ListingHomeTab/ListingHomeTab'
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
 import ListingPostsTab from '@/components/ListingPage/ListingPagePosts/ListingPagePosts'
@@ -41,11 +44,13 @@ const ListingHome: React.FC<Props> = (props) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context
+) => {
   const { query } = context
 
   const { err, res } = await getListingPages(
-    `page_url=${query['page_url']}&populate=_hobbies,_address`,
+    `page_url=${query['page_url']}&populate=_hobbies,_address`
   )
 
   if (res?.data.success && res.data.data.no_of_listings === 0) {
