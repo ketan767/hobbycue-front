@@ -14,9 +14,8 @@ import FacebookIcon from '../../../assets/svg/Facebook.svg'
 import TwitterIcon from '../../../assets/svg/Twitter.svg'
 import InstagramIcon from '../../../assets/svg/Instagram.svg'
 
-
 interface Props {
-  data: ListingPageData['pageData'],
+  data: ListingPageData['pageData']
   children: any
 }
 
@@ -33,7 +32,9 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
           <PageContentBox
             showEditButton={listingLayoutMode === 'edit'}
             onEditBtnClick={() =>
-              dispatch(openModal({ type: 'listing-hobby-edit', closable: true }))
+              dispatch(
+                openModal({ type: 'listing-hobby-edit', closable: true })
+              )
             }
           >
             <div className={styles['listing-page-type']}>
@@ -64,7 +65,9 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
           <PageContentBox
             showEditButton={listingLayoutMode === 'edit'}
             onEditBtnClick={() =>
-              dispatch(openModal({ type: 'listing-hobby-edit', closable: true }))
+              dispatch(
+                openModal({ type: 'listing-hobby-edit', closable: true })
+              )
             }
           >
             <h4 className={styles['heading']}>Hobbies</h4>
@@ -86,7 +89,12 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
           </PageContentBox>
 
           {/* Tags */}
-          <PageContentBox showEditButton={listingLayoutMode === 'edit'} onEditBtnClick={() => { }}>
+          <PageContentBox
+            showEditButton={listingLayoutMode === 'edit'}
+            onEditBtnClick={() =>
+              dispatch(openModal({ type: 'listing-tags-edit', closable: true }))
+            }
+          >
             <h4 className={styles['heading']}>Tags</h4>
             {!data || data._hobbies.length === 0 ? (
               <span className={styles.textGray}>{'No tags!'}</span>
@@ -106,7 +114,10 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
           </PageContentBox>
 
           {/* Related Listing */}
-          <PageContentBox showEditButton={listingLayoutMode === 'edit'} onEditBtnClick={() => { }}>
+          <PageContentBox
+            showEditButton={listingLayoutMode === 'edit'}
+            onEditBtnClick={() => {}}
+          >
             <h4 className={styles['heading']}>Related Listing</h4>
             {!data || data._hobbies.length === 0 ? (
               <span className={styles.textGray}>{'No data!'}</span>
@@ -133,7 +144,9 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
           <PageContentBox
             showEditButton={listingLayoutMode === 'edit'}
             onEditBtnClick={() =>
-              dispatch(openModal({ type: 'listing-contact-edit', closable: true }))
+              dispatch(
+                openModal({ type: 'listing-contact-edit', closable: true })
+              )
             }
           >
             <h4 className={styles['heading']}>Contact Information</h4>
@@ -183,7 +196,9 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                     />
                   </svg>
 
-                  <span className={styles.textGray}>{data?.whatsapp_number} </span>
+                  <span className={styles.textGray}>
+                    {data?.whatsapp_number}{' '}
+                  </span>
                 </li>
               )}
 
@@ -241,7 +256,9 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
           <PageContentBox
             showEditButton={listingLayoutMode === 'edit'}
             onEditBtnClick={() =>
-              dispatch(openModal({ type: 'listing-contact-edit', closable: true }))
+              dispatch(
+                openModal({ type: 'listing-contact-edit', closable: true })
+              )
             }
           >
             <h4 className={styles['heading']}>Seller Information</h4>
@@ -406,7 +423,9 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
           <PageContentBox
             showEditButton={listingLayoutMode === 'edit'}
             onEditBtnClick={() =>
-              dispatch(openModal({ type: 'listing-address-edit', closable: true }))
+              dispatch(
+                openModal({ type: 'listing-address-edit', closable: true })
+              )
             }
           >
             <h4 className={styles['heading']}>Location</h4>
@@ -470,45 +489,48 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                   <span>{data?.phone} </span>
                 </li>
               )}
-              {
-                data.time &&
+              {data.time && (
                 <li>
-                  <Image src={TimeIcon} width={16} height={16} alt='time' />
+                  <Image src={TimeIcon} width={16} height={16} alt="time" />
                   Event time
                 </li>
-              }
+              )}
             </ul>
           </PageContentBox>
-          {
-            data?.type === 4 || data?.type === 3 ?
-              <PageContentBox
-                showEditButton={listingLayoutMode === 'edit'}
-                onEditBtnClick={() =>
-                  dispatch(openModal({ type: 'listing-address-edit', closable: true }))
-                }
-              >
-                <h4 className={styles['heading']}>Social Media</h4>
-                <div className={styles.socialIcons}>
-                  <Image src={FacebookIcon} alt='Facebook' />
-                  <Image src={TwitterIcon} alt='Twitter' />
-                  <Image src={InstagramIcon} alt='Instagram' />
-                </div>
-              </PageContentBox> : <></>
-          }
-          {
-            data?.type === 4 || data?.type === 3 ?
-              <PageContentBox
-                showEditButton={listingLayoutMode === 'edit'}
-                onEditBtnClick={() =>
-                  dispatch(openModal({ type: 'listing-address-edit', closable: true }))
-                }
-              >
-                <h4 className={styles['heading']}> Related Listing </h4>
-                <p className={styles.textGray}>
-                  Eg: Guru related to this page
-                </p>
-              </PageContentBox> : <></>
-          }
+          {data?.type === 4 || data?.type === 3 ? (
+            <PageContentBox
+              showEditButton={listingLayoutMode === 'edit'}
+              onEditBtnClick={() =>
+                dispatch(
+                  openModal({ type: 'listing-address-edit', closable: true })
+                )
+              }
+            >
+              <h4 className={styles['heading']}>Social Media</h4>
+              <div className={styles.socialIcons}>
+                <Image src={FacebookIcon} alt="Facebook" />
+                <Image src={TwitterIcon} alt="Twitter" />
+                <Image src={InstagramIcon} alt="Instagram" />
+              </div>
+            </PageContentBox>
+          ) : (
+            <></>
+          )}
+          {data?.type === 4 || data?.type === 3 ? (
+            <PageContentBox
+              showEditButton={listingLayoutMode === 'edit'}
+              onEditBtnClick={() =>
+                dispatch(
+                  openModal({ type: 'listing-address-edit', closable: true })
+                )
+              }
+            >
+              <h4 className={styles['heading']}> Related Listing </h4>
+              <p className={styles.textGray}>Eg: Guru related to this page</p>
+            </PageContentBox>
+          ) : (
+            <></>
+          )}
         </aside>
       </PageGridLayout>
     </>

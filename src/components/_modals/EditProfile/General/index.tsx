@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { updateUser } from '@/redux/slices/user'
 import FilledButton from '@/components/_buttons/FilledButton'
+import axios from 'axios'
 
 type Props = {
   onComplete?: () => void
@@ -111,6 +112,30 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     }
   }
 
+  useEffect(() => {
+    axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/check-profile-url/${data.profile_url}`)
+      .then(res => {
+        console.log('res', res)
+        return setInputErrs((prev) => {
+          return { ...prev, profile_url: null }
+        })
+      })
+      .catch(err => {
+        console.log('err', err.response)
+        return setInputErrs((prev) => {
+          return { ...prev, profile_url: 'This profule url is already taken' }
+        })
+      })
+  }, [data.profile_url])
+
+  useEffect(() => {
+    let profileUrl = data.display_name
+    profileUrl = profileUrl?.replace(/ /g,"-");
+    setData((prev) => {
+      return { ...prev, profile_url: profileUrl }
+    })
+  }, [data.display_name])
+  
   useEffect(() => {
     setData({
       full_name: user.full_name,
