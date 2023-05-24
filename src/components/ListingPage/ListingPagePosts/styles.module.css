@@ -1,0 +1,127 @@
+.listing-page-type {
+   margin: 0 !important;
+   display: flex;
+   align-items: center;
+   gap: var(--spacing-4);
+ }
+ 
+ .listing-page-type p {
+   font-weight: 600;
+   font-size: 16px;
+   line-height: 24px;
+ 
+   color: #0096c8;
+ }
+ 
+ .hobby-list {
+   margin-top: var(--spacing-16);
+   list-style: none;
+   padding: 0;
+   display: flex;
+   flex-wrap: wrap;
+   row-gap: var(--spacing-16);
+   column-gap: var(--spacing-8);
+ }
+ 
+ .hobby-list li {
+   padding: var(--spacing-4) calc(var(--spacing-8) + var(--spacing-4));
+ 
+   background: #f7f5f9;
+   border-radius: 24px;
+ 
+   /* font-family: 'Poppins'; */
+   /* font-style: normal; */
+   font-weight: 500;
+   font-size: 14px;
+   line-height: 20px;
+ 
+   /* display: flex;
+       align-items: flex-end; */
+   letter-spacing: -0.01em;
+   color: #8064a2;
+ }
+ 
+ .hobby-list li.active {
+   color: #8064a2;
+   font-weight: 500;
+ }
+ 
+ ul.location-wrapper,
+ ul.contact-wrapper {
+   margin-top: var(--spacing-16);
+   display: flex;
+   flex-direction: column;
+   gap: var(--spacing-16);
+ }
+ 
+ ul.location-wrapper li {
+   display: flex;
+   gap: var(--spacing-8);
+   font-weight: 400;
+   font-size: 14px;
+   line-height: 20px;
+   color: #08090a;
+ }
+ 
+ ul.contact-wrapper li {
+   display: flex;
+   gap: var(--spacing-8);
+   align-items: center;
+   font-weight: 400;
+   font-size: 14px;
+   line-height: 20px;
+   color: #08090a;
+ }
+ 
+ ul.location-wrapper svg,
+ ul.contact-wrapper svg {
+   width: 1.5rem;
+   aspect-ratio: 1/1;
+ }
+ 
+ /* Seller Information  */
+ ul.seller-info-wrapper {
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   gap: var(--spacing-40);
+ }
+ 
+ ul.seller-info-wrapper li {
+   display: flex;
+   align-items: center;
+   gap: var(--spacing-8);
+ }
+ 
+ ul.seller-info-wrapper li p {
+   font-style: normal;
+   font-weight: 400;
+   font-size: 14px;
+   line-height: 21px;
+   /* identical to box height */
+ 
+   /* Grey/Dark */
+ 
+   color: #939ca3;
+ }
+ 
+ ul.seller-info-wrapper li svg:last-child {
+   margin-left: var(--spacing-16);
+ }
+ 
+ .socialIcons {
+   display: flex;
+ }
+ 
+ .socialIcons img {
+   margin-right: 16px;
+   cursor: pointer;
+ }
+ 
+ .textGray {
+   font-weight: 400;
+   font-size: 14px;
+   line-height: 20px;
+   letter-spacing: 0.04em;
+   color: #939CA3;
+ }

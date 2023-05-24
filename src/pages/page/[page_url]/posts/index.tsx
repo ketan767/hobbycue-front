@@ -10,6 +10,8 @@ import ListingPageLayout from '@/layouts/ListingPageLayout'
 import { getListingPages } from '@/services/listing.service'
 import { updateListingModalData, updateListingPageData } from '@/redux/slices/site'
 import ListingHomeTab from '@/components/ListingPage/ListingHomeTab/ListingHomeTab'
+import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
+import ListingPostsTab from '@/components/ListingPage/ListingPagePosts/ListingPagePosts'
 
 type Props = { data: ListingPageData }
 
@@ -31,7 +33,9 @@ const ListingHome: React.FC<Props> = (props) => {
       </Head>
 
       <ListingPageLayout activeTab={'posts'} data={props.data}>
-        <ListingHomeTab data={props.data.pageData} />
+        <ListingPageMain data={props.data.pageData}>
+          <ListingPostsTab data={props.data.pageData} />
+        </ListingPageMain>
       </ListingPageLayout>
     </>
   )

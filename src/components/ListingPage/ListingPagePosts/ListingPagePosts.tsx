@@ -7,7 +7,7 @@ import PageGridLayout from '@/layouts/PageGridLayout'
 import { openModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
 
-import styles from './ListingHomeTab.module.css'
+import styles from './styles.module.css'
 import { RootState } from '@/redux/store'
 import TimeIcon from '../../../assets/svg/Time.svg'
 import FacebookIcon from '../../../assets/svg/Facebook.svg'
@@ -19,7 +19,7 @@ interface Props {
   data: ListingPageData['pageData']
 }
 
-const ListingHomeTab: React.FC<Props> = ({ data }) => {
+const ListingPostsTab: React.FC<Props> = ({ data }) => {
   console.log('🚀 ~ file: ListingHomeTab.tsx:17 ~ data:', data)
   const dispatch = useDispatch()
 
@@ -63,4 +63,4 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
   )
 }
 
-export default ListingHomeTab
+export default ListingPostsTab
