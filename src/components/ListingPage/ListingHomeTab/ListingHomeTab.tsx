@@ -10,6 +10,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import styles from './ListingHomeTab.module.css'
 import { RootState } from '@/redux/store'
 import TimeIcon from '../../../assets/svg/Time.svg'
+import FacebookIcon from '../../../assets/svg/Facebook.svg'
+import TwitterIcon from '../../../assets/svg/Twitter.svg'
+import InstagramIcon from '../../../assets/svg/Instagram.svg'
+
 
 interface Props {
   data: ListingPageData['pageData']
@@ -64,13 +68,13 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
           >
             <h4 className={styles['heading']}>Hobbies</h4>
             {!data || data._hobbies.length === 0 ? (
-              <span>{'No Hobbies!'}</span>
+              <span className={styles.textGray}>{'No Hobbies!'}</span>
             ) : (
               <ul className={styles['hobby-list']}>
                 {data?._hobbies?.map((item: any) => {
                   if (typeof item === 'string') return
                   return (
-                    <li key={item._id}>
+                    <li key={item._id} className={styles.textGray}>
                       {item?.hobby?.display}
                       {item?.genre && ` - ${item?.genre?.display} `}
                     </li>
@@ -84,13 +88,13 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
           <PageContentBox showEditButton={listingLayoutMode === 'edit'} onEditBtnClick={() => { }}>
             <h4 className={styles['heading']}>Tags</h4>
             {!data || data._hobbies.length === 0 ? (
-              <span>{'No tags!'}</span>
+              <span className={styles.textGray}>{'No tags!'}</span>
             ) : (
               <ul className={styles['hobby-list']}>
                 {data?._hobbies?.map((item: any) => {
                   if (typeof item === 'string') return
                   return (
-                    <li key={item._id}>
+                    <li key={item._id} className={styles.textGray}>
                       {item?.hobby?.display}
                       {item?.genre && ` - ${item?.genre?.display} `}
                     </li>
@@ -104,13 +108,13 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
           <PageContentBox showEditButton={listingLayoutMode === 'edit'} onEditBtnClick={() => { }}>
             <h4 className={styles['heading']}>Related Listing</h4>
             {!data || data._hobbies.length === 0 ? (
-              <span>{'No data!'}</span>
+              <span className={styles.textGray}>{'No data!'}</span>
             ) : (
               <ul className={styles['hobby-list']}>
                 {data?._hobbies?.map((item: any) => {
                   if (typeof item === 'string') return
                   return (
-                    <li key={item._id}>
+                    <li key={item._id} className={styles.textGray}>
                       {item?.hobby?.display}
                       {item?.genre && ` - ${item?.genre?.display} `}
                     </li>
@@ -184,7 +188,7 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
                     </defs>
                   </svg>
 
-                  <span>{data?.phone} </span>
+                  <span className={styles.textGray}>{data?.phone} </span>
                 </li>
               )}
 
@@ -206,7 +210,7 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
                     />
                   </svg>
 
-                  <span>{data?.whatsapp_number} </span>
+                  <span className={styles.textGray}>{data?.whatsapp_number} </span>
                 </li>
               )}
 
@@ -233,7 +237,7 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
                     </defs>
                   </svg>
 
-                  <span>{data?.public_email} </span>
+                  <span className={styles.textGray}>{data?.public_email} </span>
                 </li>
               )}
 
@@ -254,7 +258,7 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
                     />
                   </svg>
 
-                  <span>{data?.website} </span>
+                  <span className={styles.textGray}>{data?.website} </span>
                 </li>
               )}
             </ul>
@@ -457,7 +461,7 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
                     </defs>
                   </svg>
 
-                  <span>
+                  <span className={styles.textGray}>
                     {`${data?._address.street},
                       ${data?._address.society},
                       ${data?._address.city},
@@ -502,6 +506,36 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
               }
             </ul>
           </PageContentBox>
+          {
+            data?.type === 4 || data?.type === 3 ?
+              <PageContentBox
+                showEditButton={listingLayoutMode === 'edit'}
+                onEditBtnClick={() =>
+                  dispatch(openModal({ type: 'listing-address-edit', closable: true }))
+                }
+              >
+                <h4 className={styles['heading']}>Social Media</h4>
+                <div className={styles.socialIcons}>
+                  <Image src={FacebookIcon} alt='Facebook' />
+                  <Image src={TwitterIcon} alt='Twitter' />
+                  <Image src={InstagramIcon} alt='Instagram' />
+                </div>
+              </PageContentBox> : <></>
+          }
+          {
+            data?.type === 4 || data?.type === 3 ?
+              <PageContentBox
+                showEditButton={listingLayoutMode === 'edit'}
+                onEditBtnClick={() =>
+                  dispatch(openModal({ type: 'listing-address-edit', closable: true }))
+                }
+              >
+                <h4 className={styles['heading']}> Related Listing </h4>
+                <p className={styles.textGray}>
+                  Eg: Guru related to this page
+                </p>
+              </PageContentBox> : <></>
+          }
         </aside>
       </PageGridLayout>
     </>
