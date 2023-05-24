@@ -19,6 +19,7 @@ export type ModalType =
   | 'listing-address-edit'
   | 'listing-hobby-edit'
   | 'listing-contact-edit'
+  | 'listing-tags-edit'
 
 interface ModalState {
   activeModal: ModalType

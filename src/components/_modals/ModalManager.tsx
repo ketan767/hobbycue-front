@@ -23,6 +23,7 @@ import ListingAddressEditModal from './EditListing/ListingAddress'
 import ListingHobbyEditModal from './EditListing/ListingHobby'
 import { UploadImageModal } from './UploadImageModal'
 import ProfileContactEditModal from './EditProfile/ProfileContact'
+import ListingTagsEditModal from './EditListing/ListingTag/ListingTag'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -85,6 +86,7 @@ const ModalManager: React.FC = () => {
               )}
 
               {activeModal === 'listing-type-edit' && <ListingTypeEditModal />}
+              {activeModal === 'listing-tags-edit' && <ListingTagsEditModal />}
               {activeModal === 'listing-general-edit' && (
                 <ListingGeneralEditModal />
               )}

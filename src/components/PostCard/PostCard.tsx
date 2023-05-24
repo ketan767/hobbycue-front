@@ -18,7 +18,7 @@ const comments = [
   }
 ]
 const PostCard: React.FC<Props> = ({ data }) => {
-  console.log('postdata', data)
+  // console.log('postdata', data)
 
   return (
     <>
@@ -27,7 +27,7 @@ const PostCard: React.FC<Props> = ({ data }) => {
           {data?._author?.profile_image ? (
             <Image
               className={styles['author-profile']}
-              src={data._author.profile_image}
+              src={data._author?.profile_image}
               alt="Author Profile"
               width={40}
               height={40}
@@ -195,7 +195,7 @@ const PostCard: React.FC<Props> = ({ data }) => {
           <section className={styles.inputContainer}>
             <Image
               className={styles.inputAuthorImage}
-              src={data._author.profile_image}
+              src={data._author?.profile_image}
               alt="Author Profile"
               width={40}
               height={40}
@@ -207,7 +207,7 @@ const PostCard: React.FC<Props> = ({ data }) => {
               return <div className={styles.comment}>
                 <Image
                   className={styles.inputAuthorImage}
-                  src={data._author.profile_image}
+                  src={data._author?.profile_image}
                   alt="Author Profile"
                   width={40}
                   height={40}
