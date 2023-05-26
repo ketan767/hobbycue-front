@@ -329,7 +329,9 @@ export const Navbar: React.FC<Props> = ({}) => {
 
                       <section className={styles['account']}>
                         <h5>Account</h5>
-                        <p>Settings</p>
+                        <Link href={`/settings/login-and-security`}>
+                          <p>Settings</p>
+                        </Link>
                         <p onClick={handleLogout}>Sign Out</p>
                       </section>
                     </div>
