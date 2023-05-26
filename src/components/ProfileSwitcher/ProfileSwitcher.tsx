@@ -10,7 +10,9 @@ import { updateActiveProfile } from '@/redux/slices/user'
 type Props = {}
 
 const ProfileSwitcher: React.FC<Props> = (props) => {
-  const { user, listing, activeProfile } = useSelector((state: RootState) => state.user)
+  const { user, listing, activeProfile } = useSelector(
+    (state: RootState) => state.user
+  )
   const dispatch = useDispatch()
 
   const [showDropdown, setShowDropdown] = useState<boolean>(false)
@@ -59,7 +61,10 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
         </svg>
 
         {showDropdown && (
-          <div onClick={(e) => e.stopPropagation()} className={`${styles['dropdown']} `}>
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className={`${styles['dropdown']} `}
+          >
             <ul className={styles['dd-list']}>
               <li
                 onClick={() => handleUpdateActiveProfile('user', user)}
