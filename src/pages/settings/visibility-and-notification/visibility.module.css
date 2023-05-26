@@ -1,75 +1,73 @@
 .container {
-   background: #FFFFFF;
-   border: 1px solid #EBEDF0;
-   border-radius: 0px 0px 8px 8px;
-   padding: 3rem;
-   margin-left: 2rem;
+  background: #ffffff;
+  border: 1px solid #ebedf0;
+  border-radius: 0px 0px 8px 8px;
+  padding: 3rem;
 }
 
 .textLight {
-   font-weight: 500;
-   font-size: 14px;
-   line-height: 22px;
-   color: #6D747A;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 22px;
+  color: #6d747a;
 }
 
 .textDark {
-   font-weight: 400;
-   font-size: 16px;
-   line-height: 22px;
-   color: #08090A;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 22px;
+  color: #08090a;
 }
 
 .clickable {
-   cursor: pointer;
+  cursor: pointer;
 }
 
 .title {
-   margin-bottom: 24px;
+  margin-bottom: 24px;
 }
 
 .line {
-   width: 100%;
-   height: 1px;
-   background: #EBEDF0;
-   margin-bottom: 24px;
+  width: 100%;
+  height: 1px;
+  background: #ebedf0;
+  margin-bottom: 24px;
 }
 
 .viewOptionContainer {
-   display: flex;
-   align-items: center;
-   justify-content: space-between;
-   margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
 }
 
 .select {
-   padding: 8px 12px;
-   background: #F7F5F9;
-   border-radius: 8px;
-   border: none;
-   color: #6D747A;
+  padding: 8px 12px;
+  background: #f7f5f9;
+  border-radius: 8px;
+  border: none;
+  color: #6d747a;
 }
 
 .select:active,
 .select:focus {
-   border: none;
-
+  border: none;
 }
 
 .option {
-   background-color: white;
+  background-color: white;
 }
 
 .option:hover {
-   background-color: white;
-   padding: 6px 2px;
+  background-color: white;
+  padding: 6px 2px;
 }
-.notifyEditContainer{
-   display: flex;
-   align-items: center;
-   justify-content: space-between;
-   margin-bottom: 24px;
+.notifyEditContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
 }
-.emailUpdates{
-   margin-top: 40px;
+.emailUpdates {
+  margin-top: 40px;
 }

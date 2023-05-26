@@ -7,6 +7,7 @@ import GoogleIcon from '../../../assets/svg/google-icon.svg'
 import FacebookIcon from '../../../assets/svg/facebook-icon.svg'
 import Image from 'next/image'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
+import { withAuth } from '@/navigation/withAuth'
 
 type Props = {}
 
@@ -67,4 +68,4 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
   )
 }
 
-export default LoginAndSecurity
+export default withAuth(LoginAndSecurity)

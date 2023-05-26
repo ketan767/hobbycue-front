@@ -8,6 +8,7 @@ import FacebookIcon from '../../../assets/svg/facebook-icon.svg'
 import Image from 'next/image'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import RadioButton from '@/components/radioButton/radioButton'
+import { withAuth } from '@/navigation/withAuth'
 
 type Props = {}
 const options = [
@@ -115,4 +116,4 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
   )
 }
 
-export default VisibilityAndNotification
+export default withAuth(VisibilityAndNotification)

@@ -1,77 +1,76 @@
 .container {
-   background: #FFFFFF;
-   border: 1px solid #EBEDF0;
-   border-radius: 0px 0px 8px 8px;
-   padding: 3rem;
-   margin-left: 2rem;
+  background: #ffffff;
+  border: 1px solid #ebedf0;
+  border-radius: 0px 0px 8px 8px;
+  padding: 3rem;
 }
 
 .textLight {
-   font-weight: 500;
-   font-size: 14px;
-   line-height: 22px;
-   color: #6D747A;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 22px;
+  color: #6d747a;
 }
-.clickable{
-   cursor: pointer;
+.clickable {
+  cursor: pointer;
 }
 .title {
-   margin-bottom: 24px;
+  margin-bottom: 24px;
 }
 
 .email {
-   font-weight: 400;
-   font-size: 16px;
-   line-height: 22px;
-   color: #08090A;
-   margin-bottom: 2rem;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 22px;
+  color: #08090a;
+  margin-bottom: 2rem;
 }
 
 .editSection {
-   margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .editContainer {
-   display: flex;
-   align-items: center;
-   margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
 }
 
 .editText {
-   font-size: 14px;
-   line-height: 22px;
-   color: #8064A2;
-   margin-left: 6px;
+  font-size: 14px;
+  line-height: 22px;
+  color: #8064a2;
+  margin-left: 6px;
 }
 
 .line {
-   width: 100%;
-   height: 1px;
-   background: #EBEDF0;
-   margin-bottom: 24px;
+  width: 100%;
+  height: 1px;
+  background: #ebedf0;
+  margin-bottom: 24px;
 }
 
 .socialLoginContainer {
-   display: flex;
-   align-items: center;
-   margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
 }
 
 .socialLoginText {
-   font-weight: 400;
-   font-size: 16px;
-   line-height: 22px;
-   color: #08090A;
-   margin-left: 8px;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 22px;
+  color: #08090a;
+  margin-left: 8px;
 }
 
 .loginBtn {
-   margin-left: auto;
+  margin-left: auto;
 }
 
 .logoutText {
-   font-weight: 400;
-   font-size: 16px;
-   line-height: 22px;
-   color: #8064A2;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 22px;
+  color: #8064a2;
 }
