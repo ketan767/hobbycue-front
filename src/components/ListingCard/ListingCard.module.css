@@ -31,6 +31,8 @@
 
 .contentImage {
   border-radius: 4px;
+  width: 48px;
+  height: 48px;
 }
 
 .contentTitle {

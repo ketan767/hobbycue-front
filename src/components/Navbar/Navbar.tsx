@@ -20,7 +20,6 @@ import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownR
 import store, { RootState } from '@/redux/store'
 
 import { useRouter } from 'next/router'
-import { DEFAULT_PROFILE_IMAGES } from '@/utils'
 import { logout } from '@/helper'
 
 type Props = {}
@@ -30,7 +29,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   const router = useRouter()
 
   const { isLoggedIn, isAuthenticated, user } = useSelector(
-    (state: RootState) => state.user
+    (state: RootState) => state.user,
   )
   // const { isLoggedIn, isAuthenticated, user } = store.getState().user
 
@@ -273,12 +272,19 @@ export const Navbar: React.FC<Props> = ({}) => {
                     onFocus={() => setShowDropdown('user-menu')}
                     onBlur={() => setShowDropdown(null)}
                   >
-                    <Image
-                      src={user.profile_image || DEFAULT_PROFILE_IMAGES.user}
-                      alt=""
-                      width={48}
-                      height={48}
-                    />
+                    {user.profile_image ? (
+                      <Image
+                        className={styles['img']}
+                        src={user.profile_image}
+                        alt=""
+                        width={48}
+                        height={48}
+                      />
+                    ) : (
+                      <div
+                        className={`${styles['img']} default-user-icon`}
+                      ></div>
+                    )}
                     <KeyboardArrowDownRoundedIcon htmlColor="#939CA3" />
                   </Link>
 
@@ -286,14 +292,19 @@ export const Navbar: React.FC<Props> = ({}) => {
                     <div className={styles['user-menu-dropdown']}>
                       <section className={styles['general-info']}>
                         <div className={styles['profile-name']}>
-                          <Image
-                            src={
-                              user.profile_image || DEFAULT_PROFILE_IMAGES.user
-                            }
-                            alt=""
-                            width={48}
-                            height={48}
-                          />
+                          {user.profile_image ? (
+                            <Image
+                              className={styles['img']}
+                              src={user.profile_image}
+                              alt=""
+                              width={48}
+                              height={48}
+                            />
+                          ) : (
+                            <div
+                              className={`${styles['img']} default-user-icon`}
+                            ></div>
+                          )}
                           <h4>{user.full_name}</h4>
                         </div>
                         <Link

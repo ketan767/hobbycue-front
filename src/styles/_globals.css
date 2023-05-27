@@ -152,3 +152,51 @@ select:-webkit-autofill {
 .modal-footer-btn:not(:disabled):hover {
   opacity: 0.9;
 }
+
+/* Default Images */
+.default-user-icon {
+  background-image: url(../assets/svg/default-images/default-user-icon.svg);
+  background-size: cover;
+  min-width: var(--spacing-24);
+  min-height: var(--spacing-24);
+}
+
+.default-user-cover {
+  background-image: url(../assets/svg/default-images/default-user-cover.svg);
+  background-size: cover;
+}
+
+.default-people-listing-icon {
+  background-image: url(../assets/svg/default-images/default-people-listing-icon.svg);
+  background-size: cover;
+}
+.default-people-listing-cover {
+  background-image: url(../assets/svg/default-images/default-people-listing-cover.svg);
+  background-size: cover;
+}
+
+.default-program-listing-icon {
+  background-image: url(../assets/svg/default-images/default-program-listing-icon.svg);
+  background-size: cover;
+}
+.default-program-listing-cover {
+  background-image: url(../assets/svg/default-images/default-program-listing-cover.svg);
+  background-size: cover;
+}
+
+.default-place-listing-icon {
+  background-image: url(../assets/svg/default-images/default-place-listing-icon.svg);
+  background-size: cover;
+}
+.default-place-listing-cover {
+  background-image: url(../assets/svg/default-images/default-place-listing-cover.svg);
+  background-size: cover;
+}
+.default-product-listing-icon {
+  background-image: url(../assets/svg/default-images/default-product-listing-icon.svg);
+  background-size: cover;
+}
+.default-product-listing-cover {
+  background-image: url(../assets/svg/default-images/default-product-listing-cover.svg);
+  background-size: cover;
+}

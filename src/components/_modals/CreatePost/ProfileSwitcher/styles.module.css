@@ -12,10 +12,6 @@
 .profile-switcher img[data-profile-type='user'] {
   width: var(--spacing-40);
   height: var(--spacing-40);
-}
-.profile-switcher img[data-profile-type='user'] {
-  width: var(--spacing-40);
-  height: var(--spacing-40);
   border-radius: 100%;
 }
 .profile-switcher img[data-profile-type='listing'] {

@@ -2,9 +2,6 @@ import React, { useState } from 'react'
 import styles from './ProfileHeader.module.css'
 import Image from 'next/image'
 
-import DefaultProfileImage from '@/assets/svg/default-profile.svg'
-import DefaultCoverImage from '@/assets/svg/default-cover.svg'
-
 import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded'
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded'
 import ShareRoundedIcon from '@mui/icons-material/ShareRounded'
@@ -105,7 +102,7 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
               height={160}
             />
           ) : (
-            <div className={`${styles['img']} ${styles['default']}`}></div>
+            <div className={`${styles['img']} default-user-icon`}></div>
           )}
 
           {profileLayoutMode === 'edit' && (
@@ -133,7 +130,7 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
                 width={1000}
               />
             ) : (
-              <div className={`${styles['img']} ${styles['default']} `}></div>
+              <div className={`${styles['img']} default-user-cover`}></div>
             )}
 
             {profileLayoutMode === 'edit' && (
@@ -157,7 +154,10 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
         <div className={styles['action-btn-wrapper']}>
           {/* Send Email Button  */}
           <Link href={`mailto:${data.public_email || data.email}`}>
-            <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
+            <div
+              onClick={(e) => console.log(e)}
+              className={styles['action-btn']}
+            >
               <MailOutlineRoundedIcon color="primary" />
             </div>
           </Link>
