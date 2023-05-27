@@ -21,7 +21,7 @@ const CustomCKEditor: React.FC<Props> = ({ value, onChange }) => {
     <CKEditor
       editor={ClassicEditor}
       data={value}
-      onReady={(editor) => {}}
+      onReady={(editor) => {console.log(editor)}}
       onChange={handleEditorChange}
       config={{
         toolbar: ['bold', 'italic', 'underline', '|', 'numberedList', 'bulletedList'],
