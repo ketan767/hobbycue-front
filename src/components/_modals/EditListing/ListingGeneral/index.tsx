@@ -156,12 +156,22 @@ const ListingGeneralEditModal: React.FC<Props> = ({
       .then((res) => {
         console.log('res', res)
         setNextDisabled(false)
-      
+        setData((prev) => {
+          return {
+            ...prev,
+            page_url: { ...prev.page_url, error: null },
+          }
+        })
       })
       .catch((err) => {
         console.log('err', err.response)
         setNextDisabled(true)
-       
+        setData((prev) => {
+          return {
+            ...prev,
+            page_url: { ...prev.page_url, error: 'This page url is already taken' },
+          }
+        })
       })
   }, [data.page_url])
 

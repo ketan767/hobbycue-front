@@ -87,7 +87,7 @@ const PostVotes: React.FC<Props> = ({ styles, data, updatePost }: Props) => {
 
   useEffect(() => {
     updateVoteStatus()
-  }, [data, activeProfile])
+  }, [data, activeProfile.data, activeProfile.type])
 
   return (
     <>

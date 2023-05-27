@@ -6,16 +6,23 @@ import { getAllUserDetail } from '@/services/user.service'
 import Head from 'next/head'
 import ProfileLayout from '@/layouts/ProfilePageLayout'
 import { getListingPages } from '@/services/listing.service'
-import ProfilePagesTab from '@/components/ProfilePage/ProfilePagesTab/ProfilePagesTab'
-import store from '@/redux/store'
+import store, { RootState } from '@/redux/store'
+import PageGridLayout from '@/layouts/PageGridLayout'
+import PageContentBox from '@/layouts/PageContentBox'
+import { useDispatch, useSelector } from 'react-redux'
+import { openModal } from '@/redux/slices/modal'
+
+import styles from '@/styles/ProfileListingPage.module.css'
+import ListingCard from '@/components/ListingCard/ListingCard'
+import ProfileHobbySideList from '@/components/ProfilePage/ProfileHobbySideList'
 
 interface Props {
   data: ProfilePageData
 }
 
 const ProfileListingsPage: React.FC<Props> = ({ data }) => {
-  // const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
-  console.log(data)
+  const dispatch = useDispatch()
+  const { profileLayoutMode } = useSelector((state: RootState) => state.site)
 
   return (
     <>
@@ -24,7 +31,22 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
       </Head>
 
       <ProfileLayout activeTab={'pages'} data={data}>
-        {data.pageData && <ProfilePagesTab data={data} />}
+        {data.pageData && (
+          <PageGridLayout column={2}>
+            <aside>
+              {/* User Hobbies */}
+              <ProfileHobbySideList data={data.pageData} />
+            </aside>
+
+            <main>
+              <div className={styles['card-container']}>
+                {data.listingsData.map((listing: any) => {
+                  return <ListingCard key={listing._id} data={listing} />
+                })}
+              </div>
+            </main>
+          </PageGridLayout>
+        )}
       </ProfileLayout>
     </>
   )

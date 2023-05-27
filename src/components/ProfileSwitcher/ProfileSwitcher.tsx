@@ -4,14 +4,14 @@ import Image from 'next/image'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import useOutsideAlerter from '@/hooks/useOutsideAlerter'
-import { DEFAULT_PROFILE_IMAGES } from '@/utils'
+
 import { updateActiveProfile } from '@/redux/slices/user'
 
 type Props = {}
 
 const ProfileSwitcher: React.FC<Props> = (props) => {
   const { user, listing, activeProfile } = useSelector(
-    (state: RootState) => state.user
+    (state: RootState) => state.user,
   )
   const dispatch = useDispatch()
 
@@ -22,7 +22,8 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
 
   const handleUpdateActiveProfile = (type: 'user' | 'listing', data: any) => {
     dispatch(updateActiveProfile({ type, data }))
-    setShowDropdown(false)
+
+    window.location.reload()
   }
   return (
     <>
@@ -33,13 +34,21 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
         ref={dropdownRef}
         onClick={() => setShowDropdown((prev) => !prev)}
       >
-        <Image
-          data-profile-type={activeProfile.type}
-          src={activeProfile.data?.profile_image || DEFAULT_PROFILE_IMAGES.user}
-          alt=""
-          width={40}
-          height={40}
-        />
+        {activeProfile.data?.profile_image ? (
+          <Image
+            className={styles['profile-image']}
+            data-profile-type={activeProfile.type}
+            src={activeProfile.data?.profile_image}
+            alt=""
+            width={40}
+            height={40}
+          />
+        ) : (
+          <div
+            className={`${styles['profile-image']} default-user-icon`}
+            data-profile-type={activeProfile.type}
+          ></div>
+        )}
         <p className={styles['name']}>
           {activeProfile.type === 'listing'
             ? activeProfile.data.title
@@ -72,13 +81,17 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
                   activeProfile.type === 'user' && styles['active']
                 }`}
               >
-                <Image
-                  src={user?.profile_image || DEFAULT_PROFILE_IMAGES.user}
-                  alt=""
-                  width={24}
-                  height={24}
-                  data-profile-type="user"
-                />
+                {user?.profile_image ? (
+                  <Image
+                    src={user?.profile_image}
+                    alt=""
+                    width={24}
+                    height={24}
+                    data-profile-type="user"
+                  />
+                ) : (
+                  <div></div>
+                )}
                 <p>{user.full_name}</p>
               </li>
 
@@ -93,13 +106,18 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
                       styles['active']
                     }`}
                   >
-                    <Image
-                      src={page?.profile_image || DEFAULT_PROFILE_IMAGES.user}
-                      alt=""
-                      width={24}
-                      height={24}
-                      data-profile-type="listing"
-                    />
+                    {page?.profile_image ? (
+                      <Image
+                        src={page?.profile_image}
+                        alt=""
+                        width={24}
+                        height={24}
+                        data-profile-type="listing"
+                      />
+                    ) : (
+                      <div></div>
+                    )}
+
                     <p>{page.title}</p>
                   </li>
                 )

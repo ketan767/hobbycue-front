@@ -4,11 +4,9 @@ import styles from './ProfileLayout.module.css'
 import { ReactNode } from 'react'
 import Link from 'next/link'
 import ProfileHeader from '../../components/ProfilePage/ProfileHeader/ProfileHeader'
-import ProfileHomeTab from '../../components/ProfilePage/ProfileHomeTab/ProfileHomeTab'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
-import ProfilePagesTab from '@/components/ProfilePage/ProfilePagesTab/ProfilePagesTab'
 import { updateProfileLayoutMode } from '@/redux/slices/site'
 
 type Props = {
@@ -21,15 +19,29 @@ const ProfileLayout: React.FC<Props> = ({ children, activeTab, data }) => {
   const router = useRouter()
   const dispatch = useDispatch()
 
-  const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
+  const { isLoggedIn, isAuthenticated, user } = useSelector(
+    (state: RootState) => state.user
+  )
 
   const tabs: ProfilePageTabs[] = ['home', 'posts', 'media', 'pages', 'blogs']
 
   useEffect(() => {
-    if (isLoggedIn && isAuthenticated && router.query.profile_url === user.profile_url)
+    if (
+      isLoggedIn &&
+      isAuthenticated &&
+      router.query.profile_url === user.profile_url
+    )
       dispatch(updateProfileLayoutMode('edit'))
     else dispatch(updateProfileLayoutMode('view'))
-  }, [router.pathname, router.query.profile_url, isLoggedIn, isAuthenticated, user])
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    router.pathname,
+    router.query.profile_url,
+    isLoggedIn,
+    isAuthenticated,
+    user,
+  ])
 
   return (
     <>
@@ -43,7 +55,9 @@ const ProfileLayout: React.FC<Props> = ({ children, activeTab, data }) => {
             return (
               <Link
                 key={tab}
-                href={`/profile/${router.query.profile_url}/${tab !== 'home' ? tab : ''}`}
+                href={`/profile/${router.query.profile_url}/${
+                  tab !== 'home' ? tab : ''
+                }`}
                 shallow
                 className={activeTab === tab ? styles['active'] : ''}
               >

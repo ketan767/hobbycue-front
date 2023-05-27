@@ -3,8 +3,7 @@ import styles from './styles.module.css'
 
 import { ReactNode } from 'react'
 import Link from 'next/link'
-import ProfileHeader from '../../components/ProfilePage/ProfileHeader/ProfileHeader'
-import HomeTab from '../../components/ProfilePage/ProfileHomeTab/ProfileHomeTab'
+
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import ListingHeader from '@/components/ListingPage/ListingHeader/ListingHeader'
@@ -22,15 +21,28 @@ const ListingPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
   const router = useRouter()
   const dispatch = useDispatch()
 
-  const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
+  const { isLoggedIn, isAuthenticated, user } = useSelector(
+    (state: RootState) => state.user,
+  )
 
-  const tabs: ListingPageTabs[] = ['home', 'posts', 'media', 'reviews', 'events', 'store']
+  const tabs: ListingPageTabs[] = [
+    'home',
+    'posts',
+    'media',
+    'reviews',
+    'events',
+    'store',
+  ]
 
   useEffect(() => {
     if (
       isLoggedIn &&
       isAuthenticated &&
-      Boolean(user._listings?.find((listing: any) => listing.page_url === router.query.page_url))
+      Boolean(
+        user._listings?.find(
+          (listing: any) => listing.page_url === router.query.page_url,
+        ),
+      )
     )
       dispatch(updateListingLayoutMode('edit'))
     else dispatch(updateListingLayoutMode('view'))
@@ -48,7 +60,9 @@ const ListingPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
             return (
               <Link
                 key={tab}
-                href={`/page/${router.query.page_url}/${tab !== 'home' ? tab : ''}`}
+                href={`/page/${router.query.page_url}/${
+                  tab !== 'home' ? tab : ''
+                }`}
                 shallow
                 className={activeTab === tab ? styles['active'] : ''}
               >

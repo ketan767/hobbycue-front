@@ -10,7 +10,10 @@ import CameraIcon from '@/assets/icons/CameraIcon'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import Link from 'next/link'
-import { updateListingCover, updateListingProfile } from '@/services/listing.service'
+import {
+  updateListingCover,
+  updateListingProfile,
+} from '@/services/listing.service'
 import { updatePhotoEditModalData } from '@/redux/slices/site'
 import { openModal } from '@/redux/slices/modal'
 
@@ -101,7 +104,9 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
               height={160}
             />
           ) : (
-            <div className={`${styles['img']} ${styles['default']}`}></div>
+            <div
+              className={`${styles['img']} default-people-listing-icon`}
+            ></div>
           )}
 
           {listingLayoutMode === 'edit' && (
@@ -129,7 +134,9 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
                 width={1000}
               />
             ) : (
-              <div className={`${styles['img']} ${styles['default']} `}></div>
+              <div
+                className={`${styles['img']} default-people-listing-cover`}
+              ></div>
             )}
 
             {listingLayoutMode === 'edit' && (
@@ -153,7 +160,10 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
         <div className={styles['action-btn-wrapper']}>
           {/* Send Email Button  */}
           <Link href={`mailto:${data.public_email}`}>
-            <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
+            <div
+              onClick={(e) => console.log(e)}
+              className={styles['action-btn']}
+            >
               <MailOutlineRoundedIcon color="primary" />
             </div>
           </Link>
