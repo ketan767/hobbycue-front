@@ -151,10 +151,10 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   useEffect(() => {
     axios
       .get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/listing/check-page-url/${data.page_url}`
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/listing/check-page-url/${data.page_url.value}`
       )
       .then((res) => {
-        console.log('res', res)
+        // console.log('res', res)
         setNextDisabled(false)
         setData((prev) => {
           return {
@@ -173,7 +173,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
           }
         })
       })
-  }, [data.page_url])
+  }, [data.page_url.value])
 
   useEffect(() => {
     if (onComplete !== undefined) {
