@@ -11,6 +11,19 @@ export const getListingPages = async (query: string) => {
   }
 }
 
+export const getPages = async (id: any) => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.get(`/post/?author_type=Listing&_author=${id}`, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
 /** Create New Listing `POST: /api/listing/` */
 export const createNewListing = async (data: any) => {
   const token = localStorage.getItem('token')
