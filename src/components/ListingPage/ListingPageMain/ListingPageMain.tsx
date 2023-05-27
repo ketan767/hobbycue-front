@@ -9,10 +9,10 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import styles from './styles.module.css'
 import { RootState } from '@/redux/store'
-import TimeIcon from '../../../assets/svg/time.svg'
-import FacebookIcon from '../../../assets/svg/facebook.svg'
-import TwitterIcon from '../../../assets/svg/twitter.svg'
-import InstagramIcon from '../../../assets/svg/instagram.svg'
+import TimeIcon from '@/assets/svg/time.svg'
+import FacebookIcon from '@/assets/svg/facebook.svg'
+import TwitterIcon from '@/assets/svg/twitter.svg'
+import InstagramIcon from '@/assets/svg/instagram.svg'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -33,7 +33,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
             showEditButton={listingLayoutMode === 'edit'}
             onEditBtnClick={() =>
               dispatch(
-                openModal({ type: 'listing-hobby-edit', closable: true })
+                openModal({ type: 'listing-hobby-edit', closable: true }),
               )
             }
           >
@@ -66,7 +66,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
             showEditButton={listingLayoutMode === 'edit'}
             onEditBtnClick={() =>
               dispatch(
-                openModal({ type: 'listing-hobby-edit', closable: true })
+                openModal({ type: 'listing-hobby-edit', closable: true }),
               )
             }
           >
@@ -145,7 +145,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
             showEditButton={listingLayoutMode === 'edit'}
             onEditBtnClick={() =>
               dispatch(
-                openModal({ type: 'listing-contact-edit', closable: true })
+                openModal({ type: 'listing-contact-edit', closable: true }),
               )
             }
           >
@@ -257,7 +257,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
             showEditButton={listingLayoutMode === 'edit'}
             onEditBtnClick={() =>
               dispatch(
-                openModal({ type: 'listing-contact-edit', closable: true })
+                openModal({ type: 'listing-contact-edit', closable: true }),
               )
             }
           >
@@ -424,7 +424,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
             showEditButton={listingLayoutMode === 'edit'}
             onEditBtnClick={() =>
               dispatch(
-                openModal({ type: 'listing-address-edit', closable: true })
+                openModal({ type: 'listing-address-edit', closable: true }),
               )
             }
           >
@@ -502,7 +502,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
                 dispatch(
-                  openModal({ type: 'listing-address-edit', closable: true })
+                  openModal({ type: 'listing-address-edit', closable: true }),
                 )
               }
             >
@@ -521,7 +521,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
                 dispatch(
-                  openModal({ type: 'listing-address-edit', closable: true })
+                  openModal({ type: 'listing-address-edit', closable: true }),
                 )
               }
             >
