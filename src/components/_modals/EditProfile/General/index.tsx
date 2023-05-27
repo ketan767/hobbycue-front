@@ -36,6 +36,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   const { user } = useSelector((state: RootState) => state.user)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
+  const [nextDisabled, setNextDisabled] = useState(false)
 
   const [data, setData] = useState<ProfileGeneralData>({
     full_name: '',
@@ -113,29 +114,37 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/check-profile-url/${data.profile_url}`)
-      .then(res => {
+    axios
+      .get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/check-profile-url/${data.profile_url}`
+      )
+      .then((res) => {
         console.log('res', res)
-        return setInputErrs((prev) => {
+        setNextDisabled(false)
+        setInputErrs((prev) => {
           return { ...prev, profile_url: null }
         })
       })
-      .catch(err => {
+      .catch((err) => {
         console.log('err', err.response)
-        return setInputErrs((prev) => {
-          return { ...prev, profile_url: 'This profule url is already taken' }
+        setNextDisabled(true)
+        setInputErrs((prev) => {
+          return { ...prev, profile_url: 'This profile url is already taken' }
         })
       })
   }, [data.profile_url])
 
   useEffect(() => {
-    let profileUrl = data.display_name
-    profileUrl = profileUrl?.replace(/ /g,"-");
-    setData((prev) => {
-      return { ...prev, profile_url: profileUrl }
-    })
-  }, [data.display_name])
-  
+    if (onComplete !== undefined) {
+      let profileUrl = data.full_name
+      profileUrl = profileUrl?.toLowerCase()
+      profileUrl = profileUrl?.replace(/ /g, '-')
+      setData((prev) => {
+        return { ...prev, profile_url: profileUrl }
+      })
+    }
+  }, [data.full_name])
+
   useEffect(() => {
     setData({
       full_name: user.full_name,
@@ -300,7 +309,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
           <button
             className="modal-footer-btn submit"
             onClick={handleSubmit}
-            disabled={submitBtnLoading}
+            disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
           >
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'24px'} />
