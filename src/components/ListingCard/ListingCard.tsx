@@ -10,6 +10,7 @@ type Props = {
 }
 
 const ListingCard: React.FC<Props> = ({ data }) => {
+  console.log('🚀 ~ file: ListingCard.tsx:13 ~ data:', data)
   return (
     <>
       <Link
@@ -18,13 +19,15 @@ const ListingCard: React.FC<Props> = ({ data }) => {
         className={styles.container}
       >
         <div className={styles.imgContainer}>
-          <Image
-            src={data.cover_image ? data.cover_image : ''}
-            width={300}
-            height={200}
-            alt="cover"
-            className={styles.coverImage}
-          />
+          {data.cover_image && (
+            <Image
+              src={data.cover_image}
+              width={300}
+              height={100}
+              alt="cover"
+              className={styles.coverImage}
+            />
+          )}
         </div>
         <div className={styles.content}>
           <div className={styles.contentHead}>

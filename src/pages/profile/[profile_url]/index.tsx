@@ -5,24 +5,26 @@ import { GetServerSideProps } from 'next'
 import { getAllUserDetail } from '@/services/user.service'
 import Head from 'next/head'
 import ProfileLayout from '@/layouts/ProfilePageLayout'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import store, { RootState } from '@/redux/store'
-import ProfileHomeTab from '@/components/ProfilePage/ProfileHomeTab/ProfileHomeTab'
+import PageGridLayout from '@/layouts/PageGridLayout'
+import ProfileHobbySideList from '@/components/ProfilePage/ProfileHobbySideList'
+import PageContentBox from '@/layouts/PageContentBox'
+import { openModal } from '@/redux/slices/modal'
+
+import styles from '@/styles/ProfileHomePage.module.css'
+import ProfileAddressSide from '@/components/ProfilePage/ProfileAddressSide'
+import ProfileContactSide from '@/components/ProfilePage/ProfileContactSides'
 
 interface Props {
   data: ProfilePageData
 }
 
 const ProfileHome: React.FC<Props> = ({ data }) => {
-  const { isLoggedIn, isAuthenticated, user } = useSelector(
-    (state: RootState) => state.user
-  )
+  const dispatch = useDispatch()
+  const { profileLayoutMode } = useSelector((state: RootState) => state.site)
 
-  // useEffect(() => {
-  //  if (isLoggedIn && isAuthenticated && data.pageData._id === user._id) setDetail(user)
-  // }, [user])
-
-  // const { isLoggedIn, isAuthenticated, user } = store.getState().user
+  const [pageData, setPageData] = useState(data.pageData)
 
   return (
     <>
@@ -31,7 +33,54 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
       </Head>
 
       <ProfileLayout activeTab={'home'} data={data}>
-        {data.pageData && <ProfileHomeTab data={data.pageData} />}
+        {data.pageData && (
+          <PageGridLayout column={3}>
+            <aside>
+              {/* User Hobbies */}
+              <ProfileHobbySideList data={pageData} />
+            </aside>
+
+            <main>
+              {/* User About */}
+              <PageContentBox
+                showEditButton={profileLayoutMode === 'edit'}
+                onEditBtnClick={() =>
+                  dispatch(
+                    openModal({ type: 'profile-about-edit', closable: true })
+                  )
+                }
+              >
+                <h4>About</h4>
+                <div
+                  dangerouslySetInnerHTML={{ __html: pageData?.about }}
+                ></div>
+              </PageContentBox>
+
+              {/* User Information */}
+              <PageContentBox
+                showEditButton={profileLayoutMode === 'edit'}
+                onEditBtnClick={() =>
+                  dispatch(
+                    openModal({ type: 'profile-general-edit', closable: true })
+                  )
+                }
+              >
+                <h4>Profile URL</h4>
+                <div>{pageData.profile_url}</div>
+                <h4>Year Of Birth</h4>
+                <div>{pageData.year_of_birth}</div>
+              </PageContentBox>
+            </main>
+
+            <aside>
+              {/* User Locations */}
+              <ProfileAddressSide data={pageData} />
+
+              {/* User Contact Details */}
+              <ProfileContactSide data={pageData} />
+            </aside>
+          </PageGridLayout>
+        )}
       </ProfileLayout>
     </>
   )

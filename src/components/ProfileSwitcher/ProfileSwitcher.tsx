@@ -22,7 +22,8 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
 
   const handleUpdateActiveProfile = (type: 'user' | 'listing', data: any) => {
     dispatch(updateActiveProfile({ type, data }))
-    setShowDropdown(false)
+
+    window.location.reload()
   }
   return (
     <>
