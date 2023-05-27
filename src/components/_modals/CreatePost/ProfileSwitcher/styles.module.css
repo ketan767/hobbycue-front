@@ -1,0 +1,99 @@
+/* Profile Switcher */
+.profile-switcher {
+  display: flex;
+  align-items: center;
+  /* justify-content: space-between; */
+  gap: var(--spacing-8);
+  padding: var(--spacing-16) var(--spacing-8);
+  /* margin-bottom: var(--spacing-16); */
+  position: relative;
+  cursor: pointer;
+}
+.profile-switcher img[data-profile-type='user'] {
+  width: var(--spacing-40);
+  height: var(--spacing-40);
+}
+.profile-switcher img[data-profile-type='user'] {
+  width: var(--spacing-40);
+  height: var(--spacing-40);
+  border-radius: 100%;
+}
+.profile-switcher img[data-profile-type='listing'] {
+  width: var(--spacing-40);
+  height: var(--spacing-40);
+  border-radius: var(--spacing-4);
+}
+.profile-switcher .name {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  color: #6d747a;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+  white-space: nowrap;
+}
+.profile-switcher svg {
+  margin-left: auto;
+}
+
+.dropdown {
+  z-index: 20;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #ebedf0;
+  border-radius: 8px;
+}
+.dropdown .dd-list {
+  list-style: none;
+  padding: var(--spacing-12) var(--spacing-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+.dd-list .dd-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-8);
+  padding: var(--spacing-4) var(--spacing-8);
+  cursor: pointer;
+}
+.dd-list .dd-item img[data-profile-type='user'] {
+  border-radius: 100%;
+  width: var(--spacing-24);
+  height: var(--spacing-24);
+}
+.dd-list .dd-item img[data-profile-type='listing'] {
+  border-radius: var(--spacing-4);
+  width: var(--spacing-24);
+  height: var(--spacing-24);
+}
+.dd-list .dd-item p {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #939ca3;
+  width: 100%;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+  white-space: nowrap;
+}
+.dd-list .dd-item.active {
+  background: #f7f5f9;
+  border-radius: 8px;
+}
+.dd-list .dd-item.active p {
+  color: #8064a2;
+}
+
+.profile-switcher.show-dropdown {
+  border-radius: 8px 8px 0 0;
+}
+.profile-switcher.show-dropdown .dropdown {
+  border-radius: 0 0 8px 8px;
+}

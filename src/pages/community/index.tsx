@@ -37,10 +37,12 @@ const Community: React.FC<Props> = ({}) => {
       <PageGridLayout column={3}>
         <aside className={styles['community-left-aside']}>
           <ProfileSwitcher />
-          <section className={`content-box-wrapper ${styles['hobbies-side-wrapper']}`}>
+          <section
+            className={`content-box-wrapper ${styles['hobbies-side-wrapper']}`}
+          >
             <header>
               <h3>Hobbies</h3>
-              <Image src={EditIcon} alt="Edit" />
+              {/* <Image src={EditIcon} alt="Edit" /> */}
             </header>
             <span className={styles['divider']}></span>
             <section>
@@ -52,10 +54,12 @@ const Community: React.FC<Props> = ({}) => {
             </section>
           </section>
 
-          <section className={`content-box-wrapper ${styles['location-side-wrapper']}`}>
+          <section
+            className={`content-box-wrapper ${styles['location-side-wrapper']}`}
+          >
             <header>
               <h3>Location</h3>
-              <Image src={EditIcon} alt="Edit" />
+              {/* <Image src={EditIcon} alt="Edit" /> */}
             </header>
             <span className={styles['divider']}></span>
             <section>
@@ -70,9 +74,15 @@ const Community: React.FC<Props> = ({}) => {
 
         <main>
           <header className={styles['community-header']}>
-            <section className={`content-box-wrapper ${styles['start-post-btn-container']}`}>
+            <section
+              className={`content-box-wrapper ${styles['start-post-btn-container']}`}
+            >
               <button
-                onClick={() => store.dispatch(openModal({ type: 'create-post', closable: true }))}
+                onClick={() =>
+                  store.dispatch(
+                    openModal({ type: 'create-post', closable: true })
+                  )
+                }
                 className={styles['start-post-btn']}
               >
                 <svg
@@ -98,7 +108,9 @@ const Community: React.FC<Props> = ({}) => {
                 <span>Start a post</span>
               </button>
             </section>
-            <section className={`content-box-wrapper ${styles['navigation-links']}`}>
+            <section
+              className={`content-box-wrapper ${styles['navigation-links']}`}
+            >
               <ul>
                 <li className={styles['active']}>Posts</li>
                 <li>Links</li>
@@ -112,13 +124,15 @@ const Community: React.FC<Props> = ({}) => {
           <section className={styles['posts-container']}>
             {allPosts.length === 0 && 'No Posts'}
             {allPosts.map((post: any) => {
-              return <PostCard key={post._id} data={post} />
+              return <PostCard key={post._id} postData={post} />
             })}
           </section>
         </main>
 
         <aside className={styles['community-right-aside']}>
-          <section className={`content-box-wrapper ${styles['invite-wrapper']}`}>
+          <section
+            className={`content-box-wrapper ${styles['invite-wrapper']}`}
+          >
             <header>
               <h3>Invite to Community</h3>
             </header>
@@ -128,7 +142,9 @@ const Community: React.FC<Props> = ({}) => {
             </section>
           </section>
 
-          <section className={`content-box-wrapper ${styles['trending-hobbies-side-wrapper']}`}>
+          <section
+            className={`content-box-wrapper ${styles['trending-hobbies-side-wrapper']}`}
+          >
             <header>
               <h3>Trending hobbies</h3>
             </header>

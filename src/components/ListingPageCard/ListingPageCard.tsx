@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
-import styles from './PostCard.module.css'
+import styles from './listingPageCard.module.css'
 import { dateFormat } from '@/utils'
 import Link from 'next/link'
 import BarsIcon from '../../assets/svg/vertical-bars.svg'
@@ -20,7 +20,7 @@ const comments = [
     createdAt: 'Sep 6, 2021',
   },
 ]
-const PostCard: React.FC<Props> = (props) => {
+const ListingPageCard: React.FC<Props> = (props) => {
   // const [type, setType] = useState<'User' | 'Listing'>()
 
   const [postData, setPostData] = useState(props.postData)
@@ -294,4 +294,4 @@ const PostCard: React.FC<Props> = (props) => {
   )
 }
 
-export default PostCard
+export default ListingPageCard

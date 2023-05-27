@@ -193,14 +193,14 @@ const ListingTagsEditModal: React.FC<Props> = ({
                 multiple={true}
                 onChange={(e) => {
                   let val = e.target.value
-                  setTagTexts((prev : any) => val)
+                  setTagTexts((prev: any) => val as any)
                 }}
                 displayEmpty
                 inputProps={{ 'aria-label': 'Without label' }}
               >
-                {tags.map((item: any) => {
+                {tags.map((item: any, idx) => {
                   return (
-                    <MenuItem value={item.tag}>
+                    <MenuItem key={idx} value={item.tag}>
                       <div className={styles.tagContainer}>
                         <p className={styles.tagText}>{item.tag}</p>
                         <p className={styles.tagDesc}>{item.desc}</p>

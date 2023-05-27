@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import styles from './ProfileSwitcher.module.css'
+import styles from './styles.module.css'
 import Image from 'next/image'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
@@ -7,13 +7,13 @@ import useOutsideAlerter from '@/hooks/useOutsideAlerter'
 import { DEFAULT_PROFILE_IMAGES } from '@/utils'
 import { updateActiveProfile } from '@/redux/slices/user'
 
-type Props = {}
+type Props = {
+  data: any
+  setData: any
+}
 
-const ProfileSwitcher: React.FC<Props> = (props) => {
-  const { user, listing, activeProfile } = useSelector(
-    (state: RootState) => state.user
-  )
-  const dispatch = useDispatch()
+const ProfileSwitcher: React.FC<Props> = ({ data: activeProfile, setData }) => {
+  const { user, listing } = useSelector((state: RootState) => state.user)
 
   const [showDropdown, setShowDropdown] = useState<boolean>(false)
   const dropdownRef = useRef(null)
@@ -21,9 +21,12 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
   useOutsideAlerter(dropdownRef, () => setShowDropdown(false))
 
   const handleUpdateActiveProfile = (type: 'user' | 'listing', data: any) => {
-    dispatch(updateActiveProfile({ type, data }))
+    setData((prev: any) => {
+      return { ...prev, type, data }
+    })
     setShowDropdown(false)
   }
+
   return (
     <>
       <section

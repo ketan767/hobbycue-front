@@ -9,6 +9,7 @@ import { RootState } from '@/redux/store'
 import ListingPageLayout from '@/layouts/ListingPageLayout'
 import { getListingPages } from '@/services/listing.service'
 import { updateListingModalData, updateListingPageData } from '@/redux/slices/site'
+
 import ListingHomeTab from '@/components/ListingPage/ListingHomeTab/ListingHomeTab'
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
 import ListingPostsTab from '@/components/ListingPage/ListingPagePosts/ListingPagePosts'

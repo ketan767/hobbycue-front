@@ -27,7 +27,9 @@ const ProfilePagesTab: React.FC<Props> = ({ data }) => {
           <PageContentBox
             showEditButton={profileLayoutMode === 'edit'}
             onEditBtnClick={() =>
-              dispatch(openModal({ type: 'profile-hobby-edit', closable: true }))
+              dispatch(
+                openModal({ type: 'profile-hobby-edit', closable: true })
+              )
             }
           >
             <h4 className={styles['heading']}>Hobbies</h4>
@@ -46,9 +48,11 @@ const ProfilePagesTab: React.FC<Props> = ({ data }) => {
         </aside>
 
         <main>
-          {data.listingsData.map((listing: any) => {
-            return <ListingCard key={listing._id} data={listing} />
-          })}
+          <div className={styles['card-container']}>
+            {data.listingsData.map((listing: any) => {
+              return <ListingCard key={listing._id} data={listing} />
+            })}
+          </div>
         </main>
       </PageGridLayout>
     </>

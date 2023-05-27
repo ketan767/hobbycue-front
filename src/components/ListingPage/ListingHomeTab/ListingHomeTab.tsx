@@ -14,7 +14,6 @@ import FacebookIcon from '../../../assets/svg/Facebook.svg'
 import TwitterIcon from '../../../assets/svg/Twitter.svg'
 import InstagramIcon from '../../../assets/svg/Instagram.svg'
 
-
 interface Props {
   data: ListingPageData['pageData']
 }
@@ -57,8 +56,6 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
           <div>{data?.admin_note}</div>
         </PageContentBox>
       </main>
-
-
     </>
   )
 }

@@ -56,3 +56,10 @@ ul.contact-wrapper svg {
   width: 1.5rem;
   aspect-ratio: 1/1;
 }
+
+.card-container {
+  display: flex;
+  gap: var(--spacing-24);
+  flex-wrap: wrap;
+  justify-content: space-between;
+}

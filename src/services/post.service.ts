@@ -13,12 +13,83 @@ export const getAllPosts = async (query: string): Promise<ApiReturnObject> => {
   }
 }
 
-export const createUserPost = async (data: any): Promise<ApiReturnObject> => {
+/** Create a User Post `POST: /api/post/user/` */
+export const createUserPost = async (data: {
+  hobbyId: string
+  genreId: string | undefined
+  content: string
+  visibility: string
+}): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
 
   try {
     const res = await axiosInstance.post(`/post/user/`, data, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+/** Create a User Post `POST: /api/post/listing/` */
+export const createListingPost = async (data: {
+  listingId: string
+  hobbyId: string
+  genreId: string | undefined
+  content: string
+  visibility: string
+}): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(`/post/listing/`, data, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+/** UpVote Post `PATCH: /api/post/upvote/:postId` */
+export const upvotePost = async (
+  postId: string,
+  data: {
+    upvoteBy: 'user' | 'listing'
+    userId?: string
+    listingId?: string
+  }
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.patch(`/post/upvote/${postId}`, data, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+/** DownVote Post `PATCH: /api/post/upvote/:postId` */
+export const downvotePost = async (
+  postId: string,
+  data: {
+    downvoteBy: 'user' | 'listing'
+    userId?: string
+    listingId?: string
+  }
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.patch(`/post/downvote/${postId}`, data, {
+      headers,
+    })
     return { res: res, err: null }
   } catch (error) {
     console.error(error)

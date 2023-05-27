@@ -45,33 +45,6 @@
   color: #6d747a;
 }
 
-/* Profile Switcher */
-.profile-switcher {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-8);
-  padding: var(--spacing-8) var(--spacing-12);
-  width: 100%;
-
-  background: #ffffff;
-
-  border: 1px solid #ced4da;
-  border-radius: 8px;
-}
-.profile-switcher img {
-  width: var(--spacing-40);
-  height: var(--spacing-40);
-}
-.profile-switcher .name {
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 20px;
-  color: #6d747a;
-}
-.profile-switcher svg {
-  margin-left: auto;
-}
-
 .who-can-view {
   display: flex;
   align-items: center;
