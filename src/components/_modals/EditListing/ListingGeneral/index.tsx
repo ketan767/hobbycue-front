@@ -13,6 +13,7 @@ import { updateUser } from '@/redux/slices/user'
 import FilledButton from '@/components/_buttons/FilledButton'
 import { updateListingModalData } from '@/redux/slices/site'
 import { createNewListing, updateListing } from '@/services/listing.service'
+import axios from 'axios'
 
 type Props = {
   onComplete?: () => void
@@ -37,6 +38,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   const { listingModalData } = useSelector((state: RootState) => state.site)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
+  const [nextDisabled, setNextDisabled] = useState(false)
 
   const [data, setData] = useState<ListingGeneralData>({
     title: { value: '', error: null },
@@ -145,6 +147,35 @@ const ListingGeneralEditModal: React.FC<Props> = ({
       admin_note: { value: listingModalData.admin_note as string, error: null },
     })
   }, [])
+
+  useEffect(() => {
+    axios
+      .get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/listing/check-page-url/${data.page_url}`
+      )
+      .then((res) => {
+        console.log('res', res)
+        setNextDisabled(false)
+      
+      })
+      .catch((err) => {
+        console.log('err', err.response)
+        setNextDisabled(true)
+       
+      })
+  }, [data.page_url])
+
+  useEffect(() => {
+    if (onComplete !== undefined) {
+      let pageUrl: any = data.title.value
+      console.log(pageUrl)
+      pageUrl = pageUrl?.toLowerCase()
+      pageUrl = pageUrl?.replace(/ /g, '-')
+      setData((prev) => {
+        return { ...prev, page_url: {value: pageUrl, error: null} }
+      })
+    }
+  }, [data.title])
 
   return (
     <>

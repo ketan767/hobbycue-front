@@ -164,8 +164,8 @@ const ListingRelatedEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
                   </p>
                </div>
                <div className={styles.listContainer}>
-                  {workingHoursData.map((item: any) => {
-                     return <div className={styles.listItem}>
+                  {workingHoursData.map((item: any, idx) => {
+                     return <div className={styles.listItem} key={idx} >
                         <div className={styles.listSubItem}>
                            <label> From Day </label>
                            <InputSelect options={days} />
