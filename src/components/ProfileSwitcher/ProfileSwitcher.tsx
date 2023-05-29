@@ -34,7 +34,7 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
         ref={dropdownRef}
         onClick={() => setShowDropdown((prev) => !prev)}
       >
-        {activeProfile.data?.profile_image ? (
+        {activeProfile?.data?.profile_image ? (
           <Image
             className={styles['profile-image']}
             data-profile-type={activeProfile.type}

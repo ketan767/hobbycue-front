@@ -189,19 +189,23 @@ const PostCard: React.FC<Props> = (props) => {
           {/* Comments Section */}
           <div>
             {/* Comment Input */}
-            {/* <section className={styles['inputContainer']}>
-              <Image
-                className={styles['inputAuthorImage']}
-                src={postData?._author?.profile_image}
-                alt="Author Profile"
-                width={40}
-                height={40}
-              />
+            <section className={styles['inputContainer']}>
+              {postData?._author?.profile_image ? (
+                <Image
+                  className={styles['inputAuthorImage']}
+                  src={postData?._author?.profile_image}
+                  alt="Author Profile"
+                  width={40}
+                  height={40}
+                />
+              ) : (
+                <div className={styles['default-user-icon ']}></div>
+              )}
               <input
                 className={styles['input']}
                 placeholder="Write a comment..."
               />
-            </section> */}
+            </section>
 
             {/* Comments */}
             {/* <section className={styles['commentsContainer']}>
