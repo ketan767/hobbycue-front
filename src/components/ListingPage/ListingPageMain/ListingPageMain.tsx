@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import styles from './styles.module.css'
 import { RootState } from '@/redux/store'
-import TimeIccon from '@/assets/svg/time.svg'
+import TimeIcon from '@/assets/svg/time.svg'
 import FacebookIcon from '@/assets/svg/facebook-icon.svg'
 import TwitterIcon from '@/assets/svg/twitter-icon.svg'
 import InstagramIcon from '@/assets/svg/insta-icon.svg'
