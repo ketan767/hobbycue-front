@@ -41,7 +41,7 @@ const CustomCKEditor: React.FC<Props> = ({
       const img = document.createElement('img')
       img.src = '/image.svg'
       img.addEventListener('click', openInput)
-      toolbar?.append(img)
+      // toolbar?.append(img)
     }
   }
 
