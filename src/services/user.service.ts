@@ -112,7 +112,7 @@ export const checkProfileUrl = async (url: string, cb: CallbackFunction) => {
     .catch((err) => cb(err, null))
 }
 
-/** Update User Profile  `POST /api/user/?{query}`
+/** Update User Profile  `POST /user/me/profile-image`
  * - FormData Required Key: `user-profile` */
 export const updateUserProfile = async (formData: FormData) => {
   const token = localStorage.getItem('token')
@@ -129,7 +129,7 @@ export const updateUserProfile = async (formData: FormData) => {
   }
 }
 
-/** Update User Cover  `POST /api/user/?{query}`
+/** Update User Cover  `POST /user/me/cover-image`
  * - FormData Required Key: `user-cover` */
 export const updateUserCover = async (formData: FormData) => {
   const token = localStorage.getItem('token')

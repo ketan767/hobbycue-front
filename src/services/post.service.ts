@@ -59,7 +59,7 @@ export const upvotePost = async (
     upvoteBy: 'user' | 'listing'
     userId?: string
     listingId?: string
-  }
+  },
 ): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
@@ -81,13 +81,30 @@ export const downvotePost = async (
     downvoteBy: 'user' | 'listing'
     userId?: string
     listingId?: string
-  }
+  },
 ): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
 
   try {
     const res = await axiosInstance.patch(`/post/downvote/${postId}`, data, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+/** Update User Profile  `POST /api/post/upload-image`
+ * - FormData Required Key: `post` */
+export const uploadImage = async (formData: FormData) => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(`/post/upload-image`, formData, {
       headers,
     })
     return { res: res, err: null }
