@@ -93,7 +93,7 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
       <header className={`site-container ${styles['header']}`}>
         {/* Profile Picture */}
         <div className={styles['profile-img-wrapper']}>
-          {data.profile_image ? (
+          {data?.profile_image ? (
             <Image
               className={styles['img']}
               src={data.profile_image}
@@ -121,7 +121,7 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
         {/* Center Elements */}
         <section className={styles['center-container']}>
           <div className={styles['cover-img-wrapper']}>
-            {data.cover_image ? (
+            {data?.cover_image ? (
               <Image
                 className={styles['img']}
                 src={data.cover_image}

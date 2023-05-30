@@ -18,12 +18,21 @@ import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props
 import OutlinedButton from '../_buttons/OutlinedButton'
 
 import styles from './AuthForm.module.css'
-import { joinIn, signIn } from '@/services/auth.service'
+import { facebookAuth, joinIn, signIn } from '@/services/auth.service'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { closeModal, openModal, resetAuthFormData, updateAuthFormData } from '@/redux/slices/modal'
+import {
+  closeModal,
+  openModal,
+  resetAuthFormData,
+  updateAuthFormData,
+} from '@/redux/slices/modal'
 import { useRouter } from 'next/router'
-import { updateIsAuthenticated, updateIsLoggedIn, updateUser } from '@/redux/slices/user'
+import {
+  updateIsAuthenticated,
+  updateIsLoggedIn,
+  updateUser,
+} from '@/redux/slices/user'
 import { validateEmail, validatePassword } from '@/utils'
 import { CircularProgress } from '@mui/material'
 import store, { RootState } from '@/redux/store'
@@ -51,11 +60,15 @@ const AuthForm: React.FC<Props> = (props) => {
   const { authFormData } = useSelector((state: RootState) => state.modal)
 
   const [selectedTab, setSelectedTab] = useState<tabs>('sign-in')
-  const [showValidationConditions, setShowValidationConditions] = useState(false)
+  const [showValidationConditions, setShowValidationConditions] =
+    useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState(false)
 
-  const [inputErrors, setInputErrors] = useState<inputErrs>({ email: null, password: null })
+  const [inputErrors, setInputErrors] = useState<inputErrs>({
+    email: null,
+    password: null,
+  })
   const [inputValidation, setInputValidation] = useState(
     validatePasswordConditions(authFormData.password),
   )
@@ -77,7 +90,10 @@ const AuthForm: React.FC<Props> = (props) => {
     if (!validateEmail(authFormData.email))
       return setInputErrors({ email: 'Enter a Valid Email!', password: null })
     if (!validatePassword(authFormData.password))
-      return setInputErrors({ email: null, password: 'Enter a Valid Passowrd!' })
+      return setInputErrors({
+        email: null,
+        password: 'Enter a Valid Password!',
+      })
 
     setSubmitBtnLoading(true)
 
@@ -88,11 +104,22 @@ const AuthForm: React.FC<Props> = (props) => {
       setSubmitBtnLoading(false)
       if (err) {
         if (err.response.data.message === 'User not found!')
-          return setInputErrors({ email: err.response.data.message, password: null })
+          return setInputErrors({
+            email: err.response.data.message,
+            password: null,
+          })
         if (err.response.data.message === 'Invalid email or password')
           return setInputErrors({
             email: err.response.data.message,
             password: err.response.data.message,
+          })
+        if (
+          err.response.data.message ===
+          'Account is connected with Social Media!'
+        )
+          return setInputErrors({
+            email: err.response.data.message,
+            password: null,
           })
         return alert(err.response?.data?.messgae)
       }
@@ -102,8 +129,6 @@ const AuthForm: React.FC<Props> = (props) => {
         console.log(res.data.data.token)
 
         dispatch(updateIsLoggedIn(true))
-        // dispatch(updateIsAuthenticated(true))
-        // dispatch(updateUser(res.data.data.user))
         dispatch(closeModal())
         router.push('/community', undefined, { shallow: false })
       }
@@ -114,8 +139,11 @@ const AuthForm: React.FC<Props> = (props) => {
       const { err, res } = await joinIn(data)
       setSubmitBtnLoading(false)
       if (err) {
-        if (err.response.data.message === 'User Already Exists!')
-          return setInputErrors({ email: err.response.data.message, password: null })
+        if (err?.response?.data.message === 'User Already Exists!')
+          return setInputErrors({
+            email: err.response.data.message,
+            password: null,
+          })
         return alert(err.response?.data?.message)
       }
 
@@ -136,18 +164,22 @@ const AuthForm: React.FC<Props> = (props) => {
   const googleAuthFailure = (e: any) => {
     console.log(e)
   }
-  const facebookAuth = (e: any) => {
-    console.log('Event', e)
-    // setSpin(true)
-    // Services.oAuth.facebookSignin(
-    //   {
-    //     accessToken: e.accessToken,
-    //     userID: e.userID,
-    //   },
-    //   setSpin,
-    //   setSignedIn,
-    // )
-    // console.log("New Resp", response);
+
+  const handleFacebookAuth = async (e: any) => {
+    const { err, res } = await facebookAuth({
+      accessToken: e.accessToken,
+      userId: e.userID,
+      name: e.name,
+    })
+    if (err) return console.log(err)
+    if (res.status === 200 && res.data.success) {
+      localStorage.setItem('token', res.data.data.token)
+      console.log(res.data.data.token)
+
+      dispatch(updateIsLoggedIn(true))
+      dispatch(closeModal())
+      router.push('/community', undefined, { shallow: false })
+    }
   }
 
   useEffect(() => {
@@ -159,9 +191,22 @@ const AuthForm: React.FC<Props> = (props) => {
   return (
     <div className={styles['form-contanier']}>
       {/* Tab Switcher (SignIn / JoinIn )  */}
-      <Tabs value={selectedTab} onChange={(e, value: tabs) => handleTabChange(value)}>
-        <Tab sx={{ margin: 0 }} label={'Sign In'} value={'sign-in'} className={styles['tab-btn']} />
-        <Tab sx={{ margin: 0 }} label={'Join In'} value={'join-in'} className={styles['tab-btn']} />
+      <Tabs
+        value={selectedTab}
+        onChange={(e, value: tabs) => handleTabChange(value)}
+      >
+        <Tab
+          sx={{ margin: 0 }}
+          label={'Sign In'}
+          value={'sign-in'}
+          className={styles['tab-btn']}
+        />
+        <Tab
+          sx={{ margin: 0 }}
+          label={'Join In'}
+          value={'join-in'}
+          className={styles['tab-btn']}
+        />
       </Tabs>
 
       {/* Google - Facebook Login Buttons */}
@@ -183,7 +228,7 @@ const AuthForm: React.FC<Props> = (props) => {
           // App ID: 1614660215286765
           // App Secret: a4839f4438a6b3527ca60636cc5d76a6
           appId="1614660215286765"
-          callback={facebookAuth}
+          callback={handleFacebookAuth}
           render={(renderProps: any) => (
             <Button
               className={`${styles['social-login-btn']} ${styles['facebook']}`}
@@ -223,9 +268,13 @@ const AuthForm: React.FC<Props> = (props) => {
             fullWidth
             label="Password"
             type={showPassword ? 'text' : 'password'}
-            sx={{ '& .MuiOutlinedInput-root': { padding: 0, background: 'white' } }}
+            sx={{
+              '& .MuiOutlinedInput-root': { padding: 0, background: 'white' },
+            }}
             variant="outlined"
-            autoComplete={selectedTab === 'join-in' ? 'new-password' : 'current-password'}
+            autoComplete={
+              selectedTab === 'join-in' ? 'new-password' : 'current-password'
+            }
             size="small"
             name="password"
             value={authFormData.password}
@@ -237,7 +286,11 @@ const AuthForm: React.FC<Props> = (props) => {
             InputProps={{
               endAdornment: (
                 <IconButton onClick={() => setShowPassword(!showPassword)}>
-                  {showPassword ? <VisibilityRoundedIcon /> : <VisibilityOffRoundedIcon />}
+                  {showPassword ? (
+                    <VisibilityRoundedIcon />
+                  ) : (
+                    <VisibilityOffRoundedIcon />
+                  )}
                 </IconButton>
               ),
             }}
@@ -246,19 +299,35 @@ const AuthForm: React.FC<Props> = (props) => {
           {/* Validation Conditions Box */}
           {selectedTab === 'join-in' && showValidationConditions && (
             <div className={styles['validation-messages']}>
-              <p className={inputValidation.lowercase ? styles['valid'] : undefined}>
+              <p
+                className={
+                  inputValidation.lowercase ? styles['valid'] : undefined
+                }
+              >
                 Must contain at least one lowercase letter
               </p>
-              <p className={inputValidation.uppercase ? styles['valid'] : undefined}>
+              <p
+                className={
+                  inputValidation.uppercase ? styles['valid'] : undefined
+                }
+              >
                 Must contain at least one uppercase letter
               </p>
-              <p className={inputValidation.number ? styles['valid'] : undefined}>
+              <p
+                className={inputValidation.number ? styles['valid'] : undefined}
+              >
                 Must contain at least one number
               </p>
-              <p className={inputValidation.specialChar ? styles['valid'] : undefined}>
+              <p
+                className={
+                  inputValidation.specialChar ? styles['valid'] : undefined
+                }
+              >
                 Must contain at least one special character
               </p>
-              <p className={inputValidation.length ? styles['valid'] : undefined}>
+              <p
+                className={inputValidation.length ? styles['valid'] : undefined}
+              >
                 Must be at least 8 characters long
               </p>
             </div>
@@ -281,7 +350,12 @@ const AuthForm: React.FC<Props> = (props) => {
                     name="rememberMe"
                     value={!authFormData.rememberMe}
                     checked={authFormData.rememberMe}
-                    onChange={(e) => handleInputChange(e.target.name, e.target.value === 'true')}
+                    onChange={(e) =>
+                      handleInputChange(
+                        e.target.name,
+                        e.target.value === 'true',
+                      )
+                    }
                   />
                 }
                 label={'Remember Me'}
@@ -306,7 +380,8 @@ const AuthForm: React.FC<Props> = (props) => {
           )}
           {selectedTab === 'join-in' && (
             <p className={styles['agree-tnc-info']}>
-              By continuing, you agree to our Terms of Service and Privacy Policy.
+              By continuing, you agree to our Terms of Service and Privacy
+              Policy.
             </p>
           )}
         </div>

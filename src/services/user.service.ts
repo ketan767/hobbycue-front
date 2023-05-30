@@ -2,7 +2,7 @@ import axiosInstance, { operation } from './_axios'
 
 /** Get User Details `GET /api/user/?{query}`  */
 export const getAllUserDetail = async (
-  query: string
+  query: string,
 ): Promise<ApiReturnObject> => {
   try {
     const res = await axiosInstance.get(`/user/?${query}`)
@@ -49,7 +49,7 @@ export const addUserHobby = async (
     genre?: string
     level: number
   },
-  cb: CallbackFunction
+  cb: CallbackFunction,
 ) => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
@@ -76,7 +76,7 @@ export const deleteUserHobby = async (id: string): Promise<ApiReturnObject> => {
 // Add new user address
 export const addUserAddress = async (
   data: ProfileAddressPayload,
-  cb: CallbackFunction
+  cb: CallbackFunction,
 ) => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
@@ -91,7 +91,7 @@ export const addUserAddress = async (
 export const updateUserAddress = async (
   id: string,
   data: ProfileAddressPayload,
-  cb: CallbackFunction
+  cb: CallbackFunction,
 ) => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
@@ -104,8 +104,10 @@ export const updateUserAddress = async (
 
 // Update User Hobby
 export const checkProfileUrl = async (url: string, cb: CallbackFunction) => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
   await axiosInstance
-    .get(`/user/check-profile-url/${url}`)
+    .get(`/user/check-profile-url/${url}`, { headers })
     .then((res) => cb(null, res))
     .catch((err) => cb(err, null))
 }

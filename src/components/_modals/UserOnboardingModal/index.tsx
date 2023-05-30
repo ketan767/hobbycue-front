@@ -50,13 +50,13 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
   const handleNext = () => {
     setActiveStep(
       (prevActiveStep: steps) =>
-        totalSteps[totalSteps.indexOf(prevActiveStep) + 1]
+        totalSteps[totalSteps.indexOf(prevActiveStep) + 1],
     )
   }
   const handleBack = () => {
     setActiveStep(
       (prevActiveStep: steps) =>
-        totalSteps[totalSteps.indexOf(prevActiveStep) - 1]
+        totalSteps[totalSteps.indexOf(prevActiveStep) - 1],
     )
   }
 
@@ -66,8 +66,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
     if (err) return console.log(err)
     if (res?.data.success) {
       dispatch(closeModal())
-      console.log(res.data.data.user.profile_url)
-      router.push(`/profile/${res.data.data.user.profile_url}`)
+      router.push(`/profile/${res?.data?.data?.user?.profile_url}`)
     }
   }
 
