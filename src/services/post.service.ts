@@ -97,7 +97,7 @@ export const downvotePost = async (
   }
 }
 
-/** Update User Profile  `POST /api/post/upload-image`
+/** Upload Post Image `POST /api/post/upload-image`
  * - FormData Required Key: `post` */
 export const uploadImage = async (formData: FormData) => {
   const token = localStorage.getItem('token')
