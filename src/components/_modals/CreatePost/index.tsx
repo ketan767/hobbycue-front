@@ -33,6 +33,7 @@ type NewPostData = {
   genre: DropdownListItem | null
   content: string
   visibility: string
+  media: []
 }
 export const CreatePost: React.FC<Props> = (props) => {
   const { user, activeProfile } = useSelector((state: RootState) => state.user)
@@ -44,6 +45,7 @@ export const CreatePost: React.FC<Props> = (props) => {
     genre: null,
     content: '',
     visibility: 'public',
+    media: [],
   })
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
@@ -129,7 +131,7 @@ export const CreatePost: React.FC<Props> = (props) => {
       return { ...prev, type: activeProfile.type, data: activeProfile.data }
     })
   }, [])
-
+  console.log({ data })
   return (
     <div className={styles['modal-wrapper']}>
       <h3 className={styles['modal-heading']}>Create Post</h3>
@@ -142,6 +144,8 @@ export const CreatePost: React.FC<Props> = (props) => {
                 return { ...prev, content: value }
               })
             }}
+            setData={setData}
+            image={true}
           />
         </section>
         <aside>

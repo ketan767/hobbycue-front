@@ -12,6 +12,7 @@
     "@ckeditor/ckeditor5-basic-styles": "^37.1.0",
     "@ckeditor/ckeditor5-build-classic": "^37.1.0",
     "@ckeditor/ckeditor5-react": "^6.0.0",
+    "@ckeditor/ckeditor5-upload": "^38.0.1",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@mui/icons-material": "^5.11.16",
