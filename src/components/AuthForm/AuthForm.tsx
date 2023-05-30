@@ -113,6 +113,14 @@ const AuthForm: React.FC<Props> = (props) => {
             email: err.response.data.message,
             password: err.response.data.message,
           })
+        if (
+          err.response.data.message ===
+          'Account is connected with Social Media!'
+        )
+          return setInputErrors({
+            email: err.response.data.message,
+            password: null,
+          })
         return alert(err.response?.data?.messgae)
       }
 
