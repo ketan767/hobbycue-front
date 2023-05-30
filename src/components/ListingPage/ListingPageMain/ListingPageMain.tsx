@@ -9,17 +9,10 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import styles from './styles.module.css'
 import { RootState } from '@/redux/store'
-<<<<<<< HEAD
-import TimeIcon from '../../../assets/svg/time.svg'
-import FacebookIcon from '@/assets/svg/Facebook.svg'
-import TwitterIcon from '@/assets/svg/Twitter.svg'
-import InstagramIcon from '@/assets/svg/Instagram.svg'
-=======
-import TimeIcon from '@/assets/svg/time.svg'
+import TimeIWcon from '@/assets/svg/time.svg'
 import FacebookIcon from '@/assets/svg/facebook-icon.svg'
 import TwitterIcon from '@/assets/svg/twitter-icon.svg'
 import InstagramIcon from '@/assets/svg/insta-icon.svg'
->>>>>>> 155bb17ffcb5f436eaba184fd0e3e7da59a4d56d
 
 interface Props {
   data: ListingPageData['pageData']
