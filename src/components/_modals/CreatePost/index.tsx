@@ -126,8 +126,8 @@ export const CreatePost: React.FC<Props> = (props) => {
       return console.log(err)
     }
     if (res.data.success) {
-      // store.dispatch(closeModal())
-      // window.location.reload()
+      store.dispatch(closeModal())
+      window.location.reload()
       console.log('res', res)
       data.media.forEach((item: any) => {
         console.log(item)
