@@ -97,7 +97,7 @@ const AuthForm: React.FC<Props> = (props) => {
 
     setSubmitBtnLoading(true)
 
-    const data = { email: authFormData.email, password: authFormData.password }
+    const data = { email: authFormData.email, password: authFormData.password, profile_url: '' }
     // Sign In
     if (selectedTab === 'sign-in') {
       const { err, res } = await signIn(data)
