@@ -104,7 +104,7 @@ export const uploadImage = async (formData: FormData) => {
   const headers = { Authorization: `Bearer ${token}` }
 
   try {
-    const res = await axiosInstance.post(`/post/upload-image`, formData, {
+    const res = await axiosInstance.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/post/upload-image`, formData, {
       headers,
     })
     return { res: res, err: null }

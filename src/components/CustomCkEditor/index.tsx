@@ -4,7 +4,8 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 // import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline'
 import styles from './style.module.css'
 import dynamic from 'next/dynamic'
-import { SimpleUploadAdapter } from '@ckeditor/ckeditor5-upload';
+import { SimpleUploadAdapter } from '@ckeditor/ckeditor5-upload'
+import { uploadImage } from '@/services/post.service'
 
 // const SimpleUploadAdapter = dynamic(() => import('@ckeditor/ckeditor5-upload'), {
 //   ssr: false,
@@ -41,14 +42,37 @@ const CustomCKEditor: React.FC<Props> = ({
       const img = document.createElement('img')
       img.src = '/image.svg'
       img.addEventListener('click', openInput)
-      // toolbar?.append(img)
+      toolbar?.append(img)
     }
   }
 
-  const handleImageChange = (e: any) => {
-    setData((prev: any) => ({ ...prev, media: e.target.files }))
+  function readFile(event: any) {
+    handleImageUpload(event.target.result)
   }
 
+  const handleImageChange = (e: any) => {
+    setData((prev: any) => ({ ...prev, media: [...e.target.files] }))
+    const images = [...e.target.files]
+    console.log(images)
+
+    images.forEach((item: any) => {
+      var reader = new FileReader()
+      reader.readAsText(item)
+      reader.addEventListener('load', readFile)
+    })
+  }
+
+  const handleImageUpload = async (image: any) => {
+    console.log('uploading', image)
+    const formData = new FormData()
+    formData.append('post-image', image)
+    const { err, res } = await uploadImage(formData)
+    if (err) return console.log(err)
+    if (res?.data.success) {
+      // window.location.reload()
+      // dispatch(closeModal())
+    }
+  }
   const openInput = () => {
     inputRef.current?.click()
   }
@@ -71,11 +95,10 @@ const CustomCKEditor: React.FC<Props> = ({
             'uploadImage',
           ],
           simpleUpload: {
-            uploadUrl: '/'
-          }
+            uploadUrl: '/',
+          },
           // plugins: [SimpleUploadAdapter],
         }}
-      
       />
       <input
         type="file"

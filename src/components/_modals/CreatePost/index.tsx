@@ -7,7 +7,11 @@ import store, { RootState } from '@/redux/store'
 import { useSelector } from 'react-redux'
 import { isEmptyField } from '@/utils'
 import { getAllHobbies } from '@/services/hobby.service'
-import { createListingPost, createUserPost } from '@/services/post.service'
+import {
+  createListingPost,
+  createUserPost,
+  uploadImage,
+} from '@/services/post.service'
 import { closeModal } from '@/redux/slices/modal'
 
 import DOMPurify from 'dompurify'
@@ -121,8 +125,27 @@ export const CreatePost: React.FC<Props> = (props) => {
       return console.log(err)
     }
     if (res.data.success) {
-      store.dispatch(closeModal())
-      window.location.reload()
+      // store.dispatch(closeModal())
+      // window.location.reload()
+      console.log('res', res)
+      data.media.forEach((item: any) => {
+        console.log(item);
+        handleImageUpload(item)
+      })
+    }
+  }
+
+  const handleImageUpload = async (image: any) => {
+    const response = await fetch(image)
+    const blob = await response.blob()
+
+    const formData = new FormData()
+    formData.append('post-image', blob)
+    const { err, res } = await uploadImage(formData)
+    if (err) return console.log(err)
+    if (res?.data.success) {
+      // window.location.reload()
+      // dispatch(closeModal())
     }
   }
 
