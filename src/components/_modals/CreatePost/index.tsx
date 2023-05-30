@@ -101,6 +101,7 @@ export const CreatePost: React.FC<Props> = (props) => {
       genreId: data.genre?._id,
       content: DOMPurify.sanitize(data.content),
       visibility: data.visibility,
+      media: data.media
     }
 
     setSubmitBtnLoading(true)
@@ -125,27 +126,10 @@ export const CreatePost: React.FC<Props> = (props) => {
       return console.log(err)
     }
     if (res.data.success) {
-      // store.dispatch(closeModal())
-      // window.location.reload()
+      store.dispatch(closeModal())
+      window.location.reload()
       console.log('res', res)
-      data.media.forEach((item: any) => {
-        console.log(item);
-        handleImageUpload(item)
-      })
-    }
-  }
-
-  const handleImageUpload = async (image: any) => {
-    const response = await fetch(image)
-    const blob = await response.blob()
-
-    const formData = new FormData()
-    formData.append('post-image', blob)
-    const { err, res } = await uploadImage(formData)
-    if (err) return console.log(err)
-    if (res?.data.success) {
-      // window.location.reload()
-      // dispatch(closeModal())
+      
     }
   }
 
@@ -154,7 +138,7 @@ export const CreatePost: React.FC<Props> = (props) => {
       return { ...prev, type: activeProfile.type, data: activeProfile.data }
     })
   }, [])
-  console.log({ data })
+
   return (
     <div className={styles['modal-wrapper']}>
       <h3 className={styles['modal-heading']}>Create Post</h3>
