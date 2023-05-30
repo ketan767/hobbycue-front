@@ -5,6 +5,7 @@ import { GetServerSideProps } from 'next'
 import { getAllUserDetail } from '@/services/user.service'
 import Head from 'next/head'
 import ProfileLayout from '@/layouts/ProfilePageLayout'
+import PageGridLayout from '@/layouts/PageGridLayout'
 
 interface Props {
   data: ProfilePageData
@@ -20,13 +21,17 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
       </Head>
 
       <ProfileLayout activeTab={'media'} data={data}>
-        <div></div>
+        <PageGridLayout column={3}>
+          <div></div>
+        </PageGridLayout>
       </ProfileLayout>
     </>
   )
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context,
+) => {
   const { query } = context
 
   const { err, res } = await getAllUserDetail(
@@ -35,7 +40,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
   if (err) return { notFound: true }
 
-  if (res?.data.success && res.data.data.no_of_users === 0) return { notFound: true }
+  if (res?.data.success && res.data.data.no_of_users === 0)
+    return { notFound: true }
 
   const data = {
     pageData: res.data.data.users[0],
