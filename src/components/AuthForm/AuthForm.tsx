@@ -139,7 +139,7 @@ const AuthForm: React.FC<Props> = (props) => {
       const { err, res } = await joinIn(data)
       setSubmitBtnLoading(false)
       if (err) {
-        if (err.response.data.message === 'User Already Exists!')
+        if (err?.response?.data.message === 'User Already Exists!')
           return setInputErrors({
             email: err.response.data.message,
             password: null,
