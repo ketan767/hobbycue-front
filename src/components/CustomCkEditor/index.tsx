@@ -51,28 +51,24 @@ const CustomCKEditor: React.FC<Props> = ({
   }
 
   const handleImageChange = (e: any) => {
+    setData((prev: any) => ({ ...prev, media: [...e.target.files] }))
     const images = [...e.target.files]
     console.log(images)
 
     images.forEach((item: any) => {
       var reader = new FileReader()
       reader.readAsText(item)
-      handleImageUpload(item)
-      // reader.addEventListener('load', readFile)
+      reader.addEventListener('load', readFile)
     })
   }
 
   const handleImageUpload = async (image: any) => {
+    console.log('uploading', image)
     const formData = new FormData()
-    formData.append('post', image)
-    console.log('formData', formData)
+    formData.append('post-image', image)
     const { err, res } = await uploadImage(formData)
     if (err) return console.log(err)
     if (res?.data.success) {
-      console.log(res.data);
-      const img = res.data.data.url
-      setData((prev: any) => ({ ...prev, media: [...prev.media, img] }))
-      alert('image uploaded')
       // window.location.reload()
       // dispatch(closeModal())
     }
