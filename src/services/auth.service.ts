@@ -34,7 +34,7 @@ export const register = async (
   }
 }
 
-/** Register the user after Verifying the OTP `POST: /api/auth/register/` */
+/** Register/Login using Facebook `POST: /api/auth/facebook/` */
 export const facebookAuth = async (data: {
   userId: String
   accessToken: String
@@ -42,6 +42,20 @@ export const facebookAuth = async (data: {
 }): Promise<ApiReturnObject> => {
   try {
     const res = await axiosInstance.post(`/auth/facebook`, data)
+    return { res: res, err: null }
+  } catch (error: any) {
+    return { err: error, res: null }
+  }
+}
+
+/** Register/Login using Google `POST: /api/auth/google/` */
+export const googleAuth = async (data: {
+  googleId: String
+  tokenId: String
+  name: String
+}): Promise<ApiReturnObject> => {
+  try {
+    const res = await axiosInstance.post(`/auth/google`, data)
     return { res: res, err: null }
   } catch (error: any) {
     return { err: error, res: null }

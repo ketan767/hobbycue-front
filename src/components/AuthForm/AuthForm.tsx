@@ -18,7 +18,12 @@ import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props
 import OutlinedButton from '../_buttons/OutlinedButton'
 
 import styles from './AuthForm.module.css'
-import { facebookAuth, joinIn, signIn } from '@/services/auth.service'
+import {
+  facebookAuth,
+  googleAuth,
+  joinIn,
+  signIn,
+} from '@/services/auth.service'
 import { useDispatch, useSelector } from 'react-redux'
 
 import {
@@ -97,7 +102,11 @@ const AuthForm: React.FC<Props> = (props) => {
 
     setSubmitBtnLoading(true)
 
-    const data = { email: authFormData.email, password: authFormData.password, profile_url: '' }
+    const data = {
+      email: authFormData.email,
+      password: authFormData.password,
+      profile_url: '',
+    }
     // Sign In
     if (selectedTab === 'sign-in') {
       const { err, res } = await signIn(data)
@@ -156,10 +165,21 @@ const AuthForm: React.FC<Props> = (props) => {
   }
 
   // Social Login Handle
-  const googleAuthSuccess = (e: any) => {
-    console.log(e)
-    // setSpin(true)
-    // Services.oAuth.googleSignin({ tokenId: e.tokenId }, setSpin, setSignedIn)
+  const googleAuthSuccess = async (e: any) => {
+    const { err, res } = await googleAuth({
+      googleId: e.profileObj.googleId,
+      tokenId: e.tokenId,
+      name: e.profileObj.name,
+    })
+    if (err) return console.log(err)
+    if (res.status === 200 && res.data.success) {
+      localStorage.setItem('token', res.data.data.token)
+      console.log(res.data.data.token)
+
+      dispatch(updateIsLoggedIn(true))
+      dispatch(closeModal())
+      router.push('/community', undefined, { shallow: false })
+    }
   }
   const googleAuthFailure = (e: any) => {
     console.log(e)
