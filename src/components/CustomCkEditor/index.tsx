@@ -72,6 +72,7 @@ const CustomCKEditor: React.FC<Props> = ({
       console.log(res.data);
       const img = res.data.data.url
       setData((prev: any) => ({ ...prev, media: [...prev.media, img] }))
+      alert('image uploaded')
       // window.location.reload()
       // dispatch(closeModal())
     }
@@ -94,8 +95,6 @@ const CustomCKEditor: React.FC<Props> = ({
             '|',
             'numberedList',
             'bulletedList',
-            'insertImage',
-            'uploadImage',
           ],
           simpleUpload: {
             uploadUrl: '/',

@@ -18,7 +18,8 @@ export const createUserPost = async (data: {
   hobbyId: string
   genreId: string | undefined
   content: string
-  visibility: string
+  visibility: string,
+  media : []
 }): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }

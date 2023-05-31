@@ -32,6 +32,7 @@ const Community: React.FC<Props> = ({}) => {
     getPost()
   }, [])
 
+  console.log({allPosts});
   return (
     <>
       <PageGridLayout column={3}>

@@ -1,11 +1,13 @@
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { GetServerSideProps } from 'next'
 import { getAllUserDetail } from '@/services/user.service'
 import Head from 'next/head'
 import ProfileLayout from '@/layouts/ProfilePageLayout'
 import PageGridLayout from '@/layouts/PageGridLayout'
+import { getListingPages } from '@/services/listing.service'
+import { getAllPosts } from '@/services/post.service'
 
 interface Props {
   data: ProfilePageData
@@ -13,7 +15,37 @@ interface Props {
 
 const ProfilePostsPage: React.FC<Props> = ({ data }) => {
   // const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
+  const [loadingPosts, setLoadingPosts] = useState(false)
+  const [posts, setPosts] = useState([])
+  const [media, setMedia] = useState([])
 
+  const getPost = async () => {
+    setLoadingPosts(true)
+    const { err, res } = await getAllPosts(
+      `author_type=User&_author=${data.pageData._id}&populate=_author,_genre,_hobby`,
+    )
+    setLoadingPosts(false)
+    if (err) return console.log(err)
+    if (res.data.success) {
+      setPosts(res.data.data.posts)
+      const allposts = res.data.data.posts
+      let tempMedia: any = []
+      allposts.forEach((post: any) => {
+        if (post.media) {
+          post.media.forEach((singleMedia: any) => {
+            tempMedia.push(post.media)
+          })
+        }
+      })
+      setMedia(tempMedia)
+    }
+  }
+
+  useEffect(() => {
+    getPost()
+  }, [])
+
+  console.log(media)
   return (
     <>
       <Head>
@@ -28,7 +60,6 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
     </>
   )
 }
-
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context,
 ) => {
