@@ -19,26 +19,26 @@ const PostVotes: React.FC<Props> = ({ styles, data, updatePost }: Props) => {
     if (activeProfile.type === 'user') {
       const isUpVoted = Boolean(
         data.up_votes._users.find(
-          (item: any) => item.toString() === activeProfile.data?._id
-        )
+          (item: any) => item.toString() === activeProfile.data?._id,
+        ),
       )
       const isDownVoted = Boolean(
         data.down_votes._users.find(
-          (item: any) => item.toString() === activeProfile.data?._id
-        )
+          (item: any) => item.toString() === activeProfile.data?._id,
+        ),
       )
       if (isUpVoted) setVoteStatus('up')
       if (isDownVoted) setVoteStatus('down')
     } else if (activeProfile.type === 'listing') {
       const isUpVoted = Boolean(
         data.up_votes._listings.find(
-          (item: any) => item.toString() === activeProfile?.data?._id
-        )
+          (item: any) => item.toString() === activeProfile?.data?._id,
+        ),
       )
       const isDownVoted = Boolean(
         data.down_votes._listings.find(
-          (item: any) => item.toString() === activeProfile?.data?._id
-        )
+          (item: any) => item.toString() === activeProfile?.data?._id,
+        ),
       )
       if (isUpVoted) setVoteStatus('up')
       if (isDownVoted) setVoteStatus('down')
@@ -51,11 +51,13 @@ const PostVotes: React.FC<Props> = ({ styles, data, updatePost }: Props) => {
       userId: activeProfile.data._id,
       listingId: activeProfile.data._id,
     }
+    setVoteStatus('up')
     setLoading(true)
     const { err, res } = await upvotePost(data._id, jsonData as any)
     if (err) {
       console.log(err)
       setLoading(false)
+      updateVoteStatus()
       return
     }
     console.log('🚀 ~ file: Votes.tsx:67 ~ handleDownVote ~ res:', res)
@@ -71,11 +73,13 @@ const PostVotes: React.FC<Props> = ({ styles, data, updatePost }: Props) => {
       userId: activeProfile.data._id,
       listingId: activeProfile.data._id,
     }
+    setVoteStatus('down')
     setLoading(true)
     const { err, res } = await downvotePost(data._id, jsonData as any)
     if (err) {
       console.log(err)
       setLoading(false)
+      updateVoteStatus()
       return
     }
     console.log('🚀 ~ file: Votes.tsx:67 ~ handleDownVote ~ res:', res)

@@ -3,7 +3,7 @@
   /* Grey/Lighter */
 
   border: 1px solid #ebedf0;
-  border-radius: 8px;
+  border-radius: var(--spacing-8);
   max-width: 670px;
 }
 
@@ -19,7 +19,7 @@
 .post-card-wrapper header .default-profile-icon {
   width: 40px;
   height: 40px;
-  border-radius: 8px;
+  border-radius: var(--spacing-8);
 }
 
 .post-card-wrapper header .author-name {
@@ -31,7 +31,7 @@
 
 .post-card-wrapper header .post-other-info {
   font-size: 12px;
-  line-height: 18px;
+  line-height: 1var (--spacing-8);
   color: #6d747a;
 }
 
@@ -102,15 +102,24 @@
 }
 
 .inputAuthorImage {
-  border-radius: 8px;
+  border-radius: var(--spacing-8);
+  width: var(--spacing-32);
+  height: var(--spacing-32);
 }
 
 .input {
+  all: unset;
   flex: 1;
   background: #f8f9fa;
   border: 1px solid #ebedf0;
-  border-radius: 8px;
-  margin-left: 8px;
+  border-radius: var(--spacing-8);
+  margin-left: var(--spacing-8);
+  padding-left: var(--spacing-8);
+  height: var(--spacing-32);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #000000;
 }
 
 .input::placeholder {
@@ -143,7 +152,7 @@
 .commentAuthor {
   font-weight: 500;
   font-size: 14px;
-  line-height: 18px;
+  line-height: 1var (--spacing-8);
 }
 
 .commentDate {
