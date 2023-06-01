@@ -84,7 +84,6 @@ export const CreatePost: React.FC<Props> = (props) => {
     let content = `${data.content} <div style="display:flex" > ${imgStrs} </div>`
     setData((prev: any) => ({ ...prev, content: content }))
   }, [data.media])
-
   // console.log('data.media', data.media)
 
   const handleHobbyInputChange = async (e: any) => {
