@@ -54,13 +54,13 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
 
       <ProfileLayout activeTab={'media'} data={data}>
         <PageGridLayout column={3}>
-          {
-            media.map((item : any) => {
-              return <div className={styles.image}>
+          {media.map((item: any, idx) => {
+            return (
+              <div key={idx} className={styles.image}>
                 <img src={item} />
               </div>
-            })
-          }
+            )
+          })}
           <div></div>
         </PageGridLayout>
       </ProfileLayout>

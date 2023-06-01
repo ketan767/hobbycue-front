@@ -122,7 +122,7 @@ export const CreatePost: React.FC<Props> = (props) => {
       content: DOMPurify.sanitize(data.content),
       visibility: data.visibility,
       media: data.media,
-      has_link: hasLink
+      has_link: hasLink,
     }
 
     setSubmitBtnLoading(true)
@@ -158,16 +158,20 @@ export const CreatePost: React.FC<Props> = (props) => {
   }
 
   const handleImageUpload = async (image: any) => {
-    const response = await fetch(image)
-    const blob = await response.blob()
+    try {
+      const response = await fetch(image)
+      const blob = await response.blob()
 
-    const formData = new FormData()
-    formData.append('post-image', blob)
-    const { err, res } = await uploadImage(formData)
-    if (err) return console.log(err)
-    if (res?.data.success) {
-      // window.location.reload()
-      // dispatch(closeModal())
+      const formData = new FormData()
+      formData.append('post-image', blob)
+      const { err, res } = await uploadImage(formData)
+      if (err) return console.log(err)
+      if (res?.data.success) {
+        // window.location.reload()
+        // dispatch(closeModal())
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 

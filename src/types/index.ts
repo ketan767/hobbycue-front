@@ -20,3 +20,5 @@ type LocalStorageActiveProfile = {
   type: 'user' | 'listing'
   id: string
 }
+
+type CommunityPageTabs = 'posts' | 'links' | 'pages' | 'store' | 'blogs'
