@@ -8,6 +8,8 @@ import { updatePosts } from '@/redux/slices/post'
 import PostCard from '@/components/PostCard/PostCard'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
+import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
+import { checkIfUrlExists } from '@/utils'
 
 type Props = {}
 
