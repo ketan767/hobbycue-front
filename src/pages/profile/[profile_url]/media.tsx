@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-
+import styles from './styles.module.css'
 import { GetServerSideProps } from 'next'
 import { getAllUserDetail } from '@/services/user.service'
 import Head from 'next/head'
@@ -33,7 +33,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
       allposts.forEach((post: any) => {
         if (post.media) {
           post.media.forEach((singleMedia: any) => {
-            tempMedia.push(post.media)
+            tempMedia.push(...post.media)
           })
         }
       })
@@ -54,6 +54,13 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
 
       <ProfileLayout activeTab={'media'} data={data}>
         <PageGridLayout column={3}>
+          {
+            media.map((item : any) => {
+              return <div className={styles.image}>
+                <img src={item} />
+              </div>
+            })
+          }
           <div></div>
         </PageGridLayout>
       </ProfileLayout>

@@ -14,6 +14,7 @@ import { updatePosts } from '@/redux/slices/post'
 import PostCard from '@/components/PostCard/PostCard'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
+import { checkIfUrlExists } from '@/utils'
 
 type Props = {}
 

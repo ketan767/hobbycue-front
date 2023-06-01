@@ -1,17 +1,19 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import styles from './PostCard.module.css'
 import { dateFormat } from '@/utils'
 import Link from 'next/link'
 import BarsIcon from '../../assets/svg/vertical-bars.svg'
 import PostVotes from './Votes'
-import { getAllPosts } from '@/services/post.service'
 import PostComments from './Comments'
+import { getAllPosts, getMetadata } from '@/services/post.service'
 
 type Props = {
   postData: any
 }
-
+type MetaData = {
+  title: string
+}
 const comments = [
   {
     id: 1,
@@ -23,9 +25,13 @@ const comments = [
 ]
 const PostCard: React.FC<Props> = (props) => {
   // const [type, setType] = useState<'User' | 'Listing'>()
-
   const [postData, setPostData] = useState(props.postData)
-
+  const [url, setUrl] = useState('')
+  const [metaData, setMetaData] = useState({
+    title: '',
+    description: '',
+    image: '',
+  })
   const updatePost = async () => {
     const { err, res } = await getAllPosts(
       `_id=${postData._id}&populate=_author,_genre,_hobby`,
@@ -37,6 +43,23 @@ const PostCard: React.FC<Props> = (props) => {
     }
   }
 
+  useEffect(() => {
+    if (postData.has_link) {
+      const regex =
+        /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
+      const url = postData.content.match(regex)
+      setUrl(url[0])
+      getMetadata(url[0])
+        .then((res: any) => {
+          setMetaData(res.res.data.data.data)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+  }, [postData])
+
+  // console.log(metaData);
   return (
     <>
       <div className={styles['post-card-wrapper']}>
@@ -98,6 +121,22 @@ const PostCard: React.FC<Props> = (props) => {
             className={styles['content']}
             dangerouslySetInnerHTML={{ __html: postData?.content }}
           ></div>
+          {postData.has_link && (
+            <a href={url} className={styles.postMetadata}>
+              <div className={styles.metaImgContainer}>
+                <img
+                  src={metaData.image}
+                  alt="link-image"
+                  width={200}
+                  height={130}
+                />
+              </div>
+              <div className={styles.metaContent}>
+                <p className={styles.contentHead}> {metaData.title} </p>
+                <p className={styles.metaContentText}>s </p>
+              </div>
+            </a>
+          )}
         </section>
 
         {/* Card Footer */}

@@ -60,6 +60,7 @@ export const CreatePost: React.FC<Props> = (props) => {
 
   const [hobbyInputValue, setHobbyInputValue] = useState('')
   const [genreInputValue, setGenreInputValue] = useState('')
+  const [hasLink, setHasLink] = useState(false)
 
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     DropdownListItem[]
@@ -70,6 +71,7 @@ export const CreatePost: React.FC<Props> = (props) => {
 
   useEffect(() => {
     const isUrl = checkIfUrlExists(data.content)
+    setHasLink(isUrl)
     // console.log(data.content)
     console.log({ isUrl })
   }, [data.content])
@@ -120,6 +122,7 @@ export const CreatePost: React.FC<Props> = (props) => {
       content: DOMPurify.sanitize(data.content),
       visibility: data.visibility,
       media: data.media,
+      has_link: hasLink
     }
 
     setSubmitBtnLoading(true)

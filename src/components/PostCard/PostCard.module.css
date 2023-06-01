@@ -187,3 +187,24 @@
   margin-top: 1rem;
   color: #8064a2;
 }
+
+.postMetadata {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+.metaImgContainer {
+  display: flex;
+}
+.metaContent {
+  flex: 1;
+  padding: 4px;
+  padding-left: 1rem;
+  align-self: stretch;
+  background-color: #f0f0f0;
+}
+.contentHead {
+  font-weight: 600;
+  margin-bottom: 12px;
+}

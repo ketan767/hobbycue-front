@@ -18,8 +18,9 @@ export const createUserPost = async (data: {
   hobbyId: string
   genreId: string | undefined
   content: string
-  visibility: string,
-  media : []
+  visibility: string
+  media: []
+  hasLink: Boolean
 }): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
@@ -105,9 +106,26 @@ export const uploadImage = async (formData: FormData) => {
   const headers = { Authorization: `Bearer ${token}` }
 
   try {
-    const res = await axiosInstance.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/post/upload-image`, formData, {
-      headers,
-    })
+    const res = await axiosInstance.post(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/post/upload-image`,
+      formData,
+      {
+        headers,
+      },
+    )
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+export const getMetadata = async (url: string): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  const body = { url }
+  try {
+    const res = await axiosInstance.post(`/post/get-metadata`, body, { headers })
     return { res: res, err: null }
   } catch (error) {
     console.error(error)
