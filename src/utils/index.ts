@@ -29,3 +29,9 @@ export const dateFormat = new Intl.DateTimeFormat('en-GB', {
   month: 'long',
   day: 'numeric',
 })
+
+export const checkIfUrlExists = (str: any) => {
+  const regex =
+    /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
+  return regex.test(str)
+}

@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import store, { RootState } from '@/redux/store'
 import { useSelector } from 'react-redux'
-import { isEmptyField } from '@/utils'
+import { checkIfUrlExists, isEmptyField } from '@/utils'
 import { getAllHobbies } from '@/services/hobby.service'
 import {
   createListingPost,
@@ -17,7 +17,7 @@ import { closeModal } from '@/redux/slices/modal'
 import DOMPurify from 'dompurify'
 import CreatePostProfileSwitcher from './ProfileSwitcher'
 
-const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
+const CustomEditor = dynamic(() => import('@/components/CustomEditor'), {
   ssr: false,
   loading: () => <h1>Loading...</h1>,
 })
@@ -36,6 +36,7 @@ type NewPostData = {
   hobby: DropdownListItem | null
   genre: DropdownListItem | null
   content: string
+  contentToDisplay: string
   visibility: string
   media: []
 }
@@ -48,10 +49,10 @@ export const CreatePost: React.FC<Props> = (props) => {
     hobby: null,
     genre: null,
     content: '',
+    contentToDisplay: '',
     visibility: 'public',
     media: [],
   })
-
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
   const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
@@ -66,6 +67,23 @@ export const CreatePost: React.FC<Props> = (props) => {
   const [genreDropdownList, setGenreDropdownList] = useState<
     DropdownListItem[]
   >([])
+
+  useEffect(() => {
+    const isUrl = checkIfUrlExists(data.content)
+    // console.log(data.content)
+    console.log({ isUrl })
+  }, [data.content])
+
+  useEffect(() => {
+    let imgStrs = ``
+    data.media.map((item: any) => {
+      imgStrs += `<img src="${item}" />`
+    })
+    let content = `${data.content} <div style="display:flex" > ${imgStrs} </div>`
+    setData((prev: any) => ({ ...prev, content: content }))
+  }, [data.media])
+
+  // console.log('data.media', data.media)
 
   const handleHobbyInputChange = async (e: any) => {
     setHobbyInputValue(e.target.value)
@@ -161,7 +179,7 @@ export const CreatePost: React.FC<Props> = (props) => {
       <h3 className={styles['modal-heading']}>Create Post</h3>
       <div className={styles['create-post-modal']}>
         <section>
-          <CustomCKEditor
+          <CustomEditor
             value=""
             onChange={(value) => {
               setData((prev) => {
@@ -169,6 +187,7 @@ export const CreatePost: React.FC<Props> = (props) => {
               })
             }}
             setData={setData}
+            data={data}
             image={true}
           />
         </section>

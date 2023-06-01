@@ -41,7 +41,7 @@ const Community: React.FC<Props> = ({}) => {
     getPost()
   }, [activeProfile])
 
-  console.log({ allPosts })
+  // console.log({allPosts});
   return (
     <>
       <PageGridLayout column={3}>
