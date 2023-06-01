@@ -22,8 +22,8 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
 
   const handleUpdateActiveProfile = (type: 'user' | 'listing', data: any) => {
     dispatch(updateActiveProfile({ type, data }))
-
-    window.location.reload()
+    setShowDropdown(false)
+    // window.location.reload()
   }
   return (
     <>
@@ -45,7 +45,10 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
           />
         ) : (
           <div
-            className={`${styles['profile-image']} default-user-icon`}
+            className={`${styles['profile-image']}  
+            ${activeProfile.type === 'user' && 'default-user-icon'}
+            ${activeProfile.type === 'listing' && 'default-people-listing-icon'}
+            `}
             data-profile-type={activeProfile.type}
           ></div>
         )}
@@ -83,6 +86,7 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
               >
                 {user?.profile_image ? (
                   <Image
+                    className={styles['img']}
                     src={user?.profile_image}
                     alt=""
                     width={24}
@@ -90,7 +94,10 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
                     data-profile-type="user"
                   />
                 ) : (
-                  <div></div>
+                  <div
+                    className={`default-user-icon ${styles['img']}`}
+                    data-profile-type="user"
+                  ></div>
                 )}
                 <p>{user.full_name}</p>
               </li>
@@ -108,6 +115,7 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
                   >
                     {page?.profile_image ? (
                       <Image
+                        className={styles['img']}
                         src={page?.profile_image}
                         alt=""
                         width={24}
@@ -115,7 +123,10 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
                         data-profile-type="listing"
                       />
                     ) : (
-                      <div></div>
+                      <div
+                        className={`default-people-listing-icon ${styles['img']}`}
+                        data-profile-type="listing"
+                      ></div>
                     )}
 
                     <p>{page.title}</p>

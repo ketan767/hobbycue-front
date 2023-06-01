@@ -149,9 +149,12 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   }, [])
 
   useEffect(() => {
+    const token = localStorage.getItem('token')
+    const headers = { Authorization: `Bearer ${token}` }
     axios
       .get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/listing/check-page-url/${data.page_url.value}`
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/listing/check-page-url/${data.page_url.value}`,
+        { headers },
       )
       .then((res) => {
         // console.log('res', res)
@@ -169,7 +172,10 @@ const ListingGeneralEditModal: React.FC<Props> = ({
         setData((prev) => {
           return {
             ...prev,
-            page_url: { ...prev.page_url, error: 'This page url is already taken' },
+            page_url: {
+              ...prev.page_url,
+              error: 'This page url is already taken',
+            },
           }
         })
       })
@@ -182,7 +188,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
       pageUrl = pageUrl?.toLowerCase()
       pageUrl = pageUrl?.replace(/ /g, '-')
       setData((prev) => {
-        return { ...prev, page_url: {value: pageUrl, error: null} }
+        return { ...prev, page_url: { value: pageUrl, error: null } }
       })
     }
   }, [data.title])

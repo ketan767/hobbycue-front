@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import PageContentBox from '@/layouts/PageContentBox'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import { withAuth } from '@/navigation/withAuth'
@@ -13,26 +13,35 @@ import { GetServerSideProps } from 'next'
 import { updatePosts } from '@/redux/slices/post'
 import PostCard from '@/components/PostCard/PostCard'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
+import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 
 type Props = {}
 
 const Community: React.FC<Props> = ({}) => {
-  const { user, activeProfile } = useSelector((state: RootState) => state.user)
+  const { activeProfile } = useSelector((state: RootState) => state.user)
   const { allPosts } = useSelector((state: RootState) => state.post)
+  const [isLoadingPosts, setIsLoadingPosts] = useState(false)
 
   const getPost = async () => {
-    const { err, res } = await getAllPosts(`populate=_author,_genre,_hobby`)
+    const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
+    activeProfile?.data?._hobbies.forEach((item: any) => {
+      params.append('_hobby', item.hobby._id)
+    })
+
+    setIsLoadingPosts(true)
+    const { err, res } = await getAllPosts(params.toString())
     if (err) return console.log(err)
     if (res.data.success) {
       store.dispatch(updatePosts(res.data.data.posts))
     }
+    setIsLoadingPosts(false)
   }
 
   useEffect(() => {
     getPost()
-  }, [])
+  }, [activeProfile])
 
-  console.log({allPosts});
+  console.log({ allPosts })
   return (
     <>
       <PageGridLayout column={3}>
@@ -81,7 +90,7 @@ const Community: React.FC<Props> = ({}) => {
               <button
                 onClick={() =>
                   store.dispatch(
-                    openModal({ type: 'create-post', closable: true })
+                    openModal({ type: 'create-post', closable: true }),
                   )
                 }
                 className={styles['start-post-btn']}
@@ -123,10 +132,17 @@ const Community: React.FC<Props> = ({}) => {
           </header>
 
           <section className={styles['posts-container']}>
-            {allPosts.length === 0 && 'No Posts'}
-            {allPosts.map((post: any) => {
-              return <PostCard key={post._id} postData={post} />
-            })}
+            {allPosts.length === 0 || isLoadingPosts ? (
+              <>
+                <PostCardSkeletonLoading />
+                {/* <PostCardSkeletonLoading />
+                <PostCardSkeletonLoading /> */}
+              </>
+            ) : (
+              allPosts.map((post: any) => {
+                return <PostCard key={post._id} postData={post} />
+              })
+            )}
           </section>
         </main>
 

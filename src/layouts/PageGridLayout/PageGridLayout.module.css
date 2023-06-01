@@ -1,6 +1,6 @@
 .container {
   background: #f8f9fa;
-  min-height: 400px;
+  min-height: 100vh;
   padding: var(--spacing-24);
 }
 
