@@ -18,6 +18,11 @@ import {
 import Image from 'next/image'
 import AddIcon from '../../../../assets/svg/add.svg'
 import InputSelect from '@/components/InputSelect/inputSelect'
+import { updateListing } from '@/services/listing.service'
+import {
+  updateEventDateTime,
+  updateListingModalData,
+} from '@/redux/slices/site'
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
@@ -34,15 +39,39 @@ type ListingAddressData = {
   latitude: InputData<string>
   longitude: InputData<string>
 }
-const initialWorkingHour = [
-  {
-    fromDay: '',
-    toDay: '',
-    fromTime: '',
-    toTime: '',
-  },
+
+const initialEventHour = {
+  from_date: '02/02/2002',
+  to_date: '02/02/2002',
+  from_time: '8:00 am',
+  to_time: '9:00 pm',
+}
+
+const timings = [
+  '12:00 am',
+  '1:00 am',
+  '2:00 am',
+  '3:00 am',
+  '4:00 am',
+  '5:00 am',
+  '6:00 am',
+  '7:00 am',
+  '8:00 am',
+  '9:00 am',
+  '10:00 am',
+  '12:00 am',
+  '1:00 pm',
+  '2:00 pm',
+  '3:00 pm',
+  '4:00 pm',
+  '5:00 pm',
+  '6:00 pm',
+  '7:00 pm',
+  '8:00 pm',
+  '9:00 pm',
+  '10:00 pm',
+  '12:00 pm',
 ]
-const days = ['Monday', 'Tuesday']
 const ListingEventHoursEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
@@ -51,91 +80,24 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
   const { user } = useSelector((state: RootState) => state.user)
 
   const { listingModalData } = useSelector((state: RootState) => state.site)
-  console.log('listingModalData:', listingModalData)
+
+  console.log('listingModalData:', listingModalData.event_date_time)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
-
-  const [data, setData] = useState<ListingAddressData>({
-    street: { value: '', error: null },
-    society: { value: '', error: null },
-    locality: { value: '', error: null },
-    city: { value: '', error: null },
-    pin_code: { value: '', error: null },
-    state: { value: '', error: null },
-    country: { value: '', error: null },
-    latitude: { value: '', error: null },
-    longitude: { value: '', error: null },
-  })
-  const [workingHoursData, setWorkingHoursData] = useState(initialWorkingHour)
-
-  const handleInputChange = (event: any) => {
-    setData((prev) => {
-      return {
-        ...prev,
-        [event.target.name]: { value: event.target.value, error: null },
-      }
-    })
-  }
+  const [eventData, setEventData] = useState(initialEventHour)
 
   const handleSubmit = async () => {
-    if (isEmptyField(data.street.value)) {
-      return setData((prev) => {
-        return {
-          ...prev,
-          street: { ...prev.street, error: 'This field is required!' },
-        }
-      })
-    }
-    if (isEmptyField(data.city.value)) {
-      return setData((prev) => {
-        return {
-          ...prev,
-          city: { ...prev.city, error: 'This field is required!' },
-        }
-      })
-    }
-    if (isEmptyField(data.pin_code.value)) {
-      return setData((prev) => {
-        return {
-          ...prev,
-          pin_code: { ...prev.pin_code, error: 'This field is required!' },
-        }
-      })
-    }
-    if (isEmptyField(data.state.value)) {
-      return setData((prev) => {
-        return {
-          ...prev,
-          state: { ...prev.state, error: 'This field is required!' },
-        }
-      })
-    }
-    if (isEmptyField(data.country.value)) {
-      return setData((prev) => {
-        return {
-          ...prev,
-          country: { ...prev.country, error: 'This field is required!' },
-        }
-      })
-    }
-
     const jsonData = {
-      street: data.street.value,
-      society: data.society.value,
-      locality: data.locality.value,
-      city: data.city.value,
-      pin_code: data.pin_code.value,
-      state: data.state.value,
-      country: data.country.value,
-      latitude: data.latitude.value,
-      longitude: data.longitude.value,
+      ...eventData,
     }
+    console.log({ jsonData })
     setSubmitBtnLoading(true)
-    const { err, res } = await updateListingAddress(
-      listingModalData._address,
-      jsonData
-    )
+    const { err, res } = await updateListing(listingModalData._id, {
+      event_date_time: jsonData,
+    })
     if (err) return console.log(err)
+    console.log('res', res?.data.data.listing)
+    dispatch(updateEventDateTime(res?.data.data.listing.event_date_time))
     if (onComplete) onComplete()
     else {
       window.location.reload()
@@ -143,44 +105,44 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     }
   }
 
-  const updateAddress = async () => {
-    const { err, res } = await getListingAddress(listingModalData._address)
-    if (err) return console.log(err)
+  useEffect(() => {
+    if (listingModalData.event_date_time) {
+      const { from_time, to_time, from_date, to_date } =
+        listingModalData.event_date_time
+        setEventData({from_time, to_time, from_date, to_date})
+    }
+  }, [])
+  
+  useEffect(() => {
+    if (listingModalData.event_date_time === undefined) {
+      const initial = {
+        from_time: 'Monday',
+        to_time: '8:00 pm',
+        from_date: '02/08/2002',
+        to_date: '02/04/2008',
+      }
 
-    setData({
-      street: { value: res?.data.data.address.street, error: null },
-      society: { value: res?.data.data.address.society, error: null },
-      locality: { value: res?.data.data.address.locality, error: null },
-      city: { value: res?.data.data.address.city, error: null },
-      pin_code: { value: res?.data.data.address.pin_code, error: null },
-      state: { value: res?.data.data.address.state, error: null },
-      country: { value: res?.data.data.address.country, error: null },
-      latitude: { value: res?.data.data.address.latitude, error: null },
-      longitude: { value: res?.data.data.address.longitude, error: null },
-    })
+      dispatch(updateEventDateTime(initial))
+    }
+  }, [])
+
+  const onChangeFromday = (updatedItem: any, key: any) => {
+    const updated = {
+      ...eventData,
+      [key]: updatedItem,
+    }
+    setEventData(updated)
+    console.log(updated)
+    // setWorkingHoursData(updated)
   }
 
-  useEffect(() => {
-    setData({
-      street: { value: '', error: null },
-      society: { value: '', error: null },
-      locality: { value: '', error: null },
-      city: { value: '', error: null },
-      pin_code: { value: '', error: null },
-      state: { value: '', error: null },
-      country: { value: '', error: null },
-      latitude: { value: '', error: null },
-      longitude: { value: '', error: null },
-    })
-    updateAddress()
-  }, [user])
-
+  console.log({ eventData })
   return (
     <>
       <div className={styles['modal-wrapper']}>
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>{'Working Hours'}</h4>
+          <h4 className={styles['heading']}>{'Event Hours'}</h4>
         </header>
 
         <hr />
@@ -188,34 +150,58 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
         <section className={styles['body']}>
           <div className={styles.sectionHead}>
             <p>Event Hours</p>
-            <div className={styles.sectionHeadRight}>
-              <Image src={AddIcon} width={14} height={14} alt="add" />
-              <p> Add event hour </p>
-            </div>
           </div>
           <div className={styles.listContainer}>
-            {workingHoursData.map((item: any, idx) => {
-              return (
-                <div key={idx} className={styles.listItem}>
-                  <div className={styles.listSubItem}>
-                    <label> From Day </label>
-                    <InputSelect options={days} />
-                  </div>
-                  <div className={styles.listSubItem}>
-                    <label> To Day </label>
-                    <InputSelect options={days} />
-                  </div>
-                  <div className={styles.listSubItem}>
-                    <label> From Time </label>
-                    <InputSelect options={days} />
-                  </div>
-                  <div className={styles.listSubItem}>
-                    <label> From Time </label>
-                    <InputSelect options={days} />
-                  </div>
-                </div>
-              )
-            })}
+            <div className={styles.listItem}>
+              <div className={styles.listSubItem}>
+                <label> From Day </label>
+                {/* <InputSelect
+                  options={days}
+                  value={workingHoursData.fromDay}
+                  onChange={(item: any) => onChangeFromday(item, 'fromDay')}
+                /> */}
+                <input
+                  value={eventData.from_date}
+                  className={styles.inputField}
+                  type="date"
+                  onChange={(e: any) =>
+                    onChangeFromday(e.target.value, 'from_date')
+                  }
+                />
+              </div>
+              <div className={styles.listSubItem}>
+                <label> To Day </label>
+                {/* <InputSelect
+                  options={days}
+                  value={eventData.toDay}
+                  onChange={(item: any) => onChangeFromday(item, 'toDay')}
+                /> */}
+                <input
+                  value={eventData.to_date}
+                  className={styles.inputField}
+                  type="date"
+                  onChange={(e: any) =>
+                    onChangeFromday(e.target.value, 'to_date')
+                  }
+                />
+              </div>
+              <div className={styles.listSubItem}>
+                <label> From Time </label>
+                <InputSelect
+                  options={timings}
+                  value={eventData.from_time}
+                  onChange={(item: any) => onChangeFromday(item, 'from_time')}
+                />
+              </div>
+              <div className={styles.listSubItem}>
+                <label> From Time </label>
+                <InputSelect
+                  value={eventData.to_time}
+                  options={timings}
+                  onChange={(item: any) => onChangeFromday(item, 'to_time')}
+                />
+              </div>
+            </div>
           </div>
         </section>
 

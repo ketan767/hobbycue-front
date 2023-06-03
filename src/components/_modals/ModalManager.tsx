@@ -24,6 +24,8 @@ import ListingHobbyEditModal from './EditListing/ListingHobby'
 import { UploadImageModal } from './UploadImageModal'
 import ProfileContactEditModal from './EditProfile/ProfileContact'
 import ListingTagsEditModal from './EditListing/ListingTag/ListingTag'
+import ListingWorkingHoursEditModal from './EditListing/ListingWorkingHours'
+import ListingEventHoursEditModal from './EditListing/ListingEventHours'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -92,6 +94,12 @@ const ModalManager: React.FC = () => {
               )}
               {activeModal === 'listing-about-edit' && (
                 <ListingAboutEditModal />
+              )}
+              {activeModal === 'listing-working-hours-edit' && (
+                <ListingWorkingHoursEditModal />
+              )}
+              {activeModal === 'listing-event-hours-edit' && (
+                <ListingEventHoursEditModal />
               )}
               {activeModal === 'listing-contact-edit' && (
                 <ListingContactEditModal />

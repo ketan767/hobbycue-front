@@ -24,6 +24,12 @@ type ListingModalData = {
   _hobbies?: any
   work_hours?: any
   _id?: string
+  event_date_time?: {
+    from_time: any
+    to_time: any
+    from_date: any
+    to_date: any
+  }
   is_published?: boolean
   is_onboarded?: boolean
   facebook_url?: string
@@ -137,6 +143,9 @@ const siteSlice = createSlice({
     ) => {
       state.editPhotoModalData = payload
     },
+    updateEventDateTime: (state, { payload }) => {
+      state.listingPageData.event_date_time = payload
+    },
   },
 })
 
@@ -146,6 +155,7 @@ export const {
   updateListingPageData,
   updateListingModalData,
   updatePhotoEditModalData,
+  updateEventDateTime,
 } = siteSlice.actions
 
 export default siteSlice.reducer

@@ -19,7 +19,7 @@ interface Props {
 }
 
 const ListingHomeTab: React.FC<Props> = ({ data }) => {
-  console.log('🚀 ~ file: ListingHomeTab.tsx:17 ~ data:', data)
+  // console.log('🚀 ~ file: ListingHomeTab.tsx:17 ~ data:', data)
   const dispatch = useDispatch()
 
   const { listingLayoutMode } = useSelector((state: RootState) => state.site)
