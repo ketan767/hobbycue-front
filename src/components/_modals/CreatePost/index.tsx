@@ -39,6 +39,7 @@ type NewPostData = {
   contentToDisplay: string
   visibility: string
   media: []
+  video_url: String
 }
 export const CreatePost: React.FC<Props> = (props) => {
   const { user, activeProfile } = useSelector((state: RootState) => state.user)
@@ -52,6 +53,7 @@ export const CreatePost: React.FC<Props> = (props) => {
     contentToDisplay: '',
     visibility: 'public',
     media: [],
+    video_url: '',
   })
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
@@ -73,7 +75,7 @@ export const CreatePost: React.FC<Props> = (props) => {
     const isUrl = checkIfUrlExists(data.content)
     setHasLink(isUrl)
     // console.log(data.content)
-    console.log({ isUrl })
+    // console.log({ isUrl })
   }, [data.content])
 
   useEffect(() => {
@@ -84,6 +86,13 @@ export const CreatePost: React.FC<Props> = (props) => {
     let content = `${data.content} <div style="display:flex" > ${imgStrs} </div>`
     setData((prev: any) => ({ ...prev, content: content }))
   }, [data.media])
+
+  useEffect(() => {
+    let videoStr = `<video src="${data.video_url}" />`
+    let content = `${data.content} <div style="display:flex" > ${videoStr} </div>`
+    setData((prev: any) => ({ ...prev, content: content }))
+  }, [data.video_url])
+
   // console.log('data.media', data.media)
 
   const handleHobbyInputChange = async (e: any) => {

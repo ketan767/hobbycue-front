@@ -22,7 +22,7 @@ type ListingModalData = {
   whatsapp_number?: string
   _address?: any
   _hobbies?: any
-
+  work_hours?: any
   _id?: string
   is_published?: boolean
   is_onboarded?: boolean
@@ -104,16 +104,25 @@ const siteSlice = createSlice({
   name: 'site',
   initialState,
   reducers: {
-    updateListingLayoutMode: (state, { payload }: PayloadAction<ListingLayoutMode>) => {
+    updateListingLayoutMode: (
+      state,
+      { payload }: PayloadAction<ListingLayoutMode>,
+    ) => {
       state.listingLayoutMode = payload
     },
-    updateProfileLayoutMode: (state, { payload }: PayloadAction<ProfileLayoutMode>) => {
+    updateProfileLayoutMode: (
+      state,
+      { payload }: PayloadAction<ProfileLayoutMode>,
+    ) => {
       state.profileLayoutMode = payload
     },
     updateListingPageData: (state, { payload }) => {
       state.listingPageData = payload
     },
-    updateListingModalData: (state, { payload }: PayloadAction<ListingModalData>) => {
+    updateListingModalData: (
+      state,
+      { payload }: PayloadAction<ListingModalData>,
+    ) => {
       state.listingModalData = payload
     },
     updatePhotoEditModalData: (

@@ -59,7 +59,7 @@ const PostCard: React.FC<Props> = (props) => {
     }
   }, [postData])
 
-  // console.log(metaData);
+  // console.log(postData.media);
   return (
     <>
       <div className={styles['post-card-wrapper']}>

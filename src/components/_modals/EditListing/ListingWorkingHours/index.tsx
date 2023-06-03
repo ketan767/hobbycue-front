@@ -18,6 +18,8 @@ import {
 import Image from 'next/image'
 import AddIcon from '../../../../assets/svg/add.svg'
 import InputSelect from '@/components/InputSelect/inputSelect'
+import { updateListing } from '@/services/listing.service'
+import { updateListingModalData } from '@/redux/slices/site'
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
@@ -36,13 +38,46 @@ type ListingAddressData = {
 }
 const initialWorkingHour = [
   {
-    fromDay: '',
-    toDay: '',
-    fromTime: '',
-    toTime: '',
+    fromDay: 'Monday',
+    toDay: 'Friday',
+    fromTime: '8:00 am',
+    toTime: '9:00 pm',
   },
 ]
-const days = ['Monday', 'Tuesday']
+const days = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
+]
+const timings = [
+  '12:00 am',
+  '1:00 am',
+  '2:00 am',
+  '3:00 am',
+  '4:00 am',
+  '5:00 am',
+  '6:00 am',
+  '7:00 am',
+  '8:00 am',
+  '9:00 am',
+  '10:00 am',
+  '12:00 am',
+  '1:00 pm',
+  '2:00 pm',
+  '3:00 pm',
+  '4:00 pm',
+  '5:00 pm',
+  '6:00 pm',
+  '7:00 pm',
+  '8:00 pm',
+  '9:00 pm',
+  '10:00 pm',
+  '12:00 pm',
+]
 const ListingWorkingHoursEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
@@ -51,6 +86,7 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
   const { user } = useSelector((state: RootState) => state.user)
 
   const { listingModalData } = useSelector((state: RootState) => state.site)
+
   console.log('listingModalData:', listingModalData)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
@@ -78,64 +114,25 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
   }
 
   const handleSubmit = async () => {
-    if (isEmptyField(data.street.value)) {
-      return setData((prev) => {
-        return {
-          ...prev,
-          street: { ...prev.street, error: 'This field is required!' },
-        }
-      })
-    }
-    if (isEmptyField(data.city.value)) {
-      return setData((prev) => {
-        return {
-          ...prev,
-          city: { ...prev.city, error: 'This field is required!' },
-        }
-      })
-    }
-    if (isEmptyField(data.pin_code.value)) {
-      return setData((prev) => {
-        return {
-          ...prev,
-          pin_code: { ...prev.pin_code, error: 'This field is required!' },
-        }
-      })
-    }
-    if (isEmptyField(data.state.value)) {
-      return setData((prev) => {
-        return {
-          ...prev,
-          state: { ...prev.state, error: 'This field is required!' },
-        }
-      })
-    }
-    if (isEmptyField(data.country.value)) {
-      return setData((prev) => {
-        return {
-          ...prev,
-          country: { ...prev.country, error: 'This field is required!' },
-        }
-      })
-    }
+    const jsonData = workingHoursData.map((item: any) => {
+      const { fromDay, toDay, fromTime, toTime } = item
+      return {
+        from_day: fromDay,
+        to_day: toDay,
+        from_time: fromTime,
+        to_time: toTime,
+      }
+    })
 
-    const jsonData = {
-      street: data.street.value,
-      society: data.society.value,
-      locality: data.locality.value,
-      city: data.city.value,
-      pin_code: data.pin_code.value,
-      state: data.state.value,
-      country: data.country.value,
-      latitude: data.latitude.value,
-      longitude: data.longitude.value,
-    }
     setSubmitBtnLoading(true)
-    const { err, res } = await updateListingAddress(
-      listingModalData._address,
-      jsonData
-    )
+    const { err, res } = await updateListing(listingModalData._id, {
+      work_hours: jsonData,
+    })
     if (err) return console.log(err)
+    console.log('res', res?.data.data.listing)
+    const updatedData = { ...listingModalData, work_hours: res?.data.data.listing.work_hours }
+
+    dispatch(updateListingModalData(updatedData))
     if (onComplete) onComplete()
     else {
       window.location.reload()
@@ -143,6 +140,26 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
     }
   }
 
+  useEffect(() => {
+    const workData = listingModalData.work_hours?.map((item: any) => {
+      const { from_day, to_day, from_time, to_time } = item
+      return {
+        fromDay: from_day,
+        toDay: to_day,
+        fromTime: from_time,
+        toTime: to_time,
+      }
+    })
+    console.log({workData});
+    if(workData){
+      setWorkingHoursData(workData)
+    }
+
+  }, [listingModalData])
+
+  const addWorkingHour = () => {
+    setWorkingHoursData((prev: any) => [...prev, ...initialWorkingHour])
+  }
   const updateAddress = async () => {
     const { err, res } = await getListingAddress(listingModalData._address)
     if (err) return console.log(err)
@@ -175,6 +192,20 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
     updateAddress()
   }, [user])
 
+  const onChangeFromday = (updatedItem: any, key: any, idxToChange: any) => {
+    const temp = workingHoursData.map((item: any, idx: any) => {
+      if (idxToChange === idx) {
+        return { ...item, [key]: updatedItem }
+      } else {
+        return { ...item }
+      }
+    })
+    console.log(temp)
+    setWorkingHoursData(temp)
+  }
+
+  console.log(workingHoursData);
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -188,7 +219,7 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
         <section className={styles['body']}>
           <div className={styles.sectionHead}>
             <p>Working Hours</p>
-            <div className={styles.sectionHeadRight}>
+            <div className={styles.sectionHeadRight} onClick={addWorkingHour}>
               <Image src={AddIcon} width={14} height={14} alt="add" />
               <p> Add working hour </p>
             </div>
@@ -199,19 +230,43 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
                 <div key={idx} className={styles.listItem}>
                   <div className={styles.listSubItem}>
                     <label> From Day </label>
-                    <InputSelect options={days} />
+                    <InputSelect
+                      options={days}
+                      value={item.fromDay}
+                      onChange={(item: any) =>
+                        onChangeFromday(item, 'fromDay', idx)
+                      }
+                    />
                   </div>
                   <div className={styles.listSubItem}>
                     <label> To Day </label>
-                    <InputSelect options={days} />
+                    <InputSelect
+                      options={days}
+                      value={item.toDay}
+                      onChange={(item: any) =>
+                        onChangeFromday(item, 'toDay', idx)
+                      }
+                    />
                   </div>
                   <div className={styles.listSubItem}>
                     <label> From Time </label>
-                    <InputSelect options={days} />
+                    <InputSelect
+                      options={timings}
+                      value={item.fromTime}
+                      onChange={(item: any) =>
+                        onChangeFromday(item, 'fromTime', idx)
+                      }
+                    />
                   </div>
                   <div className={styles.listSubItem}>
                     <label> From Time </label>
-                    <InputSelect options={days} />
+                    <InputSelect
+                      value={item.toTime}
+                      options={timings}
+                      onChange={(item: any) =>
+                        onChangeFromday(item, 'toTime', idx)
+                      }
+                    />
                   </div>
                 </div>
               )

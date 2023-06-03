@@ -35,3 +35,19 @@ export const checkIfUrlExists = (str: any) => {
     /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
   return regex.test(str)
 }
+
+export function getFileType(file : any) {
+
+  if(file.type.match('image.*'))
+    return 'image';
+
+  if(file.type.match('video.*'))
+    return 'video';
+
+  if(file.type.match('audio.*'))
+    return 'audio';
+
+  // etc...
+
+  return 'other';
+}
