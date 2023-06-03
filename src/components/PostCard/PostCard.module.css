@@ -208,3 +208,12 @@
   font-weight: 600;
   margin-bottom: 12px;
 }
+.postImages{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.postImages img {
+  width: 90%;
+  margin-bottom: 5px;
+}

@@ -1,178 +1,177 @@
 import React, { useState, useEffect } from 'react'
-import styles from './style.module.css'
-import { Button, CircularProgress } from '@mui/material'
+import dynamic from 'next/dynamic'
 import {
-  addUserAddress,
+  Button,
+  CircularProgress,
+  FormControl,
+  MenuItem,
+  Select,
+} from '@mui/material'
+
+import {
   getMyProfileDetail,
-  updateUserAddress,
+  updateMyProfileDetail,
 } from '@/services/user.service'
+
+import styles from './styles.module.css'
 import { isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
-import { RootState } from '@/redux/store'
-import {
-  getListingAddress,
-  updateListingAddress,
-} from '@/services/listing.service'
-import Image from 'next/image'
-import AddIcon from '../../../../assets/svg/add.svg'
-import InputSelect from '@/components/InputSelect/inputSelect'
+import { updateListing } from '@/services/listing.service'
+import { updateListingModalData } from '@/redux/slices/site'
+
+const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
+  ssr: false,
+  loading: () => <h1>Loading...</h1>,
+})
+
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
 }
 
-type ListingAddressData = {
-  street: InputData<string>
-  society: InputData<string>
-  locality: InputData<string>
-  city: InputData<string>
-  pin_code: InputData<string>
-  state: InputData<string>
-  country: InputData<string>
-  latitude: InputData<string>
-  longitude: InputData<string>
+type ListingAboutData = {
+  description: InputData<string>
 }
-const initialWorkingHour = [
+
+type TagItem = string
+const tags = [
   {
-    fromDay: '',
-    toDay: '',
-    fromTime: '',
-    toTime: '',
+    tag: 'Teach',
+    desc: 'Do you conduct classes or workshops?',
+  },
+  {
+    tag: 'Home Classes',
+    desc: `Do you visit the student's home to conduct `,
+  },
+  {
+    tag: '1 on 1 classes',
+    desc: 'Do you conduct 1-on-1 individual classes',
+  },
+  {
+    tag: 'Online Classes',
+    desc: 'Do you conduct online classes?',
+  },
+  {
+    tag: 'Collabs',
+    desc: 'Are you open to collaborate with others?',
+  },
+  {
+    tag: 'Shows',
+    desc: 'Do you participate in concerts?',
+  },
+  {
+    tag: 'Compose',
+    desc: 'Do you compose or design a show?',
+  },
+  {
+    tag: 'Parking',
+    desc: 'Is parking available at the venue?',
+  },
+  {
+    tag: 'Home Delivery',
+    desc: 'Do you provide home delivery?',
+  },
+  {
+    tag: 'Ride Share',
+    desc: 'Do you recommend ride sharing to get here?',
+  },
+  {
+    tag: 'Products',
+    desc: 'Do you sell or rent products from here?',
+  },
+  {
+    tag: 'Space',
+    desc: 'Do you rent out spaces for practice or shows?',
+  },
+  {
+    tag: 'Performances',
+    desc: 'Is there an auditorium or performance venue?',
+  },
+  {
+    tag: 'Parking',
+    desc: 'Is parking available at the venue?',
+  },
+  {
+    tag: 'Ride Share',
+    desc: 'Can people share rides while coming here?',
+  },
+  {
+    tag: 'Food Counter',
+    desc: 'Is there a cafe or facility for food stall?',
+  },
+  {
+    tag: 'Shop',
+    desc: 'Any souvenir or other shops at this venue?',
+  },
+  {
+    tag: 'Walk-in',
+    desc: 'Can one walk-in without a reservation?',
   },
 ]
-const days = ['Monday', 'Tuesday']
-const ListingRelatedEditModal: React.FC<Props> = ({
+
+const RelatedListingEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
-
   const { listingModalData } = useSelector((state: RootState) => state.site)
-  console.log('listingModalData:', listingModalData)
 
+  const [data, setData] = useState<ListingAboutData>({
+    description: { value: '', error: null },
+  })
+  const [tagsData, setTagsData] = useState(tags)
+  let tag_texts = tags.map((item) => item.tag)
+  const [tagTexts, setTagTexts] = useState<string[]>([])
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
-  const [data, setData] = useState<ListingAddressData>({
-    street: { value: '', error: null },
-    society: { value: '', error: null },
-    locality: { value: '', error: null },
-    city: { value: '', error: null },
-    pin_code: { value: '', error: null },
-    state: { value: '', error: null },
-    country: { value: '', error: null },
-    latitude: { value: '', error: null },
-    longitude: { value: '', error: null },
-  })
-  const [workingHoursData, setWorkingHoursData] = useState(initialWorkingHour)
-
-  const handleInputChange = (event: any) => {
+  const handleInputChange = (value: string) => {
     setData((prev) => {
-      return {
-        ...prev,
-        [event.target.name]: { value: event.target.value, error: null },
-      }
+      return { ...prev, description: { value, error: null } }
     })
   }
 
   const handleSubmit = async () => {
-    if (isEmptyField(data.street.value)) {
+    if (isEmptyField(data.description.value)) {
       return setData((prev) => {
         return {
           ...prev,
-          street: { ...prev.street, error: 'This field is required!' },
-        }
-      })
-    }
-    if (isEmptyField(data.city.value)) {
-      return setData((prev) => {
-        return {
-          ...prev,
-          city: { ...prev.city, error: 'This field is required!' },
-        }
-      })
-    }
-    if (isEmptyField(data.pin_code.value)) {
-      return setData((prev) => {
-        return {
-          ...prev,
-          pin_code: { ...prev.pin_code, error: 'This field is required!' },
-        }
-      })
-    }
-    if (isEmptyField(data.state.value)) {
-      return setData((prev) => {
-        return {
-          ...prev,
-          state: { ...prev.state, error: 'This field is required!' },
-        }
-      })
-    }
-    if (isEmptyField(data.country.value)) {
-      return setData((prev) => {
-        return {
-          ...prev,
-          country: { ...prev.country, error: 'This field is required!' },
+          description: {
+            ...prev.description,
+            error: 'This field is required!',
+          },
         }
       })
     }
 
-    const jsonData = {
-      street: data.street.value,
-      society: data.society.value,
-      locality: data.locality.value,
-      city: data.city.value,
-      pin_code: data.pin_code.value,
-      state: data.state.value,
-      country: data.country.value,
-      latitude: data.latitude.value,
-      longitude: data.longitude.value,
-    }
     setSubmitBtnLoading(true)
-    const { err, res } = await updateListingAddress(
-      listingModalData._address,
-      jsonData,
-    )
-    if (err) return console.log(err)
-    if (onComplete) onComplete()
-    else {
-      window.location.reload()
-      dispatch(closeModal())
-    }
-  }
-
-  const updateAddress = async () => {
-    const { err, res } = await getListingAddress(listingModalData._address)
-    if (err) return console.log(err)
-
-    setData({
-      street: { value: res?.data.data.address.street, error: null },
-      society: { value: res?.data.data.address.society, error: null },
-      locality: { value: res?.data.data.address.locality, error: null },
-      city: { value: res?.data.data.address.city, error: null },
-      pin_code: { value: res?.data.data.address.pin_code, error: null },
-      state: { value: res?.data.data.address.state, error: null },
-      country: { value: res?.data.data.address.country, error: null },
-      latitude: { value: res?.data.data.address.latitude, error: null },
-      longitude: { value: res?.data.data.address.longitude, error: null },
+    const { err, res } = await updateListing(listingModalData._id, {
+      description: data.description.value,
     })
+    setSubmitBtnLoading(false)
+    if (err) return console.log(err)
+    if (res?.data.success) {
+      dispatch(updateListingModalData(res.data.data.listing))
+      if (onComplete) onComplete()
+      else {
+        window.location.reload()
+        dispatch(closeModal())
+      }
+    }
   }
 
   useEffect(() => {
-    setData({
-      street: { value: '', error: null },
-      society: { value: '', error: null },
-      locality: { value: '', error: null },
-      city: { value: '', error: null },
-      pin_code: { value: '', error: null },
-      state: { value: '', error: null },
-      country: { value: '', error: null },
-      latitude: { value: '', error: null },
-      longitude: { value: '', error: null },
+    setData((prev) => {
+      return {
+        description: {
+          ...prev.description,
+          value: listingModalData.description as string,
+        },
+      }
     })
-    updateAddress()
   }, [user])
 
   return (
@@ -180,38 +179,37 @@ const ListingRelatedEditModal: React.FC<Props> = ({
       <div className={styles['modal-wrapper']}>
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>{'Working Hours'}</h4>
+          <h4 className={styles['heading']}>{'About'}</h4>
         </header>
-
         <hr />
-
         <section className={styles['body']}>
-          <div className={styles.sectionHead}>
-            <p>Related Listing</p>
-          </div>
-          <div className={styles.listContainer}>
-            {workingHoursData.map((item: any, idx) => {
-              return (
-                <div key={idx} className={styles.listItem}>
-                  <div className={styles.listSubItem}>
-                    <label> From Day </label>
-                    <InputSelect options={days} />
-                  </div>
-                  <div className={styles.listSubItem}>
-                    <label> To Day </label>
-                    <InputSelect options={days} />
-                  </div>
-                  <div className={styles.listSubItem}>
-                    <label> From Time </label>
-                    <InputSelect options={days} />
-                  </div>
-                  <div className={styles.listSubItem}>
-                    <label> From Time </label>
-                    <InputSelect options={days} />
-                  </div>
-                </div>
-              )
-            })}
+          <div className={styles['input-box']}>
+            <label>Add Tags</label>
+            <input hidden required />
+
+            <FormControl variant="outlined" size="small" sx={{ width: '100%' }}>
+              <Select
+                value={tagTexts}
+                multiple={true}
+                onChange={(e) => {
+                  let val = e.target.value
+                  setTagTexts((prev: any) => val as any)
+                }}
+                displayEmpty
+                inputProps={{ 'aria-label': 'Without label' }}
+              >
+                {tags.map((item: any, idx) => {
+                  return (
+                    <MenuItem key={idx} value={item.tag}>
+                      <div className={styles.tagContainer}>
+                        <p className={styles.tagText}>{item.tag}</p>
+                        <p className={styles.tagDesc}>{item.desc}</p>
+                      </div>
+                    </MenuItem>
+                  )
+                })}
+              </Select>
+            </FormControl>
           </div>
         </section>
 
@@ -244,4 +242,4 @@ const ListingRelatedEditModal: React.FC<Props> = ({
   )
 }
 
-export default ListingRelatedEditModal
+export default RelatedListingEditModal

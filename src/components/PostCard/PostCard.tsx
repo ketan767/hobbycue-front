@@ -59,7 +59,7 @@ const PostCard: React.FC<Props> = (props) => {
     }
   }, [postData])
 
-  // console.log(postData.media);
+  console.log(postData.media)
   return (
     <>
       <div className={styles['post-card-wrapper']}>
@@ -121,6 +121,20 @@ const PostCard: React.FC<Props> = (props) => {
             className={styles['content']}
             dangerouslySetInnerHTML={{ __html: postData?.content }}
           ></div>
+          {postData.video_url && (
+            <video width="320" height="240" controls>
+              <source src={postData.video_url} type="video/mp4"></source>
+            </video>
+          )}
+          {postData.media ? (
+            <div className={styles.postImages}>
+            {postData.media.map((item: any) => {
+              return <img src={item} className={styles.postImage} />
+            })}
+            </div>
+          ) : (
+            <></>
+          )}
           {postData.has_link && (
             <a href={url} className={styles.postMetadata}>
               <div className={styles.metaImgContainer}>

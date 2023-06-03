@@ -88,12 +88,13 @@ export const CreatePost: React.FC<Props> = (props) => {
   }, [data.media])
 
   useEffect(() => {
-    let videoStr = `<video src="${data.video_url}" />`
-    let content = `${data.content} <div style="display:flex" > ${videoStr} </div>`
+    let videoStr = `<video width="320" height="240" controls>
+    <source src=${data.video_url} type="video/mp4">
+  </video>`
+    let content = `${data.content} ${videoStr}`
     setData((prev: any) => ({ ...prev, content: content }))
   }, [data.video_url])
 
-  // console.log('data.media', data.media)
 
   const handleHobbyInputChange = async (e: any) => {
     setHobbyInputValue(e.target.value)
@@ -131,8 +132,8 @@ export const CreatePost: React.FC<Props> = (props) => {
       visibility: data.visibility,
       media: data.media,
       has_link: hasLink,
+      video_url: data.video_url ? data.video_url : null,
     }
-
     setSubmitBtnLoading(true)
 
     if (data.type === 'listing') {
@@ -155,7 +156,7 @@ export const CreatePost: React.FC<Props> = (props) => {
       return console.log(err)
     }
     if (res.data.success) {
-      store.dispatch(closeModal())
+      // store.dispatch(closeModal())
       // window.location.reload()
       console.log('res', res)
       data.media.forEach((item: any) => {
