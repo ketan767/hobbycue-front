@@ -30,24 +30,26 @@ export const dateFormat = new Intl.DateTimeFormat('en-GB', {
   day: 'numeric',
 })
 
+export const dateFormatShort = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+})
+
 export const checkIfUrlExists = (str: any) => {
   const regex =
     /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
   return regex.test(str)
 }
 
-export function getFileType(file : any) {
+export function getFileType(file: any) {
+  if (file.type.match('image.*')) return 'image'
 
-  if(file.type.match('image.*'))
-    return 'image';
+  if (file.type.match('video.*')) return 'video'
 
-  if(file.type.match('video.*'))
-    return 'video';
-
-  if(file.type.match('audio.*'))
-    return 'audio';
+  if (file.type.match('audio.*')) return 'audio'
 
   // etc...
 
-  return 'other';
+  return 'other'
 }
