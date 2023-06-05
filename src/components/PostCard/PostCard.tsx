@@ -38,7 +38,6 @@ const PostCard: React.FC<Props> = (props) => {
       const regex =
         /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
       const url = postData.content.match(regex)
-<<<<<<< HEAD
       if (url) {
         setUrl(url[0])
       }
@@ -51,16 +50,6 @@ const PostCard: React.FC<Props> = (props) => {
             console.log(err)
           })
       }
-=======
-      setUrl(url?.[0])
-      getMetadata(url?.[0])
-        .then((res: any) => {
-          setMetaData(res.res.data.data.data)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
->>>>>>> 2827cb9925af714d59287d8b74bf8d07b83e4957
     }
   }, [postData])
 
@@ -132,17 +121,12 @@ const PostCard: React.FC<Props> = (props) => {
           )}
           {postData.media ? (
             <div className={styles.postImages}>
-<<<<<<< HEAD
-              {postData.media.map((item: any) => {
-                return <img src={item} className={styles.postImage} />
-=======
               {postData.media.map((item: any, idx: number) => {
                 return (
                   <div key={item} style={{ width: '100%' }}>
                     <img src={item} alt="img" className={styles.postImage} />
                   </div>
                 )
->>>>>>> 2827cb9925af714d59287d8b74bf8d07b83e4957
               })}
             </div>
           ) : (
