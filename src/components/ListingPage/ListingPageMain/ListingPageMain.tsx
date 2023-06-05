@@ -533,9 +533,9 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                 {/* Working Hours  */}
                 {data?.work_hours && (
                   <ul>
-                    {data?.work_hours.map((item: any) => {
+                    {data?.work_hours.map((item: any, idx: number) => {
                       return (
-                        <li className={styles.workingListItem}>
+                        <li key={idx} className={styles.workingListItem}>
                           <svg
                             width="24"
                             height="24"

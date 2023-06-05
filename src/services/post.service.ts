@@ -125,7 +125,97 @@ export const getMetadata = async (url: string): Promise<ApiReturnObject> => {
   const headers = { Authorization: `Bearer ${token}` }
   const body = { url }
   try {
-    const res = await axiosInstance.post(`/post/get-metadata`, body, { headers })
+    const res = await axiosInstance.post(`/post/get-metadata`, body, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+/** Get Post Comments `GET: /api/post/comment/` */
+export const getPostComment = async (
+  query: String,
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.get(`/post/comment/?${query}`, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+/** Add Comment in Post `POST: /api/post/comment/` */
+export const addPostComment = async (data: {
+  postId: string
+  commentBy: string | 'User' | 'Listing'
+  commentById: string
+  content: string
+  date: number
+}): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(`/post/comment/`, data, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+/** UpVote Post Comment `PATCH: /api/post/comment/upvote/:commentId` */
+export const upvotePostComment = async (
+  commentId: string,
+  data: {
+    upvoteBy: 'user' | 'listing'
+    upvoteById: string
+  },
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.patch(
+      `/post/comment/upvote/${commentId}`,
+      data,
+      {
+        headers,
+      },
+    )
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+/** DownVote Post Comment `PATCH: /api/post/comment/downvote/:commentId` */
+export const downvotePostComment = async (
+  commentId: string,
+  data: {
+    downvoteBy: 'user' | 'listing'
+    downvoteById: string
+  },
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.patch(
+      `/post/comment/downvote/${commentId}`,
+      data,
+      {
+        headers,
+      },
+    )
     return { res: res, err: null }
   } catch (error) {
     console.error(error)

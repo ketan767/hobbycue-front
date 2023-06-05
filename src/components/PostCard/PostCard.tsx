@@ -11,20 +11,10 @@ import { getAllPosts, getMetadata } from '@/services/post.service'
 type Props = {
   postData: any
 }
-type MetaData = {
-  title: string
-}
-const comments = [
-  {
-    id: 1,
-    comment:
-      'Every work deserves its respect, not only delivery. Do we respect the cook who is standing in the heat all day to prepare the food they take….lets not talk more or less of any job….every job has its own good and bad associated.',
-    author: 'Author auth',
-    createdAt: 'Sep 6, 2021',
-  },
-]
+
 const PostCard: React.FC<Props> = (props) => {
   // const [type, setType] = useState<'User' | 'Listing'>()
+  const [showComments, setShowComments] = useState(false)
   const [postData, setPostData] = useState(props.postData)
   const [url, setUrl] = useState('')
   const [metaData, setMetaData] = useState({
@@ -48,6 +38,7 @@ const PostCard: React.FC<Props> = (props) => {
       const regex =
         /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
       const url = postData.content.match(regex)
+<<<<<<< HEAD
       if (url) {
         setUrl(url[0])
       }
@@ -60,10 +51,19 @@ const PostCard: React.FC<Props> = (props) => {
             console.log(err)
           })
       }
+=======
+      setUrl(url?.[0])
+      getMetadata(url?.[0])
+        .then((res: any) => {
+          setMetaData(res.res.data.data.data)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+>>>>>>> 2827cb9925af714d59287d8b74bf8d07b83e4957
     }
   }, [postData])
 
-  console.log(postData.media)
   return (
     <>
       <div className={styles['post-card-wrapper']}>
@@ -132,8 +132,17 @@ const PostCard: React.FC<Props> = (props) => {
           )}
           {postData.media ? (
             <div className={styles.postImages}>
+<<<<<<< HEAD
               {postData.media.map((item: any) => {
                 return <img src={item} className={styles.postImage} />
+=======
+              {postData.media.map((item: any, idx: number) => {
+                return (
+                  <div key={item} style={{ width: '100%' }}>
+                    <img src={item} alt="img" className={styles.postImage} />
+                  </div>
+                )
+>>>>>>> 2827cb9925af714d59287d8b74bf8d07b83e4957
               })}
             </div>
           ) : (
@@ -142,7 +151,7 @@ const PostCard: React.FC<Props> = (props) => {
           {postData.has_link && (
             <a href={url} className={styles.postMetadata}>
               <div className={styles.metaImgContainer}>
-                <img
+                <Image
                   src={metaData.image}
                   alt="link-image"
                   width={200}
@@ -168,24 +177,18 @@ const PostCard: React.FC<Props> = (props) => {
 
             {/* Comment Icon */}
             <svg
-              className={styles['comment-icon']}
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
+              onClick={() => setShowComments(!showComments)}
+              width="21"
+              height="21"
+              viewBox="0 0 21 21"
+              fill={showComments ? '#8064A2' : 'none'}
               xmlns="http://www.w3.org/2000/svg"
             >
-              <g clip-path="url(#clip0_173_72893)">
-                <path
-                  d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM20 16H6L4 18V4H20V16Z"
-                  fill="#8064A2"
-                />
-              </g>
-              <defs>
-                <clipPath id="clip0_173_72893">
-                  <rect width="24" height="24" fill="white" />
-                </clipPath>
-              </defs>
+              <path
+                d="M4.42578 15.4746H4.01157L3.71867 15.7675L1.42578 18.0604V2.47461C1.42578 1.92689 1.87807 1.47461 2.42578 1.47461H18.4258C18.9735 1.47461 19.4258 1.92689 19.4258 2.47461V14.4746C19.4258 15.0223 18.9735 15.4746 18.4258 15.4746H4.42578Z"
+                stroke="#8064A2"
+                stroke-width="2"
+              />
             </svg>
 
             {/* Share Icon */}
@@ -247,7 +250,7 @@ const PostCard: React.FC<Props> = (props) => {
           </section>
 
           {/* Comments Section */}
-          <PostComments data={postData} styles={styles} />
+          {showComments && <PostComments data={postData} styles={styles} />}
         </footer>
       </div>
     </>
