@@ -40,7 +40,7 @@ type ListingAboutData = {
   description: InputData<string>
 }
 
-const RelatedListingEditModal: React.FC<Props> = ({
+const RelatedListingRightEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
 }) => {
@@ -65,7 +65,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
   useEffect(() => {
     const updated = listingData.filter(
       (item: any) =>
-        item.type === listingModalData.type && item.side === 'left',
+        item.type === listingModalData.type && item.side === 'right',
     )
     console.log(listingModalData);
     // console.log(listingModalData.type);
@@ -74,14 +74,14 @@ const RelatedListingEditModal: React.FC<Props> = ({
   }, [listingModalData?._id])
 
   useEffect(() => {
-    setRelatedListingsLeft(listingModalData.related_listings_left?.listings)
+    setRelatedListingsLeft(listingModalData.related_listings_right?.listings)
   }, [])
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
   const handleSubmit = async () => {
     setSubmitBtnLoading(true)
     const jsonData = {
-      related_listings_left: {
+      related_listings_right: {
         relation,
         listings: [...relatedListingsLeft],
       },
@@ -121,11 +121,11 @@ const RelatedListingEditModal: React.FC<Props> = ({
       })
   }, [])
 
-  // console.log('rl', listingModalData?.related_listings_left)
+  // console.log('rl', listingModalData?.related_listings_right)
 
   const handleAddPage = async () => {
     const jsonData = {
-      related_listings_left: {
+      related_listings_right: {
         relation,
         listings: [...relatedListingsLeft, selectedPage._id],
       },
@@ -136,7 +136,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
     if (err) return console.log(err)
     console.log('resp', res?.data.data.listing)
     setRelatedListingsLeft(
-      res?.data.data.listing.related_listings_left.listings,
+      res?.data.data.listing.related_listings_right.listings,
     )
     if (onComplete) onComplete()
     else {
@@ -147,7 +147,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
 
   const handleRemovePage = async (id: any) => {
     const jsonData = {
-      related_listings_left: {
+      related_listings_right: {
         relation,
         // listings: []
         listings: [...relatedListingsLeft.filter((item: any) => item !== id)],
@@ -159,11 +159,11 @@ const RelatedListingEditModal: React.FC<Props> = ({
     if (err) return console.log(err)
     console.log('resp', res?.data.data.listing)
     setRelatedListingsLeft(
-      res?.data.data.listing.related_listings_left.listings,
+      res?.data.data.listing.related_listings_right.listings,
     )
     // dispatch(
     //   updateRelatedListingsLeft(
-    //     res?.data.data.listing.related_listings_left.listings,
+    //     res?.data.data.listing.related_listings_right.listings,
     //   ),
     // )
     if (onComplete) onComplete()
@@ -379,4 +379,4 @@ const RelatedListingEditModal: React.FC<Props> = ({
   )
 }
 
-export default RelatedListingEditModal
+export default RelatedListingRightEditModal

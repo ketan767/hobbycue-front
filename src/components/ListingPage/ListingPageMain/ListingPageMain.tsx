@@ -13,7 +13,7 @@ import TimeIcon from '@/assets/svg/time.svg'
 import FacebookIcon from '@/assets/svg/facebook-icon.svg'
 import TwitterIcon from '@/assets/svg/twitter-icon.svg'
 import InstagramIcon from '@/assets/svg/insta-icon.svg'
-import { getListingTags } from '@/services/listing.service'
+import { getListingPages, getListingTags } from '@/services/listing.service'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -25,7 +25,9 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
   const [tags, setTags] = useState([])
   const { listingLayoutMode } = useSelector((state: RootState) => state.site)
   const [selectedTags, setSelectedTags] = useState([])
-  
+  const [listingPagesLeft, setListingPagesLeft] = useState([])
+  const [listingPagesRight, setListingPagesRight] = useState([])
+
   useEffect(() => {
     getListingTags()
       .then((res: any) => {
@@ -44,7 +46,30 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
       })
   }, [data._tags])
 
-  console.log(data)
+  useEffect(() => {
+    getListingPages(``)
+      .then((res: any) => {
+        // console.log('all--' ,res.res.data.data.listings)
+        let listings = res.res.data.data.listings
+        let selectedListings: any = []
+        let selectedListingsRight: any = []
+
+        listings.forEach((item: any) => {
+          if (data?.related_listings_left?.listings.includes(item._id)) {
+            selectedListings.push(item)
+          }
+          if (data?.related_listings_right?.listings.includes(item._id)) {
+            selectedListingsRight.push(item)
+          }
+        })
+        setListingPagesRight(selectedListingsRight)
+        setListingPagesLeft(selectedListings)
+      })
+      .catch((err: any) => {
+        console.log(err)
+      })
+  }, [data?.related_listings_left?.listings])
+
   return (
     <>
       <PageGridLayout column={3}>
@@ -146,16 +171,16 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
             }
           >
             <h4 className={styles['heading']}>Related Listing</h4>
-            {!data || data._hobbies.length === 0 ? (
+            {!listingPagesLeft || listingPagesLeft.length === 0 ? (
               <span className={styles.textGray}>{'No data!'}</span>
             ) : (
               <ul className={styles['hobby-list']}>
-                {data?._hobbies?.map((item: any) => {
+                {listingPagesLeft?.map((item: any) => {
                   if (typeof item === 'string') return
                   return (
                     <li key={item._id} className={styles.textGray}>
-                      {item?.hobby?.display}
-                      {item?.genre && ` - ${item?.genre?.display} `}
+                      {item?.title}
+                      {/* {item?.genre && ` - ${item?.genre?.display} `} */}
                     </li>
                   )
                 })}
@@ -542,6 +567,36 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
               </div>
             </PageContentBox>
           )}
+
+          {/* Related Listing */}
+          <PageContentBox
+            showEditButton={listingLayoutMode === 'edit'}
+            onEditBtnClick={() =>
+              dispatch(
+                openModal({
+                  type: 'related-listing-right-edit',
+                  closable: true,
+                }),
+              )
+            }
+          >
+            <h4 className={styles['heading']}>Related Listing</h4>
+            {!listingPagesRight || listingPagesRight.length === 0 ? (
+              <span className={styles.textGray}>{'No data!'}</span>
+            ) : (
+              <ul className={styles['hobby-list']}>
+                {listingPagesRight?.map((item: any) => {
+                  if (typeof item === 'string') return
+                  return (
+                    <li key={item._id} className={styles.textGray}>
+                      {item?.title}
+                      {/* {item?.genre && ` - ${item?.genre?.display} `} */}
+                    </li>
+                  )
+                })}
+              </ul>
+            )}
+          </PageContentBox>
 
           {data?.type === 4 && (
             <PageContentBox
