@@ -160,3 +160,13 @@ export const updateListingCover = async (listingId: string, formData: FormData) 
     return { err: error, res: null }
   }
 }
+
+export const getListingTags = async () => {
+  try {
+    const res = await axiosInstance.get(`/listing/tag`)
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}

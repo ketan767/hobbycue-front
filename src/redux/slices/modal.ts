@@ -22,6 +22,8 @@ export type ModalType =
   | 'listing-hobby-edit'
   | 'listing-contact-edit'
   | 'listing-tags-edit'
+  | 'related-listing-left-edit'
+  | 'related-listing-right-edit'
 
 interface ModalState {
   activeModal: ModalType

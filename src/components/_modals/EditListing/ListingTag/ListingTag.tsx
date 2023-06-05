@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
-import { updateListing } from '@/services/listing.service'
+import { getListingTags, updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
@@ -36,82 +36,6 @@ type ListingAboutData = {
   description: InputData<string>
 }
 
-type TagItem = string
-const tags = [
-  {
-    tag: 'Teach',
-    desc: 'Do you conduct classes or workshops?',
-  },
-  {
-    tag: 'Home Classes',
-    desc: `Do you visit the student's home to conduct `,
-  },
-  {
-    tag: '1 on 1 classes',
-    desc: 'Do you conduct 1-on-1 individual classes',
-  },
-  {
-    tag: 'Online Classes',
-    desc: 'Do you conduct online classes?',
-  },
-  {
-    tag: 'Collabs',
-    desc: 'Are you open to collaborate with others?',
-  },
-  {
-    tag: 'Shows',
-    desc: 'Do you participate in concerts?',
-  },
-  {
-    tag: 'Compose',
-    desc: 'Do you compose or design a show?',
-  },
-  {
-    tag: 'Parking',
-    desc: 'Is parking available at the venue?',
-  },
-  {
-    tag: 'Home Delivery',
-    desc: 'Do you provide home delivery?',
-  },
-  {
-    tag: 'Ride Share',
-    desc: 'Do you recommend ride sharing to get here?',
-  },
-  {
-    tag: 'Products',
-    desc: 'Do you sell or rent products from here?',
-  },
-  {
-    tag: 'Space',
-    desc: 'Do you rent out spaces for practice or shows?',
-  },
-  {
-    tag: 'Performances',
-    desc: 'Is there an auditorium or performance venue?',
-  },
-  {
-    tag: 'Parking',
-    desc: 'Is parking available at the venue?',
-  },
-  {
-    tag: 'Ride Share',
-    desc: 'Can people share rides while coming here?',
-  },
-  {
-    tag: 'Food Counter',
-    desc: 'Is there a cafe or facility for food stall?',
-  },
-  {
-    tag: 'Shop',
-    desc: 'Any souvenir or other shops at this venue?',
-  },
-  {
-    tag: 'Walk-in',
-    desc: 'Can one walk-in without a reservation?',
-  },
-]
-
 const ListingTagsEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
@@ -119,13 +43,12 @@ const ListingTagsEditModal: React.FC<Props> = ({
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
+  const [tags, setTags] = useState([])
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
 
   const [data, setData] = useState<ListingAboutData>({
     description: { value: '', error: null },
   })
-  const [tagsData, setTagsData] = useState(tags)
-  let tag_texts = tags.map((item) => item.tag)
-  const [tagTexts, setTagTexts] = useState<string[]>([])
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
   const handleInputChange = (value: string) => {
@@ -135,34 +58,32 @@ const ListingTagsEditModal: React.FC<Props> = ({
   }
 
   const handleSubmit = async () => {
-    if (isEmptyField(data.description.value)) {
-      return setData((prev) => {
-        return {
-          ...prev,
-          description: {
-            ...prev.description,
-            error: 'This field is required!',
-          },
-        }
-      })
+    const jsonData = {
+      _tags: selectedTags,
     }
-
     setSubmitBtnLoading(true)
-    const { err, res } = await updateListing(listingModalData._id, {
-      description: data.description.value,
-    })
-    setSubmitBtnLoading(false)
+    const { err, res } = await updateListing(listingModalData._id, jsonData)
     if (err) return console.log(err)
-    if (res?.data.success) {
-      dispatch(updateListingModalData(res.data.data.listing))
-      if (onComplete) onComplete()
-      else {
-        window.location.reload()
-        dispatch(closeModal())
-      }
+    console.log('res', res?.data.data.listing)
+    if (onComplete) onComplete()
+    else {
+      // window.location.reload()
+      dispatch(closeModal())
     }
   }
 
+  useEffect(() => {
+    if(tags.length > 0){
+      let selected : any = []
+      tags.forEach((item: any) => {
+        if(listingModalData._tags?.includes(item._id)){
+          selected.push(item)
+        }
+      })
+      setSelectedTags(selected)
+    }
+  }, [listingModalData?._tags, tags])
+  
   useEffect(() => {
     setData((prev) => {
       return {
@@ -173,6 +94,18 @@ const ListingTagsEditModal: React.FC<Props> = ({
       }
     })
   }, [user])
+  
+  console.log({selectedTags});
+  useEffect(() => {
+    getListingTags()
+      .then((res: any) => {
+        const temp = res.res.data.data.tags
+        setTags(temp)
+      })
+      .catch((err: any) => {
+        console.log(err)
+      })
+  }, [])
 
   return (
     <>
@@ -189,21 +122,23 @@ const ListingTagsEditModal: React.FC<Props> = ({
 
             <FormControl variant="outlined" size="small" sx={{ width: '100%' }}>
               <Select
-                value={tagTexts}
+                value={selectedTags}
                 multiple={true}
                 onChange={(e) => {
-                  let val = e.target.value
-                  setTagTexts((prev: any) => val as any)
+                  let val: any = e.target.value
+                  if (val) {
+                    setSelectedTags((prev: any) => [...val])
+                  }
                 }}
                 displayEmpty
                 inputProps={{ 'aria-label': 'Without label' }}
               >
                 {tags.map((item: any, idx) => {
                   return (
-                    <MenuItem key={idx} value={item.tag}>
+                    <MenuItem key={item._id} value={item._id}>
                       <div className={styles.tagContainer}>
-                        <p className={styles.tagText}>{item.tag}</p>
-                        <p className={styles.tagDesc}>{item.desc}</p>
+                        <p className={styles.tagText}>{item.name}</p>
+                        <p className={styles.tagDesc}>{item.description}</p>
                       </div>
                     </MenuItem>
                   )
@@ -243,9 +178,3 @@ const ListingTagsEditModal: React.FC<Props> = ({
 }
 
 export default ListingTagsEditModal
-
-/**
- * @TODO:
- * 1. Loading component until the CK Editor loads.
- * 2. Underline option in the editor
- */

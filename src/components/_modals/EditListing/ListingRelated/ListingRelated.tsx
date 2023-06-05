@@ -19,8 +19,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
-import { updateListing } from '@/services/listing.service'
+import { getListingPages, updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
+import { relatedListingData } from './data'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -36,82 +37,6 @@ type ListingAboutData = {
   description: InputData<string>
 }
 
-type TagItem = string
-const tags = [
-  {
-    tag: 'Teach',
-    desc: 'Do you conduct classes or workshops?',
-  },
-  {
-    tag: 'Home Classes',
-    desc: `Do you visit the student's home to conduct `,
-  },
-  {
-    tag: '1 on 1 classes',
-    desc: 'Do you conduct 1-on-1 individual classes',
-  },
-  {
-    tag: 'Online Classes',
-    desc: 'Do you conduct online classes?',
-  },
-  {
-    tag: 'Collabs',
-    desc: 'Are you open to collaborate with others?',
-  },
-  {
-    tag: 'Shows',
-    desc: 'Do you participate in concerts?',
-  },
-  {
-    tag: 'Compose',
-    desc: 'Do you compose or design a show?',
-  },
-  {
-    tag: 'Parking',
-    desc: 'Is parking available at the venue?',
-  },
-  {
-    tag: 'Home Delivery',
-    desc: 'Do you provide home delivery?',
-  },
-  {
-    tag: 'Ride Share',
-    desc: 'Do you recommend ride sharing to get here?',
-  },
-  {
-    tag: 'Products',
-    desc: 'Do you sell or rent products from here?',
-  },
-  {
-    tag: 'Space',
-    desc: 'Do you rent out spaces for practice or shows?',
-  },
-  {
-    tag: 'Performances',
-    desc: 'Is there an auditorium or performance venue?',
-  },
-  {
-    tag: 'Parking',
-    desc: 'Is parking available at the venue?',
-  },
-  {
-    tag: 'Ride Share',
-    desc: 'Can people share rides while coming here?',
-  },
-  {
-    tag: 'Food Counter',
-    desc: 'Is there a cafe or facility for food stall?',
-  },
-  {
-    tag: 'Shop',
-    desc: 'Any souvenir or other shops at this venue?',
-  },
-  {
-    tag: 'Walk-in',
-    desc: 'Can one walk-in without a reservation?',
-  },
-]
-
 const RelatedListingEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
@@ -119,20 +44,18 @@ const RelatedListingEditModal: React.FC<Props> = ({
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
+  const [relation, setRelation] = useState<any>('')
+  const [allListingPages, setAllListingPages] = useState<any>([])
+  const [pageInputValue, setPageInputValue] = useState('')
+  const [showDropdown, setShowDropdown] = useState(false)
+  const [tableData, setTableData] = useState([])
+  const [addPageLoading, setAddPageLoading] = useState(false)
 
   const [data, setData] = useState<ListingAboutData>({
     description: { value: '', error: null },
   })
-  const [tagsData, setTagsData] = useState(tags)
-  let tag_texts = tags.map((item) => item.tag)
-  const [tagTexts, setTagTexts] = useState<string[]>([])
-  const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
-  const handleInputChange = (value: string) => {
-    setData((prev) => {
-      return { ...prev, description: { value, error: null } }
-    })
-  }
+  const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
   const handleSubmit = async () => {
     if (isEmptyField(data.description.value)) {
@@ -164,16 +87,18 @@ const RelatedListingEditModal: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    setData((prev) => {
-      return {
-        description: {
-          ...prev.description,
-          value: listingModalData.description as string,
-        },
-      }
-    })
-  }, [user])
+    getListingPages(`title=${pageInputValue}`)
+    // getListingPages(``)
+      .then((res: any) => {
+        console.log(res.res.data.data.listings)
+        setAllListingPages(res.res.data.data.listings)
+      })
+      .catch((err: any) => {
+        console.log(err)
+      })
+  }, [pageInputValue])
 
+  const handleAddPage = () => {}
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -189,21 +114,19 @@ const RelatedListingEditModal: React.FC<Props> = ({
 
             <FormControl variant="outlined" size="small" sx={{ width: '100%' }}>
               <Select
-                value={tagTexts}
-                multiple={true}
+                value={relation}
                 onChange={(e) => {
                   let val = e.target.value
-                  setTagTexts((prev: any) => val as any)
+                  setRelation(val)
                 }}
                 displayEmpty
                 inputProps={{ 'aria-label': 'Without label' }}
               >
-                {tags.map((item: any, idx) => {
+                {relatedListingData.map((item: any, idx) => {
                   return (
-                    <MenuItem key={idx} value={item.tag}>
+                    <MenuItem key={item._id} value={idx}>
                       <div className={styles.tagContainer}>
-                        <p className={styles.tagText}>{item.tag}</p>
-                        <p className={styles.tagDesc}>{item.desc}</p>
+                        <p className={styles.tagText}>{item.relation}</p>
                       </div>
                     </MenuItem>
                   )
@@ -211,6 +134,140 @@ const RelatedListingEditModal: React.FC<Props> = ({
               </Select>
             </FormControl>
           </div>
+          <section className={styles['dropdown-warpper']}>
+            <div className={`${styles['input-box']} ${styles['dropdown-input-box']}`}>
+              <input
+                type="text"
+                placeholder="Genre/Style"
+                autoComplete="name"
+                required
+                value={pageInputValue}
+                onFocus={() => setShowDropdown(true)}
+                onBlur={() =>
+                  setTimeout(() => {
+                    setShowDropdown(false)
+                  }, 300)
+                }
+                onChange={(e) => setPageInputValue(e.target.value)}
+              />
+              {/* <p className={styles['helper-text']}>{inputErrs.full_name}</p> */}
+            </div>
+            {showDropdown && allListingPages.length !== 0 && (
+              <div className={styles['dropdown']}>
+                {allListingPages.map((item: any) => {
+                  return (
+                    <p
+                      key={item?._id}
+                      onClick={() => {
+                        setData((prev) => {
+                          return { ...prev, item: item }
+                        })
+                        setPageInputValue(item.name)
+                      }}
+                    >
+                      {item?.title}
+                    </p>
+                  )
+                })}
+              </div>
+            )}
+            <Button
+              disabled={addPageLoading}
+              variant="contained"
+              onClick={handleAddPage}
+            >
+              {addPageLoading ? (
+                <CircularProgress color="inherit" size={'22px'} />
+              ) : (
+                'Add'
+              )}
+            </Button>
+          </section>
+
+          {/* <div className={styles['input-box']}>
+            <label>Add Listing Page</label>
+            <input hidden required />
+
+            <FormControl variant="outlined" size="small" sx={{ width: '100%' }}>
+              <Select
+                value={relation}
+                onChange={(e) => {
+                  let val = e.target.value
+                  setRelation(val)
+                }}
+                displayEmpty
+                inputProps={{ 'aria-label': 'Without label' }}
+              >
+                {relatedListingData.map((item: any, idx) => {
+                  return (
+                    <MenuItem key={item._id} value={idx}>
+                      <div className={styles.tagContainer}>
+                        <p className={styles.tagText}>{item.relation}</p>
+                      </div>
+                    </MenuItem>
+                  )
+                })}
+              </Select>
+            </FormControl>
+          </div> */}
+          <section className={styles['added-hobby-list']}>
+            <table>
+              <thead>
+                <tr>
+                  <td>Hobby</td>
+                  <td>Genre/Style</td>
+                  <td>Level</td>
+                  <td>Action</td>
+                </tr>
+              </thead>
+              <tbody>
+                {user._hobbies?.map((hobby: any) => {
+                  return (
+                    <tr key={hobby._id}>
+                      <td>{hobby?.hobby?.display}</td>
+                      <td>{hobby?.genre?.display || '-'}</td>
+                      <td>
+                        {hobby.level === 1
+                          ? 'Beginner'
+                          : hobby.level === 2
+                          ? 'Intermediate'
+                          : hobby.level === 3
+                          ? 'Advanced'
+                          : ''}
+                      </td>
+                      <td>
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          className={styles['delete-hobby-btn']}
+                          onClick={() => {}}
+                        >
+                          <g clip-path="url(#clip0_173_49175)">
+                            <path
+                              d="M6.137 19C6.137 20.1 7.00002 21 8.05481 21H15.726C16.7808 21 17.6439 20.1 17.6439 19V7H6.137V19ZM18.6028 4H15.2466L14.2877 3H9.49317L8.53427 4H5.1781V6H18.6028V4Z"
+                              fill="#8064A2"
+                            />
+                          </g>
+                          <defs>
+                            <clipPath id="clip0_173_49175">
+                              <rect
+                                width="23.0137"
+                                height="24"
+                                fill="white"
+                                transform="translate(0.383545)"
+                              />
+                            </clipPath>
+                          </defs>
+                        </svg>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </section>
         </section>
 
         <footer className={styles['footer']}>

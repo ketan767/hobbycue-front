@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 
 import PageContentBox from '@/layouts/PageContentBox'
@@ -13,6 +13,7 @@ import TimeIcon from '@/assets/svg/time.svg'
 import FacebookIcon from '@/assets/svg/facebook-icon.svg'
 import TwitterIcon from '@/assets/svg/twitter-icon.svg'
 import InstagramIcon from '@/assets/svg/insta-icon.svg'
+import { getListingTags } from '@/services/listing.service'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -20,11 +21,30 @@ interface Props {
 }
 
 const ListingPageMain: React.FC<Props> = ({ data, children }) => {
-  console.log('🚀 ~ file: ListingHomeTab.tsx:17 ~ data:', data)
   const dispatch = useDispatch()
-
+  const [tags, setTags] = useState([])
   const { listingLayoutMode } = useSelector((state: RootState) => state.site)
+  const [selectedTags, setSelectedTags] = useState([])
+  
+  useEffect(() => {
+    getListingTags()
+      .then((res: any) => {
+        const temp = res.res.data.data.tags
+        let selected: any = []
+        temp.forEach((item: any) => {
+          if (data._tags.includes(item._id)) {
+            selected.push(item)
+          }
+        })
+        setSelectedTags(selected)
+        setTags(temp)
+      })
+      .catch((err: any) => {
+        console.log(err)
+      })
+  }, [data._tags])
 
+  console.log(data)
   return (
     <>
       <PageGridLayout column={3}>
@@ -96,16 +116,16 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
             }
           >
             <h4 className={styles['heading']}>Tags</h4>
-            {!data || data._hobbies.length === 0 ? (
+            {!data || selectedTags.length === 0 ? (
               <span className={styles.textGray}>{'No tags!'}</span>
             ) : (
               <ul className={styles['hobby-list']}>
-                {data?._hobbies?.map((item: any) => {
+                {selectedTags?.map((item: any) => {
                   if (typeof item === 'string') return
                   return (
                     <li key={item._id} className={styles.textGray}>
-                      {item?.hobby?.display}
-                      {item?.genre && ` - ${item?.genre?.display} `}
+                      {item?.name} {` - `}
+                      {item?.description}
                     </li>
                   )
                 })}
@@ -116,7 +136,14 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
           {/* Related Listing */}
           <PageContentBox
             showEditButton={listingLayoutMode === 'edit'}
-            onEditBtnClick={() => {}}
+            onEditBtnClick={() =>
+              dispatch(
+                openModal({
+                  type: 'related-listing-left-edit',
+                  closable: true,
+                }),
+              )
+            }
           >
             <h4 className={styles['heading']}>Related Listing</h4>
             {!data || data._hobbies.length === 0 ? (
@@ -554,7 +581,9 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                         </defs>
                       </svg>
                       <p className={styles.workingHour}>
-                        {data?.event_date_time.from_date} - {data?.event_date_time.to_date}, {data?.event_date_time.from_time} -{' '}
+                        {data?.event_date_time.from_date} -{' '}
+                        {data?.event_date_time.to_date},{' '}
+                        {data?.event_date_time.from_time} -{' '}
                         {data?.event_date_time.to_time}
                       </p>
                     </li>

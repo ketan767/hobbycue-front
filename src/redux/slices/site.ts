@@ -38,6 +38,7 @@ type ListingModalData = {
   linkedin_url?: string
   profile_image?: string
   cover_image?: string
+  _tags? : any
 }
 interface AuthState {
   listingLayoutMode: ListingLayoutMode

@@ -26,6 +26,7 @@ import ProfileContactEditModal from './EditProfile/ProfileContact'
 import ListingTagsEditModal from './EditListing/ListingTag/ListingTag'
 import ListingWorkingHoursEditModal from './EditListing/ListingWorkingHours'
 import ListingEventHoursEditModal from './EditListing/ListingEventHours'
+import RelatedListingEditModal from './EditListing/ListingRelated/ListingRelated'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -109,6 +110,9 @@ const ModalManager: React.FC = () => {
               )}
               {activeModal === 'listing-hobby-edit' && (
                 <ListingHobbyEditModal />
+              )}
+              {activeModal === 'related-listing-left-edit' && (
+                <RelatedListingEditModal />
               )}
 
               {/* Modal Close Icon */}
