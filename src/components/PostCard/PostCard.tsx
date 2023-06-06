@@ -38,14 +38,18 @@ const PostCard: React.FC<Props> = (props) => {
       const regex =
         /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
       const url = postData.content.match(regex)
-      setUrl(url?.[0])
-      getMetadata(url?.[0])
-        .then((res: any) => {
-          setMetaData(res.res.data.data.data)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+      if (url) {
+        setUrl(url[0])
+      }
+      if (url) {
+        getMetadata(url[0])
+          .then((res: any) => {
+            setMetaData(res.res.data.data.data)
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
     }
   }, [postData])
 

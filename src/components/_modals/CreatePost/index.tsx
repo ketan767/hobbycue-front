@@ -72,7 +72,7 @@ export const CreatePost: React.FC<Props> = (props) => {
   >([])
 
   useEffect(() => {
-    const isUrl = checkIfUrlExists(data.content)
+    const isUrl = checkIfUrlExists(data.content.replace(/<img .*?>/g, ''))
     setHasLink(isUrl)
     // console.log(data.content)
     // console.log({ isUrl })
@@ -159,28 +159,6 @@ export const CreatePost: React.FC<Props> = (props) => {
       // store.dispatch(closeModal())
       // window.location.reload()
       console.log('res', res)
-      data.media.forEach((item: any) => {
-        console.log(item)
-        handleImageUpload(item)
-      })
-    }
-  }
-
-  const handleImageUpload = async (image: any) => {
-    try {
-      const response = await fetch(image)
-      const blob = await response.blob()
-
-      const formData = new FormData()
-      formData.append('post-image', blob)
-      const { err, res } = await uploadImage(formData)
-      if (err) return console.log(err)
-      if (res?.data.success) {
-        // window.location.reload()
-        // dispatch(closeModal())
-      }
-    } catch (error) {
-      console.log(error)
     }
   }
 

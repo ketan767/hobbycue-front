@@ -39,6 +39,11 @@ type ListingModalData = {
   profile_image?: string
   cover_image?: string
   _tags? : any
+  related_listings_left? : {
+    relation: string,
+    listings: any
+  }
+  related_listings_right? : any
 }
 interface AuthState {
   listingLayoutMode: ListingLayoutMode
@@ -147,6 +152,9 @@ const siteSlice = createSlice({
     updateEventDateTime: (state, { payload }) => {
       state.listingPageData.event_date_time = payload
     },
+    updateRelatedListingsLeft: (state, { payload }) => {
+      state.listingPageData.related_listings_left.listings = payload
+    },
   },
 })
 
@@ -157,6 +165,7 @@ export const {
   updateListingModalData,
   updatePhotoEditModalData,
   updateEventDateTime,
+  updateRelatedListingsLeft
 } = siteSlice.actions
 
 export default siteSlice.reducer
