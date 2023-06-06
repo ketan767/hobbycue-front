@@ -112,7 +112,7 @@ const PostCard: React.FC<Props> = (props) => {
         <section className={styles['body']}>
           <div
             className={styles['content']}
-            dangerouslySetInnerHTML={{ __html: postData?.content }}
+            dangerouslySetInnerHTML={{ __html: postData?.content.replace(/<img .*?>/g, '') }}
           ></div>
           {postData.video_url && (
             <video width="320" height="240" controls>
@@ -124,7 +124,7 @@ const PostCard: React.FC<Props> = (props) => {
               {postData.media.map((item: any, idx: number) => {
                 return (
                   <div key={item} style={{ width: '100%' }}>
-                    <img src={item} alt="img" className={styles.postImage} />
+                    <img src={item} alt="post-image" className={styles.postImage} />
                   </div>
                 )
               })}

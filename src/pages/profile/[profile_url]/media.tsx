@@ -32,9 +32,19 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
       let tempMedia: any = []
       allposts.forEach((post: any) => {
         if (post.media) {
-          post.media.forEach((singleMedia: any) => {
-            tempMedia.push(...post.media)
-          })
+          if (post.video_url) {
+            tempMedia.push({
+              type: 'video',
+              src: post.video_url,
+            })
+          } else {
+            post.media.forEach((singleMedia: any) => {
+              tempMedia.push({
+                type: 'image',
+                src: singleMedia,
+              })
+            })
+          }
         }
       })
       setMedia(tempMedia)
@@ -45,7 +55,6 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
     getPost()
   }, [])
 
-  console.log(media)
   return (
     <>
       <Head>
@@ -57,7 +66,13 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
           {media.map((item: any, idx) => {
             return (
               <div key={idx} className={styles.image}>
-                <img src={item} />
+                {item.type === 'video' ? (
+                  <video width="320" height="240" controls={true}>
+                    <source src={item.src} type="video/mp4" />
+                  </video>
+                ) : (
+                  <img src={item.src} />
+                )}
               </div>
             )
           })}

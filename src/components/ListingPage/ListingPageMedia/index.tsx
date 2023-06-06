@@ -23,12 +23,13 @@ interface Props {
   data: ListingPageData['pageData']
 }
 
-const ListingPostsTab: React.FC<Props> = ({ data }) => {
+const ListingMediaTab: React.FC<Props> = ({ data }) => {
   // console.log('data:', data)
   const dispatch = useDispatch()
   const [pagesData, setPagesData] = useState([])
   const { listingLayoutMode } = useSelector((state: RootState) => state.site)
   const { user } = useSelector((state: RootState) => state)
+  const [media, setMedia] = useState([])
   // console.log('pagesData', pagesData)
 
   useEffect(() => {
@@ -36,13 +37,35 @@ const ListingPostsTab: React.FC<Props> = ({ data }) => {
     const id = data?._id
     getPages(id)
       .then((res: any) => {
-        console.log('res', res.res)
+        console.log('media res', res.res)
         setPagesData(res?.res.data?.data.posts)
+        const allposts = res.res.data.data.posts
+        let tempMedia: any = []
+        allposts.forEach((post: any) => {
+          if (post.media) {
+            if (post.video_url) {
+              tempMedia.push({
+                type: 'video',
+                src: post.video_url,
+              })
+            } else {
+              post.media.forEach((singleMedia: any) => {
+                tempMedia.push({
+                  type: 'image',
+                  src: singleMedia,
+                })
+              })
+            }
+          }
+        })
+        setMedia(tempMedia)
       })
       .catch((err) => {
         console.log('err', err.response)
       })
   }, [])
+
+  console.log(media)
   return (
     <>
       <main>
@@ -52,9 +75,22 @@ const ListingPostsTab: React.FC<Props> = ({ data }) => {
             dispatch(openModal({ type: 'listing-about-edit', closable: true }))
           }
         >
-          {pagesData?.map((page: any) => {
-            return <ListingPageCard postData={page} key={page._id} />
-          })}
+          <PageGridLayout column={2}>
+            {media.map((item: any, idx) => {
+              return (
+                <div key={idx} className={styles.image}>
+                  {item.type === 'video' ? (
+                    <video width="320" height="240" controls={true}>
+                      <source src={item.src} type="video/mp4" />
+                    </video>
+                  ) : (
+                    <img src={item.src} />
+                  )}
+                </div>
+              )
+            })}
+            <div></div>
+          </PageGridLayout>
         </PageContentBox>
 
         {/* User Information */}
@@ -63,4 +99,4 @@ const ListingPostsTab: React.FC<Props> = ({ data }) => {
   )
 }
 
-export default ListingPostsTab
+export default ListingMediaTab
