@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
-import { addUserHobby, deleteUserHobby, getMyProfileDetail } from '@/services/user.service'
+import {
+  addUserHobby,
+  deleteUserHobby,
+  getMyProfileDetail,
+} from '@/services/user.service'
 
 import { FormControl, MenuItem, Select, TextField } from '@mui/material'
 import { getAllHobbies } from '@/services/hobby.service'
@@ -33,15 +37,23 @@ type DropdownListItem = {
   sub_category?: string
 }
 
-const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
+const ProfileHobbyEditModal: React.FC<Props> = ({
+  onComplete,
+  onBackBtnClick,
+}) => {
   const dispatch = useDispatch()
 
   const { user } = useSelector((state: RootState) => state.user)
 
   const [addHobbyBtnLoading, setAddHobbyBtnLoading] = useState<boolean>(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
+  const [nextDisabled, setNextDisabled] = useState(false)
 
-  const [data, setData] = useState<ProfileHobbyData>({ hobby: null, genre: null, level: 1 })
+  const [data, setData] = useState<ProfileHobbyData>({
+    hobby: null,
+    genre: null,
+    level: 1,
+  })
 
   const [showHobbyDowpdown, setShowHobbyDowpdown] = useState<boolean>(false)
   const [showGenreDowpdown, setShowGenreDowpdown] = useState<boolean>(false)
@@ -49,8 +61,12 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
   const [hobbyInputValue, setHobbyInputValue] = useState('')
   const [genreInputValue, setGenreInputValue] = useState('')
 
-  const [hobbyDropdownList, setHobbyDropdownList] = useState<DropdownListItem[]>([])
-  const [genreDropdownList, setGenreDropdownList] = useState<DropdownListItem[]>([])
+  const [hobbyDropdownList, setHobbyDropdownList] = useState<
+    DropdownListItem[]
+  >([])
+  const [genreDropdownList, setGenreDropdownList] = useState<
+    DropdownListItem[]
+  >([])
 
   const handleHobbyInputChange = async (e: any) => {
     setHobbyInputValue(e.target.value)
@@ -84,7 +100,11 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
 
     setAddHobbyBtnLoading(true)
 
-    let jsonData = { hobby: data.hobby?._id, genre: data.genre?._id, level: data.level }
+    let jsonData = {
+      hobby: data.hobby?._id,
+      genre: data.genre?._id,
+      level: data.level,
+    }
     addUserHobby(jsonData, async (err, res) => {
       if (err) {
         setAddHobbyBtnLoading(false)
@@ -116,6 +136,16 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
     }
   }
 
+  useEffect(() => {
+    if (!user._hobbies) {
+      setNextDisabled(true)
+    } else if (user._hobbies.length === 0) {
+      setNextDisabled(true)
+    } else {
+      setNextDisabled(false)
+    }
+  }, [user])
+
   const handleSubmit = () => {
     if (onComplete) onComplete()
     else dispatch(closeModal())
@@ -134,7 +164,9 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
         <section className={styles['body']}>
           <>
             <section className={styles['add-hobbies-wrapper']}>
-              <p className={styles['info']}>Added hobbies appear in the table below.</p>
+              <p className={styles['info']}>
+                Added hobbies appear in the table below.
+              </p>
 
               <h3 className={styles['heading']}>Add Hobby</h3>
               <section className={styles['add-new-hobby']}>
@@ -218,7 +250,11 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
                   )}
                 </section>
 
-                <FormControl variant="outlined" size="small" sx={{ width: '150px' }}>
+                <FormControl
+                  variant="outlined"
+                  size="small"
+                  sx={{ width: '150px' }}
+                >
                   <Select
                     value={data.level}
                     onChange={(e) => {
@@ -250,8 +286,16 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
                   <p className={styles['helper-text']}>{inputErrs.full_name}</p>
                 </div> */}
 
-                <Button disabled={addHobbyBtnLoading} variant="contained" onClick={handleAddHobby}>
-                  {addHobbyBtnLoading ? <CircularProgress color="inherit" size={'22px'} /> : 'Add'}
+                <Button
+                  disabled={addHobbyBtnLoading}
+                  variant="contained"
+                  onClick={handleAddHobby}
+                >
+                  {addHobbyBtnLoading ? (
+                    <CircularProgress color="inherit" size={'22px'} />
+                  ) : (
+                    'Add'
+                  )}
                 </Button>
               </section>
 
@@ -321,7 +365,10 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
 
         <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
-            <button className="modal-footer-btn cancel" onClick={onBackBtnClick}>
+            <button
+              className="modal-footer-btn cancel"
+              onClick={onBackBtnClick}
+            >
               Back
             </button>
           )}
@@ -329,7 +376,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
           <button
             className="modal-footer-btn submit"
             onClick={handleSubmit}
-            disabled={submitBtnLoading}
+            disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
           >
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'24px'} />

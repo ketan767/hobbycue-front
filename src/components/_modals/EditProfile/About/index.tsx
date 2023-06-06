@@ -8,7 +8,7 @@ import {
 } from '@/services/user.service'
 
 import styles from './styles.module.css'
-import { isEmptyField } from '@/utils'
+import { isEmpty, isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
@@ -36,6 +36,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
   const { user } = useSelector((state: RootState) => state.user)
 
   const [data, setData] = useState<ProfileAboutData>({ about: '' })
+  const [nextDisabled, setNextDisabled] = useState(false)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
@@ -78,6 +79,16 @@ const ProfileAboutEditModal: React.FC<Props> = ({
   }
 
   useEffect(() => {
+    if (
+      isEmpty(data.about)
+    ) {
+      setNextDisabled(true)
+    } else {
+      setNextDisabled(false)
+    }
+  }, [data])
+
+  useEffect(() => {
     setData({
       about: user.about,
     })
@@ -115,7 +126,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
           <button
             className="modal-footer-btn submit"
             onClick={handleSubmit}
-            disabled={submitBtnLoading}
+            disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
           >
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'24px'} />
