@@ -28,6 +28,7 @@ import ListingWorkingHoursEditModal from './EditListing/ListingWorkingHours'
 import ListingEventHoursEditModal from './EditListing/ListingEventHours'
 import RelatedListingEditModal from './EditListing/ListingRelated/ListingRelated'
 import RelatedListingRightEditModal from './EditListing/ListingRelatedRight/ListingRelatedRight'
+import UploadVideoPage from './uploadVideoPage'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -117,6 +118,9 @@ const ModalManager: React.FC = () => {
               )}
               {activeModal === 'related-listing-right-edit' && (
                 <RelatedListingRightEditModal />
+              )}
+              {activeModal === 'upload-video-page' && (
+                <UploadVideoPage />
               )}
 
               {/* Modal Close Icon */}

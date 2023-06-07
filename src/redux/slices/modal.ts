@@ -24,6 +24,10 @@ export type ModalType =
   | 'listing-tags-edit'
   | 'related-listing-left-edit'
   | 'related-listing-right-edit'
+  | 'upload-video-page'
+  | 'upload-image-page'
+  | 'upload-video-user'
+  | 'upload-image-user'
 
 interface ModalState {
   activeModal: ModalType

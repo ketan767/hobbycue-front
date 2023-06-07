@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 
 import PageContentBox from '@/layouts/PageContentBox'
@@ -18,14 +18,18 @@ import { getPages } from '@/services/listing.service'
 import ListingCard from '@/components/ListingCard/ListingCard'
 import ListingPageCard from '@/components/ListingPageCard/ListingPageCard'
 import PostCard from '@/components/PostCard/PostCard'
+import EditIcon from '@/assets/svg/edit-icon.svg'
+import { uploadImage } from '@/services/post.service'
 
 interface Props {
   data: ListingPageData['pageData']
 }
 
 const ListingMediaTab: React.FC<Props> = ({ data }) => {
-  // console.log('data:', data)
+  console.log('data:', data)
   const dispatch = useDispatch()
+  const inputRef = useRef<HTMLInputElement>(null)
+
   const [pagesData, setPagesData] = useState([])
   const { listingLayoutMode } = useSelector((state: RootState) => state.site)
   const { user } = useSelector((state: RootState) => state)
@@ -65,33 +69,59 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
       })
   }, [])
 
-  console.log(media)
+
+  // console.log(media)
   return (
     <>
       <main>
+        {/* <div className={styles.uploadContainer}>
+          <div className={styles.uploadButton}>
+            <p> image </p>
+            <Image src={EditIcon} alt="edit" className={styles.editIcon} onClick={() => {
+               dispatch(
+                openModal({
+                  type: 'upload-video-page',
+                  closable: true,
+                }),
+              )
+            }} />
+      
+          </div>
+          <div className={styles.uploadButton}>
+            <p> Video </p>
+            <Image src={EditIcon} alt="edit" className={styles.editIcon} onClick={() => {
+               dispatch(
+                openModal({
+                  type: 'upload-video-page',
+                  closable: true,
+                }),
+              )
+            }} />
+          </div>
+        </div> */}
         {/* User About */}
-        <PageContentBox
+        {/* <PageContentBox
           onEditBtnClick={() =>
             dispatch(openModal({ type: 'listing-about-edit', closable: true }))
           }
-        >
-          <PageGridLayout column={2}>
-            {media.map((item: any, idx) => {
-              return (
-                <div key={idx} className={styles.image}>
-                  {item.type === 'video' ? (
-                    <video width="320" height="240" controls={true}>
-                      <source src={item.src} type="video/mp4" />
-                    </video>
-                  ) : (
-                    <img src={item.src} />
-                  )}
-                </div>
-              )
-            })}
-            <div></div>
-          </PageGridLayout>
-        </PageContentBox>
+        > */}
+        <PageGridLayout column={2}>
+          {media.map((item: any, idx) => {
+            return (
+              <div key={idx} className={styles.image}>
+                {item.type === 'video' ? (
+                  <video width="320" height="240" controls={true}>
+                    <source src={item.src} type="video/mp4" />
+                  </video>
+                ) : (
+                  <img src={item.src} />
+                )}
+              </div>
+            )
+          })}
+          <div></div>
+        </PageGridLayout>
+        {/* </PageContentBox> */}
 
         {/* User Information */}
       </main>
