@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
 import { addUserAddress, getMyProfileDetail, updateUserAddress } from '@/services/user.service'
-import { isEmptyField } from '@/utils'
+import { isEmpty, isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
@@ -18,6 +18,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
   const { user } = useSelector((state: RootState) => state.user)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
+  const [nextDisabled, setNextDisabled] = useState(false)
 
   const [data, setData] = useState<ProfileAddressPayload>({
     street: '',
@@ -139,6 +140,20 @@ const ProfileAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
     })
   }, [user])
 
+  useEffect(() => {
+    if (
+      isEmpty(data.street) ||
+      isEmpty(data.pin_code) ||
+      isEmpty(data.state) ||
+      isEmpty(data.city) || 
+      isEmpty(data.country) 
+    ) {
+      setNextDisabled(true)
+    } else {
+      setNextDisabled(false)
+    }
+  }, [data])
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -253,7 +268,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
           <button
             className="modal-footer-btn submit"
             onClick={handleSubmit}
-            disabled={submitBtnLoading}
+            disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
           >
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'24px'} />

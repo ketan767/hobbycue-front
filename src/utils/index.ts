@@ -53,3 +53,10 @@ export function getFileType(file: any) {
 
   return 'other'
 }
+
+export const isEmpty = (value: string) => {
+  if (value === null || value === undefined) return true
+  let val = `${value}`
+  if (val?.trim() === '') return true
+  return false
+}

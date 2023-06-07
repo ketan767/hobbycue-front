@@ -46,6 +46,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
 
   const [hobbyDropdownList, setHobbyDropdownList] = useState<DropdownListItem[]>([])
   const [genreDropdownList, setGenreDropdownList] = useState<DropdownListItem[]>([])
+  const [nextDisabled, setNextDisabled] = useState(false)
 
   const [addHobbyBtnLoading, setAddHobbyBtnLoading] = useState<boolean>(false)
 
@@ -124,6 +125,16 @@ const ListingHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
   useEffect(() => {
     updateHobbyList()
   }, [])
+
+  useEffect(() => {
+    if (!hobbiesList) {
+      setNextDisabled(true)
+    } else if (hobbiesList.length === 0) {
+      setNextDisabled(true)
+    } else {
+      setNextDisabled(false)
+    }
+  }, [hobbiesList])
 
   return (
     <>
@@ -294,7 +305,8 @@ const ListingHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
             </button>
           )}
 
-          <button className="modal-footer-btn submit" onClick={handleSubmit}>
+          <button className="modal-footer-btn submit" onClick={handleSubmit}
+          disabled={nextDisabled} >
             {onComplete ? 'Next' : 'Save'}
           </button>
         </footer>

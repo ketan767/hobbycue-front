@@ -6,7 +6,7 @@ import SearchIcon from '@mui/icons-material/Search'
 
 import Image from 'next/image'
 
-import LogoFull from '@/assets/image/logo-full.png'
+import LogoFull from '@/assets/image/logo-full.svg'
 import ExploreIcon from '@/assets/svg/navbar-explore-icon.svg'
 import HobbyIcon from '@/assets/svg/navbar-hobby-icon.svg'
 
@@ -55,7 +55,7 @@ export const Navbar: React.FC<Props> = ({}) => {
               <Image
                 src={LogoFull}
                 alt="HobbyCue Logo"
-                placeholder="blur" // Optional blur-up while loading
+                // placeholder="blur" // Optional blur-up while loading
                 priority
               />
             </Link>
@@ -64,6 +64,7 @@ export const Navbar: React.FC<Props> = ({}) => {
               variant="outlined"
               placeholder="Search here..."
               size="small"
+              className={styles.inputField}
               sx={{
                 '& .MuiOutlinedInput-root': {
                   borderRadius: '8px',
@@ -354,6 +355,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                     onClick={() =>
                       dispatch(openModal({ type: 'auth', closable: true }))
                     }
+                    className={styles.textSmall}
                   >
                     Sign In
                   </OutlinedButton>{' '}

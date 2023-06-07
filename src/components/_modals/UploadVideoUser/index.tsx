@@ -13,6 +13,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
+import { updateListing } from '@/services/listing.service'
+import { updateListingModalData } from '@/redux/slices/site'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -24,92 +26,52 @@ type Props = {
   onBackBtnClick?: () => void
 }
 
-type ProfileAboutData = {
-  about: string
+type ListingAboutData = {
+  description: InputData<string>
 }
 
-const ProfileAboutEditModal: React.FC<Props> = ({
+const UploadVideoUser: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
-
-  const [data, setData] = useState<ProfileAboutData>({ about: '' })
+  const { listingModalData } = useSelector((state: RootState) => state.site)
+  const [url, setUrl] = useState('')
   const [nextDisabled, setNextDisabled] = useState(false)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
-  const [inputErrs, setInputErrs] = useState<{ about: string | null }>({
-    about: null,
-  })
-
-  const handleInputChange = (value: string) => {
-    setData((prev) => {
-      return { ...prev, about: value }
-    })
-    setInputErrs({ about: null })
-  }
-
   const handleSubmit = async () => {
-    if (isEmptyField(data.about)) {
-      setInputErrs((prev) => {
-        return { ...prev, about: 'This field is required!' }
-      })
-      return
-    }
-
     setSubmitBtnLoading(true)
-    const { err, res } = await updateMyProfileDetail(data)
-
-    if (err) {
-      setSubmitBtnLoading(false)
-      return console.log(err)
-    }
-
-    const { err: error, res: response } = await getMyProfileDetail()
+    const { err, res } = await updateMyProfileDetail( {
+      video_url: url,
+    })
     setSubmitBtnLoading(false)
-
-    if (error) return console.log(error)
-    if (response?.data.success) {
-      dispatch(updateUser(response.data.data.user))
+    if (err) return console.log(err)
+    if (res?.data.success) {
       if (onComplete) onComplete()
-      else dispatch(closeModal())
+      else {
+        window.location.reload()
+        dispatch(closeModal())
+      }
     }
   }
-
-  useEffect(() => {
-    if (
-      isEmpty(data.about)
-    ) {
-      setNextDisabled(true)
-    } else {
-      setNextDisabled(false)
-    }
-  }, [data])
-
-  useEffect(() => {
-    setData({
-      about: user.about,
-    })
-  }, [user])
+  console.log('user', user);
 
   return (
     <>
       <div className={styles['modal-wrapper']}>
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>{'About'}</h4>
+          <h4 className={styles['heading']}>{'Add Video Link'}</h4>
         </header>
         <hr />
         <section className={styles['body']}>
+          <p className={styles.headerText}> Enter the destination URL </p>
+          <label className={styles.label}>URL</label>
           <div className={styles['input-box']}>
-            <label>About</label>
-            <input hidden required />
-            <CustomCKEditor value={data.about} onChange={handleInputChange} />
-            {inputErrs.about && (
-              <p className={styles['error-msg']}>{inputErrs.about}</p>
-            )}
+            <input value={url} onChange={(e) => setUrl(e.target.value)} className={styles.input} />
           </div>
         </section>
 
@@ -130,10 +92,8 @@ const ProfileAboutEditModal: React.FC<Props> = ({
           >
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'24px'} />
-            ) : onComplete ? (
-              'Next'
             ) : (
-              'Save'
+              'Add Link'
             )}
           </button>
         </footer>
@@ -142,10 +102,10 @@ const ProfileAboutEditModal: React.FC<Props> = ({
   )
 }
 
-export default ProfileAboutEditModal
+export default UploadVideoUser
 
 /**
  * @TODO:
- * 1. Loading component untill the CK Editor loads.
+ * 1. Loading component until the CK Editor loads.
  * 2. Underline option in the editor
  */

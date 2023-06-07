@@ -28,6 +28,9 @@ import ListingWorkingHoursEditModal from './EditListing/ListingWorkingHours'
 import ListingEventHoursEditModal from './EditListing/ListingEventHours'
 import RelatedListingEditModal from './EditListing/ListingRelated/ListingRelated'
 import RelatedListingRightEditModal from './EditListing/ListingRelatedRight/ListingRelatedRight'
+import UploadVideoPage from './uploadVideoPage'
+import UploadImagePage from './uploadImagePage'
+import UploadVideoUser from './UploadVideoUser'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -37,7 +40,7 @@ const ModalManager: React.FC = () => {
   const dispatch = useDispatch()
 
   const { activeModal, closable } = useSelector(
-    (state: RootState) => state.modal
+    (state: RootState) => state.modal,
   )
 
   function handleClose() {
@@ -118,6 +121,9 @@ const ModalManager: React.FC = () => {
               {activeModal === 'related-listing-right-edit' && (
                 <RelatedListingRightEditModal />
               )}
+              {activeModal === 'upload-video-page' && <UploadVideoPage />}
+              {activeModal === 'upload-image-page' && <UploadImagePage />}
+              {activeModal === 'upload-video-user' && <UploadVideoUser />}
 
               {/* Modal Close Icon */}
               {closable && (

@@ -101,7 +101,7 @@
   font-size: 18px;
   line-height: 30px;
   letter-spacing: 0.02em;
-  color: rgba(var(--gray-50-rgb));
+  color: #6D747A;
 }
 .testimonial-footer {
   margin-top: 2rem;
@@ -110,4 +110,7 @@
   background: rgba(var(--primary-50-rgb));
   border-radius: 8px;
   padding: 3.125rem;
+}
+.card-btn {
+  font-size: 14px;
 }

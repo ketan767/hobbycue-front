@@ -3,6 +3,7 @@
   font-weight: 600;
   font-size: 1.25rem;
   color: rgba(var(--gray-100-rgb));
+  color: #939ca3;
   margin-right: 1rem;
   border-radius: 0;
   padding: 0;
@@ -31,6 +32,7 @@
   height: 40px;
   position: relative;
   text-transform: none;
+  font-family: Poppins;
 }
 
 .social-login-btn::before {
@@ -71,6 +73,14 @@
   font-weight: 500;
   font-size: 0.8rem;
   color: rgba(var(--black-rgb));
+}
+.form-body input::placeholder {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #939ca3;
 }
 .form-body label {
   font-weight: 500;
@@ -137,9 +147,11 @@
 }
 .form-footer .form-footer-top .remember-me-btn span {
   font-weight: 400;
-  font-size: 0.7rem;
-  line-height: 1rem;
   padding: 5px;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-size: 12px;
+  line-height: 16px;
 }
 .form-footer .form-footer-top .forgot-pass-btn {
   display: flex;
@@ -149,7 +161,7 @@
   border: none;
   background: none;
   font-weight: 400;
-  font-size: 0.7rem;
+  font-size: 12px;
   line-height: 1rem;
   cursor: pointer;
 }
@@ -164,4 +176,11 @@
 .form-footer .submit-btn {
   margin-top: var(--spacing-24);
   width: 100%;
+  font-size: 14px;
+  border: 1px solid #000000;
+  color: black;
+}
+.form-footer .submit-btn:hover {
+  background-color: #000000;
+  color: white;
 }

@@ -24,12 +24,12 @@ interface Props {
 }
 
 const ListingPostsTab: React.FC<Props> = ({ data }) => {
-  console.log('data:', data)
+  // console.log('data:', data)
   const dispatch = useDispatch()
   const [pagesData, setPagesData] = useState([])
   const { listingLayoutMode } = useSelector((state: RootState) => state.site)
   const { user } = useSelector((state: RootState) => state)
-  console.log('pagesData', pagesData)
+  // console.log('pagesData', pagesData)
 
   useEffect(() => {
     // const id = user?.activeProfile?.data?._id

@@ -127,7 +127,9 @@ const PostCard: React.FC<Props> = (props) => {
           <section className={styles['body']}>
             <div
               className={styles['content']}
-              dangerouslySetInnerHTML={{ __html: postData?.content }}
+              dangerouslySetInnerHTML={{
+                __html: postData?.content.replace(/<img .*?>/g, ''),
+              }}
             ></div>
             {postData.video_url && (
               <video width="320" height="240" controls>

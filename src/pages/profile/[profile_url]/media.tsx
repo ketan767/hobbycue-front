@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router'
+import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import styles from './styles.module.css'
 import { GetServerSideProps } from 'next'
@@ -8,6 +9,9 @@ import ProfileLayout from '@/layouts/ProfilePageLayout'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import { getListingPages } from '@/services/listing.service'
 import { getAllPosts } from '@/services/post.service'
+import EditIcon from '@/assets/svg/edit-icon.svg'
+import { useDispatch } from 'react-redux'
+import { openModal } from '@/redux/slices/modal'
 
 interface Props {
   data: ProfilePageData
@@ -18,6 +22,8 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
   const [loadingPosts, setLoadingPosts] = useState(false)
   const [posts, setPosts] = useState([])
   const [media, setMedia] = useState([])
+  
+  const dispatch = useDispatch()
 
   const getPost = async () => {
     setLoadingPosts(true)
@@ -32,9 +38,19 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
       let tempMedia: any = []
       allposts.forEach((post: any) => {
         if (post.media) {
-          post.media.forEach((singleMedia: any) => {
-            tempMedia.push(...post.media)
-          })
+          if (post.video_url) {
+            tempMedia.push({
+              type: 'video',
+              src: post.video_url,
+            })
+          } else {
+            post.media.forEach((singleMedia: any) => {
+              tempMedia.push({
+                type: 'image',
+                src: singleMedia,
+              })
+            })
+          }
         }
       })
       setMedia(tempMedia)
@@ -45,7 +61,6 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
     getPost()
   }, [])
 
-  console.log(media)
   return (
     <>
       <Head>
@@ -53,11 +68,51 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
       </Head>
 
       <ProfileLayout activeTab={'media'} data={data}>
+      <div className={styles.uploadContainer}>
+          <div className={styles.uploadButton}>
+            <p> image </p>
+            <Image
+              src={EditIcon}
+              alt="edit"
+              className={styles.editIcon}
+              onClick={() => {
+                dispatch(
+                  openModal({
+                    type: 'upload-image-page',
+                    closable: true,
+                  }),
+                )
+              }}
+            />
+          </div>
+          <div className={styles.uploadButton}>
+            <p> Video </p>
+            <Image
+              src={EditIcon}
+              alt="edit"
+              className={styles.editIcon}
+              onClick={() => {
+                dispatch(
+                  openModal({
+                    type: 'upload-video-user',
+                    closable: true,
+                  }),
+                )
+              }}
+            />
+          </div>
+        </div>
         <PageGridLayout column={3}>
           {media.map((item: any, idx) => {
             return (
               <div key={idx} className={styles.image}>
-                <img src={item} />
+                {item.type === 'video' ? (
+                  <video width="320" height="240" controls={true}>
+                    <source src={item.src} type="video/mp4" />
+                  </video>
+                ) : (
+                  <img src={item.src} />
+                )}
               </div>
             )
           })}

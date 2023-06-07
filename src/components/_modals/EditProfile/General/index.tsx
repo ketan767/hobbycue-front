@@ -5,7 +5,7 @@ import {
   getMyProfileDetail,
   updateMyProfileDetail,
 } from '@/services/user.service'
-import { isEmptyField } from '@/utils'
+import { isEmpty, isEmptyField } from '@/utils'
 import { closeModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
@@ -114,6 +114,18 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   }
 
   useEffect(() => {
+    if (
+      isEmpty(data.full_name) ||
+      isEmpty(data.display_name) ||
+      isEmpty(data.profile_url)
+    ) {
+      setNextDisabled(true)
+    } else {
+      setNextDisabled(false)
+    }
+  }, [data])
+
+  useEffect(() => {
     const token = localStorage.getItem('token')
     const headers = { Authorization: `Bearer ${token}` }
     axios
@@ -122,13 +134,11 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
         { headers },
       )
       .then((res) => {
-        setNextDisabled(false)
         setInputErrs((prev) => {
           return { ...prev, profile_url: null }
         })
       })
       .catch((err) => {
-        setNextDisabled(true)
         setInputErrs((prev) => {
           return { ...prev, profile_url: 'This profile url is already taken' }
         })

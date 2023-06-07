@@ -262,7 +262,7 @@ const AuthForm: React.FC<Props> = (props) => {
 
       {/* Divider */}
       <div className={styles['divider']}>
-        {selectedTab === 'sign-in' && <span>Or Sign In with Email</span>}
+        {selectedTab === 'sign-in' && <span>Or connect with</span>}
         {selectedTab === 'join-in' && <span>Or Join with Email</span>}
       </div>
 
@@ -280,6 +280,7 @@ const AuthForm: React.FC<Props> = (props) => {
             onChange={(e) => handleInputChange(e.target.name, e.target.value)}
             error={Boolean(inputErrors.email)}
             helperText={inputErrors.email}
+            className={styles.inputField}
           />
         </div>
 

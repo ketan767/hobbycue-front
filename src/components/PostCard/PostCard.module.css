@@ -237,8 +237,10 @@
   align-items: center;
   height: 100% !important;
   width: 100% !important;
+  padding: 0 12px;
 }
-.postImages img {
-  width: 90%;
-  margin-bottom: 5px;
+
+.postImage {
+  width: 100%;
+  align-self: stretch;
 }
