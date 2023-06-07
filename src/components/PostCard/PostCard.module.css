@@ -46,8 +46,10 @@
   font-size: 14px;
   line-height: 20px;
   letter-spacing: 0.02em;
-
   color: #08090a;
+}
+.post-card-wrapper .body .content img {
+  max-width: 100%;
 }
 
 /* Footer */
@@ -197,6 +199,16 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.see-more-comments {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 22px;
+  text-align: center;
+  color: #8064a2;
+  cursor: pointer;
+  margin-top: var(--spacing-12);
 }
 
 .postMetadata {

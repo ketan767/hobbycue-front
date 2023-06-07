@@ -7,6 +7,7 @@ import BarsIcon from '../../assets/svg/vertical-bars.svg'
 import PostVotes from './Votes'
 import PostComments from './Comments'
 import { getAllPosts, getMetadata } from '@/services/post.service'
+import { useRouter } from 'next/router'
 
 type Props = {
   postData: any
@@ -14,6 +15,10 @@ type Props = {
 
 const PostCard: React.FC<Props> = (props) => {
   // const [type, setType] = useState<'User' | 'Listing'>()
+
+  const router = useRouter()
+  console.log('🚀 ~ file: PostCard.tsx:20 ~ router:', router)
+
   const [showComments, setShowComments] = useState(false)
   const [postData, setPostData] = useState(props.postData)
   const [url, setUrl] = useState('')
@@ -22,6 +27,7 @@ const PostCard: React.FC<Props> = (props) => {
     description: '',
     image: '',
   })
+
   const updatePost = async () => {
     const { err, res } = await getAllPosts(
       `_id=${postData._id}&populate=_author,_genre,_hobby`,
@@ -32,6 +38,12 @@ const PostCard: React.FC<Props> = (props) => {
       return
     }
   }
+
+  useEffect(() => {
+    if (router.query['comments'] === 'show') {
+      setShowComments(true)
+    }
+  }, [])
 
   useEffect(() => {
     if (postData.has_link) {
@@ -58,19 +70,21 @@ const PostCard: React.FC<Props> = (props) => {
       <div className={styles['post-card-wrapper']}>
         {/* Card Header */}
         <header>
-          {postData?._author?.profile_image ? (
-            <Image
-              className={styles['author-profile']}
-              src={postData?._author?.profile_image}
-              alt="Author Profile"
-              width={40}
-              height={40}
-            />
-          ) : (
-            <div
-              className={`default-user-icon  ${styles['author-profile']}`}
-            ></div>
-          )}
+          <Link href={`/profile/${postData?._author?.profile_url}`}>
+            {postData?._author?.profile_image ? (
+              <Image
+                className={styles['author-profile']}
+                src={postData?._author?.profile_image}
+                alt="Author Profile"
+                width={40}
+                height={40}
+              />
+            ) : (
+              <div
+                className={`default-user-icon  ${styles['author-profile']}`}
+              ></div>
+            )}
+          </Link>
           <div>
             <Link href={`/profile/${postData?._author?.profile_url}`}>
               <p className={styles['author-name']}>
@@ -109,46 +123,50 @@ const PostCard: React.FC<Props> = (props) => {
         </header>
 
         {/* Card Body */}
-        <section className={styles['body']}>
-          <div
-            className={styles['content']}
-            dangerouslySetInnerHTML={{ __html: postData?.content.replace(/<img .*?>/g, '') }}
-          ></div>
-          {postData.video_url && (
-            <video width="320" height="240" controls>
-              <source src={postData.video_url} type="video/mp4"></source>
-            </video>
-          )}
-          {postData.media ? (
-            <div className={styles.postImages}>
-              {postData.media.map((item: any, idx: number) => {
-                return (
-                  <div key={item} style={{ width: '100%' }}>
-                    <img src={item} alt="post-image" className={styles.postImage} />
-                  </div>
-                )
-              })}
-            </div>
-          ) : (
-            <></>
-          )}
-          {postData.has_link && (
-            <a href={url} className={styles.postMetadata}>
-              <div className={styles.metaImgContainer}>
-                <Image
-                  src={metaData.image}
-                  alt="link-image"
-                  width={200}
-                  height={130}
-                />
+        <Link href={`/post/${postData._id}`}>
+          <section className={styles['body']}>
+            <div
+              className={styles['content']}
+              dangerouslySetInnerHTML={{
+                __html: postData?.content.replace(/<img .*?>/g, ''),
+              }}
+            ></div>
+            {postData.video_url && (
+              <video width="320" height="240" controls>
+                <source src={postData.video_url} type="video/mp4"></source>
+              </video>
+            )}
+            {postData.media ? (
+              <div className={styles.postImages}>
+                {postData.media.map((item: any, idx: number) => {
+                  return (
+                    <div key={item} style={{ width: '100%' }}>
+                      <img src={item} alt="img" className={styles.postImage} />
+                    </div>
+                  )
+                })}
               </div>
-              <div className={styles.metaContent}>
-                <p className={styles.contentHead}> {metaData.title} </p>
-                <p className={styles.metaContentText}>s </p>
-              </div>
-            </a>
-          )}
-        </section>
+            ) : (
+              <></>
+            )}
+            {postData.has_link && (
+              <a href={url} className={styles.postMetadata}>
+                <div className={styles.metaImgContainer}>
+                  <Image
+                    src={metaData.image}
+                    alt="link-image"
+                    width={200}
+                    height={130}
+                  />
+                </div>
+                <div className={styles.metaContent}>
+                  <p className={styles.contentHead}> {metaData.title} </p>
+                  <p className={styles.metaContentText}>s </p>
+                </div>
+              </a>
+            )}
+          </section>
+        </Link>
 
         {/* Card Footer */}
         <footer>

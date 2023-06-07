@@ -10,6 +10,7 @@ import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import { checkIfUrlExists } from '@/utils'
+import { useRouter } from 'next/router'
 
 type Props = {}
 
@@ -17,6 +18,7 @@ const CommunityHome: React.FC<Props> = ({}) => {
   const { activeProfile } = useSelector((state: RootState) => state.user)
   const { allPosts } = useSelector((state: RootState) => state.post)
   const [isLoadingPosts, setIsLoadingPosts] = useState(false)
+  const router = useRouter()
 
   const getPost = async () => {
     const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
@@ -38,7 +40,7 @@ const CommunityHome: React.FC<Props> = ({}) => {
   }
 
   useEffect(() => {
-    getPost()
+    if (allPosts.length === 0) getPost()
   }, [activeProfile])
 
   // console.log({allPosts});
