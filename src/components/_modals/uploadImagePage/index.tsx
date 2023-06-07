@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { Button, CircularProgress } from '@mui/material'
 
@@ -15,6 +15,7 @@ import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
+import { uploadImage } from '@/services/post.service'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -30,22 +31,20 @@ type ListingAboutData = {
   description: InputData<string>
 }
 
-const UploadImagePage: React.FC<Props> = ({
-  onComplete,
-  onBackBtnClick,
-}) => {
+const UploadImagePage: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
   const [url, setUrl] = useState('')
   const [nextDisabled, setNextDisabled] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
   const handleSubmit = async () => {
     setSubmitBtnLoading(true)
     const { err, res } = await updateListing(listingModalData._id, {
-      video_url: url,
+      images: url,
     })
     setSubmitBtnLoading(false)
     if (err) return console.log(err)
@@ -59,6 +58,7 @@ const UploadImagePage: React.FC<Props> = ({
     }
   }
 
+ 
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -71,7 +71,11 @@ const UploadImagePage: React.FC<Props> = ({
           <p className={styles.headerText}> Enter the destination URL </p>
           <label className={styles.label}>URL</label>
           <div className={styles['input-box']}>
-            <input value={url} onChange={(e) => setUrl(e.target.value)} className={styles.input} />
+            <input
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              className={styles.input}
+            />
           </div>
         </section>
 

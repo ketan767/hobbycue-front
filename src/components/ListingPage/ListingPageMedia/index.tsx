@@ -14,7 +14,7 @@ import FacebookIcon from '../../../assets/svg/Facebook.svg'
 import TwitterIcon from '../../../assets/svg/Twitter.svg'
 import InstagramIcon from '../../../assets/svg/Instagram.svg'
 import axios from 'axios'
-import { getPages } from '@/services/listing.service'
+import { getPages, updateListing } from '@/services/listing.service'
 import ListingCard from '@/components/ListingCard/ListingCard'
 import ListingPageCard from '@/components/ListingPageCard/ListingPageCard'
 import PostCard from '@/components/PostCard/PostCard'
@@ -26,12 +26,13 @@ interface Props {
 }
 
 const ListingMediaTab: React.FC<Props> = ({ data }) => {
-  console.log('data:', data)
   const dispatch = useDispatch()
   const inputRef = useRef<HTMLInputElement>(null)
 
   const [pagesData, setPagesData] = useState([])
-  const { listingLayoutMode } = useSelector((state: RootState) => state.site)
+  const { listingLayoutMode, listingModalData } = useSelector(
+    (state: RootState) => state.site,
+  )
   const { user } = useSelector((state: RootState) => state)
   const [media, setMedia] = useState([])
   // console.log('pagesData', pagesData)
@@ -69,24 +70,59 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
       })
   }, [])
 
-  // console.log(media)
+  const handleImageChange = (e: any) => {
+    const images = [...e.target.files]
+    const image = e.target.files[0]
+    handleImageUpload(image, false)
+  }
+
+  const handleImageUpload = async (image: any, isVideo: boolean) => {
+    const formData = new FormData()
+    formData.append('post', image)
+    console.log('formData', formData)
+    const { err, res } = await uploadImage(formData)
+    if (err) return console.log(err)
+    if (res?.data.success) {
+      console.log(res.data)
+      const img = res.data.data.url
+      updateListingPage(img)
+      // window.location.reload()
+      // dispatch(closeModal())
+    }
+  }
+
+  const updateListingPage = async (url: string) => {
+    let arr: any = []
+    if (listingModalData?.images) {
+      arr = listingModalData.images
+    }
+    const { err, res } = await updateListing(listingModalData._id, {
+      images: [...arr, url],
+    })
+    if (err) return console.log(err)
+    console.log(res)
+  }
+
+  console.log('imgs', listingModalData.images)
   return (
     <>
       <main>
         <div className={styles.uploadContainer}>
           <div className={styles.uploadButton}>
+            <input
+              type="file"
+              accept="image/png, image/gif, image/jpeg"
+              className={styles.hidden}
+              onChange={(e) => handleImageChange(e)}
+              ref={inputRef}
+            />
             <p> image </p>
             <Image
               src={EditIcon}
               alt="edit"
               className={styles.editIcon}
               onClick={() => {
-                dispatch(
-                  openModal({
-                    type: 'upload-image-page',
-                    closable: true,
-                  }),
-                )
+                inputRef.current?.click()
               }}
             />
           </div>
@@ -114,16 +150,17 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
           }
         > */}
         <PageGridLayout column={2}>
-          {media.map((item: any, idx) => {
+          {listingModalData?.video_url && (
+            <div>
+              <video width="250" height="240" controls={true} className={styles.video}>
+                <source src={listingModalData?.video_url} type="video/mp4" />
+              </video>
+            </div>
+          )}
+          {listingModalData.images?.map((item: any, idx) => {
             return (
               <div key={idx} className={styles.image}>
-                {item.type === 'video' ? (
-                  <video width="320" height="240" controls={true}>
-                    <source src={item.src} type="video/mp4" />
-                  </video>
-                ) : (
-                  <img src={item.src} />
-                )}
+                <img src={item} />
               </div>
             )
           })}

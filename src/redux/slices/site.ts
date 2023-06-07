@@ -29,13 +29,15 @@ type ListingModalData = {
     to_time: any
     from_date: any
     to_date: any
-  }
+  },
+  images?: [],
   is_published?: boolean
   is_onboarded?: boolean
   facebook_url?: string
   instagram_url?: string
   twitter_url?: string
   linkedin_url?: string
+  video_url?: string
   profile_image?: string
   cover_image?: string
   _tags? : any

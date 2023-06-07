@@ -1,16 +1,20 @@
 import { useRouter } from 'next/router'
 import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styles from './styles.module.css'
 import { GetServerSideProps } from 'next'
-import { getAllUserDetail } from '@/services/user.service'
+import {
+  getAllUserDetail,
+  updateMyProfileDetail,
+} from '@/services/user.service'
+import { RootState } from '@/redux/store'
 import Head from 'next/head'
 import ProfileLayout from '@/layouts/ProfilePageLayout'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import { getListingPages } from '@/services/listing.service'
-import { getAllPosts } from '@/services/post.service'
+import { getAllPosts, uploadImage } from '@/services/post.service'
 import EditIcon from '@/assets/svg/edit-icon.svg'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { openModal } from '@/redux/slices/modal'
 
 interface Props {
@@ -18,11 +22,12 @@ interface Props {
 }
 
 const ProfilePostsPage: React.FC<Props> = ({ data }) => {
-  // const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
+  const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
   const [loadingPosts, setLoadingPosts] = useState(false)
   const [posts, setPosts] = useState([])
   const [media, setMedia] = useState([])
-  
+
+  const inputRef = useRef<HTMLInputElement>(null)
   const dispatch = useDispatch()
 
   const getPost = async () => {
@@ -61,6 +66,40 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
     getPost()
   }, [])
 
+  const handleImageChange = (e: any) => {
+    const images = [...e.target.files]
+    const image = e.target.files[0]
+    handleImageUpload(image, false)
+  }
+
+  const handleImageUpload = async (image: any, isVideo: boolean) => {
+    const formData = new FormData()
+    formData.append('post', image)
+    console.log('formData', formData)
+    const { err, res } = await uploadImage(formData)
+    if (err) return console.log(err)
+    if (res?.data.success) {
+      console.log(res.data)
+      const img = res.data.data.url
+      updateUser(img)
+      // window.location.reload()
+      // dispatch(closeModal())
+    }
+  }
+
+  const updateUser = async (url: string) => {
+    let arr: any = []
+    if (user?.images) {
+      arr = user.images
+    }
+    const { err, res } = await updateMyProfileDetail({
+      images: [...arr, url],
+    })
+    if (err) return console.log(err)
+    console.log(res)
+  }
+
+  console.log('user', user)
   return (
     <>
       <Head>
@@ -68,20 +107,22 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
       </Head>
 
       <ProfileLayout activeTab={'media'} data={data}>
-      <div className={styles.uploadContainer}>
+        <div className={styles.uploadContainer}>
           <div className={styles.uploadButton}>
             <p> image </p>
+            <input
+              type="file"
+              accept="image/png, image/gif, image/jpeg"
+              className={styles.hidden}
+              onChange={(e) => handleImageChange(e)}
+              ref={inputRef}
+            />
             <Image
               src={EditIcon}
               alt="edit"
               className={styles.editIcon}
               onClick={() => {
-                dispatch(
-                  openModal({
-                    type: 'upload-image-page',
-                    closable: true,
-                  }),
-                )
+                inputRef.current?.click()
               }}
             />
           </div>
@@ -103,16 +144,22 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
           </div>
         </div>
         <PageGridLayout column={3}>
-          {media.map((item: any, idx) => {
+          {user?.video_url && (
+            <div>
+              <video
+                width="250"
+                height="240"
+                controls={true}
+                className={styles.video}
+              >
+                <source src={user?.video_url} type="video/mp4" />
+              </video>
+            </div>
+          )}
+          {user.images?.map((item: any, idx: number) => {
             return (
               <div key={idx} className={styles.image}>
-                {item.type === 'video' ? (
-                  <video width="320" height="240" controls={true}>
-                    <source src={item.src} type="video/mp4" />
-                  </video>
-                ) : (
-                  <img src={item.src} />
-                )}
+                <img src={item} />
               </div>
             )
           })}

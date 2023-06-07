@@ -30,7 +30,13 @@
 .uploadButton:nth-child(1) {
   margin-right: 8px;
 }
-.editIcon{
-   padding: 2px;
-   cursor: pointer;
+.editIcon {
+  padding: 2px;
+  cursor: pointer;
+}
+.hidden {
+  display: none;
+}
+.video{
+  width: 100%;
 }
