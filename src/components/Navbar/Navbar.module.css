@@ -223,3 +223,14 @@
   background: #000;
   z-index: 5;
 }
+.inputField::placeholder {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 16px;
+  color: #939ca3;
+}
+.textSmall{
+  font-size: 14px;
+}

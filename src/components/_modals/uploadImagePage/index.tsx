@@ -30,7 +30,7 @@ type ListingAboutData = {
   description: InputData<string>
 }
 
-const UploadVideoPage: React.FC<Props> = ({
+const UploadImagePage: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
 }) => {
@@ -102,7 +102,7 @@ const UploadVideoPage: React.FC<Props> = ({
   )
 }
 
-export default UploadVideoPage
+export default UploadImagePage
 
 /**
  * @TODO:

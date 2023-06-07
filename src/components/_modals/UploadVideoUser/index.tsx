@@ -30,7 +30,7 @@ type ListingAboutData = {
   description: InputData<string>
 }
 
-const UploadVideoPage: React.FC<Props> = ({
+const UploadVideoUser: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
 }) => {
@@ -44,13 +44,12 @@ const UploadVideoPage: React.FC<Props> = ({
 
   const handleSubmit = async () => {
     setSubmitBtnLoading(true)
-    const { err, res } = await updateListing(listingModalData._id, {
+    const { err, res } = await updateMyProfileDetail( {
       video_url: url,
     })
     setSubmitBtnLoading(false)
     if (err) return console.log(err)
     if (res?.data.success) {
-      dispatch(updateListingModalData(res.data.data.listing))
       if (onComplete) onComplete()
       else {
         window.location.reload()
@@ -58,6 +57,7 @@ const UploadVideoPage: React.FC<Props> = ({
       }
     }
   }
+  console.log('user', user);
 
   return (
     <>
@@ -102,7 +102,7 @@ const UploadVideoPage: React.FC<Props> = ({
   )
 }
 
-export default UploadVideoPage
+export default UploadVideoUser
 
 /**
  * @TODO:

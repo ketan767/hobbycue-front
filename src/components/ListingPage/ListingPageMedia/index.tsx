@@ -69,36 +69,44 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
       })
   }, [])
 
-
   // console.log(media)
   return (
     <>
       <main>
-        {/* <div className={styles.uploadContainer}>
+        <div className={styles.uploadContainer}>
           <div className={styles.uploadButton}>
             <p> image </p>
-            <Image src={EditIcon} alt="edit" className={styles.editIcon} onClick={() => {
-               dispatch(
-                openModal({
-                  type: 'upload-video-page',
-                  closable: true,
-                }),
-              )
-            }} />
-      
+            <Image
+              src={EditIcon}
+              alt="edit"
+              className={styles.editIcon}
+              onClick={() => {
+                dispatch(
+                  openModal({
+                    type: 'upload-image-page',
+                    closable: true,
+                  }),
+                )
+              }}
+            />
           </div>
           <div className={styles.uploadButton}>
             <p> Video </p>
-            <Image src={EditIcon} alt="edit" className={styles.editIcon} onClick={() => {
-               dispatch(
-                openModal({
-                  type: 'upload-video-page',
-                  closable: true,
-                }),
-              )
-            }} />
+            <Image
+              src={EditIcon}
+              alt="edit"
+              className={styles.editIcon}
+              onClick={() => {
+                dispatch(
+                  openModal({
+                    type: 'upload-video-page',
+                    closable: true,
+                  }),
+                )
+              }}
+            />
           </div>
-        </div> */}
+        </div>
         {/* User About */}
         {/* <PageContentBox
           onEditBtnClick={() =>

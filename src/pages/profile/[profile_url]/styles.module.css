@@ -1,9 +1,40 @@
-.image{
-   height: 288px;
-   overflow: hidden;
+.image {
+  height: 288px;
+  overflow: hidden;
 }
-.image img{
-   width: 100%;
-   border-radius: 8px;
-   object-fit: cover;
+.image img {
+  width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.uploadContainer {
+  display: flex;
+  max-width: 800px;
+  margin: 0 auto;
+  margin-top: 2rem;
+}
+.uploadContainer > div {
+  flex: 1;
+}
+.uploadButton {
+  padding: 16px;
+  height: 88px;
+  border: 1px solid #ebedf0;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  color: #000000;
+}
+.uploadButton:nth-child(1) {
+  margin-right: 8px;
+}
+.editIcon {
+  padding: 2px;
+  cursor: pointer;
 }
