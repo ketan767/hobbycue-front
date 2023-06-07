@@ -135,16 +135,17 @@ const CustomEditor: React.FC<Props> = ({
         onChange={(updatedValue) => {
           setData((prev: any) => ({ ...prev, content: updatedValue }))
         }}
+        className={styles.quill}
         modules={{
           toolbar: {
             container: [
-              [{ header: [1, 2, 3, 4, 5, 6, false] }],
+              // [{ header: [1, 2, 3,  false] }],
               ['bold', 'italic', 'underline'],
               [{ list: 'ordered' }, { list: 'bullet' }],
-              [{ align: [] }],
+              // [{ align: [] }],
               // ['link', 'image'],
-              ['clean'],
-              [{ color: [] }],
+              // ['clean'],
+              // [{ color: [] }],
             ],
           },
         }}
