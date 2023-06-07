@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
 import { addUserAddress, getMyProfileDetail, updateUserAddress } from '@/services/user.service'
-import { isEmptyField } from '@/utils'
+import { isEmpty, isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
@@ -31,7 +31,7 @@ const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
   const { user } = useSelector((state: RootState) => state.user)
 
   const { listingModalData } = useSelector((state: RootState) => state.site)
-  console.log('🚀 ~ file: index.tsx:35 ~ listingModalData:', listingModalData)
+  const [nextDisabled, setNextDisabled] = useState(false)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
@@ -132,6 +132,20 @@ const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
     })
     updateAddress()
   }, [user])
+
+  useEffect(() => {
+    if (
+      isEmpty(data.street.value) ||
+      isEmpty(data.pin_code.value) ||
+      isEmpty(data.state.value) ||
+      isEmpty(data.city.value) || 
+      isEmpty(data.country.value) 
+    ) {
+      setNextDisabled(true)
+    } else {
+      setNextDisabled(false)
+    }
+  }, [data])
 
   return (
     <>
@@ -247,7 +261,7 @@ const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
           <button
             className="modal-footer-btn submit"
             onClick={handleSubmit}
-            disabled={submitBtnLoading}
+            disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
           >
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'24px'} />

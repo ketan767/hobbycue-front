@@ -6,7 +6,7 @@ import {
   getMyProfileDetail,
   updateUserAddress,
 } from '@/services/user.service'
-import { isEmptyField } from '@/utils'
+import { isEmpty, isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
@@ -24,6 +24,7 @@ type ListingContactData = {
   phone: InputData<string>
   website: InputData<string>
   whatsapp_number: InputData<string>
+  page_admin: InputData<string>
 }
 
 const ListingContactEditModal: React.FC<Props> = ({
@@ -35,12 +36,14 @@ const ListingContactEditModal: React.FC<Props> = ({
   const { listingModalData } = useSelector((state: RootState) => state.site)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
+  const [nextDisabled, setNextDisabled] = useState(false)
 
   const [data, setData] = useState<ListingContactData>({
     phone: { value: '', error: null },
     public_email: { value: '', error: null },
     website: { value: '', error: null },
     whatsapp_number: { value: '', error: null },
+    page_admin: { value: '', error: null },
   })
 
   const handleInputChange = (event: any) => {
@@ -95,6 +98,7 @@ const ListingContactEditModal: React.FC<Props> = ({
   }
 
   useEffect(() => {
+    console.log(user);
     setData((prev) => {
       return {
         public_email: {
@@ -107,9 +111,23 @@ const ListingContactEditModal: React.FC<Props> = ({
           value: listingModalData.whatsapp_number as string,
         },
         website: { ...prev.website, value: listingModalData.website as string },
+        page_admin: {
+          ...prev.page_admin,
+          value: user.display_name
+        }
       }
     })
   }, [user])
+
+  useEffect(() => {
+    if (
+      isEmpty(data.phone.value)
+    ) {
+      setNextDisabled(true)
+    } else {
+      setNextDisabled(false)
+    }
+  }, [data])
 
   return (
     <>
@@ -150,7 +168,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                   <input
                     type="text"
                     placeholder={`Page Admin`}
-                    // value={data.page_admin.value}
+                    value={data.page_admin.value}
                     name="page_admin"
                     autoComplete="page_admin"
                     onChange={handleInputChange}
@@ -254,7 +272,7 @@ const ListingContactEditModal: React.FC<Props> = ({
           <button
             className="modal-footer-btn submit"
             onClick={handleSubmit}
-            disabled={submitBtnLoading}
+            disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
           >
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'24px'} />

@@ -5,7 +5,7 @@ import { Button, CircularProgress } from '@mui/material'
 import { getMyProfileDetail, updateMyProfileDetail } from '@/services/user.service'
 
 import styles from './styles.module.css'
-import { isEmptyField } from '@/utils'
+import { isEmpty, isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
@@ -33,6 +33,7 @@ const ListingAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
   const { listingModalData } = useSelector((state: RootState) => state.site)
 
   const [data, setData] = useState<ListingAboutData>({ description: { value: '', error: null } })
+  const [nextDisabled, setNextDisabled] = useState(false)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
@@ -71,6 +72,16 @@ const ListingAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
     })
   }, [user])
 
+  useEffect(() => {
+    if (
+      isEmpty(data.description.value)
+    ) {
+      setNextDisabled(true)
+    } else {
+      setNextDisabled(false)
+    }
+  }, [data])
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -100,7 +111,7 @@ const ListingAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
           <button
             className="modal-footer-btn submit"
             onClick={handleSubmit}
-            disabled={submitBtnLoading}
+            disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
           >
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'24px'} />

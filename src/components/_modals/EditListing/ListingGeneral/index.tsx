@@ -5,7 +5,7 @@ import {
   getMyProfileDetail,
   updateMyProfileDetail,
 } from '@/services/user.service'
-import { isEmptyField } from '@/utils'
+import { isEmpty, isEmptyField } from '@/utils'
 import { closeModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
@@ -193,6 +193,18 @@ const ListingGeneralEditModal: React.FC<Props> = ({
     }
   }, [data.title])
 
+  useEffect(() => {
+    if (
+      isEmpty(data.title.value) ||
+      isEmpty(data.page_url.value) ||
+      isEmpty(data.year.value)
+    ) {
+      setNextDisabled(true)
+    } else {
+      setNextDisabled(false)
+    }
+  }, [data])
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -363,7 +375,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
           <button
             className="modal-footer-btn submit"
             onClick={handleSubmit}
-            disabled={submitBtnLoading}
+            disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
           >
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'24px'} />
