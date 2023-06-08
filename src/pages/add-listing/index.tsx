@@ -1,14 +1,22 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styles from '@/styles/AddListing.module.css'
 import { openModal } from '@/redux/slices/modal'
 import { useDispatch } from 'react-redux'
 import { updateListingModalData } from '@/redux/slices/site'
 import store from '@/redux/store'
+import { useRouter } from 'next/router'
 
 type Props = {}
 
 const AddListing: React.FC<Props> = (props) => {
   const dispatch = useDispatch()
+  const router = useRouter()
+
+  useEffect(() => {
+    if(router.query?.selectedType === '1'){
+      handleClick(1)
+    }
+  }, [router.query])
 
   const handleClick = (type: ListingPages) => {
     dispatch(updateListingModalData({ type }))
