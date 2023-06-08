@@ -45,3 +45,10 @@
   padding: 0.5rem 1rem !important;
   height: 2.5rem;
 }
+.textMain{
+  font-weight: 500;
+}
+.textMain > span {
+  font-weight: 600;
+  color: #08090A;
+}
