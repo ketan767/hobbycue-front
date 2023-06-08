@@ -104,3 +104,6 @@
   display: grid;
   place-items: center;
 }
+.makeMyPageButton{
+  width: 100%;
+}

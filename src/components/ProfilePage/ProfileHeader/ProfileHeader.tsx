@@ -14,6 +14,7 @@ import { closeModal, openModal } from '@/redux/slices/modal'
 import { setTimeout } from 'timers/promises'
 import { updateUserCover, updateUserProfile } from '@/services/user.service'
 import { RootState } from '@/redux/store'
+import FilledButton from '@/components/_buttons/FilledButton'
 
 type Props = {
   data: ProfilePageData['pageData']
@@ -151,30 +152,46 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
         </section>
 
         {/* Action Buttons */}
-        <div className={styles['action-btn-wrapper']}>
-          {/* Send Email Button  */}
-          <Link href={`mailto:${data.public_email || data.email}`}>
+        <div>
+          <Link href={`/add-listing?selectedType=1`}>
+          <FilledButton className={styles.makeMyPageButton} >
+            Make my page
+          </FilledButton>
+          </Link>
+          <div className={styles['action-btn-wrapper']}>
+            {/* Send Email Button  */}
+            <Link href={`mailto:${data.public_email || data.email}`}>
+              <div
+                onClick={(e) => console.log(e)}
+                className={styles['action-btn']}
+              >
+                <MailOutlineRoundedIcon color="primary" />
+              </div>
+            </Link>
+
+            {/* Bookmark Button */}
             <div
               onClick={(e) => console.log(e)}
               className={styles['action-btn']}
             >
-              <MailOutlineRoundedIcon color="primary" />
+              <BookmarkBorderRoundedIcon color="primary" />
             </div>
-          </Link>
 
-          {/* Bookmark Button */}
-          <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
-            <BookmarkBorderRoundedIcon color="primary" />
-          </div>
+            {/* Share Button */}
+            <div
+              onClick={(e) => console.log(e)}
+              className={styles['action-btn']}
+            >
+              <ShareRoundedIcon color="primary" fontSize="small" />
+            </div>
 
-          {/* Share Button */}
-          <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
-            <ShareRoundedIcon color="primary" fontSize="small" />
-          </div>
-
-          {/* More Options Button */}
-          <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
-            <MoreHorizRoundedIcon color="primary" />
+            {/* More Options Button */}
+            <div
+              onClick={(e) => console.log(e)}
+              className={styles['action-btn']}
+            >
+              <MoreHorizRoundedIcon color="primary" />
+            </div>
           </div>
         </div>
       </header>
