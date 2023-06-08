@@ -86,11 +86,10 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
       console.log(res.data)
       const img = res.data.data.url
       updateListingPage(img)
-      // window.location.reload()
       // dispatch(closeModal())
     }
   }
-
+  
   const updateListingPage = async (url: string) => {
     let arr: any = []
     if (listingModalData?.images) {
@@ -100,6 +99,7 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
       images: [...arr, url],
     })
     if (err) return console.log(err)
+    window.location.reload()
     console.log(res)
   }
 

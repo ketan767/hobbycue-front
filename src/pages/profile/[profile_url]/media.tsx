@@ -16,6 +16,7 @@ import { getAllPosts, uploadImage } from '@/services/post.service'
 import EditIcon from '@/assets/svg/edit-icon.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { openModal } from '@/redux/slices/modal'
+import ProfileHobbySideList from '@/components/ProfilePage/ProfileHobbySideList'
 
 interface Props {
   data: ProfilePageData
@@ -82,7 +83,6 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
       console.log(res.data)
       const img = res.data.data.url
       updateUser(img)
-      // window.location.reload()
       // dispatch(closeModal())
     }
   }
@@ -97,9 +97,10 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
     })
     if (err) return console.log(err)
     console.log(res)
+    window.location.reload()
   }
 
-  console.log('user', user)
+  // console.log('user', user)
   return (
     <>
       <Head>
@@ -107,63 +108,71 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
       </Head>
 
       <ProfileLayout activeTab={'media'} data={data}>
-        <div className={styles.uploadContainer}>
-          <div className={styles.uploadButton}>
-            <p> image </p>
-            <input
-              type="file"
-              accept="image/png, image/gif, image/jpeg"
-              className={styles.hidden}
-              onChange={(e) => handleImageChange(e)}
-              ref={inputRef}
-            />
-            <Image
-              src={EditIcon}
-              alt="edit"
-              className={styles.editIcon}
-              onClick={() => {
-                inputRef.current?.click()
-              }}
-            />
-          </div>
-          <div className={styles.uploadButton}>
-            <p> Video </p>
-            <Image
-              src={EditIcon}
-              alt="edit"
-              className={styles.editIcon}
-              onClick={() => {
-                dispatch(
-                  openModal({
-                    type: 'upload-video-user',
-                    closable: true,
-                  }),
-                )
-              }}
-            />
-          </div>
-        </div>
-        <PageGridLayout column={3}>
-          {user?.video_url && (
-            <div>
-              <video
-                width="250"
-                height="240"
-                controls={true}
-                className={styles.video}
-              >
-                <source src={user?.video_url} type="video/mp4" />
-              </video>
-            </div>
-          )}
-          {user.images?.map((item: any, idx: number) => {
-            return (
-              <div key={idx} className={styles.image}>
-                <img src={item} />
+        <PageGridLayout column={2}>
+          <aside>
+            {/* User Hobbies */}
+            <ProfileHobbySideList data={data.pageData} />
+          </aside>
+          <div>
+            <div className={styles.uploadContainer}>
+              <div className={styles.uploadButton}>
+                <p> image </p>
+                <input
+                  type="file"
+                  accept="image/png, image/gif, image/jpeg"
+                  className={styles.hidden}
+                  onChange={(e) => handleImageChange(e)}
+                  ref={inputRef}
+                />
+                <Image
+                  src={EditIcon}
+                  alt="edit"
+                  className={styles.editIcon}
+                  onClick={() => {
+                    inputRef.current?.click()
+                  }}
+                />
               </div>
-            )
-          })}
-          <div></div>
+              <div className={styles.uploadButton}>
+                <p> Video </p>
+                <Image
+                  src={EditIcon}
+                  alt="edit"
+                  className={styles.editIcon}
+                  onClick={() => {
+                    dispatch(
+                      openModal({
+                        type: 'upload-video-user',
+                        closable: true,
+                      }),
+                    )
+                  }}
+                />
+              </div>
+            </div>
+            <PageGridLayout column={3}>
+              {user?.video_url && (
+                <div className={styles.image}>
+                  <video
+                    width="250"
+                    height="240"
+                    controls={true}
+                    className={styles.video}
+                  >
+                    <source src={user?.video_url} type="video/mp4" />
+                  </video>
+                </div>
+              )}
+              {user.images?.map((item: any, idx: number) => {
+                return (
+                  <div key={idx} className={styles.image}>
+                    <img src={item} />
+                  </div>
+                )
+              })}
+              <div></div>
+            </PageGridLayout>
+          </div>
         </PageGridLayout>
       </ProfileLayout>
     </>
