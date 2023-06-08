@@ -227,3 +227,7 @@ select:-webkit-autofill {
 .ql-toolbar.ql-snow img:nth-child(3){
   margin-left: auto;
 }
+
+.ql-editor.ql-blank{
+  min-height: 17rem;
+}
