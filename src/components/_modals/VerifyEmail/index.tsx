@@ -47,8 +47,8 @@ export const VerifyEmailModal: React.FC<PropTypes> = (props) => {
   return (
     <div className={styles['modal-wrapper']}>
       <h3>Verify your email</h3>
-      <p>
-        We have sent a verification code to {email}. Please check your e-mail and enter that code
+      <p className={styles.textMain}>
+        We have sent a verification code to <span> {email} </span>. Please check your e-mail and enter that code
         below to proceed.
       </p>
       <FormInput

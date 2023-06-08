@@ -10,7 +10,7 @@ import AuthForm from '@/components/AuthForm/AuthForm'
 export const AuthModal: React.FC<PropTypes> = (props) => {
   return (
     <div className={styles['modal-wrapper']}>
-      <AuthForm />
+      <AuthForm isModal={true} />
     </div>
   )
 }

@@ -42,7 +42,9 @@ import { validateEmail, validatePassword } from '@/utils'
 import { CircularProgress } from '@mui/material'
 import store, { RootState } from '@/redux/store'
 
-interface Props {}
+interface Props {
+  isModal?: boolean
+}
 
 type tabs = 'sign-in' | 'join-in'
 type inputErrs = { email: null | string; password: null | string }
@@ -59,6 +61,7 @@ function validatePasswordConditions(password: string) {
 }
 
 const AuthForm: React.FC<Props> = (props) => {
+  const { isModal } = props
   const router = useRouter()
   const dispatch = useDispatch()
 
@@ -209,7 +212,11 @@ const AuthForm: React.FC<Props> = (props) => {
   }, [authFormData.password])
 
   return (
-    <div className={styles['form-contanier']}>
+    <div
+      className={`${styles['form-contanier']} ${
+        isModal ? styles['modal-form-contanier'] : ''
+      }`}
+    >
       {/* Tab Switcher (SignIn / JoinIn )  */}
       <Tabs
         value={selectedTab}
@@ -280,7 +287,7 @@ const AuthForm: React.FC<Props> = (props) => {
             onChange={(e) => handleInputChange(e.target.name, e.target.value)}
             error={Boolean(inputErrors.email)}
             helperText={inputErrors.email}
-            className={styles.inputField}
+            className={`${styles.inputField} ${isModal ? styles.bgGrey : ''}`}
           />
         </div>
 
@@ -304,6 +311,7 @@ const AuthForm: React.FC<Props> = (props) => {
             helperText={inputErrors.password}
             onFocus={() => setShowValidationConditions(true)}
             onBlur={() => setShowValidationConditions(false)}
+            className={`${styles.inputField} ${isModal ? styles.bgGrey : ''}`}
             InputProps={{
               endAdornment: (
                 <IconButton onClick={() => setShowPassword(!showPassword)}>
