@@ -101,7 +101,7 @@
   font-size: 18px;
   line-height: 30px;
   letter-spacing: 0.02em;
-  color: #6D747A;
+  color: #6d747a;
 }
 .testimonial-footer {
   margin-top: 2rem;
@@ -113,4 +113,33 @@
 }
 .card-btn {
   font-size: 14px;
+}
+
+.bigTextContainer{
+  margin-bottom: 5rem;
+}
+.bigText {
+  font-family: 'Poppins';
+  font-style: italic;
+  font-weight: 500;
+  font-size: 36px;
+  line-height: 54px;
+  color: #000000;
+
+  background: rgba(var(--primary-10-rgb));
+  border-radius: 8px;
+}
+.bigText .hobbyText {
+  color: #8064a2;
+}
+.bigText .communityText {
+  color: #0096c8;
+}
+.getStartedBtn{
+  width: 147px;
+  margin-top: 8px;
+}
+.people-illustration{
+  width: 100%;
+  object-fit: contain;
 }
