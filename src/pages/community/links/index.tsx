@@ -45,7 +45,19 @@ const CommunityLinks: React.FC<Props> = ({}) => {
   // console.log({ allPosts })
   return (
     <>
-      <CommunityPageLayout activeTab="links">Link tab</CommunityPageLayout>
+      <CommunityPageLayout activeTab="links">
+      <section className={styles['posts-container']}>
+          {allPosts.length === 0 || isLoadingPosts ? (
+            <>
+              <PostCardSkeletonLoading />
+            </>
+          ) : (
+            allPosts.map((post: any) => {
+              return <PostCard key={post._id} postData={post} />
+            })
+          )}
+        </section>
+      </CommunityPageLayout>
     </>
   )
 }

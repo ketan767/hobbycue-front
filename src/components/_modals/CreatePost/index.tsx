@@ -39,7 +39,7 @@ type NewPostData = {
   contentToDisplay: string
   visibility: string
   media: []
-  video_url: String
+  video_url: any
 }
 export const CreatePost: React.FC<Props> = (props) => {
   const { user, activeProfile } = useSelector((state: RootState) => state.user)
@@ -78,23 +78,22 @@ export const CreatePost: React.FC<Props> = (props) => {
     // console.log({ isUrl })
   }, [data.content])
 
-  useEffect(() => {
-    let imgStrs = ``
-    data.media.map((item: any) => {
-      imgStrs += `<img src="${item}" />`
-    })
-    let content = `${data.content} <div style="display:flex" > ${imgStrs} </div>`
-    setData((prev: any) => ({ ...prev, content: content }))
-  }, [data.media])
+  // useEffect(() => {
+  //   let imgStrs = ``
+  //   data.media.map((item: any) => {
+  //     imgStrs += `<img src="${item}" />`
+  //   })
+  //   let content = `${data.content} <div style="display:flex" > ${imgStrs} </div>`
+  //   setData((prev: any) => ({ ...prev, content: content }))
+  // }, [data.media])
 
-  useEffect(() => {
-    let videoStr = `<video width="320" height="240" controls>
-    <source src=${data.video_url} type="video/mp4">
-  </video>`
-    let content = `${data.content} ${videoStr}`
-    setData((prev: any) => ({ ...prev, content: content }))
-  }, [data.video_url])
-
+  // useEffect(() => {
+  //   let videoStr = `<video width="320" height="240" controls>
+  //   <source src=${data.video_url} type="video/mp4" />
+  // </video>`
+  //   let content = `${data.content} ${videoStr}`
+  //   setData((prev: any) => ({ ...prev, content: content }))
+  // }, [data.video_url])
 
   const handleHobbyInputChange = async (e: any) => {
     setHobbyInputValue(e.target.value)
@@ -156,8 +155,8 @@ export const CreatePost: React.FC<Props> = (props) => {
       return console.log(err)
     }
     if (res.data.success) {
-      // store.dispatch(closeModal())
-      // window.location.reload()
+      store.dispatch(closeModal())
+      window.location.reload()
       console.log('res', res)
     }
   }
@@ -184,6 +183,17 @@ export const CreatePost: React.FC<Props> = (props) => {
             data={data}
             image={true}
           />
+          {data.video_url && (
+            <video width="320" height="240" controls>
+              <source src={data.video_url} type="video/mp4" />
+            </video>
+          )}
+          {data.media ?
+         <div className={styles.imgContainer}>
+          {data?.media?.map((item:any) => {
+            return <img src={item} />
+          })}
+         </div> : <></>}
         </section>
         <aside>
           <div>

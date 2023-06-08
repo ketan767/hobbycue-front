@@ -17,7 +17,7 @@ const PostCard: React.FC<Props> = (props) => {
   // const [type, setType] = useState<'User' | 'Listing'>()
 
   const router = useRouter()
-  console.log('🚀 ~ file: PostCard.tsx:20 ~ router:', router)
+  // console.log('🚀 ~ file: PostCard.tsx:20 ~ router:', router)
 
   const [showComments, setShowComments] = useState(false)
   const [postData, setPostData] = useState(props.postData)
@@ -132,7 +132,7 @@ const PostCard: React.FC<Props> = (props) => {
               }}
             ></div>
             {postData.video_url && (
-              <video width="320" height="240" controls>
+              <video width="320" height="240" controls className={styles.video} >
                 <source src={postData.video_url} type="video/mp4"></source>
               </video>
             )}
