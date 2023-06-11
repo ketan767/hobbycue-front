@@ -45,7 +45,7 @@ const ProfileLayout: React.FC<Props> = ({ children, activeTab, data }) => {
   function checkScroll() {
     const scrollValue = window.scrollY || document.documentElement.scrollTop
 
-    if (scrollValue >= 310) setShowSmallHeader(true)
+    if (scrollValue >= 308) setShowSmallHeader(true)
     else setShowSmallHeader(false)
   }
 
