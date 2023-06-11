@@ -41,6 +41,7 @@ import {
 import { validateEmail, validatePassword } from '@/utils'
 import { CircularProgress } from '@mui/material'
 import store, { RootState } from '@/redux/store'
+import { setShowPageLoader } from '@/redux/slices/site'
 
 interface Props {
   isModal?: boolean
@@ -169,36 +170,35 @@ const AuthForm: React.FC<Props> = (props) => {
 
   // Social Login Handle
   const googleAuthSuccess = async (e: any) => {
+    dispatch(setShowPageLoader(true))
     const { err, res } = await googleAuth({
       googleId: e.profileObj.googleId,
       tokenId: e.tokenId,
       name: e.profileObj.name,
     })
+    dispatch(setShowPageLoader(false))
     if (err) return console.log(err)
     if (res.status === 200 && res.data.success) {
       localStorage.setItem('token', res.data.data.token)
-      console.log(res.data.data.token)
-
       dispatch(updateIsLoggedIn(true))
       dispatch(closeModal())
       router.push('/community', undefined, { shallow: false })
     }
   }
-  const googleAuthFailure = (e: any) => {
-    console.log(e)
-  }
+  const googleAuthFailure = (e: any) => console.log(e)
 
   const handleFacebookAuth = async (e: any) => {
+    dispatch(setShowPageLoader(true))
+
     const { err, res } = await facebookAuth({
       accessToken: e.accessToken,
       userId: e.userID,
       name: e.name,
     })
+    dispatch(setShowPageLoader(false))
     if (err) return console.log(err)
     if (res.status === 200 && res.data.success) {
       localStorage.setItem('token', res.data.data.token)
-      console.log(res.data.data.token)
-
       dispatch(updateIsLoggedIn(true))
       dispatch(closeModal())
       router.push('/community', undefined, { shallow: false })

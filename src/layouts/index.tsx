@@ -19,18 +19,18 @@ import PageLoader from '@/components/PageLoader'
 import { getListingPages } from '@/services/listing.service'
 import PreLoader from '@/components/PreLoader'
 import { logout } from '@/helper'
+import { setShowPageLoader } from '@/redux/slices/site'
 
 function SiteMainLayout({ children }: { children: ReactElement }) {
   const { isLoggedIn, isAuthenticated, user } = useSelector(
-    (state: RootState) => state.user
+    (state: RootState) => state.user,
   )
+  const { showPageLoader } = useSelector((state: RootState) => state.site)
 
   const dispatch = useDispatch()
   const router = useRouter()
 
   const [showPreLoader, setShowPreLoader] = useState(true)
-
-  const [showPageLoader, setShowPageLoader] = useState(false)
 
   const fetchDetails = async () => {
     // @TODO:
@@ -55,7 +55,7 @@ function SiteMainLayout({ children }: { children: ReactElement }) {
 
     // Fetch the user Listings pages.
     const { err: listingErr, res: listingRes } = await getListingPages(
-      `populate=_hobbies,_address&admin=${profileRes?.data.data.user._id}`
+      `populate=_hobbies,_address&admin=${profileRes?.data.data.user._id}`,
     )
 
     if (listingErr || !listingRes || !listingRes.data.success) return
@@ -66,7 +66,7 @@ function SiteMainLayout({ children }: { children: ReactElement }) {
     const active_profile = localStorage.getItem('active_profile')
 
     const activeProfile: LocalStorageActiveProfile = JSON.parse(
-      active_profile as string
+      active_profile as string,
     )
 
     let activeProfileData: AuthState['activeProfile'] = {
@@ -76,7 +76,7 @@ function SiteMainLayout({ children }: { children: ReactElement }) {
 
     if (activeProfile && activeProfile.type === 'listing') {
       const listing = listingRes.data.data.listings.find(
-        (listing: any) => listing._id === activeProfile.id
+        (listing: any) => listing._id === activeProfile.id,
       )
       if (listing) activeProfileData = { type: 'listing', data: listing }
     }
@@ -115,13 +115,13 @@ function SiteMainLayout({ children }: { children: ReactElement }) {
     let timeout: NodeJS.Timeout
     const handleStart = (url: any, { shallow }: any) => {
       timeout = setTimeout(() => {
-        setShowPageLoader(true)
+        dispatch(setShowPageLoader(true))
       }, 200)
     }
 
     const handleComplete = () => {
       clearTimeout(timeout)
-      setShowPageLoader(false)
+      dispatch(setShowPageLoader(false))
     }
 
     router.events.on('routeChangeStart', handleStart)
