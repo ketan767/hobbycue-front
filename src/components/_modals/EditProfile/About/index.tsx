@@ -74,14 +74,15 @@ const ProfileAboutEditModal: React.FC<Props> = ({
     if (response?.data.success) {
       dispatch(updateUser(response.data.data.user))
       if (onComplete) onComplete()
-      else dispatch(closeModal())
+      else {
+        window.location.reload()
+        dispatch(closeModal())
+      }
     }
   }
 
   useEffect(() => {
-    if (
-      isEmpty(data.about)
-    ) {
+    if (isEmpty(data.about)) {
       setNextDisabled(true)
     } else {
       setNextDisabled(false)

@@ -110,7 +110,10 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         if (response?.data.success) {
           dispatch(updateUser(response.data.data.user))
           if (onComplete) onComplete()
-          else dispatch(closeModal())
+          else {
+            window.location.reload()
+            dispatch(closeModal())
+          }
         }
       })
     } else {
@@ -130,7 +133,10 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         if (response?.data.success) {
           dispatch(updateUser(response?.data.data.user))
           if (onComplete) onComplete()
-          else dispatch(closeModal())
+          else {
+            window.location.reload()
+            dispatch(closeModal())
+          }
         }
       })
     }
@@ -174,7 +180,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       handleGeocode(lat, long)
     }
     const errorFunction = () => {
-      console.log('location err')
+      alert('Location permission denied!')
     }
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(successFunction, errorFunction)

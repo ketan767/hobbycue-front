@@ -7,19 +7,22 @@ import dynamic from 'next/dynamic'
 import { SimpleUploadAdapter } from '@ckeditor/ckeditor5-upload'
 import { uploadImage } from '@/services/post.service'
 import ReactQuill, { Quill } from 'react-quill'
-import quillEmoji from 'quill-emoji';
-import 'react-quill/dist/quill.snow.css';
-import "quill-emoji/dist/quill-emoji.css";
+// @ts-ignore
+import quillEmoji from 'quill-emoji'
+import 'react-quill/dist/quill.snow.css'
+import 'quill-emoji/dist/quill-emoji.css'
 
-const { EmojiBlot, ShortNameEmoji, ToolbarEmoji, TextAreaEmoji } = quillEmoji;
+const { EmojiBlot, ShortNameEmoji, ToolbarEmoji, TextAreaEmoji } = quillEmoji
 
-Quill.register({
-  'formats/emoji': EmojiBlot,
-  'modules/emoji-shortname': ShortNameEmoji,
-  'modules/emoji-toolbar': ToolbarEmoji,
-  'modules/emoji-textarea': TextAreaEmoji
-}, true);
-
+Quill.register(
+  {
+    'formats/emoji': EmojiBlot,
+    'modules/emoji-shortname': ShortNameEmoji,
+    'modules/emoji-toolbar': ToolbarEmoji,
+    'modules/emoji-textarea': TextAreaEmoji,
+  },
+  true,
+)
 
 interface Props {
   value: string
@@ -126,7 +129,7 @@ const CustomEditor: React.FC<Props> = ({
         modules={{
           toolbar: {
             container: [
-              ['bold', 'italic', 'underline', 'emoji' ],
+              ['bold', 'italic', 'underline', 'emoji'],
               [{ list: 'ordered' }, { list: 'bullet' }],
             ],
             // handlers: { emoji: function () {} },

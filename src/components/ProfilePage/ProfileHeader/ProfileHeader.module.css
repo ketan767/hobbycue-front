@@ -99,6 +99,7 @@
 }
 .makeMyPageButton {
   width: 100%;
+  margin-bottom: var(--spacing-12);
 }
 
 /* Navigation Tabs */

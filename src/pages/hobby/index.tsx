@@ -220,7 +220,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     `level=1&populate=category,sub_category,tags`,
   )
   const hobby = await getAllHobbies(
-    `level=3&populate=category,sub_category,tags`,
+    `level=3&populate=category,sub_category,tags&limit=500`,
   )
 
   return {

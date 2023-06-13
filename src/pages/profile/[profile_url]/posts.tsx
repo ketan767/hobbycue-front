@@ -13,6 +13,7 @@ import PostCard from '@/components/PostCard/PostCard'
 import styles from '@/styles/ProfilePostsPage.module.css'
 import ProfileAddressSide from '@/components/ProfilePage/ProfileAddressSide'
 import ProfileContactSide from '@/components/ProfilePage/ProfileContactSides'
+import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 
 interface Props {
   data: ProfilePageData
@@ -25,7 +26,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
   const getPost = async () => {
     setLoadingPosts(true)
     const { err, res } = await getAllPosts(
-      `author_type=User&_author=${data.pageData._id}&populate=_author,_genre,_hobby`
+      `author_type=User&_author=${data.pageData._id}&populate=_author,_genre,_hobby`,
     )
     setLoadingPosts(false)
     if (err) return console.log(err)
@@ -51,7 +52,11 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
           </aside>
           <main>
             <section className={styles['posts-container']}>
-              {loadingPosts ? 'Loading..' : posts.length === 0 && 'No Posts'}
+              {loadingPosts ? (
+                <PostCardSkeletonLoading />
+              ) : (
+                posts.length === 0 && 'No Posts'
+              )}
               {posts.map((post: any) => {
                 return <PostCard key={post._id} postData={post} />
               })}
@@ -71,12 +76,12 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async (
-  context
+  context,
 ) => {
   const { query } = context
 
   const { err, res } = await getAllUserDetail(
-    `profile_url=${query['profile_url']}&populate=_hobbies,_addresses,primary_address,_listings`
+    `profile_url=${query['profile_url']}&populate=_hobbies,_addresses,primary_address,_listings`,
   )
 
   if (err) return { notFound: true }
