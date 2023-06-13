@@ -14,7 +14,6 @@ import { closeModal, openModal } from '@/redux/slices/modal'
 import { setTimeout } from 'timers/promises'
 import { updateUserCover, updateUserProfile } from '@/services/user.service'
 import { RootState } from '@/redux/store'
-import FilledButton from '@/components/_buttons/FilledButton'
 import { useRouter } from 'next/router'
 
 type Props = {
@@ -22,12 +21,12 @@ type Props = {
   data: ProfilePageData['pageData']
 }
 
-const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
+/** // #fix: There are many things to update and improve code in this file. // */
+const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
   const router = useRouter()
   const dispatch = useDispatch()
 
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
-
   const tabs: ProfilePageTabs[] = ['home', 'posts', 'media', 'pages', 'blogs']
 
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
@@ -96,7 +95,7 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
 
   return (
     <>
-      <div className={`${styles['container']}`}>
+      <div className={`${styles['container']} ${styles['small']} `}>
         {/* Header */}
         <header className={`site-container ${styles['header']}`}>
           {/* Profile Picture */}
@@ -159,47 +158,39 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
           </section>
 
           {/* Action Buttons */}
-
-          <div>
-            <Link href={`/add-listing?selectedType=1`}>
-              <FilledButton className={styles.makeMyPageButton}>
-                Make my page
-              </FilledButton>
+          <div className={styles['action-btn-wrapper']}>
+            {/* Send Email Button  */}
+            <Link href={`mailto:${data.public_email || data.email}`}>
+              <div
+                onClick={(e) => console.log(e)}
+                className={styles['action-btn']}
+              >
+                <MailOutlineRoundedIcon color="primary" />
+              </div>
             </Link>
-            <div className={styles['action-btn-wrapper']}>
-              {/* Send Email Button  */}
-              <Link href={`mailto:${data.public_email || data.email}`}>
-                <div
-                  onClick={(e) => console.log(e)}
-                  className={styles['action-btn']}
-                >
-                  <MailOutlineRoundedIcon color="primary" />
-                </div>
-              </Link>
 
-              {/* Bookmark Button */}
-              <div
-                onClick={(e) => console.log(e)}
-                className={styles['action-btn']}
-              >
-                <BookmarkBorderRoundedIcon color="primary" />
-              </div>
+            {/* Bookmark Button */}
+            <div
+              onClick={(e) => console.log(e)}
+              className={styles['action-btn']}
+            >
+              <BookmarkBorderRoundedIcon color="primary" />
+            </div>
 
-              {/* Share Button */}
-              <div
-                onClick={(e) => console.log(e)}
-                className={styles['action-btn']}
-              >
-                <ShareRoundedIcon color="primary" fontSize="small" />
-              </div>
+            {/* Share Button */}
+            <div
+              onClick={(e) => console.log(e)}
+              className={styles['action-btn']}
+            >
+              <ShareRoundedIcon color="primary" fontSize="small" />
+            </div>
 
-              {/* More Options Button */}
-              <div
-                onClick={(e) => console.log(e)}
-                className={styles['action-btn']}
-              >
-                <MoreHorizRoundedIcon color="primary" />
-              </div>
+            {/* More Options Button */}
+            <div
+              onClick={(e) => console.log(e)}
+              className={styles['action-btn']}
+            >
+              <MoreHorizRoundedIcon color="primary" />
             </div>
           </div>
         </header>
@@ -226,4 +217,4 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
   )
 }
 
-export default ProfileHeader
+export default ProfileHeaderSmall

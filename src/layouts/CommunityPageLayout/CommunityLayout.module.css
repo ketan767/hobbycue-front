@@ -6,8 +6,20 @@
 }
 
 .community-header {
-  box-shadow: 0 2px 8px rgba(222, 222, 222, 0.766);
   border-radius: var(--spacing-8);
+  transform: translateY(calc(-1 * var(--navbar-height-desktop)));
+  z-index: 1;
+}
+
+.community-header > section {
+  box-shadow: 0 2px 8px rgba(222, 222, 222, 0.766);
+}
+.community-header .top-margin-card {
+  height: var(--navbar-height-desktop);
+  background: #f8f9fa;
+}
+.children-wrapper {
+  transform: translateY(calc(-1 * var(--navbar-height-desktop)));
 }
 
 /* Side Hobby Wrapper */

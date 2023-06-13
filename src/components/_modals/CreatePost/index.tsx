@@ -188,12 +188,15 @@ export const CreatePost: React.FC<Props> = (props) => {
               <source src={data.video_url} type="video/mp4" />
             </video>
           )}
-          {data.media ?
-         <div className={styles.imgContainer}>
-          {data?.media?.map((item:any) => {
-            return <img src={item} />
-          })}
-         </div> : <></>}
+          {data.media ? (
+            <div className={styles.imgContainer}>
+              {data?.media?.map((item: any, idx) => {
+                return <img key={idx} src={item} alt="" />
+              })}
+            </div>
+          ) : (
+            <></>
+          )}
         </section>
         <aside>
           <div>

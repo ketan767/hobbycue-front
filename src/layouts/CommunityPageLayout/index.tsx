@@ -97,6 +97,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
 
         <main>
           <header className={styles['community-header']}>
+            <div className={styles['top-margin-card']}></div>
             <section
               className={`content-box-wrapper ${styles['start-post-btn-container']}`}
             >
@@ -153,7 +154,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
               </ul>
             </section>
           </header>
-          {children}
+          <section className={styles['children-wrapper']}>{children}</section>
         </main>
 
         <aside className={styles['community-right-aside']}>
