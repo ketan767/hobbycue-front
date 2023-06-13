@@ -135,3 +135,13 @@
 .profile-url-input input {
   flex-grow: 1;
 }
+.street-input-container{
+  position: relative;
+}
+.locationImg{
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}

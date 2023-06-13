@@ -131,19 +131,23 @@ const ProfileContactEditModal: React.FC<Props> = ({
         <section className={styles['body']}>
           <>
             {/* Public Email */}
-            <div className={styles['input-box']}>
-              <label>Email ID (public)</label>
-              <input
-                type="text"
-                placeholder={`Enter email ID`}
-                value={data.public_email.value}
-                name="public_email"
-                autoComplete="email"
-                onChange={handleInputChange}
-              />
-              <p className={styles['helper-text']}>{data.public_email.error}</p>
+            <div className={styles.emailContainer}>
+              <div className={styles['input-box']}>
+                <label>Email ID (public)</label>
+                <input
+                  type="text"
+                  placeholder={`Enter email ID`}
+                  value={data.public_email.value}
+                  name="public_email"
+                  autoComplete="email"
+                  onChange={handleInputChange}
+                />
+                <p className={styles['helper-text']}>
+                  {data.public_email.error}
+                </p>
+              </div>
+              <div className={styles['input-box']}></div>
             </div>
-
             <section className={styles['two-column-grid']}>
               {/* Phone Number */}
               <div className={styles['input-box']}>
