@@ -194,7 +194,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                 />
               </div>
               <div className={styles.listSubItem}>
-                <label> From Time </label>
+                <label> To Time </label>
                 <InputSelect
                   value={eventData.to_time}
                   options={timings}
