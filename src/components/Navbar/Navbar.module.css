@@ -79,6 +79,11 @@
   color: #08090a;
   margin-bottom: var(--spacing-16);
 }
+
+.hobbiescategory {
+color: black !important;
+}
+
 .hobby-list-dropdown .list ul {
   list-style: none;
   display: flex;

@@ -45,10 +45,13 @@ const HobbyDetail: React.FC<Props> = (props) => {
 
     if (!query) return
 
-    fetchHobbies(`fields=display,slug&sort=level&${query}`, (err: any, res: any) => {
-      if (err) return router.push('/hobby')
-      setNextLevels(res.data?.hobbies)
-    })
+    fetchHobbies(
+      `fields=display,slug&sort=level&${query}`,
+      (err: any, res: any) => {
+        if (err) return router.push('/hobby')
+        setNextLevels(res.data?.hobbies)
+      },
+    )
   }, [data])
 
   useEffect(() => {
@@ -71,9 +74,21 @@ const HobbyDetail: React.FC<Props> = (props) => {
     <section>
       {/* Page Header  */}
       <header className={`site-container ${styles['header']}`}>
-        <Image className={styles['profile-img']} src={profile} alt="" width={100} height={50} />
+        <Image
+          className={styles['profile-img']}
+          src={profile}
+          alt=""
+          width={100}
+          height={50}
+        />
         <section className={styles['center-container']}>
-          <Image className={styles['cover-img']} src={cover} alt="" width={100} height={50} />
+          <Image
+            className={styles['cover-img']}
+            src={cover}
+            alt=""
+            width={100}
+            height={50}
+          />
           <h1 className={styles['name']}>{data?.display}</h1>
           <p className={styles['category']}>
             {data?.level === 0
@@ -119,7 +134,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
         </a>
         <a href="#">Posts</a>
         <a href="#">Links</a>
-        <a href="#">Links</a>
+        <a href="#">Pages</a>
         <a href="#">Store</a>
         <a href="#">Blogs</a>
       </div>
@@ -248,9 +263,11 @@ const HobbyDetail: React.FC<Props> = (props) => {
             <h4 className={styles['heading']}>Members</h4>
             <hr />
             <div className={styles['member-list']}>
-              {['Aditya', 'Prince', 'Devansh', 'Someone'].map((name: any, idx: number) => (
-                <p key={idx}>{name}</p>
-              ))}
+              {['Aditya', 'Prince', 'Devansh', 'Someone'].map(
+                (name: any, idx: number) => (
+                  <p key={idx}>{name}</p>
+                ),
+              )}
             </div>
           </div>
         </aside>

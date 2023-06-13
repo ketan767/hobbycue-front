@@ -56,6 +56,18 @@
   color: #6d747a;
 }
 
+.select-filter input{
+  font-size: 12px;
+  font-family: 'Poppins';
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+
+.select-filter div{
+  border-radius: 8px;
+}
+
 .hobby-desc-container {
   background: #ffffff;
   padding: 16px;
@@ -126,11 +138,11 @@
   min-width: 120px;
 }
 .hobbies-table thead th:nth-child(2) {
-  min-width: 230px;
-  padding-left: 30px;
+  min-width: 160px;
+  
 }
 .hobbies-table thead th:nth-child(3) {
-  width: 100%;
+  min-width: 188px;
 }
 
 .hobbies-table tbody tr td:nth-child(1) {

@@ -24,7 +24,8 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
 
   const params = new URLSearchParams()
   const handleFilter = async () => {
-    if (filterData.category === '' && filterData.subCategory === '') resetHobbiesData()
+    if (filterData.category === '' && filterData.subCategory === '')
+      resetHobbiesData()
     if (filterData.category !== '') {
       params.set('_id', filterData.category)
       const { err, res } = await getAllHobbies(`level=0&${params.toString()}`)
@@ -60,7 +61,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
           {/* Filters */}
           <div className={styles['filter-wrapper']}>
             <header>
-              <h4 className={styles['heading']}>Filters</h4>
+              <h4 className={styles['heading']}>Filter</h4>
               <button onClick={handleFilter}>Apply</button>
             </header>
 
@@ -135,17 +136,19 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
             <h1 className={styles['heading']}>Hobbies</h1>
             <div className={styles['text']}>
               <p>
-                Here is a reference list of hobbies categorised primarily based on the research work
-                of Dr. Robert Stebbins called Serious Leisure. Dr. Stebbins defines Series Leisure
-                as a systematic pursuit of an amateur, hobbyist or volunteer that is substantial,
-                rewarding and results in a sense of accomplishment. Here is a top-down view of the
-                categorisation.
+                Here is a reference list of hobbies categorised primarily based
+                on the research work of Dr. Robert Stebbins called Serious
+                Leisure. Dr. Stebbins defines Series Leisure as a systematic
+                pursuit of an amateur, hobbyist or volunteer that is
+                substantial, rewarding and results in a sense of accomplishment.
+                Here is a top-down view of the categorisation.
               </p>
               <p>
-                While we maintain the same 5 top-level categories for a Hobbyist, the sub-categories
-                may be slightly different. Each Category or Sub-Category has a dedicated page – just
-                click on the name to navigate. Search on this page for any hobby and let us know if
-                we’re missing something.
+                While we maintain the same 5 top-level categories for a
+                Hobbyist, the sub-categories may be slightly different. Each
+                Category or Sub-Category has a dedicated page – just click on
+                the name to navigate. Search on this page for any hobby and let
+                us know if we’re missing something.
               </p>
             </div>
           </div>
@@ -154,7 +157,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
               <thead>
                 <tr className="">
                   <th>Category</th>
-                  <th>SubCategory</th>
+                  <th>Sub-Category</th>
                   <th>Hobby</th>
                 </tr>
               </thead>
@@ -171,7 +174,9 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                             <div>
                               <>
                                 <p>
-                                  <Link href={`/hobby/${subCat.slug}`}>{subCat.display}</Link>
+                                  <Link href={`/hobby/${subCat.slug}`}>
+                                    {subCat.display}
+                                  </Link>
                                 </p>
                                 <p>
                                   {hobbyData.map((hobby: any) => {
@@ -204,12 +209,18 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
 
 export default ALlHobbies
 
-export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context,
+) => {
   const { query } = context
 
   const category = await getAllHobbies(`level=0`)
-  const subCategory = await getAllHobbies(`level=1&populate=category,sub_category,tags`)
-  const hobby = await getAllHobbies(`level=3&populate=category,sub_category,tags`)
+  const subCategory = await getAllHobbies(
+    `level=1&populate=category,sub_category,tags`,
+  )
+  const hobby = await getAllHobbies(
+    `level=3&populate=category,sub_category,tags`,
+  )
 
   return {
     props: {
