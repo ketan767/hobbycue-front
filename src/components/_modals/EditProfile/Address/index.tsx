@@ -184,11 +184,11 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   const handleGeocode = (lat: any, long: any) => {
     axios
       .get(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyAwOPUWhvrhca656LqEJTwchHxVORmI-5M`,
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyCSFbd4Cf-Ui3JvMvEiXXs9xfGJaveKO_Y`,
       )
       .then((response) => {
         const { results } = response.data
-        console.log('response', response);
+        console.log('response', response)
         if (results && results.length > 0) {
           const { formatted_address, address_components } = results[0]
           let city = ''
@@ -199,11 +199,14 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               city = component.long_name
             }
             if (component.types.includes('administrative_area_level_1')) {
-              state = component.short_name
+              state = component.long_name
             }
           })
-          console.log(city)
-          console.log(state)
+          // console.log(city)
+          // console.log(state)
+          setData((prev) => {
+            return { ...prev, state, city }
+          })
         }
       })
       .catch((error) => {
