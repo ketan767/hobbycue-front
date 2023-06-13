@@ -75,9 +75,10 @@ export const CreatePost: React.FC<Props> = (props) => {
     const isUrl = checkIfUrlExists(data.content.replace(/<img .*?>/g, ''))
     setHasLink(isUrl)
     // console.log(data.content)
-    // console.log({ isUrl })
+    console.log({ isUrl })
   }, [data.content])
-
+  
+  console.log({ hasLink })
   // useEffect(() => {
   //   let imgStrs = ``
   //   data.media.map((item: any) => {
@@ -108,6 +109,7 @@ export const CreatePost: React.FC<Props> = (props) => {
     setHobbyDropdownList(res.data.hobbies)
     setGenreDropdownList(res.data.hobbies)
   }
+
   const handleGenreInputChange = async (e: any) => {
     setGenreInputValue(e.target.value)
 
@@ -143,7 +145,7 @@ export const CreatePost: React.FC<Props> = (props) => {
         return console.log(err)
       }
       if (res.data.success) {
-        store.dispatch(closeModal())
+        // store.dispatch(closeModal())
         // window.location.reload()
       }
       return
@@ -155,8 +157,8 @@ export const CreatePost: React.FC<Props> = (props) => {
       return console.log(err)
     }
     if (res.data.success) {
-      store.dispatch(closeModal())
-      window.location.reload()
+      // store.dispatch(closeModal())
+      // window.location.reload()
       console.log('res', res)
     }
   }
