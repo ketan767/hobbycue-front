@@ -120,6 +120,7 @@
 }
 
 .start-post-btn button {
+  cursor: pointer;
   width: 100%;
   padding: 12px 16px;
   background: #f7f5f9;
@@ -128,6 +129,9 @@
   align-items: center;
   gap: 5px;
   height: fit-content;
+  border: none;
+  color: #8064a2;
+  fill: #8064a2;
 }
 
 .start-post-btn span {
@@ -136,8 +140,12 @@
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
-
-  color: #8064a2;
+  color: inherit;
+}
+.start-post-btn button:hover {
+  background: rgb(var(--primary-100-rgb));
+  color: #ffffff;
+  fill: #ffffff;
 }
 
 .keywords {
@@ -225,4 +233,12 @@
   margin: 0;
   color: #6d747a;
   margin-bottom: 8px;
+}
+
+/* Post Page */
+
+.posts-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
 }

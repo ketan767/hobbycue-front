@@ -148,7 +148,10 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
   const handleSubmit = () => {
     if (onComplete) onComplete()
-    else dispatch(closeModal())
+    else {
+      window.location.reload()
+      dispatch(closeModal())
+    }
   }
 
   return (

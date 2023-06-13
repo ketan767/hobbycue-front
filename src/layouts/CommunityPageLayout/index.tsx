@@ -4,7 +4,7 @@ import PageGridLayout from '@/layouts/PageGridLayout'
 import { withAuth } from '@/navigation/withAuth'
 import styles from './CommunityLayout.module.css'
 import Image from 'next/image'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import store, { RootState } from '@/redux/store'
 import EditIcon from '@/assets/svg/edit-icon.svg'
 import { openModal } from '@/redux/slices/modal'
@@ -23,6 +23,7 @@ type Props = {
 }
 
 const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
+  const dispatch = useDispatch()
   const { activeProfile } = useSelector((state: RootState) => state.user)
   const { allPosts } = useSelector((state: RootState) => state.post)
   const [isLoadingPosts, setIsLoadingPosts] = useState(false)
@@ -103,9 +104,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
             >
               <button
                 onClick={() =>
-                  store.dispatch(
-                    openModal({ type: 'create-post', closable: true }),
-                  )
+                  dispatch(openModal({ type: 'create-post', closable: true }))
                 }
                 className={styles['start-post-btn']}
               >

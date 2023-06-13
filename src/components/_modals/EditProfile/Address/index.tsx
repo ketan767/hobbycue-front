@@ -110,7 +110,10 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         if (response?.data.success) {
           dispatch(updateUser(response.data.data.user))
           if (onComplete) onComplete()
-          else dispatch(closeModal())
+          else {
+            window.location.reload()
+            dispatch(closeModal())
+          }
         }
       })
     } else {
@@ -130,7 +133,10 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         if (response?.data.success) {
           dispatch(updateUser(response?.data.data.user))
           if (onComplete) onComplete()
-          else dispatch(closeModal())
+          else {
+            window.location.reload()
+            dispatch(closeModal())
+          }
         }
       })
     }
@@ -174,7 +180,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       handleGeocode(lat, long)
     }
     const errorFunction = () => {
-      console.log('location err')
+      alert('Location permission denied!')
     }
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(successFunction, errorFunction)
@@ -193,6 +199,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           const { formatted_address, address_components } = results[0]
           let city = ''
           let state = ''
+          let country = ''
+          let pin_code = ''
 
           address_components.forEach((component: any) => {
             if (component.types.includes('locality')) {
@@ -201,11 +209,15 @@ const ProfileAddressEditModal: React.FC<Props> = ({
             if (component.types.includes('administrative_area_level_1')) {
               state = component.long_name
             }
+            if (component.types.includes('country')) {
+              country = component.long_name
+            }
+            // if (component.types.includes('postal_code')) {
+            //   pin_code = component.long_name
+            // }
           })
-          // console.log(city)
-          // console.log(state)
           setData((prev) => {
-            return { ...prev, state, city }
+            return { ...prev, state, city, country, pin_code }
           })
         }
       })

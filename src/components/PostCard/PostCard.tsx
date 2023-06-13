@@ -95,11 +95,22 @@ const PostCard: React.FC<Props> = (props) => {
                   : ''}
               </p>
             </Link>
-            <p className={styles['post-other-info']}>{`${dateFormat.format(
-              new Date('2023-05-07T20:09:37.986Z'),
-            )} | ${postData?._hobby?.display} ${
-              postData?._genre?.display ? `| ${postData?._genre?.display}` : ''
-            }`}</p>
+            <p className={styles['post-other-info']}>
+              <span>
+                {dateFormat.format(new Date('2023-05-07T20:09:37.986Z'))}
+                {' | '}
+              </span>
+              <span>
+                <Link href={`/hobby/${postData?._hobby?.slug}`}>
+                  {postData?._hobby?.display}
+                </Link>
+              </span>
+              <span>
+                {postData?._genre?.display
+                  ? ` | ${postData?._genre?.display}`
+                  : ''}
+              </span>
+            </p>
           </div>
           <svg
             className={styles['more-actions-icon']}
@@ -132,7 +143,7 @@ const PostCard: React.FC<Props> = (props) => {
               }}
             ></div>
             {postData.video_url && (
-              <video width="320" height="240" controls className={styles.video} >
+              <video width="320" height="240" controls className={styles.video}>
                 <source src={postData.video_url} type="video/mp4"></source>
               </video>
             )}

@@ -9,7 +9,10 @@ import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded'
 import CameraIcon from '@/assets/icons/CameraIcon'
 import Link from 'next/link'
 import { useDispatch, useSelector } from 'react-redux'
-import { updatePhotoEditModalData } from '@/redux/slices/site'
+import {
+  updateListingModalData,
+  updatePhotoEditModalData,
+} from '@/redux/slices/site'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { setTimeout } from 'timers/promises'
 import { updateUserCover, updateUserProfile } from '@/services/user.service'
@@ -161,11 +164,17 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
           {/* Action Buttons */}
 
           <div>
-            <Link href={`/add-listing?selectedType=1`}>
-              <FilledButton className={styles.makeMyPageButton}>
-                Make my page
-              </FilledButton>
-            </Link>
+            <FilledButton
+              onClick={() => {
+                dispatch(updateListingModalData({ type: 1 }))
+                dispatch(
+                  openModal({ type: 'listing-type-edit', closable: true }),
+                )
+              }}
+              className={styles.makeMyPageButton}
+            >
+              Make my page
+            </FilledButton>
             <div className={styles['action-btn-wrapper']}>
               {/* Send Email Button  */}
               <Link href={`mailto:${data.public_email || data.email}`}>
