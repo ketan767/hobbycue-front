@@ -17,7 +17,7 @@ const CommunityLinks: React.FC<Props> = ({}) => {
   const [isLoadingPosts, setIsLoadingPosts] = useState(false)
 
   const getPost = async () => {
-    const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
+    const params = new URLSearchParams(`has_link=true&populate=_author,_genre,_hobby`)
     activeProfile?.data?._hobbies.forEach((item: any) => {
       params.append('_hobby', item.hobby._id)
     })
@@ -30,9 +30,8 @@ const CommunityLinks: React.FC<Props> = ({}) => {
         let content = post.content.replace(/<img .*?>/g, '')
         return { ...post, content }
       })
-      linkPosts = linkPosts.filter(
-        (item: any) => (item.has_link = true),
-      )
+      // console.log('postss', linkPosts)
+      linkPosts = linkPosts.filter((item: any) => (item.has_link = true))
       store.dispatch(updatePosts(linkPosts))
     }
     setIsLoadingPosts(false)
@@ -46,7 +45,7 @@ const CommunityLinks: React.FC<Props> = ({}) => {
   return (
     <>
       <CommunityPageLayout activeTab="links">
-      <section className={styles['posts-container']}>
+        <section className={styles['posts-container']}>
           {allPosts.length === 0 || isLoadingPosts ? (
             <>
               <PostCardSkeletonLoading />

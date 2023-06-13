@@ -212,12 +212,19 @@ const ProfileAddressEditModal: React.FC<Props> = ({
             if (component.types.includes('country')) {
               country = component.long_name
             }
-            // if (component.types.includes('postal_code')) {
-            //   pin_code = component.long_name
-            // }
+            if (component.types.includes('postal_code')) {
+              pin_code = component.long_name
+            }
           })
           setData((prev) => {
-            return { ...prev, state, city, country, pin_code }
+            return {
+              ...prev,
+              state,
+              city,
+              street: formatted_address,
+              country,
+              pin_code,
+            }
           })
         }
       })

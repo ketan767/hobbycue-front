@@ -26,6 +26,7 @@ const PostCard: React.FC<Props> = (props) => {
     title: '',
     description: '',
     image: '',
+    icon: '',
   })
 
   const updatePost = async () => {
@@ -163,8 +164,8 @@ const PostCard: React.FC<Props> = (props) => {
             {postData.has_link && (
               <a href={url} className={styles.postMetadata}>
                 <div className={styles.metaImgContainer}>
-                  <Image
-                    src={metaData.image}
+                  <img
+                    src={metaData.image ? metaData.image : metaData.icon}
                     alt="link-image"
                     width={200}
                     height={130}
@@ -172,7 +173,7 @@ const PostCard: React.FC<Props> = (props) => {
                 </div>
                 <div className={styles.metaContent}>
                   <p className={styles.contentHead}> {metaData.title} </p>
-                  <p className={styles.metaContentText}>s </p>
+                  <p className={styles.metaContentText}> {metaData.description} </p>
                 </div>
               </a>
             )}

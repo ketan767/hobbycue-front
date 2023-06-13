@@ -1,0 +1,113 @@
+.container {
+  padding: 40px 0px;
+}
+.wrapper {
+  display: flex;
+  align-items: stretch;
+}
+.contentWrapper {
+  display: flex;
+  justify-content: space-between;
+  flex: 5;
+  padding-right: 1rem;
+}
+.listContainer {
+  margin-right: 120px;
+  font-size: 14px;
+}
+.listContainer li {
+  list-style: none;
+}
+.listHeading {
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.listItem {
+  color: #08090a;
+  margin-bottom: 0.5rem;
+}
+.iconsContainer {
+  display: flex;
+  align-items: center;
+  padding: 20px 0;
+  padding-top: 0;
+  column-gap: 24px;
+}
+.iconsContainer img {
+  cursor: pointer;
+}
+.rightSection {
+  flex: 2;
+}
+.inviteContainer {
+  margin-top: 2rem;
+}
+
+.input-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-32);
+  position: relative;
+  overflow: hidden;
+}
+.input-box label {
+  /* font-family: 'Poppins'; */
+  /* font-style: normal; */
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 22px;
+  color: #6d747a;
+}
+.input-box input[type='text'] {
+  width: 100%;
+  /* all: unset; */
+  background: #f8f9fa;
+  /* Grey/Lighter */
+
+  border: 1px solid #8064a2;
+  border-radius: 8px;
+  padding: calc(var(--spacing-8) + var(--spacing-4));
+padding-right: 70px;
+  /* font-family: 'Poppins'; */
+  /* font-style: normal; */
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  /* color: #878c90; */
+  min-width: 6.25rem;
+}
+.input-box input[type='text']:focus-within {
+  outline: none;
+  border: 1px solid #8064a2;
+}
+
+.bottombar {
+  background: #f7f5f9;
+  padding: 30px;
+  text-align: center;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  color: #08090a;
+}
+.button {
+  background: #8064a2;
+  position: absolute;
+  right: 0;
+  height: 100%;
+  color: white;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 0 12px;
+  box-shadow: none;
+  border: 0;
+  outline: 0;
+  border-radius: 0px 8px 8px 0px;
+  cursor: pointer;
+}

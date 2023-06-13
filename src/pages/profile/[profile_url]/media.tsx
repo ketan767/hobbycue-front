@@ -27,6 +27,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
   const [loadingPosts, setLoadingPosts] = useState(false)
   const [posts, setPosts] = useState([])
   const [media, setMedia] = useState([])
+  const { listingLayoutMode } = useSelector((state: RootState) => state.site)
 
   const inputRef = useRef<HTMLInputElement>(null)
   const dispatch = useDispatch()
@@ -100,7 +101,6 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
     window.location.reload()
   }
 
-  // console.log('user', user)
   return (
     <>
       <Head>
@@ -114,42 +114,44 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
             <ProfileHobbySideList data={data.pageData} />
           </aside>
           <div>
-            <div className={styles.uploadContainer}>
-              <div className={styles.uploadButton}>
-                <p> image </p>
-                <input
-                  type="file"
-                  accept="image/png, image/gif, image/jpeg"
-                  className={styles.hidden}
-                  onChange={(e) => handleImageChange(e)}
-                  ref={inputRef}
-                />
-                <Image
-                  src={EditIcon}
-                  alt="edit"
-                  className={styles.editIcon}
-                  onClick={() => {
-                    inputRef.current?.click()
-                  }}
-                />
+            {listingLayoutMode === 'edit' && (
+              <div className={styles.uploadContainer}>
+                <div className={styles.uploadButton}>
+                  <p> image </p>
+                  <input
+                    type="file"
+                    accept="image/png, image/gif, image/jpeg"
+                    className={styles.hidden}
+                    onChange={(e) => handleImageChange(e)}
+                    ref={inputRef}
+                  />
+                  <Image
+                    src={EditIcon}
+                    alt="edit"
+                    className={styles.editIcon}
+                    onClick={() => {
+                      inputRef.current?.click()
+                    }}
+                  />
+                </div>
+                <div className={styles.uploadButton}>
+                  <p> Video </p>
+                  <Image
+                    src={EditIcon}
+                    alt="edit"
+                    className={styles.editIcon}
+                    onClick={() => {
+                      dispatch(
+                        openModal({
+                          type: 'upload-video-user',
+                          closable: true,
+                        }),
+                      )
+                    }}
+                  />
+                </div>
               </div>
-              <div className={styles.uploadButton}>
-                <p> Video </p>
-                <Image
-                  src={EditIcon}
-                  alt="edit"
-                  className={styles.editIcon}
-                  onClick={() => {
-                    dispatch(
-                      openModal({
-                        type: 'upload-video-user',
-                        closable: true,
-                      }),
-                    )
-                  }}
-                />
-              </div>
-            </div>
+            )}
             <PageGridLayout column={3}>
               {user?.video_url && (
                 <div className={styles.image}>

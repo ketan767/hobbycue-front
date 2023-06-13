@@ -7,6 +7,7 @@ import PeopleIllustration from '@/assets/svg/community-bottom.svg'
 import AuthForm from '@/components/AuthForm/AuthForm'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import FilledButton from '@/components/_buttons/FilledButton'
+import Footer from '@/components/Footer/Footer'
 
 const Home: React.FC<PropTypes> = function () {
   return (
@@ -251,6 +252,9 @@ const Home: React.FC<PropTypes> = function () {
           // blurDataURL="data:..." automatically provided
           // placeholder="blur" // Optional blur-up while loading
         />
+      </section>
+      <section className={`site-container`}>
+      <Footer />
       </section>
     </>
   )

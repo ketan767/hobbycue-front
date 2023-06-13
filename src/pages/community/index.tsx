@@ -30,6 +30,7 @@ const CommunityHome: React.FC<Props> = ({}) => {
     const { err, res } = await getAllPosts(params.toString())
     if (err) return console.log(err)
     if (res.data.success) {
+      console.log('resp', res.data);
       let posts = res.data.data.posts.map((post: any) => {
         let content = post.content.replace(/<img .*?>/g, '')
         return { ...post, content }
