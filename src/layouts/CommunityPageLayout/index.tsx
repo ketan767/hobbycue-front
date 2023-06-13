@@ -54,6 +54,24 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
     getPost()
   }, [activeProfile])
 
+  const handleHobbyClick = async (item: any) => {
+    console.log(item)
+    const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
+
+    params.append('_hobby', item.hobby._id)
+
+    setIsLoadingPosts(true)
+    const { err, res } = await getAllPosts(params.toString())
+    if (err) return console.log(err)
+    if (res.data.success) {
+      let posts = res.data.data.posts.map((post: any) => {
+        let content = post.content.replace(/<img .*?>/g, '')
+        return { ...post, content }
+      })
+      store.dispatch(updatePosts(posts))
+    }
+    setIsLoadingPosts(false)
+  }
   // console.log({allPosts});
   return (
     <>
@@ -71,7 +89,11 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
             <section>
               <ul>
                 {activeProfile.data?._hobbies?.map((hobby: any) => {
-                  return <li key={hobby._id}>{hobby?.hobby?.display}</li>
+                  return (
+                    <li key={hobby._id} onClick={() => handleHobbyClick(hobby)}>
+                      {hobby?.hobby?.display}
+                    </li>
+                  )
                 })}
               </ul>
             </section>

@@ -184,7 +184,7 @@ export const CreatePost: React.FC<Props> = (props) => {
             image={true}
           />
           {data.video_url && (
-            <video width="320" height="240" controls>
+            <video width="320" height="180" controls>
               <source src={data.video_url} type="video/mp4" />
             </video>
           )}

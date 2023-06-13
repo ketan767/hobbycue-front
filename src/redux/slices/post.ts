@@ -2,10 +2,12 @@ import { createSlice } from '@reduxjs/toolkit'
 
 interface PostState {
   allPosts: object[]
+  allPages: object[]
 }
 
 const initialState: PostState = {
   allPosts: [],
+  allPages: [],
 }
 
 const postSlice = createSlice({
@@ -14,6 +16,9 @@ const postSlice = createSlice({
   reducers: {
     updatePosts: (state, { payload }) => {
       state.allPosts = payload
+    },
+    updatePages: (state, { payload }) => {
+      state.allPages = payload
     },
     // updateBlogCategories: (state, { payload }) => {
     //   state.allCategories = payload
@@ -33,5 +38,5 @@ const postSlice = createSlice({
   },
 })
 
-export const { updatePosts } = postSlice.actions
+export const { updatePosts, updatePages } = postSlice.actions
 export default postSlice.reducer
