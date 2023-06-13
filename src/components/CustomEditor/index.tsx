@@ -126,9 +126,8 @@ const CustomEditor: React.FC<Props> = ({
         modules={{
           toolbar: {
             container: [
-              ['bold', 'italic', 'underline',  ],
+              ['bold', 'italic', 'underline', 'emoji' ],
               [{ list: 'ordered' }, { list: 'bullet' }],
-              ['emoji']
             ],
             // handlers: { emoji: function () {} },
           },
