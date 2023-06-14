@@ -1,11 +1,11 @@
 .landing-contaniner {
   background: rgba(var(--primary-10-rgb));
+  height: calc(100vh - var(--navbar-height-desktop));
 }
 
 .landing-wrapper {
-  padding-top: 5rem;
-  /* padding-bottom: 10rem; */
-  height: 45rem;
+  padding-top: 3rem;
+  height: 100%;
   display: grid;
   grid-template-columns: 1.7fr 1fr;
   column-gap: 7.5rem;
@@ -115,7 +115,7 @@
   font-size: 14px;
 }
 
-.bigTextContainer{
+.bigTextContainer {
   margin-bottom: 5rem;
 }
 .bigText {
@@ -135,11 +135,20 @@
 .bigText .communityText {
   color: #0096c8;
 }
-.getStartedBtn{
+.getStartedBtn {
   width: 147px;
   margin-top: 8px;
 }
-.people-illustration{
+.people-illustration {
   width: 100%;
   object-fit: contain;
+}
+
+@media screen and (min-width: 1600px) {
+  .landing-contaniner {
+    height: 45rem;
+  }
+  .landing-wrapper {
+    padding-top: 5rem;
+  }
 }
