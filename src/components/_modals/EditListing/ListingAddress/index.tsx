@@ -8,6 +8,9 @@ import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import { getListingAddress, updateListingAddress } from '@/services/listing.service'
+import LocationIcon from '@/assets/svg/location-2.svg'
+import Image from 'next/image'
+import axios from 'axios'
 
 type Props = {
   onComplete?: () => void
@@ -147,6 +150,68 @@ const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
     }
   }, [data])
 
+  const getLocation = () => {
+    //Get latitude and longitude;
+    const successFunction = (position: any) => {
+      var lat = position.coords.latitude
+      var long = position.coords.longitude
+      console.log(lat)
+      console.log(long)
+      handleGeocode(lat, long)
+    }
+    const errorFunction = () => {
+      alert('Location permission denied!')
+    }
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(successFunction, errorFunction)
+    }
+  }
+
+  const handleGeocode = (lat: any, long: any) => {
+    axios
+      .get(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyCSFbd4Cf-Ui3JvMvEiXXs9xfGJaveKO_Y`,
+      )
+      .then((response) => {
+        const { results } = response.data
+        console.log('response', response)
+        if (results && results.length > 0) {
+          const { formatted_address, address_components } = results[0]
+          let city = ''
+          let state = ''
+          let country = ''
+          let pin_code = ''
+
+          address_components.forEach((component: any) => {
+            if (component.types.includes('locality')) {
+              city = component.long_name
+            }
+            if (component.types.includes('administrative_area_level_1')) {
+              state = component.long_name
+            }
+            if (component.types.includes('country')) {
+              country = component.long_name
+            }
+            if (component.types.includes('postal_code')) {
+              pin_code = component.long_name
+            }
+          })
+          setData((prev: any) => {
+            return {
+              ...prev,
+              state: {value:formatted_address, error: null},
+              city: {value:city, error: null},
+              country: {value:country, error: null},
+              pin_code: {value:pin_code, error: null},
+            }
+          })
+        }
+      })
+      .catch((error) => {
+        console.error('Error geocoding:', error)
+      })
+  }
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -162,14 +227,22 @@ const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
             {/* Street Address */}
             <div className={styles['input-box']}>
               <label>Street Address</label>
-              <input
-                type="text"
-                placeholder={`Enter address or click the "locate me" icon to auto-detect`}
-                required
-                value={data.street.value}
-                name="street"
-                onChange={handleInputChange}
-              />
+              <div className={styles['street-input-container']}>
+                <input
+                  type="text"
+                  placeholder={`Enter address or click the "locate me" icon to auto-detect`}
+                  required
+                  value={data.street.value}
+                  name="street"
+                  onChange={handleInputChange}
+                />
+                <Image
+                  src={LocationIcon}
+                  alt="location"
+                  className={styles.locationImg}
+                  onClick={getLocation}
+                />
+              </div>
               <p className={styles['helper-text']}>{data.street.error}</p>
             </div>
             <section className={styles['two-column-grid']}>
