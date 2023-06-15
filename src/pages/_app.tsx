@@ -1,7 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Provider } from 'react-redux'
 import Head from 'next/head'
-import { createTheme, StyledEngineProvider, ThemeProvider } from '@mui/material/styles'
+import {
+  createTheme,
+  StyledEngineProvider,
+  ThemeProvider,
+} from '@mui/material/styles'
 import type { AppProps } from 'next/app'
 
 import store from '@/redux/store'
