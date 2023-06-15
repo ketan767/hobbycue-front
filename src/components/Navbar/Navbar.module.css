@@ -230,11 +230,16 @@ color: black !important;
 }
 .inputField::placeholder {
   font-family: 'Poppins';
+ 
+  color: #939ca3;
+}
+
+.navbar-wrappper input{
+  font-family: "poppins";
+  background-color: #EBEDF0;
   font-style: normal;
   font-weight: 300;
   font-size: 12px;
-  line-height: 16px;
-  color: #939ca3;
 }
 .textSmall{
   font-size: 14px;

@@ -33,6 +33,7 @@
   position: relative;
   text-transform: none;
   font-family: Poppins;
+  background-color: #F7F5F9;
 }
 
 .social-login-btn::before {
@@ -88,8 +89,32 @@
   color: rgba(var(--gray-100-rgb));
 }
 
+.email-field div div{
+  border-radius: 8px;
+}
+
+.password-field div div{
+  border-radius: 8px;
+}
+
 .password-field {
   position: relative;
+}
+
+.password-field label{
+  font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 12px;
+line-height: 20px;
+}
+
+.email-field label{
+  font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 12px;
+line-height: 20px;
 }
 
 .password-field .show-pass-icon {
@@ -100,6 +125,10 @@
   right: 1rem;
   top: 50%;
   transform: translateY(-50%);
+}
+
+.password-field button{
+  height: 10px;
 }
 
 .validation-messages {

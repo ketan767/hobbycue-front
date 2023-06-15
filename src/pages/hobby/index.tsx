@@ -181,8 +181,9 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                 <p>
                                   {hobbyData.map((hobby: any) => {
                                     return (
-                                      hobby.category._id === cat._id &&
-                                      hobby.sub_category._id === subCat._id && (
+                                      hobby?.category?._id === cat._id &&
+                                      hobby?.sub_category?._id ===
+                                        subCat._id && (
                                         <Link href={`/hobby/${hobby.slug}`}>
                                           <span> {hobby.display}, </span>
                                         </Link>
@@ -219,7 +220,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     `level=1&populate=category,sub_category,tags`,
   )
   const hobby = await getAllHobbies(
-    `level=3&populate=category,sub_category,tags`,
+    `level=3&populate=category,sub_category,tags&limit=500`,
   )
 
   return {
