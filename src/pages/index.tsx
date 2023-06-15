@@ -3,8 +3,11 @@ import Image from 'next/image'
 import styles from '@/styles/Home.module.css'
 import React, { useEffect } from 'react'
 import landingIllustration from '@/assets/svg/landing-illustration.svg'
+import PeopleIllustration from '@/assets/svg/community-bottom.svg'
 import AuthForm from '@/components/AuthForm/AuthForm'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
+import FilledButton from '@/components/_buttons/FilledButton'
+import Footer from '@/components/Footer/Footer'
 
 const Home: React.FC<PropTypes> = function () {
   return (
@@ -228,6 +231,30 @@ const Home: React.FC<PropTypes> = function () {
             <div>TODO</div>
           </div>
         </div>
+      </section>
+
+      <section className={`site-container ${styles.bigTextContainer}`}>
+        <p className={`${styles.bigText}`}>
+          Your <span className={styles.hobbyText}>Hobby </span> , Your{' '}
+          <span className={styles.communityText}>Community</span>...
+        </p>
+        <div className={styles.getStartedBtn}>
+          <FilledButton>Get Started</FilledButton>
+        </div>
+      </section>
+      <section className={`site-container ${styles.bigTextContainer}`}>
+        <Image
+          src={PeopleIllustration}
+          className={styles['people-illustration']}
+          alt="Landing Illustration"
+          // width={500} automatically provided
+          // height={500} automatically provided
+          // blurDataURL="data:..." automatically provided
+          // placeholder="blur" // Optional blur-up while loading
+        />
+      </section>
+      <section className={`site-container`}>
+      <Footer />
       </section>
     </>
   )

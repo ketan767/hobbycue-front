@@ -5,7 +5,7 @@
   transform: translate(-50%, -50%); */
   background-color: white;
   max-width: 30rem;
-  width: 25rem;
+  width: 30rem;
   padding: var(--spacing-40);
   mix-blend-mode: normal;
   border-radius: var(--spacing-8);

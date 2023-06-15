@@ -4,6 +4,7 @@
 }
 .image img {
   width: 100%;
+  height: 100%;
   border-radius: 8px;
   object-fit: cover;
 }
@@ -12,7 +13,7 @@
   display: flex;
   max-width: 800px;
   margin: 0 auto;
-  margin-top: 2rem;
+  margin-top: 0rem;
 }
 .uploadContainer > div {
   flex: 1;
@@ -37,4 +38,10 @@
 .editIcon {
   padding: 2px;
   cursor: pointer;
+}
+.hidden {
+  display: none;
+}
+.video{
+  width: 100%;
 }

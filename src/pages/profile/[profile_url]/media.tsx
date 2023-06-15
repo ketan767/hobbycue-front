@@ -1,28 +1,35 @@
 import { useRouter } from 'next/router'
 import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styles from './styles.module.css'
 import { GetServerSideProps } from 'next'
-import { getAllUserDetail } from '@/services/user.service'
+import {
+  getAllUserDetail,
+  updateMyProfileDetail,
+} from '@/services/user.service'
+import { RootState } from '@/redux/store'
 import Head from 'next/head'
 import ProfileLayout from '@/layouts/ProfilePageLayout'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import { getListingPages } from '@/services/listing.service'
-import { getAllPosts } from '@/services/post.service'
+import { getAllPosts, uploadImage } from '@/services/post.service'
 import EditIcon from '@/assets/svg/edit-icon.svg'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { openModal } from '@/redux/slices/modal'
+import ProfileHobbySideList from '@/components/ProfilePage/ProfileHobbySideList'
 
 interface Props {
   data: ProfilePageData
 }
 
 const ProfilePostsPage: React.FC<Props> = ({ data }) => {
-  // const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
+  const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
   const [loadingPosts, setLoadingPosts] = useState(false)
   const [posts, setPosts] = useState([])
   const [media, setMedia] = useState([])
-  
+  const { listingLayoutMode } = useSelector((state: RootState) => state.site)
+
+  const inputRef = useRef<HTMLInputElement>(null)
   const dispatch = useDispatch()
 
   const getPost = async () => {
@@ -61,6 +68,39 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
     getPost()
   }, [])
 
+  const handleImageChange = (e: any) => {
+    const images = [...e.target.files]
+    const image = e.target.files[0]
+    handleImageUpload(image, false)
+  }
+
+  const handleImageUpload = async (image: any, isVideo: boolean) => {
+    const formData = new FormData()
+    formData.append('post', image)
+    console.log('formData', formData)
+    const { err, res } = await uploadImage(formData)
+    if (err) return console.log(err)
+    if (res?.data.success) {
+      console.log(res.data)
+      const img = res.data.data.url
+      updateUser(img)
+      // dispatch(closeModal())
+    }
+  }
+
+  const updateUser = async (url: string) => {
+    let arr: any = []
+    if (user?.images) {
+      arr = user.images
+    }
+    const { err, res } = await updateMyProfileDetail({
+      images: [...arr, url],
+    })
+    if (err) return console.log(err)
+    console.log(res)
+    window.location.reload()
+  }
+
   return (
     <>
       <Head>
@@ -68,55 +108,73 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
       </Head>
 
       <ProfileLayout activeTab={'media'} data={data}>
-      <div className={styles.uploadContainer}>
-          <div className={styles.uploadButton}>
-            <p> image </p>
-            <Image
-              src={EditIcon}
-              alt="edit"
-              className={styles.editIcon}
-              onClick={() => {
-                dispatch(
-                  openModal({
-                    type: 'upload-image-page',
-                    closable: true,
-                  }),
-                )
-              }}
-            />
-          </div>
-          <div className={styles.uploadButton}>
-            <p> Video </p>
-            <Image
-              src={EditIcon}
-              alt="edit"
-              className={styles.editIcon}
-              onClick={() => {
-                dispatch(
-                  openModal({
-                    type: 'upload-video-user',
-                    closable: true,
-                  }),
-                )
-              }}
-            />
-          </div>
-        </div>
-        <PageGridLayout column={3}>
-          {media.map((item: any, idx) => {
-            return (
-              <div key={idx} className={styles.image}>
-                {item.type === 'video' ? (
-                  <video width="320" height="240" controls={true}>
-                    <source src={item.src} type="video/mp4" />
-                  </video>
-                ) : (
-                  <img src={item.src} />
-                )}
+        <PageGridLayout column={2}>
+          <aside>
+            {/* User Hobbies */}
+            <ProfileHobbySideList data={data.pageData} />
+          </aside>
+          <div>
+            {listingLayoutMode === 'edit' && (
+              <div className={styles.uploadContainer}>
+                <div className={styles.uploadButton}>
+                  <p> image </p>
+                  <input
+                    type="file"
+                    accept="image/png, image/gif, image/jpeg"
+                    className={styles.hidden}
+                    onChange={(e) => handleImageChange(e)}
+                    ref={inputRef}
+                  />
+                  <Image
+                    src={EditIcon}
+                    alt="edit"
+                    className={styles.editIcon}
+                    onClick={() => {
+                      inputRef.current?.click()
+                    }}
+                  />
+                </div>
+                <div className={styles.uploadButton}>
+                  <p> Video </p>
+                  <Image
+                    src={EditIcon}
+                    alt="edit"
+                    className={styles.editIcon}
+                    onClick={() => {
+                      dispatch(
+                        openModal({
+                          type: 'upload-video-user',
+                          closable: true,
+                        }),
+                      )
+                    }}
+                  />
+                </div>
               </div>
-            )
-          })}
-          <div></div>
+            )}
+            <PageGridLayout column={3}>
+              {user?.video_url && (
+                <div className={styles.image}>
+                  <video
+                    width="250"
+                    height="240"
+                    controls={true}
+                    className={styles.video}
+                  >
+                    <source src={user?.video_url} type="video/mp4" />
+                  </video>
+                </div>
+              )}
+              {user.images?.map((item: any, idx: number) => {
+                return (
+                  <div key={idx} className={styles.image}>
+                    <img src={item} />
+                  </div>
+                )
+              })}
+              <div></div>
+            </PageGridLayout>
+          </div>
         </PageGridLayout>
       </ProfileLayout>
     </>

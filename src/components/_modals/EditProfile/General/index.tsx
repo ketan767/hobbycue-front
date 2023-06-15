@@ -109,7 +109,10 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     if (response?.data.success) {
       dispatch(updateUser(response?.data.data.user))
       if (onComplete) onComplete()
-      else dispatch(closeModal())
+      else {
+        window.location.reload()
+        dispatch(closeModal())
+      }
     }
   }
 

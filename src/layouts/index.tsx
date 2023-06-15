@@ -19,18 +19,18 @@ import PageLoader from '@/components/PageLoader'
 import { getListingPages } from '@/services/listing.service'
 import PreLoader from '@/components/PreLoader'
 import { logout } from '@/helper'
+import { setShowPageLoader } from '@/redux/slices/site'
 
 function SiteMainLayout({ children }: { children: ReactElement }) {
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
+  const { showPageLoader } = useSelector((state: RootState) => state.site)
 
   const dispatch = useDispatch()
   const router = useRouter()
 
   const [showPreLoader, setShowPreLoader] = useState(true)
-
-  const [showPageLoader, setShowPageLoader] = useState(false)
 
   const fetchDetails = async () => {
     // @TODO:
@@ -115,13 +115,13 @@ function SiteMainLayout({ children }: { children: ReactElement }) {
     let timeout: NodeJS.Timeout
     const handleStart = (url: any, { shallow }: any) => {
       timeout = setTimeout(() => {
-        setShowPageLoader(true)
+        dispatch(setShowPageLoader(true))
       }, 200)
     }
 
     const handleComplete = () => {
       clearTimeout(timeout)
-      setShowPageLoader(false)
+      dispatch(setShowPageLoader(false))
     }
 
     router.events.on('routeChangeStart', handleStart)

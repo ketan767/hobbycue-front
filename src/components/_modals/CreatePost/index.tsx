@@ -39,7 +39,7 @@ type NewPostData = {
   contentToDisplay: string
   visibility: string
   media: []
-  video_url: String
+  video_url: any
 }
 export const CreatePost: React.FC<Props> = (props) => {
   const { user, activeProfile } = useSelector((state: RootState) => state.user)
@@ -75,26 +75,26 @@ export const CreatePost: React.FC<Props> = (props) => {
     const isUrl = checkIfUrlExists(data.content.replace(/<img .*?>/g, ''))
     setHasLink(isUrl)
     // console.log(data.content)
-    // console.log({ isUrl })
+    console.log({ isUrl })
   }, [data.content])
+  
+  console.log({ hasLink })
+  // useEffect(() => {
+  //   let imgStrs = ``
+  //   data.media.map((item: any) => {
+  //     imgStrs += `<img src="${item}" />`
+  //   })
+  //   let content = `${data.content} <div style="display:flex" > ${imgStrs} </div>`
+  //   setData((prev: any) => ({ ...prev, content: content }))
+  // }, [data.media])
 
-  useEffect(() => {
-    let imgStrs = ``
-    data.media.map((item: any) => {
-      imgStrs += `<img src="${item}" />`
-    })
-    let content = `${data.content} <div style="display:flex" > ${imgStrs} </div>`
-    setData((prev: any) => ({ ...prev, content: content }))
-  }, [data.media])
-
-  useEffect(() => {
-    let videoStr = `<video width="320" height="240" controls>
-    <source src=${data.video_url} type="video/mp4">
-  </video>`
-    let content = `${data.content} ${videoStr}`
-    setData((prev: any) => ({ ...prev, content: content }))
-  }, [data.video_url])
-
+  // useEffect(() => {
+  //   let videoStr = `<video width="320" height="240" controls>
+  //   <source src=${data.video_url} type="video/mp4" />
+  // </video>`
+  //   let content = `${data.content} ${videoStr}`
+  //   setData((prev: any) => ({ ...prev, content: content }))
+  // }, [data.video_url])
 
   const handleHobbyInputChange = async (e: any) => {
     setHobbyInputValue(e.target.value)
@@ -109,6 +109,7 @@ export const CreatePost: React.FC<Props> = (props) => {
     setHobbyDropdownList(res.data.hobbies)
     setGenreDropdownList(res.data.hobbies)
   }
+
   const handleGenreInputChange = async (e: any) => {
     setGenreInputValue(e.target.value)
 
@@ -144,7 +145,7 @@ export const CreatePost: React.FC<Props> = (props) => {
         return console.log(err)
       }
       if (res.data.success) {
-        store.dispatch(closeModal())
+        // store.dispatch(closeModal())
         // window.location.reload()
       }
       return
@@ -184,6 +185,20 @@ export const CreatePost: React.FC<Props> = (props) => {
             data={data}
             image={true}
           />
+          {data.video_url && (
+            <video width="320" height="180" controls>
+              <source src={data.video_url} type="video/mp4" />
+            </video>
+          )}
+          {data.media ? (
+            <div className={styles.imgContainer}>
+              {data?.media?.map((item: any, idx) => {
+                return <img key={idx} src={item} alt="" />
+              })}
+            </div>
+          ) : (
+            <></>
+          )}
         </section>
         <aside>
           <div>

@@ -1,11 +1,12 @@
 .image {
-  height: 288px;
+  height: 208px;
   overflow: hidden;
 }
 .image img {
   width: 100%;
   border-radius: 8px;
   object-fit: cover;
+  height: 100%;
 }
 .uploadContainer {
   display: flex;
@@ -30,7 +31,13 @@
 .uploadButton:nth-child(1) {
   margin-right: 8px;
 }
-.editIcon{
-   padding: 2px;
-   cursor: pointer;
+.editIcon {
+  padding: 2px;
+  cursor: pointer;
+}
+.hidden {
+  display: none;
+}
+.video{
+  width: 100%;
 }

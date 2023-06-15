@@ -32,7 +32,7 @@ type UpdateProfilePayload = {
   latitude?: string
   longitude?: string
   video_url?: string
-
+  images?: any
   is_onboarded?: boolean
 }
 

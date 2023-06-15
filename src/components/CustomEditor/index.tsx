@@ -6,13 +6,23 @@ import styles from './style.module.css'
 import dynamic from 'next/dynamic'
 import { SimpleUploadAdapter } from '@ckeditor/ckeditor5-upload'
 import { uploadImage } from '@/services/post.service'
-import ReactQuill from 'react-quill'
+import ReactQuill, { Quill } from 'react-quill'
+// @ts-ignore
+import quillEmoji from 'quill-emoji'
 import 'react-quill/dist/quill.snow.css'
+import 'quill-emoji/dist/quill-emoji.css'
 
-// const SimpleUploadAdapter = dynamic(() => import('@ckeditor/ckeditor5-upload'), {
-//   ssr: false,
-//   loading: () => <h1>Loading...</h1>,
-// })
+const { EmojiBlot, ShortNameEmoji, ToolbarEmoji, TextAreaEmoji } = quillEmoji
+
+Quill.register(
+  {
+    'formats/emoji': EmojiBlot,
+    'modules/emoji-shortname': ShortNameEmoji,
+    'modules/emoji-toolbar': ToolbarEmoji,
+    'modules/emoji-textarea': TextAreaEmoji,
+  },
+  true,
+)
 
 interface Props {
   value: string
@@ -108,26 +118,6 @@ const CustomEditor: React.FC<Props> = ({
 
   return (
     <>
-      {/* <CKEditor
-        ref={editorRef}
-        editor={ClassicEditor}
-        data={value}
-        onReady={(editor) => onReady(editor)}
-        onChange={handleEditorChange}
-        config={{
-          toolbar: [
-            'bold',
-            'italic',
-            'underline',
-            '|',
-            'numberedList',
-            'bulletedList',
-          ],
-          simpleUpload: {
-            uploadUrl: '/',
-          },
-        }}
-      /> */}
       <ReactQuill
         theme="snow"
         ref={editorRef}
@@ -139,15 +129,14 @@ const CustomEditor: React.FC<Props> = ({
         modules={{
           toolbar: {
             container: [
-              // [{ header: [1, 2, 3,  false] }],
-              ['bold', 'italic', 'underline'],
+              ['bold', 'italic', 'underline', 'emoji'],
               [{ list: 'ordered' }, { list: 'bullet' }],
-              // [{ align: [] }],
-              // ['link', 'image'],
-              // ['clean'],
-              // [{ color: [] }],
             ],
+            // handlers: { emoji: function () {} },
           },
+          'emoji-toolbar': true,
+          'emoji-textarea': true,
+          'emoji-shortname': true,
         }}
       />
 

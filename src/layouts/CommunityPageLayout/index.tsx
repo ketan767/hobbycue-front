@@ -4,7 +4,7 @@ import PageGridLayout from '@/layouts/PageGridLayout'
 import { withAuth } from '@/navigation/withAuth'
 import styles from './CommunityLayout.module.css'
 import Image from 'next/image'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import store, { RootState } from '@/redux/store'
 import EditIcon from '@/assets/svg/edit-icon.svg'
 import { openModal } from '@/redux/slices/modal'
@@ -23,6 +23,7 @@ type Props = {
 }
 
 const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
+  const dispatch = useDispatch()
   const { activeProfile } = useSelector((state: RootState) => state.user)
   const { allPosts } = useSelector((state: RootState) => state.post)
   const [isLoadingPosts, setIsLoadingPosts] = useState(false)
@@ -54,6 +55,24 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
     getPost()
   }, [activeProfile])
 
+  const handleHobbyClick = async (item: any) => {
+    console.log(item)
+    const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
+
+    params.append('_hobby', item.hobby._id)
+
+    setIsLoadingPosts(true)
+    const { err, res } = await getAllPosts(params.toString())
+    if (err) return console.log(err)
+    if (res.data.success) {
+      let posts = res.data.data.posts.map((post: any) => {
+        let content = post.content.replace(/<img .*?>/g, '')
+        return { ...post, content }
+      })
+      store.dispatch(updatePosts(posts))
+    }
+    setIsLoadingPosts(false)
+  }
   // console.log({allPosts});
   return (
     <>
@@ -71,7 +90,11 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
             <section>
               <ul>
                 {activeProfile.data?._hobbies?.map((hobby: any) => {
-                  return <li key={hobby._id}>{hobby?.hobby?.display}</li>
+                  return (
+                    <li key={hobby._id} onClick={() => handleHobbyClick(hobby)}>
+                      {hobby?.hobby?.display}
+                    </li>
+                  )
                 })}
               </ul>
             </section>
@@ -97,14 +120,13 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
 
         <main>
           <header className={styles['community-header']}>
+            <div className={styles['top-margin-card']}></div>
             <section
               className={`content-box-wrapper ${styles['start-post-btn-container']}`}
             >
               <button
                 onClick={() =>
-                  store.dispatch(
-                    openModal({ type: 'create-post', closable: true }),
-                  )
+                  dispatch(openModal({ type: 'create-post', closable: true }))
                 }
                 className={styles['start-post-btn']}
               >
@@ -153,7 +175,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
               </ul>
             </section>
           </header>
-          {children}
+          <section className={styles['children-wrapper']}>{children}</section>
         </main>
 
         <aside className={styles['community-right-aside']}>

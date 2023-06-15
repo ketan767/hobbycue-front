@@ -1,14 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styles from '@/styles/AddListing.module.css'
 import { openModal } from '@/redux/slices/modal'
 import { useDispatch } from 'react-redux'
 import { updateListingModalData } from '@/redux/slices/site'
 import store from '@/redux/store'
+import { useRouter } from 'next/router'
 
 type Props = {}
 
 const AddListing: React.FC<Props> = (props) => {
   const dispatch = useDispatch()
+  const router = useRouter()
 
   const handleClick = (type: ListingPages) => {
     dispatch(updateListingModalData({ type }))
@@ -60,8 +62,8 @@ const AddListing: React.FC<Props> = (props) => {
               <span>People</span>
             </h3>
             <p>
-              An Individual or Organization. Teacher, Coach, Professional or Online Seller. Company,
-              Business or Association.
+              An Individual or Organization. Teacher, Coach, Professional or
+              Online Seller. Company, Business or Association.
             </p>
           </section>
           <section
@@ -84,8 +86,8 @@ const AddListing: React.FC<Props> = (props) => {
               <span>Place</span>
             </h3>
             <p>
-              An Address. Classroom, Shop, Performance or Event Venue, Sports Arena, Play Area,
-              Studio, School or Campus.
+              An Address. Classroom, Shop, Performance or Event Venue, Sports
+              Arena, Play Area, Studio, School or Campus.
             </p>
           </section>
           <section
@@ -117,11 +119,14 @@ const AddListing: React.FC<Props> = (props) => {
               <span>Product</span>
             </h3>
             <p>
-              An Item that you can Book, Buy or Rent. Appointment, Ticket, or Voucher. Equipment,
-              Instrument or Activity Kit.
+              An Item that you can Book, Buy or Rent. Appointment, Ticket, or
+              Voucher. Equipment, Instrument or Activity Kit.
             </p>
           </section>
-          <section  onClick={() => handleClick(4)} className={`${styles['card']} ${styles['program']}`}>
+          <section
+            onClick={() => handleClick(4)}
+            className={`${styles['card']} ${styles['program']}`}
+          >
             <h3>
               <svg
                 width="40"
@@ -141,8 +146,8 @@ const AddListing: React.FC<Props> = (props) => {
               <span>Program</span>
             </h3>
             <p>
-              An Event with Venue and Date. Meetup, Workshop or Webinar. Exhibition, Performance or
-              Competition.
+              An Event with Venue and Date. Meetup, Workshop or Webinar.
+              Exhibition, Performance or Competition.
             </p>
           </section>
         </div>

@@ -17,7 +17,7 @@ const PostCard: React.FC<Props> = (props) => {
   // const [type, setType] = useState<'User' | 'Listing'>()
 
   const router = useRouter()
-  console.log('🚀 ~ file: PostCard.tsx:20 ~ router:', router)
+  // console.log('🚀 ~ file: PostCard.tsx:20 ~ router:', router)
 
   const [showComments, setShowComments] = useState(false)
   const [postData, setPostData] = useState(props.postData)
@@ -26,6 +26,7 @@ const PostCard: React.FC<Props> = (props) => {
     title: '',
     description: '',
     image: '',
+    icon: '',
   })
 
   const updatePost = async () => {
@@ -95,11 +96,22 @@ const PostCard: React.FC<Props> = (props) => {
                   : ''}
               </p>
             </Link>
-            <p className={styles['post-other-info']}>{`${dateFormat.format(
-              new Date('2023-05-07T20:09:37.986Z'),
-            )} | ${postData?._hobby?.display} ${
-              postData?._genre?.display ? `| ${postData?._genre?.display}` : ''
-            }`}</p>
+            <p className={styles['post-other-info']}>
+              <span>
+                {dateFormat.format(new Date('2023-05-07T20:09:37.986Z'))}
+                {' | '}
+              </span>
+              <span>
+                <Link href={`/hobby/${postData?._hobby?.slug}`}>
+                  {postData?._hobby?.display}
+                </Link>
+              </span>
+              <span>
+                {postData?._genre?.display
+                  ? ` | ${postData?._genre?.display}`
+                  : ''}
+              </span>
+            </p>
           </div>
           <svg
             className={styles['more-actions-icon']}
@@ -132,7 +144,7 @@ const PostCard: React.FC<Props> = (props) => {
               }}
             ></div>
             {postData.video_url && (
-              <video width="320" height="240" controls>
+              <video width="320" height="240" controls className={styles.video}>
                 <source src={postData.video_url} type="video/mp4"></source>
               </video>
             )}
@@ -152,8 +164,8 @@ const PostCard: React.FC<Props> = (props) => {
             {postData.has_link && (
               <a href={url} className={styles.postMetadata}>
                 <div className={styles.metaImgContainer}>
-                  <Image
-                    src={metaData.image}
+                  <img
+                    src={metaData.image ? metaData.image : metaData.icon}
                     alt="link-image"
                     width={200}
                     height={130}
@@ -161,7 +173,7 @@ const PostCard: React.FC<Props> = (props) => {
                 </div>
                 <div className={styles.metaContent}>
                   <p className={styles.contentHead}> {metaData.title} </p>
-                  <p className={styles.metaContentText}>s </p>
+                  <p className={styles.metaContentText}> {metaData.description} </p>
                 </div>
               </a>
             )}

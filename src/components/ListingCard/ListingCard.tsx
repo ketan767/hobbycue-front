@@ -10,7 +10,7 @@ type Props = {
 }
 
 const ListingCard: React.FC<Props> = ({ data }) => {
-  console.log('🚀 ~ file: ListingCard.tsx:13 ~ data:', data)
+  // console.log('🚀 ~ file: ListingCard.tsx:13 ~ data:', data)
   return (
     <>
       <Link
@@ -71,7 +71,7 @@ const ListingCard: React.FC<Props> = ({ data }) => {
               {data?._hobbies?.map((item: any) => {
                 return (
                   <span className={styles.hobby} key={item._id}>
-                    {item.hobby.display}
+                    {item.hobby?.display}
                   </span>
                 )
               })}

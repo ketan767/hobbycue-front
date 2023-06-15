@@ -135,3 +135,9 @@
 .profile-url-input input {
   flex-grow: 1;
 }
+.emailContainer{
+  display: flex;
+}
+.emailContainer .input-box{
+  flex: 1;
+}

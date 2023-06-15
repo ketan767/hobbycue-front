@@ -11,7 +11,25 @@
   /* min-height: 32px; */
   font-family: var(--font-poppins);
 }
-
+.modal-form-contanier {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.modal-form-contanier .form-body {
+  order: 1;
+  margin-top: 3rem;
+}
+.modal-form-contanier .divider {
+  order: 3;
+}
+.modal-form-contanier .social-login-btns {
+  order: 4;
+  margin-top: 0;
+}
+.modal-form-contanier .form-footer {
+  order: 2;
+}
 .social-login-btns {
   margin-top: var(--spacing-24);
   display: flex;
@@ -195,7 +213,7 @@ line-height: 20px;
   cursor: pointer;
 }
 .form-footer .form-footer-top .agree-tnc-info {
-  font-weight: 400;
+  font-weight: 500;
   font-size: 0.7rem;
   line-height: 18px;
   color: rgba(var(--gray-50-rgb));
@@ -206,10 +224,17 @@ line-height: 20px;
   margin-top: var(--spacing-24);
   width: 100%;
   font-size: 14px;
-  border: 1px solid #000000;
-  color: black;
+  border: 1px solid rgba(var(--primary-100-rgb));
+  color: rgba(var(--primary-100-rgb));
 }
 .form-footer .submit-btn:hover {
-  background-color: #000000;
+  background-color: rgba(var(--primary-100-rgb));
   color: white;
+}
+.bgGrey input {
+  background-color: #ebedf0 !important;
+  border-radius: 4px;
+}
+.bgGrey fieldset {
+  border: 0;
 }

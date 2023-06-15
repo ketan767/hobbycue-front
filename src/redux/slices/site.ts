@@ -29,33 +29,36 @@ type ListingModalData = {
     to_time: any
     from_date: any
     to_date: any
-  }
+  },
+  images?: [],
   is_published?: boolean
   is_onboarded?: boolean
   facebook_url?: string
   instagram_url?: string
   twitter_url?: string
   linkedin_url?: string
+  video_url?: string
   profile_image?: string
   cover_image?: string
-  _tags? : any
-  related_listings_left? : {
-    relation: string,
+  _tags?: any
+  related_listings_left?: {
+    relation: string
     listings: any
   }
-  related_listings_right? : any
+  related_listings_right?: any
 }
+
 interface AuthState {
   listingLayoutMode: ListingLayoutMode
   profileLayoutMode: ProfileLayoutMode
   listingPageData: any
   listingModalData: ListingModalData
-
   editPhotoModalData: {
     type: 'profile' | 'cover' | null
     image: any
     onComplete: any
   }
+  showPageLoader: boolean
 }
 
 const initialState: AuthState = {
@@ -72,12 +75,12 @@ const initialState: AuthState = {
     admin_note: '',
     tagline: '',
   },
-
   editPhotoModalData: {
     image: null,
     type: null,
     onComplete: null,
   },
+  showPageLoader: false,
 }
 
 /** Template Listing Data 
@@ -155,6 +158,9 @@ const siteSlice = createSlice({
     updateRelatedListingsLeft: (state, { payload }) => {
       state.listingPageData.related_listings_left.listings = payload
     },
+    setShowPageLoader: (state, { payload }: { payload: boolean }) => {
+      state.showPageLoader = payload
+    },
   },
 })
 
@@ -165,7 +171,8 @@ export const {
   updateListingModalData,
   updatePhotoEditModalData,
   updateEventDateTime,
-  updateRelatedListingsLeft
+  updateRelatedListingsLeft,
+  setShowPageLoader,
 } = siteSlice.actions
 
 export default siteSlice.reducer

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styles from './ProfileHeader.module.css'
 import Image from 'next/image'
 
@@ -9,20 +9,29 @@ import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded'
 import CameraIcon from '@/assets/icons/CameraIcon'
 import Link from 'next/link'
 import { useDispatch, useSelector } from 'react-redux'
-import { updatePhotoEditModalData } from '@/redux/slices/site'
+import {
+  updateListingModalData,
+  updatePhotoEditModalData,
+} from '@/redux/slices/site'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { setTimeout } from 'timers/promises'
 import { updateUserCover, updateUserProfile } from '@/services/user.service'
 import { RootState } from '@/redux/store'
+import FilledButton from '@/components/_buttons/FilledButton'
+import { useRouter } from 'next/router'
 
 type Props = {
+  activeTab: ProfilePageTabs
   data: ProfilePageData['pageData']
 }
 
-const ProfileHeader: React.FC<Props> = ({ data }) => {
+const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
+  const router = useRouter()
   const dispatch = useDispatch()
 
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
+
+  const tabs: ProfilePageTabs[] = ['home', 'posts', 'media', 'pages', 'blogs']
 
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
     e.preventDefault()
@@ -90,47 +99,21 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
 
   return (
     <>
-      <header className={`site-container ${styles['header']}`}>
-        {/* Profile Picture */}
-        <div className={styles['profile-img-wrapper']}>
-          {data?.profile_image ? (
-            <Image
-              className={styles['img']}
-              src={data.profile_image}
-              alt=""
-              width={160}
-              height={160}
-            />
-          ) : (
-            <div className={`${styles['img']} default-user-icon`}></div>
-          )}
-
-          {profileLayoutMode === 'edit' && (
-            <label className={styles['edit-btn']}>
-              <input
-                type="file"
-                hidden
-                accept="image/*"
-                onChange={(e) => onInputChange(e, 'profile')}
-              />
-              <CameraIcon />
-            </label>
-          )}
-        </div>
-
-        {/* Center Elements */}
-        <section className={styles['center-container']}>
-          <div className={styles['cover-img-wrapper']}>
-            {data?.cover_image ? (
+      <div className={`${styles['container']}`}>
+        {/* Header */}
+        <header className={`site-container ${styles['header']}`}>
+          {/* Profile Picture */}
+          <div className={styles['profile-img-wrapper']}>
+            {data?.profile_image ? (
               <Image
                 className={styles['img']}
-                src={data.cover_image}
+                src={data.profile_image}
                 alt=""
-                height={296}
-                width={1000}
+                width={160}
+                height={160}
               />
             ) : (
-              <div className={`${styles['img']} default-user-cover`}></div>
+              <div className={`${styles['img']} default-user-icon`}></div>
             )}
 
             {profileLayoutMode === 'edit' && (
@@ -139,45 +122,115 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
                   type="file"
                   hidden
                   accept="image/*"
-                  onChange={(e) => onInputChange(e, 'cover')}
+                  onChange={(e) => onInputChange(e, 'profile')}
                 />
                 <CameraIcon />
               </label>
             )}
           </div>
 
-          <h1 className={styles['name']}>{data.full_name}</h1>
-          <p className={styles['tagline']}>{data.tagline}</p>
-        </section>
+          {/* Center Section */}
+          <section className={styles['center-container']}>
+            <div className={styles['cover-img-wrapper']}>
+              {data?.cover_image ? (
+                <Image
+                  className={styles['img']}
+                  src={data.cover_image}
+                  alt=""
+                  height={296}
+                  width={1000}
+                />
+              ) : (
+                <div className={`${styles['img']} default-user-cover`}></div>
+              )}
 
-        {/* Action Buttons */}
-        <div className={styles['action-btn-wrapper']}>
-          {/* Send Email Button  */}
-          <Link href={`mailto:${data.public_email || data.email}`}>
-            <div
-              onClick={(e) => console.log(e)}
-              className={styles['action-btn']}
-            >
-              <MailOutlineRoundedIcon color="primary" />
+              {profileLayoutMode === 'edit' && (
+                <label className={styles['edit-btn']}>
+                  <input
+                    type="file"
+                    hidden
+                    accept="image/*"
+                    onChange={(e) => onInputChange(e, 'cover')}
+                  />
+                  <CameraIcon />
+                </label>
+              )}
             </div>
-          </Link>
 
-          {/* Bookmark Button */}
-          <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
-            <BookmarkBorderRoundedIcon color="primary" />
-          </div>
+            <h1 className={styles['name']}>{data.full_name}</h1>
+            <p className={styles['tagline']}>{data.tagline}</p>
+          </section>
 
-          {/* Share Button */}
-          <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
-            <ShareRoundedIcon color="primary" fontSize="small" />
-          </div>
+          {/* Action Buttons */}
 
-          {/* More Options Button */}
-          <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
-            <MoreHorizRoundedIcon color="primary" />
+          <div>
+            <FilledButton
+              onClick={() => {
+                dispatch(updateListingModalData({ type: 1 }))
+                dispatch(
+                  openModal({ type: 'listing-type-edit', closable: true }),
+                )
+              }}
+              className={styles.makeMyPageButton}
+            >
+              Make my page
+            </FilledButton>
+            <div className={styles['action-btn-wrapper']}>
+              {/* Send Email Button  */}
+              <Link href={`mailto:${data.public_email || data.email}`}>
+                <div
+                  onClick={(e) => console.log(e)}
+                  className={styles['action-btn']}
+                >
+                  <MailOutlineRoundedIcon color="primary" />
+                </div>
+              </Link>
+
+              {/* Bookmark Button */}
+              <div
+                onClick={(e) => console.log(e)}
+                className={styles['action-btn']}
+              >
+                <BookmarkBorderRoundedIcon color="primary" />
+              </div>
+
+              {/* Share Button */}
+              <div
+                onClick={(e) => console.log(e)}
+                className={styles['action-btn']}
+              >
+                <ShareRoundedIcon color="primary" fontSize="small" />
+              </div>
+
+              {/* More Options Button */}
+              <div
+                onClick={(e) => console.log(e)}
+                className={styles['action-btn']}
+              >
+                <MoreHorizRoundedIcon color="primary" />
+              </div>
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
+        {/* Navigation Links */}
+        <nav>
+          <div className={styles['navigation-tabs']}>
+            {tabs.map((tab) => {
+              return (
+                <Link
+                  key={tab}
+                  href={`/profile/${router.query.profile_url}/${
+                    tab !== 'home' ? tab : ''
+                  }`}
+                  className={activeTab === tab ? styles['active'] : ''}
+                >
+                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                </Link>
+              )
+            })}
+          </div>
+        </nav>
+      </div>
     </>
   )
 }

@@ -16,3 +16,6 @@
   font-size: 0.8rem;
   line-height: 16px;
 }
+.input-field input::placeholder{
+  color: #EBEDF0;
+}

@@ -41,8 +41,11 @@ import {
 import { validateEmail, validatePassword } from '@/utils'
 import { CircularProgress } from '@mui/material'
 import store, { RootState } from '@/redux/store'
+import { setShowPageLoader } from '@/redux/slices/site'
 
-interface Props {}
+interface Props {
+  isModal?: boolean
+}
 
 type tabs = 'sign-in' | 'join-in'
 type inputErrs = { email: null | string; password: null | string }
@@ -59,6 +62,7 @@ function validatePasswordConditions(password: string) {
 }
 
 const AuthForm: React.FC<Props> = (props) => {
+  const { isModal } = props
   const router = useRouter()
   const dispatch = useDispatch()
 
@@ -166,36 +170,35 @@ const AuthForm: React.FC<Props> = (props) => {
 
   // Social Login Handle
   const googleAuthSuccess = async (e: any) => {
+    dispatch(setShowPageLoader(true))
     const { err, res } = await googleAuth({
       googleId: e.profileObj.googleId,
       tokenId: e.tokenId,
       name: e.profileObj.name,
     })
+    dispatch(setShowPageLoader(false))
     if (err) return console.log(err)
     if (res.status === 200 && res.data.success) {
       localStorage.setItem('token', res.data.data.token)
-      console.log(res.data.data.token)
-
       dispatch(updateIsLoggedIn(true))
       dispatch(closeModal())
       router.push('/community', undefined, { shallow: false })
     }
   }
-  const googleAuthFailure = (e: any) => {
-    console.log(e)
-  }
+  const googleAuthFailure = (e: any) => console.log(e)
 
   const handleFacebookAuth = async (e: any) => {
+    dispatch(setShowPageLoader(true))
+
     const { err, res } = await facebookAuth({
       accessToken: e.accessToken,
       userId: e.userID,
       name: e.name,
     })
+    dispatch(setShowPageLoader(false))
     if (err) return console.log(err)
     if (res.status === 200 && res.data.success) {
       localStorage.setItem('token', res.data.data.token)
-      console.log(res.data.data.token)
-
       dispatch(updateIsLoggedIn(true))
       dispatch(closeModal())
       router.push('/community', undefined, { shallow: false })
@@ -209,7 +212,11 @@ const AuthForm: React.FC<Props> = (props) => {
   }, [authFormData.password])
 
   return (
-    <div className={styles['form-contanier']}>
+    <div
+      className={`${styles['form-contanier']} ${
+        isModal ? styles['modal-form-contanier'] : ''
+      }`}
+    >
       {/* Tab Switcher (SignIn / JoinIn )  */}
       <Tabs
         value={selectedTab}
@@ -280,7 +287,7 @@ const AuthForm: React.FC<Props> = (props) => {
             onChange={(e) => handleInputChange(e.target.name, e.target.value)}
             error={Boolean(inputErrors.email)}
             helperText={inputErrors.email}
-            className={styles.inputField}
+            className={`${styles.inputField} ${isModal ? styles.bgGrey : ''}`}
           />
         </div>
 
@@ -304,6 +311,7 @@ const AuthForm: React.FC<Props> = (props) => {
             helperText={inputErrors.password}
             onFocus={() => setShowValidationConditions(true)}
             onBlur={() => setShowValidationConditions(false)}
+            className={`${styles.inputField} ${isModal ? styles.bgGrey : ''}`}
             InputProps={{
               endAdornment: (
                 <IconButton onClick={() => setShowPassword(!showPassword)}>

@@ -9,7 +9,7 @@
 }
 
 .button:hover {
-  background-color: #624e83;
+  background-color: #624e83 !important;
 }
 
 .button:disabled {
