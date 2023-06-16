@@ -14,6 +14,7 @@ import styles from '@/styles/ProfilePostsPage.module.css'
 import ProfileAddressSide from '@/components/ProfilePage/ProfileAddressSide'
 import ProfileContactSide from '@/components/ProfilePage/ProfileContactSides'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
+import ProfilePagesList from '@/components/ProfilePage/ProfilePagesList/ProfilePagesList'
 
 interface Props {
   data: ProfilePageData
@@ -49,6 +50,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
         <PageGridLayout column={3}>
           <aside>
             <ProfileHobbySideList data={data.pageData} />
+            <ProfilePagesList data={data} />
           </aside>
           <main>
             <section className={styles['posts-container']}>
@@ -58,7 +60,9 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
                 posts.length === 0 && 'No Posts'
               )}
               {posts.map((post: any) => {
-                return <PostCard key={post._id} postData={post} />
+                return (
+                  <PostCard key={post._id} postData={post} fromProfile={true} />
+                )
               })}
             </section>
           </main>

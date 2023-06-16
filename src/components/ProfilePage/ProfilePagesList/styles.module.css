@@ -1,0 +1,25 @@
+.pages-list {
+   display: flex;
+   flex-direction: column;
+   row-gap: 8px;
+   padding: 8px 0;
+ }
+ .pages-list li {
+   list-style: none;
+   font-size: 14px;
+   display: flex;
+   align-items: center;
+ }
+ .pages-list img {
+   width: 20px;
+   height: 20px;
+   object-fit: contain;
+ }
+ .pages-list p {
+   margin-left: 8px;
+   font-weight: 500;
+   font-size: 14px;
+   line-height: 20px;
+   color: #6d747a;
+ }
+ 

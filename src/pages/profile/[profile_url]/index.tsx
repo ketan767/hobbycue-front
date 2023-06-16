@@ -15,6 +15,10 @@ import { openModal } from '@/redux/slices/modal'
 import styles from '@/styles/ProfileHomePage.module.css'
 import ProfileAddressSide from '@/components/ProfilePage/ProfileAddressSide'
 import ProfileContactSide from '@/components/ProfilePage/ProfileContactSides'
+import { getAllPosts } from '@/services/post.service'
+import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
+import PostCard from '@/components/PostCard/PostCard'
+import ProfilePagesList from '@/components/ProfilePage/ProfilePagesList/ProfilePagesList'
 
 interface Props {
   data: ProfilePageData
@@ -25,6 +29,25 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
 
   const [pageData, setPageData] = useState(data.pageData)
+  const [loadingPosts, setLoadingPosts] = useState(false)
+  const [posts, setPosts] = useState([])
+  const router = useRouter()
+
+  const getPost = async () => {
+    setLoadingPosts(true)
+    const { err, res } = await getAllPosts(
+      `author_type=User&_author=${data.pageData._id}&populate=_author,_genre,_hobby`,
+    )
+    setLoadingPosts(false)
+    if (err) return console.log(err)
+    if (res.data.success) {
+      setPosts(res.data.data.posts)
+    }
+  }
+
+  useEffect(() => {
+    getPost()
+  }, [])
 
   return (
     <>
@@ -38,6 +61,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
             <aside>
               {/* User Hobbies */}
               <ProfileHobbySideList data={pageData} />
+              <ProfilePagesList data={data} />
             </aside>
 
             <main>
@@ -46,7 +70,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                 showEditButton={profileLayoutMode === 'edit'}
                 onEditBtnClick={() =>
                   dispatch(
-                    openModal({ type: 'profile-about-edit', closable: true })
+                    openModal({ type: 'profile-about-edit', closable: true }),
                   )
                 }
               >
@@ -61,7 +85,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                 showEditButton={profileLayoutMode === 'edit'}
                 onEditBtnClick={() =>
                   dispatch(
-                    openModal({ type: 'profile-general-edit', closable: true })
+                    openModal({ type: 'profile-general-edit', closable: true }),
                   )
                 }
               >
@@ -70,6 +94,23 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                 <h4>Year Of Birth</h4>
                 <div>{pageData.year_of_birth}</div>
               </PageContentBox>
+
+              <section className={styles['posts-container']}>
+                {loadingPosts ? (
+                  <PostCardSkeletonLoading />
+                ) : (
+                  posts.length === 0 && 'No Posts'
+                )}
+                {posts.map((post: any) => {
+                  return (
+                    <PostCard
+                      key={post._id}
+                      postData={post}
+                      fromProfile={true}
+                    />
+                  )
+                })}
+              </section>
             </main>
 
             <aside>
@@ -87,12 +128,12 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async (
-  context
+  context,
 ) => {
   const { query } = context
 
   const { err, res } = await getAllUserDetail(
-    `profile_url=${query['profile_url']}&populate=_hobbies,_addresses,primary_address,_listings,_listings,_listings`
+    `profile_url=${query['profile_url']}&populate=_hobbies,_addresses,primary_address,_listings,_listings,_listings`,
   )
 
   if (err) return { notFound: true }

@@ -17,6 +17,7 @@ import EditIcon from '@/assets/svg/edit-icon.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { openModal } from '@/redux/slices/modal'
 import ProfileHobbySideList from '@/components/ProfilePage/ProfileHobbySideList'
+import ProfilePagesList from '@/components/ProfilePage/ProfilePagesList/ProfilePagesList'
 
 interface Props {
   data: ProfilePageData
@@ -112,6 +113,8 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
           <aside>
             {/* User Hobbies */}
             <ProfileHobbySideList data={data.pageData} />
+            <ProfilePagesList data={data} />
+
           </aside>
           <div>
             {listingLayoutMode === 'edit' && (
