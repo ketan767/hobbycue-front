@@ -240,4 +240,5 @@ select:-webkit-autofill {
   line-height: 20px;
   letter-spacing: 0.04em;
   color: #939ca3;
+  flex: 1;
 }
