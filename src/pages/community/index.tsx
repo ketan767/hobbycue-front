@@ -44,7 +44,7 @@ const CommunityHome: React.FC<Props> = ({}) => {
     if (allPosts.length === 0) getPost()
   }, [activeProfile])
 
-  // console.log({allPosts});
+  // console.log(allPosts);
   return (
     <>
       <CommunityPageLayout activeTab="posts">

@@ -105,7 +105,7 @@ const PostCard: React.FC<Props> = (props) => {
             </Link>
             <p className={styles['post-other-info']}>
               <span>
-                {dateFormat.format(new Date('2023-05-07T20:09:37.986Z'))}
+                {dateFormat.format(new Date(postData.createdAt))}
                 {' | '}
               </span>
               <span>
@@ -114,8 +114,8 @@ const PostCard: React.FC<Props> = (props) => {
                 </Link>
               </span>
               <span>
-                {postData?._genre?.display
-                  ? ` | ${postData?._genre?.display}`
+                {postData?._author?.state
+                  ? ` | ${postData?._author?.state}`
                   : ''}
               </span>
             </p>

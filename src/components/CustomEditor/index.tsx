@@ -121,7 +121,6 @@ const CustomEditor: React.FC<Props> = ({
   const openInputVideo = () => {
     inputVideoRef.current?.click()
   }
-  console.log('data', data)
 
   return (
     <>
