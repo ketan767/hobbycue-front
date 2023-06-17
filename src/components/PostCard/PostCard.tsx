@@ -9,6 +9,7 @@ import PostComments from './Comments'
 import { getAllPosts, getMetadata } from '@/services/post.service'
 import { useRouter } from 'next/router'
 import useCheckIfClickedOutside from '@/hooks/useCheckIfClickedOutside'
+import Slider from '../Slider/Slider'
 
 type Props = {
   postData: any
@@ -27,6 +28,7 @@ const PostCard: React.FC<Props> = (props) => {
   const [postData, setPostData] = useState(props.postData)
   const [url, setUrl] = useState('')
   const [optionsActive, setOptionsActive] = useState(false)
+  const [activeIdx, setActiveIdx] = useState(0)
   const [metaData, setMetaData] = useState({
     title: '',
     description: '',
@@ -71,7 +73,6 @@ const PostCard: React.FC<Props> = (props) => {
       }
     }
   }, [postData])
-
 
   return (
     <>
@@ -144,7 +145,15 @@ const PostCard: React.FC<Props> = (props) => {
             </svg>
             {optionsActive && fromProfile && (
               <ul className={styles.optionsContainer}>
-                <li onClick={onPinPost !== undefined ? () => onPinPost(postData._id) : () => {}}>Pin post</li>
+                <li
+                  onClick={
+                    onPinPost !== undefined
+                      ? () => onPinPost(postData._id)
+                      : () => {}
+                  }
+                >
+                  Pin post
+                </li>
                 <li>Delete</li>
               </ul>
             )}
@@ -165,16 +174,19 @@ const PostCard: React.FC<Props> = (props) => {
                 <source src={postData.video_url} type="video/mp4"></source>
               </video>
             )}
-            {postData.media ? (
-              <div className={styles.postImages}>
-                {postData.media.map((item: any, idx: number) => {
+            {postData.media?.length > 0 ? (
+              <Slider setActiveIdx={setActiveIdx} activeIdx={activeIdx} images={postData.media} >
+                {/* {postData.media.map((item: any, idx: number) => {
                   return (
-                    <div key={item} style={{ width: '100%' }}>
-                      <img src={item} alt="img" className={styles.postImage} />
-                    </div>
+                    <img
+                      src={item}
+                      alt="img"
+                      className={styles.postImage}
+                      onClick={() => setActiveIdx(idx)}
+                    />
                   )
-                })}
-              </div>
+                })} */}
+              </Slider>
             ) : (
               <></>
             )}
