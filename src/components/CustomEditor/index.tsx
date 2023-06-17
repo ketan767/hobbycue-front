@@ -126,6 +126,7 @@ const CustomEditor: React.FC<Props> = ({
           setData((prev: any) => ({ ...prev, content: updatedValue }))
         }}
         className={styles.quill}
+        placeholder='Start something interesting...'
         modules={{
           toolbar: {
             container: [

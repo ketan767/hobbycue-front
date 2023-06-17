@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { openModal } from '@/redux/slices/modal'
 import ProfileHobbySideList from '@/components/ProfilePage/ProfileHobbySideList'
 import ProfilePagesList from '@/components/ProfilePage/ProfilePagesList/ProfilePagesList'
+import ReactPlayer from 'react-player'
 
 interface Props {
   data: ProfilePageData
@@ -114,10 +115,9 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
             {/* User Hobbies */}
             <ProfileHobbySideList data={data.pageData} />
             <ProfilePagesList data={data} />
-
           </aside>
           <div>
-            {listingLayoutMode === 'edit' && (
+            {listingLayoutMode !== 'edit' && (
               <div className={styles.uploadContainer}>
                 <div className={styles.uploadButton}>
                   <p> image </p>
@@ -155,17 +155,23 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
                 </div>
               </div>
             )}
-            <PageGridLayout column={3}>
+            <div className={styles.medias}>
               {user?.video_url && (
                 <div className={styles.image}>
-                  <video
+                  {/* <video
                     width="250"
                     height="240"
                     controls={true}
                     className={styles.video}
                   >
                     <source src={user?.video_url} type="video/mp4" />
-                  </video>
+                  </video> */}
+                  <ReactPlayer
+                    width="100%"
+                    height="100%"
+                    url={user?.video_url}
+                    controls={true}
+                  />
                 </div>
               )}
               {user.images?.map((item: any, idx: number) => {
@@ -176,7 +182,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
                 )
               })}
               <div></div>
-            </PageGridLayout>
+            </div>
           </div>
         </PageGridLayout>
       </ProfileLayout>

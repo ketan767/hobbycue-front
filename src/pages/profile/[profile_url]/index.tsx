@@ -19,6 +19,9 @@ import { getAllPosts } from '@/services/post.service'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import PostCard from '@/components/PostCard/PostCard'
 import ProfilePagesList from '@/components/ProfilePage/ProfilePagesList/ProfilePagesList'
+import PinnedPostWrapper from '@/layouts/PinnedPost/PinnedPost'
+import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/ProfileSocialMedia'
+import { getListingPages } from '@/services/listing.service'
 
 interface Props {
   data: ProfilePageData
@@ -102,12 +105,19 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                   posts.length === 0 && 'No Posts'
                 )}
                 {posts.map((post: any) => {
+                   if (post.pinned) {
+                    return (
+                      <PinnedPostWrapper>
+                        <PostCard
+                          key={post._id}
+                          postData={post}
+                          fromProfile={true}
+                        />
+                      </PinnedPostWrapper>
+                    )
+                  }
                   return (
-                    <PostCard
-                      key={post._id}
-                      postData={post}
-                      fromProfile={true}
-                    />
+                    <PostCard key={post._id} postData={post} fromProfile={true} />
                   )
                 })}
               </section>
@@ -119,6 +129,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
 
               {/* User Contact Details */}
               <ProfileContactSide data={pageData} />
+              <ProfileSocialMediaSide data={pageData} />
             </aside>
           </PageGridLayout>
         )}
@@ -141,11 +152,20 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   if (res?.data.success && res.data.data.no_of_users === 0)
     return { notFound: true }
 
+    
+  const user = res.data?.data?.users[0]
+
+  if (!user) return { notFound: true }
+
+  const { err: error, res: response } = await getListingPages(
+    `populate=_hobbies,_address&admin=${user._id}`
+  )
+
   const data = {
     pageData: res.data.data.users[0],
     postsData: null,
     mediaData: null,
-    listingsData: null,
+    listingsData: response?.data.data.listings,
     blogsData: null,
   }
   return {

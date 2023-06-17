@@ -60,3 +60,6 @@ export const isEmpty = (value: string) => {
   if (val?.trim() === '') return true
   return false
 }
+export const getListingTypeName = (num: Number) => {
+ return num === 1 ? 'People' : num === 2 ? 'Place' : num === 3 ? 'Product' : 'Program'
+}

@@ -9,11 +9,13 @@
    font-size: 14px;
    display: flex;
    align-items: center;
+   cursor: pointer;
  }
  .pages-list img {
-   width: 20px;
-   height: 20px;
+   width: 35px;
+   height: 35px;
    object-fit: contain;
+   border-radius: 8px;
  }
  .pages-list p {
    margin-left: 8px;
@@ -22,4 +24,5 @@
    line-height: 20px;
    color: #6d747a;
  }
+
  

@@ -8,11 +8,12 @@ import PostVotes from './Votes'
 import PostComments from './Comments'
 import { getAllPosts, getMetadata } from '@/services/post.service'
 import { useRouter } from 'next/router'
-import useOutsideAlerter from '@/hooks/useOutsideAlerter'
+import useCheckIfClickedOutside from '@/hooks/useCheckIfClickedOutside'
 
 type Props = {
   postData: any
   fromProfile?: boolean
+  onPinPost?: any
 }
 
 const PostCard: React.FC<Props> = (props) => {
@@ -20,8 +21,8 @@ const PostCard: React.FC<Props> = (props) => {
 
   const router = useRouter()
   // console.log('🚀 ~ file: PostCard.tsx:20 ~ router:', router)
-  const { fromProfile } = props
-  const optionRef : any= useRef(null)
+  const { fromProfile, onPinPost } = props
+  const optionRef: any = useRef(null)
   const [showComments, setShowComments] = useState(false)
   const [postData, setPostData] = useState(props.postData)
   const [url, setUrl] = useState('')
@@ -32,7 +33,7 @@ const PostCard: React.FC<Props> = (props) => {
     image: '',
     icon: '',
   })
-  useOutsideAlerter(optionRef, () => setOptionsActive(false))
+  useCheckIfClickedOutside(optionRef, () => setOptionsActive(false))
 
   const updatePost = async () => {
     const { err, res } = await getAllPosts(
@@ -70,6 +71,7 @@ const PostCard: React.FC<Props> = (props) => {
       }
     }
   }, [postData])
+
 
   return (
     <>
@@ -119,13 +121,14 @@ const PostCard: React.FC<Props> = (props) => {
             </p>
           </div>
           <div className={styles.actionIcon}>
-            <svg ref={optionRef}
+            <svg
+              ref={optionRef}
               className={styles['more-actions-icon']}
               width="24"
               height="24"
               viewBox="0 0 24 24"
               fill="none"
-              onClick={()=> setOptionsActive(true)}
+              onClick={() => setOptionsActive(true)}
             >
               <g clip-path="url(#clip0_173_72891)">
                 <path
@@ -139,9 +142,9 @@ const PostCard: React.FC<Props> = (props) => {
                 </clipPath>
               </defs>
             </svg>
-            {optionsActive && (
+            {optionsActive && fromProfile && (
               <ul className={styles.optionsContainer}>
-                <li>Pin post</li>
+                <li onClick={onPinPost !== undefined ? () => onPinPost(postData._id) : () => {}}>Pin post</li>
                 <li>Delete</li>
               </ul>
             )}

@@ -4,6 +4,8 @@
 .quill{
    display: flex;
    flex-direction: column-reverse;
+   /* height: 100%; */
+   padding-bottom: 8px;
 }
 .quill .ql-container{
    border-top: 1px solid #ccc;
