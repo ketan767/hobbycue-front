@@ -43,7 +43,8 @@
   margin: 0;
   font: inherit;
 }
-strong, em {
+strong,
+em {
   font: revert;
 }
 /* *:focus {
@@ -203,31 +204,41 @@ select:-webkit-autofill {
   background-image: url(../assets/svg/default-images/default-product-listing-cover.svg);
   background-size: cover;
 }
-.ql-toolbar.ql-snow + .ql-container.ql-snow{
+.ql-toolbar.ql-snow + .ql-container.ql-snow {
   border-top: 1px solid #ccc !important;
   border-bottom: 0;
 }
-.ql-toolbar.ql-snow{
+.ql-toolbar.ql-snow {
   display: flex;
   align-items: center;
 }
-.ql-toolbar.ql-snow .ql-formats button{
- opacity: 0.8;
- padding: 3px 7px !important;
- width: auto !important;
+.ql-toolbar.ql-snow .ql-formats button {
+  opacity: 0.8;
+  padding: 3px 7px !important;
+  width: auto !important;
 }
-.ql-toolbar.ql-snow .ql-formats:nth-child(1){
+.ql-toolbar.ql-snow .ql-formats:nth-child(1) {
   margin-right: 6px;
 }
-.ql-toolbar.ql-snow > img{
+.ql-toolbar.ql-snow > img {
   padding-top: 0px;
   display: inline-block;
   padding: 0 4px;
 }
-.ql-toolbar.ql-snow img:nth-child(3){
+.ql-toolbar.ql-snow img:nth-child(3) {
   margin-left: auto;
 }
 
-.ql-editor.ql-blank{
+.ql-editor.ql-blank {
   min-height: 17rem;
+}
+.quill > .ql-container > .ql-editor.ql-blank::before {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.04em;
+  color: #939ca3;
+  flex: 1;
 }

@@ -34,6 +34,7 @@ type UpdateProfilePayload = {
   video_url?: string
   images?: any
   is_onboarded?: boolean
+  pinned_post?: string
 }
 
 type ProfileAddressPayload = {

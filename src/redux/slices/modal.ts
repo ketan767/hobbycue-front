@@ -28,6 +28,7 @@ export type ModalType =
   | 'upload-image-page'
   | 'upload-video-user'
   | 'upload-image-user'
+  | 'social-media-edit'
 
 interface ModalState {
   activeModal: ModalType

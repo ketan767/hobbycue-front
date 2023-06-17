@@ -1,0 +1,114 @@
+.modal-wrapper {
+  background-color: white;
+  border-radius: var(--spacing-8);
+  max-width: 50rem;
+  width: 38rem;
+  min-height: 10rem;
+  display: flex;
+  flex-direction: column;
+}
+.modal-wrapper .header,
+.modal-wrapper .body {
+  padding: var(--spacing-16) var(--spacing-24);
+}
+.modal-wrapper .footer {
+  padding: var(--spacing-16) var(--spacing-24);
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+}
+.modal-wrapper .footer .submit {
+  margin-left: auto;
+}
+
+.two-column-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-24);
+}
+.heading {
+  /* font-family: 'Poppins'; */
+  /* font-style: normal; */
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 26px;
+  /* identical to box height, or 144% */
+
+  color: #000000;
+}
+
+.input-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  position: relative;
+  flex: 1;
+}
+.input-box label {
+  /* font-family: 'Poppins'; */
+  /* font-style: normal; */
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 22px;
+  color: #6d747a;
+}
+.input-box input[type='text'] {
+  width: 100%;
+  background: #f8f9fa;
+  border: 1px solid #ebedf0;
+  border-radius: 8px;
+  padding: calc(var(--spacing-8) + var(--spacing-4));
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  min-width: 6.25rem;
+  flex: 1;
+}
+.input-box input[type='text']:focus-within {
+  outline: none;
+  border: 1px solid rgb(var(--primary-50-rgb));
+}
+.input-box:has(input[required]) label::after {
+  content: '*';
+  color: rgba(192, 80, 77, 1);
+}
+
+.input-box .helper-text {
+  position: absolute;
+  top: calc(100% + var(--spacing-4));
+  left: 0;
+
+  /* font-family: 'Poppins'; */
+  /* font-style: normal; */
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 16px;
+  color: #c0504d;
+}
+.inputContainer {
+  display: flex;
+  align-items: center;
+  column-gap: 12px;
+}
+.dropdown {
+  width: 124px;
+  height: 40px;
+}
+.deleteIcon {
+  margin-left: 4px;
+}
+.body-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 22px;
+  color: #6d747a;
+  margin-bottom: 24px;
+}
+.inputContainer {
+  margin-bottom: 0.8rem;
+}

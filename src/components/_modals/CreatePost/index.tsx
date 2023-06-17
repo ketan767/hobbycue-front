@@ -75,10 +75,9 @@ export const CreatePost: React.FC<Props> = (props) => {
     const isUrl = checkIfUrlExists(data.content.replace(/<img .*?>/g, ''))
     setHasLink(isUrl)
     // console.log(data.content)
-    console.log({ isUrl })
+    // console.log({ isUrl })
   }, [data.content])
   
-  console.log({ hasLink })
   // useEffect(() => {
   //   let imgStrs = ``
   //   data.media.map((item: any) => {
@@ -106,8 +105,15 @@ export const CreatePost: React.FC<Props> = (props) => {
     const query = `fields=display,sub_category&show=true&search=${e.target.value}`
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
-    setHobbyDropdownList(res.data.hobbies)
-    setGenreDropdownList(res.data.hobbies)
+    const userHobbies = user._hobbies.map((item:any) => item.hobby._id)
+    const userGenres = user._hobbies.map((item:any) => item.genre._id)
+  
+    let hobbies = res.data.hobbies
+    let genres = res.data.hobbies
+    hobbies = hobbies.filter((item:any) => userHobbies.includes(item._id))
+    genres = genres.filter((item:any) => userGenres.includes(item._id))
+    setHobbyDropdownList(hobbies)
+    // setGenreDropdownList(genres)
   }
 
   const handleGenreInputChange = async (e: any) => {
@@ -121,7 +127,11 @@ export const CreatePost: React.FC<Props> = (props) => {
 
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
-    setGenreDropdownList(res.data.hobbies)
+
+    const userGenres = user._hobbies.map((item:any) => item.genre._id)
+    let genres = res.data.hobbies
+    genres = genres.filter((item:any) => userGenres.includes(item._id))
+    setGenreDropdownList(genres)
   }
 
   const handleSubmit = async () => {
@@ -145,8 +155,8 @@ export const CreatePost: React.FC<Props> = (props) => {
         return console.log(err)
       }
       if (res.data.success) {
-        // store.dispatch(closeModal())
-        // window.location.reload()
+        store.dispatch(closeModal())
+        window.location.reload()
       }
       return
     }
@@ -157,9 +167,9 @@ export const CreatePost: React.FC<Props> = (props) => {
       return console.log(err)
     }
     if (res.data.success) {
-      // store.dispatch(closeModal())
-      // window.location.reload()
       console.log('res', res)
+      store.dispatch(closeModal())
+      window.location.reload()
     }
   }
 
@@ -173,7 +183,7 @@ export const CreatePost: React.FC<Props> = (props) => {
     <div className={styles['modal-wrapper']}>
       <h3 className={styles['modal-heading']}>Create Post</h3>
       <div className={styles['create-post-modal']}>
-        <section>
+        <section className={styles['editor-container']}>
           <CustomEditor
             value=""
             onChange={(value) => {
@@ -190,7 +200,7 @@ export const CreatePost: React.FC<Props> = (props) => {
               <source src={data.video_url} type="video/mp4" />
             </video>
           )}
-          {data.media ? (
+          {data.media?.length > 0 ? (
             <div className={styles.imgContainer}>
               {data?.media?.map((item: any, idx) => {
                 return <img key={idx} src={item} alt="" />

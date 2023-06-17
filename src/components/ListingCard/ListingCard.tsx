@@ -4,6 +4,10 @@ import Link from 'next/link'
 import Image from 'next/image'
 import LocationIcon from '../../assets/svg/location.svg'
 import HobbyIcon from '../../assets/svg/hobby.svg'
+import { getListingTypeName } from '@/utils'
+import People from '@/assets/svg/People.svg'
+import Place from '@/assets/svg/Place.svg'
+import Program from '@/assets/svg/Program.svg'
 
 type Props = {
   data: any
@@ -11,6 +15,8 @@ type Props = {
 
 const ListingCard: React.FC<Props> = ({ data }) => {
   // console.log('🚀 ~ file: ListingCard.tsx:13 ~ data:', data)
+  console.log('data', data)
+  const type = getListingTypeName(data.type)
   return (
     <>
       <Link
@@ -36,13 +42,15 @@ const ListingCard: React.FC<Props> = ({ data }) => {
         <div className={styles.content}>
           <div className={styles.contentHead}>
             {data?.profile_image ? (
-              <Image
-                src={data.profile_image}
-                width={48}
-                height={48}
-                alt="cover"
-                className={styles.contentImage}
-              />
+              <div className={styles.contentImageContainer}>
+                <Image
+                  src={data.profile_image}
+                  width={48}
+                  height={48}
+                  alt="cover"
+                  className={styles.contentImage}
+                />
+              </div>
             ) : (
               <div
                 className={`${styles['contentImage']} default-people-listing-icon`}
@@ -51,8 +59,8 @@ const ListingCard: React.FC<Props> = ({ data }) => {
             <div className={styles.contentTitle}>
               <p className={styles.title}> {data.title} </p>
               <p className={styles.titleType}>
-                {' '}
-                {data._address?.city} {', '} {data._address?.country}{' '}
+                <Image src={data.type === 1? People : data.type === 2 ? Place : Program} alt="type" />
+                <p> {data.page_type} </p>
               </p>
             </div>
           </div>
@@ -62,7 +70,7 @@ const ListingCard: React.FC<Props> = ({ data }) => {
           <div className={styles.bottom}>
             <Image src={LocationIcon} width={16} height={16} alt="location" />
             <p className={styles.location}>
-              {data._address?.street} {', '} {data._address?.state}
+              {data._address?.city} {', '} {data._address?.country}{' '}
             </p>
           </div>
           <div className={styles.bottom}>

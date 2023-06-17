@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import styles from './PostCard.module.css'
 import { dateFormat } from '@/utils'
@@ -8,9 +8,13 @@ import PostVotes from './Votes'
 import PostComments from './Comments'
 import { getAllPosts, getMetadata } from '@/services/post.service'
 import { useRouter } from 'next/router'
+import useCheckIfClickedOutside from '@/hooks/useCheckIfClickedOutside'
+import Slider from '../Slider/Slider'
 
 type Props = {
   postData: any
+  fromProfile?: boolean
+  onPinPost?: any
 }
 
 const PostCard: React.FC<Props> = (props) => {
@@ -18,16 +22,20 @@ const PostCard: React.FC<Props> = (props) => {
 
   const router = useRouter()
   // console.log('🚀 ~ file: PostCard.tsx:20 ~ router:', router)
-
+  const { fromProfile, onPinPost } = props
+  const optionRef: any = useRef(null)
   const [showComments, setShowComments] = useState(false)
   const [postData, setPostData] = useState(props.postData)
   const [url, setUrl] = useState('')
+  const [optionsActive, setOptionsActive] = useState(false)
+  const [activeIdx, setActiveIdx] = useState(0)
   const [metaData, setMetaData] = useState({
     title: '',
     description: '',
     image: '',
     icon: '',
   })
+  useCheckIfClickedOutside(optionRef, () => setOptionsActive(false))
 
   const updatePost = async () => {
     const { err, res } = await getAllPosts(
@@ -98,7 +106,7 @@ const PostCard: React.FC<Props> = (props) => {
             </Link>
             <p className={styles['post-other-info']}>
               <span>
-                {dateFormat.format(new Date('2023-05-07T20:09:37.986Z'))}
+                {dateFormat.format(new Date(postData.createdAt))}
                 {' | '}
               </span>
               <span>
@@ -107,31 +115,49 @@ const PostCard: React.FC<Props> = (props) => {
                 </Link>
               </span>
               <span>
-                {postData?._genre?.display
-                  ? ` | ${postData?._genre?.display}`
+                {postData?._author?.state
+                  ? ` | ${postData?._author?.state}`
                   : ''}
               </span>
             </p>
           </div>
-          <svg
-            className={styles['more-actions-icon']}
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <g clip-path="url(#clip0_173_72891)">
-              <path
-                d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z"
-                fill="#8064A2"
-              />
-            </g>
-            <defs>
-              <clipPath id="clip0_173_72891">
-                <rect width="24" height="24" fill="white" />
-              </clipPath>
-            </defs>
-          </svg>
+          <div className={styles.actionIcon}>
+            <svg
+              ref={optionRef}
+              className={styles['more-actions-icon']}
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              onClick={() => setOptionsActive(true)}
+            >
+              <g clip-path="url(#clip0_173_72891)">
+                <path
+                  d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z"
+                  fill="#8064A2"
+                />
+              </g>
+              <defs>
+                <clipPath id="clip0_173_72891">
+                  <rect width="24" height="24" fill="white" />
+                </clipPath>
+              </defs>
+            </svg>
+            {optionsActive && fromProfile && (
+              <ul className={styles.optionsContainer}>
+                <li
+                  onClick={
+                    onPinPost !== undefined
+                      ? () => onPinPost(postData._id)
+                      : () => {}
+                  }
+                >
+                  Pin post
+                </li>
+                <li>Delete</li>
+              </ul>
+            )}
+          </div>
         </header>
 
         {/* Card Body */}
@@ -148,16 +174,19 @@ const PostCard: React.FC<Props> = (props) => {
                 <source src={postData.video_url} type="video/mp4"></source>
               </video>
             )}
-            {postData.media ? (
-              <div className={styles.postImages}>
-                {postData.media.map((item: any, idx: number) => {
+            {postData.media?.length > 0 ? (
+              <Slider setActiveIdx={setActiveIdx} activeIdx={activeIdx} images={postData.media} >
+                {/* {postData.media.map((item: any, idx: number) => {
                   return (
-                    <div key={item} style={{ width: '100%' }}>
-                      <img src={item} alt="img" className={styles.postImage} />
-                    </div>
+                    <img
+                      src={item}
+                      alt="img"
+                      className={styles.postImage}
+                      onClick={() => setActiveIdx(idx)}
+                    />
                   )
-                })}
-              </div>
+                })} */}
+              </Slider>
             ) : (
               <></>
             )}
@@ -173,7 +202,10 @@ const PostCard: React.FC<Props> = (props) => {
                 </div>
                 <div className={styles.metaContent}>
                   <p className={styles.contentHead}> {metaData.title} </p>
-                  <p className={styles.metaContentText}> {metaData.description} </p>
+                  <p className={styles.metaContentText}>
+                    {' '}
+                    {metaData.description}{' '}
+                  </p>
                 </div>
               </a>
             )}

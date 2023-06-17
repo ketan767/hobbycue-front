@@ -15,6 +15,7 @@ import { openModal } from '@/redux/slices/modal'
 import styles from '@/styles/ProfileListingPage.module.css'
 import ListingCard from '@/components/ListingCard/ListingCard'
 import ProfileHobbySideList from '@/components/ProfilePage/ProfileHobbySideList'
+import ProfilePagesList from '@/components/ProfilePage/ProfilePagesList/ProfilePagesList'
 
 interface Props {
   data: ProfilePageData
@@ -36,6 +37,8 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
             <aside>
               {/* User Hobbies */}
               <ProfileHobbySideList data={data.pageData} />
+            <ProfilePagesList data={data} />
+
             </aside>
 
             <main>

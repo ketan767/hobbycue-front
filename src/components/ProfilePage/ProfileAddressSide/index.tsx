@@ -21,7 +21,7 @@ const ProfileAddressSide = ({ data }: Props) => {
           dispatch(openModal({ type: 'profile-address-edit', closable: true }))
         }
       >
-        <h4 className={styles['heading']}>Address</h4>
+        <h4 className={styles['heading']}>Location</h4>
         <ul className={styles['location-wrapper']}>
           <li>
             <svg

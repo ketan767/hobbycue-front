@@ -74,19 +74,24 @@ const CustomEditor: React.FC<Props> = ({
   }, [])
 
   const handleImageChange = (e: any) => {
-    const images = [...e.target.files]
+    let images = [...e.target.files]
     // setData((prev: any) => ({ ...prev, media: [...prev.media, ...images] }))
+    if (data.video_url !== '')
+      return alert('Only video or image can be uploaded')
+    if (data.media.length >= 3) return alert('Maximum 3 images can be uploaded')
+    if (images.length > 3) return alert('Maximum 3 images can be uploaded')
     images.forEach((item: any) => {
       handleImageUpload(item, false)
     })
   }
 
   const handleVideoChange = (e: any) => {
+    if (data.video_url !== '') return alert('Maximum 1 video can be uploaded')
+    if (data.media.length > 0) return alert('Only video or image can be uploaded')
+
     const video = e.target.files[0]
     handleImageUpload(video, true)
   }
-  // console.log(editorRef?.current?.editor)
-  // console.log('content', data.content)
 
   const handleImageUpload = async (image: any, isVideo: boolean) => {
     const formData = new FormData()
@@ -108,6 +113,7 @@ const CustomEditor: React.FC<Props> = ({
       // dispatch(closeModal())
     }
   }
+
   const openInput = () => {
     inputRef.current?.click()
   }
@@ -126,6 +132,7 @@ const CustomEditor: React.FC<Props> = ({
           setData((prev: any) => ({ ...prev, content: updatedValue }))
         }}
         className={styles.quill}
+        placeholder="Start something interesting..."
         modules={{
           toolbar: {
             container: [

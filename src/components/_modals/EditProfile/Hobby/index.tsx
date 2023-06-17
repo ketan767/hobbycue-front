@@ -78,7 +78,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     const query = `fields=display,sub_category&show=true&search=${e.target.value}`
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
-    console.log('resp', res.data);
+    console.log('resp', res.data)
     setHobbyDropdownList(res.data.hobbies)
     setGenreDropdownList(res.data.hobbies)
   }
@@ -156,6 +156,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     }
   }
 
+  const handleClose = ()=>dispatch(closeModal())
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -295,6 +296,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                   disabled={addHobbyBtnLoading}
                   variant="contained"
                   onClick={handleAddHobby}
+                  sx={{fontFamily: 'Poppins', padding: "8px 23px", borderRadius: '8px'}}
                 >
                   {addHobbyBtnLoading ? (
                     <CircularProgress color="inherit" size={'22px'} />
@@ -369,14 +371,17 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         </section>
 
         <footer className={styles['footer']}>
-          {Boolean(onBackBtnClick) && (
+          {/* {Boolean(onBackBtnClick) && (
             <button
               className="modal-footer-btn cancel"
               onClick={onBackBtnClick}
             >
               Back
             </button>
-          )}
+          )} */}
+          <button className="modal-footer-btn cancel" onClick={onBackBtnClick ? onBackBtnClick : handleClose}>
+            {onBackBtnClick ? 'Back' : 'Cancel'}
+          </button>
 
           <button
             className="modal-footer-btn submit"

@@ -1,0 +1,46 @@
+.container {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+}
+
+.container .image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: 0.2s ease-in-out;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.active {
+  transform: translateX(0);
+  opacity: 1;
+}
+.prev {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+.next {
+  transform: translateX(100%);
+  opacity: 0;
+}
+.icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 4px;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  z-index: 1;
+  background-color: rgba(81, 81, 80, 0.348);
+  cursor: pointer;
+}
+.leftIcon {
+  left: 8px;
+}
+.rightIcon {
+  right: 8px;
+}

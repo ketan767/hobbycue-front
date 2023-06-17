@@ -244,6 +244,27 @@
   width: 100%;
   align-self: stretch;
 }
-.video{
+.video {
   width: 100%;
+}
+.actionIcon {
+  position: relative;
+  margin-left: auto;
+  z-index: 1;
+}
+.optionsContainer {
+  position: absolute;
+  top: calc(100% - 2px);
+  left: 0;
+  width: 30px;
+  border: 1px solid #cfcfcf;
+  border-radius: 8px;
+  width: 80px;
+  background-color: white;
+}
+.optionsContainer li {
+  list-style: none;
+  color: #6d747a;
+  padding: 6px;
+  font-size: 14px;
 }
