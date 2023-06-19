@@ -77,9 +77,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
           <PageContentBox
             showEditButton={listingLayoutMode === 'edit'}
             onEditBtnClick={() =>
-              dispatch(
-                openModal({ type: 'listing-hobby-edit', closable: true }),
-              )
+              dispatch(openModal({ type: 'listing-type-edit', closable: true }))
             }
           >
             <div className={styles['listing-page-type']}>
@@ -505,13 +503,19 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                     </defs>
                   </svg>
 
-                  <span className={styles.textGray}>
-                    {`${data?._address.street},
+                  {listingLayoutMode === 'edit' ? (
+                    <span className={styles.textGray}>
+                      {`${data?._address.street},
                       ${data?._address.society},
                       ${data?._address.city},
                       ${data?._address.state},
                       ${data?._address.country}`}
-                  </span>
+                    </span>
+                  ) : (
+                    <span className={styles.textGray}>
+                      {`${data?._address.city}`}
+                    </span>
+                  )}
                 </li>
               )}
             </ul>

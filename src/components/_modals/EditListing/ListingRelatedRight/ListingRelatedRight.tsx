@@ -67,7 +67,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
       (item: any) =>
         item.type === listingModalData.type && item.side === 'right',
     )
-    console.log(listingModalData);
+    console.log(listingModalData)
     // console.log(listingModalData.type);
     // console.log({updated});
     setRelatedListingData(updated)
@@ -223,9 +223,10 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
             <div
               className={`${styles['input-box']} ${styles['dropdown-input-box']}`}
             >
+              <label>Listing Page</label>
               <input
                 type="text"
-                placeholder="Genre/Style"
+                placeholder="Search user page..."
                 autoComplete="name"
                 required
                 value={pageInputValue}
@@ -299,9 +300,9 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
             <table>
               <thead>
                 <tr>
-                  <td>Hobby</td>
-                  <td>Genre/Style</td>
-                  <td>Level</td>
+                  <td>Listing Page</td>
+                  <td></td>
+                  <td></td>
                   <td>Action</td>
                 </tr>
               </thead>

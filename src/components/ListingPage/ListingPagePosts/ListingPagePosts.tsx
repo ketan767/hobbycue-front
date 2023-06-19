@@ -22,7 +22,7 @@ import PostCard from '@/components/PostCard/PostCard'
 interface Props {
   data: ListingPageData['pageData']
 }
-
+ 
 const ListingPostsTab: React.FC<Props> = ({ data }) => {
   // console.log('data:', data)
   const dispatch = useDispatch()
@@ -43,6 +43,7 @@ const ListingPostsTab: React.FC<Props> = ({ data }) => {
         console.log('err', err.response)
       })
   }, [])
+
   return (
     <>
       <main>
@@ -53,7 +54,7 @@ const ListingPostsTab: React.FC<Props> = ({ data }) => {
           }
         >
           {pagesData?.map((page: any) => {
-            return <ListingPageCard postData={page} key={page._id} />
+            return <PostCard postData={page} key={page._id} />
           })}
         </PageContentBox>
 

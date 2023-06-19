@@ -17,6 +17,7 @@ interface Props {
   onChange: (value: string) => void
   image?: boolean
   setData?: any
+  placeholder? : string
 }
 
 const CustomCKEditor: React.FC<Props> = ({
@@ -24,6 +25,7 @@ const CustomCKEditor: React.FC<Props> = ({
   onChange,
   image,
   setData,
+  placeholder
 }) => {
   const editorRef = useRef(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -89,6 +91,7 @@ const CustomCKEditor: React.FC<Props> = ({
         data={value}
         onReady={(editor) => onReady(editor)}
         onChange={handleEditorChange}
+        
         config={{
           toolbar: [
             'bold',
@@ -101,6 +104,7 @@ const CustomCKEditor: React.FC<Props> = ({
           simpleUpload: {
             uploadUrl: '/',
           },
+          placeholder: placeholder ? placeholder : ''
           // plugins: [SimpleUploadAdapter],
         }}
       />

@@ -26,7 +26,11 @@ const ProfilePagesList = ({ data }: Props) => {
               key={item._id}
               onClick={() => router.push(`/page/${item.page_url}`)}
             >
-              <img src={item.profile_image} />
+              {
+                item.profile_image ?
+                <img src={item.profile_image} />:
+                <div className={`${styles.defaultImg} default-people-listing-icon`}></div>
+              }
               <p>{item?.title}</p>
             </li>
           )

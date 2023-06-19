@@ -24,7 +24,7 @@ const PostCard: React.FC<Props> = (props) => {
   // console.log('🚀 ~ file: PostCard.tsx:20 ~ router:', router)
   const { fromProfile, onPinPost } = props
   const optionRef: any = useRef(null)
-  const [showComments, setShowComments] = useState(false)
+  const [showComments, setShowComments] = useState(true)
   const [postData, setPostData] = useState(props.postData)
   const [url, setUrl] = useState('')
   const [optionsActive, setOptionsActive] = useState(false)

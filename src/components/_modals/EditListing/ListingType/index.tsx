@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
-import { Button, CircularProgress, FormControl, MenuItem, Select } from '@mui/material'
+import {
+  Button,
+  CircularProgress,
+  FormControl,
+  MenuItem,
+  Select,
+} from '@mui/material'
 
-import { getMyProfileDetail, updateMyProfileDetail } from '@/services/user.service'
+import {
+  getMyProfileDetail,
+  updateMyProfileDetail,
+} from '@/services/user.service'
 
 import styles from './styles.module.css'
 import { isEmptyField } from '@/utils'
@@ -11,13 +20,17 @@ import store, { RootState } from '@/redux/store'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { updateListingModalData } from '@/redux/slices/site'
+import { updateListing } from '@/services/listing.service'
 
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
 }
 
-const ListingTypeEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
+const ListingTypeEditModal: React.FC<Props> = ({
+  onComplete,
+  onBackBtnClick,
+}) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
 
@@ -29,13 +42,31 @@ const ListingTypeEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) =
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // setSubmitBtnLoading(true)
 
     dispatch(updateListingModalData({ ...listingModalData, page_type: value }))
     dispatch(openModal({ type: 'listing-onboarding', closable: false }))
   }
-
+  // const handleSubmit = async () => {
+  //   // setSubmitBtnLoading(true)
+  //   if (onComplete) {
+  //     dispatch(
+  //       updateListingModalData({ ...listingModalData, page_type: value }),
+  //     )
+  //     dispatch(openModal({ type: 'listing-onboarding', closable: false }))
+  //   } else {
+  //     const { err, res } = await updateListing(listingModalData._id, {
+  //       page_type: value,
+  //     })
+  //     setSubmitBtnLoading(false)
+  //     if (err) return console.log(err)
+  //     if (res?.data.success) {
+  //       dispatch(updateListingModalData(res.data.data.listing))
+  //       window.location.reload()
+  //       dispatch(closeModal())
+  //     }
+  //   }
   const peoplePageTypeList: PeoplePageType[] = [
     'Teacher',
     'Trainer',
@@ -61,7 +92,12 @@ const ListingTypeEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) =
     'Play Area',
     'Campus',
   ]
-  const programPageTypeList: ProgramPageType[] = ['Classes', 'Workshop', 'Performance', 'Event']
+  const programPageTypeList: ProgramPageType[] = [
+    'Classes',
+    'Workshop',
+    'Performance',
+    'Event',
+  ]
 
   useEffect(() => {
     switch (listingModalData.type) {
@@ -96,8 +132,8 @@ const ListingTypeEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) =
 
         <section className={styles['body']}>
           <p className={styles['info']}>
-            Please select two of the most appropriate listing types. One type is recommended. Use
-            another type only if it is significantly different
+            Please select two of the most appropriate listing types. One type is
+            recommended. Use another type only if it is significantly different
           </p>
           <div className={styles['input-box']}>
             <label>Listing Page Type</label>
@@ -128,7 +164,12 @@ const ListingTypeEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) =
 
         <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
-            <Button variant="outlined" size="medium" color="primary" onClick={onBackBtnClick}>
+            <Button
+              variant="outlined"
+              size="medium"
+              color="primary"
+              onClick={onBackBtnClick}
+            >
               Back
             </Button>
           )}
@@ -140,7 +181,11 @@ const ListingTypeEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) =
             onClick={handleSubmit}
             disabled={submitBtnLoading || value?.length === 0}
           >
-            {submitBtnLoading ? <CircularProgress color="inherit" size={'22px'} /> : 'Next'}
+            {submitBtnLoading ? (
+              <CircularProgress color="inherit" size={'22px'} />
+            ) : (
+              'Next'
+            )}
           </Button>
         </footer>
       </div>

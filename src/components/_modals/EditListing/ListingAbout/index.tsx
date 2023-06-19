@@ -94,7 +94,7 @@ const ListingAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
           <div className={styles['input-box']}>
             <label>About</label>
             <input hidden required />
-            <CustomCKEditor value={data.description.value as string} onChange={handleInputChange} />
+            <CustomCKEditor value={data.description.value as string} onChange={handleInputChange} placeholder='Briefly describe your listing page' />
             {data.description.error && (
               <p className={styles['error-msg']}>{data.description.error}</p>
             )}

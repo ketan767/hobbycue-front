@@ -223,9 +223,11 @@ const RelatedListingEditModal: React.FC<Props> = ({
             <div
               className={`${styles['input-box']} ${styles['dropdown-input-box']}`}
             >
+              <label>Listing Page</label>
+
               <input
                 type="text"
-                placeholder="Genre/Style"
+                placeholder="Search listing page..."
                 autoComplete="name"
                 required
                 value={pageInputValue}
@@ -299,9 +301,9 @@ const RelatedListingEditModal: React.FC<Props> = ({
             <table>
               <thead>
                 <tr>
-                  <td>Hobby</td>
-                  <td>Genre/Style</td>
-                  <td>Level</td>
+                  <td>Listing Page</td>
+                  <td></td>
+                  <td></td>
                   <td>Action</td>
                 </tr>
               </thead>

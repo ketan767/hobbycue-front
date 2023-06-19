@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import styles from './styles.module.css'
-import LeftIcon from '@/assets/svg/People.svg'
-import RightIcon from '@/assets/svg/Place.svg'
+import LeftIcon from '@/assets/svg/left.svg'
+import RightIcon from '@/assets/svg/right.svg'
 
 type Props = {
   children: any

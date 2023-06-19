@@ -107,7 +107,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                 {posts.map((post: any) => {
                    if (post.pinned) {
                     return (
-                      <PinnedPostWrapper>
+                      <PinnedPostWrapper title='Pinned Post'>
                         <PostCard
                           key={post._id}
                           postData={post}
