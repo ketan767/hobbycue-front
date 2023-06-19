@@ -5,13 +5,12 @@ import LeftIcon from '@/assets/svg/left.svg'
 import RightIcon from '@/assets/svg/right.svg'
 
 type Props = {
-  children: any
   setActiveIdx: any
   activeIdx: number
   images: any
 }
 
-const Slider: React.FC<Props> = ({ children, images }) => {
+const Slider: React.FC<Props> = ({ images }) => {
   const [activeIdx, setActiveIdx] = useState(0)
 
   const handleChange = (e: any, idx: number) => {
@@ -19,8 +18,8 @@ const Slider: React.FC<Props> = ({ children, images }) => {
       setActiveIdx(0)
     } else if (idx < 0) {
       setActiveIdx(images.length - 1)
-    }else{
-       setActiveIdx(idx)
+    } else {
+      setActiveIdx(idx)
     }
     e.stopPropagation()
     e.preventDefault()

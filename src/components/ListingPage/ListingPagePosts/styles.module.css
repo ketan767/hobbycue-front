@@ -125,3 +125,29 @@
    letter-spacing: 0.04em;
    color: #939CA3;
  }
+ .start-post-btn-container {
+  padding: var(--spacing-12) var(--spacing-16);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  margin-bottom: 1rem;
+  border: 0;
+}
+.start-post-btn {
+  padding: var(--spacing-12) var(--spacing-16);
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+
+  border: none;
+  border-radius: 60px;
+
+  background: #F7F5F9;
+  cursor: pointer;
+
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #8064a2;
+}

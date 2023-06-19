@@ -175,18 +175,11 @@ const PostCard: React.FC<Props> = (props) => {
               </video>
             )}
             {postData.media?.length > 0 ? (
-              <Slider setActiveIdx={setActiveIdx} activeIdx={activeIdx} images={postData.media} >
-                {/* {postData.media.map((item: any, idx: number) => {
-                  return (
-                    <img
-                      src={item}
-                      alt="img"
-                      className={styles.postImage}
-                      onClick={() => setActiveIdx(idx)}
-                    />
-                  )
-                })} */}
-              </Slider>
+              <Slider
+                setActiveIdx={setActiveIdx}
+                activeIdx={activeIdx}
+                images={postData.media}
+              ></Slider>
             ) : (
               <></>
             )}

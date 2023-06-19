@@ -10,10 +10,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import styles from './styles.module.css'
 import { RootState } from '@/redux/store'
 import TimeIcon from '@/assets/svg/time.svg'
-import FacebookIcon from '@/assets/svg/facebook-icon.svg'
-import TwitterIcon from '@/assets/svg/twitter-icon.svg'
-import InstagramIcon from '@/assets/svg/insta-icon.svg'
+import FacebookIcon from '@/assets/svg/Facebook.svg'
+import TwitterIcon from '@/assets/svg/Twitter.svg'
+import InstagramIcon from '@/assets/svg/Instagram.svg'
 import { getListingPages, getListingTags } from '@/services/listing.service'
+import { dateFormat } from '@/utils'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -640,8 +641,12 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                         </defs>
                       </svg>
                       <p className={styles.workingHour}>
-                        {data?.event_date_time.from_date} -{' '}
-                        {data?.event_date_time.to_date},{' '}
+                        {dateFormat.format(
+                          new Date(data?.event_date_time.from_date),
+                        )} -{' '}
+                        {dateFormat.format(
+                          new Date(data?.event_date_time.to_date),
+                        )}, {' '}
                         {data?.event_date_time.from_time} -{' '}
                         {data?.event_date_time.to_time}
                       </p>
@@ -656,7 +661,10 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
                 dispatch(
-                  openModal({ type: 'listing-address-edit', closable: true }),
+                  openModal({
+                    type: 'listing-social-media-edit',
+                    closable: true,
+                  }),
                 )
               }
             >
@@ -675,7 +683,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
                 dispatch(
-                  openModal({ type: 'listing-address-edit', closable: true }),
+                  openModal({ type: 'related-listing-right-edit', closable: true }),
                 )
               }
             >

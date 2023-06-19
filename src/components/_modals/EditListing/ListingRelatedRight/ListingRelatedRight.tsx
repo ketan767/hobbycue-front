@@ -24,7 +24,9 @@ import {
   updateListingModalData,
   updateRelatedListingsLeft,
 } from '@/redux/slices/site'
+import Image from 'next/image'
 import { listingData } from './data'
+import DefaultProfile from '@/assets/image/default.png'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -226,7 +228,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
               <label>Listing Page</label>
               <input
                 type="text"
-                placeholder="Search user page..."
+                placeholder="Search user profile..."
                 autoComplete="name"
                 required
                 value={pageInputValue}
@@ -236,7 +238,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
                     setShowDropdown(false)
                   }, 300)
                 }
-                onChange={(e) => setPageInputValue(e.target.value)}
+                onChange={(e: any) => setPageInputValue(e.target.value)}
               />
               {/* <p className={styles['helper-text']}>{inputErrs.full_name}</p> */}
             </div>
@@ -244,15 +246,26 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
               <div className={styles['dropdown']}>
                 {allDropdownValues.map((item: any) => {
                   return (
-                    <p
+                    <div
                       key={item?._id}
                       onClick={() => {
                         setSelectedPage(item)
                         setPageInputValue(item.name)
                       }}
+                      className={styles.dropdownItem}
                     >
-                      {item?.title}
-                    </p>
+                      <Image
+                        src={
+                          item.profile_image
+                            ? item.profile_image
+                            : DefaultProfile
+                        }
+                        alt="profile"
+                        width={20}
+                        height={20}
+                      />
+                      <p>{item?.title}</p>
+                    </div>
                   )
                 })}
               </div>

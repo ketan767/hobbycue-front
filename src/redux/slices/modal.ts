@@ -22,6 +22,7 @@ export type ModalType =
   | 'listing-hobby-edit'
   | 'listing-contact-edit'
   | 'listing-tags-edit'
+  | 'listing-social-media-edit'
   | 'related-listing-left-edit'
   | 'related-listing-right-edit'
   | 'upload-video-page'
