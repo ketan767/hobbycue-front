@@ -196,8 +196,8 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   useEffect(() => {
     if (
       isEmpty(data.title.value) ||
-      isEmpty(data.page_url.value) ||
-      isEmpty(data.year.value)
+      isEmpty(data.page_url.value) 
+      // isEmpty(data.year.value)
     ) {
       setNextDisabled(true)
     } else {

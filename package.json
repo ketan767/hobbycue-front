@@ -44,6 +44,7 @@
     "react-quill-emoji": "^0.1.9",
     "react-redux": "^8.0.5",
     "retry": "^0.13.1",
+    "timeago.js": "^4.0.2",
     "typescript": "5.0.3"
   },
   "devDependencies": {

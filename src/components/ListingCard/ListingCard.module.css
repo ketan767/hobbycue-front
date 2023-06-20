@@ -35,8 +35,8 @@
 }
 .contentImage {
   border-radius: 4px;
-  width: 100%;
-  height: 100%;
+  width: 48px;
+  height: 48px;
   object-fit: cover;
 }
 

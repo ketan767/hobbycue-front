@@ -14,6 +14,7 @@ import { RootState } from '@/redux/store'
 import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
+import Checkbox from '@mui/material/Checkbox'
 
 type Props = {
   onComplete?: () => void
@@ -37,7 +38,7 @@ const ListingContactEditModal: React.FC<Props> = ({
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [nextDisabled, setNextDisabled] = useState(false)
-
+const [tick, setTick] = useState(false)
   const [data, setData] = useState<ListingContactData>({
     phone: { value: '', error: null },
     public_email: { value: '', error: null },
@@ -98,7 +99,7 @@ const ListingContactEditModal: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    console.log(user);
+    console.log(user)
     setData((prev) => {
       return {
         public_email: {
@@ -113,22 +114,31 @@ const ListingContactEditModal: React.FC<Props> = ({
         website: { ...prev.website, value: listingModalData.website as string },
         page_admin: {
           ...prev.page_admin,
-          value: user.display_name
-        }
+          value: user.display_name,
+        },
       }
     })
   }, [user])
 
   useEffect(() => {
-    if (
-      isEmpty(data.phone.value)
-    ) {
+    if (isEmpty(data.phone.value)) {
       setNextDisabled(true)
     } else {
       setNextDisabled(false)
     }
   }, [data])
 
+  useEffect(() => {
+    if(tick){
+      setData((prev) => {
+        return {
+          ...prev,
+          whatsapp_number: { value: user.phone, error: null },
+        }
+      })
+    }
+  }, [tick])
+  console.log(user)
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -151,6 +161,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                       return {
                         ...prev,
                         public_email: { value: user.email, error: null },
+                        phone: { value: user.phone, error: null },
                       }
                     })
                   }
@@ -222,7 +233,20 @@ const ListingContactEditModal: React.FC<Props> = ({
                 <p className={styles['helper-text']}>{data.phone.error}</p>
               </div>
               <div className={styles['input-box']}>
-                <label>WhatsApp Number</label>
+                <label className={styles['whatsapp-label']}>
+                  WhatsApp Number
+                  <Checkbox
+                    size="small"
+                    color="primary"
+                    name="rememberMe"
+                    className={styles.checkbox}
+                    value={!tick}
+                    checked={tick}
+                    onChange={(e) =>
+                     setTick(!tick)
+                    }
+                  />{' '}
+                </label>
                 <input
                   type="text"
                   placeholder={`-91`}
@@ -253,8 +277,8 @@ const ListingContactEditModal: React.FC<Props> = ({
 
             <p className={styles.kycText}>
               {' '}
-              Seller KYC and Bank details can be entered only on claimed and
-              verified listing pages{' '}
+              {/* Seller KYC and Bank details can be entered only on claimed and
+              verified listing pages{' '} */}
             </p>
           </>
         </section>

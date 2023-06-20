@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import styles from '@/styles/AddListing.module.css'
 import { openModal } from '@/redux/slices/modal'
 import { useDispatch } from 'react-redux'
-import { updateListingModalData } from '@/redux/slices/site'
+import { updateListingModalData, updateListingTypeModalMode } from '@/redux/slices/site'
 import store from '@/redux/store'
 import { useRouter } from 'next/router'
 
@@ -15,6 +15,8 @@ const AddListing: React.FC<Props> = (props) => {
   const handleClick = (type: ListingPages) => {
     dispatch(updateListingModalData({ type }))
     dispatch(openModal({ type: 'listing-type-edit', closable: true }))
+    dispatch(updateListingTypeModalMode({ mode: 'create'}))
+    
   }
   return (
     <>

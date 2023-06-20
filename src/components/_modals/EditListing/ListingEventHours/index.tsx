@@ -142,14 +142,14 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
       <div className={styles['modal-wrapper']}>
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>{'Event Hours'}</h4>
+          <h4 className={styles['heading']}>{'Event Date And Time'}</h4>
         </header>
 
         <hr />
 
         <section className={styles['body']}>
           <div className={styles.sectionHead}>
-            <p>Event Hours</p>
+            <p>Event Date & Time</p>
           </div>
           <div className={styles.listContainer}>
             <div className={styles.listItem}>

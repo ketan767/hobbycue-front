@@ -9,11 +9,12 @@ type Props = {
 }
 
 const PostWrapper: React.FC<Props> = ({ children, title }) => {
-  return <div className={`${styles['wrapper']}`}>
-   <p className={styles.title}>
-      {title}
-   </p>
-   {children}</div>
+  return (
+    <div className={`${styles['wrapper']}`}>
+      <p className={styles.title}>{title}</p>
+      <div className={styles['posts-container']}>{children}</div>
+    </div>
+  )
 }
 
 export default PostWrapper

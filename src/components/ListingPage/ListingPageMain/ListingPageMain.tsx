@@ -10,10 +10,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import styles from './styles.module.css'
 import { RootState } from '@/redux/store'
 import TimeIcon from '@/assets/svg/time.svg'
-import FacebookIcon from '@/assets/svg/facebook-icon.svg'
-import TwitterIcon from '@/assets/svg/twitter-icon.svg'
-import InstagramIcon from '@/assets/svg/insta-icon.svg'
+import FacebookIcon from '@/assets/svg/Facebook.svg'
+import TwitterIcon from '@/assets/svg/Twitter.svg'
+import InstagramIcon from '@/assets/svg/Instagram.svg'
 import { getListingPages, getListingTags } from '@/services/listing.service'
+import { dateFormat } from '@/utils'
+import { getAllUserDetail } from '@/services/user.service'
+import { updateListingTypeModalMode } from '@/redux/slices/site'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -23,7 +26,7 @@ interface Props {
 const ListingPageMain: React.FC<Props> = ({ data, children }) => {
   const dispatch = useDispatch()
   const [tags, setTags] = useState([])
-  const { listingLayoutMode } = useSelector((state: RootState) => state.site)
+  const { listingLayoutMode } = useSelector((state: any) => state.site)
   const [selectedTags, setSelectedTags] = useState([])
   const [listingPagesLeft, setListingPagesLeft] = useState([])
   const [listingPagesRight, setListingPagesRight] = useState([])
@@ -52,18 +55,29 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
         // console.log('all--' ,res.res.data.data.listings)
         let listings = res.res.data.data.listings
         let selectedListings: any = []
-        let selectedListingsRight: any = []
 
         listings.forEach((item: any) => {
           if (data?.related_listings_left?.listings.includes(item._id)) {
             selectedListings.push(item)
           }
+        })
+        setListingPagesLeft(selectedListings)
+      })
+      .catch((err: any) => {
+        console.log(err)
+      })
+
+    getAllUserDetail(``)
+      .then((res: any) => {
+        // console.log('all users', res.res.data.data.users)
+        let users = res.res.data.data.users
+        let selectedListingsRight: any = []
+        users.forEach((item: any) => {
           if (data?.related_listings_right?.listings.includes(item._id)) {
             selectedListingsRight.push(item)
           }
         })
         setListingPagesRight(selectedListingsRight)
-        setListingPagesLeft(selectedListings)
       })
       .catch((err: any) => {
         console.log(err)
@@ -76,11 +90,10 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
         <aside>
           <PageContentBox
             showEditButton={listingLayoutMode === 'edit'}
-            onEditBtnClick={() =>
-              dispatch(
-                openModal({ type: 'listing-hobby-edit', closable: true }),
-              )
-            }
+            onEditBtnClick={() => {
+              dispatch(openModal({ type: 'listing-type-edit', closable: true }))
+              dispatch(updateListingTypeModalMode({ mode: 'edit' }))
+            }}
           >
             <div className={styles['listing-page-type']}>
               <svg
@@ -505,13 +518,19 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                     </defs>
                   </svg>
 
-                  <span className={styles.textGray}>
-                    {`${data?._address.street},
+                  {listingLayoutMode === 'edit' ? (
+                    <span className={styles.textGray}>
+                      {`${data?._address.street},
                       ${data?._address.society},
                       ${data?._address.city},
                       ${data?._address.state},
                       ${data?._address.country}`}
-                  </span>
+                    </span>
+                  ) : (
+                    <span className={styles.textGray}>
+                      {`${data?._address.city}`}
+                    </span>
+                  )}
                 </li>
               )}
             </ul>
@@ -570,33 +589,33 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
 
           {/* Related Listing */}
           <PageContentBox
-            showEditButton={listingLayoutMode === 'edit'}
-            onEditBtnClick={() =>
-              dispatch(
-                openModal({
-                  type: 'related-listing-right-edit',
-                  closable: true,
-                }),
-              )
-            }
-          >
-            <h4 className={styles['heading']}>Related Listing</h4>
-            {!listingPagesRight || listingPagesRight.length === 0 ? (
-              <span className={styles.textGray}>{'No data!'}</span>
-            ) : (
-              <ul className={styles['hobby-list']}>
-                {listingPagesRight?.map((item: any) => {
-                  if (typeof item === 'string') return
-                  return (
-                    <li key={item._id} className={styles.textGray}>
-                      {item?.title}
-                      {/* {item?.genre && ` - ${item?.genre?.display} `} */}
-                    </li>
-                  )
-                })}
-              </ul>
-            )}
-          </PageContentBox>
+              showEditButton={listingLayoutMode === 'edit'}
+              onEditBtnClick={() =>
+                dispatch(
+                  openModal({
+                    type: 'related-listing-right-edit',
+                    closable: true,
+                  }),
+                )
+              }
+            >
+              <h4 className={styles['heading']}> Related Listing </h4>
+              {!listingPagesRight || listingPagesRight.length === 0 ? (
+                <span className={styles.textGray}>{'No data!'}</span>
+              ) : (
+                <ul className={styles['hobby-list']}>
+                  {listingPagesRight?.map((item: any) => {
+                    if (typeof item === 'string') return
+                    return (
+                      <li key={item._id} className={styles.textGray}>
+                        {item?.full_name}
+                        {/* {item?.genre && ` - ${item?.genre?.display} `} */}
+                      </li>
+                    )
+                  })}
+                </ul>
+              )}
+            </PageContentBox>
 
           {data?.type === 4 && (
             <PageContentBox
@@ -636,9 +655,14 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                         </defs>
                       </svg>
                       <p className={styles.workingHour}>
-                        {data?.event_date_time.from_date} -{' '}
-                        {data?.event_date_time.to_date},{' '}
-                        {data?.event_date_time.from_time} -{' '}
+                        {dateFormat.format(
+                          new Date(data?.event_date_time.from_date),
+                        )}{' '}
+                        -{' '}
+                        {dateFormat.format(
+                          new Date(data?.event_date_time.to_date),
+                        )}
+                        , {data?.event_date_time.from_time} -{' '}
                         {data?.event_date_time.to_time}
                       </p>
                     </li>
@@ -652,7 +676,10 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
                 dispatch(
-                  openModal({ type: 'listing-address-edit', closable: true }),
+                  openModal({
+                    type: 'listing-social-media-edit',
+                    closable: true,
+                  }),
                 )
               }
             >
@@ -662,21 +689,6 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                 <Image src={TwitterIcon} alt="Twitter" />
                 <Image src={InstagramIcon} alt="Instagram" />
               </div>
-            </PageContentBox>
-          ) : (
-            <></>
-          )}
-          {data?.type === 4 || data?.type === 3 ? (
-            <PageContentBox
-              showEditButton={listingLayoutMode === 'edit'}
-              onEditBtnClick={() =>
-                dispatch(
-                  openModal({ type: 'listing-address-edit', closable: true }),
-                )
-              }
-            >
-              <h4 className={styles['heading']}> Related Listing </h4>
-              <p className={styles.textGray}>Eg: Guru related to this page</p>
             </PageContentBox>
           ) : (
             <></>

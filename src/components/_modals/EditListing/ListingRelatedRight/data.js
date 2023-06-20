@@ -63,31 +63,31 @@ export const listingData = [
 
   {
     _id: 11,
-    type: 3,
+    type: 4,
     relation: 'Artists',
     side: 'left',
   },
   {
     _id: 12,
-    type: 3,
+    type: 4,
     relation: 'See Also',
     side: 'left',
   },
   {
     _id: 13,
-    type: 3,
+    type: 4,
     relation: 'Venue',
     side: 'right',
   },
   {
     _id: 14,
-    type: 3,
+    type: 4,
     relation: 'Host',
     side: 'right',
   },
   {
     _id: 15,
-    type: 3,
+    type: 4,
     relation: 'See Also',
     side: 'right',
   },

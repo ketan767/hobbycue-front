@@ -16,7 +16,7 @@ export const getPages = async (id: any) => {
   const headers = { Authorization: `Bearer ${token}` }
 
   try {
-    const res = await axiosInstance.get(`/post/?author_type=Listing&_author=${id}`, { headers })
+    const res = await axiosInstance.get(`/post/?author_type=Listing&_author=${id}&populate=_author`, { headers })
     return { res: res, err: null }
   } catch (error) {
     console.error(error)

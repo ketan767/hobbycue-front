@@ -7,6 +7,7 @@ import { dateFormatShort, isEmptyField } from '@/utils'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import PostCommentVotes from './CommentVotes'
+import { format, render, cancel, register } from 'timeago.js';
 
 type Props = {
   styles: any
@@ -138,7 +139,7 @@ const PostComments = ({ data, styles }: Props) => {
                         </p>
                         <p className={styles['date']}>
                           {comment?.date &&
-                            dateFormatShort.format(new Date(comment.date))}
+                            format(new Date(comment.date))}
                         </p>
                       </header>
 
@@ -214,7 +215,7 @@ const PostComments = ({ data, styles }: Props) => {
                       </p>
                       <p className={styles['date']}>
                         {comments?.[0]?.date &&
-                          dateFormatShort.format(new Date(comments[0].date))}
+                          format(new Date(comments[0].date))}
                       </p>
                     </header>
 

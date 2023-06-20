@@ -78,6 +78,8 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
       // window.location.reload()
     }
   }
+  let pinnedPosts = posts.filter((item: any) => item.isPinned === true)
+  let unpinnnedPosts = posts.filter((item: any) => item.isPinned !== true)
 
   return (
     <>
@@ -130,28 +132,33 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
               ) : (
                 posts.length === 0 && 'No Posts'
               )}
-              {posts.map((post: any) => {
-                if (post.isPinned) {
-                  return (
-                    <PostWrapper title="Pinned Post">
+
+              {pinnedPosts.map((post: any) => {
+                return (
+                  <PostWrapper title="Pinned Post" key={post._id}>
+                    <PostCard
+                      key={post._id}
+                      postData={post}
+                      fromProfile={true}
+                      onPinPost={onPinPost}
+                    />
+                  </PostWrapper>
+                )
+              })}
+              {unpinnnedPosts.length > 0 && (
+                <PostWrapper title="Recent Post">
+                  {unpinnnedPosts.map((post: any) => {
+                    return (
                       <PostCard
                         key={post._id}
                         postData={post}
                         fromProfile={true}
                         onPinPost={onPinPost}
                       />
-                    </PostWrapper>
-                  )
-                }
-                return (
-                  <PostCard
-                    key={post._id}
-                    postData={post}
-                    fromProfile={true}
-                    onPinPost={onPinPost}
-                  />
-                )
-              })}
+                    )
+                  })}
+                </PostWrapper>
+              )}
             </section>
           </main>
           <aside>
