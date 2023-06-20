@@ -15,6 +15,7 @@ import TwitterIcon from '@/assets/svg/Twitter.svg'
 import InstagramIcon from '@/assets/svg/Instagram.svg'
 import { getListingPages, getListingTags } from '@/services/listing.service'
 import { dateFormat } from '@/utils'
+import { getAllUserDetail } from '@/services/user.service'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -53,18 +54,29 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
         // console.log('all--' ,res.res.data.data.listings)
         let listings = res.res.data.data.listings
         let selectedListings: any = []
-        let selectedListingsRight: any = []
 
         listings.forEach((item: any) => {
           if (data?.related_listings_left?.listings.includes(item._id)) {
             selectedListings.push(item)
           }
+        })
+        setListingPagesLeft(selectedListings)
+      })
+      .catch((err: any) => {
+        console.log(err)
+      })
+
+    getAllUserDetail(``)
+      .then((res: any) => {
+        // console.log('all users', res.res.data.data.users)
+        let users = res.res.data.data.users
+        let selectedListingsRight: any = []
+        users.forEach((item: any) => {
           if (data?.related_listings_right?.listings.includes(item._id)) {
             selectedListingsRight.push(item)
           }
         })
         setListingPagesRight(selectedListingsRight)
-        setListingPagesLeft(selectedListings)
       })
       .catch((err: any) => {
         console.log(err)
@@ -643,11 +655,12 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                       <p className={styles.workingHour}>
                         {dateFormat.format(
                           new Date(data?.event_date_time.from_date),
-                        )} -{' '}
+                        )}{' '}
+                        -{' '}
                         {dateFormat.format(
                           new Date(data?.event_date_time.to_date),
-                        )}, {' '}
-                        {data?.event_date_time.from_time} -{' '}
+                        )}
+                        , {data?.event_date_time.from_time} -{' '}
                         {data?.event_date_time.to_time}
                       </p>
                     </li>
@@ -683,12 +696,29 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
                 dispatch(
-                  openModal({ type: 'related-listing-right-edit', closable: true }),
+                  openModal({
+                    type: 'related-listing-right-edit',
+                    closable: true,
+                  }),
                 )
               }
             >
               <h4 className={styles['heading']}> Related Listing </h4>
-              <p className={styles.textGray}>Eg: Guru related to this page</p>
+              {!listingPagesRight || listingPagesRight.length === 0 ? (
+                <span className={styles.textGray}>{'No data!'}</span>
+              ) : (
+                <ul className={styles['hobby-list']}>
+                  {listingPagesRight?.map((item: any) => {
+                    if (typeof item === 'string') return
+                    return (
+                      <li key={item._id} className={styles.textGray}>
+                        {item?.full_name}
+                        {/* {item?.genre && ` - ${item?.genre?.display} `} */}
+                      </li>
+                    )
+                  })}
+                </ul>
+              )}
             </PageContentBox>
           ) : (
             <></>

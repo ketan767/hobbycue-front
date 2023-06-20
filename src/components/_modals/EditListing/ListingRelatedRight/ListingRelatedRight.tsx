@@ -9,6 +9,7 @@ import {
 } from '@mui/material'
 
 import {
+  getAllUserDetail,
   getMyProfileDetail,
   updateMyProfileDetail,
 } from '@/services/user.service'
@@ -102,10 +103,18 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    getListingPages(`title=${pageInputValue}`)
+    // getListingPages(`title=${pageInputValue}`)
+    //   .then((res: any) => {
+    //     // console.log(res.res.data.data.listings)
+    //     setAllDropdownValues(res.res.data.data.listings)
+    //   })
+    //   .catch((err: any) => {
+    //     console.log(err)
+    //   })
+      getAllUserDetail(`full_name=${pageInputValue}`)
       .then((res: any) => {
-        // console.log(res.res.data.data.listings)
-        setAllDropdownValues(res.res.data.data.listings)
+        console.log('resp', res.res.data.data.users)
+        setAllDropdownValues(res.res.data.data.users)
       })
       .catch((err: any) => {
         console.log(err)
@@ -113,17 +122,15 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
   }, [pageInputValue])
 
   useEffect(() => {
-    getListingPages(``)
+    getAllUserDetail(``)
       .then((res: any) => {
-        // console.log('all--' ,res.res.data.data.listings)
-        setAllListingPages(res.res.data.data.listings)
+        setAllListingPages(res.res.data.data.users)
       })
       .catch((err: any) => {
         console.log(err)
       })
   }, [])
 
-  // console.log('rl', listingModalData?.related_listings_right)
 
   const handleAddPage = async () => {
     const jsonData = {
@@ -185,7 +192,6 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
     setTableData(listing)
   }, [relatedListingsLeft, allListingPages])
 
-  // console.log(tableData)
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -242,9 +248,9 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
               />
               {/* <p className={styles['helper-text']}>{inputErrs.full_name}</p> */}
             </div>
-            {showDropdown && allDropdownValues.length !== 0 && (
+            {showDropdown && allDropdownValues?.length !== 0 && (
               <div className={styles['dropdown']}>
-                {allDropdownValues.map((item: any) => {
+                {allDropdownValues?.map((item: any) => {
                   return (
                     <div
                       key={item?._id}
@@ -264,7 +270,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
                         width={20}
                         height={20}
                       />
-                      <p>{item?.title}</p>
+                      <p>{item?.full_name}</p>
                     </div>
                   )
                 })}
@@ -323,7 +329,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
                 {tableData?.map((item: any) => {
                   return (
                     <tr key={item._id}>
-                      <td>{item?.title}</td>
+                      <td>{item?.full_name}</td>
                       {/* <td>{item?.genre?.display || '-'}</td> */}
                       <td></td>
                       <td></td>
