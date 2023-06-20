@@ -589,33 +589,33 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
 
           {/* Related Listing */}
           <PageContentBox
-            showEditButton={listingLayoutMode === 'edit'}
-            onEditBtnClick={() =>
-              dispatch(
-                openModal({
-                  type: 'related-listing-right-edit',
-                  closable: true,
-                }),
-              )
-            }
-          >
-            <h4 className={styles['heading']}>Related Listing</h4>
-            {!listingPagesRight || listingPagesRight.length === 0 ? (
-              <span className={styles.textGray}>{'No data!'}</span>
-            ) : (
-              <ul className={styles['hobby-list']}>
-                {listingPagesRight?.map((item: any) => {
-                  if (typeof item === 'string') return
-                  return (
-                    <li key={item._id} className={styles.textGray}>
-                      {item?.title}
-                      {/* {item?.genre && ` - ${item?.genre?.display} `} */}
-                    </li>
-                  )
-                })}
-              </ul>
-            )}
-          </PageContentBox>
+              showEditButton={listingLayoutMode === 'edit'}
+              onEditBtnClick={() =>
+                dispatch(
+                  openModal({
+                    type: 'related-listing-right-edit',
+                    closable: true,
+                  }),
+                )
+              }
+            >
+              <h4 className={styles['heading']}> Related Listing </h4>
+              {!listingPagesRight || listingPagesRight.length === 0 ? (
+                <span className={styles.textGray}>{'No data!'}</span>
+              ) : (
+                <ul className={styles['hobby-list']}>
+                  {listingPagesRight?.map((item: any) => {
+                    if (typeof item === 'string') return
+                    return (
+                      <li key={item._id} className={styles.textGray}>
+                        {item?.full_name}
+                        {/* {item?.genre && ` - ${item?.genre?.display} `} */}
+                      </li>
+                    )
+                  })}
+                </ul>
+              )}
+            </PageContentBox>
 
           {data?.type === 4 && (
             <PageContentBox
@@ -689,38 +689,6 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                 <Image src={TwitterIcon} alt="Twitter" />
                 <Image src={InstagramIcon} alt="Instagram" />
               </div>
-            </PageContentBox>
-          ) : (
-            <></>
-          )}
-          {data?.type === 4 || data?.type === 3 ? (
-            <PageContentBox
-              showEditButton={listingLayoutMode === 'edit'}
-              onEditBtnClick={() =>
-                dispatch(
-                  openModal({
-                    type: 'related-listing-right-edit',
-                    closable: true,
-                  }),
-                )
-              }
-            >
-              <h4 className={styles['heading']}> Related Listing </h4>
-              {!listingPagesRight || listingPagesRight.length === 0 ? (
-                <span className={styles.textGray}>{'No data!'}</span>
-              ) : (
-                <ul className={styles['hobby-list']}>
-                  {listingPagesRight?.map((item: any) => {
-                    if (typeof item === 'string') return
-                    return (
-                      <li key={item._id} className={styles.textGray}>
-                        {item?.full_name}
-                        {/* {item?.genre && ` - ${item?.genre?.display} `} */}
-                      </li>
-                    )
-                  })}
-                </ul>
-              )}
             </PageContentBox>
           ) : (
             <></>
