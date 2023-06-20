@@ -260,3 +260,13 @@
    margin-bottom: 0;
    margin-right: 8px;
  }
+ .dropdownItem{
+  display: flex;
+  column-gap: 8px;
+  align-items: center;
+  padding: 4px;
+  transition: 0.2s;
+}
+.dropdownItem:hover{
+  background-color: #94949444;
+}

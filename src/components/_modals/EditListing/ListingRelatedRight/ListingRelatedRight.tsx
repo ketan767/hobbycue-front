@@ -9,6 +9,7 @@ import {
 } from '@mui/material'
 
 import {
+  getAllUserDetail,
   getMyProfileDetail,
   updateMyProfileDetail,
 } from '@/services/user.service'
@@ -24,7 +25,9 @@ import {
   updateListingModalData,
   updateRelatedListingsLeft,
 } from '@/redux/slices/site'
+import Image from 'next/image'
 import { listingData } from './data'
+import DefaultProfile from '@/assets/image/default.png'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -67,7 +70,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
       (item: any) =>
         item.type === listingModalData.type && item.side === 'right',
     )
-    console.log(listingModalData);
+    console.log(listingModalData)
     // console.log(listingModalData.type);
     // console.log({updated});
     setRelatedListingData(updated)
@@ -100,10 +103,18 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    getListingPages(`title=${pageInputValue}`)
+    // getListingPages(`title=${pageInputValue}`)
+    //   .then((res: any) => {
+    //     // console.log(res.res.data.data.listings)
+    //     setAllDropdownValues(res.res.data.data.listings)
+    //   })
+    //   .catch((err: any) => {
+    //     console.log(err)
+    //   })
+      getAllUserDetail(`full_name=${pageInputValue}`)
       .then((res: any) => {
-        // console.log(res.res.data.data.listings)
-        setAllDropdownValues(res.res.data.data.listings)
+        console.log('resp', res.res.data.data.users)
+        setAllDropdownValues(res.res.data.data.users)
       })
       .catch((err: any) => {
         console.log(err)
@@ -111,17 +122,15 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
   }, [pageInputValue])
 
   useEffect(() => {
-    getListingPages(``)
+    getAllUserDetail(``)
       .then((res: any) => {
-        // console.log('all--' ,res.res.data.data.listings)
-        setAllListingPages(res.res.data.data.listings)
+        setAllListingPages(res.res.data.data.users)
       })
       .catch((err: any) => {
         console.log(err)
       })
   }, [])
 
-  // console.log('rl', listingModalData?.related_listings_right)
 
   const handleAddPage = async () => {
     const jsonData = {
@@ -183,7 +192,6 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
     setTableData(listing)
   }, [relatedListingsLeft, allListingPages])
 
-  // console.log(tableData)
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -223,9 +231,10 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
             <div
               className={`${styles['input-box']} ${styles['dropdown-input-box']}`}
             >
+              <label>Listing Page</label>
               <input
                 type="text"
-                placeholder="Genre/Style"
+                placeholder="Search user profile..."
                 autoComplete="name"
                 required
                 value={pageInputValue}
@@ -235,23 +244,34 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
                     setShowDropdown(false)
                   }, 300)
                 }
-                onChange={(e) => setPageInputValue(e.target.value)}
+                onChange={(e: any) => setPageInputValue(e.target.value)}
               />
               {/* <p className={styles['helper-text']}>{inputErrs.full_name}</p> */}
             </div>
-            {showDropdown && allDropdownValues.length !== 0 && (
+            {showDropdown && allDropdownValues?.length !== 0 && (
               <div className={styles['dropdown']}>
-                {allDropdownValues.map((item: any) => {
+                {allDropdownValues?.map((item: any) => {
                   return (
-                    <p
+                    <div
                       key={item?._id}
                       onClick={() => {
                         setSelectedPage(item)
                         setPageInputValue(item.name)
                       }}
+                      className={styles.dropdownItem}
                     >
-                      {item?.title}
-                    </p>
+                      <Image
+                        src={
+                          item.profile_image
+                            ? item.profile_image
+                            : DefaultProfile
+                        }
+                        alt="profile"
+                        width={20}
+                        height={20}
+                      />
+                      <p>{item?.full_name}</p>
+                    </div>
                   )
                 })}
               </div>
@@ -299,9 +319,9 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
             <table>
               <thead>
                 <tr>
-                  <td>Hobby</td>
-                  <td>Genre/Style</td>
-                  <td>Level</td>
+                  <td>Listing Page</td>
+                  <td></td>
+                  <td></td>
                   <td>Action</td>
                 </tr>
               </thead>
@@ -309,7 +329,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
                 {tableData?.map((item: any) => {
                   return (
                     <tr key={item._id}>
-                      <td>{item?.title}</td>
+                      <td>{item?.full_name}</td>
                       {/* <td>{item?.genre?.display || '-'}</td> */}
                       <td></td>
                       <td></td>

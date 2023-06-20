@@ -59,6 +59,7 @@ interface AuthState {
     onComplete: any
   }
   showPageLoader: boolean
+  listingTypeModalMode? : any
 }
 
 const initialState: AuthState = {
@@ -81,6 +82,7 @@ const initialState: AuthState = {
     onComplete: null,
   },
   showPageLoader: false,
+  listingTypeModalMode : 'create'
 }
 
 /** Template Listing Data 
@@ -161,6 +163,9 @@ const siteSlice = createSlice({
     setShowPageLoader: (state, { payload }: { payload: boolean }) => {
       state.showPageLoader = payload
     },
+    updateListingTypeModalMode: (state, { payload }) => {
+      state.listingTypeModalMode = payload.mode
+    },
   },
 })
 
@@ -173,6 +178,7 @@ export const {
   updateEventDateTime,
   updateRelatedListingsLeft,
   setShowPageLoader,
+  updateListingTypeModalMode
 } = siteSlice.actions
 
 export default siteSlice.reducer

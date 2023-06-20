@@ -11,40 +11,41 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
+import { RootState } from '@/redux/store'
+import { updateListing } from '@/services/listing.service'
 
 type Props = {
   data?: ProfilePageData['pageData']
 }
 const options = ['Facebook', 'Twitter', 'Instagram']
-const SocialMediaEditModal = ({ data }: Props) => {
+const ListingSocialMediaEditModal = ({ data }: Props) => {
   const [submitBtnLoading, setSubmitBtnLoading] = useState(false)
-  const [relation, setRelation] = useState('')
-  const { user } = useSelector((state: any) => state.user)
+  const { listingModalData } = useSelector((state: RootState) => state.site)
 
   useEffect(() => {
     let arr = []
-    if (user.facebook_url) {
+    if (listingModalData.facebook_url) {
       arr.push({
         socialMedia: 'Facebook',
-        url: user.facebook_url,
+        url: listingModalData.facebook_url,
       })
     }
-    if (user.instagram_url) {
+    if (listingModalData.instagram_url) {
       arr.push({
         socialMedia: 'Instagram',
-        url: user.instagram_url,
+        url: listingModalData.instagram_url,
       })
     }
-    if (user.twitter_url) {
+    if (listingModalData.twitter_url) {
       arr.push({
         socialMedia: 'Twitter',
-        url: user.twitter_url,
+        url: listingModalData.twitter_url,
       })
     }
     if (arr.length > 0) {
       setMediaData(arr)
     }
-  }, [user])
+  }, [listingModalData])
 
   const [mediaData, setMediaData] = useState([
     {
@@ -92,20 +93,16 @@ const SocialMediaEditModal = ({ data }: Props) => {
       twitter_url: getValue('Twitter'),
     }
     // console.log('re', reqBody)
-    const { err, res } = await updateMyProfileDetail(reqBody)
+    const { err, res } = await updateListing(listingModalData._id, reqBody)
 
     if (err) {
       setSubmitBtnLoading(false)
       return console.log(err)
     }
 
-    const { err: error, res: response } = await getMyProfileDetail()
-    setSubmitBtnLoading(false)
-
-    if (error) return console.log(error)
-    if (response?.data.success) {
-      console.log('response', response)
-      dispatch(updateUser(response.data.data.user))
+    if (err) return console.log(err)
+    if (res?.data.success) {
+      console.log('res', res)
       window.location.reload()
       dispatch(closeModal())
     }
@@ -132,7 +129,7 @@ const SocialMediaEditModal = ({ data }: Props) => {
         </div>
         {mediaData.map((item: any, idx: any) => {
           return (
-            <div className={styles.inputContainer} key={idx}>
+            <div className={styles.inputContainer} key={idx} >
               <Select
                 value={item.socialMedia}
                 onChange={(e) => {
@@ -190,4 +187,4 @@ const SocialMediaEditModal = ({ data }: Props) => {
   )
 }
 
-export default SocialMediaEditModal
+export default ListingSocialMediaEditModal

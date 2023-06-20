@@ -7,7 +7,7 @@ import {
   MenuItem,
   Select,
 } from '@mui/material'
-
+import Image from 'next/image'
 import {
   getMyProfileDetail,
   updateMyProfileDetail,
@@ -25,6 +25,7 @@ import {
   updateRelatedListingsLeft,
 } from '@/redux/slices/site'
 import { listingData } from './data'
+import DefaultProfile from '@/assets/image/default.png'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -45,7 +46,6 @@ const RelatedListingEditModal: React.FC<Props> = ({
   onBackBtnClick,
 }) => {
   const dispatch = useDispatch()
-  const { user } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
   const [relation, setRelation] = useState<any>('')
 
@@ -58,18 +58,13 @@ const RelatedListingEditModal: React.FC<Props> = ({
   const [addPageLoading, setAddPageLoading] = useState(false)
   const [selectedPage, setSelectedPage] = useState<any>({})
   const [relatedListingsLeft, setRelatedListingsLeft] = useState<any>([])
-  const [data, setData] = useState<ListingAboutData>({
-    description: { value: '', error: null },
-  })
+
 
   useEffect(() => {
     const updated = listingData.filter(
       (item: any) =>
         item.type === listingModalData.type && item.side === 'left',
     )
-    console.log(listingModalData);
-    // console.log(listingModalData.type);
-    // console.log({updated});
     setRelatedListingData(updated)
   }, [listingModalData?._id])
 
@@ -120,8 +115,6 @@ const RelatedListingEditModal: React.FC<Props> = ({
         console.log(err)
       })
   }, [])
-
-  // console.log('rl', listingModalData?.related_listings_left)
 
   const handleAddPage = async () => {
     const jsonData = {
@@ -223,9 +216,11 @@ const RelatedListingEditModal: React.FC<Props> = ({
             <div
               className={`${styles['input-box']} ${styles['dropdown-input-box']}`}
             >
+              <label>Listing Page</label>
+
               <input
                 type="text"
-                placeholder="Genre/Style"
+                placeholder="Search listing page..."
                 autoComplete="name"
                 required
                 value={pageInputValue}
@@ -243,15 +238,17 @@ const RelatedListingEditModal: React.FC<Props> = ({
               <div className={styles['dropdown']}>
                 {allDropdownValues.map((item: any) => {
                   return (
-                    <p
+                    <div
                       key={item?._id}
                       onClick={() => {
                         setSelectedPage(item)
                         setPageInputValue(item.name)
                       }}
+                      className={styles.dropdownItem}
                     >
-                      {item?.title}
-                    </p>
+                      <Image src={item.profile_image ? item.profile_image : DefaultProfile} alt='profile' width={20} height={20} />
+                      <p>{item?.title}</p>
+                    </div>
                   )
                 })}
               </div>
@@ -299,9 +296,9 @@ const RelatedListingEditModal: React.FC<Props> = ({
             <table>
               <thead>
                 <tr>
-                  <td>Hobby</td>
-                  <td>Genre/Style</td>
-                  <td>Level</td>
+                  <td>Listing Page</td>
+                  <td></td>
+                  <td></td>
                   <td>Action</td>
                 </tr>
               </thead>

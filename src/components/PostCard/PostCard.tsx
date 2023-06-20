@@ -24,7 +24,7 @@ const PostCard: React.FC<Props> = (props) => {
   // console.log('🚀 ~ file: PostCard.tsx:20 ~ router:', router)
   const { fromProfile, onPinPost } = props
   const optionRef: any = useRef(null)
-  const [showComments, setShowComments] = useState(false)
+  const [showComments, setShowComments] = useState(true)
   const [postData, setPostData] = useState(props.postData)
   const [url, setUrl] = useState('')
   const [optionsActive, setOptionsActive] = useState(false)
@@ -175,18 +175,11 @@ const PostCard: React.FC<Props> = (props) => {
               </video>
             )}
             {postData.media?.length > 0 ? (
-              <Slider setActiveIdx={setActiveIdx} activeIdx={activeIdx} images={postData.media} >
-                {/* {postData.media.map((item: any, idx: number) => {
-                  return (
-                    <img
-                      src={item}
-                      alt="img"
-                      className={styles.postImage}
-                      onClick={() => setActiveIdx(idx)}
-                    />
-                  )
-                })} */}
-              </Slider>
+              <Slider
+                setActiveIdx={setActiveIdx}
+                activeIdx={activeIdx}
+                images={postData.media}
+              ></Slider>
             ) : (
               <></>
             )}

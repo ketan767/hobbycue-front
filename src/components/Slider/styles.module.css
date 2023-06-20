@@ -35,7 +35,7 @@
   width: 30px;
   height: 30px;
   z-index: 1;
-  background-color: rgba(81, 81, 80, 0.348);
+  /* background-color: rgba(81, 81, 80, 0.044); */
   cursor: pointer;
 }
 .leftIcon {

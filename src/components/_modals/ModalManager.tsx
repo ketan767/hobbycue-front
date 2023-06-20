@@ -32,6 +32,7 @@ import UploadVideoPage from './uploadVideoPage'
 import UploadImagePage from './uploadImagePage'
 import UploadVideoUser from './UploadVideoUser'
 import SocialMediaEditModal from './EditProfile/SocialMedia/SocialMedia'
+import ListingSocialMediaEditModal from './EditListing/ListingSocialMedia/ListingSocialMedia'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -121,6 +122,9 @@ const ModalManager: React.FC = () => {
               )}
               {activeModal === 'related-listing-right-edit' && (
                 <RelatedListingRightEditModal />
+              )}
+              {activeModal === 'listing-social-media-edit' && (
+                <ListingSocialMediaEditModal />
               )}
               {activeModal === 'upload-video-page' && <UploadVideoPage />}
               {activeModal === 'upload-image-page' && <UploadImagePage />}

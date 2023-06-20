@@ -199,7 +199,8 @@ const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
           setData((prev: any) => {
             return {
               ...prev,
-              state: {value:formatted_address, error: null},
+              street: {value:formatted_address, error: null},
+              state: {value:state, error: null},
               city: {value:city, error: null},
               country: {value:country, error: null},
               pin_code: {value:pin_code, error: null},
@@ -211,7 +212,7 @@ const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
         console.error('Error geocoding:', error)
       })
   }
-
+ 
   return (
     <>
       <div className={styles['modal-wrapper']}>

@@ -61,7 +61,7 @@ const CustomEditor: React.FC<Props> = ({
       toolbar?.append(img)
 
       const vid = document.createElement('img')
-      vid.src = '/add.svg'
+      vid.src = '/video.svg'
       vid.addEventListener('click', openInputVideo)
       toolbar?.append(vid)
       setImageIconAdded(true)
