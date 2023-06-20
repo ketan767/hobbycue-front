@@ -16,6 +16,7 @@ import InstagramIcon from '../../../assets/svg/Instagram.svg'
 import { getPages } from '@/services/listing.service'
 import ListingPageCard from '@/components/ListingPageCard/ListingPageCard'
 import PostCard from '@/components/PostCard/PostCard'
+import ListingPostsTab from '../ListingPagePosts/ListingPagePosts'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -33,8 +34,16 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
     const id = data?._id
     getPages(id)
       .then((res: any) => {
-        console.log('res', res.res)
-        setPagesData(res?.res.data?.data.posts)
+        let allPosts = res.res.data.data.posts
+        allPosts = allPosts.map((post: any) => {
+          if (post._id === data.pinned_post) {
+            return { ...post, isPinned: true }
+          } else {
+            return post
+          }
+        })
+        allPosts = allPosts.sort((x: any) => (x.isPinned ? -1 : 1))
+        setPagesData(allPosts)
       })
       .catch((err) => {
         console.log('err', err.response)
@@ -74,11 +83,7 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
           <div>{data?.admin_note}</div>
         </PageContentBox>
 
-        <PageContentBox>
-          {pagesData?.map((page: any) => {
-            return <PostCard postData={page} key={page._id} />
-          })}
-        </PageContentBox>
+        <ListingPostsTab data={data} hideStartPost={true} />
       </main>
     </>
   )

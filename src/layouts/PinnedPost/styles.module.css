@@ -3,6 +3,10 @@
   background: #ffffff;
   border: 1px solid #ebedf0;
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+  margin-bottom: 1rem;
 }
 .title {
   margin-bottom: 16px;
