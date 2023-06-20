@@ -129,7 +129,7 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
         </div>
         {mediaData.map((item: any, idx: any) => {
           return (
-            <div className={styles.inputContainer}>
+            <div className={styles.inputContainer} key={idx} >
               <Select
                 value={item.socialMedia}
                 onChange={(e) => {

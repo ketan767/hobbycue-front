@@ -16,6 +16,7 @@ import InstagramIcon from '@/assets/svg/Instagram.svg'
 import { getListingPages, getListingTags } from '@/services/listing.service'
 import { dateFormat } from '@/utils'
 import { getAllUserDetail } from '@/services/user.service'
+import { updateListingTypeModalMode } from '@/redux/slices/site'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -25,7 +26,7 @@ interface Props {
 const ListingPageMain: React.FC<Props> = ({ data, children }) => {
   const dispatch = useDispatch()
   const [tags, setTags] = useState([])
-  const { listingLayoutMode } = useSelector((state: RootState) => state.site)
+  const { listingLayoutMode } = useSelector((state: any) => state.site)
   const [selectedTags, setSelectedTags] = useState([])
   const [listingPagesLeft, setListingPagesLeft] = useState([])
   const [listingPagesRight, setListingPagesRight] = useState([])
@@ -89,9 +90,10 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
         <aside>
           <PageContentBox
             showEditButton={listingLayoutMode === 'edit'}
-            onEditBtnClick={() =>
+            onEditBtnClick={() => {
               dispatch(openModal({ type: 'listing-type-edit', closable: true }))
-            }
+              dispatch(updateListingTypeModalMode({ mode: 'edit' }))
+            }}
           >
             <div className={styles['listing-page-type']}>
               <svg

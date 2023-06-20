@@ -133,7 +133,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
               {posts.map((post: any) => {
                 if (post.isPinned) {
                   return (
-                    <PostWrapper title="Pinned Post">
+                    <PostWrapper title="Pinned Post" key={post._id} >
                       <PostCard
                         key={post._id}
                         postData={post}

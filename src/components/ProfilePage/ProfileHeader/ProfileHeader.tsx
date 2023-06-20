@@ -11,6 +11,7 @@ import Link from 'next/link'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   updateListingModalData,
+  updateListingTypeModalMode,
   updatePhotoEditModalData,
 } from '@/redux/slices/site'
 import { closeModal, openModal } from '@/redux/slices/modal'
@@ -170,6 +171,7 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
                 dispatch(
                   openModal({ type: 'listing-type-edit', closable: true }),
                 )
+                dispatch(updateListingTypeModalMode({ mode: 'edit' }))
               }}
               className={styles.makeMyPageButton}
             >

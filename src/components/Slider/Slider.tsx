@@ -39,6 +39,7 @@ const Slider: React.FC<Props> = ({ images }) => {
                 ? styles.prev
                 : styles.next
             }`}
+            key={idx}
             onClick={() => setActiveIdx(idx)}
           />
         )

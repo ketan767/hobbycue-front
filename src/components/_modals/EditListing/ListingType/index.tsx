@@ -34,8 +34,9 @@ const ListingTypeEditModal: React.FC<Props> = ({
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
 
-  const { listingModalData } = useSelector((state: RootState) => state.site)
-
+  const { listingModalData, listingTypeModalMode } = useSelector(
+    (state: RootState) => state.site,
+  )
   const [list, setList] = useState<any>([])
 
   const [value, setValue] = useState<string | string[]>([])
@@ -44,29 +45,35 @@ const ListingTypeEditModal: React.FC<Props> = ({
 
   const handleSubmit = async () => {
     // setSubmitBtnLoading(true)
-
-    dispatch(updateListingModalData({ ...listingModalData, page_type: value }))
-    dispatch(openModal({ type: 'listing-onboarding', closable: false }))
+    if (listingTypeModalMode === 'edit') {
+      handleEdit()
+    } else {
+      dispatch(
+        updateListingModalData({ ...listingModalData, page_type: value }),
+      )
+      dispatch(openModal({ type: 'listing-onboarding', closable: false }))
+    }
   }
-  // const handleSubmit = async () => {
-  //   // setSubmitBtnLoading(true)
-  //   if (onComplete) {
-  //     dispatch(
-  //       updateListingModalData({ ...listingModalData, page_type: value }),
-  //     )
-  //     dispatch(openModal({ type: 'listing-onboarding', closable: false }))
-  //   } else {
-  //     const { err, res } = await updateListing(listingModalData._id, {
-  //       page_type: value,
-  //     })
-  //     setSubmitBtnLoading(false)
-  //     if (err) return console.log(err)
-  //     if (res?.data.success) {
-  //       dispatch(updateListingModalData(res.data.data.listing))
-  //       window.location.reload()
-  //       dispatch(closeModal())
-  //     }
-  //   }
+  const handleEdit = async () => {
+    // setSubmitBtnLoading(true)
+    if (onComplete) {
+      dispatch(
+        updateListingModalData({ ...listingModalData, page_type: value }),
+      )
+      dispatch(openModal({ type: 'listing-onboarding', closable: false }))
+    } else {
+      const { err, res } = await updateListing(listingModalData._id, {
+        page_type: value,
+      })
+      setSubmitBtnLoading(false)
+      if (err) return console.log(err)
+      if (res?.data.success) {
+        dispatch(updateListingModalData(res.data.data.listing))
+        window.location.reload()
+        dispatch(closeModal())
+      }
+    }
+  }
   const peoplePageTypeList: PeoplePageType[] = [
     'Teacher',
     'Trainer',
@@ -184,7 +191,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'22px'} />
             ) : (
-              'Next'
+              listingTypeModalMode === 'edit' ? 'Edit' : 'Next'
             )}
           </Button>
         </footer>

@@ -20,6 +20,7 @@ import ListingHobbyEditModal from '../EditListing/ListingHobby'
 import { updateListing } from '@/services/listing.service'
 import ListingWorkingHoursEditModal from '../EditListing/ListingWorkingHours'
 import ListingEventHoursEditModal from '../EditListing/ListingEventHours'
+import { updateListingTypeModalMode } from '@/redux/slices/site'
 
 // type OnboardingData = {
 //   full_name: string
@@ -114,9 +115,10 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
       {activeStep === 'General' && (
         <ListingGeneralEditModal
           onComplete={handleNext}
-          onBackBtnClick={() =>
+          onBackBtnClick={() =>{
             dispatch(openModal({ type: 'listing-type-edit', closable: true }))
-          }
+            dispatch(updateListingTypeModalMode({ mode: 'create'}))
+          }}
         />
       )}
 
