@@ -73,6 +73,25 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
     }
     setIsLoadingPosts(false)
   }
+
+  const handleLocationClick = async (item: any) => {
+    console.log(item)
+    const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
+
+    params.append('visibility', item)
+
+    setIsLoadingPosts(true)
+    const { err, res } = await getAllPosts(params.toString())
+    if (err) return console.log(err)
+    if (res.data.success) {
+      let posts = res.data.data.posts.map((post: any) => {
+        let content = post.content.replace(/<img .*?>/g, '')
+        return { ...post, content }
+      })
+      store.dispatch(updatePosts(posts))
+    }
+    setIsLoadingPosts(false)
+  }
   // console.log({allPosts});
   return (
     <>
@@ -111,7 +130,27 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
             <section>
               <ul>
                 {activeProfile.data?._addresses?.map((address: any) => {
-                  return <li key={address._id}>{address?.city}</li>
+                  return (
+                    <ul key={address._id}>
+                      <li onClick={() => handleLocationClick(address?.city)}>
+                        {address?.city}
+                      </li>
+                      <li onClick={() => handleLocationClick(address?.country)}>
+                        {address?.country}
+                      </li>
+                      <li
+                        onClick={() => handleLocationClick(address?.pin_code)}
+                      >
+                        {address?.pin_code}
+                      </li>
+                      <li onClick={() => handleLocationClick(address?.society)}>
+                        {address?.society}
+                      </li>
+                      <li onClick={() => handleLocationClick(address?.state)}>
+                        {address?.state}
+                      </li>
+                    </ul>
+                  )
                 })}
               </ul>
             </section>
