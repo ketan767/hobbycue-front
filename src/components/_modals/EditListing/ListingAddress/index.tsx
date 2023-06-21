@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
-import { addUserAddress, getMyProfileDetail, updateUserAddress } from '@/services/user.service'
+import {
+  addUserAddress,
+  getMyProfileDetail,
+  updateUserAddress,
+} from '@/services/user.service'
 import { isEmpty, isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
-import { getListingAddress, updateListingAddress } from '@/services/listing.service'
+import {
+  getListingAddress,
+  updateListingAddress,
+} from '@/services/listing.service'
 import LocationIcon from '@/assets/svg/location-2.svg'
 import Image from 'next/image'
 import axios from 'axios'
@@ -29,7 +36,10 @@ type ListingAddressData = {
   longitude: InputData<string>
 }
 
-const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
+const ListingAddressEditModal: React.FC<Props> = ({
+  onComplete,
+  onBackBtnClick,
+}) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
 
@@ -52,34 +62,36 @@ const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
 
   const handleInputChange = (event: any) => {
     setData((prev) => {
-      return { ...prev, [event.target.name]: { value: event.target.value, error: null } }
+      return {
+        ...prev,
+        [event.target.name]: { value: event.target.value, error: null },
+      }
     })
   }
 
   const handleSubmit = async () => {
-    if (isEmptyField(data.street.value)) {
-      return setData((prev) => {
-        return { ...prev, street: { ...prev.street, error: 'This field is required!' } }
-      })
-    }
     if (isEmptyField(data.city.value)) {
       return setData((prev) => {
-        return { ...prev, city: { ...prev.city, error: 'This field is required!' } }
-      })
-    }
-    if (isEmptyField(data.pin_code.value)) {
-      return setData((prev) => {
-        return { ...prev, pin_code: { ...prev.pin_code, error: 'This field is required!' } }
+        return {
+          ...prev,
+          city: { ...prev.city, error: 'This field is required!' },
+        }
       })
     }
     if (isEmptyField(data.state.value)) {
       return setData((prev) => {
-        return { ...prev, state: { ...prev.state, error: 'This field is required!' } }
+        return {
+          ...prev,
+          state: { ...prev.state, error: 'This field is required!' },
+        }
       })
     }
     if (isEmptyField(data.country.value)) {
       return setData((prev) => {
-        return { ...prev, country: { ...prev.country, error: 'This field is required!' } }
+        return {
+          ...prev,
+          country: { ...prev.country, error: 'This field is required!' },
+        }
       })
     }
 
@@ -95,7 +107,10 @@ const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
       longitude: data.longitude.value,
     }
     setSubmitBtnLoading(true)
-    const { err, res } = await updateListingAddress(listingModalData._address, jsonData)
+    const { err, res } = await updateListingAddress(
+      listingModalData._address,
+      jsonData,
+    )
     if (err) return console.log(err)
     if (onComplete) onComplete()
     else {
@@ -138,11 +153,9 @@ const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
 
   useEffect(() => {
     if (
-      isEmpty(data.street.value) ||
-      isEmpty(data.pin_code.value) ||
       isEmpty(data.state.value) ||
-      isEmpty(data.city.value) || 
-      isEmpty(data.country.value) 
+      isEmpty(data.city.value) ||
+      isEmpty(data.country.value)
     ) {
       setNextDisabled(true)
     } else {
@@ -199,11 +212,11 @@ const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
           setData((prev: any) => {
             return {
               ...prev,
-              street: {value:formatted_address, error: null},
-              state: {value:state, error: null},
-              city: {value:city, error: null},
-              country: {value:country, error: null},
-              pin_code: {value:pin_code, error: null},
+              street: { value: formatted_address, error: null },
+              state: { value: state, error: null },
+              city: { value: city, error: null },
+              country: { value: country, error: null },
+              pin_code: { value: pin_code, error: null },
             }
           })
         }
@@ -212,7 +225,7 @@ const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
         console.error('Error geocoding:', error)
       })
   }
- 
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -232,7 +245,6 @@ const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
                 <input
                   type="text"
                   placeholder={`Enter address or click the "locate me" icon to auto-detect`}
-                  required
                   value={data.street.value}
                   name="street"
                   onChange={handleInputChange}
@@ -271,7 +283,11 @@ const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
               </div>
             </section>
             <section className={styles['two-column-grid']}>
-              <div className={styles['input-box']}>
+              <div
+                className={`${styles['input-box']} ${
+                  data.city.error ? styles['input-box-error'] : ''
+                }`}
+              >
                 <label>City</label>
                 <input
                   type="text"
@@ -288,7 +304,6 @@ const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
                 <input
                   type="text"
                   placeholder={`Enter PIN Code`}
-                  required
                   value={data.pin_code.value}
                   name="pin_code"
                   onChange={handleInputChange}
@@ -297,7 +312,11 @@ const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
               </div>
             </section>
             <section className={styles['two-column-grid']}>
-              <div className={styles['input-box']}>
+              <div
+                className={`${styles['input-box']} ${
+                  data.state.error ? styles['input-box-error'] : ''
+                }`}
+              >
                 <label>State</label>
                 <input
                   type="text"
@@ -309,7 +328,11 @@ const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
                 />
                 <p className={styles['helper-text']}>{data.state.error}</p>
               </div>
-              <div className={styles['input-box']}>
+              <div
+                className={`${styles['input-box']} ${
+                  data.country.error ? styles['input-box-error'] : ''
+                }`}
+              >
                 <label>Country</label>
                 <input
                   type="text"
@@ -327,7 +350,10 @@ const ListingAddressEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }
 
         <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
-            <button className="modal-footer-btn cancel" onClick={onBackBtnClick}>
+            <button
+              className="modal-footer-btn cancel"
+              onClick={onBackBtnClick}
+            >
               Back
             </button>
           )}

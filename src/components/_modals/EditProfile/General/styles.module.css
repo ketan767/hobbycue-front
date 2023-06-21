@@ -67,7 +67,7 @@
   border: 1px solid rgb(var(--primary-50-rgb));
   outline: 1px solid rgb(var(--primary-10-rgb));
 }
-.input-box:has(input[required]) label::after {
+.input-box:has(input[required]) label.label-required::after {
   content: '*';
   color: rgba(192, 80, 77, 1);
 }
@@ -133,4 +133,7 @@
 .profile-url-input input {
   flex-grow: 1;
   padding-left: 13.7rem !important;
+}
+.input-box-error input{
+  border: 1px solid #c0504d !important;
 }

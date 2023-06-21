@@ -74,7 +74,7 @@
   outline: none;
   border: 1px solid rgb(var(--primary-50-rgb));
 }
-.input-box:has(input[required]) label::after {
+.input-box:has(input[required]) label.label-required::after {
   content: '*';
   color: rgba(192, 80, 77, 1);
 }
@@ -144,4 +144,7 @@
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
+}
+.input-box-error input{
+  border: 1px solid #c0504d !important;
 }
