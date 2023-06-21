@@ -8,8 +8,14 @@ import AuthForm from '@/components/AuthForm/AuthForm'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import FilledButton from '@/components/_buttons/FilledButton'
 import Footer from '@/components/Footer/Footer'
+import { openModal } from '@/redux/slices/modal'
+import { useDispatch } from 'react-redux'
 
 const Home: React.FC<PropTypes> = function () {
+  const dispatch = useDispatch()
+  const openLogin = () => {
+    dispatch(openModal({ type: 'auth', closable: true }))
+  }
   return (
     <>
       <Head>
@@ -77,7 +83,7 @@ const Home: React.FC<PropTypes> = function () {
               Find a teacher, coach, or expert for your hobby interest in your
               locality. Find a partner, teammate, accompanist or collaborator.
             </p>
-            <OutlinedButton className={styles['card-btn']}>
+            <OutlinedButton className={styles['card-btn']}  onClick={openLogin}>
               Connect
             </OutlinedButton>
           </div>
@@ -99,7 +105,10 @@ const Home: React.FC<PropTypes> = function () {
               event venue. Book a slot at venues that allow booking through
               hobbycue.
             </p>
-            <OutlinedButton className={styles['card-btn']}>
+            <OutlinedButton
+              className={styles['card-btn']}
+              onClick={openLogin}
+            >
               Meet up
             </OutlinedButton>
           </div>
@@ -125,7 +134,7 @@ const Home: React.FC<PropTypes> = function () {
               Find equipment or supplies required for your hobby. Buy, rent or
               borrow from shops, online stores or from community members.
             </p>
-            <OutlinedButton className={styles['card-btn']}>
+            <OutlinedButton className={styles['card-btn']}  onClick={openLogin}>
               Get it
             </OutlinedButton>
           </div>
@@ -156,7 +165,7 @@ const Home: React.FC<PropTypes> = function () {
               Find events, meetups and workshops related to your hobby. Register
               or buy tickets online.
             </p>
-            <OutlinedButton className={styles['card-btn']}>
+            <OutlinedButton className={styles['card-btn']}  onClick={openLogin}>
               Attend
             </OutlinedButton>
           </div>
@@ -187,7 +196,7 @@ const Home: React.FC<PropTypes> = function () {
               venue or event tickets? Or, you know someone who should be on
               hobbycue? Go ahead and Add your Own page..{' '}
             </p>
-            <OutlinedButton className={styles['card-btn']}>
+            <OutlinedButton className={styles['card-btn']}  onClick={openLogin}>
               Add new
             </OutlinedButton>
           </div>
@@ -239,7 +248,7 @@ const Home: React.FC<PropTypes> = function () {
           <span className={styles.communityText}>Community</span>...
         </p>
         <div className={styles.getStartedBtn}>
-          <FilledButton>Get Started</FilledButton>
+          <FilledButton  onClick={openLogin}>Get Started</FilledButton>
         </div>
       </section>
       <section className={`site-container ${styles.bigTextContainer}`}>
@@ -254,7 +263,7 @@ const Home: React.FC<PropTypes> = function () {
         />
       </section>
       <section className={`site-container`}>
-      <Footer />
+        <Footer />
       </section>
     </>
   )

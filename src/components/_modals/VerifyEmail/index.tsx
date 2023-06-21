@@ -20,7 +20,7 @@ export const VerifyEmailModal: React.FC<PropTypes> = (props) => {
   const { email } = useSelector((state: RootState) => state.modal.authFormData)
 
   const [otp, setOtp] = useState('')
-  const [errMsg, setErrMsg] = useState(null)
+  const [errMsg, setErrMsg] = useState('')
   const [submitBtnLoading, setSubmitBtnLoading] = useState(false)
 
   const handleRegister = async () => {
@@ -29,8 +29,8 @@ export const VerifyEmailModal: React.FC<PropTypes> = (props) => {
     setSubmitBtnLoading(false)
     if (err) {
       if (err.response.data.message === 'Invalid or expired OTP')
-        return setErrMsg(err.response.data.message)
-      return setErrMsg(err.response?.data?.message)
+      return setErrMsg('Invalid or expired OTP')
+      return setErrMsg('Invalid or expired OTP')
     }
 
     if (res.status === 200 && res.data.success) {

@@ -57,7 +57,6 @@
 }
 
 .center-container .name {
-  margin-top: 12px;
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 600;
@@ -103,4 +102,33 @@
   cursor: pointer;
   display: grid;
   place-items: center;
+}
+.content-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+.eventDate {
+  display: flex;
+  align-items: center;
+}
+.eventDate p {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #6d747a;
+}
+.eventDate img{
+  margin-right: 6px;
+}
+.eventDate .date{
+  margin-right: 17px;
+}
+.eventDate .time{
+  margin-right: 14px;
+}
+.eventDate .edit-icon{
+  cursor: pointer;
 }

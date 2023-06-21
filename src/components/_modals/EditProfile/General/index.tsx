@@ -5,7 +5,7 @@ import {
   getMyProfileDetail,
   updateMyProfileDetail,
 } from '@/services/user.service'
-import { isEmpty, isEmptyField } from '@/utils'
+import { checkFullname, isEmpty, isEmptyField } from '@/utils'
 import { closeModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
@@ -71,6 +71,14 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
         return { ...prev, full_name: 'This field is required!' }
       })
     }
+    if (checkFullname(data.full_name)) {
+      return setInputErrs((prev) => {
+        return {
+          ...prev,
+          full_name: 'First name should not contain any numbers!',
+        }
+      })
+    }
     if (isEmptyField(data.display_name)) {
       return setInputErrs((prev) => {
         return { ...prev, display_name: 'This field is required!' }
@@ -79,16 +87,6 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     if (isEmptyField(data.profile_url)) {
       return setInputErrs((prev) => {
         return { ...prev, profile_url: 'This field is required!' }
-      })
-    }
-    if (isEmptyField(data.year_of_birth)) {
-      return setInputErrs((prev) => {
-        return { ...prev, year_of_birth: 'This field is required!' }
-      })
-    }
-    if (!data.gender) {
-      return setInputErrs((prev) => {
-        return { ...prev, gender: 'This field is required!' }
       })
     }
 
@@ -183,8 +181,12 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
         <section className={styles['body']}>
           <>
             {/* Full Name */}
-            <div className={styles['input-box']}>
-              <label>Full Name</label>
+            <div
+              className={`${styles['input-box']} ${
+                inputErrs.full_name ? styles['input-box-error'] : ''
+              }`}
+            >
+              <label className={styles['label-required']}>Full Name</label>
               <input
                 type="text"
                 placeholder="Full Name"
@@ -198,7 +200,11 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
             </div>
 
             {/* Tagline */}
-            <div className={styles['input-box']}>
+            <div
+              className={`${styles['input-box']} ${
+                inputErrs.tagline ? styles['input-box-error'] : ''
+              }`}
+            >
               <label>Tagline</label>
               <input
                 type="text"
@@ -211,8 +217,12 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
             </div>
 
             {/* Display Name */}
-            <div className={styles['input-box']}>
-              <label>Display Name</label>
+            <div
+              className={`${styles['input-box']} ${
+                inputErrs.display_name ? styles['input-box-error'] : ''
+              }`}
+            >
+              <label className={styles['label-required']}>Display Name</label>
               <input
                 type="text"
                 placeholder="Display Name"
@@ -226,8 +236,12 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
             </div>
 
             {/* Profile URL */}
-            <div className={styles['input-box']}>
-              <label>Profile URL</label>
+            <div
+              className={`${styles['input-box']} ${
+                inputErrs.profile_url ? styles['input-box-error'] : ''
+              }`}
+            >
+              <label className={styles['label-required']}>Profile URL</label>
               <div className={styles['profile-url-input']}>
                 <input
                   type="text"

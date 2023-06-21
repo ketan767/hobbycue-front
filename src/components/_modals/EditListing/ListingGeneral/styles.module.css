@@ -71,7 +71,6 @@
   content: '*';
   color: rgba(192, 80, 77, 1);
 }
-
 .input-box .helper-text {
   position: absolute;
   top: calc(100% + var(--spacing-4));
@@ -133,4 +132,7 @@
 .profile-url-input input {
   flex-grow: 1;
   padding-left: 13.2rem !important;
+}
+.input-box-error input{
+  border: 1px solid #c0504d !important;
 }

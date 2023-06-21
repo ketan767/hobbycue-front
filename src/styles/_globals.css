@@ -148,6 +148,9 @@ select:-webkit-autofill {
 .modal-footer-btn.submit {
   margin-left: auto;
 }
+.modal-footer-btn.submit:disabled{
+  opacity: 0.7;
+}
 .modal-footer-btn.cancel {
   margin-right: auto;
   --bg-color: rgb(var(--white-rgb));

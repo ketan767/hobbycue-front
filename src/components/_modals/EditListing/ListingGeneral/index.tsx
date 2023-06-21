@@ -75,16 +75,6 @@ const ListingGeneralEditModal: React.FC<Props> = ({
         }
       })
     }
-    if (listingModalData.type !== 4) {
-      if (isEmptyField(data.year.value)) {
-        return setData((prev) => {
-          return {
-            ...prev,
-            year: { ...prev.year, error: 'This field is required!' },
-          }
-        })
-      }
-    }
     if (listingModalData.type === 1) {
       if (!data.gender.value) {
         return setData((prev) => {
@@ -196,8 +186,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   useEffect(() => {
     if (
       isEmpty(data.title.value) ||
-      isEmpty(data.page_url.value) 
-      // isEmpty(data.year.value)
+      isEmpty(data.page_url.value)
     ) {
       setNextDisabled(true)
     } else {
@@ -218,7 +207,11 @@ const ListingGeneralEditModal: React.FC<Props> = ({
         <section className={styles['body']}>
           <>
             {/* Title */}
-            <div className={styles['input-box']}>
+            <div
+              className={`${styles['input-box']} ${
+                data.title.error ? styles['input-box-error'] : ''
+              }`}
+            >
               <label>Title</label>
               <input
                 type="text"
@@ -233,7 +226,11 @@ const ListingGeneralEditModal: React.FC<Props> = ({
             </div>
 
             {/* Tagline */}
-            <div className={styles['input-box']}>
+            <div
+              className={`${styles['input-box']} ${
+                data.tagline.error ? styles['input-box-error'] : ''
+              }`}
+            >
               <label>Tagline</label>
               <input
                 type="text"
@@ -241,13 +238,18 @@ const ListingGeneralEditModal: React.FC<Props> = ({
                 value={data.tagline.value}
                 name="tagline"
                 onChange={handleInputChange}
+                required
               />
               <p className={styles['helper-text']}>{data.tagline.error}</p>
             </div>
 
             {/* Page URL */}
-            <div className={styles['input-box']}>
-              <label>Page URL</label>
+            <div
+              className={`${styles['input-box']} ${
+                data.page_url.error ? styles['input-box-error'] : ''
+              }`}
+            >
+              <label className={styles['label-required']}>Page URL</label>
               <div className={styles['profile-url-input']}>
                 <input
                   type="text"
@@ -274,7 +276,6 @@ const ListingGeneralEditModal: React.FC<Props> = ({
                   <input
                     type="text"
                     placeholder="Year"
-                    required
                     autoComplete="year"
                     value={data.year.value}
                     name="year"

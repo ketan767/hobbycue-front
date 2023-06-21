@@ -28,6 +28,8 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
   const { allPosts } = useSelector((state: RootState) => state.post)
   const [isLoadingPosts, setIsLoadingPosts] = useState(false)
 
+  const [selectedHobby, setSelectedHobby] = useState('')
+  const [selectedLocation, setSelectedLocation] = useState('')
   const tabs: CommunityPageTabs[] = [
     'posts',
     'links',
@@ -56,11 +58,21 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
   }, [activeProfile])
 
   const handleHobbyClick = async (item: any) => {
-    console.log(item)
+    if (selectedHobby !== item.hobby._id) {
+      setSelectedHobby(item.hobby._id)
+    } else {
+      setSelectedHobby('')
+    }
+  }
+
+  const fetchPosts = async () => {
     const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
-
-    params.append('_hobby', item.hobby._id)
-
+    if (selectedHobby !== '') {
+      params.append('_hobby', selectedHobby)
+    }
+    if (selectedLocation !== '') {
+      params.append('visibility', selectedLocation)
+    }
     setIsLoadingPosts(true)
     const { err, res } = await getAllPosts(params.toString())
     if (err) return console.log(err)
@@ -73,7 +85,18 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
     }
     setIsLoadingPosts(false)
   }
-  // console.log({allPosts});
+
+  useEffect(() => {
+    fetchPosts()
+  }, [selectedHobby, selectedLocation])
+
+  const handleLocationClick = async (item: any) => {
+    if (item === selectedLocation) {
+      setSelectedLocation('')
+    } else {
+      setSelectedLocation(item)
+    }
+  }
   return (
     <>
       <PageGridLayout column={3}>
@@ -91,7 +114,13 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
               <ul>
                 {activeProfile.data?._hobbies?.map((hobby: any) => {
                   return (
-                    <li key={hobby._id} onClick={() => handleHobbyClick(hobby)}>
+                    <li
+                      key={hobby._id}
+                      onClick={() => handleHobbyClick(hobby)}
+                      className={
+                        selectedHobby === hobby.hobby._id ? styles.selected : ''
+                      }
+                    >
                       {hobby?.hobby?.display}
                     </li>
                   )
@@ -111,7 +140,58 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
             <section>
               <ul>
                 {activeProfile.data?._addresses?.map((address: any) => {
-                  return <li key={address._id}>{address?.city}</li>
+                  return (
+                    <ul key={address._id}>
+                      <li
+                        onClick={() => handleLocationClick(address?.city)}
+                        className={
+                          selectedHobby === address?.city ? styles.selected : ''
+                        }
+                      >
+                        {address?.city}
+                      </li>
+                      <li
+                        onClick={() => handleLocationClick(address?.country)}
+                        className={
+                          selectedHobby === address?.country
+                            ? styles.selected
+                            : ''
+                        }
+                      >
+                        {address?.country}
+                      </li>
+                      <li
+                        onClick={() => handleLocationClick(address?.pin_code)}
+                        className={
+                          selectedHobby === address?.pin_code
+                            ? styles.selected
+                            : ''
+                        }
+                      >
+                        {address?.pin_code}
+                      </li>
+                      <li
+                        onClick={() => handleLocationClick(address?.society)}
+                        className={
+                          selectedHobby === address?.society
+                            ? styles.selected
+                            : ''
+                        }
+                      >
+                        {address?.society}
+                      </li>
+                      <li
+                        onClick={() => handleLocationClick(address?.state)}
+                        className={
+                          selectedHobby === address?.state
+                            ? styles.selected
+                            : ''
+                        }
+                      >
+                        {address?.state}
+                      </li>
+                    </ul>
+                  )
                 })}
               </ul>
             </section>
