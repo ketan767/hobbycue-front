@@ -18,6 +18,11 @@ export const isEmptyField = (value: string) => {
   return a !== null ? true : false
 }
 
+export const checkFullname = (value: string) => {
+  let a = String(value).match(/\d+$/gm)
+  return a !== null ? true : false
+}
+
 export const validatePhone = (phone: string) => {
   let a = String(phone).match(
     /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/,

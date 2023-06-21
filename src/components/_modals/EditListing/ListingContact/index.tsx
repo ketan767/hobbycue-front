@@ -138,7 +138,7 @@ const [tick, setTick] = useState(false)
       })
     }
   }, [tick])
-  console.log(user)
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -194,6 +194,7 @@ const [tick, setTick] = useState(false)
                     value={data.public_email.value}
                     name="public_email"
                     autoComplete="email"
+                    required
                     onChange={handleInputChange}
                   />
                   <p className={styles['helper-text']}>

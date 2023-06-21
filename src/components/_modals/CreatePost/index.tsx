@@ -16,6 +16,7 @@ import { closeModal } from '@/redux/slices/modal'
 
 import DOMPurify from 'dompurify'
 import CreatePostProfileSwitcher from './ProfileSwitcher'
+import { MenuItem, Select } from '@mui/material'
 
 const CustomEditor = dynamic(() => import('@/components/CustomEditor'), {
   ssr: false,
@@ -70,6 +71,7 @@ export const CreatePost: React.FC<Props> = (props) => {
   const [genreDropdownList, setGenreDropdownList] = useState<
     DropdownListItem[]
   >([])
+  const [visibilityData, setVisibilityData] = useState(['public'])
 
   useEffect(() => {
     const isUrl = checkIfUrlExists(data.content.replace(/<img .*?>/g, ''))
@@ -77,7 +79,21 @@ export const CreatePost: React.FC<Props> = (props) => {
     // console.log(data.content)
     // console.log({ isUrl })
   }, [data.content])
-  
+
+  useEffect(() => {
+    if(user._addresses){
+      if(user._addresses?.length>0){
+        const address = user._addresses[0]
+        let visibilityArr : any = ['public']
+        visibilityArr.push(address.city)
+        visibilityArr.push(address.country)
+        visibilityArr.push(address.pin_code)
+        visibilityArr.push(address.society)
+        visibilityArr.push(address.state)
+        setVisibilityData(visibilityArr)
+      }
+    }
+  }, [user])
   // useEffect(() => {
   //   let imgStrs = ``
   //   data.media.map((item: any) => {
@@ -105,13 +121,13 @@ export const CreatePost: React.FC<Props> = (props) => {
     const query = `fields=display,sub_category&show=true&search=${e.target.value}`
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
-    const userHobbies = user._hobbies.map((item:any) => item.hobby._id)
-    const userGenres = user._hobbies.map((item:any) => item.genre._id)
-  
+    const userHobbies = user._hobbies.map((item: any) => item.hobby._id)
+    const userGenres = user._hobbies.map((item: any) => item.genre._id)
+
     let hobbies = res.data.hobbies
     let genres = res.data.hobbies
-    hobbies = hobbies.filter((item:any) => userHobbies.includes(item._id))
-    genres = genres.filter((item:any) => userGenres.includes(item._id))
+    hobbies = hobbies.filter((item: any) => userHobbies.includes(item._id))
+    genres = genres.filter((item: any) => userGenres.includes(item._id))
     setHobbyDropdownList(hobbies)
     // setGenreDropdownList(genres)
   }
@@ -128,9 +144,9 @@ export const CreatePost: React.FC<Props> = (props) => {
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
 
-    const userGenres = user._hobbies.map((item:any) => item.genre._id)
+    const userGenres = user._hobbies.map((item: any) => item.genre._id)
     let genres = res.data.hobbies
-    genres = genres.filter((item:any) => userGenres.includes(item._id))
+    genres = genres.filter((item: any) => userGenres.includes(item._id))
     setGenreDropdownList(genres)
   }
 
@@ -300,28 +316,25 @@ export const CreatePost: React.FC<Props> = (props) => {
 
           <div>
             <label>Who Can View</label>
-            <section className={` ${styles['who-can-view']}`}>
-              <p className={styles['name']}>Everyone</p>
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g clip-path="url(#clip0_25_51286)">
-                  <path
-                    d="M15.88 9.29055L12 13.1705L8.11998 9.29055C7.72998 8.90055 7.09998 8.90055 6.70998 9.29055C6.31998 9.68055 6.31998 10.3105 6.70998 10.7005L11.3 15.2905C11.69 15.6805 12.32 15.6805 12.71 15.2905L17.3 10.7005C17.69 10.3105 17.69 9.68055 17.3 9.29055C16.91 8.91055 16.27 8.90055 15.88 9.29055Z"
-                    fill="#08090A"
-                  />
-                </g>
-                <defs>
-                  <clipPath id="clip0_25_51286">
-                    <rect width="24" height="24" fill="white" />
-                  </clipPath>
-                </defs>
-              </svg>
-            </section>
+
+            <Select
+              value={data.visibility}
+              onChange={(e) => {
+                let val = e.target.value
+                setData((prev: any) => ({ ...prev, visibility: val }))
+              }}
+              displayEmpty
+              inputProps={{ 'aria-label': 'Without label' }}
+              className={` ${styles['visibility-dropdown']}`}
+            >
+              {visibilityData?.map((item: any, idx) => {
+                return (
+                  <MenuItem key={idx} value={item}>
+                    <p>{item}</p>
+                  </MenuItem>
+                )
+              })}
+            </Select>
           </div>
 
           <button

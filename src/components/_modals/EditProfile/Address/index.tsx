@@ -6,7 +6,7 @@ import {
   getMyProfileDetail,
   updateUserAddress,
 } from '@/services/user.service'
-import { isEmpty, isEmptyField } from '@/utils'
+import { checkFullname, isEmpty, isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
@@ -65,19 +65,9 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   }
 
   const handleSubmit = () => {
-    if (isEmptyField(data.street)) {
-      return setInputErrs((prev) => {
-        return { ...prev, street: 'This field is required!' }
-      })
-    }
     if (isEmptyField(data.city)) {
       return setInputErrs((prev) => {
         return { ...prev, city: 'This field is required!' }
-      })
-    }
-    if (isEmptyField(data.pin_code)) {
-      return setInputErrs((prev) => {
-        return { ...prev, pin_code: 'This field is required!' }
       })
     }
     if (isEmptyField(data.state)) {
@@ -88,6 +78,31 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     if (isEmptyField(data.country)) {
       return setInputErrs((prev) => {
         return { ...prev, country: 'This field is required!' }
+      })
+    }
+    if (checkFullname(data.city)) {
+      return setInputErrs((prev) => {
+        return {
+          ...prev,
+          city: 'City should not contain any numbers!',
+        }
+      })
+    }
+    if (checkFullname(data.state)) {
+      return setInputErrs((prev) => {
+        return {
+          ...prev,
+          state: 'State should not contain any numbers!',
+        }
+      })
+    }
+
+    if (checkFullname(data.country)) {
+      return setInputErrs((prev) => {
+        return {
+          ...prev,
+          country: 'Country should not contain any numbers!',
+        }
       })
     }
 
@@ -158,8 +173,6 @@ const ProfileAddressEditModal: React.FC<Props> = ({
 
   useEffect(() => {
     if (
-      isEmpty(data.street) ||
-      isEmpty(data.pin_code) ||
       isEmpty(data.state) ||
       isEmpty(data.city) ||
       isEmpty(data.country)
@@ -290,8 +303,12 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               </div>
             </section>
             <section className={styles['two-column-grid']}>
-              <div className={styles['input-box']}>
-                <label>City</label>
+              <div
+                className={`${styles['input-box']} ${
+                  inputErrs.city ? styles['input-box-error'] : ''
+                }`}
+              >
+                <label className={styles['label-required']}>City</label>
                 <input
                   type="text"
                   placeholder={`Enter City Name`}
@@ -316,8 +333,12 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               </div>
             </section>
             <section className={styles['two-column-grid']}>
-              <div className={styles['input-box']}>
-                <label>State</label>
+              <div
+                className={`${styles['input-box']} ${
+                  inputErrs.state ? styles['input-box-error'] : ''
+                }`}
+              >
+                <label className={styles['label-required']}>State</label>
                 <input
                   type="text"
                   placeholder={`Enter State Name`}
@@ -328,8 +349,12 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                 />
                 <p className={styles['helper-text']}>{inputErrs.state}</p>
               </div>
-              <div className={styles['input-box']}>
-                <label>Country</label>
+              <div
+                className={`${styles['input-box']} ${
+                  inputErrs.country ? styles['input-box-error'] : ''
+                }`}
+              >
+                <label className={styles['label-required']}>Country</label>
                 <input
                   type="text"
                   placeholder={`Enter Country Name`}
