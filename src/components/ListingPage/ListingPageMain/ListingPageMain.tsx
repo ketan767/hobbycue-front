@@ -617,7 +617,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
               )}
             </PageContentBox>
 
-          {data?.type === 4 && (
+          {/* {data?.type === 4 && (
             <PageContentBox
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
@@ -631,7 +631,6 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
             >
               <h4 className={styles['heading']}>Event Hours</h4>
               <div className={styles['working-hours-wrapper']}>
-                {/* Working Hours  */}
                 {data?.event_date_time && (
                   <div>
                     <li className={styles.workingListItem}>
@@ -670,7 +669,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                 )}
               </div>
             </PageContentBox>
-          )}
+          )} */}
           {data?.type === 4 || data?.type === 3 ? (
             <PageContentBox
               showEditButton={listingLayoutMode === 'edit'}

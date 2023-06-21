@@ -16,6 +16,10 @@ import {
 } from '@/services/listing.service'
 import { updatePhotoEditModalData } from '@/redux/slices/site'
 import { openModal } from '@/redux/slices/modal'
+import { dateFormat } from '@/utils'
+import Calendar from '@/assets/svg/calendar-light.svg'
+import Time from '@/assets/svg/clock-light.svg'
+import EditIcon from '@/assets/svg/edit-colored.svg'
 
 type Props = {
   data: ListingPageData['pageData']
@@ -90,6 +94,14 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
     }
   }
 
+  const handleEventEditClick = () => {
+    dispatch(
+      openModal({
+        type: 'listing-event-hours-edit',
+        closable: true,
+      }),
+    )
+  }
   return (
     <>
       <header className={`site-container ${styles['header']}`}>
@@ -151,9 +163,45 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
               </label>
             )}
           </div>
-
-          <h1 className={styles['name']}>{data?.title}</h1>
-          <p className={styles['tagline']}>{data?.tagline}</p>
+          <div className={styles['content-container']}>
+            <div>
+              <h1 className={styles['name']}>{data?.title}</h1>
+              <p className={styles['tagline']}>{data?.tagline}</p>
+            </div>
+            <div>
+              {data?.type === 4 && data?.event_date_time && (
+                <div>
+                  <div className={styles.eventDate}>
+                    <Image
+                      className={styles['im']}
+                      src={Calendar}
+                      alt="calendar"
+                    />
+                    <p className={styles.date}>
+                      {dateFormat.format(
+                        new Date(data?.event_date_time.from_date),
+                      )}{' '}
+                      -{' '}
+                      {dateFormat.format(
+                        new Date(data?.event_date_time.to_date),
+                      )}
+                    </p>
+                    <Image className={styles['im']} src={Time} alt="Time" />{' '}
+                    <p className={styles.time}>
+                      {data?.event_date_time.from_time} -{' '}
+                      {data?.event_date_time.to_time}
+                    </p>
+                    <Image
+                      className={styles['edit-icon']}
+                      src={EditIcon}
+                      alt="Time"
+                      onClick={handleEventEditClick}
+                    />{' '}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </section>
 
         {/* Action Buttons */}
