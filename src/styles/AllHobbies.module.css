@@ -8,7 +8,10 @@
 .filter-wrapper {
   background: #ffffff;
   padding: 16px;
-  box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+  background: #FFFFFF;
+  border: 1px solid #EBEDF0;
+  border-radius: 8px;
 }
 
 .filter-wrapper header {
@@ -27,6 +30,7 @@
 }
 
 .filter-wrapper header button {
+  border: 1px solid #EBEDF0;
   background: #8064a2;
   border-radius: 8px;
   font-family: 'Poppins';
@@ -51,9 +55,33 @@
   font-size: 14px;
   line-height: 16px;
   /* identical to box height, or 114% */
-  margin-bottom: 10px;
+  margin-bottom: 3px;
 
   color: #6d747a;
+}
+
+.select-filter input{
+  font-size: 12px;
+  font-family: 'Poppins';
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.select-filter div{
+  border-radius: 8px;
+  background-color: #F8F9FA;
+  font-family: "poppins";
+  font-size: 12px;
+  color: #6D747A;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  height: 32px;
+  
+}
+
+.select-filter select{
+  font-family: "poppins";
 }
 
 .hobby-desc-container {
@@ -126,11 +154,11 @@
   min-width: 120px;
 }
 .hobbies-table thead th:nth-child(2) {
-  min-width: 230px;
-  padding-left: 30px;
+  min-width: 160px;
+  
 }
 .hobbies-table thead th:nth-child(3) {
-  width: 100%;
+  min-width: 188px;
 }
 
 .hobbies-table tbody tr td:nth-child(1) {

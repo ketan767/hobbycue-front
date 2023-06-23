@@ -126,44 +126,112 @@ export const Navbar: React.FC<Props> = ({}) => {
                 {showDropdown === 'hobby-list' && (
                   <div className={styles['hobby-list-dropdown']}>
                     <section className={styles['list']}>
-                      <h4>Art</h4>
+                      <h4>
+                        <Link
+                          href={'/hobby/arts'}
+                          className={styles['hobbiescategory']}
+                        >
+                          Art
+                        </Link>
+                      </h4>
                       <ul>
-                        <li>Music</li>
-                        <li>Dance</li>
-                        <li>Literary</li>
-                        <li>Theatre</li>
-                        <li>Visual</li>
-                      </ul>
-                    </section>
-                    <section className={styles['list']}>
-                      <h4>Play</h4>
+                        <Link href={'/hobby/music'}>
+                          <li>Music</li>
+                        </Link>
 
-                      <ul>
-                        <li>Fitness</li>
-                        <li>Games</li>
-                        <li>Sports</li>
-                      </ul>
-                    </section>
-                    <section className={styles['list']}>
-                      <h4>Making Things</h4>
+                        <Link href={'/hobby/dance'}>
+                          <li>Dance</li>
+                        </Link>
 
-                      <ul>
-                        <li>Clothing</li>
-                        <li>Cooking</li>
-                        <li>Garden</li>
-                        <li>Model</li>
-                        <li>Utility</li>
+                        <Link href={'/hobby/literary'}>
+                          <li>Literary</li>
+                        </Link>
+
+                        <Link href={'/hobby/theatre'}>
+                          <li>Theatre</li>
+                        </Link>
+
+                        <Link href={'/hobby/visual-arts'}>
+                          <li>Visual</li>
+                        </Link>
                       </ul>
                     </section>
                     <section className={styles['list']}>
                       <h4>
-                        <Link href={'/hobby/activity'}>Activity</Link>
+                        <Link
+                          href={'/hobby/play'}
+                          className={styles['hobbiescategory']}
+                        >
+                          Play
+                        </Link>
                       </h4>
 
                       <ul>
-                        <li>Animals</li>
-                        <li>Observe</li>
-                        <li>Outdoor</li>
+                        <li>Fitness</li>
+
+                        <Link href={'/hobby/games'}>
+                          <li>Games</li>
+                        </Link>
+
+                        <Link href={'/hobby/sports'}>
+                          <li>Sports</li>
+                        </Link>
+                      </ul>
+                    </section>
+                    <section className={styles['list']}>
+                      <h4>
+                        <Link
+                          href={'/hobby/making'}
+                          className={styles['hobbiescategory']}
+                        >
+                          Making Things
+                        </Link>
+                      </h4>
+
+                      <ul>
+                        <Link href={'/hobby/clothing'}>
+                          <li>Clothing</li>
+                        </Link>
+
+                        <Link href={'/hobby/cooking'}>
+                          <li>Cooking</li>
+                        </Link>
+
+                        <Link href={'/hobby/gardening'}>
+                          <li>Garden</li>
+                        </Link>
+
+                        <Link href={'/hobby/model-making'}>
+                          <li>Model</li>
+                        </Link>
+
+                        <Link href={'/hobby/making-utility'}>
+                          <li>Utility</li>
+                        </Link>
+                      </ul>
+                    </section>
+                    <section className={styles['list']}>
+                      <h4>
+                        <Link
+                          href={'/hobby/activity'}
+                          className={styles['hobbiescategory']}
+                        >
+                          Activity
+                        </Link>
+                      </h4>
+
+                      <ul>
+                        <Link href={'/hobby/animal-fancy'}>
+                          <li>Animals</li>
+                        </Link>
+
+                        <Link href={'/hobby/observe'}>
+                          <li>Observe</li>
+                        </Link>
+
+                        <Link href={'/hobby/outdoor'}>
+                          <li>Outdoor</li>
+                        </Link>
 
                         <Link href={'/hobby/traveling'}>
                           <li>Travel</li>
@@ -174,11 +242,23 @@ export const Navbar: React.FC<Props> = ({}) => {
                       </ul>
                     </section>
                     <section className={styles['list']}>
-                      <h4>Collecting</h4>
+                      <h4>
+                        <Link
+                          href={'/hobby/collect'}
+                          className={styles['hobbiescategory']}
+                        >
+                          {' '}
+                          Collecting{' '}
+                        </Link>
+                      </h4>
 
                       <ul>
                         <li>Items</li>
-                        <li>Record</li>
+
+                        <Link href={'/hobby/record-keeping'}>
+                          <li>Record</li>
+                        </Link>
+
                         <li>Spotting</li>
                       </ul>
                     </section>

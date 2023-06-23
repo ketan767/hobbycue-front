@@ -61,7 +61,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
           {/* Filters */}
           <div className={styles['filter-wrapper']}>
             <header>
-              <h4 className={styles['heading']}>Filters</h4>
+              <h4 className={styles['heading']}>Filter</h4>
               <button onClick={handleFilter}>Apply</button>
             </header>
 
@@ -157,7 +157,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
               <thead>
                 <tr className="">
                   <th>Category</th>
-                  <th>SubCategory</th>
+                  <th>Sub-Category</th>
                   <th>Hobby</th>
                 </tr>
               </thead>
