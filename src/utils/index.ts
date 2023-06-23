@@ -18,6 +18,11 @@ export const isEmptyField = (value: string) => {
   return a !== null ? true : false
 }
 
+export const containOnlyNumbers = (value: string) => {
+  let a = String(value).match(/^[0-9]*$/gm)
+  return a !== null ? true : false
+}
+
 export const checkFullname = (value: string) => {
   let a = String(value).match(/\d+$/gm)
   return a !== null ? true : false
