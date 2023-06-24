@@ -120,6 +120,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         dispatch(updateUser(response?.data.data.user))
         setHobbyInputValue('')
         setGenreInputValue('')
+        setData({...data, level: 1})
       }
     })
   }

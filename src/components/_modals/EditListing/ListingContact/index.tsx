@@ -6,7 +6,7 @@ import {
   getMyProfileDetail,
   updateUserAddress,
 } from '@/services/user.service'
-import { isEmpty, isEmptyField } from '@/utils'
+import { containOnlyNumbers, isEmpty, isEmptyField, validatePhone } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
@@ -68,15 +68,14 @@ const [tick, setTick] = useState(false)
         }
       })
     }
-    if (isEmptyField(data.phone.value)) {
+    if (!containOnlyNumbers(data.phone.value)) {
       return setData((prev) => {
         return {
           ...prev,
-          phone: { ...prev.phone, error: 'This field is required!' },
+          phone: { ...prev.phone, error: 'Enter a valid phone number' },
         }
       })
     }
-
     const jsonData = {
       phone: data.phone.value,
       public_email: data.public_email.value,
@@ -89,7 +88,7 @@ const [tick, setTick] = useState(false)
     setSubmitBtnLoading(false)
     if (err) return console.log(err)
     if (res?.data.success) {
-      dispatch(updateListingModalData(res.data.data.listing))
+      dispatch(updateListingModalData(res?.data.data.listing))
       if (onComplete) onComplete()
       else {
         window.location.reload()
