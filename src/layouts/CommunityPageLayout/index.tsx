@@ -16,6 +16,8 @@ import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import { checkIfUrlExists } from '@/utils'
 import Link from 'next/link'
+import { getAllHobbies } from '@/services/hobby.service'
+import DefaultHobbyImg from '@/assets/image/default.png'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -27,7 +29,11 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
   const { activeProfile } = useSelector((state: RootState) => state.user)
   const { allPosts } = useSelector((state: RootState) => state.post)
   const [isLoadingPosts, setIsLoadingPosts] = useState(false)
-
+  const [hobbyGroup, setHobbyGroup] = useState({
+    profile_image: null,
+    cover_image: null,
+    display: '',
+  })
   const [selectedHobby, setSelectedHobby] = useState('')
   const [selectedLocation, setSelectedLocation] = useState('')
   const tabs: CommunityPageTabs[] = [
@@ -58,6 +64,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
   }, [activeProfile])
 
   const handleHobbyClick = async (item: any) => {
+    // console.log(item)
     if (selectedHobby !== item.hobby._id) {
       setSelectedHobby(item.hobby._id)
     } else {
@@ -97,6 +104,31 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
       setSelectedLocation(item)
     }
   }
+
+  useEffect(() => {
+    if (selectedHobby !== '' && selectedLocation !== '') {
+      fetchHobby()
+    }
+  }, [selectedHobby, selectedLocation])
+
+  const fetchHobby = async () => {
+    // const query = `fields=display,sub_category&show=true&search=${selectedHobby}`
+    const params = new URLSearchParams()
+    params.set('_id', selectedHobby)
+    const { err, res } = await getAllHobbies(
+      `level=3&${params.toString()}&populate=category,sub_category,tags`,
+    )
+    // const { err, res } = await getAllHobbies(query)
+    if (err) return console.log(err)
+    console.log('res', res.data)
+    if (res?.data && res?.data?.hobbies) {
+      const hobby = res.data.hobbies[0]
+      if (hobby !== undefined) {
+        setHobbyGroup(hobby)
+      }
+    }
+  }
+
   return (
     <>
       <PageGridLayout column={3}>
@@ -118,7 +150,9 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
                       key={hobby._id}
                       onClick={() => handleHobbyClick(hobby)}
                       className={
-                        selectedHobby === hobby.hobby._id ? styles.selected : ''
+                        selectedHobby === hobby.hobby._id
+                          ? styles.selectedItem
+                          : ''
                       }
                     >
                       {hobby?.hobby?.display}
@@ -145,7 +179,9 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
                       <li
                         onClick={() => handleLocationClick(address?.city)}
                         className={
-                          selectedHobby === address?.city ? styles.selected : ''
+                          selectedLocation === address?.city
+                            ? styles.selectedItem
+                            : ''
                         }
                       >
                         {address?.city}
@@ -153,8 +189,8 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
                       <li
                         onClick={() => handleLocationClick(address?.country)}
                         className={
-                          selectedHobby === address?.country
-                            ? styles.selected
+                          selectedLocation === address?.country
+                            ? styles.selectedItem
                             : ''
                         }
                       >
@@ -163,8 +199,8 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
                       <li
                         onClick={() => handleLocationClick(address?.pin_code)}
                         className={
-                          selectedHobby === address?.pin_code
-                            ? styles.selected
+                          selectedLocation === address?.pin_code
+                            ? styles.selectedItem
                             : ''
                         }
                       >
@@ -173,8 +209,8 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
                       <li
                         onClick={() => handleLocationClick(address?.society)}
                         className={
-                          selectedHobby === address?.society
-                            ? styles.selected
+                          selectedLocation === address?.society
+                            ? styles.selectedItem
                             : ''
                         }
                       >
@@ -183,8 +219,8 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
                       <li
                         onClick={() => handleLocationClick(address?.state)}
                         className={
-                          selectedHobby === address?.state
-                            ? styles.selected
+                          selectedLocation === address?.state
+                            ? styles.selectedItem
                             : ''
                         }
                       >
@@ -199,8 +235,40 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
         </aside>
 
         <main>
+         
           <header className={styles['community-header']}>
             <div className={styles['top-margin-card']}></div>
+            {selectedHobby !== '' &&
+            selectedLocation !== '' &&
+            Object.keys(hobbyGroup).length > 5 && (
+              <div className={styles['community-group-container']}>
+                <div className={styles['community-group-header']}>
+                  <div className={styles['profile-img-container']}>
+                    <Image
+                      src={
+                        hobbyGroup?.profile_image
+                          ? hobbyGroup?.profile_image
+                          : DefaultHobbyImg
+                      }
+                      alt="hobby-img"
+                    />
+                  </div>
+                  <div className={styles['cover-img-container']}>
+                    <Image
+                      src={
+                        hobbyGroup.cover_image
+                          ? hobbyGroup.cover_image
+                          : DefaultHobbyImg
+                      }
+                      alt="hobby-img"
+                    />
+                  </div>
+                </div>
+                <p>
+                  {hobbyGroup?.display} in {selectedLocation}
+                </p>
+              </div>
+            )}
             <section
               className={`content-box-wrapper ${styles['start-post-btn-container']}`}
             >
@@ -255,6 +323,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
               </ul>
             </section>
           </header>
+
           <section className={styles['children-wrapper']}>{children}</section>
         </main>
 
