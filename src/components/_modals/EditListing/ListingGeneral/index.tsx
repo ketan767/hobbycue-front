@@ -5,7 +5,7 @@ import {
   getMyProfileDetail,
   updateMyProfileDetail,
 } from '@/services/user.service'
-import { isEmpty, isEmptyField } from '@/utils'
+import { containOnlyNumbers, isEmpty, isEmptyField } from '@/utils'
 import { closeModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
@@ -75,17 +75,14 @@ const ListingGeneralEditModal: React.FC<Props> = ({
         }
       })
     }
-    if (listingModalData.type === 1) {
-      if (!data.gender.value) {
-        return setData((prev) => {
-          return {
-            ...prev,
-            gender: { ...prev.gender, error: 'This field is required!' },
-          }
-        })
-      }
+    if (data.year.value.trim() !== '' && !containOnlyNumbers(data.year.value)) {
+      return setData((prev) => {
+        return {
+          ...prev,
+          year: { ...prev.year, error: 'Enter a valid year of birth!' },
+        }
+      })
     }
-
     let jsonData = {
       type: listingModalData.type,
       page_type: listingModalData.page_type,
@@ -184,10 +181,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   }, [data.title])
 
   useEffect(() => {
-    if (
-      isEmpty(data.title.value) ||
-      isEmpty(data.page_url.value)
-    ) {
+    if (isEmpty(data.title.value) || isEmpty(data.page_url.value)) {
       setNextDisabled(true)
     } else {
       setNextDisabled(false)

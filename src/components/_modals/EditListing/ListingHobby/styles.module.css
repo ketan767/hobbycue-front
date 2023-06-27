@@ -163,7 +163,7 @@
 .added-hobby-list table tbody {
   display: block;
   background: #ffffff;
-
+overflow: auto;
   max-height: 18rem;
 
   padding: 0 var(--spacing-12);
