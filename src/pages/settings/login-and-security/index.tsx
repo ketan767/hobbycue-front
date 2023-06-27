@@ -8,19 +8,29 @@ import FacebookIcon from '../../../assets/svg/facebook-icon.svg'
 import Image from 'next/image'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import { withAuth } from '@/navigation/withAuth'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
+import { openModal } from '@/redux/slices/modal'
 
 type Props = {}
 
 const LoginAndSecurity: React.FC<Props> = ({}) => {
+  const { user } = useSelector((state: RootState) => state.user)
+  const dispatch = useDispatch()
+  console.log(user)
+  const openChangePasswordModal = () => {
+    dispatch(openModal({ type: 'change-password', closable: true }))
+  }
+  
   return (
     <>
       <PageGridLayout column={2}>
         <SettingsSidebar active="" />
         <div className={styles.container}>
           <p className={`${styles.textLight} ${styles.title}`}> Email Login </p>
-          <p className={styles.email}>Email ID: rakeshsha</p>
+          <p className={styles.email}>Email ID: {user.email} </p>
           <section className={styles.editSection}>
-            <div className={styles.editContainer}>
+            <div className={styles.editContainer} onClick={openChangePasswordModal} >
               <Image src={EditIcon} width={16} height={16} alt="edit" />
               <p className={styles.editText}> Change Password </p>
             </div>

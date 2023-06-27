@@ -30,6 +30,10 @@ export type ModalType =
   | 'upload-video-user'
   | 'upload-image-user'
   | 'social-media-edit'
+  | 'change-password'
+  | 'confirm-email'
+  | 'email-sent'
+  | 'reset-password'
 
 interface ModalState {
   activeModal: ModalType

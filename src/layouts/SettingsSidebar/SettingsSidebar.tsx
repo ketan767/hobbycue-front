@@ -2,6 +2,8 @@ import React from 'react'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import styles from './sidebar.module.css'
 import Link from 'next/link'
+import { RootState } from '@/redux/store'
+import { useSelector } from 'react-redux'
 
 type Props = { active: any }
 
@@ -25,6 +27,8 @@ const sidebarItems = [
 ]
 
 const SettingsSidebar: React.FC<Props> = ({ active }) => {
+
+
   return (
     <>
       <div className={styles.sidebarContainer}>

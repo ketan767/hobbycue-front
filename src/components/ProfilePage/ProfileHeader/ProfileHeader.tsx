@@ -20,6 +20,8 @@ import { updateUserCover, updateUserProfile } from '@/services/user.service'
 import { RootState } from '@/redux/store'
 import FilledButton from '@/components/_buttons/FilledButton'
 import { useRouter } from 'next/router'
+import ShareIcon from '@/assets/svg/share-outlined.svg'
+import EditIcon from '@/assets/svg/edit-colored.svg'
 
 type Props = {
   activeTab: ProfilePageTabs
@@ -157,8 +159,18 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
                 </label>
               )}
             </div>
-
-            <h1 className={styles['name']}>{data.full_name}</h1>
+            <div className={styles['name-container']}>
+              <h1 className={styles['name']}>{data.full_name}</h1>
+              <Image
+                src={EditIcon}
+                alt="edit"
+                onClick={() =>
+                  dispatch(
+                    openModal({ type: 'profile-general-edit', closable: true }),
+                  )
+                }
+              />
+            </div>
             <p className={styles['tagline']}>{data.tagline}</p>
           </section>
 
@@ -201,7 +213,7 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
                 onClick={(e) => console.log(e)}
                 className={styles['action-btn']}
               >
-                <ShareRoundedIcon color="primary" fontSize="small" />
+                <Image src={ShareIcon} alt="share" />
               </div>
 
               {/* More Options Button */}

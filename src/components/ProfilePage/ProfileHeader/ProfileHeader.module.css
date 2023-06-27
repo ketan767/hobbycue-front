@@ -54,7 +54,6 @@
   right: var(--spacing-8);
 }
 .center-container .name {
-  margin-top: 12px;
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 600;
@@ -188,7 +187,15 @@
   gap: var(--spacing-8);
   box-shadow: none;
 }
-
+.name-container{
+  margin-top: 12px;
+  display: flex;
+  column-gap: 12px;
+  align-items: center;
+}
+.name-container img{
+  cursor: pointer;
+}
 @keyframes scroll-in {
   0% {
     /* transform: translateY(-100%); */

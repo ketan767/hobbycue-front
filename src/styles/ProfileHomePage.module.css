@@ -22,3 +22,12 @@
   line-height: 20px;
   color: #6d747a;
 }
+.color-light{
+  color: #939CA3 !important;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.04em;
+  margin-bottom: 1rem;
+}

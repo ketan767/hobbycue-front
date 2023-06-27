@@ -26,10 +26,10 @@ const Footer: React.FC = () => {
   const data = [
     {
       title: 'Hobbycue',
-      values: ['About Us', 'Our Services', 'Work with us', 'FAQ', 'Contact Us'],
+      values: ['About Us', 'Our Services', 'Work with Us', 'FAQ', 'Contact Us'],
     },
     {
-      title: 'How do i',
+      title: 'How do I',
       values: [
         'Sign Up',
         'Add a Listing',
