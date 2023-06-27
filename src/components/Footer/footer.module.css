@@ -39,6 +39,9 @@
 .rightSection {
   flex: 2;
 }
+.rightSection .listHeading{
+  font-size: 14px;
+}
 .inviteContainer {
   margin-top: 2rem;
 }

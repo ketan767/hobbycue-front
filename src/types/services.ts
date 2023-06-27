@@ -10,6 +10,10 @@ interface RegisterPayload {
   email: string
   otp: string
 }
+interface ChangePasswordPayload {
+  currentPassword: string
+  newPassword: string
+}
 
 type UpdateProfilePayload = {
   full_name?: string

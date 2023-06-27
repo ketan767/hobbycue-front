@@ -211,6 +211,10 @@ const AuthForm: React.FC<Props> = (props) => {
     }
   }, [authFormData.password])
 
+  const openForgotPasswordEmail = () => {
+    dispatch(openModal({ type: 'confirm-email', closable: true }))
+  }
+
   return (
     <div
       className={`${styles['form-contanier']} ${
@@ -403,7 +407,7 @@ const AuthForm: React.FC<Props> = (props) => {
                   />
                 </svg>
 
-                <span>Forgot password?</span>
+                <span onClick={openForgotPasswordEmail}>Forgot password?</span>
               </button>
             </>
           )}

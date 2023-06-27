@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { withAuth } from '@/navigation/withAuth'
 import styles from '@/styles/Community.module.css'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import store, { RootState } from '@/redux/store'
 import { getAllPosts } from '@/services/post.service'
 import { updatePosts } from '@/redux/slices/post'
@@ -11,6 +11,7 @@ import CommunityPageLayout from '@/layouts/CommunityPageLayout'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import { checkIfUrlExists } from '@/utils'
 import { useRouter } from 'next/router'
+import { openModal } from '@/redux/slices/modal'
 
 type Props = {}
 
@@ -19,6 +20,7 @@ const CommunityHome: React.FC<Props> = ({}) => {
   const { allPosts } = useSelector((state: RootState) => state.post)
   const [isLoadingPosts, setIsLoadingPosts] = useState(false)
   const router = useRouter()
+  const dispatch = useDispatch()
 
   const getPost = async () => {
     const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
@@ -30,7 +32,7 @@ const CommunityHome: React.FC<Props> = ({}) => {
     const { err, res } = await getAllPosts(params.toString())
     if (err) return console.log(err)
     if (res.data.success) {
-      console.log('resp', res.data);
+      console.log('resp', res.data)
       let posts = res.data.data.posts.map((post: any) => {
         let content = post.content.replace(/<img .*?>/g, '')
         return { ...post, content }

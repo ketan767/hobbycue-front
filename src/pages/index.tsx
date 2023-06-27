@@ -16,6 +16,8 @@ const Home: React.FC<PropTypes> = function () {
   const openLogin = () => {
     dispatch(openModal({ type: 'auth', closable: true }))
   }
+
+
   return (
     <>
       <Head>

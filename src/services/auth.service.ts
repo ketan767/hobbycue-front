@@ -61,3 +61,17 @@ export const googleAuth = async (data: {
     return { err: error, res: null }
   }
 }
+
+export const changePassword = async (
+  data: ChangePasswordPayload,
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.patch(`/auth/change-password`, data, { headers })
+    return { res: res, err: null }
+  } catch (error: any) {
+    return { err: error, res: null }
+  }
+}

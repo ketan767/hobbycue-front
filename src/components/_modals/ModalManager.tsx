@@ -33,6 +33,10 @@ import UploadImagePage from './uploadImagePage'
 import UploadVideoUser from './UploadVideoUser'
 import SocialMediaEditModal from './EditProfile/SocialMedia/SocialMedia'
 import ListingSocialMediaEditModal from './EditListing/ListingSocialMedia/ListingSocialMedia'
+import ChangePasswordModal from './ChangePassword/ChangePassword'
+import ConfirmEmailModal from './ConfirmEmail/ConfirmEmail'
+import EmailSentModal from './EmailSent/EmailSent'
+import ResetPasswordModal from './ResetPassword/ResetPassword'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -130,6 +134,10 @@ const ModalManager: React.FC = () => {
               {activeModal === 'upload-image-page' && <UploadImagePage />}
               {activeModal === 'upload-video-user' && <UploadVideoUser />}
               {activeModal === 'social-media-edit' && <SocialMediaEditModal />}
+              {activeModal === 'change-password' && <ChangePasswordModal />}
+              {activeModal === 'confirm-email' && <ConfirmEmailModal />}
+              {activeModal === 'email-sent' && <EmailSentModal />}
+              {activeModal === 'reset-password' && <ResetPasswordModal />}
 
               {/* Modal Close Icon */}
               {closable && (

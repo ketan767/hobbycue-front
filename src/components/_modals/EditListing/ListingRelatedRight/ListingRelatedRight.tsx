@@ -48,7 +48,6 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
   onBackBtnClick,
 }) => {
   const dispatch = useDispatch()
-  const { user } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
   const [relation, setRelation] = useState<any>('')
 
