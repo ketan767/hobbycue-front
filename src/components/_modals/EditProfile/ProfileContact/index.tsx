@@ -65,14 +65,6 @@ const ProfileContactEditModal: React.FC<Props> = ({
         }
       })
     }
-    if (isEmptyField(data.phone.value)) {
-      return setData((prev) => {
-        return {
-          ...prev,
-          phone: { ...prev.phone, error: 'This field is required!' },
-        }
-      })
-    }
 
     const jsonData = {
       phone: data.phone.value,
@@ -161,7 +153,6 @@ const ProfileContactEditModal: React.FC<Props> = ({
                   value={data.phone.value}
                   name="phone"
                   autoComplete="phone"
-                  required
                   onChange={handleInputChange}
                 />
                 <p className={styles['helper-text']}>{data.phone.error}</p>
