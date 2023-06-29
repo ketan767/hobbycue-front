@@ -248,3 +248,6 @@ select:-webkit-autofill {
 .textarea-emoji-control{
   display: none;
 }
+.ql-container{
+  font-size: 14px !important;
+}
