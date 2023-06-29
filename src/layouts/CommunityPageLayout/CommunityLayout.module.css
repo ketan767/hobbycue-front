@@ -38,6 +38,9 @@
   line-height: 20px;
   color: #08090a;
 }
+.hobbies-side-wrapper header img{
+  cursor: pointer;
+}
 .hobbies-side-wrapper span.divider {
   background: #ebedf0;
   display: block;
@@ -83,6 +86,9 @@
   font-size: 14px;
   line-height: 20px;
   color: #08090a;
+}
+.location-side-wrapper header img{
+  cursor: pointer;
 }
 .location-side-wrapper span.divider {
   background: #ebedf0;

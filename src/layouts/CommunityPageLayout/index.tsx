@@ -139,6 +139,15 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
           >
             <header>
               <h3>Hobbies</h3>
+              <Image
+                src={EditIcon}
+                onClick={() =>
+                  dispatch(
+                    openModal({ type: 'profile-hobby-edit', closable: true }),
+                  )
+                }
+                alt="edit"
+              />
               {/* <Image src={EditIcon} alt="Edit" /> */}
             </header>
             <span className={styles['divider']}></span>
@@ -168,6 +177,15 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
           >
             <header>
               <h3>Location</h3>
+              <Image
+                src={EditIcon}
+                onClick={() =>
+                  dispatch(
+                    openModal({ type: 'profile-address-edit', closable: true }),
+                  )
+                }
+                alt="edit"
+              />
               {/* <Image src={EditIcon} alt="Edit" /> */}
             </header>
             <span className={styles['divider']}></span>
@@ -235,40 +253,39 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
         </aside>
 
         <main>
-         
           <header className={styles['community-header']}>
             <div className={styles['top-margin-card']}></div>
             {selectedHobby !== '' &&
-            selectedLocation !== '' &&
-            Object.keys(hobbyGroup).length > 5 && (
-              <div className={styles['community-group-container']}>
-                <div className={styles['community-group-header']}>
-                  <div className={styles['profile-img-container']}>
-                    <Image
-                      src={
-                        hobbyGroup?.profile_image
-                          ? hobbyGroup?.profile_image
-                          : DefaultHobbyImg
-                      }
-                      alt="hobby-img"
-                    />
+              selectedLocation !== '' &&
+              Object.keys(hobbyGroup).length > 5 && (
+                <div className={styles['community-group-container']}>
+                  <div className={styles['community-group-header']}>
+                    <div className={styles['profile-img-container']}>
+                      <Image
+                        src={
+                          hobbyGroup?.profile_image
+                            ? hobbyGroup?.profile_image
+                            : DefaultHobbyImg
+                        }
+                        alt="hobby-img"
+                      />
+                    </div>
+                    <div className={styles['cover-img-container']}>
+                      <Image
+                        src={
+                          hobbyGroup.cover_image
+                            ? hobbyGroup.cover_image
+                            : DefaultHobbyImg
+                        }
+                        alt="hobby-img"
+                      />
+                    </div>
                   </div>
-                  <div className={styles['cover-img-container']}>
-                    <Image
-                      src={
-                        hobbyGroup.cover_image
-                          ? hobbyGroup.cover_image
-                          : DefaultHobbyImg
-                      }
-                      alt="hobby-img"
-                    />
-                  </div>
+                  <p>
+                    {hobbyGroup?.display} in {selectedLocation}
+                  </p>
                 </div>
-                <p>
-                  {hobbyGroup?.display} in {selectedLocation}
-                </p>
-              </div>
-            )}
+              )}
             <section
               className={`content-box-wrapper ${styles['start-post-btn-container']}`}
             >
