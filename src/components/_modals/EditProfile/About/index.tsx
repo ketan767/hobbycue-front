@@ -107,7 +107,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
           <div className={styles['input-box']}>
             <label>About</label>
             <input hidden required />
-            <CustomCKEditor value={data.about} onChange={handleInputChange} />
+            <CustomCKEditor value={data.about} onChange={handleInputChange} placeholder='Briefly describe about yourself' />
             {inputErrs.about && (
               <p className={styles['error-msg']}>{inputErrs.about}</p>
             )}

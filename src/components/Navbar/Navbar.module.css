@@ -81,7 +81,7 @@
 }
 
 .hobbiescategory {
-color: black !important;
+  color: black !important;
 }
 
 .hobby-list-dropdown .list ul {
@@ -228,19 +228,26 @@ color: black !important;
   background: #000;
   z-index: 5;
 }
+.inputField{
+  width: 300px;
+}
 .inputField::placeholder {
   font-family: 'Poppins';
- 
+  font-weight: 300;
   color: #939ca3;
 }
 
-.navbar-wrappper input{
-  font-family: "poppins";
-  background-color: #EBEDF0;
+.navbar-wrappper input {
+  font-family: 'poppins';
+  background-color: #ebedf0;
   font-style: normal;
   font-weight: 300;
   font-size: 12px;
 }
-.textSmall{
+.textSmall {
   font-size: 14px;
+}
+.inputField input {
+  background: #f8f9fa;
+  outline: none;
 }

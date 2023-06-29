@@ -39,6 +39,9 @@
 .rightSection {
   flex: 2;
 }
+.rightSection .listHeading{
+  font-size: 14px;
+}
 .inviteContainer {
   margin-top: 2rem;
 }
@@ -62,7 +65,7 @@
 .input-box input[type='text'] {
   width: 100%;
   /* all: unset; */
-  background: #f8f9fa;
+  background: #fff;
   /* Grey/Lighter */
 
   border: 1px solid #8064a2;

@@ -93,7 +93,9 @@ export const Navbar: React.FC<Props> = ({}) => {
                         },
                       }}
                     >
-                      <SearchIcon sx={{ color: 'white' }} />
+                      <SearchIcon
+                        sx={{ color: 'white', width: '22px', height: '22px' }}
+                      />
                     </IconButton>
                   </InputAdornment>
                 ),

@@ -18,7 +18,7 @@
 }
 .modal-form-contanier .form-body {
   order: 1;
-  margin-top: 3rem;
+  margin-top: 2.3rem;
 }
 .modal-form-contanier .divider {
   order: 3;
@@ -78,8 +78,25 @@
   font-weight: 600;
   font-size: 0.75rem;
   line-height: 1rem;
+  z-index: 1;
+  position: relative;
 }
-
+.divider::before{
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  background-color: #CED4DA;
+  width: 100%;
+  height: 2px;
+  z-index: -1;
+}
+.divider span{
+  background-color: white;
+  display: inline-block;
+  padding: 0 4px;
+}
 /* FORM  */
 
 .form-body {
@@ -214,27 +231,48 @@ line-height: 20px;
 }
 .form-footer .form-footer-top .agree-tnc-info {
   font-weight: 500;
-  font-size: 0.7rem;
+  font-size: 12px;
   line-height: 18px;
   color: rgba(var(--gray-50-rgb));
   margin: auto;
 }
-
+.agree-tnc-info span{
+  color: black;
+}
 .form-footer .submit-btn {
   margin-top: var(--spacing-24);
   width: 100%;
   font-size: 14px;
-  border: 1px solid rgba(var(--primary-100-rgb));
-  color: rgba(var(--primary-100-rgb));
+  border: 1px solid #000;
+  color: #000;
 }
 .form-footer .submit-btn:hover {
-  background-color: rgba(var(--primary-100-rgb));
+  background-color: #000;
   color: white;
 }
 .bgGrey input {
-  background-color: #ebedf0 !important;
   border-radius: 4px;
+  background-color: #ebedf0 !important;
+}
+.bgGrey > div{
+  background-color: #ebedf0 !important;
 }
 .bgGrey fieldset {
   border: 0;
+}
+
+.modal-form-contanier .forgot-pass-btn span{
+  color: #000;
+  font-size: 14px;
+  font-family: Poppins;
+  line-height: 16px;
+}
+.modal-form-contanier .form-footer .submit-btn {
+  border: 1px solid #8064A2;
+  color: #8064A2;
+}
+
+.modal-form-contanier .form-footer .submit-btn:hover {
+  background-color: #8064A2;
+  color: white;
 }

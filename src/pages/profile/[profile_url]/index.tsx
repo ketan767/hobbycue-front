@@ -78,7 +78,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                 }
               >
                 <h4>About</h4>
-                <div
+                <div className={`${styles['color-light']} ${styles['about-text']}`}
                   dangerouslySetInnerHTML={{ __html: pageData?.about }}
                 ></div>
               </PageContentBox>
@@ -93,9 +93,11 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                 }
               >
                 <h4>Profile URL</h4>
-                <div>{pageData.profile_url}</div>
+                <p className={styles['color-light']}>{pageData.profile_url}</p>
+                <h4>Gender</h4>
+                <p className={styles['color-light']}>{pageData.gender}</p>
                 <h4>Year Of Birth</h4>
-                <div>{pageData.year_of_birth}</div>
+                <p className={styles['color-light']}>{pageData.year_of_birth}</p>
               </PageContentBox>
 
               <section className={styles['posts-container']}>

@@ -5,7 +5,7 @@ import {
   getMyProfileDetail,
   updateMyProfileDetail,
 } from '@/services/user.service'
-import { checkFullname, isEmpty, isEmptyField } from '@/utils'
+import { checkFullname, containOnlyNumbers, isEmpty, isEmptyField } from '@/utils'
 import { closeModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
@@ -87,6 +87,11 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     if (isEmptyField(data.profile_url)) {
       return setInputErrs((prev) => {
         return { ...prev, profile_url: 'This field is required!' }
+      })
+    }
+    if (!containOnlyNumbers(data.year_of_birth)) {
+      return setInputErrs((prev) => {
+        return { ...prev, year_of_birth: 'Enter a valid year of birth' }
       })
     }
 
