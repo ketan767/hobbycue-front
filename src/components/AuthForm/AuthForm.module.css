@@ -18,7 +18,7 @@
 }
 .modal-form-contanier .form-body {
   order: 1;
-  margin-top: 3rem;
+  margin-top: 2.3rem;
 }
 .modal-form-contanier .divider {
   order: 3;
@@ -266,4 +266,13 @@ line-height: 20px;
   font-size: 14px;
   font-family: Poppins;
   line-height: 16px;
+}
+.modal-form-contanier .form-footer .submit-btn {
+  border: 1px solid #8064A2;
+  color: #8064A2;
+}
+
+.modal-form-contanier .form-footer .submit-btn:hover {
+  background-color: #8064A2;
+  color: white;
 }

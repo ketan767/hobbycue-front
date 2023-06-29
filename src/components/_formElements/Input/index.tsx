@@ -16,6 +16,7 @@ type Props = {
 
 const FormInput: React.FC<Props> = (props) => {
   const { type, value, placeholder, error, helperText, className, onChange, disabled } = props
+  console.log({placeholder});
   return (
     <>
       <TextField
