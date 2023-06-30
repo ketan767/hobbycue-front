@@ -12,20 +12,23 @@ import { openModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
+import PauseIcon from '@/assets/svg/play_arrow.svg'
+import Microphone from '@/assets/svg/microphone.svg'
+import TestimonialImg from '@/assets/image/testimonial.png'
 
 const Home: React.FC<PropTypes> = function () {
   const dispatch = useDispatch()
   const openLogin = () => {
     dispatch(openModal({ type: 'auth', closable: true }))
   }
-  const  user  = useSelector((state: RootState) => state.user)
+  const user = useSelector((state: RootState) => state.user)
   const router = useRouter()
 
-useEffect(() => {
-  if(user.isLoggedIn){
-    router.push('/community')
-  }
-}, [user.isLoggedIn])
+  useEffect(() => {
+    if (user.isLoggedIn) {
+      router.push('/community')
+    }
+  }, [user.isLoggedIn])
   return (
     <>
       <Head>
@@ -48,9 +51,9 @@ useEffect(() => {
             <p>
               Sign-in to interact with a community of fellow hobbyists and an
               eco-system of experts, teachers, suppliers, classes, workshops,
-              and places to practice, participate or perform. Your hobby may
-              be about visual or performing arts, sports, games, gardening,
-              model making, cooking, indoor or outdoor activities…
+              and places to practice, participate or perform. Your hobby may be
+              about visual or performing arts, sports, games, gardening, model
+              making, cooking, indoor or outdoor activities…
               <br />
               <br />
               If you are an expert or a seller, you can Add your Listing and
@@ -93,7 +96,7 @@ useEffect(() => {
               Find a teacher, coach, or expert for your hobby interest in your
               locality. Find a partner, teammate, accompanist or collaborator.
             </p>
-            <OutlinedButton className={styles['card-btn']}  onClick={openLogin}>
+            <OutlinedButton className={styles['card-btn']} onClick={openLogin}>
               Connect
             </OutlinedButton>
           </div>
@@ -115,10 +118,7 @@ useEffect(() => {
               event venue. Book a slot at venues that allow booking through
               hobbycue.
             </p>
-            <OutlinedButton
-              className={styles['card-btn']}
-              onClick={openLogin}
-            >
+            <OutlinedButton className={styles['card-btn']} onClick={openLogin}>
               Meet up
             </OutlinedButton>
           </div>
@@ -144,7 +144,7 @@ useEffect(() => {
               Find equipment or supplies required for your hobby. Buy, rent or
               borrow from shops, online stores or from community members.
             </p>
-            <OutlinedButton className={styles['card-btn']}  onClick={openLogin}>
+            <OutlinedButton className={styles['card-btn']} onClick={openLogin}>
               Get it
             </OutlinedButton>
           </div>
@@ -175,7 +175,7 @@ useEffect(() => {
               Find events, meetups and workshops related to your hobby. Register
               or buy tickets online.
             </p>
-            <OutlinedButton className={styles['card-btn']}  onClick={openLogin}>
+            <OutlinedButton className={styles['card-btn']} onClick={openLogin}>
               Attend
             </OutlinedButton>
           </div>
@@ -206,7 +206,7 @@ useEffect(() => {
               venue or event tickets? Or, you know someone who should be on
               hobbycue? Go ahead and Add your Own page..{' '}
             </p>
-            <OutlinedButton className={styles['card-btn']}  onClick={openLogin}>
+            <OutlinedButton className={styles['card-btn']} onClick={openLogin}>
               Add new
             </OutlinedButton>
           </div>
@@ -246,8 +246,38 @@ useEffect(() => {
             recommend it.
           </p>
           <div className={styles['testimonial-footer']}>
-            <div className={styles['testimonial-audio']}>{/* TODO */}</div>
-            <div>TODO</div>
+            <div className={styles['testimonial-audio']}>
+              <div className={styles['pause-icon-container']}>
+                <Image src={PauseIcon} alt="pause" />
+              </div>
+              <div className={styles['progressbar']}>
+                <input type="range" />
+                <span>0:00</span>
+              </div>
+              <div className={styles['profile-container']}>
+                <Image
+                  src={TestimonialImg}
+                  alt="TestimonialImg"
+                  className={styles.testimonial}
+                />
+                <Image
+                  src={Microphone}
+                  alt="Microphone"
+                  className={styles.microphone}
+                />
+              </div>
+            </div>
+            <div className={styles['testimonial-right']}>
+              <Image
+                src={TestimonialImg}
+                alt="TestimonialImg"
+                className={styles.testimonial}
+              />
+              <div>
+                <p> Shubha Nagarajan </p>
+                <span> Classical Dancer </span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -258,7 +288,7 @@ useEffect(() => {
           <span className={styles.communityText}>Community</span>...
         </p>
         <div className={styles.getStartedBtn}>
-          <FilledButton  onClick={openLogin}>Get Started</FilledButton>
+          <FilledButton onClick={openLogin}>Get Started</FilledButton>
         </div>
       </section>
       <section className={`site-container ${styles.bigTextContainer}`}>
