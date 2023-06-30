@@ -100,9 +100,6 @@ const CustomCKEditor: React.FC<Props> = ({
             'numberedList',
             'bulletedList',
           ],
-          simpleUpload: {
-            uploadUrl: '/',
-          },
           placeholder: placeholder ? placeholder : '',
         }}
       />

@@ -223,12 +223,12 @@ export const CreatePost: React.FC<Props> = (props) => {
                 <video width="320" height="180" controls>
                   <source src={data.video_url} type="video/mp4" />
                 </video>
-                  <Image
-                    onClick={() => removeMedia(0)}
-                    src={CancelBtn}
-                    className={styles['img-cancel-icon']}
-                    alt="cancel"
-                  />
+                <Image
+                  onClick={() => removeMedia(0)}
+                  src={CancelBtn}
+                  className={styles['img-cancel-icon']}
+                  alt="cancel"
+                />
               </div>
             </div>
           )}
@@ -236,8 +236,8 @@ export const CreatePost: React.FC<Props> = (props) => {
             <div className={styles.imgWrapper}>
               {data?.media?.map((item: any, idx) => {
                 return (
-                  <div className={styles.imgContainer}>
-                    <img key={idx} src={item} alt="" />
+                  <div className={styles.imgContainer} key={idx}>
+                    <img src={item} alt="" />
                     <Image
                       onClick={() => removeMedia(idx)}
                       src={CancelBtn}
