@@ -136,3 +136,7 @@
 .input-box-error input{
   border: 1px solid #c0504d !important;
 }
+
+.year-gender-wrapper label::after{
+  content: "" !important;
+}

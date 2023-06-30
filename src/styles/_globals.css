@@ -44,7 +44,7 @@
   font: inherit;
 }
 strong,
-em {
+em,i {
   font: revert;
 }
 /* *:focus {
@@ -250,4 +250,10 @@ select:-webkit-autofill {
 }
 .ql-container{
   font-size: 14px !important;
+  max-width: 606px;
+}
+
+.ck.ck-content.ck-editor__editable ul,
+.ck.ck-content.ck-editor__editable ol{
+  padding-left: 12px !important;
 }

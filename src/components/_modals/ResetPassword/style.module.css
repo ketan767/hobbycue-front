@@ -1,19 +1,25 @@
 .modal-wrapper {
   background-color: white;
   border-radius: var(--spacing-8);
-  max-width: 50rem;
-  width: 38rem;
-  min-height: 10rem;
+  max-width: 490px;
+  width: 490px;
+  min-height: auto;
   display: flex;
   flex-direction: column;
 }
-.modal-wrapper .header,
-.modal-wrapper .body {
+.modal-wrapper .header {
   padding: var(--spacing-16) var(--spacing-24);
+  padding-top: 40px;
+  padding-bottom: 30px;
+}
+.modal-wrapper .body {
+  padding: 0 var(--spacing-24);
 }
 .modal-wrapper .footer {
   padding: var(--spacing-16) var(--spacing-24);
   margin-top: auto;
+  padding-bottom: 40px;
+  padding-top: 0;
 }
 .modal-wrapper .footer .submit {
   margin-left: auto;
@@ -26,15 +32,19 @@
   font-size: 18px;
   line-height: 26px;
   /* identical to box height, or 144% */
-
-  color: #000000;
+  font-size: 20px;
+  font-family: Poppins;
+  font-weight: 600;
+  text-align: center;
+  color: #8064a2;
+  text-decoration: underline;
+  text-underline-offset: 8px;
 }
-
 .input-box {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-4);
-  margin-bottom: var(--spacing-32);
+  margin-bottom: 1rem;
   position: relative;
 }
 .input-box label {
@@ -63,7 +73,13 @@
   /* color: #878c90; */
   min-width: 6.25rem;
 }
-
+.input-box input::placeholder {
+  color: #939ca3;
+  font-size: 12px;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 400;
+}
 .input-box input[type='text']:focus-within {
   outline: none;
   border: 1px solid rgb(var(--primary-50-rgb));
@@ -141,4 +157,9 @@
 
 .input-error.input-box input {
   border: 1px solid #c0504d;
+}
+
+.footer button {
+  width: 100%;
+  max-width: 100%;
 }

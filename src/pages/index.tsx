@@ -9,15 +9,23 @@ import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import FilledButton from '@/components/_buttons/FilledButton'
 import Footer from '@/components/Footer/Footer'
 import { openModal } from '@/redux/slices/modal'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
+import { useRouter } from 'next/router'
 
 const Home: React.FC<PropTypes> = function () {
   const dispatch = useDispatch()
   const openLogin = () => {
     dispatch(openModal({ type: 'auth', closable: true }))
   }
+  const  user  = useSelector((state: RootState) => state.user)
+  const router = useRouter()
 
-
+useEffect(() => {
+  if(user.isLoggedIn){
+    router.push('/community')
+  }
+}, [user.isLoggedIn])
   return (
     <>
       <Head>

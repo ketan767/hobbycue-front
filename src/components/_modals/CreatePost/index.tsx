@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styles from './CreatePost.module.css'
 import dynamic from 'next/dynamic'
-
 import Image from 'next/image'
 import store, { RootState } from '@/redux/store'
 import { useSelector } from 'react-redux'
@@ -17,6 +16,7 @@ import { closeModal } from '@/redux/slices/modal'
 import DOMPurify from 'dompurify'
 import CreatePostProfileSwitcher from './ProfileSwitcher'
 import { MenuItem, Select } from '@mui/material'
+import CancelBtn from '@/assets/svg/trash-icon.svg'
 
 const CustomEditor = dynamic(() => import('@/components/CustomEditor'), {
   ssr: false,
@@ -81,10 +81,10 @@ export const CreatePost: React.FC<Props> = (props) => {
   }, [data.content])
 
   useEffect(() => {
-    if(user._addresses){
-      if(user._addresses?.length>0){
+    if (user._addresses) {
+      if (user._addresses?.length > 0) {
         const address = user._addresses[0]
-        let visibilityArr : any = ['public']
+        let visibilityArr: any = ['public']
         visibilityArr.push(address.city)
         visibilityArr.push(address.country)
         visibilityArr.push(address.pin_code)
@@ -195,6 +195,12 @@ export const CreatePost: React.FC<Props> = (props) => {
     })
   }, [])
 
+  const removeMedia = (idxToRemove: any) => {
+    setData((prev: any) => {
+      return { ...prev, video_url: '' }
+    })
+  }
+
   return (
     <div className={styles['modal-wrapper']}>
       <h3 className={styles['modal-heading']}>Create Post</h3>
@@ -212,14 +218,34 @@ export const CreatePost: React.FC<Props> = (props) => {
             image={true}
           />
           {data.video_url && (
-            <video width="320" height="180" controls>
-              <source src={data.video_url} type="video/mp4" />
-            </video>
+            <div className={styles.videoWrapper}>
+              <div className={styles.imgContainer}>
+                <video width="320" height="180" controls>
+                  <source src={data.video_url} type="video/mp4" />
+                </video>
+                  <Image
+                    onClick={() => removeMedia(0)}
+                    src={CancelBtn}
+                    className={styles['img-cancel-icon']}
+                    alt="cancel"
+                  />
+              </div>
+            </div>
           )}
           {data.media?.length > 0 ? (
-            <div className={styles.imgContainer}>
+            <div className={styles.imgWrapper}>
               {data?.media?.map((item: any, idx) => {
-                return <img key={idx} src={item} alt="" />
+                return (
+                  <div className={styles.imgContainer}>
+                    <img key={idx} src={item} alt="" />
+                    <Image
+                      onClick={() => removeMedia(idx)}
+                      src={CancelBtn}
+                      className={styles['img-cancel-icon']}
+                      alt="cancel"
+                    />
+                  </div>
+                )
               })}
             </div>
           ) : (

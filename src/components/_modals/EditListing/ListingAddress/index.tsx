@@ -70,7 +70,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
   }
 
   const handleSubmit = async () => {
-    if (isEmptyField(data.city.value)) {
+    if (isEmptyField(data.city.value) || !data.city.value) {
       return setData((prev) => {
         return {
           ...prev,
@@ -78,7 +78,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
         }
       })
     }
-    if (isEmptyField(data.state.value)) {
+    if (isEmptyField(data.state.value) || !data.state.value) {
       return setData((prev) => {
         return {
           ...prev,
@@ -86,7 +86,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
         }
       })
     }
-    if (isEmptyField(data.country.value)) {
+    if (isEmptyField(data.country.value) || !data.country.value) {
       return setData((prev) => {
         return {
           ...prev,
@@ -157,7 +157,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
       isEmpty(data.city.value) ||
       isEmpty(data.country.value)
     ) {
-      setNextDisabled(true)
+      // setNextDisabled(true)
     } else {
       setNextDisabled(false)
     }

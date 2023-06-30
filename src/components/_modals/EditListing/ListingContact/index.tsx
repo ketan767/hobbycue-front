@@ -57,18 +57,7 @@ const [tick, setTick] = useState(false)
   }
 
   const handleSubmit = async () => {
-    if (isEmptyField(data.public_email.value)) {
-      return setData((prev) => {
-        return {
-          ...prev,
-          public_email: {
-            ...prev.public_email,
-            error: 'This field is required!',
-          },
-        }
-      })
-    }
-    if (!containOnlyNumbers(data.phone.value)) {
+    if (!data.phone.value || !containOnlyNumbers(data.phone.value.toString().trim()) || !data.phone.value) {
       return setData((prev) => {
         return {
           ...prev,
@@ -121,7 +110,7 @@ const [tick, setTick] = useState(false)
 
   useEffect(() => {
     if (isEmpty(data.phone.value)) {
-      setNextDisabled(true)
+      // setNextDisabled(true)
     } else {
       setNextDisabled(false)
     }
@@ -151,7 +140,7 @@ const [tick, setTick] = useState(false)
         <section className={styles['body']}>
           <>
             {/* Public Email */}
-            {listingModalData.type === 1 || listingModalData.type === 4 ? (
+            {listingModalData.type === 1 || listingModalData.type === 4 || listingModalData.type === 2 ? (
               <div className={styles.useEmailContainer}>
                 <p>Either Phone Number or Email ID is required.</p>
                 <OutlinedButton
@@ -173,7 +162,7 @@ const [tick, setTick] = useState(false)
             )}
             {listingModalData.type === 2 ? (
               <div className={styles['two-column-grid']}>
-                <div className={styles['input-box']}>
+                {/* <div className={styles['input-box']}>
                   <label> Page Admin </label>
                   <input
                     type="text"
@@ -183,17 +172,15 @@ const [tick, setTick] = useState(false)
                     autoComplete="page_admin"
                     onChange={handleInputChange}
                   />
-                  {/* <p className={styles['helper-text']}>{data.page_admin.error}</p> */}
-                </div>
+                </div> */}
                 <div className={styles['input-box']}>
-                  <label>Email ID</label>
+                  <label>Email ID if different </label>
                   <input
                     type="text"
                     placeholder={`Enter alternate email ID`}
                     value={data.public_email.value}
                     name="public_email"
                     autoComplete="email"
-                    required
                     onChange={handleInputChange}
                   />
                   <p className={styles['helper-text']}>

@@ -91,7 +91,6 @@ const CustomCKEditor: React.FC<Props> = ({
         data={value}
         onReady={(editor) => onReady(editor)}
         onChange={handleEditorChange}
-        
         config={{
           toolbar: [
             'bold',

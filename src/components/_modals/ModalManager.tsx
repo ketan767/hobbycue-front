@@ -135,6 +135,7 @@ const ModalManager: React.FC = () => {
               {activeModal === 'upload-video-user' && <UploadVideoUser />}
               {activeModal === 'social-media-edit' && <SocialMediaEditModal />}
               {activeModal === 'change-password' && <ChangePasswordModal />}
+
               {activeModal === 'confirm-email' && <ConfirmEmailModal />}
               {activeModal === 'email-sent' && <EmailSentModal />}
               {activeModal === 'reset-password' && <ResetPasswordModal />}
