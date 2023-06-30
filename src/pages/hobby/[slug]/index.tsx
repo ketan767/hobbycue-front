@@ -51,128 +51,88 @@ const HobbyDetail: React.FC<Props> = (props) => {
   return (
     <HobbyPageLayout activeTab="about" data={data}>
       {/* Body / Main Content */}
-      <PageGridLayout column={3}>
-        <aside>
-          {isLoggedIn && isAuthenticated && <ProfileSwitcher />}
 
+      <main>
+        {/* About Section */}
+        <PageContentBox showEditButton={false}>
+          <h4>About</h4>
+          <div>{data?.description}</div>
+        </PageContentBox>
+
+        {/* Keywords Section */}
+        {data?.keywords?.length > 0 && (
           <PageContentBox showEditButton={false}>
-            <h4 className={styles['heading']}>Hobbies Classification</h4>
-            <ul className={styles['classification-items']}>
-              <Link href={`/hobby/${data?.category?.slug}`}>
-                <li>{data?.category?.display}</li>
-              </Link>
-              <Link href={`/hobby/${data?.sub_category?.slug}`}>
-                <li>{data?.sub_category?.display}</li>
-              </Link>
-              {data?.tags &&
-                data?.tags.map((tag: any, idx: number) => {
-                  return (
-                    <Link key={idx} href={`/hobby/${tag?.slug}`}>
-                      <li>{tag.display}</li>
-                    </Link>
-                  )
-                })}
-              <li className={styles['active']}>{data?.display}</li>
+            <h4>Keywords :</h4>
+            <ul className={styles['keyword-list']}>
+              {data?.keywords?.map((item: any, idx: number) => (
+                <li key={idx}>{item}</li>
+              ))}
             </ul>
           </PageContentBox>
-        </aside>
+        )}
 
-        <main>
-          {/* About Section */}
+        {/* Next Levels and Related Hobbies */}
+        <section
+          style={{ display: 'flex', gap: '24px', alignItems: 'start' }}
+          className={styles['']}
+        >
+          {/* Next Levels */}
           <PageContentBox showEditButton={false}>
-            <h4>About</h4>
-            <div>{data?.description}</div>
-          </PageContentBox>
-
-          {/* Keywords Section */}
-          {data?.keywords?.length > 0 && (
-            <PageContentBox showEditButton={false}>
-              <h4>Keywords :</h4>
-              <ul className={styles['keyword-list']}>
-                {data?.keywords?.map((item: any, idx: number) => (
-                  <li key={idx}>{item}</li>
-                ))}
-              </ul>
-            </PageContentBox>
-          )}
-
-          {/* Next Levels and Related Hobbies */}
-          <section
-            style={{ display: 'flex', gap: '24px', alignItems: 'start' }}
-            className={styles['']}
-          >
-            {/* Next Levels */}
-            <PageContentBox showEditButton={false}>
-              <h4>
-                {data?.level === 0
-                  ? 'Sub-Categories'
-                  : data?.level === 1
-                  ? 'Hobbies'
-                  : data?.level === 2
-                  ? 'Hobbies'
-                  : data?.level === 3
-                  ? 'Genre/Styles'
-                  : data?.level === 5
-                  ? 'Next Level'
-                  : 'Next Level'}
-              </h4>
-              <div>
-                {data.level !== 5 && nextLevels.length > 0 ? (
-                  <>
-                    <ul className={styles['next-level-items']}>
-                      {nextLevels.map((item: any, idx: number) => {
-                        return (
-                          <Link href={`/hobby/${item.slug}`} key={idx}>
-                            <li>{item.display}</li>
-                          </Link>
-                        )
-                      })}
-                    </ul>
-                  </>
-                ) : (
-                  <span>No further sub-classification.</span>
-                )}
-              </div>
-            </PageContentBox>
-
-            {/* Related Hobbies */}
-            <PageContentBox showEditButton={false}>
-              <h4>Related</h4>
-              <div>
-                {data?.related_hobbies?.length > 0 ? (
-                  <>
-                    <ul className={styles['items']}>
-                      {data?.related_hobbies?.map((item: any, idx: number) => {
-                        return (
-                          <Link href={`/hobby/${item.slug}`} key={idx}>
-                            <li>{item.display}</li>
-                          </Link>
-                        )
-                      })}
-                    </ul>
-                  </>
-                ) : (
-                  <span>No further information.</span>
-                )}
-              </div>
-            </PageContentBox>
-          </section>
-        </main>
-
-        <aside>
-          <div className={styles['members']}>
-            <h4 className={styles['heading']}>Members</h4>
-            <hr />
-            <div className={styles['member-list']}>
-              {['Aditya', 'Prince', 'Devansh', 'Someone'].map(
-                (name: any, idx: number) => (
-                  <p key={idx}>{name}</p>
-                ),
+            <h4>
+              {data?.level === 0
+                ? 'Sub-Categories'
+                : data?.level === 1
+                ? 'Hobbies'
+                : data?.level === 2
+                ? 'Hobbies'
+                : data?.level === 3
+                ? 'Genre/Styles'
+                : data?.level === 5
+                ? 'Next Level'
+                : 'Next Level'}
+            </h4>
+            <div>
+              {data.level !== 5 && nextLevels.length > 0 ? (
+                <>
+                  <ul className={styles['next-level-items']}>
+                    {nextLevels.map((item: any, idx: number) => {
+                      return (
+                        <Link href={`/hobby/${item.slug}`} key={idx}>
+                          <li>{item.display}</li>
+                        </Link>
+                      )
+                    })}
+                  </ul>
+                </>
+              ) : (
+                <span>No further sub-classification.</span>
               )}
             </div>
-          </div>
-        </aside>
-      </PageGridLayout>
+          </PageContentBox>
+
+          {/* Related Hobbies */}
+          <PageContentBox showEditButton={false}>
+            <h4>Related</h4>
+            <div>
+              {data?.related_hobbies?.length > 0 ? (
+                <>
+                  <ul className={styles['items']}>
+                    {data?.related_hobbies?.map((item: any, idx: number) => {
+                      return (
+                        <Link href={`/hobby/${item.slug}`} key={idx}>
+                          <li>{item.display}</li>
+                        </Link>
+                      )
+                    })}
+                  </ul>
+                </>
+              ) : (
+                <span>No further information.</span>
+              )}
+            </div>
+          </PageContentBox>
+        </section>
+      </main>
     </HobbyPageLayout>
   )
 }

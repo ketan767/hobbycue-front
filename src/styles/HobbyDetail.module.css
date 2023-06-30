@@ -242,3 +242,7 @@
   flex-direction: column;
   gap: var(--spacing-16);
 }
+.noMembers{
+  font-size: 14px;
+  color: #6d747a;
+}

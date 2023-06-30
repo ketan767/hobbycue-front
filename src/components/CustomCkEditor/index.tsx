@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from 'react'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
-// import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline'
+
 import styles from './style.module.css'
 import dynamic from 'next/dynamic'
 import { SimpleUploadAdapter } from '@ckeditor/ckeditor5-upload'
@@ -103,8 +103,7 @@ const CustomCKEditor: React.FC<Props> = ({
           simpleUpload: {
             uploadUrl: '/',
           },
-          placeholder: placeholder ? placeholder : ''
-          // plugins: [SimpleUploadAdapter],
+          placeholder: placeholder ? placeholder : '',
         }}
       />
       <input

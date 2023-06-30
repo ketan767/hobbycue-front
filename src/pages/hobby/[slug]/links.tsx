@@ -49,7 +49,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
   }, [])
 
   return (
-    <HobbyPageLayout activeTab="posts" data={data}>
+    <HobbyPageLayout activeTab="links" data={data}>
       <main>
         <div className={styles['start-post-btn']}>
           <button
@@ -90,7 +90,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   const { query } = context
 
   const { err, res } = await getAllHobbies(
-    `slug=${query.slug}&populate=category,sub_category,tags,related_hobbies`,
+    `slug=${query.slug}&populate=category,sub_category,tags,related_hobbies&has_link=true`,
   )
 
   if (err) return { notFound: true }
