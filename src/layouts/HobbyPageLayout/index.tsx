@@ -22,8 +22,11 @@ type Props = {
 
 const HobbyPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
   const [showSmallHeader, setShowSmallHeader] = useState(false)
-  const [members, setMembers] = useState([])
+  const [members, setMembers] = useState([
+
+  ])
   const router = useRouter()
+  const [seeAll, setSeeAll] = useState(false)
 
   const { isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
@@ -51,7 +54,6 @@ const HobbyPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
       if (res.data.data.users) {
         setMembers(res.data.data.users)
       }
-      // setPosts(res.data.data.posts)
     }
   }
 
@@ -60,6 +62,10 @@ const HobbyPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
     getMembers()
     // return window.removeEventListener('scroll', checkScroll)
   }, [])
+
+  const toggleMembers = () => {
+    setSeeAll(!seeAll)
+  }
 
   return (
     <>
@@ -103,9 +109,16 @@ const HobbyPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
             <hr />
             <div className={styles['member-list']}>
               {members.length > 0 ? (
-                members.map((user: any, idx: number) => (
-                  <p key={idx}>{user.full_name}</p>
-                ))
+                <>
+                  {members.slice(0, seeAll ? members.length : 5).map((user: any, idx: number) => (
+                    <p key={idx}>{user}</p>
+                  ))}
+                  {members.length > 5 && (
+                    <p className={styles.seeAllBtn} onClick={toggleMembers}>
+                      See All
+                    </p>
+                  )}
+                </>
               ) : (
                 <>
                   <p className={styles.noMembers}>No members for this hobby!</p>

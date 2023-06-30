@@ -234,7 +234,10 @@
   color: #6d747a;
   margin-bottom: 8px;
 }
-
+.members .member-list p.seeAllBtn{
+  color: #8064A2;
+  cursor: pointer;
+}
 /* Post Page */
 
 .posts-container {
