@@ -39,7 +39,8 @@ interface ModalState {
   activeModal: ModalType
   closable: boolean
   onModalClose?: (() => void) | null
-  authFormData: { email: string; password: string; rememberMe: boolean }
+  authFormData: { email: string; password: string; rememberMe: boolean },
+  forgotPasswordEmail: string
 }
 
 const initialState: ModalState = {
@@ -50,6 +51,7 @@ const initialState: ModalState = {
     password: '',
     rememberMe: false,
   },
+  forgotPasswordEmail: ""
 }
 
 const modalSlice = createSlice({
@@ -78,9 +80,12 @@ const modalSlice = createSlice({
     resetAuthFormData(state) {
       state.authFormData = { email: '', password: '', rememberMe: false }
     },
+    updateForgotPasswordEmail(state, { payload }) {
+      state.forgotPasswordEmail = payload
+    },
   },
 })
 
-export const { openModal, closeModal, updateAuthFormData, resetAuthFormData } = modalSlice.actions
+export const { openModal, closeModal, updateAuthFormData, resetAuthFormData, updateForgotPasswordEmail } = modalSlice.actions
 
 export default modalSlice.reducer

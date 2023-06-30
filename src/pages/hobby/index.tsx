@@ -4,6 +4,8 @@ import { getAllHobbies } from '@/services/hobby.service'
 import { FormControl, MenuItem, Select, TextField } from '@mui/material'
 import Link from 'next/link'
 import { GetServerSideProps } from 'next'
+import Image from 'next/image'
+import AddIcon from '@/assets/svg/add-circle.svg'
 
 type Props = {
   data: any
@@ -174,9 +176,9 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                             <div>
                               <>
                                 <p>
-                                  <Link href={`/hobby/${subCat.slug}`}>
-                                    {subCat.display}
-                                  </Link>
+                                  <Image src={AddIcon} alt="add" />{' '}
+                                  {subCat.display}
+                                  <Link href={`/hobby/${subCat.slug}`}></Link>
                                 </p>
                                 <p>
                                   {hobbyData.map((hobby: any) => {

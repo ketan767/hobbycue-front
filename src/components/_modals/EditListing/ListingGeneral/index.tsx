@@ -59,7 +59,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   }
 
   const handleSubmit = async () => {
-    if (isEmptyField(data.title.value)) {
+    if (isEmptyField(data.title.value) || !data.title.value) {
       return setData((prev) => {
         return {
           ...prev,
@@ -67,7 +67,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
         }
       })
     }
-    if (isEmptyField(data.page_url.value)) {
+    if (isEmptyField(data.page_url.value)|| !data.page_url.value) {
       return setData((prev) => {
         return {
           ...prev,
@@ -75,7 +75,8 @@ const ListingGeneralEditModal: React.FC<Props> = ({
         }
       })
     }
-    if (data.year.value.trim() !== '' && !containOnlyNumbers(data.year.value)) {
+    console.log(data);
+    if(data.year.value && data.year.value?.trim() !== '' && !containOnlyNumbers(data.year.value)) {
       return setData((prev) => {
         return {
           ...prev,
@@ -182,7 +183,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
 
   useEffect(() => {
     if (isEmpty(data.title.value) || isEmpty(data.page_url.value)) {
-      setNextDisabled(true)
+      // setNextDisabled(true)
     } else {
       setNextDisabled(false)
     }
@@ -232,7 +233,6 @@ const ListingGeneralEditModal: React.FC<Props> = ({
                 value={data.tagline.value}
                 name="tagline"
                 onChange={handleInputChange}
-                required
               />
               <p className={styles['helper-text']}>{data.tagline.error}</p>
             </div>

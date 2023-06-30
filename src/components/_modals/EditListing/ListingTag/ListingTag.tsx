@@ -112,7 +112,7 @@ const ListingTagsEditModal: React.FC<Props> = ({
       <div className={styles['modal-wrapper']}>
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>{'About'}</h4>
+          <h4 className={styles['heading']}>{'Tags'}</h4>
         </header>
         <hr />
         <section className={styles['body']}>

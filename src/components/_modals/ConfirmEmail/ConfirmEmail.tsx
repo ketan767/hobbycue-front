@@ -11,12 +11,12 @@ import styles from './style.module.css'
 import { isEmpty, isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
-import { closeModal } from '@/redux/slices/modal'
+import { closeModal, openModal, updateForgotPasswordEmail } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
-import { changePassword } from '@/services/auth.service'
+import { changePassword, forgotPassword } from '@/services/auth.service'
 
 type Props = {
   onComplete?: () => void
@@ -35,26 +35,30 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
     email: '',
   })
   const handleSubmit = async () => {
-    // setSubmitBtnLoading(true)
-    // const { err, res } = await changePassword({
-    //   currentPassword,
-    //   newPassword,
-    // })
-    // setSubmitBtnLoading(false)
-    // if (err) {
-    //   if (err?.response?.data?.message) {
-    //     setErrors({
-    //       ...errors,
-    //       email: err?.response?.data?.message,
-    //     })
-    //   }
-    //   return
-    // }
-    // if (res?.data.success) {
-    //   console.log(res.data)
-    //   dispatch(closeModal())
-    //   window.location.reload()
-    // }
+    setSubmitBtnLoading(true)
+    const { err, res } = await forgotPassword({
+      email
+    })
+    setSubmitBtnLoading(false)
+    if (err) {
+      console.log(err?.response);
+      if (err?.response?.data?.message) {
+        setErrors({
+          ...errors,
+          email: err?.response?.data?.message,
+        })
+      }
+      return
+    }
+    if (res?.data.success) {
+      console.log(res.data.data.user)
+      alert(res.data.data.user.otp)
+
+      dispatch(openModal({ type: 'reset-password', closable: true }))
+      dispatch(updateForgotPasswordEmail(email))
+      // dispatch(closeModal())
+      // window.location.reload()
+    }
   }
   //   console.log('user', user)
 
@@ -72,7 +76,7 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
         </header>
         <section className={styles['body']}>
           <div className={styles.inputField}>
-            <label className={styles.label}>Current Password</label>
+            <label className={styles.label}>Enter the email address below to get forgotten password link to reset your hobbycue password.</label>
             <div
               className={`${styles['input-box']} ${
                 errors.email ? styles['input-error'] : ''
@@ -82,7 +86,7 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className={styles.input}
-                placeholder="Enter Current Password"
+                placeholder="Email Address"
               />
               <p className={styles['helper-text']}>{errors.email}</p>
             </div>

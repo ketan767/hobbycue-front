@@ -18,6 +18,7 @@ import { checkIfUrlExists } from '@/utils'
 import Link from 'next/link'
 import { getAllHobbies } from '@/services/hobby.service'
 import DefaultHobbyImg from '@/assets/image/default.png'
+import { MenuItem, Select } from '@mui/material'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -34,6 +35,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
     cover_image: null,
     display: '',
   })
+  const [locations, setLocations] = useState([])
   const [selectedHobby, setSelectedHobby] = useState('')
   const [selectedLocation, setSelectedLocation] = useState('')
   const tabs: CommunityPageTabs[] = [
@@ -129,6 +131,28 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
     }
   }
 
+  useEffect(() => {
+    let tempLocations: any = []
+    activeProfile.data?._addresses?.forEach((address: any) => {
+      if (address?.city) {
+        tempLocations.push(address?.city)
+      }
+      if (address?.country) {
+        tempLocations.push(address?.country)
+      }
+      if (address?.pin_code) {
+        tempLocations.push(address?.pin_code)
+      }
+      if (address?.society) {
+        tempLocations.push(address?.society)
+      }
+      if (address?.state) {
+        tempLocations.push(address?.state)
+      }
+    }),
+      setLocations(tempLocations)
+  }, [activeProfile])
+
   return (
     <>
       <PageGridLayout column={3}>
@@ -189,7 +213,24 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
               {/* <Image src={EditIcon} alt="Edit" /> */}
             </header>
             <span className={styles['divider']}></span>
-            <section>
+            {locations?.length > 0 && (
+              <Select
+              sx={{ boxShadow: 'none', '.MuiOutlinedInput-notchedOutline': { border: 0 } }}
+                className={styles['location-select']}
+                value={selectedLocation}
+                onChange={(e) => setSelectedLocation(e.target.value)}
+                defaultValue={selectedLocation}
+              >
+                {locations.map((item, idx) => {
+                  return (
+                    <MenuItem key={idx} value={item}>
+                      {item}
+                    </MenuItem>
+                  )
+                })}
+              </Select>
+            )}
+            {/* <section>
               <ul>
                 {activeProfile.data?._addresses?.map((address: any) => {
                   return (
@@ -248,7 +289,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
                   )
                 })}
               </ul>
-            </section>
+            </section> */}
           </section>
         </aside>
 

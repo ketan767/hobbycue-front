@@ -234,11 +234,18 @@
   color: #6d747a;
   margin-bottom: 8px;
 }
-
+.members .member-list p.seeAllBtn{
+  color: #8064A2;
+  cursor: pointer;
+}
 /* Post Page */
 
 .posts-container {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-16);
+}
+.noMembers{
+  font-size: 14px;
+  color: #6d747a;
 }
