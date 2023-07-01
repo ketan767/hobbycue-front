@@ -98,11 +98,6 @@ const AuthForm: React.FC<Props> = (props) => {
     // @TODO:: Email Password verification
     if (!validateEmail(authFormData.email))
       return setInputErrors({ email: 'Enter a Valid Email!', password: null })
-    if (!validatePassword(authFormData.password))
-      return setInputErrors({
-        email: null,
-        password: 'Enter a Valid Password!',
-      })
 
     setSubmitBtnLoading(true)
 
@@ -149,6 +144,12 @@ const AuthForm: React.FC<Props> = (props) => {
 
     // Join In
     if (selectedTab === 'join-in') {
+      if (!validatePassword(authFormData.password))
+        return setInputErrors({
+          email: null,
+          password: 'Enter a Valid Password!',
+        })
+
       const { err, res } = await joinIn(data)
       setSubmitBtnLoading(false)
       if (err) {
@@ -414,8 +415,8 @@ const AuthForm: React.FC<Props> = (props) => {
           )}
           {selectedTab === 'join-in' && (
             <p className={styles['agree-tnc-info']}>
-              By continuing, you agree to our <span> Terms of Service </span> and <span> Privacy
-              Policy </span>.
+              By continuing, you agree to our <span> Terms of Service </span>{' '}
+              and <span> Privacy Policy </span>.
             </p>
           )}
         </div>
