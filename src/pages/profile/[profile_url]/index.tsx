@@ -2,7 +2,11 @@ import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
 
 import { GetServerSideProps } from 'next'
-import { getAllUserDetail } from '@/services/user.service'
+import {
+  getAllUserDetail,
+  getMyProfileDetail,
+  updateMyProfileDetail,
+} from '@/services/user.service'
 import Head from 'next/head'
 import ProfileLayout from '@/layouts/ProfilePageLayout'
 import { useDispatch, useSelector } from 'react-redux'
@@ -22,6 +26,8 @@ import ProfilePagesList from '@/components/ProfilePage/ProfilePagesList/ProfileP
 import PinnedPostWrapper from '@/layouts/PinnedPost/PinnedPost'
 import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/ProfileSocialMedia'
 import { getListingPages } from '@/services/listing.service'
+import PostWrapper from '@/layouts/PinnedPost/PinnedPost'
+import { updateUser } from '@/redux/slices/user'
 
 interface Props {
   data: ProfilePageData
@@ -33,6 +39,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
 
   const [pageData, setPageData] = useState(data.pageData)
   const [loadingPosts, setLoadingPosts] = useState(false)
+  const { user } = useSelector((state: any) => state.user)
   const [posts, setPosts] = useState([])
   const router = useRouter()
 
@@ -44,13 +51,44 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
     setLoadingPosts(false)
     if (err) return console.log(err)
     if (res.data.success) {
-      setPosts(res.data.data.posts)
+      let allPosts = res.data.data.posts
+      allPosts = allPosts.map((post: any) => {
+        if (post._id === user.pinned_post) {
+          return { ...post, isPinned: true }
+        } else {
+          return post
+        }
+      })
+      allPosts = allPosts.sort((x: any) => (x.isPinned ? -1 : 1))
+      setPosts(allPosts)
     }
   }
+  const onPinPost = async (postId: any) => {
+    console.log(postId)
+    const reqBody = {
+      pinned_post: postId,
+    }
+    const { err, res } = await updateMyProfileDetail(reqBody)
 
+    if (err) {
+      return console.log(err)
+    }
+
+    const { err: error, res: response } = await getMyProfileDetail()
+
+    if (error) return console.log(error)
+    if (response?.data.success) {
+      console.log('response', response)
+      dispatch(updateUser(response.data.data.user))
+      // window.location.reload()
+    }
+  }
   useEffect(() => {
     getPost()
-  }, [])
+  }, [user.pinned_post])
+  
+  let pinnedPosts = posts.filter((item: any) => item.isPinned === true)
+  let unpinnnedPosts = posts.filter((item: any) => item.isPinned !== true)
 
   return (
     <>
@@ -78,7 +116,8 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                 }
               >
                 <h4>About</h4>
-                <div className={`${styles['color-light']} ${styles['about-text']}`}
+                <div
+                  className={`${styles['color-light']} ${styles['about-text']}`}
                   dangerouslySetInnerHTML={{ __html: pageData?.about }}
                 ></div>
               </PageContentBox>
@@ -97,7 +136,9 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                 <h4>Gender</h4>
                 <p className={styles['color-light']}>{pageData.gender}</p>
                 <h4>Year Of Birth</h4>
-                <p className={styles['color-light']}>{pageData.year_of_birth}</p>
+                <p className={styles['color-light']}>
+                  {pageData.year_of_birth}
+                </p>
               </PageContentBox>
 
               <section className={styles['posts-container']}>
@@ -106,22 +147,33 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                 ) : (
                   posts.length === 0 && 'No Posts'
                 )}
-                {posts.map((post: any) => {
-                   if (post.pinned) {
-                    return (
-                      <PinnedPostWrapper title='Pinned Post' key={post._id}>
+
+                {pinnedPosts.map((post: any) => {
+                  return (
+                    <PostWrapper title="Pinned Post" key={post._id}>
+                      <PostCard
+                        key={post._id}
+                        postData={post}
+                        fromProfile={true}
+                        onPinPost={onPinPost}
+                      />
+                    </PostWrapper>
+                  )
+                })}
+                {unpinnnedPosts.length > 0 && (
+                  <PostWrapper title="Recent Post">
+                    {unpinnnedPosts.map((post: any) => {
+                      return (
                         <PostCard
                           key={post._id}
                           postData={post}
                           fromProfile={true}
+                          onPinPost={onPinPost}
                         />
-                      </PinnedPostWrapper>
-                    )
-                  }
-                  return (
-                    <PostCard key={post._id} postData={post} fromProfile={true} />
-                  )
-                })}
+                      )
+                    })}
+                  </PostWrapper>
+                )}
               </section>
             </main>
 
@@ -154,13 +206,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   if (res?.data.success && res.data.data.no_of_users === 0)
     return { notFound: true }
 
-    
   const user = res.data?.data?.users[0]
 
   if (!user) return { notFound: true }
 
   const { err: error, res: response } = await getListingPages(
-    `populate=_hobbies,_address&admin=${user._id}`
+    `populate=_hobbies,_address&admin=${user._id}`,
   )
 
   const data = {
