@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import {
   Button,
@@ -12,7 +12,7 @@ import {
   getMyProfileDetail,
   updateMyProfileDetail,
 } from '@/services/user.service'
-
+import Image from 'next/image'
 import styles from './styles.module.css'
 import { isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
@@ -21,6 +21,10 @@ import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { getListingTags, updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
+import InputSelect from '@/components/InputSelect/inputSelect'
+import DownArrow from '@/assets/svg/chevron-down.svg'
+import TickIcon from '@/assets/svg/tick.svg'
+import useOutsideAlerter from '@/hooks/useOutsideAlerter'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -45,11 +49,13 @@ const ListingTagsEditModal: React.FC<Props> = ({
   const { listingModalData } = useSelector((state: RootState) => state.site)
   const [tags, setTags] = useState([])
   const [selectedTags, setSelectedTags] = useState<string[]>([])
-
+  const [showDropdown, setShowDropdown] = useState(false)
+  const dropdownRef: any = useRef()
   const [data, setData] = useState<ListingAboutData>({
     description: { value: '', error: null },
   })
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
+  useOutsideAlerter(dropdownRef, () => setShowDropdown(false))
 
   const handleInputChange = (value: string) => {
     setData((prev) => {
@@ -67,23 +73,23 @@ const ListingTagsEditModal: React.FC<Props> = ({
     console.log('res', res?.data.data.listing)
     if (onComplete) onComplete()
     else {
-      // window.location.reload()
+      window.location.reload()
       dispatch(closeModal())
     }
   }
 
   useEffect(() => {
-    if(tags.length > 0){
-      let selected : any = []
+    if (tags.length > 0) {
+      let selected: any = []
       tags.forEach((item: any) => {
-        if(listingModalData._tags?.includes(item._id)){
-          selected.push(item)
+        if (listingModalData._tags?.includes(item._id)) {
+          selected.push(item._id)
         }
       })
       setSelectedTags(selected)
     }
   }, [listingModalData?._tags, tags])
-  
+
   useEffect(() => {
     setData((prev) => {
       return {
@@ -94,8 +100,7 @@ const ListingTagsEditModal: React.FC<Props> = ({
       }
     })
   }, [user])
-  
-  console.log({selectedTags});
+
   useEffect(() => {
     getListingTags()
       .then((res: any) => {
@@ -106,6 +111,16 @@ const ListingTagsEditModal: React.FC<Props> = ({
         console.log(err)
       })
   }, [])
+
+  const handleTagChange = (idToChange: any) => {
+    if (selectedTags.includes(idToChange)) {
+      setSelectedTags((prev: any) =>
+        prev.filter((item: any) => item !== idToChange),
+      )
+    } else {
+      setSelectedTags((prev: any) => [...prev, idToChange])
+    }
+  }
 
   return (
     <>
@@ -119,8 +134,40 @@ const ListingTagsEditModal: React.FC<Props> = ({
           <div className={styles['input-box']}>
             <label>Add Tags</label>
             <input hidden required />
-
-            <FormControl variant="outlined" size="small" sx={{ width: '100%' }}>
+            <div className={styles['select-container']} ref={dropdownRef}>
+              <div
+                className={styles['select-input']}
+                onClick={() => setShowDropdown(true)}
+              >
+                <p> Select listin tag.. </p>
+                <Image src={DownArrow} alt="down" />
+              </div>
+              {showDropdown && (
+                <div className={styles['options-container']}>
+                  {tags.map((item: any, idx) => {
+                    return (
+                      <div
+                        className={`${styles['single-option']}  ${
+                          selectedTags.includes(item._id)
+                            ? styles['selcted-option']
+                            : ''
+                        }`}
+                        key={item._id}
+                        onClick={() => handleTagChange(item._id)}
+                        // value={item._id}
+                      >
+                        <p className={`${styles.tagText}`}>{item.name}</p>
+                        <p className={styles.tagDesc}>
+                          {item.description}
+                          <Image src={TickIcon} alt="down" className={styles['tick-icon']} />
+                        </p>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+            {/* <FormControl variant="outlined" size="small" sx={{ width: '100%' }}>
               <Select
                 value={selectedTags}
                 multiple={true}
@@ -144,7 +191,7 @@ const ListingTagsEditModal: React.FC<Props> = ({
                   )
                 })}
               </Select>
-            </FormControl>
+            </FormControl> */}
           </div>
         </section>
 
