@@ -111,7 +111,7 @@ export const connectGoogle = async (
   const headers = { Authorization: `Bearer ${token}` }
 
   try {
-    const res = await axiosInstance.post(`/google/connect`, data, { headers })
+    const res = await axiosInstance.post(`/auth/google/connect`, data, { headers })
     return { res: res, err: null }
   } catch (error: any) {
     return { err: error, res: null }
@@ -124,7 +124,7 @@ export const disconnectGoogle = async (
   const headers = { Authorization: `Bearer ${token}` }
 
   try {
-    const res = await axiosInstance.post(`/google/disconnect`, data, { headers })
+    const res = await axiosInstance.post(`/auth/google/disconnect`, data, { headers })
     return { res: res, err: null }
   } catch (error: any) {
     return { err: error, res: null }
@@ -138,7 +138,7 @@ export const connectFacebook = async (
   const headers = { Authorization: `Bearer ${token}` }
 
   try {
-    const res = await axiosInstance.post(`/facebook/connect`, data, { headers })
+    const res = await axiosInstance.post(`/auth/facebook/connect`, data, { headers })
     return { res: res, err: null }
   } catch (error: any) {
     return { err: error, res: null }
@@ -151,7 +151,7 @@ export const disconnectFacebook = async (
   const headers = { Authorization: `Bearer ${token}` }
 
   try {
-    const res = await axiosInstance.post(`/facebook/disconnect`, data, { headers })
+    const res = await axiosInstance.post(`/auth/facebook/disconnect`, data, { headers })
     return { res: res, err: null }
   } catch (error: any) {
     return { err: error, res: null }
