@@ -75,7 +75,6 @@ const PostCard: React.FC<Props> = (props) => {
     }
   }, [postData])
 
-  console.log('metaData', metaData)
   return (
     <>
       <div className={styles['post-card-wrapper']}>

@@ -39,6 +39,7 @@ type UpdateProfilePayload = {
   images?: any
   is_onboarded?: boolean
   pinned_post?: string
+  _hobbies? : any
 }
 
 type ProfileAddressPayload = {
