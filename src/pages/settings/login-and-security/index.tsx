@@ -70,23 +70,15 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
 
   const handleFacebookAuth = async (e: any) => {
     dispatch(setShowPageLoader(true))
-    const { err, res } = await facebookAuth({
+
+    const { err, res } = await connectFacebook({
       accessToken: e.accessToken,
       userId: e.userID,
-      name: e.name,
     })
     dispatch(setShowPageLoader(false))
     if (err) return console.log(err)
     if (res.status === 200 && res.data.success) {
-      // localStorage.setItem('token', res.data.data.token)
       console.log('fb - ', res.data)
-      const accessToken = res.data.data.token
-      const { err: error, res: response } = await connectFacebook({
-        accessToken,
-        userId: user._id,
-      })
-      if (error) return console.log(error)
-      console.log(res.data)
       window.location.reload()
     }
   }
