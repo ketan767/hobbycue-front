@@ -50,9 +50,9 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
     dispatch(setShowPageLoader(false))
     if (err) return console.log(err)
     if (res.status === 200 && res.data.success) {
-      console.log('token id', res.data.data.token)
+      console.log('token id', e.tokenId)
       console.log('google id', res.data.data.user.google.googleId)
-      const tokenId = res.data.data.token
+      const tokenId = e.tokenId
       const googleId = res.data.data.user.google.googleId
       const { err: error, res: response } = await connectGoogle({
         tokenId,
