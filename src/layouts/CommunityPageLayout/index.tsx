@@ -19,6 +19,7 @@ import Link from 'next/link'
 import { getAllHobbies } from '@/services/hobby.service'
 import DefaultHobbyImg from '@/assets/image/default.png'
 import { MenuItem, Select } from '@mui/material'
+import FilledButton from '@/components/_buttons/FilledButton'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -395,6 +396,12 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
             <span className={styles['divider']}></span>
             <section>
               <input type="text" name="" id="" />
+              <span className={styles['input-prefix']}>
+                @
+              </span>
+              <FilledButton>
+                Invite
+              </FilledButton>
             </section>
           </section>
 
