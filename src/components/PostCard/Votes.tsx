@@ -7,9 +7,10 @@ type Props = {
   styles: any
   data: any
   updatePost: () => void
+  className? : any
 }
 
-const PostVotes: React.FC<Props> = ({ styles, data, updatePost }: Props) => {
+const PostVotes: React.FC<Props> = ({ styles, data, updatePost, className }: Props) => {
   const { activeProfile } = useSelector((state: RootState) => state.user)
   const [voteStatus, setVoteStatus] = useState<'up' | 'down' | null>(null)
 
@@ -95,7 +96,7 @@ const PostVotes: React.FC<Props> = ({ styles, data, updatePost }: Props) => {
 
   return (
     <>
-      <div className={styles['upvote-downvote']}>
+      <div className={`${styles['upvote-downvote']} ${className ? className : ''}`}>
         <div className={styles['upvote']} onClick={handleUpVote}>
           <svg
             width="24"
