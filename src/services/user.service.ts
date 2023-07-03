@@ -60,6 +60,20 @@ export const addUserHobby = async (
     .catch((err) => cb(err, null))
 }
 
+export const updateUserHobbyLevel = async (id: string, data: any) => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.patch(`/user/hobby/${id}`, data, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error) {
+    return { err: error, res: null }
+  }
+}
+
 // Delete User Hobby
 export const deleteUserHobby = async (id: string): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
