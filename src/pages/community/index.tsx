@@ -51,16 +51,18 @@ const CommunityHome: React.FC<Props> = ({}) => {
     <>
       <CommunityPageLayout activeTab="posts">
         <section className={styles['posts-container']}>
-          {allPosts.length === 0 || isLoadingPosts ? (
+          {isLoadingPosts ? (
             <>
               <PostCardSkeletonLoading />
-              {/* <PostCardSkeletonLoading />
-                <PostCardSkeletonLoading /> */}
             </>
-          ) : (
+          ) : allPosts.length > 0 ? (
             allPosts.map((post: any) => {
               return <PostCard key={post._id} postData={post} />
             })
+          ) : allPosts.length === 0 ? (
+            <p className={styles['no-posts-text']}>No posts found</p>
+          ) : (
+            <></>
           )}
         </section>
       </CommunityPageLayout>
