@@ -144,8 +144,41 @@
 }
 .invite-wrapper > section {
   padding: var(--spacing-16);
+  display: flex;
+  align-items: stretch;
+  position: relative;
 }
-
+.invite-wrapper > section input {
+  width: 100%;
+  border-radius: 8px 0 0 8px;
+  border: 1px solid var(--purple-1, #8064a2);
+  background: var(--grey-white, #fff);
+  outline: none;
+  padding-left: 32px;
+  color: #191919;
+  font-size: 12px;
+}
+.invite-wrapper > section button {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  max-width: 59px;
+  padding: 12px 4px 12px 4px;
+  font-size: 12px;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 16px;
+}
+.invite-wrapper > section .input-prefix {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 2rem;
+  font-size: 12px;
+  font-family: Poppins;
+  font-style: normal;
+  color: #939ca3;
+}
 /* Trending Hobby Wrapper */
 .trending-hobbies-side-wrapper {
   margin-bottom: var(--spacing-16);

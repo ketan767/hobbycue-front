@@ -103,3 +103,57 @@ export const resetPassword = async (
     return { err: error, res: null }
   }
 }
+
+export const connectGoogle = async (
+  data: any,
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(`/google/connect`, data, { headers })
+    return { res: res, err: null }
+  } catch (error: any) {
+    return { err: error, res: null }
+  }
+}
+export const disconnectGoogle = async (
+  data: any,
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(`/google/disconnect`, data, { headers })
+    return { res: res, err: null }
+  } catch (error: any) {
+    return { err: error, res: null }
+  }
+}
+
+export const connectFacebook = async (
+  data: any,
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(`/facebook/connect`, data, { headers })
+    return { res: res, err: null }
+  } catch (error: any) {
+    return { err: error, res: null }
+  }
+}
+export const disconnectFacebook = async (
+  data: any,
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(`/facebook/disconnect`, data, { headers })
+    return { res: res, err: null }
+  } catch (error: any) {
+    return { err: error, res: null }
+  }
+}
