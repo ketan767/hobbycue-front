@@ -67,6 +67,7 @@
 
 .loginBtn {
   margin-left: auto;
+  width: 129px !important;
 }
 
 .logoutText {
