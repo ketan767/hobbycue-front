@@ -76,7 +76,7 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
       name: e.name,
     })
     dispatch(setShowPageLoader(false))
-    if (err) return console.log(err?.response)
+    if (err) return console.log(err)
     if (res.status === 200 && res.data.success) {
       // localStorage.setItem('token', res.data.data.token)
       console.log('fb - ', res.data)
