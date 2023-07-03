@@ -11,7 +11,14 @@
   z-index: 1;
   background-color: white;
 }
-
+.community-header-small {
+  display: flex;
+  column-gap: 16px;
+}
+.community-header-small > .community-header-left{
+  max-width: 615px;
+  flex: 1;
+}
 .community-header > section {
   box-shadow: 0 2px 8px rgba(222, 222, 222, 0.766);
 }

@@ -42,7 +42,7 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
   // Social Login Handle
   const googleAuthSuccess = async (e: any) => {
     dispatch(setShowPageLoader(true))
-    const { err, res } = await googleAuth({
+    const { err, res } = await connectGoogle({
       googleId: e.profileObj.googleId,
       tokenId: e.tokenId,
       name: e.profileObj.name,
@@ -50,16 +50,7 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
     dispatch(setShowPageLoader(false))
     if (err) return console.log(err)
     if (res.status === 200 && res.data.success) {
-      console.log('token id', e.tokenId)
-      console.log('google id', res.data.data.user.google.googleId)
-      const tokenId = e.tokenId
-      const googleId = res.data.data.user.google.googleId
-      const { err: error, res: response } = await connectGoogle({
-        tokenId,
-        googleId,
-      })
-      if (error) return console.log(error)
-      console.log(res.data)
+      console.log('google' ,res.data)
       window.location.reload()
       // res.data.data.user.google.googleId
       // localStorage.setItem('token', res.data.data.token)

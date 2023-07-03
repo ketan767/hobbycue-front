@@ -45,7 +45,7 @@ const CommunityLinks: React.FC<Props> = ({}) => {
   return (
     <>
       <CommunityPageLayout activeTab="links">
-        <section className={styles['posts-container']}>
+        <section className={styles['pages-container']}>
           {allPosts.length === 0 || isLoadingPosts ? (
             <>
               <PostCardSkeletonLoading />
