@@ -16,7 +16,8 @@ import { closeModal } from '@/redux/slices/modal'
 import DOMPurify from 'dompurify'
 import CreatePostProfileSwitcher from './ProfileSwitcher'
 import { MenuItem, Select } from '@mui/material'
-import CancelBtn from '@/assets/svg/trash-icon.svg'
+// import CancelBtn from '@/assets/svg/trash-icon.svg'
+import CancelBtn from '@/assets/icons/x-icon.svg'
 
 const CustomEditor = dynamic(() => import('@/components/CustomEditor'), {
   ssr: false,

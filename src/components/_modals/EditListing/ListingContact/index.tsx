@@ -6,7 +6,12 @@ import {
   getMyProfileDetail,
   updateUserAddress,
 } from '@/services/user.service'
-import { containOnlyNumbers, isEmpty, isEmptyField, validatePhone } from '@/utils'
+import {
+  containOnlyNumbers,
+  isEmpty,
+  isEmptyField,
+  validatePhone,
+} from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
@@ -38,7 +43,7 @@ const ListingContactEditModal: React.FC<Props> = ({
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [nextDisabled, setNextDisabled] = useState(false)
-const [tick, setTick] = useState(false)
+  const [tick, setTick] = useState(false)
   const [data, setData] = useState<ListingContactData>({
     phone: { value: '', error: null },
     public_email: { value: '', error: null },
@@ -57,7 +62,11 @@ const [tick, setTick] = useState(false)
   }
 
   const handleSubmit = async () => {
-    if (!data.phone.value || !containOnlyNumbers(data.phone.value.toString().trim()) || !data.phone.value) {
+    if (
+      !data.phone.value ||
+      !containOnlyNumbers(data.phone.value.toString().trim()) ||
+      !data.phone.value
+    ) {
       return setData((prev) => {
         return {
           ...prev,
@@ -71,6 +80,7 @@ const [tick, setTick] = useState(false)
       website: data.website.value,
       whatsapp_number: data.whatsapp_number.value,
     }
+    console.log('jsonData', jsonData);
 
     setSubmitBtnLoading(true)
     const { err, res } = await updateListing(listingModalData._id, jsonData)
@@ -80,14 +90,13 @@ const [tick, setTick] = useState(false)
       dispatch(updateListingModalData(res?.data.data.listing))
       if (onComplete) onComplete()
       else {
-        window.location.reload()
+        // window.location.reload()
         dispatch(closeModal())
       }
     }
   }
 
   useEffect(() => {
-    console.log(user)
     setData((prev) => {
       return {
         public_email: {
@@ -117,11 +126,11 @@ const [tick, setTick] = useState(false)
   }, [data])
 
   useEffect(() => {
-    if(tick){
+    if (tick) {
       setData((prev) => {
         return {
           ...prev,
-          whatsapp_number: { value: user.phone, error: null },
+          whatsapp_number: { value: data.phone.value, error: null },
         }
       })
     }
@@ -140,7 +149,9 @@ const [tick, setTick] = useState(false)
         <section className={styles['body']}>
           <>
             {/* Public Email */}
-            {listingModalData.type === 1 || listingModalData.type === 4 || listingModalData.type === 2 ? (
+            {listingModalData.type === 1 ||
+            listingModalData.type === 4 ||
+            listingModalData.type === 2 ? (
               <div className={styles.useEmailContainer}>
                 <p>Either Phone Number or Email ID is required.</p>
                 <OutlinedButton
@@ -162,17 +173,21 @@ const [tick, setTick] = useState(false)
             )}
             {listingModalData.type === 2 ? (
               <div className={styles['two-column-grid']}>
-                {/* <div className={styles['input-box']}>
-                  <label> Page Admin </label>
-                  <input
-                    type="text"
-                    placeholder={`Page Admin`}
-                    value={data.page_admin.value}
-                    name="page_admin"
-                    autoComplete="page_admin"
-                    onChange={handleInputChange}
-                  />
-                </div> */}
+                {listingModalData.type === 2 ? (
+                  <div className={styles['input-box']}>
+                    <label> Page Admin </label>
+                    <input
+                      type="text"
+                      placeholder={`Page Admin`}
+                      value={data.page_admin.value}
+                      name="page_admin"
+                      autoComplete="page_admin"
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                ) : (
+                  <></>
+                )}
                 <div className={styles['input-box']}>
                   <label>Email ID if different </label>
                   <input
@@ -229,9 +244,7 @@ const [tick, setTick] = useState(false)
                     className={styles.checkbox}
                     value={!tick}
                     checked={tick}
-                    onChange={(e) =>
-                     setTick(!tick)
-                    }
+                    onChange={(e) => setTick(!tick)}
                   />{' '}
                 </label>
                 <input

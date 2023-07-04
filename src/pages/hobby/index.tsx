@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { GetServerSideProps } from 'next'
 import Image from 'next/image'
 import AddIcon from '@/assets/svg/add-circle.svg'
+import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 
 type Props = {
   data: any
@@ -57,9 +58,10 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
   }, [])
 
   useEffect(() => {
-    let tempSubCategories = data.sub_categories.filter((item: any)=> item.category._id === filterData.category)
+    let tempSubCategories = data.sub_categories.filter(
+      (item: any) => item.category._id === filterData.category,
+    )
     setFilterSubCategories(tempSubCategories)
-    
   }, [filterData.category])
 
   return (
@@ -67,6 +69,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
       <div className={`site-container ${styles['page-container']}`}>
         <aside>
           {/* Filters */}
+          <ProfileSwitcher />
           <div className={styles['filter-wrapper']}>
             <header>
               <h4 className={styles['heading']}>Filter</h4>
@@ -186,7 +189,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                   {subCat.display}
                                   <Link href={`/hobby/${subCat.slug}`}></Link>
                                 </p>
-                                <p>
+                                <p className={styles['table-hobby']}>
                                   {hobbyData.map((hobby: any) => {
                                     return (
                                       hobby?.category?._id === cat._id &&
