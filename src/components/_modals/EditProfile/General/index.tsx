@@ -79,7 +79,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
         }
       })
     }
-    if (isEmptyField(data.display_name)) {
+    if (!data.display_name || data.display_name === '') {
       return setInputErrs((prev) => {
         return { ...prev, display_name: 'This field is required!' }
       })
@@ -89,7 +89,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
         return { ...prev, profile_url: 'This field is required!' }
       })
     }
-    if (!containOnlyNumbers(data.year_of_birth)) {
+    if (!containOnlyNumbers(data.year_of_birth) && data.year_of_birth && data.year_of_birth !== '') {
       return setInputErrs((prev) => {
         return { ...prev, year_of_birth: 'Enter a valid year of birth' }
       })
@@ -125,7 +125,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
       isEmpty(data.display_name) ||
       isEmpty(data.profile_url)
     ) {
-      setNextDisabled(true)
+      // setNextDisabled(true)
     } else {
       setNextDisabled(false)
     }

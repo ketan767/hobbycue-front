@@ -133,6 +133,10 @@
 .comment-input-wrapper .submit-btn:hover {
   background-color: rgba(var(--primary-100-rgb), 0.2);
 }
+.comment-input-wrapper .submit-btn:disabled{
+  opacity: 0.4;
+  pointer-events: none;
+}
 .input {
   all: unset;
   background: #f8f9fa;

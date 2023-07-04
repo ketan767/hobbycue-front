@@ -65,17 +65,17 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   }
 
   const handleSubmit = () => {
-    if (isEmptyField(data.city)) {
+    if (!data.city || data.city === '') {
       return setInputErrs((prev) => {
         return { ...prev, city: 'This field is required!' }
       })
     }
-    if (isEmptyField(data.state)) {
+    if (!data.state || data.state === '') {
       return setInputErrs((prev) => {
         return { ...prev, state: 'This field is required!' }
       })
     }
-    if (isEmptyField(data.country)) {
+    if (!data.country || data.country === '') {
       return setInputErrs((prev) => {
         return { ...prev, country: 'This field is required!' }
       })
@@ -177,7 +177,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       isEmpty(data.city) ||
       isEmpty(data.country)
     ) {
-      setNextDisabled(true)
+      // setNextDisabled(true)
     } else {
       setNextDisabled(false)
     }

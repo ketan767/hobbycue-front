@@ -249,3 +249,13 @@
   font-size: 14px;
   color: #6d747a;
 }
+
+.pages-container {
+  margin-top: var(--spacing-16);
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two equal-width columns */
+  gap: var(--spacing-16); /* Gap between grid items */
+}
+.pages-container > a {
+  overflow: hidden;
+}

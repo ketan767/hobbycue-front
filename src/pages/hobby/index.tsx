@@ -56,6 +56,12 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
     setHobbyData(data.hobbies)
   }, [])
 
+  useEffect(() => {
+    let tempSubCategories = data.sub_categories.filter((item: any)=> item.category._id === filterData.category)
+    setFilterSubCategories(tempSubCategories)
+    
+  }, [filterData.category])
+
   return (
     <>
       <div className={`site-container ${styles['page-container']}`}>

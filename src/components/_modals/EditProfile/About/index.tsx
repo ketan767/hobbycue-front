@@ -52,7 +52,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
   }
 
   const handleSubmit = async () => {
-    if (isEmptyField(data.about)) {
+    if (!data.about || data.about?.trim() === '') {
       setInputErrs((prev) => {
         return { ...prev, about: 'This field is required!' }
       })
@@ -83,7 +83,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
 
   useEffect(() => {
     if (isEmpty(data.about)) {
-      setNextDisabled(true)
+      // setNextDisabled(true)
     } else {
       setNextDisabled(false)
     }
