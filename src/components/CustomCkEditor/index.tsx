@@ -87,7 +87,7 @@ const CustomCKEditor: React.FC<Props> = ({
     <>
       <CKEditor
         ref={editorRef}
-        editor={ClassicEditor}
+        editor={ClassicEditor}        // @ts-ignore 
         data={value}
         onReady={(editor) => onReady(editor)}
         onChange={handleEditorChange}
