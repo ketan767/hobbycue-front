@@ -54,10 +54,13 @@
   /* font-family: 'Poppins'; */
   /* font-style: normal; */
   font-weight: 400;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 16px;
   /* color: #878c90; */
   min-width: 6.25rem;
+}
+.input-box input[type='text']::placeholder {
+  font-size: 14px;
 }
 .input-box input[type='text']:focus-within {
   outline: none;

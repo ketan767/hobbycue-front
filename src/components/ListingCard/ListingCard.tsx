@@ -15,7 +15,7 @@ type Props = {
 
 const ListingCard: React.FC<Props> = ({ data }) => {
   // console.log('🚀 ~ file: ListingCard.tsx:13 ~ data:', data)
-  console.log('data', data)
+  // console.log('data', data)
   const type = getListingTypeName(data.type)
   return (
     <>

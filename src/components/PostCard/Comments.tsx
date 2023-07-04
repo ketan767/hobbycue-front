@@ -7,7 +7,7 @@ import { dateFormatShort, isEmptyField } from '@/utils'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import PostCommentVotes from './CommentVotes'
-import { format, render, cancel, register } from 'timeago.js';
+import { format, render, cancel, register } from 'timeago.js'
 
 type Props = {
   styles: any
@@ -19,7 +19,7 @@ const PostComments = ({ data, styles }: Props) => {
   const router = useRouter()
   const { activeProfile } = useSelector((state: RootState) => state.user)
   const [comments, setComments] = useState<any>([])
-
+  const [loading, setLoading] = useState(false)
   const [inputValue, setInputValue] = useState('')
 
   const fetchComments = async () => {
@@ -32,6 +32,7 @@ const PostComments = ({ data, styles }: Props) => {
 
   const addComment = async (event: any) => {
     event.preventDefault()
+
     if (isEmptyField(inputValue)) return
     const jsonData = {
       postId: data._id,
@@ -46,10 +47,16 @@ const PostComments = ({ data, styles }: Props) => {
       date: Date.now(),
     }
     if (!jsonData.commentBy) return
+    setLoading(true)
     const { err, res } = await addPostComment(jsonData)
-    if (err) return console.log(err)
+    if (err) {
+      console.log(err)
+      setLoading(false)
+      return
+    }
     await fetchComments()
     setInputValue('')
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -83,7 +90,7 @@ const PostComments = ({ data, styles }: Props) => {
                 placeholder="Write a comment..."
                 onChange={(e) => setInputValue(e.target.value)}
               />
-              <button type="submit" className={styles['submit-btn']}>
+              <button type="submit" className={styles['submit-btn']} disabled={loading} >
                 <svg
                   width="14"
                   height="12"
@@ -138,8 +145,7 @@ const PostComments = ({ data, styles }: Props) => {
                             : comment?._author?.full_name}
                         </p>
                         <p className={styles['date']}>
-                          {comment?.date &&
-                            format(new Date(comment.date))}
+                          {comment?.date && format(new Date(comment.date))}
                         </p>
                       </header>
 

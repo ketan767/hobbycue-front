@@ -20,3 +20,12 @@ export const getHobbyMembers = async (query: string | null): Promise<ApiReturnOb
     return { err: error, res: null }
   }
 }
+export const getHobbyPages = async (query: string | null): Promise<ApiReturnObject> => {
+  try {
+    const res = await axiosInstance.get(`/listing?_hobbies=${query}`)
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}

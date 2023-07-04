@@ -24,8 +24,10 @@ const PostCard: React.FC<Props> = (props) => {
   // console.log('🚀 ~ file: PostCard.tsx:20 ~ router:', router)
   const { fromProfile, onPinPost } = props
   const optionRef: any = useRef(null)
-  const [showComments, setShowComments] = useState(true)
   const [postData, setPostData] = useState(props.postData)
+  const [showComments, setShowComments] = useState(
+    props.postData.has_link ? false : true,
+  )
   const [url, setUrl] = useState('')
   const [optionsActive, setOptionsActive] = useState(false)
   const [activeIdx, setActiveIdx] = useState(0)
@@ -225,7 +227,11 @@ const PostCard: React.FC<Props> = (props) => {
                       updatePost={updatePost}
                     />
                     <svg
-                      onClick={() => setShowComments(!showComments)}
+                      onClick={(e: any) => {
+                        e.stopPropagation()
+                        e.preventDefault()
+                        setShowComments(!showComments)
+                      }}
                       width="21"
                       height="21"
                       viewBox="0 0 21 21"

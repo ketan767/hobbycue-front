@@ -62,12 +62,14 @@ const HobbyDetail: React.FC<Props> = (props) => {
         {/* Keywords Section */}
         {data?.keywords?.length > 0 && (
           <PageContentBox showEditButton={false}>
-            <h4>Keywords :</h4>
-            <ul className={styles['keyword-list']}>
-              {data?.keywords?.map((item: any, idx: number) => (
-                <li key={idx}>{item}</li>
-              ))}
-            </ul>
+            <div className={styles['keyword-container']}>
+              <h4 className={styles['keyword-text']}>Keyword :</h4>
+              <ul className={styles['keyword-list']}>
+                {data?.keywords?.map((item: any, idx: number) => (
+                  <li key={idx}>{item} {idx + 1 === data?.keywords.length ? '' : ','} </li>
+                ))}
+              </ul>
+            </div>
           </PageContentBox>
         )}
 

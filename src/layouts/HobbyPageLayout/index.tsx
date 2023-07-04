@@ -22,12 +22,19 @@ type Props = {
 
 const HobbyPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
   const [showSmallHeader, setShowSmallHeader] = useState(false)
-  const [members, setMembers] = useState([
-
-  ])
+  const [members, setMembers] = useState([])
+  const hideLastColumnPages = ['pages', 'blogs']
+  const [hideLastColumn, sethideLastColumn] = useState(false)
   const router = useRouter()
   const [seeAll, setSeeAll] = useState(false)
 
+  useEffect(() => {
+    if (hideLastColumnPages.includes(activeTab)) {
+      sethideLastColumn(true)
+    } else {
+      sethideLastColumn(false)
+    }
+  }, [activeTab])
   const { isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
   )
@@ -76,7 +83,7 @@ const HobbyPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
       )} */}
 
       {/* Profile Page Body, where all contents of different tabs appears. */}
-      <PageGridLayout column={3}>
+      <PageGridLayout column={!hideLastColumn ? 3 : 2}>
         <aside>
           {isLoggedIn && isAuthenticated && <ProfileSwitcher />}
 
@@ -103,30 +110,36 @@ const HobbyPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
         </aside>
         <main>{children}</main>
 
-        <aside>
-          <div className={styles['members']}>
-            <h4 className={styles['heading']}>Members</h4>
-            <hr />
-            <div className={styles['member-list']}>
-              {members.length > 0 ? (
-                <>
-                  {members.slice(0, seeAll ? members.length : 5).map((user: any, idx: number) => (
-                    <p key={idx}>{user}</p>
-                  ))}
-                  {members.length > 5 && (
-                    <p className={styles.seeAllBtn} onClick={toggleMembers}>
-                      See All
+        {!hideLastColumn && (
+          <aside>
+            <div className={styles['members']}>
+              <h4 className={styles['heading']}>Members</h4>
+              <hr />
+              <div className={styles['member-list']}>
+                {members.length > 0 ? (
+                  <>
+                    {members
+                      .slice(0, seeAll ? members.length : 5)
+                      .map((user: any, idx: number) => (
+                        <p key={idx}>{user}</p>
+                      ))}
+                    {members.length > 5 && (
+                      <p className={styles.seeAllBtn} onClick={toggleMembers}>
+                        See All
+                      </p>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <p className={styles.noMembers}>
+                      No members for this hobby!
                     </p>
-                  )}
-                </>
-              ) : (
-                <>
-                  <p className={styles.noMembers}>No members for this hobby!</p>
-                </>
-              )}
+                  </>
+                )}
+              </div>
             </div>
-          </div>
-        </aside>
+          </aside>
+        )}
       </PageGridLayout>
     </>
   )

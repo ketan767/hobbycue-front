@@ -285,7 +285,7 @@ const Home: React.FC<PropTypes> = function () {
       <section className={`site-container ${styles.bigTextContainer}`}>
         <p className={`${styles.bigText}`}>
           Your <span className={styles.hobbyText}>Hobby </span> , Your{' '}
-          <span className={styles.communityText}>Community</span>...
+          <span className={styles.communityText}>Community...</span>
         </p>
         <div className={styles.getStartedBtn}>
           <FilledButton onClick={openLogin}>Get Started</FilledButton>
