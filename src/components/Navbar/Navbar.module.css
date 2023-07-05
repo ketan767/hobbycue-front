@@ -252,7 +252,7 @@
   outline: none;
 }
 .right-listing-small{
-  display: none;
+  display: none !important;
 }
 .logo-small{
   display: none;

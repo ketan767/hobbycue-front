@@ -95,3 +95,15 @@ body:has(.add-listing-container) {
 .card:hover svg {
   fill: white;
 }
+@media screen and (max-width: 900px) {
+  .add-listing-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .cards-wrapper {
+    grid-template-columns: 1fr;
+  }
+.card {
+  width: auto;
+}
+}

@@ -220,3 +220,20 @@ overflow: auto;
 .added-hobby-list .delete-hobby-btn {
   cursor: pointer;
 }
+@media screen and (max-width: 1100px) {
+  .modal-wrapper {
+    width: auto;
+    height: 100%;
+  }
+  .modal-wrapper .body {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .add-hobbies-wrapper .add-new-hobby {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .add-hobbies-wrapper .add-new-hobby > section {
+    width: calc(50% - 10px);
+  }
+}

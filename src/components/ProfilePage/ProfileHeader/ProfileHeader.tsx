@@ -107,29 +107,44 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
         <header className={`site-container ${styles['header']}`}>
           {/* Profile Picture */}
           <div className={styles['profile-img-wrapper']}>
-            {data?.profile_image ? (
-              <Image
-                className={styles['img']}
-                src={data.profile_image}
-                alt=""
-                width={160}
-                height={160}
-              />
-            ) : (
-              <div className={`${styles['img']} default-user-icon`}></div>
-            )}
-
-            {profileLayoutMode === 'edit' && (
-              <label className={styles['edit-btn']}>
-                <input
-                  type="file"
-                  hidden
-                  accept="image/*"
-                  onChange={(e) => onInputChange(e, 'profile')}
+            <div className={styles['relative']}>
+              {data?.profile_image ? (
+                <Image
+                  className={styles['img']}
+                  src={data.profile_image}
+                  alt=""
+                  width={160}
+                  height={160}
                 />
-                <CameraIcon />
-              </label>
-            )}
+              ) : (
+                <div className={`${styles['img']} default-user-icon`}></div>
+              )}
+
+              {profileLayoutMode === 'edit' && (
+                <label className={styles['edit-btn']}>
+                  <input
+                    type="file"
+                    hidden
+                    accept="image/*"
+                    onChange={(e) => onInputChange(e, 'profile')}
+                  />
+                  <CameraIcon />
+                </label>
+              )}
+            </div>
+            <div className={styles['name-container']}>
+              <h1 className={styles['name']}>{data.full_name}</h1>
+              <Image
+                src={EditIcon}
+                alt="edit"
+                onClick={() =>
+                  dispatch(
+                    openModal({ type: 'profile-general-edit', closable: true }),
+                  )
+                }
+              />
+            </div>
+            {/* <p className={styles['tagline']}>{data.tagline}</p> */}
           </div>
 
           {/* Center Section */}
@@ -176,7 +191,7 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
 
           {/* Action Buttons */}
 
-          <div>
+          <div className={styles['actions-container']}>
             <FilledButton
               onClick={() => {
                 dispatch(updateListingModalData({ type: 1 }))
