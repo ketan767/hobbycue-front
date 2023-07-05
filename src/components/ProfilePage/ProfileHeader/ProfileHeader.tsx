@@ -242,7 +242,7 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
           </div>
         </header>
         {/* Navigation Links */}
-        <nav>
+        <nav className={styles['nav']}>
           <div className={styles['navigation-tabs']}>
             {tabs.map((tab) => {
               return (
