@@ -156,7 +156,10 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
 
   return (
     <>
-      <PageGridLayout column={hideThirdColumnTabs.includes(activeTab) ? 2 : 3}>
+      <PageGridLayout
+        column={hideThirdColumnTabs.includes(activeTab) ? 2 : 3}
+        responsive={true}
+      >
         <aside className={styles['community-left-aside']}>
           <ProfileSwitcher />
           <section
@@ -391,9 +394,57 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
                   })}
                 </ul>
               </section>
+              <section className={styles['filter-section']}>
+                <p> Filter: </p>
+                <div>
+                  <Select
+                    sx={{
+                      boxShadow: 'none',
+                      '.MuiOutlinedInput-notchedOutline': { border: 0 },
+                      fieldset: { border: 0 },
+                    }}
+                    className={styles['location-select']}
+                    value={selectedHobby}
+                    onChange={(e) => handleHobbyClick(e.target.value)}
+                    defaultValue={'Hobby'}
+                  >
+                    {activeProfile.data?._hobbies?.map(
+                      (item: any, idx: number) => {
+                        return (
+                          <MenuItem key={idx} value={item.hobby._id}>
+                            {item?.hobby?.display}
+                          </MenuItem>
+                        )
+                      },
+                    )}
+                  </Select>
+
+                  {locations?.length > 0 && (
+                    <Select
+                      sx={{
+                        boxShadow: 'none',
+                        '.MuiOutlinedInput-notchedOutline': { border: 0 },
+                        fieldset: { border: 0 },
+                      }}
+                      className={styles['location-select']}
+                      value={selectedLocation}
+                      onChange={(e) => setSelectedLocation(e.target.value)}
+                      defaultValue={'Location'}
+                    >
+                      {locations.map((item, idx) => {
+                        return (
+                          <MenuItem key={idx} value={item}>
+                            {item}
+                          </MenuItem>
+                        )
+                      })}
+                    </Select>
+                  )}
+                </div>
+              </section>
             </div>
             {hideThirdColumnTabs.includes(activeTab) && (
-              <div>
+              <div className={styles['invite-container-main']}>
                 <div className={styles['top-margin-card']}></div>
                 <section
                   className={`content-box-wrapper ${styles['invite-wrapper']}`}
@@ -415,7 +466,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
           <section className={styles['children-wrapper']}>{children}</section>
         </main>
 
-        {hideThirdColumnTabs.includes(activeProfile) && (
+        {hideThirdColumnTabs.includes(activeTab) === false && (
           <aside className={styles['community-right-aside']}>
             <section
               className={`content-box-wrapper ${styles['invite-wrapper']}`}

@@ -36,7 +36,12 @@
   /* Heights */
   --navbar-height-desktop: 5rem;
 }
+@media screen and (max-width: 1100px) {
+  :root{
 
+  --navbar-height-desktop: 3rem;
+  }
+}
 * {
   box-sizing: border-box;
   padding: 0;
