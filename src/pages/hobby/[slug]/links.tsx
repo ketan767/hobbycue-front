@@ -24,7 +24,6 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
   const data = props.data.hobbyData
 
   const dispatch = useDispatch()
-
   const { isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
   )
@@ -35,12 +34,15 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
   const getPost = async () => {
     setLoadingPosts(true)
     const { err, res } = await getAllPosts(
-      `_hobby=${data._id}&populate=_author,_genre,_hobby`,
+      `_hobby=${data._id}&populate=_author,_genre,_hobby&has_link=true`,
     )
     setLoadingPosts(false)
     if (err) return console.log(err)
     if (res.data.success) {
-      setPosts(res.data.data.posts)
+      console.log('posts', res.data)
+      if (res.data.data.posts) {
+        setPosts(res.data.data.posts)
+      }
     }
   }
 
@@ -49,7 +51,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
   }, [])
 
   return (
-    <HobbyPageLayout activeTab="posts" data={data}>
+    <HobbyPageLayout activeTab="links" data={data}>
       <main>
         <div className={styles['start-post-btn']}>
           <button

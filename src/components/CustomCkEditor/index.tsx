@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from 'react'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
-// import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline'
+
 import styles from './style.module.css'
 import dynamic from 'next/dynamic'
 import { SimpleUploadAdapter } from '@ckeditor/ckeditor5-upload'
@@ -87,11 +87,10 @@ const CustomCKEditor: React.FC<Props> = ({
     <>
       <CKEditor
         ref={editorRef}
-        editor={ClassicEditor}
+        editor={ClassicEditor}        // @ts-ignore 
         data={value}
         onReady={(editor) => onReady(editor)}
         onChange={handleEditorChange}
-        
         config={{
           toolbar: [
             'bold',
@@ -101,11 +100,7 @@ const CustomCKEditor: React.FC<Props> = ({
             'numberedList',
             'bulletedList',
           ],
-          simpleUpload: {
-            uploadUrl: '/',
-          },
-          placeholder: placeholder ? placeholder : ''
-          // plugins: [SimpleUploadAdapter],
+          placeholder: placeholder ? placeholder : '',
         }}
       />
       <input

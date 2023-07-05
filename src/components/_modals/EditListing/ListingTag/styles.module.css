@@ -44,6 +44,7 @@
   font-size: 14px;
   line-height: 22px;
   color: #6d747a;
+  margin-bottom: 4px;
 }
 .input-box input[type='text'] {
   width: 100%;
@@ -134,4 +135,82 @@
 .tagText {
   width: 100px;
   margin-right: 10px;
+}
+
+.select-container {
+  display: block;
+  position: relative;
+}
+
+.select-container .select-input {
+  position: relative;
+  padding: 7.5px 12px;
+  border: 1px solid #bababa;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+}
+.select-container .select-input p {
+  font-size: 14px;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  color: #939ca3;
+}
+.select-container .select-input img {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+}
+
+.select-container .single-option {
+  display: flex;
+  align-items: center;
+  padding: 4px;
+}
+
+.select-container .single-option .tagText {
+  font-size: 12px;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+  color: #6d747a;
+  border-radius: 1px solid #ebedf0;
+  min-width: 100px;
+  padding: 8px;
+}
+.select-container .single-option .tagDesc {
+  flex: 1;
+  font-size: 12px;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+  color: #6d747a;
+  padding: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+.select-container .options-container {
+  max-height: 200px;
+  overflow: auto;
+  position: absolute;
+  top: calc(100% + 4px);
+  background-color: white;
+  border-radius: 8px;
+  width: 100%;
+}
+.select-container .single-option.selcted-option .tagText,
+.select-container .single-option.selcted-option .tagDesc {
+  background-color: #f7f5f9;
+  color: #8064a2;
+}
+.tick-icon{
+  display: none;
+}
+.select-container .single-option.selcted-option .tagDesc .tick-icon{
+  display: inline-block;
 }

@@ -5,6 +5,8 @@ import {
   addUserHobby,
   deleteUserHobby,
   getMyProfileDetail,
+  updateMyProfileDetail,
+  updateUserHobbyLevel,
 } from '@/services/user.service'
 
 import { FormControl, MenuItem, Select, TextField } from '@mui/material'
@@ -19,7 +21,7 @@ type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
 }
-
+const levels = ['Beginner', 'Intermediate', 'Advanced']
 // const levels = {
 //   BEGINNER: 1,
 //   INTERMEDIATE: 2,
@@ -60,7 +62,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
   const [hobbyInputValue, setHobbyInputValue] = useState('')
   const [genreInputValue, setGenreInputValue] = useState('')
-
+  const [userHobbies, setUserHobbies]: any = useState([])
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     DropdownListItem[]
   >([])
@@ -120,7 +122,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         dispatch(updateUser(response?.data.data.user))
         setHobbyInputValue('')
         setGenreInputValue('')
-        setData({...data, level: 1})
+        setData({ ...data, level: 1 })
       }
     })
   }
@@ -157,7 +159,25 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     }
   }
 
-  const handleClose = ()=>dispatch(closeModal())
+  useEffect(() => {
+    setUserHobbies(user._hobbies)
+  }, [user._hobbies])
+
+  const handleClose = () => dispatch(closeModal())
+
+  const handleLevelChange = async (_id: any, level: string) => {
+    let temp = userHobbies.map((item: any) => {
+      if (item._id === _id) {
+        return { ...item, level }
+      } else {
+        return item
+      }
+    })
+    setUserHobbies(temp)
+    const { err, res } = await updateUserHobbyLevel(_id, { level })
+    if (err) return console.log(err)
+    console.log('hobby updated-' ,res?.data)
+  }
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -297,7 +317,11 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                   disabled={addHobbyBtnLoading}
                   variant="contained"
                   onClick={handleAddHobby}
-                  sx={{fontFamily: 'Poppins', padding: "8px 23px", borderRadius: '8px'}}
+                  sx={{
+                    fontFamily: 'Poppins',
+                    padding: '8px 23px',
+                    borderRadius: '8px',
+                  }}
                 >
                   {addHobbyBtnLoading ? (
                     <CircularProgress color="inherit" size={'22px'} />
@@ -320,19 +344,43 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                     </tr>
                   </thead>
                   <tbody>
-                    {user._hobbies?.map((hobby: any) => {
+                    {userHobbies?.map((hobby: any) => {
                       return (
                         <tr key={hobby._id}>
                           <td>{hobby?.hobby?.display}</td>
                           <td>{hobby?.genre?.display || '-'}</td>
                           <td>
-                            {hobby.level === 1
+                            {/* {hobby.level === 1
                               ? 'Beginner'
                               : hobby.level === 2
                               ? 'Intermediate'
                               : hobby.level === 3
                               ? 'Advanced'
-                              : ''}
+                              : ''} */}
+                            <Select
+                              value={hobby.level}
+                              className={styles['hobby-dropdown']}
+                              onChange={(e) => {
+                                let val = e.target.value
+                                handleLevelChange(hobby._id, val)
+                              }}
+                              sx={{
+                                boxShadow: 'none',
+                                '.MuiOutlinedInput-notchedOutline': {
+                                  border: 0,
+                                  outline: 'none',
+                                },
+                              }}
+                              displayEmpty
+                            >
+                              {levels?.map((item: any, idx) => {
+                                return (
+                                  <MenuItem key={idx} value={idx + 1}>
+                                    <p>{item}</p>
+                                  </MenuItem>
+                                )
+                              })}
+                            </Select>
                           </td>
                           <td>
                             <svg
@@ -380,7 +428,10 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
               Back
             </button>
           )} */}
-          <button className="modal-footer-btn cancel" onClick={onBackBtnClick ? onBackBtnClick : handleClose}>
+          <button
+            className="modal-footer-btn cancel"
+            onClick={onBackBtnClick ? onBackBtnClick : handleClose}
+          >
             {onBackBtnClick ? 'Back' : 'Cancel'}
           </button>
 

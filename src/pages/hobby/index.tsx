@@ -4,6 +4,9 @@ import { getAllHobbies } from '@/services/hobby.service'
 import { FormControl, MenuItem, Select, TextField } from '@mui/material'
 import Link from 'next/link'
 import { GetServerSideProps } from 'next'
+import Image from 'next/image'
+import AddIcon from '@/assets/svg/add-circle.svg'
+import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 
 type Props = {
   data: any
@@ -54,11 +57,19 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
     setHobbyData(data.hobbies)
   }, [])
 
+  useEffect(() => {
+    let tempSubCategories = data.sub_categories.filter(
+      (item: any) => item.category._id === filterData.category,
+    )
+    setFilterSubCategories(tempSubCategories)
+  }, [filterData.category])
+
   return (
     <>
       <div className={`site-container ${styles['page-container']}`}>
         <aside>
           {/* Filters */}
+          <ProfileSwitcher />
           <div className={styles['filter-wrapper']}>
             <header>
               <h4 className={styles['heading']}>Filter</h4>
@@ -174,11 +185,11 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                             <div>
                               <>
                                 <p>
-                                  <Link href={`/hobby/${subCat.slug}`}>
-                                    {subCat.display}
-                                  </Link>
+                                  <Image src={AddIcon} alt="add" />{' '}
+                                  {subCat.display}
+                                  <Link href={`/hobby/${subCat.slug}`}></Link>
                                 </p>
-                                <p>
+                                <p className={styles['table-hobby']}>
                                   {hobbyData.map((hobby: any) => {
                                     return (
                                       hobby?.category?._id === cat._id &&

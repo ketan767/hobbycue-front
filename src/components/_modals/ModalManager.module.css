@@ -31,3 +31,10 @@
 .modal-wrapper main .modal-close-icon:hover {
   background: #ddd;
 }
+
+@media screen and (max-width: 1100px) {
+.modal-wrapper {
+  display: block;
+  padding: 0;
+}
+}

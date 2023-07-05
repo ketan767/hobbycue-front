@@ -40,8 +40,10 @@ export const facebookAuth = async (data: {
   accessToken: String
   name: String
 }): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
   try {
-    const res = await axiosInstance.post(`/auth/facebook`, data)
+    const res = await axiosInstance.post(`/auth/facebook`, data, { headers })
     return { res: res, err: null }
   } catch (error: any) {
     return { err: error, res: null }
@@ -69,7 +71,93 @@ export const changePassword = async (
   const headers = { Authorization: `Bearer ${token}` }
 
   try {
-    const res = await axiosInstance.patch(`/auth/change-password`, data, { headers })
+    const res = await axiosInstance.patch(`/auth/change-password`, data, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error: any) {
+    return { err: error, res: null }
+  }
+}
+
+export const forgotPassword = async (data: any): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(`/auth/forgot-password`, data, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error: any) {
+    return { err: error, res: null }
+  }
+}
+
+export const resetPassword = async (data: any): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(`/auth/forgot-password`, data, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error: any) {
+    return { err: error, res: null }
+  }
+}
+
+export const connectGoogle = async (data: any): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(`/auth/google/connect`, data, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error: any) {
+    return { err: error, res: null }
+  }
+}
+export const disconnectGoogle = async (data: any): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(`/auth/google/disconnect`, data, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error: any) {
+    return { err: error, res: null }
+  }
+}
+
+export const connectFacebook = async (data: any): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(`/auth/facebook/connect`, data, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error: any) {
+    return { err: error, res: null }
+  }
+}
+export const disconnectFacebook = async (
+  data: any,
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(`/auth/facebook/disconnect`, data, {
+      headers,
+    })
     return { res: res, err: null }
   } catch (error: any) {
     return { err: error, res: null }

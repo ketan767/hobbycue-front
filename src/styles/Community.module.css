@@ -223,3 +223,17 @@
   flex-direction: column;
   gap: var(--spacing-16);
 }
+.pages-container {
+  margin-top: var(--spacing-16);
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two equal-width columns */
+  gap: var(--spacing-16); /* Gap between grid items */
+}
+.pages-container > a {
+  overflow: hidden;
+}
+@media screen and (max-width: 1100px) {
+  .pages-container {
+    grid-template-columns: 1fr;
+  }
+}

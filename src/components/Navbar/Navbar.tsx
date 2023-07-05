@@ -7,8 +7,12 @@ import SearchIcon from '@mui/icons-material/Search'
 import Image from 'next/image'
 
 import LogoFull from '@/assets/image/logo-full.svg'
+import LogoSmall from '@/assets/image/logo-small.png'
 import ExploreIcon from '@/assets/svg/navbar-explore-icon.svg'
 import HobbyIcon from '@/assets/svg/navbar-hobby-icon.svg'
+import Search from '@/assets/svg/search.svg'
+import BellIcon from '@/assets/svg/bell.svg'
+import BarsIcon from '@/assets/svg/bars.svg'
 
 import styles from './Navbar.module.css'
 import OutlinedButton from '../_buttons/OutlinedButton'
@@ -55,6 +59,14 @@ export const Navbar: React.FC<Props> = ({}) => {
               <Image
                 src={LogoFull}
                 alt="HobbyCue Logo"
+                className={styles['logo-full']}
+                // placeholder="blur" // Optional blur-up while loading
+                priority
+              />
+              <Image
+                src={LogoSmall}
+                alt="HobbyCue Logo"
+                className={styles['logo-small']}
                 // placeholder="blur" // Optional blur-up while loading
                 priority
               />
@@ -104,7 +116,7 @@ export const Navbar: React.FC<Props> = ({}) => {
           </section>
 
           <section className={styles['navbar-right']}>
-            <ul>
+            <ul  className={styles['right-listing-expanded']}>
               {/* Explore */}
               <li>
                 <Link href={'/explore'}>
@@ -443,6 +455,17 @@ export const Navbar: React.FC<Props> = ({}) => {
                   </OutlinedButton>{' '}
                 </li>
               )}
+            </ul>
+            <ul className={styles['right-listing-small']}>
+              <li>
+                <Image src={Search} alt="search" />
+              </li>
+              <li>
+                <Image src={BellIcon} alt="Bell" />
+              </li>
+              <li>
+                <Image src={BarsIcon} alt="Bars" />
+              </li>
             </ul>
           </section>
         </nav>

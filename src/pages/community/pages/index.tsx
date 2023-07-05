@@ -14,7 +14,7 @@ import ListingCard from '@/components/ListingCard/ListingCard'
 type Props = {}
 
 const CommunityPages: React.FC<Props> = ({}) => {
-  const { activeProfile } = useSelector((state: RootState) => state.user)
+  const { activeProfile } = useSelector((state: any) => state.user)
   const { allPages } = useSelector((state: RootState) => state.post)
   const [isLoadingPosts, setIsLoadingPosts] = useState(false)
 
@@ -50,7 +50,7 @@ const CommunityPages: React.FC<Props> = ({}) => {
   return (
     <>
       <CommunityPageLayout activeTab="pages">
-      <section className={styles['posts-container']}>
+      <section className={styles['pages-container']}>
           {allPages.length === 0 || isLoadingPosts ? (
             <>
               <PostCardSkeletonLoading />

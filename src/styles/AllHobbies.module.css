@@ -9,8 +9,8 @@
   background: #ffffff;
   padding: 16px;
   box-sizing: border-box;
-  background: #FFFFFF;
-  border: 1px solid #EBEDF0;
+  background: #ffffff;
+  border: 1px solid #ebedf0;
   border-radius: 8px;
 }
 
@@ -30,7 +30,7 @@
 }
 
 .filter-wrapper header button {
-  border: 1px solid #EBEDF0;
+  border: 1px solid #ebedf0;
   background: #8064a2;
   border-radius: 8px;
   font-family: 'Poppins';
@@ -60,28 +60,28 @@
   color: #6d747a;
 }
 
-.select-filter input{
+.select-filter input {
   font-size: 12px;
   font-family: 'Poppins';
   padding-top: 10px;
   padding-bottom: 10px;
 }
 
-.select-filter div{
+.select-filter div {
   border-radius: 8px;
-  background-color: #F8F9FA;
-  font-family: "poppins";
+  background-color: #f8f9fa;
+  font-family: 'poppins';
   font-size: 12px;
-  color: #6D747A;
+  color: #6d747a;
   font-style: normal;
   font-weight: 400;
   font-size: 12px;
   height: 32px;
-  
+  width: 100%;
 }
 
-.select-filter select{
-  font-family: "poppins";
+.select-filter select {
+  font-family: 'poppins';
 }
 
 .hobby-desc-container {
@@ -96,7 +96,7 @@
   font-weight: 600;
   font-size: 14px;
   line-height: 20px;
-
+  margin-bottom: 1rem;
   color: #000000;
 }
 
@@ -107,10 +107,11 @@
   font-size: 14px;
   line-height: 20px;
   letter-spacing: 0.04em;
-
   color: #08090a;
 }
-
+.hobby-desc-container .text p:first-child {
+  margin-bottom: 1rem;
+}
 .hobbies-table {
   margin-top: 30px;
   width: 100%;
@@ -155,7 +156,6 @@
 }
 .hobbies-table thead th:nth-child(2) {
   min-width: 160px;
-  
 }
 .hobbies-table thead th:nth-child(3) {
   min-width: 188px;
@@ -172,7 +172,7 @@
   font-size: 14px;
   line-height: 20px;
   /* identical to box height, or 143% */
-
+  text-align: center;
   letter-spacing: 0.04em;
 
   color: #000000;
@@ -198,8 +198,12 @@
   font-size: 14px;
   line-height: 20px;
   /* identical to box height, or 143% */
-
+  display: flex;
+  align-items: center;
   letter-spacing: 0.04em;
-
+column-gap: 2px;
   color: #000000;
+}
+.table-hobby{
+  font-size: 14px;
 }

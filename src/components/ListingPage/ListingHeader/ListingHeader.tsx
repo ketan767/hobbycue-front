@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './ListingHeader.module.css'
 import Image from 'next/image'
 
@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import Link from 'next/link'
 import {
+  updateListing,
   updateListingCover,
   updateListingProfile,
 } from '@/services/listing.service'
@@ -20,6 +21,8 @@ import { dateFormat } from '@/utils'
 import Calendar from '@/assets/svg/calendar-light.svg'
 import Time from '@/assets/svg/clock-light.svg'
 import EditIcon from '@/assets/svg/edit-colored.svg'
+import ListingGeneralEditModal from '@/components/_modals/EditListing/ListingGeneral'
+import FilledButton from '@/components/_buttons/FilledButton'
 
 type Props = {
   data: ListingPageData['pageData']
@@ -29,13 +32,14 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
   const dispatch = useDispatch()
 
   const { listingLayoutMode } = useSelector((state: RootState) => state.site)
+  const [titleEditModalActive, setTitleEditModalActive] = useState(false)
 
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
     e.preventDefault()
     let files = e.target.files
 
     if (files.length === 0) return
-
+    console.log('data', data?.pageData)
     const reader = new FileReader()
     reader.onload = () => {
       dispatch(
@@ -102,6 +106,26 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
       }),
     )
   }
+
+  const openTitleEditModal = () => {
+    dispatch(
+      openModal({
+        type: 'listing-general-edit',
+        closable: true,
+      }),
+    )
+  }
+
+  const handlePublish = async () => {
+    // console.log(data)
+    const { err, res } = await updateListing(data._id,{
+      is_published: true,
+    })
+    if (err) return console.log(err)
+    else {
+      window.location.reload()
+    }
+  }
   return (
     <>
       <header className={`site-container ${styles['header']}`}>
@@ -165,11 +189,19 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
           </div>
           <div className={styles['content-container']}>
             <div>
-              <h1 className={styles['name']}>{data?.title}</h1>
+              <h1 className={styles['name']}>
+                {data?.title}{' '}
+                <Image
+                  className={styles['edit-icon']}
+                  src={EditIcon}
+                  alt="edit"
+                  onClick={openTitleEditModal}
+                />{' '}
+              </h1>
               <p className={styles['tagline']}>{data?.tagline}</p>
             </div>
             <div>
-              {data?.type === 4 && data?.event_date_time && (
+              {data?.type === 4 && data?.event_date_time ? (
                 <div>
                   <div className={styles.eventDate}>
                     <Image
@@ -194,41 +226,63 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
                     <Image
                       className={styles['edit-icon']}
                       src={EditIcon}
-                      alt="Time"
+                      alt="edit"
                       onClick={handleEventEditClick}
                     />{' '}
                   </div>
                 </div>
+              ) : data.type === 2 ? (
+                <></>
+              ) : (
+                <>
+                  <FilledButton className={styles.contactBtn}>
+                    Contact
+                  </FilledButton>
+                </>
               )}
             </div>
           </div>
         </section>
+        <div>
+          <FilledButton className={styles.publishBtn} onClick={handlePublish}>
+            Publish
+          </FilledButton>
+          {/* Action Buttons */}
+          <div className={styles['action-btn-wrapper']}>
+            {/* Send Email Button  */}
 
-        {/* Action Buttons */}
-        <div className={styles['action-btn-wrapper']}>
-          {/* Send Email Button  */}
-          <Link href={`mailto:${data.public_email}`}>
+            <Link href={`mailto:${data.public_email}`}>
+              <div
+                onClick={(e) => console.log(e)}
+                className={styles['action-btn']}
+              >
+                <MailOutlineRoundedIcon color="primary" />
+              </div>
+            </Link>
+
+            {/* Bookmark Button */}
             <div
               onClick={(e) => console.log(e)}
               className={styles['action-btn']}
             >
-              <MailOutlineRoundedIcon color="primary" />
+              <BookmarkBorderRoundedIcon color="primary" />
             </div>
-          </Link>
 
-          {/* Bookmark Button */}
-          <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
-            <BookmarkBorderRoundedIcon color="primary" />
-          </div>
+            {/* Share Button */}
+            <div
+              onClick={(e) => console.log(e)}
+              className={styles['action-btn']}
+            >
+              <ShareRoundedIcon color="primary" fontSize="small" />
+            </div>
 
-          {/* Share Button */}
-          <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
-            <ShareRoundedIcon color="primary" fontSize="small" />
-          </div>
-
-          {/* More Options Button */}
-          <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
-            <MoreHorizRoundedIcon color="primary" />
+            {/* More Options Button */}
+            <div
+              onClick={(e) => console.log(e)}
+              className={styles['action-btn']}
+            >
+              <MoreHorizRoundedIcon color="primary" />
+            </div>
           </div>
         </div>
       </header>
