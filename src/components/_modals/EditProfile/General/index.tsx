@@ -1,11 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
 import {
   getMyProfileDetail,
   updateMyProfileDetail,
 } from '@/services/user.service'
-import { checkFullname, containOnlyNumbers, isEmpty, isEmptyField } from '@/utils'
+import {
+  checkFullname,
+  containOnlyNumbers,
+  isEmpty,
+  isEmptyField,
+} from '@/utils'
 import { closeModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
@@ -34,7 +39,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   const dispatch = useDispatch()
 
   const { user } = useSelector((state: RootState) => state.user)
-
+  const fullNameRef = useRef<HTMLInputElement>(null)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [nextDisabled, setNextDisabled] = useState(false)
 
@@ -89,7 +94,11 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
         return { ...prev, profile_url: 'This field is required!' }
       })
     }
-    if (!containOnlyNumbers(data.year_of_birth) && data.year_of_birth && data.year_of_birth !== '') {
+    if (
+      !containOnlyNumbers(data.year_of_birth) &&
+      data.year_of_birth &&
+      data.year_of_birth !== ''
+    ) {
       return setInputErrs((prev) => {
         return { ...prev, year_of_birth: 'Enter a valid year of birth' }
       })
@@ -173,6 +182,9 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     })
   }, [user])
 
+  useEffect(() => {
+    fullNameRef?.current?.focus()
+  }, [])
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -200,6 +212,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
                 value={data.full_name}
                 name="full_name"
                 onChange={handleInputChange}
+                ref={fullNameRef}
               />
               <p className={styles['helper-text']}>{inputErrs.full_name}</p>
             </div>

@@ -14,7 +14,7 @@ import {
   updateListingTypeModalMode,
   updatePhotoEditModalData,
 } from '@/redux/slices/site'
-import { closeModal, openModal } from '@/redux/slices/modal'
+import { closeModal, openModal, updateShareUrl } from '@/redux/slices/modal'
 import { setTimeout } from 'timers/promises'
 import { updateUserCover, updateUserProfile } from '@/services/user.service'
 import { RootState } from '@/redux/store'
@@ -98,6 +98,11 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
       window.location.reload()
       // dispatch(closeModal())
     }
+  }
+
+  const handleShare = () => {
+    dispatch(updateShareUrl(window.location.href))
+    dispatch(openModal({ type: 'social-media-share', closable: true }))
   }
 
   return (
@@ -225,7 +230,7 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
 
               {/* Share Button */}
               <div
-                onClick={(e) => console.log(e)}
+                onClick={(e) => handleShare()}
                 className={styles['action-btn']}
               >
                 <Image src={ShareIcon} alt="share" />
