@@ -1,6 +1,6 @@
 .landing-contaniner {
   background: #fff;
-  height: calc(100vh - var(--navbar-height-desktop));
+  /* height: calc(100vh - var(--navbar-height-desktop)); */
 }
 
 .landing-wrapper {
@@ -38,9 +38,8 @@
 }
 
 .landing-illustration {
-  position: absolute;
-  bottom: 0;
-  left: 0;
+ width: 100%;
+ object-fit: contain;
 }
 
 /* Multiple Cards Container*/
