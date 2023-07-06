@@ -12,6 +12,7 @@ import cover from '@/assets/temp/hobby-cover.png'
 import mailSvg from '@/Assets/Icons/mail.svg'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import DefaultProfile from '@/assets/image/default.png'
 
 type Props = {
   activeTab: HobbyPageTabs
@@ -43,9 +44,15 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
             height={160}
           />
         ) : (
-          <div
-            className={`${styles['profile-img']} default-people-listing-icon`}
-          ></div>
+          <div className={`${styles['profile-img']}`}>
+            <Image
+              // className={styles['profile-img']}
+              src={DefaultProfile}
+              alt=""
+              width={160}
+              height={160}
+            />
+          </div>
         )}
         <section className={styles['center-container']}>
           {data?.cover_image ? (

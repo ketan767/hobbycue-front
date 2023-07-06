@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
 import {
@@ -51,7 +51,11 @@ const ListingContactEditModal: React.FC<Props> = ({
     whatsapp_number: { value: '', error: null },
     page_admin: { value: '', error: null },
   })
+  const inputRef = useRef<HTMLInputElement>(null)
 
+  useEffect(() => {
+   inputRef?.current?.focus()
+ }, [])
   const handleInputChange = (event: any) => {
     setData((prev) => {
       return {
@@ -155,6 +159,7 @@ const ListingContactEditModal: React.FC<Props> = ({
               <div className={styles.useEmailContainer}>
                 <p>Either Phone Number or Email ID is required.</p>
                 <OutlinedButton
+                className={styles['button']}
                   onClick={() =>
                     setData((prev) => {
                       return {
@@ -182,6 +187,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                       value={data.page_admin.value}
                       name="page_admin"
                       autoComplete="page_admin"
+                      ref={inputRef}
                       onChange={handleInputChange}
                     />
                   </div>

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { AuthModal } from './AuthModal'
@@ -37,6 +37,7 @@ import ChangePasswordModal from './ChangePassword/ChangePassword'
 import ConfirmEmailModal from './ConfirmEmail/ConfirmEmail'
 import EmailSentModal from './EmailSent/EmailSent'
 import ResetPasswordModal from './ResetPassword/ResetPassword'
+import ShareModal from './ShareModal/ShareModal'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -60,6 +61,20 @@ const ModalManager: React.FC = () => {
         document.body.style.overflow = 'auto'
       }, 500)
   }, [activeModal])
+
+  const escFunction = useCallback((event: any) => {
+    if (event.key === "Escape") {
+      handleClose()
+    }
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener("keydown", escFunction, false);
+
+    return () => {
+      document.removeEventListener("keydown", escFunction, false);
+    };
+  }, [escFunction]);
 
   return (
     <>
@@ -139,6 +154,7 @@ const ModalManager: React.FC = () => {
               {activeModal === 'confirm-email' && <ConfirmEmailModal />}
               {activeModal === 'email-sent' && <EmailSentModal />}
               {activeModal === 'reset-password' && <ResetPasswordModal />}
+              {activeModal === 'social-media-share' && <ShareModal />}
 
               {/* Modal Close Icon */}
               {closable && (

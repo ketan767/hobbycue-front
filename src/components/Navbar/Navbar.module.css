@@ -228,7 +228,7 @@
   background: #000;
   z-index: 5;
 }
-.inputField{
+.inputField {
   width: 300px;
 }
 .inputField::placeholder {
@@ -250,4 +250,41 @@
 .inputField input {
   background: #f8f9fa;
   outline: none;
+}
+.navbar-right > ul.right-listing-small{
+  display: none ;
+}
+.logo-small{
+  display: none;
+}
+.navbar-left > a{
+  display: flex;
+}
+@media screen and (max-width: 1100px) {
+  .navbar-left .inputField {
+    display: none;
+  }
+  .logo-full{
+    display: none;
+  }
+  .logo-small{
+    display: inline-block;
+  }
+  .right-listing-expanded{
+    display: none !important;
+  }
+  .navbar-right > ul.right-listing-small{
+    display: flex;
+  }
+  .right-listing-small li{
+    list-style: none;
+    column-gap: 1rem;
+  }
+  .right-listing-small li img{
+    cursor: pointer;
+  }
+  .navbar-wrappper{
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }

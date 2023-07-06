@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
 import {
@@ -48,7 +48,11 @@ const ListingGeneralEditModal: React.FC<Props> = ({
     year: { value: '', error: null },
     admin_note: { value: '', error: null },
   })
+  const inputRef = useRef<HTMLInputElement>(null)
 
+  useEffect(() => {
+   inputRef?.current?.focus()
+ }, [])
   const handleInputChange = (event: any) => {
     setData((prev) => {
       return {
@@ -215,6 +219,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
                 required
                 value={data.title.value}
                 name="title"
+                ref={inputRef}
                 onChange={handleInputChange}
               />
               <p className={styles['helper-text']}>{data.title.error}</p>

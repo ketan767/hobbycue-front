@@ -30,3 +30,18 @@
   background: #8064a2;
   border-radius: 2px 2px 0px 0px;
 }
+@media screen and (max-width: 1100px) {
+  .nav{
+    display: flex;
+    overflow-x: auto;
+    padding: 0 16px;
+  }
+  .navigation-tabs {
+    gap: 20px;
+    overflow-x: auto;
+    flex-shrink: 0;
+  }
+  .navigation-tabs > a {
+    flex-shrink: 0;
+  }
+}

@@ -54,7 +54,7 @@ const ListingPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
       <ListingHeader data={data.pageData} />
 
       {/* Navigation Links */}
-      <nav>
+      <nav className={styles['nav']}>
         <div className={styles['navigation-tabs']}>
           {tabs.map((tab) => {
             return (

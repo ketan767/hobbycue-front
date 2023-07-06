@@ -214,3 +214,13 @@
 .select-container .single-option.selcted-option .tagDesc .tick-icon{
   display: inline-block;
 }
+@media screen and (max-width: 1100px) {
+  .modal-wrapper {
+    width: auto;
+    height: 100%;
+  }
+  .modal-wrapper .body {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}

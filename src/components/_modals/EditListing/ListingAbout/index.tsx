@@ -44,7 +44,7 @@ const ListingAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
   }
 
   const handleSubmit = async () => {
-    if (isEmptyField(data.description.value)) {
+    if (!data.description.value || data.description.value === '') {
       return setData((prev) => {
         return { ...prev, description: { ...prev.description, error: 'This field is required!' } }
       })
@@ -76,7 +76,7 @@ const ListingAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
     if (
       isEmpty(data.description.value)
     ) {
-      setNextDisabled(true)
+      // setNextDisabled(true)
     } else {
       setNextDisabled(false)
     }

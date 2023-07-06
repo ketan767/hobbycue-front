@@ -15,3 +15,12 @@
 .grid-container[data-column='2'] {
   grid-template-columns: 14rem auto;
 }
+@media screen and (max-width: 1100px) {
+  .grid-container[data-column='3'] ,
+  .grid-container[data-column='2'] {
+    grid-template-columns: 1fr;
+  }
+  .container {
+    padding: 1rem;
+  }
+}
