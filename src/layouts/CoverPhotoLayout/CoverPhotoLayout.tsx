@@ -12,7 +12,7 @@ const CoverPhotoLayout: React.FC<Props> = ({ onChange, profileLayoutMode }) => {
 
   return (
     <div className={`${styles['container']} ${profileLayoutMode !== 'edit' ? 'default-cover-icon' : styles['editable'] } `}>
-    {profileLayoutMode === 'exdit' && (
+    {profileLayoutMode === 'edit' && (
       <div
         className={styles['wrapper']}
         onClick={() => inputRef?.current?.click()}

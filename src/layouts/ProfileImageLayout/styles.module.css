@@ -1,15 +1,19 @@
 .container {
-  border-radius: 50%;
-  background-color:  #f7f5f9;
+  background-color: #f7f5f9;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
   width: 100%;
 }
-.editable{
-  border: 1px dashed  #8064a2;
-
+.container.page {
+  border-radius: 8px;
+}
+.container.user {
+  border-radius: 50%;
+}
+.editable {
+  border: 1px dashed #8064a2;
 }
 .wrapper {
   display: flex;
@@ -28,6 +32,6 @@
   line-height: 20px;
   color: #8064a2;
 }
-.wrapper input{
-   display: none;
+.wrapper input {
+  display: none;
 }

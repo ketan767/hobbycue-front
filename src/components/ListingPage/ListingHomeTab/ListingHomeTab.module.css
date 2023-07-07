@@ -125,3 +125,8 @@ ul.seller-info-wrapper li svg:last-child {
   letter-spacing: 0.04em;
   color: #939CA3;
 }
+
+.about-text ol,
+.about-text ul{
+  padding-left: 1rem;
+}

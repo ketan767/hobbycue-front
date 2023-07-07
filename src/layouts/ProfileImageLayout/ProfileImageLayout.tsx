@@ -6,15 +6,17 @@ import UploadIcon from '@/assets/svg/upload.svg'
 type Props = {
   onChange?: any
   profileLayoutMode: any
+  type : any
 }
 const ProfileImageLayout: React.FC<Props> = ({
   onChange,
   profileLayoutMode,
+  type
 }) => {
   const inputRef = useRef<any>(null)
   return (
     <div
-      className={`${styles['container']} ${
+      className={`${styles['container']} ${type === 'page' ? styles.page  : styles.user} ${
         profileLayoutMode !== 'edit' ? 'default-user-icon' : styles['editable']
       } `}
     >

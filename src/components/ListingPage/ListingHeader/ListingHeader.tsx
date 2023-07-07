@@ -23,6 +23,8 @@ import Time from '@/assets/svg/clock-light.svg'
 import EditIcon from '@/assets/svg/edit-colored.svg'
 import ListingGeneralEditModal from '@/components/_modals/EditListing/ListingGeneral'
 import FilledButton from '@/components/_buttons/FilledButton'
+import CoverPhotoLayout from '@/layouts/CoverPhotoLayout/CoverPhotoLayout'
+import ProfileImageLayout from '@/layouts/ProfileImageLayout/ProfileImageLayout'
 
 type Props = {
   data: ListingPageData['pageData']
@@ -141,9 +143,13 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
                 height={160}
               />
             ) : (
-              <div
-                className={`${styles['img']} default-people-listing-icon`}
-              ></div>
+              <div className={`${styles['img']}`}>
+                <ProfileImageLayout
+                  onChange={(e: any) => onInputChange(e, 'profile')}
+                  profileLayoutMode={listingLayoutMode}
+                  type={'page'}
+                ></ProfileImageLayout>
+              </div>
             )}
 
             {listingLayoutMode === 'edit' && (
@@ -183,9 +189,12 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
                 width={1000}
               />
             ) : (
-              <div
-                className={`${styles['img']} default-people-listing-cover`}
-              ></div>
+              <div className={`${styles['img']}`}>
+                <CoverPhotoLayout
+                  onChange={(e: any) => onInputChange(e, 'cover')}
+                  profileLayoutMode={listingLayoutMode}
+                ></CoverPhotoLayout>
+              </div>
             )}
 
             {listingLayoutMode === 'edit' && (

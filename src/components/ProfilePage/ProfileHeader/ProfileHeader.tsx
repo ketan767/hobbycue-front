@@ -129,6 +129,7 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
                   <ProfileImageLayout
                     onChange={(e: any) => onInputChange(e, 'profile')}
                     profileLayoutMode={profileLayoutMode}
+                    type={'user'}
                   ></ProfileImageLayout>
                 </div>
               )}
@@ -172,7 +173,7 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
                   width={1000}
                 />
               ) : (
-                <div className={`${styles['img']} r`}>
+                <div className={`${styles['img']}`}>
                   <CoverPhotoLayout
                     onChange={(e: any) => onInputChange(e, 'cover')}
                     profileLayoutMode={profileLayoutMode}
