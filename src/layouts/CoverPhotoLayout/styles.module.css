@@ -1,0 +1,34 @@
+.container {
+  border-radius: 8px;
+  border: 1px dashed var(--purple-1, #8064a2);
+  background: var(--purple-3, #f7f5f9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+.editable{
+  border: 1px dashed var(--purple-1, #8064a2);
+
+}
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  row-gap: 14px;
+  cursor: pointer;
+}
+
+.wrapper p {
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  color: #8064a2;
+}
+.wrapper input{
+   display: none;
+}
