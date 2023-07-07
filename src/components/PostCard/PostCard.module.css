@@ -283,6 +283,7 @@
   padding: 12px 8px;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
+  display: block;
 }
 .postImages {
   display: flex;

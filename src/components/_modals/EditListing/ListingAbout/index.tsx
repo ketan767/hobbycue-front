@@ -17,7 +17,10 @@ const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
   loading: () => <h1>Loading...</h1>,
 })
-
+const AboutEditor = dynamic(() => import('@/components/AboutEditor/AboutEditor'), {
+  ssr: false,
+  loading: () => <h1>Loading...</h1>,
+})
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
@@ -94,7 +97,8 @@ const ListingAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
           <div className={styles['input-box']}>
             <label>About</label>
             <input hidden required />
-            <CustomCKEditor value={data.description.value as string} onChange={handleInputChange} placeholder='Briefly describe your listing page' />
+            {/* <CustomCKEditor value={data.description.value as string} onChange={handleInputChange} placeholder='Briefly describe your listing page' /> */}
+            <AboutEditor value={data.description.value as string} onChange={handleInputChange} placeholder='Briefly describe your listing page' />
             {data.description.error && (
               <p className={styles['error-msg']}>{data.description.error}</p>
             )}

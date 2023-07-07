@@ -31,3 +31,7 @@
   letter-spacing: 0.04em;
   margin-bottom: 1rem;
 }
+.about-text ol,
+.about-text ul{
+  padding-left: 1rem;
+}

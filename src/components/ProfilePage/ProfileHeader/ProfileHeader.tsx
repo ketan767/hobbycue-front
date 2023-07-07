@@ -22,6 +22,9 @@ import FilledButton from '@/components/_buttons/FilledButton'
 import { useRouter } from 'next/router'
 import ShareIcon from '@/assets/svg/share-outlined.svg'
 import EditIcon from '@/assets/svg/edit-colored.svg'
+import UploadIcon from '@/assets/svg/upload.svg'
+import CoverPhotoLayout from '@/layouts/CoverPhotoLayout/CoverPhotoLayout'
+import ProfileImageLayout from '@/layouts/ProfileImageLayout/ProfileImageLayout'
 
 type Props = {
   activeTab: ProfilePageTabs
@@ -122,7 +125,13 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
                   height={160}
                 />
               ) : (
-                <div className={`${styles['img']} default-user-icon`}></div>
+                <div className={`${styles['img']}`}>
+                  <ProfileImageLayout
+                    onChange={(e: any) => onInputChange(e, 'profile')}
+                    profileLayoutMode={profileLayoutMode}
+                    type={'user'}
+                  ></ProfileImageLayout>
+                </div>
               )}
 
               {profileLayoutMode === 'edit' && (
@@ -164,7 +173,12 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
                   width={1000}
                 />
               ) : (
-                <div className={`${styles['img']} default-user-cover`}></div>
+                <div className={`${styles['img']}`}>
+                  <CoverPhotoLayout
+                    onChange={(e: any) => onInputChange(e, 'cover')}
+                    profileLayoutMode={profileLayoutMode}
+                  ></CoverPhotoLayout>
+                </div>
               )}
 
               {profileLayoutMode === 'edit' && (

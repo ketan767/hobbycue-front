@@ -243,11 +243,11 @@ line-height: 20px;
   margin-top: var(--spacing-24);
   width: 100%;
   font-size: 14px;
-  border: 1px solid #000;
-  color: #000;
+  border: 1px solid #8064A2;
+  color: #8064A2;
 }
 .form-footer .submit-btn:hover {
-  background-color: #000;
+  background-color: #8064A2;
   color: white;
 }
 .bgGrey input {

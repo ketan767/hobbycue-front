@@ -1,0 +1,13 @@
+.hidden {
+   display: none;
+}
+.quill{
+   display: flex;
+   flex-direction: column-reverse;
+   /* height: 100%; */
+   padding-bottom: 8px;
+   flex: 1;
+}
+.quill .ql-container{
+   border-top: 1px solid #ccc;
+}
