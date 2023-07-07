@@ -33,7 +33,7 @@ type Props = {
 const ListingHeader: React.FC<Props> = ({ data }) => {
   const dispatch = useDispatch()
 
-  const { listingLayoutMode } = useSelector((state: RootState) => state.site)
+  const { listingLayoutMode } = useSelector((state: any) => state.site)
   const [titleEditModalActive, setTitleEditModalActive] = useState(false)
 
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
@@ -121,13 +121,14 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
   const handlePublish = async () => {
     // console.log(data)
     const { err, res } = await updateListing(data._id, {
-      is_published: true,
+      is_published: data.is_published === true ? false : true,
     })
     if (err) return console.log(err)
     else {
       window.location.reload()
     }
   }
+
   return (
     <>
       <header className={`site-container ${styles['header']}`}>
@@ -267,7 +268,7 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
         </section>
         <div className={styles['actions-container']}>
           <FilledButton className={styles.publishBtn} onClick={handlePublish}>
-            Publish
+            {data.is_published ? 'Unpublish' : 'Publish'}
           </FilledButton>
           {/* Action Buttons */}
           <div className={styles['action-btn-wrapper']}>

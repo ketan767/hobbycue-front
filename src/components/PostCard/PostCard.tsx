@@ -253,10 +253,10 @@ const PostCard: React.FC<Props> = (props) => {
 
         {/* Card Footer */}
         {postData.has_link ? (
-          <footer className={styles['metadata-footer']}>
+          <Link href={metaData.url} target='_blank' className={styles['metadata-footer']}>
             {metaData.url}
             {showComments && <PostComments data={postData} styles={styles} />}
-          </footer>
+          </Link>
         ) : (
           <footer>
             <section className={styles['footer-actions-wrapper']}>
