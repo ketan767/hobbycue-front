@@ -5,7 +5,7 @@
   border: 1px solid #ebedf0;
   border-radius: var(--spacing-8);
   max-width: 670px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .post-card-wrapper > header {
