@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
 import IconButton from '@mui/material/IconButton'
-import SearchIcon from '@mui/icons-material/Search'
+// import SearchIcon from '@mui/icons-material/Search'
 
 import Image from 'next/image'
 
@@ -11,6 +11,7 @@ import LogoSmall from '@/assets/image/logo-small.png'
 import ExploreIcon from '@/assets/svg/navbar-explore-icon.svg'
 import HobbyIcon from '@/assets/svg/navbar-hobby-icon.svg'
 import Search from '@/assets/svg/search.svg'
+import SearchIcon from '@/assets/svg/search-small.svg'
 import BellIcon from '@/assets/svg/bell.svg'
 import BarsIcon from '@/assets/svg/bars.svg'
 
@@ -83,6 +84,9 @@ export const Navbar: React.FC<Props> = ({}) => {
                   padding: 0,
                   overflow: 'hidden',
                   borderColor: 'red',
+                  '& fieldset': {
+                    borderColor: '#EBEDF0',
+                  }
                 },
                 '& .MuiInputBase-input': {
                   fontSize: '15px',
@@ -105,9 +109,9 @@ export const Navbar: React.FC<Props> = ({}) => {
                         },
                       }}
                     >
-                      <SearchIcon
-                        sx={{ color: 'white', width: '22px', height: '22px' }}
-                      />
+                      <div className={styles['search-icon-container']}>
+                      <Image src={SearchIcon} alt='search' width={16} height={16} />
+                      </div>
                     </IconButton>
                   </InputAdornment>
                 ),
