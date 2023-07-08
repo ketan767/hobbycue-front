@@ -2,7 +2,7 @@
   background-color: white;
   border-radius: var(--spacing-8);
   max-width: 50rem;
-  width: 38rem;
+  width: 40rem;
   min-height: 21rem;
   display: flex;
   flex-direction: column;
@@ -11,6 +11,8 @@
 .modal-wrapper .header,
 .modal-wrapper .body {
   padding: var(--spacing-16) var(--spacing-24);
+  padding-left: 34px;
+  padding-right: 34px;
 }
 
 .modal-wrapper .footer {
@@ -224,15 +226,16 @@
   .listItem {
     flex-wrap: wrap;
     row-gap: 12px;
+    padding-bottom: 2rem;
   }
   .listItem > div {
     flex: 50%;
   }
-  .listSubItem:nth-child(3) {
+  .listSubItem:nth-child(3),
+  .listSubItem:nth-child(2) {
     padding-left: 0;
   }
-  .inputField{
-   width: auto;
+  .inputField {
+    width: auto;
   }
-  
 }

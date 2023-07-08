@@ -40,11 +40,14 @@ const ListingTypeEditModal: React.FC<Props> = ({
   const [list, setList] = useState<any>([])
 
   const [value, setValue] = useState<string | string[]>([])
-
+  const [error, setError] = useState(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
   const handleSubmit = async () => {
     // setSubmitBtnLoading(true)
+    if (!value || value === '') {
+      return setError(true)
+    }
     if (listingTypeModalMode === 'edit') {
       handleEdit()
     } else {
@@ -165,6 +168,8 @@ const ListingTypeEditModal: React.FC<Props> = ({
                   )
                 })}
               </Select>
+
+              <p className={styles.error}> {error && 'Select a listing type!'} </p>
             </FormControl>
           </div>
         </section>
@@ -190,8 +195,10 @@ const ListingTypeEditModal: React.FC<Props> = ({
           >
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'22px'} />
+            ) : listingTypeModalMode === 'edit' ? (
+              'Edit'
             ) : (
-              listingTypeModalMode === 'edit' ? 'Edit' : 'Next'
+              'Next'
             )}
           </Button>
         </footer>

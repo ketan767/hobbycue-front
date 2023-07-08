@@ -247,7 +247,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
               {/* WhatsApp Number */}
               {data?.whatsapp_number && (
                 <li>
-                  <Image src={WhatsappIcon} alt="whatsapp11" />
+                  <Image src={WhatsappIcon} alt="whatsapp11" width={24} height={24} />
                   <span className={styles.textGray}>
                     {data?.whatsapp_number}{' '}
                   </span>

@@ -85,7 +85,12 @@
   content: '*';
   color: rgba(192, 80, 77, 1);
 }
-
+.error{
+  color: rgba(192, 80, 77, 1);
+  height: 15px;
+  font-size: 12px;
+  margin-top: 4px;
+}
 /* General Profile */
 .year-gender-wrapper {
   display: flex;
