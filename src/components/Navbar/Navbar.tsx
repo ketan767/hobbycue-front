@@ -86,6 +86,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                   borderColor: 'red',
                   '& fieldset': {
                     borderColor: '#EBEDF0',
+                    borderRight: 0
                   }
                 },
                 '& .MuiInputBase-input': {
