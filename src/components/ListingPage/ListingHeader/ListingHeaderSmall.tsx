@@ -25,16 +25,19 @@ import ListingGeneralEditModal from '@/components/_modals/EditListing/ListingGen
 import FilledButton from '@/components/_buttons/FilledButton'
 import CoverPhotoLayout from '@/layouts/CoverPhotoLayout/CoverPhotoLayout'
 import ProfileImageLayout from '@/layouts/ProfileImageLayout/ProfileImageLayout'
+import { useRouter } from 'next/router'
 
 type Props = {
   data: ListingPageData['pageData']
+  activeTab: any
 }
+const tabs: ProfilePageTabs[] = ['home', 'posts', 'media', 'pages', 'blogs']
 
-const ListingHeader: React.FC<Props> = ({ data }) => {
+const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
   const dispatch = useDispatch()
+  const router = useRouter()
 
   const { listingLayoutMode } = useSelector((state: any) => state.site)
-  const [titleEditModalActive, setTitleEditModalActive] = useState(false)
 
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
     e.preventDefault()
@@ -131,9 +134,10 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
 
   const handleContact = () => {
     console.log('data', data)
-    if(data.public_email){
-      
-      window.open(`mailto:${data.public_email}?subject=Subject&body=Body%20goes%20here`)
+    if (data.public_email) {
+      window.open(
+        `mailto:${data.public_email}?subject=Subject&body=Body%20goes%20here`,
+      )
     }
   }
 
@@ -144,26 +148,20 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
 
   return (
     <>
-      <header className={`site-container ${styles['header']}`}>
-        {/* Profile Picture */}
-        <div className={styles['profile-img-wrapper']}>
-          <div className={styles['relative']}>
+      <div className={`${styles['container']} ${styles['small']} `}>
+        <header className={`site-container ${styles['header']}`}>
+          {/* Profile Picture */}
+          <div className={styles['profile-img-wrapper']}>
             {data?.profile_image ? (
               <Image
                 className={styles['img']}
-                src={data?.profile_image}
+                src={data.profile_image}
                 alt=""
                 width={160}
                 height={160}
               />
             ) : (
-              <div className={`${styles['img']}`}>
-                <ProfileImageLayout
-                  onChange={(e: any) => onInputChange(e, 'profile')}
-                  profileLayoutMode={listingLayoutMode}
-                  type={'page'}
-                ></ProfileImageLayout>
-              </div>
+              <div className={`${styles['img']} default-user-icon`}></div>
             )}
 
             {listingLayoutMode === 'edit' && (
@@ -178,119 +176,43 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
               </label>
             )}
           </div>
-          <div className={styles['name-container']}>
-            <h1 className={styles['name']}>
-              {data?.title}{' '}
-              <Image
-                className={styles['edit-icon']}
-                src={EditIcon}
-                alt="edit"
-                onClick={openTitleEditModal}
-              />{' '}
-            </h1>
-          </div>
-        </div>
 
-        {/* Center Elements */}
-        <section className={styles['center-container']}>
-          <div className={styles['cover-img-wrapper']}>
-            {data?.cover_image ? (
-              <Image
-                className={styles['img']}
-                src={data?.cover_image}
-                alt=""
-                height={296}
-                width={1000}
-              />
-            ) : (
-              <div className={`${styles['img']}`}>
-                <CoverPhotoLayout
-                  onChange={(e: any) => onInputChange(e, 'cover')}
-                  profileLayoutMode={listingLayoutMode}
-                ></CoverPhotoLayout>
-              </div>
-            )}
-
-            {listingLayoutMode === 'edit' && (
-              <label className={styles['edit-btn']}>
-                <input
-                  type="file"
-                  hidden
-                  accept="image/*"
-                  onChange={(e) => onInputChange(e, 'cover')}
-                />
-                <CameraIcon />
-              </label>
-            )}
-          </div>
-          <div className={styles['content-container']}>
-            <div className={styles['name-container']}>
-              <h1 className={styles['name']}>
-                {data?.title}{' '}
+          {/* Center Section */}
+          <section className={styles['center-container']}>
+            <div className={styles['cover-img-wrapper']}>
+              {data?.cover_image ? (
                 <Image
-                  className={styles['edit-icon']}
-                  src={EditIcon}
-                  alt="edit"
-                  onClick={openTitleEditModal}
-                />{' '}
-              </h1>
-              <p className={styles['tagline']}>{data?.tagline}</p>
-            </div>
-            <div>
-              {data?.type === 4 && data?.event_date_time ? (
-                <div>
-                  <div className={styles.eventDate}>
-                    <Image
-                      className={styles['im']}
-                      src={Calendar}
-                      alt="calendar"
-                    />
-                    <p className={styles.date}>
-                      {dateFormat.format(
-                        new Date(data?.event_date_time.from_date),
-                      )}{' '}
-                      -{' '}
-                      {dateFormat.format(
-                        new Date(data?.event_date_time.to_date),
-                      )}
-                    </p>
-                    <Image className={styles['im']} src={Time} alt="Time" />{' '}
-                    <p className={styles.time}>
-                      {data?.event_date_time.from_time} -{' '}
-                      {data?.event_date_time.to_time}
-                    </p>
-                    <Image
-                      className={styles['edit-icon']}
-                      src={EditIcon}
-                      alt="edit"
-                      onClick={handleEventEditClick}
-                    />{' '}
-                  </div>
-                </div>
-              ) : data.type === 2 ? (
-                <></>
+                  className={styles['img']}
+                  src={data.cover_image}
+                  alt=""
+                  height={296}
+                  width={1000}
+                />
               ) : (
-                <>
-                  <FilledButton
-                    className={styles.contactBtn}
-                    onClick={handleContact}
-                  >
-                    Contact
-                  </FilledButton>
-                </>
+                <div className={`${styles['img']} default-user-cover`}></div>
+              )}
+
+              {listingLayoutMode === 'edit' && (
+                <label className={styles['edit-btn']}>
+                  <input
+                    type="file"
+                    hidden
+                    accept="image/*"
+                    onChange={(e) => onInputChange(e, 'cover')}
+                  />
+                  <CameraIcon />
+                </label>
               )}
             </div>
-          </div>
-        </section>
-        <div className={styles['actions-container']}>
-          <FilledButton className={styles.publishBtn} onClick={handlePublish}>
-            {data.is_published ? 'Unpublish' : 'Publish'}
-          </FilledButton>
+
+            <h1 className={styles['name']}>{data.full_name}</h1>
+            <p className={styles['tagline']}>{data.tagline}</p>
+          </section>
+
           {/* Action Buttons */}
           <div className={styles['action-btn-wrapper']}>
             {/* Send Email Button  */}
-
-            <Link href={`mailto:${data.public_email}`}>
+            <Link href={`mailto:${data.public_email || data.email}`}>
               <div
                 onClick={(e) => console.log(e)}
                 className={styles['action-btn']}
@@ -323,10 +245,28 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
               <MoreHorizRoundedIcon color="primary" />
             </div>
           </div>
-        </div>
-      </header>
+        </header>
+
+        <nav>
+          <div className={styles['navigation-tabs']}>
+            {tabs.map((tab) => {
+              return (
+                <Link
+                  key={tab}
+                  href={`/page/${router.query.page_url}/${
+                    tab !== 'home' ? tab : ''
+                  }`}
+                  className={activeTab === tab ? styles['active'] : ''}
+                >
+                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                </Link>
+              )
+            })}
+          </div>
+        </nav>
+      </div>
     </>
   )
 }
 
-export default ListingHeader
+export default ListingHeaderSmall
