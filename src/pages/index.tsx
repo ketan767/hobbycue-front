@@ -290,8 +290,6 @@ const Home: React.FC<PropTypes> = function () {
         <div className={styles.getStartedBtn}>
           <FilledButton onClick={openLogin}>Get Started</FilledButton>
         </div>
-      </section>
-      <section className={`site-container ${styles.bigTextContainer}`}>
         <Image
           src={PeopleIllustration}
           className={styles['people-illustration']}
@@ -302,6 +300,8 @@ const Home: React.FC<PropTypes> = function () {
           // placeholder="blur" // Optional blur-up while loading
         />
       </section>
+      {/* <section className={`site-container ${styles.bigTextContainer}`}>
+      </section> */}
       <section className={`site-container`}>
         <Footer />
       </section>
