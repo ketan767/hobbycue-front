@@ -84,6 +84,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                   padding: 0,
                   overflow: 'hidden',
                   borderColor: 'red',
+                  background: '#f8f9fa',
                   '& fieldset': {
                     borderColor: '#EBEDF0',
                     borderRight: 0

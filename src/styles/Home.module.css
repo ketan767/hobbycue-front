@@ -116,6 +116,10 @@
 
 .bigTextContainer {
   margin-bottom: 5rem;
+  background-color: #F7FDFF;
+}
+.bigTextContainer .getStartedBtn {
+  margin-bottom: 121px;
 }
 .bigText {
   font-family: 'Poppins';
