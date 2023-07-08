@@ -95,6 +95,9 @@
   display: flex;
   gap: 60px;
   justify-content: center;
+  background-color: white;
+  position: sticky;
+  top: 78px;
 }
 .navigation-links a {
   font-family: 'Poppins';

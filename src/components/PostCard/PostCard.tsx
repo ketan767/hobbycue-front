@@ -10,6 +10,8 @@ import { getAllPosts, getMetadata } from '@/services/post.service'
 import { useRouter } from 'next/router'
 import useCheckIfClickedOutside from '@/hooks/useCheckIfClickedOutside'
 import Slider from '../Slider/Slider'
+import { openModal, updateShareUrl } from '@/redux/slices/modal'
+import { useDispatch } from 'react-redux'
 
 type Props = {
   postData: any
@@ -28,6 +30,7 @@ const PostCard: React.FC<Props> = (props) => {
   const [showComments, setShowComments] = useState(
     props.postData.has_link ? false : true,
   )
+  const dispatch = useDispatch()
   const [url, setUrl] = useState('')
   const [optionsActive, setOptionsActive] = useState(false)
   const [activeIdx, setActiveIdx] = useState(0)
@@ -77,6 +80,10 @@ const PostCard: React.FC<Props> = (props) => {
     }
   }, [postData])
 
+  const handleShare = ()=>{
+    dispatch(updateShareUrl(`${window.location.origin}/post/${postData._id}`))
+    dispatch(openModal({ type: 'social-media-share', closable: true }))
+  }
   return (
     <>
       <div className={styles['post-card-wrapper']}>
@@ -290,6 +297,7 @@ const PostCard: React.FC<Props> = (props) => {
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
+                onClick={handleShare}
               >
                 <circle
                   cx="12"

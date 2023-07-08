@@ -41,11 +41,11 @@ const ProfileSwitcher: React.FC<Props> = ({ data: activeProfile, setData }) => {
             data-profile-type={activeProfile.type}
             src={activeProfile.data?.profile_image}
             alt=""
-            width={40}
-            height={40}
+            width={32}
+            height={32}
           />
         ) : (
-          <div className={`${styles['img']} default-user-icon`}></div>
+          <div className={`${styles['default-img']} default-user-icon`}></div>
         )}
         <p className={styles['name']}>
           {activeProfile.type === 'listing'
@@ -88,7 +88,7 @@ const ProfileSwitcher: React.FC<Props> = ({ data: activeProfile, setData }) => {
                     data-profile-type="user"
                   />
                 ) : (
-                  <div className={`${styles['img']} default-user-icon`}></div>
+                  <div className={`${styles['default-img']} default-user-icon`}></div>
                 )}
 
                 <p>{user.full_name}</p>
