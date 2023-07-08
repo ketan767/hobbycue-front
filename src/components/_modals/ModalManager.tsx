@@ -79,7 +79,7 @@ const ModalManager: React.FC = () => {
   }, [escFunction])
 
   const handleBgClick = (event: any) => {
-    event.preventDefault()
+    // event.preventDefault()
     if (event.target === event.currentTarget) {
       setConfirmationModal(true)
     }
