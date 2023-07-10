@@ -11,6 +11,7 @@ import {
   isEmpty,
   isEmptyField,
   validatePhone,
+  validateUrl,
 } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
@@ -77,6 +78,19 @@ const ListingContactEditModal: React.FC<Props> = ({
           phone: { ...prev.phone, error: 'Enter a valid phone number' },
         }
       })
+    }
+    if (data.website && data.website.value !== '') {
+      if (!validateUrl(data.website.value)) {
+        return setData((prev) => {
+          return {
+            ...prev,
+            website: {
+              ...prev.website,
+              error: 'Please enter a valid website!',
+            },
+          }
+        })
+      }
     }
     const jsonData = {
       phone: data.phone.value,
