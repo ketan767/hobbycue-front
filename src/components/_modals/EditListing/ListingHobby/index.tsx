@@ -94,6 +94,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
 
   const handleAddHobby = async () => {
     // @TODO: Error Handling
+    setError(false)
     setNextDisabled(false)
     if (!data.hobby || !listingModalData._id) return
 

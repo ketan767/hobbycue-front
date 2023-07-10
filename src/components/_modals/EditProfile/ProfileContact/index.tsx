@@ -7,7 +7,7 @@ import {
   updateMyProfileDetail,
   updateUserAddress,
 } from '@/services/user.service'
-import { isEmptyField } from '@/utils'
+import { isEmptyField, validateUrl } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
@@ -36,8 +36,8 @@ const ProfileContactEditModal: React.FC<Props> = ({
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-   inputRef?.current?.focus()
- }, [])
+    inputRef?.current?.focus()
+  }, [])
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
@@ -69,7 +69,19 @@ const ProfileContactEditModal: React.FC<Props> = ({
         }
       })
     }
-
+    if (data.website && data.website.value !== '') {
+      if (!validateUrl(data.website.value)) {
+        return setData((prev) => {
+          return {
+            ...prev,
+            website: {
+              ...prev.website,
+              error: 'Please enter a valid website!',
+            },
+          }
+        })
+      }
+    }
     const jsonData = {
       phone: data.phone.value,
       public_email: data.public_email.value,
