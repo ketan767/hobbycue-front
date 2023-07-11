@@ -47,7 +47,7 @@ const ListingAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
   }
 
   const handleSubmit = async () => {
-    if (!data.description.value || data.description.value === '') {
+    if (!data.description.value || data.description.value === '' || data.description.value === '<p><br></p>') {
       return setData((prev) => {
         return { ...prev, description: { ...prev.description, error: 'This field is required!' } }
       })
