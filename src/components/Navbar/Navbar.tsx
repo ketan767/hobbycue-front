@@ -57,18 +57,30 @@ export const Navbar: React.FC<Props> = ({}) => {
         <nav className={`site-container `}>
           <section className={styles['navbar-left']}>
             <Link href={isLoggedIn ? '/community' : '/'}>
-              <Image
-                src={LogoFull}
-                alt="HobbyCue Logo"
-                className={styles['logo-full']}
-                // placeholder="blur" // Optional blur-up while loading
-                priority
-              />
+              {isLoggedIn ? (
+                <Image
+                  src={LogoSmall}
+                  alt="HobbyCue Logo"
+                  className={styles['logo-full']}
+                  // placeholder="blur" // Optional blur-up while loading
+                  // height={50}
+                  priority
+                />
+              ) : (
+                <Image
+                  src={LogoFull}
+                  alt="HobbyCue Logo"
+                  className={styles['logo-full']}
+                  // placeholder="blur" // Optional blur-up while loading
+                  priority
+                />
+              )}
               <Image
                 src={LogoSmall}
                 alt="HobbyCue Logo"
                 className={styles['logo-small']}
                 // placeholder="blur" // Optional blur-up while loading
+                height={40}
                 priority
               />
             </Link>
@@ -87,8 +99,8 @@ export const Navbar: React.FC<Props> = ({}) => {
                   background: '#f8f9fa',
                   '& fieldset': {
                     borderColor: '#EBEDF0',
-                    borderRight: 0
-                  }
+                    borderRight: 0,
+                  },
                 },
                 '& .MuiInputBase-input': {
                   fontSize: '15px',
@@ -112,7 +124,12 @@ export const Navbar: React.FC<Props> = ({}) => {
                       }}
                     >
                       <div className={styles['search-icon-container']}>
-                      <Image src={SearchIcon} alt='search' width={16} height={16} />
+                        <Image
+                          src={SearchIcon}
+                          alt="search"
+                          width={16}
+                          height={16}
+                        />
                       </div>
                     </IconButton>
                   </InputAdornment>
@@ -122,7 +139,7 @@ export const Navbar: React.FC<Props> = ({}) => {
           </section>
 
           <section className={styles['navbar-right']}>
-            <ul  className={styles['right-listing-expanded']}>
+            <ul className={styles['right-listing-expanded']}>
               {/* Explore */}
               <li>
                 <Link href={'/explore'}>
