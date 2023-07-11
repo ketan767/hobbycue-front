@@ -185,6 +185,7 @@
   max-width: 185px;
   object-fit: cover;
   height: 100%;
+  max-height: 150px;
 }
 .editor-container {
   display: flex;
