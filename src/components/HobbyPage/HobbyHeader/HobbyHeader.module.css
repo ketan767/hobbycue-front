@@ -98,6 +98,8 @@
   background-color: white;
   position: sticky;
   top: 78px;
+  z-index: 1;
+  padding-bottom: 12px;
 }
 .navigation-links a {
   font-family: 'Poppins';

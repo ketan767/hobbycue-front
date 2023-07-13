@@ -67,6 +67,7 @@ const ListingContactEditModal: React.FC<Props> = ({
   }
 
   const handleSubmit = async () => {
+    console.log(data.website);
     if (
       !data.phone.value ||
       !containOnlyNumbers(data.phone.value.toString().trim()) ||
@@ -79,7 +80,7 @@ const ListingContactEditModal: React.FC<Props> = ({
         }
       })
     }
-    if (data.website && data.website.value !== '') {
+    if (data.website.value && data.website.value !== '') {
       if (!validateUrl(data.website.value)) {
         return setData((prev) => {
           return {
