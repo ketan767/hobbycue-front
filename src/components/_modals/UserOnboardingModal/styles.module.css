@@ -36,3 +36,9 @@
 .step-indicators .step.active {
   background-color: rgb(var(--primary-100-rgb));
 }
+
+@media screen and (max-width: 1100px){
+  .step-indicators {
+    bottom: 70px;
+  }
+}
