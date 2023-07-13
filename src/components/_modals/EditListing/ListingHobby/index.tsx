@@ -343,7 +343,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
             onClick={handleSubmit}
             disabled={nextDisabled}
           >
-            {onComplete ? 'Next' : 'Save'}
+            {onComplete ? 'Save' : 'Save'}
           </button>
         </footer>
       </div>

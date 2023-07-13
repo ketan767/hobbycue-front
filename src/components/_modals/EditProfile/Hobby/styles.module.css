@@ -12,6 +12,9 @@
 .modal-wrapper .body {
   padding: var(--spacing-16) var(--spacing-24);
 }
+.modal-wrapper .body {
+  padding-bottom: 0;
+}
 .modal-wrapper .footer {
   padding: var(--spacing-16) var(--spacing-24);
   margin-top: auto;
@@ -163,7 +166,7 @@
   display: block;
   background: #ffffff;
   overflow: auto;
-  max-height: 18rem;
+  max-height: 17rem;
 
   padding: 0 var(--spacing-12);
   border: 1px solid #ced4da;
@@ -222,7 +225,7 @@
 .hobby-dropdown > div {
   padding: 2px 6px;
 }
-.helper-text{
+.helper-text {
   font-weight: 400;
   font-size: 10px;
   line-height: 16px;
@@ -246,5 +249,11 @@
   }
   .add-hobbies-wrapper .add-new-hobby > section {
     width: calc(50% - 10px);
+  }
+  .added-hobby-list table tbody {
+    max-height: 15rem;
+  }
+  .modal-wrapper {
+    min-height: 42rem;
   }
 }

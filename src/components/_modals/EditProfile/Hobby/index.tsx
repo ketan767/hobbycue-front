@@ -451,7 +451,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'24px'} />
             ) : onComplete ? (
-              'Next'
+              'Save'
             ) : (
               'Save'
             )}
