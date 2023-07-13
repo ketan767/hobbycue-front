@@ -172,7 +172,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                         </Link>
                       </h4>
                       <ul>
-                        <Link href={'/hobby/music'}>
+                        <Link href={'/hobby/music'} onClick={() => window.location.reload()}>
                           <li>Music</li>
                         </Link>
 
