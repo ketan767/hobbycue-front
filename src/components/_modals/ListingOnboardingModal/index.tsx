@@ -113,7 +113,7 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
         <h2 className={styles['modal-heading']}>Complete your Listing Page</h2>
       </header>
 
-      <ProgressBar total={steps.length} current={steps.findIndex((str : any) => str === activeStep) + 1} />
+      {/* <ProgressBar total={steps.length} current={steps.findIndex((str : any) => str === activeStep) + 1} /> */}
 
       {activeStep === 'General' && (
         <ListingGeneralEditModal
@@ -165,7 +165,7 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
         />
       )}
 
-      {/* <section className={styles['step-indicators']}>
+      <section className={styles['step-indicators']}>
         {steps.map((step) => {
           return (
             <span
@@ -178,7 +178,7 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
             ></span>
           )
         })}
-      </section> */}
+      </section>
 
     </div>
   )
