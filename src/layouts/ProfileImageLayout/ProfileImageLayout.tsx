@@ -14,6 +14,7 @@ const ProfileImageLayout: React.FC<Props> = ({
   type
 }) => {
   const inputRef = useRef<any>(null)
+  console.log('profileLayoutMode', profileLayoutMode);
   return (
     <div
       className={`${styles['container']} ${type === 'page' ? styles.page  : styles.user} ${
