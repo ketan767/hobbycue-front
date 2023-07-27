@@ -18,6 +18,7 @@ import { dateFormat } from '@/utils'
 import { getAllUserDetail } from '@/services/user.service'
 import { updateListingTypeModalMode } from '@/redux/slices/site'
 import WhatsappIcon from '@/assets/svg/whatsapp.svg'
+import {listingTypes} from '@/constants/constant'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -522,7 +523,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
               )}
             </ul>
           </PageContentBox>
-          {data?.type === 2 && (
+          {data?.type === listingTypes.PLACE && (
             <PageContentBox
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
@@ -657,7 +658,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
               </div>
             </PageContentBox>
           )} */}
-          {data?.type === 4 || data?.type === 3 ? (
+          {data?.type === listingTypes.PROGRAM || data?.type === listingTypes.PRODUCT ? (
             <PageContentBox
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
