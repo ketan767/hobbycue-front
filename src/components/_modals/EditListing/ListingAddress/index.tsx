@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
 import {
@@ -47,7 +47,11 @@ const ListingAddressEditModal: React.FC<Props> = ({
   const [nextDisabled, setNextDisabled] = useState(false)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
+  const inputRef = useRef<HTMLInputElement>(null)
 
+  useEffect(() => {
+    inputRef?.current?.focus()
+  }, [])
   const [data, setData] = useState<ListingAddressData>({
     street: { value: '', error: null },
     society: { value: '', error: null },
@@ -247,6 +251,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   placeholder={`Enter address or click the "locate me" icon to auto-detect`}
                   value={data.street.value}
                   name="street"
+                  ref={inputRef}
                   onChange={handleInputChange}
                 />
                 <Image

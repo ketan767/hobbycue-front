@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { AuthModal } from './AuthModal'
@@ -37,6 +37,9 @@ import ChangePasswordModal from './ChangePassword/ChangePassword'
 import ConfirmEmailModal from './ConfirmEmail/ConfirmEmail'
 import EmailSentModal from './EmailSent/EmailSent'
 import ResetPasswordModal from './ResetPassword/ResetPassword'
+import ShareModal from './ShareModal/ShareModal'
+import FilledButton from '../_buttons/FilledButton'
+import OutlinedButton from '../_buttons/OutlinedButton'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -44,7 +47,7 @@ const CustomBackdrop: React.FC = () => {
 
 const ModalManager: React.FC = () => {
   const dispatch = useDispatch()
-
+  const [confirmationModal, setConfirmationModal] = useState(false)
   const { activeModal, closable } = useSelector(
     (state: RootState) => state.modal,
   )
@@ -61,6 +64,27 @@ const ModalManager: React.FC = () => {
       }, 500)
   }, [activeModal])
 
+  const escFunction = useCallback((event: any) => {
+    if (event.key === 'Escape') {
+      handleClose()
+    }
+  }, [])
+
+  useEffect(() => {
+    document.addEventListener('keydown', escFunction, false)
+
+    return () => {
+      document.removeEventListener('keydown', escFunction, false)
+    }
+  }, [escFunction])
+
+  const handleBgClick = (event: any) => {
+    // event.preventDefault()
+    if (event.target === event.currentTarget) {
+      setConfirmationModal(true)
+    }
+  }
+
   return (
     <>
       <Modal
@@ -69,8 +93,16 @@ const ModalManager: React.FC = () => {
         closeAfterTransition
         onClose={handleClose}
       >
-        <Fade in={Boolean(activeModal)} exit={!Boolean(activeModal)}>
-          <div className={styles['modal-wrapper']}>
+        <Fade
+          in={Boolean(activeModal)}
+          exit={!Boolean(activeModal)}
+          onClick={handleBgClick}
+        >
+          <div
+            className={`${styles['modal-wrapper']} ${
+              confirmationModal ? styles['in-active'] : ''
+            }  `}
+          >
             <main>
               {activeModal === 'auth' && <AuthModal />}
               {activeModal === 'email-verify' && <VerifyEmailModal />}
@@ -139,6 +171,7 @@ const ModalManager: React.FC = () => {
               {activeModal === 'confirm-email' && <ConfirmEmailModal />}
               {activeModal === 'email-sent' && <EmailSentModal />}
               {activeModal === 'reset-password' && <ResetPasswordModal />}
+              {activeModal === 'social-media-share' && <ShareModal />}
 
               {/* Modal Close Icon */}
               {closable && (
@@ -148,6 +181,26 @@ const ModalManager: React.FC = () => {
                 />
               )}
             </main>
+            {confirmationModal && (
+              <div className={`${styles['confirmation-modal']}`}>
+                <div className={styles['confirmation-modal-body']}>
+                  <p> Are you sure you want to close the modal ? </p>
+                  <div className={styles['buttons']}>
+                    <FilledButton
+                      onClick={() => {
+                        handleClose()
+                        setConfirmationModal(false)
+                      }}
+                    >
+                      Yes
+                    </FilledButton>
+                    <OutlinedButton onClick={() => setConfirmationModal(false)}>
+                      No
+                    </OutlinedButton>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </Fade>
       </Modal>

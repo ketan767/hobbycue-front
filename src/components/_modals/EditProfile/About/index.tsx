@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { Button, CircularProgress } from '@mui/material'
 
@@ -14,7 +14,7 @@ import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 
-const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
+const AboutEditor = dynamic(() => import('@/components/AboutEditor/AboutEditor'), {
   ssr: false,
   loading: () => <h1>Loading...</h1>,
 })
@@ -107,7 +107,8 @@ const ProfileAboutEditModal: React.FC<Props> = ({
           <div className={styles['input-box']}>
             <label>About</label>
             <input hidden required />
-            <CustomCKEditor value={data.about} onChange={handleInputChange} placeholder='Briefly describe about yourself' />
+            {/* <CustomCKEditor value={data.about} onChange={handleInputChange} placeholder='Briefly describe about yourself' /> */}
+            <AboutEditor value={data.about} onChange={handleInputChange} placeholder='Briefly describe about yourself' />
             {inputErrs.about && (
               <p className={styles['error-msg']}>{inputErrs.about}</p>
             )}

@@ -6,6 +6,16 @@
   display: flex;
   flex-direction: column;
 }
+@media screen and (min-width: 1100px) {
+  .modal-wrapper {
+    max-height: calc(100vh - 6rem);
+    height: 100%;
+  }
+  .modal-wrapper .body {
+    height: 100%;
+    overflow: auto;
+  }
+}
 .modal-wrapper .header,
 .modal-wrapper .body {
   padding: var(--spacing-16) var(--spacing-24);
@@ -213,4 +223,14 @@
 }
 .select-container .single-option.selcted-option .tagDesc .tick-icon{
   display: inline-block;
+}
+@media screen and (max-width: 1100px) {
+  .modal-wrapper {
+    width: auto;
+    height: 100%;
+  }
+  .modal-wrapper .body {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 }

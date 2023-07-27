@@ -10,6 +10,8 @@ import { getAllPosts, getMetadata } from '@/services/post.service'
 import { useRouter } from 'next/router'
 import useCheckIfClickedOutside from '@/hooks/useCheckIfClickedOutside'
 import Slider from '../Slider/Slider'
+import { openModal, updateShareUrl } from '@/redux/slices/modal'
+import { useDispatch } from 'react-redux'
 
 type Props = {
   postData: any
@@ -21,6 +23,7 @@ const PostCard: React.FC<Props> = (props) => {
   // const [type, setType] = useState<'User' | 'Listing'>()
 
   const router = useRouter()
+  const [has_link, setHas_link] = useState(props.postData.has_link)
   // console.log('🚀 ~ file: PostCard.tsx:20 ~ router:', router)
   const { fromProfile, onPinPost } = props
   const optionRef: any = useRef(null)
@@ -28,6 +31,13 @@ const PostCard: React.FC<Props> = (props) => {
   const [showComments, setShowComments] = useState(
     props.postData.has_link ? false : true,
   )
+
+  useEffect(() => {
+    if (postData?.media?.length > 0 || postData?.video_url) {
+      setHas_link(false)
+    }
+  }, [postData])
+  const dispatch = useDispatch()
   const [url, setUrl] = useState('')
   const [optionsActive, setOptionsActive] = useState(false)
   const [activeIdx, setActiveIdx] = useState(0)
@@ -58,7 +68,7 @@ const PostCard: React.FC<Props> = (props) => {
   }, [])
 
   useEffect(() => {
-    if (postData.has_link) {
+    if (has_link) {
       const regex =
         /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
       const url = postData.content.match(regex)
@@ -77,11 +87,15 @@ const PostCard: React.FC<Props> = (props) => {
     }
   }, [postData])
 
+  const handleShare = () => {
+    dispatch(updateShareUrl(`${window.location.origin}/post/${postData._id}`))
+    dispatch(openModal({ type: 'social-media-share', closable: true }))
+  }
   return (
     <>
       <div className={styles['post-card-wrapper']}>
         {/* Card Header */}
-        {!postData.has_link && (
+        {!has_link && (
           <header>
             <Link href={`/profile/${postData?._author?.profile_url}`}>
               {postData?._author?.profile_image ? (
@@ -167,7 +181,7 @@ const PostCard: React.FC<Props> = (props) => {
         {/* Card Body */}
         <Link href={`/post/${postData._id}`}>
           <section className={styles['body']}>
-            {!postData.has_link && (
+            {!has_link && (
               <div
                 className={styles['content']}
                 dangerouslySetInnerHTML={{
@@ -189,7 +203,7 @@ const PostCard: React.FC<Props> = (props) => {
             ) : (
               <></>
             )}
-            {postData.has_link && (
+            {has_link && (
               <a href={url} className={styles.postMetadata}>
                 <div className={styles.metaImgContainer}>
                   <img
@@ -252,11 +266,15 @@ const PostCard: React.FC<Props> = (props) => {
         </Link>
 
         {/* Card Footer */}
-        {postData.has_link ? (
-          <footer className={styles['metadata-footer']}>
+        {has_link ? (
+          <Link
+            href={metaData.url}
+            target="_blank"
+            className={styles['metadata-footer']}
+          >
             {metaData.url}
             {showComments && <PostComments data={postData} styles={styles} />}
-          </footer>
+          </Link>
         ) : (
           <footer>
             <section className={styles['footer-actions-wrapper']}>
@@ -290,6 +308,7 @@ const PostCard: React.FC<Props> = (props) => {
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
+                onClick={handleShare}
               >
                 <circle
                   cx="12"

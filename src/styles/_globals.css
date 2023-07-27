@@ -262,3 +262,21 @@ select:-webkit-autofill {
 .ck.ck-content.ck-editor__editable ol{
   padding-left: 12px !important;
 }
+
+
+.about-quill-container .ql-container.ql-snow{
+  flex: 1;
+  min-height: 285px !important;
+  border: 1px solid #EBEDF0;
+}
+.about-quill-container .ql-toolbar.ql-snow + .ql-container.ql-snow {
+  border-top: 1px solid #EBEDF0 !important;
+  border-bottom: 0;
+}
+.about-quill-container .ql-toolbar.ql-snow{
+  border: 1px solid #EBEDF0;
+
+}
+.about-quill-container .ql-toolbar.ql-snow button{
+  margin-right: 0.75rem;
+}

@@ -21,6 +21,7 @@ import { updateListing } from '@/services/listing.service'
 import ListingWorkingHoursEditModal from '../EditListing/ListingWorkingHours'
 import ListingEventHoursEditModal from '../EditListing/ListingEventHours'
 import { updateListingTypeModalMode } from '@/redux/slices/site'
+import { ProgressBar } from '@/components/ProgressBar/ProgressBar'
 
 // type OnboardingData = {
 //   full_name: string
@@ -85,12 +86,12 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
 
   const handleNext = () => {
     setActiveStep(
-      (prevActiveStep: Step) => steps[steps.indexOf(prevActiveStep) + 1]
+      (prevActiveStep: Step) => steps[steps.indexOf(prevActiveStep) + 1],
     )
   }
   const handleBack = () => {
     setActiveStep(
-      (prevActiveStep: Step) => steps[steps.indexOf(prevActiveStep) - 1]
+      (prevActiveStep: Step) => steps[steps.indexOf(prevActiveStep) - 1],
     )
   }
 
@@ -112,12 +113,14 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
         <h2 className={styles['modal-heading']}>Complete your Listing Page</h2>
       </header>
 
+      {/* <ProgressBar total={steps.length} current={steps.findIndex((str : any) => str === activeStep) + 1} /> */}
+
       {activeStep === 'General' && (
         <ListingGeneralEditModal
           onComplete={handleNext}
-          onBackBtnClick={() =>{
+          onBackBtnClick={() => {
             dispatch(openModal({ type: 'listing-type-edit', closable: true }))
-            dispatch(updateListingTypeModalMode({ mode: 'create'}))
+            dispatch(updateListingTypeModalMode({ mode: 'create' }))
           }}
         />
       )}
@@ -176,6 +179,7 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
           )
         })}
       </section>
+
     </div>
   )
 }

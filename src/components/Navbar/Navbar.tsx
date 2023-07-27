@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
 import IconButton from '@mui/material/IconButton'
-import SearchIcon from '@mui/icons-material/Search'
+// import SearchIcon from '@mui/icons-material/Search'
 
 import Image from 'next/image'
 
@@ -11,6 +11,7 @@ import LogoSmall from '@/assets/image/logo-small.png'
 import ExploreIcon from '@/assets/svg/navbar-explore-icon.svg'
 import HobbyIcon from '@/assets/svg/navbar-hobby-icon.svg'
 import Search from '@/assets/svg/search.svg'
+import SearchIcon from '@/assets/svg/search-small.svg'
 import BellIcon from '@/assets/svg/bell.svg'
 import BarsIcon from '@/assets/svg/bars.svg'
 
@@ -56,18 +57,30 @@ export const Navbar: React.FC<Props> = ({}) => {
         <nav className={`site-container `}>
           <section className={styles['navbar-left']}>
             <Link href={isLoggedIn ? '/community' : '/'}>
-              <Image
-                src={LogoFull}
-                alt="HobbyCue Logo"
-                className={styles['logo-full']}
-                // placeholder="blur" // Optional blur-up while loading
-                priority
-              />
+              {isLoggedIn ? (
+                <Image
+                  src={LogoSmall}
+                  alt="HobbyCue Logo"
+                  className={styles['logo-full']}
+                  // placeholder="blur" // Optional blur-up while loading
+                  // height={50}
+                  priority
+                />
+              ) : (
+                <Image
+                  src={LogoFull}
+                  alt="HobbyCue Logo"
+                  className={styles['logo-full']}
+                  // placeholder="blur" // Optional blur-up while loading
+                  priority
+                />
+              )}
               <Image
                 src={LogoSmall}
                 alt="HobbyCue Logo"
                 className={styles['logo-small']}
                 // placeholder="blur" // Optional blur-up while loading
+                height={40}
                 priority
               />
             </Link>
@@ -83,6 +96,11 @@ export const Navbar: React.FC<Props> = ({}) => {
                   padding: 0,
                   overflow: 'hidden',
                   borderColor: 'red',
+                  background: '#f8f9fa',
+                  '& fieldset': {
+                    borderColor: '#EBEDF0',
+                    borderRight: 0,
+                  },
                 },
                 '& .MuiInputBase-input': {
                   fontSize: '15px',
@@ -105,9 +123,14 @@ export const Navbar: React.FC<Props> = ({}) => {
                         },
                       }}
                     >
-                      <SearchIcon
-                        sx={{ color: 'white', width: '22px', height: '22px' }}
-                      />
+                      <div className={styles['search-icon-container']}>
+                        <Image
+                          src={SearchIcon}
+                          alt="search"
+                          width={16}
+                          height={16}
+                        />
+                      </div>
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -116,7 +139,7 @@ export const Navbar: React.FC<Props> = ({}) => {
           </section>
 
           <section className={styles['navbar-right']}>
-            <ul  className={styles['right-listing-expanded']}>
+            <ul className={styles['right-listing-expanded']}>
               {/* Explore */}
               <li>
                 <Link href={'/explore'}>
@@ -149,7 +172,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                         </Link>
                       </h4>
                       <ul>
-                        <Link href={'/hobby/music'}>
+                        <Link href={'/hobby/music'} onClick={() => window.location.reload()}>
                           <li>Music</li>
                         </Link>
 

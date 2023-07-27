@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
 import {
@@ -7,7 +7,7 @@ import {
   updateMyProfileDetail,
   updateUserAddress,
 } from '@/services/user.service'
-import { isEmptyField } from '@/utils'
+import { isEmptyField, validateUrl } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
@@ -32,8 +32,12 @@ const ProfileContactEditModal: React.FC<Props> = ({
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
-  console.log('🚀 ~ file: index.tsx:34 ~ user:', user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    inputRef?.current?.focus()
+  }, [])
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
@@ -65,7 +69,19 @@ const ProfileContactEditModal: React.FC<Props> = ({
         }
       })
     }
-
+    if (data.website && data.website.value !== '') {
+      if (!validateUrl(data.website.value)) {
+        return setData((prev) => {
+          return {
+            ...prev,
+            website: {
+              ...prev.website,
+              error: 'Please enter a valid website!',
+            },
+          }
+        })
+      }
+    }
     const jsonData = {
       phone: data.phone.value,
       public_email: data.public_email.value,
@@ -133,6 +149,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
                   type="text"
                   placeholder={`Enter email ID`}
                   value={data.public_email.value}
+                  ref={inputRef}
                   name="public_email"
                   autoComplete="email"
                   onChange={handleInputChange}

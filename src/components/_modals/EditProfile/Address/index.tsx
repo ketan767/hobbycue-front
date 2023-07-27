@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
 import {
@@ -29,6 +29,12 @@ const ProfileAddressEditModal: React.FC<Props> = ({
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [nextDisabled, setNextDisabled] = useState(false)
+
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    inputRef?.current?.focus()
+  }, [])
 
   const [data, setData] = useState<ProfileAddressPayload>({
     street: '',
@@ -172,11 +178,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   }, [user])
 
   useEffect(() => {
-    if (
-      isEmpty(data.state) ||
-      isEmpty(data.city) ||
-      isEmpty(data.country)
-    ) {
+    if (isEmpty(data.state) || isEmpty(data.city) || isEmpty(data.country)) {
       // setNextDisabled(true)
     } else {
       setNextDisabled(false)
@@ -267,6 +269,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   required
                   value={data.street}
                   name="street"
+                  ref={inputRef}
                   onChange={handleInputChange}
                 />
                 <Image

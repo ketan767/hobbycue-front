@@ -50,6 +50,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const [addHobbyBtnLoading, setAddHobbyBtnLoading] = useState<boolean>(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [nextDisabled, setNextDisabled] = useState(false)
+  const [error, setError] = useState(false)
 
   const [data, setData] = useState<ProfileHobbyData>({
     hobby: null,
@@ -101,7 +102,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
   const handleAddHobby = () => {
     if (!data.hobby) return
-
+    setError(false)
     setAddHobbyBtnLoading(true)
 
     let jsonData = {
@@ -143,15 +144,19 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
   useEffect(() => {
     if (!user._hobbies) {
-      setNextDisabled(true)
+      // setNextDisabled(true)
     } else if (user._hobbies.length === 0) {
-      setNextDisabled(true)
+      // setNextDisabled(true)
     } else {
       setNextDisabled(false)
     }
   }, [user])
 
   const handleSubmit = () => {
+    if (userHobbies.length === 0) {
+      setError(true)
+      return
+    }
     if (onComplete) onComplete()
     else {
       window.location.reload()
@@ -176,8 +181,9 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     setUserHobbies(temp)
     const { err, res } = await updateUserHobbyLevel(_id, { level })
     if (err) return console.log(err)
-    console.log('hobby updated-' ,res?.data)
+    console.log('hobby updated-', res?.data)
   }
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -214,7 +220,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                       }
                       onChange={handleHobbyInputChange}
                     />
-                    {/* <p className={styles['helper-text']}>{inputErrs.full_name}</p> */}
                   </div>
                   {showHobbyDowpdown && hobbyDropdownList.length !== 0 && (
                     <div className={styles['dropdown']}>
@@ -416,6 +421,9 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                 </table>
               </section>
             </section>
+            <p className={styles['helper-text']}>
+              {error ? 'Add atleast one hobby!' : ''}
+            </p>
           </>
         </section>
 
@@ -443,7 +451,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'24px'} />
             ) : onComplete ? (
-              'Next'
+              'Save'
             ) : (
               'Save'
             )}

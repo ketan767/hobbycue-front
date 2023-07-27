@@ -4,20 +4,25 @@
   align-items: center;
   /* justify-content: space-between; */
   gap: var(--spacing-8);
-  padding: var(--spacing-16) var(--spacing-8);
+  padding: 7px var(--spacing-8);
   /* margin-bottom: var(--spacing-16); */
   position: relative;
   cursor: pointer;
-  border: 1px solid #CED4DA;
+  border: 1px solid #CED4DA !important;
+}
+.default-img{
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
 }
 .profile-switcher img[data-profile-type='user'] {
-  width: var(--spacing-40);
-  height: var(--spacing-40);
+  width: 32px;
+  height: 32px;
   border-radius: 100%;
 }
 .profile-switcher img[data-profile-type='listing'] {
-  width: var(--spacing-40);
-  height: var(--spacing-40);
+  width: 32px;
+  height: 32px;
   border-radius: var(--spacing-4);
 }
 .profile-switcher .name {

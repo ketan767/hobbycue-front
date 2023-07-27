@@ -63,3 +63,8 @@ ul.contact-wrapper svg {
   flex-wrap: wrap;
   justify-content: space-between;
 }
+@media screen and (max-width: 1100px) {
+  .card-container {
+    flex-direction: column;
+  }
+}

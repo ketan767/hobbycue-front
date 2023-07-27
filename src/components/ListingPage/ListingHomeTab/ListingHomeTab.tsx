@@ -61,7 +61,7 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
           }
         >
           <h4>About</h4>
-          <div dangerouslySetInnerHTML={{ __html: data?.description }}></div>
+          <div dangerouslySetInnerHTML={{ __html: data?.description }} className={styles['about-text']} ></div>
         </PageContentBox>
 
         {/* User Information */}

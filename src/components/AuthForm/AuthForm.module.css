@@ -17,18 +17,18 @@
   align-items: stretch;
 }
 .modal-form-contanier .form-body {
-  order: 1;
-  margin-top: 2.3rem;
+  order: 3;
+  /* margin-top: 2.3rem; */
 }
 .modal-form-contanier .divider {
-  order: 3;
+  order: 2;
 }
 .modal-form-contanier .social-login-btns {
-  order: 4;
-  margin-top: 0;
+  order: 1;
+  /* margin-top: 0; */
 }
 .modal-form-contanier .form-footer {
-  order: 2;
+  order: 4;
 }
 .social-login-btns {
   margin-top: var(--spacing-24);
@@ -243,11 +243,11 @@ line-height: 20px;
   margin-top: var(--spacing-24);
   width: 100%;
   font-size: 14px;
-  border: 1px solid #000;
-  color: #000;
+  border: 1px solid #8064A2;
+  color: #8064A2;
 }
 .form-footer .submit-btn:hover {
-  background-color: #000;
+  background-color: #8064A2;
   color: white;
 }
 .bgGrey input {

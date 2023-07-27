@@ -103,7 +103,6 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
     console.log(res)
   }
 
-  console.log('imgs', listingModalData.images)
   return (
     <>
       <main>

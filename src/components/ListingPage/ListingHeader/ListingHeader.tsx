@@ -16,13 +16,15 @@ import {
   updateListingProfile,
 } from '@/services/listing.service'
 import { updatePhotoEditModalData } from '@/redux/slices/site'
-import { openModal } from '@/redux/slices/modal'
+import { openModal, updateShareUrl } from '@/redux/slices/modal'
 import { dateFormat } from '@/utils'
 import Calendar from '@/assets/svg/calendar-light.svg'
 import Time from '@/assets/svg/clock-light.svg'
 import EditIcon from '@/assets/svg/edit-colored.svg'
 import ListingGeneralEditModal from '@/components/_modals/EditListing/ListingGeneral'
 import FilledButton from '@/components/_buttons/FilledButton'
+import CoverPhotoLayout from '@/layouts/CoverPhotoLayout/CoverPhotoLayout'
+import ProfileImageLayout from '@/layouts/ProfileImageLayout/ProfileImageLayout'
 
 type Props = {
   data: ListingPageData['pageData']
@@ -31,7 +33,7 @@ type Props = {
 const ListingHeader: React.FC<Props> = ({ data }) => {
   const dispatch = useDispatch()
 
-  const { listingLayoutMode } = useSelector((state: RootState) => state.site)
+  const { listingLayoutMode } = useSelector((state: any) => state.site)
   const [titleEditModalActive, setTitleEditModalActive] = useState(false)
 
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
@@ -118,44 +120,75 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
 
   const handlePublish = async () => {
     // console.log(data)
-    const { err, res } = await updateListing(data._id,{
-      is_published: true,
+    const { err, res } = await updateListing(data._id, {
+      is_published: data.is_published === true ? false : true,
     })
     if (err) return console.log(err)
     else {
       window.location.reload()
     }
   }
+
+  const handleContact = () => {
+    console.log('data', data)
+    if(data.public_email){
+      
+      window.open(`mailto:${data.public_email}?subject=Subject&body=Body%20goes%20here`)
+    }
+  }
+
+  const handleShare = () => {
+    dispatch(updateShareUrl(window.location.href))
+    dispatch(openModal({ type: 'social-media-share', closable: true }))
+  }
+
   return (
     <>
       <header className={`site-container ${styles['header']}`}>
         {/* Profile Picture */}
         <div className={styles['profile-img-wrapper']}>
-          {data?.profile_image ? (
-            <Image
-              className={styles['img']}
-              src={data?.profile_image}
-              alt=""
-              width={160}
-              height={160}
-            />
-          ) : (
-            <div
-              className={`${styles['img']} default-people-listing-icon`}
-            ></div>
-          )}
-
-          {listingLayoutMode === 'edit' && (
-            <label className={styles['edit-btn']}>
-              <input
-                type="file"
-                hidden
-                accept="image/*"
-                onChange={(e) => onInputChange(e, 'profile')}
+          <div className={styles['relative']}>
+            {data?.profile_image ? (
+              <Image
+                className={styles['img']}
+                src={data?.profile_image}
+                alt=""
+                width={160}
+                height={160}
               />
-              <CameraIcon />
-            </label>
-          )}
+            ) : (
+              <div className={`${styles['img']}`}>
+                <ProfileImageLayout
+                  onChange={(e: any) => onInputChange(e, 'profile')}
+                  profileLayoutMode={listingLayoutMode}
+                  type={'page'}
+                ></ProfileImageLayout>
+              </div>
+            )}
+
+            {listingLayoutMode === 'edit' && (
+              <label className={styles['edit-btn']}>
+                <input
+                  type="file"
+                  hidden
+                  accept="image/*"
+                  onChange={(e) => onInputChange(e, 'profile')}
+                />
+                <CameraIcon />
+              </label>
+            )}
+          </div>
+          <div className={styles['name-container']}>
+            <h1 className={styles['name']}>
+              {data?.title}{' '}
+              <Image
+                className={styles['edit-icon']}
+                src={EditIcon}
+                alt="edit"
+                onClick={openTitleEditModal}
+              />{' '}
+            </h1>
+          </div>
         </div>
 
         {/* Center Elements */}
@@ -170,9 +203,12 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
                 width={1000}
               />
             ) : (
-              <div
-                className={`${styles['img']} default-people-listing-cover`}
-              ></div>
+              <div className={`${styles['img']}`}>
+                <CoverPhotoLayout
+                  onChange={(e: any) => onInputChange(e, 'cover')}
+                  profileLayoutMode={listingLayoutMode}
+                ></CoverPhotoLayout>
+              </div>
             )}
 
             {listingLayoutMode === 'edit' && (
@@ -188,7 +224,7 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
             )}
           </div>
           <div className={styles['content-container']}>
-            <div>
+            <div className={styles['name-container']}>
               <h1 className={styles['name']}>
                 {data?.title}{' '}
                 <Image
@@ -235,7 +271,10 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
                 <></>
               ) : (
                 <>
-                  <FilledButton className={styles.contactBtn}>
+                  <FilledButton
+                    className={styles.contactBtn}
+                    onClick={handleContact}
+                  >
                     Contact
                   </FilledButton>
                 </>
@@ -243,9 +282,9 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
             </div>
           </div>
         </section>
-        <div>
+        <div className={styles['actions-container']}>
           <FilledButton className={styles.publishBtn} onClick={handlePublish}>
-            Publish
+            {data.is_published ? 'Unpublish' : 'Publish'}
           </FilledButton>
           {/* Action Buttons */}
           <div className={styles['action-btn-wrapper']}>
@@ -270,7 +309,7 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
 
             {/* Share Button */}
             <div
-              onClick={(e) => console.log(e)}
+              onClick={(e) => handleShare()}
               className={styles['action-btn']}
             >
               <ShareRoundedIcon color="primary" fontSize="small" />

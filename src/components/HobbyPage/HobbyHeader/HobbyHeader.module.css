@@ -16,6 +16,30 @@
   border: 2px solid rgb(var(--primary-100-rgb));
   clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
   background-color: rgb(var(--gray-50-rgb), 0.2);
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.profile-img img{
+  width: calc(100% - 4px);
+  height: calc(100% - 4px);
+  object-fit: cover;
+  position: relative;
+  z-index: 10;
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+
+}
+.profile-img::before{
+  content: "";
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #8064a2;
+  z-index: 1;
 }
 
 .center-container .cover-img {
@@ -71,6 +95,11 @@
   display: flex;
   gap: 60px;
   justify-content: center;
+  background-color: white;
+  position: sticky;
+  top: 78px;
+  z-index: 1;
+  padding-bottom: 12px;
 }
 .navigation-links a {
   font-family: 'Poppins';

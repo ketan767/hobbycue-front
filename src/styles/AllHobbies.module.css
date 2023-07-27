@@ -129,6 +129,8 @@
   display: flex;
   padding: 16px 10px;
   width: 100%;
+  position: sticky;
+  top: 78px;
   background: #8064a2;
   font-family: 'Poppins';
   font-style: normal;

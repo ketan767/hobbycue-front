@@ -32,6 +32,22 @@ const HobbyDetail: React.FC<Props> = (props) => {
     setNextLevels(res.data?.hobbies)
   }
 
+  const fetchData = async () => {
+    const { err, res } = await getAllHobbies(
+      `slug=${router.query.slug}&populate=category,sub_category,tags,related_hobbies`,
+    )
+    if (err) return
+
+    if (res?.data.success && res.data.no_of_hobbies === 0) return
+    if(res.data.hobbies[0]){
+      setData(res.data.hobbies[0])
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [router.asPath])
+
   /** Get Next Levels */
   useEffect(() => {
     if (!data) return
@@ -66,7 +82,9 @@ const HobbyDetail: React.FC<Props> = (props) => {
               <h4 className={styles['keyword-text']}>Keyword :</h4>
               <ul className={styles['keyword-list']}>
                 {data?.keywords?.map((item: any, idx: number) => (
-                  <li key={idx}>{item} {idx + 1 === data?.keywords.length ? '' : ','} </li>
+                  <li key={idx}>
+                    {item} {idx + 1 === data?.keywords.length ? '' : ','}{' '}
+                  </li>
                 ))}
               </ul>
             </div>

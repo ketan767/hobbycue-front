@@ -34,6 +34,12 @@ export const validatePhone = (phone: string) => {
   )
   return a !== null ? true : false
 }
+export const validateUrl = (url: string) => {
+  const regex =
+    /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+((\/)[\w#]+)*(\/\w+\?[a-zA-Z0-9_]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?\/?$/
+
+  return regex.test(url)
+}
 
 export const dateFormat = new Intl.DateTimeFormat('en-GB', {
   month: 'long',
@@ -71,5 +77,11 @@ export const isEmpty = (value: string) => {
   return false
 }
 export const getListingTypeName = (num: Number) => {
- return num === 1 ? 'People' : num === 2 ? 'Place' : num === 3 ? 'Product' : 'Program'
+  return num === 1
+    ? 'People'
+    : num === 2
+    ? 'Place'
+    : num === 3
+    ? 'Product'
+    : 'Program'
 }

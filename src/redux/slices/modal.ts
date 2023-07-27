@@ -34,6 +34,7 @@ export type ModalType =
   | 'confirm-email'
   | 'email-sent'
   | 'reset-password'
+  | 'social-media-share'
 
 interface ModalState {
   activeModal: ModalType
@@ -41,6 +42,7 @@ interface ModalState {
   onModalClose?: (() => void) | null
   authFormData: { email: string; password: string; rememberMe: boolean },
   forgotPasswordEmail: string
+  shareUrl : string
 }
 
 const initialState: ModalState = {
@@ -51,7 +53,8 @@ const initialState: ModalState = {
     password: '',
     rememberMe: false,
   },
-  forgotPasswordEmail: ""
+  forgotPasswordEmail: "",
+  shareUrl: ''
 }
 
 const modalSlice = createSlice({
@@ -83,9 +86,12 @@ const modalSlice = createSlice({
     updateForgotPasswordEmail(state, { payload }) {
       state.forgotPasswordEmail = payload
     },
+    updateShareUrl(state, { payload }) {
+      state.shareUrl = payload
+    },
   },
 })
 
-export const { openModal, closeModal, updateAuthFormData, resetAuthFormData, updateForgotPasswordEmail } = modalSlice.actions
+export const { openModal, closeModal, updateAuthFormData, resetAuthFormData, updateForgotPasswordEmail, updateShareUrl } = modalSlice.actions
 
 export default modalSlice.reducer

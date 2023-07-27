@@ -3,16 +3,27 @@
   border-radius: var(--spacing-8);
   max-width: 50rem;
   width: 38rem;
-  min-height: 40rem;
+  /* min-height: 30rem; */
   display: flex;
   flex-direction: column;
 }
-
+@media screen and (min-width: 1100px) {
+  .modal-wrapper {
+    max-height: calc(100vh - 6rem);
+    height: 100%;
+  }
+  .modal-wrapper .body {
+    height: 100%;
+    overflow: auto;
+  }
+}
 .modal-wrapper .header,
 .modal-wrapper .body {
   padding: var(--spacing-16) var(--spacing-24);
 }
-
+.modal-wrapper .body{
+  padding-right: 12px;
+}
 .modal-wrapper .footer {
   padding: var(--spacing-16) var(--spacing-24);
   margin-top: auto;
@@ -178,6 +189,12 @@
   font-size: 14px;
 }
 
+.listContainer{
+  max-height: 20rem;
+  overflow-y: auto;
+  overflow-x: visible;
+  overflow-x: hidden;
+}
 .listSubItem {
   display: flex;
   flex-direction: column;
@@ -202,3 +219,32 @@
   line-height: 18px;
   color: #6d747a;
 }
+@media screen and (max-width: 1100px) {
+  .modal-wrapper {
+    width: auto;
+    height: 100%;
+    min-height: 23rem;
+  }
+  .modal-wrapper .body {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+  }
+  .listItem {
+    flex-wrap: wrap;
+    row-gap: 12px;
+    padding-right: 0;
+    margin-bottom: 1.5rem;
+  }
+  .listItem > div {
+    flex: calc(50% - 20px);
+  }
+  .listSubItem:nth-child(3) {
+    padding-left: 0;
+  }
+  .inputField{
+   width: 100%;
+  }
+  
+}
+

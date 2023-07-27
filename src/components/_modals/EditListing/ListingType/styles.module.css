@@ -3,9 +3,19 @@
   border-radius: var(--spacing-8);
   max-width: 40rem;
   width: 38rem;
-  min-height: 18rem;
+  /* min-height: 18rem; */
   display: flex;
   flex-direction: column;
+}
+@media screen and (min-width: 1100px) {
+  .modal-wrapper {
+    max-height: calc(100vh - 6rem);
+    height: 100%;
+  }
+  .modal-wrapper .body {
+    height: 100%;
+    overflow: auto;
+  }
 }
 .modal-wrapper .header,
 .modal-wrapper .body {
@@ -85,7 +95,12 @@
   content: '*';
   color: rgba(192, 80, 77, 1);
 }
-
+.error{
+  color: rgba(192, 80, 77, 1);
+  height: 15px;
+  font-size: 12px;
+  margin-top: 4px;
+}
 /* General Profile */
 .year-gender-wrapper {
   display: flex;
@@ -140,4 +155,14 @@
   line-height: 16px;
 
   color: #c0504d;
+}
+@media screen and (max-width: 1100px) {
+  .modal-wrapper {
+    width: auto;
+    height: 100%;
+  }
+  .modal-wrapper .body {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 }

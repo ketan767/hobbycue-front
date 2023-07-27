@@ -196,10 +196,17 @@ export const CreatePost: React.FC<Props> = (props) => {
     })
   }, [])
 
-  const removeMedia = (idxToRemove: any) => {
-    setData((prev: any) => {
-      return { ...prev, video_url: '' }
-    })
+  const removeMedia = (idxToRemove: any, key:String) => {
+    if(key === 'media'){
+      let tempData:any = data.media.filter((item:any, idx:any)=> idx !== idxToRemove) 
+      setData((prev: any) => {
+        return { ...prev, media: tempData }
+      })
+    }else{
+      setData((prev: any) => {
+        return { ...prev, video_url: '' }
+      })
+    }
   }
 
   return (
@@ -225,7 +232,7 @@ export const CreatePost: React.FC<Props> = (props) => {
                   <source src={data.video_url} type="video/mp4" />
                 </video>
                 <Image
-                  onClick={() => removeMedia(0)}
+                  onClick={() => removeMedia(0, 'video_url')}
                   src={CancelBtn}
                   className={styles['img-cancel-icon']}
                   alt="cancel"
@@ -240,7 +247,7 @@ export const CreatePost: React.FC<Props> = (props) => {
                   <div className={styles.imgContainer} key={idx}>
                     <img src={item} alt="" />
                     <Image
-                      onClick={() => removeMedia(idx)}
+                      onClick={() => removeMedia(idx, 'media')}
                       src={CancelBtn}
                       className={styles['img-cancel-icon']}
                       alt="cancel"

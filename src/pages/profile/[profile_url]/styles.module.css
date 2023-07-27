@@ -67,3 +67,12 @@
 }
 
 
+@media screen and (max-width: 1100px) {
+  .medias{
+    display: flex;
+    flex-direction: column;
+  }
+  .image{
+    width: auto;
+  }
+}

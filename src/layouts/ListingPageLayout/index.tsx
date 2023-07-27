@@ -10,6 +10,7 @@ import ListingHeader from '@/components/ListingPage/ListingHeader/ListingHeader'
 import { useRouter } from 'next/router'
 import ListingHomeTab from '@/components/ListingPage/ListingHomeTab/ListingHomeTab'
 import { updateListingLayoutMode } from '@/redux/slices/site'
+import ListingHeaderSmall from '@/components/ListingPage/ListingHeader/ListingHeaderSmall'
 
 type Props = {
   activeTab: ListingPageTabs
@@ -20,6 +21,19 @@ type Props = {
 const ListingPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
   const router = useRouter()
   const dispatch = useDispatch()
+  const [showSmallHeader, setShowSmallHeader] = useState(false)
+
+  function checkScroll() {
+    const scrollValue = window.scrollY || document.documentElement.scrollTop
+
+    if (scrollValue >= 308) setShowSmallHeader(true)
+    else setShowSmallHeader(false)
+  }
+
+  useEffect(() => {
+    window.addEventListener('scroll', checkScroll)
+    // return window.removeEventListener('scroll', checkScroll)
+  }, [])
 
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
@@ -52,9 +66,11 @@ const ListingPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
       <ListingHeader data={data.pageData} />
-
+      {showSmallHeader && (
+        <ListingHeaderSmall data={data.pageData} activeTab={activeTab} />
+      )}
       {/* Navigation Links */}
-      <nav>
+      <nav className={styles['nav']}>
         <div className={styles['navigation-tabs']}>
           {tabs.map((tab) => {
             return (

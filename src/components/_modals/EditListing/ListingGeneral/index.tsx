@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
 import {
@@ -48,7 +48,11 @@ const ListingGeneralEditModal: React.FC<Props> = ({
     year: { value: '', error: null },
     admin_note: { value: '', error: null },
   })
+  const inputRef = useRef<HTMLInputElement>(null)
 
+  useEffect(() => {
+    inputRef?.current?.focus()
+  }, [])
   const handleInputChange = (event: any) => {
     setData((prev) => {
       return {
@@ -67,7 +71,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
         }
       })
     }
-    if (isEmptyField(data.page_url.value)|| !data.page_url.value) {
+    if (isEmptyField(data.page_url.value) || !data.page_url.value) {
       return setData((prev) => {
         return {
           ...prev,
@@ -75,15 +79,15 @@ const ListingGeneralEditModal: React.FC<Props> = ({
         }
       })
     }
-    console.log(data);
-    if(data.year.value && data.year.value?.trim() !== '' && !containOnlyNumbers(data.year.value)) {
-      return setData((prev) => {
-        return {
-          ...prev,
-          year: { ...prev.year, error: 'Enter a valid year of birth!' },
-        }
-      })
-    }
+    console.log(data)
+    // if(data.year.value && data.year.value?.trim() !== '' && !containOnlyNumbers(data.year.value)) {
+    //   return setData((prev) => {
+    //     return {
+    //       ...prev,
+    //       year: { ...prev.year, error: 'Enter a valid year of birth!' },
+    //     }
+    //   })
+    // }
     let jsonData = {
       type: listingModalData.type,
       page_type: listingModalData.page_type,
@@ -113,9 +117,22 @@ const ListingGeneralEditModal: React.FC<Props> = ({
       }
     } else {
       setSubmitBtnLoading(true)
-      const { err, res } = await createNewListing(jsonData)
+      const { err, res }: any = await createNewListing(jsonData)
       setSubmitBtnLoading(false)
-      if (err) return console.log(err)
+      if (err) {
+        if (err?.response?.status === 500) {
+          setData((prev) => {
+            return {
+              ...prev,
+              page_url: {
+                ...prev.page_url,
+                error: 'This page url is already taken',
+              },
+            }
+          })
+        }
+        return
+      }
       if (res?.data.success) {
         console.log('first')
         dispatch(updateListingModalData(res.data.data.listing))
@@ -145,7 +162,19 @@ const ListingGeneralEditModal: React.FC<Props> = ({
         { headers },
       )
       .then((res) => {
-        // console.log('res', res)
+        console.log('res', res)
+        if(res.data.message !== "Available!"){
+          setData((prev) => {
+            return {
+              ...prev,
+              page_url: {
+                ...prev.page_url,
+                error: 'This page url is already taken',
+              },
+            }
+          })
+          return
+        }
         setNextDisabled(false)
         setData((prev) => {
           return {
@@ -215,6 +244,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
                 required
                 value={data.title.value}
                 name="title"
+                ref={inputRef}
                 onChange={handleInputChange}
               />
               <p className={styles['helper-text']}>{data.title.error}</p>

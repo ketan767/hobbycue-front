@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
-import { addUserHobby, deleteUserHobby, getMyProfileDetail } from '@/services/user.service'
+import {
+  addUserHobby,
+  deleteUserHobby,
+  getMyProfileDetail,
+} from '@/services/user.service'
 
 import { FormControl, MenuItem, Select, TextField } from '@mui/material'
 import { getAllHobbies } from '@/services/hobby.service'
@@ -29,14 +33,21 @@ type ListingHobbyData = {
   genre: DropdownListItem | null
 }
 
-const ListingHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
+const ListingHobbyEditModal: React.FC<Props> = ({
+  onComplete,
+  onBackBtnClick,
+}) => {
   const dispatch = useDispatch()
 
   const { user } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
 
   const [hobbiesList, setHobbiesList] = useState([])
-  const [data, setData] = useState<ListingHobbyData>({ hobby: null, genre: null })
+  const [data, setData] = useState<ListingHobbyData>({
+    hobby: null,
+    genre: null,
+  })
+  const [error, setError] = useState(false)
 
   const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
   const [showGenreDropdown, setShowGenreDropdown] = useState<boolean>(false)
@@ -44,8 +55,12 @@ const ListingHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
   const [hobbyInputValue, setHobbyInputValue] = useState('')
   const [genreInputValue, setGenreInputValue] = useState('')
 
-  const [hobbyDropdownList, setHobbyDropdownList] = useState<DropdownListItem[]>([])
-  const [genreDropdownList, setGenreDropdownList] = useState<DropdownListItem[]>([])
+  const [hobbyDropdownList, setHobbyDropdownList] = useState<
+    DropdownListItem[]
+  >([])
+  const [genreDropdownList, setGenreDropdownList] = useState<
+    DropdownListItem[]
+  >([])
   const [nextDisabled, setNextDisabled] = useState(false)
 
   const [addHobbyBtnLoading, setAddHobbyBtnLoading] = useState<boolean>(false)
@@ -79,6 +94,8 @@ const ListingHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
 
   const handleAddHobby = async () => {
     // @TODO: Error Handling
+    setError(false)
+    setNextDisabled(false)
     if (!data.hobby || !listingModalData._id) return
 
     setAddHobbyBtnLoading(true)
@@ -106,6 +123,10 @@ const ListingHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
   }
 
   const handleSubmit = () => {
+    if (hobbiesList.length === 0) {
+      setError(true)
+      return
+    }
     if (onComplete) onComplete()
     else {
       window.location.reload()
@@ -128,9 +149,9 @@ const ListingHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
 
   useEffect(() => {
     if (!hobbiesList) {
-      setNextDisabled(true)
+      // setNextDisabled(true)
     } else if (hobbiesList.length === 0) {
-      setNextDisabled(true)
+      // setNextDisabled(true)
     } else {
       setNextDisabled(false)
     }
@@ -149,7 +170,9 @@ const ListingHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
         <section className={styles['body']}>
           <>
             <section className={styles['add-hobbies-wrapper']}>
-              <p className={styles['info']}>Added hobbies appear in the table below.</p>
+              <p className={styles['info']}>
+                Added hobbies appear in the table below.
+              </p>
 
               {/* Add New Hobbies Dropdown and Add Button */}
               <h3 className={styles['heading']}>Add Hobby</h3>
@@ -240,7 +263,11 @@ const ListingHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
                   variant="contained"
                   onClick={handleAddHobby}
                 >
-                  {addHobbyBtnLoading ? <CircularProgress color="inherit" size={'22px'} /> : 'Add'}
+                  {addHobbyBtnLoading ? (
+                    <CircularProgress color="inherit" size={'22px'} />
+                  ) : (
+                    'Add'
+                  )}
                 </Button>
               </section>
 
@@ -294,20 +321,29 @@ const ListingHobbyEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
                   </tbody>
                 </table>
               </section>
+              <p className={styles['helper-text']}>
+                {error ? 'Add atleast one hobby!' : ''}
+              </p>
             </section>
           </>
         </section>
 
         <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
-            <button className="modal-footer-btn cancel" onClick={onBackBtnClick}>
+            <button
+              className="modal-footer-btn cancel"
+              onClick={onBackBtnClick}
+            >
               Back
             </button>
           )}
 
-          <button className="modal-footer-btn submit" onClick={handleSubmit}
-          disabled={nextDisabled} >
-            {onComplete ? 'Next' : 'Save'}
+          <button
+            className="modal-footer-btn submit"
+            onClick={handleSubmit}
+            disabled={nextDisabled}
+          >
+            {onComplete ? 'Save' : 'Save'}
           </button>
         </footer>
       </div>

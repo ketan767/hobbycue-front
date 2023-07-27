@@ -251,14 +251,21 @@
   background: #f8f9fa;
   outline: none;
 }
-.right-listing-small{
-  display: none;
+.navbar-right > ul.right-listing-small{
+  display: none ;
 }
 .logo-small{
   display: none;
 }
 .navbar-left > a{
   display: flex;
+}
+.search-icon-container{
+  width: 22px;
+  height: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 @media screen and (max-width: 1100px) {
   .navbar-left .inputField {
@@ -273,12 +280,15 @@
   .right-listing-expanded{
     display: none !important;
   }
-  .right-listing-small{
+  .navbar-right > ul.right-listing-small{
     display: flex;
   }
   .right-listing-small li{
     list-style: none;
     column-gap: 1rem;
+  }
+  .right-listing-small li img{
+    cursor: pointer;
   }
   .navbar-wrappper{
     padding-left: 1rem;

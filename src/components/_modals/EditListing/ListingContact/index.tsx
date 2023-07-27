@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
 import {
@@ -11,6 +11,7 @@ import {
   isEmpty,
   isEmptyField,
   validatePhone,
+  validateUrl,
 } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
@@ -51,7 +52,11 @@ const ListingContactEditModal: React.FC<Props> = ({
     whatsapp_number: { value: '', error: null },
     page_admin: { value: '', error: null },
   })
+  const inputRef = useRef<HTMLInputElement>(null)
 
+  useEffect(() => {
+   inputRef?.current?.focus()
+ }, [])
   const handleInputChange = (event: any) => {
     setData((prev) => {
       return {
@@ -62,6 +67,7 @@ const ListingContactEditModal: React.FC<Props> = ({
   }
 
   const handleSubmit = async () => {
+    console.log(data.website);
     if (
       !data.phone.value ||
       !containOnlyNumbers(data.phone.value.toString().trim()) ||
@@ -73,6 +79,19 @@ const ListingContactEditModal: React.FC<Props> = ({
           phone: { ...prev.phone, error: 'Enter a valid phone number' },
         }
       })
+    }
+    if (data.website.value && data.website.value !== '') {
+      if (!validateUrl(data.website.value)) {
+        return setData((prev) => {
+          return {
+            ...prev,
+            website: {
+              ...prev.website,
+              error: 'Please enter a valid website!',
+            },
+          }
+        })
+      }
     }
     const jsonData = {
       phone: data.phone.value,
@@ -155,6 +174,7 @@ const ListingContactEditModal: React.FC<Props> = ({
               <div className={styles.useEmailContainer}>
                 <p>Either Phone Number or Email ID is required.</p>
                 <OutlinedButton
+                className={styles['button']}
                   onClick={() =>
                     setData((prev) => {
                       return {
@@ -182,6 +202,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                       value={data.page_admin.value}
                       name="page_admin"
                       autoComplete="page_admin"
+                      ref={inputRef}
                       onChange={handleInputChange}
                     />
                   </div>

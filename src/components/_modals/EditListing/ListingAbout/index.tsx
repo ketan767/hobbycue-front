@@ -17,7 +17,10 @@ const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
   loading: () => <h1>Loading...</h1>,
 })
-
+const AboutEditor = dynamic(() => import('@/components/AboutEditor/AboutEditor'), {
+  ssr: false,
+  loading: () => <h1>Loading...</h1>,
+})
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
@@ -44,7 +47,7 @@ const ListingAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
   }
 
   const handleSubmit = async () => {
-    if (isEmptyField(data.description.value)) {
+    if (!data.description.value || data.description.value === '' || data.description.value === '<p><br></p>') {
       return setData((prev) => {
         return { ...prev, description: { ...prev.description, error: 'This field is required!' } }
       })
@@ -76,7 +79,7 @@ const ListingAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
     if (
       isEmpty(data.description.value)
     ) {
-      setNextDisabled(true)
+      // setNextDisabled(true)
     } else {
       setNextDisabled(false)
     }
@@ -94,7 +97,8 @@ const ListingAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
           <div className={styles['input-box']}>
             <label>About</label>
             <input hidden required />
-            <CustomCKEditor value={data.description.value as string} onChange={handleInputChange} placeholder='Briefly describe your listing page' />
+            {/* <CustomCKEditor value={data.description.value as string} onChange={handleInputChange} placeholder='Briefly describe your listing page' /> */}
+            <AboutEditor value={data.description.value as string} onChange={handleInputChange} placeholder='Briefly describe your listing page' />
             {data.description.error && (
               <p className={styles['error-msg']}>{data.description.error}</p>
             )}

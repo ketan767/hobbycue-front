@@ -66,10 +66,9 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
     getPost()
   }, [activeProfile])
 
-  const handleHobbyClick = async (item: any) => {
-    // console.log(item)
-    if (selectedHobby !== item.hobby._id) {
-      setSelectedHobby(item.hobby._id)
+  const handleHobbyClick = async (hobbyId: any) => {
+    if (selectedHobby !== hobbyId) {
+      setSelectedHobby(hobbyId)
     } else {
       setSelectedHobby('')
     }
@@ -185,7 +184,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
                   return (
                     <li
                       key={hobby._id}
-                      onClick={() => handleHobbyClick(hobby)}
+                      onClick={() => handleHobbyClick(hobby.hobby._id)}
                       className={
                         selectedHobby === hobby.hobby._id
                           ? styles.selectedItem

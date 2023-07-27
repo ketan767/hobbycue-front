@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import {
   Button,
@@ -59,7 +59,11 @@ const RelatedListingEditModal: React.FC<Props> = ({
   const [selectedPage, setSelectedPage] = useState<any>({})
   const [relatedListingsLeft, setRelatedListingsLeft] = useState<any>([])
 
+  const inputRef = useRef<HTMLInputElement>(null)
 
+  useEffect(() => {
+   inputRef?.current?.focus()
+ }, [])
   useEffect(() => {
     const updated = listingData.filter(
       (item: any) =>
@@ -225,6 +229,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
                 required
                 value={pageInputValue}
                 onFocus={() => setShowDropdown(true)}
+                ref={inputRef}
                 onBlur={() =>
                   setTimeout(() => {
                     setShowDropdown(false)

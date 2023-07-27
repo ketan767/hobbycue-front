@@ -187,13 +187,14 @@
   gap: var(--spacing-8);
   box-shadow: none;
 }
-.name-container{
+
+.name-container {
   margin-top: 12px;
   display: flex;
   column-gap: 12px;
   align-items: center;
 }
-.name-container img{
+.name-container img {
   cursor: pointer;
 }
 @keyframes scroll-in {
@@ -204,5 +205,69 @@
   100% {
     /* transform: translateY(0%); */
     opacity: 1;
+  }
+}
+.profile-img-wrapper .name-container,
+.profile-img-wrapper .tagline {
+  display: none;
+}
+.relative {
+  position: relative;
+  width: fit-content;
+}
+.container.small .navigation-tabs {
+  padding-bottom: 12px;
+}
+@media screen and (max-width: 1100px) {
+  .actions-container {
+    display: none;
+  }
+  .header {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .profile-img-wrapper .name-container,
+  .profile-img-wrapper .tagline {
+    display: block;
+  }
+  .center-container .name-container,
+  .center-container .tagline {
+    display: none;
+  }
+  .header .center-container {
+    order: 1;
+  }
+  .header .profile-img-wrapper {
+    order: 2;
+    display: flex;
+    align-items: center;
+    column-gap: 12px;
+  }
+  .profile-img-wrapper .img {
+    width: 3.75rem;
+    height: 3.75rem;
+  }
+  .profile-img-wrapper .edit-btn > svg {
+    width: 20px;
+    height: 20px;
+    display: flex;
+  }
+}
+@media screen and (max-width: 1100px) {
+  .nav {
+    display: flex;
+    overflow-x: auto;
+    padding: 0 16px;
+  }
+  .navigation-tabs {
+    gap: 0px;
+    overflow-x: auto;
+    flex-shrink: 0;
+  }
+  .navigation-tabs > a {
+    flex-shrink: 0;
   }
 }
