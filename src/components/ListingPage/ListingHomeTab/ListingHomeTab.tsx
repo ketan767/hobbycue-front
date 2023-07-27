@@ -61,7 +61,10 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
           }
         >
           <h4>About</h4>
-          <div dangerouslySetInnerHTML={{ __html: data?.description }} className={styles['about-text']} ></div>
+          <div
+            dangerouslySetInnerHTML={{ __html: data?.description }}
+            className={styles['about-text']}
+          ></div>
         </PageContentBox>
 
         {/* User Information */}
@@ -75,12 +78,24 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
         >
           <h4>Profile URL</h4>
           <div>{data?.page_url}</div>
-          <h4>Gender</h4>
-          <div>{data?.gender}</div>
-          <h4>Year</h4>
-          <div>{data?.year}</div>
-          <h4>Notes</h4>
-          <div>{data?.admin_note}</div>
+          {data?.gender && (
+            <>
+              <h4>Gender</h4>
+              <div>{data?.gender}</div>
+            </>
+          )}
+          {data?.year && (
+            <>
+              <h4>Year</h4>
+              <div>{data?.year}</div>
+            </>
+          )}
+          {data?.admin_note && (
+            <>
+              <h4>Notes</h4>
+              <div>{data?.admin_note}</div>
+            </>
+          )}
         </PageContentBox>
 
         <ListingPostsTab data={data} hideStartPost={true} />

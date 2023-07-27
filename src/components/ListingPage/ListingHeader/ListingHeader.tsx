@@ -25,6 +25,7 @@ import ListingGeneralEditModal from '@/components/_modals/EditListing/ListingGen
 import FilledButton from '@/components/_buttons/FilledButton'
 import CoverPhotoLayout from '@/layouts/CoverPhotoLayout/CoverPhotoLayout'
 import ProfileImageLayout from '@/layouts/ProfileImageLayout/ProfileImageLayout'
+import { listingTypes } from '@/constants/constant'
 
 type Props = {
   data: ListingPageData['pageData']
@@ -131,9 +132,10 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
 
   const handleContact = () => {
     console.log('data', data)
-    if(data.public_email){
-      
-      window.open(`mailto:${data.public_email}?subject=Subject&body=Body%20goes%20here`)
+    if (data.public_email) {
+      window.open(
+        `mailto:${data.public_email}?subject=Subject&body=Body%20goes%20here`,
+      )
     }
   }
 
@@ -181,12 +183,14 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
           <div className={styles['name-container']}>
             <h1 className={styles['name']}>
               {data?.title}{' '}
-              <Image
-                className={styles['edit-icon']}
-                src={EditIcon}
-                alt="edit"
-                onClick={openTitleEditModal}
-              />{' '}
+              {listingLayoutMode === 'edit' && (
+                <Image
+                  className={styles['edit-icon']}
+                  src={EditIcon}
+                  alt="edit"
+                  onClick={openTitleEditModal}
+                />
+              )}
             </h1>
           </div>
         </div>
@@ -227,17 +231,19 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
             <div className={styles['name-container']}>
               <h1 className={styles['name']}>
                 {data?.title}{' '}
-                <Image
-                  className={styles['edit-icon']}
-                  src={EditIcon}
-                  alt="edit"
-                  onClick={openTitleEditModal}
-                />{' '}
+                {listingLayoutMode === 'edit' && (
+                  <Image
+                    className={styles['edit-icon']}
+                    src={EditIcon}
+                    alt="edit"
+                    onClick={openTitleEditModal}
+                  />
+                )}
               </h1>
               <p className={styles['tagline']}>{data?.tagline}</p>
             </div>
             <div>
-              {data?.type === 4 && data?.event_date_time ? (
+              {data?.type === listingTypes.PROGRAM && data?.event_date_time ? (
                 <div>
                   <div className={styles.eventDate}>
                     <Image
@@ -259,15 +265,17 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
                       {data?.event_date_time.from_time} -{' '}
                       {data?.event_date_time.to_time}
                     </p>
-                    <Image
-                      className={styles['edit-icon']}
-                      src={EditIcon}
-                      alt="edit"
-                      onClick={handleEventEditClick}
-                    />{' '}
+                    {listingLayoutMode === 'edit' && (
+                      <Image
+                        className={styles['edit-icon']}
+                        src={EditIcon}
+                        alt="edit"
+                        onClick={handleEventEditClick}
+                      />
+                    )}
                   </div>
                 </div>
-              ) : data.type === 2 ? (
+              ) : data.type === listingTypes.PLACE ? (
                 <></>
               ) : (
                 <>
@@ -283,9 +291,11 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
           </div>
         </section>
         <div className={styles['actions-container']}>
-          <FilledButton className={styles.publishBtn} onClick={handlePublish}>
-            {data.is_published ? 'Unpublish' : 'Publish'}
-          </FilledButton>
+          {listingLayoutMode === 'edit' && (
+            <FilledButton className={styles.publishBtn} onClick={handlePublish}>
+              {data.is_published ? 'Unpublish' : 'Publish'}
+            </FilledButton>
+          )}
           {/* Action Buttons */}
           <div className={styles['action-btn-wrapper']}>
             {/* Send Email Button  */}

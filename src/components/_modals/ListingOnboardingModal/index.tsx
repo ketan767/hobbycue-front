@@ -22,6 +22,7 @@ import ListingWorkingHoursEditModal from '../EditListing/ListingWorkingHours'
 import ListingEventHoursEditModal from '../EditListing/ListingEventHours'
 import { updateListingTypeModalMode } from '@/redux/slices/site'
 import { ProgressBar } from '@/components/ProgressBar/ProgressBar'
+import {listingTypes} from '@/constants/constant'
 
 // type OnboardingData = {
 //   full_name: string
@@ -70,7 +71,7 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
     'Hobbies',
   ]
   let steps = [...totalSteps]
-  if (listingModalData.type === 2) {
+  if (listingModalData.type === listingTypes.PLACE) {
     steps = [
       'General',
       'About',
@@ -80,7 +81,7 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
       'Hobbies',
     ]
   }
-  if (listingModalData.type === 4) {
+  if (listingModalData.type === listingTypes.PROGRAM) {
     steps = ['General', 'About', 'Contact', 'Address', 'EventHours', 'Hobbies']
   }
 
