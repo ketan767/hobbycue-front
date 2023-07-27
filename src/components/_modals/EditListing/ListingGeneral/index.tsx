@@ -14,6 +14,7 @@ import FilledButton from '@/components/_buttons/FilledButton'
 import { updateListingModalData } from '@/redux/slices/site'
 import { createNewListing, updateListing } from '@/services/listing.service'
 import axios from 'axios'
+import {listingTypes} from '@/constants/constant'
 
 type Props = {
   onComplete?: () => void
@@ -290,10 +291,10 @@ const ListingGeneralEditModal: React.FC<Props> = ({
 
             <div className={styles['year-gender-wrapper']}>
               {/* Year*/}
-              {listingModalData.type !== 4 && (
+              {listingModalData.type !== listingTypes.PROGRAM && (
                 <div className={styles['input-box']}>
                   <label>
-                    {listingModalData.type === 2
+                    {listingModalData.type === listingTypes.PLACE
                       ? 'Year Of Birth/Establishment'
                       : 'Year'}
                   </label>
@@ -310,7 +311,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
               )}
 
               {/* Gender */}
-              {listingModalData.type === 1 && (
+              {listingModalData.type === listingTypes.PEOPLE && (
                 <div className={styles['input-box']}>
                   <label>Gender</label>
                   <div className={styles['gender-radio-btns']}>
@@ -370,7 +371,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
             </div>
 
             {/* Note */}
-            {listingModalData.type === 1 && (
+            {listingModalData.type === listingTypes.PEOPLE && (
               <div className={styles['input-box']}>
                 <label>Note</label>
                 <input

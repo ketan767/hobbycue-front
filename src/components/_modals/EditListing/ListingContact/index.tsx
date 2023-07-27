@@ -21,6 +21,7 @@ import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import Checkbox from '@mui/material/Checkbox'
+import {listingTypes} from '@/constants/constant'
 
 type Props = {
   onComplete?: () => void
@@ -168,9 +169,9 @@ const ListingContactEditModal: React.FC<Props> = ({
         <section className={styles['body']}>
           <>
             {/* Public Email */}
-            {listingModalData.type === 1 ||
-            listingModalData.type === 4 ||
-            listingModalData.type === 2 ? (
+            {listingModalData.type === listingTypes.PEOPLE ||
+            listingModalData.type === listingTypes.PROGRAM ||
+            listingModalData.type === listingTypes.PLACE ? (
               <div className={styles.useEmailContainer}>
                 <p>Either Phone Number or Email ID is required.</p>
                 <OutlinedButton
@@ -191,9 +192,9 @@ const ListingContactEditModal: React.FC<Props> = ({
             ) : (
               <></>
             )}
-            {listingModalData.type === 2 ? (
+            {listingModalData.type === listingTypes.PLACE ? (
               <div className={styles['two-column-grid']}>
-                {listingModalData.type === 2 ? (
+                {listingModalData.type === listingTypes.PLACE ? (
                   <div className={styles['input-box']}>
                     <label> Page Admin </label>
                     <input
