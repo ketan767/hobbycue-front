@@ -183,12 +183,14 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
           <div className={styles['name-container']}>
             <h1 className={styles['name']}>
               {data?.title}{' '}
-              <Image
-                className={styles['edit-icon']}
-                src={EditIcon}
-                alt="edit"
-                onClick={openTitleEditModal}
-              />{' '}
+              {listingLayoutMode === 'edit' && (
+                <Image
+                  className={styles['edit-icon']}
+                  src={EditIcon}
+                  alt="edit"
+                  onClick={openTitleEditModal}
+                />
+              )}
             </h1>
           </div>
         </div>
@@ -229,12 +231,14 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
             <div className={styles['name-container']}>
               <h1 className={styles['name']}>
                 {data?.title}{' '}
-                <Image
-                  className={styles['edit-icon']}
-                  src={EditIcon}
-                  alt="edit"
-                  onClick={openTitleEditModal}
-                />{' '}
+                {listingLayoutMode === 'edit' && (
+                  <Image
+                    className={styles['edit-icon']}
+                    src={EditIcon}
+                    alt="edit"
+                    onClick={openTitleEditModal}
+                  />
+                )}
               </h1>
               <p className={styles['tagline']}>{data?.tagline}</p>
             </div>
@@ -287,9 +291,11 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
           </div>
         </section>
         <div className={styles['actions-container']}>
-          <FilledButton className={styles.publishBtn} onClick={handlePublish}>
-            {data.is_published ? 'Unpublish' : 'Publish'}
-          </FilledButton>
+          {listingLayoutMode === 'edit' && (
+            <FilledButton className={styles.publishBtn} onClick={handlePublish}>
+              {data.is_published ? 'Unpublish' : 'Publish'}
+            </FilledButton>
+          )}
           {/* Action Buttons */}
           <div className={styles['action-btn-wrapper']}>
             {/* Send Email Button  */}
