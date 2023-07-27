@@ -3,11 +3,20 @@
   border-radius: var(--spacing-8);
   max-width: 50rem;
   width: 38rem;
-  min-height: 30rem;
+  /* min-height: 30rem; */
   display: flex;
   flex-direction: column;
 }
-
+@media screen and (min-width: 1100px) {
+  .modal-wrapper {
+    max-height: calc(100vh - 6rem);
+    height: 100%;
+  }
+  .modal-wrapper .body {
+    height: 100%;
+    overflow: auto;
+  }
+}
 .modal-wrapper .header,
 .modal-wrapper .body {
   padding: var(--spacing-16) var(--spacing-24);

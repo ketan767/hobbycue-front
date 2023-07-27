@@ -148,15 +148,20 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
             </div>
             <div className={styles['name-container']}>
               <h1 className={styles['name']}>{data.full_name}</h1>
-              <Image
-                src={EditIcon}
-                alt="edit"
-                onClick={() =>
-                  dispatch(
-                    openModal({ type: 'profile-general-edit', closable: true }),
-                  )
-                }
-              />
+              {profileLayoutMode === 'edit' && (
+                <Image
+                  src={EditIcon}
+                  alt="edit"
+                  onClick={() =>
+                    dispatch(
+                      openModal({
+                        type: 'profile-general-edit',
+                        closable: true,
+                      }),
+                    )
+                  }
+                />
+              )}
             </div>
             {/* <p className={styles['tagline']}>{data.tagline}</p> */}
           </div>
@@ -195,15 +200,20 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
             </div>
             <div className={styles['name-container']}>
               <h1 className={styles['name']}>{data.full_name}</h1>
-              <Image
-                src={EditIcon}
-                alt="edit"
-                onClick={() =>
-                  dispatch(
-                    openModal({ type: 'profile-general-edit', closable: true }),
-                  )
-                }
-              />
+              {profileLayoutMode === 'edit' && (
+                <Image
+                  src={EditIcon}
+                  alt="edit"
+                  onClick={() =>
+                    dispatch(
+                      openModal({
+                        type: 'profile-general-edit',
+                        closable: true,
+                      }),
+                    )
+                  }
+                />
+              )}
             </div>
             <p className={styles['tagline']}>{data.tagline}</p>
           </section>
