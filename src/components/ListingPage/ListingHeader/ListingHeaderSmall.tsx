@@ -146,6 +146,8 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
     dispatch(openModal({ type: 'social-media-share', closable: true }))
   }
 
+  console.log('data', data);
+
   return (
     <>
       <div className={`${styles['container']} ${styles['small']} `}>
@@ -205,7 +207,7 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
               )}
             </div>
 
-            <h1 className={styles['name']}>{data.full_name}</h1>
+            <h1 className={styles['name']}>{data.title}</h1>
             <p className={styles['tagline']}>{data.tagline}</p>
           </section>
 

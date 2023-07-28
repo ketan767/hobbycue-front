@@ -126,6 +126,7 @@ ul.seller-info-wrapper li svg:last-child {
   line-height: 20px;
   letter-spacing: 0.04em;
   color: #939ca3;
+  word-break: break-word;
 }
 
 .working-hours-wrapper {
@@ -144,4 +145,16 @@ ul.seller-info-wrapper li svg:last-child {
 
 .workingListItem > p {
   margin-left: 6px;
+}
+
+.page-type-container {
+  /* margin-bottom: 0; */
+  padding: 0;
+}
+.page-type-container > div {
+  border-bottom: 1px solid #ebedf0;
+  padding: 1rem;
+}
+.page-type-container:not(:last-child) {
+  border-bottom: none;
 }
