@@ -39,9 +39,13 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   const dispatch = useDispatch()
 
   const { user } = useSelector((state: RootState) => state.user)
-  const fullNameRef = useRef<HTMLInputElement>(null)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [nextDisabled, setNextDisabled] = useState(false)
+
+  const fullNameRef = useRef<HTMLInputElement>(null)
+  const displayNameRef = useRef<HTMLInputElement>(null)
+  const profileUrlRef = useRef<HTMLInputElement>(null)
+  const dobRef = useRef<HTMLInputElement>(null)
 
   const [data, setData] = useState<ProfileGeneralData>({
     full_name: '',
@@ -71,12 +75,14 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   }
 
   const handleSubmit = async () => {
-    if (isEmptyField(data.full_name)) {
+    if (isEmptyField(data.full_name) || !data.full_name) {
+      fullNameRef.current?.focus()
       return setInputErrs((prev) => {
         return { ...prev, full_name: 'This field is required!' }
       })
     }
     if (checkFullname(data.full_name)) {
+      fullNameRef.current?.focus()
       return setInputErrs((prev) => {
         return {
           ...prev,
@@ -85,11 +91,13 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
       })
     }
     if (!data.display_name || data.display_name === '') {
+      displayNameRef.current?.focus()
       return setInputErrs((prev) => {
         return { ...prev, display_name: 'This field is required!' }
       })
     }
-    if (isEmptyField(data.profile_url)) {
+    if (isEmptyField(data.profile_url) || !data.profile_url) {
+      profileUrlRef.current?.focus()
       return setInputErrs((prev) => {
         return { ...prev, profile_url: 'This field is required!' }
       })
@@ -99,6 +107,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
       data.year_of_birth &&
       data.year_of_birth !== ''
     ) {
+      dobRef.current?.focus()
       return setInputErrs((prev) => {
         return { ...prev, year_of_birth: 'Enter a valid year of birth' }
       })

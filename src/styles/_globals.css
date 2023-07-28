@@ -280,3 +280,15 @@ select:-webkit-autofill {
 .about-quill-container .ql-toolbar.ql-snow button{
   margin-right: 0.75rem;
 }
+.about-quill-container .quill{
+  padding-bottom: 0;
+  border-radius: 8px;
+}
+.about-quill-container{
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.about-quill-container.quill-error {
+  border: 1px solid #c0504d;
+}

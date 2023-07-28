@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { Button, CircularProgress } from '@mui/material'
 
-import { getMyProfileDetail, updateMyProfileDetail } from '@/services/user.service'
+import {
+  getMyProfileDetail,
+  updateMyProfileDetail,
+} from '@/services/user.service'
 
 import styles from './styles.module.css'
 import { isEmpty, isEmptyField } from '@/utils'
@@ -17,10 +20,13 @@ const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
   loading: () => <h1>Loading...</h1>,
 })
-const AboutEditor = dynamic(() => import('@/components/AboutEditor/AboutEditor'), {
-  ssr: false,
-  loading: () => <h1>Loading...</h1>,
-})
+const AboutEditor = dynamic(
+  () => import('@/components/AboutEditor/AboutEditor'),
+  {
+    ssr: false,
+    loading: () => <h1>Loading...</h1>,
+  },
+)
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
@@ -30,12 +36,17 @@ type ListingAboutData = {
   description: InputData<string>
 }
 
-const ListingAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
+const ListingAboutEditModal: React.FC<Props> = ({
+  onComplete,
+  onBackBtnClick,
+}) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
 
-  const [data, setData] = useState<ListingAboutData>({ description: { value: '', error: null } })
+  const [data, setData] = useState<ListingAboutData>({
+    description: { value: '', error: null },
+  })
   const [nextDisabled, setNextDisabled] = useState(false)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
@@ -47,9 +58,19 @@ const ListingAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
   }
 
   const handleSubmit = async () => {
-    if (!data.description.value || data.description.value === '' || data.description.value === '<p><br></p>') {
+    if (
+      !data.description.value ||
+      data.description.value === '' ||
+      data.description.value === '<p><br></p>'
+    ) {
       return setData((prev) => {
-        return { ...prev, description: { ...prev.description, error: 'This field is required!' } }
+        return {
+          ...prev,
+          description: {
+            ...prev.description,
+            error: 'This field is required!',
+          },
+        }
       })
     }
 
@@ -71,14 +92,17 @@ const ListingAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
 
   useEffect(() => {
     setData((prev) => {
-      return { description: { ...prev.description, value: listingModalData.description as string } }
+      return {
+        description: {
+          ...prev.description,
+          value: listingModalData.description as string,
+        },
+      }
     })
   }, [user])
 
   useEffect(() => {
-    if (
-      isEmpty(data.description.value)
-    ) {
+    if (isEmpty(data.description.value)) {
       // setNextDisabled(true)
     } else {
       setNextDisabled(false)
@@ -98,7 +122,12 @@ const ListingAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
             <label>About</label>
             <input hidden required />
             {/* <CustomCKEditor value={data.description.value as string} onChange={handleInputChange} placeholder='Briefly describe your listing page' /> */}
-            <AboutEditor value={data.description.value as string} onChange={handleInputChange} placeholder='Briefly describe your listing page' />
+            <AboutEditor
+              value={data.description.value as string}
+              onChange={handleInputChange}
+              placeholder="Briefly describe your listing page"
+              error={data.description.error ? true : false}
+            />
             {data.description.error && (
               <p className={styles['error-msg']}>{data.description.error}</p>
             )}
@@ -107,7 +136,10 @@ const ListingAboutEditModal: React.FC<Props> = ({ onComplete, onBackBtnClick }) 
 
         <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
-            <button className="modal-footer-btn cancel" onClick={onBackBtnClick}>
+            <button
+              className="modal-footer-btn cancel"
+              onClick={onBackBtnClick}
+            >
               Back
             </button>
           )}

@@ -18,7 +18,8 @@ import { dateFormat } from '@/utils'
 import { getAllUserDetail } from '@/services/user.service'
 import { updateListingTypeModalMode } from '@/redux/slices/site'
 import WhatsappIcon from '@/assets/svg/whatsapp.svg'
-import {listingTypes} from '@/constants/constant'
+import { listingTypes } from '@/constants/constant'
+import Link from 'next/link'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -248,7 +249,12 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
               {/* WhatsApp Number */}
               {data?.whatsapp_number && (
                 <li>
-                  <Image src={WhatsappIcon} alt="whatsapp11" width={24} height={24} />
+                  <Image
+                    src={WhatsappIcon}
+                    alt="whatsapp11"
+                    width={24}
+                    height={24}
+                  />
                   <span className={styles.textGray}>
                     {data?.whatsapp_number}{' '}
                   </span>
@@ -658,7 +664,10 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
               </div>
             </PageContentBox>
           )} */}
-          {data?.type === listingTypes.PROGRAM || data?.type === listingTypes.PRODUCT ? (
+          {data?.type === listingTypes.PROGRAM ||
+          data?.type === listingTypes.PRODUCT ||
+          data?.type === listingTypes.PLACE ||
+          data?.type === listingTypes.PEOPLE ? (
             <PageContentBox
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
@@ -672,9 +681,42 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
             >
               <h4 className={styles['heading']}>Social Media</h4>
               <div className={styles.socialIcons}>
-                <Image src={FacebookIcon} alt="Facebook" />
-                <Image src={TwitterIcon} alt="Twitter" />
-                <Image src={InstagramIcon} alt="Instagram" />
+                <a
+                  target="_blank"
+                  href={
+                    data?.facebook_url
+                      ? data?.facebook_url
+                      : data?.social_media_urls?.Facebook
+                      ? data?.social_media_urls?.Facebook
+                      : '#'
+                  }
+                >
+                  <Image src={FacebookIcon} alt="Facebook" />
+                </a>
+                <a
+                  target="_blank"
+                  href={
+                    data.twitter_url
+                      ? data.twitter_url
+                      : data?.social_media_urls?.Twitter
+                      ? data?.social_media_urls?.Twitter
+                      : '#'
+                  }
+                >
+                  <Image src={TwitterIcon} alt="Twitter" />
+                </a>
+                <a
+                  target="_blank"
+                  href={
+                    data.instagram_url
+                      ? data.instagram_url
+                      : data?.social_media_urls?.Instagram
+                      ? data?.social_media_urls?.Instagram
+                      : '#'
+                  }
+                >
+                  <Image src={InstagramIcon} alt="Instagram" />
+                </a>
               </div>
             </PageContentBox>
           ) : (

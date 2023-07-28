@@ -21,7 +21,7 @@ import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import Checkbox from '@mui/material/Checkbox'
-import {listingTypes} from '@/constants/constant'
+import { listingTypes } from '@/constants/constant'
 
 type Props = {
   onComplete?: () => void
@@ -54,10 +54,12 @@ const ListingContactEditModal: React.FC<Props> = ({
     page_admin: { value: '', error: null },
   })
   const inputRef = useRef<HTMLInputElement>(null)
+  const phoneRef = useRef<HTMLInputElement>(null)
+  const websiteRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-   inputRef?.current?.focus()
- }, [])
+    inputRef?.current?.focus()
+  }, [])
   const handleInputChange = (event: any) => {
     setData((prev) => {
       return {
@@ -68,12 +70,14 @@ const ListingContactEditModal: React.FC<Props> = ({
   }
 
   const handleSubmit = async () => {
-    console.log(data.website);
+    console.log(data.website)
     if (
       !data.phone.value ||
       !containOnlyNumbers(data.phone.value.toString().trim()) ||
-      !data.phone.value
+      !data.phone.value ||
+      data.phone.value.toString().trim().length !== 10
     ) {
+      phoneRef.current?.focus()
       return setData((prev) => {
         return {
           ...prev,
@@ -82,6 +86,7 @@ const ListingContactEditModal: React.FC<Props> = ({
       })
     }
     if (data.website.value && data.website.value !== '') {
+      websiteRef.current?.focus()
       if (!validateUrl(data.website.value)) {
         return setData((prev) => {
           return {
@@ -100,7 +105,7 @@ const ListingContactEditModal: React.FC<Props> = ({
       website: data.website.value,
       whatsapp_number: data.whatsapp_number.value,
     }
-    console.log('jsonData', jsonData);
+    console.log('jsonData', jsonData)
 
     setSubmitBtnLoading(true)
     const { err, res } = await updateListing(listingModalData._id, jsonData)
@@ -175,7 +180,7 @@ const ListingContactEditModal: React.FC<Props> = ({
               <div className={styles.useEmailContainer}>
                 <p>Either Phone Number or Email ID is required.</p>
                 <OutlinedButton
-                className={styles['button']}
+                  className={styles['button']}
                   onClick={() =>
                     setData((prev) => {
                       return {
@@ -243,7 +248,11 @@ const ListingContactEditModal: React.FC<Props> = ({
             )}
 
             <section className={styles['two-column-grid']}>
-              <div className={styles['input-box']}>
+              <div
+                className={`${styles['input-box']} ${
+                  data.phone.error ? styles['input-box-error'] : ''
+                }`}
+              >
                 <label>Phone Number</label>
                 <input
                   type="text"
@@ -252,6 +261,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                   name="phone"
                   autoComplete="phone"
                   required
+                  ref={phoneRef}
                   onChange={handleInputChange}
                 />
                 <p className={styles['helper-text']}>{data.phone.error}</p>
@@ -284,7 +294,11 @@ const ListingContactEditModal: React.FC<Props> = ({
             </section>
 
             {/* Website */}
-            <div className={styles['input-box']}>
+            <div
+              className={`${styles['input-box']} ${
+                data.website.error ? styles['input-box-error'] : ''
+              }`}
+            >
               <label>Website</label>
               <input
                 type="text"
@@ -292,6 +306,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                 value={data.website.value}
                 name="website"
                 autoComplete="website"
+                ref={websiteRef}
                 onChange={handleInputChange}
               />
               <p className={styles['helper-text']}>{data.website.error}</p>
