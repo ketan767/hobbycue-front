@@ -72,7 +72,9 @@ ul.contact-wrapper li {
   line-height: 20px;
   color: #08090a;
 }
-
+ul.contact-wrapper li svg {
+  flex-shrink: 0;
+}
 ul.location-wrapper svg,
 ul.contact-wrapper svg {
   width: 1.5rem;
@@ -133,11 +135,11 @@ ul.seller-info-wrapper li svg:last-child {
   list-style: none;
   font-size: 14px;
 }
-.workingHour{
+.workingHour {
   margin-bottom: 8px;
 }
-.workingListItem{
-display: flex;
+.workingListItem {
+  display: flex;
 }
 
 .workingListItem > p {

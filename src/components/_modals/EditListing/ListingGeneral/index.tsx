@@ -14,7 +14,7 @@ import FilledButton from '@/components/_buttons/FilledButton'
 import { updateListingModalData } from '@/redux/slices/site'
 import { createNewListing, updateListing } from '@/services/listing.service'
 import axios from 'axios'
-import {listingTypes} from '@/constants/constant'
+import { listingTypes } from '@/constants/constant'
 
 type Props = {
   onComplete?: () => void
@@ -50,6 +50,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
     admin_note: { value: '', error: null },
   })
   const inputRef = useRef<HTMLInputElement>(null)
+  const pageUrlRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     inputRef?.current?.focus()
@@ -65,6 +66,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
 
   const handleSubmit = async () => {
     if (isEmptyField(data.title.value) || !data.title.value) {
+      inputRef.current?.focus()
       return setData((prev) => {
         return {
           ...prev,
@@ -73,6 +75,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
       })
     }
     if (isEmptyField(data.page_url.value) || !data.page_url.value) {
+      pageUrlRef.current?.focus()
       return setData((prev) => {
         return {
           ...prev,
@@ -122,6 +125,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
       setSubmitBtnLoading(false)
       if (err) {
         if (err?.response?.status === 500) {
+          pageUrlRef.current?.focus()
           setData((prev) => {
             return {
               ...prev,
@@ -164,7 +168,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
       )
       .then((res) => {
         console.log('res', res)
-        if(res.data.message !== "Available!"){
+        if (res.data.message !== 'Available!') {
           setData((prev) => {
             return {
               ...prev,
@@ -186,7 +190,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
       })
       .catch((err) => {
         console.log('err', err.response)
-        setNextDisabled(true)
+        // setNextDisabled(true)
         setData((prev) => {
           return {
             ...prev,
@@ -283,6 +287,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
                   value={data.page_url.value}
                   name="page_url"
                   onChange={handleInputChange}
+                  ref={pageUrlRef}
                 />
                 <span>https://hobbycue.com/page/</span>
               </div>

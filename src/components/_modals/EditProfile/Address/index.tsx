@@ -61,6 +61,12 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     longitude: null,
   })
 
+  
+  const cityRef = useRef<HTMLInputElement>(null)
+  const stateRef = useRef<HTMLInputElement>(null)
+  const countryRef = useRef<HTMLInputElement>(null)
+
+
   const handleInputChange = (event: any) => {
     setData((prev) => {
       return { ...prev, [event.target.name]: event.target.value }
@@ -72,21 +78,25 @@ const ProfileAddressEditModal: React.FC<Props> = ({
 
   const handleSubmit = () => {
     if (!data.city || data.city === '') {
+      cityRef.current?.focus()
       return setInputErrs((prev) => {
         return { ...prev, city: 'This field is required!' }
       })
     }
     if (!data.state || data.state === '') {
+      stateRef.current?.focus()
       return setInputErrs((prev) => {
         return { ...prev, state: 'This field is required!' }
       })
     }
     if (!data.country || data.country === '') {
+      countryRef.current?.focus()
       return setInputErrs((prev) => {
         return { ...prev, country: 'This field is required!' }
       })
     }
     if (checkFullname(data.city)) {
+      cityRef.current?.focus()
       return setInputErrs((prev) => {
         return {
           ...prev,
@@ -95,6 +105,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       })
     }
     if (checkFullname(data.state)) {
+      stateRef.current?.focus()
       return setInputErrs((prev) => {
         return {
           ...prev,
@@ -104,6 +115,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     }
 
     if (checkFullname(data.country)) {
+      countryRef.current?.focus()
       return setInputErrs((prev) => {
         return {
           ...prev,
@@ -317,6 +329,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   placeholder={`Enter City Name`}
                   required
                   value={data.city}
+                  ref={cityRef}
                   name="city"
                   onChange={handleInputChange}
                 />
@@ -347,6 +360,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   placeholder={`Enter State Name`}
                   required
                   value={data.state}
+                  ref={stateRef}
                   name="state"
                   onChange={handleInputChange}
                 />
@@ -364,6 +378,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   required
                   value={data.country}
                   name="country"
+                  ref={countryRef}
                   onChange={handleInputChange}
                 />
                 <p className={styles['helper-text']}>{inputErrs.country}</p>

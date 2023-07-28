@@ -16,14 +16,15 @@ interface Props {
   value: string
   onChange: (value: string) => void
   placeholder: any
+  error?: any
 }
 
 const AboutEditor: React.FC<Props> = ({
   value,
   onChange,
-  placeholder
+  placeholder,
+  error
 }) => {
-  const editorRef = useRef(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const inputVideoRef = useRef<HTMLInputElement>(null)
   const [imageIconAdded, setImageIconAdded] = useState(false)
@@ -37,27 +38,16 @@ const AboutEditor: React.FC<Props> = ({
     [onChange],
   )
 
-  const onReady = () => {
-
-  }
-
-  useEffect(() => {
-    if (editorRef.current === undefined) return
-    onReady()
-  }, [])
-
-
 
   return (
-    <div className={'about-quill-container'}>
+    <div className={`about-quill-container  ${error ? 'quill-error' : ''}  `}>
       <ReactQuill
         theme="snow"
-        ref={editorRef}
         value={value}
         onChange={(updatedValue) => {
          onChange(updatedValue)
         }}
-        className={styles.quill}
+        className={`${styles.quill}`}
         placeholder={placeholder}
         modules={{
           toolbar: {
