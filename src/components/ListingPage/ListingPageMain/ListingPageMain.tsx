@@ -121,9 +121,9 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
             }}
             className={styles['page-type-container']}
           >
-            {data.page_type.map((type: any) => {
+            {data.page_type.map((type: any, idx: any) => {
               return (
-                <div className={styles['listing-page-type']}>
+                <div className={styles['listing-page-type']} key={idx} >
                   <svg
                     width="24"
                     height="24"
