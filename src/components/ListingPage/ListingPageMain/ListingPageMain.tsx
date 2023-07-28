@@ -87,6 +87,28 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
       })
   }, [data?.related_listings_left?.listings])
 
+  let facebookUrl = null
+  let twitterUrl = null
+  let instagramUrl = null
+
+  if (data?.facebook_url) {
+    facebookUrl = data.facebook_url
+  } else if (data?.social_media_urls?.Facebook) {
+    facebookUrl = data?.social_media_urls?.Facebook
+  }
+
+  if (data?.twitter_url) {
+    twitterUrl = data.twitter_url
+  } else if (data?.social_media_urls?.Twitter) {
+    twitterUrl = data?.social_media_urls?.Twitter
+  }
+
+  if (data?.instagram_url) {
+    instagramUrl = data.instagram_url
+  } else if (data?.social_media_urls?.Instagram) {
+    instagramUrl = data?.social_media_urls?.Instagram
+  }
+
   return (
     <>
       <PageGridLayout column={3}>
@@ -680,43 +702,23 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
               }
             >
               <h4 className={styles['heading']}>Social Media</h4>
+
               <div className={styles.socialIcons}>
-                <a
-                  target="_blank"
-                  href={
-                    data?.facebook_url
-                      ? data?.facebook_url
-                      : data?.social_media_urls?.Facebook
-                      ? data?.social_media_urls?.Facebook
-                      : '#'
-                  }
-                >
-                  <Image src={FacebookIcon} alt="Facebook" />
-                </a>
-                <a
-                  target="_blank"
-                  href={
-                    data.twitter_url
-                      ? data.twitter_url
-                      : data?.social_media_urls?.Twitter
-                      ? data?.social_media_urls?.Twitter
-                      : '#'
-                  }
-                >
-                  <Image src={TwitterIcon} alt="Twitter" />
-                </a>
-                <a
-                  target="_blank"
-                  href={
-                    data.instagram_url
-                      ? data.instagram_url
-                      : data?.social_media_urls?.Instagram
-                      ? data?.social_media_urls?.Instagram
-                      : '#'
-                  }
-                >
-                  <Image src={InstagramIcon} alt="Instagram" />
-                </a>
+                {facebookUrl && (
+                  <a target='_blank' href={facebookUrl}>
+                    <Image src={FacebookIcon} alt="Facebook" />
+                  </a>
+                )}
+                {twitterUrl && (
+                  <a target='_blank' href={twitterUrl}>
+                    <Image src={TwitterIcon} alt="Facebook" />
+                  </a>
+                )}
+                {instagramUrl && (
+                  <a target='_blank' href={instagramUrl}>
+                    <Image src={InstagramIcon} alt="Facebook" />
+                  </a>
+                )}
               </div>
             </PageContentBox>
           ) : (
