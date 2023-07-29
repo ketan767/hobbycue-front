@@ -40,6 +40,7 @@ import ResetPasswordModal from './ResetPassword/ResetPassword'
 import ShareModal from './ShareModal/ShareModal'
 import FilledButton from '../_buttons/FilledButton'
 import OutlinedButton from '../_buttons/OutlinedButton'
+import ClaimModal from './ClaimModal/ClaimModal'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -162,6 +163,8 @@ const ModalManager: React.FC = () => {
               {activeModal === 'listing-social-media-edit' && (
                 <ListingSocialMediaEditModal />
               )}
+
+              {activeModal === 'claim-listing' && <ClaimModal />}
               {activeModal === 'upload-video-page' && <UploadVideoPage />}
               {activeModal === 'upload-image-page' && <UploadImagePage />}
               {activeModal === 'upload-video-user' && <UploadVideoUser />}

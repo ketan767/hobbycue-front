@@ -25,7 +25,10 @@ import ListingGeneralEditModal from '@/components/_modals/EditListing/ListingGen
 import FilledButton from '@/components/_buttons/FilledButton'
 import CoverPhotoLayout from '@/layouts/CoverPhotoLayout/CoverPhotoLayout'
 import ProfileImageLayout from '@/layouts/ProfileImageLayout/ProfileImageLayout'
+
+import dropdown from './DropDown'
 import { listingTypes } from '@/constants/constant'
+
 
 type Props = {
   data: ListingPageData['pageData']
@@ -142,6 +145,12 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
   const handleShare = () => {
     dispatch(updateShareUrl(window.location.href))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
+  }
+
+  const [open, setOpen] = useState(false)
+
+  const handleDropdown = () => {
+    setOpen(!open)
   }
 
   return (
@@ -327,9 +336,11 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
 
             {/* More Options Button */}
             <div
-              onClick={(e) => console.log(e)}
-              className={styles['action-btn']}
+              onClick={(e) => handleDropdown()}
+              className={styles['action-dropdown']}
             >
+              {' '}
+              {open && <Dropdown />}
               <MoreHorizRoundedIcon color="primary" />
             </div>
           </div>
