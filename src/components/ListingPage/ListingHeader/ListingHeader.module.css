@@ -109,6 +109,30 @@
   display: grid;
   place-items: center;
 }
+
+.action-btn-wrapper :hover{
+  background-color: #CCC1DA;
+  transition: 0.2s;
+}
+
+.customList{
+list-style: none;
+position: absolute;
+background: #ffffff;
+}
+
+.customList li a{
+  font-size: 14px;
+  font: 'Poppins';
+  color: #6D747A;
+  font-weight: 400;
+}
+
+.customList li{
+  Width: 90px;
+  Height:42px;
+}
+
 .content-container {
   display: flex;
   justify-content: space-between;
