@@ -93,7 +93,7 @@ const AddListing: React.FC<Props> = (props) => {
             </p>
           </section>
           <section
-            onClick={() => handleClick(3)}
+            onClick={() => handleClick(4)}
             className={`${styles['card']} ${styles['product']}`}
           >
             <h3>
@@ -126,7 +126,7 @@ const AddListing: React.FC<Props> = (props) => {
             </p>
           </section>
           <section
-            onClick={() => handleClick(4)}
+            onClick={() => handleClick(3)}
             className={`${styles['card']} ${styles['program']}`}
           >
             <h3>
