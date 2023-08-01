@@ -18,7 +18,8 @@ import { dateFormat } from '@/utils'
 import { getAllUserDetail } from '@/services/user.service'
 import { updateListingTypeModalMode } from '@/redux/slices/site'
 import WhatsappIcon from '@/assets/svg/whatsapp.svg'
-import {listingTypes} from '@/constants/constant'
+import { listingTypes } from '@/constants/constant'
+import Link from 'next/link'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -52,22 +53,24 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
   }, [data._tags])
 
   useEffect(() => {
-    getListingPages(``)
-      .then((res: any) => {
-        // console.log('all--' ,res.res.data.data.listings)
-        let listings = res.res.data.data.listings
-        let selectedListings: any = []
-
-        listings.forEach((item: any) => {
-          if (data?.related_listings_left?.listings.includes(item._id)) {
-            selectedListings.push(item)
-          }
+    data.related_listings_left.listings.map((listing: any) => {
+      getListingPages(`_id=${listing}`)
+        .then((res: any) => {
+          const listingData = res.res.data.data.listings[0]
+          setListingPagesLeft((prevArray: any) => {
+            const updated: any = [...prevArray, listingData]
+            const ids = prevArray.map((item: any) => item._id)
+            if (!ids.includes(listingData._id)) {
+              return updated
+            } else {
+              return prevArray
+            }
+          })
         })
-        setListingPagesLeft(selectedListings)
-      })
-      .catch((err: any) => {
-        console.log(err)
-      })
+        .catch((err: any) => {
+          console.log(err)
+        })
+    })
 
     getAllUserDetail(``)
       .then((res: any) => {
@@ -86,6 +89,28 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
       })
   }, [data?.related_listings_left?.listings])
 
+  let facebookUrl = null
+  let twitterUrl = null
+  let instagramUrl = null
+
+  if (data?.facebook_url) {
+    facebookUrl = data.facebook_url
+  } else if (data?.social_media_urls?.Facebook) {
+    facebookUrl = data?.social_media_urls?.Facebook
+  }
+
+  if (data?.twitter_url) {
+    twitterUrl = data.twitter_url
+  } else if (data?.social_media_urls?.Twitter) {
+    twitterUrl = data?.social_media_urls?.Twitter
+  }
+
+  if (data?.instagram_url) {
+    instagramUrl = data.instagram_url
+  } else if (data?.social_media_urls?.Instagram) {
+    instagramUrl = data?.social_media_urls?.Instagram
+  }
+
   return (
     <>
       <PageGridLayout column={3}>
@@ -96,29 +121,34 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
               dispatch(openModal({ type: 'listing-type-edit', closable: true }))
               dispatch(updateListingTypeModalMode({ mode: 'edit' }))
             }}
+            className={styles['page-type-container']}
           >
-            <div className={styles['listing-page-type']}>
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g clip-path="url(#clip0_173_56244)">
-                  <path
-                    d="M17 10.43V2H7V10.43C7 10.78 7.18 11.11 7.49 11.29L11.67 13.8L10.68 16.14L7.27 16.43L9.86 18.67L9.07 22L12 20.23L14.93 22L14.15 18.67L16.74 16.43L13.33 16.14L12.34 13.8L16.52 11.29C16.82 11.11 17 10.79 17 10.43ZM13 12.23L12 12.83L11 12.23V3H13V12.23Z"
-                    fill="#0096C8"
-                  />
-                </g>
-                <defs>
-                  <clipPath id="clip0_173_56244">
-                    <rect width="24" height="24" fill="white" />
-                  </clipPath>
-                </defs>
-              </svg>
-              <p>{data.page_type[0]}</p>
-            </div>
+            {data.page_type.map((type: any, idx: any) => {
+              return (
+                <div className={styles['listing-page-type']} key={idx}>
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g clip-path="url(#clip0_173_56244)">
+                      <path
+                        d="M17 10.43V2H7V10.43C7 10.78 7.18 11.11 7.49 11.29L11.67 13.8L10.68 16.14L7.27 16.43L9.86 18.67L9.07 22L12 20.23L14.93 22L14.15 18.67L16.74 16.43L13.33 16.14L12.34 13.8L16.52 11.29C16.82 11.11 17 10.79 17 10.43ZM13 12.23L12 12.83L11 12.23V3H13V12.23Z"
+                        fill="#0096C8"
+                      />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_173_56244">
+                        <rect width="24" height="24" fill="white" />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                  <p>{type}</p>
+                </div>
+              )
+            })}
           </PageContentBox>
 
           {/* Listing Hobbies */}
@@ -185,7 +215,10 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
               )
             }
           >
-            <h4 className={styles['heading']}>Related Listing</h4>
+            <h4 className={styles['heading']}>
+              {' '}
+              {data?.related_listings_left.relation ? data?.related_listings_left.relation : 'Relared Listing'}{' '}
+            </h4>
             {!listingPagesLeft || listingPagesLeft.length === 0 ? (
               <span className={styles.textGray}>{'No data!'}</span>
             ) : (
@@ -193,10 +226,10 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                 {listingPagesLeft?.map((item: any) => {
                   if (typeof item === 'string') return
                   return (
-                    <li key={item._id} className={styles.textGray}>
+                    <Link key={item._id} className={styles.textGray} href={`/page/${item.page_url}`} >
                       {item?.title}
                       {/* {item?.genre && ` - ${item?.genre?.display} `} */}
-                    </li>
+                    </Link>
                   )
                 })}
               </ul>
@@ -248,7 +281,12 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
               {/* WhatsApp Number */}
               {data?.whatsapp_number && (
                 <li>
-                  <Image src={WhatsappIcon} alt="whatsapp11" width={24} height={24} />
+                  <Image
+                    src={WhatsappIcon}
+                    alt="whatsapp11"
+                    width={24}
+                    height={24}
+                  />
                   <span className={styles.textGray}>
                     {data?.whatsapp_number}{' '}
                   </span>
@@ -658,7 +696,10 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
               </div>
             </PageContentBox>
           )} */}
-          {data?.type === listingTypes.PROGRAM || data?.type === listingTypes.PRODUCT ? (
+          {data?.type === listingTypes.PROGRAM ||
+          data?.type === listingTypes.PRODUCT ||
+          data?.type === listingTypes.PLACE ||
+          data?.type === listingTypes.PEOPLE ? (
             <PageContentBox
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
@@ -671,10 +712,23 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
               }
             >
               <h4 className={styles['heading']}>Social Media</h4>
+
               <div className={styles.socialIcons}>
-                <Image src={FacebookIcon} alt="Facebook" />
-                <Image src={TwitterIcon} alt="Twitter" />
-                <Image src={InstagramIcon} alt="Instagram" />
+                {facebookUrl && (
+                  <a target="_blank" href={facebookUrl}>
+                    <Image src={FacebookIcon} alt="Facebook" />
+                  </a>
+                )}
+                {twitterUrl && (
+                  <a target="_blank" href={twitterUrl}>
+                    <Image src={TwitterIcon} alt="Facebook" />
+                  </a>
+                )}
+                {instagramUrl && (
+                  <a target="_blank" href={instagramUrl}>
+                    <Image src={InstagramIcon} alt="Facebook" />
+                  </a>
+                )}
               </div>
             </PageContentBox>
           ) : (

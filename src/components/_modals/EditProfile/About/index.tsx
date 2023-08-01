@@ -14,10 +14,13 @@ import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 
-const AboutEditor = dynamic(() => import('@/components/AboutEditor/AboutEditor'), {
-  ssr: false,
-  loading: () => <h1>Loading...</h1>,
-})
+const AboutEditor = dynamic(
+  () => import('@/components/AboutEditor/AboutEditor'),
+  {
+    ssr: false,
+    loading: () => <h1>Loading...</h1>,
+  },
+)
 
 type Props = {
   onComplete?: () => void
@@ -52,7 +55,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
   }
 
   const handleSubmit = async () => {
-    if (!data.about || data.about?.trim() === '') {
+    if (!data.about || data.about?.trim() === '' || data.about === '<p><br></p>') {
       setInputErrs((prev) => {
         return { ...prev, about: 'This field is required!' }
       })
@@ -108,7 +111,12 @@ const ProfileAboutEditModal: React.FC<Props> = ({
             <label>About</label>
             <input hidden required />
             {/* <CustomCKEditor value={data.about} onChange={handleInputChange} placeholder='Briefly describe about yourself' /> */}
-            <AboutEditor value={data.about} onChange={handleInputChange} placeholder='Briefly describe about yourself' />
+            <AboutEditor
+              value={data.about}
+              onChange={handleInputChange}
+              error={inputErrs.about ? true : false}
+              placeholder="Briefly describe about yourself"
+            />
             {inputErrs.about && (
               <p className={styles['error-msg']}>{inputErrs.about}</p>
             )}

@@ -31,7 +31,14 @@ type Props = {
   data: ListingPageData['pageData']
   activeTab: any
 }
-const tabs: ProfilePageTabs[] = ['home', 'posts', 'media', 'pages', 'blogs']
+const tabs: ListingPageTabs[] = [
+  'home',
+  'posts',
+  'media',
+  'reviews',
+  'events',
+  'store',
+]
 
 const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
   const dispatch = useDispatch()
@@ -205,12 +212,15 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
               )}
             </div>
 
-            <h1 className={styles['name']}>{data.full_name}</h1>
+            <h1 className={styles['name']}>{data.title}</h1>
             <p className={styles['tagline']}>{data.tagline}</p>
           </section>
 
           {/* Action Buttons */}
           <div className={styles['action-btn-wrapper']}>
+            <FilledButton className={styles.contactBtn} onClick={handleContact}>
+              Contact
+            </FilledButton>
             {/* Send Email Button  */}
             <Link href={`mailto:${data.public_email || data.email}`}>
               <div

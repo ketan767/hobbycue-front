@@ -19,7 +19,7 @@ type Props = {
   data: any
 }
 
-const HobbyPageHeader = ({ activeTab, data }: Props) => {
+const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
   // console.log('🚀 ~ file: HobbyHeader.tsx:22 ~ HobbyPageHeader ~ data:', data)
   const router = useRouter()
   const tabs: HobbyPageTabs[] = [
@@ -34,7 +34,8 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
   return (
     <>
       {/* Page Header  */}
-      <header className={`site-container ${styles['header']} ${styles['expanded']} `}>
+      <div className={`${styles['container']} ${styles['small']} `}>
+      <header className={`site-container ${styles['header']} ${styles['small']}`}>
         {data?.profile_image ? (
           <Image
             className={styles['profile-img']}
@@ -55,17 +56,7 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
           </div>
         )}
         <section className={styles['center-container']}>
-          {data?.cover_image ? (
-            <Image
-              className={styles['cover-img']}
-              src={data.cover_image}
-              alt=""
-              height={296}
-              width={1000}
-            />
-          ) : (
-            <div className={`${styles['cover-img']} default-user-cover`}></div>
-          )}
+        
           <h1 className={styles['name']}>{data?.display}</h1>
           <p className={styles['category']}>
             {data?.level === 0
@@ -118,8 +109,9 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
           )
         })}
       </div>
+      </div>
     </>
   )
 }
 
-export default HobbyPageHeader
+export default HobbyPageHeaderSmall

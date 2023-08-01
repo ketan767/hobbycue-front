@@ -41,6 +41,18 @@
   color: #8064a2;
 }
 
+.hobby-list a {
+  padding: var(--spacing-4) calc(var(--spacing-8) + var(--spacing-4));
+
+  background: #f7f5f9;
+  border-radius: 24px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.01em;
+  color: #8064a2;
+}
+
 .hobby-list li.active {
   color: #8064a2;
   font-weight: 500;
@@ -72,7 +84,9 @@ ul.contact-wrapper li {
   line-height: 20px;
   color: #08090a;
 }
-
+ul.contact-wrapper li svg {
+  flex-shrink: 0;
+}
 ul.location-wrapper svg,
 ul.contact-wrapper svg {
   width: 1.5rem;
@@ -124,6 +138,7 @@ ul.seller-info-wrapper li svg:last-child {
   line-height: 20px;
   letter-spacing: 0.04em;
   color: #939ca3;
+  word-break: break-word;
 }
 
 .working-hours-wrapper {
@@ -133,13 +148,25 @@ ul.seller-info-wrapper li svg:last-child {
   list-style: none;
   font-size: 14px;
 }
-.workingHour{
+.workingHour {
   margin-bottom: 8px;
 }
-.workingListItem{
-display: flex;
+.workingListItem {
+  display: flex;
 }
 
 .workingListItem > p {
   margin-left: 6px;
+}
+
+.page-type-container {
+  /* margin-bottom: 0; */
+  padding: 0;
+}
+.page-type-container > div {
+  border-bottom: 1px solid #ebedf0;
+  padding: 1rem;
+}
+.page-type-container:not(:last-child) {
+  border-bottom: none;
 }

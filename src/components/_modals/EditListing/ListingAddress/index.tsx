@@ -49,6 +49,10 @@ const ListingAddressEditModal: React.FC<Props> = ({
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
+  const cityRef = useRef<HTMLInputElement>(null)
+  const stateRef = useRef<HTMLInputElement>(null)
+  const countryRef = useRef<HTMLInputElement>(null)
+
   useEffect(() => {
     inputRef?.current?.focus()
   }, [])
@@ -75,6 +79,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
 
   const handleSubmit = async () => {
     if (isEmptyField(data.city.value) || !data.city.value) {
+      cityRef.current?.focus()
       return setData((prev) => {
         return {
           ...prev,
@@ -83,6 +88,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
       })
     }
     if (isEmptyField(data.state.value) || !data.state.value) {
+      stateRef.current?.focus()
       return setData((prev) => {
         return {
           ...prev,
@@ -91,6 +97,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
       })
     }
     if (isEmptyField(data.country.value) || !data.country.value) {
+      countryRef.current?.focus()
       return setData((prev) => {
         return {
           ...prev,
@@ -300,6 +307,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   required
                   value={data.city.value}
                   name="city"
+                  ref={cityRef}
                   onChange={handleInputChange}
                 />
                 <p className={styles['helper-text']}>{data.city.error}</p>
@@ -329,6 +337,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   required
                   value={data.state.value}
                   name="state"
+                  ref={stateRef}
                   onChange={handleInputChange}
                 />
                 <p className={styles['helper-text']}>{data.state.error}</p>
@@ -344,6 +353,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   placeholder={`Enter Country Name`}
                   required
                   value={data.country.value}
+                  ref={countryRef}
                   name="country"
                   onChange={handleInputChange}
                 />

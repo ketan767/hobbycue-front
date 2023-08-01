@@ -13,6 +13,7 @@ import { getAllHobbies, getHobbyMembers } from '@/services/hobby.service'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import PageContentBox from '../PageContentBox'
 import Link from 'next/link'
+import HobbyPageHeaderSmall from '@/components/HobbyPage/HobbyHeader/HobbyPageHeaderSmall'
 
 type Props = {
   activeTab: HobbyPageTabs
@@ -77,10 +78,10 @@ const HobbyPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
   return (
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
-      <HobbyPageHeader data={data} activeTab={activeTab} />
-      {/* {showSmallHeader && (
-        <HobbyPageHeader data={data.pageData} activeTab={activeTab} />
-      )} */}
+        <HobbyPageHeader data={data} activeTab={activeTab} />
+       {showSmallHeader && (
+        <HobbyPageHeaderSmall data={data.pageData} activeTab={activeTab} />
+      )} 
 
       {/* Profile Page Body, where all contents of different tabs appears. */}
       <PageGridLayout column={!hideLastColumn ? 3 : 2}>

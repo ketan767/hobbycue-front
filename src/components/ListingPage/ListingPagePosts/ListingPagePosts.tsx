@@ -39,7 +39,7 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
     const id = data?._id
     getPages(id)
       .then((res: any) => {
-        console.log('res posts -', res.res)
+        // console.log('res posts -', res.res)
         let allPosts = res.res.data.data.posts
         allPosts = allPosts.map((post: any) => {
           if (post._id === data.pinned_post) {
@@ -52,7 +52,7 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
         setPagesData(allPosts)
       })
       .catch((err) => {
-        console.log('err', err.response)
+        // console.log('err', err.response)
       })
   }
   const onPinPost = async (postId: any) => {
