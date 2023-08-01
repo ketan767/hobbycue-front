@@ -1,17 +1,19 @@
 .navigation-tabs {
   display: flex;
-  gap: 60px;
+  /* gap: 60px; */
   justify-content: center;
 }
 .navigation-tabs a {
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 16px;
   color: #6d747a;
   padding: 8px 5px;
   position: relative;
+  min-width: 90px;
+  text-align: center;
 }
 .navigation-tabs a:hover {
   color: #8064a2;
