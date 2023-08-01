@@ -53,22 +53,24 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
   }, [data._tags])
 
   useEffect(() => {
-    getListingPages(``)
-      .then((res: any) => {
-        // console.log('all--' ,res.res.data.data.listings)
-        let listings = res.res.data.data.listings
-        let selectedListings: any = []
-
-        listings.forEach((item: any) => {
-          if (data?.related_listings_left?.listings.includes(item._id)) {
-            selectedListings.push(item)
-          }
+    data.related_listings_left.listings.map((listing: any) => {
+      getListingPages(`_id=${listing}`)
+        .then((res: any) => {
+          const listingData = res.res.data.data.listings[0]
+          setListingPagesLeft((prevArray: any) => {
+            const updated: any = [...prevArray, listingData]
+            const ids = prevArray.map((item: any) => item._id)
+            if (!ids.includes(listingData._id)) {
+              return updated
+            } else {
+              return prevArray
+            }
+          })
         })
-        setListingPagesLeft(selectedListings)
-      })
-      .catch((err: any) => {
-        console.log(err)
-      })
+        .catch((err: any) => {
+          console.log(err)
+        })
+    })
 
     getAllUserDetail(``)
       .then((res: any) => {
@@ -123,7 +125,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
           >
             {data.page_type.map((type: any, idx: any) => {
               return (
-                <div className={styles['listing-page-type']} key={idx} >
+                <div className={styles['listing-page-type']} key={idx}>
                   <svg
                     width="24"
                     height="24"
@@ -213,7 +215,10 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
               )
             }
           >
-            <h4 className={styles['heading']}>Related Listing</h4>
+            <h4 className={styles['heading']}>
+              {' '}
+              {data?.related_listings_left.relation ? data?.related_listings_left.relation : 'Relared Listing'}{' '}
+            </h4>
             {!listingPagesLeft || listingPagesLeft.length === 0 ? (
               <span className={styles.textGray}>{'No data!'}</span>
             ) : (
@@ -221,10 +226,10 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                 {listingPagesLeft?.map((item: any) => {
                   if (typeof item === 'string') return
                   return (
-                    <li key={item._id} className={styles.textGray}>
+                    <Link key={item._id} className={styles.textGray} href={`/page/${item.page_url}`} >
                       {item?.title}
                       {/* {item?.genre && ` - ${item?.genre?.display} `} */}
-                    </li>
+                    </Link>
                   )
                 })}
               </ul>

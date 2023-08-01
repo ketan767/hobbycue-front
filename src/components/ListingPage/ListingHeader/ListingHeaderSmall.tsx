@@ -146,8 +146,6 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
     dispatch(openModal({ type: 'social-media-share', closable: true }))
   }
 
-  console.log('data', data);
-
   return (
     <>
       <div className={`${styles['container']} ${styles['small']} `}>
