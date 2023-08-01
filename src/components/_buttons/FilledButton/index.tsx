@@ -7,6 +7,7 @@ interface FilledButtonProps {
   type?: 'button' | 'submit' | 'reset'
   disabled?: boolean
   className?: string
+  loading?: boolean
 }
 
 const FilledButton: React.FC<FilledButtonProps> = ({
@@ -15,6 +16,7 @@ const FilledButton: React.FC<FilledButtonProps> = ({
   type = 'button',
   disabled = false,
   className = '',
+  loading = false
 }) => {
   return (
     <button

@@ -30,6 +30,7 @@ interface Props {
   image?: boolean
   setData?: any
   data?: any
+  error?: any
 }
 
 const CustomEditor: React.FC<Props> = ({
@@ -38,6 +39,7 @@ const CustomEditor: React.FC<Props> = ({
   image,
   data,
   setData,
+  error,
 }) => {
   const editorRef = useRef(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -51,7 +53,6 @@ const CustomEditor: React.FC<Props> = ({
     },
     [onChange],
   )
-
   const onReady = () => {
     if (image && !imageIconAdded) {
       const toolbar = document.querySelector('.ql-toolbar.ql-snow')
@@ -87,7 +88,8 @@ const CustomEditor: React.FC<Props> = ({
 
   const handleVideoChange = (e: any) => {
     if (data.video_url !== '') return alert('Maximum 1 video can be uploaded')
-    if (data.media.length > 0) return alert('Only video or image can be uploaded')
+    if (data.media.length > 0)
+      return alert('Only video or image can be uploaded')
 
     const video = e.target.files[0]
     handleImageUpload(video, true)
@@ -131,7 +133,7 @@ const CustomEditor: React.FC<Props> = ({
         onChange={(updatedValue) => {
           setData((prev: any) => ({ ...prev, content: updatedValue }))
         }}
-        className={styles.quill}
+        className={`${styles.quill} ${error ? styles['quill-error'] : ''} `}
         placeholder="Start something interesting..."
         modules={{
           toolbar: {
@@ -162,6 +164,7 @@ const CustomEditor: React.FC<Props> = ({
         onChange={(e) => handleVideoChange(e)}
         ref={inputVideoRef}
       />
+      {error && <p className={styles['error-text']} >{error}</p>}
     </>
   )
 }

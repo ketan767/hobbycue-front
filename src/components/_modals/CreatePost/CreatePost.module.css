@@ -72,6 +72,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-4);
+  position: relative;
   /* margin-bottom: var(--spacing-32); */
 }
 .input-box label {
@@ -144,7 +145,7 @@
 
 .create-post-btn {
   border: none;
-  width: 99px;
+  width: 99px !important;
   height: 40px;
   font-weight: 600;
   font-size: 14px;
@@ -193,8 +194,8 @@
   align-items: stretch;
 }
 .visibility-dropdown > div {
-  padding-top: 13px;
-  padding-bottom: 13px;
+  padding-top: 9px;
+  padding-bottom: 9px;
   padding-right: 0;
   padding-left: 18px;
   width: -webkit-fill-available;
@@ -216,6 +217,22 @@
   cursor: pointer;
   z-index: 40;
 }
+.input-box.error-input-box > div:hover fieldset { 
+  border: 1px solid rgba(192, 80, 77, 1);
+}
+.input-box.error-input-box > div > fieldset {
+  border: 1px solid rgba(192, 80, 77, 1);
+  color: rgba(192, 80, 77, 1);
+}
+.error-text{
+  color: rgba(192, 80, 77, 1);
+  font-size: 12px;
+  margin-top: 4px;
+  position: absolute;
+  bottom: -4px;
+  transform: translateY(100%);
+  left: 0;
+}
 @media screen and (max-width: 1100px) {
   .create-post-modal {
     flex-direction: column;
@@ -226,7 +243,7 @@
     /* max-width: 350px; */
     width: 100%;
   }
-.create-post-btn {
-  width: 100%;
-}
+  .create-post-btn {
+    width: 100%;
+  }
 }
