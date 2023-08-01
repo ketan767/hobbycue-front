@@ -275,18 +275,15 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
                     )}
                   </div>
                 </div>
-              ) : data.type === listingTypes.PLACE ? (
-                <></>
               ) : (
-                <>
-                  <FilledButton
-                    className={styles.contactBtn}
-                    onClick={handleContact}
-                  >
-                    Contact
-                  </FilledButton>
-                </>
+                <></>
               )}
+              <FilledButton
+                className={styles.contactBtn}
+                onClick={handleContact}
+              >
+                Contact
+              </FilledButton>
             </div>
           </div>
         </section>

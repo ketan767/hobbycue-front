@@ -128,3 +128,113 @@
   background: #8064a2;
   border-radius: 2px 2px 0px 0px;
 }
+
+
+/* Apply styles when page is scrolled and `small` class is added to `container` */
+.container:has(.header).small {
+  background-color: white;
+  position: fixed;
+  top: var(--navbar-height-desktop);
+  left: 0;
+  right: 0;
+  z-index: 5;
+  /* transform: translateY(-100%); */
+  box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.08);
+  opacity: 1;
+  /* animation: scroll-in 200ms ease-in-out forwards; */
+}
+.container:has(.header).small .profile-img {
+  width: 60px;
+  height: 60px;
+}
+.container:has(.header).small .header {
+  grid-template-columns: 60px auto max-content;
+  gap: var(--spacing-8);
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #ebedf0;
+}
+.container:has(.header).small .profile-img-wrapper .edit-btn {
+  display: none;
+}
+.container:has(.header).small .profile-img-wrapper .img {
+  width: 60px;
+  height: 60px;
+}
+.container:has(.header).small .center-container .cover-img-wrapper {
+  display: none;
+}
+.container:has(.header).small .center-container .name {
+  font-size: 1rem;
+  margin-top: 0;
+}
+.container:has(.header).small .center-container .tagline {
+  font-size: 14px;
+  margin-top: 0;
+}
+.container:has(.header).small .action-btn-wrapper {
+  display: flex;
+  align-items: center;
+  column-gap: 12px;
+  width: auto;
+  height: auto;
+  background-color: transparent;
+  gap: var(--spacing-8);
+  box-shadow: none;
+}
+
+
+@media screen and (max-width: 1100px) {
+  .nav {
+    display: flex;
+    overflow-x: auto;
+    padding: 0 16px;
+  }
+  .navigation-tabs {
+    gap: 20px;
+    overflow-x: auto;
+    flex-shrink: 0;
+  }
+  .navigation-tabs > a {
+    flex-shrink: 0;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .actions-container {
+    display: none;
+  }
+  .header {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .profile-img-wrapper .name-container,
+  .profile-img-wrapper .tagline {
+    display: block;
+  }
+  .center-container .name-container,
+  .center-container .tagline {
+    display: none;
+  }
+  .header .center-container {
+    order: 1;
+  }
+  .header .profile-img-wrapper {
+    order: 2;
+    display: flex;
+    align-items: center;
+    column-gap: 12px;
+  }
+  .profile-img-wrapper .img {
+    width: 3.75rem;
+    height: 3.75rem;
+  }
+  .profile-img-wrapper .edit-btn > svg {
+    width: 20px;
+    height: 20px;
+    display: flex;
+  }
+}

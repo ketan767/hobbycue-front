@@ -41,7 +41,7 @@ axiosInstance.interceptors.response.use(
 
     // Handle other errors
     console.log('Other Error')
-    console.log(error)
+    // console.log(error)
     return Promise.reject(error)
   },
 )

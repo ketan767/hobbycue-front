@@ -31,7 +31,14 @@ type Props = {
   data: ListingPageData['pageData']
   activeTab: any
 }
-const tabs: ProfilePageTabs[] = ['home', 'posts', 'media', 'pages', 'blogs']
+const tabs: ListingPageTabs[] = [
+  'home',
+  'posts',
+  'media',
+  'reviews',
+  'events',
+  'store',
+]
 
 const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
   const dispatch = useDispatch()
@@ -146,8 +153,6 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
     dispatch(openModal({ type: 'social-media-share', closable: true }))
   }
 
-  console.log('data', data);
-
   return (
     <>
       <div className={`${styles['container']} ${styles['small']} `}>
@@ -213,6 +218,9 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
 
           {/* Action Buttons */}
           <div className={styles['action-btn-wrapper']}>
+            <FilledButton className={styles.contactBtn} onClick={handleContact}>
+              Contact
+            </FilledButton>
             {/* Send Email Button  */}
             <Link href={`mailto:${data.public_email || data.email}`}>
               <div
