@@ -145,7 +145,7 @@
 
 .create-post-btn {
   border: none;
-  width: 99px !important;
+  width: 99px;
   height: 40px;
   font-weight: 600;
   font-size: 14px;
@@ -244,6 +244,6 @@
     width: 100%;
   }
   .create-post-btn {
-    width: 100%;
+    width: 100% ;
   }
 }
