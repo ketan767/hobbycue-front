@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styles from './styles.module.css'
 import PageContentBox from '@/layouts/PageContentBox'
 import { useDispatch, useSelector } from 'react-redux'
@@ -12,8 +12,20 @@ type Props = {
 
 const ProfileContactSide = ({ data }: Props) => {
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
-
+  const ulRef = useRef(null)
   const dispatch = useDispatch()
+  const [showText, setShowText] = useState(false)
+
+  useEffect(() => {
+    const ulElement: any = ulRef.current
+    const hasListItems = ulElement?.getElementsByTagName('li')
+    if (hasListItems) {
+      setShowText(false)
+    } else {
+      setShowText(true)
+    }
+  }, [data])
+
   return (
     <>
       <PageContentBox
@@ -23,10 +35,10 @@ const ProfileContactSide = ({ data }: Props) => {
         }
       >
         <h4 className={styles['heading']}>Contact Information</h4>
-        <ul className={styles['contact-wrapper']}>
+        <ul className={styles['contact-wrapper']} ref={ulRef}>
           {/* Phone */}
           {data.phone && (
-            <li>
+            <li className={styles['list-item']}>
               <svg
                 width="24"
                 height="24"
@@ -53,16 +65,16 @@ const ProfileContactSide = ({ data }: Props) => {
 
           {/* WhatsApp Number */}
           {data.whatsapp_number && (
-            <li>
-              <Image src={Whatsapp} alt='whatsapp' width={24} height={24} />
-              
+            <li className={styles['list-item']}>
+              <Image src={Whatsapp} alt="whatsapp" width={24} height={24} />
+
               <span>{data.whatsapp_number} </span>
             </li>
           )}
 
           {/* Email */}
           {data.public_email && (
-            <li>
+            <li className={styles['list-item']}>
               <svg
                 width="24"
                 height="24"
@@ -89,7 +101,7 @@ const ProfileContactSide = ({ data }: Props) => {
 
           {/* Website */}
           {data.website && (
-            <li>
+            <li className={styles['list-item']}>
               <svg
                 width="24"
                 height="24"
@@ -107,6 +119,14 @@ const ProfileContactSide = ({ data }: Props) => {
               <span>{data.website} </span>
             </li>
           )}
+
+          <p
+            className={`${styles['text']} ${
+              showText ? styles['show'] : styles['hide']
+            } `}
+          >
+            No contact information
+          </p>
         </ul>
       </PageContentBox>
     </>

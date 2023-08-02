@@ -17,10 +17,23 @@ ul.contact-wrapper li {
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;
-  color: #939CA3;
+  color: #939ca3;
 }
 ul.location-wrapper svg,
 ul.contact-wrapper svg {
   width: 1.5rem;
   aspect-ratio: 1/1;
+}
+.ul.location-wrapper .text {
+  margin-left: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #939ca3;
+}
+.hide {
+  display: none !important;
+}
+.show {
+  display: block !important;
 }

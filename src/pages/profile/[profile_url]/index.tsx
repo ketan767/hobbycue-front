@@ -86,7 +86,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
   useEffect(() => {
     getPost()
   }, [user.pinned_post])
-  
+
   let pinnedPosts = posts.filter((item: any) => item.isPinned === true)
   let unpinnnedPosts = posts.filter((item: any) => item.isPinned !== true)
 
@@ -133,12 +133,20 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
               >
                 <h4>Profile URL</h4>
                 <p className={styles['color-light']}>{pageData.profile_url}</p>
-                <h4>Gender</h4>
-                <p className={styles['color-light']}>{pageData.gender}</p>
-                <h4>Year Of Birth</h4>
-                <p className={styles['color-light']}>
-                  {pageData.year_of_birth}
-                </p>
+                {pageData.gender && (
+                  <>
+                    <h4>Gender</h4>
+                    <p className={styles['color-light']}>{pageData.gender}</p>
+                  </>
+                )}
+                {pageData.year_of_birth && (
+                  <>
+                    <h4>Year Of Birth</h4>
+                    <p className={styles['color-light']}>
+                      {pageData.year_of_birth}
+                    </p>
+                  </>
+                )}
               </PageContentBox>
 
               <section className={styles['posts-container']}>
