@@ -10,14 +10,22 @@
 .modal-wrapper .header,
 .modal-wrapper .body {
   padding: var(--spacing-16) var(--spacing-24);
-  padding-top: 5rem;
-  padding-bottom: 5rem;
+  padding-top: 4rem;
+  padding-bottom: 4rem;
 }
 .body {
    display: grid;
    grid-template-columns: 1fr 1fr 1fr 1fr;
+   gap: 3rem;
 }
 .body img{
    width: 50px;
    height: 50px;
+}
+.body button{
+  box-shadow: none;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
 }
