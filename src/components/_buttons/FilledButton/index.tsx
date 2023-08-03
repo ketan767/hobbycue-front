@@ -7,6 +7,7 @@ interface FilledButtonProps {
   type?: 'button' | 'submit' | 'reset'
   disabled?: boolean
   className?: string
+  loading?: boolean
 }
 
 const FilledButton: React.FC<FilledButtonProps> = ({
@@ -15,6 +16,7 @@ const FilledButton: React.FC<FilledButtonProps> = ({
   type = 'button',
   disabled = false,
   className = '',
+  loading = false
 }) => {
   return (
     <button
@@ -22,7 +24,7 @@ const FilledButton: React.FC<FilledButtonProps> = ({
       onClick={onClick}
       disabled={disabled}
       className={`${styles.button} ${className}`}
-      style={{ width: '100%' }}
+      // style={{ width: '100%' }}
     >
       {children}
     </button>

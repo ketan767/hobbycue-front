@@ -141,6 +141,12 @@ background: #ffffff;
 .eventDate {
   display: flex;
   align-items: center;
+  margin-bottom: 12px;
+}
+.event-date-container{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 .eventDate p {
   font-family: 'Poppins';

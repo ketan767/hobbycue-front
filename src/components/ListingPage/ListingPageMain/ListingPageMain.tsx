@@ -53,6 +53,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
   }, [data._tags])
 
   useEffect(() => {
+    setListingPagesLeft([])
     data.related_listings_left.listings.map((listing: any) => {
       getListingPages(`_id=${listing}`)
         .then((res: any) => {
@@ -109,6 +110,10 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
     instagramUrl = data.instagram_url
   } else if (data?.social_media_urls?.Instagram) {
     instagramUrl = data?.social_media_urls?.Instagram
+  }
+
+  const handleDialPhone = () => {
+
   }
 
   return (
@@ -253,7 +258,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
             <ul className={styles['contact-wrapper']}>
               {/* Phone */}
               {data?.phone && (
-                <li>
+                <Link href={`tel:${data?.phone}`} onClick={handleDialPhone} >
                   <svg
                     width="24"
                     height="24"
@@ -275,12 +280,12 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                   </svg>
 
                   <span className={styles.textGray}>{data?.phone} </span>
-                </li>
+                </Link>
               )}
 
               {/* WhatsApp Number */}
               {data?.whatsapp_number && (
-                <li>
+                <Link href={`https://wa.me/${data?.whatsapp_number}`} >
                   <Image
                     src={WhatsappIcon}
                     alt="whatsapp11"
@@ -290,12 +295,12 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                   <span className={styles.textGray}>
                     {data?.whatsapp_number}{' '}
                   </span>
-                </li>
+                </Link>
               )}
 
               {/* Email */}
               {data?.public_email && (
-                <li>
+                <Link href={`mailto:${data?.public_email}`} >
                   <svg
                     width="24"
                     height="24"
@@ -317,12 +322,12 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                   </svg>
 
                   <span className={styles.textGray}>{data?.public_email} </span>
-                </li>
+                </Link>
               )}
 
               {/* Website */}
               {data?.website && (
-                <li>
+                <Link href={data.website} >
                   <svg
                     width="24"
                     height="24"
@@ -338,7 +343,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                   </svg>
 
                   <span className={styles.textGray}>{data?.website} </span>
-                </li>
+                </Link>
               )}
             </ul>
           </PageContentBox>

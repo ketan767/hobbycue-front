@@ -14,7 +14,7 @@ const ProfilePagesList = ({ data }: Props) => {
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
   const router = useRouter()
   const dispatch = useDispatch()
-
+  console.log('data', data)
   return (
     <PageContentBox>
       <h4 className={styles['heading']}>Pages</h4>
@@ -26,15 +26,22 @@ const ProfilePagesList = ({ data }: Props) => {
               key={item._id}
               onClick={() => router.push(`/page/${item.page_url}`)}
             >
-              {
-                item.profile_image ?
-                <img src={item.profile_image} />:
-                <div className={`${styles.defaultImg} default-people-listing-icon`}></div>
-              }
+              {item.profile_image ? (
+                <img src={item.profile_image} />
+              ) : (
+                <div
+                  className={`${styles.defaultImg} default-people-listing-icon`}
+                ></div>
+              )}
               <p>{item?.title}</p>
             </li>
           )
         })}
+        {!data?.listingsData || data?.listingsData.length == 0 ? (
+          <p className={styles['color-light']}>No pages</p>
+        ) : (
+          <></>
+        )}
       </ul>
     </PageContentBox>
   )

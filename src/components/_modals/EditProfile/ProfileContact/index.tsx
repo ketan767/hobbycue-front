@@ -69,7 +69,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
         }
       })
     }
-    if (data.website && data.website.value !== '') {
+    if (data.website.value && data.website.value !== '') {
       if (!validateUrl(data.website.value)) {
         return setData((prev) => {
           return {

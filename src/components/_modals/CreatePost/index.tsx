@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styles from './CreatePost.module.css'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
@@ -18,6 +18,7 @@ import CreatePostProfileSwitcher from './ProfileSwitcher'
 import { MenuItem, Select } from '@mui/material'
 // import CancelBtn from '@/assets/svg/trash-icon.svg'
 import CancelBtn from '@/assets/icons/x-icon.svg'
+import FilledButton from '@/components/_buttons/FilledButton'
 
 const CustomEditor = dynamic(() => import('@/components/CustomEditor'), {
   ssr: false,
@@ -59,12 +60,21 @@ export const CreatePost: React.FC<Props> = (props) => {
   })
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
+  const [errors, setErrors] = useState({
+    content: '',
+    genre: '',
+    hobby: '',
+  })
+
   const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
   const [showGenreDropdown, setShowGenreDropdown] = useState<boolean>(false)
 
   const [hobbyInputValue, setHobbyInputValue] = useState('')
   const [genreInputValue, setGenreInputValue] = useState('')
   const [hasLink, setHasLink] = useState(false)
+
+  const hobbyRef = useRef<HTMLInputElement>(null)
+  const genreRef = useRef<HTMLInputElement>(null)
 
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     DropdownListItem[]
@@ -152,16 +162,38 @@ export const CreatePost: React.FC<Props> = (props) => {
   }
 
   const handleSubmit = async () => {
-    if (!data.hobby) return
+    if (data.content === '' || data.content === '<p><br></p>') {
+      console.log(data.content)
+      return setErrors({
+        ...errors,
+        content: 'This field is required',
+      })
+    }
+    if (!data.hobby) {
+      hobbyRef.current?.focus()
+      return setErrors({
+        ...errors,
+        hobby: 'This field is required',
+      })
+    }
+    if (!data.genre) {
+      genreRef.current?.focus()
+      return setErrors({
+        ...errors,
+        genre: 'This field is required',
+      })
+    }
     const jsonData: any = {
-      hobbyId: data.hobby?._id,
-      genreId: data.genre?._id,
+      hobbyId: data.hobby,
+      genreId: data.genre,
       content: DOMPurify.sanitize(data.content),
       visibility: data.visibility,
       media: data.media,
       has_link: hasLink,
       video_url: data.video_url ? data.video_url : null,
     }
+    console.log('jsonData', jsonData.hobbyId)
+    console.log('jsonData genreId', jsonData.genreId)
     setSubmitBtnLoading(true)
 
     if (data.type === 'listing') {
@@ -191,18 +223,28 @@ export const CreatePost: React.FC<Props> = (props) => {
   }
 
   useEffect(() => {
+    setErrors({
+      content: '',
+      genre: '',
+      hobby: '',
+    })
+  }, [data])
+
+  useEffect(() => {
     setData((prev: any) => {
       return { ...prev, type: activeProfile.type, data: activeProfile.data }
     })
   }, [])
 
-  const removeMedia = (idxToRemove: any, key:String) => {
-    if(key === 'media'){
-      let tempData:any = data.media.filter((item:any, idx:any)=> idx !== idxToRemove) 
+  const removeMedia = (idxToRemove: any, key: String) => {
+    if (key === 'media') {
+      let tempData: any = data.media.filter(
+        (item: any, idx: any) => idx !== idxToRemove,
+      )
       setData((prev: any) => {
         return { ...prev, media: tempData }
       })
-    }else{
+    } else {
       setData((prev: any) => {
         return { ...prev, video_url: '' }
       })
@@ -224,6 +266,7 @@ export const CreatePost: React.FC<Props> = (props) => {
             setData={setData}
             data={data}
             image={true}
+            error={errors.content}
           />
           {data.video_url && (
             <div className={styles.videoWrapper}>
@@ -267,8 +310,12 @@ export const CreatePost: React.FC<Props> = (props) => {
           </div>
 
           {/* Hobby Input and Dropdown */}
-          <section className={styles['dropdown-wrapper']}>
-            <div className={styles['input-box']}>
+          {/* <section className={styles['dropdown-wrapper']}>
+            <div
+              className={`${styles['input-box']} ${
+                errors.hobby ? styles['error-input-box'] : ''
+              } `}
+            >
               <label>Hobby</label>
               <input
                 type="text"
@@ -276,6 +323,7 @@ export const CreatePost: React.FC<Props> = (props) => {
                 autoComplete="name"
                 required
                 value={hobbyInputValue}
+                ref={hobbyRef}
                 onFocus={() => setShowHobbyDropdown(true)}
                 onBlur={() =>
                   setTimeout(() => {
@@ -284,7 +332,9 @@ export const CreatePost: React.FC<Props> = (props) => {
                 }
                 onChange={handleHobbyInputChange}
               />
-              {/* <p className={styles['helper-text']}>{inputErrs.full_name}</p> */}
+              {errors.hobby && (
+                <p className={styles['error-text']}>{errors.hobby}</p>
+              )}
             </div>
             {showHobbyDropdown && hobbyDropdownList.length !== 0 && (
               <div className={styles['dropdown']}>
@@ -305,17 +355,21 @@ export const CreatePost: React.FC<Props> = (props) => {
                 })}
               </div>
             )}
-          </section>
-
-          {/* Genre Input and Dropdown */}
+          </section> */}
+          {/* 
           <section className={styles['dropdown-wrapper']}>
-            <div className={styles['input-box']}>
+            <div
+              className={`${styles['input-box']}  ${
+                errors.genre ? styles['error-input-box'] : ''
+              } `}
+            >
               <label>Genre/Style</label>
 
               <input
                 type="text"
                 placeholder="Search genre/style..."
                 autoComplete="name"
+                ref={genreRef}
                 value={genreInputValue}
                 onFocus={() => setShowGenreDropdown(true)}
                 onBlur={() =>
@@ -325,7 +379,9 @@ export const CreatePost: React.FC<Props> = (props) => {
                 }
                 onChange={handleGenreInputChange}
               />
-              {/* <p className={styles['helper-text']}>{inputErrs.full_name}</p> */}
+              {errors.genre && (
+                <p className={styles['error-text']}>{errors.genre}</p>
+              )}
             </div>
             {showGenreDropdown && genreDropdownList.length !== 0 && (
               <div className={styles['dropdown']}>
@@ -346,7 +402,81 @@ export const CreatePost: React.FC<Props> = (props) => {
                 })}
               </div>
             )}
-          </section>
+          </section> */}
+
+          <div
+            className={`${styles['input-box']}  ${
+              errors.hobby ? styles['error-input-box'] : ''
+            } `}
+          >
+            <label>Hobby</label>
+            <Select
+              value={data.hobby}
+              onChange={(e) => {
+                let val = e.target.value
+                setData((prev: any) => ({ ...prev, hobby: val }))
+              }}
+              displayEmpty
+              inputProps={{ 'aria-label': 'Without label' }}
+              className={` ${styles['visibility-dropdown']}`}
+            >
+              {user._hobbies?.map((item: any, idx: any) => {
+                return (
+                  <MenuItem
+                    key={idx}
+                    value={item.hobby?._id}
+                    selected={item.hobby?._id === data.hobby}
+                  >
+                    <p>
+                      {item.hobby?.display
+                        ? item.hobby?.display
+                        : item.hobby?.slug}
+                    </p>
+                  </MenuItem>
+                )
+              })}
+            </Select>
+            {errors.hobby && (
+              <p className={styles['error-text']}>{errors.hobby}</p>
+            )}
+          </div>
+
+          <div
+            className={`${styles['input-box']}  ${
+              errors.genre ? styles['error-input-box'] : ''
+            } `}
+          >
+            <label>Genre/Style</label>
+            <Select
+              value={data.genre}
+              onChange={(e) => {
+                let val = e.target.value
+                setData((prev: any) => ({ ...prev, genre: val }))
+              }}
+              displayEmpty
+              inputProps={{ 'aria-label': 'Without label' }}
+              className={` ${styles['visibility-dropdown']}`}
+            >
+              {user._hobbies?.map((item: any, idx: any) => {
+                return (
+                  <MenuItem
+                    key={idx}
+                    value={item.genre?._id}
+                    selected={item.genre?._id === data.genre}
+                  >
+                    <p>
+                      {item.genre?.display
+                        ? item.genre?.display
+                        : item.genre?.slug}
+                    </p>
+                  </MenuItem>
+                )
+              })}
+            </Select>
+            {errors.genre && (
+              <p className={styles['error-text']}>{errors.genre}</p>
+            )}
+          </div>
 
           <div>
             <label>Who Can View</label>
@@ -371,13 +501,14 @@ export const CreatePost: React.FC<Props> = (props) => {
             </Select>
           </div>
 
-          <button
+          <FilledButton
             disabled={submitBtnLoading}
             onClick={handleSubmit}
             className={styles['create-post-btn']}
+            loading={submitBtnLoading}
           >
             Post
-          </button>
+          </FilledButton>
         </aside>
       </div>
     </div>

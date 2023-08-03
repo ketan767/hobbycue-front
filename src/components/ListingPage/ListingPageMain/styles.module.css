@@ -75,6 +75,7 @@ ul.location-wrapper li {
   color: #08090a;
 }
 
+ul.contact-wrapper a,
 ul.contact-wrapper li {
   display: flex;
   gap: var(--spacing-8);
@@ -84,6 +85,7 @@ ul.contact-wrapper li {
   line-height: 20px;
   color: #08090a;
 }
+ul.contact-wrapper a svg,
 ul.contact-wrapper li svg {
   flex-shrink: 0;
 }
