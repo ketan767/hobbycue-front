@@ -53,6 +53,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
   }, [data._tags])
 
   useEffect(() => {
+    setListingPagesLeft([])
     data.related_listings_left.listings.map((listing: any) => {
       getListingPages(`_id=${listing}`)
         .then((res: any) => {
