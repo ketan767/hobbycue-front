@@ -37,7 +37,7 @@ const CommunityHome: React.FC<Props> = ({}) => {
         let content = post.content.replace(/<img .*?>/g, '')
         return { ...post, content }
       })
-      store.dispatch(updatePosts(posts))
+      dispatch(updatePosts(posts))
     }
     dispatch(updateLoading(false))
   }

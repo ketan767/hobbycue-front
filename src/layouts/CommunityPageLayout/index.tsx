@@ -3,6 +3,7 @@ import PageContentBox from '@/layouts/PageContentBox'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import { withAuth } from '@/navigation/withAuth'
 import styles from './CommunityLayout.module.css'
+import { useRouter } from 'next/router'
 import Image from 'next/image'
 import { useDispatch, useSelector } from 'react-redux'
 import store, { RootState } from '@/redux/store'
@@ -76,13 +77,24 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
   }
 
   const fetchPosts = async () => {
-    const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
+    let params: any = ''
+    if (!activeProfile?.data?._hobbies) return
+    if (activeProfile?.data?._hobbies.length === 0) return
+    if(selectedLocation === '' && selectedHobby === '') return
+    if (activeTab === 'links') {
+      params = new URLSearchParams(
+        `has_link=true&populate=_author,_genre,_hobby`,
+      )
+    } else {
+      params = new URLSearchParams(`populate=_author,_genre,_hobby`)
+    }
     if (selectedHobby !== '') {
       params.append('_hobby', selectedHobby)
     }
     if (selectedLocation !== '') {
       params.append('visibility', selectedLocation)
     }
+    console.log('PARAMS ---', params.toString());
     dispatch(updateLoading(true))
 
     const { err, res } = await getAllPosts(params.toString())
@@ -99,7 +111,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
 
   useEffect(() => {
     fetchPosts()
-  }, [selectedHobby, selectedLocation])
+  }, [selectedHobby, selectedLocation, activeProfile])
 
   const handleLocationClick = async (item: any) => {
     if (item === selectedLocation) {

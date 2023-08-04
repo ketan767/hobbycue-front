@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { withAuth } from '@/navigation/withAuth'
 import styles from '@/styles/Community.module.css'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import store, { RootState } from '@/redux/store'
 import { getAllPosts } from '@/services/post.service'
-import { updatePosts } from '@/redux/slices/post'
+import { updateLoading, updatePosts } from '@/redux/slices/post'
 import PostCard from '@/components/PostCard/PostCard'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
@@ -13,9 +13,8 @@ type Props = {}
 
 const CommunityLinks: React.FC<Props> = ({}) => {
   const { activeProfile } = useSelector((state: RootState) => state.user)
-  const { allPosts } = useSelector((state: RootState) => state.post)
-  const [isLoadingPosts, setIsLoadingPosts] = useState(false)
-
+  const { allPosts, loading } = useSelector((state: RootState) => state.post)
+  const dispatch = useDispatch()
   const getPost = async () => {
     const params = new URLSearchParams(
       `has_link=true&populate=_author,_genre,_hobby`,
@@ -23,8 +22,10 @@ const CommunityLinks: React.FC<Props> = ({}) => {
     activeProfile?.data?._hobbies.forEach((item: any) => {
       params.append('_hobby', item.hobby._id)
     })
-
-    setIsLoadingPosts(true)
+    if (!activeProfile?.data?._hobbies) return
+    if (activeProfile?.data?._hobbies.length === 0) return
+   
+    dispatch(updateLoading(true))
     const { err, res } = await getAllPosts(params.toString())
     if (err) return console.log(err)
     if (res.data.success) {
@@ -32,34 +33,32 @@ const CommunityLinks: React.FC<Props> = ({}) => {
         let content = post.content.replace(/<img .*?>/g, '')
         return { ...post, content }
       })
-      // console.log('postss', linkPosts)
-      linkPosts = linkPosts.filter((item: any) => (item.has_link = true))
-      store.dispatch(updatePosts(linkPosts))
+      linkPosts = linkPosts.filter((item: any) => (item.has_link === true))
+      dispatch(updatePosts(linkPosts))
     }
-    setIsLoadingPosts(false)
+    dispatch(updateLoading(false))
   }
 
   useEffect(() => {
     getPost()
   }, [activeProfile])
 
-  console.log({ isLoadingPosts })
+  let posts = [...allPosts]
+  posts = posts.filter((item: any) => (item.has_link === true))
   return (
     <>
       <CommunityPageLayout activeTab="links">
         <section className={styles['pages-container']}>
-          {isLoadingPosts ? (
+          {loading ? (
             <>
               <PostCardSkeletonLoading />
             </>
-          ) : allPosts.length > 0 ? (
-            allPosts.map((post: any) => {
+          ) : posts.length > 0 ? (
+            posts.map((post: any) => {
               return <PostCard key={post._id} postData={post} />
             })
-          ) : allPosts.length === 0 ? (
-            <>
-            No posts found
-            </>
+          ) : posts.length === 0 ? (
+            <>No posts found</>
           ) : (
             <></>
           )}
