@@ -4,7 +4,7 @@ import styles from '@/styles/Community.module.css'
 import { useDispatch, useSelector } from 'react-redux'
 import store, { RootState } from '@/redux/store'
 import { getAllPosts } from '@/services/post.service'
-import { updatePosts } from '@/redux/slices/post'
+import { updateLoading, updatePosts } from '@/redux/slices/post'
 import PostCard from '@/components/PostCard/PostCard'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
@@ -17,8 +17,7 @@ type Props = {}
 
 const CommunityHome: React.FC<Props> = ({}) => {
   const { activeProfile } = useSelector((state: RootState) => state.user)
-  const { allPosts } = useSelector((state: RootState) => state.post)
-  const [isLoadingPosts, setIsLoadingPosts] = useState(false)
+  const { allPosts, loading } = useSelector((state: RootState) => state.post)
   const router = useRouter()
   const dispatch = useDispatch()
 
@@ -27,8 +26,10 @@ const CommunityHome: React.FC<Props> = ({}) => {
     activeProfile?.data?._hobbies.forEach((item: any) => {
       params.append('_hobby', item.hobby._id)
     })
-
-    setIsLoadingPosts(true)
+    console.log('params', params);
+    if (!activeProfile?.data?._hobbies) return
+    if (activeProfile?.data?._hobbies.length === 0) return
+    dispatch(updateLoading(true))
     const { err, res } = await getAllPosts(params.toString())
     if (err) return console.log(err)
     if (res.data.success) {
@@ -39,7 +40,7 @@ const CommunityHome: React.FC<Props> = ({}) => {
       })
       store.dispatch(updatePosts(posts))
     }
-    setIsLoadingPosts(false)
+    dispatch(updateLoading(false))
   }
 
   useEffect(() => {
@@ -51,7 +52,7 @@ const CommunityHome: React.FC<Props> = ({}) => {
     <>
       <CommunityPageLayout activeTab="posts">
         <section className={styles['posts-container']}>
-          {isLoadingPosts ? (
+          {loading ? (
             <>
               <PostCardSkeletonLoading />
             </>
