@@ -26,7 +26,6 @@ const CommunityHome: React.FC<Props> = ({}) => {
     activeProfile?.data?._hobbies.forEach((item: any) => {
       params.append('_hobby', item.hobby._id)
     })
-    console.log('params', params);
     if (!activeProfile?.data?._hobbies) return
     if (activeProfile?.data?._hobbies.length === 0) return
     dispatch(updateLoading(true))
@@ -47,7 +46,6 @@ const CommunityHome: React.FC<Props> = ({}) => {
     if (allPosts.length === 0) getPost()
   }, [activeProfile])
 
-  // console.log(allPosts);
   return (
     <>
       <CommunityPageLayout activeTab="posts">

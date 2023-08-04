@@ -10,7 +10,7 @@ import EditIcon from '@/assets/svg/edit-icon.svg'
 import { openModal } from '@/redux/slices/modal'
 import { getAllPosts } from '@/services/post.service'
 import { GetServerSideProps } from 'next'
-import { updatePosts } from '@/redux/slices/post'
+import { updateLoading, updatePosts } from '@/redux/slices/post'
 import PostCard from '@/components/PostCard/PostCard'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
@@ -52,14 +52,15 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
     activeProfile?.data?._hobbies.forEach((item: any) => {
       params.append('_hobby', item.hobby._id)
     })
-
-    setIsLoadingPosts(true)
+    if (!activeProfile?.data?._hobbies) return
+    if (activeProfile?.data?._hobbies.length === 0) return
+    dispatch(updateLoading(true))
     const { err, res } = await getAllPosts(params.toString())
     if (err) return console.log(err)
     if (res.data.success) {
       store.dispatch(updatePosts(res.data.data.posts))
     }
-    setIsLoadingPosts(false)
+    dispatch(updateLoading(false))
   }
 
   useEffect(() => {
@@ -82,7 +83,8 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
     if (selectedLocation !== '') {
       params.append('visibility', selectedLocation)
     }
-    setIsLoadingPosts(true)
+    dispatch(updateLoading(true))
+
     const { err, res } = await getAllPosts(params.toString())
     if (err) return console.log(err)
     if (res.data.success) {
@@ -92,7 +94,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
       })
       store.dispatch(updatePosts(posts))
     }
-    setIsLoadingPosts(false)
+    dispatch(updateLoading(false))
   }
 
   useEffect(() => {
