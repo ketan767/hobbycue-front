@@ -1,12 +1,15 @@
 .container {
   border-radius: 8px;
   border: 1px dashed var(--purple-1, #8064a2);
-  background: var(--purple-3, #f7f5f9);
+  background-color: var(--purple-3, #f7f5f9);
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
   width: 100%;
+}
+.non-editable{
+  border: none;
 }
 .editable{
   border: 1px dashed var(--purple-1, #8064a2);
