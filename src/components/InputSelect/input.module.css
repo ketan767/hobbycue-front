@@ -1,23 +1,21 @@
-
 .select {
-   padding: 8px 12px;
-   background: #F7F5F9;
-   border-radius: 8px;
-   border: none;
-   color: #6D747A;
+  padding: 8px 12px;
+  background: #f7f5f9;
+  border-radius: 8px;
+  border: none;
+  color: #6d747a;
 }
 
 .select:active,
 .select:focus {
-   border: none;
-
+  border: none;
 }
 
 .option {
-   background-color: white;
+  background-color: white;
 }
 
 .option:hover {
-   background-color: white;
-   padding: 6px 2px;
+  background-color: white;
+  padding: 6px 2px;
 }
