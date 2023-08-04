@@ -4,7 +4,10 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { RootState } from '@/redux/store'
-import { updateMyProfileDetail } from '@/services/user.service'
+import {
+  getMyProfileDetail,
+  updateMyProfileDetail,
+} from '@/services/user.service'
 
 import ProfileGeneralEditModal from '../EditProfile/General'
 import ProfileAboutEditModal from '../EditProfile/About'
@@ -17,12 +20,13 @@ import ListingAboutEditModal from '../EditListing/ListingAbout'
 import ListingAddressEditModal from '../EditListing/ListingAddress'
 import ListingContactEditModal from '../EditListing/ListingContact'
 import ListingHobbyEditModal from '../EditListing/ListingHobby'
-import { updateListing } from '@/services/listing.service'
+import { getListingPages, updateListing } from '@/services/listing.service'
 import ListingWorkingHoursEditModal from '../EditListing/ListingWorkingHours'
 import ListingEventHoursEditModal from '../EditListing/ListingEventHours'
 import { updateListingTypeModalMode } from '@/redux/slices/site'
 import { ProgressBar } from '@/components/ProgressBar/ProgressBar'
-import {listingTypes} from '@/constants/constant'
+import { listingTypes } from '@/constants/constant'
+import { updateUserListing } from '@/redux/slices/user'
 
 // type OnboardingData = {
 //   full_name: string
@@ -104,8 +108,18 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
     if (res?.data.success) {
       dispatch(closeModal())
       console.log(res)
+      await fetchDetails()
       router.push(`/page/${res.data.data.listing.page_url}`)
     }
+  }
+
+  const fetchDetails = async () => {
+    const { err: profileErr, res: profileRes } = await getMyProfileDetail()
+    const { err: listingErr, res: listingRes } = await getListingPages(
+      `populate=_hobbies,_address&admin=${profileRes?.data.data.user._id}`,
+    )
+    if (listingErr || !listingRes || !listingRes.data.success) return
+    return dispatch(updateUserListing(listingRes.data.data.listings))
   }
 
   return (
@@ -180,7 +194,6 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
           )
         })}
       </section>
-
     </div>
   )
 }

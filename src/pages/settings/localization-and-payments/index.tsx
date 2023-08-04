@@ -43,9 +43,8 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
           </div>
 
           {user._addresses?.map((address: any) => {
-            console.log('arr', address)
             return (
-              <div className={`${styles.cardContainer}`}>
+              <div className={`${styles.cardContainer}`} key={address._id} >
                 <div className={`${styles.addressLeft}`}>
                   <Image
                     src={RadioUnselected}
