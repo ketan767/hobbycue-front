@@ -120,13 +120,6 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
                 errors.currentPassword ? styles['input-error'] : ''
               }`}
             >
-              {/* <input
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                className={styles.input}
-                placeholder="Enter Current Password"
-              /> */}
-
               <TextField
                 fullWidth
                 required
@@ -160,15 +153,6 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
                 errors.newPassword ? styles['input-error'] : ''
               }`}
             >
-              {/* <input
-                value={newPassword}
-                type="password"
-                onChange={(e) => setNewPassword(e.target.value)}
-                className={styles.input}
-                placeholder="Enter New Password"
-                
-              /> */}
-
               <TextField
                 fullWidth
                 required
