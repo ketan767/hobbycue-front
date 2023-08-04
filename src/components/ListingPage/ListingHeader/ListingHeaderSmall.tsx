@@ -26,6 +26,7 @@ import FilledButton from '@/components/_buttons/FilledButton'
 import CoverPhotoLayout from '@/layouts/CoverPhotoLayout/CoverPhotoLayout'
 import ProfileImageLayout from '@/layouts/ProfileImageLayout/ProfileImageLayout'
 import { useRouter } from 'next/router'
+import { listingTypes } from '@/constants/constant'
 
 type Props = {
   data: ListingPageData['pageData']
@@ -218,9 +219,50 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
 
           {/* Action Buttons */}
           <div className={styles['action-btn-wrapper']}>
-            <FilledButton className={styles.contactBtn} onClick={handleContact}>
-              Contact
-            </FilledButton>
+            <div className={styles['event-date-container']}>
+              {data?.type === listingTypes.PROGRAM && data?.event_date_time ? (
+                <div>
+                  <div className={styles.eventDate}>
+                    <Image
+                      className={styles['im']}
+                      src={Calendar}
+                      alt="calendar"
+                    />
+                    <p className={styles.date}>
+                      {dateFormat.format(
+                        new Date(data?.event_date_time.from_date),
+                      )}{' '}
+                      -{' '}
+                      {dateFormat.format(
+                        new Date(data?.event_date_time.to_date),
+                      )}
+                    </p>
+                    <Image className={styles['im']} src={Time} alt="Time" />{' '}
+                    <p className={styles.time}>
+                      {data?.event_date_time.from_time} -{' '}
+                      {data?.event_date_time.to_time}
+                    </p>
+                    {listingLayoutMode === 'edit' && (
+                      <Image
+                        className={styles['edit-icon']}
+                        src={EditIcon}
+                        alt="edit"
+                        onClick={handleEventEditClick}
+                      />
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )}
+              <FilledButton
+                className={styles.contactBtn}
+                onClick={handleContact}
+              >
+                Contact
+              </FilledButton>
+            </div>
+
             {/* Send Email Button  */}
             <Link href={`mailto:${data.public_email || data.email}`}>
               <div
