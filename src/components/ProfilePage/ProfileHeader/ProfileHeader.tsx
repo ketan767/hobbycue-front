@@ -36,7 +36,6 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
   const dispatch = useDispatch()
 
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
-
   const tabs: ProfilePageTabs[] = ['home', 'posts', 'media', 'pages', 'blogs']
 
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
