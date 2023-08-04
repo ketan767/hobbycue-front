@@ -11,6 +11,10 @@ import styles from './style.module.css'
 import { isEmpty, isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
+import TextField from '@mui/material/TextField'
+import IconButton from '@mui/material/IconButton'
+import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded'
+import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { updateListing } from '@/services/listing.service'
@@ -31,17 +35,32 @@ type Props = {
 type ListingAboutData = {
   description: InputData<string>
 }
+function validatePasswordConditions(password: string) {
+  const validation = {
+    lowercase: /^(?=.*[a-z])/.test(password),
+    uppercase: /^(?=.*[A-Z])/.test(password),
+    number: /^(?=.*\d)/.test(password),
+    specialChar: /^(?=.*[@$!%*?&])/.test(password),
+    length: /^(?=.{8,})/.test(password),
+  }
+  return validation
+}
 
 const ChangePasswordModal: React.FC<Props> = ({}) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
   const [url, setUrl] = useState('')
+  const { authFormData } = useSelector((state: RootState) => state.modal)
   const [nextDisabled, setNextDisabled] = useState(false)
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
-
+  const [showPassword, setShowPassword] = useState(false)
+  const [showcurrPassword, setShowcurrPassword] = useState(false)
+  const [inputValidation, setInputValidation] = useState(
+    validatePasswordConditions(authFormData.password),
+  )
   const [errors, setErrors] = useState({
     currentPassword: '',
     newPassword: '',
@@ -62,18 +81,21 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
       if (err?.response?.data?.message) {
         setErrors({
           ...errors,
-          currentPassword: err?.response?.data?.message
+          currentPassword: err?.response?.data?.message,
         })
       }
       return
     }
     if (res?.data.success) {
-      console.log(res.data);
+      console.log(res.data)
       dispatch(closeModal())
       window.location.reload()
     }
   }
-  //   console.log('user', user)
+
+  function handleClose() {
+    dispatch(closeModal())
+  }
 
   useEffect(() => {
     setErrors({
@@ -98,28 +120,112 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
                 errors.currentPassword ? styles['input-error'] : ''
               }`}
             >
-              <input
+              {/* <input
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 className={styles.input}
                 placeholder="Enter Current Password"
+              /> */}
+
+              <TextField
+                fullWidth
+                required
+                placeholder="Enter Current Password"
+                type={showcurrPassword ? 'text' : 'password'}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <IconButton
+                      className={styles['hide-icon']}
+                      onClick={() => setShowcurrPassword(!showcurrPassword)}
+                    >
+                      {showcurrPassword ? (
+                        <VisibilityRoundedIcon />
+                      ) : (
+                        <VisibilityOffRoundedIcon />
+                      )}
+                    </IconButton>
+                  ),
+                }}
               />
+
               <p className={styles['helper-text']}>{errors.currentPassword}</p>
             </div>
           </div>
           <div className={styles.inputField}>
             <label className={styles.label}>New Password</label>
+
             <div
               className={`${styles['input-box']} ${
                 errors.newPassword ? styles['input-error'] : ''
               }`}
             >
-              <input
+              {/* <input
                 value={newPassword}
+                type="password"
                 onChange={(e) => setNewPassword(e.target.value)}
                 className={styles.input}
                 placeholder="Enter New Password"
+                
+              /> */}
+
+              <TextField
+                fullWidth
+                required
+                placeholder="Enter New Password"
+                type={showPassword ? 'text' : 'password'}
+                onChange={(e) => setNewPassword(e.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <IconButton onClick={() => setShowPassword(!showPassword)}>
+                      {showPassword ? (
+                        <VisibilityRoundedIcon />
+                      ) : (
+                        <VisibilityOffRoundedIcon />
+                      )}
+                    </IconButton>
+                  ),
+                }}
               />
+
+              <div className={styles['validation-messages']}>
+                <p
+                  className={
+                    inputValidation.lowercase ? styles['valid'] : undefined
+                  }
+                >
+                  Must contain at least one lowercase letter
+                </p>
+                <p
+                  className={
+                    inputValidation.uppercase ? styles['valid'] : undefined
+                  }
+                >
+                  Must contain at least one uppercase letter
+                </p>
+                <p
+                  className={
+                    inputValidation.number ? styles['valid'] : undefined
+                  }
+                >
+                  Must contain at least one number
+                </p>
+                <p
+                  className={
+                    inputValidation.specialChar ? styles['valid'] : undefined
+                  }
+                >
+                  Must contain at least one special character
+                </p>
+                <p
+                  className={
+                    inputValidation.length ? styles['valid'] : undefined
+                  }
+                >
+                  Must be at least 8 characters long
+                </p>
+              </div>
+
               <p className={styles['helper-text']}>{errors.newPassword}</p>
             </div>
           </div>
@@ -153,7 +259,14 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
               'Save'
             )}
           </button>
-          <OutlinedButton>Cancel</OutlinedButton>
+
+          <OutlinedButton
+            onClick={() => {
+              handleClose()
+            }}
+          >
+            Cancel
+          </OutlinedButton>
         </footer>
       </div>
     </>

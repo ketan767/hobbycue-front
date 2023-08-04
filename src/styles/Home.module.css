@@ -30,7 +30,7 @@
 .landing-wrapper .content p {
   margin-top: 2rem;
   font-style: normal;
-  font-weight: 400;
+  font-weight: 300;
   font-size: 0.875rem;
   line-height: 1.875rem;
   color: #000000;
@@ -38,8 +38,10 @@
 }
 
 .landing-illustration {
- width: 100%;
- object-fit: contain;
+  position: relative;
+  top: 72px;
+  width: 100%;
+  object-fit: contain;
 }
 
 /* Multiple Cards Container*/
@@ -312,5 +314,21 @@
   }
   .landing-wrapper {
     padding-top: 5rem;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .nav {
+    display: flex;
+    overflow-x: auto;
+    padding: 0 16px;
+  }
+  .navigation-tabs {
+    gap: 20px;
+    overflow-x: auto;
+    flex-shrink: 0;
+  }
+  .navigation-tabs > a {
+    flex-shrink: 0;
   }
 }

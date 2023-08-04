@@ -46,27 +46,34 @@ export default function ShareModal() {
       <section className={styles['body']}>
         <FacebookShareButton url={shareUrl}>
           <Image src={Facebook} alt="Facebook" />
+          Facebook
         </FacebookShareButton>
         <TwitterShareButton url={shareUrl}>
           <Image src={Twitter} alt="Twitter" />
+          Twitter
         </TwitterShareButton>
         <WhatsappShareButton url={shareUrl}>
           <Image src={Whatsapp} alt="Whatsapp" />
+          WhatsApp
         </WhatsappShareButton>
         <TelegramShareButton url={shareUrl}>
           <Image src={Telegram} alt="Telegram" />
+          Telegram
         </TelegramShareButton>
 
         <LinkedinShareButton url={shareUrl}>
           <Image src={Linkedin} alt="Linkedin" />
+          LinkedIn
         </LinkedinShareButton>
 
         <button onClick={handleInstagramShare}>
           <Image src={Instagram} alt="Instagram" />
+          Instagram
         </button>
 
         <EmailShareButton url={shareUrl}>
           <Image src={Mail} alt="Mail" />
+          Mail
         </EmailShareButton>
 
         <button
@@ -75,6 +82,7 @@ export default function ShareModal() {
           }}
         >
           <Image src={Copy} alt="Copy" />
+          Copy Link
         </button>
       </section>
     </div>
