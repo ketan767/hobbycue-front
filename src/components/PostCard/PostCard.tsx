@@ -231,7 +231,11 @@ const PostCard: React.FC<Props> = (props) => {
                     </p>
                   </div>
                   <p className={styles.metaContentText}>
-                    {metaData.description}{' '}
+                    {/* {metaData.description}{' '} */}
+                    {
+                      metaData.description.length > 150 ? metaData.description.slice(0, 150 - 3) + '...' : metaData.description
+                    }
+                    
                   </p>
                   <section className={styles['meta-actions']}>
                     <PostVotes

@@ -3,6 +3,7 @@ import PageContentBox from '@/layouts/PageContentBox'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import { withAuth } from '@/navigation/withAuth'
 import styles from './CommunityLayout.module.css'
+import { useRouter } from 'next/router'
 import Image from 'next/image'
 import { useDispatch, useSelector } from 'react-redux'
 import store, { RootState } from '@/redux/store'
@@ -76,7 +77,14 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
   }
 
   const fetchPosts = async () => {
-    const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
+    let params: any = ''
+    if (activeTab === 'links') {
+      params = new URLSearchParams(
+        `has_link=true&populate=_author,_genre,_hobby`,
+      )
+    } else {
+      params = new URLSearchParams(`populate=_author,_genre,_hobby`)
+    }
     if (selectedHobby !== '') {
       params.append('_hobby', selectedHobby)
     }
