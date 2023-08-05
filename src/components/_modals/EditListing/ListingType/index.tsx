@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import {
   Button,
@@ -12,6 +12,7 @@ import {
   getMyProfileDetail,
   updateMyProfileDetail,
 } from '@/services/user.service'
+import Image from 'next/image'
 
 import styles from './styles.module.css'
 import { isEmptyField } from '@/utils'
@@ -21,6 +22,11 @@ import { closeModal, openModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { updateListingModalData } from '@/redux/slices/site'
 import { updateListing } from '@/services/listing.service'
+
+import DownArrow from '@/assets/svg/chevron-down.svg'
+import TickIcon from '@/assets/svg/tick.svg'
+import CrossIcon from '@/assets/svg/cross.svg'
+import useOutsideAlerter from '@/hooks/useOutsideAlerter'
 
 type Props = {
   onComplete?: () => void
@@ -33,19 +39,21 @@ const ListingTypeEditModal: React.FC<Props> = ({
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
-
   const { listingModalData, listingTypeModalMode } = useSelector(
     (state: RootState) => state.site,
   )
   const [list, setList] = useState<any>([])
 
-  const [value, setValue] = useState<string | string[]>([])
+  const [value, setValue] = useState<any>([])
   const [error, setError] = useState(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
+  const [showDropdown, setShowDropdown] = useState(false)
+  const dropdownRef: any = useRef()
+  useOutsideAlerter(dropdownRef, () => setShowDropdown(false))
+
   const handleSubmit = async () => {
-    // setSubmitBtnLoading(true)
-    if (!value || value === '') {
+    if (!value || value === '' || value.length === 0) {
       return setError(true)
     }
     if (listingTypeModalMode === 'edit') {
@@ -130,6 +138,14 @@ const ListingTypeEditModal: React.FC<Props> = ({
     setValue(listingModalData.page_type as string)
   }, [listingModalData])
 
+  const handleChange = (itemToChange: any) => {
+    if (value.includes(itemToChange)) {
+      setValue((prev: any) => prev.filter((item: any) => item !== itemToChange))
+    } else {
+      setValue((prev: any) => [...prev, itemToChange])
+    }
+  }
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -150,26 +166,57 @@ const ListingTypeEditModal: React.FC<Props> = ({
             <input hidden required />
 
             <FormControl variant="outlined" size="small">
-              <Select
-                // multiple
-                value={value}
-                onChange={(e) => {
-                  setValue(e.target.value)
-                }}
-                displayEmpty
-                inputProps={{ 'aria-label': 'Without label' }}
-              >
-                {/* <MenuItem value={''}>Select..</MenuItem> */}
-                {list.map((item: string, idx: number) => {
+              <div className={styles['select-container']} ref={dropdownRef}>
+                <div
+                  className={styles['select-input']}
+                  onClick={() => setShowDropdown(true)}
+                >
+                  <p> Select listin tag.. </p>
+                  <Image src={DownArrow} alt="down" />
+                </div>
+                {showDropdown && (
+                  <div className={styles['options-container']}>
+                    {list.map((item: any, idx: any) => {
+                      return (
+                        <div
+                          className={`${styles['single-option']}  ${
+                            value.includes(item) ? styles['selcted-option'] : ''
+                          }`}
+                          key={item}
+                          onClick={() => handleChange(item)}
+                        >
+                          <p className={styles.tagDesc}>
+                            {item}
+                            <Image
+                              src={TickIcon}
+                              alt="down"
+                              className={styles['tick-icon']}
+                            />
+                          </p>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
+
+              <p className={styles.error}>
+                {error && 'Select a listing type!'}{' '}
+              </p>
+              <div className={styles['selected-values']}>
+                {value?.map((item: any) => {
                   return (
-                    <MenuItem key={idx} value={item}>
-                      {item}
-                    </MenuItem>
+                    <div key={item} className={styles['selected-value']}>
+                      <p>{item}</p>
+                      <Image
+                        src={CrossIcon}
+                        alt="cancel"
+                        onClick={() => handleChange(item)}
+                      />
+                    </div>
                   )
                 })}
-              </Select>
-
-              <p className={styles.error}> {error && 'Select a listing type!'} </p>
+              </div>
             </FormControl>
           </div>
         </section>
