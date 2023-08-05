@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { Button, CircularProgress } from '@mui/material'
 
@@ -21,6 +21,7 @@ import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import { changePassword } from '@/services/auth.service'
+import PasswordAnalyzer from '@/components/PasswordAnalyzer/PasswordAnalyzer'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -48,9 +49,6 @@ function validatePasswordConditions(password: string) {
 
 const ChangePasswordModal: React.FC<Props> = ({}) => {
   const dispatch = useDispatch()
-  const { user } = useSelector((state: RootState) => state.user)
-  const [url, setUrl] = useState('')
-  const { authFormData } = useSelector((state: RootState) => state.modal)
   const [nextDisabled, setNextDisabled] = useState(false)
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
@@ -58,16 +56,38 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showcurrPassword, setShowcurrPassword] = useState(false)
+  const [showValidations, setShowValidations] = useState(false)
   const [inputValidation, setInputValidation] = useState(
-    validatePasswordConditions(authFormData.password),
+    validatePasswordConditions(newPassword),
   )
+  const newPasswordRef = useRef<HTMLInputElement>(null)
+  const confirmPasswordRef = useRef<HTMLInputElement>(null)
+  const [strength, setStrength] = useState(0)
+
+  useEffect(() => {
+    const result = validatePasswordConditions(newPassword)
+    setInputValidation(result)
+  }, [newPassword])
+
   const [errors, setErrors] = useState({
     currentPassword: '',
     newPassword: '',
     confirmPassword: '',
   })
   const handleSubmit = async () => {
+    if (newPassword === '') {
+      setErrors({ ...errors, newPassword: 'Please enter a password!' })
+      newPasswordRef.current?.focus()
+      return
+    }
+    const strengthNum = getStrengthNum(inputValidation)
+    if (strengthNum < 3) {
+      newPasswordRef.current?.focus()
+      setErrors({ ...errors, newPassword: 'Please enter a strong password!' })
+      return
+    }
     if (confirmPassword !== newPassword) {
+      confirmPasswordRef.current?.focus()
       setErrors({ ...errors, confirmPassword: 'Passwords does not match!' })
       return
     }
@@ -104,6 +124,21 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
       confirmPassword: '',
     })
   }, [currentPassword, newPassword, confirmPassword])
+
+  const getStrengthNum = (object: any) => {
+    let num = 0
+    Object.keys(object).map((key: any) => {
+      if (object[key] === true) {
+        num += 1
+      }
+    })
+    return num
+  }
+  useEffect(() => {
+    const strengthNum = getStrengthNum(inputValidation)
+    setStrength(strengthNum)
+  }, [newPassword, inputValidation])
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -156,8 +191,11 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
               <TextField
                 fullWidth
                 required
+                ref={newPasswordRef}
                 placeholder="Enter New Password"
                 type={showPassword ? 'text' : 'password'}
+                onFocus={() => setShowValidations(true)}
+                onBlur={() => setShowValidations(false)}
                 onChange={(e) => setNewPassword(e.target.value)}
                 InputProps={{
                   endAdornment: (
@@ -171,47 +209,49 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
                   ),
                 }}
               />
-
-              <div className={styles['validation-messages']}>
-                <p
-                  className={
-                    inputValidation.lowercase ? styles['valid'] : undefined
-                  }
-                >
-                  Must contain at least one lowercase letter
-                </p>
-                <p
-                  className={
-                    inputValidation.uppercase ? styles['valid'] : undefined
-                  }
-                >
-                  Must contain at least one uppercase letter
-                </p>
-                <p
-                  className={
-                    inputValidation.number ? styles['valid'] : undefined
-                  }
-                >
-                  Must contain at least one number
-                </p>
-                <p
-                  className={
-                    inputValidation.specialChar ? styles['valid'] : undefined
-                  }
-                >
-                  Must contain at least one special character
-                </p>
-                <p
-                  className={
-                    inputValidation.length ? styles['valid'] : undefined
-                  }
-                >
-                  Must be at least 8 characters long
-                </p>
-              </div>
+              {showValidations && (
+                <div className={styles['validation-messages']}>
+                  <p
+                    className={
+                      inputValidation.lowercase ? styles['valid'] : undefined
+                    }
+                  >
+                    Must contain at least one lowercase letter
+                  </p>
+                  <p
+                    className={
+                      inputValidation.uppercase ? styles['valid'] : undefined
+                    }
+                  >
+                    Must contain at least one uppercase letter
+                  </p>
+                  <p
+                    className={
+                      inputValidation.number ? styles['valid'] : undefined
+                    }
+                  >
+                    Must contain at least one number
+                  </p>
+                  <p
+                    className={
+                      inputValidation.specialChar ? styles['valid'] : undefined
+                    }
+                  >
+                    Must contain at least one special character
+                  </p>
+                  <p
+                    className={
+                      inputValidation.length ? styles['valid'] : undefined
+                    }
+                  >
+                    Must be at least 8 characters long
+                  </p>
+                </div>
+              )}
 
               <p className={styles['helper-text']}>{errors.newPassword}</p>
             </div>
+            <PasswordAnalyzer strength={strength - 2} />
           </div>
           <div className={styles.inputField}>
             <label className={styles.label}>Confirm New Password</label>
@@ -225,6 +265,7 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className={styles.input}
                 placeholder="Confirm New Password"
+                ref={confirmPasswordRef}
               />
               <p className={styles['helper-text']}>{errors.confirmPassword}</p>
             </div>
