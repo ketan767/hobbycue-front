@@ -172,3 +172,20 @@ ul.seller-info-wrapper li svg:last-child {
 .page-type-container:not(:last-child) {
   border-bottom: none;
 }
+.location-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.direction-container {
+  display: flex;
+  align-items: center;
+  column-gap: 4px;
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px;
+  color: #8064a2;
+  cursor: pointer;
+}
