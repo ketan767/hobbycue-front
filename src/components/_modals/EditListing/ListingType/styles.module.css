@@ -19,6 +19,8 @@
 .modal-wrapper .header,
 .modal-wrapper .body {
   padding: var(--spacing-16) var(--spacing-24);
+}
+.modal-wrapper .body{
   position: relative;
   z-index: 10;
 }
