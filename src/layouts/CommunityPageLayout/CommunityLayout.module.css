@@ -161,7 +161,7 @@
   border: 1px solid var(--purple-1, #8064a2);
   background: var(--grey-white, #fff);
   outline: none;
-  padding-left: 32px;
+  padding-left: 10px;
   color: #191919;
   font-size: 12px;
 }
@@ -169,7 +169,7 @@
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   max-width: 59px;
-  padding: 12px 4px 12px 4px;
+  padding: 12px 10px 12px 10px;
   font-size: 12px;
   font-family: Poppins;
   font-style: normal;
@@ -239,10 +239,16 @@
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
+
+.start-post-btn-container :hover{
+  background-color: #8064a2;
+  color: white;
+  transition: 0.2s;
+}
+
 .start-post-btn {
   padding: var(--spacing-12) var(--spacing-16);
   width: 100%;
-
   display: flex;
   align-items: center;
   gap: var(--spacing-4);
