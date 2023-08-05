@@ -177,6 +177,12 @@ ul.seller-info-wrapper li svg:last-child {
   align-items: center;
   justify-content: space-between;
 }
+.location-heading h4 {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  color: #000000;
+}
 .direction-container {
   display: flex;
   align-items: center;
