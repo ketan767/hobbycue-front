@@ -37,21 +37,16 @@
   margin-bottom: var(--spacing-32);
   position: relative;
 }
-.input-box label {
-  /* font-family: 'Poppins'; */
-  /* font-style: normal; */
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 22px;
-  color: #6d747a;
-}
-.input-box input[type='text'] {
+
+.input-box input {
+  
   width: 100%;
   /* all: unset; */
   background: #f8f9fa;
+  
   /* Grey/Lighter */
 
-  border: 1px solid #ebedf0;
+  
   border-radius: 8px;
   padding: calc(var(--spacing-8) + var(--spacing-4));
 
@@ -64,10 +59,34 @@
   min-width: 6.25rem;
 }
 
-.input-box input[type='text']:focus-within {
-  outline: none;
-  border: 1px solid rgb(var(--primary-50-rgb));
+.input-box div div{
+  border-radius: 8px;
 }
+
+.input-box{
+  background: #f8f9fa;
+  
+}
+
+.input ::placeholder{
+  color: #939CA3;
+}
+
+.input-box .show-pass-icon {
+  all: unset;
+  height: -webkit-fill-available;
+  cursor: pointer;
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.input-box input:focus-within {
+  outline: none;
+  
+}
+
 .input-box:has(input[required]) label::after {
   content: '*';
   color: rgba(192, 80, 77, 1);
@@ -105,7 +124,7 @@
 .input:active,
 .input:focus,
 .input:hover {
-  border: 1px solid #ebedf0;
+  border: 1px solid #8064A2;
   outline: none;
 }
 .error-msg {
@@ -141,4 +160,37 @@
 
 .input-error.input-box input {
   border: 1px solid #c0504d;
+}
+
+.validation-messages {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(var(--black-rgb), 0.1);
+  padding: 5px 10px 5px 40px;
+  z-index: 20;
+}
+.validation-messages p {
+  position: relative;
+  margin: 10px 0;
+  font-size: 0.8rem;
+  color: red;
+  list-style: circle;
+}
+.validation-messages p::before {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-40%);
+  left: -25px;
+}
+.validation-messages p::before {
+  content: url('../../../assets/svg/error-icon.svg');
+}
+.validation-messages p.valid {
+  color: green;
+}
+.validation-messages p.valid::before {
+  content: url('../../../assets/svg/green-check-icon.svg');
 }
