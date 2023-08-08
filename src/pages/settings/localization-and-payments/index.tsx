@@ -9,6 +9,8 @@ import RadioUnselected from '../../../assets/svg/radio-unselected.svg'
 import RadioSelected from '../../../assets/svg/radio-selected.svg'
 import InputSelect from '@/components/InputSelect/inputSelect'
 import { withAuth } from '@/navigation/withAuth'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
 
 type Props = {}
 const options = [
@@ -19,6 +21,8 @@ const options = [
   'My Society',
 ]
 const VisibilityAndNotification: React.FC<Props> = ({}) => {
+  const { user, activeProfile } = useSelector((state: RootState) => state.user)
+
   return (
     <>
       <PageGridLayout column={2}>
@@ -38,98 +42,47 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
             </div>
           </div>
 
-          <div className={`${styles.cardContainer}`}>
-            <div className={`${styles.addressLeft}`}>
-              <Image
-                src={RadioUnselected}
-                width={16}
-                height={16}
-                alt="radio"
-                className={styles.addIcon}
-              />
-              <div className={styles.addressContent}>
-                <p className={`${styles.textDark} ${styles.labelText}`}>
-                  {' '}
-                  Home Address 1{' '}
-                </p>
-                <p className={`${styles.textLight} ${styles.addressText}`}>
-                  <span className={styles.addressText}>
-                    33/B Home Sweet Home, ABC Road.
-                  </span>
-                  <span className={styles.addressText}>Valsad 360001</span>
-                  <span className={styles.addressText}>Gujarat, India</span>
-                </p>
+          {user._addresses?.map((address: any) => {
+            return (
+              <div className={`${styles.cardContainer}`} key={address._id} >
+                <div className={`${styles.addressLeft}`}>
+                  <Image
+                    src={RadioUnselected}
+                    width={16}
+                    height={16}
+                    alt="radio"
+                    className={styles.addIcon}
+                  />
+                  <div className={styles.addressContent}>
+                    <p className={`${styles.textDark} ${styles.labelText}`}>
+                      Home Address 1
+                    </p>
+                    <p className={`${styles.textLight} ${styles.addressText}`}>
+                      <span className={styles.addressText}>
+                        {address.society && `${address.society}, `}
+                        {address.street && `${address.street}`}
+                      </span>
+                      <span className={styles.addressText}>
+                        {address.city && `${address.city}, `}
+                        {address.pin_code && `${address.pin_code}`}
+                      </span>
+                      <span className={styles.addressText}>
+                        {address.state && `${address.state}, `}
+                        {address.country && `${address.country}`}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+                <Image
+                  src={EditIcon}
+                  width={16}
+                  height={16}
+                  alt="edit"
+                  className={styles.addIcon}
+                />
               </div>
-            </div>
-            <Image
-              src={EditIcon}
-              width={16}
-              height={16}
-              alt="edit"
-              className={styles.addIcon}
-            />
-          </div>
-
-          <div className={`${styles.cardContainer}`}>
-            <div className={`${styles.addressLeft}`}>
-              <Image
-                src={RadioUnselected}
-                width={16}
-                height={16}
-                alt="radio"
-                className={styles.addIcon}
-              />
-              <div className={styles.addressContent}>
-                <p className={`${styles.textDark} ${styles.labelText}`}>
-                  {' '}
-                  Office Address 1{' '}
-                </p>
-                <p className={`${styles.textLight} ${styles.addressText}`}>
-                  <span className={styles.addressText}>
-                    33/B Home Sweet Home, ABC Road.
-                  </span>
-                  <span className={styles.addressText}>Valsad 360001</span>
-                  <span className={styles.addressText}>Gujarat, India</span>
-                </p>
-              </div>
-            </div>
-            <Image
-              src={EditIcon}
-              width={16}
-              height={16}
-              alt="edit"
-              className={styles.addIcon}
-            />
-          </div>
-          <div className={`${styles.cardContainer}`}>
-            <div className={`${styles.addressLeft}`}>
-              <Image
-                src={RadioUnselected}
-                width={16}
-                height={16}
-                alt="radio"
-                className={styles.addIcon}
-              />
-              <div className={styles.addressContent}>
-                <p className={`${styles.textDark} ${styles.labelText}`}>
-                  {' '}
-                  Home Address 2{' '}
-                </p>
-                <p className={`${styles.textLight} ${styles.addressText}`}>
-                  <span className={styles.addressText}>
-                    33/B Home Sweet Home, ABC Road.
-                  </span>
-                </p>
-              </div>
-            </div>
-            <Image
-              src={EditIcon}
-              width={16}
-              height={16}
-              alt="edit"
-              className={styles.addIcon}
-            />
-          </div>
+            )
+          })}
 
           <div className={styles.line}></div>
 

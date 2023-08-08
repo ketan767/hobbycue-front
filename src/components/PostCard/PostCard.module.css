@@ -225,6 +225,7 @@
   display: flex;
   align-self: stretch;
   width: 195px;
+  max-height: 500px;
 }
 .metaImgContainer img {
   width: 100%;
@@ -237,6 +238,9 @@
   padding-left: 1rem;
   align-self: stretch;
   /* background-color: #f0f0f0; */
+}
+.metaContentText{
+  font-size: 14px;
 }
 .contentHead {
   color: #000;

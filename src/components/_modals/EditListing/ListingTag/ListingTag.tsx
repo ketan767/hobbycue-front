@@ -154,7 +154,6 @@ const ListingTagsEditModal: React.FC<Props> = ({
                         }`}
                         key={item._id}
                         onClick={() => handleTagChange(item._id)}
-                        // value={item._id}
                       >
                         <p className={`${styles.tagText}`}>{item.name}</p>
                         <p className={styles.tagDesc}>

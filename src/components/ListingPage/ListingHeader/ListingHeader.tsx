@@ -173,6 +173,7 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
                   onChange={(e: any) => onInputChange(e, 'profile')}
                   profileLayoutMode={listingLayoutMode}
                   type={'page'}
+                  typeId={data?.type}
                 ></ProfileImageLayout>
               </div>
             )}
@@ -219,7 +220,7 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
               <div className={`${styles['img']}`}>
                 <CoverPhotoLayout
                   onChange={(e: any) => onInputChange(e, 'cover')}
-                  profileLayoutMode={listingLayoutMode}
+                  profileLayoutMode={'edit'}
                 ></CoverPhotoLayout>
               </div>
             )}

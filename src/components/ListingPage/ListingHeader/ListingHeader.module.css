@@ -282,7 +282,9 @@ background: #ffffff;
     flex-shrink: 0;
   }
 }
-
+.publishBtn{
+  width: 100%;
+}
 @media screen and (max-width: 1100px) {
   .actions-container {
     display: none;

@@ -33,8 +33,6 @@ function SiteMainLayout({ children }: { children: ReactElement }) {
   const [showPreLoader, setShowPreLoader] = useState(true)
 
   const fetchDetails = async () => {
-    // @TODO:
-
     // Get Profile (User) Details
     const { err: profileErr, res: profileRes } = await getMyProfileDetail()
     if (

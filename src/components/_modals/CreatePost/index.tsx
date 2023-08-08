@@ -19,6 +19,8 @@ import { MenuItem, Select } from '@mui/material'
 // import CancelBtn from '@/assets/svg/trash-icon.svg'
 import CancelBtn from '@/assets/icons/x-icon.svg'
 import FilledButton from '@/components/_buttons/FilledButton'
+import { DropdownOption } from './Dropdown/DropdownOption'
+import InputSelect from '@/components/_formElements/Select/Select'
 
 const CustomEditor = dynamic(() => import('@/components/CustomEditor'), {
   ssr: false,
@@ -54,7 +56,7 @@ export const CreatePost: React.FC<Props> = (props) => {
     genre: null,
     content: '',
     contentToDisplay: '',
-    visibility: 'public',
+    visibility: 'Everyone',
     media: [],
     video_url: '',
   })
@@ -87,20 +89,52 @@ export const CreatePost: React.FC<Props> = (props) => {
   useEffect(() => {
     const isUrl = checkIfUrlExists(data.content.replace(/<img .*?>/g, ''))
     setHasLink(isUrl)
-    // console.log(data.content)
-    // console.log({ isUrl })
   }, [data.content])
 
   useEffect(() => {
     if (user._addresses) {
       if (user._addresses?.length > 0) {
         const address = user._addresses[0]
-        let visibilityArr: any = ['public']
-        visibilityArr.push(address.city)
-        visibilityArr.push(address.country)
-        visibilityArr.push(address.pin_code)
-        visibilityArr.push(address.society)
-        visibilityArr.push(address.state)
+        // let visibilityArr: any = ['public']
+        let visibilityArr: any = [
+          {
+            value: 'Everyone',
+            display: 'Everyone',
+            type: 'text',
+          },
+        ]
+        let obj: any = {
+          type: 'dropdown',
+          value: 'Home',
+          display: 'Home',
+          options: [],
+          _id: address._id,
+          active: false,
+        }
+        visibilityArr.push(obj)
+        if (address.state) {
+          obj.display = `${address.state} - Home`
+        }
+        if (address.pin_code) {
+          obj.options.push({
+            value: address.pin_code,
+            display: `Pin Code ${address.pin_code}`,
+          })
+        }
+        if (address.society) {
+          obj.options.push({
+            value: address.society,
+            display: `${address.society}`,
+          })
+        }
+        if (address.city) {
+          obj.options.push({
+            value: address.city,
+            display: `${address.city}`,
+          })
+        }
+        // console.log('address', address)
+        // console.log('visibilityArr', visibilityArr)
         setVisibilityData(visibilityArr)
       }
     }
@@ -176,16 +210,9 @@ export const CreatePost: React.FC<Props> = (props) => {
         hobby: 'This field is required',
       })
     }
-    if (!data.genre) {
-      genreRef.current?.focus()
-      return setErrors({
-        ...errors,
-        genre: 'This field is required',
-      })
-    }
     const jsonData: any = {
       hobbyId: data.hobby,
-      genreId: data.genre,
+      genreId: data.genre ? data.genre : '',
       content: DOMPurify.sanitize(data.content),
       visibility: data.visibility,
       media: data.media,
@@ -249,6 +276,10 @@ export const CreatePost: React.FC<Props> = (props) => {
         return { ...prev, video_url: '' }
       })
     }
+  }
+
+  const handleAddressChange = (value: string) => {
+    setData((prev: any) => ({ ...prev, visibility: value }))
   }
 
   return (
@@ -481,24 +512,28 @@ export const CreatePost: React.FC<Props> = (props) => {
           <div>
             <label>Who Can View</label>
 
-            <Select
-              value={data.visibility}
-              onChange={(e) => {
+            <InputSelect
+              onChange={(e: any) => {
                 let val = e.target.value
                 setData((prev: any) => ({ ...prev, visibility: val }))
               }}
-              displayEmpty
-              inputProps={{ 'aria-label': 'Without label' }}
-              className={` ${styles['visibility-dropdown']}`}
+              value={data.visibility}
+              // inputProps={{ 'aria-label': 'Without label' }}
+              // className={` ${styles['visibility-dropdown']}`}
             >
               {visibilityData?.map((item: any, idx) => {
                 return (
-                  <MenuItem key={idx} value={item}>
-                    <p>{item}</p>
-                  </MenuItem>
+                  <>
+                    <DropdownOption
+                      {...item}
+                      key={idx}
+                      currentValue={data.visibility}
+                      onChange={handleAddressChange}
+                    />
+                  </>
                 )
               })}
-            </Select>
+            </InputSelect>
           </div>
 
           <FilledButton

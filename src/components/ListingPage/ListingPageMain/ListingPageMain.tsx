@@ -20,6 +20,7 @@ import { updateListingTypeModalMode } from '@/redux/slices/site'
 import WhatsappIcon from '@/assets/svg/whatsapp.svg'
 import { listingTypes } from '@/constants/constant'
 import Link from 'next/link'
+import DirectionIcon from '@/assets/svg/direction.svg'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -112,8 +113,28 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
     instagramUrl = data?.social_media_urls?.Instagram
   }
 
-  const handleDialPhone = () => {
-
+  const openGoogleMaps = () => {
+    let addressText = ''
+    if (data?._address.street) {
+      addressText += `${data?._address.street}, `
+    }
+    if (data?._address.society) {
+      addressText += `${data?._address.society}, `
+    }
+    if (data?._address.city) {
+      addressText += `${data?._address.city}, `
+    }
+    if (data?._address.state) {
+      addressText += `${data?._address.state}, `
+    }
+    if (data?._address.country) {
+      addressText += `${data?._address.country}, `
+    }
+    console.log('addressText', addressText)
+    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+      addressText,
+    )}`
+    window.open(mapsUrl, '_blank')
   }
 
   return (
@@ -222,7 +243,9 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
           >
             <h4 className={styles['heading']}>
               {' '}
-              {data?.related_listings_left.relation ? data?.related_listings_left.relation : 'Relared Listing'}{' '}
+              {data?.related_listings_left.relation
+                ? data?.related_listings_left.relation
+                : 'Relared Listing'}{' '}
             </h4>
             {!listingPagesLeft || listingPagesLeft.length === 0 ? (
               <span className={styles.textGray}>{'No data!'}</span>
@@ -231,7 +254,11 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                 {listingPagesLeft?.map((item: any) => {
                   if (typeof item === 'string') return
                   return (
-                    <Link key={item._id} className={styles.textGray} href={`/page/${item.page_url}`} >
+                    <Link
+                      key={item._id}
+                      className={styles.textGray}
+                      href={`/page/${item.page_url}`}
+                    >
                       {item?.title}
                       {/* {item?.genre && ` - ${item?.genre?.display} `} */}
                     </Link>
@@ -258,7 +285,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
             <ul className={styles['contact-wrapper']}>
               {/* Phone */}
               {data?.phone && (
-                <Link href={`tel:${data?.phone}`} onClick={handleDialPhone} >
+                <Link href={`tel:${data?.phone}`}>
                   <svg
                     width="24"
                     height="24"
@@ -285,7 +312,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
 
               {/* WhatsApp Number */}
               {data?.whatsapp_number && (
-                <Link href={`https://wa.me/${data?.whatsapp_number}`} >
+                <Link href={`https://wa.me/${data?.whatsapp_number}`}>
                   <Image
                     src={WhatsappIcon}
                     alt="whatsapp11"
@@ -300,7 +327,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
 
               {/* Email */}
               {data?.public_email && (
-                <Link href={`mailto:${data?.public_email}`} >
+                <Link href={`mailto:${data?.public_email}`}>
                   <svg
                     width="24"
                     height="24"
@@ -327,7 +354,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
 
               {/* Website */}
               {data?.website && (
-                <Link href={data.website} >
+                <Link href={data.website}>
                   <svg
                     width="24"
                     height="24"
@@ -524,7 +551,17 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
               )
             }
           >
-            <h4 className={styles['heading']}>Location</h4>
+            <div
+              className={`${styles['heading']} ${styles['location-heading']} `}
+            >
+              <h4>Location</h4>
+              {listingLayoutMode === 'view' && (
+                <div className={styles['direction-container']} onClick={openGoogleMaps} >
+                  <Image src={DirectionIcon} alt="direction" />
+                  <p> Get Direction </p>
+                </div>
+              )}
+            </div>
             <ul className={styles['location-wrapper']}>
               {/* Address */}
               {data?._address && (

@@ -1,0 +1,39 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  transform: translateY(-8px);
+}
+.lines {
+  display: flex;
+  align-items: center;
+  column-gap: 2px;
+  flex: 1;
+  max-width: 184px;
+}
+.line {
+  flex: 1;
+  height: 4px;
+  background-color: #ebedf0;
+  border-radius: 4px;
+}
+
+.container.strength-1 .red {
+  background-color: #c0504d;
+}
+
+.container.strength-2 .yellow {
+  background-color: #fcc418;
+}
+.container.strength-3 .green {
+  background-color: #00b879;
+}
+.message {
+  color: #939ca3;
+  font-family: Poppins;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 16px; /* 160% */
+}

@@ -11,10 +11,7 @@ type Props = {
 }
 
 const ProfilePagesList = ({ data }: Props) => {
-  const { profileLayoutMode } = useSelector((state: RootState) => state.site)
   const router = useRouter()
-  const dispatch = useDispatch()
-  console.log('data', data)
   return (
     <PageContentBox>
       <h4 className={styles['heading']}>Pages</h4>
