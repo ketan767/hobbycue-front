@@ -1,5 +1,5 @@
 :root {
-  --max-width: 74rem; /* 1200px */
+  --max-width: 81rem; /* 1200px */
 
   --font-poppins: 'Poppins', Verdana, Geneva, Tahoma, sans-serif;
 
@@ -291,4 +291,11 @@ select:-webkit-autofill {
 
 .about-quill-container.quill-error {
   border: 1px solid #c0504d;
+}
+
+@media screen and (max-width: 768px) {
+  .main-site-wrapper {
+    margin-left: 24px;
+    margin-right: 24px;
+  }
 }
