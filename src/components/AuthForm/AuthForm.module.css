@@ -243,8 +243,8 @@ line-height: 20px;
   margin-top: var(--spacing-24);
   width: 100%;
   font-size: 14px;
-  border: 1px solid #8064A2;
-  color: #8064A2;
+  border: 1px solid #000000;
+  color: #000000;
 }
 .form-footer .submit-btn:hover {
   background-color: #8064A2;

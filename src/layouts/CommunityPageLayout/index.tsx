@@ -490,7 +490,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
               <span className={styles['divider']}></span>
               <section>
                 <input type="text" name="" id="" />
-                <span className={styles['input-prefix']}>@</span>
+                <span className={styles['input-prefix']}></span>
                 <FilledButton>Invite</FilledButton>
               </section>
             </section>

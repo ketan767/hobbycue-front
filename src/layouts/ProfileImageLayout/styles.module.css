@@ -35,3 +35,14 @@
 .wrapper input {
   display: none;
 }
+
+@media screen and (max-width: 1100px) {
+.wrapper p {
+  font-size: 5.25px;
+  font-weight: 600;
+}
+
+.wrapper{
+  row-gap: 0px;
+}
+}
