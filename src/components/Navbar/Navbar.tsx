@@ -204,7 +204,9 @@ export const Navbar: React.FC<Props> = ({}) => {
                       </h4>
 
                       <ul>
-                        <li>Fitness</li>
+                      <Link href={'/hobby/fitness'}>
+                          <li>Fitness</li>
+                        </Link>
 
                         <Link href={'/hobby/games'}>
                           <li>Games</li>
