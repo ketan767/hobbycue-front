@@ -51,9 +51,9 @@ export const DropdownOption: React.FC<Props> = (props) => {
           active ? styles['active'] : ''
         } `}
       >
-        {options?.map((option: any) => {
+        {options?.map((option: any, idx: any) => {
           return (
-            <p
+            <p key={idx}
               className={`${styles['dropdown-value']} ${
                 currentValue === option.value ? styles['option-active'] : ''
               }`}
