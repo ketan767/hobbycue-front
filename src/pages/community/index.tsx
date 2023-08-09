@@ -53,6 +53,8 @@ const CommunityHome: React.FC<Props> = ({}) => {
           {loading ? (
             <>
               <PostCardSkeletonLoading />
+              <PostCardSkeletonLoading />
+              <PostCardSkeletonLoading />
             </>
           ) : allPosts.length > 0 ? (
             allPosts.map((post: any) => {
