@@ -121,16 +121,16 @@ export const CreatePost: React.FC<Props> = (props) => {
             display: `Pin Code ${address.pin_code}`,
           })
         }
-        if (address.society) {
-          obj.options.push({
-            value: address.society,
-            display: `${address.society}`,
-          })
-        }
         if (address.locality) {
           obj.options.push({
             value: address.locality,
             display: `${address.locality}`,
+          })
+        }
+        if (address.society) {
+          obj.options.push({
+            value: address.society,
+            display: `${address.society}`,
           })
         }
         // console.log('address', address)
