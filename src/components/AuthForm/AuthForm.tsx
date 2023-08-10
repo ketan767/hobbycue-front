@@ -163,7 +163,7 @@ const AuthForm: React.FC<Props> = (props) => {
 
       if (res.status === 200 && res.data.success) {
         // #FIX: Temporary - alert OTP
-        alert(res.data.data.savedUser.otp)
+
         dispatch(openModal({ type: 'email-verify', closable: true }))
       }
     }
@@ -224,6 +224,7 @@ const AuthForm: React.FC<Props> = (props) => {
     >
       {/* Tab Switcher (SignIn / JoinIn )  */}
       <Tabs
+        className={styles['tab']}
         value={selectedTab}
         onChange={(e, value: tabs) => handleTabChange(value)}
         centered={isModal ? true : false}

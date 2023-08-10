@@ -4,7 +4,7 @@
 
   border: 1px solid #ebedf0;
   border-radius: var(--spacing-8);
-  max-width: 670px;
+  max-width: 726px;
   overflow: visible;
 }
 
@@ -335,5 +335,8 @@
   }
   .postMetadata{
     display: block;
+  }
+  .post-card-wrapper{
+    max-width: 1017px;
   }
 }

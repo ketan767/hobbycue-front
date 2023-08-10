@@ -21,6 +21,7 @@ import { getAllHobbies } from '@/services/hobby.service'
 import DefaultHobbyImg from '@/assets/image/default.png'
 import { MenuItem, Select } from '@mui/material'
 import FilledButton from '@/components/_buttons/FilledButton'
+import { BorderBottom } from '@mui/icons-material'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -80,7 +81,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
     let params: any = ''
     if (!activeProfile?.data?._hobbies) return
     if (activeProfile?.data?._hobbies.length === 0) return
-    if(selectedLocation === '' && selectedHobby === '') return
+    if (selectedLocation === '' && selectedHobby === '') return
     if (activeTab === 'links') {
       params = new URLSearchParams(
         `has_link=true&populate=_author,_genre,_hobby`,
@@ -94,7 +95,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
     if (selectedLocation !== '') {
       params.append('visibility', selectedLocation)
     }
-    console.log('PARAMS ---', params.toString());
+    console.log('PARAMS ---', params.toString())
     dispatch(updateLoading(true))
 
     const { err, res } = await getAllPosts(params.toString())
