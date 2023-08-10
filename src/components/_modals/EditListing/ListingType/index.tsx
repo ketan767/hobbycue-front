@@ -139,10 +139,14 @@ const ListingTypeEditModal: React.FC<Props> = ({
   }, [listingModalData])
 
   const handleChange = (itemToChange: any) => {
-    if (value.includes(itemToChange)) {
+    if (value?.includes(itemToChange)) {
       setValue((prev: any) => prev.filter((item: any) => item !== itemToChange))
     } else {
-      setValue((prev: any) => [...prev, itemToChange])
+      if (value) {
+        setValue((prev: any) => [...prev, itemToChange])
+      } else {
+        setValue((prev: any) => [itemToChange])
+      }
     }
   }
 
@@ -180,7 +184,9 @@ const ListingTypeEditModal: React.FC<Props> = ({
                       return (
                         <div
                           className={`${styles['single-option']}  ${
-                            value.includes(item) ? styles['selcted-option'] : ''
+                            value?.includes(item)
+                              ? styles['selcted-option']
+                              : ''
                           }`}
                           key={item}
                           onClick={() => handleChange(item)}

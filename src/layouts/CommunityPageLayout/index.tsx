@@ -206,6 +206,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
                       }
                     >
                       {hobby?.hobby?.display}
+                      {hobby?.genre && ` - ${hobby?.genre?.display} `}
                     </li>
                   )
                 })}
