@@ -93,7 +93,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       return { ...prev, genre: null }
     })
     if (isEmptyField(e.target.value)) return setGenreDropdownList([])
-    const query = `fields=display&show=true&search=${e.target.value}`
+    const query = `fields=display&show=true&search=${e.target.value}&level=5`
 
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
