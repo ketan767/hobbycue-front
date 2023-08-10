@@ -103,38 +103,41 @@ export const CreatePost: React.FC<Props> = (props) => {
             type: 'text',
           },
         ]
-        let obj: any = {
-          type: 'dropdown',
-          value: 'Home',
-          display: 'Home',
-          options: [],
-          _id: address._id,
-          active: false,
-        }
-        visibilityArr.push(obj)
-        if (address.state) {
-          obj.display = `${address.state} - Home`
-        }
-        if (address.pin_code) {
-          obj.options.push({
-            value: address.pin_code,
-            display: `Pin Code ${address.pin_code}`,
-          })
-        }
-        if (address.society) {
-          obj.options.push({
-            value: address.society,
-            display: `${address.society}`,
-          })
-        }
-        if (address.city) {
-          obj.options.push({
-            value: address.city,
-            display: `${address.city}`,
-          })
-        }
-        // console.log('address', address)
-        // console.log('visibilityArr', visibilityArr)
+        user?._addresses.map((address: any) => {
+          let obj: any = {
+            type: 'dropdown',
+            value: 'Home',
+            display: 'Home',
+            options: [],
+            _id: address._id,
+            active: false,
+          }
+          visibilityArr.push(obj)
+          if (address.state) {
+            obj.display = `${address.state} - Home`
+          }
+          if (address.label) {
+            obj.display = `${address.label}`
+          }
+          if (address.pin_code) {
+            obj.options.push({
+              value: address.pin_code,
+              display: `Pin Code ${address.pin_code}`,
+            })
+          }
+          if (address.society) {
+            obj.options.push({
+              value: address.society,
+              display: `${address.society}`,
+            })
+          }
+          if (address.city) {
+            obj.options.push({
+              value: address.city,
+              display: `${address.city}`,
+            })
+          }
+        })
         setVisibilityData(visibilityArr)
       }
     }
