@@ -36,6 +36,7 @@ export type ModalType =
   | 'reset-password'
   | 'social-media-share'
   | 'claim-listing'
+  | 'add-location'
 
 interface ModalState {
   activeModal: ModalType

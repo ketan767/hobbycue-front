@@ -25,6 +25,7 @@ import EditIcon from '@/assets/svg/edit-colored.svg'
 import UploadIcon from '@/assets/svg/upload.svg'
 import CoverPhotoLayout from '@/layouts/CoverPhotoLayout/CoverPhotoLayout'
 import ProfileImageLayout from '@/layouts/ProfileImageLayout/ProfileImageLayout'
+import Dropdown from './DropDown'
 
 type Props = {
   activeTab: ProfilePageTabs
@@ -34,6 +35,11 @@ type Props = {
 const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
   const router = useRouter()
   const dispatch = useDispatch()
+  const [open, setOpen] = useState(false)
+
+  const handleDropdown = () => {
+    setOpen(!open)
+  }
 
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
   const tabs: ProfilePageTabs[] = ['home', 'posts', 'media', 'pages', 'blogs']
@@ -261,10 +267,11 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
 
               {/* More Options Button */}
               <div
-                onClick={(e) => console.log(e)}
+                onClick={(e) => handleDropdown() }
                 className={styles['action-btn']}
               >
                 <MoreHorizRoundedIcon color="primary" />
+                {open && <Dropdown />}
               </div>
             </div>
           </div>

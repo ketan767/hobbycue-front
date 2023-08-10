@@ -18,6 +18,7 @@
 }
 .dropdown-container p.dropdown-value {
   color: #6d747a;
+  padding-left: 16px;
 }
 
 .dropdown-options {

@@ -95,6 +95,7 @@
   cursor: pointer;
   display: grid;
   place-items: center;
+  position: relative;
 }
 .makeMyPageButton {
   width: 100%;
@@ -196,6 +197,39 @@
 }
 .name-container img {
   cursor: pointer;
+}
+.dropdown {
+  position: absolute;
+  top: calc(100%);
+  left: 0;
+  z-index: 100;
+  /* Dropdown */
+  box-shadow: 0px 8px 12px 0px rgba(147, 156, 163, 0.12),
+    0px 0px 2px 0px rgba(147, 156, 163, 0.36);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.customList {
+  list-style: none;
+  background: #ffffff;
+  min-width: 90px;
+}
+
+.customList li {
+  width: 90px;
+  height: 42px;
+  color: #6d747a;
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18px; /* 128.571% */
+  letter-spacing: 0.07px;
+  padding: 12px;
+  transition: 0.2s;
+}
+.customList li:hover{
+  background-color: #e5e5e5;
 }
 @keyframes scroll-in {
   0% {

@@ -175,6 +175,9 @@ const ModalManager: React.FC = () => {
               {activeModal === 'email-sent' && <EmailSentModal />}
               {activeModal === 'reset-password' && <ResetPasswordModal />}
               {activeModal === 'social-media-share' && <ShareModal />}
+              {activeModal === 'add-location' && (
+                <ProfileAddressEditModal addLocation={true} title={'Add New Location'} />
+              )}
 
               {/* Modal Close Icon */}
               {closable && (

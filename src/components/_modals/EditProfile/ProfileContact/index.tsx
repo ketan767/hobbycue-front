@@ -114,10 +114,16 @@ const ProfileContactEditModal: React.FC<Props> = ({
 
   useEffect(() => {
     setData((prev) => {
+      let publicEmail = ''
+      if(user.public_email){
+        publicEmail = user.public_email
+      }else if(user.email){
+        publicEmail = user.email
+      }
       return {
         public_email: {
           ...prev.public_email,
-          value: user.public_email as string,
+          value: publicEmail as string,
         },
         phone: { ...prev.phone, value: user.phone as string },
         whatsapp_number: {

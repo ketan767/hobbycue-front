@@ -163,7 +163,7 @@ const AuthForm: React.FC<Props> = (props) => {
 
       if (res.status === 200 && res.data.success) {
         // #FIX: Temporary - alert OTP
-        alert(res.data.data.savedUser.otp)
+        // alert(res.data.data.savedUser.otp)
         dispatch(openModal({ type: 'email-verify', closable: true }))
       }
     }

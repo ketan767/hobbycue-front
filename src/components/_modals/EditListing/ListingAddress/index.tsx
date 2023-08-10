@@ -105,7 +105,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
         }
       })
     }
-
+    
     const jsonData = {
       street: data.street.value,
       society: data.society.value,
@@ -119,7 +119,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
     }
     setSubmitBtnLoading(true)
     const { err, res } = await updateListingAddress(
-      listingModalData._address._id,
+      listingModalData._address,
       jsonData,
     )
     if (err) return console.log(err)

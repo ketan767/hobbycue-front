@@ -93,7 +93,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       return { ...prev, genre: null }
     })
     if (isEmptyField(e.target.value)) return setGenreDropdownList([])
-    const query = `fields=display&show=true&search=${e.target.value}`
+    const query = `fields=display&show=true&search=${e.target.value}&level=5`
 
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
@@ -189,7 +189,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       <div className={styles['modal-wrapper']}>
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>{'Hobby'}</h4>
+          <h4 className={styles['heading']}>{'Hobbies'}</h4>
         </header>
 
         <hr />
