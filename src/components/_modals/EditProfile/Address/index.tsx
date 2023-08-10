@@ -18,11 +18,15 @@ import axios from 'axios'
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
+  addLocation?: boolean
+  title?: String
 }
 
 const ProfileAddressEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
+  addLocation,
+  title: modalTitle,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -36,6 +40,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     inputRef?.current?.focus()
   }, [])
 
+  const [addressLabel, setAddressLabel] = useState('')
   const [data, setData] = useState<ProfileAddressPayload>({
     street: '',
     society: '',
@@ -59,13 +64,13 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     country: null,
     latitude: null,
     longitude: null,
+    addressLabel: null,
   })
 
-  
   const cityRef = useRef<HTMLInputElement>(null)
   const stateRef = useRef<HTMLInputElement>(null)
   const countryRef = useRef<HTMLInputElement>(null)
-
+  const addressLabelRef = useRef<HTMLInputElement>(null)
 
   const handleInputChange = (event: any) => {
     setData((prev) => {
@@ -77,6 +82,14 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   }
 
   const handleSubmit = () => {
+    if (addLocation) {
+      if (!addressLabel || addressLabel === '') {
+        addressLabelRef.current?.focus()
+        return setInputErrs((prev) => {
+          return { ...prev, addressLabel: 'This field is required!' }
+        })
+      }
+    }
     if (!data.city || data.city === '') {
       cityRef.current?.focus()
       return setInputErrs((prev) => {
@@ -125,7 +138,32 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     }
 
     setSubmitBtnLoading(true)
-    if (!user.is_onboarded) {
+    if (addLocation) {
+      let reqBody: any = { ...data }
+      reqBody.label = addressLabel
+      addUserAddress(reqBody, async (err, res) => {
+        if (err) {
+          setSubmitBtnLoading(false)
+          return console.log(err)
+        }
+        if (!res.data.success) {
+          setSubmitBtnLoading(false)
+          return alert('Something went wrong!')
+        }
+        const { err: error, res: response } = await getMyProfileDetail()
+
+        setSubmitBtnLoading(false)
+        if (error) return console.log(error)
+        if (response?.data.success) {
+          dispatch(updateUser(response.data.data.user))
+          if (onComplete) onComplete()
+          else {
+            window.location.reload()
+            dispatch(closeModal())
+          }
+        }
+      })
+    } else if (!user.is_onboarded) {
       data.set_as_primary = true
       addUserAddress(data, async (err, res) => {
         if (err) {
@@ -264,12 +302,35 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       <div className={styles['modal-wrapper']}>
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>{'Location'}</h4>
+          <h4 className={styles['heading']}>
+            {modalTitle ? modalTitle : 'Location'}
+          </h4>
         </header>
 
         <hr />
 
         <section className={styles['body']}>
+          {addLocation && (
+            <div
+              className={`${styles['input-box']} ${
+                inputErrs.addressLabel ? styles['input-box-error'] : ''
+              }`}
+            >
+              <label>Address Label</label>
+              <div className={styles['street-input-container']}>
+                <input
+                  type="text"
+                  placeholder={`Eg: Home, Office`}
+                  required
+                  value={addressLabel}
+                  name="label"
+                  ref={inputRef}
+                  onChange={(e: any) => setAddressLabel(e.target.value)}
+                />
+              </div>
+              <p className={styles['helper-text']}>{inputErrs.addressLabel}</p>
+            </div>
+          )}
           <>
             {/* Street Address */}
             <div className={styles['input-box']}>

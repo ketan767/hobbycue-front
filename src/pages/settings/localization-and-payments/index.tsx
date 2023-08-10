@@ -9,8 +9,9 @@ import RadioUnselected from '../../../assets/svg/radio-unselected.svg'
 import RadioSelected from '../../../assets/svg/radio-selected.svg'
 import InputSelect from '@/components/InputSelect/inputSelect'
 import { withAuth } from '@/navigation/withAuth'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
+import { openModal } from '@/redux/slices/modal'
 
 type Props = {}
 const options = [
@@ -22,6 +23,11 @@ const options = [
 ]
 const VisibilityAndNotification: React.FC<Props> = ({}) => {
   const { user, activeProfile } = useSelector((state: RootState) => state.user)
+  const dispatch = useDispatch()
+
+  const handleAddLocation = () => {
+    dispatch(openModal({ type: 'add-location', closable: false }))
+  }
 
   return (
     <>
@@ -30,7 +36,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
         <div className={styles.container}>
           <div className={`${styles.flex} ${styles.addSectionContainer}`}>
             <p className={`${styles.textLight}`}> Addresses </p>
-            <div className={`${styles.flex}`}>
+            <div className={`${styles.flex} ${styles['clickable']} ` } onClick={handleAddLocation} > 
               <Image
                 src={AddIcon}
                 width={16}
@@ -44,7 +50,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
 
           {user._addresses?.map((address: any) => {
             return (
-              <div className={`${styles.cardContainer}`} key={address._id} >
+              <div className={`${styles.cardContainer}`} key={address._id}>
                 <div className={`${styles.addressLeft}`}>
                   <Image
                     src={RadioUnselected}
@@ -55,7 +61,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                   />
                   <div className={styles.addressContent}>
                     <p className={`${styles.textDark} ${styles.labelText}`}>
-                      Home Address 1
+                      {address.label ? address.label : '-'}
                     </p>
                     <p className={`${styles.textLight} ${styles.addressText}`}>
                       <span className={styles.addressText}>

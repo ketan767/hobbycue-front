@@ -37,7 +37,9 @@
   background: #ebedf0;
   margin-bottom: 24px;
 }
-
+.clickable{
+  cursor: pointer;
+}
 .flex {
   display: flex;
   align-items: center;
