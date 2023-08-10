@@ -80,7 +80,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
     let params: any = ''
     if (!activeProfile?.data?._hobbies) return
     if (activeProfile?.data?._hobbies.length === 0) return
-    if(selectedLocation === '' && selectedHobby === '') return
+    if (selectedLocation === '' && selectedHobby === '') return
     if (activeTab === 'links') {
       params = new URLSearchParams(
         `has_link=true&populate=_author,_genre,_hobby`,
@@ -94,7 +94,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
     if (selectedLocation !== '') {
       params.append('visibility', selectedLocation)
     }
-    console.log('PARAMS ---', params.toString());
+    console.log('PARAMS ---', params.toString())
     dispatch(updateLoading(true))
 
     const { err, res } = await getAllPosts(params.toString())
@@ -392,17 +392,17 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
                 <ul>
                   {tabs.map((tab, idx) => {
                     return (
-                      <Link
-                        key={tab}
-                        href={`/community/${tab !== 'posts' ? tab : ''}`}
+                      <li
+                        key={idx}
+                        className={activeTab === tab ? styles['active'] : ''}
                       >
-                        <li
-                          key={idx}
-                          className={activeTab === tab ? styles['active'] : ''}
+                        <Link
+                          key={tab}
+                          href={`/community/${tab !== 'posts' ? tab : ''}`}
                         >
                           {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                        </li>
-                      </Link>
+                        </Link>
+                      </li>
                     )
                   })}
                 </ul>

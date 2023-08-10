@@ -11,9 +11,23 @@ type Props = {
 
 const ProfileAddressSide = ({ data }: Props) => {
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
-
   const dispatch = useDispatch()
-
+  let addressText = ''
+  if (data?.primary_address?.street) {
+    addressText += `${data?.primary_address?.street}, `
+  }
+  if (data?.primary_address?.society) {
+    addressText += `${data?.primary_address?.society}, `
+  }
+  if (data?.primary_address?.city) {
+    addressText += `${data?.primary_address?.city}, `
+  }
+  if (data?.primary_address?.state) {
+    addressText += `${data?.primary_address?.state}, `
+  }
+  if (data?.primary_address?.country) {
+    addressText += `${data?.primary_address?.country}, `
+  }
   return (
     <>
       <PageContentBox
@@ -45,8 +59,13 @@ const ProfileAddressSide = ({ data }: Props) => {
               </defs>
             </svg>
             <span>
-              {typeof data._addresses[0] === 'object' &&
-                data.primary_address?.city}
+              {profileLayoutMode === 'edit' ? (
+                <span className={styles.textGray}>{addressText}</span>
+              ) : (
+                <span className={styles.textGray}>
+                  {`${data?.primary_address?.city}`}
+                </span>
+              )}
             </span>
           </li>
         </ul>
