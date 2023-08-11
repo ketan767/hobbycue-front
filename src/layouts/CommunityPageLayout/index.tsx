@@ -11,7 +11,12 @@ import EditIcon from '@/assets/svg/edit-icon.svg'
 import { openModal } from '@/redux/slices/modal'
 import { getAllPosts } from '@/services/post.service'
 import { GetServerSideProps } from 'next'
-import { updateLoading, updatePosts } from '@/redux/slices/post'
+import {
+  updateLoading,
+  updatePages,
+  updatePagesLoading,
+  updatePosts,
+} from '@/redux/slices/post'
 import PostCard from '@/components/PostCard/PostCard'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
@@ -23,6 +28,7 @@ import { MenuItem, Select } from '@mui/material'
 import FilledButton from '@/components/_buttons/FilledButton'
 import InputSelect from '@/components/_formElements/Select/Select'
 import { DropdownOption } from '@/components/_modals/CreatePost/Dropdown/DropdownOption'
+import { getListingPages } from '@/services/listing.service'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -41,7 +47,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
   })
   const [locations, setLocations] = useState([])
   const [selectedHobby, setSelectedHobby] = useState('')
-  const [selectedLocation, setSelectedLocation] = useState('')
+  const [selectedLocation, setSelectedLocation] = useState('Everyone')
   const tabs: CommunityPageTabs[] = [
     'posts',
     'links',
@@ -113,8 +119,38 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
     dispatch(updateLoading(false))
   }
 
+  const fetchPages = async () => {
+    let params: any = ''
+    if (!activeProfile?.data?._hobbies) return
+    if (activeProfile?.data?._hobbies.length === 0) return
+    if (selectedLocation === '' && selectedHobby === '') return
+    params = new URLSearchParams(`populate=_author,_genre,_hobby`)
+    if (selectedHobby !== '') {
+      params.append('_hobby', selectedHobby)
+    }
+    if (selectedLocation !== '') {
+      params.append('visibility', selectedLocation)
+    }
+    console.log('PARAMS ---', params.toString())
+    dispatch(updatePagesLoading(true))
+
+    const { err, res } = await getListingPages(params.toString())
+    if (err) return console.log(err)
+    if (res?.data.success) {
+      if (err) return console.log(err)
+      if (res?.data.success) {
+        store.dispatch(updatePages(res.data.data.listings))
+      }
+    }
+    dispatch(updatePagesLoading(false))
+  }
+
   useEffect(() => {
-    fetchPosts()
+    if (activeTab === 'posts' || activeTab === 'links') {
+      fetchPosts()
+    } else if (activeTab === 'pages') {
+      fetchPages()
+    }
   }, [selectedHobby, selectedLocation, activeProfile])
 
   const handleLocationClick = async (item: any) => {
@@ -175,8 +211,13 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
     if (user._addresses) {
       if (user._addresses?.length > 0) {
         const address = user._addresses[0]
-        // let visibilityArr: any = ['public']
-        let visibilityArr: any = []
+        let visibilityArr: any = [
+          {
+            value: 'Everyone',
+            display: 'Everyone',
+            type: 'text',
+          },
+        ]
         user?._addresses.map((address: any) => {
           let obj: any = {
             type: 'dropdown',
