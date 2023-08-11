@@ -21,6 +21,8 @@ import { getAllHobbies } from '@/services/hobby.service'
 import DefaultHobbyImg from '@/assets/image/default.png'
 import { MenuItem, Select } from '@mui/material'
 import FilledButton from '@/components/_buttons/FilledButton'
+import InputSelect from '@/components/_formElements/Select/Select'
+import { DropdownOption } from '@/components/_modals/CreatePost/Dropdown/DropdownOption'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -29,7 +31,7 @@ type Props = {
 
 const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
   const dispatch = useDispatch()
-  const { activeProfile } = useSelector((state: any) => state.user)
+  const { activeProfile, user } = useSelector((state: any) => state.user)
   const { allPosts } = useSelector((state: RootState) => state.post)
   const [isLoadingPosts, setIsLoadingPosts] = useState(false)
   const [hobbyGroup, setHobbyGroup] = useState({
@@ -47,6 +49,8 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
     'store',
     'blogs',
   ]
+  const [visibilityData, setVisibilityData] = useState(['public'])
+
   const hideThirdColumnTabs = ['pages', 'links']
   const getPost = async () => {
     const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
@@ -167,6 +171,52 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
       setLocations(tempLocations)
   }, [activeProfile])
 
+  useEffect(() => {
+    if (user._addresses) {
+      if (user._addresses?.length > 0) {
+        const address = user._addresses[0]
+        // let visibilityArr: any = ['public']
+        let visibilityArr: any = []
+        user?._addresses.map((address: any) => {
+          let obj: any = {
+            type: 'dropdown',
+            value: 'Home',
+            display: 'Home',
+            options: [],
+            _id: address._id,
+            active: false,
+          }
+          visibilityArr.push(obj)
+          if (address.state) {
+            obj.display = `${address.state} - Home`
+          }
+          if (address.label) {
+            obj.display = `${address.label}`
+          }
+          if (address.pin_code) {
+            obj.options.push({
+              value: address.pin_code,
+              display: `Pin Code ${address.pin_code}`,
+            })
+          }
+          if (address.society) {
+            obj.options.push({
+              value: address.society,
+              display: `${address.society}`,
+            })
+          }
+          if (address.city) {
+            obj.options.push({
+              value: address.city,
+              display: `${address.city}`,
+            })
+          }
+        })
+        setVisibilityData(visibilityArr)
+      }
+    }
+  }, [user])
+
   return (
     <>
       <PageGridLayout
@@ -232,24 +282,28 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
             </header>
             <span className={styles['divider']}></span>
             {locations?.length > 0 && (
-              <Select
-                sx={{
-                  boxShadow: 'none',
-                  '.MuiOutlinedInput-notchedOutline': { border: 0 },
+              <InputSelect
+                onChange={(e: any) => {
+                  let val = e.target.value
+                  setSelectedLocation(val)
                 }}
-                className={styles['location-select']}
                 value={selectedLocation}
-                onChange={(e) => setSelectedLocation(e.target.value)}
-                defaultValue={selectedLocation}
+                // inputProps={{ 'aria-label': 'Without label' }}
+                className={` ${styles['location-dropdown']}`}
               >
-                {locations.map((item, idx) => {
+                {visibilityData?.map((item: any, idx) => {
                   return (
-                    <MenuItem key={idx} value={item}>
-                      {item}
-                    </MenuItem>
+                    <>
+                      <DropdownOption
+                        {...item}
+                        key={idx}
+                        currentValue={selectedLocation}
+                        onChange={(val: any) => setSelectedLocation(val)}
+                      />
+                    </>
                   )
                 })}
-              </Select>
+              </InputSelect>
             )}
             {/* <section>
               <ul>

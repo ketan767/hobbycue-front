@@ -514,7 +514,7 @@ export const CreatePost: React.FC<Props> = (props) => {
 
           <div>
             <label>Who Can View</label>
-
+ 
             <InputSelect
               onChange={(e: any) => {
                 let val = e.target.value
