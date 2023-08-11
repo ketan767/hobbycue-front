@@ -63,7 +63,7 @@ const ProfileImageLayout: React.FC<Props> = ({
             onChange={(e) => onChange(e)}
             ref={inputRef}
           />
-          <p>User Profile Pic</p>
+          <p>{type === 'page' ? 'Page Profile Pic' : 'User Profile Pic'}</p>
         </div>
       )}
     </div>

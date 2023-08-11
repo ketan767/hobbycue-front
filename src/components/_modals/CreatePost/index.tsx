@@ -103,38 +103,41 @@ export const CreatePost: React.FC<Props> = (props) => {
             type: 'text',
           },
         ]
-        let obj: any = {
-          type: 'dropdown',
-          value: 'Home',
-          display: 'Home',
-          options: [],
-          _id: address._id,
-          active: false,
-        }
-        visibilityArr.push(obj)
-        if (address.state) {
-          obj.display = `${address.city} - Home`
-        }
-        if (address.pin_code) {
-          obj.options.push({
-            value: address.pin_code,
-            display: `Pin Code ${address.pin_code}`,
-          })
-        }
-        if (address.locality) {
-          obj.options.push({
-            value: address.locality,
-            display: `${address.locality}`,
-          })
-        }
-        if (address.society) {
-          obj.options.push({
-            value: address.society,
-            display: `${address.society}`,
-          })
-        }
-        // console.log('address', address)
-        // console.log('visibilityArr', visibilityArr)
+        user?._addresses.map((address: any) => {
+          let obj: any = {
+            type: 'dropdown',
+            value: 'Home',
+            display: 'Home',
+            options: [],
+            _id: address._id,
+            active: false,
+          }
+          visibilityArr.push(obj)
+          if (address.city) {
+            obj.display = `${address.city} - Home`
+          }
+          if (address.label) {
+            obj.display = `${address.label}`
+          }
+          if (address.pin_code) {
+            obj.options.push({
+              value: address.pin_code,
+              display: `Pin Code ${address.pin_code}`,
+            })
+          }
+          if (address.locality) {
+            obj.options.push({
+              value: address.locality,
+              display: `${address.locality}`,
+            })
+          }
+          if (address.society) {
+            obj.options.push({
+              value: address.society,
+              display: `${address.society}`,
+            })
+          }
+        })
         setVisibilityData(visibilityArr)
       }
     }
@@ -511,7 +514,7 @@ export const CreatePost: React.FC<Props> = (props) => {
 
           <div>
             <label>Who Can View</label>
-
+ 
             <InputSelect
               onChange={(e: any) => {
                 let val = e.target.value

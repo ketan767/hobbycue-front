@@ -18,6 +18,7 @@ import {
 import LocationIcon from '@/assets/svg/location-2.svg'
 import Image from 'next/image'
 import axios from 'axios'
+import { listingTypes } from '@/constants/constant'
 
 type Props = {
   onComplete?: () => void
@@ -52,6 +53,10 @@ const ListingAddressEditModal: React.FC<Props> = ({
   const cityRef = useRef<HTMLInputElement>(null)
   const stateRef = useRef<HTMLInputElement>(null)
   const countryRef = useRef<HTMLInputElement>(null)
+  const pincodeRef = useRef<HTMLInputElement>(null)
+  const streetRef = useRef<HTMLInputElement>(null)
+  const localityRef = useRef<HTMLInputElement>(null)
+  const societyRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     inputRef?.current?.focus()
@@ -78,6 +83,35 @@ const ListingAddressEditModal: React.FC<Props> = ({
   }
 
   const handleSubmit = async () => {
+    if (listingModalData.type === listingTypes.PLACE) {
+      if (isEmptyField(data.street.value) || !data.street.value) {
+        streetRef.current?.focus()
+        return setData((prev) => {
+          return {
+            ...prev,
+            street: { ...prev.street, error: 'This field is required!' },
+          }
+        })
+      }
+      if (isEmptyField(data.society.value) || !data.society.value) {
+        societyRef.current?.focus()
+        return setData((prev) => {
+          return {
+            ...prev,
+            society: { ...prev.society, error: 'This field is required!' },
+          }
+        })
+      }
+      if (isEmptyField(data.locality.value) || !data.locality.value) {
+        localityRef.current?.focus()
+        return setData((prev) => {
+          return {
+            ...prev,
+            locality: { ...prev.locality, error: 'This field is required!' },
+          }
+        })
+      }
+    }
     if (isEmptyField(data.city.value) || !data.city.value) {
       cityRef.current?.focus()
       return setData((prev) => {
@@ -86,6 +120,17 @@ const ListingAddressEditModal: React.FC<Props> = ({
           city: { ...prev.city, error: 'This field is required!' },
         }
       })
+    }
+    if (listingModalData.type === listingTypes.PLACE) {
+      if (isEmptyField(data.pin_code.value) || !data.pin_code.value) {
+        pincodeRef.current?.focus()
+        return setData((prev) => {
+          return {
+            ...prev,
+            pin_code: { ...prev.pin_code, error: 'This field is required!' },
+          }
+        })
+      }
     }
     if (isEmptyField(data.state.value) || !data.state.value) {
       stateRef.current?.focus()
@@ -119,7 +164,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
     }
     setSubmitBtnLoading(true)
     const { err, res } = await updateListingAddress(
-      listingModalData._address._id,
+      listingModalData._address,
       jsonData,
     )
     if (err) return console.log(err)
@@ -131,7 +176,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
   }
 
   const updateAddress = async () => {
-    console.log(listingModalData);
+    console.log(listingModalData)
     const { err, res } = await getListingAddress(listingModalData._address?._id)
     if (err) return console.log(err)
 
@@ -253,12 +298,17 @@ const ListingAddressEditModal: React.FC<Props> = ({
             {/* Street Address */}
             <div className={styles['input-box']}>
               <label>Street Address</label>
-              <div className={styles['street-input-container']}>
+              <div
+                className={` ${styles['street-input-container']}  ${
+                  data.street.error ? styles['input-box-error'] : ''
+                }`}
+              >
                 <input
                   type="text"
                   placeholder={`Enter address or click the "locate me" icon to auto-detect`}
                   value={data.street.value}
                   name="street"
+                  required={listingModalData.type === listingTypes.PLACE}
                   ref={inputRef}
                   onChange={handleInputChange}
                 />
@@ -272,23 +322,33 @@ const ListingAddressEditModal: React.FC<Props> = ({
               <p className={styles['helper-text']}>{data.street.error}</p>
             </div>
             <section className={styles['two-column-grid']}>
-              <div className={styles['input-box']}>
+            <div
+                className={`${styles['input-box']} ${
+                  data.society.error ? styles['input-box-error'] : ''
+                }`}
+              >
                 <label>Society</label>
                 <input
                   type="text"
                   placeholder={`Building Name`}
                   value={data.society.value}
+                  required={listingModalData.type === listingTypes.PLACE}
                   name="society"
                   onChange={handleInputChange}
                 />
                 <p className={styles['helper-text']}>{data.society.error}</p>
               </div>
-              <div className={styles['input-box']}>
+              <div
+                className={`${styles['input-box']} ${
+                  data.locality.error ? styles['input-box-error'] : ''
+                }`}
+              >
                 <label>Locality</label>
                 <input
                   type="text"
                   placeholder={`Enter Locality`}
                   value={data.locality.value}
+                  required={listingModalData.type === listingTypes.PLACE}
                   name="locality"
                   onChange={handleInputChange}
                 />
@@ -319,6 +379,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   type="text"
                   placeholder={`Enter PIN Code`}
                   value={data.pin_code.value}
+                  required={listingModalData.type === listingTypes.PLACE}
                   name="pin_code"
                   onChange={handleInputChange}
                 />

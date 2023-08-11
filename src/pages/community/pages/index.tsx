@@ -15,46 +15,38 @@ type Props = {}
 
 const CommunityPages: React.FC<Props> = ({}) => {
   const { activeProfile } = useSelector((state: any) => state.user)
-  const { allPages } = useSelector((state: RootState) => state.post)
-  const [isLoadingPosts, setIsLoadingPosts] = useState(false)
+  const { allPages, pagesLoading } = useSelector(
+    (state: RootState) => state.post,
+  )
 
   const getPost = async () => {
     const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
     activeProfile?.data?._hobbies.forEach((item: any) => {
       params.append('_hobby', item.hobby._id)
     })
-
-    setIsLoadingPosts(true)
-    const { err, res } = await getListingPages('')
+    if (!activeProfile?.data?._hobbies) return
+    if (activeProfile?.data?._hobbies.length === 0) return
+    const { err, res } = await getListingPages(`${params}`)
     if (err) return console.log(err)
-    console.log('resp', res?.data.data.listings);
     if (res?.data.success) {
       store.dispatch(updatePages(res.data.data.listings))
-      // let linkPosts = res.data.data.posts.map((post: any) => {
-      //   let content = post.content.replace(/<img .*?>/g, '')
-      //   return { ...post, content }
-      // })
-      // linkPosts = linkPosts.filter(
-      //   (item: any) => (item.has_link = true),
-      // )
-      // store.dispatch(updatePosts(linkPosts))
     }
-    setIsLoadingPosts(false)
   }
 
   useEffect(() => {
     getPost()
   }, [activeProfile])
 
-  // console.log({ allPages })
   return (
     <>
       <CommunityPageLayout activeTab="pages">
-      <section className={styles['pages-container']}>
-          {allPages.length === 0 || isLoadingPosts ? (
+        <section className={styles['pages-container']}>
+          {pagesLoading ? (
             <>
               <PostCardSkeletonLoading />
             </>
+          ) : allPages.length === 0 ? (
+            <p>No pages found</p>
           ) : (
             allPages.map((post: any) => {
               return <ListingCard key={post._id} data={post} />
