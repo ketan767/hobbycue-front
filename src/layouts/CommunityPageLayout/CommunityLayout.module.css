@@ -285,7 +285,30 @@
   cursor: pointer;
 }
 .navigation-links ul li.active {
+
   color: #8064a2;
+  
+}
+
+.active-tab{
+  width: 91;
+  height: 2.74;
+  background: '#8064A2';
+  border-top-left-radius: 2;
+  border-top-right-radius: 2;
+}
+
+.navigation-links ul li.active ::after{
+  text-decoration: underline #8064a2;
+  transform: scaleX(1);
+  
+  content: "";
+  bottom: 0;
+  left: 0;
+  position: absolute;
+
+  transition: transform .2s ease-in-out;
+  width: 100%;
 }
 
 .posts-container {

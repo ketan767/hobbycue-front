@@ -278,13 +278,11 @@ line-height: 20px;
 }
 
 @media screen and (max-width: 1100px) {
-  .tab-btn{
+  .tab{
     display: grid;
     grid-template-columns: 1fr;
-
   }
 
-  
   .form-footer .submit-btn {
     margin-top: var(--spacing-24);
     width: 100%;

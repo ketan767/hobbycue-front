@@ -113,7 +113,7 @@ export const CreatePost: React.FC<Props> = (props) => {
         }
         visibilityArr.push(obj)
         if (address.state) {
-          obj.display = `${address.state} - Home`
+          obj.display = `${address.city} - Home`
         }
         if (address.pin_code) {
           obj.options.push({
@@ -121,16 +121,16 @@ export const CreatePost: React.FC<Props> = (props) => {
             display: `Pin Code ${address.pin_code}`,
           })
         }
+        if (address.locality) {
+          obj.options.push({
+            value: address.locality,
+            display: `${address.locality}`,
+          })
+        }
         if (address.society) {
           obj.options.push({
             value: address.society,
             display: `${address.society}`,
-          })
-        }
-        if (address.city) {
-          obj.options.push({
-            value: address.city,
-            display: `${address.city}`,
           })
         }
         // console.log('address', address)
