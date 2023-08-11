@@ -376,7 +376,8 @@ const ListingGeneralEditModal: React.FC<Props> = ({
             </div>
 
             {/* Note */}
-            {listingModalData.type === listingTypes.PEOPLE && (
+            {listingModalData.type === listingTypes.PEOPLE ||
+            listingModalData.type === listingTypes.PROGRAM ? (
               <div className={styles['input-box']}>
                 <label>Note</label>
                 <input
@@ -389,6 +390,8 @@ const ListingGeneralEditModal: React.FC<Props> = ({
                 />
                 <p className={styles['helper-text']}>{data.admin_note.error}</p>
               </div>
+            ) : (
+              <></>
             )}
           </>
         </section>

@@ -180,7 +180,7 @@ const ListingContactEditModal: React.FC<Props> = ({
               <div className={styles.useEmailContainer}>
                 <p>Either Phone Number or Email ID is required.</p>
                 <OutlinedButton
-                  className={styles['button']}
+                  className={styles['use-mine-button']}
                   onClick={() =>
                     setData((prev) => {
                       return {

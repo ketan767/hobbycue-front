@@ -166,7 +166,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
             recommended. Use another type only if it is significantly different
           </p>
           <div className={styles['input-box']}>
-            <label>Listing Page Type</label>
+            <label>Listing Type</label>
             <input hidden required />
 
             <FormControl variant="outlined" size="small">

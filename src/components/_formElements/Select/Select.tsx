@@ -9,6 +9,7 @@ type Props = {
   onChange: any
   value: any
   children: any
+  className?: any
 }
 
 const InputSelect: React.FC<Props> = ({
@@ -16,6 +17,7 @@ const InputSelect: React.FC<Props> = ({
   onChange,
   value,
   children,
+  className
 }) => {
   const [active, setActive] = useState(false)
   const toggle = () => setActive(!active)
@@ -24,7 +26,7 @@ const InputSelect: React.FC<Props> = ({
   useOutsideAlerter(dropdownRef, () => setActive(false))
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${className ? className : ''}`}>
       <header className={styles.header} onClick={toggle}>
         <p>{value ? value : 'Select...'}</p>
         <Image src={ChevronDown} alt="arrow" />

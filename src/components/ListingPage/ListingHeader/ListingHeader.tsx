@@ -219,6 +219,7 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
             ) : (
               <div className={`${styles['img']}`}>
                 <CoverPhotoLayout
+                  type="page"
                   onChange={(e: any) => onInputChange(e, 'cover')}
                   profileLayoutMode={'edit'}
                 ></CoverPhotoLayout>

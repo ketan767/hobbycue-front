@@ -11,7 +11,12 @@ import EditIcon from '@/assets/svg/edit-icon.svg'
 import { openModal } from '@/redux/slices/modal'
 import { getAllPosts } from '@/services/post.service'
 import { GetServerSideProps } from 'next'
-import { updateLoading, updatePosts } from '@/redux/slices/post'
+import {
+  updateLoading,
+  updatePages,
+  updatePagesLoading,
+  updatePosts,
+} from '@/redux/slices/post'
 import PostCard from '@/components/PostCard/PostCard'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
@@ -21,6 +26,9 @@ import { getAllHobbies } from '@/services/hobby.service'
 import DefaultHobbyImg from '@/assets/image/default.png'
 import { MenuItem, Select } from '@mui/material'
 import FilledButton from '@/components/_buttons/FilledButton'
+import InputSelect from '@/components/_formElements/Select/Select'
+import { DropdownOption } from '@/components/_modals/CreatePost/Dropdown/DropdownOption'
+import { getListingPages } from '@/services/listing.service'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -29,7 +37,7 @@ type Props = {
 
 const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
   const dispatch = useDispatch()
-  const { activeProfile } = useSelector((state: any) => state.user)
+  const { activeProfile, user } = useSelector((state: any) => state.user)
   const { allPosts } = useSelector((state: RootState) => state.post)
   const [isLoadingPosts, setIsLoadingPosts] = useState(false)
   const [hobbyGroup, setHobbyGroup] = useState({
@@ -39,7 +47,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
   })
   const [locations, setLocations] = useState([])
   const [selectedHobby, setSelectedHobby] = useState('')
-  const [selectedLocation, setSelectedLocation] = useState('')
+  const [selectedLocation, setSelectedLocation] = useState('Everyone')
   const tabs: CommunityPageTabs[] = [
     'posts',
     'links',
@@ -47,6 +55,8 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
     'store',
     'blogs',
   ]
+  const [visibilityData, setVisibilityData] = useState(['public'])
+
   const hideThirdColumnTabs = ['pages', 'links']
   const getPost = async () => {
     const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
@@ -91,7 +101,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
     if (selectedHobby !== '') {
       params.append('_hobby', selectedHobby)
     }
-    if (selectedLocation !== '') {
+    if (selectedLocation !== '' && selectedLocation !== 'Everyone') {
       params.append('visibility', selectedLocation)
     }
     console.log('PARAMS ---', params.toString())
@@ -109,8 +119,38 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
     dispatch(updateLoading(false))
   }
 
+  const fetchPages = async () => {
+    let params: any = ''
+    if (!activeProfile?.data?._hobbies) return
+    if (activeProfile?.data?._hobbies.length === 0) return
+    if (selectedLocation === '' && selectedHobby === '') return
+    params = new URLSearchParams(`populate=_author,_genre,_hobby`)
+    if (selectedHobby !== '') {
+      params.append('_hobby', selectedHobby)
+    }
+    if (selectedLocation !== '') {
+      params.append('visibility', selectedLocation)
+    }
+    console.log('PARAMS ---', params.toString())
+    dispatch(updatePagesLoading(true))
+
+    const { err, res } = await getListingPages(params.toString())
+    if (err) return console.log(err)
+    if (res?.data.success) {
+      if (err) return console.log(err)
+      if (res?.data.success) {
+        store.dispatch(updatePages(res.data.data.listings))
+      }
+    }
+    dispatch(updatePagesLoading(false))
+  }
+
   useEffect(() => {
-    fetchPosts()
+    if (activeTab === 'posts' || activeTab === 'links') {
+      fetchPosts()
+    } else if (activeTab === 'pages') {
+      fetchPages()
+    }
   }, [selectedHobby, selectedLocation, activeProfile])
 
   const handleLocationClick = async (item: any) => {
@@ -166,6 +206,57 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
     }),
       setLocations(tempLocations)
   }, [activeProfile])
+
+  useEffect(() => {
+    if (user._addresses) {
+      if (user._addresses?.length > 0) {
+        const address = user._addresses[0]
+        let visibilityArr: any = [
+          {
+            value: 'Everyone',
+            display: 'Everyone',
+            type: 'text',
+          },
+        ]
+        user?._addresses.map((address: any) => {
+          let obj: any = {
+            type: 'dropdown',
+            value: 'Home',
+            display: 'Home',
+            options: [],
+            _id: address._id,
+            active: false,
+          }
+          visibilityArr.push(obj)
+          if (address.city) {
+            obj.display = `${address.city} - Home`
+          }
+          if (address.label) {
+            obj.display = `${address.label}`
+          }
+          if (address.pin_code) {
+            obj.options.push({
+              value: address.pin_code,
+              display: `Pin Code ${address.pin_code}`,
+            })
+          }
+          if (address.locality) {
+            obj.options.push({
+              value: address.locality,
+              display: `${address.locality}`,
+            })
+          }
+          if (address.society) {
+            obj.options.push({
+              value: address.society,
+              display: `${address.society}`,
+            })
+          }
+        })
+        setVisibilityData(visibilityArr)
+      }
+    }
+  }, [user])
 
   return (
     <>
@@ -232,24 +323,28 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
             </header>
             <span className={styles['divider']}></span>
             {locations?.length > 0 && (
-              <Select
-                sx={{
-                  boxShadow: 'none',
-                  '.MuiOutlinedInput-notchedOutline': { border: 0 },
+              <InputSelect
+                onChange={(e: any) => {
+                  let val = e.target.value
+                  setSelectedLocation(val)
                 }}
-                className={styles['location-select']}
                 value={selectedLocation}
-                onChange={(e) => setSelectedLocation(e.target.value)}
-                defaultValue={selectedLocation}
+                // inputProps={{ 'aria-label': 'Without label' }}
+                className={` ${styles['location-dropdown']}`}
               >
-                {locations.map((item, idx) => {
+                {visibilityData?.map((item: any, idx) => {
                   return (
-                    <MenuItem key={idx} value={item}>
-                      {item}
-                    </MenuItem>
+                    <>
+                      <DropdownOption
+                        {...item}
+                        key={idx}
+                        currentValue={selectedLocation}
+                        onChange={(val: any) => setSelectedLocation(val)}
+                      />
+                    </>
                   )
                 })}
-              </Select>
+              </InputSelect>
             )}
             {/* <section>
               <ul>
@@ -326,6 +421,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
               <div className={styles['top-margin-card']}></div>
               {selectedHobby !== '' &&
                 selectedLocation !== '' &&
+                selectedLocation !== 'Everyone' &&
                 Object.keys(hobbyGroup).length > 5 && (
                   <div className={styles['community-group-container']}>
                     <div className={styles['community-group-header']}>
