@@ -101,7 +101,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
     if (selectedHobby !== '') {
       params.append('_hobby', selectedHobby)
     }
-    if (selectedLocation !== '') {
+    if (selectedLocation !== '' && selectedLocation !== 'Everyone') {
       params.append('visibility', selectedLocation)
     }
     console.log('PARAMS ---', params.toString())
@@ -421,6 +421,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
               <div className={styles['top-margin-card']}></div>
               {selectedHobby !== '' &&
                 selectedLocation !== '' &&
+                selectedLocation !== 'Everyone' &&
                 Object.keys(hobbyGroup).length > 5 && (
                   <div className={styles['community-group-container']}>
                     <div className={styles['community-group-header']}>

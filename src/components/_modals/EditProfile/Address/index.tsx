@@ -165,7 +165,9 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       })
     } else if (!user.is_onboarded) {
       data.set_as_primary = true
-      addUserAddress(data, async (err, res) => {
+      let reqBody: any = { ...data }
+      reqBody.label = 'Default'
+      addUserAddress(reqBody, async (err, res) => {
         if (err) {
           setSubmitBtnLoading(false)
           return console.log(err)
