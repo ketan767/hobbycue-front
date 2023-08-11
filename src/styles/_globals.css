@@ -65,7 +65,6 @@ body {
 }
 a {
   all: unset;
-  color: rgba(var(--primary-100-rgb));
   cursor: pointer;
 }
 button:disabled {
