@@ -6,8 +6,13 @@ import UploadIcon from '@/assets/svg/upload.svg'
 type Props = {
   onChange: any
   profileLayoutMode: any
+  type?: any
 }
-const CoverPhotoLayout: React.FC<Props> = ({ onChange, profileLayoutMode }) => {
+const CoverPhotoLayout: React.FC<Props> = ({
+  onChange,
+  profileLayoutMode,
+  type,
+}) => {
   const inputRef = useRef<any>(null)
 
   return (
@@ -37,7 +42,7 @@ const CoverPhotoLayout: React.FC<Props> = ({ onChange, profileLayoutMode }) => {
             onChange={(e) => onChange(e)}
             ref={inputRef}
           />
-          <p>User Cover Photo</p>
+          <p>{type === 'page' ? 'Page Cover Photo' : 'User Cover Photo'}</p>
         </div>
       )}
     </div>
