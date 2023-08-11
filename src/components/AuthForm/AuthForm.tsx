@@ -224,6 +224,7 @@ const AuthForm: React.FC<Props> = (props) => {
     >
       {/* Tab Switcher (SignIn / JoinIn )  */}
       <Tabs
+        className={styles['tab']}
         value={selectedTab}
         onChange={(e, value: tabs) => handleTabChange(value)}
         centered={isModal ? true : false}

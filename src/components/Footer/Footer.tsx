@@ -83,9 +83,7 @@ const Footer: React.FC = () => {
                   name="society"
                   onChange={(e: any) => setEmail(e.target.value)}
                 />
-                <button className={styles.button}>
-Invite
-                </button>
+                <button className={styles.button}>Invite</button>
               </div>
             </div>
           </div>
