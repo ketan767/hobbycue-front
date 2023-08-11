@@ -128,8 +128,8 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
     if (selectedHobby !== '') {
       params.append('_hobby', selectedHobby)
     }
-    if (selectedLocation !== '') {
-      params.append('visibility', selectedLocation)
+    if (selectedLocation !== '' && selectedLocation !== 'Everyone') {
+      params.append('location', selectedLocation)
     }
     console.log('PARAMS ---', params.toString())
     dispatch(updatePagesLoading(true))
