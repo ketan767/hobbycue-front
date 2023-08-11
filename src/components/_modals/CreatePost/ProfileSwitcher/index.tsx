@@ -6,6 +6,7 @@ import { RootState } from '@/redux/store'
 import useOutsideAlerter from '@/hooks/useOutsideAlerter'
 
 import { updateActiveProfile } from '@/redux/slices/user'
+import { listingTypes } from '@/constants/constant'
 
 type Props = {
   data: any
@@ -27,6 +28,19 @@ const ProfileSwitcher: React.FC<Props> = ({ data: activeProfile, setData }) => {
     setShowDropdown(false)
   }
 
+  const getClass = (type: any) => {
+    if (type === listingTypes.PEOPLE) {
+      return 'default-people-listing-icon'
+    } else if (type === listingTypes.PLACE) {
+      return 'default-place-listing-icon'
+    } else if (type === listingTypes.PROGRAM) {
+      return 'default-program-listing-icon'
+    } else if (type === listingTypes.PRODUCT) {
+      return 'default-product-listing-icon'
+    }else if (type === 'listing') {
+      return 'default-people-listing-icon'
+    }
+  }
   return (
     <>
       <section
@@ -45,7 +59,12 @@ const ProfileSwitcher: React.FC<Props> = ({ data: activeProfile, setData }) => {
             height={32}
           />
         ) : (
-          <div className={`${styles['default-img']} default-user-icon`}></div>
+          <div
+            data-profile-type={activeProfile.type}
+            className={`${styles['default-img']} ${getClass(
+              activeProfile.type,
+            )} `}
+          ></div>
         )}
         <p className={styles['name']}>
           {activeProfile.type === 'listing'
@@ -100,6 +119,8 @@ const ProfileSwitcher: React.FC<Props> = ({ data: activeProfile, setData }) => {
                     key={page._id}
                     onClick={() => handleUpdateActiveProfile('listing', page)}
                     className={`${styles['dd-item']} ${
+                      styles['dd-item-listing']
+                    } ${
                       activeProfile.type === 'listing' &&
                       activeProfile.data._id === page._id &&
                       styles['active']
@@ -114,7 +135,11 @@ const ProfileSwitcher: React.FC<Props> = ({ data: activeProfile, setData }) => {
                         data-profile-type="listing"
                       />
                     ) : (
-                      <div></div>
+                      <div
+                        className={`${styles['default-img']} ${getClass(
+                          page.type,
+                        )} `}
+                      ></div>
                     )}
                     <p>{page.title}</p>
                   </li>
