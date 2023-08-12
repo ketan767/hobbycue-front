@@ -22,6 +22,7 @@ import FilledButton from '@/components/_buttons/FilledButton'
 import { useRouter } from 'next/router'
 import ShareIcon from '@/assets/svg/share-outlined.svg'
 import EditIcon from '@/assets/svg/edit-colored.svg'
+import MailIcon from '@/assets/svg/mailicon.png'
 import UploadIcon from '@/assets/svg/upload.svg'
 import CoverPhotoLayout from '@/layouts/CoverPhotoLayout/CoverPhotoLayout'
 import ProfileImageLayout from '@/layouts/ProfileImageLayout/ProfileImageLayout'
@@ -245,7 +246,7 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
                   onClick={(e) => console.log(e)}
                   className={styles['action-btn']}
                 >
-                  <MailOutlineRoundedIcon color="primary" />
+                  <Image src={MailIcon} alt="share" />
                 </div>
               </Link>
 

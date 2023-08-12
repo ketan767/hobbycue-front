@@ -33,7 +33,7 @@
 .post-card-wrapper header .post-other-info {
   font-size: 12px;
   line-height: 1var (--spacing-8);
-  color: #6d747a;
+  color: #6d747a !important;
 }
 
 .more-actions-icon {
