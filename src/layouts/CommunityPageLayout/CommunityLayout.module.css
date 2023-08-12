@@ -414,6 +414,23 @@
   border: none !important;
   border-radius: 0;
 }
+.location-side-wrapper {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.location-dropdown > header{
+  display: none;
+}
+.location-dropdown > div{
+  max-height: 1000px;
+  top: 0;
+  box-shadow: none;
+  border: 1px solid #ebedf0;
+  border-top: none;
+}
+.location-dropdown > div > div{
+  border-bottom: 0;
+}
 @media screen and (max-width: 1100px) {
   .hobbies-side-wrapper {
     display: none;

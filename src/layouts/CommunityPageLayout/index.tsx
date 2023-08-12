@@ -228,16 +228,13 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
             active: false,
           }
           visibilityArr.push(obj)
-          if (address.city) {
-            obj.display = `${address.city} - Home`
-          }
-          if (address.label) {
-            obj.display = `${address.label}`
+          if (address.city || address.label) {
+            obj.display = `${address.city} -  ${address.label ? address.label : 'Default'} `
           }
           if (address.pin_code) {
             obj.options.push({
               value: address.pin_code,
-              display: `Pin Code ${address.pin_code}`,
+              display: `PIN Code ${address.pin_code}`,
             })
           }
           if (address.locality) {
