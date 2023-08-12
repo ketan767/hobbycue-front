@@ -103,7 +103,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
             </header>
             <div className={styles['dropdown-options']}>
               {exploreOptions.map((option: any) => {
-                return <p>{option.text}</p>
+                return <p key={option.text} >{option.text}</p>
               })}
             </div>
           </div>
