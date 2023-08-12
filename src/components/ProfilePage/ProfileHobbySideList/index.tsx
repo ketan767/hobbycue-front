@@ -4,6 +4,7 @@ import PageContentBox from '@/layouts/PageContentBox'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { openModal } from '@/redux/slices/modal'
+import Link from 'next/link'
 
 type Props = {
   data: ProfilePageData['pageData']
@@ -26,10 +27,12 @@ const ProfileHobbySideList = ({ data }: Props) => {
           {data._hobbies.map((item: any) => {
             if (typeof item === 'string') return
             return (
-              <li key={item._id}>
-                {item?.hobby?.display}
-                {item?.genre && ` - ${item?.genre?.display} `}
-              </li>
+              <Link href={`/hobby/${item?.genre?.slug}`} key={item._id}>
+                <li>
+                  {item?.hobby?.display}
+                  {item?.genre && ` - ${item?.genre?.display} `}
+                </li>
+              </Link>
             )
           })}
         </ul>

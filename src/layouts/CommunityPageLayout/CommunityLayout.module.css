@@ -29,7 +29,9 @@
 .children-wrapper {
   transform: translateY(calc(-1 * var(--navbar-height-desktop)));
 }
-
+.single-post-children-wrapper{
+  transform: translate(0);
+}
 /* Side Hobby Wrapper */
 .hobbies-side-wrapper {
   margin-bottom: var(--spacing-16);

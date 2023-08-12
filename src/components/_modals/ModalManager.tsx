@@ -67,7 +67,7 @@ const ModalManager: React.FC = () => {
 
   const escFunction = useCallback((event: any) => {
     if (event.key === 'Escape') {
-      handleClose()
+      setConfirmationModal(true)
     }
   }, [])
 
@@ -92,7 +92,7 @@ const ModalManager: React.FC = () => {
         slots={{ backdrop: CustomBackdrop }}
         open={Boolean(activeModal)}
         closeAfterTransition
-        onClose={handleClose}
+        onClose={() =>  setConfirmationModal(true)}
       >
         <Fade
           in={Boolean(activeModal)}
@@ -190,7 +190,7 @@ const ModalManager: React.FC = () => {
             {confirmationModal && (
               <div className={`${styles['confirmation-modal']}`}>
                 <div className={styles['confirmation-modal-body']}>
-                  <p> Are you sure you want to close the modal ? </p>
+                  <p> Would you like to save before exit ? </p>
                   <div className={styles['buttons']}>
                     <FilledButton
                       onClick={() => {

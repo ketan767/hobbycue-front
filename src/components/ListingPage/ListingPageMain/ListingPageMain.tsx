@@ -194,10 +194,14 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                 {data?._hobbies?.map((item: any) => {
                   if (typeof item === 'string') return
                   return (
-                    <li key={item._id} className={styles.textGray}>
+                    <Link
+                      href={`/hobby/${item?.genre?.slug}`}
+                      className={styles.textGray}
+                      key={item._id}
+                    >
                       {item?.hobby?.display}
                       {item?.genre && ` - ${item?.genre?.display} `}
-                    </li>
+                    </Link>
                   )
                 })}
               </ul>
@@ -556,7 +560,10 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
             >
               <h4>Location</h4>
               {listingLayoutMode === 'view' && (
-                <div className={styles['direction-container']} onClick={openGoogleMaps} >
+                <div
+                  className={styles['direction-container']}
+                  onClick={openGoogleMaps}
+                >
                   <Image src={DirectionIcon} alt="direction" />
                   <p> Get Direction </p>
                 </div>
