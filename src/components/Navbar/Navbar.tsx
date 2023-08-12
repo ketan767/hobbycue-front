@@ -26,12 +26,14 @@ import store, { RootState } from '@/redux/store'
 
 import { useRouter } from 'next/router'
 import { logout } from '@/helper'
+import SideMenu from './SideMenu/SideMenu'
 
 type Props = {}
 
 export const Navbar: React.FC<Props> = ({}) => {
   const dispatch = useDispatch()
   const router = useRouter()
+  const [menuActive, setMenuActive] = useState(false)
 
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
@@ -50,6 +52,10 @@ export const Navbar: React.FC<Props> = ({}) => {
   useEffect(() => {
     setShowDropdown(null)
   }, [router.pathname])
+
+  const toggleMenu = ()=> {
+    setMenuActive(!menuActive)
+  }
 
   return (
     <>
@@ -172,7 +178,10 @@ export const Navbar: React.FC<Props> = ({}) => {
                         </Link>
                       </h4>
                       <ul>
-                        <Link href={'/hobby/music'} onClick={() => window.location.reload()}>
+                        <Link
+                          href={'/hobby/music'}
+                          onClick={() => window.location.reload()}
+                        >
                           <li>Music</li>
                         </Link>
 
@@ -204,7 +213,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                       </h4>
 
                       <ul>
-                      <Link href={'/hobby/fitness'}>
+                        <Link href={'/hobby/fitness'}>
                           <li>Fitness</li>
                         </Link>
 
@@ -488,13 +497,14 @@ export const Navbar: React.FC<Props> = ({}) => {
               <li>
                 <Image src={BellIcon} alt="Bell" />
               </li>
-              <li>
-                <Image src={BarsIcon} alt="Bars" />
+              <li >
+                <Image src={BarsIcon} alt="Bars" onClick={toggleMenu} />
               </li>
             </ul>
           </section>
         </nav>
       </header>
+      {menuActive && <SideMenu handleClose={toggleMenu} />}
       {showDropdown && <div className={styles['navbar-backdrop']}></div>}
     </>
   )

@@ -29,7 +29,9 @@
 .children-wrapper {
   transform: translateY(calc(-1 * var(--navbar-height-desktop)));
 }
-
+.single-post-children-wrapper{
+  transform: translate(0);
+}
 /* Side Hobby Wrapper */
 .hobbies-side-wrapper {
   margin-bottom: var(--spacing-16);
@@ -71,14 +73,19 @@
   font-size: 14px;
   line-height: 20px;
 
-  color: #8064a2;
+  color: var(--grey-dark, #939CA3);
   cursor: pointer;
 }
 .hobbies-side-wrapper section ul li:hover {
   background: #f7f5f9;
 }
 .hobbies-side-wrapper section ul li.selectedItem:hover {
-  background: #d0d0d0a2;
+  
+  background: #f7f5f9;
+}
+
+.hobbies-side-wrapper section ul li.selectedItem{
+  color: var(--purple-1, #8064A2);
 }
 
 /* Side Location Wrapper */
@@ -127,7 +134,7 @@
   background: #f7f5f9;
 }
 .location-side-wrapper section ul li.selectedItem:hover {
-  background: #d0d0d0a2;
+  background: #f7f5f9;
 }
 
 /* Invite to Community Wrapper */
@@ -336,7 +343,7 @@
   gap: var(--spacing-16);
 }
 .selectedItem {
-  background-color: #d0d0d0a2;
+  background-color: #f7f5f9;
 }
 .community-group-container {
   margin-bottom: 1rem;
@@ -413,6 +420,23 @@
 .location-dropdown{
   border: none !important;
   border-radius: 0;
+}
+.location-side-wrapper {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.location-dropdown > header{
+  display: none;
+}
+.location-dropdown > div{
+  max-height: 1000px;
+  top: 0;
+  box-shadow: none;
+  border: 1px solid #ebedf0;
+  border-top: none;
+}
+.location-dropdown > div > div{
+  border-bottom: 0;
 }
 @media screen and (max-width: 1100px) {
   .hobbies-side-wrapper {

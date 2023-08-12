@@ -42,7 +42,7 @@ export const DropdownOption: React.FC<Props> = (props) => {
           src={ChevronDown}
           alt="arrow-down"
           className={`${styles['icon']} ${
-            active ? styles['icon-active'] : ''
+            !active ? styles['icon-active'] : ''
           } `}
         />
       </div>

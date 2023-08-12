@@ -171,6 +171,7 @@ const AuthForm: React.FC<Props> = (props) => {
 
   // Social Login Handle
   const googleAuthSuccess = async (e: any) => {
+    console.log('g-data', e);
     dispatch(setShowPageLoader(true))
     const { err, res } = await googleAuth({
       googleId: e.profileObj.googleId,
