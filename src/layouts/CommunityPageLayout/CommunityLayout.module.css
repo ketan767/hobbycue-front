@@ -73,14 +73,19 @@
   font-size: 14px;
   line-height: 20px;
 
-  color: #8064a2;
+  color: var(--grey-dark, #939CA3);
   cursor: pointer;
 }
 .hobbies-side-wrapper section ul li:hover {
   background: #f7f5f9;
 }
 .hobbies-side-wrapper section ul li.selectedItem:hover {
-  background: #d0d0d0a2;
+  
+  background: #f7f5f9;
+}
+
+.hobbies-side-wrapper section ul li.selectedItem{
+  color: var(--purple-1, #8064A2);
 }
 
 /* Side Location Wrapper */
@@ -129,7 +134,7 @@
   background: #f7f5f9;
 }
 .location-side-wrapper section ul li.selectedItem:hover {
-  background: #d0d0d0a2;
+  background: #f7f5f9;
 }
 
 /* Invite to Community Wrapper */
@@ -338,7 +343,7 @@
   gap: var(--spacing-16);
 }
 .selectedItem {
-  background-color: #d0d0d0a2;
+  background-color: #f7f5f9;
 }
 .community-group-container {
   margin-bottom: 1rem;
