@@ -339,7 +339,7 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
               className={styles['action-dropdown']}
             >
               {' '}
-              {open && <Dropdown />}
+              {open && <Dropdown handleClose={handleDropdown} />}
               <MoreHorizRoundedIcon color="primary" />
             </div>
           </div>

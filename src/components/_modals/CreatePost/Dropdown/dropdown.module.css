@@ -1,6 +1,10 @@
 .dropdown-container {
   position: relative;
   padding: 0 4px;
+  border-bottom: 1px solid #ced4da;
+}
+.dropdown-container:last-child{
+  border-bottom: 0;
 }
 .heading {
   display: flex;
@@ -44,7 +48,7 @@ p.dropdown-value {
 
 p.dropdown-value-active{
    background-color: #f7f5f9;
-   color: #8064a2;
+   color: #8064a2 !important;
    border-radius: 4px;
 }
 .dropdown-options p.option-active {

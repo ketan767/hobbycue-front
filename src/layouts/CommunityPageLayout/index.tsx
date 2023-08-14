@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PageContentBox from '@/layouts/PageContentBox'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import { withAuth } from '@/navigation/withAuth'
@@ -33,9 +33,14 @@ import { getListingPages } from '@/services/listing.service'
 type Props = {
   activeTab: CommunityPageTabs
   children: React.ReactNode
+  singlePostPage?: boolean
 }
 
-const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
+const CommunityLayout: React.FC<Props> = ({
+  children,
+  activeTab,
+  singlePostPage,
+}) => {
   const dispatch = useDispatch()
   const { activeProfile, user } = useSelector((state: any) => state.user)
   const { allPosts } = useSelector((state: RootState) => state.post)
@@ -101,7 +106,7 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
     if (selectedHobby !== '') {
       params.append('_hobby', selectedHobby)
     }
-    if (selectedLocation !== '') {
+    if (selectedLocation !== '' && selectedLocation !== 'Everyone') {
       params.append('visibility', selectedLocation)
     }
     console.log('PARAMS ---', params.toString())
@@ -128,8 +133,8 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
     if (selectedHobby !== '') {
       params.append('_hobby', selectedHobby)
     }
-    if (selectedLocation !== '') {
-      params.append('visibility', selectedLocation)
+    if (selectedLocation !== '' && selectedLocation !== 'Everyone') {
+      params.append('location', selectedLocation)
     }
     console.log('PARAMS ---', params.toString())
     dispatch(updatePagesLoading(true))
@@ -228,16 +233,15 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
             active: false,
           }
           visibilityArr.push(obj)
-          if (address.city) {
-            obj.display = `${address.city} - Home`
-          }
-          if (address.label) {
-            obj.display = `${address.label}`
+          if (address.city || address.label) {
+            obj.display = `${address.city} -  ${
+              address.label ? address.label : 'Default'
+            } `
           }
           if (address.pin_code) {
             obj.options.push({
               value: address.pin_code,
-              display: `Pin Code ${address.pin_code}`,
+              display: `PIN Code ${address.pin_code}`,
             })
           }
           if (address.locality) {
@@ -264,7 +268,9 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
         column={hideThirdColumnTabs.includes(activeTab) ? 2 : 3}
         responsive={true}
       >
-        <aside className={styles['community-left-aside']}>
+        <aside
+          className={`${styles['community-left-aside']} custom-scrollbar`}
+        >
           <ProfileSwitcher />
           <section
             className={`content-box-wrapper ${styles['hobbies-side-wrapper']}`}
@@ -410,125 +416,106 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
         </aside>
 
         <main>
-          <header
-            className={`${styles['community-header']} ${
-              hideThirdColumnTabs.includes(activeTab)
-                ? styles['community-header-small']
-                : ''
-            }`}
-          >
-            <div className={styles['community-header-left']}>
-              <div className={styles['top-margin-card']}></div>
-              {selectedHobby !== '' &&
-                selectedLocation !== '' &&
-                Object.keys(hobbyGroup).length > 5 && (
-                  <div className={styles['community-group-container']}>
-                    <div className={styles['community-group-header']}>
-                      <div className={styles['profile-img-container']}>
-                        <Image
-                          src={
-                            hobbyGroup?.profile_image
-                              ? hobbyGroup?.profile_image
-                              : DefaultHobbyImg
-                          }
-                          alt="hobby-img"
-                        />
+          {!singlePostPage && (
+            <header
+              className={`${styles['community-header']} ${
+                hideThirdColumnTabs.includes(activeTab)
+                  ? styles['community-header-small']
+                  : ''
+              }`}
+            >
+              <div className={styles['community-header-left']}>
+                <div className={styles['top-margin-card']}></div>
+                {selectedHobby !== '' &&
+                  selectedLocation !== '' &&
+                  selectedLocation !== 'Everyone' &&
+                  Object.keys(hobbyGroup).length > 5 && (
+                    <div className={styles['community-group-container']}>
+                      <div className={styles['community-group-header']}>
+                        <div className={styles['profile-img-container']}>
+                          <Image
+                            src={
+                              hobbyGroup?.profile_image
+                                ? hobbyGroup?.profile_image
+                                : DefaultHobbyImg
+                            }
+                            alt="hobby-img"
+                          />
+                        </div>
+                        <div className={styles['cover-img-container']}>
+                          <Image
+                            src={
+                              hobbyGroup.cover_image
+                                ? hobbyGroup.cover_image
+                                : DefaultHobbyImg
+                            }
+                            alt="hobby-img"
+                          />
+                        </div>
                       </div>
-                      <div className={styles['cover-img-container']}>
-                        <Image
-                          src={
-                            hobbyGroup.cover_image
-                              ? hobbyGroup.cover_image
-                              : DefaultHobbyImg
-                          }
-                          alt="hobby-img"
-                        />
-                      </div>
+                      <p>
+                        {hobbyGroup?.display} in {selectedLocation}
+                      </p>
                     </div>
-                    <p>
-                      {hobbyGroup?.display} in {selectedLocation}
-                    </p>
-                  </div>
-                )}
-              <section
-                className={`content-box-wrapper ${styles['start-post-btn-container']}`}
-              >
-                <button
-                  onClick={() =>
-                    dispatch(openModal({ type: 'create-post', closable: true }))
-                  }
-                  className={styles['start-post-btn']}
+                  )}
+                <section
+                  className={`content-box-wrapper ${styles['start-post-btn-container']}`}
                 >
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
+                  <button
+                    onClick={() =>
+                      dispatch(
+                        openModal({ type: 'create-post', closable: true }),
+                      )
+                    }
+                    className={styles['start-post-btn']}
                   >
-                    <g clip-path="url(#clip0_704_44049)">
-                      <path
-                        d="M13.1429 8.85714H8.85714V13.1429C8.85714 13.6143 8.47143 14 8 14C7.52857 14 7.14286 13.6143 7.14286 13.1429V8.85714H2.85714C2.38571 8.85714 2 8.47143 2 8C2 7.52857 2.38571 7.14286 2.85714 7.14286H7.14286V2.85714C7.14286 2.38571 7.52857 2 8 2C8.47143 2 8.85714 2.38571 8.85714 2.85714V7.14286H13.1429C13.6143 7.14286 14 7.52857 14 8C14 8.47143 13.6143 8.85714 13.1429 8.85714Z"
-                        fill="#8064A2"
-                      />
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_704_44049">
-                        <rect width="16" height="16" fill="white" />
-                      </clipPath>
-                    </defs>
-                  </svg>
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g clip-path="url(#clip0_704_44049)">
+                        <path
+                          d="M13.1429 8.85714H8.85714V13.1429C8.85714 13.6143 8.47143 14 8 14C7.52857 14 7.14286 13.6143 7.14286 13.1429V8.85714H2.85714C2.38571 8.85714 2 8.47143 2 8C2 7.52857 2.38571 7.14286 2.85714 7.14286H7.14286V2.85714C7.14286 2.38571 7.52857 2 8 2C8.47143 2 8.85714 2.38571 8.85714 2.85714V7.14286H13.1429C13.6143 7.14286 14 7.52857 14 8C14 8.47143 13.6143 8.85714 13.1429 8.85714Z"
+                          fill="#8064A2"
+                        />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_704_44049">
+                          <rect width="16" height="16" fill="white" />
+                        </clipPath>
+                      </defs>
+                    </svg>
 
-                  <span>Start a post</span>
-                </button>
-              </section>
-              <section
-                className={`content-box-wrapper ${styles['navigation-links']}`}
-              >
-                <ul>
-                  {tabs.map((tab, idx) => {
-                    return (
-                      <li
-                        key={idx}
-                        className={activeTab === tab ? styles['active'] : ''}
-                      >
-                        <Link
-                          key={tab}
-                          href={`/community/${tab !== 'posts' ? tab : ''}`}
+                    <span>Start a post</span>
+                  </button>
+                </section>
+                <section
+                  className={`content-box-wrapper ${styles['navigation-links']}`}
+                >
+                  <ul>
+                    {tabs.map((tab, idx) => {
+                      return (
+                        <li
+                          key={idx}
+                          className={activeTab === tab ? styles['active'] : ''}
                         >
-                          {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                        </Link>
-                      </li>
-                    )
-                  })}
-                </ul>
-              </section>
-              <section className={styles['filter-section']}>
-                <p> Filter: </p>
-                <div>
-                  <Select
-                    sx={{
-                      boxShadow: 'none',
-                      '.MuiOutlinedInput-notchedOutline': { border: 0 },
-                      fieldset: { border: 0 },
-                    }}
-                    className={styles['location-select']}
-                    value={selectedHobby}
-                    onChange={(e) => handleHobbyClick(e.target.value)}
-                    defaultValue={'Hobby'}
-                  >
-                    {activeProfile.data?._hobbies?.map(
-                      (item: any, idx: number) => {
-                        return (
-                          <MenuItem key={idx} value={item.hobby._id}>
-                            {item?.hobby?.display}
-                          </MenuItem>
-                        )
-                      },
-                    )}
-                  </Select>
-
-                  {locations?.length > 0 && (
+                          <Link
+                            key={tab}
+                            href={`/community/${tab !== 'posts' ? tab : ''}`}
+                          >
+                            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                          </Link>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </section>
+                <section className={styles['filter-section']}>
+                  <p> Filter: </p>
+                  <div>
                     <Select
                       sx={{
                         boxShadow: 'none',
@@ -536,43 +523,72 @@ const CommunityLayout: React.FC<Props> = ({ children, activeTab }) => {
                         fieldset: { border: 0 },
                       }}
                       className={styles['location-select']}
-                      value={selectedLocation}
-                      onChange={(e) => setSelectedLocation(e.target.value)}
-                      defaultValue={'Location'}
+                      value={selectedHobby}
+                      onChange={(e) => handleHobbyClick(e.target.value)}
+                      defaultValue={'Hobby'}
                     >
-                      {locations.map((item, idx) => {
-                        return (
-                          <MenuItem key={idx} value={item}>
-                            {item}
-                          </MenuItem>
-                        )
-                      })}
+                      {activeProfile.data?._hobbies?.map(
+                        (item: any, idx: number) => {
+                          return (
+                            <MenuItem key={idx} value={item.hobby._id}>
+                              {item?.hobby?.display}
+                            </MenuItem>
+                          )
+                        },
+                      )}
                     </Select>
-                  )}
-                </div>
-              </section>
-            </div>
-            {hideThirdColumnTabs.includes(activeTab) && (
-              <div className={styles['invite-container-main']}>
-                <div className={styles['top-margin-card']}></div>
-                <section
-                  className={`content-box-wrapper ${styles['invite-wrapper']}`}
-                >
-                  <header>
-                    <h3>Invite to Community</h3>
-                  </header>
-                  <span className={styles['divider']}></span>
-                  <section>
-                    <input type="text" name="" id="" />
-                    <span className={styles['input-prefix']}>@</span>
-                    <FilledButton>Invite</FilledButton>
-                  </section>
+
+                    {locations?.length > 0 && (
+                      <Select
+                        sx={{
+                          boxShadow: 'none',
+                          '.MuiOutlinedInput-notchedOutline': { border: 0 },
+                          fieldset: { border: 0 },
+                        }}
+                        className={styles['location-select']}
+                        value={selectedLocation}
+                        onChange={(e) => setSelectedLocation(e.target.value)}
+                        defaultValue={'Location'}
+                      >
+                        {locations.map((item, idx) => {
+                          return (
+                            <MenuItem key={idx} value={item}>
+                              {item}
+                            </MenuItem>
+                          )
+                        })}
+                      </Select>
+                    )}
+                  </div>
                 </section>
               </div>
-            )}
-          </header>
+              {hideThirdColumnTabs.includes(activeTab) && (
+                <div className={styles['invite-container-main']}>
+                  <div className={styles['top-margin-card']}></div>
+                  <section
+                    className={`content-box-wrapper ${styles['invite-wrapper']}`}
+                  >
+                    <header>
+                      <h3>Invite to Community</h3>
+                    </header>
+                    <span className={styles['divider']}></span>
+                    <section>
+                      <input type="text" name="" id="" />
+                      <FilledButton>Invite</FilledButton>
+                    </section>
+                  </section>
+                </div>
+              )}
+            </header>
+          )}
 
-          <section className={styles['children-wrapper']}>{children}</section>
+          <section
+            className={`${styles['children-wrapper']} ${
+              singlePostPage ? styles['single-post-children-wrapper'] : ''
+            } `}
+          >
+            {children}
+          </section>
         </main>
 
         {hideThirdColumnTabs.includes(activeTab) === false && (

@@ -10,11 +10,12 @@ import CameraIcon from '@/assets/icons/CameraIcon'
 import Link from 'next/link'
 import { useDispatch, useSelector } from 'react-redux'
 import { updatePhotoEditModalData } from '@/redux/slices/site'
-import { closeModal, openModal } from '@/redux/slices/modal'
+import { closeModal, openModal, updateShareUrl } from '@/redux/slices/modal'
 import { setTimeout } from 'timers/promises'
 import { updateUserCover, updateUserProfile } from '@/services/user.service'
 import { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
+import Dropdown from './DropDown'
 
 type Props = {
   activeTab: ProfilePageTabs
@@ -29,6 +30,11 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
   const tabs: ProfilePageTabs[] = ['home', 'posts', 'media', 'pages', 'blogs']
 
+  const [open, setOpen] = useState(false)
+
+  const handleDropdown = () => {
+    setOpen(!open)
+  }
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
     e.preventDefault()
     let files = e.target.files
@@ -92,6 +98,12 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
       // dispatch(closeModal())
     }
   }
+
+  const handleShare = () => {
+    dispatch(updateShareUrl(window.location.href))
+    dispatch(openModal({ type: 'social-media-share', closable: true }))
+  }
+
 
   return (
     <>
@@ -179,7 +191,7 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
 
             {/* Share Button */}
             <div
-              onClick={(e) => console.log(e)}
+             onClick={(e) => handleShare()}
               className={styles['action-btn']}
             >
               <ShareRoundedIcon color="primary" fontSize="small" />
@@ -187,10 +199,11 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
 
             {/* More Options Button */}
             <div
-              onClick={(e) => console.log(e)}
+              onClick={(e) => handleDropdown()}
               className={styles['action-btn']}
             >
               <MoreHorizRoundedIcon color="primary" />
+              {open && <Dropdown handleClose={handleDropdown} />}
             </div>
           </div>
         </header>

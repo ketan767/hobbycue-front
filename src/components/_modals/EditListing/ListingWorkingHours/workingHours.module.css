@@ -1,8 +1,8 @@
 .modal-wrapper {
   background-color: white;
   border-radius: var(--spacing-8);
-  max-width: 50rem;
-  width: 38rem;
+  max-width: 668px;
+  width: 668px;
   /* min-height: 30rem; */
   display: flex;
   flex-direction: column;
@@ -16,6 +16,10 @@
     height: 100%;
     overflow: auto;
   }
+}
+.delete-icon{
+  cursor: pointer;
+  margin-left: 1rem;
 }
 .modal-wrapper .header,
 .modal-wrapper .body {
@@ -194,6 +198,10 @@
   overflow-y: auto;
   overflow-x: visible;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  row-gap: 1rem;
 }
 .listSubItem {
   display: flex;
@@ -218,6 +226,9 @@
   font-size: 12px;
   line-height: 18px;
   color: #6d747a;
+}
+.listItem+.listItem .listSubItem label{
+  display: none;
 }
 @media screen and (max-width: 1100px) {
   .modal-wrapper {

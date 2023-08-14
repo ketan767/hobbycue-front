@@ -176,8 +176,8 @@ const ListingAddressEditModal: React.FC<Props> = ({
   }
 
   const updateAddress = async () => {
-    console.log(listingModalData)
-    const { err, res } = await getListingAddress(listingModalData._address?._id)
+    console.log('listingModalData', listingModalData)
+    const { err, res } = await getListingAddress(listingModalData._address?._id ? listingModalData._address?._id : listingModalData._address)
     if (err) return console.log(err)
 
     setData({
