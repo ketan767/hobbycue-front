@@ -27,6 +27,7 @@ import CoverPhotoLayout from '@/layouts/CoverPhotoLayout/CoverPhotoLayout'
 import ProfileImageLayout from '@/layouts/ProfileImageLayout/ProfileImageLayout'
 import { useRouter } from 'next/router'
 import { listingTypes } from '@/constants/constant'
+import Dropdown from './DropDown'
 
 type Props = {
   data: ListingPageData['pageData']
@@ -46,6 +47,13 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
   const router = useRouter()
 
   const { listingLayoutMode } = useSelector((state: any) => state.site)
+
+  
+  const [open, setOpen] = useState(false)
+
+  const handleDropdown = () => {
+    setOpen(!open)
+  }
 
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
     e.preventDefault()
@@ -291,9 +299,11 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
 
             {/* More Options Button */}
             <div
-              onClick={(e) => console.log(e)}
-              className={styles['action-btn']}
+              onClick={(e) => handleDropdown()}
+              className={styles['action-dropdown']}
             >
+              {' '}
+              {open && <Dropdown handleClose={handleDropdown} />}
               <MoreHorizRoundedIcon color="primary" />
             </div>
           </div>
