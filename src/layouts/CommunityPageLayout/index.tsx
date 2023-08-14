@@ -61,8 +61,11 @@ const CommunityLayout: React.FC<Props> = ({
     'blogs',
   ]
   const [visibilityData, setVisibilityData] = useState(['public'])
+  const [seeMoreHobby, setSeeMoreHobby] = useState(false)
 
   const hideThirdColumnTabs = ['pages', 'links']
+
+  const toggleSeeMore = () => setSeeMoreHobby(!seeMoreHobby)
   const getPost = async () => {
     const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
     activeProfile?.data?._hobbies.forEach((item: any) => {
@@ -268,9 +271,7 @@ const CommunityLayout: React.FC<Props> = ({
         column={hideThirdColumnTabs.includes(activeTab) ? 2 : 3}
         responsive={true}
       >
-        <aside
-          className={`${styles['community-left-aside']} custom-scrollbar`}
-        >
+        <aside className={`${styles['community-left-aside']} custom-scrollbar`}>
           <ProfileSwitcher />
           <section
             className={`content-box-wrapper ${styles['hobbies-side-wrapper']}`}
@@ -291,7 +292,7 @@ const CommunityLayout: React.FC<Props> = ({
             <span className={styles['divider']}></span>
             <section>
               <ul>
-                {activeProfile.data?._hobbies?.map((hobby: any) => {
+                {activeProfile.data?._hobbies?.slice(0, seeMoreHobby ? activeProfile.data?._hobbies.length : 3).map((hobby: any) => {
                   return (
                     <li
                       key={hobby._id}
@@ -307,6 +308,11 @@ const CommunityLayout: React.FC<Props> = ({
                     </li>
                   )
                 })}
+                {
+                  !seeMoreHobby ?
+                  <p className={styles['see-more']} onClick={toggleSeeMore} > See more </p> :
+                  <p className={styles['see-more']} onClick={toggleSeeMore} > See less </p>
+                }
               </ul>
             </section>
           </section>
