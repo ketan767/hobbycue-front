@@ -37,9 +37,8 @@
   --navbar-height-desktop: 5rem;
 }
 @media screen and (max-width: 1100px) {
-  :root{
-
-  --navbar-height-desktop: 3rem;
+  :root {
+    --navbar-height-desktop: 3rem;
   }
 }
 * {
@@ -49,7 +48,8 @@
   font: inherit;
 }
 strong,
-em,i {
+em,
+i {
   font: revert;
 }
 /* *:focus {
@@ -152,7 +152,7 @@ select:-webkit-autofill {
 .modal-footer-btn.submit {
   margin-left: auto;
 }
-.modal-footer-btn.submit:disabled{
+.modal-footer-btn.submit:disabled {
   opacity: 0.7;
 }
 .modal-footer-btn.cancel {
@@ -249,41 +249,39 @@ select:-webkit-autofill {
   color: #939ca3;
   flex: 1;
 }
-.textarea-emoji-control{
+.textarea-emoji-control {
   display: none;
 }
-.ql-container{
+.ql-container {
   font-size: 14px !important;
   max-width: 606px;
 }
 
 .ck.ck-content.ck-editor__editable ul,
-.ck.ck-content.ck-editor__editable ol{
+.ck.ck-content.ck-editor__editable ol {
   padding-left: 12px !important;
 }
 
-
-.about-quill-container .ql-container.ql-snow{
+.about-quill-container .ql-container.ql-snow {
   flex: 1;
   min-height: 285px !important;
-  border: 1px solid #EBEDF0;
+  border: 1px solid #ebedf0;
 }
 .about-quill-container .ql-toolbar.ql-snow + .ql-container.ql-snow {
-  border-top: 1px solid #EBEDF0 !important;
+  border-top: 1px solid #ebedf0 !important;
   border-bottom: 0;
 }
-.about-quill-container .ql-toolbar.ql-snow{
-  border: 1px solid #EBEDF0;
-
+.about-quill-container .ql-toolbar.ql-snow {
+  border: 1px solid #ebedf0;
 }
-.about-quill-container .ql-toolbar.ql-snow button{
+.about-quill-container .ql-toolbar.ql-snow button {
   margin-right: 0.75rem;
 }
-.about-quill-container .quill{
+.about-quill-container .quill {
   padding-bottom: 0;
   border-radius: 8px;
 }
-.about-quill-container{
+.about-quill-container {
   border-radius: 8px;
   overflow: hidden;
 }
@@ -296,5 +294,34 @@ select:-webkit-autofill {
   .main-site-wrapper {
     margin-left: 24px;
     margin-right: 24px;
+    margin-top: 8px;
   }
+}
+.custom-scrollbar {
+  transition: 0.6s;
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0);
+  transition: background-color 0.3s ease;
+}
+
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.4);
 }

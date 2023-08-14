@@ -21,6 +21,12 @@
     grid-template-columns: 1fr;
   }
   .container {
-    padding: 1rem;
+    background: #f8f9fa;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .grid-container {
+    gap: 0;
   }
 }

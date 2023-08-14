@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PageContentBox from '@/layouts/PageContentBox'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import { withAuth } from '@/navigation/withAuth'
@@ -268,7 +268,9 @@ const CommunityLayout: React.FC<Props> = ({
         column={hideThirdColumnTabs.includes(activeTab) ? 2 : 3}
         responsive={true}
       >
-        <aside className={styles['community-left-aside']}>
+        <aside
+          className={`${styles['community-left-aside']} custom-scrollbar`}
+        >
           <ProfileSwitcher />
           <section
             className={`content-box-wrapper ${styles['hobbies-side-wrapper']}`}
@@ -572,7 +574,6 @@ const CommunityLayout: React.FC<Props> = ({
                     <span className={styles['divider']}></span>
                     <section>
                       <input type="text" name="" id="" />
-                      <span className={styles['input-prefix']}>@</span>
                       <FilledButton>Invite</FilledButton>
                     </section>
                   </section>

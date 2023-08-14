@@ -291,6 +291,25 @@ line-height: 20px;
     color: #ffffff;
     background-color: #8064A2;
   }
-
+  .tab-btn {
+    text-transform: none;
+    font-weight: 600;
+    font-size: 16px;
+    
+    /* min-height: 32px; */
+    font-family: var(--font-poppins);
+  }
+  .social-login-btn {
+    font-size: 12px;
+  }
+  .modal-form-contanier .forgot-pass-btn span{
+    font-size: 12px;
+  }
+  .modal-form-contanier .form-footer .submit-btn {
+    color: #ebedf0;
+  }
+  .social-login-btn {
+    height: 32px;
+  }
   
 }
