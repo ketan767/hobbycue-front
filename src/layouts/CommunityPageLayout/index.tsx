@@ -574,7 +574,6 @@ const CommunityLayout: React.FC<Props> = ({
                     <span className={styles['divider']}></span>
                     <section>
                       <input type="text" name="" id="" />
-                      <span className={styles['input-prefix']}>@</span>
                       <FilledButton>Invite</FilledButton>
                     </section>
                   </section>
