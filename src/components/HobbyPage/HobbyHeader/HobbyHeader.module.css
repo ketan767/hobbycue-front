@@ -208,8 +208,6 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    padding-left: 1rem;
-    padding-right: 1rem;
   }
   .profile-img-wrapper .name-container,
   .profile-img-wrapper .tagline {

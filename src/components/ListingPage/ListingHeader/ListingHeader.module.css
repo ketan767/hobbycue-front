@@ -289,16 +289,20 @@
   .nav {
     display: flex;
     overflow-x: auto;
-    padding: 0 16px;
+    padding: 0 14px;
   }
   .navigation-tabs {
-    gap: 20px;
+    gap: 0;
     overflow-x: auto;
     flex-shrink: 0;
   }
   .navigation-tabs > a {
     flex-shrink: 0;
   }
+  .navigation-tabs a {
+    min-width: 6px;
+    font-size: 12px;
+ }
 }
 .publishBtn {
   width: 100%;
@@ -312,8 +316,7 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    padding-left: 1rem;
-    padding-right: 1rem;
+ 
   }
   .profile-img-wrapper .name-container,
   .profile-img-wrapper .tagline {
