@@ -500,4 +500,10 @@
   .navigation-links ul li {
     padding: 8px;
   }
+  .location-select > div {
+    font-size: 10px;
+    padding: 10px;
+    border: 0;
+    outline: 0;
+  }
 }
