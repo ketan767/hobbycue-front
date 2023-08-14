@@ -152,21 +152,27 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   useEffect(() => {
     const token = localStorage.getItem('token')
     const headers = { Authorization: `Bearer ${token}` }
-    axios
-      .get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/check-profile-url/${data.profile_url}`,
-        { headers },
-      )
-      .then((res) => {
-        setInputErrs((prev) => {
-          return { ...prev, profile_url: null }
+    if (user.profile_url !== data.profile_url) {
+      axios
+        .get(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/check-profile-url/${data.profile_url}`,
+          { headers },
+        )
+        .then((res) => {
+          setInputErrs((prev) => {
+            return { ...prev, profile_url: null }
+          })
         })
-      })
-      .catch((err) => {
-        setInputErrs((prev) => {
-          return { ...prev, profile_url: 'This profile url is already taken' }
+        .catch((err) => {
+          setInputErrs((prev) => {
+            return { ...prev, profile_url: 'This profile url is already taken' }
+          })
         })
+    }else{
+      setInputErrs((prev) => {
+        return { ...prev, profile_url: null }
       })
+    }
   }, [data.profile_url])
 
   useEffect(() => {
