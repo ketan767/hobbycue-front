@@ -11,3 +11,13 @@
   mix-blend-mode: normal;
   border-radius: var(--spacing-8);
 }
+
+@media screen and (max-width: 1100px){
+  .modal-wrapper {
+    max-width: 1100px;
+    height: 100%;
+    padding: var(--spacing-24);
+    width: 100%;
+  }
+}
+  
