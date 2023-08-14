@@ -95,3 +95,26 @@
 .profile-switcher.show-dropdown .dropdown {
   border-radius: 0 0 8px 8px;
 }
+
+@media screen and (max-width:1100px) {
+  .profile-switcher .name {
+  font-size: 14px;
+}
+
+.profile-switcher .profile-image[data-profile-type='user'] {
+  width: var(--spacing-32);
+  height: var(--spacing-32);
+
+}
+.profile-switcher .profile-image[data-profile-type='listing'] {
+  width: var(--spacing-32);
+  height: var(--spacing-32);
+}
+.profile-switcher {
+  
+  /* justify-content: space-between; */
+  gap: var(--spacing-8);
+  padding: 8px 8px;
+  margin-bottom: 8px;
+}
+}
