@@ -27,6 +27,7 @@ import UploadIcon from '@/assets/svg/upload.svg'
 import CoverPhotoLayout from '@/layouts/CoverPhotoLayout/CoverPhotoLayout'
 import ProfileImageLayout from '@/layouts/ProfileImageLayout/ProfileImageLayout'
 import Dropdown from './DropDown'
+import useOutsideClick from '@/hooks/useOutsideClick'
 
 type Props = {
   activeTab: ProfilePageTabs
@@ -41,7 +42,6 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
   const handleDropdown = () => {
     setOpen(!open)
   }
-
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
   const tabs: ProfilePageTabs[] = ['home', 'posts', 'media', 'pages', 'blogs']
 
@@ -272,7 +272,7 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
                 className={styles['action-btn']}
               >
                 <MoreHorizRoundedIcon color="primary" />
-                {open && <Dropdown />}
+                {open && <Dropdown handleClose={handleDropdown} />}
               </div>
             </div>
           </div>
