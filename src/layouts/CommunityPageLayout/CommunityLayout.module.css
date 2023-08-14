@@ -439,4 +439,29 @@
   .invite-container-main {
     display: none;
   }
+  .navigation-links a {
+    font-size: 12px;
+  }
+  /* .community-right-aside{
+    display: none;
+  } */
+  .community-header {
+    border-radius: var(--spacing-8);
+    transform: translateY(calc(0 * var(--navbar-height-desktop)));
+    z-index: 1;
+    background-color: white;
+  }
+  .community-header .top-margin-card {
+    height: 0;
+    
+  }
+
+  .start-post-btn-container {
+    padding: 6px 8px;
+  }
+
+  .navigation-links ul li {
+    padding: 8px;
+  }
+  
 }
