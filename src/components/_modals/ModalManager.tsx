@@ -92,7 +92,7 @@ const ModalManager: React.FC = () => {
         slots={{ backdrop: CustomBackdrop }}
         open={Boolean(activeModal)}
         closeAfterTransition
-        onClose={() =>  setConfirmationModal(true)}
+        onClose={() => setConfirmationModal(true)}
       >
         <Fade
           in={Boolean(activeModal)}
@@ -132,6 +132,7 @@ const ModalManager: React.FC = () => {
               )}
 
               {activeModal === 'listing-type-edit' && <ListingTypeEditModal />}
+
               {activeModal === 'listing-tags-edit' && <ListingTagsEditModal />}
               {activeModal === 'listing-general-edit' && (
                 <ListingGeneralEditModal />
@@ -176,9 +177,14 @@ const ModalManager: React.FC = () => {
               {activeModal === 'reset-password' && <ResetPasswordModal />}
               {activeModal === 'social-media-share' && <ShareModal />}
               {activeModal === 'add-location' && (
-                <ProfileAddressEditModal addLocation={true} title={'Add New Location'} />
+                <ProfileAddressEditModal
+                  addLocation={true}
+                  title={'Add New Location'}
+                />
               )}
-
+              {activeModal === 'user-address-edit' && (
+                <ProfileAddressEditModal title="Edit Location" editLocation={true} />
+              )}
               {/* Modal Close Icon */}
               {closable && (
                 <CloseIcon

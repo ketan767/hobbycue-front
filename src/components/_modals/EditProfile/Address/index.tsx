@@ -20,6 +20,7 @@ type Props = {
   onBackBtnClick?: () => void
   addLocation?: boolean
   title?: String
+  editLocation?: boolean
 }
 
 const ProfileAddressEditModal: React.FC<Props> = ({
@@ -27,9 +28,10 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   onBackBtnClick,
   addLocation,
   title: modalTitle,
+  editLocation,
 }) => {
   const dispatch = useDispatch()
-  const { user } = useSelector((state: RootState) => state.user)
+  const { user, addressToEdit } = useSelector((state: RootState) => state.user)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [nextDisabled, setNextDisabled] = useState(false)
@@ -136,8 +138,34 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         }
       })
     }
-
     setSubmitBtnLoading(true)
+    if (editLocation) {
+      let reqBody: any = { ...data }
+      reqBody.label = addressLabel
+      updateUserAddress(addressToEdit, reqBody, async (err, res) => {
+        if (err) {
+          setSubmitBtnLoading(false)
+          return console.log(err)
+        }
+        if (!res.data.success) {
+          setSubmitBtnLoading(false)
+          return alert('Something went wrong!')
+        }
+        const { err: error, res: response } = await getMyProfileDetail()
+
+        setSubmitBtnLoading(false)
+        if (error) return console.log(error)
+        if (response?.data.success) {
+          dispatch(updateUser(response.data.data.user))
+          if (onComplete) onComplete()
+          else {
+            window.location.reload()
+            dispatch(closeModal())
+          }
+        }
+      })
+      return
+    }
     if (addLocation) {
       let reqBody: any = { ...data }
       reqBody.label = addressLabel
@@ -216,18 +244,29 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    setData({
-      street: user.primary_address?.street,
-      society: user.primary_address?.society,
-      locality: user.primary_address?.locality,
-      city: user.primary_address?.city,
-      pin_code: user.primary_address?.pin_code,
-      state: user.primary_address?.state,
-      country: user.primary_address?.country,
-      latitude: user.primary_address?.latitude,
-      longitude: user.primary_address?.longitude,
-    })
-  }, [user])
+    if (editLocation) {
+      const address = user._addresses.find(
+        (address: any) => address._id === addressToEdit,
+      )
+      console.log('address', address)
+      if (address) {
+        setData(address)
+        setAddressLabel(address.label)
+      }
+    } else {
+      setData({
+        street: user.primary_address?.street,
+        society: user.primary_address?.society,
+        locality: user.primary_address?.locality,
+        city: user.primary_address?.city,
+        pin_code: user.primary_address?.pin_code,
+        state: user.primary_address?.state,
+        country: user.primary_address?.country,
+        latitude: user.primary_address?.latitude,
+        longitude: user.primary_address?.longitude,
+      })
+    }
+  }, [user, editLocation])
 
   useEffect(() => {
     if (isEmpty(data.state) || isEmpty(data.city) || isEmpty(data.country)) {
@@ -312,7 +351,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         <hr />
 
         <section className={styles['body']}>
-          {addLocation && (
+          {addLocation || editLocation ? (
             <div
               className={`${styles['input-box']} ${
                 inputErrs.addressLabel ? styles['input-box-error'] : ''
@@ -332,6 +371,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               </div>
               <p className={styles['helper-text']}>{inputErrs.addressLabel}</p>
             </div>
+          ) : (
+            <></>
           )}
           <>
             {/* Street Address */}

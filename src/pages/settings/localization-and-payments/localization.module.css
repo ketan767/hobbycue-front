@@ -88,3 +88,29 @@
   padding: 4px 0;
   margin-bottom: 10px;
 }
+.edit-icon-container{
+  position: relative;
+}
+.optionsContainer {
+  position: absolute;
+  top: calc(100% - 2px);
+  left: 0;
+  width: 30px;
+  border: 1px solid #cfcfcf;
+  border-radius: 8px;
+  width: 80px;
+  background-color: white;
+  opacity: 0;
+  pointer-events: none;
+}
+.optionsContainer.options-active{
+  opacity: 1;
+  pointer-events: all;
+}
+.optionsContainer li {
+  list-style: none;
+  color: #6d747a;
+  padding: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
