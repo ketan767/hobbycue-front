@@ -92,6 +92,7 @@ const PostComments = ({ data, styles }: Props) => {
                 placeholder="Write a comment..."
                 onChange={(e: any) => setInputValue(e.target.value)}
                 ref={inputRef}
+                maxRows={5}
               />
               <button
                 type="submit"

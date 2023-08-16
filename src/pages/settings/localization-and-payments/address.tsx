@@ -47,11 +47,11 @@ const Address: React.FC<Props> = ({ address, handleAddressEdit }) => {
     }
   }
   return (
-    <div className={`${styles.cardContainer}`} key={address._id}>
+    <div className={`${styles.cardContainer}`} key={address?._id}>
       <div className={`${styles.addressLeft}`}>
         <Image
           src={
-            user?.primary_address?._id === address._id
+            user?.primary_address?._id === address?._id
               ? RadioSelected
               : RadioUnselected
           }
@@ -95,7 +95,7 @@ const Address: React.FC<Props> = ({ address, handleAddressEdit }) => {
             optionsActive ? styles['options-active'] : ''
           } `}
         >
-          <li onClick={() => handleAddressEdit(address._id)}>Edit</li>
+          <li onClick={() => handleAddressEdit(address?._id)}>Edit</li>
           <li>Delete</li>
         </ul>
       </div>

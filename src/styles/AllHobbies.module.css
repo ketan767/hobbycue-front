@@ -139,6 +139,7 @@
   line-height: 20px;
   letter-spacing: 0.04em;
   color: #ffffff;
+  z-index: 100;
 }
 
 .hobbies-table tbody {
@@ -203,9 +204,23 @@
   display: flex;
   align-items: center;
   letter-spacing: 0.04em;
-column-gap: 2px;
+  column-gap: 2px;
   color: #000000;
 }
-.table-hobby{
+.table-hobby {
   font-size: 14px;
+}
+.table-content-container{
+  position: relative;
+}
+.hobbies-table tbody tr td .vertical-line{
+  position: absolute;
+  left: 200px;
+  top: -10px;
+  width: 1px;
+  height: calc(100% + 10px);
+  padding: 0;
+  margin-top: 0;
+  padding-top: 0;
+  background-color: #CED4DA;
 }
