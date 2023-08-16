@@ -179,35 +179,47 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                       <Link href={`/hobby/${cat.slug}`}>{cat.display}</Link>
                     </td>
                     <td>
-                      {subCategories.map((subCat: any) => {
-                        return (
-                          subCat.category?._id === cat._id && (
-                            <div className={styles['table-content-container']}>
-                              <>
-                                <p>
-                                  <Image src={AddIcon} alt="add" />{' '}
-                                  {subCat.display}
-                                  <Link href={`/hobby/${subCat.slug}`}></Link>
-                                </p>
-                                <div className={styles['vertical-line']}></div>
-                                <p className={styles['table-hobby']}>
-                                  {hobbyData.map((hobby: any) => {
-                                    return (
-                                      hobby?.category?._id === cat._id &&
-                                      hobby?.sub_category?._id ===
-                                        subCat._id && (
-                                        <Link href={`/hobby/${hobby.slug}`}>
-                                          <span> {hobby.display}, </span>
-                                        </Link>
-                                      )
-                                    )
-                                  })}
-                                </p>
-                              </>
-                            </div>
-                          )
+                      {subCategories
+                        .sort((a: any, b: any) =>
+                          a.display > b.display
+                            ? 1
+                            : b.display > a.display
+                            ? -1
+                            : 0,
                         )
-                      })}
+                        .map((subCat: any) => {
+                          return (
+                            subCat.category?._id === cat._id && (
+                              <div
+                                className={styles['table-content-container']}
+                              >
+                                <>
+                                  <p>
+                                    <Image src={AddIcon} alt="add" />{' '}
+                                    {subCat.display}
+                                    <Link href={`/hobby/${subCat.slug}`}></Link>
+                                  </p>
+                                  <div
+                                    className={styles['vertical-line']}
+                                  ></div>
+                                  <p className={styles['table-hobby']}>
+                                    {hobbyData.map((hobby: any) => {
+                                      return (
+                                        hobby?.category?._id === cat._id &&
+                                        hobby?.sub_category?._id ===
+                                          subCat._id && (
+                                          <Link href={`/hobby/${hobby.slug}`}>
+                                            <span> {hobby.display}, </span>
+                                          </Link>
+                                        )
+                                      )
+                                    })}
+                                  </p>
+                                </>
+                              </div>
+                            )
+                          )
+                        })}
                     </td>
                   </tr>
                 ))}
