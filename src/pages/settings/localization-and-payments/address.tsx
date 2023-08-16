@@ -13,6 +13,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { openModal } from '@/redux/slices/modal'
 import useCheckIfClickedOutside from '@/hooks/useCheckIfClickedOutside'
+import {
+  getMyProfileDetail,
+  updateMyProfileDetail,
+} from '@/services/user.service'
+import { updateUser } from '@/redux/slices/user'
 
 type Props = {
   address: any
@@ -22,16 +27,39 @@ const Address: React.FC<Props> = ({ address, handleAddressEdit }) => {
   const [optionsActive, setOptionsActive] = useState(false)
   const editRef: any = useRef(null)
   useCheckIfClickedOutside(editRef, () => setOptionsActive(false))
-
+  const { user, activeProfile } = useSelector((state: RootState) => state.user)
+  const dispatch = useDispatch()
+  const toggleDefaultAddress = async () => {
+    let body: any = {
+      primary_address: address._id,
+    }
+    const { err, res } = await updateMyProfileDetail(body)
+    if (err) {
+      console.log(err)
+      return
+    }
+    if (res?.data?.data?.user) {
+      const { err: error, res: response } = await getMyProfileDetail()
+      // console.log('res', response?.data?.data)
+      if (response?.data?.data?.user) {
+        dispatch(updateUser(response?.data?.data?.user))
+      }
+    }
+  }
   return (
     <div className={`${styles.cardContainer}`} key={address._id}>
       <div className={`${styles.addressLeft}`}>
         <Image
-          src={RadioUnselected}
+          src={
+            user?.primary_address?._id === address._id
+              ? RadioSelected
+              : RadioUnselected
+          }
           width={16}
           height={16}
           alt="radio"
           className={styles.addIcon}
+          onClick={toggleDefaultAddress}
         />
         <div className={styles.addressContent}>
           <p className={`${styles.textDark} ${styles.labelText}`}>

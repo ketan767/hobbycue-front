@@ -285,11 +285,16 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       console.log(long)
       handleGeocode(lat, long)
     }
-    const errorFunction = () => {
+    const errorFunction = (err: any) => {
       alert('Location permission denied!')
+      console.log('err', err)
     }
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(successFunction, errorFunction)
+      navigator.geolocation.getCurrentPosition(successFunction, errorFunction, {
+        maximumAge: 60000,
+        timeout: 12000,
+        enableHighAccuracy: true,
+      })
     }
   }
 
@@ -303,10 +308,10 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         console.log('response', response)
         if (results && results.length > 0) {
           const { formatted_address, address_components } = results[0]
-          let city = ''
-          let state = ''
-          let country = ''
-          let pin_code = ''
+          let city = data.city
+          let state = data.state
+          let country = data.country
+          let pin_code = data.pin_code
 
           address_components.forEach((component: any) => {
             if (component.types.includes('locality')) {
@@ -325,11 +330,11 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           setData((prev) => {
             return {
               ...prev,
-              state,
-              city,
-              street: formatted_address,
-              country,
-              pin_code,
+              state: data.state ? data.state : state,
+              city: data.city ? data.city : city,
+              street: data.street ? data.street : formatted_address,
+              country: data.country ? data.country : country,
+              pin_code: data.pin_code ? data.pin_code : pin_code,
             }
           })
         }

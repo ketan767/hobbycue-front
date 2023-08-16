@@ -56,6 +56,7 @@
 
 .addIcon {
   margin-right: 4px;
+  cursor: pointer;
 }
 
 .textColored {

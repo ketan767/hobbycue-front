@@ -35,7 +35,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
     dispatch(updateAddressToEdit(id))
     dispatch(openModal({ type: 'user-address-edit', closable: true }))
   }
-
+  // console.log('user', user?.primary_address?._id)
   return (
     <>
       <PageGridLayout column={2}>

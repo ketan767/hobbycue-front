@@ -65,7 +65,7 @@ export const {
   updateUser,
   updateActiveProfile,
   updateUserListing,
-  updateAddressToEdit
+  updateAddressToEdit,
 } = authSlice.actions
 
 export default authSlice.reducer
