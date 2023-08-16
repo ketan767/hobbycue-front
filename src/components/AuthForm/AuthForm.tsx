@@ -42,6 +42,7 @@ import { validateEmail, validatePassword } from '@/utils'
 import { CircularProgress } from '@mui/material'
 import store, { RootState } from '@/redux/store'
 import { setShowPageLoader } from '@/redux/slices/site'
+import PasswordAnalyzer from '../PasswordAnalyzer/PasswordAnalyzer'
 
 interface Props {
   isModal?: boolean
@@ -81,6 +82,20 @@ const AuthForm: React.FC<Props> = (props) => {
   const [inputValidation, setInputValidation] = useState(
     validatePasswordConditions(authFormData.password),
   )
+  const [strength, setStrength] = useState(0)
+  const getStrengthNum = (object: any) => {
+    let num = 0
+    Object.keys(object).map((key: any) => {
+      if (object[key] === true) {
+        num += 1
+      }
+    })
+    return num
+  }
+  useEffect(() => {
+    const strengthNum = getStrengthNum(inputValidation)
+    setStrength(strengthNum)
+  }, [authFormData.password, inputValidation])
 
   const handleInputChange = (key: any, value: any) => {
     setInputErrors({ email: null, password: null })
@@ -171,7 +186,7 @@ const AuthForm: React.FC<Props> = (props) => {
 
   // Social Login Handle
   const googleAuthSuccess = async (e: any) => {
-    console.log('g-data', e);
+    console.log('g-data', e)
     dispatch(setShowPageLoader(true))
     const { err, res } = await googleAuth({
       googleId: e.profileObj.googleId,
@@ -337,39 +352,45 @@ const AuthForm: React.FC<Props> = (props) => {
           {selectedTab === 'join-in' && showValidationConditions && (
             <div className={styles['validation-messages']}>
               <p
+                className={inputValidation.length ? styles['valid'] : undefined}
+              >
+                At least 8 character in length.
+              </p>
+              <p className={inputValidation.lowercase ? styles['vlid'] : ''}>
+                3 out of 4 conditions below
+              </p>
+              <p
                 className={
                   inputValidation.lowercase ? styles['valid'] : undefined
                 }
               >
-                Must contain at least one lowercase letter
+                Lower case letters (a-z)
               </p>
               <p
                 className={
                   inputValidation.uppercase ? styles['valid'] : undefined
                 }
               >
-                Must contain at least one uppercase letter
+                Upper case letters (A-Z)
               </p>
               <p
                 className={inputValidation.number ? styles['valid'] : undefined}
               >
-                Must contain at least one number
+                Numbers (0-9)
               </p>
               <p
                 className={
                   inputValidation.specialChar ? styles['valid'] : undefined
                 }
               >
-                Must contain at least one special character
-              </p>
-              <p
-                className={inputValidation.length ? styles['valid'] : undefined}
-              >
-                Must be at least 8 characters long
+                Special characters (@,#,$)
               </p>
             </div>
           )}
         </div>
+        {selectedTab === 'join-in' && authFormData.password && (
+          <PasswordAnalyzer strength={strength - 1} />
+        )}
       </FormControl>
 
       {/* Remember Me - Forgot Password / Accept Terms & Submit Button */}
