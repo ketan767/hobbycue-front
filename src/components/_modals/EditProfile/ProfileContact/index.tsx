@@ -33,7 +33,9 @@ const ProfileContactEditModal: React.FC<Props> = ({
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
+
   const inputRef = useRef<HTMLInputElement>(null)
+  const websiteRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     inputRef?.current?.focus()
@@ -58,7 +60,11 @@ const ProfileContactEditModal: React.FC<Props> = ({
   }
 
   const handleSubmit = async () => {
-    if (isEmptyField(data.public_email.value)) {
+    if (
+      (!data.public_email.value || data.public_email.value === '') &&
+      (!data.phone.value || data.phone.value === '')
+    ) {
+      inputRef.current?.focus()
       return setData((prev) => {
         return {
           ...prev,
@@ -71,6 +77,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
     }
     if (data.website.value && data.website.value !== '') {
       if (!validateUrl(data.website.value)) {
+        websiteRef.current?.focus()
         return setData((prev) => {
           return {
             ...prev,
@@ -115,9 +122,9 @@ const ProfileContactEditModal: React.FC<Props> = ({
   useEffect(() => {
     setData((prev) => {
       let publicEmail = ''
-      if(user.public_email){
+      if (user.public_email) {
         publicEmail = user.public_email
-      }else if(user.email){
+      } else if (user.email) {
         publicEmail = user.email
       }
       return {
@@ -149,8 +156,12 @@ const ProfileContactEditModal: React.FC<Props> = ({
           <>
             {/* Public Email */}
             <div className={styles.emailContainer}>
-              <div className={styles['input-box']}>
-                <label>Email ID (public)</label>
+              <div
+                className={`${styles['input-box']} ${
+                  data.public_email.error ? styles['input-box-error'] : ''
+                }`}
+              >
+                <label>Email ID</label>
                 <input
                   type="text"
                   placeholder={`Enter email ID`}
@@ -168,7 +179,11 @@ const ProfileContactEditModal: React.FC<Props> = ({
             </div>
             <section className={styles['two-column-grid']}>
               {/* Phone Number */}
-              <div className={styles['input-box']}>
+              <div
+                className={`${styles['input-box']} ${
+                  data.phone.error ? styles['input-box-error'] : ''
+                }`}
+              >
                 <label>Phone Number</label>
                 <input
                   type="text"
@@ -199,7 +214,11 @@ const ProfileContactEditModal: React.FC<Props> = ({
             </section>
 
             {/* Website */}
-            <div className={styles['input-box']}>
+            <div
+              className={`${styles['input-box']} ${
+                data.website.error ? styles['input-box-error'] : ''
+              }`}
+            >
               <label>Website</label>
               <input
                 type="text"
@@ -207,6 +226,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
                 value={data.website.value}
                 name="website"
                 autoComplete="website"
+                ref={websiteRef}
                 onChange={handleInputChange}
               />
               <p className={styles['helper-text']}>{data.website.error}</p>
