@@ -114,7 +114,9 @@ export const CreatePost: React.FC<Props> = (props) => {
           }
           visibilityArr.push(obj)
           if (address.city || address.label) {
-            obj.display = `${address.city} -  ${address.label ? address.label : 'Default'} `
+            obj.display = `${address.city} -  ${
+              address.label ? address.label : 'Default'
+            } `
           }
           if (address.pin_code) {
             obj.options.push({
@@ -445,7 +447,14 @@ export const CreatePost: React.FC<Props> = (props) => {
               value={data.hobby}
               onChange={(e) => {
                 let val = e.target.value
-                setData((prev: any) => ({ ...prev, hobby: val }))
+                const selected = user._hobbies.find(
+                  (item: any) => item.hobby?._id === val,
+                )
+                setData((prev: any) => ({
+                  ...prev,
+                  hobby: val,
+                  genre: selected?.genre?._id,
+                }))
               }}
               displayEmpty
               inputProps={{ 'aria-label': 'Without label' }}
@@ -461,7 +470,8 @@ export const CreatePost: React.FC<Props> = (props) => {
                     <p>
                       {item.hobby?.display
                         ? item.hobby?.display
-                        : item.hobby?.slug}
+                        : item.hobby?.slug}{' '}
+                      {item?.genre && ` - ${item?.genre?.display} `}
                     </p>
                   </MenuItem>
                 )
@@ -472,7 +482,7 @@ export const CreatePost: React.FC<Props> = (props) => {
             )}
           </div>
 
-          <div
+          {/* <div
             className={`${styles['input-box']}  ${
               errors.genre ? styles['error-input-box'] : ''
             } `}
@@ -507,11 +517,11 @@ export const CreatePost: React.FC<Props> = (props) => {
             {errors.genre && (
               <p className={styles['error-text']}>{errors.genre}</p>
             )}
-          </div>
+          </div> */}
 
           <div>
             <label>Who Can View</label>
- 
+
             <InputSelect
               onChange={(e: any) => {
                 let val = e.target.value
