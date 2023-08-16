@@ -176,13 +176,21 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   }, [data.profile_url])
 
   useEffect(() => {
-    if (onComplete !== undefined) {
+    if (onComplete !== undefined && !user.profile_url) {
       let profileUrl = data.full_name
       profileUrl = profileUrl?.toLowerCase()
       profileUrl = profileUrl?.replace(/ /g, '-')
       setData((prev) => {
         return { ...prev, profile_url: profileUrl }
       })
+      if(data.full_name){
+        let display = data.full_name.split(' ')[0]
+        if(!user.display_name){
+          setData((prev) => {
+            return { ...prev, display_name: display }
+          })
+        }
+      }
     }
   }, [data.full_name])
 

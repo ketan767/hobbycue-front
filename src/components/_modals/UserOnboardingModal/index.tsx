@@ -66,7 +66,8 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
     if (err) return console.log(err)
     if (res?.data.success) {
       dispatch(closeModal())
-      router.push(`/profile/${res?.data?.data?.user?.profile_url}`)
+      router.push('/community')
+      // router.push(`/profile/${res?.data?.data?.user?.profile_url}`)
     }
   }
 

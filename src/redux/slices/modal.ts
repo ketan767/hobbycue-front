@@ -37,6 +37,7 @@ export type ModalType =
   | 'social-media-share'
   | 'claim-listing'
   | 'add-location'
+  | 'user-address-edit'
 
 interface ModalState {
   activeModal: ModalType
