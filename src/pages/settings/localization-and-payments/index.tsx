@@ -61,7 +61,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
           {user._addresses?.map((address: any) => {
             return (
               <Address
-                key={address._id}
+                key={address?._id}
                 address={address}
                 handleAddressEdit={handleAddressEdit}
               />

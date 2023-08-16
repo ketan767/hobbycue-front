@@ -150,3 +150,6 @@
 .emailContainer .input-box {
   flex: 1;
 }
+.input-box-error input {
+  border: 1px solid #c0504d !important;
+}
