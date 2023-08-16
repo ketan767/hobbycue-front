@@ -159,12 +159,28 @@ const AuthForm: React.FC<Props> = (props) => {
 
     // Join In
     if (selectedTab === 'join-in') {
-      if (!validatePassword(authFormData.password))
-        return setInputErrors({
+      // if (!validatePassword(authFormData.password)) {
+      //   setSubmitBtnLoading(false)
+      //   return setInputErrors({
+      //     email: null,
+      //     password: 'Enter a Valid Password!',
+      //   })
+      // }
+      if (authFormData.password === '' || authFormData.password.length < 8) {
+        setInputErrors({
           email: null,
           password: 'Enter a Valid Password!',
         })
-
+        return setSubmitBtnLoading(false)
+      }
+      const strengthNum = getStrengthNum(inputValidation)
+      if (strengthNum < 3) {
+        setInputErrors({
+          email: null,
+          password: 'Enter a Valid Password!',
+        })
+        return setSubmitBtnLoading(false)
+      }
       const { err, res } = await joinIn(data)
       setSubmitBtnLoading(false)
       if (err) {
