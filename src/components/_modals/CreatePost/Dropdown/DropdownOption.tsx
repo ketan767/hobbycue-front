@@ -4,6 +4,7 @@ import { MenuItem } from '@mui/material'
 import ChevronDown from '@/assets/svg/chevron-up.svg'
 import Image from 'next/image'
 import useOutsideAlerter from '@/hooks/useOutsideAlerter'
+import { useSelector } from 'react-redux'
 
 type Props = {
   type: String
@@ -12,11 +13,14 @@ type Props = {
   display: String
   options: any
   onChange: any
+  _id: any
 }
 
 export const DropdownOption: React.FC<Props> = (props) => {
-  const { value, type, display, options, onChange, currentValue } = props
-  const [active, setActive] = useState(true)
+  const { value, type, display, options, onChange, currentValue, _id } = props
+  const { activeProfile, user } = useSelector((state: any) => state.user)
+
+  const [active, setActive] = useState(user?.primary_address?._id === _id ? true : false)
 
   const toggle = () => setActive(!active)
 

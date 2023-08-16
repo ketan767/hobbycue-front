@@ -10,6 +10,7 @@ export interface AuthState {
     type: 'user' | 'listing'
     data: any
   }
+  addressToEdit: any
 }
 
 const initialState: AuthState = {
@@ -21,6 +22,7 @@ const initialState: AuthState = {
     type: 'user',
     data: null,
   },
+  addressToEdit: null,
 }
 
 const authSlice = createSlice({
@@ -39,13 +41,19 @@ const authSlice = createSlice({
     updateUserListing: (state, { payload }) => {
       state.listing = payload
     },
+    updateAddressToEdit: (state, { payload }) => {
+      state.addressToEdit = payload
+    },
     updateActiveProfile: (
       state,
       { payload }: PayloadAction<{ type: 'user' | 'listing'; data: any }>,
     ) => {
       state.activeProfile = { type: payload.type, data: payload.data }
 
-      const data: LocalStorageActiveProfile = { type: payload.type, id: payload.data._id }
+      const data: LocalStorageActiveProfile = {
+        type: payload.type,
+        id: payload.data._id,
+      }
       localStorage.setItem('active_profile', JSON.stringify(data))
     },
   },
@@ -57,6 +65,7 @@ export const {
   updateUser,
   updateActiveProfile,
   updateUserListing,
+  updateAddressToEdit,
 } = authSlice.actions
 
 export default authSlice.reducer
