@@ -24,13 +24,20 @@
 .create-post-modal > section {
   flex-grow: 1;
   height: 485px;
+  border-radius: 8px;
 }
 .create-post-modal > aside {
+  
   width: 290px;
   min-width: 290px;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-32);
+}
+
+.create-post-modal > aside {
+  background-color: #F8F9FA;
+  
 }
 
 .create-post-modal > aside div {

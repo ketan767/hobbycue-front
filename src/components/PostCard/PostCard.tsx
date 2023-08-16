@@ -29,7 +29,7 @@ const PostCard: React.FC<Props> = (props) => {
   const optionRef: any = useRef(null)
   const [postData, setPostData] = useState(props.postData)
   const [showComments, setShowComments] = useState(
-    props.postData.has_link ? false : true,
+    props.postData.has_link ? true : false,
   )
 
   useEffect(() => {
@@ -232,10 +232,9 @@ const PostCard: React.FC<Props> = (props) => {
                   </div>
                   <p className={styles.metaContentText}>
                     {/* {metaData.description}{' '} */}
-                    {
-                      metaData.description.length > 150 ? metaData.description.slice(0, 150 - 3) + '...' : metaData.description
-                    }
-                    
+                    {metaData.description.length > 150
+                      ? metaData.description.slice(0, 150 - 3) + '...'
+                      : metaData.description}
                   </p>
                   <section className={styles['meta-actions']}>
                     <PostVotes
