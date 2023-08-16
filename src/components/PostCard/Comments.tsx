@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
@@ -8,6 +8,7 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import PostCommentVotes from './CommentVotes'
 import { format, render, cancel, register } from 'timeago.js'
+import TextareaAutosize from 'react-textarea-autosize'
 
 type Props = {
   styles: any
@@ -17,6 +18,7 @@ type Props = {
 
 const PostComments = ({ data, styles }: Props) => {
   const router = useRouter()
+  const inputRef: any = useRef<HTMLTextAreaElement>(null)
   const { activeProfile } = useSelector((state: RootState) => state.user)
   const [comments, setComments] = useState<any>([])
   const [loading, setLoading] = useState(false)
@@ -84,13 +86,18 @@ const PostComments = ({ data, styles }: Props) => {
 
           <div className={styles['comment-input-wrapper']}>
             <form onSubmit={addComment}>
-              <input
+              <TextareaAutosize
                 value={inputValue}
                 className={styles['input']}
                 placeholder="Write a comment..."
-                onChange={(e) => setInputValue(e.target.value)}
+                onChange={(e: any) => setInputValue(e.target.value)}
+                ref={inputRef}
               />
-              <button type="submit" className={styles['submit-btn']} disabled={loading} >
+              <button
+                type="submit"
+                className={styles['submit-btn']}
+                disabled={loading}
+              >
                 <svg
                   width="14"
                   height="12"

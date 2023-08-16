@@ -133,7 +133,7 @@
 .comment-input-wrapper .submit-btn:hover {
   background-color: rgba(var(--primary-100-rgb), 0.2);
 }
-.comment-input-wrapper .submit-btn:disabled{
+.comment-input-wrapper .submit-btn:disabled {
   opacity: 0.4;
   pointer-events: none;
 }
@@ -144,12 +144,14 @@
   border-radius: var(--spacing-8);
   margin-left: var(--spacing-8);
   padding-left: var(--spacing-8);
+  padding: 10px var(--spacing-8);
   height: var(--spacing-40);
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
   color: #000000;
   width: 100%;
+  padding-right: 1rem;
 }
 
 .input::placeholder {
@@ -239,7 +241,7 @@
   align-self: stretch;
   /* background-color: #f0f0f0; */
 }
-.metaContentText{
+.metaContentText {
   font-size: 14px;
 }
 .contentHead {
@@ -328,15 +330,15 @@
   cursor: pointer;
 }
 @media screen and (max-width: 1100px) {
-  .metaImgContainer{
+  .metaImgContainer {
     width: 100%;
     max-height: 200px;
     overflow: hidden;
   }
-  .postMetadata{
+  .postMetadata {
     display: block;
   }
-  .post-card-wrapper{
+  .post-card-wrapper {
     max-width: 1017px;
   }
 }
