@@ -182,13 +182,14 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                       {subCategories.map((subCat: any) => {
                         return (
                           subCat.category?._id === cat._id && (
-                            <div>
+                            <div className={styles['table-content-container']}>
                               <>
                                 <p>
                                   <Image src={AddIcon} alt="add" />{' '}
                                   {subCat.display}
                                   <Link href={`/hobby/${subCat.slug}`}></Link>
                                 </p>
+                                <div className={styles['vertical-line']}></div>
                                 <p className={styles['table-hobby']}>
                                   {hobbyData.map((hobby: any) => {
                                     return (
