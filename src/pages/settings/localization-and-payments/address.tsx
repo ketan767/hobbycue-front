@@ -31,7 +31,7 @@ const Address: React.FC<Props> = ({ address, handleAddressEdit }) => {
   const dispatch = useDispatch()
   const toggleDefaultAddress = async () => {
     let body: any = {
-      primary_address: address._id,
+      primary_address: address?._id,
     }
     const { err, res } = await updateMyProfileDetail(body)
     if (err) {
@@ -63,20 +63,20 @@ const Address: React.FC<Props> = ({ address, handleAddressEdit }) => {
         />
         <div className={styles.addressContent}>
           <p className={`${styles.textDark} ${styles.labelText}`}>
-            {address.label ? address.label : '-'}
+            {address?.label ? address?.label : '-'}
           </p>
           <p className={`${styles.textLight} ${styles.addressText}`}>
             <span className={styles.addressText}>
-              {address.society && `${address.society}, `}
-              {address.street && `${address.street}`}
+              {address?.society && `${address?.society}, `}
+              {address?.street && `${address?.street}`}
             </span>
             <span className={styles.addressText}>
-              {address.city && `${address.city}, `}
-              {address.pin_code && `${address.pin_code}`}
+              {address?.city && `${address?.city}, `}
+              {address?.pin_code && `${address?.pin_code}`}
             </span>
             <span className={styles.addressText}>
-              {address.state && `${address.state}, `}
-              {address.country && `${address.country}`}
+              {address?.state && `${address?.state}, `}
+              {address?.country && `${address?.country}`}
             </span>
           </p>
         </div>
