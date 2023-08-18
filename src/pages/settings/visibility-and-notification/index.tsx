@@ -21,7 +21,7 @@ const options = [
 const VisibilityAndNotification: React.FC<Props> = ({}) => {
   return (
     <>
-      <PageGridLayout column={2}>
+      <PageGridLayout column={2} customStyles={styles['settingcontainer']}>
         <SettingsSidebar active="" />
         <div className={styles.container}>
           <p className={`${styles.textLight} ${styles.title}`}>

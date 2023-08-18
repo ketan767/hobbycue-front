@@ -212,12 +212,17 @@ select:-webkit-autofill {
   background-size: cover;
 }
 .ql-toolbar.ql-snow + .ql-container.ql-snow {
-  border-top: 1px solid #ccc !important;
+  border-top: 1px solid #EBEDF0 !important;
   border-bottom: 0;
+  border-radius: 8px;
+  border-color: #EBEDF0;
 }
+
 .ql-toolbar.ql-snow {
   display: flex;
   align-items: center;
+  border-radius: 8px;
+  border-color: #EBEDF0 !important;
 }
 .ql-toolbar.ql-snow .ql-formats button {
   opacity: 0.8;

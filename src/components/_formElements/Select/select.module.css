@@ -25,7 +25,14 @@
 }
 .container p{
    color: #6d747a;
+   font-size: 14px;
+   font-weight: 500;
 }
+.container p:hover{
+  background-color: #f7f5f9;
+  border-radius: 8px;
+}
+
 .container p.dropdown-value {
   color: #6d747a;
   padding-top: 8px;

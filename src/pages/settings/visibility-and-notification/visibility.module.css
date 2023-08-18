@@ -71,3 +71,7 @@
 .emailUpdates {
   margin-top: 40px;
 }
+
+.settingcontainer{
+  grid-template-columns: 16rem 42rem !important;
+}

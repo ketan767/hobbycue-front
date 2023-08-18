@@ -56,7 +56,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
   // console.log('user', user?.primary_address?._id)
   return (
     <>
-      <PageGridLayout column={2}>
+      <PageGridLayout column={2} customStyles={styles['settingcontainer']}>
         <SettingsSidebar active="" />
         <div className={styles.container}>
           <div className={`${styles.flex} ${styles.addSectionContainer}`}>
