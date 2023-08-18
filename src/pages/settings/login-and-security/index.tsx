@@ -50,7 +50,7 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
     dispatch(setShowPageLoader(false))
     if (err) return console.log(err)
     if (res.status === 200 && res.data.success) {
-      console.log('google' ,res.data)
+      console.log('google', res.data)
       window.location.reload()
       // res.data.data.user.google.googleId
       // localStorage.setItem('token', res.data.data.token)
@@ -92,7 +92,7 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
   }
   return (
     <>
-      <PageGridLayout column={2}>
+      <PageGridLayout column={2} customStyles={styles['settingcontainer']}>
         <SettingsSidebar active="" />
         <div className={styles.container}>
           <p className={`${styles.textLight} ${styles.title}`}> Email Login </p>

@@ -21,7 +21,7 @@
   transform: rotate(180deg);
 }
 .dropdown-container p.dropdown-value {
-  color: #6d747a;
+  color: var(--grey-dark, #939ca3);
   padding-left: 16px;
 }
 
