@@ -115,3 +115,7 @@
   font-size: 14px;
   cursor: pointer;
 }
+
+.settingcontainer{
+  grid-template-columns: 16rem 42rem !important;
+}

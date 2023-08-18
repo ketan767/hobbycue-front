@@ -81,3 +81,7 @@
   flex-direction: column;
   align-items: flex-start;
 }
+
+.settingcontainer{
+  grid-template-columns: 16rem 42rem !important;
+}
