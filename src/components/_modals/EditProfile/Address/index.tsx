@@ -253,6 +253,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         setData(address)
         setAddressLabel(address.label)
       }
+    } else if (addLocation) {
     } else {
       setData({
         street: user.primary_address?.street,

@@ -139,6 +139,20 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
     setStrength(strengthNum)
   }, [newPassword, inputValidation])
 
+  let threeConditionsValid = 0
+  if (inputValidation.uppercase) {
+    threeConditionsValid += 1
+  }
+  if (inputValidation.lowercase) {
+    threeConditionsValid += 1
+  }
+  if (inputValidation.specialChar) {
+    threeConditionsValid += 1
+  }
+  if (inputValidation.number) {
+    threeConditionsValid += 1
+  }
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -213,38 +227,43 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
                 <div className={styles['validation-messages']}>
                   <p
                     className={
+                      inputValidation.length ? styles['valid'] : undefined
+                    }
+                  >
+                    At least 8 character in length.
+                  </p>
+                  <p
+                    className={threeConditionsValid >= 3 ? styles['valid'] : ''}
+                  >
+                    3 out of 4 conditions below
+                  </p>
+                  <p
+                    className={
                       inputValidation.lowercase ? styles['valid'] : undefined
                     }
                   >
-                    Must contain at least one lowercase letter
+                    Lower case letters (a-z)
                   </p>
                   <p
                     className={
                       inputValidation.uppercase ? styles['valid'] : undefined
                     }
                   >
-                    Must contain at least one uppercase letter
+                    Upper case letters (A-Z)
                   </p>
                   <p
                     className={
                       inputValidation.number ? styles['valid'] : undefined
                     }
                   >
-                    Must contain at least one number
+                    Numbers (0-9)
                   </p>
                   <p
                     className={
                       inputValidation.specialChar ? styles['valid'] : undefined
                     }
                   >
-                    Must contain at least one special character
-                  </p>
-                  <p
-                    className={
-                      inputValidation.length ? styles['valid'] : undefined
-                    }
-                  >
-                    Must be at least 8 characters long
+                    Special characters (@,#,$)
                   </p>
                 </div>
               )}

@@ -22,8 +22,9 @@ import { updateUser } from '@/redux/slices/user'
 type Props = {
   address: any
   handleAddressEdit: any
+  handleDeleteAddress: any
 }
-const Address: React.FC<Props> = ({ address, handleAddressEdit }) => {
+const Address: React.FC<Props> = ({ address, handleAddressEdit, handleDeleteAddress }) => {
   const [optionsActive, setOptionsActive] = useState(false)
   const editRef: any = useRef(null)
   useCheckIfClickedOutside(editRef, () => setOptionsActive(false))
@@ -96,7 +97,7 @@ const Address: React.FC<Props> = ({ address, handleAddressEdit }) => {
           } `}
         >
           <li onClick={() => handleAddressEdit(address?._id)}>Edit</li>
-          <li>Delete</li>
+          <li onClick={()=>handleDeleteAddress(address?._id)} >Delete</li>
         </ul>
       </div>
     </div>

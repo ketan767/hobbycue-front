@@ -13,7 +13,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { openModal } from '@/redux/slices/modal'
 import Address from './address'
-import { updateAddressToEdit } from '@/redux/slices/user'
+import { updateAddressToEdit, updateUser } from '@/redux/slices/user'
+import { deleteUserAddress, getMyProfileDetail } from '@/services/user.service'
 
 type Props = {}
 const options = [
@@ -34,6 +35,23 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
   const handleAddressEdit = (id: string) => {
     dispatch(updateAddressToEdit(id))
     dispatch(openModal({ type: 'user-address-edit', closable: true }))
+  }
+
+  const handleDeleteAddress = (id: string) => {
+    deleteUserAddress(id, async (err, res) => {
+      if (err) {
+        return console.log(err)
+      }
+      if (!res.data.success) {
+        return alert('Something went wrong!')
+      }
+      const { err: error, res: response } = await getMyProfileDetail()
+
+      if (error) return console.log(error)
+      if (response?.data.success) {
+        dispatch(updateUser(response.data.data.user))
+      }
+    })
   }
   // console.log('user', user?.primary_address?._id)
   return (
@@ -64,6 +82,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                 key={address?._id}
                 address={address}
                 handleAddressEdit={handleAddressEdit}
+                handleDeleteAddress={handleDeleteAddress}
               />
             )
           })}
