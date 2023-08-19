@@ -473,6 +473,7 @@
   }
   .community-left-aside {
     position: static;
+    overflow: visible;
   }
   .invite-container-main {
     display: none;

@@ -248,6 +248,20 @@ const AuthForm: React.FC<Props> = (props) => {
     dispatch(openModal({ type: 'confirm-email', closable: true }))
   }
 
+  let threeConditionsValid = 0
+  if (inputValidation.uppercase) {
+    threeConditionsValid += 1
+  }
+  if (inputValidation.lowercase) {
+    threeConditionsValid += 1
+  }
+  if (inputValidation.specialChar) {
+    threeConditionsValid += 1
+  }
+  if (inputValidation.number) {
+    threeConditionsValid += 1
+  }
+
   return (
     <div
       className={`${styles['form-contanier']} ${
@@ -372,7 +386,7 @@ const AuthForm: React.FC<Props> = (props) => {
               >
                 At least 8 character in length.
               </p>
-              <p className={inputValidation.lowercase ? styles['vlid'] : ''}>
+              <p className={threeConditionsValid >= 3 ? styles['valid'] : ''}>
                 3 out of 4 conditions below
               </p>
               <p
@@ -405,7 +419,7 @@ const AuthForm: React.FC<Props> = (props) => {
           )}
         </div>
         {selectedTab === 'join-in' && authFormData.password && (
-          <PasswordAnalyzer strength={strength - 1} />
+          <PasswordAnalyzer strength={strength - 2} />
         )}
       </FormControl>
 
