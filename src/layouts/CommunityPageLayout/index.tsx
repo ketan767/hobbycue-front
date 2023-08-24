@@ -62,8 +62,16 @@ const CommunityLayout: React.FC<Props> = ({
     'blogs',
   ]
   const [visibilityData, setVisibilityData] = useState(['public'])
-  const [seeMoreHobby, setSeeMoreHobby] = useState(false)
+  const [seeMoreHobby, setSeeMoreHobby] = useState(
+    activeProfile.data?._hobbies?.length > 3 ? true : false,
+  )
+
   const [trendingHobbies, setTrendingHobbies] = useState([])
+
+  const shouldShowSeeMoreButton =
+    (activeProfile.data?._hobbies?.length ?? 0) > 3
+  console.log('Number of hobbies:', activeProfile.data?._hobbies?.length)
+
   const hideThirdColumnTabs = ['pages', 'links']
   const { showPageLoader } = useSelector((state: RootState) => state.site)
 

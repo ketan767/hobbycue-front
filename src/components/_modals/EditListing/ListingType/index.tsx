@@ -189,7 +189,10 @@ const ListingTypeEditModal: React.FC<Props> = ({
                               : ''
                           }`}
                           key={item}
-                          onClick={() => handleChange(item)}
+                          onClick={() => {
+                            handleChange(item)
+                            setShowDropdown(false)
+                          }}
                         >
                           <p className={styles.tagDesc}>
                             {item}

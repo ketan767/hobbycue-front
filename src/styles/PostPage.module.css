@@ -12,7 +12,7 @@
 
 /* Side Hobby Wrapper */
 .hobbies-side-wrapper {
-  margin-bottom: var(--spacing-16);
+  margin-bottom: var(--spacing-12);
 }
 .hobbies-side-wrapper header {
   padding: var(--spacing-16);
@@ -98,7 +98,7 @@
 
 /* Invite to Community Wrapper */
 .invite-wrapper {
-  margin-bottom: var(--spacing-16);
+  margin-bottom: var(--spacing-12);
 }
 .invite-wrapper header {
   padding: var(--spacing-16);
@@ -218,8 +218,8 @@
 }
 
 .posts-container {
-  margin-top: var(--spacing-16);
+  margin-top: var(--spacing-12);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-16);
+  gap: var(--spacing-12);
 }
