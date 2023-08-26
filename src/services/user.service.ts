@@ -116,6 +116,19 @@ export const updateUserAddress = async (
     .catch((err) => cb(err, null))
 }
 
+//delet address
+export const deleteUserAddress = async (
+  id: string,
+  cb: CallbackFunction,
+) => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  await axiosInstance
+    .delete(`/user/address/${id}`, { headers })
+    .then((res) => cb(null, res))
+    .catch((err) => cb(err, null))
+}
 // Update User Hobby
 export const checkProfileUrl = async (url: string, cb: CallbackFunction) => {
   const token = localStorage.getItem('token')

@@ -90,6 +90,10 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
     console.log(res.data)
     window.location.reload()
   }
+
+  const openForgotPasswordEmail = () => {
+    dispatch(openModal({ type: 'confirm-email', closable: true }))
+  }
   return (
     <>
       <PageGridLayout column={2} customStyles={styles['settingcontainer']}>
@@ -107,8 +111,7 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
             </div>
             <div className={styles.editContainer}>
               <Image src={EditIcon} width={16} height={16} alt="edit" />
-              <p className={styles.editText}>
-                {' '}
+              <p className={styles.editText} onClick={openForgotPasswordEmail} >
                 Used Social Media Login or Forgot Password?{' '}
               </p>
             </div>
