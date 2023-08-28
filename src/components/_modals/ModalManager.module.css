@@ -27,6 +27,7 @@
   cursor: pointer;
   border-radius: 100%;
   padding: var(--spacing-2);
+  z-index: 10;
 }
 .modal-wrapper main .modal-close-icon:hover {
   background: #ddd;
