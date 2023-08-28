@@ -555,6 +555,7 @@ export const CreatePost: React.FC<Props> = (props) => {
             Post
           </FilledButton>
         </aside>
+        <div className={styles['background']}></div>
       </div>
     </div>
   )
