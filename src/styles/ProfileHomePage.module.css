@@ -35,3 +35,13 @@
 .about-text ul{
   padding-left: 1rem;
 }
+
+.profile-left-aside{
+  position: -webkit-sticky;
+  top: 232px;
+  position: sticky; 
+  transition: 0.6s;
+  height: calc(100vh - calc(var(--navbar-height-desktop) + var(--spacing-24)) + 3rem);
+  overflow: auto;
+}
+

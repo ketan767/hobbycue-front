@@ -6,13 +6,10 @@ import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded'
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded'
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded'
 import ShareIcon from '@/assets/svg/share-outlined.svg'
-
-import profile from '@/assets/temp/hooby-profile.png'
-import cover from '@/assets/temp/hobby-cover.png'
-import mailSvg from '@/Assets/Icons/mail.svg'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import DefaultProfile from '@/assets/image/default.png'
+import DefaultProfile from '@/assets/svg/default-images/default-hobbies.svg'
+import MailIcon from '@/assets/svg/mailicon.svg'
 import { useDispatch } from 'react-redux'
 import { openModal, updateShareUrl } from '@/redux/slices/modal'
 
@@ -39,11 +36,12 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
     dispatch(openModal({ type: 'social-media-share', closable: true }))
   }
 
-
   return (
     <>
       {/* Page Header  */}
-      <header className={`site-container ${styles['header']} ${styles['expanded']} `}>
+      <header
+        className={`site-container ${styles['header']} ${styles['expanded']} `}
+      >
         {data?.profile_image ? (
           <Image
             className={styles['profile-img']}
@@ -93,7 +91,7 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
         <div className={styles['action-btn-wrapper']}>
           {/* Send Email Button  */}
           <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
-            <MailOutlineRoundedIcon color="primary" />
+            <Image src={MailIcon} alt="share" />
           </div>
 
           {/* Bookmark Button */}
@@ -103,9 +101,7 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
 
           {/* Share Button */}
           <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
-            <Image src={ShareIcon} alt='share'
-              onClick={handleShare}
-              />
+            <Image src={ShareIcon} alt="share" onClick={handleShare} />
           </div>
 
           {/* More Options Button */}

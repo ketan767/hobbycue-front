@@ -71,7 +71,6 @@ export const CreatePost: React.FC<Props> = (props) => {
     genre: '',
     hobby: '',
   })
-
   const [hobbyInputValue, setHobbyInputValue] = useState('')
   const [genreInputValue, setGenreInputValue] = useState('')
   const [hasLink, setHasLink] = useState(false)
@@ -285,7 +284,7 @@ export const CreatePost: React.FC<Props> = (props) => {
     setData((prev: any) => ({ ...prev, visibility: value }))
   }
 
-  console.log('hobbies', hobbies);
+  console.log('hobbies', hobbies)
   return (
     <div className={styles['modal-wrapper']}>
       <h3 className={styles['modal-heading']}>Create Post</h3>
@@ -341,7 +340,11 @@ export const CreatePost: React.FC<Props> = (props) => {
         <aside>
           <div className={styles['posting-as-container']}>
             <label>Posting As</label>
-            <CreatePostProfileSwitcher data={data} setData={setData} setHobbies={setHobbies} />
+            <CreatePostProfileSwitcher
+              data={data}
+              setData={setData}
+              setHobbies={setHobbies}
+            />
           </div>
 
           {/* Hobby Input and Dropdown */}

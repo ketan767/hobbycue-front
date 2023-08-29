@@ -20,44 +20,4 @@
    font-size: 12px;
    margin-top: 4px;
 }
-.quill-toolbar-button-bl:hover{
-background-color: rgb(0, 0, 0);
-}
 
-.quill-container {
-   width: 80%; /* Adjust the width as needed */
-   margin: 0 auto; /* Center the editor */
-   padding: 20px;
-   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
- }
- 
- /* Style for the toolbar buttons */
- .quill-toolbar-button {
-   position: relative;
-   cursor: pointer;
-   padding: 5px 10px;
-   margin-right: 10px;
-   background-color: #f0f0f0;
-   border: 1px solid #ccc;
-   border-radius: 3px;
- }
- 
- /* Style for the tooltip text */
- .quill-toolbar-button::before {
-   content: attr(data-tooltip); /* Display the 'data-tooltip' attribute as content */
-   position: absolute;
-   background-color: #333;
-   color: white;
-   padding: 5px;
-   border-radius: 3px;
-   bottom: 100%; /* Position above the button */
-   left: 50%; /* Center horizontally */
-   transform: translateX(-50%);
-   opacity: 0; /* Initially hidden */
-   transition: opacity 0.2s;
- }
- 
- /* Show the tooltip on hover */
- .quill-toolbar-button:hover::before {
-   opacity: 1;
- }
