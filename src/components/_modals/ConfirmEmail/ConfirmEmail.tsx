@@ -11,7 +11,11 @@ import styles from './style.module.css'
 import { isEmpty, isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
-import { closeModal, openModal, updateForgotPasswordEmail } from '@/redux/slices/modal'
+import {
+  closeModal,
+  openModal,
+  updateForgotPasswordEmail,
+} from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
@@ -22,7 +26,6 @@ type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
 }
-
 
 const ConfirmEmailModal: React.FC<Props> = ({}) => {
   const dispatch = useDispatch()
@@ -37,11 +40,11 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
   const handleSubmit = async () => {
     setSubmitBtnLoading(true)
     const { err, res } = await forgotPassword({
-      email
+      email,
     })
     setSubmitBtnLoading(false)
     if (err) {
-      console.log(err?.response);
+      console.log(err?.response)
       if (err?.response?.data?.message) {
         setErrors({
           ...errors,
@@ -76,7 +79,10 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
         </header>
         <section className={styles['body']}>
           <div className={styles.inputField}>
-            <label className={styles.label}>Enter the email address below to get forgotten password link to reset your hobbycue password.</label>
+            <label className={styles.label}>
+              Enter the email address below to get forgotten password link to
+              reset your hobbycue password.
+            </label>
             <div
               className={`${styles['input-box']} ${
                 errors.email ? styles['input-error'] : ''
@@ -102,7 +108,7 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'16px'} />
             ) : (
-              'Save'
+              'Send'
             )}
           </button>
         </footer>

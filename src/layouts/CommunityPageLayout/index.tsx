@@ -103,6 +103,9 @@ const CommunityLayout: React.FC<Props> = ({
       setSelectedHobby('')
     }
   }
+  const EditProfileLocation = () => {
+    window.location.href = '/settings/localization-and-payments'
+  }
 
   const fetchPosts = async () => {
     if (showPageLoader) {
@@ -401,15 +404,7 @@ const CommunityLayout: React.FC<Props> = ({
           >
             <header>
               <h3>Location</h3>
-              <Image
-                src={EditIcon}
-                onClick={() =>
-                  dispatch(
-                    openModal({ type: 'profile-address-edit', closable: true }),
-                  )
-                }
-                alt="edit"
-              />
+              <Image src={EditIcon} onClick={EditProfileLocation} alt="edit" />
               {/* <Image src={EditIcon} alt="Edit" /> */}
             </header>
             <span className={styles['divider']}></span>

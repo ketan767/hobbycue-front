@@ -99,7 +99,9 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
       <ProfileLayout activeTab={'home'} data={data}>
         {data.pageData && (
           <PageGridLayout column={3}>
-            <aside>
+            <aside
+              className={`custom-scrollbar ${styles['profile-left-aside']}`}
+            >
               {/* User Hobbies */}
               <ProfileHobbySideList data={pageData} />
               <ProfilePagesList data={data} />

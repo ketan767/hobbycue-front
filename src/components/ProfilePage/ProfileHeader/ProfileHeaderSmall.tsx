@@ -6,6 +6,7 @@ import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded'
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded'
 import ShareRoundedIcon from '@mui/icons-material/ShareRounded'
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded'
+import MailIcon from '@/assets/svg/mailicon.svg'
 import CameraIcon from '@/assets/icons/CameraIcon'
 import Link from 'next/link'
 import { useDispatch, useSelector } from 'react-redux'
@@ -104,7 +105,6 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
     dispatch(openModal({ type: 'social-media-share', closable: true }))
   }
 
-
   return (
     <>
       <div className={`${styles['container']} ${styles['small']} `}>
@@ -177,7 +177,7 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
                 onClick={(e) => console.log(e)}
                 className={styles['action-btn']}
               >
-                <MailOutlineRoundedIcon color="primary" />
+                <Image src={MailIcon} alt="share" />
               </div>
             </Link>
 
@@ -191,7 +191,7 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
 
             {/* Share Button */}
             <div
-             onClick={(e) => handleShare()}
+              onClick={(e) => handleShare()}
               className={styles['action-btn']}
             >
               <ShareRoundedIcon color="primary" fontSize="small" />

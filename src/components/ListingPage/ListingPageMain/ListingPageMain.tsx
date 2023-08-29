@@ -140,7 +140,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
   return (
     <>
       <PageGridLayout column={3}>
-        <aside>
+        <aside className={`custom-scrollbar ${styles['page-left-aside']}`}>
           <PageContentBox
             showEditButton={listingLayoutMode === 'edit'}
             onEditBtnClick={() => {
