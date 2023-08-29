@@ -22,7 +22,7 @@ import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import { checkIfUrlExists } from '@/utils'
 import Link from 'next/link'
-import { getAllHobbies } from '@/services/hobby.service'
+import { getAllHobbies, getTrendingHobbies } from '@/services/hobby.service'
 import DefaultHobbyImg from '@/assets/image/default.png'
 import { MenuItem, Select } from '@mui/material'
 import FilledButton from '@/components/_buttons/FilledButton'
@@ -62,7 +62,7 @@ const CommunityLayout: React.FC<Props> = ({
   ]
   const [visibilityData, setVisibilityData] = useState(['public'])
   const [seeMoreHobby, setSeeMoreHobby] = useState(false)
-
+  const [trendingHobbies, setTrendingHobbies] = useState([])
   const hideThirdColumnTabs = ['pages', 'links']
 
   const toggleSeeMore = () => setSeeMoreHobby(!seeMoreHobby)
@@ -126,6 +126,18 @@ const CommunityLayout: React.FC<Props> = ({
     }
     dispatch(updateLoading(false))
   }
+
+  const fetchTrendingHobbies = async () => {
+    const { err, res } = await getTrendingHobbies(``)
+    if (err) {
+      return console.log('err', err)
+    }
+    setTrendingHobbies(res.data?.hobbies)
+  }
+
+  useEffect(() => {
+    fetchTrendingHobbies()
+  }, [])
 
   const fetchPages = async () => {
     let params: any = ''
@@ -292,27 +304,38 @@ const CommunityLayout: React.FC<Props> = ({
             <span className={styles['divider']}></span>
             <section>
               <ul>
-                {activeProfile.data?._hobbies?.slice(0, seeMoreHobby ? activeProfile.data?._hobbies.length : 3).map((hobby: any) => {
-                  return (
-                    <li
-                      key={hobby._id}
-                      onClick={() => handleHobbyClick(hobby.hobby._id)}
-                      className={
-                        selectedHobby === hobby.hobby._id
-                          ? styles.selectedItem
-                          : ''
-                      }
-                    >
-                      {hobby?.hobby?.display}
-                      {hobby?.genre && ` - ${hobby?.genre?.display} `}
-                    </li>
+                {activeProfile.data?._hobbies
+                  ?.slice(
+                    0,
+                    seeMoreHobby ? activeProfile.data?._hobbies.length : 3,
                   )
-                })}
-                {
-                  !seeMoreHobby ?
-                  <p className={styles['see-more']} onClick={toggleSeeMore} > See more </p> :
-                  <p className={styles['see-more']} onClick={toggleSeeMore} > See less </p>
-                }
+                  .map((hobby: any) => {
+                    return (
+                      <li
+                        key={hobby._id}
+                        onClick={() => handleHobbyClick(hobby.hobby._id)}
+                        className={
+                          selectedHobby === hobby.hobby._id
+                            ? styles.selectedItem
+                            : ''
+                        }
+                      >
+                        {hobby?.hobby?.display}
+                        {hobby?.genre && ` - ${hobby?.genre?.display} `}
+                      </li>
+                    )
+                  })}
+                {!seeMoreHobby ? (
+                  <p className={styles['see-more']} onClick={toggleSeeMore}>
+                    {' '}
+                    See more{' '}
+                  </p>
+                ) : (
+                  <p className={styles['see-more']} onClick={toggleSeeMore}>
+                    {' '}
+                    See less{' '}
+                  </p>
+                )}
               </ul>
             </section>
           </section>
@@ -622,11 +645,13 @@ const CommunityLayout: React.FC<Props> = ({
               <span className={styles['divider']}></span>
               <section>
                 <ul>
-                  {[1, 2, 3, 4, 5, 6]?.map((hobby: any) => {
+                  {trendingHobbies?.map((hobby: any) => {
                     return (
-                      <li key={hobby}>
-                        <div className={styles['default-img']}></div>
-                        <span>{`Hobby ${hobby}`}</span>
+                      <li key={hobby._id}>
+                        <Link href={`/hobby/${hobby.slug}`}>
+                          <div className={styles['default-img']}></div>
+                          <span>{`${hobby.display}`}</span>
+                        </Link>
                       </li>
                     )
                   })}

@@ -114,6 +114,15 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
     dispatch(openModal({ type: 'social-media-share', closable: true }))
   }
 
+  const handleContact = () => {
+    console.log('data', data)
+    if (data.email) {
+      window.open(
+        `mailto:${data.email}?subject=Subject&body=Body%20goes%20here`,
+      )
+    }
+  }
+  
   return (
     <>
       <div className={`${styles['container']}`}>
@@ -205,23 +214,33 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
               )}
             </div>
             <div className={styles['name-container']}>
-              <h1 className={styles['name']}>{data.full_name}</h1>
-              {profileLayoutMode === 'edit' && (
-                <Image
-                  src={EditIcon}
-                  alt="edit"
-                  onClick={() =>
-                    dispatch(
-                      openModal({
-                        type: 'profile-general-edit',
-                        closable: true,
-                      }),
-                    )
-                  }
-                />
-              )}
+              <div>
+                <div className={styles['profile-name']}>
+                  <h1 className={styles['name']}>{data.full_name}</h1>
+                  {profileLayoutMode === 'edit' && (
+                    <Image
+                      src={EditIcon}
+                      alt="edit"
+                      onClick={() =>
+                        dispatch(
+                          openModal({
+                            type: 'profile-general-edit',
+                            closable: true,
+                          }),
+                        )
+                      }
+                    />
+                  )}
+                </div>
+                <p className={styles['tagline']}>{data.tagline}</p>
+              </div>
+              <FilledButton
+                className={styles.contactBtn}
+                onClick={handleContact}
+              >
+                Contact
+              </FilledButton>
             </div>
-            <p className={styles['tagline']}>{data.tagline}</p>
           </section>
 
           {/* Action Buttons */}
@@ -268,7 +287,7 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
 
               {/* More Options Button */}
               <div
-                onClick={(e) => handleDropdown() }
+                onClick={(e) => handleDropdown()}
                 className={styles['action-btn']}
               >
                 <MoreHorizRoundedIcon color="primary" />
