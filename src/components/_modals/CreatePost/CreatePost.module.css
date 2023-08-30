@@ -28,7 +28,6 @@
   border-radius: 8px;
 }
 .create-post-modal > aside {
-  
   width: 290px;
   min-width: 290px;
   display: flex;
@@ -43,7 +42,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-4);
-  
 }
 .create-post-modal > aside div label {
   font-weight: 500;
@@ -224,14 +222,14 @@
   cursor: pointer;
   z-index: 40;
 }
-.input-box.error-input-box > div:hover fieldset { 
+.input-box.error-input-box > div:hover fieldset {
   border: 1px solid rgba(192, 80, 77, 1);
 }
 .input-box.error-input-box > div > fieldset {
   border: 1px solid rgba(192, 80, 77, 1);
   color: rgba(192, 80, 77, 1);
 }
-.error-text{
+.error-text {
   color: rgba(192, 80, 77, 1);
   font-size: 12px;
   margin-top: 4px;
@@ -240,18 +238,22 @@
   transform: translateY(100%);
   left: 0;
 }
-.dropdown-value{
+.dropdown-value {
   padding-left: 8px;
   padding-right: 8px;
 }
-.background{
+.background {
   position: absolute;
   top: 0;
   right: 0;
   width: 314px;
   height: 100%;
-  background-color: #F8F9FA;
+  background-color: #f8f9fa;
   z-index: 1;
+}
+.posting-as-container {
+  position: relative;
+  z-index: 1000;
 }
 @media screen and (max-width: 1100px) {
   .create-post-modal {
@@ -264,6 +266,6 @@
     width: 100%;
   }
   .create-post-btn {
-    width: 100% ;
+    width: 100%;
   }
 }

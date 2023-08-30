@@ -149,8 +149,10 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     }
   }, [data])
 
-  useEffect(() => {
+  const checkProfileUrl = () => {
     const token = localStorage.getItem('token')
+    if (!user.profile_url) return
+    if (!data.profile_url) return
     const headers = { Authorization: `Bearer ${token}` }
     if (user.profile_url !== data.profile_url) {
       axios
@@ -159,21 +161,27 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
           { headers },
         )
         .then((res) => {
+          console.log('res', res)
           setInputErrs((prev) => {
             return { ...prev, profile_url: null }
           })
         })
         .catch((err) => {
+          console.log('err', err)
           setInputErrs((prev) => {
             return { ...prev, profile_url: 'This profile url is already taken' }
           })
         })
-    }else{
+    } else {
       setInputErrs((prev) => {
         return { ...prev, profile_url: null }
       })
     }
-  }, [data.profile_url])
+  }
+
+  useEffect(() => {
+    checkProfileUrl()
+  }, [data.profile_url, user.profile_url])
 
   useEffect(() => {
     if (onComplete !== undefined && !user.profile_url) {
@@ -183,9 +191,9 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
       setData((prev) => {
         return { ...prev, profile_url: profileUrl }
       })
-      if(data.full_name){
+      if (data.full_name) {
         let display = data.full_name.split(' ')[0]
-        if(!user.display_name){
+        if (!user.display_name) {
           setData((prev) => {
             return { ...prev, display_name: display }
           })

@@ -11,9 +11,10 @@ import { listingTypes } from '@/constants/constant'
 type Props = {
   data: any
   setData: any
+  setHobbies: any
 }
 
-const ProfileSwitcher: React.FC<Props> = ({ data: activeProfile, setData }) => {
+const ProfileSwitcher: React.FC<Props> = ({ data: activeProfile, setData, setHobbies }) => {
   const { user, listing } = useSelector((state: RootState) => state.user)
 
   const [showDropdown, setShowDropdown] = useState<boolean>(false)
@@ -25,6 +26,7 @@ const ProfileSwitcher: React.FC<Props> = ({ data: activeProfile, setData }) => {
     setData((prev: any) => {
       return { ...prev, type, data }
     })
+    setHobbies(data?._hobbies)
     setShowDropdown(false)
   }
 
