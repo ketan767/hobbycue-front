@@ -29,6 +29,7 @@ import FilledButton from '@/components/_buttons/FilledButton'
 import InputSelect from '@/components/_formElements/Select/Select'
 import { DropdownOption } from '@/components/_modals/CreatePost/Dropdown/DropdownOption'
 import { getListingPages } from '@/services/listing.service'
+import { setShowPageLoader } from '@/redux/slices/site'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -64,6 +65,7 @@ const CommunityLayout: React.FC<Props> = ({
   const [seeMoreHobby, setSeeMoreHobby] = useState(false)
   const [trendingHobbies, setTrendingHobbies] = useState([])
   const hideThirdColumnTabs = ['pages', 'links']
+  const { showPageLoader } = useSelector((state: RootState) => state.site)
 
   const toggleSeeMore = () => setSeeMoreHobby(!seeMoreHobby)
   const getPost = async () => {
@@ -95,6 +97,9 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   const fetchPosts = async () => {
+    if(showPageLoader){
+      dispatch(setShowPageLoader(false))
+    }
     let params: any = ''
     if (!activeProfile?.data?._hobbies) return
     if (activeProfile?.data?._hobbies.length === 0) return
