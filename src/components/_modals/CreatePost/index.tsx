@@ -48,7 +48,7 @@ type NewPostData = {
 }
 export const CreatePost: React.FC<Props> = (props) => {
   const { user, activeProfile } = useSelector((state: RootState) => state.user)
-
+  const [hobbies, setHobbies] = useState([])
   const [data, setData] = useState<NewPostData>({
     type: 'user',
     data: null,
@@ -60,6 +60,10 @@ export const CreatePost: React.FC<Props> = (props) => {
     media: [],
     video_url: '',
   })
+
+  useEffect(() => {
+    setHobbies(activeProfile.data?._hobbies)
+  }, [activeProfile])
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
   const [errors, setErrors] = useState({
@@ -67,9 +71,6 @@ export const CreatePost: React.FC<Props> = (props) => {
     genre: '',
     hobby: '',
   })
-
-  const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
-  const [showGenreDropdown, setShowGenreDropdown] = useState<boolean>(false)
 
   const [hobbyInputValue, setHobbyInputValue] = useState('')
   const [genreInputValue, setGenreInputValue] = useState('')
@@ -284,6 +285,7 @@ export const CreatePost: React.FC<Props> = (props) => {
     setData((prev: any) => ({ ...prev, visibility: value }))
   }
 
+  console.log('hobbies', hobbies);
   return (
     <div className={styles['modal-wrapper']}>
       <h3 className={styles['modal-heading']}>Create Post</h3>
@@ -337,9 +339,9 @@ export const CreatePost: React.FC<Props> = (props) => {
           )}
         </section>
         <aside>
-          <div>
+          <div className={styles['posting-as-container']}>
             <label>Posting As</label>
-            <CreatePostProfileSwitcher data={data} setData={setData} />
+            <CreatePostProfileSwitcher data={data} setData={setData} setHobbies={setHobbies} />
           </div>
 
           {/* Hobby Input and Dropdown */}
@@ -460,7 +462,7 @@ export const CreatePost: React.FC<Props> = (props) => {
               inputProps={{ 'aria-label': 'Without label' }}
               className={` ${styles['visibility-dropdown']}`}
             >
-              {user._hobbies?.map((item: any, idx: any) => {
+              {hobbies?.map((item: any, idx: any) => {
                 return (
                   <MenuItem
                     key={idx}
