@@ -15,6 +15,7 @@ import { closeModal, openModal, updateShareUrl } from '@/redux/slices/modal'
 import { setTimeout } from 'timers/promises'
 import { updateUserCover, updateUserProfile } from '@/services/user.service'
 import { RootState } from '@/redux/store'
+import FilledButton from '@/components/_buttons/FilledButton'
 import { useRouter } from 'next/router'
 import Dropdown from './DropDown'
 
@@ -35,6 +36,14 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
 
   const handleDropdown = () => {
     setOpen(!open)
+  }
+  const handleContact = () => {
+    console.log('data', data)
+    if (data.public_email) {
+      window.open(
+        `mailto:${data.public_email}?subject=Subject&body=Body%20goes%20here`,
+      )
+    }
   }
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
     e.preventDefault()
@@ -171,6 +180,9 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
 
           {/* Action Buttons */}
           <div className={styles['action-btn-wrapper']}>
+            <FilledButton className={styles.contactBtn} onClick={handleContact}>
+              Contact
+            </FilledButton>
             {/* Send Email Button  */}
             <Link href={`mailto:${data.public_email || data.email}`}>
               <div

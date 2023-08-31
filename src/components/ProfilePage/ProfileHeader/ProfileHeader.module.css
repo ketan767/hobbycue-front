@@ -185,13 +185,12 @@
   margin-top: 0;
 }
 .container:has(.header).small .action-btn-wrapper {
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: auto;
   width: auto;
   height: auto;
   background-color: transparent;
   gap: var(--spacing-8);
   box-shadow: none;
+  display: flex;
 }
 
 .name-container {

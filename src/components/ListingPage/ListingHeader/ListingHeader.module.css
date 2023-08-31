@@ -119,6 +119,13 @@
 }
 .action-dropdown{
   position: relative;
+  background: #f7f5f9;
+  border-radius: 8px;
+  width: 48px;
+  height: 40px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
 }
 .dropdown {
   position: absolute;

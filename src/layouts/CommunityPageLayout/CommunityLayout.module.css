@@ -484,6 +484,9 @@
     position: static;
     overflow: visible;
   }
+  .community-right-aside{
+    display: none;
+  }
   .invite-container-main {
     display: none;
   }

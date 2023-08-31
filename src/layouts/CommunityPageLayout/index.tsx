@@ -70,7 +70,6 @@ const CommunityLayout: React.FC<Props> = ({
 
   const shouldShowSeeMoreButton =
     (activeProfile.data?._hobbies?.length ?? 0) > 3
-  console.log('Number of hobbies:', activeProfile.data?._hobbies?.length)
 
   const hideThirdColumnTabs = ['pages', 'links']
   const { showPageLoader } = useSelector((state: RootState) => state.site)
@@ -108,7 +107,7 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   const fetchPosts = async () => {
-    if(showPageLoader){
+    if (showPageLoader) {
       dispatch(setShowPageLoader(false))
     }
     let params: any = ''
