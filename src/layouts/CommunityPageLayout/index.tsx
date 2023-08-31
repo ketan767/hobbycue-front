@@ -672,7 +672,9 @@ const CommunityLayout: React.FC<Props> = ({
         </main>
 
         {hideThirdColumnTabs.includes(activeTab) === false && (
-          <aside className={styles['community-right-aside']}>
+          <aside
+            className={`custom-scrollbar ${styles['community-right-aside']}`}
+          >
             <section
               className={`content-box-wrapper ${styles['invite-wrapper']}`}
             >
