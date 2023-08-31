@@ -234,7 +234,7 @@ const CommunityLayout: React.FC<Props> = ({
 
   useEffect(() => {
     if (activeProfile.type === 'user') {
-      if (activeProfile.data._addresses) {
+      if (activeProfile.data?._addresses) {
         if (activeProfile.data?._addresses?.length > 0) {
           let visibilityArr: any = [
             {
@@ -694,6 +694,9 @@ const CommunityLayout: React.FC<Props> = ({
               <section>
                 <ul>
                   {trendingHobbies?.map((hobby: any) => {
+                    if (hobby.profile_image) {
+                      console.log('hobby', hobby)
+                    }
                     return (
                       <li key={hobby._id}>
                         <Link href={`/hobby/${hobby.slug}`}>

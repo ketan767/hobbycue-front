@@ -164,7 +164,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
     }
     setSubmitBtnLoading(true)
     const { err, res } = await updateListingAddress(
-      listingModalData._address,
+      listingModalData._address?._id ? listingModalData._address?._id : listingModalData._address,
       jsonData,
     )
     if (err) return console.log(err)
