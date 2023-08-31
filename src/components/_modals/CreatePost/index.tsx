@@ -93,55 +93,98 @@ export const CreatePost: React.FC<Props> = (props) => {
   }, [data.content])
 
   useEffect(() => {
-    if (user._addresses) {
-      if (user._addresses?.length > 0) {
-        const address = user._addresses[0]
-        // let visibilityArr: any = ['public']
-        let visibilityArr: any = [
-          {
-            value: 'Everyone',
-            display: 'Everyone',
-            type: 'text',
-          },
-        ]
-        user?._addresses.map((address: any) => {
-          let obj: any = {
-            type: 'dropdown',
-            value: 'Home',
-            display: 'Home',
-            options: [],
-            _id: address._id,
-            active: false,
-          }
-          visibilityArr.push(obj)
-          if (address.city || address.label) {
-            obj.display = `${address.city} -  ${
-              address.label ? address.label : 'Default'
-            } `
-          }
-          if (address.pin_code) {
-            obj.options.push({
-              value: address.pin_code,
-              display: `PIN Code ${address.pin_code}`,
-            })
-          }
-          if (address.locality) {
-            obj.options.push({
-              value: address.locality,
-              display: `${address.locality}`,
-            })
-          }
-          if (address.society) {
-            obj.options.push({
-              value: address.society,
-              display: `${address.society}`,
-            })
-          }
-        })
-        setVisibilityData(visibilityArr)
+    if (data.type === 'user') {
+      if (data.data._addresses) {
+        if (data.data?._addresses?.length > 0) {
+          let visibilityArr: any = [
+            {
+              value: 'Everyone',
+              display: 'Everyone',
+              type: 'text',
+            },
+          ]
+          data.data?._addresses.map((address: any) => {
+            let obj: any = {
+              type: 'dropdown',
+              value: 'Home',
+              display: 'Home',
+              options: [],
+              _id: address._id,
+              active: false,
+            }
+            visibilityArr.push(obj)
+            if (address.city || address.label) {
+              obj.display = `${address.city} -  ${
+                address.label ? address.label : 'Default'
+              } `
+            }
+            if (address.pin_code) {
+              obj.options.push({
+                value: address.pin_code,
+                display: `PIN Code ${address.pin_code}`,
+              })
+            }
+            if (address.locality) {
+              obj.options.push({
+                value: address.locality,
+                display: `${address.locality}`,
+              })
+            }
+            if (address.society) {
+              obj.options.push({
+                value: address.society,
+                display: `${address.society}`,
+              })
+            }
+          })
+          setVisibilityData(visibilityArr)
+        }
       }
+    } else if (data.type === 'listing') {
+      let address = data.data?._address
+      let visibilityArr: any = [
+        {
+          value: 'Everyone',
+          display: 'Everyone',
+          type: 'text',
+        },
+      ]
+      let obj: any = {
+        type: 'dropdown',
+        value: 'Default',
+        display: 'Default',
+        options: [],
+        _id: address._id,
+        active: false,
+      }
+      visibilityArr.push(obj)
+      if (address.city || address.label) {
+        obj.display = `${address.city} -  ${
+          address.label ? address.label : 'Default'
+        } `
+      }
+      if (address.pin_code) {
+        obj.options.push({
+          value: address.pin_code,
+          display: `PIN Code ${address.pin_code}`,
+        })
+      }
+      if (address.locality) {
+        obj.options.push({
+          value: address.locality,
+          display: `${address.locality}`,
+        })
+      }
+      if (address.society) {
+        obj.options.push({
+          value: address.society,
+          display: `${address.society}`,
+        })
+      }
+      setVisibilityData(visibilityArr)
     }
-  }, [user])
+  }, [data])
+
   // useEffect(() => {
   //   let imgStrs = ``
   //   data.media.map((item: any) => {
@@ -285,7 +328,6 @@ export const CreatePost: React.FC<Props> = (props) => {
     setData((prev: any) => ({ ...prev, visibility: value }))
   }
 
-  console.log('hobbies', hobbies);
   return (
     <div className={styles['modal-wrapper']}>
       <h3 className={styles['modal-heading']}>Create Post</h3>
