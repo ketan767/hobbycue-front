@@ -5,7 +5,7 @@
   right: 0;
   background-color: rgba(var(--white-rgb));
   /* padding: calc(var(--spacing-8) + var(--spacing-2)); */
-  z-index: var(--navbar-z-index);
+  z-index: 21;
   box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.08);
   height: var(--navbar-height-desktop);
 }
@@ -114,6 +114,7 @@
   height: auto;
   border-radius: 100%;
   aspect-ratio: 1/1;
+  border: 1px solid #8064a2;
 }
 
 .user-menu-dropdown {
@@ -270,7 +271,7 @@
 }
 @media screen and (max-width: 1100px) {
   .navbar-wrappper {
-    position:static;
+    position:sticky;
   }
   .navbar-left .inputField {
     display: none;

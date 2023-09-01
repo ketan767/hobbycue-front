@@ -21,6 +21,7 @@ import { dateFormat } from '@/utils'
 import Calendar from '@/assets/svg/calendar-light.svg'
 import Time from '@/assets/svg/clock-light.svg'
 import EditIcon from '@/assets/svg/edit-colored.svg'
+import ShareIcon from '@/assets/svg/share-outlined.svg'
 import ListingGeneralEditModal from '@/components/_modals/EditListing/ListingGeneral'
 import FilledButton from '@/components/_buttons/FilledButton'
 import CoverPhotoLayout from '@/layouts/CoverPhotoLayout/CoverPhotoLayout'
@@ -48,7 +49,6 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
 
   const { listingLayoutMode } = useSelector((state: any) => state.site)
 
-  
   const [open, setOpen] = useState(false)
 
   const handleDropdown = () => {
@@ -294,7 +294,7 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
               onClick={(e) => handleShare()}
               className={styles['action-btn']}
             >
-              <ShareRoundedIcon color="primary" fontSize="small" />
+              <Image src={ShareIcon} alt="share" />
             </div>
 
             {/* More Options Button */}

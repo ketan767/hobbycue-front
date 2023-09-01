@@ -29,6 +29,7 @@
 }
 .modal-wrapper .footer .submit {
   margin-left: auto;
+  border-radius: 8px;
 }
 
 .heading {

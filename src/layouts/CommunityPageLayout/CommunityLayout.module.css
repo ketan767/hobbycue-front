@@ -44,7 +44,7 @@
 }
 /* Side Hobby Wrapper */
 .hobbies-side-wrapper {
-  margin-bottom: var(--spacing-16);
+  margin-bottom: var(--spacing-12);
 }
 .hobbies-side-wrapper header {
   padding: var(--spacing-16);
@@ -72,8 +72,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-4);
-  max-height: 250px;
-  overflow: auto;
+  max-height: 600px;
+  overflow-y: hidden;
 }
 .hobbies-side-wrapper section ul li {
   border-radius: var(--spacing-8);
@@ -148,7 +148,7 @@
 
 /* Invite to Community Wrapper */
 .invite-wrapper {
-  margin-bottom: var(--spacing-16);
+  margin-bottom: var(--spacing-12);
 }
 .invite-wrapper header {
   padding: var(--spacing-16);

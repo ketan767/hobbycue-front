@@ -62,8 +62,16 @@ const CommunityLayout: React.FC<Props> = ({
     'blogs',
   ]
   const [visibilityData, setVisibilityData] = useState(['public'])
-  const [seeMoreHobby, setSeeMoreHobby] = useState(false)
+  const [seeMoreHobby, setSeeMoreHobby] = useState(
+    activeProfile.data?._hobbies?.length > 3 ? true : false,
+  )
+
   const [trendingHobbies, setTrendingHobbies] = useState([])
+
+  const shouldShowSeeMoreButton =
+    (activeProfile.data?._hobbies?.length ?? 0) > 3
+  console.log('Number of hobbies:', activeProfile.data?._hobbies?.length)
+
   const hideThirdColumnTabs = ['pages', 'links']
   const { showPageLoader } = useSelector((state: RootState) => state.site)
 
@@ -94,6 +102,9 @@ const CommunityLayout: React.FC<Props> = ({
     } else {
       setSelectedHobby('')
     }
+  }
+  const EditProfileLocation = () => {
+    window.location.href = '/settings/localization-and-payments'
   }
 
   const fetchPosts = async () => {
@@ -393,15 +404,7 @@ const CommunityLayout: React.FC<Props> = ({
           >
             <header>
               <h3>Location</h3>
-              <Image
-                src={EditIcon}
-                onClick={() =>
-                  dispatch(
-                    openModal({ type: 'profile-address-edit', closable: true }),
-                  )
-                }
-                alt="edit"
-              />
+              <Image src={EditIcon} onClick={EditProfileLocation} alt="edit" />
               {/* <Image src={EditIcon} alt="Edit" /> */}
             </header>
             <span className={styles['divider']}></span>
@@ -669,7 +672,9 @@ const CommunityLayout: React.FC<Props> = ({
         </main>
 
         {hideThirdColumnTabs.includes(activeTab) === false && (
-          <aside className={styles['community-right-aside']}>
+          <aside
+            className={`custom-scrollbar ${styles['community-right-aside']}`}
+          >
             <section
               className={`content-box-wrapper ${styles['invite-wrapper']}`}
             >

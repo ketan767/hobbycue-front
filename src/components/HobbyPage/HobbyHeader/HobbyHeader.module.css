@@ -4,7 +4,7 @@
   grid-template-columns: 160px auto 160px;
   gap: 24px;
   align-items: flex-end;
-  padding: 24px 0;
+  padding-top: 18px;
   /* background-color: white; */
 }
 .profile-img {
@@ -13,9 +13,7 @@
   height: 160px;
   filter: drop-shadow(0px 2px 12px rgba(0, 0, 0, 0.08));
   object-fit: cover;
-  border: 2px solid rgb(var(--primary-100-rgb));
   clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
-  background-color: rgb(var(--gray-50-rgb), 0.2);
   position: relative;
   z-index: 1;
   display: flex;
@@ -23,8 +21,8 @@
   align-items: center;
 }
 .profile-img img{
-  width: calc(100% - 4px);
-  height: calc(100% - 4px);
+  width: calc(100% );
+  height: calc(100% );
   object-fit: cover;
   position: relative;
   z-index: 10;
@@ -38,7 +36,6 @@
   left: 0;
   top: 0;
   bottom: 0;
-  background-color: #8064a2;
   z-index: 1;
 }
 
@@ -48,10 +45,10 @@
   aspect-ratio: 3/1;
   border-radius: 8px;
   object-fit: cover;
-  background-color: rgb(var(--gray-50-rgb), 0.2);
+  background-color: #96969680;
 }
 .center-container .name {
-  margin-top: 12px;
+  margin-top: 17px;
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 600;
@@ -66,7 +63,9 @@
   font-size: 16px;
   line-height: 20px;
   color: #08090a;
+  margin-top: var(--spacing-8);
 }
+
 
 .action-btn-wrapper {
   width: 160px;
@@ -89,6 +88,10 @@
   cursor: pointer;
   display: grid;
   place-items: center;
+}
+
+.action-btn-wrapper .action-btn img{
+  border-radius: 8px;
 }
 
 .navigation-links {

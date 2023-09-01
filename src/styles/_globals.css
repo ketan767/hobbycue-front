@@ -229,6 +229,7 @@ select:-webkit-autofill {
   padding: 3px 7px !important;
   width: auto !important;
 }
+
 .ql-toolbar.ql-snow .ql-formats:nth-child(1) {
   margin-right: 6px;
 }
@@ -295,13 +296,14 @@ select:-webkit-autofill {
   border: 1px solid #c0504d;
 }
 
-@media screen and (max-width: 1100px) {
+@media screen and (max-width: 1300px) {
   .main-site-wrapper {
     margin-left: 24px;
     margin-right: 24px;
     margin-top: 8px;
   }
 }
+
 .custom-scrollbar {
   transition: 0.6s;
 }
