@@ -5,7 +5,7 @@
   grid-template-columns: 160px auto 160px;
   gap: 24px;
   align-items: flex-end;
-  padding: 24px 0;
+  padding-top: 18px;
 }
 
 .profile-img-wrapper {
@@ -97,6 +97,11 @@
   place-items: center;
   position: relative;
 }
+
+.action-btn-wrapper .action-btn img{
+  border-radius: 8px;
+}
+
 .makeMyPageButton {
   width: 100%;
   margin-bottom: var(--spacing-12);
@@ -180,8 +185,7 @@
   margin-top: 0;
 }
 .container:has(.header).small .action-btn-wrapper {
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: auto;
+  display: flex;
   width: auto;
   height: auto;
   background-color: transparent;

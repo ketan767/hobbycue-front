@@ -189,7 +189,10 @@ const ListingTypeEditModal: React.FC<Props> = ({
                               : ''
                           }`}
                           key={item}
-                          onClick={() => handleChange(item)}
+                          onClick={() => {
+                            handleChange(item)
+                            setShowDropdown(false)
+                          }}
                         >
                           <p className={styles.tagDesc}>
                             {item}
@@ -249,7 +252,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'22px'} />
             ) : listingTypeModalMode === 'edit' ? (
-              'Edit'
+              'Next'
             ) : (
               'Next'
             )}

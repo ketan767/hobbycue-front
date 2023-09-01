@@ -28,6 +28,7 @@
   height: 60px;
   background-color: rgb(127, 99, 161);
   animation: loading 1s ease-in-out 0s infinite alternate;
+  z-index: 60
 }
 
 @keyframes loading {

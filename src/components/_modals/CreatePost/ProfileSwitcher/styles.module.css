@@ -27,6 +27,7 @@
   height: 32px;
   border-radius: 100%;
   flex-shrink: 0;
+  border: 1px solid #8064a2;
 }
 .profile-switcher img[data-profile-type='listing'] {
   width: 32px;

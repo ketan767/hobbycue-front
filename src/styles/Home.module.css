@@ -37,6 +37,10 @@
   letter-spacing: 0.02em;
 }
 
+.hide-paragraph-responsive{
+  margin-top: 0 !important;
+}
+
 .landing-illustration {
   position: relative;
   top: 72px;
@@ -308,6 +312,7 @@
   line-height: normal;
   letter-spacing: 0.28px;
 }
+
 @media screen and (min-width: 1600px) {
 
   .landing-contaniner {
@@ -333,7 +338,12 @@
     overflow: hidden; 
   }
 
-
+  .hide-paragraph-responsive{
+    display: none;
+  }
+  .content{
+    height: 15rem;
+  }
   .landing-wrapper {
     padding-top: 3rem;
     height: 100%;
@@ -344,7 +354,7 @@
   }
 
   .landing-wrapper img{
-    top:700px;
+    top:540px;
   }
   .cards-container .four-p-card-wrapper {
     padding: 24rem 0;

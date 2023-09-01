@@ -6,9 +6,12 @@ import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded'
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded'
 import ShareRoundedIcon from '@mui/icons-material/ShareRounded'
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded'
+import MailIcon from '@/assets/svg/mailicon.svg'
+import ShareIcon from '@/assets/svg/share-outlined.svg'
 import CameraIcon from '@/assets/icons/CameraIcon'
 import Link from 'next/link'
 import { useDispatch, useSelector } from 'react-redux'
+import FilledButton from '@/components/_buttons/FilledButton'
 import { updatePhotoEditModalData } from '@/redux/slices/site'
 import { closeModal, openModal, updateShareUrl } from '@/redux/slices/modal'
 import { setTimeout } from 'timers/promises'
@@ -34,6 +37,15 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
 
   const handleDropdown = () => {
     setOpen(!open)
+  }
+
+  const handleContact = () => {
+    console.log('data', data)
+    if (data.public_email) {
+      window.open(
+        `mailto:${data.public_email}?subject=Subject&body=Body%20goes%20here`,
+      )
+    }
   }
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
     e.preventDefault()
@@ -104,7 +116,6 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
     dispatch(openModal({ type: 'social-media-share', closable: true }))
   }
 
-
   return (
     <>
       <div className={`${styles['container']} ${styles['small']} `}>
@@ -171,13 +182,16 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
 
           {/* Action Buttons */}
           <div className={styles['action-btn-wrapper']}>
+            <FilledButton className={styles.contactBtn} onClick={handleContact}>
+              Contact
+            </FilledButton>
             {/* Send Email Button  */}
             <Link href={`mailto:${data.public_email || data.email}`}>
               <div
                 onClick={(e) => console.log(e)}
                 className={styles['action-btn']}
               >
-                <MailOutlineRoundedIcon color="primary" />
+                <Image src={MailIcon} alt="share" />
               </div>
             </Link>
 
@@ -191,10 +205,10 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
 
             {/* Share Button */}
             <div
-             onClick={(e) => handleShare()}
+              onClick={(e) => handleShare()}
               className={styles['action-btn']}
             >
-              <ShareRoundedIcon color="primary" fontSize="small" />
+              <Image src={ShareIcon} alt="share" />
             </div>
 
             {/* More Options Button */}

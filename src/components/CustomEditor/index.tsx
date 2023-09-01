@@ -138,7 +138,26 @@ const CustomEditor: React.FC<Props> = ({
         modules={{
           toolbar: {
             container: [
-              ['bold', 'italic', 'underline', 'emoji'],
+              [
+                {
+                  bold: {
+                    className: 'quill-toolbar-button',
+                    title: 'Bold',
+                    text: 'Bold Text',
+                    'data-tooltip': 'Bold Tooltip',
+                  },
+                },
+                {
+                  italic: {
+                    className: 'quill-toolbar-button',
+                    title: 'Italic',
+                    text: 'Italic Text',
+                    'data-tooltip': 'Italic Tooltip',
+                  },
+                },
+                'underline',
+                'emoji',
+              ],
               [{ list: 'ordered' }, { list: 'bullet' }],
             ],
             // handlers: { emoji: function () {} },
@@ -164,7 +183,7 @@ const CustomEditor: React.FC<Props> = ({
         onChange={(e) => handleVideoChange(e)}
         ref={inputVideoRef}
       />
-      {error && <p className={styles['error-text']} >{error}</p>}
+      {error && <p className={styles['error-text']}>{error}</p>}
     </>
   )
 }

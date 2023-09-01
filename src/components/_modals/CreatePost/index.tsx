@@ -71,7 +71,6 @@ export const CreatePost: React.FC<Props> = (props) => {
     genre: '',
     hobby: '',
   })
-
   const [hobbyInputValue, setHobbyInputValue] = useState('')
   const [genreInputValue, setGenreInputValue] = useState('')
   const [hasLink, setHasLink] = useState(false)
@@ -93,53 +92,55 @@ export const CreatePost: React.FC<Props> = (props) => {
   }, [data.content])
 
   useEffect(() => {
-    if (data.type === 'user') {
-      if (data.data._addresses) {
-        if (data.data?._addresses?.length > 0) {
-          let visibilityArr: any = [
-            {
-              value: 'Everyone',
-              display: 'Everyone',
-              type: 'text',
-            },
-          ]
-          data.data?._addresses.map((address: any) => {
-            let obj: any = {
-              type: 'dropdown',
-              value: 'Home',
-              display: 'Home',
-              options: [],
-              _id: address._id,
-              active: false,
-            }
-            visibilityArr.push(obj)
-            if (address.city || address.label) {
-              obj.display = `${address.city} -  ${
-                address.label ? address.label : 'Default'
-              } `
-            }
-            if (address.pin_code) {
-              obj.options.push({
-                value: address.pin_code,
-                display: `PIN Code ${address.pin_code}`,
-              })
-            }
-            if (address.locality) {
-              obj.options.push({
-                value: address.locality,
-                display: `${address.locality}`,
-              })
-            }
-            if (address.society) {
-              obj.options.push({
-                value: address.society,
-                display: `${address.society}`,
-              })
-            }
-          })
-          setVisibilityData(visibilityArr)
+    if (
+      data &&
+      data.type === 'user' &&
+      data.data &&
+      data.data._addresses &&
+      data.data._addresses.length > 0
+    ) {
+      let visibilityArr: any = [
+        {
+          value: 'Everyone',
+          display: 'Everyone',
+          type: 'text',
+        },
+      ]
+      data.data?._addresses.map((address: any) => {
+        let obj: any = {
+          type: 'dropdown',
+          value: 'Home',
+          display: 'Home',
+          options: [],
+          _id: address._id,
+          active: false,
         }
-      }
+        visibilityArr.push(obj)
+        if (address.city || address.label) {
+          obj.display = `${address.city} -  ${
+            address.label ? address.label : 'Default'
+          } `
+        }
+        if (address.pin_code) {
+          obj.options.push({
+            value: address.pin_code,
+            display: `PIN Code ${address.pin_code}`,
+          })
+        }
+        if (address.locality) {
+          obj.options.push({
+            value: address.locality,
+            display: `${address.locality}`,
+          })
+        }
+        if (address.society) {
+          obj.options.push({
+            value: address.society,
+            display: `${address.society}`,
+          })
+        }
+      })
+      setVisibilityData(visibilityArr)
     } else if (data.type === 'listing') {
       let address = data.data?._address
       let visibilityArr: any = [
@@ -383,7 +384,11 @@ export const CreatePost: React.FC<Props> = (props) => {
         <aside>
           <div className={styles['posting-as-container']}>
             <label>Posting As</label>
-            <CreatePostProfileSwitcher data={data} setData={setData} setHobbies={setHobbies} />
+            <CreatePostProfileSwitcher
+              data={data}
+              setData={setData}
+              setHobbies={setHobbies}
+            />
           </div>
 
           {/* Hobby Input and Dropdown */}

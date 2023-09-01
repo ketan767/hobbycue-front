@@ -51,9 +51,12 @@ const Home: React.FC<PropTypes> = function () {
             <p>
               Sign-in to interact with a community of fellow hobbyists and an
               eco-system of experts, teachers, suppliers, classes, workshops,
-              and places to practice, participate or perform. Your hobby may be
-              about visual or performing arts, sports, games, gardening, model
-              making, cooking, indoor or outdoor activities…
+              and places to practice, participate or perform.
+            </p>
+
+            <p className={styles['hide-paragraph-responsive']}>
+              Your hobby may be about visual or performing arts, sports, games,
+              gardening, model making, cooking, indoor or outdoor activities…
               <br />
               <br />
               If you are an expert or a seller, you can Add your Listing and
