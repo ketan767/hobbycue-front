@@ -26,7 +26,7 @@
 .loading-card {
   width: 60px;
   height: 60px;
-  background-color: rgb(127, 99, 161);
+  background-color: #8064A2;
   animation: loading 1s ease-in-out 0s infinite alternate;
   z-index: 60
 }
