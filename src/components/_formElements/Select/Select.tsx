@@ -3,6 +3,7 @@ import styles from './select.module.css'
 import ChevronDown from '@/assets/svg/chevron-down.svg'
 import Image from 'next/image'
 import useOutsideAlerter from '@/hooks/useOutsideAlerter'
+import { toggleButtonClasses } from '@mui/material'
 
 type Props = {
   options?: any
@@ -19,13 +20,13 @@ const InputSelect: React.FC<Props> = ({
   children,
   className,
 }) => {
-  const [active, setActive] = useState(false)
-  const toggle = () => setActive(!active)
+  const [active, setactive] = useState(false)
+  const toggle = () => setactive(!active)
   const dropdownRef = useRef(null)
 
   useEffect(() => {
     const closeDropdown = () => {
-      setActive(false)
+      setactive(false)
     }
 
     if (active) {
@@ -40,12 +41,12 @@ const InputSelect: React.FC<Props> = ({
   }, [active])
 
   const handleHeaderClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    event.stopPropagation() // Prevent the click event from propagating to the document
+    event.stopPropagation()
     toggle()
   }
 
   const handleChildClick = () => {
-    setActive(false)
+    setactive(false)
   }
 
   return (
