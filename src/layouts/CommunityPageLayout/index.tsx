@@ -23,7 +23,8 @@ import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import { checkIfUrlExists } from '@/utils'
 import Link from 'next/link'
 import { getAllHobbies, getTrendingHobbies } from '@/services/hobby.service'
-import DefaultHobbyImg from '@/assets/image/default.png'
+import DefaultHobbyImg from '@/assets/svg/default-images/default-hobbies.svg'
+import DefaultHobbyImgcover from '@/assets/svg/default-images/default-hobby-cover.svg'
 import { MenuItem, Select } from '@mui/material'
 import FilledButton from '@/components/_buttons/FilledButton'
 import InputSelect from '@/components/_formElements/Select/Select'
@@ -269,6 +270,12 @@ const CommunityLayout: React.FC<Props> = ({
                 address.label ? address.label : 'Default'
               } `
             }
+            if (address.city) {
+              obj.options.push({
+                value: address.city,
+                display: `${address.city}`,
+              })
+            }
             if (address.pin_code) {
               obj.options.push({
                 value: address.pin_code,
@@ -314,6 +321,13 @@ const CommunityLayout: React.FC<Props> = ({
           address.label ? address.label : 'Default'
         } `
       }
+      if (address.city) {
+        obj.options.push({
+          value: address.city,
+          display: `${address.city}`,
+        })
+      }
+
       if (address.pin_code) {
         obj.options.push({
           value: address.pin_code,
@@ -508,7 +522,6 @@ const CommunityLayout: React.FC<Props> = ({
                 <div className={styles['top-margin-card']}></div>
                 {selectedHobby !== '' &&
                   selectedLocation !== '' &&
-                  selectedLocation !== 'Everyone' &&
                   Object.keys(hobbyGroup).length > 5 && (
                     <div className={styles['community-group-container']}>
                       <div className={styles['community-group-header']}>
@@ -527,7 +540,7 @@ const CommunityLayout: React.FC<Props> = ({
                             src={
                               hobbyGroup.cover_image
                                 ? hobbyGroup.cover_image
-                                : DefaultHobbyImg
+                                : DefaultHobbyImgcover
                             }
                             alt="hobby-img"
                           />
