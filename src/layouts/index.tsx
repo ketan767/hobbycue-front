@@ -45,8 +45,10 @@ function SiteMainLayout({ children }: { children: ReactElement }) {
     }
 
     // If any error or !success, then set user as `not authenticated`
-    if (profileErr || !profileRes || !profileRes.data.success)
+    if (profileErr || !profileRes || !profileRes.data.success){
+      setShowPreLoader(false)
       return dispatch(updateIsAuthenticated(false))
+    }
 
     dispatch(updateIsAuthenticated(true))
     dispatch(updateUser(profileRes?.data.data.user))
@@ -56,7 +58,7 @@ function SiteMainLayout({ children }: { children: ReactElement }) {
       `populate=_hobbies,_address&admin=${profileRes?.data.data.user._id}`,
     )
 
-    if (listingErr || !listingRes || !listingRes.data.success) return
+    if (listingErr || !listingRes || !listingRes.data.success) return setShowPreLoader(false)
 
     dispatch(updateUserListing(listingRes.data.data.listings))
 
@@ -86,7 +88,7 @@ function SiteMainLayout({ children }: { children: ReactElement }) {
 
   /** To check user logged-in status, as it will open the website */
   useEffect(() => {
-    if (isLoggedIn && isAuthenticated) return
+    if (isLoggedIn && isAuthenticated) return setShowPreLoader(false)
 
     const token = localStorage.getItem('token')
 

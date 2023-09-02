@@ -20,13 +20,18 @@ export const DropdownOption: React.FC<Props> = (props) => {
   const { value, type, display, options, onChange, currentValue, _id } = props
   const { activeProfile, user } = useSelector((state: any) => state.user)
 
-  const [active, setActive] = useState(user?.primary_address?._id === _id ? true : false)
+  const [active, setActive] = useState(
+    user?.primary_address?._id === _id ? true : false,
+  )
 
-  const toggle = () => setActive(!active)
+  const toggle = (e: any) => {
+    e.stopPropagation()
+    setActive(!active)
+  }
 
   if (type === 'text') {
     return (
-      <div className={styles['value-container']} >
+      <div className={styles['value-container']}>
         <p
           className={`${styles['dropdown-value']} ${
             currentValue === value ? styles['dropdown-value-active'] : ''
@@ -57,7 +62,8 @@ export const DropdownOption: React.FC<Props> = (props) => {
       >
         {options?.map((option: any, idx: any) => {
           return (
-            <p key={idx}
+            <p
+              key={idx}
               className={`${styles['dropdown-value']} ${
                 currentValue === option.value ? styles['option-active'] : ''
               }`}
