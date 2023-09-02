@@ -363,6 +363,7 @@
   margin-bottom: 1rem;
   margin-top: 1rem;
   overflow: hidden;
+  position: static;
   /* transform: translateY(calc(-1 * var(--navbar-height-desktop))); */
 }
 .community-group-header {

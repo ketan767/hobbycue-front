@@ -121,6 +121,12 @@ export const CreatePost: React.FC<Props> = (props) => {
             address.label ? address.label : 'Default'
           } `
         }
+        if (address.city) {
+          obj.options.push({
+            value: address.city,
+            display: `${address.city}`,
+          })
+        }
         if (address.pin_code) {
           obj.options.push({
             value: address.pin_code,
@@ -163,6 +169,12 @@ export const CreatePost: React.FC<Props> = (props) => {
         obj.display = `${address.city} -  ${
           address.label ? address.label : 'Default'
         } `
+      }
+      if (address.city) {
+        obj.options.push({
+          value: address.city,
+          display: `${address.city}`,
+        })
       }
       if (address.pin_code) {
         obj.options.push({
