@@ -122,7 +122,7 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
       )
     }
   }
-  
+
   return (
     <>
       <div className={`${styles['container']}`}>
@@ -256,7 +256,7 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
               }}
               className={styles.makeMyPageButton}
             >
-              Make my page
+              Make My Page
             </FilledButton>
             <div className={styles['action-btn-wrapper']}>
               {/* Send Email Button  */}

@@ -53,7 +53,7 @@ export const Navbar: React.FC<Props> = ({}) => {
     setShowDropdown(null)
   }, [router.pathname])
 
-  const toggleMenu = ()=> {
+  const toggleMenu = () => {
     setMenuActive(!menuActive)
   }
 
@@ -497,7 +497,7 @@ export const Navbar: React.FC<Props> = ({}) => {
               <li>
                 <Image src={BellIcon} alt="Bell" />
               </li>
-              <li >
+              <li>
                 <Image src={BarsIcon} alt="Bars" onClick={toggleMenu} />
               </li>
             </ul>

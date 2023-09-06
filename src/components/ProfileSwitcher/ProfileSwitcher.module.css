@@ -36,7 +36,7 @@
 }
 
 .dropdown {
-  z-index: 20;
+  z-index: 600;
   position: absolute;
   left: 0;
   top: 100%;

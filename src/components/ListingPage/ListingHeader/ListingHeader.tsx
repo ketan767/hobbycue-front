@@ -300,7 +300,12 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
         </section>
         <div className={styles['actions-container']}>
           {listingLayoutMode === 'edit' && (
-            <FilledButton className={styles.publishBtn} onClick={handlePublish}>
+            <FilledButton
+              className={
+                data.is_published ? styles.unpublishBtn : styles.publishBtn
+              }
+              onClick={handlePublish}
+            >
               {data.is_published ? 'Unpublish' : 'Publish'}
             </FilledButton>
           )}
