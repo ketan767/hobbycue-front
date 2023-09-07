@@ -4,6 +4,7 @@ import Image from 'next/image'
 
 import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded'
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded'
+import { Tooltip } from '@mui/material'
 import ShareRoundedIcon from '@mui/icons-material/ShareRounded'
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded'
 import CameraIcon from '@/assets/icons/CameraIcon'
@@ -19,6 +20,7 @@ import { updatePhotoEditModalData } from '@/redux/slices/site'
 import { openModal, updateShareUrl } from '@/redux/slices/modal'
 import { dateFormat } from '@/utils'
 import Calendar from '@/assets/svg/calendar-light.svg'
+import MailIcon from '@/assets/svg/mailicon.svg'
 import Time from '@/assets/svg/clock-light.svg'
 import EditIcon from '@/assets/svg/edit-colored.svg'
 import ShareIcon from '@/assets/svg/share-outlined.svg'
@@ -272,40 +274,47 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
             </div>
 
             {/* Send Email Button  */}
-            <Link href={`mailto:${data.public_email || data.email}`}>
+            <Tooltip title="Repost">
+              <Link href={`mailto:${data.public_email || data.email}`}>
+                <div
+                  onClick={(e) => console.log(e)}
+                  className={styles['action-btn']}
+                >
+                  <Image src={MailIcon} alt="share" />
+                </div>
+              </Link>
+            </Tooltip>
+
+            {/* Bookmark Button */}
+            <Tooltip title="Bookmark">
               <div
                 onClick={(e) => console.log(e)}
                 className={styles['action-btn']}
               >
-                <MailOutlineRoundedIcon color="primary" />
+                <BookmarkBorderRoundedIcon color="primary" />
               </div>
-            </Link>
-
-            {/* Bookmark Button */}
-            <div
-              onClick={(e) => console.log(e)}
-              className={styles['action-btn']}
-            >
-              <BookmarkBorderRoundedIcon color="primary" />
-            </div>
+            </Tooltip>
 
             {/* Share Button */}
-            <div
-              onClick={(e) => handleShare()}
-              className={styles['action-btn']}
-            >
-              <Image src={ShareIcon} alt="share" />
-            </div>
+            <Tooltip title="Ahare">
+              <div
+                onClick={(e) => handleShare()}
+                className={styles['action-btn']}
+              >
+                <Image src={ShareIcon} alt="share" />
+              </div>
+            </Tooltip>
 
             {/* More Options Button */}
-            <div
-              onClick={(e) => handleDropdown()}
-              className={styles['action-dropdown']}
-            >
-              {' '}
-              {open && <Dropdown handleClose={handleDropdown} />}
-              <MoreHorizRoundedIcon color="primary" />
-            </div>
+            <Tooltip title="More options">
+              <div
+                onClick={(e) => handleDropdown()}
+                className={styles['action-btn']}
+              >
+                <MoreHorizRoundedIcon color="primary" />
+                {open && <Dropdown handleClose={handleDropdown} />}
+              </div>
+            </Tooltip>
           </div>
         </header>
 
