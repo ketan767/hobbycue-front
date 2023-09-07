@@ -187,7 +187,7 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
               Contact
             </FilledButton>
             {/* Send Email Button  */}
-            <Tooltip title="Send Email">
+            <Tooltip title="Repost">
               <Link href={`mailto:${data.public_email || data.email}`}>
                 <div
                   onClick={(e) => console.log(e)}

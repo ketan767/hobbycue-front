@@ -274,7 +274,7 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
             </div>
 
             {/* Send Email Button  */}
-            <Tooltip title="Send Email">
+            <Tooltip title="Repost">
               <Link href={`mailto:${data.public_email || data.email}`}>
                 <div
                   onClick={(e) => console.log(e)}

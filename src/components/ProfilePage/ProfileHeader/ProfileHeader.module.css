@@ -38,6 +38,7 @@
 
 .center-container .cover-img-wrapper {
   position: relative;
+  height: 309px;
 }
 .center-container .cover-img-wrapper .img {
   width: 100%;

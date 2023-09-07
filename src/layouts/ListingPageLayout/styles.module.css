@@ -4,6 +4,7 @@
   margin-top: var(--spacing-4);
   position: sticky;
   min-height: 40px;
+  gap: 36px;
 }
 .navigation-tabs a {
   font-family: 'Poppins';
@@ -11,7 +12,7 @@
   font-weight: 600;
   font-size: 14px;
   line-height: 16px;
-  color: #6d747a;
+  color: #939ca3;
   padding: 8px 5px;
   position: relative;
   min-width: 90px;

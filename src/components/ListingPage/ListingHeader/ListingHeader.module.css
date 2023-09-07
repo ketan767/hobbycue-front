@@ -39,6 +39,7 @@
 
 .center-container .cover-img-wrapper {
   position: relative;
+  height: 309px;
 }
 .center-container .cover-img-wrapper .img {
   width: 100%;
@@ -164,7 +165,7 @@
 .content-container {
   display: flex;
   justify-content: space-between;
-  margin-top: 12px;
+  margin-top: 5px;
   align-items: flex-end;
 }
 .eventDate {

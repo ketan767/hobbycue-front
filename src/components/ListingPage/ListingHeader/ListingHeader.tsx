@@ -315,7 +315,7 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
           <div className={styles['action-btn-wrapper']}>
             {/* Send Email Button  */}
             <Link href={`mailto:${data.public_email || data.email}`}>
-              <Tooltip title="Send mail">
+              <Tooltip title="Repost">
                 <div
                   onClick={(e) => console.log(e)}
                   className={styles['action-btn']}

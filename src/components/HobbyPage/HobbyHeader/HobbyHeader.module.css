@@ -48,7 +48,7 @@
   background-color: #96969680;
 }
 .center-container .name {
-  margin-top: 17px;
+  margin-top: 5px;
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 600;
@@ -96,12 +96,12 @@
 
 .navigation-links {
   display: flex;
-  gap: 60px;
+  gap: 30px;
   margin-top: var(--spacing-4);
   justify-content: center;
   background-color: white;
   position: sticky;
-  top: 78px;
+  min-height: 40px;
   z-index: 1;
   
 }
@@ -114,6 +114,8 @@
   color: #939ca3;
   padding: 10px 5px;
   position: relative;
+  min-width: 90px;
+  text-align: center;
 }
 .navigation-links a:hover {
   color: #8064a2;
