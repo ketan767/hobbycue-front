@@ -16,6 +16,7 @@ import { updatePhotoEditModalData } from '@/redux/slices/site'
 import { closeModal, openModal, updateShareUrl } from '@/redux/slices/modal'
 import { setTimeout } from 'timers/promises'
 import { updateUserCover, updateUserProfile } from '@/services/user.service'
+import { Tooltip } from '@mui/material'
 import { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
 import Dropdown from './DropDown'
@@ -186,39 +187,47 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
               Contact
             </FilledButton>
             {/* Send Email Button  */}
-            <Link href={`mailto:${data.public_email || data.email}`}>
+            <Tooltip title="Repost">
+              <Link href={`mailto:${data.public_email || data.email}`}>
+                <div
+                  onClick={(e) => console.log(e)}
+                  className={styles['action-btn']}
+                >
+                  <Image src={MailIcon} alt="share" />
+                </div>
+              </Link>
+            </Tooltip>
+
+            {/* Bookmark Button */}
+            <Tooltip title="Bookmark">
               <div
                 onClick={(e) => console.log(e)}
                 className={styles['action-btn']}
               >
-                <Image src={MailIcon} alt="share" />
+                <BookmarkBorderRoundedIcon color="primary" />
               </div>
-            </Link>
-
-            {/* Bookmark Button */}
-            <div
-              onClick={(e) => console.log(e)}
-              className={styles['action-btn']}
-            >
-              <BookmarkBorderRoundedIcon color="primary" />
-            </div>
+            </Tooltip>
 
             {/* Share Button */}
-            <div
-              onClick={(e) => handleShare()}
-              className={styles['action-btn']}
-            >
-              <Image src={ShareIcon} alt="share" />
-            </div>
+            <Tooltip title="Ahare">
+              <div
+                onClick={(e) => handleShare()}
+                className={styles['action-btn']}
+              >
+                <Image src={ShareIcon} alt="share" />
+              </div>
+            </Tooltip>
 
             {/* More Options Button */}
-            <div
-              onClick={(e) => handleDropdown()}
-              className={styles['action-btn']}
-            >
-              <MoreHorizRoundedIcon color="primary" />
-              {open && <Dropdown handleClose={handleDropdown} />}
-            </div>
+            <Tooltip title="More options">
+              <div
+                onClick={(e) => handleDropdown()}
+                className={styles['action-btn']}
+              >
+                <MoreHorizRoundedIcon color="primary" />
+                {open && <Dropdown handleClose={handleDropdown} />}
+              </div>
+            </Tooltip>
           </div>
         </header>
         {/* Navigation Links */}

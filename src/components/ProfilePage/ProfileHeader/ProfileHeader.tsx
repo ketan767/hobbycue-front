@@ -26,6 +26,7 @@ import MailIcon from '@/assets/svg/mailicon.svg'
 import UploadIcon from '@/assets/svg/upload.svg'
 import CoverPhotoLayout from '@/layouts/CoverPhotoLayout/CoverPhotoLayout'
 import ProfileImageLayout from '@/layouts/ProfileImageLayout/ProfileImageLayout'
+import { Tooltip } from '@mui/material'
 import Dropdown from './DropDown'
 import useOutsideClick from '@/hooks/useOutsideClick'
 
@@ -122,7 +123,7 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
       )
     }
   }
-  
+
   return (
     <>
       <div className={`${styles['container']}`}>
@@ -256,43 +257,51 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
               }}
               className={styles.makeMyPageButton}
             >
-              Make my page
+              Make My Page
             </FilledButton>
             <div className={styles['action-btn-wrapper']}>
               {/* Send Email Button  */}
               <Link href={`mailto:${data.public_email || data.email}`}>
+                <Tooltip title="Repost">
+                  <div
+                    onClick={(e) => console.log(e)}
+                    className={styles['action-btn']}
+                  >
+                    <Image src={MailIcon} alt="share" />
+                  </div>
+                </Tooltip>
+              </Link>
+
+              {/* Bookmark Button */}
+              <Tooltip title="Bookmark">
                 <div
                   onClick={(e) => console.log(e)}
                   className={styles['action-btn']}
                 >
-                  <Image src={MailIcon} alt="share" />
+                  <BookmarkBorderRoundedIcon color="primary" />
                 </div>
-              </Link>
-
-              {/* Bookmark Button */}
-              <div
-                onClick={(e) => console.log(e)}
-                className={styles['action-btn']}
-              >
-                <BookmarkBorderRoundedIcon color="primary" />
-              </div>
+              </Tooltip>
 
               {/* Share Button */}
-              <div
-                onClick={(e) => handleShare()}
-                className={styles['action-btn']}
-              >
-                <Image src={ShareIcon} alt="share" />
-              </div>
+              <Tooltip title="Share">
+                <div
+                  onClick={(e) => handleShare()}
+                  className={styles['action-btn']}
+                >
+                  <Image src={ShareIcon} alt="share" />
+                </div>
+              </Tooltip>
 
               {/* More Options Button */}
-              <div
-                onClick={(e) => handleDropdown()}
-                className={styles['action-btn']}
-              >
-                <MoreHorizRoundedIcon color="primary" />
-                {open && <Dropdown handleClose={handleDropdown} />}
-              </div>
+              <Tooltip title="More options">
+                <div
+                  onClick={(e) => handleDropdown()}
+                  className={styles['action-btn']}
+                >
+                  <MoreHorizRoundedIcon color="primary" />
+                  {open && <Dropdown handleClose={handleDropdown} />}
+                </div>
+              </Tooltip>
             </div>
           </div>
         </header>

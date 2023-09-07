@@ -20,7 +20,7 @@
 }
 .community-header-small {
   display: flex;
-  column-gap: 16px;
+  column-gap: 24px;
 }
 .community-header-small > .community-header-left {
   max-width: 726.42px;
@@ -37,7 +37,7 @@
   background: #f8f9fa;
 }
 .children-wrapper {
-  transform: translateY(calc(-1 * var(--navbar-height-desktop)));
+  transform: translateY(calc(-1 * 68px));
 }
 .single-post-children-wrapper {
   transform: translate(0);
@@ -300,6 +300,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 4px;
 }
 .navigation-links a {
   color: #6d747a;
@@ -314,6 +315,7 @@
   text-align: center;
   padding: var(--spacing-16);
   position: relative;
+  max-width: 90px;
 }
 .navigation-links ul li.active a {
   color: #8064a2;
@@ -394,6 +396,7 @@
   font-size: 16px;
   font-family: Poppins;
   margin-top: 8px;
+  margin-left: 8px;
 }
 .location-select {
   width: 100%;

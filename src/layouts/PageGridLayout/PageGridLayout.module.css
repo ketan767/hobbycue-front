@@ -15,7 +15,7 @@
   grid-template-columns: 14.3rem auto 18.3rem;
 }
 .grid-container[data-column='2'] {
-  grid-template-columns: 14rem auto;
+  grid-template-columns: 14.3rem auto;
 }
 
 @media screen and (max-width: 1100px) {

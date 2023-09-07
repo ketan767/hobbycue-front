@@ -53,7 +53,8 @@ ul.contact-wrapper li {
 }
 ul.location-wrapper svg,
 ul.contact-wrapper svg {
-  width: 1.5rem;
+  max-width: 1.5rem;
+  width: 100%;
   aspect-ratio: 1/1;
 }
 

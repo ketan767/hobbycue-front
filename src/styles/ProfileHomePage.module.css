@@ -21,6 +21,10 @@
   font-size: 14px;
   line-height: 20px;
   color: #6d747a;
+  display: -webkit-box; 
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; 
+  overflow: hidden;
 }
 .color-light{
   color: #08090A;

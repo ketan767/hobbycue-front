@@ -18,10 +18,12 @@ import {
 import { updatePhotoEditModalData } from '@/redux/slices/site'
 import { openModal, updateShareUrl } from '@/redux/slices/modal'
 import { dateFormat } from '@/utils'
+import { Tooltip } from '@mui/material'
 import Calendar from '@/assets/svg/calendar-light.svg'
 import Time from '@/assets/svg/clock-light.svg'
 import EditIcon from '@/assets/svg/edit-colored.svg'
 import ShareIcon from '@/assets/svg/share-outlined.svg'
+import MailIcon from '@/assets/svg/mailicon.svg'
 import ListingGeneralEditModal from '@/components/_modals/EditListing/ListingGeneral'
 import FilledButton from '@/components/_buttons/FilledButton'
 import CoverPhotoLayout from '@/layouts/CoverPhotoLayout/CoverPhotoLayout'
@@ -300,48 +302,59 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
         </section>
         <div className={styles['actions-container']}>
           {listingLayoutMode === 'edit' && (
-            <FilledButton className={styles.publishBtn} onClick={handlePublish}>
+            <FilledButton
+              className={
+                data.is_published ? styles.unpublishBtn : styles.publishBtn
+              }
+              onClick={handlePublish}
+            >
               {data.is_published ? 'Unpublish' : 'Publish'}
             </FilledButton>
           )}
           {/* Action Buttons */}
           <div className={styles['action-btn-wrapper']}>
             {/* Send Email Button  */}
+            <Link href={`mailto:${data.public_email || data.email}`}>
+              <Tooltip title="Repost">
+                <div
+                  onClick={(e) => console.log(e)}
+                  className={styles['action-btn']}
+                >
+                  <Image src={MailIcon} alt="share" />
+                </div>
+              </Tooltip>
+            </Link>
 
-            <Link href={`mailto:${data.public_email}`}>
+            {/* Bookmark Button */}
+            <Tooltip title="Bookmark">
               <div
                 onClick={(e) => console.log(e)}
                 className={styles['action-btn']}
               >
-                <MailOutlineRoundedIcon color="primary" />
+                <BookmarkBorderRoundedIcon color="primary" />
               </div>
-            </Link>
-
-            {/* Bookmark Button */}
-            <div
-              onClick={(e) => console.log(e)}
-              className={styles['action-btn']}
-            >
-              <BookmarkBorderRoundedIcon color="primary" />
-            </div>
+            </Tooltip>
 
             {/* Share Button */}
-            <div
-              onClick={(e) => handleShare()}
-              className={styles['action-btn']}
-            >
-              <Image src={ShareIcon} alt="share" />
-            </div>
+            <Tooltip title="Share">
+              <div
+                onClick={(e) => handleShare()}
+                className={styles['action-btn']}
+              >
+                <Image src={ShareIcon} alt="share" />
+              </div>
+            </Tooltip>
 
             {/* More Options Button */}
-            <div
-              onClick={(e) => handleDropdown()}
-              className={styles['action-dropdown']}
-            >
-              {' '}
-              {open && <Dropdown handleClose={handleDropdown} />}
-              <MoreHorizRoundedIcon color="primary" />
-            </div>
+            <Tooltip title="More options">
+              <div
+                onClick={(e) => handleDropdown()}
+                className={styles['action-btn']}
+              >
+                <MoreHorizRoundedIcon color="primary" />
+                {open && <Dropdown handleClose={handleDropdown} />}
+              </div>
+            </Tooltip>
           </div>
         </div>
       </header>
