@@ -23,6 +23,10 @@
   font-size: 14px;
   line-height: 20px;
   color: #6d747a;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .defaultImg {

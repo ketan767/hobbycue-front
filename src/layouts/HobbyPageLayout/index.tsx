@@ -86,8 +86,6 @@ const HobbyPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
       {/* Profile Page Body, where all contents of different tabs appears. */}
       <PageGridLayout column={!hideLastColumn ? 3 : 2}>
         <aside className={`custom-scrollbar ${styles['hobby-left-aside']}`}>
-          {isLoggedIn && isAuthenticated && <ProfileSwitcher />}
-
           <PageContentBox showEditButton={false}>
             <h4 className={styles['heading']}>Hobbies Classification</h4>
             <ul className={styles['classification-items']}>

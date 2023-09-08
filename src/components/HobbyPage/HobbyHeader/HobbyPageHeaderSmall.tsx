@@ -7,9 +7,12 @@ import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded
 import ShareRoundedIcon from '@mui/icons-material/ShareRounded'
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded'
 import MailIcon from '@/assets/svg/mailicon.svg'
+import ShareIcon from '@/assets/svg/share-outlined.svg'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import DefaultProfile from '@/assets/svg/default-images/default-hobbies.svg'
+import { openModal, updateShareUrl } from '@/redux/slices/modal'
+import { useDispatch } from 'react-redux'
 
 type Props = {
   activeTab: HobbyPageTabs
@@ -27,6 +30,11 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
     'store',
     'blogs',
   ]
+  const dispatch = useDispatch()
+  const handleShare = () => {
+    dispatch(updateShareUrl(window.location.href))
+    dispatch(openModal({ type: 'social-media-share', closable: true }))
+  }
 
   return (
     <>
@@ -56,6 +64,7 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
           )}
           <section className={styles['center-container']}>
             <h1 className={styles['name']}>{data?.display}</h1>
+
             <p className={styles['category']}>
               {data?.level === 0
                 ? 'Category'
@@ -92,7 +101,7 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
               onClick={(e) => console.log(e)}
               className={styles['action-btn']}
             >
-              <ShareRoundedIcon color="primary" fontSize="small" />
+              <Image src={ShareIcon} alt="share" onClick={handleShare} />
             </div>
 
             {/* More Options Button */}

@@ -115,7 +115,7 @@
   display: flex;
   gap: 60px;
   justify-content: center;
-  margin-top: var(--spacing-4);
+  margin-top: 14px;
   position: sticky;
   min-height: 40px;
 }
@@ -197,7 +197,7 @@
 }
 
 .name-container {
-  margin-top: 5px;
+  margin-top: 9px;
   display: flex;
   column-gap: 12px;
   align-items: flex-end;

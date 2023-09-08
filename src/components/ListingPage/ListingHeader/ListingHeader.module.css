@@ -165,7 +165,7 @@
 .content-container {
   display: flex;
   justify-content: space-between;
-  margin-top: 5px;
+  margin-top: 9px;
   align-items: flex-end;
 }
 .eventDate {
