@@ -67,7 +67,7 @@
   font-size: 16px;
   line-height: 20px;
   color: #08090a;
-  margin-top: var(--spacing-8);
+  margin-top: var(--spacing-12);
 }
 .center-container .category {
   font-weight: 400;
@@ -248,7 +248,8 @@
   font-style: normal;
   font-weight: 600;
   line-height: 16px;
-  padding: 12px 24px;
+  padding: 0 50px;
+  height: 32px;
 }
 .customList li:hover {
   background-color: #e5e5e5;
@@ -271,9 +272,7 @@
   position: relative;
   width: fit-content;
 }
-.container.small .navigation-tabs {
-  padding-bottom: 12px;
-}
+
 @media screen and (max-width: 1100px) {
   .actions-container {
     display: none;

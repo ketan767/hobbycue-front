@@ -74,13 +74,12 @@ const HobbyPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
   const toggleMembers = () => {
     setSeeAll(!seeAll)
   }
-
   return (
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
       <HobbyPageHeader data={data} activeTab={activeTab} />
       {showSmallHeader && (
-        <HobbyPageHeaderSmall data={data.pageData} activeTab={activeTab} />
+        <HobbyPageHeaderSmall data={data} activeTab={activeTab} />
       )}
 
       {/* Profile Page Body, where all contents of different tabs appears. */}

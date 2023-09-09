@@ -270,12 +270,7 @@ const CommunityLayout: React.FC<Props> = ({
                 address.label ? address.label : 'Default'
               } `
             }
-            if (address.city) {
-              obj.options.push({
-                value: address.city,
-                display: `${address.city}`,
-              })
-            }
+
             if (address.pin_code) {
               obj.options.push({
                 value: address.pin_code,
@@ -320,12 +315,6 @@ const CommunityLayout: React.FC<Props> = ({
         obj.display = `${address.city} -  ${
           address.label ? address.label : 'Default'
         } `
-      }
-      if (address.city) {
-        obj.options.push({
-          value: address.city,
-          display: `${address.city}`,
-        })
       }
 
       if (address.pin_code) {
@@ -519,7 +508,6 @@ const CommunityLayout: React.FC<Props> = ({
               }`}
             >
               <div className={styles['community-header-left']}>
-                <div className={styles['top-margin-card']}></div>
                 {selectedHobby !== '' &&
                   selectedLocation !== '' &&
                   Object.keys(hobbyGroup).length > 5 && (
@@ -657,7 +645,6 @@ const CommunityLayout: React.FC<Props> = ({
               </div>
               {hideThirdColumnTabs.includes(activeTab) && (
                 <div className={styles['invite-container-main']}>
-                  <div className={styles['top-margin-card']}></div>
                   <section
                     className={`content-box-wrapper ${styles['invite-wrapper']}`}
                   >

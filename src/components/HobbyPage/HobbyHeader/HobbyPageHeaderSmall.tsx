@@ -20,7 +20,7 @@ type Props = {
 }
 
 const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
-  // console.log('🚀 ~ file: HobbyHeader.tsx:22 ~ HobbyPageHeader ~ data:', data)
+  console.log('🚀 ~ file: HobbyHeader.tsx:22 ~ HobbyPageHeader ~ data:', data)
   const router = useRouter()
   const tabs: HobbyPageTabs[] = [
     'about',
