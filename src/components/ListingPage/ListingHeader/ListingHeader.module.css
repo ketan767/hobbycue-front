@@ -72,13 +72,12 @@
   cursor: pointer;
 }
 .center-container .tagline {
-  /* font-family: 'Poppins'; */
-  /* font-style: normal; */
+
   font-weight: 400;
   font-size: 16px;
   line-height: 20px;
   color: #08090a;
-  margin-top: var(--spacing-8);
+  margin-top: var(--spacing-12);
 }
 .center-container .category {
   font-family: 'Poppins';
@@ -165,7 +164,7 @@
 .content-container {
   display: flex;
   justify-content: space-between;
-  margin-top: 5px;
+  margin-top: 9px;
   align-items: flex-end;
 }
 .eventDate {
@@ -204,7 +203,8 @@
   font-style: normal;
   font-weight: 600;
   line-height: 16px;
-  padding: 12px 24px;
+  padding: 0 50px;
+  height: 32px;
 }
 .relative {
   position: relative;

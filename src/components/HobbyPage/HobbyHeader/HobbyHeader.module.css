@@ -19,6 +19,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  
 }
 .profile-img img{
   width: calc(100% );
@@ -28,15 +29,6 @@
   z-index: 10;
   clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
 
-}
-.profile-img::before{
-  content: "";
-  position: absolute;
-  right: 0;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  z-index: 1;
 }
 
 .center-container .cover-img {
@@ -48,7 +40,7 @@
   background-color: #96969680;
 }
 .center-container .name {
-  margin-top: 5px;
+  margin-top: 9px;
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 600;
@@ -63,7 +55,7 @@
   font-size: 16px;
   line-height: 20px;
   color: #08090a;
-  margin-top: var(--spacing-8);
+  margin-top: var(--spacing-12);
 }
 
 
@@ -97,7 +89,7 @@
 .navigation-links {
   display: flex;
   gap: 30px;
-  margin-top: var(--spacing-4);
+  margin-top: 14px;
   justify-content: center;
   background-color: white;
   position: sticky;
