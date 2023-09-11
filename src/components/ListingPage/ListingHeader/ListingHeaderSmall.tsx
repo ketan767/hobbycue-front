@@ -31,7 +31,6 @@ import ProfileImageLayout from '@/layouts/ProfileImageLayout/ProfileImageLayout'
 import { useRouter } from 'next/router'
 import { listingTypes } from '@/constants/constant'
 import Dropdown from './DropDown'
-import profileLayoutStyles from './ProfileImageLayout.module.css'
 
 type Props = {
   data: ListingPageData['pageData']
