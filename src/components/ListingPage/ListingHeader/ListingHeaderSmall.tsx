@@ -31,6 +31,7 @@ import ProfileImageLayout from '@/layouts/ProfileImageLayout/ProfileImageLayout'
 import { useRouter } from 'next/router'
 import { listingTypes } from '@/constants/constant'
 import Dropdown from './DropDown'
+import profileLayoutStyles from './ProfileImageLayout.module.css'
 
 type Props = {
   data: ListingPageData['pageData']
@@ -179,7 +180,14 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                 height={160}
               />
             ) : (
-              <div className={`${styles['img']} default-user-icon`}></div>
+              <div className={`${styles['img']}`}>
+                <ProfileImageLayout
+                  onChange={(e: any) => onInputChange(e, 'profile')}
+                  profileLayoutMode={listingLayoutMode}
+                  type={'page'}
+                  typeId={data?.type}
+                ></ProfileImageLayout>
+              </div>
             )}
 
             {listingLayoutMode === 'edit' && (

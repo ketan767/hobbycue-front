@@ -17,7 +17,23 @@ import { updateListing } from '@/services/listing.service'
 type Props = {
   data?: ProfilePageData['pageData']
 }
-const options = ['Facebook', 'Twitter', 'Instagram']
+const options = [
+  'Facebook',
+  'Twitter',
+  'Instagram',
+  'Youtube',
+  'SoundCloud',
+  'Pinterest',
+  'TripAdvisor',
+  'Ultimate Guiter',
+  'Strava',
+  'DeviantArts',
+  'Behance',
+  'GoodReads',
+  'Smule',
+  'Chess',
+  'BGG',
+]
 const ListingSocialMediaEditModal = ({ data }: Props) => {
   const [submitBtnLoading, setSubmitBtnLoading] = useState(false)
   const { listingModalData } = useSelector((state: RootState) => state.site)
@@ -40,6 +56,78 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
       arr.push({
         socialMedia: 'Twitter',
         url: listingModalData.twitter_url,
+      })
+    }
+    if (listingModalData.youtube_url) {
+      arr.push({
+        socialMedia: 'Youtube',
+        url: listingModalData.youtube_url,
+      })
+    }
+    if (listingModalData.soundcloud_url) {
+      arr.push({
+        socialMedia: 'SoundCloud',
+        url: listingModalData.soundcloud_url,
+      })
+    }
+    if (listingModalData.pinterest_url) {
+      arr.push({
+        socialMedia: 'Pinterest',
+        url: listingModalData.pinterest_url,
+      })
+    }
+    if (listingModalData.tripadvisor_url) {
+      arr.push({
+        socialMedia: 'TripAdvisor',
+        url: listingModalData.tripadvisor_url,
+      })
+    }
+    if (listingModalData.ultimate_guiter_url) {
+      arr.push({
+        socialMedia: 'Ultimate Guiter',
+        url: listingModalData.ultimate_guiter_url,
+      })
+    }
+    if (listingModalData.strava_url) {
+      arr.push({
+        socialMedia: 'Strava',
+        url: listingModalData.strava_url,
+      })
+    }
+    if (listingModalData.deviantarts_url) {
+      arr.push({
+        socialMedia: 'DeviantArts',
+        url: listingModalData.deviantarts_url,
+      })
+    }
+    if (listingModalData.behance_url) {
+      arr.push({
+        socialMedia: 'Behance',
+        url: listingModalData.behance_url,
+      })
+    }
+    if (listingModalData.goodreads_url) {
+      arr.push({
+        socialMedia: 'GoodReads',
+        url: listingModalData.goodreads_url,
+      })
+    }
+    if (listingModalData.smule_url) {
+      arr.push({
+        socialMedia: 'Smule',
+        url: listingModalData.smule_url,
+      })
+    }
+    if (listingModalData.chess_url) {
+      arr.push({
+        socialMedia: 'Chess',
+        url: listingModalData.chess_url,
+      })
+    }
+    if (listingModalData.bgg_url) {
+      arr.push({
+        socialMedia: 'BGG',
+        url: listingModalData.bgg_url,
       })
     }
     if (arr.length > 0) {
@@ -91,6 +179,18 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
       facebook_url: getValue('Facebook'),
       instagram_url: getValue('Instagram'),
       twitter_url: getValue('Twitter'),
+      youtube_url: getValue('Youtube'),
+      soundcloud_url: getValue('SoundCloud'),
+      pinterest_url: getValue('Pinterest'),
+      tripadvisor_url: getValue('TripAdvisor'),
+      ultimate_guiter_url: getValue('Ultimate_Guiter'),
+      strava_url: getValue('Strava'),
+      deviantarts_url: getValue('DeviantArts'),
+      behance_url: getValue('Behance'),
+      goodreads_url: getValue('GoodReads'),
+      smule_url: getValue('Smule'),
+      chess_url: getValue('Chess'),
+      bgg_url: getValue('BGG'),
     }
     // console.log('re', reqBody)
     const { err, res } = await updateListing(listingModalData._id, reqBody)
@@ -129,7 +229,7 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
         </div>
         {mediaData.map((item: any, idx: any) => {
           return (
-            <div className={styles.inputContainer} key={idx} >
+            <div className={styles.inputContainer} key={idx}>
               <Select
                 value={item.socialMedia}
                 onChange={(e) => {

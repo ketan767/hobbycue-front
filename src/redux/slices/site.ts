@@ -35,6 +35,18 @@ type ListingModalData = {
   is_onboarded?: boolean
   facebook_url?: string
   instagram_url?: string
+  youtube_url?: string
+  soundcloud_url?: string
+  pinterest_url?: string
+  tripadvisor_url?: string
+  ultimate_guiter_url?: string
+  strava_url?: string
+  deviantarts_url?: string
+  behance_url?: string
+  goodreads_url?: string
+  smule_url?: string
+  chess_url?: string
+  bgg_url?: string
   twitter_url?: string
   linkedin_url?: string
   video_url?: string

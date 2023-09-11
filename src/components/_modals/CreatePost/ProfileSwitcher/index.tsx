@@ -14,7 +14,11 @@ type Props = {
   setHobbies: any
 }
 
-const ProfileSwitcher: React.FC<Props> = ({ data: activeProfile, setData, setHobbies }) => {
+const ProfileSwitcher: React.FC<Props> = ({
+  data: activeProfile,
+  setData,
+  setHobbies,
+}) => {
   const { user, listing } = useSelector((state: RootState) => state.user)
 
   const [showDropdown, setShowDropdown] = useState<boolean>(false)
@@ -36,10 +40,10 @@ const ProfileSwitcher: React.FC<Props> = ({ data: activeProfile, setData, setHob
     } else if (type === listingTypes.PLACE) {
       return 'default-place-listing-icon'
     } else if (type === listingTypes.PROGRAM) {
-      return 'default-program-listing-icon'
+      return 'default-program-listing-cover'
     } else if (type === listingTypes.PRODUCT) {
       return 'default-product-listing-icon'
-    }else if (type === 'listing') {
+    } else if (type === 'listing') {
       return 'default-people-listing-icon'
     }
   }
@@ -109,7 +113,9 @@ const ProfileSwitcher: React.FC<Props> = ({ data: activeProfile, setData, setHob
                     data-profile-type="user"
                   />
                 ) : (
-                  <div className={`${styles['default-img']} default-user-icon`}></div>
+                  <div
+                    className={`${styles['default-img']} default-user-icon`}
+                  ></div>
                 )}
 
                 <p>{user.full_name}</p>
