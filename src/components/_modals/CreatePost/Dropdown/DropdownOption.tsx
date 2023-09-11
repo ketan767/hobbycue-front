@@ -44,9 +44,16 @@ export const DropdownOption: React.FC<Props> = (props) => {
     )
   }
   return (
-    <div className={styles['dropdown-container']}>
-      <div className={styles['heading']} onClick={toggle}>
+    <div data-column="2" className={styles['dropdown-container']}>
+      <aside
+        className={`${styles['heading']} ${
+          currentValue === display ? styles['city-select'] : ''
+        } `}
+        onClick={() => onChange(display.split(' ')[0])}
+      >
         <p>{display}</p>
+      </aside>
+      <aside className={styles['drop-down']} onClick={toggle}>
         <Image
           src={ChevronDown}
           alt="arrow-down"
@@ -54,7 +61,8 @@ export const DropdownOption: React.FC<Props> = (props) => {
             !active ? styles['icon-active'] : ''
           } `}
         />
-      </div>
+      </aside>
+
       <div
         className={`${styles['dropdown-options']} ${
           active ? styles['active'] : ''

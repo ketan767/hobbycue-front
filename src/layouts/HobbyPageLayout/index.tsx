@@ -74,20 +74,17 @@ const HobbyPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
   const toggleMembers = () => {
     setSeeAll(!seeAll)
   }
-
   return (
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
       <HobbyPageHeader data={data} activeTab={activeTab} />
       {showSmallHeader && (
-        <HobbyPageHeaderSmall data={data.pageData} activeTab={activeTab} />
+        <HobbyPageHeaderSmall data={data} activeTab={activeTab} />
       )}
 
       {/* Profile Page Body, where all contents of different tabs appears. */}
       <PageGridLayout column={!hideLastColumn ? 3 : 2}>
         <aside className={`custom-scrollbar ${styles['hobby-left-aside']}`}>
-          {isLoggedIn && isAuthenticated && <ProfileSwitcher />}
-
           <PageContentBox showEditButton={false}>
             <h4 className={styles['heading']}>Hobbies Classification</h4>
             <ul className={styles['classification-items']}>
