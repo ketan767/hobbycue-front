@@ -1,8 +1,7 @@
 .community-left-aside,
-.community-right-aside,
-.community-header {
+.community-right-aside{
   position: sticky;
-  top: calc(var(--navbar-height-desktop) + var(--spacing-24));
+  top: calc(var(--navbar-height-desktop) + var(--spacing-12));
 }
 .community-left-aside,
 .community-right-aside {
@@ -13,9 +12,6 @@
 }
 
 .community-header {
-  border-radius: var(--spacing-8);
-  transform: translateY(calc(-1 * var(--navbar-height-desktop)));
-  z-index: 1;
   background-color: white;
 }
 .community-header-small {
@@ -36,9 +32,7 @@
   height: var(--navbar-height-desktop);
   background: #f8f9fa;
 }
-.children-wrapper {
-  transform: translateY(calc(-1 * 68px));
-}
+
 .single-post-children-wrapper {
   transform: translate(0);
 }

@@ -39,7 +39,7 @@
 }
 
 .create-post-modal > aside div {
-  display: flex;
+  display: grid;
   flex-direction: column;
   gap: var(--spacing-4);
   background-color: #ffffff;

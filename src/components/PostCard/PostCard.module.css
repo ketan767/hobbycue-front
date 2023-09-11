@@ -1,8 +1,6 @@
 .post-card-wrapper {
   background: #ffffff;
   /* Grey/Lighter */
-
-  border: 1px solid #ebedf0;
   border-radius: var(--spacing-8);
   max-width: 726px;
   overflow: visible;
