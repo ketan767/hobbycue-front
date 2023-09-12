@@ -170,7 +170,7 @@
 .eventDate {
   display: flex;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 .event-date-container {
   display: flex;
@@ -262,6 +262,18 @@
   background-color: transparent;
   gap: var(--spacing-8);
   box-shadow: none;
+}
+.container:has(.header).small .navigation-tabs {
+  margin-top: 0;
+  padding-top: 4px;
+  padding-bottom: 0px;
+}
+
+.container:has(.header).small .navigation-tabs a {
+  color: #939ca3;
+  line-height: 22px;
+  padding: 8px 5px;
+  font-weight: 600;
 }
 .navigation-tabs {
   display: flex;

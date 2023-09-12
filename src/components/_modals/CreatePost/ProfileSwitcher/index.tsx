@@ -40,7 +40,7 @@ const ProfileSwitcher: React.FC<Props> = ({
     } else if (type === listingTypes.PLACE) {
       return 'default-place-listing-icon'
     } else if (type === listingTypes.PROGRAM) {
-      return 'default-program-listing-cover'
+      return 'default-program-listing-icon'
     } else if (type === listingTypes.PRODUCT) {
       return 'default-product-listing-icon'
     } else if (type === 'listing') {
