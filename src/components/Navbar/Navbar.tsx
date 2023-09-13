@@ -23,11 +23,11 @@ import { updateIsLoggedIn } from '@/redux/slices/user'
 import Link from 'next/link'
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
 import store, { RootState } from '@/redux/store'
-import { Tooltip } from '@mui/material'
+
 import { useRouter } from 'next/router'
 import { logout } from '@/helper'
 import SideMenu from './SideMenu/SideMenu'
-
+import CustomizedTooltips from './../Tooltip/ToolTip'
 type Props = {}
 
 export const Navbar: React.FC<Props> = ({}) => {
@@ -317,7 +317,7 @@ export const Navbar: React.FC<Props> = ({}) => {
               {/* Bookmark */}
               <li>
                 <Link href={'#'}>
-                  <Tooltip title="Bookmark">
+                  <CustomizedTooltips title="Bookmark">
                     <svg
                       width="24"
                       height="24"
@@ -337,14 +337,14 @@ export const Navbar: React.FC<Props> = ({}) => {
                         </clipPath>
                       </defs>
                     </svg>
-                  </Tooltip>
+                  </CustomizedTooltips>
                 </Link>{' '}
               </li>
 
               {/* Notification */}
               <li>
                 <Link href={'#'}>
-                  <Tooltip title="Notification">
+                  <CustomizedTooltips title="Notification">
                     <svg
                       width="24"
                       height="24"
@@ -364,14 +364,14 @@ export const Navbar: React.FC<Props> = ({}) => {
                         </clipPath>
                       </defs>
                     </svg>
-                  </Tooltip>
+                  </CustomizedTooltips>
                 </Link>{' '}
               </li>
 
               {/* Cart */}
               <li>
                 <Link href={'#'}>
-                  <Tooltip title="Cart">
+                  <CustomizedTooltips title="Cart">
                     <svg
                       width="24"
                       height="24"
@@ -392,7 +392,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                         fill="#8064A2"
                       />
                     </svg>
-                  </Tooltip>
+                  </CustomizedTooltips>
                 </Link>{' '}
               </li>
 
