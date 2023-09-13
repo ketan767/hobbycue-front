@@ -180,6 +180,29 @@
   gap: var(--spacing-8);
   box-shadow: none;
 }
+.container:has(.header).small .navigation-tabs {
+  padding-top: 4px;
+}
+
+.container:has(.header).small .navigation-links{
+  margin-top: 0;
+  padding-top: 4px;
+}
+
+.container:has(.header).small .navigation-links a {
+  line-height: 22px;
+  padding: 8px 5px;
+  font-weight: 600;
+}
+
+.container:has(.header).small .center-container .category {
+  margin-top: 0;
+  font-size: 14px;
+}
+.container:has(.header).small .center-container .tagline {
+  font-size: 14px;
+  margin-top: 0;
+}
 
 
 @media screen and (max-width: 1100px) {

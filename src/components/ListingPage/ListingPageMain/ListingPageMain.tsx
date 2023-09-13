@@ -13,6 +13,19 @@ import TimeIcon from '@/assets/svg/time.svg'
 import FacebookIcon from '@/assets/svg/Facebook.svg'
 import TwitterIcon from '@/assets/svg/Twitter.svg'
 import InstagramIcon from '@/assets/svg/Instagram.svg'
+import YoutubeIcon from '@/assets/svg/Instagram.svg'
+import SoundcardIcon from '@/assets/svg/Instagram.svg'
+import pinterestIcon from '@/assets/svg/Instagram.svg'
+import TripadvisorIcon from '@/assets/svg/Instagram.svg'
+import ultimateguiterIcon from '@/assets/svg/Instagram.svg'
+import StravaIcon from '@/assets/svg/Instagram.svg'
+import DeviantartsIcon from '@/assets/svg/Instagram.svg'
+import BehanceIcon from '@/assets/svg/Instagram.svg'
+import GoodreadsIcon from '@/assets/svg/Instagram.svg'
+import SmuleIcon from '@/assets/svg/Instagram.svg'
+import ChessIcon from '@/assets/svg/Instagram.svg'
+import BggIcon from '@/assets/svg/Instagram.svg'
+
 import { getListingPages, getListingTags } from '@/services/listing.service'
 import { dateFormat } from '@/utils'
 import { getAllUserDetail } from '@/services/user.service'
@@ -94,6 +107,18 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
   let facebookUrl = null
   let twitterUrl = null
   let instagramUrl = null
+  let youtubeUrl = null
+  let soundcloudUrl = null
+  let pinterestUrl = null
+  let tripAdvisorUrl = null
+  let ultimate_guiterUrl = null
+  let stravaUrl = null
+  let deviantartsUrl = null
+  let behanceUrl = null
+  let goodreadsUrl = null
+  let smuleUrl = null
+  let chessUrl = null
+  let bggUrl = null
 
   if (data?.facebook_url) {
     facebookUrl = data.facebook_url
@@ -111,6 +136,66 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
     instagramUrl = data.instagram_url
   } else if (data?.social_media_urls?.Instagram) {
     instagramUrl = data?.social_media_urls?.Instagram
+  }
+  if (data?.youtube_url) {
+    youtubeUrl = data.youtube_url
+  } else if (data?.social_media_urls?.Youtube) {
+    youtubeUrl = data?.social_media_urls?.Youtube
+  }
+  if (data?.soundcloud_url) {
+    soundcloudUrl = data.soundcloud_url
+  } else if (data?.social_media_urls?.SoundCloud) {
+    soundcloudUrl = data?.social_media_urls?.SoundCloud
+  }
+  if (data?.pinterest_url) {
+    pinterestUrl = data.pinterest_url
+  } else if (data?.social_media_urls?.Pinterest) {
+    pinterestUrl = data?.social_media_urls?.Pinterest
+  }
+  if (data?.tripadvisor_url) {
+    tripAdvisorUrl = data.tripadvisor_url
+  } else if (data?.social_media_urls?.TripAdvisor) {
+    tripAdvisorUrl = data?.social_media_urls?.TripAdvisor
+  }
+  if (data?.ultimate_guiter_url) {
+    ultimate_guiterUrl = data.ultimate_guiter_url
+  } else if (data?.social_media_urls?.Ultimate_Guiter) {
+    ultimate_guiterUrl = data?.social_media_urls?.Ultimate_Guiter
+  }
+  if (data?.strava_url) {
+    stravaUrl = data.strava_url
+  } else if (data?.social_media_urls?.Strava) {
+    stravaUrl = data?.social_media_urls?.Strava
+  }
+  if (data?.deviantarts_url) {
+    deviantartsUrl = data.deviantarts_url
+  } else if (data?.social_media_urls?.DeviantArts) {
+    deviantartsUrl = data?.social_media_urls?.DeviantArts
+  }
+  if (data?.behance_url) {
+    behanceUrl = data.behance_url
+  } else if (data?.social_media_urls?.Behance) {
+    behanceUrl = data?.social_media_urls?.Behance
+  }
+  if (data?.goodreads_url) {
+    goodreadsUrl = data.goodreads_url
+  } else if (data?.social_media_urls?.GoodReads) {
+    goodreadsUrl = data?.social_media_urls?.GoodReads
+  }
+  if (data?.smule_url) {
+    smuleUrl = data.smule_url
+  } else if (data?.social_media_urls?.Smule) {
+    smuleUrl = data?.social_media_urls?.Smule
+  }
+  if (data?.chess_url) {
+    chessUrl = data.chess_url
+  } else if (data?.social_media_urls?.Chess) {
+    chessUrl = data?.social_media_urls?.Chess
+  }
+  if (data?.bgg_url) {
+    bggUrl = data.bgg_url
+  } else if (data?.social_media_urls?.BGG) {
+    bggUrl = data?.social_media_urls?.BGG
   }
 
   const openGoogleMaps = () => {
@@ -770,12 +855,72 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                 )}
                 {twitterUrl && (
                   <a target="_blank" href={twitterUrl}>
-                    <Image src={TwitterIcon} alt="Facebook" />
+                    <Image src={TwitterIcon} alt="Twitter" />
                   </a>
                 )}
                 {instagramUrl && (
                   <a target="_blank" href={instagramUrl}>
-                    <Image src={InstagramIcon} alt="Facebook" />
+                    <Image src={InstagramIcon} alt="Instagram" />
+                  </a>
+                )}
+                {youtubeUrl && (
+                  <a target="_blank" href={youtubeUrl}>
+                    <Image src={YoutubeIcon} alt="Youtube" />
+                  </a>
+                )}
+                {soundcloudUrl && (
+                  <a target="_blank" href={soundcloudUrl}>
+                    <Image src={SoundcardIcon} alt="SoundCloud" />
+                  </a>
+                )}
+                {pinterestUrl && (
+                  <a target="_blank" href={pinterestUrl}>
+                    <Image src={pinterestIcon} alt="Pinterest" />
+                  </a>
+                )}
+                {tripAdvisorUrl && (
+                  <a target="_blank" href={tripAdvisorUrl}>
+                    <Image src={TripadvisorIcon} alt="Trip Advisor" />
+                  </a>
+                )}
+                {ultimate_guiterUrl && (
+                  <a target="_blank" href={ultimate_guiterUrl}>
+                    <Image src={ultimateguiterIcon} alt="Umtimate Guiter" />
+                  </a>
+                )}
+                {stravaUrl && (
+                  <a target="_blank" href={stravaUrl}>
+                    <Image src={StravaIcon} alt="Facebook" />
+                  </a>
+                )}
+                {deviantartsUrl && (
+                  <a target="_blank" href={deviantartsUrl}>
+                    <Image src={DeviantartsIcon} alt="Deviant Arts" />
+                  </a>
+                )}
+                {behanceUrl && (
+                  <a target="_blank" href={behanceUrl}>
+                    <Image src={BehanceIcon} alt="Behance" />
+                  </a>
+                )}
+                {goodreadsUrl && (
+                  <a target="_blank" href={goodreadsUrl}>
+                    <Image src={GoodreadsIcon} alt="Facebook" />
+                  </a>
+                )}
+                {smuleUrl && (
+                  <a target="_blank" href={smuleUrl}>
+                    <Image src={SmuleIcon} alt="Facebook" />
+                  </a>
+                )}
+                {chessUrl && (
+                  <a target="_blank" href={chessUrl}>
+                    <Image src={ChessIcon} alt="Chess.com" />
+                  </a>
+                )}
+                {bggUrl && (
+                  <a target="_blank" href={bggUrl}>
+                    <Image src={BggIcon} alt="BGG" />
                   </a>
                 )}
               </div>
