@@ -11,40 +11,129 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
+import { RootState } from '@/redux/store'
+import { updateListing } from '@/services/listing.service'
 
 type Props = {
   data?: ProfilePageData['pageData']
 }
-const options = ['Facebook', 'Twitter', 'Instagram']
-const SocialMediaEditModal = ({ data }: Props) => {
+const options = [
+  'Facebook',
+  'Twitter',
+  'Instagram',
+  'Youtube',
+  'SoundCloud',
+  'Pinterest',
+  'TripAdvisor',
+  'Ultimate Guiter',
+  'Strava',
+  'DeviantArts',
+  'Behance',
+  'GoodReads',
+  'Smule',
+  'Chess',
+  'BGG',
+]
+const ListingSocialMediaEditModal = ({ data }: Props) => {
   const [submitBtnLoading, setSubmitBtnLoading] = useState(false)
-  const [relation, setRelation] = useState('')
-  const { user } = useSelector((state: any) => state.user)
+  const { listingModalData } = useSelector((state: RootState) => state.site)
 
   useEffect(() => {
     let arr = []
-    if (user.facebook_url) {
+    if (listingModalData.facebook_url) {
       arr.push({
         socialMedia: 'Facebook',
-        url: user.facebook_url,
+        url: listingModalData.facebook_url,
       })
     }
-    if (user.instagram_url) {
+    if (listingModalData.instagram_url) {
       arr.push({
         socialMedia: 'Instagram',
-        url: user.instagram_url,
+        url: listingModalData.instagram_url,
       })
     }
-    if (user.twitter_url) {
+    if (listingModalData.twitter_url) {
       arr.push({
         socialMedia: 'Twitter',
-        url: user.twitter_url,
+        url: listingModalData.twitter_url,
+      })
+    }
+    if (listingModalData.youtube_url) {
+      arr.push({
+        socialMedia: 'Youtube',
+        url: listingModalData.youtube_url,
+      })
+    }
+    if (listingModalData.soundcloud_url) {
+      arr.push({
+        socialMedia: 'SoundCloud',
+        url: listingModalData.soundcloud_url,
+      })
+    }
+    if (listingModalData.pinterest_url) {
+      arr.push({
+        socialMedia: 'Pinterest',
+        url: listingModalData.pinterest_url,
+      })
+    }
+    if (listingModalData.tripadvisor_url) {
+      arr.push({
+        socialMedia: 'TripAdvisor',
+        url: listingModalData.tripadvisor_url,
+      })
+    }
+    if (listingModalData.ultimate_guiter_url) {
+      arr.push({
+        socialMedia: 'Ultimate Guiter',
+        url: listingModalData.ultimate_guiter_url,
+      })
+    }
+    if (listingModalData.strava_url) {
+      arr.push({
+        socialMedia: 'Strava',
+        url: listingModalData.strava_url,
+      })
+    }
+    if (listingModalData.deviantarts_url) {
+      arr.push({
+        socialMedia: 'DeviantArts',
+        url: listingModalData.deviantarts_url,
+      })
+    }
+    if (listingModalData.behance_url) {
+      arr.push({
+        socialMedia: 'Behance',
+        url: listingModalData.behance_url,
+      })
+    }
+    if (listingModalData.goodreads_url) {
+      arr.push({
+        socialMedia: 'GoodReads',
+        url: listingModalData.goodreads_url,
+      })
+    }
+    if (listingModalData.smule_url) {
+      arr.push({
+        socialMedia: 'Smule',
+        url: listingModalData.smule_url,
+      })
+    }
+    if (listingModalData.chess_url) {
+      arr.push({
+        socialMedia: 'Chess',
+        url: listingModalData.chess_url,
+      })
+    }
+    if (listingModalData.bgg_url) {
+      arr.push({
+        socialMedia: 'BGG',
+        url: listingModalData.bgg_url,
       })
     }
     if (arr.length > 0) {
       setMediaData(arr)
     }
-  }, [user])
+  }, [listingModalData])
 
   const [mediaData, setMediaData] = useState([
     {
@@ -90,22 +179,30 @@ const SocialMediaEditModal = ({ data }: Props) => {
       facebook_url: getValue('Facebook'),
       instagram_url: getValue('Instagram'),
       twitter_url: getValue('Twitter'),
+      youtube_url: getValue('Youtube'),
+      soundcloud_url: getValue('SoundCloud'),
+      pinterest_url: getValue('Pinterest'),
+      tripadvisor_url: getValue('TripAdvisor'),
+      ultimate_guiter_url: getValue('Ultimate_Guiter'),
+      strava_url: getValue('Strava'),
+      deviantarts_url: getValue('DeviantArts'),
+      behance_url: getValue('Behance'),
+      goodreads_url: getValue('GoodReads'),
+      smule_url: getValue('Smule'),
+      chess_url: getValue('Chess'),
+      bgg_url: getValue('BGG'),
     }
     // console.log('re', reqBody)
-    const { err, res } = await updateMyProfileDetail(reqBody)
+    const { err, res } = await updateListing(listingModalData._id, reqBody)
 
     if (err) {
       setSubmitBtnLoading(false)
       return console.log(err)
     }
 
-    const { err: error, res: response } = await getMyProfileDetail()
-    setSubmitBtnLoading(false)
-
-    if (error) return console.log(error)
-    if (response?.data.success) {
-      console.log('response', response)
-      dispatch(updateUser(response.data.data.user))
+    if (err) return console.log(err)
+    if (res?.data.success) {
+      console.log('res', res)
       window.location.reload()
       dispatch(closeModal())
     }
@@ -190,4 +287,4 @@ const SocialMediaEditModal = ({ data }: Props) => {
   )
 }
 
-export default SocialMediaEditModal
+export default ListingSocialMediaEditModal

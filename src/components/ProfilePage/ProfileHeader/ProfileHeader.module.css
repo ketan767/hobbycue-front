@@ -196,6 +196,16 @@
   box-shadow: none;
 }
 
+.container:has(.header).small .navigation-tabs {
+  margin-top: 0;
+  padding-top: 4px;
+}
+
+.container:has(.header).small .navigation-tabs a {
+  line-height: 22px;
+  padding: 8px 5px;
+}
+
 .name-container {
   margin-top: 9px;
   display: flex;
