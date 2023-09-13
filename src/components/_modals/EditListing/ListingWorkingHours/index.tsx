@@ -130,7 +130,10 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
     })
     if (err) return console.log(err)
     console.log('res', res?.data.data.listing)
-    const updatedData = { ...listingModalData, work_hours: res?.data.data.listing.work_hours }
+    const updatedData = {
+      ...listingModalData,
+      work_hours: res?.data.data.listing.work_hours,
+    }
 
     dispatch(updateListingModalData(updatedData))
     if (onComplete) onComplete()
@@ -150,10 +153,9 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
         toTime: to_time,
       }
     })
-    if(workData){
+    if (workData) {
       setWorkingHoursData(workData)
     }
-
   }, [listingModalData])
 
   const addWorkingHour = () => {
@@ -202,8 +204,10 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
     setWorkingHoursData(temp)
   }
 
-  const handleDelete = (index:any) => {
-    let updatedData = workingHoursData.filter((item: any, idx: any) => idx !== index)
+  const handleDelete = (index: any) => {
+    let updatedData = workingHoursData.filter(
+      (item: any, idx: any) => idx !== index,
+    )
     setWorkingHoursData(updatedData)
   }
 
@@ -228,7 +232,7 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
           <div className={styles.listContainer}>
             {workingHoursData.map((item: any, idx) => {
               return (
-                <div key={idx} className={styles.listItem} >
+                <div key={idx} className={styles.listItem}>
                   <div className={styles.listSubItem}>
                     <label> From Day </label>
                     <InputSelect
@@ -269,7 +273,12 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
                       }
                     />
                   </div>
-                  <Image src={DeleteIcon} alt='delete' className={styles['delete-icon']}  onClick={()=>handleDelete(idx)} />
+                  <Image
+                    src={DeleteIcon}
+                    alt="delete"
+                    className={styles['delete-icon']}
+                    onClick={() => handleDelete(idx)}
+                  />
                 </div>
               )
             })}

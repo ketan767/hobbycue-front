@@ -293,15 +293,17 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
               </Tooltip>
 
               {/* More Options Button */}
-              <Tooltip title="More options">
-                <div
-                  onClick={(e) => handleDropdown()}
-                  className={styles['action-btn']}
-                >
+
+              <div
+                onClick={(e) => handleDropdown()}
+                className={styles['action-btn']}
+              >
+                <Tooltip title="More options">
                   <MoreHorizRoundedIcon color="primary" />
-                  {open && <Dropdown handleClose={handleDropdown} />}
-                </div>
-              </Tooltip>
+                </Tooltip>
+
+                {open && <Dropdown handleClose={handleDropdown} />}
+              </div>
             </div>
           </div>
         </header>
