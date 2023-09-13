@@ -308,7 +308,7 @@ select:-webkit-autofill {
   transition: 0.6s;
 }
 .custom-scrollbar::-webkit-scrollbar {
-  width: 5px;
+  width: 2px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
