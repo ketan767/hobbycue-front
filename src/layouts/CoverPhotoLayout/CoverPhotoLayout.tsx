@@ -8,7 +8,7 @@ type Props = {
   onChange: any
   profileLayoutMode: any
   type?: any
-  typeId: 1 | 2 | 3 | 4
+  typeId?: 1 | 2 | 3 | 4
 }
 const CoverPhotoLayout: React.FC<Props> = ({
   onChange,
