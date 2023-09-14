@@ -302,7 +302,19 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
                   <MoreHorizRoundedIcon color="primary" />
                 </Tooltip>
 
-                {open && <Dropdown handleClose={handleDropdown} />}
+                {profileLayoutMode === 'edit'
+                  ? open && (
+                      <Dropdown
+                        userType={'edit'}
+                        handleClose={handleDropdown}
+                      />
+                    )
+                  : open && (
+                      <Dropdown
+                        userType={'anonymous'}
+                        handleClose={handleDropdown}
+                      />
+                    )}
               </div>
             </div>
           </div>

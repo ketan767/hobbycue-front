@@ -21,7 +21,7 @@ const CoverPhotoLayout: React.FC<Props> = ({
   const getClass = (type: any) => {
     if (type === 'page') {
       if (typeId === listingTypes.PEOPLE) {
-        return 'default-people-listing-cover'
+        return 'default-user-cover'
       } else if (typeId === listingTypes.PLACE) {
         return 'default-place-listing-cover'
       } else if (typeId === listingTypes.PROGRAM) {
@@ -30,7 +30,7 @@ const CoverPhotoLayout: React.FC<Props> = ({
         return 'default-product-listing-cover'
       }
     } else {
-      return 'default-user-icon'
+      return 'default-user-cover'
     }
   }
   const defaultCover = getClass(type)

@@ -319,7 +319,19 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                 className={styles['action-btn']}
               >
                 <MoreHorizRoundedIcon color="primary" />
-                {open && <Dropdown handleClose={handleDropdown} />}
+                {listingLayoutMode === 'edit'
+                  ? open && (
+                      <Dropdown
+                        userType={'edit'}
+                        handleClose={handleDropdown}
+                      />
+                    )
+                  : open && (
+                      <Dropdown
+                        userType={'anonymous'}
+                        handleClose={handleDropdown}
+                      />
+                    )}
               </div>
             </Tooltip>
           </div>
