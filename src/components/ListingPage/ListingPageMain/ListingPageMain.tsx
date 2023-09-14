@@ -263,6 +263,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
           </PageContentBox>
 
           {/* Listing Hobbies */}
+
           <PageContentBox
             showEditButton={listingLayoutMode === 'edit'}
             onEditBtnClick={() =>
@@ -294,68 +295,71 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
           </PageContentBox>
 
           {/* Tags */}
-          <PageContentBox
-            showEditButton={listingLayoutMode === 'edit'}
-            onEditBtnClick={() =>
-              dispatch(openModal({ type: 'listing-tags-edit', closable: true }))
-            }
-          >
-            <h4 className={styles['heading']}>Tags</h4>
-            {!data || selectedTags.length === 0 ? (
-              <span className={styles.textGray}>{'No tags!'}</span>
-            ) : (
+          {listingLayoutMode !== 'edit' &&
+          (!listingPagesRight || listingPagesRight.length === 0) ? null : (
+            <PageContentBox
+              showEditButton={listingLayoutMode === 'edit'}
+              onEditBtnClick={() =>
+                dispatch(
+                  openModal({ type: 'listing-tags-edit', closable: true }),
+                )
+              }
+            >
+              <h4 className={styles['heading']}>Tags</h4>
               <ul className={styles['hobby-list']}>
                 {selectedTags?.map((item: any) => {
-                  if (typeof item === 'string') return
+                  if (typeof item === 'string') return null
                   return (
                     <li key={item._id} className={styles.textGray}>
-                      {item?.name} {` - `}
-                      {item?.description}
+                      {item?.name} - {item?.description}
                     </li>
                   )
                 })}
               </ul>
-            )}
-          </PageContentBox>
+            </PageContentBox>
+          )}
 
           {/* Related Listing */}
-          <PageContentBox
-            showEditButton={listingLayoutMode === 'edit'}
-            onEditBtnClick={() =>
-              dispatch(
-                openModal({
-                  type: 'related-listing-left-edit',
-                  closable: true,
-                }),
-              )
-            }
-          >
-            <h4 className={styles['heading']}>
-              {' '}
-              {data?.related_listings_left.relation
-                ? data?.related_listings_left.relation
-                : 'Relared Listing'}{' '}
-            </h4>
-            {!listingPagesLeft || listingPagesLeft.length === 0 ? (
-              <span className={styles.textGray}>{'No data!'}</span>
-            ) : (
-              <ul className={styles['hobby-list']}>
-                {listingPagesLeft?.map((item: any) => {
-                  if (typeof item === 'string') return
-                  return (
-                    <Link
-                      key={item._id}
-                      className={styles.textGray}
-                      href={`/page/${item.page_url}`}
-                    >
-                      {item?.title}
-                      {/* {item?.genre && ` - ${item?.genre?.display} `} */}
-                    </Link>
-                  )
-                })}
-              </ul>
-            )}
-          </PageContentBox>
+          {listingLayoutMode !== 'edit' &&
+          (!listingPagesRight || listingPagesRight.length === 0) ? null : (
+            <PageContentBox
+              showEditButton={listingLayoutMode === 'edit'}
+              onEditBtnClick={() =>
+                dispatch(
+                  openModal({
+                    type: 'related-listing-left-edit',
+                    closable: true,
+                  }),
+                )
+              }
+            >
+              <h4 className={styles['heading']}>
+                {' '}
+                {data?.related_listings_left.relation
+                  ? data?.related_listings_left.relation
+                  : 'Related Listing'}{' '}
+              </h4>
+              {!listingPagesLeft || listingPagesLeft.length === 0 ? (
+                <span className={styles.textGray}>{'No data!'}</span>
+              ) : (
+                <ul className={styles['hobby-list']}>
+                  {listingPagesLeft?.map((item: any) => {
+                    if (typeof item === 'string') return null
+                    return (
+                      <Link
+                        key={item._id}
+                        className={styles.textGray}
+                        href={`/page/${item.page_url}`}
+                      >
+                        {item?.title}
+                        {/* {item?.genre && ` - ${item?.genre?.display} `} */}
+                      </Link>
+                    )
+                  })}
+                </ul>
+              )}
+            </PageContentBox>
+          )}
         </aside>
 
         {children}
@@ -748,34 +752,37 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
           )}
 
           {/* Related Listing */}
-          <PageContentBox
-            showEditButton={listingLayoutMode === 'edit'}
-            onEditBtnClick={() =>
-              dispatch(
-                openModal({
-                  type: 'related-listing-right-edit',
-                  closable: true,
-                }),
-              )
-            }
-          >
-            <h4 className={styles['heading']}> Related Listing </h4>
-            {!listingPagesRight || listingPagesRight.length === 0 ? (
-              <span className={styles.textGray}>{'No data!'}</span>
-            ) : (
-              <ul className={styles['hobby-list']}>
-                {listingPagesRight?.map((item: any) => {
-                  if (typeof item === 'string') return
-                  return (
-                    <li key={item._id} className={styles.textGray}>
-                      {item?.full_name}
-                      {/* {item?.genre && ` - ${item?.genre?.display} `} */}
-                    </li>
-                  )
-                })}
-              </ul>
-            )}
-          </PageContentBox>
+          {listingLayoutMode !== 'edit' &&
+          (!listingPagesRight || listingPagesRight.length === 0) ? null : (
+            <PageContentBox
+              showEditButton={listingLayoutMode === 'edit'}
+              onEditBtnClick={() =>
+                dispatch(
+                  openModal({
+                    type: 'related-listing-right-edit',
+                    closable: true,
+                  }),
+                )
+              }
+            >
+              <h4 className={styles['heading']}>Related Listing</h4>
+              {!listingPagesRight || listingPagesRight.length === 0 ? (
+                <span className={styles.textGray}>{'No data!'}</span>
+              ) : (
+                <ul className={styles['hobby-list']}>
+                  {listingPagesRight?.map((item: any) => {
+                    if (typeof item === 'string') return null
+                    return (
+                      <li key={item._id} className={styles.textGray}>
+                        {item?.full_name}
+                        {/* {item?.genre && ` - ${item?.genre?.display} `} */}
+                      </li>
+                    )
+                  })}
+                </ul>
+              )}
+            </PageContentBox>
+          )}
 
           {/* {data?.type === 4 && (
             <PageContentBox
@@ -890,7 +897,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                 )}
                 {stravaUrl && (
                   <a target="_blank" href={stravaUrl}>
-                    <Image src={StravaIcon} alt="Facebook" />
+                    <Image src={StravaIcon} alt="Strava" />
                   </a>
                 )}
                 {deviantartsUrl && (
@@ -905,12 +912,12 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                 )}
                 {goodreadsUrl && (
                   <a target="_blank" href={goodreadsUrl}>
-                    <Image src={GoodreadsIcon} alt="Facebook" />
+                    <Image src={GoodreadsIcon} alt="GoofReads" />
                   </a>
                 )}
                 {smuleUrl && (
                   <a target="_blank" href={smuleUrl}>
-                    <Image src={SmuleIcon} alt="Facebook" />
+                    <Image src={SmuleIcon} alt="Smule" />
                   </a>
                 )}
                 {chessUrl && (

@@ -263,6 +263,7 @@
 }
 .customList li:hover {
   background-color: #e5e5e5;
+  color: #8064a2; 
 }
 @keyframes scroll-in {
   0% {
