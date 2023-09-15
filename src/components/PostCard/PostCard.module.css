@@ -21,6 +21,14 @@
   border-radius: var(--spacing-40);
   border: 1px solid #8064a2;
 }
+.post-card-wrapper header .author-listing,
+.post-card-wrapper header .default-people-listing-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid #8064a2;
+
+}
 
 .post-card-wrapper header .author-name {
   font-weight: 500;

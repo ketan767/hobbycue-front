@@ -264,7 +264,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
               <label>Tagline</label>
               <input
                 type="text"
-                placeholder="Something catchy..."
+                placeholder="Something catchy... that also appears in search results"
                 value={data.tagline.value}
                 name="tagline"
                 onChange={handleInputChange}

@@ -837,10 +837,14 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
               </div>
             </PageContentBox>
           )} */}
-          {data?.type === listingTypes.PROGRAM ||
-          data?.type === listingTypes.PRODUCT ||
-          data?.type === listingTypes.PLACE ||
-          data?.type === listingTypes.PEOPLE ? (
+
+          {listingLayoutMode !== 'edit' &&
+          (!listingPagesRight ||
+            listingPagesRight.length === 0) ? null : data?.type ===
+              listingTypes.PROGRAM ||
+            data?.type === listingTypes.PRODUCT ||
+            data?.type === listingTypes.PLACE ||
+            data?.type === listingTypes.PEOPLE ? (
             <PageContentBox
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>

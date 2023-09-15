@@ -21,7 +21,7 @@ const CoverPhotoLayout: React.FC<Props> = ({
   const getClass = (type: any) => {
     if (type === 'page') {
       if (typeId === listingTypes.PEOPLE) {
-        return 'default-user-cover'
+        return 'default-people-listing-cover'
       } else if (typeId === listingTypes.PLACE) {
         return 'default-place-listing-cover'
       } else if (typeId === listingTypes.PROGRAM) {
