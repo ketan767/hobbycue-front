@@ -387,7 +387,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               <div className={styles['street-input-container']}>
                 <input
                   type="text"
-                  placeholder={`Enter address or click the "locate me" icon to auto-detect`}
+                  placeholder={`Enter address or click the 'GPS icon' to auto-detect`}
                   required
                   value={data.street}
                   name="street"

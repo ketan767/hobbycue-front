@@ -76,9 +76,8 @@ const modalSlice = createSlice({
       state.activeModal = null
       state.closable = true
       if (state.onModalClose) {
-        state.onModalClose()
-        state.onModalClose = null
-      }
+      state.onModalClose()
+       }
     },
     updateAuthFormData(state, { payload }) {
       state.authFormData = payload

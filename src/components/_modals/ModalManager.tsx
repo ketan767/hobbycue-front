@@ -183,7 +183,10 @@ const ModalManager: React.FC = () => {
                 />
               )}
               {activeModal === 'user-address-edit' && (
-                <ProfileAddressEditModal title="Edit Location" editLocation={true} />
+                <ProfileAddressEditModal
+                  title="Edit Location"
+                  editLocation={true}
+                />
               )}
               {/* Modal Close Icon */}
               {closable && (
