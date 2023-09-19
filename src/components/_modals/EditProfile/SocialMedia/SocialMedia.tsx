@@ -36,104 +36,104 @@ const options = [
 ]
 const ListingSocialMediaEditModal = ({ data }: Props) => {
   const [submitBtnLoading, setSubmitBtnLoading] = useState(false)
-  const { listingModalData } = useSelector((state: RootState) => state.site)
+  const { user } = useSelector((state: RootState) => state.user)
 
   useEffect(() => {
     let arr = []
-    if (listingModalData.facebook_url) {
+    if (user.facebook_url) {
       arr.push({
         socialMedia: 'Facebook',
-        url: listingModalData.facebook_url,
+        url: user.facebook_url,
       })
     }
-    if (listingModalData.instagram_url) {
+    if (user.instagram_url) {
       arr.push({
         socialMedia: 'Instagram',
-        url: listingModalData.instagram_url,
+        url: user.instagram_url,
       })
     }
-    if (listingModalData.twitter_url) {
+    if (user.twitter_url) {
       arr.push({
         socialMedia: 'Twitter',
-        url: listingModalData.twitter_url,
+        url: user.twitter_url,
       })
     }
-    if (listingModalData.youtube_url) {
+    if (user.youtube_url) {
       arr.push({
         socialMedia: 'Youtube',
-        url: listingModalData.youtube_url,
+        url: user.youtube_url,
       })
     }
-    if (listingModalData.soundcloud_url) {
+    if (user.soundcloud_url) {
       arr.push({
         socialMedia: 'SoundCloud',
-        url: listingModalData.soundcloud_url,
+        url: user.soundcloud_url,
       })
     }
-    if (listingModalData.pinterest_url) {
+    if (user.pinterest_url) {
       arr.push({
         socialMedia: 'Pinterest',
-        url: listingModalData.pinterest_url,
+        url: user.pinterest_url,
       })
     }
-    if (listingModalData.tripadvisor_url) {
+    if (user.tripadvisor_url) {
       arr.push({
         socialMedia: 'TripAdvisor',
-        url: listingModalData.tripadvisor_url,
+        url: user.tripadvisor_url,
       })
     }
-    if (listingModalData.ultimate_guiter_url) {
+    if (user.ultimate_guiter_url) {
       arr.push({
         socialMedia: 'Ultimate Guiter',
-        url: listingModalData.ultimate_guiter_url,
+        url: user.ultimate_guiter_url,
       })
     }
-    if (listingModalData.strava_url) {
+    if (user.strava_url) {
       arr.push({
         socialMedia: 'Strava',
-        url: listingModalData.strava_url,
+        url: user.strava_url,
       })
     }
-    if (listingModalData.deviantarts_url) {
+    if (user.deviantarts_url) {
       arr.push({
         socialMedia: 'DeviantArts',
-        url: listingModalData.deviantarts_url,
+        url: user.deviantarts_url,
       })
     }
-    if (listingModalData.behance_url) {
+    if (user.behance_url) {
       arr.push({
         socialMedia: 'Behance',
-        url: listingModalData.behance_url,
+        url: user.behance_url,
       })
     }
-    if (listingModalData.goodreads_url) {
+    if (user.goodreads_url) {
       arr.push({
         socialMedia: 'GoodReads',
-        url: listingModalData.goodreads_url,
+        url: user.goodreads_url,
       })
     }
-    if (listingModalData.smule_url) {
+    if (user.smule_url) {
       arr.push({
         socialMedia: 'Smule',
-        url: listingModalData.smule_url,
+        url: user.smule_url,
       })
     }
-    if (listingModalData.chess_url) {
+    if (user.chess_url) {
       arr.push({
         socialMedia: 'Chess',
-        url: listingModalData.chess_url,
+        url: user.chess_url,
       })
     }
-    if (listingModalData.bgg_url) {
+    if (user.bgg_url) {
       arr.push({
         socialMedia: 'BGG',
-        url: listingModalData.bgg_url,
+        url: user.bgg_url,
       })
     }
     if (arr.length > 0) {
       setMediaData(arr)
     }
-  }, [listingModalData])
+  }, [user])
 
   const [mediaData, setMediaData] = useState([
     {
@@ -172,6 +172,13 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
     })
     return value
   }
+  const handleDelete = (item: any) => {
+    let updated = mediaData.filter(
+      (media: any) => item.socialMedia !== media.socialMedia,
+    )
+    setMediaData(updated)
+  }
+  console.log('item', mediaData)
 
   const handleSubmit = async () => {
     setSubmitBtnLoading(true)
@@ -193,7 +200,7 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
       bgg_url: getValue('BGG'),
     }
     // console.log('re', reqBody)
-    const { err, res } = await updateListing(listingModalData._id, reqBody)
+    const { err, res } = await updateMyProfileDetail(reqBody)
 
     if (err) {
       setSubmitBtnLoading(false)
@@ -203,7 +210,7 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
     if (err) return console.log(err)
     if (res?.data.success) {
       console.log('res', res)
-      window.location.reload()
+      //window.location.reload()
       dispatch(closeModal())
     }
   }
@@ -264,6 +271,7 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
                 src={DeleteIcon}
                 alt="delete"
                 className={styles.deleteIcon}
+                onClick={() => handleDelete(item)}
               />
             </div>
           )

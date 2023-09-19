@@ -133,7 +133,7 @@ const CustomEditor: React.FC<Props> = ({
         onChange={(updatedValue) => {
           setData((prev: any) => ({ ...prev, content: updatedValue }))
         }}
-        className={`${styles.quill} ${error ? styles['quill-error'] : ''} `}
+        className={`${styles.quill} ${error ? styles['quill-error'] : ''}`}
         placeholder="Start something interesting..."
         modules={{
           toolbar: {
