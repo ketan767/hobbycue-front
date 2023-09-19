@@ -9,10 +9,6 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import styles from './styles.module.css'
 import { RootState } from '@/redux/store'
-import TimeIcon from '../../../assets/svg/Time.svg'
-import FacebookIcon from '../../../assets/svg/Facebook.svg'
-import TwitterIcon from '../../../assets/svg/Twitter.svg'
-import InstagramIcon from '../../../assets/svg/Instagram.svg'
 import axios from 'axios'
 import { getPages, updateListing } from '@/services/listing.service'
 import ListingCard from '@/components/ListingCard/ListingCard'
@@ -89,7 +85,7 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
       // dispatch(closeModal())
     }
   }
-  
+
   const updateListingPage = async (url: string) => {
     let arr: any = []
     if (listingModalData?.images) {
@@ -151,7 +147,12 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
         <PageGridLayout column={2}>
           {listingModalData?.video_url && (
             <div>
-              <video width="250" height="240" controls={true} className={styles.video}>
+              <video
+                width="250"
+                height="240"
+                controls={true}
+                className={styles.video}
+              >
                 <source src={listingModalData?.video_url} type="video/mp4" />
               </video>
             </div>

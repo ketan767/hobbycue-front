@@ -34,100 +34,101 @@ const options = [
   'Chess',
   'BGG',
 ]
+
 const ListingSocialMediaEditModal = ({ data }: Props) => {
   const [submitBtnLoading, setSubmitBtnLoading] = useState(false)
   const { user } = useSelector((state: RootState) => state.user)
 
   useEffect(() => {
     let arr = []
-    if (user.facebook_url) {
+    if (user.social_media_urls.facebook_url) {
       arr.push({
         socialMedia: 'Facebook',
-        url: user.facebook_url,
+        url: user.social_media_urls.facebook_url,
       })
     }
-    if (user.instagram_url) {
+    if (user.social_media_urls.instagram_url) {
       arr.push({
         socialMedia: 'Instagram',
         url: user.instagram_url,
       })
     }
-    if (user.twitter_url) {
+    if (user.social_media_urls.twitter_url) {
       arr.push({
         socialMedia: 'Twitter',
-        url: user.twitter_url,
+        url: user.social_media_urls.twitter_url,
       })
     }
-    if (user.youtube_url) {
+    if (user.social_media_urls.youtube_url) {
       arr.push({
         socialMedia: 'Youtube',
-        url: user.youtube_url,
+        url: user.social_media_urls.youtube_url,
       })
     }
-    if (user.soundcloud_url) {
+    if (user.social_media_urls.soundcloud_url) {
       arr.push({
         socialMedia: 'SoundCloud',
-        url: user.soundcloud_url,
+        url: user.social_media_urls.soundcloud_url,
       })
     }
-    if (user.pinterest_url) {
+    if (user.social_media_urls.pinterest_url) {
       arr.push({
         socialMedia: 'Pinterest',
-        url: user.pinterest_url,
+        url: user.social_media_urls.pinterest_url,
       })
     }
-    if (user.tripadvisor_url) {
+    if (user.social_media_urls.tripadvisor_url) {
       arr.push({
         socialMedia: 'TripAdvisor',
-        url: user.tripadvisor_url,
+        url: user.social_media_urls.tripadvisor_url,
       })
     }
-    if (user.ultimate_guiter_url) {
+    if (user.social_media_urls.ultimate_guiter_url) {
       arr.push({
         socialMedia: 'Ultimate Guiter',
-        url: user.ultimate_guiter_url,
+        url: user.social_media_urls.ultimate_guiter_url,
       })
     }
-    if (user.strava_url) {
+    if (user.social_media_urls.strava_url) {
       arr.push({
         socialMedia: 'Strava',
-        url: user.strava_url,
+        url: user.social_media_urls.strava_url,
       })
     }
-    if (user.deviantarts_url) {
+    if (user.social_media_urls.deviantarts_url) {
       arr.push({
         socialMedia: 'DeviantArts',
-        url: user.deviantarts_url,
+        url: user.social_media_urls.deviantarts_url,
       })
     }
-    if (user.behance_url) {
+    if (user.social_media_urls.behance_url) {
       arr.push({
         socialMedia: 'Behance',
-        url: user.behance_url,
+        url: user.social_media_urls.behance_url,
       })
     }
-    if (user.goodreads_url) {
+    if (user.social_media_urls.goodreads_url) {
       arr.push({
         socialMedia: 'GoodReads',
-        url: user.goodreads_url,
+        url: user.social_media_urls.goodreads_url,
       })
     }
-    if (user.smule_url) {
+    if (user.social_media_urls.smule_url) {
       arr.push({
         socialMedia: 'Smule',
-        url: user.smule_url,
+        url: user.social_media_urls.smule_url,
       })
     }
-    if (user.chess_url) {
+    if (user.social_media_urls.chess_url) {
       arr.push({
         socialMedia: 'Chess',
-        url: user.chess_url,
+        url: user.social_media_urls.chess_url,
       })
     }
-    if (user.bgg_url) {
+    if (user.social_media_urls.bgg_url) {
       arr.push({
         socialMedia: 'BGG',
-        url: user.bgg_url,
+        url: user.social_media_urls.bgg_url,
       })
     }
     if (arr.length > 0) {
@@ -159,18 +160,13 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
   }
 
   const addSocialMedia = () => {
-    let updated = [...mediaData, { socialMedia: '', url: '' }]
-    setMediaData(updated)
+    const newSocialMedia = { socialMedia: '', url: '' }
+    setMediaData((prevMediaData) => [...prevMediaData.slice(), newSocialMedia])
   }
 
   const getValue = (key: any) => {
-    let value = ''
-    mediaData.map((item: any) => {
-      if (key === item.socialMedia) {
-        value = item.url
-      }
-    })
-    return value
+    const socialMediaItem = mediaData.find((item) => item.socialMedia === key)
+    return socialMediaItem ? socialMediaItem.url : ''
   }
   const handleDelete = (item: any) => {
     let updated = mediaData.filter(
@@ -182,22 +178,24 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
 
   const handleSubmit = async () => {
     setSubmitBtnLoading(true)
-    let reqBody: any = {
-      facebook_url: getValue('Facebook'),
-      instagram_url: getValue('Instagram'),
-      twitter_url: getValue('Twitter'),
-      youtube_url: getValue('Youtube'),
-      soundcloud_url: getValue('SoundCloud'),
-      pinterest_url: getValue('Pinterest'),
-      tripadvisor_url: getValue('TripAdvisor'),
-      ultimate_guiter_url: getValue('Ultimate_Guiter'),
-      strava_url: getValue('Strava'),
-      deviantarts_url: getValue('DeviantArts'),
-      behance_url: getValue('Behance'),
-      goodreads_url: getValue('GoodReads'),
-      smule_url: getValue('Smule'),
-      chess_url: getValue('Chess'),
-      bgg_url: getValue('BGG'),
+    let reqBody = {
+      social_media_urls: {
+        facebook_url: getValue('Facebook'),
+        instagram_url: getValue('Instagram'),
+        twitter_url: getValue('Twitter'),
+        youtube_url: getValue('Youtube'),
+        soundcloud_url: getValue('SoundCloud'),
+        pinterest_url: getValue('Pinterest'),
+        tripadvisor_url: getValue('TripAdvisor'),
+        ultimate_guiter_url: getValue('Ultimate_Guiter'),
+        strava_url: getValue('Strava'),
+        deviantarts_url: getValue('DeviantArts'),
+        behance_url: getValue('Behance'),
+        goodreads_url: getValue('GoodReads'),
+        smule_url: getValue('Smule'),
+        chess_url: getValue('Chess'),
+        bgg_url: getValue('BGG'),
+      },
     }
     // console.log('re', reqBody)
     const { err, res } = await updateMyProfileDetail(reqBody)
@@ -210,11 +208,11 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
     if (err) return console.log(err)
     if (res?.data.success) {
       console.log('res', res)
-      //window.location.reload()
+      window.location.reload()
       dispatch(closeModal())
     }
   }
-
+  console.log(user)
   return (
     <div className={styles['modal-wrapper']}>
       {/* Modal Header */}

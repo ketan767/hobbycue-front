@@ -83,7 +83,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     if (err) return console.log(err)
     console.log('resp', res.data)
     setHobbyDropdownList(res.data.hobbies)
-    setGenreDropdownList(res.data.hobbies)
+    // setGenreDropdownList(res.data.hobbies)
   }
 
   const handleGenreInputChange = async (e: any) => {

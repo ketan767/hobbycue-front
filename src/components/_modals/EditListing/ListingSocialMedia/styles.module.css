@@ -105,6 +105,7 @@
 }
 .deleteIcon {
   margin-left: 4px;
+  cursor: pointer;
 }
 .body-header {
   display: flex;

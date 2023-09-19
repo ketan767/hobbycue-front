@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import styles from '@/styles/AllHobbies.module.css'
 import { getAllHobbies } from '@/services/hobby.service'
 import { FormControl, MenuItem, Select, TextField } from '@mui/material'
@@ -7,6 +8,8 @@ import { GetServerSideProps } from 'next'
 import Image from 'next/image'
 import AddIcon from '@/assets/svg/add-circle.svg'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
+import { updateIsAuthenticated } from '@/redux/slices/user'
+import { RootState } from '@/redux/store'
 
 type Props = {
   data: any
@@ -24,6 +27,9 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
     subCategory: '',
     hobby: '',
   })
+  const { isLoggedIn, isAuthenticated, user } = useSelector(
+    (state: RootState) => state.user,
+  )
 
   const params = new URLSearchParams()
   const handleFilter = async () => {
@@ -69,7 +75,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
       <div className={`site-container ${styles['page-container']}`}>
         <aside>
           {/* Filters */}
-          <ProfileSwitcher />
+          {isLoggedIn && <ProfileSwitcher />}
           <div className={styles['filter-wrapper']}>
             <header>
               <h4 className={styles['heading']}>Filter</h4>

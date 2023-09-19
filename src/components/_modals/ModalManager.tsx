@@ -209,7 +209,12 @@ const ModalManager: React.FC = () => {
                     >
                       Yes
                     </FilledButton>
-                    <OutlinedButton onClick={() => setConfirmationModal(false)}>
+                    <OutlinedButton
+                      onClick={() => {
+                        handleClose()
+                        setConfirmationModal(false)
+                      }}
+                    >
                       No
                     </OutlinedButton>
                   </div>
