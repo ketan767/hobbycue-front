@@ -91,6 +91,7 @@ const PostCard: React.FC<Props> = (props) => {
     dispatch(updateShareUrl(`${window.location.origin}/post/${postData._id}`))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
   }
+  console.log(postData)
   return (
     <>
       <div className={styles['post-card-wrapper']}>
@@ -98,7 +99,21 @@ const PostCard: React.FC<Props> = (props) => {
         {!has_link && (
           <header>
             <Link href={`/profile/${postData?._author?.profile_url}`}>
-              {postData?._author?.profile_image ? (
+              {postData?.author_type === 'Listing' ? (
+                postData?._author?.profile_image ? (
+                  <Image
+                    className={styles['author-listing']}
+                    src={postData?._author?.profile_image}
+                    alt="Author Profile"
+                    width={40}
+                    height={40}
+                  />
+                ) : (
+                  <div
+                    className={`default-people-listing-icon  ${styles['author-listing']}`}
+                  ></div>
+                )
+              ) : postData?._author?.profile_image ? (
                 <Image
                   className={styles['author-profile']}
                   src={postData?._author?.profile_image}
@@ -108,7 +123,7 @@ const PostCard: React.FC<Props> = (props) => {
                 />
               ) : (
                 <div
-                  className={`default-user-icon  ${styles['author-profile']}`}
+                  className={`${styles['author-profile']} default-author-icon`}
                 ></div>
               )}
             </Link>

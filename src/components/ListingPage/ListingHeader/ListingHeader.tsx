@@ -31,6 +31,7 @@ import ProfileImageLayout from '@/layouts/ProfileImageLayout/ProfileImageLayout'
 
 import Dropdown from './DropDown'
 import { listingTypes } from '@/constants/constant'
+import ListingPageLayout from '@/layouts/ListingPageLayout'
 
 type Props = {
   data: ListingPageData['pageData']
@@ -353,7 +354,19 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
                 className={styles['action-btn']}
               >
                 <MoreHorizRoundedIcon color="primary" />
-                {open && <Dropdown handleClose={handleDropdown} />}
+                {listingLayoutMode === 'edit'
+                  ? open && (
+                      <Dropdown
+                        userType={'edit'}
+                        handleClose={handleDropdown}
+                      />
+                    )
+                  : open && (
+                      <Dropdown
+                        userType={'anonymous'}
+                        handleClose={handleDropdown}
+                      />
+                    )}
               </div>
             </Tooltip>
           </div>
