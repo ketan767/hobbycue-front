@@ -41,7 +41,7 @@ function validatePasswordConditions(password: string) {
     lowercase: /^(?=.*[a-z])/.test(password),
     uppercase: /^(?=.*[A-Z])/.test(password),
     number: /^(?=.*\d)/.test(password),
-    specialChar: /^(?=.*[@$!%*?&])/.test(password),
+    specialChar: /^(?=.*[#()^+@$!%*?&])/.test(password),
     length: /^(?=.{8,})/.test(password),
   }
   return validation

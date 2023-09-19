@@ -10,6 +10,7 @@ import ProfileGeneralEditModal from '../EditProfile/General'
 import ProfileAboutEditModal from '../EditProfile/About'
 import ProfileAddressEditModal from '../EditProfile/Address'
 import ProfileHobbyEditModal from '../EditProfile/Hobby'
+import ProfileContactEditModal from '../EditProfile/ProfileContact'
 
 import styles from './styles.module.css'
 
@@ -35,7 +36,7 @@ import styles from './styles.module.css'
 //   is_onboarded: boolean
 // }
 
-type steps = 'General' | 'About' | 'Address' | 'Hobbies'
+type steps = 'General' | 'About' | 'Contact' | 'Address' | 'Hobbies'
 
 export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
   const dispatch = useDispatch()
@@ -45,7 +46,13 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
 
   const { user } = useSelector((state: RootState) => state.user)
 
-  const totalSteps: steps[] = ['General', 'About', 'Address', 'Hobbies']
+  const totalSteps: steps[] = [
+    'General',
+    'About',
+    'Contact',
+    'Address',
+    'Hobbies',
+  ]
 
   const handleNext = () => {
     setActiveStep(
@@ -86,6 +93,12 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
           onBackBtnClick={handleBack}
         />
       )}
+      {activeStep === 'Contact' && (
+        <ProfileContactEditModal
+          onComplete={handleNext}
+          onBackBtnClick={handleBack}
+        />
+      )}
       {activeStep === 'Address' && (
         <ProfileAddressEditModal
           onComplete={handleNext}
@@ -100,15 +113,16 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
       )}
 
       <section className={styles['step-indicators']}>
-        {totalSteps.map((step) => {
+        {totalSteps.map((step, index) => {
+          const isClickable = index < totalSteps.indexOf(activeStep)
+
           return (
             <span
               key={step}
               className={`${styles['step']} ${
-                totalSteps.indexOf(step) <= totalSteps.indexOf(activeStep)
-                  ? styles['active']
-                  : ''
+                isClickable ? styles['active'] : ''
               }`}
+              onClick={isClickable ? () => setActiveStep(step) : undefined}
             ></span>
           )
         })}

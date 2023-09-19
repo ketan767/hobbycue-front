@@ -24,7 +24,11 @@ type Props = {
   handleAddressEdit: any
   handleDeleteAddress: any
 }
-const Address: React.FC<Props> = ({ address, handleAddressEdit, handleDeleteAddress }) => {
+const Address: React.FC<Props> = ({
+  address,
+  handleAddressEdit,
+  handleDeleteAddress,
+}) => {
   const [optionsActive, setOptionsActive] = useState(false)
   const editRef: any = useRef(null)
   useCheckIfClickedOutside(editRef, () => setOptionsActive(false))
@@ -47,6 +51,7 @@ const Address: React.FC<Props> = ({ address, handleAddressEdit, handleDeleteAddr
       }
     }
   }
+  console.log('address', address)
   return (
     <div className={`${styles.cardContainer}`} key={address?._id}>
       <div className={`${styles.addressLeft}`}>
@@ -97,7 +102,7 @@ const Address: React.FC<Props> = ({ address, handleAddressEdit, handleDeleteAddr
           } `}
         >
           <li onClick={() => handleAddressEdit(address?._id)}>Edit</li>
-          <li onClick={()=>handleDeleteAddress(address?._id)} >Delete</li>
+          <li onClick={() => handleDeleteAddress(address?._id)}>Delete</li>
         </ul>
       </div>
     </div>

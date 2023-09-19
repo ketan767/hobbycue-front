@@ -1,14 +1,15 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import styles from './ListingHeader.module.css'
-import { openModal } from '@/redux/slices/modal';
-import useOutsideClick from '@/hooks/useOutsideClick';
+import styles from './../../ProfilePage/ProfileHeader/ProfileHeader.module.css'
+import { openModal } from '@/redux/slices/modal'
+import useOutsideClick from '@/hooks/useOutsideClick'
 
 type Props = {
   handleClose?: any
+  userType: 'edit' | 'anonymous' | 'page'
 }
 
-const Dropdown: React.FC<Props> = ({ handleClose }) => {
+const Dropdown: React.FC<Props> = ({ handleClose, userType }) => {
   const dispatch = useDispatch()
   const ref = useRef(null)
   useOutsideClick(ref, handleClose)
@@ -19,9 +20,21 @@ const Dropdown: React.FC<Props> = ({ handleClose }) => {
   return (
     <div className={styles['dropdown']} ref={ref}>
       <ul className={styles['customList']}>
-        <li>Claim</li>
-        <li>Review</li>
-        <li>Report</li>
+        {userType === 'edit' && <li>Support</li>}
+        {userType === 'anonymous' && (
+          <>
+            <li>Claim</li>
+            <li>Review</li>
+            <li>Report</li>
+          </>
+        )}
+        {userType === 'page' && (
+          <>
+            <li>Claim</li>
+            <li>Review</li>
+            <li>Report</li>
+          </>
+        )}
       </ul>
     </div>
   )

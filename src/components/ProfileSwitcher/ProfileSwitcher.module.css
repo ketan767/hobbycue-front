@@ -22,6 +22,7 @@
   width: 100%;
   height: var(--spacing-40);
   border-radius: var(--spacing-4);
+  border: 1px solid #8064A2
 }
 .profile-switcher .name {
   font-weight: 500;
@@ -60,18 +61,21 @@
   gap: var(--spacing-8);
   padding: var(--spacing-4) var(--spacing-8);
   cursor: pointer;
+  
 }
 .dd-list .dd-item .img[data-profile-type='user'] {
   border-radius: 100%;
   max-width: var(--spacing-24);
   width: 100%;
   height: var(--spacing-24);
+  border: 1px solid #8064A2;
 }
 .dd-list .dd-item .img[data-profile-type='listing'] {
   border-radius: var(--spacing-4);
   max-width: var(--spacing-24);
   width: 100%;
   height: var(--spacing-24);
+  border: 1px solid #8064A2
 }
 
 .dd-list .dd-item p {

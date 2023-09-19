@@ -30,7 +30,7 @@ const CoverPhotoLayout: React.FC<Props> = ({
         return 'default-product-listing-cover'
       }
     } else {
-      return 'default-user-icon'
+      return 'default-user-cover'
     }
   }
   const defaultCover = getClass(type)
