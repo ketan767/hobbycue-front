@@ -62,7 +62,7 @@ ul.location-wrapper,
 ul.contact-wrapper {
   margin-top: var(--spacing-16);
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: var(--spacing-16);
 }
 
