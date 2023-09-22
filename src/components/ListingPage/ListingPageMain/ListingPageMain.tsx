@@ -6,7 +6,7 @@ import PageGridLayout from '@/layouts/PageGridLayout'
 
 import { openModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
-import { Tooltip } from '@mui/material'
+import Tooltip from '@/components/Tooltip/ToolTip'
 import styles from './styles.module.css'
 import { RootState } from '@/redux/store'
 import TimeIcon from '@/assets/svg/time.svg'

@@ -71,9 +71,9 @@ button:disabled {
   cursor: not-allowed;
 }
 
-.main-site-wrapper {
+/* .main-site-wrapper {
   margin-top: var(--navbar-height-desktop);
-}
+} */
 
 .site-container {
   max-width: var(--max-width);
@@ -260,7 +260,8 @@ select:-webkit-autofill {
 }
 .ql-container {
   font-size: 14px !important;
-  max-width: 606px;
+  max-width: 671px;
+  width: 100%;
 }
 
 .ck.ck-content.ck-editor__editable ul,

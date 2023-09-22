@@ -26,7 +26,7 @@ import MailIcon from '@/assets/svg/mailicon.svg'
 import UploadIcon from '@/assets/svg/upload.svg'
 import CoverPhotoLayout from '@/layouts/CoverPhotoLayout/CoverPhotoLayout'
 import ProfileImageLayout from '@/layouts/ProfileImageLayout/ProfileImageLayout'
-import { Tooltip } from '@mui/material'
+import Tooltip from '@/components/Tooltip/ToolTip'
 import Dropdown from './DropDown'
 import useOutsideClick from '@/hooks/useOutsideClick'
 

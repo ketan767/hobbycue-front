@@ -8,7 +8,7 @@ body:has(.add-listing-container) {
   padding: var(--spacing-40);
   border-radius: 8px;
   max-width: fit-content;
-  margin-top: calc(var(--navbar-height-desktop) + 32px);
+  margin-top: 32px;
 }
 
 .add-listing-heading {

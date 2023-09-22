@@ -18,7 +18,7 @@ import {
 import { updatePhotoEditModalData } from '@/redux/slices/site'
 import { openModal, updateShareUrl } from '@/redux/slices/modal'
 import { dateFormat } from '@/utils'
-import { Tooltip } from '@mui/material'
+import CustomTooltip from '@/components/Tooltip/ToolTip'
 import Calendar from '@/assets/svg/calendar-light.svg'
 import Time from '@/assets/svg/clock-light.svg'
 import EditIcon from '@/assets/svg/edit-colored.svg'
@@ -317,38 +317,38 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
           <div className={styles['action-btn-wrapper']}>
             {/* Send Email Button  */}
             <Link href={`mailto:${data.public_email || data.email}`}>
-              <Tooltip title="Repost">
+              <CustomTooltip title="Repost">
                 <div
                   onClick={(e) => console.log(e)}
                   className={styles['action-btn']}
                 >
                   <Image src={MailIcon} alt="share" />
                 </div>
-              </Tooltip>
+              </CustomTooltip>
             </Link>
 
             {/* Bookmark Button */}
-            <Tooltip title="Bookmark">
+            <CustomTooltip title="Bookmark">
               <div
                 onClick={(e) => console.log(e)}
                 className={styles['action-btn']}
               >
                 <BookmarkBorderRoundedIcon color="primary" />
               </div>
-            </Tooltip>
+            </CustomTooltip>
 
             {/* Share Button */}
-            <Tooltip title="Share">
+            <CustomTooltip title="Share">
               <div
                 onClick={(e) => handleShare()}
                 className={styles['action-btn']}
               >
                 <Image src={ShareIcon} alt="share" />
               </div>
-            </Tooltip>
+            </CustomTooltip>
 
             {/* More Options Button */}
-            <Tooltip title="More options">
+            <CustomTooltip title="More options">
               <div
                 onClick={(e) => handleDropdown()}
                 className={styles['action-btn']}
@@ -368,7 +368,7 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
                       />
                     )}
               </div>
-            </Tooltip>
+            </CustomTooltip>
           </div>
         </div>
       </header>
