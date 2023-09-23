@@ -127,6 +127,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
     )}`
     window.open(mapsUrl, '_blank')
   }
+  console.log('data', data)
   return (
     <>
       <PageGridLayout column={3}>
@@ -282,6 +283,31 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
             <h4 className={styles['heading']}>Contact Information</h4>
             <ul className={styles['contact-wrapper']}>
               {/* Phone */}
+              {data?.name && (
+                <Link href={`tel:${data?.name}`}>
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g clipPath="url(#clip0_230_34018)">
+                      <path
+                        d="M19.23 15.2578L16.69 14.9678C16.08 14.8978 15.48 15.1078 15.05 15.5378L13.21 17.3778C10.38 15.9378 8.06004 13.6278 6.62004 10.7878L8.47004 8.93781C8.90004 8.50781 9.11004 7.90781 9.04004 7.29781L8.75004 4.77781C8.63004 3.76781 7.78004 3.00781 6.76004 3.00781H5.03004C3.90004 3.00781 2.96004 3.94781 3.03004 5.07781C3.56004 13.6178 10.39 20.4378 18.92 20.9678C20.05 21.0378 20.99 20.0978 20.99 18.9678V17.2378C21 16.2278 20.24 15.3778 19.23 15.2578Z"
+                        fill="#8064A2"
+                      />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_230_34018">
+                        <rect width="24" height="24" fill="white" />
+                      </clipPath>
+                    </defs>
+                  </svg>
+
+                  <span className={styles.textGray}>{data?.name} </span>
+                </Link>
+              )}
               {data?.phone && (
                 <Link href={`tel:${data?.phone}`}>
                   <svg
@@ -597,7 +623,12 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                     </span>
                   ) : (
                     <span className={styles.textGray}>
-                      {`${data?._address.city}`}
+                      {`
+                      ${data?._address.street},
+                      ${data?._address.society},
+                      ${data?._address.city},
+                      ${data?._address.state},
+                      ${data?._address.country}`}
                     </span>
                   )}
                 </li>
@@ -763,7 +794,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
             >
               <h4 className={styles['heading']}>Social Media</h4>
 
-              <ul className={styles['contact-wrapper']}>
+              <ul className={styles['social-contact-wrapper']}>
                 {data?.social_media_urls?.facebook_url && (
                   <Tooltip title="Facebook">
                     <Link href={data?.social_media_urls?.facebook_url}>

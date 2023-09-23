@@ -313,27 +313,25 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
             </Tooltip>
 
             {/* More Options Button */}
-            <Tooltip title="More options">
-              <div
-                onClick={(e) => handleDropdown()}
-                className={styles['action-btn']}
-              >
+
+            <div
+              onClick={(e) => handleDropdown()}
+              className={styles['action-btn']}
+            >
+              <Tooltip title="More options">
                 <MoreHorizRoundedIcon color="primary" />
-                {listingLayoutMode === 'edit'
-                  ? open && (
-                      <Dropdown
-                        userType={'edit'}
-                        handleClose={handleDropdown}
-                      />
-                    )
-                  : open && (
-                      <Dropdown
-                        userType={'anonymous'}
-                        handleClose={handleDropdown}
-                      />
-                    )}
-              </div>
-            </Tooltip>
+              </Tooltip>
+              {listingLayoutMode === 'edit'
+                ? open && (
+                    <Dropdown userType={'edit'} handleClose={handleDropdown} />
+                  )
+                : open && (
+                    <Dropdown
+                      userType={'anonymous'}
+                      handleClose={handleDropdown}
+                    />
+                  )}
+            </div>
           </div>
         </header>
 

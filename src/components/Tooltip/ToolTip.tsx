@@ -28,11 +28,7 @@ const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
 }))
 
 const CustomizedTooltips: React.FC<Props> = ({ title, children }) => {
-  return (
-    <BootstrapTooltip title={title}>
-      <Typography className="custom-tooltip">{children}</Typography>
-    </BootstrapTooltip>
-  )
+  return <BootstrapTooltip title={title}>{children}</BootstrapTooltip>
 }
 
 export default CustomizedTooltips

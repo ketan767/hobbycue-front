@@ -492,7 +492,7 @@ export const CreatePost: React.FC<Props> = (props) => {
               errors.hobby ? styles['error-input-box'] : ''
             } `}
           >
-            <label>Hobby</label>
+            <label>Select Hobby</label>
             <Select
               value={data.hobby}
               onChange={(e) => {

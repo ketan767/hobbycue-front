@@ -20,9 +20,9 @@ export const getTrendingHobbies = async (query: string | null): Promise<ApiRetur
   }
 }
 
-export const getHobbyMembers = async (query: string | null): Promise<ApiReturnObject> => {
+export const getHobbyMembers = async (id: string | null): Promise<ApiReturnObject> => {
   try {
-    const res = await axiosInstance.get(`/user/?fields=full_name,slug,profile_image&_hobbies=${query}`)
+    const res = await axiosInstance.get(`/hobby/members/${id}`)
     return { res: res, err: null }
   } catch (error) {
     console.error(error)

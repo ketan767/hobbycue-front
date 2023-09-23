@@ -1,8 +1,13 @@
-ul.location-wrapper,
+ul.location-wrapper{
+  margin-top: var(--spacing-16);
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-16);
+}
 ul.contact-wrapper {
   margin-top: var(--spacing-16);
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: var(--spacing-16);
 }
 

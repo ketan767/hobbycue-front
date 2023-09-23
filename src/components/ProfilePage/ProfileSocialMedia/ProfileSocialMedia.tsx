@@ -29,8 +29,6 @@ type Props = {
 
 const ProfileSocialMediaSide = ({ data }: Props) => {
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
-  const { user } = useSelector((state: any) => state.user)
-  console.log('user', user)
 
   const dispatch = useDispatch()
   return (
@@ -43,107 +41,107 @@ const ProfileSocialMediaSide = ({ data }: Props) => {
       >
         <h4 className={styles['heading']}>Social Media</h4>
         <ul className={styles['contact-wrapper']}>
-          {user?.social_media_urls?.facebook_url && (
+          {data?.social_media_urls?.facebook_url && (
             <Tooltip title="Facebook">
-              <Link href={user.social_media_urls.facebook_url}>
+              <Link href={data.social_media_urls.facebook_url}>
                 <Image src={FacebookIcon} alt="Facebook" />
               </Link>
             </Tooltip>
           )}
-          {user?.social_media_urls?.twitter_url && (
+          {data?.social_media_urls?.twitter_url && (
             <Tooltip title="Twitter">
-              <Link href={user.social_media_urls.twitter_url}>
+              <Link href={data.social_media_urls.twitter_url}>
                 <Image src={TwitterIcon} alt="Twitter" />
               </Link>
             </Tooltip>
           )}
-          {user?.social_media_urls?.instagram_url && (
+          {data?.social_media_urls?.instagram_url && (
             <Tooltip title="Instagram">
-              <Link href={user.social_media_urls.instagram_url}>
+              <Link href={data.social_media_urls.instagram_url}>
                 <Image src={InstagramIcon} alt="Instagram" />
               </Link>
             </Tooltip>
           )}
-          {user?.social_media_urls?.behance_url && (
+          {data?.social_media_urls?.behance_url && (
             <Tooltip title="Behance">
-              <Link href={user.social_media_urls.behance_url}>
+              <Link href={data.social_media_urls.behance_url}>
                 <Image src={BehanceIcon} alt="Behance" />
               </Link>
             </Tooltip>
           )}
-          {user?.social_media_urls?.bgg_url && (
+          {data?.social_media_urls?.bgg_url && (
             <Tooltip title="BoardGameGeek">
-              <Link href={user.social_media_urls.bgg_url}>
+              <Link href={data.social_media_urls.bgg_url}>
                 <Image src={BGGIcon} alt="BoardGameGeek" />
               </Link>
             </Tooltip>
           )}
-          {user?.social_media_urls?.chess_url && (
+          {data?.social_media_urls?.chess_url && (
             <Tooltip title="Chess">
-              <Link href={user.social_media_urls.chess_url}>
+              <Link href={data.social_media_urls.chess_url}>
                 <Image src={ChessIcon} alt="Chess" />
               </Link>
             </Tooltip>
           )}
-          {user?.social_media_urls?.deviantarts_url && (
+          {data?.social_media_urls?.deviantarts_url && (
             <Tooltip title="DeviantArt">
-              <Link href={user.social_media_urls.deviantarts_url}>
+              <Link href={data.social_media_urls.deviantarts_url}>
                 <Image src={DeviantArtIcon} alt="DeviantArt" />
               </Link>
             </Tooltip>
           )}
-          {user?.social_media_urls?.goodreads_url && (
+          {data?.social_media_urls?.goodreads_url && (
             <Tooltip title="Goodreads">
-              <Link href={user.social_media_urls.goodreads_url}>
+              <Link href={data.social_media_urls.goodreads_url}>
                 <Image src={GoodreadsIcon} alt="Goodreads" />
               </Link>
             </Tooltip>
           )}
-          {user?.social_media_urls?.pinterest_url && (
+          {data?.social_media_urls?.pinterest_url && (
             <Tooltip title="Pinterest">
-              <Link href={user.social_media_urls.pinterest_url}>
+              <Link href={data.social_media_urls.pinterest_url}>
                 <Image src={PinterestIcon} alt="Pinterest" />
               </Link>
             </Tooltip>
           )}
-          {user?.social_media_urls?.smule_url && (
+          {data?.social_media_urls?.smule_url && (
             <Tooltip title="Smule">
-              <Link href={user.social_media_urls.smule_url}>
+              <Link href={data.social_media_urls.smule_url}>
                 <Image src={SmuleIcon} alt="Smule" />
               </Link>
             </Tooltip>
           )}
-          {user?.social_media_urls?.soundcloud_url && (
+          {data?.social_media_urls?.soundcloud_url && (
             <Tooltip title="SoundCloud">
-              <Link href={user.social_media_urls.soundcloud_url}>
+              <Link href={data.social_media_urls.soundcloud_url}>
                 <Image src={SoundCloudIcon} alt="SoundCloud" />
               </Link>
             </Tooltip>
           )}
-          {user?.social_media_urls?.strava_url && (
+          {data?.social_media_urls?.strava_url && (
             <Tooltip title="Strava">
-              <Link href={user.social_media_urls.strava_url}>
+              <Link href={data.social_media_urls.strava_url}>
                 <Image src={StravaIcon} alt="Strava" />
               </Link>
             </Tooltip>
           )}
-          {user?.social_media_urls?.tripadvisor_url && (
+          {data?.social_media_urls?.tripadvisor_url && (
             <Tooltip title="TripAdvisor">
-              <Link href={user.social_media_urls.tripadvisor_url}>
+              <Link href={data.social_media_urls.tripadvisor_url}>
                 <Image src={TripAdvisorIcon} alt="TripAdvisor" />
               </Link>
             </Tooltip>
           )}
-          {user?.social_media_urls?.ultimate_guitar_url && (
+          {data?.social_media_urls?.ultimate_guitar_url && (
             <Tooltip title="Ultimate Guitar">
-              <Link href={user.social_media_urls.ultimate_guitar_url}>
+              <Link href={data.social_media_urls.ultimate_guitar_url}>
                 <Image src={UltimateGuitarIcon} alt="Ultimate Guitar" />
               </Link>
             </Tooltip>
           )}
-          {user?.social_media_urls?.youtube_url && (
+          {data?.social_media_urls?.youtube_url && (
             <Tooltip title="YouTube">
-              <Link href={user.social_media_urls.youtube_url}>
+              <Link href={data.social_media_urls.youtube_url}>
                 <Image src={YouTubeIcon} alt="YouTube" />
               </Link>
             </Tooltip>

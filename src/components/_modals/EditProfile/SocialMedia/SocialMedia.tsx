@@ -40,95 +40,97 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
   const { user } = useSelector((state: RootState) => state.user)
 
   useEffect(() => {
+    if (!user.social_media_urls) return
+
     let arr = []
-    if (user.social_media_urls.facebook_url) {
+    if (user.social_media_urls?.facebook_url) {
       arr.push({
         socialMedia: 'Facebook',
-        url: user.social_media_urls.facebook_url,
+        url: user.social_media_urls?.facebook_url,
       })
     }
-    if (user.social_media_urls.instagram_url) {
+    if (user.social_media_urls?.instagram_url) {
       arr.push({
         socialMedia: 'Instagram',
         url: user.instagram_url,
       })
     }
-    if (user.social_media_urls.twitter_url) {
+    if (user.social_media_urls?.twitter_url) {
       arr.push({
         socialMedia: 'Twitter',
-        url: user.social_media_urls.twitter_url,
+        url: user.social_media_urls?.twitter_url,
       })
     }
-    if (user.social_media_urls.youtube_url) {
+    if (user.social_media_urls?.youtube_url) {
       arr.push({
         socialMedia: 'Youtube',
-        url: user.social_media_urls.youtube_url,
+        url: user.social_media_urls?.youtube_url,
       })
     }
-    if (user.social_media_urls.soundcloud_url) {
+    if (user.social_media_urls?.soundcloud_url) {
       arr.push({
         socialMedia: 'SoundCloud',
-        url: user.social_media_urls.soundcloud_url,
+        url: user.social_media_urls?.soundcloud_url,
       })
     }
-    if (user.social_media_urls.pinterest_url) {
+    if (user.social_media_urls?.pinterest_url) {
       arr.push({
         socialMedia: 'Pinterest',
-        url: user.social_media_urls.pinterest_url,
+        url: user.social_media_urls?.pinterest_url,
       })
     }
-    if (user.social_media_urls.tripadvisor_url) {
+    if (user.social_media_urls?.tripadvisor_url) {
       arr.push({
         socialMedia: 'TripAdvisor',
-        url: user.social_media_urls.tripadvisor_url,
+        url: user.social_media_urls?.tripadvisor_url,
       })
     }
-    if (user.social_media_urls.ultimate_guiter_url) {
+    if (user.social_media_urls?.ultimate_guiter_url) {
       arr.push({
         socialMedia: 'Ultimate Guiter',
-        url: user.social_media_urls.ultimate_guiter_url,
+        url: user.social_media_urls?.ultimate_guiter_url,
       })
     }
-    if (user.social_media_urls.strava_url) {
+    if (user.social_media_urls?.strava_url) {
       arr.push({
         socialMedia: 'Strava',
-        url: user.social_media_urls.strava_url,
+        url: user.social_media_urls?.strava_url,
       })
     }
-    if (user.social_media_urls.deviantarts_url) {
+    if (user.social_media_urls?.deviantarts_url) {
       arr.push({
         socialMedia: 'DeviantArts',
-        url: user.social_media_urls.deviantarts_url,
+        url: user.social_media_urls?.deviantarts_url,
       })
     }
-    if (user.social_media_urls.behance_url) {
+    if (user.social_media_urls?.behance_url) {
       arr.push({
         socialMedia: 'Behance',
-        url: user.social_media_urls.behance_url,
+        url: user.social_media_urls?.behance_url,
       })
     }
-    if (user.social_media_urls.goodreads_url) {
+    if (user.social_media_urls?.goodreads_url) {
       arr.push({
         socialMedia: 'GoodReads',
-        url: user.social_media_urls.goodreads_url,
+        url: user.social_media_urls?.goodreads_url,
       })
     }
-    if (user.social_media_urls.smule_url) {
+    if (user.social_media_urls?.smule_url) {
       arr.push({
         socialMedia: 'Smule',
-        url: user.social_media_urls.smule_url,
+        url: user.social_media_urls?.smule_url,
       })
     }
-    if (user.social_media_urls.chess_url) {
+    if (user.social_media_urls?.chess_url) {
       arr.push({
         socialMedia: 'Chess',
-        url: user.social_media_urls.chess_url,
+        url: user.social_media_urls?.chess_url,
       })
     }
-    if (user.social_media_urls.bgg_url) {
+    if (user.social_media_urls?.bgg_url) {
       arr.push({
         socialMedia: 'BGG',
-        url: user.social_media_urls.bgg_url,
+        url: user.social_media_urls?.bgg_url,
       })
     }
     if (arr.length > 0) {
