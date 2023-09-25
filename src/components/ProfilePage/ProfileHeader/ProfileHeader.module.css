@@ -223,11 +223,9 @@
   cursor: pointer;
 }
 .dropdown {
-  position: absolute;
-  top: calc(100%);
-  left: 0;
-  z-index: 100;
-  /* Dropdown */
+  position: relative;
+  top: calc(100% + 65px);
+  z-index: 50;
   box-shadow: 0px 8px 12px 0px rgba(147, 156, 163, 0.12),
     0px 0px 2px 0px rgba(147, 156, 163, 0.36);
   border-radius: 4px;

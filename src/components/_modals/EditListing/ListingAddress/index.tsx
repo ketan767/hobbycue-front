@@ -164,7 +164,9 @@ const ListingAddressEditModal: React.FC<Props> = ({
     }
     setSubmitBtnLoading(true)
     const { err, res } = await updateListingAddress(
-      listingModalData._address?._id ? listingModalData._address?._id : listingModalData._address,
+      listingModalData._address?._id
+        ? listingModalData._address?._id
+        : listingModalData._address,
       jsonData,
     )
     if (err) return console.log(err)
@@ -177,7 +179,11 @@ const ListingAddressEditModal: React.FC<Props> = ({
 
   const updateAddress = async () => {
     console.log('listingModalData', listingModalData)
-    const { err, res } = await getListingAddress(listingModalData._address?._id ? listingModalData._address?._id : listingModalData._address)
+    const { err, res } = await getListingAddress(
+      listingModalData._address?._id
+        ? listingModalData._address?._id
+        : listingModalData._address,
+    )
     if (err) return console.log(err)
 
     setData({
@@ -305,7 +311,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
               >
                 <input
                   type="text"
-                  placeholder={`Enter address or click the "locate me" icon to auto-detect`}
+                  placeholder={`Enter address or click the 'GPS icon' to auto-detect`}
                   value={data.street.value}
                   name="street"
                   required={listingModalData.type === listingTypes.PLACE}
@@ -322,7 +328,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
               <p className={styles['helper-text']}>{data.street.error}</p>
             </div>
             <section className={styles['two-column-grid']}>
-            <div
+              <div
                 className={`${styles['input-box']} ${
                   data.society.error ? styles['input-box-error'] : ''
                 }`}

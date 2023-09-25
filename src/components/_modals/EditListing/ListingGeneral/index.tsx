@@ -37,7 +37,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   const dispatch = useDispatch()
 
   const { listingModalData } = useSelector((state: RootState) => state.site)
-
+  const { user } = useSelector((state: RootState) => state.user)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [nextDisabled, setNextDisabled] = useState(false)
 
@@ -49,6 +49,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
     year: { value: '', error: null },
     admin_note: { value: '', error: null },
   })
+  const fullNameRef = useRef<HTMLInputElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const pageUrlRef = useRef<HTMLInputElement>(null)
 
@@ -66,7 +67,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
 
   const handleSubmit = async () => {
     if (isEmptyField(data.title.value) || !data.title.value) {
-      inputRef.current?.focus()
+      fullNameRef.current?.focus()
       return setData((prev) => {
         return {
           ...prev,
@@ -160,6 +161,8 @@ const ListingGeneralEditModal: React.FC<Props> = ({
 
   useEffect(() => {
     const token = localStorage.getItem('token')
+    if (!user.page_url) return
+    if (!data.page_url) return
     const headers = { Authorization: `Bearer ${token}` }
     axios
       .get(
@@ -202,6 +205,10 @@ const ListingGeneralEditModal: React.FC<Props> = ({
         })
       })
   }, [data.page_url.value])
+  console.log(
+    'url',
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/listing/check-page-url/${data.page_url.value}`,
+  )
 
   useEffect(() => {
     if (onComplete !== undefined) {
@@ -377,7 +384,8 @@ const ListingGeneralEditModal: React.FC<Props> = ({
 
             {/* Note */}
             {listingModalData.type === listingTypes.PEOPLE ||
-            listingModalData.type === listingTypes.PROGRAM ? (
+            listingModalData.type === listingTypes.PROGRAM ||
+            listingModalData.type === listingTypes.PLACE ? (
               <div className={styles['input-box']}>
                 <label>Note</label>
                 <input

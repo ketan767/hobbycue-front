@@ -364,11 +364,11 @@
 }
 .community-group-header {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
 }
 .community-group-container .profile-img-container {
-  width: 160px;
-  height: 160px;
+  width: 220px;
+  height: 220px;
 }
 .community-group-container .profile-img-container img {
   width: 100%;
@@ -378,7 +378,7 @@
 .community-group-container .cover-img-container {
   flex: 1;
   margin-left: 1rem;
-  height: 201px;
+  height: 220px;
 }
 .community-group-container .cover-img-container img {
   width: 100%;

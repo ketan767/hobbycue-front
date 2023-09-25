@@ -17,16 +17,18 @@ const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
   [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: theme.palette.common.white,
     color: '#8064A2',
-    font: 'Poppins',
+
+    fontFamily: 'Poppins, sans-serif',
+    fontSize: '14px',
+    fontStyle: 'normal',
+    fontWeight: 400,
+    lineHeight: '14px',
+    letterSpacing: '0.14px',
   },
 }))
 
 const CustomizedTooltips: React.FC<Props> = ({ title, children }) => {
-  return (
-    <BootstrapTooltip title={title}>
-      <Typography className="text-color">{children}</Typography>
-    </BootstrapTooltip>
-  )
+  return <BootstrapTooltip title={title}>{children}</BootstrapTooltip>
 }
 
 export default CustomizedTooltips

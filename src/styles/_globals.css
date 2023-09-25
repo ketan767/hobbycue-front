@@ -71,9 +71,9 @@ button:disabled {
   cursor: not-allowed;
 }
 
-.main-site-wrapper {
+/* .main-site-wrapper {
   margin-top: var(--navbar-height-desktop);
-}
+} */
 
 .site-container {
   max-width: var(--max-width);
@@ -214,19 +214,20 @@ select:-webkit-autofill {
 .ql-toolbar.ql-snow + .ql-container.ql-snow {
   border-top: 1px solid #EBEDF0 !important;
   border-bottom: 0;
-  border-radius: 8px;
-  border-color: #EBEDF0;
+  border-radius: 8px 8px 0 0;
+  border-color: 1px solid #EBEDF0 !important;
 }
 
 .ql-toolbar.ql-snow {
   display: flex;
   align-items: center;
-  border-radius: 8px;
-  border-color: #EBEDF0 !important;
+  border-radius: 0 0 8px 8px;
+  border-color: 1px solid #EBEDF0 !important;
+  height: 48px;
 }
 .ql-toolbar.ql-snow .ql-formats button {
   opacity: 0.8;
-  padding: 3px 7px !important;
+  padding: 0 12px !important;
   width: auto !important;
 }
 
@@ -260,7 +261,8 @@ select:-webkit-autofill {
 }
 .ql-container {
   font-size: 14px !important;
-  max-width: 606px;
+  max-width: 671px;
+  width: 100%;
 }
 
 .ck.ck-content.ck-editor__editable ul,
@@ -295,6 +297,17 @@ select:-webkit-autofill {
 .about-quill-container.quill-error {
   border: 1px solid #c0504d;
 }
+.ql-snow.ql-toolbar button svg{
+  width: 24px;
+  height: 24px;
+}
+.ql-snow.ql-toolbar button svg path,
+.ql-snow.ql-toolbar button svg line,
+.ql-snow.ql-toolbar button svg circle,
+.ql-snow.ql-toolbar button svg path rect{
+  stroke: #6D747A;
+}
+
 
 @media screen and (max-width: 1300px) {
   .main-site-wrapper {

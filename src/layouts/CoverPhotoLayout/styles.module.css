@@ -1,6 +1,5 @@
 .container {
   border-radius: 8px;
-  border: 1px dashed var(--purple-1, #8064a2);
   background-color: var(--purple-3, #f7f5f9);
   display: flex;
   justify-content: center;
