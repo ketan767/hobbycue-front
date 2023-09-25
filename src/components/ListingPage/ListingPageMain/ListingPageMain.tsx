@@ -6,29 +6,28 @@ import PageGridLayout from '@/layouts/PageGridLayout'
 
 import { openModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
-
+import Tooltip from '@/components/Tooltip/ToolTip'
 import styles from './styles.module.css'
 import { RootState } from '@/redux/store'
 import TimeIcon from '@/assets/svg/time.svg'
 import FacebookIcon from '@/assets/svg/Facebook.svg'
 import TwitterIcon from '@/assets/svg/Twitter.svg'
 import InstagramIcon from '@/assets/svg/Instagram.svg'
-import YoutubeIcon from '@/assets/svg/Instagram.svg'
-import SoundcardIcon from '@/assets/svg/Instagram.svg'
-import pinterestIcon from '@/assets/svg/Instagram.svg'
-import TripadvisorIcon from '@/assets/svg/Instagram.svg'
-import ultimateguiterIcon from '@/assets/svg/Instagram.svg'
-import StravaIcon from '@/assets/svg/Instagram.svg'
-import DeviantartsIcon from '@/assets/svg/Instagram.svg'
-import BehanceIcon from '@/assets/svg/Instagram.svg'
-import GoodreadsIcon from '@/assets/svg/Instagram.svg'
-import SmuleIcon from '@/assets/svg/Instagram.svg'
-import ChessIcon from '@/assets/svg/Instagram.svg'
-import BggIcon from '@/assets/svg/Instagram.svg'
+import BehanceIcon from '@/assets/svg/Behance.svg'
+import BGGIcon from '@/assets/svg/BGG.svg'
+import ChessIcon from '@/assets/svg/Chess.com.svg'
+import DeviantArtIcon from '@/assets/svg/DeviantArt.svg'
+import GoodreadsIcon from '@/assets/svg/GoodReads.svg'
+import PinterestIcon from '@/assets/svg/Pinterest.svg'
+import SmuleIcon from '@/assets/svg/Smule.svg'
+import SoundCloudIcon from '@/assets/svg/Soundcloud.svg'
+import StravaIcon from '@/assets/svg/Strava.svg'
+import TripAdvisorIcon from '@/assets/svg/Tripadvisor.svg'
+import UltimateGuitarIcon from '@/assets/svg/Ultimate-Guitar.svg'
+import YouTubeIcon from '@/assets/svg/Youtube.svg'
 
 import { getListingPages, getListingTags } from '@/services/listing.service'
 import { dateFormat } from '@/utils'
-import { getAllUserDetail } from '@/services/user.service'
 import { updateListingTypeModalMode } from '@/redux/slices/site'
 import WhatsappIcon from '@/assets/svg/whatsapp.svg'
 import { listingTypes } from '@/constants/constant'
@@ -44,6 +43,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
   const dispatch = useDispatch()
   const [tags, setTags] = useState([])
   const { listingLayoutMode } = useSelector((state: any) => state.site)
+  console.log('page', data)
   const [selectedTags, setSelectedTags] = useState([])
   const [listingPagesLeft, setListingPagesLeft] = useState([])
   const [listingPagesRight, setListingPagesRight] = useState([])
@@ -87,7 +87,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
         })
     })
 
-    getAllUserDetail(``)
+    getListingPages(``)
       .then((res: any) => {
         // console.log('all users', res.res.data.data.users)
         let users = res.res.data.data.users
@@ -103,100 +103,6 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
         console.log(err)
       })
   }, [data?.related_listings_left?.listings])
-
-  let facebookUrl = null
-  let twitterUrl = null
-  let instagramUrl = null
-  let youtubeUrl = null
-  let soundcloudUrl = null
-  let pinterestUrl = null
-  let tripAdvisorUrl = null
-  let ultimate_guiterUrl = null
-  let stravaUrl = null
-  let deviantartsUrl = null
-  let behanceUrl = null
-  let goodreadsUrl = null
-  let smuleUrl = null
-  let chessUrl = null
-  let bggUrl = null
-
-  if (data?.facebook_url) {
-    facebookUrl = data.facebook_url
-  } else if (data?.social_media_urls?.Facebook) {
-    facebookUrl = data?.social_media_urls?.Facebook
-  }
-
-  if (data?.twitter_url) {
-    twitterUrl = data.twitter_url
-  } else if (data?.social_media_urls?.Twitter) {
-    twitterUrl = data?.social_media_urls?.Twitter
-  }
-
-  if (data?.instagram_url) {
-    instagramUrl = data.instagram_url
-  } else if (data?.social_media_urls?.Instagram) {
-    instagramUrl = data?.social_media_urls?.Instagram
-  }
-  if (data?.youtube_url) {
-    youtubeUrl = data.youtube_url
-  } else if (data?.social_media_urls?.Youtube) {
-    youtubeUrl = data?.social_media_urls?.Youtube
-  }
-  if (data?.soundcloud_url) {
-    soundcloudUrl = data.soundcloud_url
-  } else if (data?.social_media_urls?.SoundCloud) {
-    soundcloudUrl = data?.social_media_urls?.SoundCloud
-  }
-  if (data?.pinterest_url) {
-    pinterestUrl = data.pinterest_url
-  } else if (data?.social_media_urls?.Pinterest) {
-    pinterestUrl = data?.social_media_urls?.Pinterest
-  }
-  if (data?.tripadvisor_url) {
-    tripAdvisorUrl = data.tripadvisor_url
-  } else if (data?.social_media_urls?.TripAdvisor) {
-    tripAdvisorUrl = data?.social_media_urls?.TripAdvisor
-  }
-  if (data?.ultimate_guiter_url) {
-    ultimate_guiterUrl = data.ultimate_guiter_url
-  } else if (data?.social_media_urls?.Ultimate_Guiter) {
-    ultimate_guiterUrl = data?.social_media_urls?.Ultimate_Guiter
-  }
-  if (data?.strava_url) {
-    stravaUrl = data.strava_url
-  } else if (data?.social_media_urls?.Strava) {
-    stravaUrl = data?.social_media_urls?.Strava
-  }
-  if (data?.deviantarts_url) {
-    deviantartsUrl = data.deviantarts_url
-  } else if (data?.social_media_urls?.DeviantArts) {
-    deviantartsUrl = data?.social_media_urls?.DeviantArts
-  }
-  if (data?.behance_url) {
-    behanceUrl = data.behance_url
-  } else if (data?.social_media_urls?.Behance) {
-    behanceUrl = data?.social_media_urls?.Behance
-  }
-  if (data?.goodreads_url) {
-    goodreadsUrl = data.goodreads_url
-  } else if (data?.social_media_urls?.GoodReads) {
-    goodreadsUrl = data?.social_media_urls?.GoodReads
-  }
-  if (data?.smule_url) {
-    smuleUrl = data.smule_url
-  } else if (data?.social_media_urls?.Smule) {
-    smuleUrl = data?.social_media_urls?.Smule
-  }
-  if (data?.chess_url) {
-    chessUrl = data.chess_url
-  } else if (data?.social_media_urls?.Chess) {
-    chessUrl = data?.social_media_urls?.Chess
-  }
-  if (data?.bgg_url) {
-    bggUrl = data.bgg_url
-  } else if (data?.social_media_urls?.BGG) {
-    bggUrl = data?.social_media_urls?.BGG
-  }
 
   const openGoogleMaps = () => {
     let addressText = ''
@@ -221,7 +127,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
     )}`
     window.open(mapsUrl, '_blank')
   }
-
+  console.log('data', data)
   return (
     <>
       <PageGridLayout column={3}>
@@ -377,6 +283,31 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
             <h4 className={styles['heading']}>Contact Information</h4>
             <ul className={styles['contact-wrapper']}>
               {/* Phone */}
+              {data?.name && (
+                <Link href={`tel:${data?.name}`}>
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g clipPath="url(#clip0_230_34018)">
+                      <path
+                        d="M19.23 15.2578L16.69 14.9678C16.08 14.8978 15.48 15.1078 15.05 15.5378L13.21 17.3778C10.38 15.9378 8.06004 13.6278 6.62004 10.7878L8.47004 8.93781C8.90004 8.50781 9.11004 7.90781 9.04004 7.29781L8.75004 4.77781C8.63004 3.76781 7.78004 3.00781 6.76004 3.00781H5.03004C3.90004 3.00781 2.96004 3.94781 3.03004 5.07781C3.56004 13.6178 10.39 20.4378 18.92 20.9678C20.05 21.0378 20.99 20.0978 20.99 18.9678V17.2378C21 16.2278 20.24 15.3778 19.23 15.2578Z"
+                        fill="#8064A2"
+                      />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_230_34018">
+                        <rect width="24" height="24" fill="white" />
+                      </clipPath>
+                    </defs>
+                  </svg>
+
+                  <span className={styles.textGray}>{data?.name} </span>
+                </Link>
+              )}
               {data?.phone && (
                 <Link href={`tel:${data?.phone}`}>
                   <svg
@@ -692,7 +623,12 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                     </span>
                   ) : (
                     <span className={styles.textGray}>
-                      {`${data?._address.city}`}
+                      {`
+                      ${data?._address.street},
+                      ${data?._address.society},
+                      ${data?._address.city},
+                      ${data?._address.state},
+                      ${data?._address.country}`}
                     </span>
                   )}
                 </li>
@@ -858,83 +794,113 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
             >
               <h4 className={styles['heading']}>Social Media</h4>
 
-              <div className={styles.socialIcons}>
-                {facebookUrl && (
-                  <a target="_blank" href={facebookUrl}>
-                    <Image src={FacebookIcon} alt="Facebook" />
-                  </a>
+              <ul className={styles['social-contact-wrapper']}>
+                {data?.social_media_urls?.facebook_url && (
+                  <Tooltip title="Facebook">
+                    <Link href={data?.social_media_urls?.facebook_url}>
+                      <Image src={FacebookIcon} alt="Facebook" />
+                    </Link>
+                  </Tooltip>
                 )}
-                {twitterUrl && (
-                  <a target="_blank" href={twitterUrl}>
-                    <Image src={TwitterIcon} alt="Twitter" />
-                  </a>
+                {data?.social_media_urls?.twitter_url && (
+                  <Tooltip title="Twitter">
+                    <Link href={data?.social_media_urls?.twitter_url}>
+                      <Image src={TwitterIcon} alt="Twitter" />
+                    </Link>
+                  </Tooltip>
                 )}
-                {instagramUrl && (
-                  <a target="_blank" href={instagramUrl}>
-                    <Image src={InstagramIcon} alt="Instagram" />
-                  </a>
+                {data?.social_media_urls?.instagram_url && (
+                  <Tooltip title="Instagram">
+                    <Link href={data?.social_media_urls?.instagram_url}>
+                      <Image src={InstagramIcon} alt="Instagram" />
+                    </Link>
+                  </Tooltip>
                 )}
-                {youtubeUrl && (
-                  <a target="_blank" href={youtubeUrl}>
-                    <Image src={YoutubeIcon} alt="Youtube" />
-                  </a>
+                {data?.social_media_urls?.behance_url && (
+                  <Tooltip title="Behance">
+                    <Link href={data?.social_media_urls?.behance_url}>
+                      <Image src={BehanceIcon} alt="Behance" />
+                    </Link>
+                  </Tooltip>
                 )}
-                {soundcloudUrl && (
-                  <a target="_blank" href={soundcloudUrl}>
-                    <Image src={SoundcardIcon} alt="SoundCloud" />
-                  </a>
+                {data?.social_media_urls?.bgg_url && (
+                  <Tooltip title="BoardGameGeek">
+                    <Link href={data?.social_media_urls?.bgg_url}>
+                      <Image src={BGGIcon} alt="BoardGameGeek" />
+                    </Link>
+                  </Tooltip>
                 )}
-                {pinterestUrl && (
-                  <a target="_blank" href={pinterestUrl}>
-                    <Image src={pinterestIcon} alt="Pinterest" />
-                  </a>
+                {data?.social_media_urls?.chess_url && (
+                  <Tooltip title="Chess">
+                    <Link href={data?.social_media_urls?.chess_url}>
+                      <Image src={ChessIcon} alt="Chess" />
+                    </Link>
+                  </Tooltip>
                 )}
-                {tripAdvisorUrl && (
-                  <a target="_blank" href={tripAdvisorUrl}>
-                    <Image src={TripadvisorIcon} alt="Trip Advisor" />
-                  </a>
+                {data?.social_media_urls?.deviantarts_url && (
+                  <Tooltip title="DeviantArt">
+                    <Link href={data?.social_media_urls?.deviantarts_url}>
+                      <Image src={DeviantArtIcon} alt="DeviantArt" />
+                    </Link>
+                  </Tooltip>
                 )}
-                {ultimate_guiterUrl && (
-                  <a target="_blank" href={ultimate_guiterUrl}>
-                    <Image src={ultimateguiterIcon} alt="Umtimate Guiter" />
-                  </a>
+                {data?.social_media_urls?.goodreads_url && (
+                  <Tooltip title="Goodreads">
+                    <Link href={data?.social_media_urls?.goodreads_url}>
+                      <Image src={GoodreadsIcon} alt="Goodreads" />
+                    </Link>
+                  </Tooltip>
                 )}
-                {stravaUrl && (
-                  <a target="_blank" href={stravaUrl}>
-                    <Image src={StravaIcon} alt="Strava" />
-                  </a>
+                {data?.social_media_urls?.pinterest_url && (
+                  <Tooltip title="Pinterest">
+                    <Link href={data?.social_media_urls?.pinterest_url}>
+                      <Image src={PinterestIcon} alt="Pinterest" />
+                    </Link>
+                  </Tooltip>
                 )}
-                {deviantartsUrl && (
-                  <a target="_blank" href={deviantartsUrl}>
-                    <Image src={DeviantartsIcon} alt="Deviant Arts" />
-                  </a>
+                {data?.social_media_urls?.smule_url && (
+                  <Tooltip title="Smule">
+                    <Link href={data?.social_media_urls?.smule_url}>
+                      <Image src={SmuleIcon} alt="Smule" />
+                    </Link>
+                  </Tooltip>
                 )}
-                {behanceUrl && (
-                  <a target="_blank" href={behanceUrl}>
-                    <Image src={BehanceIcon} alt="Behance" />
-                  </a>
+                {data?.social_media_urls?.soundcloud_url && (
+                  <Tooltip title="SoundCloud">
+                    <Link href={data?.social_media_urls?.soundcloud_url}>
+                      <Image src={SoundCloudIcon} alt="SoundCloud" />
+                    </Link>
+                  </Tooltip>
                 )}
-                {goodreadsUrl && (
-                  <a target="_blank" href={goodreadsUrl}>
-                    <Image src={GoodreadsIcon} alt="GoofReads" />
-                  </a>
+                {data?.social_media_urls?.strava_url && (
+                  <Tooltip title="Strava">
+                    <Link href={data?.social_media_urls?.strava_url}>
+                      <Image src={StravaIcon} alt="Strava" />
+                    </Link>
+                  </Tooltip>
                 )}
-                {smuleUrl && (
-                  <a target="_blank" href={smuleUrl}>
-                    <Image src={SmuleIcon} alt="Smule" />
-                  </a>
+                {data?.social_media_urls?.tripadvisor_url && (
+                  <Tooltip title="TripAdvisor">
+                    <Link href={data?.social_media_urls?.tripadvisor_url}>
+                      <Image src={TripAdvisorIcon} alt="TripAdvisor" />
+                    </Link>
+                  </Tooltip>
                 )}
-                {chessUrl && (
-                  <a target="_blank" href={chessUrl}>
-                    <Image src={ChessIcon} alt="Chess.com" />
-                  </a>
+                {data?.social_media_urls?.ultimate_guitar_url && (
+                  <Tooltip title="Ultimate Guitar">
+                    <Link href={data?.social_media_urls?.ultimate_guitar_url}>
+                      <Image src={UltimateGuitarIcon} alt="Ultimate Guitar" />
+                    </Link>
+                  </Tooltip>
                 )}
-                {bggUrl && (
-                  <a target="_blank" href={bggUrl}>
-                    <Image src={BggIcon} alt="BGG" />
-                  </a>
+                {data?.social_media_urls?.youtube_url && (
+                  <Tooltip title="YouTube">
+                    <Link href={data?.social_media_urls?.youtube_url}>
+                      <Image src={YouTubeIcon} alt="YouTube" />
+                    </Link>
+                  </Tooltip>
                 )}
-              </div>
+              </ul>
             </PageContentBox>
           ) : (
             <></>

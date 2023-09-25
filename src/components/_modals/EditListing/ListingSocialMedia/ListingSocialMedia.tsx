@@ -40,94 +40,95 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
 
   useEffect(() => {
     let arr = []
-    if (listingModalData.facebook_url) {
+    const socialMediaUrls = listingModalData.social_media_urls
+    if (socialMediaUrls && socialMediaUrls.facebook_url) {
       arr.push({
         socialMedia: 'Facebook',
-        url: listingModalData.facebook_url,
+        url: socialMediaUrls && socialMediaUrls.facebook_url,
       })
     }
-    if (listingModalData.instagram_url) {
+    if (socialMediaUrls && socialMediaUrls.instagram_url) {
       arr.push({
         socialMedia: 'Instagram',
-        url: listingModalData.instagram_url,
+        url: socialMediaUrls && socialMediaUrls.instagram_url,
       })
     }
-    if (listingModalData.twitter_url) {
+    if (socialMediaUrls && socialMediaUrls.twitter_url) {
       arr.push({
         socialMedia: 'Twitter',
-        url: listingModalData.twitter_url,
+        url: socialMediaUrls && socialMediaUrls.twitter_url,
       })
     }
-    if (listingModalData.youtube_url) {
+    if (socialMediaUrls && socialMediaUrls.youtube_url) {
       arr.push({
         socialMedia: 'Youtube',
-        url: listingModalData.youtube_url,
+        url: socialMediaUrls && socialMediaUrls.youtube_url,
       })
     }
-    if (listingModalData.soundcloud_url) {
+    if (socialMediaUrls && socialMediaUrls.soundcloud_url) {
       arr.push({
         socialMedia: 'SoundCloud',
-        url: listingModalData.soundcloud_url,
+        url: socialMediaUrls && socialMediaUrls.soundcloud_url,
       })
     }
-    if (listingModalData.pinterest_url) {
+    if (socialMediaUrls && socialMediaUrls.pinterest_url) {
       arr.push({
         socialMedia: 'Pinterest',
-        url: listingModalData.pinterest_url,
+        url: socialMediaUrls && socialMediaUrls.pinterest_url,
       })
     }
-    if (listingModalData.tripadvisor_url) {
+    if (socialMediaUrls && socialMediaUrls.tripadvisor_url) {
       arr.push({
         socialMedia: 'TripAdvisor',
-        url: listingModalData.tripadvisor_url,
+        url: socialMediaUrls && socialMediaUrls.tripadvisor_url,
       })
     }
-    if (listingModalData.ultimate_guiter_url) {
+    if (socialMediaUrls && socialMediaUrls.ultimate_guiter_url) {
       arr.push({
         socialMedia: 'Ultimate Guiter',
-        url: listingModalData.ultimate_guiter_url,
+        url: socialMediaUrls && socialMediaUrls.ultimate_guiter_url,
       })
     }
-    if (listingModalData.strava_url) {
+    if (socialMediaUrls && socialMediaUrls.strava_url) {
       arr.push({
         socialMedia: 'Strava',
-        url: listingModalData.strava_url,
+        url: socialMediaUrls && socialMediaUrls.strava_url,
       })
     }
-    if (listingModalData.deviantarts_url) {
+    if (socialMediaUrls && socialMediaUrls.deviantarts_url) {
       arr.push({
         socialMedia: 'DeviantArts',
-        url: listingModalData.deviantarts_url,
+        url: socialMediaUrls && socialMediaUrls.deviantarts_url,
       })
     }
-    if (listingModalData.behance_url) {
+    if (socialMediaUrls && socialMediaUrls.behance_url) {
       arr.push({
         socialMedia: 'Behance',
-        url: listingModalData.behance_url,
+        url: socialMediaUrls && socialMediaUrls.behance_url,
       })
     }
-    if (listingModalData.goodreads_url) {
+    if (socialMediaUrls && socialMediaUrls.goodreads_url) {
       arr.push({
         socialMedia: 'GoodReads',
-        url: listingModalData.goodreads_url,
+        url: socialMediaUrls && socialMediaUrls.goodreads_url,
       })
     }
-    if (listingModalData.smule_url) {
+    if (socialMediaUrls && socialMediaUrls.smule_url) {
       arr.push({
         socialMedia: 'Smule',
-        url: listingModalData.smule_url,
+        url: socialMediaUrls && socialMediaUrls.smule_url,
       })
     }
-    if (listingModalData.chess_url) {
+    if (socialMediaUrls && socialMediaUrls.chess_url) {
       arr.push({
         socialMedia: 'Chess',
-        url: listingModalData.chess_url,
+        url: socialMediaUrls && socialMediaUrls.chess_url,
       })
     }
-    if (listingModalData.bgg_url) {
+    if (socialMediaUrls && socialMediaUrls.bgg_url) {
       arr.push({
         socialMedia: 'BGG',
-        url: listingModalData.bgg_url,
+        url: socialMediaUrls && socialMediaUrls.bgg_url,
       })
     }
     if (arr.length > 0) {
@@ -159,39 +160,41 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
   }
 
   const addSocialMedia = () => {
-    let updated = [...mediaData, { socialMedia: '', url: '' }]
-    setMediaData(updated)
+    const newSocialMedia = { socialMedia: '', url: '' }
+    setMediaData((prevMediaData) => [...prevMediaData.slice(), newSocialMedia])
   }
 
   const getValue = (key: any) => {
-    let value = ''
-    mediaData.map((item: any) => {
-      if (key === item.socialMedia) {
-        value = item.url
-      }
-    })
-    return value
+    const socialMediaItem = mediaData.find((item) => item.socialMedia === key)
+    return socialMediaItem ? socialMediaItem.url : ''
   }
 
   const handleSubmit = async () => {
     setSubmitBtnLoading(true)
     let reqBody: any = {
-      facebook_url: getValue('Facebook'),
-      instagram_url: getValue('Instagram'),
-      twitter_url: getValue('Twitter'),
-      youtube_url: getValue('Youtube'),
-      soundcloud_url: getValue('SoundCloud'),
-      pinterest_url: getValue('Pinterest'),
-      tripadvisor_url: getValue('TripAdvisor'),
-      ultimate_guiter_url: getValue('Ultimate_Guiter'),
-      strava_url: getValue('Strava'),
-      deviantarts_url: getValue('DeviantArts'),
-      behance_url: getValue('Behance'),
-      goodreads_url: getValue('GoodReads'),
-      smule_url: getValue('Smule'),
-      chess_url: getValue('Chess'),
-      bgg_url: getValue('BGG'),
+      social_media_urls: {
+        facebook_url: getValue('Facebook'),
+        instagram_url: getValue('Instagram'),
+        twitter_url: getValue('Twitter'),
+        youtube_url: getValue('Youtube'),
+        soundcloud_url: getValue('SoundCloud'),
+        pinterest_url: getValue('Pinterest'),
+        tripadvisor_url: getValue('TripAdvisor'),
+        ultimate_guiter_url: getValue('Ultimate_Guiter'),
+        strava_url: getValue('Strava'),
+        deviantarts_url: getValue('DeviantArts'),
+        behance_url: getValue('Behance'),
+        goodreads_url: getValue('GoodReads'),
+        smule_url: getValue('Smule'),
+        chess_url: getValue('Chess'),
+        bgg_url: getValue('BGG'),
+      },
     }
+    options.forEach((socialMedia) => {
+      const key = socialMedia.toLowerCase() + '_url'
+      reqBody[key] = getValue(socialMedia)
+    })
+
     // console.log('re', reqBody)
     const { err, res } = await updateListing(listingModalData._id, reqBody)
 

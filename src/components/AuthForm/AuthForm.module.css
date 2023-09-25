@@ -166,20 +166,22 @@ line-height: 20px;
   height: 10px;
 }
 
+
 .validation-messages {
+  margin-left: 195px;
   position: absolute;
   top: 50px;
   left: 0;
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 0 5px rgba(var(--black-rgb), 0.1);
-  padding: 5px 10px 5px 40px;
+  padding: 5px 10px 5px 5px;
   z-index: 20;
 }
 .validation-messages p {
   position: relative;
   margin: 10px 0;
-  font-size: 0.8rem;
+  font-size: 9px;
   color: red;
   list-style: circle;
 }
@@ -189,15 +191,15 @@ line-height: 20px;
   transform: translateY(-40%);
   left: -25px;
 }
-.validation-messages p::before {
+/* .validation-messages p::before {
   content: url('../../assets/svg/error-icon.svg');
-}
+} */
 .validation-messages p.valid {
   color: green;
 }
-.validation-messages p.valid::before {
+/* .validation-messages p.valid::before {
   content: url('../../assets/svg/green-check-icon.svg');
-}
+} */
 
 /* Form Footer */
 .form-footer {

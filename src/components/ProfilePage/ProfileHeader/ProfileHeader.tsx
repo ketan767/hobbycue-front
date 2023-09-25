@@ -26,7 +26,7 @@ import MailIcon from '@/assets/svg/mailicon.svg'
 import UploadIcon from '@/assets/svg/upload.svg'
 import CoverPhotoLayout from '@/layouts/CoverPhotoLayout/CoverPhotoLayout'
 import ProfileImageLayout from '@/layouts/ProfileImageLayout/ProfileImageLayout'
-import { Tooltip } from '@mui/material'
+import Tooltip from '@/components/Tooltip/ToolTip'
 import Dropdown from './DropDown'
 import useOutsideClick from '@/hooks/useOutsideClick'
 
@@ -247,18 +247,20 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
           {/* Action Buttons */}
 
           <div className={styles['actions-container']}>
-            <FilledButton
-              onClick={() => {
-                dispatch(updateListingModalData({ type: 1 }))
-                dispatch(
-                  openModal({ type: 'listing-type-edit', closable: true }),
-                )
-                dispatch(updateListingTypeModalMode({ mode: 'edit' }))
-              }}
-              className={styles.makeMyPageButton}
-            >
-              Make My Page
-            </FilledButton>
+            {profileLayoutMode === 'edit' && (
+              <FilledButton
+                onClick={() => {
+                  dispatch(updateListingModalData({ type: 1 }))
+                  dispatch(
+                    openModal({ type: 'listing-type-edit', closable: true }),
+                  )
+                  dispatch(updateListingTypeModalMode({ mode: 'edit' }))
+                }}
+                className={styles.makeMyPageButton}
+              >
+                Make My Page
+              </FilledButton>
+            )}
             <div className={styles['action-btn-wrapper']}>
               {/* Send Email Button  */}
               <Link href={`mailto:${data.public_email || data.email}`}>

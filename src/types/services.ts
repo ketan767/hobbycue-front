@@ -40,6 +40,7 @@ type UpdateProfilePayload = {
   is_onboarded?: boolean
   pinned_post?: string
   _hobbies? : any
+  social_media_urls?: any
 }
 
 type ProfileAddressPayload = {

@@ -1,6 +1,6 @@
 .modal-wrapper {
   background-color: white;
-  width: 62rem;
+  width: 63rem;
   /* width: 100%; */
   mix-blend-mode: normal;
   border-radius: var(--spacing-8);
@@ -28,12 +28,12 @@
   border-radius: 8px;
 }
 .create-post-modal > aside {
-  width: 290px;
-  min-width: 290px;
+  width: 242px;
+  min-width: 242px;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-32);
-  padding: 0 0 16px 12px;
+  padding-bottom: 16px;
   padding-top: 0;
   z-index: 2;
 }
@@ -45,6 +45,7 @@
   background-color: #ffffff;
   border-radius: 8px;
 }
+
 .create-post-modal > aside div label {
   font-weight: 500;
   font-size: 14px;
@@ -106,6 +107,7 @@
   min-width: 6.25rem;
   border: 1px solid #ced4da;
   border-radius: 8px;
+  max-width: 215px;
 }
 .input-box input[type='text']:focus-within {
   outline: none;
@@ -251,7 +253,7 @@
   position: absolute;
   top: 0;
   right: 0;
-  width: 314px;
+  width: 290px;
   height: 100%;
   background-color: #f8f9fa;
   z-index: 1;
@@ -280,9 +282,9 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 33%;
+    width: 29%;
     height: 100%;
-    left: 67%;
+    left: 71%;
     background-color: #F8F9FA;
     border-radius: 0 8px 8px 0;
     

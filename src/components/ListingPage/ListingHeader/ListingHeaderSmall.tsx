@@ -4,7 +4,7 @@ import Image from 'next/image'
 
 import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded'
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded'
-import { Tooltip } from '@mui/material'
+import Tooltip from '@/components/Tooltip/ToolTip'
 import ShareRoundedIcon from '@mui/icons-material/ShareRounded'
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded'
 import CameraIcon from '@/assets/icons/CameraIcon'
@@ -313,27 +313,25 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
             </Tooltip>
 
             {/* More Options Button */}
-            <Tooltip title="More options">
-              <div
-                onClick={(e) => handleDropdown()}
-                className={styles['action-btn']}
-              >
+
+            <div
+              onClick={(e) => handleDropdown()}
+              className={styles['action-btn']}
+            >
+              <Tooltip title="More options">
                 <MoreHorizRoundedIcon color="primary" />
-                {listingLayoutMode === 'edit'
-                  ? open && (
-                      <Dropdown
-                        userType={'edit'}
-                        handleClose={handleDropdown}
-                      />
-                    )
-                  : open && (
-                      <Dropdown
-                        userType={'anonymous'}
-                        handleClose={handleDropdown}
-                      />
-                    )}
-              </div>
-            </Tooltip>
+              </Tooltip>
+              {listingLayoutMode === 'edit'
+                ? open && (
+                    <Dropdown userType={'edit'} handleClose={handleDropdown} />
+                  )
+                : open && (
+                    <Dropdown
+                      userType={'anonymous'}
+                      handleClose={handleDropdown}
+                    />
+                  )}
+            </div>
           </div>
         </header>
 

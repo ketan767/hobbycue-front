@@ -56,6 +56,30 @@ const ModalManager: React.FC = () => {
   function handleClose() {
     dispatch(closeModal())
   }
+  useEffect(() => {
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth
+
+    const navbar = document.querySelector('.navbar-wrappper') as HTMLElement
+
+    if (activeModal !== null) {
+      document.body.style.overflow = 'hidden'
+      document.body.style.paddingRight = `${scrollbarWidth}px`
+
+      if (navbar && getComputedStyle(navbar).position === 'sticky') {
+        navbar.style.paddingRight = `${scrollbarWidth}px`
+      }
+    } else {
+      setTimeout(() => {
+        document.body.style.overflow = ''
+        document.body.style.paddingRight = ''
+
+        if (navbar) {
+          navbar.style.paddingRight = ''
+        }
+      }, 500)
+    }
+  }, [activeModal])
 
   useEffect(() => {
     if (activeModal !== null) document.body.style.overflow = 'hidden'
@@ -183,7 +207,10 @@ const ModalManager: React.FC = () => {
                 />
               )}
               {activeModal === 'user-address-edit' && (
-                <ProfileAddressEditModal title="Edit Location" editLocation={true} />
+                <ProfileAddressEditModal
+                  title="Edit Location"
+                  editLocation={true}
+                />
               )}
               {/* Modal Close Icon */}
               {closable && (
@@ -206,7 +233,12 @@ const ModalManager: React.FC = () => {
                     >
                       Yes
                     </FilledButton>
-                    <OutlinedButton onClick={() => setConfirmationModal(false)}>
+                    <OutlinedButton
+                      onClick={() => {
+                        handleClose()
+                        setConfirmationModal(false)
+                      }}
+                    >
                       No
                     </OutlinedButton>
                   </div>

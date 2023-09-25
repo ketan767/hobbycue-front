@@ -11,6 +11,7 @@ import ReactQuill, { Quill } from 'react-quill'
 import quillEmoji from 'quill-emoji'
 import 'react-quill/dist/quill.snow.css'
 import 'quill-emoji/dist/quill-emoji.css'
+import Tooltip from '@/components/Tooltip/ToolTip'
 
 const { EmojiBlot, ShortNameEmoji, ToolbarEmoji, TextAreaEmoji } = quillEmoji
 
