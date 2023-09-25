@@ -165,6 +165,20 @@ const ListingTypeEditModal: React.FC<Props> = ({
             Please select two of the most appropriate listing types. One type is
             recommended. Use another type only if it is significantly different
           </p>
+          <div className={styles['selected-values']}>
+            {value?.map((item: any) => {
+              return (
+                <div key={item} className={styles['selected-value']}>
+                  <p>{item}</p>
+                  <Image
+                    src={CrossIcon}
+                    alt="cancel"
+                    onClick={() => handleChange(item)}
+                  />
+                </div>
+              )
+            })}
+          </div>
           <div className={styles['input-box']}>
             <label>Listing Type</label>
             <input hidden required />
@@ -212,20 +226,6 @@ const ListingTypeEditModal: React.FC<Props> = ({
               <p className={styles.error}>
                 {error && 'Select a listing type!'}{' '}
               </p>
-              <div className={styles['selected-values']}>
-                {value?.map((item: any) => {
-                  return (
-                    <div key={item} className={styles['selected-value']}>
-                      <p>{item}</p>
-                      <Image
-                        src={CrossIcon}
-                        alt="cancel"
-                        onClick={() => handleChange(item)}
-                      />
-                    </div>
-                  )
-                })}
-              </div>
             </FormControl>
           </div>
         </section>

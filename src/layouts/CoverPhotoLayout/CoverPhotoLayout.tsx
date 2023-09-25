@@ -40,6 +40,7 @@ const CoverPhotoLayout: React.FC<Props> = ({
       className={`${styles['container']} ${
         type === 'page' ? styles.page : styles.user
       }
+      ${profileLayoutMode === 'edit' ? styles['editable'] : ''}
       ${
         profileLayoutMode !== 'edit'
           ? `${profileLayoutMode === 'view' ? defaultCover : ''}`

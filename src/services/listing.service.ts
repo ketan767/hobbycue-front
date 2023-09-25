@@ -70,7 +70,6 @@ export const getListingAddress = async (addressId: string) => {
 export const updateListingAddress = async (addressId: string, data: any) => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
-
   try {
     const res = await axiosInstance.patch(`/listing/address/${addressId}`, data, { headers })
     return { res: res, err: null }

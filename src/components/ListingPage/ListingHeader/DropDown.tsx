@@ -23,14 +23,14 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType }) => {
         {userType === 'edit' && <li>Support</li>}
         {userType === 'anonymous' && (
           <>
-            <li>Claim</li>
+            <li onClick={claimModal}>Claim</li>
             <li>Review</li>
             <li>Report</li>
           </>
         )}
         {userType === 'page' && (
           <>
-            <li>Claim</li>
+            <li onClick={claimModal}>Claim</li>
             <li>Review</li>
             <li>Report</li>
           </>

@@ -130,8 +130,7 @@
 }
 .dropdown {
   position: absolute;
-  top: calc(100%);
-  left: 0;
+  top: 460px;
   z-index: 100;
   /* Dropdown */
   box-shadow: 0px 8px 12px 0px rgba(147, 156, 163, 0.12),
@@ -264,9 +263,12 @@
   box-shadow: none;
 }
 .container:has(.header).small .navigation-tabs {
-  margin-top: 0;
-  padding-top: 4px;
-  padding-bottom: 0px;
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+  position: sticky;
+  min-height: 40px;
+  gap: 36px;
 }
 
 .container:has(.header).small .navigation-tabs a {

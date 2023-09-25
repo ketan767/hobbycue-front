@@ -24,6 +24,7 @@ import { updateListingModalData } from '@/redux/slices/site'
 import InputSelect from '@/components/InputSelect/inputSelect'
 import DownArrow from '@/assets/svg/chevron-down.svg'
 import TickIcon from '@/assets/svg/tick.svg'
+import CrossIcon from '@/assets/svg/cross.svg'
 import useOutsideAlerter from '@/hooks/useOutsideAlerter'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
@@ -47,7 +48,10 @@ const ListingTagsEditModal: React.FC<Props> = ({
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
-  const [tags, setTags] = useState([])
+  const [tags, setTags] = useState<
+    { _id: string; name: string; description: string }[]
+  >([])
+
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [showDropdown, setShowDropdown] = useState(false)
   const dropdownRef: any = useRef()
@@ -62,7 +66,7 @@ const ListingTagsEditModal: React.FC<Props> = ({
       return { ...prev, description: { value, error: null } }
     })
   }
-
+  const [value, setValue] = useState<any>([])
   const handleSubmit = async () => {
     const jsonData = {
       _tags: selectedTags,
@@ -75,6 +79,18 @@ const ListingTagsEditModal: React.FC<Props> = ({
     else {
       window.location.reload()
       dispatch(closeModal())
+    }
+  }
+
+  const handleChange = (itemToChange: any) => {
+    if (tags?.includes(itemToChange)) {
+      setTags((prev: any) => prev.filter((item: any) => item !== itemToChange))
+    } else {
+      if (tags) {
+        setTags((prev: any) => [...prev, itemToChange])
+      } else {
+        setTags((prev: any) => [itemToChange])
+      }
     }
   }
 
@@ -121,7 +137,7 @@ const ListingTagsEditModal: React.FC<Props> = ({
       setSelectedTags((prev: any) => [...prev, idToChange])
     }
   }
-
+  console.log('item', selectedTags)
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -131,6 +147,22 @@ const ListingTagsEditModal: React.FC<Props> = ({
         </header>
         <hr />
         <section className={styles['body']}>
+          <div className={styles['selected-values']}>
+            {tags
+              ?.filter((item) => selectedTags.includes(item._id)) // Filter tags to show only selected ones
+              .map((item: any, idx) => {
+                return (
+                  <div key={item} className={styles['selected-value']}>
+                    <p>{item.name}</p>
+                    <Image
+                      src={CrossIcon}
+                      alt="cancel"
+                      onClick={() => handleChange(item)}
+                    />
+                  </div>
+                )
+              })}
+          </div>
           <div className={styles['input-box']}>
             <label>Add Tags</label>
             <input hidden required />
@@ -153,12 +185,19 @@ const ListingTagsEditModal: React.FC<Props> = ({
                             : ''
                         }`}
                         key={item._id}
-                        onClick={() => handleTagChange(item._id)}
+                        onClick={() => {
+                          handleTagChange(item._id)
+                          setShowDropdown(false)
+                        }}
                       >
                         <p className={`${styles.tagText}`}>{item.name}</p>
                         <p className={styles.tagDesc}>
                           {item.description}
-                          <Image src={TickIcon} alt="down" className={styles['tick-icon']} />
+                          <Image
+                            src={TickIcon}
+                            alt="down"
+                            className={styles['tick-icon']}
+                          />
                         </p>
                       </div>
                     )

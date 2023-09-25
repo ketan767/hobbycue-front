@@ -139,15 +139,15 @@
   line-height: 20px;
   letter-spacing: 0.04em;
   color: #ffffff;
-  z-index: 100;
+  z-index: 1;
 }
 
 .hobbies-table tbody {
   display: flex;
   flex-direction: column;
   /* padding: 16px 10px; */
-  border-left: 1px solid #ced4da;
-  border-right: 1px solid #ced4da;
+  border-left: 1px solid #CED4DA;
+  border-right: 1px solid #CED4DA;
 }
 
 .hobbies-table * {
@@ -186,15 +186,12 @@
 }
 .hobbies-table tbody tr td div {
   /* background-color: red; */
-  padding-left: 30px;
-  padding-top: 6px;
-  padding-bottom: 10px;
   display: flex;
-  margin-top: 10px;
   border-bottom: 1px solid #ced4da;
 }
 .hobbies-table tbody tr td div p:first-of-type {
-  min-width: 200px;
+  max-width: 130px;
+  width: 100%;
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 600;
@@ -206,16 +203,18 @@
   letter-spacing: 0.04em;
   column-gap: 2px;
   color: #000000;
+  justify-content: center;
 }
 .table-hobby {
   font-size: 14px;
+  padding: 8px 103px 8px 24px;
 }
 .table-content-container{
   position: relative;
 }
 .hobbies-table tbody tr td .vertical-line{
   position: absolute;
-  left: 200px;
+  left: 130px;
   top: -10px;
   width: 1px;
   height: calc(100% + 10px);

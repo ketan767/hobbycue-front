@@ -35,7 +35,9 @@ const ProfileSwitcher: React.FC<Props> = ({
   }
 
   const getClass = (type: any) => {
-    if (type === listingTypes.PEOPLE) {
+    if (type === 'user') {
+      return 'default-user-icon'
+    } else if (type === listingTypes.PEOPLE) {
       return 'default-people-listing-icon'
     } else if (type === listingTypes.PLACE) {
       return 'default-place-listing-icon'
@@ -114,7 +116,7 @@ const ProfileSwitcher: React.FC<Props> = ({
                   />
                 ) : (
                   <div
-                    className={`${styles['default-img']} default-user-icon`}
+                    className={`${styles['user-default-img']} default-user-icon`}
                   ></div>
                 )}
 

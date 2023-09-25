@@ -109,7 +109,7 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
       dispatch(closeModal())
       console.log(res)
       await fetchDetails()
-      await  router.push(`/page/${res.data.data.listing.page_url}`)
+      await router.push(`/page/${res.data.data.listing.page_url}`)
       window.location.reload()
     }
   }
@@ -182,15 +182,15 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
       )}
 
       <section className={styles['step-indicators']}>
-        {steps.map((step) => {
+        {steps.map((step, index) => {
+          const isClickable = index < steps.indexOf(activeStep)
           return (
             <span
               key={step}
               className={`${styles['step']} ${
-                steps.indexOf(step) <= steps.indexOf(activeStep)
-                  ? styles['active']
-                  : ''
+                isClickable ? styles['active'] : ''
               }`}
+              onClick={isClickable ? () => setActiveStep(step) : undefined}
             ></span>
           )
         })}

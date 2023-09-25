@@ -309,6 +309,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         console.log('response', response)
         if (results && results.length > 0) {
           const { formatted_address, address_components } = results[0]
+          let society = data.society
+          let locality = data.locality
           let city = data.city
           let state = data.state
           let country = data.country
@@ -327,6 +329,12 @@ const ProfileAddressEditModal: React.FC<Props> = ({
             if (component.types.includes('postal_code')) {
               pin_code = component.long_name
             }
+            if (component.types.includes('sublocality_level_3')) {
+              locality = component.long_name
+            }
+            if (component.types.includes('neighborhood')) {
+              society = component.long_name
+            }
           })
           setData((prev) => {
             return {
@@ -336,6 +344,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               street: data.street ? data.street : formatted_address,
               country: data.country ? data.country : country,
               pin_code: data.pin_code ? data.pin_code : pin_code,
+              locality: data.locality ? data.locality : locality,
+              society: data.society ? data.society : society,
             }
           })
         }
@@ -387,7 +397,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               <div className={styles['street-input-container']}>
                 <input
                   type="text"
-                  placeholder={`Enter address or click the "locate me" icon to auto-detect`}
+                  placeholder={`Enter address or click the 'GPS icon' to auto-detect`}
                   required
                   value={data.street}
                   name="street"

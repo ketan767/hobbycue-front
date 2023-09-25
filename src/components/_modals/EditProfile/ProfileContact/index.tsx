@@ -14,6 +14,7 @@ import { updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
+import Checkbox from '@mui/material/Checkbox'
 
 type Props = {
   onComplete?: () => void
@@ -33,7 +34,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
-
+  const [tick, setTick] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const websiteRef = useRef<HTMLInputElement>(null)
 
@@ -118,6 +119,16 @@ const ProfileContactEditModal: React.FC<Props> = ({
       }
     }
   }
+  useEffect(() => {
+    if (tick) {
+      setData((prev) => {
+        return {
+          ...prev,
+          whatsapp_number: { value: data.phone.value, error: null },
+        }
+      })
+    }
+  }, [tick])
 
   useEffect(() => {
     setData((prev) => {
@@ -198,7 +209,18 @@ const ProfileContactEditModal: React.FC<Props> = ({
 
               {/* WhatsApp Number */}
               <div className={styles['input-box']}>
-                <label>WhatsApp Number</label>
+                <label className={styles['whatsapp-label']}>
+                  WhatsApp Number
+                  <Checkbox
+                    size="small"
+                    color="primary"
+                    name="rememberMe"
+                    className={styles.checkbox}
+                    value={!tick}
+                    checked={tick}
+                    onChange={(e) => setTick(!tick)}
+                  />{' '}
+                </label>
                 <input
                   type="text"
                   placeholder={`Enter WhatsApp Number`}

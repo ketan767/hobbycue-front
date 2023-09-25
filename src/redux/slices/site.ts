@@ -31,6 +31,7 @@ type ListingModalData = {
     to_date: any
   },
   images?: [],
+  social_media_urls?: any
   is_published?: boolean
   is_onboarded?: boolean
   facebook_url?: string
