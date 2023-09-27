@@ -291,7 +291,22 @@ align-self: flex-start;
   overflow: auto;
   transition: 0.6s;
   height: 400px;
-  
-
 }
 
+.member-img{
+  border-radius: 50%;
+  border: 1px solid #8064a2;
+}
+.hobbies-members{
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  vertical-align: middle;
+}
+
+.hobbies-members div{
+  padding-top: 2px;
+}
+
+.hobbies-members div:hover{
+  color: #8064a2;
+}

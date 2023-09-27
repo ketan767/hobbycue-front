@@ -315,8 +315,8 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   value={data.street.value}
                   name="street"
                   required={listingModalData.type === listingTypes.PLACE}
-                  ref={inputRef}
                   onChange={handleInputChange}
+                  ref={streetRef}
                 />
                 <Image
                   src={LocationIcon}
@@ -341,6 +341,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   required={listingModalData.type === listingTypes.PLACE}
                   name="society"
                   onChange={handleInputChange}
+                  ref={societyRef}
                 />
                 <p className={styles['helper-text']}>{data.society.error}</p>
               </div>
@@ -357,6 +358,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   required={listingModalData.type === listingTypes.PLACE}
                   name="locality"
                   onChange={handleInputChange}
+                  ref={localityRef}
                 />
                 <p className={styles['helper-text']}>{data.locality.error}</p>
               </div>
@@ -388,6 +390,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   required={listingModalData.type === listingTypes.PLACE}
                   name="pin_code"
                   onChange={handleInputChange}
+                  ref={pincodeRef}
                 />
                 <p className={styles['helper-text']}>{data.pin_code.error}</p>
               </div>

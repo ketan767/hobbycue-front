@@ -226,6 +226,7 @@ const ModalManager: React.FC = () => {
                   <p> Would you like to save before exit ? </p>
                   <div className={styles['buttons']}>
                     <FilledButton
+                      className={styles['button1']}
                       onClick={() => {
                         handleClose()
                         setConfirmationModal(false)

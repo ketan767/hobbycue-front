@@ -52,7 +52,11 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   const fullNameRef = useRef<HTMLInputElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const pageUrlRef = useRef<HTMLInputElement>(null)
-
+  const baseURL =
+    window.location.protocol +
+    '//' +
+    window.location.hostname +
+    (window.location.port ? ':' + window.location.port : '')
   useEffect(() => {
     inputRef?.current?.focus()
   }, [])
@@ -254,7 +258,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
                 placeholder="Title"
                 autoComplete="title"
                 required
-                value={data.title.value}
+                value={data.title.value as string}
                 name="title"
                 ref={inputRef}
                 onChange={handleInputChange}
@@ -272,7 +276,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
               <input
                 type="text"
                 placeholder="Something catchy... that also appears in search results"
-                value={data.tagline.value}
+                value={data.tagline.value as string}
                 name="tagline"
                 onChange={handleInputChange}
               />
@@ -291,12 +295,12 @@ const ListingGeneralEditModal: React.FC<Props> = ({
                   type="text"
                   placeholder="page-url"
                   required
-                  value={data.page_url.value}
+                  value={data.page_url.value as string}
                   name="page_url"
                   onChange={handleInputChange}
                   ref={pageUrlRef}
                 />
-                <span>https://hobbycue.com/page/</span>
+                <span>{baseURL + '/page/'}</span>
               </div>
               <p className={styles['helper-text']}>{data.page_url.error}</p>
             </div>

@@ -92,6 +92,36 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         })
       }
     }
+    if (
+      !data.city ||
+      data.city === '' ||
+      !data.state ||
+      data.state === '' ||
+      !data.country ||
+      data.country === ''
+    ) {
+      let errors: typeof inputErrs = {}
+
+      if (!data.city || data.city === '') {
+        cityRef.current?.focus()
+        errors.city = 'This field is required!'
+      }
+
+      if (!data.state || data.state === '') {
+        stateRef.current?.focus()
+        errors.state = 'This field is required!'
+      }
+
+      if (!data.country || data.country === '') {
+        countryRef.current?.focus()
+        errors.country = 'This field is required!'
+      }
+
+      return setInputErrs((prev) => {
+        return { ...prev, ...errors }
+      })
+    }
+
     if (!data.city || data.city === '') {
       cityRef.current?.focus()
       return setInputErrs((prev) => {

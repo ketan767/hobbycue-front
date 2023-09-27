@@ -73,6 +73,11 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
       return { ...prev, [event.target.name]: null }
     })
   }
+  const baseURL =
+    window.location.protocol +
+    '//' +
+    window.location.hostname +
+    (window.location.port ? ':' + window.location.port : '')
 
   const handleSubmit = async () => {
     if (isEmptyField(data.full_name) || !data.full_name) {
@@ -184,7 +189,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   }, [data.profile_url, user.profile_url])
 
   useEffect(() => {
-    if (onComplete !== undefined && !user.profile_url) {
+    if (onComplete !== undefined) {
       let profileUrl = data.full_name
       profileUrl = profileUrl?.toLowerCase()
       profileUrl = profileUrl?.replace(/ /g, '-')
@@ -216,6 +221,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   useEffect(() => {
     fullNameRef?.current?.focus()
   }, [])
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -296,11 +302,12 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
                   type="text"
                   placeholder="profile-url"
                   required
-                  value={data.profile_url}
+                  value={data.profile_url as string}
                   name="profile_url"
                   onChange={handleInputChange}
+                  ref={profileUrlRef}
                 />
-                <span>https://hobbycue.com/profile/</span>
+                <span>{baseURL + '/profile/'}</span>
               </div>
               <p className={styles['helper-text']}>{inputErrs.profile_url}</p>
             </div>
