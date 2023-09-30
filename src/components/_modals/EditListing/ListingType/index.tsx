@@ -152,112 +152,115 @@ const ListingTypeEditModal: React.FC<Props> = ({
 
   return (
     <>
-      <div className={styles['modal-wrapper']}>
-        {/* Modal Header */}
-        <header className={styles['header']}>
-          <h4 className={styles['heading']}>{'Listing Type'}</h4>
-        </header>
+      <div className={styles['modal-container']}>
+        <div className={styles['modal-wrapper']}>
+          {/* Modal Header */}
+          <header className={styles['header']}>
+            <h4 className={styles['heading']}>{'Listing Type'}</h4>
+          </header>
 
-        <hr />
+          <hr />
 
-        <section className={styles['body']}>
-          <p className={styles['info']}>
-            Please select two of the most appropriate listing types. One type is
-            recommended. Use another type only if it is significantly different
-          </p>
-          <div className={styles['selected-values']}>
-            {value?.map((item: any) => {
-              return (
-                <div key={item} className={styles['selected-value']}>
-                  <p>{item}</p>
-                  <Image
-                    src={CrossIcon}
-                    alt="cancel"
-                    onClick={() => handleChange(item)}
-                  />
-                </div>
-              )
-            })}
-          </div>
-          <div className={styles['input-box']}>
-            <label>Listing Type</label>
-            <input hidden required />
-
-            <FormControl variant="outlined" size="small">
-              <div className={styles['select-container']} ref={dropdownRef}>
-                <div
-                  className={styles['select-input']}
-                  onClick={() => setShowDropdown(true)}
-                >
-                  <p> Select listin tag.. </p>
-                  <Image src={DownArrow} alt="down" />
-                </div>
-                {showDropdown && (
-                  <div className={styles['options-container']}>
-                    {list.map((item: any, idx: any) => {
-                      return (
-                        <div
-                          className={`${styles['single-option']}  ${
-                            value?.includes(item)
-                              ? styles['selcted-option']
-                              : ''
-                          }`}
-                          key={item}
-                          onClick={() => {
-                            handleChange(item)
-                            setShowDropdown(false)
-                          }}
-                        >
-                          <p className={styles.tagDesc}>
-                            {item}
-                            <Image
-                              src={TickIcon}
-                              alt="down"
-                              className={styles['tick-icon']}
-                            />
-                          </p>
-                        </div>
-                      )
-                    })}
+          <section className={styles['body']}>
+            <p className={styles['info']}>
+              Please select two of the most appropriate listing types. One type
+              is recommended. Use another type only if it is significantly
+              different
+            </p>
+            <div className={styles['selected-values']}>
+              {value?.map((item: any) => {
+                return (
+                  <div key={item} className={styles['selected-value']}>
+                    <p>{item}</p>
+                    <Image
+                      src={CrossIcon}
+                      alt="cancel"
+                      onClick={() => handleChange(item)}
+                    />
                   </div>
-                )}
-              </div>
+                )
+              })}
+            </div>
+            <div className={styles['input-box']}>
+              <label>Listing Type</label>
+              <input hidden required />
 
-              <p className={styles.error}>
-                {error && 'Select a listing type!'}{' '}
-              </p>
-            </FormControl>
-          </div>
-        </section>
+              <FormControl variant="outlined" size="small">
+                <div className={styles['select-container']} ref={dropdownRef}>
+                  <div
+                    className={styles['select-input']}
+                    onClick={() => setShowDropdown(true)}
+                  >
+                    <p> Select listin tag.. </p>
+                    <Image src={DownArrow} alt="down" />
+                  </div>
+                  {showDropdown && (
+                    <div className={styles['options-container']}>
+                      {list.map((item: any, idx: any) => {
+                        return (
+                          <div
+                            className={`${styles['single-option']}  ${
+                              value?.includes(item)
+                                ? styles['selcted-option']
+                                : ''
+                            }`}
+                            key={item}
+                            onClick={() => {
+                              handleChange(item)
+                              setShowDropdown(false)
+                            }}
+                          >
+                            <p className={styles.tagDesc}>
+                              {item}
+                              <Image
+                                src={TickIcon}
+                                alt="down"
+                                className={styles['tick-icon']}
+                              />
+                            </p>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
 
-        <footer className={styles['footer']}>
-          {Boolean(onBackBtnClick) && (
+                <p className={styles.error}>
+                  {error && 'Select a listing type!'}{' '}
+                </p>
+              </FormControl>
+            </div>
+          </section>
+
+          <footer className={styles['footer']}>
+            {Boolean(onBackBtnClick) && (
+              <Button
+                variant="outlined"
+                size="medium"
+                color="primary"
+                onClick={onBackBtnClick}
+              >
+                Back
+              </Button>
+            )}
             <Button
-              variant="outlined"
+              className={styles['submit']}
+              variant="contained"
               size="medium"
               color="primary"
-              onClick={onBackBtnClick}
+              onClick={handleSubmit}
+              disabled={submitBtnLoading || value?.length === 0}
             >
-              Back
+              {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'22px'} />
+              ) : listingTypeModalMode === 'edit' ? (
+                'Next'
+              ) : (
+                'Next'
+              )}
             </Button>
-          )}
-          <Button
-            className={styles['submit']}
-            variant="contained"
-            size="medium"
-            color="primary"
-            onClick={handleSubmit}
-            disabled={submitBtnLoading || value?.length === 0}
-          >
-            {submitBtnLoading ? (
-              <CircularProgress color="inherit" size={'22px'} />
-            ) : listingTypeModalMode === 'edit' ? (
-              'Next'
-            ) : (
-              'Next'
-            )}
-          </Button>
-        </footer>
+          </footer>
+        </div>
       </div>
     </>
   )

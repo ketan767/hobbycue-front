@@ -46,7 +46,6 @@
   .modal-container {
     min-height: 20rem;
     height: calc(100vh - 2rem) ;
-    overflow: auto;
     max-height: 50rem;
     min-width: 600px;
   }

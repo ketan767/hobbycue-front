@@ -5,7 +5,7 @@
    display: flex;
    flex-direction: column-reverse;
    /* height: 100%; */
-   padding-bottom: 8px;
+   padding-bottom: 24px;
    flex: 1;
 }
 .quill .ql-container{

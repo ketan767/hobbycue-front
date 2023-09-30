@@ -310,6 +310,18 @@ export const Navbar: React.FC<Props> = ({}) => {
                         <li>Spotting</li>
                       </ul>
                     </section>
+                    <section className={styles['list']}>
+                      <h4>
+                        <Link href={'/'} className={styles['hobbiescategory']}>
+                          {' '}
+                          All Hobbies{' '}
+                        </Link>
+                      </h4>
+
+                      <ul>
+                        <li>Hobbies Challenges</li>
+                      </ul>
+                    </section>
                   </div>
                 )}
               </li>

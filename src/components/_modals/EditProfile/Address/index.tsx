@@ -32,9 +32,11 @@ const ProfileAddressEditModal: React.FC<Props> = ({
 }) => {
   const dispatch = useDispatch()
   const { user, addressToEdit } = useSelector((state: RootState) => state.user)
-
+  const [tempAddressId, setTempAddressId] = useState(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [nextDisabled, setNextDisabled] = useState(false)
+  const [backDisabled, SetBackDisabled] = useState(false)
+  const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
 
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -83,6 +85,141 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     })
   }
 
+  const Backsave = async () => {
+    setBackBtnLoading(true)
+    if (
+      !addressLabel ||
+      addressLabel === '' ||
+      !data.city ||
+      data.city === '' ||
+      !data.state ||
+      data.state === '' ||
+      !data.country ||
+      data.country === '' ||
+      !data.society ||
+      data.society === '' ||
+      !data.locality ||
+      data.locality === '' ||
+      !data.pin_code ||
+      data.pin_code === ''
+    ) {
+      if (onBackBtnClick) onBackBtnClick()
+      setBackBtnLoading(false)
+    } else {
+      if (editLocation) {
+        let reqBody: any = { ...data }
+        reqBody.label = addressLabel
+        updateUserAddress(addressToEdit, reqBody, async (err, res) => {
+          if (err) {
+            return console.log(err)
+          }
+          setBackBtnLoading(true)
+          if (!res.data.success) {
+            return alert('Something went wrong!')
+          }
+          const { err: error, res: response } = await getMyProfileDetail()
+
+          if (error) return console.log(error)
+          if (response?.data.success) {
+            dispatch(updateUser(response.data.data.user))
+            if (onBackBtnClick) onBackBtnClick()
+            setBackBtnLoading(false)
+          }
+        })
+        return
+      }
+      if (addLocation) {
+        let reqBody: any = { ...data }
+        reqBody.label = addressLabel
+        addUserAddress(reqBody, async (err, res) => {
+          setBackBtnLoading(true)
+          if (err) {
+            return console.log(err)
+          }
+          if (!res.data.success) {
+            return alert('Something went wrong!')
+          }
+          const { err: error, res: response } = await getMyProfileDetail()
+
+          if (error) return console.log(error)
+          if (response?.data.success) {
+            dispatch(updateUser(response.data.data.user))
+            if (onBackBtnClick) onBackBtnClick()
+            setBackBtnLoading(false)
+          }
+        })
+      } else if (!user.is_onboarded) {
+        data.set_as_primary = true
+        let reqBody: any = { ...data }
+        reqBody.label = 'Default'
+
+        if (!user.primary_address?._id) {
+          setBackBtnLoading(true)
+          addUserAddress(reqBody, async (err, res) => {
+            console.log(res)
+            if (err) {
+              return console.log(err)
+            }
+            if (!res.data.success) {
+              return alert('Something went wrong!')
+            }
+
+            const { err: error, res: response } = await getMyProfileDetail()
+
+            if (error) return console.log(error)
+            if (response?.data.success) {
+              dispatch(updateUser(response.data.data.user))
+
+              if (onBackBtnClick) onBackBtnClick()
+              setBackBtnLoading(false)
+            }
+          })
+        } else if (user.primary_address._id) {
+          setBackBtnLoading(true)
+          updateUserAddress(
+            user.primary_address._id,
+            reqBody,
+            async (err, res) => {
+              if (err) {
+                return console.log(err)
+              }
+              if (!res.data.success) {
+                return alert('Something went wrong!')
+              }
+
+              const { err: error, res: response } = await getMyProfileDetail()
+
+              if (error) return console.log(error)
+              if (response?.data.success) {
+                dispatch(updateUser(response.data.data.user))
+                if (onBackBtnClick) onBackBtnClick()
+                setBackBtnLoading(false)
+              }
+            },
+          )
+        }
+      } else {
+        updateUserAddress(user.primary_address._id, data, async (err, res) => {
+          setBackBtnLoading(true)
+          if (err) {
+            return console.log(err)
+          }
+          if (!res.data.success) {
+            return alert('Something went wrong!')
+          }
+          const { err: error, res: response } = await getMyProfileDetail()
+
+          if (error) return console.log(error)
+          if (response?.data.success) {
+            dispatch(updateUser(response?.data.data.user))
+            if (onBackBtnClick) onBackBtnClick()
+            setBackBtnLoading(false)
+          }
+        })
+      }
+    }
+  }
+
   const handleSubmit = () => {
     if (addLocation) {
       if (!addressLabel || addressLabel === '') {
@@ -92,6 +229,36 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         })
       }
     }
+    if (
+      !data.city ||
+      data.city === '' ||
+      !data.state ||
+      data.state === '' ||
+      !data.country ||
+      data.country === ''
+    ) {
+      let errors: typeof inputErrs = {}
+
+      if (!data.city || data.city === '') {
+        cityRef.current?.focus()
+        errors.city = 'This field is required!'
+      }
+
+      if (!data.state || data.state === '') {
+        stateRef.current?.focus()
+        errors.state = 'This field is required!'
+      }
+
+      if (!data.country || data.country === '') {
+        countryRef.current?.focus()
+        errors.country = 'This field is required!'
+      }
+
+      return setInputErrs((prev) => {
+        return { ...prev, ...errors }
+      })
+    }
+
     if (!data.city || data.city === '') {
       cityRef.current?.focus()
       return setInputErrs((prev) => {
@@ -195,28 +362,62 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       data.set_as_primary = true
       let reqBody: any = { ...data }
       reqBody.label = 'Default'
-      addUserAddress(reqBody, async (err, res) => {
-        if (err) {
-          setSubmitBtnLoading(false)
-          return console.log(err)
-        }
-        if (!res.data.success) {
-          setSubmitBtnLoading(false)
-          return alert('Something went wrong!')
-        }
-        const { err: error, res: response } = await getMyProfileDetail()
 
-        setSubmitBtnLoading(false)
-        if (error) return console.log(error)
-        if (response?.data.success) {
-          dispatch(updateUser(response.data.data.user))
-          if (onComplete) onComplete()
-          else {
-            window.location.reload()
-            dispatch(closeModal())
+      if (!user.primary_address?._id) {
+        addUserAddress(reqBody, async (err, res) => {
+          console.log(res)
+          if (err) {
+            setSubmitBtnLoading(true)
+            return console.log(err)
           }
-        }
-      })
+          if (!res.data.success) {
+            setSubmitBtnLoading(false)
+            return alert('Something went wrong!')
+          }
+
+          const { err: error, res: response } = await getMyProfileDetail()
+
+          setSubmitBtnLoading(false)
+          if (error) return console.log(error)
+          if (response?.data.success) {
+            dispatch(updateUser(response.data.data.user))
+
+            if (onComplete) onComplete()
+            else {
+              window.location.reload()
+              dispatch(closeModal())
+            }
+          }
+        })
+      } else if (user.primary_address._id) {
+        updateUserAddress(
+          user.primary_address._id,
+          reqBody,
+          async (err, res) => {
+            if (err) {
+              setSubmitBtnLoading(false)
+              return console.log(err)
+            }
+            if (!res.data.success) {
+              setSubmitBtnLoading(false)
+              return alert('Something went wrong!')
+            }
+
+            const { err: error, res: response } = await getMyProfileDetail()
+
+            setSubmitBtnLoading(false)
+            if (error) return console.log(error)
+            if (response?.data.success) {
+              dispatch(updateUser(response.data.data.user))
+              if (onComplete) onComplete()
+              else {
+                window.location.reload()
+                dispatch(closeModal())
+              }
+            }
+          },
+        )
+      }
     } else {
       updateUserAddress(user.primary_address._id, data, async (err, res) => {
         if (err) {
@@ -242,7 +443,6 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       })
     }
   }
-
   useEffect(() => {
     if (editLocation) {
       const address = user._addresses.find(
@@ -511,9 +711,16 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           {Boolean(onBackBtnClick) && (
             <button
               className="modal-footer-btn cancel"
-              onClick={onBackBtnClick}
+              onClick={Backsave}
+              disabled={backBtnLoading ? backBtnLoading : backDisabled}
             >
-              Back
+              {backBtnLoading ? (
+                <CircularProgress color="inherit" size={'24px'} />
+              ) : onBackBtnClick ? (
+                'Back'
+              ) : (
+                'Back'
+              )}
             </button>
           )}
 

@@ -43,6 +43,8 @@ const ProfileContactEditModal: React.FC<Props> = ({
   }, [])
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
+  const [backDisabled, SetBackDisabled] = useState(false)
+  const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
 
   const [data, setData] = useState<ProfileContactData>({
     phone: { value: '', error: null },
@@ -58,6 +60,43 @@ const ProfileContactEditModal: React.FC<Props> = ({
         [event.target.name]: { value: event.target.value, error: null },
       }
     })
+  }
+
+  const Backsave = async () => {
+    setBackBtnLoading(true)
+    if (
+      (!data.public_email.value || data.public_email.value === '') &&
+      (!data.phone.value || data.phone.value === '')
+    ) {
+      if (onBackBtnClick) onBackBtnClick()
+      setBackBtnLoading(false)
+    } else {
+      const jsonData = {
+        phone: data.phone.value,
+        public_email: data.public_email.value,
+        website: data.website.value,
+        whatsapp_number: data.whatsapp_number.value,
+      }
+
+      setBackBtnLoading(true)
+
+      const { err, res } = await updateMyProfileDetail(jsonData)
+
+      if (err) {
+        setBackBtnLoading(false)
+        return console.log(err)
+      }
+
+      const { err: error, res: response } = await getMyProfileDetail()
+      setBackBtnLoading(true)
+
+      if (error) return console.log(error)
+      if (response?.data.success) {
+        dispatch(updateUser(response.data.data.user))
+        if (onBackBtnClick) onBackBtnClick()
+        setBackBtnLoading(false)
+      }
+    }
   }
 
   const handleSubmit = async () => {
@@ -260,9 +299,16 @@ const ProfileContactEditModal: React.FC<Props> = ({
           {Boolean(onBackBtnClick) && (
             <button
               className="modal-footer-btn cancel"
-              onClick={onBackBtnClick}
+              onClick={Backsave}
+              disabled={backBtnLoading ? backBtnLoading : backDisabled}
             >
-              Back
+              {backBtnLoading ? (
+                <CircularProgress color="inherit" size={'24px'} />
+              ) : onBackBtnClick ? (
+                'Back'
+              ) : (
+                'Back'
+              )}
             </button>
           )}
 
