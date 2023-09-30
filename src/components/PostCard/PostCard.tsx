@@ -91,7 +91,6 @@ const PostCard: React.FC<Props> = (props) => {
     dispatch(updateShareUrl(`${window.location.origin}/post/${postData._id}`))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
   }
-  console.log(postData)
   return (
     <>
       <div className={styles['post-card-wrapper']}>

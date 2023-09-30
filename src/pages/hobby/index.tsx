@@ -30,7 +30,10 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
-
+  const [hobbyInputValue, setHobbyInputValue] = useState('')
+  const handleHobbyInputChange = async (e: any) => {
+    setHobbyInputValue(e.target.value)
+  }
   const params = new URLSearchParams()
   const handleFilter = async () => {
     if (filterData.category === '' && filterData.subCategory === '')
@@ -138,11 +141,12 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                 id="outlined-basic"
                 variant="outlined"
                 value={filterData.hobby}
-                onChange={(e) =>
+                onChange={(e) => {
+                  handleHobbyInputChange
                   setFilterData((prev) => {
                     return { ...prev, hobby: e.target.value }
                   })
-                }
+                }}
               />
             </div>
           </div>

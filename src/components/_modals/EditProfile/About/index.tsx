@@ -40,7 +40,8 @@ const ProfileAboutEditModal: React.FC<Props> = ({
 
   const [data, setData] = useState<ProfileAboutData>({ about: '' })
   const [nextDisabled, setNextDisabled] = useState(false)
-
+  const [backDisabled, SetBackDisabled] = useState(false)
+  const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
   const [inputErrs, setInputErrs] = useState<{ about: string | null }>({
@@ -53,9 +54,40 @@ const ProfileAboutEditModal: React.FC<Props> = ({
     })
     setInputErrs({ about: null })
   }
+  const Backsave = async () => {
+    setBackBtnLoading(true)
+    if (
+      !data.about ||
+      data.about?.trim() === '' ||
+      data.about === '<p><br></p>'
+    ) {
+      if (onBackBtnClick) onBackBtnClick()
+      setBackBtnLoading(false)
+    } else {
+      const { err, res } = await updateMyProfileDetail(data)
+
+      if (err) {
+        return console.log(err)
+      }
+      setBackBtnLoading(true)
+      const { err: error, res: response } = await getMyProfileDetail()
+
+      if (error) return console.log(error)
+      if (response?.data.success) {
+        dispatch(updateUser(response.data.data.user))
+
+        if (onBackBtnClick) onBackBtnClick()
+        setBackBtnLoading(false)
+      }
+    }
+  }
 
   const handleSubmit = async () => {
-    if (!data.about || data.about?.trim() === '' || data.about === '<p><br></p>') {
+    if (
+      !data.about ||
+      data.about?.trim() === '' ||
+      data.about === '<p><br></p>'
+    ) {
       setInputErrs((prev) => {
         return { ...prev, about: 'This field is required!' }
       })
@@ -89,6 +121,14 @@ const ProfileAboutEditModal: React.FC<Props> = ({
       // setNextDisabled(true)
     } else {
       setNextDisabled(false)
+    }
+  }, [data])
+
+  useEffect(() => {
+    if (isEmpty(data.about)) {
+      SetBackDisabled(true)
+    } else {
+      SetBackDisabled(false)
     }
   }, [data])
 
@@ -127,9 +167,16 @@ const ProfileAboutEditModal: React.FC<Props> = ({
           {Boolean(onBackBtnClick) && (
             <button
               className="modal-footer-btn cancel"
-              onClick={onBackBtnClick}
+              onClick={Backsave}
+              disabled={backBtnLoading ? backBtnLoading : backDisabled}
             >
-              Back
+              {backBtnLoading ? (
+                <CircularProgress color="inherit" size={'24px'} />
+              ) : onBackBtnClick ? (
+                'Back'
+              ) : (
+                'Back'
+              )}
             </button>
           )}
 

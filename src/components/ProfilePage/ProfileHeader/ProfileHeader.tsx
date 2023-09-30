@@ -254,7 +254,7 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
                   dispatch(
                     openModal({ type: 'listing-type-edit', closable: true }),
                   )
-                  dispatch(updateListingTypeModalMode({ mode: 'edit' }))
+                  dispatch(updateListingTypeModalMode({ mode: 'create' }))
                 }}
                 className={styles.makeMyPageButton}
               >

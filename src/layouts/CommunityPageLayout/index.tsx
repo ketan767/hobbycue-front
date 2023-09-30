@@ -83,7 +83,9 @@ const CommunityLayout: React.FC<Props> = ({
       params.append('_hobby', item.hobby._id)
     })
     if (!activeProfile?.data?._hobbies) return
+
     if (activeProfile?.data?._hobbies.length === 0) return
+    console.log('active', activeProfile.data._hobbies)
     dispatch(updateLoading(true))
     const { err, res } = await getAllPosts(params.toString())
     if (err) return console.log(err)
@@ -100,10 +102,18 @@ const CommunityLayout: React.FC<Props> = ({
   const handleHobbyClick = async (hobbyId: any) => {
     if (selectedHobby !== hobbyId) {
       setSelectedHobby(hobbyId)
+      // Fetch posts for the newly selected hobby
+      const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
+      params.append('_hobby', hobbyId)
+      dispatch(updateLoading(true))
+
+      dispatch(updateLoading(false))
     } else {
       setSelectedHobby('')
+      getPost()
     }
   }
+
   const EditProfileLocation = () => {
     window.location.href = '/settings/localization-and-payments'
   }
@@ -125,6 +135,10 @@ const CommunityLayout: React.FC<Props> = ({
     }
     if (selectedHobby !== '') {
       params.append('_hobby', selectedHobby)
+    } else {
+      activeProfile?.data?._hobbies.forEach((item: any) => {
+        params.append('_hobby', item.hobby._id)
+      })
     }
     if (selectedLocation !== '' && selectedLocation !== 'Everyone') {
       params.append('visibility', selectedLocation)
