@@ -253,12 +253,20 @@ const ListingAddressEditModal: React.FC<Props> = ({
         console.log('response', response)
         if (results && results.length > 0) {
           const { formatted_address, address_components } = results[0]
+          let locality = ''
+          let society = ''
           let city = ''
           let state = ''
           let country = ''
           let pin_code = ''
 
           address_components.forEach((component: any) => {
+            if (component.types.includes('neighborhood')) {
+              society = component.long_name
+            }
+            if (component.types.includes('sublocality_level_3')) {
+              locality = component.long_name
+            }
             if (component.types.includes('locality')) {
               city = component.long_name
             }
@@ -280,6 +288,8 @@ const ListingAddressEditModal: React.FC<Props> = ({
               city: { value: city, error: null },
               country: { value: country, error: null },
               pin_code: { value: pin_code, error: null },
+              society: { value: society, error: null },
+              locality: { value: locality, error: null },
             }
           })
         }
@@ -315,8 +325,8 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   value={data.street.value}
                   name="street"
                   required={listingModalData.type === listingTypes.PLACE}
-                  ref={inputRef}
                   onChange={handleInputChange}
+                  ref={streetRef}
                 />
                 <Image
                   src={LocationIcon}
@@ -341,6 +351,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   required={listingModalData.type === listingTypes.PLACE}
                   name="society"
                   onChange={handleInputChange}
+                  ref={societyRef}
                 />
                 <p className={styles['helper-text']}>{data.society.error}</p>
               </div>
@@ -357,6 +368,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   required={listingModalData.type === listingTypes.PLACE}
                   name="locality"
                   onChange={handleInputChange}
+                  ref={localityRef}
                 />
                 <p className={styles['helper-text']}>{data.locality.error}</p>
               </div>
@@ -388,6 +400,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   required={listingModalData.type === listingTypes.PLACE}
                   name="pin_code"
                   onChange={handleInputChange}
+                  ref={pincodeRef}
                 />
                 <p className={styles['helper-text']}>{data.pin_code.error}</p>
               </div>

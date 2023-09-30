@@ -46,9 +46,11 @@ export const DropdownOption: React.FC<Props> = (props) => {
   return (
     <div data-column="2" className={styles['dropdown-container']}>
       <aside
-        className={`${styles['heading']} ${
-          currentValue === display ? styles['city-select'] : ''
-        } `}
+        className={`
+    ${styles['heading']} 
+    ${currentValue === display ? styles['city-select'] : ''} 
+    ${active ? styles['active'] : ''}
+  `}
         onClick={() => onChange(display.split(' ')[0])}
       >
         <p>{display}</p>

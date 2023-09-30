@@ -28,6 +28,7 @@ const HobbyPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
   const [hideLastColumn, sethideLastColumn] = useState(false)
   const router = useRouter()
   const [seeAll, setSeeAll] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (hideLastColumnPages.includes(activeTab)) {
@@ -53,16 +54,18 @@ const HobbyPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
     if (scrollValue >= 308) setShowSmallHeader(true)
     else setShowSmallHeader(false)
   }
-
+  console.log('setmem', members)
   const getMembers = async () => {
+    setLoading(true)
     const { err, res } = await getHobbyMembers(`${data._id}`)
+    console.log('mem', res.data)
     if (err) return console.log(err)
-    if (res.data.success) {
-      console.log('mem', res.data.data.users)
-      if (res.data.data.users) {
-        setMembers(res.data.data.users)
+    if (res?.data) {
+      if (res?.data?.users) {
+        setMembers(res.data.users.filter((user: any) => user !== null))
       }
     }
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -114,14 +117,28 @@ const HobbyPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
               <h4 className={styles['heading']}>Members</h4>
               <hr />
               <div className={styles['member-list']}>
-                {members.length > 0 ? (
+                {loading ? (
+                  <p>Loading...</p>
+                ) : members.length > 0 ? (
                   <>
                     {members
                       .slice(0, seeAll ? members.length : 5)
                       .map((user: any, idx: number) => (
-                        <p key={idx}>{user}</p>
+                        <p key={idx}>
+                          <Link href={`/profile/${user.profile_url}`}>
+                            <div className={styles['hobbies-members']}>
+                              <img
+                                className={styles['member-img']}
+                                width="24"
+                                height="24"
+                                src={user.profile_image}
+                              ></img>
+                              <div>{user.full_name}</div>
+                            </div>
+                          </Link>
+                        </p>
                       ))}
-                    {members.length > 5 && (
+                    {members.length > 5 && !seeAll && (
                       <p className={styles.seeAllBtn} onClick={toggleMembers}>
                         See All
                       </p>

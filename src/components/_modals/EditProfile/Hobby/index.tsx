@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
 import {
@@ -46,7 +46,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const dispatch = useDispatch()
 
   const { user } = useSelector((state: RootState) => state.user)
-
+  const searchref = useRef<HTMLInputElement>(null)
   const [addHobbyBtnLoading, setAddHobbyBtnLoading] = useState<boolean>(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [nextDisabled, setNextDisabled] = useState(false)
@@ -155,6 +155,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const handleSubmit = () => {
     if (userHobbies.length === 0) {
       setError(true)
+      searchref.current?.focus()
       return
     }
     if (onComplete) onComplete()
@@ -218,6 +219,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                           setShowHobbyDowpdown(false)
                         }, 300)
                       }
+                      ref={searchref}
                       onChange={handleHobbyInputChange}
                     />
                   </div>

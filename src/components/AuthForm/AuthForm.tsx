@@ -364,6 +364,11 @@ const AuthForm: React.FC<Props> = (props) => {
             helperText={inputErrors.password}
             onFocus={() => setShowValidationConditions(true)}
             onBlur={() => setShowValidationConditions(false)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleSubmit()
+              }
+            }}
             className={`${styles.inputField} ${isModal ? styles.bgGrey : ''}`}
             InputProps={{
               endAdornment: (
