@@ -135,6 +135,10 @@ const CommunityLayout: React.FC<Props> = ({
     }
     if (selectedHobby !== '') {
       params.append('_hobby', selectedHobby)
+    } else {
+      activeProfile?.data?._hobbies.forEach((item: any) => {
+        params.append('_hobby', item.hobby._id)
+      })
     }
     if (selectedLocation !== '' && selectedLocation !== 'Everyone') {
       params.append('visibility', selectedLocation)

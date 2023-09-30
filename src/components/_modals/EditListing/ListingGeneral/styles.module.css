@@ -11,10 +11,6 @@
   overflow: hidden;
 }
 
-.modal-wrapper,
-.body{
-  height: 100%;
-}
 @media screen and (max-width: 1100px) {
   .modal-wrapper {
   max-height: calc(100vh - 6rem);
@@ -40,7 +36,7 @@
   border-radius: 8px;
 }
 .modal-wrapper .body{
-  height: 400px;
+  height: 485px;
   overflow: auto;
 }
 
