@@ -103,52 +103,54 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const handleAddHobby = () => {
     setError(null)
 
+    let selectedHobby = null
+    let selectedGenre = null
+
+    // Handle hobby input
     if (!data.hobby) {
       const matchedHobby = hobbyDropdownList.find(
         (hobby) =>
           hobby.display.toLowerCase() === hobbyInputValue.toLowerCase(),
       )
+
       if (!hobbyInputValue.trim()) {
         setError('Please enter a hobby')
         return
       }
 
       if (matchedHobby) {
-        setData((prevData) => ({ ...prevData, hobby: matchedHobby }))
+        selectedHobby = matchedHobby
       } else {
         setError('Typed hobby not found!')
         return
       }
-      if (!matchedHobby) {
-        setError('Please enter a hobby')
-      }
+    } else {
+      selectedHobby = data.hobby
     }
 
+    // Handle genre input
     if (!data.genre && genreInputValue) {
       const matchedGenre = genreDropdownList.find(
         (genre) =>
           genre.display.toLowerCase() === genreInputValue.toLowerCase(),
       )
+
       if (matchedGenre) {
-        setData((prevData) => ({ ...prevData, genre: matchedGenre }))
+        selectedGenre = matchedGenre
       } else {
         setError('Typed Genre not found!')
         return
       }
+    } else {
+      selectedGenre = data.genre
     }
 
-    setError(null)
+    // If we've made it here without an early return, we can go ahead and update the state and proceed.
     setAddHobbyBtnLoading(true)
 
-    if (!data.hobby) {
-      console.error('Hobby is missing')
-      setAddHobbyBtnLoading(false)
-      return
-    }
-
     let jsonData = {
-      hobby: data.hobby._id,
-      genre: data.genre?._id,
+      hobby: selectedHobby._id,
+      genre: selectedGenre?._id,
       level: data.level,
     }
 

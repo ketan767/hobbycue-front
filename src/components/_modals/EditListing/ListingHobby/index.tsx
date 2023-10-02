@@ -95,42 +95,43 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   const handleAddHobby = async () => {
     setError(null)
     setNextDisabled(false)
+    let selectedHobby = null
+    let selectedGenre = null
 
     if (!data.hobby) {
       const matchedHobby = hobbyDropdownList.find(
         (hobby) =>
           hobby.display.toLowerCase() === hobbyInputValue.toLowerCase(),
       )
+
       if (!hobbyInputValue.trim()) {
         setError('Please enter a hobby')
         return
       }
+
       if (matchedHobby) {
-        setData((prev) => {
-          return { ...prev, hobby: matchedHobby }
-        })
+        selectedHobby = matchedHobby
       } else {
         setError('Typed hobby not found!')
         return
       }
-      if (!matchedHobby) {
-        setError('Please enter a hobby')
-      }
+    } else {
+      selectedHobby = data.hobby
     }
-
     if (!data.genre && genreInputValue) {
       const matchedGenre = genreDropdownList.find(
         (genre) =>
           genre.display.toLowerCase() === genreInputValue.toLowerCase(),
       )
+
       if (matchedGenre) {
-        setData((prev) => {
-          return { ...prev, genre: matchedGenre }
-        })
+        selectedGenre = matchedGenre
       } else {
         setError('Typed Genre not found!')
         return
       }
+    } else {
+      selectedGenre = data.genre
     }
 
     if (!data.hobby || !listingModalData._id) return
