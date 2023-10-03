@@ -47,7 +47,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
     hobby: null,
     genre: null,
   })
-  const [error, setError] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
   const [showGenreDropdown, setShowGenreDropdown] = useState<boolean>(false)
@@ -93,9 +93,47 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   }
 
   const handleAddHobby = async () => {
-    // @TODO: Error Handling
-    setError(false)
+    setError(null)
     setNextDisabled(false)
+    let selectedHobby = null
+    let selectedGenre = null
+
+    if (!data.hobby) {
+      const matchedHobby = hobbyDropdownList.find(
+        (hobby) =>
+          hobby.display.toLowerCase() === hobbyInputValue.toLowerCase(),
+      )
+
+      if (!hobbyInputValue.trim()) {
+        setError('Please enter a hobby')
+        return
+      }
+
+      if (matchedHobby) {
+        selectedHobby = matchedHobby
+      } else {
+        setError('Typed hobby not found!')
+        return
+      }
+    } else {
+      selectedHobby = data.hobby
+    }
+    if (!data.genre && genreInputValue) {
+      const matchedGenre = genreDropdownList.find(
+        (genre) =>
+          genre.display.toLowerCase() === genreInputValue.toLowerCase(),
+      )
+
+      if (matchedGenre) {
+        selectedGenre = matchedGenre
+      } else {
+        setError('Typed Genre not found!')
+        return
+      }
+    } else {
+      selectedGenre = data.genre
+    }
+
     if (!data.hobby || !listingModalData._id) return
 
     setAddHobbyBtnLoading(true)
@@ -124,7 +162,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
 
   const handleSubmit = () => {
     if (hobbiesList.length === 0) {
-      setError(true)
+      setError('Add atleast one hobby!')
       return
     }
     if (onComplete) onComplete()
@@ -321,9 +359,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
                   </tbody>
                 </table>
               </section>
-              <p className={styles['helper-text']}>
-                {error ? 'Add atleast one hobby!' : ''}
-              </p>
+              <p className={styles['helper-text']}>{error}</p>
             </section>
           </>
         </section>

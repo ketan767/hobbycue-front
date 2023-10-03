@@ -243,6 +243,10 @@ const ListingAddressEditModal: React.FC<Props> = ({
     }
   }
 
+  useEffect(() => {
+    getLocation()
+  }, [])
+
   const handleGeocode = (lat: any, long: any) => {
     axios
       .get(
