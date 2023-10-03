@@ -16,7 +16,6 @@ import Address from './address'
 import { updateAddressToEdit, updateUser } from '@/redux/slices/user'
 import { deleteUserAddress, getMyProfileDetail } from '@/services/user.service'
 
-type Props = {}
 const options = [
   'Everyone',
   'My City',
@@ -24,7 +23,7 @@ const options = [
   'My Locality',
   'My Society',
 ]
-const VisibilityAndNotification: React.FC<Props> = ({}) => {
+const VisibilityAndNotification: React.FC = () => {
   const { user, activeProfile } = useSelector((state: RootState) => state.user)
   const dispatch = useDispatch()
 
@@ -83,6 +82,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
                 address={address}
                 handleAddressEdit={handleAddressEdit}
                 handleDeleteAddress={handleDeleteAddress}
+                isPrimary={user?.primary_address?._id === address?._id}
               />
             )
           })}

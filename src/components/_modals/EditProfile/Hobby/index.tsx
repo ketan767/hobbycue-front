@@ -145,7 +145,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       selectedGenre = data.genre
     }
 
-    // If we've made it here without an early return, we can go ahead and update the state and proceed.
     setAddHobbyBtnLoading(true)
 
     let jsonData = {
