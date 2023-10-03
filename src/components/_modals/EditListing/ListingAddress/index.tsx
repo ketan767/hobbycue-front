@@ -325,7 +325,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
               >
                 <input
                   type="text"
-                  placeholder={`Enter address or click the 'GPS icon' to auto-detect`}
+                  placeholder={`GPS icon to the right`}
                   value={data.street.value}
                   name="street"
                   required={listingModalData.type === listingTypes.PLACE}
