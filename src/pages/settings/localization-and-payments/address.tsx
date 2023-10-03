@@ -12,6 +12,8 @@ import { withAuth } from '@/navigation/withAuth'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { openModal } from '@/redux/slices/modal'
+import { CircularProgress } from '@mui/material'
+import ConfirmationModal from '@/components/_modals/ConfirmationModal'
 import useCheckIfClickedOutside from '@/hooks/useCheckIfClickedOutside'
 import {
   getMyProfileDetail,
@@ -23,12 +25,14 @@ type Props = {
   address: any
   handleAddressEdit: any
   handleDeleteAddress: any
+  isPrimary: any
 }
 const Address: React.FC<Props> = ({
   address,
   handleAddressEdit,
   handleDeleteAddress,
 }) => {
+  const [isModalOpen, setModalOpen] = useState(false)
   const [optionsActive, setOptionsActive] = useState(false)
   const editRef: any = useRef(null)
   useCheckIfClickedOutside(editRef, () => setOptionsActive(false))
@@ -45,10 +49,23 @@ const Address: React.FC<Props> = ({
     }
     if (res?.data?.data?.user) {
       const { err: error, res: response } = await getMyProfileDetail()
-      // console.log('res', response?.data?.data)
       if (response?.data?.data?.user) {
         dispatch(updateUser(response?.data?.data?.user))
       }
+    }
+  }
+
+  const handleCancel = () => {
+    setModalOpen(false)
+  }
+
+  const handleClose = () => {
+    setModalOpen(false)
+  }
+
+  const handleBgClick = (event: any) => {
+    if (event.target === event.currentTarget) {
+      setModalOpen(false)
     }
   }
   console.log('address', address)
@@ -102,7 +119,14 @@ const Address: React.FC<Props> = ({
           } `}
         >
           <li onClick={() => handleAddressEdit(address?._id)}>Edit</li>
-          <li onClick={() => handleDeleteAddress(address?._id)}>Delete</li>
+          <li onClick={() => setModalOpen(true)}>Delete</li>
+          <ConfirmationModal
+            isOpen={isModalOpen}
+            onConfirm={() => handleDeleteAddress(address?._id)}
+            onCancel={handleCancel}
+            handleClose={handleClose}
+            handleBgClick={handleBgClick}
+          />
         </ul>
       </div>
     </div>
