@@ -50,7 +50,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const [addHobbyBtnLoading, setAddHobbyBtnLoading] = useState<boolean>(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [nextDisabled, setNextDisabled] = useState(false)
-  const [error, setError] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const [data, setData] = useState<ProfileHobbyData>({
     hobby: null,
@@ -101,16 +101,61 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   }
 
   const handleAddHobby = () => {
-    if (!data.hobby) return
-    setError(false)
+    setError(null)
+
+    let selectedHobby = null
+    let selectedGenre = null
+
+    // Handle hobby input
+    if (!data.hobby) {
+      const matchedHobby = hobbyDropdownList.find(
+        (hobby) =>
+          hobby.display.toLowerCase() === hobbyInputValue.toLowerCase(),
+      )
+
+      if (!hobbyInputValue.trim()) {
+        setError('Please enter a hobby')
+        return
+      }
+
+      if (matchedHobby) {
+        selectedHobby = matchedHobby
+      } else {
+        setError('Typed hobby not found!')
+        return
+      }
+    } else {
+      selectedHobby = data.hobby
+    }
+
+    // Handle genre input
+    if (!data.genre && genreInputValue) {
+      const matchedGenre = genreDropdownList.find(
+        (genre) =>
+          genre.display.toLowerCase() === genreInputValue.toLowerCase(),
+      )
+
+      if (matchedGenre) {
+        selectedGenre = matchedGenre
+      } else {
+        setError('Typed Genre not found!')
+        return
+      }
+    } else {
+      selectedGenre = data.genre
+    }
+
+    // If we've made it here without an early return, we can go ahead and update the state and proceed.
     setAddHobbyBtnLoading(true)
 
     let jsonData = {
-      hobby: data.hobby?._id,
-      genre: data.genre?._id,
+      hobby: selectedHobby._id,
+      genre: selectedGenre?._id,
       level: data.level,
     }
+
     addUserHobby(jsonData, async (err, res) => {
+      console.log('Button clicked!')
       if (err) {
         setAddHobbyBtnLoading(false)
         return console.log(err)
@@ -119,6 +164,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       const { err: error, res: response } = await getMyProfileDetail()
       setAddHobbyBtnLoading(false)
       if (error) return console.log(error)
+
       if (response?.data.success) {
         dispatch(updateUser(response?.data.data.user))
         setHobbyInputValue('')
@@ -127,6 +173,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       }
     })
   }
+
   const handleDeleteHobby = async (id: string) => {
     const { err, res } = await deleteUserHobby(id)
 
@@ -154,7 +201,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
   const handleSubmit = () => {
     if (userHobbies.length === 0) {
-      setError(true)
+      setError('Add atleast one hobby!')
       searchref.current?.focus()
       return
     }
@@ -423,9 +470,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                 </table>
               </section>
             </section>
-            <p className={styles['helper-text']}>
-              {error ? 'Add atleast one hobby!' : ''}
-            </p>
+            <p className={styles['helper-text']}>{error}</p>
           </>
         </section>
 

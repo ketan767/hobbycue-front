@@ -74,6 +74,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
     if (res?.data.success) {
       dispatch(closeModal())
       router.push('/community')
+      window.location.reload()
       // router.push(`/profile/${res?.data?.data?.user?.profile_url}`)
     }
   }
