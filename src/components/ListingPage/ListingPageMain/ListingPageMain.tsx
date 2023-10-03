@@ -217,7 +217,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
                   if (typeof item === 'string') return null
                   return (
                     <li key={item._id} className={styles.textGray}>
-                      {item?.name} - {item?.description}
+                      {item?.name}
                     </li>
                   )
                 })}

@@ -178,7 +178,7 @@
   display: block;
   background: #ffffff;
   overflow: auto;
-  max-height: 17rem;
+  max-height: 15.4rem;
 
   padding: 0 var(--spacing-12);
   border: 1px solid #ced4da;
