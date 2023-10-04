@@ -164,14 +164,13 @@ const ListingTagsEditModal: React.FC<Props> = ({
               })}
           </div>
           <div className={styles['input-box']}>
-            <label>Add Tags</label>
             <input hidden required />
             <div className={styles['select-container']} ref={dropdownRef}>
               <div
                 className={styles['select-input']}
                 onClick={() => setShowDropdown(true)}
               >
-                <p> Select listin tag.. </p>
+                <p> Select listing tag.. </p>
                 <Image src={DownArrow} alt="down" />
               </div>
               {showDropdown && (

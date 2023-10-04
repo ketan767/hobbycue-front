@@ -191,7 +191,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
                     className={styles['select-input']}
                     onClick={() => setShowDropdown(true)}
                   >
-                    <p> Select listin tag.. </p>
+                    <p> Select listing tag.. </p>
                     <Image src={DownArrow} alt="down" />
                   </div>
                   {showDropdown && (

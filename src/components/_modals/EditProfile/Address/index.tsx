@@ -500,7 +500,16 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    getLocation()
+    if (
+      !data.city ||
+      data.city === '' ||
+      !data.state ||
+      data.state === '' ||
+      !data.country ||
+      data.country === ''
+    ) {
+      getLocation()
+    }
   }, [])
 
   const handleGeocode = (lat: any, long: any) => {
