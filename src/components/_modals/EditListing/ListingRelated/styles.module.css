@@ -232,6 +232,7 @@
   display: flex;
   align-items: center;
   margin-bottom: 1rem;
+  align-items: end;
 }
 
 .dropdown-warpper .dropdown {
@@ -279,6 +280,24 @@
 }
 .dropdownItem:hover{
   background-color: #94949444;
+}
+.add-btn{
+  --color: rgb(var(--white-rgb));
+  --bg-color: rgb(var(--primary-100-rgb));
+
+  width: 100%;
+  max-width: 77px;
+  height: var(--spacing-40);
+
+  border-radius: 8px;
+  background-color: var(--bg-color);
+  color: var(--color);
+  border: 1px solid rgb(var(--primary-100-rgb));
+
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 16px;
+  cursor: pointer;
 }
 @media screen and (max-width: 1100px) {
   .modal-wrapper {

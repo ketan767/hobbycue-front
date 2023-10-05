@@ -48,6 +48,7 @@ const ListingAboutEditModal: React.FC<Props> = ({
     description: { value: '', error: null },
   })
   const [nextDisabled, setNextDisabled] = useState(false)
+  const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
@@ -55,6 +56,31 @@ const ListingAboutEditModal: React.FC<Props> = ({
     setData((prev) => {
       return { ...prev, description: { value, error: null } }
     })
+  }
+
+  const handleBack = async () => {
+    if (
+      !data.description.value ||
+      data.description.value === '' ||
+      data.description.value === '<p><br></p>'
+    ) {
+      if (onBackBtnClick) onBackBtnClick()
+      return
+    }
+
+    setBackBtnLoading(true)
+    const { err, res } = await updateListing(listingModalData._id, {
+      description: data.description.value,
+    })
+    setBackBtnLoading(false)
+    if (err) {
+      console.log(err)
+      return
+    }
+    if (res?.data.success) {
+      dispatch(updateListingModalData(res.data.data.listing))
+      if (onBackBtnClick) onBackBtnClick()
+    }
   }
 
   const handleSubmit = async () => {
@@ -136,11 +162,14 @@ const ListingAboutEditModal: React.FC<Props> = ({
 
         <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
-            <button
-              className="modal-footer-btn cancel"
-              onClick={onBackBtnClick}
-            >
-              Back
+            <button className="modal-footer-btn cancel" onClick={handleBack}>
+              {backBtnLoading ? (
+                <CircularProgress color="inherit" size={'24px'} />
+              ) : onBackBtnClick ? (
+                'Back'
+              ) : (
+                'Back'
+              )}
             </button>
           )}
 

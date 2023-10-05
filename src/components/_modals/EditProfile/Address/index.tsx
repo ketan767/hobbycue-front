@@ -37,6 +37,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backDisabled, SetBackDisabled] = useState(false)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
+  const [dataLoaded, setDataLoaded] = useState(false)
 
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -88,20 +89,12 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   const Backsave = async () => {
     setBackBtnLoading(true)
     if (
-      !addressLabel ||
-      addressLabel === '' ||
       !data.city ||
       data.city === '' ||
       !data.state ||
       data.state === '' ||
       !data.country ||
-      data.country === '' ||
-      !data.society ||
-      data.society === '' ||
-      !data.locality ||
-      data.locality === '' ||
-      !data.pin_code ||
-      data.pin_code === ''
+      data.country === ''
     ) {
       if (onBackBtnClick) onBackBtnClick()
       setBackBtnLoading(false)
@@ -443,6 +436,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       })
     }
   }
+
   useEffect(() => {
     if (editLocation) {
       const address = user._addresses.find(
@@ -452,9 +446,11 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       if (address) {
         setData(address)
         setAddressLabel(address.label)
+        setDataLoaded(true)
       }
     } else if (addLocation) {
     } else {
+      setDataLoaded(true)
       setData({
         street: user.primary_address?.street,
         society: user.primary_address?.society,
@@ -500,17 +496,19 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    if (
-      !data.city ||
-      data.city === '' ||
-      !data.state ||
-      data.state === '' ||
-      !data.country ||
-      data.country === ''
-    ) {
-      getLocation()
+    if (dataLoaded) {
+      if (
+        !data.city ||
+        data.city === '' ||
+        !data.state ||
+        data.state === '' ||
+        !data.country ||
+        data.country === ''
+      ) {
+        getLocation()
+      }
     }
-  }, [])
+  }, [dataLoaded, data])
 
   const handleGeocode = (lat: any, long: any) => {
     axios
@@ -542,10 +540,10 @@ const ProfileAddressEditModal: React.FC<Props> = ({
             if (component.types.includes('postal_code')) {
               pin_code = component.long_name
             }
-            if (component.types.includes('sublocality_level_3')) {
+            if (component.types.includes('sublocality_level_1')) {
               locality = component.long_name
             }
-            if (component.types.includes('neighborhood')) {
+            if (component.types.includes('sublocality_level_3')) {
               society = component.long_name
             }
           })
@@ -610,7 +608,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               <div className={styles['street-input-container']}>
                 <input
                   type="text"
-                  placeholder={`GPS icon to the right`}
+                  placeholder={`Enter address or click the "locate me" icon to auto-detect`}
                   required
                   value={data.street}
                   name="street"
@@ -717,6 +715,11 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                 <p className={styles['helper-text']}>{inputErrs.country}</p>
               </div>
             </section>
+            <div className={styles['input-box']}>
+              <label>Location ID</label>
+
+              <input type="text" placeholder={`Map to existing Location...`} />
+            </div>
           </>
         </section>
 
