@@ -62,6 +62,7 @@ type Step =
 export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
   const dispatch = useDispatch()
   const [activeStep, setActiveStep] = useState<Step>('General')
+  const [furthestStepIndex, setFurthestStepIndex] = useState<number>(0)
 
   const router = useRouter()
 
@@ -90,9 +91,12 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
   }
 
   const handleNext = () => {
-    setActiveStep(
-      (prevActiveStep: Step) => steps[steps.indexOf(prevActiveStep) + 1],
-    )
+    const newIndex = totalSteps.indexOf(activeStep) + 1
+    setActiveStep(totalSteps[newIndex])
+
+    if (newIndex > furthestStepIndex) {
+      setFurthestStepIndex(newIndex)
+    }
   }
   const handleBack = () => {
     setActiveStep(
@@ -182,8 +186,9 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
       )}
 
       <section className={styles['step-indicators']}>
-        {steps.map((step, index) => {
-          const isClickable = index < steps.indexOf(activeStep)
+        {totalSteps.map((step, index) => {
+          const isClickable = index <= furthestStepIndex
+
           return (
             <span
               key={step}
