@@ -82,15 +82,13 @@ const ListingTagsEditModal: React.FC<Props> = ({
     }
   }
 
-  const handleChange = (itemToChange: any) => {
-    if (tags?.includes(itemToChange)) {
-      setTags((prev: any) => prev.filter((item: any) => item !== itemToChange))
+  const handleChange = (idToChange: any) => {
+    if (selectedTags.includes(idToChange)) {
+      setSelectedTags((prev: any) =>
+        prev.filter((item: any) => item !== idToChange),
+      )
     } else {
-      if (tags) {
-        setTags((prev: any) => [...prev, itemToChange])
-      } else {
-        setTags((prev: any) => [itemToChange])
-      }
+      setSelectedTags((prev: any) => [...prev, idToChange])
     }
   }
 
@@ -149,7 +147,7 @@ const ListingTagsEditModal: React.FC<Props> = ({
         <section className={styles['body']}>
           <div className={styles['selected-values']}>
             {tags
-              ?.filter((item) => selectedTags.includes(item._id)) // Filter tags to show only selected ones
+              ?.filter((item) => selectedTags.includes(item._id))
               .map((item: any, idx) => {
                 return (
                   <div key={item} className={styles['selected-value']}>
@@ -157,25 +155,25 @@ const ListingTagsEditModal: React.FC<Props> = ({
                     <Image
                       src={CrossIcon}
                       alt="cancel"
-                      onClick={() => handleChange(item)}
+                      onClick={() => handleChange(item._id)}
                     />
                   </div>
                 )
               })}
           </div>
           <div className={styles['input-box']}>
-            <label>Add Tags</label>
             <input hidden required />
             <div className={styles['select-container']} ref={dropdownRef}>
               <div
                 className={styles['select-input']}
                 onClick={() => setShowDropdown(true)}
               >
-                <p> Select listin tag.. </p>
+                <p> Select listing tag.. </p>
                 <Image src={DownArrow} alt="down" />
               </div>
               {showDropdown && (
                 <div className={styles['options-container']}>
+                  <div className={styles['vertical-line']}></div>
                   {tags.map((item: any, idx) => {
                     return (
                       <div

@@ -62,8 +62,8 @@ const RelatedListingEditModal: React.FC<Props> = ({
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-   inputRef?.current?.focus()
- }, [])
+    inputRef?.current?.focus()
+  }, [])
   useEffect(() => {
     const updated = listingData.filter(
       (item: any) =>
@@ -186,12 +186,12 @@ const RelatedListingEditModal: React.FC<Props> = ({
       <div className={styles['modal-wrapper']}>
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>{'About'}</h4>
+          <h4 className={styles['heading']}>{'Related Listing'}</h4>
         </header>
         <hr />
         <section className={styles['body']}>
           <div className={styles['input-box']}>
-            <label>Add Tags</label>
+            <label>Relation</label>
             <input hidden required />
 
             <FormControl variant="outlined" size="small" sx={{ width: '100%' }}>
@@ -251,16 +251,25 @@ const RelatedListingEditModal: React.FC<Props> = ({
                       }}
                       className={styles.dropdownItem}
                     >
-                      <Image src={item.profile_image ? item.profile_image : DefaultProfile} alt='profile' width={20} height={20} />
+                      <Image
+                        src={
+                          item.profile_image
+                            ? item.profile_image
+                            : DefaultProfile
+                        }
+                        alt="profile"
+                        width={20}
+                        height={20}
+                      />
                       <p>{item?.title}</p>
                     </div>
                   )
                 })}
               </div>
             )}
-            <Button
+            <button
               disabled={addPageLoading}
-              variant="contained"
+              className={styles['add-btn']}
               onClick={handleAddPage}
             >
               {addPageLoading ? (
@@ -268,7 +277,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
               ) : (
                 'Add'
               )}
-            </Button>
+            </button>
           </section>
 
           {/* <div className={styles['input-box']}>

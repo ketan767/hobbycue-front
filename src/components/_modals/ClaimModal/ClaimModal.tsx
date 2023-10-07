@@ -47,7 +47,7 @@ const ClaimModal = () => {
             </div>
           </div>
           <div className={styles['input-box']}>
-            <label>LWebsite or Social Media page?</label>
+            <label>Website or Social Media page?</label>
             <div className={styles['street-input-container']}>
               <input type="text" required name="street" />
             </div>
