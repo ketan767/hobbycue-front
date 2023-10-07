@@ -312,9 +312,11 @@ export const Navbar: React.FC<Props> = ({}) => {
                     </section>
                     <section className={styles['list']}>
                       <h4>
-                        <Link href={'/'} className={styles['hobbiescategory']}>
-                          {' '}
-                          All Hobbies{' '}
+                        <Link
+                          href={'/hobby'}
+                          className={styles['hobbiescategory']}
+                        >
+                          All Hobbies
                         </Link>
                       </h4>
 

@@ -46,6 +46,9 @@ const ListingAddressEditModal: React.FC<Props> = ({
 
   const { listingModalData } = useSelector((state: RootState) => state.site)
   const [nextDisabled, setNextDisabled] = useState(false)
+  const [backDisabled, SetBackDisabled] = useState(false)
+  const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
+  const [dataLoaded, setDataLoaded] = useState(false)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -80,6 +83,39 @@ const ListingAddressEditModal: React.FC<Props> = ({
         [event.target.name]: { value: event.target.value, error: null },
       }
     })
+  }
+
+  const handleBackButtonClick = async () => {
+    if (!data.country.value && !data.city.value && !data.state.value) {
+      if (onBackBtnClick) {
+        onBackBtnClick()
+      }
+      return
+    }
+
+    const jsonData = {
+      street: data.street.value,
+      society: data.society.value,
+      locality: data.locality.value,
+      city: data.city.value,
+      pin_code: data.pin_code.value,
+      state: data.state.value,
+      country: data.country.value,
+      latitude: data.latitude.value,
+      longitude: data.longitude.value,
+    }
+    setBackBtnLoading(true)
+    const { err, res } = await updateListingAddress(
+      listingModalData._address?._id
+        ? listingModalData._address?._id
+        : listingModalData._address,
+      jsonData,
+    )
+    if (err) return console.log(err)
+
+    if (onBackBtnClick) {
+      onBackBtnClick()
+    }
   }
 
   const handleSubmit = async () => {
@@ -200,6 +236,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
   }
 
   useEffect(() => {
+    setDataLoaded(true)
     setData({
       street: { value: '', error: null },
       society: { value: '', error: null },
@@ -244,8 +281,19 @@ const ListingAddressEditModal: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    getLocation()
-  }, [])
+    if (dataLoaded) {
+      if (
+        !data.city.value ||
+        data.city.value === '' ||
+        !data.state ||
+        data.state.value === '' ||
+        !data.country.value ||
+        data.country.value === ''
+      ) {
+        getLocation()
+      }
+    }
+  }, [dataLoaded, data])
 
   const handleGeocode = (lat: any, long: any) => {
     axios
@@ -452,9 +500,15 @@ const ListingAddressEditModal: React.FC<Props> = ({
           {Boolean(onBackBtnClick) && (
             <button
               className="modal-footer-btn cancel"
-              onClick={onBackBtnClick}
+              onClick={handleBackButtonClick}
             >
-              Back
+              {backBtnLoading ? (
+                <CircularProgress color="inherit" size={'24px'} />
+              ) : onBackBtnClick ? (
+                'Back'
+              ) : (
+                'Back'
+              )}
             </button>
           )}
 

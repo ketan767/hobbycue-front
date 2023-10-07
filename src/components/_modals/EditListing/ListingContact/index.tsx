@@ -45,6 +45,8 @@ const ListingContactEditModal: React.FC<Props> = ({
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [nextDisabled, setNextDisabled] = useState(false)
+  const [backDisabled, SetBackDisabled] = useState(false)
+  const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [tick, setTick] = useState(false)
   const [data, setData] = useState<ListingContactData>({
     phone: { value: '', error: null },
@@ -67,6 +69,37 @@ const ListingContactEditModal: React.FC<Props> = ({
         [event.target.name]: { value: event.target.value, error: null },
       }
     })
+  }
+
+  const handleBack = async () => {
+    setBackBtnLoading(true)
+    const { phone, public_email, website, whatsapp_number } = data
+
+    if (
+      !phone.value &&
+      !public_email.value &&
+      !website.value &&
+      !whatsapp_number.value
+    ) {
+      onBackBtnClick && onBackBtnClick()
+      return
+    } else {
+      const jsonData = {
+        phone: data.phone.value,
+        public_email: data.public_email.value,
+        website: data.website.value,
+        whatsapp_number: data.whatsapp_number.value,
+      }
+
+      const { err, res } = await updateListing(listingModalData._id, jsonData)
+      setBackBtnLoading(false)
+      if (err) return console.log(err)
+      if (res?.data.success) {
+        dispatch(updateListingModalData(res?.data.data.listing))
+      }
+
+      if (onBackBtnClick) onBackBtnClick()
+    }
   }
 
   const handleSubmit = async () => {
@@ -281,7 +314,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                 </label>
                 <input
                   type="text"
-                  placeholder={`-91`}
+                  placeholder={`+91`}
                   value={data.whatsapp_number.value}
                   autoComplete="phone"
                   name="whatsapp_number"
@@ -324,9 +357,16 @@ const ListingContactEditModal: React.FC<Props> = ({
           {Boolean(onBackBtnClick) && (
             <button
               className="modal-footer-btn cancel"
-              onClick={onBackBtnClick}
+              onClick={handleBack}
+              disabled={backBtnLoading ? backBtnLoading : backDisabled}
             >
-              Back
+              {backBtnLoading ? (
+                <CircularProgress color="inherit" size={'24px'} />
+              ) : onBackBtnClick ? (
+                'Back'
+              ) : (
+                'Back'
+              )}
             </button>
           )}
 

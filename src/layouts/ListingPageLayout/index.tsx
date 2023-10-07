@@ -49,18 +49,22 @@ const ListingPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
   ]
 
   useEffect(() => {
-    if (
-      isLoggedIn &&
-      isAuthenticated &&
-      Boolean(
+    if (isLoggedIn && isAuthenticated) {
+      const userHasListing = Boolean(
         user._listings?.find(
           (listing: any) => listing.page_url === router.query.page_url,
         ),
       )
-    )
-      dispatch(updateListingLayoutMode('edit'))
-    else dispatch(updateListingLayoutMode('view'))
-  }, [router.pathname, isLoggedIn, isAuthenticated, user])
+
+      if (userHasListing) {
+        dispatch(updateListingLayoutMode('edit'))
+      } else {
+        dispatch(updateListingLayoutMode('view'))
+      }
+    } else {
+      dispatch(updateListingLayoutMode('view'))
+    }
+  }, [user, router.query.page_url, isLoggedIn, isAuthenticated, dispatch])
 
   return (
     <>
