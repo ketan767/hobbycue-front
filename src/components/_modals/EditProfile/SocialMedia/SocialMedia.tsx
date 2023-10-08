@@ -13,11 +13,26 @@ import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import { updateListing } from '@/services/listing.service'
+import FacebookIcon from '@/assets/svg/Facebook.svg'
+import TwitterIcon from '@/assets/svg/Twitter.svg'
+import InstagramIcon from '@/assets/svg/Instagram.svg'
+import BehanceIcon from '@/assets/svg/Behance.svg'
+import BGGIcon from '@/assets/svg/BGG.svg'
+import ChessIcon from '@/assets/svg/Chess.com.svg'
+import DeviantArtIcon from '@/assets/svg/DeviantArt.svg'
+import GoodreadsIcon from '@/assets/svg/GoodReads.svg'
+import PinterestIcon from '@/assets/svg/Pinterest.svg'
+import SmuleIcon from '@/assets/svg/Smule.svg'
+import SoundCloudIcon from '@/assets/svg/Soundcloud.svg'
+import StravaIcon from '@/assets/svg/Strava.svg'
+import TripAdvisorIcon from '@/assets/svg/Tripadvisor.svg'
+import UltimateGuitarIcon from '@/assets/svg/Ultimate-Guitar.svg'
+import YouTubeIcon from '@/assets/svg/Youtube.svg'
 
 type Props = {
   data?: ProfilePageData['pageData']
 }
-const options = [
+const options: SocialMediaOption[] = [
   'Facebook',
   'Twitter',
   'Instagram',
@@ -25,7 +40,7 @@ const options = [
   'SoundCloud',
   'Pinterest',
   'TripAdvisor',
-  'Ultimate Guiter',
+  'Ultimate Guitar',
   'Strava',
   'DeviantArts',
   'Behance',
@@ -34,6 +49,41 @@ const options = [
   'Chess',
   'BGG',
 ]
+
+type SocialMediaOption =
+  | 'Facebook'
+  | 'Twitter'
+  | 'Instagram'
+  | 'Youtube'
+  | 'SoundCloud'
+  | 'Pinterest'
+  | 'TripAdvisor'
+  | 'Ultimate Guitar'
+  | 'Strava'
+  | 'DeviantArts'
+  | 'Behance'
+  | 'GoodReads'
+  | 'Smule'
+  | 'Chess'
+  | 'BGG'
+
+const socialMediaIcons: Record<SocialMediaOption, any> = {
+  Facebook: FacebookIcon,
+  Twitter: TwitterIcon,
+  Instagram: InstagramIcon,
+  Youtube: YouTubeIcon,
+  SoundCloud: SoundCloudIcon,
+  Pinterest: PinterestIcon,
+  TripAdvisor: TripAdvisorIcon,
+  'Ultimate Guitar': UltimateGuitarIcon,
+  Strava: StravaIcon,
+  DeviantArts: DeviantArtIcon,
+  Behance: BehanceIcon,
+  GoodReads: GoodreadsIcon,
+  Smule: SmuleIcon,
+  Chess: ChessIcon,
+  BGG: BGGIcon,
+}
 
 const ListingSocialMediaEditModal = ({ data }: Props) => {
   const [submitBtnLoading, setSubmitBtnLoading] = useState(false)
@@ -87,7 +137,7 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
     }
     if (user.social_media_urls?.ultimate_guiter_url) {
       arr.push({
-        socialMedia: 'Ultimate Guiter',
+        socialMedia: 'UltimateGuiter',
         url: user.social_media_urls?.ultimate_guiter_url,
       })
     }
@@ -246,10 +296,18 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
                 className={styles.dropdown}
                 inputProps={{ 'aria-label': 'Without label' }}
               >
-                {options.map((option: any) => {
+                {options.map((option) => {
                   return (
                     <MenuItem key={option} value={option}>
-                      <p>{option}</p>
+                      <div className={styles['menu-item']}>
+                        <Image
+                          src={socialMediaIcons[option]}
+                          alt={option}
+                          width={24}
+                          height={24}
+                        />
+                        <p style={{ marginLeft: '8px' }}>{option}</p>
+                      </div>
                     </MenuItem>
                   )
                 })}

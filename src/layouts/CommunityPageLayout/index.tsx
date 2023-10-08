@@ -68,9 +68,6 @@ const CommunityLayout: React.FC<Props> = ({
   )
 
   const [trendingHobbies, setTrendingHobbies] = useState([])
-
-  const shouldShowSeeMoreButton =
-    (activeProfile.data?._hobbies?.length ?? 0) > 3
   console.log('Number of hobbies:', activeProfile.data?._hobbies?.length)
 
   const hideThirdColumnTabs = ['pages', 'links']
@@ -117,7 +114,7 @@ const CommunityLayout: React.FC<Props> = ({
   const EditProfileLocation = () => {
     window.location.href = '/settings/localization-and-payments'
   }
-
+  console.log('l', activeProfile.data?._hobbies?.length)
   const fetchPosts = async () => {
     if (showPageLoader) {
       dispatch(setShowPageLoader(false))
@@ -401,17 +398,18 @@ const CommunityLayout: React.FC<Props> = ({
                       </li>
                     )
                   })}
-                {!seeMoreHobby ? (
-                  <p className={styles['see-more']} onClick={toggleSeeMore}>
-                    {' '}
-                    See more{' '}
-                  </p>
-                ) : (
-                  <p className={styles['see-more']} onClick={toggleSeeMore}>
-                    {' '}
-                    See less{' '}
-                  </p>
-                )}
+                {activeProfile.data?._hobbies?.length >= 4 &&
+                  (!seeMoreHobby ? (
+                    <p className={styles['see-more']} onClick={toggleSeeMore}>
+                      {' '}
+                      See more{' '}
+                    </p>
+                  ) : (
+                    <p className={styles['see-more']} onClick={toggleSeeMore}>
+                      {' '}
+                      See less{' '}
+                    </p>
+                  ))}
               </ul>
             </section>
           </section>

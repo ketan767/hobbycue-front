@@ -313,6 +313,11 @@
   letter-spacing: 0.28px;
 }
 
+.landing-bg{
+  background-color: #F7F5F9;
+  height: 632px;
+}
+
 @media screen and (min-width: 1600px) {
 
   .landing-contaniner {

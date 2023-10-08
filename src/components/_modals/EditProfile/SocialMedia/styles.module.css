@@ -91,7 +91,12 @@
   column-gap: 12px;
 }
 .dropdown {
-  width: 124px;
+  width: 184px;
+  font-size: 12px;
+  font-family: "Poppins";
+  border-radius: 8px;
+  border: 1px solid #ebedf0 !important;
+  background: var(--Grey-Hover, #F8F9FA);
   height: 40px;
 }
 .deleteIcon {
@@ -111,4 +116,13 @@
 }
 .inputContainer {
   margin-bottom: 0.8rem;
+}
+.social-media-label {
+  font-size: 12px;
+}
+
+.menu-item{
+  display: flex;
+  align-items: center;
+ 
 }
