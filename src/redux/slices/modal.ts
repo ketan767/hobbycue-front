@@ -38,6 +38,7 @@ export type ModalType =
   | 'claim-listing'
   | 'add-location'
   | 'user-address-edit'
+  | 'CopyProfileDataModal'
 
 interface ModalState {
   activeModal: ModalType

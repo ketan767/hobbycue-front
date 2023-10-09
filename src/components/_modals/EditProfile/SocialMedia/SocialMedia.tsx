@@ -85,6 +85,24 @@ const socialMediaIcons: Record<SocialMediaOption, any> = {
   BGG: BGGIcon,
 }
 
+const defaultSocialMediaURLs: Record<SocialMediaOption, string> = {
+  Facebook: 'https://facebook.com/',
+  Twitter: 'https://twitter.com/',
+  Instagram: 'https://instagram.com/',
+  Youtube: 'https://youtube.com/',
+  SoundCloud: 'https://soundcloud.com/',
+  Pinterest: 'https://pinterest.com/',
+  TripAdvisor: 'https://tripadvisor.com/',
+  'Ultimate Guitar': 'https://ultimate-guitar.com/',
+  Strava: 'https://strava.com/',
+  DeviantArts: 'https://deviantart.com/',
+  Behance: 'https://behance.net/',
+  GoodReads: 'https://goodreads.com/',
+  Smule: 'https://smule.com/',
+  Chess: 'https://chess.com/',
+  BGG: 'https://boardgamegeek.com/',
+}
+
 const ListingSocialMediaEditModal = ({ data }: Props) => {
   const [submitBtnLoading, setSubmitBtnLoading] = useState(false)
   const { user } = useSelector((state: RootState) => state.user)
@@ -269,14 +287,13 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
     <div className={styles['modal-wrapper']}>
       {/* Modal Header */}
       <header className={styles['header']}>
-        <h4 className={styles['heading']}>{'Contact Information'}</h4>
+        <h4 className={styles['heading']}>{'Social Media'}</h4>
       </header>
 
       <hr />
 
       <section className={styles['body']}>
         <div className={styles['body-header']}>
-          <p> Social Media </p>
           <Image
             src={AddIcon}
             alt="add"
@@ -290,8 +307,17 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
               <Select
                 value={item.socialMedia}
                 onChange={(e) => {
-                  let val = e.target.value
-                  onChange(idx, 'socialMedia', val)
+                  let selectedSocialMedia = e.target.value as SocialMediaOption
+                  let defaultUrl = defaultSocialMediaURLs[selectedSocialMedia]
+
+                  let updatedMediaData = [...mediaData]
+                  updatedMediaData[idx] = {
+                    ...item,
+                    socialMedia: selectedSocialMedia,
+                    url: defaultUrl,
+                  }
+
+                  setMediaData(updatedMediaData)
                 }}
                 className={styles.dropdown}
                 inputProps={{ 'aria-label': 'Without label' }}
@@ -312,6 +338,7 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
                   )
                 })}
               </Select>
+
               <div className={styles['input-box']}>
                 <input
                   type="text"

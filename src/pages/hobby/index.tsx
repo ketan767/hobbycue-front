@@ -81,7 +81,14 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
     }
   }
 
-  const resetHobbiesData = async () => {}
+  const resetHobbiesData = async () => {
+    // resetHobbiesData()
+    setCategories(data.categories)
+    setFilterCategories(data.categories)
+    setSubCategories(data.sub_categories)
+    setFilterSubCategories(data.sub_categories)
+    setHobbyData(data.hobbies)
+  }
 
   useEffect(() => {
     // resetHobbiesData()
