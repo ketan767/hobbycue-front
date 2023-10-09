@@ -8,7 +8,7 @@
 }
 
   .modal-wrapper{
-    min-height: calc(100vh - 6rem);
+    max-height: calc(100vh - 6rem);
 
   }
   .modal-wrapper .body {
@@ -165,6 +165,33 @@
 
 .footer button{
   color: white;
+}
+
+.two-column-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-24);
+}
+
+.long-input-box{
+  display: flex;
+  width: 560px;
+  height: 92px;
+  padding: 12px;
+  align-items: flex-start;
+  gap: 10px;
+  flex-shrink: 0
+}
+
+.street-input-container span {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: var(--spacing-12);
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 22px;
+  color: #6d747a;
 }
 @media screen and (max-width: 1100px) {
   .modal-wrapper {

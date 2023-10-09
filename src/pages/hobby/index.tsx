@@ -5,6 +5,7 @@ import { getAllHobbies } from '@/services/hobby.service'
 import { FormControl, MenuItem, Select, TextField } from '@mui/material'
 import Link from 'next/link'
 import { GetServerSideProps } from 'next'
+import { isEmptyField } from '@/utils'
 import Image from 'next/image'
 import AddIcon from '@/assets/svg/add-circle.svg'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
@@ -14,6 +15,17 @@ import { RootState } from '@/redux/store'
 type Props = {
   data: any
 }
+
+type DropdownListItem = {
+  _id: string
+  display: string
+  sub_category?: string
+}
+
+type ListingHobbyData = {
+  hobby: DropdownListItem | null
+}
+
 const ALlHobbies: React.FC<Props> = ({ data }) => {
   const [categories, setCategories] = useState([])
   const [subCategories, setSubCategories] = useState([])
@@ -21,6 +33,11 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
   const [filtercategories, setFilterCategories] = useState([])
   const [filtersubCategories, setFilterSubCategories] = useState([])
   const [filterhobbyData, setFilterHobbyData] = useState([])
+  const [hobbyDropdownList, setHobbyDropdownList] = useState<
+    DropdownListItem[]
+  >([])
+  const [dataa, setData] = useState<ListingHobbyData>({ hobby: null })
+  const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
 
   const [filterData, setFilterData] = useState({
     category: '',
@@ -33,6 +50,15 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
   const [hobbyInputValue, setHobbyInputValue] = useState('')
   const handleHobbyInputChange = async (e: any) => {
     setHobbyInputValue(e.target.value)
+
+    setData((prev) => {
+      return { ...prev, hobby: null }
+    })
+    if (isEmptyField(e.target.value)) return setHobbyDropdownList([])
+    const query = `fields=display,sub_category&show=true&search=${e.target.value}`
+    const { err, res } = await getAllHobbies(query)
+    if (err) return console.log(err)
+    setHobbyDropdownList(res.data.hobbies)
   }
   const params = new URLSearchParams()
   const handleFilter = async () => {
@@ -55,7 +81,14 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
     }
   }
 
-  const resetHobbiesData = async () => {}
+  const resetHobbiesData = async () => {
+    // resetHobbiesData()
+    setCategories(data.categories)
+    setFilterCategories(data.categories)
+    setSubCategories(data.sub_categories)
+    setFilterSubCategories(data.sub_categories)
+    setHobbyData(data.hobbies)
+  }
 
   useEffect(() => {
     // resetHobbiesData()
@@ -78,7 +111,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
       <div className={`site-container ${styles['page-container']}`}>
         <aside>
           {/* Filters */}
-          {isLoggedIn && <ProfileSwitcher />}
+
           <div className={styles['filter-wrapper']}>
             <header>
               <h4 className={styles['heading']}>Filter</h4>
@@ -140,15 +173,35 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                 placeholder="Text here with any keyword"
                 id="outlined-basic"
                 variant="outlined"
-                value={filterData.hobby}
-                onChange={(e) => {
-                  handleHobbyInputChange
-                  setFilterData((prev) => {
-                    return { ...prev, hobby: e.target.value }
-                  })
-                }}
+                value={hobbyInputValue}
+                onFocus={() => setShowHobbyDropdown(true)}
+                onBlur={() =>
+                  setTimeout(() => {
+                    setShowHobbyDropdown(false)
+                  }, 300)
+                }
+                onChange={handleHobbyInputChange}
               />
             </div>
+            {showHobbyDropdown && hobbyDropdownList.length !== 0 && (
+              <div className={styles['dropdown']}>
+                {hobbyDropdownList.map((hobby) => {
+                  return (
+                    <p
+                      key={hobby._id}
+                      onClick={() => {
+                        setData((prev) => {
+                          return { ...prev, hobby: hobby }
+                        })
+                        setHobbyInputValue(hobby.display)
+                      }}
+                    >
+                      {hobby.display}
+                    </p>
+                  )
+                })}
+              </div>
+            )}
           </div>
         </aside>
 

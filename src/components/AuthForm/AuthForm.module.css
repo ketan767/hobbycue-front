@@ -93,7 +93,7 @@
   z-index: -1;
 }
 .divider span{
-  background-color: white;
+  background-color: #F7F5F9;
   display: inline-block;
   padding: 0 4px;
 }
@@ -245,8 +245,9 @@ line-height: 20px;
   margin-top: var(--spacing-24);
   width: 100%;
   font-size: 14px;
-  border: 1px solid #000000;
-  color: #000000;
+  color: #ffffff;
+  background: #8064A2;
+
 }
 .form-footer .submit-btn:hover {
   background-color: #8064A2;
@@ -277,6 +278,9 @@ line-height: 20px;
 .modal-form-contanier .form-footer .submit-btn:hover {
   background-color: #8064A2;
   color: white;
+}
+.loader{
+  color: #ffffff;
 }
 
 @media screen and (max-width: 1100px) {

@@ -10,8 +10,8 @@
 .modal-wrapper .header,
 .modal-wrapper .body {
   padding: var(--spacing-16) var(--spacing-24);
-  padding-top: 4rem;
-  padding-bottom: 4rem;
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
 }
 .body {
    display: grid;
@@ -34,4 +34,6 @@
   text-align: justify;
   margin:0 auto;
   display: block;
+  margin-bottom: 5px;
+
 }

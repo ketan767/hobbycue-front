@@ -12,7 +12,7 @@ type Props = {
 
 const ProfileHobbySideList = ({ data }: Props) => {
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
-
+  console.log('data', data)
   const dispatch = useDispatch()
   return (
     <>
@@ -27,7 +27,7 @@ const ProfileHobbySideList = ({ data }: Props) => {
           {data._hobbies.map((item: any) => {
             if (typeof item === 'string') return
             return (
-              <Link href={`/hobby/${item?.genre?.slug}`} key={item._id}>
+              <Link href={`/hobby/${item?.hobby?.slug}`} key={item._id}>
                 <li>
                   {item?.hobby?.display}
                   {item?.genre && ` - ${item?.genre?.display} `}

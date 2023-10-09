@@ -8,7 +8,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import ListingPageLayout from '@/layouts/ListingPageLayout'
 import { getListingPages } from '@/services/listing.service'
-import { updateListingModalData, updateListingPageData } from '@/redux/slices/site'
+import {
+  updateListingModalData,
+  updateListingPageData,
+} from '@/redux/slices/site'
 import ListingHomeTab from '@/components/ListingPage/ListingHomeTab/ListingHomeTab'
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
 
@@ -16,7 +19,12 @@ type Props = { data: ListingPageData }
 
 const ListingHome: React.FC<Props> = (props) => {
   const dispatch = useDispatch()
-
+  const [error, seterror] = useState({
+    hobby: false,
+    about: false,
+    location: false,
+    contact: false,
+  })
   // const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
   // const { listingPageData } = useSelector((state: RootState) => state.site)
   console.log('data', props.data)
@@ -31,7 +39,11 @@ const ListingHome: React.FC<Props> = (props) => {
         <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
       </Head>
 
-      <ListingPageLayout activeTab={'home'} data={props.data}>
+      <ListingPageLayout
+        activeTab={'home'}
+        data={props.data}
+        seterror={seterror}
+      >
         <ListingPageMain data={props.data.pageData}>
           <ListingHomeTab data={props.data.pageData} />
         </ListingPageMain>
@@ -40,7 +52,9 @@ const ListingHome: React.FC<Props> = (props) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context,
+) => {
   const { query } = context
 
   const { err, res } = await getListingPages(
