@@ -25,7 +25,7 @@ import StravaIcon from '@/assets/svg/Strava.svg'
 import TripAdvisorIcon from '@/assets/svg/Tripadvisor.svg'
 import UltimateGuitarIcon from '@/assets/svg/Ultimate-Guitar.svg'
 import YouTubeIcon from '@/assets/svg/Youtube.svg'
-
+import ListingPageLayout from '../../../layouts/ListingPageLayout'
 import { getListingPages, getListingTags } from '@/services/listing.service'
 import { dateFormat } from '@/utils'
 import { updateListingTypeModalMode } from '@/redux/slices/site'
@@ -37,12 +37,14 @@ import DirectionIcon from '@/assets/svg/direction.svg'
 interface Props {
   data: ListingPageData['pageData']
   children: any
+  hobbyError?: boolean
 }
 
-const ListingPageMain: React.FC<Props> = ({ data, children }) => {
+const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
   const dispatch = useDispatch()
   const [tags, setTags] = useState([])
   const { listingLayoutMode } = useSelector((state: any) => state.site)
+
   console.log('page', data)
   const [selectedTags, setSelectedTags] = useState([])
   const [listingPagesLeft, setListingPagesLeft] = useState([])
@@ -179,6 +181,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children }) => {
             }
           >
             <h4 className={styles['heading']}>Hobbies</h4>
+            {hobbyError && <span>Error: No hobby found!</span>}
             {!data || data._hobbies.length === 0 ? (
               <span className={styles.textGray}>{'No Hobbies!'}</span>
             ) : (

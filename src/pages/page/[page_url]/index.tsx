@@ -39,11 +39,7 @@ const ListingHome: React.FC<Props> = (props) => {
         <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
       </Head>
 
-      <ListingPageLayout
-        activeTab={'home'}
-        data={props.data}
-        seterror={seterror}
-      >
+      <ListingPageLayout activeTab={'home'} data={props.data}>
         <ListingPageMain data={props.data.pageData}>
           <ListingHomeTab data={props.data.pageData} />
         </ListingPageMain>
