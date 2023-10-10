@@ -252,7 +252,7 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
                 onClick={() => {
                   dispatch(updateListingModalData({ type: 1 }))
                   dispatch(
-                    openModal({ type: 'listing-type-edit', closable: true }),
+                    openModal({ type: 'CopyProfileDataModal', closable: true }),
                   )
                   dispatch(updateListingTypeModalMode({ mode: 'create' }))
                 }}

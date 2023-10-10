@@ -27,6 +27,7 @@ import { updateListingTypeModalMode } from '@/redux/slices/site'
 import { ProgressBar } from '@/components/ProgressBar/ProgressBar'
 import { listingTypes } from '@/constants/constant'
 import { updateUserListing } from '@/redux/slices/user'
+import ListingCopyModal from '../EditListing/ListingCopyModal'
 
 // type OnboardingData = {
 //   full_name: string
@@ -58,6 +59,7 @@ type Step =
   | 'Hobbies'
   | 'WorkingHours'
   | 'EventHours'
+  | 'CopyProfileDataModal'
 
 export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
   const dispatch = useDispatch()
@@ -78,6 +80,17 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
   let steps = [...totalSteps]
   if (listingModalData.type === listingTypes.PLACE) {
     steps = [
+      'General',
+      'About',
+      'Contact',
+      'Address',
+      'WorkingHours',
+      'Hobbies',
+    ]
+  }
+  if (listingModalData.type === listingTypes.MakeMyPage) {
+    steps = [
+      'CopyProfileDataModal',
       'General',
       'About',
       'Contact',

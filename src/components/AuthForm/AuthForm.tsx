@@ -237,6 +237,14 @@ const AuthForm: React.FC<Props> = (props) => {
       router.push('/community', undefined, { shallow: false })
     }
   }
+  const getButtonText = () => {
+    if (selectedTab === 'join-in') {
+      return 'Agree and Continue'
+    } else if (selectedTab === 'sign-in') {
+      return 'Continue'
+    }
+    return ''
+  }
 
   useEffect(() => {
     if (selectedTab === 'join-in') {
@@ -322,8 +330,8 @@ const AuthForm: React.FC<Props> = (props) => {
 
       {/* Divider */}
       <div className={styles['divider']}>
-        {selectedTab === 'sign-in' && <span>Or connect with</span>}
-        {selectedTab === 'join-in' && <span>Or Join with Email</span>}
+        {selectedTab === 'sign-in' && <span>Or Sign In with</span>}
+        {selectedTab === 'join-in' && <span>Or Join In with</span>}
       </div>
 
       {/* Email - Password Fields */}
@@ -483,7 +491,11 @@ const AuthForm: React.FC<Props> = (props) => {
           onClick={handleSubmit}
           className={styles['submit-btn']}
         >
-          {submitBtnLoading ? <CircularProgress size={'16px'} /> : 'Continue'}
+          {submitBtnLoading ? (
+            <CircularProgress className={styles['loader']} size={'16px'} />
+          ) : (
+            getButtonText()
+          )}
         </OutlinedButton>
       </section>
     </div>

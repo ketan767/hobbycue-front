@@ -4,7 +4,7 @@
  * * `3 -> PROGRAM`
  * * `4 -> PRODUCT`
  */
-type ListingPages = 1 | 2 | 3 | 4
+type ListingPages = 1 | 2 | 3 | 4 | 5
 
 type PeoplePageType =
   | 'Teacher'

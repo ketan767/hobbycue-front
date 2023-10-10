@@ -13,11 +13,26 @@ import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import { updateListing } from '@/services/listing.service'
+import FacebookIcon from '@/assets/svg/Facebook.svg'
+import TwitterIcon from '@/assets/svg/Twitter.svg'
+import InstagramIcon from '@/assets/svg/Instagram.svg'
+import BehanceIcon from '@/assets/svg/Behance.svg'
+import BGGIcon from '@/assets/svg/BGG.svg'
+import ChessIcon from '@/assets/svg/Chess.com.svg'
+import DeviantArtIcon from '@/assets/svg/DeviantArt.svg'
+import GoodreadsIcon from '@/assets/svg/GoodReads.svg'
+import PinterestIcon from '@/assets/svg/Pinterest.svg'
+import SmuleIcon from '@/assets/svg/Smule.svg'
+import SoundCloudIcon from '@/assets/svg/Soundcloud.svg'
+import StravaIcon from '@/assets/svg/Strava.svg'
+import TripAdvisorIcon from '@/assets/svg/Tripadvisor.svg'
+import UltimateGuitarIcon from '@/assets/svg/Ultimate-Guitar.svg'
+import YouTubeIcon from '@/assets/svg/Youtube.svg'
 
 type Props = {
   data?: ProfilePageData['pageData']
 }
-const options = [
+const options: SocialMediaOption[] = [
   'Facebook',
   'Twitter',
   'Instagram',
@@ -25,7 +40,7 @@ const options = [
   'SoundCloud',
   'Pinterest',
   'TripAdvisor',
-  'Ultimate Guiter',
+  'Ultimate Guitar',
   'Strava',
   'DeviantArts',
   'Behance',
@@ -34,6 +49,59 @@ const options = [
   'Chess',
   'BGG',
 ]
+
+type SocialMediaOption =
+  | 'Facebook'
+  | 'Twitter'
+  | 'Instagram'
+  | 'Youtube'
+  | 'SoundCloud'
+  | 'Pinterest'
+  | 'TripAdvisor'
+  | 'Ultimate Guitar'
+  | 'Strava'
+  | 'DeviantArts'
+  | 'Behance'
+  | 'GoodReads'
+  | 'Smule'
+  | 'Chess'
+  | 'BGG'
+
+const socialMediaIcons: Record<SocialMediaOption, any> = {
+  Facebook: FacebookIcon,
+  Twitter: TwitterIcon,
+  Instagram: InstagramIcon,
+  Youtube: YouTubeIcon,
+  SoundCloud: SoundCloudIcon,
+  Pinterest: PinterestIcon,
+  TripAdvisor: TripAdvisorIcon,
+  'Ultimate Guitar': UltimateGuitarIcon,
+  Strava: StravaIcon,
+  DeviantArts: DeviantArtIcon,
+  Behance: BehanceIcon,
+  GoodReads: GoodreadsIcon,
+  Smule: SmuleIcon,
+  Chess: ChessIcon,
+  BGG: BGGIcon,
+}
+
+const defaultSocialMediaURLs: Record<SocialMediaOption, string> = {
+  Facebook: 'https://facebook.com/',
+  Twitter: 'https://twitter.com/',
+  Instagram: 'https://instagram.com/',
+  Youtube: 'https://youtube.com/',
+  SoundCloud: 'https://soundcloud.com/',
+  Pinterest: 'https://pinterest.com/',
+  TripAdvisor: 'https://tripadvisor.com/',
+  'Ultimate Guitar': 'https://ultimate-guitar.com/',
+  Strava: 'https://strava.com/',
+  DeviantArts: 'https://deviantart.com/',
+  Behance: 'https://behance.net/',
+  GoodReads: 'https://goodreads.com/',
+  Smule: 'https://smule.com/',
+  Chess: 'https://chess.com/',
+  BGG: 'https://boardgamegeek.com/',
+}
 
 const ListingSocialMediaEditModal = ({ data }: Props) => {
   const [submitBtnLoading, setSubmitBtnLoading] = useState(false)
@@ -87,7 +155,7 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
     }
     if (user.social_media_urls?.ultimate_guiter_url) {
       arr.push({
-        socialMedia: 'Ultimate Guiter',
+        socialMedia: 'UltimateGuiter',
         url: user.social_media_urls?.ultimate_guiter_url,
       })
     }
@@ -219,14 +287,13 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
     <div className={styles['modal-wrapper']}>
       {/* Modal Header */}
       <header className={styles['header']}>
-        <h4 className={styles['heading']}>{'Contact Information'}</h4>
+        <h4 className={styles['heading']}>{'Social Media'}</h4>
       </header>
 
       <hr />
 
       <section className={styles['body']}>
         <div className={styles['body-header']}>
-          <p> Social Media </p>
           <Image
             src={AddIcon}
             alt="add"
@@ -240,20 +307,38 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
               <Select
                 value={item.socialMedia}
                 onChange={(e) => {
-                  let val = e.target.value
-                  onChange(idx, 'socialMedia', val)
+                  let selectedSocialMedia = e.target.value as SocialMediaOption
+                  let defaultUrl = defaultSocialMediaURLs[selectedSocialMedia]
+
+                  let updatedMediaData = [...mediaData]
+                  updatedMediaData[idx] = {
+                    ...item,
+                    socialMedia: selectedSocialMedia,
+                    url: defaultUrl,
+                  }
+
+                  setMediaData(updatedMediaData)
                 }}
                 className={styles.dropdown}
                 inputProps={{ 'aria-label': 'Without label' }}
               >
-                {options.map((option: any) => {
+                {options.map((option) => {
                   return (
                     <MenuItem key={option} value={option}>
-                      <p>{option}</p>
+                      <div className={styles['menu-item']}>
+                        <Image
+                          src={socialMediaIcons[option]}
+                          alt={option}
+                          width={24}
+                          height={24}
+                        />
+                        <p style={{ marginLeft: '8px' }}>{option}</p>
+                      </div>
                     </MenuItem>
                   )
                 })}
               </Select>
+
               <div className={styles['input-box']}>
                 <input
                   type="text"
