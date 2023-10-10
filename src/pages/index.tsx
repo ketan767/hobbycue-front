@@ -43,41 +43,44 @@ const Home: React.FC<PropTypes> = function () {
 
       {/** Landing Container **/}
       <section className={styles['landing-contaniner']}>
-        <main className={`site-container ${styles['landing-wrapper']}`}>
-          <div className={styles['content']}>
-            <h1>
-              Explore your <span>hobby</span> or <span>passion</span>
-            </h1>
-            <p>
-              Sign-in to interact with a community of fellow hobbyists and an
-              eco-system of experts, teachers, suppliers, classes, workshops,
-              and places to practice, participate or perform.
-            </p>
+        <div className={styles['landing-bg']}>
+          <main className={`site-container ${styles['landing-wrapper']}`}>
+            <div className={styles['content']}>
+              <h1>
+                Explore your <span>hobby</span> or <span>passion</span>
+              </h1>
+              <p>
+                Sign-in to interact with a community of fellow hobbyists and an
+                eco-system of experts, teachers, suppliers, classes, workshops,
+                and places to practice, participate or perform.
+              </p>
 
-            <p className={styles['hide-paragraph-responsive']}>
-              Your hobby may be about visual or performing arts, sports, games,
-              gardening, model making, cooking, indoor or outdoor activities…
-              <br />
-              <br />
-              If you are an expert or a seller, you can Add your Listing and
-              promote yourself, your students, products, services or events. Hop
-              on your hobbyhorse and enjoy the ride.
-            </p>
-            <Image
-              src={landingIllustration}
-              className={styles['landing-illustration']}
-              alt="Landing Illustration"
-              // width={500} automatically provided
-              // height={500} automatically provided
-              // blurDataURL="data:..." automatically provided
-              // placeholder="blur" // Optional blur-up while loading
-            />
-          </div>
+              <p className={styles['hide-paragraph-responsive']}>
+                Your hobby may be about visual or performing arts, sports,
+                games, gardening, model making, cooking, indoor or outdoor
+                activities…
+                <br />
+                <br />
+                If you are an expert or a seller, you can Add your Listing and
+                promote yourself, your students, products, services or events.
+                Hop on your hobbyhorse and enjoy the ride.
+              </p>
+              <Image
+                src={landingIllustration}
+                className={styles['landing-illustration']}
+                alt="Landing Illustration"
+                // width={500} automatically provided
+                // height={500} automatically provided
+                // blurDataURL="data:..." automatically provided
+                // placeholder="blur" // Optional blur-up while loading
+              />
+            </div>
 
-          <div className={styles['auth-form']}>
-            <AuthForm />
-          </div>
-        </main>
+            <div className={styles['auth-form']}>
+              <AuthForm />
+            </div>
+          </main>
+        </div>
       </section>
 
       {/** Cards Container **/}

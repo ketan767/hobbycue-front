@@ -158,10 +158,10 @@
   min-width: 120px;
 }
 .hobbies-table thead th:nth-child(2) {
-  min-width: 160px;
+  min-width: 153px;
 }
 .hobbies-table thead th:nth-child(3) {
-  min-width: 188px;
+  min-width: 68px;
 }
 
 .hobbies-table tbody tr td:nth-child(1) {
@@ -190,7 +190,7 @@
   border-bottom: 1px solid #ced4da;
 }
 .hobbies-table tbody tr td div p:first-of-type {
-  max-width: 130px;
+  max-width: 140px;
   width: 100%;
   font-family: 'Poppins';
   font-style: normal;
@@ -203,7 +203,7 @@
   letter-spacing: 0.04em;
   column-gap: 2px;
   color: #000000;
-  justify-content: center;
+  padding-left: 24px;
 }
 .table-hobby {
   font-size: 14px;
@@ -214,7 +214,7 @@
 }
 .hobbies-table tbody tr td .vertical-line{
   position: absolute;
-  left: 130px;
+  left: 140px;
   top: -10px;
   width: 1px;
   height: calc(100% + 10px);
@@ -222,4 +222,40 @@
   margin-top: 0;
   padding-top: 0;
   background-color: #CED4DA;
+}
+
+.dropdown {
+  max-width: 196px;
+  width: 100%;
+  position: absolute;
+  left: 130px;
+  max-height: 280px;
+  overflow-y: auto;
+  right: 0;
+  background: #ffffff;
+  border-radius: var(--spacing-4);
+  padding: var(--spacing-4);
+  filter: drop-shadow(0px 0px 2px rgba(147, 156, 163, 0.36))
+    drop-shadow(0px 8px 12px rgba(147, 156, 163, 0.12));
+  z-index: 20;
+}
+.dropdown p {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0.005em;
+  border-radius: 4px;
+  padding: var(--spacing-8);
+  color: #6d747a;
+  cursor: pointer;
+}
+
+.dropdown p:hover {
+  background: #f7f5f9;
+  color: #8064a2;
+}
+.dropdown, .dropdown p {
+  box-sizing: border-box;
 }

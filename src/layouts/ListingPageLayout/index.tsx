@@ -11,14 +11,22 @@ import { useRouter } from 'next/router'
 import ListingHomeTab from '@/components/ListingPage/ListingHomeTab/ListingHomeTab'
 import { updateListingLayoutMode } from '@/redux/slices/site'
 import ListingHeaderSmall from '@/components/ListingPage/ListingHeader/ListingHeaderSmall'
+import { error } from 'console'
+import { getListingPages } from '@/services/listing.service'
 
 type Props = {
   activeTab: ListingPageTabs
   data: ListingPageData
   children: React.ReactNode
+  seterror: any
 }
 
-const ListingPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
+const ListingPageLayout: React.FC<Props> = ({
+  children,
+  activeTab,
+  data,
+  seterror,
+}) => {
   const router = useRouter()
   const dispatch = useDispatch()
   const [showSmallHeader, setShowSmallHeader] = useState(false)
@@ -29,6 +37,14 @@ const ListingPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
     if (scrollValue >= 308) setShowSmallHeader(true)
     else setShowSmallHeader(false)
   }
+  // const navigationTabs = (tab: any) => {
+  //   if (data.pageData._hobbies?.length === 0) {
+  //   } else {
+  //     router.push(`/page/${router.query.page_url}/${tab !== 'home' ? tab : ''}`)
+  //   }
+  // }
+
+  console.log('dataa', data)
 
   useEffect(() => {
     window.addEventListener('scroll', checkScroll)
@@ -84,6 +100,7 @@ const ListingPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
                   tab !== 'home' ? tab : ''
                 }`}
                 shallow
+                // onClick={() => navigationTabs(tab)}
                 className={activeTab === tab ? styles['active'] : ''}
               >
                 {tab.charAt(0).toUpperCase() + tab.slice(1)}

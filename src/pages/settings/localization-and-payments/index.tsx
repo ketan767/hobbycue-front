@@ -44,6 +44,7 @@ const VisibilityAndNotification: React.FC = () => {
       if (!res.data.success) {
         return alert('Something went wrong!')
       }
+      window.location.reload()
       const { err: error, res: response } = await getMyProfileDetail()
 
       if (error) return console.log(error)

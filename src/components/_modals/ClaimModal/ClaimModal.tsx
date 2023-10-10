@@ -6,6 +6,11 @@ type Props = {
   data: ListingPageData['pageData']
 }
 const ClaimModal = () => {
+  const baseURL =
+    window.location.protocol +
+    '//' +
+    window.location.hostname +
+    (window.location.port ? ':' + window.location.port : '')
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -22,39 +27,48 @@ const ClaimModal = () => {
               <input type="text" required name="street" />
             </div>
           </div>
-          <div className={styles['input-box']}>
-            <label>Email ID</label>
-            <div className={styles['street-input-container']}>
-              <input type="text" required name="street" />
+          <section className={styles['two-column-grid']}>
+            <div className={styles['input-box']}>
+              <label>Email ID</label>
+              <div className={styles['street-input-container']}>
+                <input type="text" required name="street" />
+              </div>
             </div>
-          </div>
-          <div className={styles['input-box']}>
-            <label>Phone Number</label>
-            <div className={styles['street-input-container']}>
-              <input type="text" required name="street" />
+            <div className={styles['input-box']}>
+              <label>Phone Number</label>
+              <div className={styles['street-input-container']}>
+                <input type="text" required name="street" />
+              </div>
             </div>
-          </div>
+          </section>
           <div className={styles['input-box']}>
             <label>Listing Page URL</label>
             <div className={styles['street-input-container']}>
               <input type="text" required name="street" />
+              <span>{baseURL + '/page/'}</span>
             </div>
           </div>
           <div className={styles['input-box']}>
             <label>How are you related to this listing?</label>
             <div className={styles['street-input-container']}>
-              <input type="text" required name="street" />
+              <input
+                className={styles['long-input-box']}
+                type="text"
+                required
+                name="street"
+              />
             </div>
           </div>
           <div className={styles['input-box']}>
             <label>Website or Social Media page?</label>
             <div className={styles['street-input-container']}>
               <input type="text" required name="street" />
+              <span>{'https://'}</span>
             </div>
           </div>
         </section>
         <footer className={styles['footer']}>
-          <button className="modal-footer-btn cancel">Claim</button>
+          <button className="modal-footer-btn submit">Claim</button>
         </footer>
       </div>
     </>

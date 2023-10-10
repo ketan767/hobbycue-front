@@ -12,6 +12,7 @@ import ProfileGeneralEditModal from './EditProfile/General'
 import ProfileAddressEditModal from './EditProfile/Address'
 import ProfileHobbyEditModal from './EditProfile/Hobby'
 import ListingTypeEditModal from './EditListing/ListingType'
+import ListingCopyModal from './EditListing/ListingCopyModal'
 import Image from 'next/image'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import ListingAboutEditModal from './EditListing/ListingAbout'
@@ -154,6 +155,7 @@ const ModalManager: React.FC = () => {
               {activeModal === 'profile-contact-edit' && (
                 <ProfileContactEditModal />
               )}
+              {activeModal === 'CopyProfileDataModal' && <ListingCopyModal />}
 
               {activeModal === 'listing-type-edit' && <ListingTypeEditModal />}
 
