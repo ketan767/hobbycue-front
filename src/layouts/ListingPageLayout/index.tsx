@@ -18,7 +18,7 @@ type Props = {
   activeTab: ListingPageTabs
   data: ListingPageData
   children: React.ReactNode
-  seterror: any
+  seterror?: any
 }
 
 const ListingPageLayout: React.FC<Props> = ({
