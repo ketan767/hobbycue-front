@@ -156,6 +156,15 @@ ul.seller-info-wrapper li svg:last-child {
   word-break: break-word;
 }
 
+.textdefault{
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.04em;
+  color: #08090A;
+  word-break: break-word;
+}
+
 .working-hours-wrapper {
   display: flex;
   flex-direction: column;
@@ -216,4 +225,28 @@ ul.seller-info-wrapper li svg:last-child {
   transition: 0.6s;
   height: calc(100vh - calc(var(--navbar-height-desktop) + var(--spacing-8)) - 10rem);
   overflow: auto;
+}
+.related {
+  display: flex;
+  align-items: center;
+}
+
+.related img{
+  border-radius: 4px;
+}
+.item-title {
+  margin-left: 10px; 
+  color: #08090A;
+}
+
+.related-list {
+  list-style-type: none; /* This will remove the bullet points */
+  padding: 0; /* This will remove any default padding */
+  margin: 0;  /* This will remove any default margin */
+}
+
+/* If you only want to target the li inside .related-list */
+.related-list li {
+  list-style-type: none;
+  margin-bottom: 10px;
 }

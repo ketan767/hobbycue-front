@@ -233,7 +233,11 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
                     />
                   )}
                 </div>
-                <p className={styles['tagline']}>{data.tagline}</p>
+                {data?.tagline ? (
+                  <p className={styles['tagline']}>{data?.tagline}</p>
+                ) : (
+                  <p className={styles['tagline']}>&nbsp;</p>
+                )}
               </div>
               <FilledButton
                 className={styles.contactBtn}
