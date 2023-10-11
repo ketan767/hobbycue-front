@@ -255,7 +255,11 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
                   />
                 )}
               </h1>
-              <p className={styles['tagline']}>{data?.tagline}</p>
+              {data?.tagline ? (
+                <p className={styles['tagline']}>{data?.tagline}</p>
+              ) : (
+                <p className={styles['tagline']}>&nbsp;</p>
+              )}
             </div>
             <div className={styles['event-date-container']}>
               {data?.type === listingTypes.PROGRAM && data?.event_date_time ? (

@@ -11,6 +11,7 @@
   background-color: #f7f5f9;
   color: #8064a2;
   display: inline-block;
+  border-radius: 8px;
 }
 .selected-values {
   display: flex;
