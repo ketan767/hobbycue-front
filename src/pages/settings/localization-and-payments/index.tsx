@@ -14,7 +14,11 @@ import { RootState } from '@/redux/store'
 import { openModal } from '@/redux/slices/modal'
 import Address from './address'
 import { updateAddressToEdit, updateUser } from '@/redux/slices/user'
-import { deleteUserAddress, getMyProfileDetail } from '@/services/user.service'
+import {
+  deleteUserAddress,
+  getMyProfileDetail,
+  updateMyProfileDetail,
+} from '@/services/user.service'
 
 const options = [
   'Everyone',
@@ -36,7 +40,7 @@ const VisibilityAndNotification: React.FC = () => {
     dispatch(openModal({ type: 'user-address-edit', closable: true }))
   }
 
-  const handleDeleteAddress = (id: string) => {
+  const handleDeleteAddress = (id: string, isPrimaryAddress: boolean) => {
     deleteUserAddress(id, async (err, res) => {
       if (err) {
         return console.log(err)
@@ -44,15 +48,33 @@ const VisibilityAndNotification: React.FC = () => {
       if (!res.data.success) {
         return alert('Something went wrong!')
       }
-      window.location.reload()
-      const { err: error, res: response } = await getMyProfileDetail()
 
+      const { err: error, res: response } = await getMyProfileDetail()
       if (error) return console.log(error)
+
       if (response?.data.success) {
+        if (
+          isPrimaryAddress &&
+          response.data.data.user._addresses?.length > 0
+        ) {
+          // Set first address as the new primary address, if exists
+          const newPrimaryAddress = response.data.data.user._addresses[0]
+          const body = {
+            primary_address: newPrimaryAddress._id,
+          }
+          const updateResult = await updateMyProfileDetail(body)
+          if (updateResult.err) {
+            console.log(updateResult.err)
+            return
+          }
+          window.location.reload()
+        }
+
         dispatch(updateUser(response.data.data.user))
       }
     })
   }
+
   // console.log('user', user?.primary_address?._id)
   return (
     <>

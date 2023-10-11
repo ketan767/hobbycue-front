@@ -54,7 +54,13 @@ const Address: React.FC<Props> = ({
       }
     }
   }
-
+  const handleConfirmDelete = () => {
+    if (user?.primary_address?._id === address?._id) {
+      handleDeleteAddress(address?._id, true)
+    } else {
+      handleDeleteAddress(address?._id, false)
+    }
+  }
   const handleCancel = () => {
     setModalOpen(false)
   }
@@ -122,7 +128,7 @@ const Address: React.FC<Props> = ({
           <li onClick={() => setModalOpen(true)}>Delete</li>
           <ConfirmationModal
             isOpen={isModalOpen}
-            onConfirm={() => handleDeleteAddress(address?._id)}
+            onConfirm={handleConfirmDelete}
             onCancel={handleCancel}
             handleClose={handleClose}
             handleBgClick={handleBgClick}

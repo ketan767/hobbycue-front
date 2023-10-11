@@ -3,7 +3,7 @@ import styles from './styles.module.css'
 
 import { ReactNode } from 'react'
 import Link from 'next/link'
-
+import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import ListingHeader from '@/components/ListingPage/ListingHeader/ListingHeader'
@@ -14,22 +14,18 @@ import ListingHeaderSmall from '@/components/ListingPage/ListingHeader/ListingHe
 import { error } from 'console'
 import { getListingPages } from '@/services/listing.service'
 
-type Props = {
+interface Props {
   activeTab: ListingPageTabs
-  data: ListingPageData
-  children: React.ReactNode
-  seterror?: any
+  data: ListingPageData['pageData']
+  children: React.ReactElement<{ hobbyError?: boolean }>
+  hobbyError?: boolean
 }
 
-const ListingPageLayout: React.FC<Props> = ({
-  children,
-  activeTab,
-  data,
-  seterror,
-}) => {
+const ListingPageLayout: React.FC<Props> = ({ data, children, activeTab }) => {
   const router = useRouter()
   const dispatch = useDispatch()
   const [showSmallHeader, setShowSmallHeader] = useState(false)
+  const [hobbyError, setHobbyError] = useState(false)
 
   function checkScroll() {
     const scrollValue = window.scrollY || document.documentElement.scrollTop
@@ -37,12 +33,13 @@ const ListingPageLayout: React.FC<Props> = ({
     if (scrollValue >= 308) setShowSmallHeader(true)
     else setShowSmallHeader(false)
   }
-  // const navigationTabs = (tab: any) => {
-  //   if (data.pageData._hobbies?.length === 0) {
-  //   } else {
-  //     router.push(`/page/${router.query.page_url}/${tab !== 'home' ? tab : ''}`)
-  //   }
-  // }
+  const navigationTabs = (tab: any) => {
+    if (data.pageData._hobbies.length === 0) {
+      setHobbyError(true)
+    } else {
+      router.push(`/page/${router.query.page_url}/${tab !== 'home' ? tab : ''}`)
+    }
+  }
 
   console.log('dataa', data)
 
@@ -63,6 +60,13 @@ const ListingPageLayout: React.FC<Props> = ({
     'events',
     'store',
   ]
+  let content
+
+  if (React.isValidElement(children) && typeof children.type !== 'string') {
+    content = React.cloneElement(children, { hobbyError: hobbyError })
+  } else {
+    content = children
+  }
 
   useEffect(() => {
     if (isLoggedIn && isAuthenticated) {
@@ -94,17 +98,13 @@ const ListingPageLayout: React.FC<Props> = ({
         <div className={styles['navigation-tabs']}>
           {tabs.map((tab) => {
             return (
-              <Link
+              <a
                 key={tab}
-                href={`/page/${router.query.page_url}/${
-                  tab !== 'home' ? tab : ''
-                }`}
-                shallow
-                // onClick={() => navigationTabs(tab)}
+                onClick={() => navigationTabs(tab)}
                 className={activeTab === tab ? styles['active'] : ''}
               >
                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </Link>
+              </a>
             )
           })}
         </div>
