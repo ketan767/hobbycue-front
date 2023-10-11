@@ -84,3 +84,8 @@ p.dropdown-value-active{
   color: #8064a2;
   border-radius: 4px;
 }
+
+.city-select{
+  background-color: #f7f5f9;
+  color:#8064a2 !important
+}

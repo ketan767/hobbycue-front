@@ -33,6 +33,7 @@ import WhatsappIcon from '@/assets/svg/whatsapp.svg'
 import { listingTypes } from '@/constants/constant'
 import Link from 'next/link'
 import DirectionIcon from '@/assets/svg/direction.svg'
+import DefaultPageImage from '@/assets/svg/default-images/default-people-listing-icon.svg'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -49,6 +50,8 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
   const [selectedTags, setSelectedTags] = useState([])
   const [listingPagesLeft, setListingPagesLeft] = useState([])
   const [listingPagesRight, setListingPagesRight] = useState([])
+  const [relation, setRelation] = useState('')
+  const [relationRight, setRelationRight] = useState('')
 
   useEffect(() => {
     getListingTags()
@@ -70,7 +73,13 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
 
   useEffect(() => {
     setListingPagesLeft([])
-    data.related_listings_left.listings.map((listing: any) => {
+    if (data.related_listings_left.relation) {
+      setRelation(data.related_listings_left.relation)
+    }
+    if (data.related_listings_right.relation) {
+      setRelationRight(data.related_listings_right.relation)
+    }
+    data.related_listings_left?.listings.map((listing: any) => {
       getListingPages(`_id=${listing}`)
         .then((res: any) => {
           const listingData = res.res.data.data.listings[0]
@@ -89,23 +98,26 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
         })
     })
 
-    getListingPages(``)
-      .then((res: any) => {
-        // console.log('all users', res.res.data.data.users)
-        let users = res.res.data.data.users
-        let selectedListingsRight: any = []
-        users.forEach((item: any) => {
-          if (data?.related_listings_right?.listings.includes(item._id)) {
-            selectedListingsRight.push(item)
-          }
+    data.related_listings_right?.listings.map((listing: any) => {
+      getListingPages(`_id=${listing}`)
+        .then((res: any) => {
+          const listingData = res.res.data.data.listings[0]
+          setListingPagesRight((prevArray: any) => {
+            const updated: any = [...prevArray, listingData]
+            const ids = prevArray.map((item: any) => item._id)
+            if (!ids.includes(listingData._id)) {
+              return updated
+            } else {
+              return prevArray
+            }
+          })
         })
-        setListingPagesRight(selectedListingsRight)
-      })
-      .catch((err: any) => {
-        console.log(err)
-      })
+        .catch((err: any) => {
+          console.log(err)
+        })
+    })
   }, [data?.related_listings_left?.listings])
-
+  console.log('listingPagesRight', listingPagesRight)
   const openGoogleMaps = () => {
     let addressText = ''
     if (data?._address.street) {
@@ -190,7 +202,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
                   if (typeof item === 'string') return
                   return (
                     <Link
-                      href={`/hobby/${item?.genre?.slug}`}
+                      href={`/hobby/${item?.hobby?.slug}`}
                       className={styles.textGray}
                       key={item._id}
                     >
@@ -230,7 +242,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
 
           {/* Related Listing */}
           {listingLayoutMode !== 'edit' &&
-          (!listingPagesRight || listingPagesRight.length === 0) ? null : (
+          (!listingPagesLeft || listingPagesLeft.length === 0) ? null : (
             <PageContentBox
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
@@ -249,20 +261,32 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
                   : 'Related Listing'}{' '}
               </h4>
               {!listingPagesLeft || listingPagesLeft.length === 0 ? (
-                <span className={styles.textGray}>{'No data!'}</span>
+                <span className={styles.textGray}>
+                  {'Eg: Sishyas related to this page'}
+                </span>
               ) : (
-                <ul className={styles['hobby-list']}>
+                <ul className={styles['related-list']}>
                   {listingPagesLeft?.map((item: any) => {
                     if (typeof item === 'string') return null
                     return (
-                      <Link
-                        key={item._id}
-                        className={styles.textGray}
-                        href={`/page/${item.page_url}`}
-                      >
-                        {item?.title}
-                        {/* {item?.genre && ` - ${item?.genre?.display} `} */}
-                      </Link>
+                      <li key={item._id}>
+                        <Link
+                          className={styles.textGray}
+                          href={`/page/${item.page_url}`}
+                        >
+                          <div className={styles['related']}>
+                            <Image
+                              src={DefaultPageImage}
+                              alt={item?.title}
+                              width="32"
+                              height="32"
+                            />
+                            <span className={styles['item-title']}>
+                              {item?.title}
+                            </span>
+                          </div>
+                        </Link>
+                      </li>
                     )
                   })}
                 </ul>
@@ -308,7 +332,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
                     </defs>
                   </svg>
 
-                  <span className={styles.textGray}>{data?.name} </span>
+                  <span className={styles.textdefault}>{data?.name} </span>
                 </Link>
               )}
               {data?.phone && (
@@ -333,7 +357,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
                     </defs>
                   </svg>
 
-                  <span className={styles.textGray}>{data?.phone} </span>
+                  <span className={styles.textdefault}>{data?.phone} </span>
                 </Link>
               )}
 
@@ -346,7 +370,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
                     width={24}
                     height={24}
                   />
-                  <span className={styles.textGray}>
+                  <span className={styles.textdefault}>
                     {data?.whatsapp_number}{' '}
                   </span>
                 </Link>
@@ -375,7 +399,9 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
                     </defs>
                   </svg>
 
-                  <span className={styles.textGray}>{data?.public_email} </span>
+                  <span className={styles.textdefault}>
+                    {data?.public_email}{' '}
+                  </span>
                 </Link>
               )}
 
@@ -396,7 +422,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
                     />
                   </svg>
 
-                  <span className={styles.textGray}>{data?.website} </span>
+                  <span className={styles.textdefault}>{data?.website} </span>
                 </Link>
               )}
             </ul>
@@ -617,7 +643,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
                   </svg>
 
                   {listingLayoutMode === 'edit' ? (
-                    <span className={styles.textGray}>
+                    <span className={styles.textdefault}>
                       {`${data?._address.street},
                       ${data?._address.society},
                       ${data?._address.city},
@@ -625,7 +651,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
                       ${data?._address.country}`}
                     </span>
                   ) : (
-                    <span className={styles.textGray}>
+                    <span className={styles.textdefault}>
                       {`
                       ${data?._address.street},
                       ${data?._address.society},
@@ -704,17 +730,38 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
                 )
               }
             >
-              <h4 className={styles['heading']}>Related Listing</h4>
+              <h4 className={styles['heading']}>
+                {relationRight && relationRight.trim() !== ''
+                  ? relationRight
+                  : 'Related Listing'}
+              </h4>
+
               {!listingPagesRight || listingPagesRight.length === 0 ? (
-                <span className={styles.textGray}>{'No data!'}</span>
+                <span className={styles.textGray}>
+                  {'Eg: Guru related to this page'}
+                </span>
               ) : (
-                <ul className={styles['hobby-list']}>
+                <ul className={styles['related-list']}>
                   {listingPagesRight?.map((item: any) => {
                     if (typeof item === 'string') return null
                     return (
-                      <li key={item._id} className={styles.textGray}>
-                        {item?.full_name}
-                        {/* {item?.genre && ` - ${item?.genre?.display} `} */}
+                      <li key={item._id}>
+                        <Link
+                          className={styles.textGray}
+                          href={`/page/${item.page_url}`}
+                        >
+                          <div className={styles['related']}>
+                            <Image
+                              src={DefaultPageImage}
+                              alt={item?.title}
+                              width="32"
+                              height="32"
+                            />
+                            <span className={styles['item-title']}>
+                              {item?.title}
+                            </span>
+                          </div>
+                        </Link>
                       </li>
                     )
                   })}

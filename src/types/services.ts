@@ -41,6 +41,7 @@ type UpdateProfilePayload = {
   pinned_post?: string
   _hobbies? : any
   social_media_urls?: any
+  primary_address?: any;
 }
 
 type ProfileAddressPayload = {

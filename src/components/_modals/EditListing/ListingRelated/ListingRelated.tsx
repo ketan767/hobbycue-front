@@ -25,7 +25,8 @@ import {
   updateRelatedListingsLeft,
 } from '@/redux/slices/site'
 import { listingData } from './data'
-import DefaultProfile from '@/assets/image/default.png'
+import DefaultProfile from '@/assets/svg/default-images/default-people-listing-icon.svg'
+import CrossIcon from '@/assets/svg/cross.svg'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -37,10 +38,6 @@ type Props = {
   onBackBtnClick?: () => void
 }
 
-type ListingAboutData = {
-  description: InputData<string>
-}
-
 const RelatedListingEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
@@ -48,7 +45,10 @@ const RelatedListingEditModal: React.FC<Props> = ({
   const dispatch = useDispatch()
   const { listingModalData } = useSelector((state: RootState) => state.site)
   const [relation, setRelation] = useState<any>('')
-
+  const [selectedlisting, setselectedListing] = useState<
+    { _id: string; name: string; description: string }[]
+  >([])
+  const [error, setError] = useState<string | null>(null)
   const [relatedListingData, setRelatedListingData] = useState(listingData)
   const [allListingPages, setAllListingPages] = useState([])
   const [allDropdownValues, setAllDropdownValues] = useState<any>([])
@@ -58,9 +58,11 @@ const RelatedListingEditModal: React.FC<Props> = ({
   const [addPageLoading, setAddPageLoading] = useState(false)
   const [selectedPage, setSelectedPage] = useState<any>({})
   const [relatedListingsLeft, setRelatedListingsLeft] = useState<any>([])
+  const [dropdownLoading, setDropdownLoading] = useState<boolean>(true)
+  const [selectedRelated, setSelectedRelated] = useState<string[]>([])
 
   const inputRef = useRef<HTMLInputElement>(null)
-
+  const updateRelatedList = async () => {}
   useEffect(() => {
     inputRef?.current?.focus()
   }, [])
@@ -81,71 +83,69 @@ const RelatedListingEditModal: React.FC<Props> = ({
     setSubmitBtnLoading(true)
     const jsonData = {
       related_listings_left: {
-        relation,
+        relation: relation,
         listings: [...relatedListingsLeft],
       },
     }
     const { err, res } = await updateListing(listingModalData._id, jsonData)
+    console.log('res', res)
     setSubmitBtnLoading(false)
     if (err) return console.log(err)
+
     if (res?.data.success) {
       dispatch(updateListingModalData(res.data.data.listing))
       if (onComplete) onComplete()
       else {
-        window.location.reload()
+        // window.location.reload()
         dispatch(closeModal())
       }
     }
   }
 
   useEffect(() => {
-    getListingPages(`title=${pageInputValue}`)
+    setDropdownLoading(true)
+    getListingPages(``)
       .then((res: any) => {
-        // console.log(res.res.data.data.listings)
+        console.log('listing', res.res.data)
         setAllDropdownValues(res.res.data.data.listings)
+        setDropdownLoading(false)
       })
       .catch((err: any) => {
         console.log(err)
+        setDropdownLoading(false)
       })
   }, [pageInputValue])
 
-  useEffect(() => {
-    getListingPages(``)
-      .then((res: any) => {
-        // console.log('all--' ,res.res.data.data.listings)
-        setAllListingPages(res.res.data.data.listings)
-      })
-      .catch((err: any) => {
-        console.log(err)
-      })
-  }, [])
-
   const handleAddPage = async () => {
-    const jsonData = {
-      related_listings_left: {
-        relation,
-        listings: [...relatedListingsLeft, selectedPage._id],
-      },
-    }
-    setAddPageLoading(true)
-    const { err, res } = await updateListing(listingModalData._id, jsonData)
-    setAddPageLoading(false)
-    if (err) return console.log(err)
-    console.log('resp', res?.data.data.listing)
-    setRelatedListingsLeft(
-      res?.data.data.listing.related_listings_left.listings,
-    )
-    if (onComplete) onComplete()
-    else {
-      // window.location.reload()
-      // dispatch(closeModal())
+    if (!relation || relation.trim() === '') {
+      setError('Please select Relation')
+    } else {
+      const jsonData = {
+        related_listings_left: {
+          relation: relation,
+          listings: [...relatedListingsLeft, selectedPage._id],
+        },
+      }
+      setAddPageLoading(true)
+      const { err, res } = await updateListing(listingModalData._id, jsonData)
+      setAddPageLoading(false)
+      if (err) return console.log(err)
+      console.log('resp', res?.data.data.listing)
+      setRelatedListingsLeft(
+        res?.data.data.listing.related_listings_left.listings,
+      )
+      if (onComplete) onComplete()
+      else {
+        // window.location.reload()
+        // dispatch(closeModal())
+      }
     }
   }
 
   const handleRemovePage = async (id: any) => {
     const jsonData = {
       related_listings_left: {
-        relation,
+        relation: relation,
         // listings: []
         listings: [...relatedListingsLeft.filter((item: any) => item !== id)],
       },
@@ -177,7 +177,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
         listing.push(item)
       }
     })
-    setTableData(listing)
+    setTableData(listingModalData.related_listings_left?.listings)
   }, [relatedListingsLeft, allListingPages])
 
   // console.log(tableData)
@@ -196,6 +196,8 @@ const RelatedListingEditModal: React.FC<Props> = ({
 
             <FormControl variant="outlined" size="small" sx={{ width: '100%' }}>
               <Select
+                className={styles['select-relation']}
+                placeholder="Select"
                 value={relation}
                 onChange={(e) => {
                   let val = e.target.value
@@ -204,6 +206,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
                 displayEmpty
                 inputProps={{ 'aria-label': 'Without label' }}
               >
+                <MenuItem value="">Select</MenuItem>
                 {relatedListingData.map((item: any, idx) => {
                   return (
                     <MenuItem key={item._id} value={item.relation}>
@@ -215,7 +218,9 @@ const RelatedListingEditModal: React.FC<Props> = ({
                 })}
               </Select>
             </FormControl>
+            <p className={styles['helper-text']}>{error}</p>
           </div>
+
           <section className={styles['dropdown-warpper']}>
             <div
               className={`${styles['input-box']} ${styles['dropdown-input-box']}`}
@@ -239,34 +244,41 @@ const RelatedListingEditModal: React.FC<Props> = ({
               />
               {/* <p className={styles['helper-text']}>{inputErrs.full_name}</p> */}
             </div>
-            {showDropdown && allDropdownValues.length !== 0 && (
+            {showDropdown && (
               <div className={styles['dropdown']}>
-                {allDropdownValues.map((item: any) => {
-                  return (
-                    <div
-                      key={item?._id}
-                      onClick={() => {
-                        setSelectedPage(item)
-                        setPageInputValue(item.name)
-                      }}
-                      className={styles.dropdownItem}
-                    >
-                      <Image
-                        src={
-                          item.profile_image
-                            ? item.profile_image
-                            : DefaultProfile
-                        }
-                        alt="profile"
-                        width={20}
-                        height={20}
-                      />
-                      <p>{item?.title}</p>
-                    </div>
-                  )
-                })}
+                {dropdownLoading ? (
+                  <div className={styles.dropdownItem}>Loading...</div>
+                ) : allDropdownValues.length !== 0 ? (
+                  allDropdownValues.map((item: any) => {
+                    return (
+                      <div
+                        key={item?._id}
+                        onClick={() => {
+                          setSelectedPage(item)
+                          setPageInputValue(item.title)
+                        }}
+                        className={styles.dropdownItem}
+                      >
+                        <Image
+                          src={
+                            item.profile_image
+                              ? item.profile_image
+                              : DefaultProfile
+                          }
+                          alt="profile"
+                          width={40}
+                          height={40}
+                        />
+                        <p>{item?.title}</p>
+                      </div>
+                    )
+                  })
+                ) : (
+                  <div className={styles.dropdownItem}>No results found</div>
+                )}
               </div>
             )}
+
             <button
               disabled={addPageLoading}
               className={styles['add-btn']}
@@ -319,9 +331,9 @@ const RelatedListingEditModal: React.FC<Props> = ({
               <tbody>
                 {tableData?.map((item: any) => {
                   return (
-                    <tr key={item._id}>
-                      <td>{item?.title}</td>
-                      {/* <td>{item?.genre?.display || '-'}</td> */}
+                    <tr key={item}>
+                      <td>{item.title}</td>
+
                       <td></td>
                       <td></td>
                       <td>
