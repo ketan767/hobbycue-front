@@ -27,7 +27,7 @@ const ListingPageCard: React.FC<Props> = (props) => {
 
   const updatePost = async () => {
     const { err, res } = await getAllPosts(
-      `_id=${postData._id}&populate=_author,_genre,_hobby`
+      `_id=${postData._id}&populate=_author,_genre,_hobby`,
     )
     if (err) return console.log(err)
     if (res.data.success) {
@@ -63,7 +63,7 @@ const ListingPageCard: React.FC<Props> = (props) => {
               </p>
             </Link>
             <p className={styles['post-other-info']}>{`${dateFormat.format(
-              new Date('2023-05-07T20:09:37.986Z')
+              new Date('2023-05-07T20:09:37.986Z'),
             )} | ${postData?._hobby?.display} ${
               postData?._genre?.display ? `| ${postData?._genre?.display}` : ''
             }`}</p>

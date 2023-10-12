@@ -22,6 +22,7 @@ import { updateListingModalData } from '@/redux/slices/site'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import Checkbox from '@mui/material/Checkbox'
 import { listingTypes } from '@/constants/constant'
+import CustomTooltip from '@/components/Tooltip/ToolTip'
 
 type Props = {
   onComplete?: () => void
@@ -302,15 +303,19 @@ const ListingContactEditModal: React.FC<Props> = ({
               <div className={styles['input-box']}>
                 <label className={styles['whatsapp-label']}>
                   WhatsApp Number
-                  <Checkbox
-                    size="small"
-                    color="primary"
-                    name="rememberMe"
-                    className={styles.checkbox}
-                    value={!tick}
-                    checked={tick}
-                    onChange={(e) => setTick(!tick)}
-                  />{' '}
+                  <CustomTooltip title="Use same">
+                    <div>
+                      <Checkbox
+                        size="small"
+                        color="primary"
+                        name="rememberMe"
+                        className={styles.checkbox}
+                        value={!tick}
+                        checked={tick}
+                        onChange={(e) => setTick(!tick)}
+                      />
+                    </div>
+                  </CustomTooltip>
                 </label>
                 <input
                   type="text"

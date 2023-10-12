@@ -35,7 +35,17 @@ const ListingCard: React.FC<Props> = ({ data }) => {
             />
           ) : (
             <div
-              className={`${styles['coverImage']} default-people-listing-cover`}
+              className={
+                data.type == 1
+                  ? `${styles['coverImage']} default-people-listing-cover`
+                  : data.type == 2
+                  ? `${styles['coverImage']} default-place-listing-cover`
+                  : data.type == 3
+                  ? `${styles['coverImage']} default-program-listing-cover`
+                  : data.type == 4
+                  ? `${styles['coverImage']} default-product-listing-cover`
+                  : `${styles['coverImage']} default-people-listing-cover`
+              }
             ></div>
           )}
         </div>
@@ -53,13 +63,28 @@ const ListingCard: React.FC<Props> = ({ data }) => {
               </div>
             ) : (
               <div
-                className={`${styles['contentImage']} default-people-listing-icon`}
+                className={
+                  data.type == 1
+                    ? `${styles['contentImage']} default-people-listing-icon`
+                    : data.type == 2
+                    ? `${styles['contentImage']} default-place-listing-icon`
+                    : data.type == 3
+                    ? `${styles['contentImage']} default-program-listing-icon`
+                    : data.type == 4
+                    ? `${styles['contentImage']} default-product-listing-icon`
+                    : `${styles['contentImage']} default-people-listing-icon`
+                }
               ></div>
             )}
             <div className={styles.contentTitle}>
               <p className={styles.title}> {data.title} </p>
               <p className={styles.titleType}>
-                <Image src={data.type === 1? People : data.type === 2 ? Place : Program} alt="type" />
+                <Image
+                  src={
+                    data.type === 1 ? People : data.type === 2 ? Place : Program
+                  }
+                  alt="type"
+                />
                 <p> {data.page_type} </p>
               </p>
             </div>

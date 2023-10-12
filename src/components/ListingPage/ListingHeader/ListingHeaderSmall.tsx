@@ -56,7 +56,7 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
   const handleDropdown = () => {
     setOpen(!open)
   }
-
+  console.log('head', data)
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
     e.preventDefault()
     let files = e.target.files
@@ -179,7 +179,19 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                 height={160}
               />
             ) : (
-              <div className={`${styles['img']} default-user-icon`}></div>
+              <div
+                className={
+                  data.type == 1
+                    ? `${styles['img']} default-people-listing-icon`
+                    : data.type == 2
+                    ? `${styles['img']} default-place-listing-icon`
+                    : data.type == 3
+                    ? `${styles['img']} default-program-listing-icon`
+                    : data.type == 4
+                    ? `${styles['img']} default-product-listing-icon`
+                    : `${styles['img']} default-people-listing-icon`
+                }
+              ></div>
             )}
 
             {listingLayoutMode === 'edit' && (
