@@ -36,7 +36,6 @@ const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
-  _id: any
 }
 
 const RelatedListingEditModal: React.FC<Props> = ({
