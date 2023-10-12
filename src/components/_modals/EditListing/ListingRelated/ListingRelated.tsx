@@ -36,6 +36,7 @@ const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
+  _id: any
 }
 
 const RelatedListingEditModal: React.FC<Props> = ({
@@ -96,7 +97,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
       dispatch(updateListingModalData(res.data.data.listing))
       if (onComplete) onComplete()
       else {
-        // window.location.reload()
+        window.location.reload()
         dispatch(closeModal())
       }
     }
@@ -107,7 +108,9 @@ const RelatedListingEditModal: React.FC<Props> = ({
     getListingPages(``)
       .then((res: any) => {
         console.log('listing', res.res.data)
+
         setAllDropdownValues(res.res.data.data.listings)
+        setAllListingPages(res.res.data.data.listings)
         setDropdownLoading(false)
       })
       .catch((err: any) => {
@@ -123,7 +126,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
       const jsonData = {
         related_listings_left: {
           relation: relation,
-          listings: [...relatedListingsLeft, selectedPage._id],
+          listings: [...relatedListingsLeft, selectedPage],
         },
       }
       setAddPageLoading(true)
@@ -143,16 +146,20 @@ const RelatedListingEditModal: React.FC<Props> = ({
   }
 
   const handleRemovePage = async (id: any) => {
+    console.log('before', relatedListingsLeft)
+    const filteredListings = relatedListingsLeft.filter(
+      (item: any) => item !== id,
+    )
+    console.log('After', filteredListings)
     const jsonData = {
       related_listings_left: {
         relation: relation,
-        // listings: []
-        listings: [...relatedListingsLeft.filter((item: any) => item !== id)],
+        listings: filteredListings,
       },
     }
-    setAddPageLoading(true)
+
     const { err, res } = await updateListing(listingModalData._id, jsonData)
-    setAddPageLoading(false)
+
     if (err) return console.log(err)
     console.log('resp', res?.data.data.listing)
     setRelatedListingsLeft(
@@ -171,13 +178,15 @@ const RelatedListingEditModal: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    let listing: any = []
-    allListingPages.forEach((item: any) => {
-      if (relatedListingsLeft.includes(item._id)) {
-        listing.push(item)
-      }
-    })
-    setTableData(listingModalData.related_listings_left?.listings)
+    const matchedListings = allListingPages.filter((item: any) =>
+      relatedListingsLeft.includes(item._id),
+    )
+
+    const matchedTitles = matchedListings.map((listing: any) => ({
+      id: listing._id,
+      title: listing.title,
+    }))
+    setTableData(matchedTitles)
   }, [relatedListingsLeft, allListingPages])
 
   // console.log(tableData)
@@ -233,7 +242,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
                 autoComplete="name"
                 required
                 value={pageInputValue}
-                onFocus={() => setShowDropdown(true)}
+                onClick={() => setShowDropdown(true)}
                 ref={inputRef}
                 onBlur={() =>
                   setTimeout(() => {
@@ -254,7 +263,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
                       <div
                         key={item?._id}
                         onClick={() => {
-                          setSelectedPage(item)
+                          setSelectedPage(item._id)
                           setPageInputValue(item.title)
                         }}
                         className={styles.dropdownItem}
@@ -331,7 +340,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
               <tbody>
                 {tableData?.map((item: any) => {
                   return (
-                    <tr key={item}>
+                    <tr key={item._id}>
                       <td>{item.title}</td>
 
                       <td></td>
