@@ -40,17 +40,40 @@ const ListingPageLayout: React.FC<Props> = ({ data, children, activeTab }) => {
       router.push(`/page/${router.query.page_url}/${tab !== 'home' ? tab : ''}`)
     }
   }
+  const { isLoggedIn, isAuthenticated, user } = useSelector(
+    (state: RootState) => state.user,
+  )
+  const determineUserMode = () => {
+    if (isLoggedIn && isAuthenticated) {
+      const userHasListing = Boolean(
+        user._listings?.find(
+          (listing: any) => listing.page_url === router.query.page_url,
+        ),
+      )
+
+      if (userHasListing) {
+        dispatch(updateListingLayoutMode('edit'))
+      } else {
+        dispatch(updateListingLayoutMode('view'))
+      }
+    } else {
+      dispatch(updateListingLayoutMode('view'))
+    }
+  }
 
   console.log('dataa', data)
 
   useEffect(() => {
     window.addEventListener('scroll', checkScroll)
-    // return window.removeEventListener('scroll', checkScroll)
+
+    return () => window.removeEventListener('scroll', checkScroll)
   }, [])
 
-  const { isLoggedIn, isAuthenticated, user } = useSelector(
-    (state: RootState) => state.user,
-  )
+  useEffect(() => {
+    if (router.isReady) {
+      determineUserMode()
+    }
+  }, [user, router.query.page_url, isLoggedIn, isAuthenticated, dispatch])
 
   const tabs: ListingPageTabs[] = [
     'home',
@@ -67,24 +90,6 @@ const ListingPageLayout: React.FC<Props> = ({ data, children, activeTab }) => {
   } else {
     content = children
   }
-
-  useEffect(() => {
-    if (isLoggedIn && isAuthenticated) {
-      const userHasListing = Boolean(
-        user._listings?.find(
-          (listing: any) => listing.page_url === router.query.page_url,
-        ),
-      )
-
-      if (userHasListing) {
-        dispatch(updateListingLayoutMode('edit'))
-      } else {
-        dispatch(updateListingLayoutMode('view'))
-      }
-    } else {
-      dispatch(updateListingLayoutMode('view'))
-    }
-  }, [user, router.query.page_url, isLoggedIn, isAuthenticated, dispatch])
 
   return (
     <>

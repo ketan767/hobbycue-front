@@ -59,7 +59,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
   const [tableData, setTableData] = useState<any>([])
   const [addPageLoading, setAddPageLoading] = useState(false)
   const [selectedPage, setSelectedPage] = useState<any>({})
-  const [relatedListingsLeft, setRelatedListingsLeft] = useState<any>([])
+  const [relatedListingsRight, setRelatedListingsRight] = useState<any>([])
   const [selectedRelated, setSelectedRelated] = useState<string[]>([])
   const [dropdownLoading, setDropdownLoading] = useState<boolean>(true)
   const [data, setData] = useState<ListingAboutData>({
@@ -85,7 +85,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
   }, [listingModalData?._id])
 
   useEffect(() => {
-    setRelatedListingsLeft(listingModalData.related_listings_right?.listings)
+    setRelatedListingsRight(listingModalData.related_listings_right?.listings)
   }, [])
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
@@ -94,7 +94,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
     const jsonData = {
       related_listings_right: {
         relation,
-        listings: [...relatedListingsLeft],
+        listings: [...relatedListingsRight],
       },
     }
     const { err, res } = await updateListing(listingModalData._id, jsonData)
@@ -146,14 +146,20 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
   }, [pageInputValue])
 
   useEffect(() => {
-    getAllUserDetail(``)
+    setDropdownLoading(true)
+    getListingPages(``)
       .then((res: any) => {
-        setAllListingPages(res.res.data.data.users)
+        console.log('listing', res.res.data)
+
+        setAllDropdownValues(res.res.data.data.listings)
+        setAllListingPages(res.res.data.data.listings)
+        setDropdownLoading(false)
       })
       .catch((err: any) => {
         console.log(err)
+        setDropdownLoading(false)
       })
-  }, [])
+  }, [pageInputValue])
 
   const handleAddPage = async () => {
     if (!relation || relation.trim() === '') {
@@ -162,7 +168,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
       const jsonData = {
         related_listings_right: {
           relation: relation,
-          listings: [...relatedListingsLeft, selectedPage._id],
+          listings: [...relatedListingsRight, selectedPage._id],
         },
       }
       setAddPageLoading(true)
@@ -170,7 +176,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
       setAddPageLoading(false)
       if (err) return console.log(err)
       console.log('resp', res?.data.data.listing)
-      setRelatedListingsLeft(
+      setRelatedListingsRight(
         res?.data.data.listing.related_listings_right.listings,
       )
       if (onComplete) onComplete()
@@ -186,7 +192,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
       related_listings_right: {
         relation: relation,
         // listings: []
-        listings: [...relatedListingsLeft.filter((item: any) => item !== id)],
+        listings: [...relatedListingsRight.filter((item: any) => item !== id)],
       },
     }
     setAddPageLoading(true)
@@ -194,7 +200,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
     setAddPageLoading(false)
     if (err) return console.log(err)
     console.log('resp', res?.data.data.listing)
-    setRelatedListingsLeft(
+    setRelatedListingsRight(
       res?.data.data.listing.related_listings_right.listings,
     )
     // dispatch(
@@ -208,16 +214,18 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
       // dispatch(closeModal())
     }
   }
-
   useEffect(() => {
-    let listing: any = []
-    allListingPages.forEach((item: any) => {
-      if (relatedListingsLeft.includes(item._id)) {
-        listing.push(item)
-      }
-    })
-    setTableData(listingModalData.related_listings_right?.listings)
-  }, [relatedListingsLeft, allListingPages])
+    const matchedListings = allListingPages.filter((item: any) =>
+      relatedListingsRight.includes(item._id),
+    )
+
+    const matchedTitles = matchedListings.map((listing: any) => ({
+      id: listing._id,
+      title: listing.title,
+    }))
+    setTableData(matchedTitles)
+    console.log('matchtitlerigght', matchedTitles)
+  }, [relatedListingsRight, allListingPages])
 
   useEffect(() => {
     setDropdownLoading(true)
@@ -282,7 +290,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
                 autoComplete="name"
                 required
                 value={pageInputValue}
-                onFocus={() => setShowDropdown(true)}
+                onClick={() => setShowDropdown(true)}
                 ref={inputRef}
                 onBlur={() =>
                   setTimeout(() => {
@@ -381,7 +389,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
                 {tableData?.map((item: any) => {
                   return (
                     <tr key={item._id}>
-                      <td>{item?.full_name}</td>
+                      <td>{item?.title}</td>
                       {/* <td>{item?.genre?.display || '-'}</td> */}
                       <td></td>
                       <td></td>

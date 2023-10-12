@@ -313,10 +313,10 @@ const ListingAddressEditModal: React.FC<Props> = ({
           let pin_code = ''
 
           address_components.forEach((component: any) => {
-            if (component.types.includes('neighborhood')) {
+            if (component.types.includes('sublocality_level_3')) {
               society = component.long_name
             }
-            if (component.types.includes('sublocality_level_3')) {
+            if (component.types.includes('sublocality_level_1')) {
               locality = component.long_name
             }
             if (component.types.includes('locality')) {

@@ -5,7 +5,8 @@
   border: 1px solid #ebedf0;
   border-radius: 8px;
   overflow: hidden;
-  max-width: 481px;
+  max-width: 505px;
+  width: 100%;
   min-width: 450px;
   max-height: 338px;
 }

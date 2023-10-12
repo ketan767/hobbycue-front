@@ -60,7 +60,8 @@ ul.contact-wrapper svg {
 
 .card-container {
   display: flex;
-  gap: var(--spacing-24);
+  row-gap: 12px;
+  column-gap: 25px;
   flex-wrap: wrap;
   justify-content: space-between;
 }
