@@ -190,7 +190,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
                     className={styles['select-input']}
                     onClick={() => setShowDropdown(true)}
                   >
-                    <p> Select listing tag.. </p>
+                    <p> Select listing type </p>
                     <Image src={DownArrow} alt="down" />
                   </div>
                   {showDropdown && (
@@ -242,11 +242,8 @@ const ListingTypeEditModal: React.FC<Props> = ({
                 Back
               </Button>
             )}
-            <Button
-              className={styles['submit']}
-              variant="contained"
-              size="medium"
-              color="primary"
+            <button
+              className="modal-footer-btn submit"
               onClick={handleSubmit}
               disabled={submitBtnLoading || value?.length === 0}
             >
@@ -257,7 +254,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
               ) : (
                 'Next'
               )}
-            </Button>
+            </button>
           </footer>
         </div>
       </div>
