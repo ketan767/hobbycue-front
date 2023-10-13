@@ -62,6 +62,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
   }
   const params = new URLSearchParams()
   const handleFilter = async () => {
+    setCategories(data.categories)
     if (filterData.category === '' && filterData.subCategory === '')
       resetHobbiesData()
     if (filterData.category !== '') {
@@ -109,7 +110,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
   return (
     <>
       <div className={`site-container ${styles['page-container']}`}>
-        <aside>
+        <aside className={styles['hobby-filter']}>
           {/* Filters */}
 
           <div className={styles['filter-wrapper']}>

@@ -125,9 +125,8 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
     if (res?.data.success) {
       dispatch(closeModal())
       console.log(res)
-      await fetchDetails()
-      await router.push(`/page/${res.data.data.listing.page_url}`)
-      window.location.reload()
+
+      window.location.href = `/page/${res.data.data.listing.page_url}`
     }
   }
 
