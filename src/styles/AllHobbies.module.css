@@ -12,6 +12,8 @@
   background: #ffffff;
   border: 1px solid #ebedf0;
   border-radius: 8px;
+  top: calc(24px + var(--navbar-height-desktop));
+  position: sticky;
 }
 
 .filter-wrapper header {
@@ -258,4 +260,9 @@
 }
 .dropdown, .dropdown p {
   box-sizing: border-box;
+}
+
+.hobby-filter{
+  top: calc(100vh - calc(var(--navbar-height-desktop)));
+  position: sticky;
 }

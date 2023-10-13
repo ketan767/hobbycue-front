@@ -19,7 +19,7 @@ const ListingCard: React.FC<Props> = ({ data }) => {
   const type = getListingTypeName(data.type)
   return (
     <>
-      <Link
+      <a
         key={data._id}
         href={`/page/${data.page_url}`}
         className={styles.container}
@@ -111,7 +111,7 @@ const ListingCard: React.FC<Props> = ({ data }) => {
             </div>
           </div>
         </div>
-      </Link>
+      </a>
     </>
   )
 }
