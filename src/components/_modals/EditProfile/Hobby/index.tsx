@@ -37,6 +37,7 @@ type DropdownListItem = {
   _id: string
   display: string
   sub_category?: string
+  genre?: any
 }
 
 const ProfileHobbyEditModal: React.FC<Props> = ({
@@ -62,6 +63,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const [showGenreDowpdown, setShowGenreDowpdown] = useState<boolean>(false)
 
   const [hobbyInputValue, setHobbyInputValue] = useState('')
+  const [genreid, setGenreId] = useState('')
   const [genreInputValue, setGenreInputValue] = useState('')
   const [userHobbies, setUserHobbies]: any = useState([])
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
@@ -78,10 +80,10 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       return { ...prev, hobby: null }
     })
     if (isEmptyField(e.target.value)) return setHobbyDropdownList([])
-    const query = `fields=display,sub_category&show=true&search=${e.target.value}`
+    const query = `fields=display,genre&level=3&show=true&search=${e.target.value}`
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
-    console.log('resp', res.data)
+    console.log('resp', res)
     setHobbyDropdownList(res.data.hobbies)
     // setGenreDropdownList(res.data.hobbies)
   }
@@ -93,13 +95,15 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       return { ...prev, genre: null }
     })
     if (isEmptyField(e.target.value)) return setGenreDropdownList([])
-    const query = `fields=display&show=true&search=${e.target.value}&level=5`
+    const query = `fields=display&show=true&genre=${genreid}&level=5`
 
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
     setGenreDropdownList(res.data.hobbies)
   }
-
+  const printgenreid = () => {
+    console.log('genreid', genreid)
+  }
   const handleAddHobby = () => {
     setError(null)
 
@@ -129,15 +133,13 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     }
 
     // Handle genre input
-    if (!data.genre && genreInputValue) {
+    if (!data.genre) {
       const matchedGenre = genreDropdownList.find(
         (genre) =>
           genre.display.toLowerCase() === genreInputValue.toLowerCase(),
       )
 
-      if (matchedGenre) {
-        selectedGenre = matchedGenre
-      } else {
+      if (selectedGenre !== null && selectedGenre !== matchedGenre) {
         setError('Typed Genre not found!')
         return
       }
@@ -148,12 +150,13 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     setAddHobbyBtnLoading(true)
 
     let jsonData = {
-      hobby: selectedHobby._id,
+      hobby: selectedHobby?._id,
       genre: selectedGenre?._id,
       level: data.level,
     }
 
     addUserHobby(jsonData, async (err, res) => {
+      console.log('json', jsonData)
       console.log('Button clicked!')
       if (err) {
         setAddHobbyBtnLoading(false)
@@ -168,7 +171,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         dispatch(updateUser(response?.data.data.user))
         setHobbyInputValue('')
         setGenreInputValue('')
-        setData({ ...data, level: 1 })
+        setData({ level: 1, hobby: null, genre: null })
       }
     })
   }
@@ -280,6 +283,10 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                                 return { ...prev, hobby: hobby }
                               })
                               setHobbyInputValue(hobby.display)
+                              setGenreId('')
+                              setGenreId(hobby.genre[0])
+
+                              printgenreid()
                             }}
                           >
                             {hobby.display}

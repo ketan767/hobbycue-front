@@ -126,6 +126,7 @@
 
 .email-field div div{
   border-radius: 8px;
+  height: 40px;
 }
 
 .password-field div div{
@@ -247,6 +248,7 @@ line-height: 20px;
   font-size: 14px;
   color: #ffffff;
   background: #8064A2;
+  height: 40px;
 
 }
 .form-footer .submit-btn:hover {
