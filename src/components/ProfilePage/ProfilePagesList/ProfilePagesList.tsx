@@ -21,7 +21,7 @@ const ProfilePagesList = ({ data }: Props) => {
           return (
             <li
               key={item._id}
-              onClick={() => router.push(`/page/${item.page_url}`)}
+              onClick={() => (window.location.href = `/page/${item.page_url}`)}
             >
               {item.profile_image ? (
                 <img src={item.profile_image} />

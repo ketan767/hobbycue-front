@@ -218,6 +218,8 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     })
   }, [user])
 
+  console.log('data', data)
+
   useEffect(() => {
     fullNameRef?.current?.focus()
   }, [])
