@@ -8,8 +8,7 @@ import { openModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
 import Tooltip from '@/components/Tooltip/ToolTip'
 import styles from './styles.module.css'
-import { RootState } from '@/redux/store'
-import TimeIcon from '@/assets/svg/time.svg'
+import AdminSvg from '@/assets/svg/adminSvg.svg'
 import FacebookIcon from '@/assets/svg/Facebook.svg'
 import TwitterIcon from '@/assets/svg/Twitter.svg'
 import InstagramIcon from '@/assets/svg/Instagram.svg'
@@ -27,6 +26,7 @@ import UltimateGuitarIcon from '@/assets/svg/Ultimate-Guitar.svg'
 import YouTubeIcon from '@/assets/svg/Youtube.svg'
 import ListingPageLayout from '../../../layouts/ListingPageLayout'
 import { getListingPages, getListingTags } from '@/services/listing.service'
+import { getAllUserDetail } from '@/services/user.service'
 import { dateFormat } from '@/utils'
 import { updateListingTypeModalMode } from '@/redux/slices/site'
 import WhatsappIcon from '@/assets/svg/whatsapp.svg'
@@ -40,6 +40,9 @@ interface Props {
   data: ListingPageData['pageData']
   children: any
   hobbyError?: boolean
+  PageAdmin?: any
+  full_name?: string
+  profile_url?: string
 }
 
 const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
@@ -53,7 +56,13 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
   const [listingPagesRight, setListingPagesRight] = useState([])
   const [relation, setRelation] = useState('')
   const [relationRight, setRelationRight] = useState('')
+  const [PageAdmin, setPageAdmin] = useState(null)
 
+  const FetchAdmin = async () => {
+    let adminId = data.admin
+    const admin: any = await getAllUserDetail(`_id=${adminId}`)
+    setPageAdmin(admin.res.data.data.users[0])
+  }
   useEffect(() => {
     getListingTags()
       .then((res: any) => {
@@ -70,8 +79,9 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
       .catch((err: any) => {
         console.log(err)
       })
+    FetchAdmin()
   }, [data._tags])
-
+  console.log('admin', PageAdmin)
   useEffect(() => {
     setListingPagesLeft([])
     if (data.related_listings_left.relation) {
@@ -142,6 +152,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
     )}`
     window.open(mapsUrl, '_blank')
   }
+
   console.log('data', data)
   return (
     <>
@@ -306,6 +317,15 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
           >
             <h4 className={styles['heading']}>Contact Information</h4>
             <ul className={styles['contact-wrapper']}>
+              {/* Page Admin */}
+              {(PageAdmin as any)?.full_name && (
+                <Link href={`/profile/${(PageAdmin as any)?.profile_url}`}>
+                  <Image src={AdminSvg} alt="whatsapp" width={24} height={24} />
+                  <span className={styles.textdefault}>
+                    {(PageAdmin as any)?.full_name}
+                  </span>
+                </Link>
+              )}
               {/* Phone */}
               {data?.name && (
                 <Link href={`tel:${data?.name}`}>
