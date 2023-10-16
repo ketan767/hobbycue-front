@@ -23,8 +23,6 @@ type Props = {
   onBackBtnClick?: () => void
 }
 
-
-
 const EmailSentModal: React.FC<Props> = ({}) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -55,13 +53,13 @@ const EmailSentModal: React.FC<Props> = ({}) => {
       if (err?.response?.data?.message) {
         setErrors({
           ...errors,
-          currentPassword: err?.response?.data?.message
+          currentPassword: err?.response?.data?.message,
         })
       }
       return
     }
     if (res?.data.success) {
-      console.log(res.data);
+      console.log(res.data)
       dispatch(closeModal())
       window.location.reload()
     }

@@ -126,7 +126,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
 
   useEffect(() => {
     if (isEmpty(data.about)) {
-      SetBackDisabled(true)
+      // SetBackDisabled(true)
     } else {
       SetBackDisabled(false)
     }

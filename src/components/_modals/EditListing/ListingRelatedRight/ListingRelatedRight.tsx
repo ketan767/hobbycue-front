@@ -20,7 +20,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
-import { getListingPages, updateListing } from '@/services/listing.service'
+import {
+  getListingPages,
+  updateListing,
+  deleteRelatedListingRight,
+} from '@/services/listing.service'
 import {
   updateListingModalData,
   updateRelatedListingsLeft,
@@ -188,18 +192,14 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
   }
 
   const handleRemovePage = async (id: any) => {
-    const jsonData = {
-      related_listings_right: {
-        relation: relation,
-        // listings: []
-        listings: [...relatedListingsRight.filter((item: any) => item !== id)],
-      },
-    }
-    setAddPageLoading(true)
-    const { err, res } = await updateListing(listingModalData._id, jsonData)
-    setAddPageLoading(false)
+    const { err, res } = await deleteRelatedListingRight(
+      listingModalData._id,
+      id,
+    )
+
     if (err) return console.log(err)
     console.log('resp', res?.data.data.listing)
+
     setRelatedListingsRight(
       res?.data.data.listing.related_listings_right.listings,
     )

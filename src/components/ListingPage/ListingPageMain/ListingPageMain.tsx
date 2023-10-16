@@ -34,6 +34,7 @@ import { listingTypes } from '@/constants/constant'
 import Link from 'next/link'
 import DirectionIcon from '@/assets/svg/direction.svg'
 import DefaultPageImage from '@/assets/svg/default-images/default-people-listing-icon.svg'
+import OthersIcon from '@/assets/svg/other.svg'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -181,9 +182,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
               )
             })}
           </PageContentBox>
-
           {/* Listing Hobbies */}
-
           <PageContentBox
             showEditButton={listingLayoutMode === 'edit'}
             onEditBtnClick={() =>
@@ -214,7 +213,6 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
               </ul>
             )}
           </PageContentBox>
-
           {/* Tags */}
           {listingLayoutMode !== 'edit' &&
           (!listingPagesRight || listingPagesRight.length === 0) ? null : (
@@ -239,7 +237,6 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
               </ul>
             </PageContentBox>
           )}
-
           {/* Related Listing */}
           {listingLayoutMode !== 'edit' &&
           (!listingPagesLeft || listingPagesLeft.length === 0) ? null : (
@@ -644,20 +641,38 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
 
                   {listingLayoutMode === 'edit' ? (
                     <span className={styles.textdefault}>
-                      {`${data?._address.street},
-                      ${data?._address.society},
-                      ${data?._address.city},
-                      ${data?._address.state},
-                      ${data?._address.country}`}
+                      {`${
+                        data?._address.street
+                          ? data._address.street
+                              .split(' ')
+                              .slice(0, 2)
+                              .join(' ')
+                          : ''
+                      }
+                  
+                    ${
+                      data?._address.society ? data._address.society + ',' : ''
+                    } 
+                    ${data?._address.city ? data._address.city + ',' : ''} 
+                    ${data?._address.state ? data._address.state + ',' : ''} 
+                    ${data?._address.country || ''}`}
                     </span>
                   ) : (
                     <span className={styles.textdefault}>
-                      {`
-                      ${data?._address.street},
-                      ${data?._address.society},
-                      ${data?._address.city},
-                      ${data?._address.state},
-                      ${data?._address.country}`}
+                      {`${
+                        data?._address.street
+                          ? data._address.street
+                              .split(' ')
+                              .slice(0, 2)
+                              .join(' ')
+                          : ''
+                      }
+                    ${
+                      data?._address.society ? data._address.society + ',' : ''
+                    } 
+                    ${data?._address.city ? data._address.city + ',' : ''} 
+                    ${data?._address.state ? data._address.state + ',' : ''} 
+                    ${data?._address.country || ''}`}
                     </span>
                   )}
                 </li>
@@ -947,6 +962,13 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
                   <Tooltip title="YouTube">
                     <Link href={data?.social_media_urls?.youtube_url}>
                       <Image src={YouTubeIcon} alt="YouTube" />
+                    </Link>
+                  </Tooltip>
+                )}
+                {data?.social_media_urls?.Others_url && (
+                  <Tooltip title="Others">
+                    <Link href={data?.social_media_urls?.Others_url}>
+                      <Image src={OthersIcon} alt="Others" />
                     </Link>
                   </Tooltip>
                 )}

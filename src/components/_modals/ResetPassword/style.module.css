@@ -163,3 +163,36 @@
   width: 100%;
   max-width: 100%;
 }
+
+.validation-messages {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(var(--black-rgb), 0.1);
+  padding: 5px 10px 5px 40px;
+  z-index: 20;
+}
+.validation-messages p {
+  position: relative;
+  margin: 10px 0;
+  font-size: 0.8rem;
+  color: red;
+  list-style: circle;
+}
+.validation-messages p::before {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-40%);
+  left: -25px;
+}
+.validation-messages p::before {
+  content: url('../../../assets/svg/error-icon.svg');
+}
+.validation-messages p.valid {
+  color: green;
+}
+.validation-messages p.valid::before {
+  content: url('../../../assets/svg/green-check-icon.svg');
+}

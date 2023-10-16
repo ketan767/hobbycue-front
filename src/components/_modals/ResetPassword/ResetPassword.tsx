@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { Button, CircularProgress } from '@mui/material'
 
@@ -11,12 +11,16 @@ import styles from './style.module.css'
 import { isEmpty, isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
+import TextField from '@mui/material/TextField'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import { changePassword, resetPassword } from '@/services/auth.service'
+import IconButton from '@mui/material/IconButton'
+import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded'
+import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -32,6 +36,17 @@ type ListingAboutData = {
   description: InputData<string>
 }
 
+function validatePasswordConditions(password: string) {
+  const validation = {
+    lowercase: /^(?=.*[a-z])/.test(password),
+    uppercase: /^(?=.*[A-Z])/.test(password),
+    number: /^(?=.*\d)/.test(password),
+    specialChar: /^(?=.*[#()^+@$!%*?&])/.test(password),
+    length: /^(?=.{8,})/.test(password),
+  }
+  return validation
+}
+
 const ResetPasswordModal: React.FC<Props> = ({}) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -39,9 +54,17 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
   const [nextDisabled, setNextDisabled] = useState(false)
   const [otp, setOtp] = useState('')
   const [newPassword, setNewPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [confirmPassword, setConfirmPassword] = useState('')
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const { forgotPasswordEmail } = useSelector((state: any) => state.modal)
+  const newPasswordRef = useRef<HTMLInputElement>(null)
+
+  const [showValidations, setShowValidations] = useState(false)
+  const [inputValidation, setInputValidation] = useState(
+    validatePasswordConditions(newPassword),
+  )
+  const [strength, setStrength] = useState(0)
 
   const [errors, setErrors] = useState({
     otp: '',
@@ -77,6 +100,16 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
   }
   //   console.log('user', user)
 
+  const getStrengthNum = (object: any) => {
+    let num = 0
+    Object.keys(object).map((key: any) => {
+      if (object[key] === true) {
+        num += 1
+      }
+    })
+    return num
+  }
+
   useEffect(() => {
     setErrors({
       otp: '',
@@ -84,6 +117,25 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
       confirmPassword: '',
     })
   }, [otp, newPassword, confirmPassword])
+
+  useEffect(() => {
+    const strengthNum = getStrengthNum(inputValidation)
+    setStrength(strengthNum)
+  }, [newPassword, inputValidation])
+
+  let threeConditionsValid = 0
+  if (inputValidation.uppercase) {
+    threeConditionsValid += 1
+  }
+  if (inputValidation.lowercase) {
+    threeConditionsValid += 1
+  }
+  if (inputValidation.specialChar) {
+    threeConditionsValid += 1
+  }
+  if (inputValidation.number) {
+    threeConditionsValid += 1
+  }
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -115,12 +167,77 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
                 errors.newPassword ? styles['input-error'] : ''
               }`}
             >
-              <input
+              <TextField
+                fullWidth
+                required
+                ref={newPasswordRef}
+                placeholder="Enter New Password"
+                type={showPassword ? 'text' : 'password'}
+                onFocus={() => setShowValidations(true)}
+                onBlur={() => setShowValidations(false)}
+                onChange={(e) => setNewPassword(e.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <IconButton onClick={() => setShowPassword(!showPassword)}>
+                      {showPassword ? (
+                        <VisibilityRoundedIcon />
+                      ) : (
+                        <VisibilityOffRoundedIcon />
+                      )}
+                    </IconButton>
+                  ),
+                }}
+              />
+              {showValidations && (
+                <div className={styles['validation-messages']}>
+                  <p
+                    className={
+                      inputValidation.length ? styles['valid'] : undefined
+                    }
+                  >
+                    At least 8 character in length.
+                  </p>
+                  <p
+                    className={threeConditionsValid >= 3 ? styles['valid'] : ''}
+                  >
+                    3 out of 4 conditions below
+                  </p>
+                  <p
+                    className={
+                      inputValidation.lowercase ? styles['valid'] : undefined
+                    }
+                  >
+                    Lower case letters (a-z)
+                  </p>
+                  <p
+                    className={
+                      inputValidation.uppercase ? styles['valid'] : undefined
+                    }
+                  >
+                    Upper case letters (A-Z)
+                  </p>
+                  <p
+                    className={
+                      inputValidation.number ? styles['valid'] : undefined
+                    }
+                  >
+                    Numbers (0-9)
+                  </p>
+                  <p
+                    className={
+                      inputValidation.specialChar ? styles['valid'] : undefined
+                    }
+                  >
+                    Special characters (@,#,$)
+                  </p>
+                </div>
+              )}
+              {/* <input
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 className={styles.input}
                 placeholder="Enter New Password"
-              />
+              /> */}
               <p className={styles['helper-text']}>{errors.newPassword}</p>
             </div>
           </div>
