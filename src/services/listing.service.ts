@@ -52,6 +52,43 @@ export const updateListing = async (listingId: any, data: any) => {
   }
 }
 
+export const deleteRelatedListingLeft = async (listingId: string, relatedListingId: string) => {
+  const token = localStorage.getItem('token');
+  const headers = { Authorization: `Bearer ${token}` };
+
+  try {
+    const res = await axiosInstance.patch(`/listing/${listingId}`, {
+      related_listings_left: {
+        listings: [relatedListingId]
+      }
+    }, {
+      headers,
+    });
+    return { res: res, err: null };
+  } catch (error) {
+    console.error(error);
+    return { err: error, res: null };
+  }
+}
+
+export const deleteRelatedListingRight = async (listingId: string, relatedListingId: string) => {
+  const token = localStorage.getItem('token');
+  const headers = { Authorization: `Bearer ${token}` };
+
+  try {
+    const res = await axiosInstance.patch(`/listing/${listingId}`, {
+      related_listings_right: {
+        listings: [relatedListingId]
+      }
+    }, {
+      headers,
+    });
+    return { res: res, err: null };
+  } catch (error) {
+    console.error(error);
+    return { err: error, res: null };
+  }
+}
 /** Get Listing Address `GET: /api/listing/address/:addressId` */
 export const getListingAddress = async (addressId: string) => {
   const token = localStorage.getItem('token')

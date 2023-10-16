@@ -28,6 +28,7 @@ import StravaIcon from '@/assets/svg/Strava.svg'
 import TripAdvisorIcon from '@/assets/svg/Tripadvisor.svg'
 import UltimateGuitarIcon from '@/assets/svg/Ultimate-Guitar.svg'
 import YouTubeIcon from '@/assets/svg/Youtube.svg'
+import OthersIcon from '@/assets/svg/other.svg'
 
 type Props = {
   data?: ProfilePageData['pageData']
@@ -48,6 +49,7 @@ const options: SocialMediaOption[] = [
   'Smule',
   'Chess',
   'BGG',
+  'Others',
 ]
 
 type SocialMediaOption =
@@ -66,6 +68,7 @@ type SocialMediaOption =
   | 'Smule'
   | 'Chess'
   | 'BGG'
+  | 'Others'
 
 const socialMediaIcons: Record<SocialMediaOption, any> = {
   Facebook: FacebookIcon,
@@ -83,6 +86,7 @@ const socialMediaIcons: Record<SocialMediaOption, any> = {
   Smule: SmuleIcon,
   Chess: ChessIcon,
   BGG: BGGIcon,
+  Others: OthersIcon,
 }
 
 const defaultSocialMediaURLs: Record<SocialMediaOption, string> = {
@@ -92,15 +96,16 @@ const defaultSocialMediaURLs: Record<SocialMediaOption, string> = {
   Youtube: 'https://youtube.com/',
   SoundCloud: 'https://soundcloud.com/',
   Pinterest: 'https://pinterest.com/',
-  TripAdvisor: 'https://tripadvisor.com/',
-  'Ultimate Guitar': 'https://ultimate-guitar.com/',
-  Strava: 'https://strava.com/',
+  TripAdvisor: 'https://tripadvisor.com/profile/',
+  'Ultimate Guitar': 'https://profile.ultimate-guitar.com/',
+  Strava: 'https://strava.com/athletes/',
   DeviantArts: 'https://deviantart.com/',
   Behance: 'https://behance.net/',
   GoodReads: 'https://goodreads.com/',
   Smule: 'https://smule.com/',
-  Chess: 'https://chess.com/',
-  BGG: 'https://boardgamegeek.com/',
+  Chess: 'https://chess.com/member/',
+  BGG: 'https://boardgamegeek.com/user',
+  Others: 'https://',
 }
 
 const ListingSocialMediaEditModal = ({ data }: Props) => {
@@ -152,10 +157,10 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
         url: socialMediaUrls && socialMediaUrls.tripadvisor_url,
       })
     }
-    if (socialMediaUrls && socialMediaUrls.ultimate_guiter_url) {
+    if (socialMediaUrls && socialMediaUrls.ultimate_guitar_url) {
       arr.push({
-        socialMedia: 'Ultimate Guiter',
-        url: socialMediaUrls && socialMediaUrls.ultimate_guiter_url,
+        socialMedia: 'Ultimate Guitar',
+        url: socialMediaUrls && socialMediaUrls.ultimate_guitar_url,
       })
     }
     if (socialMediaUrls && socialMediaUrls.strava_url) {
@@ -200,6 +205,12 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
         url: socialMediaUrls && socialMediaUrls.bgg_url,
       })
     }
+    if (socialMediaUrls && socialMediaUrls.Others_url) {
+      arr.push({
+        socialMedia: 'Others',
+        url: socialMediaUrls && socialMediaUrls.Others_url,
+      })
+    }
     if (arr.length > 0) {
       setMediaData(arr)
     }
@@ -207,7 +218,7 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
 
   const [mediaData, setMediaData] = useState([
     {
-      socialMedia: 'Facebook',
+      socialMedia: '',
       url: '',
     },
   ])
@@ -255,7 +266,7 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
         soundcloud_url: getValue('SoundCloud'),
         pinterest_url: getValue('Pinterest'),
         tripadvisor_url: getValue('TripAdvisor'),
-        ultimate_guiter_url: getValue('Ultimate_Guiter'),
+        ultimate_guitar_url: getValue('Ultimate Guitar'),
         strava_url: getValue('Strava'),
         deviantarts_url: getValue('DeviantArts'),
         behance_url: getValue('Behance'),
@@ -263,6 +274,7 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
         smule_url: getValue('Smule'),
         chess_url: getValue('Chess'),
         bgg_url: getValue('BGG'),
+        Others_url: getValue('Others'),
       },
     }
     options.forEach((socialMedia) => {
@@ -296,13 +308,15 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
       <hr />
 
       <section className={styles['body']}>
-        <div className={styles['body-header']}>
+        <div className={styles['body-header']} onClick={addSocialMedia}>
           <Image
             src={AddIcon}
             alt="add"
+            width={12}
+            height={12}
             className={styles.deleteIcon}
-            onClick={addSocialMedia}
           />
+          Add new
         </div>
         {mediaData.map((item: any, idx: any) => {
           return (

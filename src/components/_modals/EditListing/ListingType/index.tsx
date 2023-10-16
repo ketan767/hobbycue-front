@@ -45,7 +45,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
   const [list, setList] = useState<any>([])
 
   const [value, setValue] = useState<any>([])
-  const [error, setError] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
   const [showDropdown, setShowDropdown] = useState(false)
@@ -53,8 +53,9 @@ const ListingTypeEditModal: React.FC<Props> = ({
   useOutsideAlerter(dropdownRef, () => setShowDropdown(false))
 
   const handleSubmit = async () => {
+    setError('')
     if (!value || value === '' || value.length === 0) {
-      return setError(true)
+      return setError('Select a listing type!')
     }
     if (listingTypeModalMode === 'edit') {
       handleEdit()
@@ -140,12 +141,18 @@ const ListingTypeEditModal: React.FC<Props> = ({
 
   const handleChange = (itemToChange: any) => {
     if (value?.includes(itemToChange)) {
+      setError('') // Clear error when removing a value
       setValue((prev: any) => prev.filter((item: any) => item !== itemToChange))
     } else {
-      if (value) {
-        setValue((prev: any) => [...prev, itemToChange])
+      if (value?.length >= 2) {
+        setError('You can select only two listing types')
       } else {
-        setValue((prev: any) => [itemToChange])
+        setError('') // Clear error when adding a value within the limit
+        if (value) {
+          setValue((prev: any) => [...prev, itemToChange])
+        } else {
+          setValue((prev: any) => [itemToChange])
+        }
       }
     }
   }
@@ -224,9 +231,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
                   )}
                 </div>
 
-                <p className={styles.error}>
-                  {error && 'Select a listing type!'}{' '}
-                </p>
+                <p className={styles.error}>{error}</p>
               </FormControl>
             </div>
           </section>
@@ -242,15 +247,11 @@ const ListingTypeEditModal: React.FC<Props> = ({
                 Back
               </Button>
             )}
-            <button
-              className="modal-footer-btn submit"
-              onClick={handleSubmit}
-              disabled={submitBtnLoading || value?.length === 0}
-            >
+            <button className="modal-footer-btn submit" onClick={handleSubmit}>
               {submitBtnLoading ? (
                 <CircularProgress color="inherit" size={'22px'} />
               ) : listingTypeModalMode === 'edit' ? (
-                'Next'
+                'Save'
               ) : (
                 'Next'
               )}

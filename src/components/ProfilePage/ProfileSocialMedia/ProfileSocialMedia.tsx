@@ -20,6 +20,7 @@ import StravaIcon from '@/assets/svg/Strava.svg'
 import TripAdvisorIcon from '@/assets/svg/Tripadvisor.svg'
 import UltimateGuitarIcon from '@/assets/svg/Ultimate-Guitar.svg'
 import YouTubeIcon from '@/assets/svg/Youtube.svg'
+import OthersIcon from '@/assets/svg/other.svg'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -143,6 +144,14 @@ const ProfileSocialMediaSide = ({ data }: Props) => {
             <Tooltip title="YouTube">
               <Link href={data.social_media_urls.youtube_url}>
                 <Image src={YouTubeIcon} alt="YouTube" />
+              </Link>
+            </Tooltip>
+          )}
+
+          {data?.social_media_urls?.Others_url && (
+            <Tooltip title="Others">
+              <Link href={data?.social_media_urls?.Others_url}>
+                <Image src={OthersIcon} alt="Others" />
               </Link>
             </Tooltip>
           )}
