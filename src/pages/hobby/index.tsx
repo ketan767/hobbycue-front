@@ -26,10 +26,25 @@ type ListingHobbyData = {
   hobby: DropdownListItem | null
 }
 
+type HobbyType = {
+  _id: string
+  display: string
+  slug: any
+  category: {
+    _id: string
+    display: string
+  }
+  sub_category?: {
+    _id: string
+    display: string
+  }
+}
+
 const ALlHobbies: React.FC<Props> = ({ data }) => {
   const [categories, setCategories] = useState([])
   const [subCategories, setSubCategories] = useState([])
-  const [hobbyData, setHobbyData] = useState([])
+  const [hobbyData, setHobbyData] = useState<HobbyType[]>([])
+
   const [filtercategories, setFilterCategories] = useState([])
   const [filtersubCategories, setFilterSubCategories] = useState([])
   const [filterhobbyData, setFilterHobbyData] = useState([])
@@ -50,6 +65,9 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
   const [hobbyInputValue, setHobbyInputValue] = useState('')
   const handleHobbyInputChange = async (e: any) => {
     setHobbyInputValue(e.target.value)
+    if (e.target.value === '') {
+      setFilterData((prev) => ({ ...prev, hobby: '' }))
+    }
 
     setData((prev) => {
       return { ...prev, hobby: null }
@@ -79,6 +97,12 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
       )
       if (err) return console.log(err)
       setSubCategories(res.data.hobbies)
+    }
+    if (filterData.hobby !== '') {
+      params.set('_id', filterData.hobby)
+      const { err, res } = await getAllHobbies(`level=2&${params.toString()}`)
+      if (err) return console.log(err)
+      setHobbyData(res.data.hobbies)
     }
   }
 
@@ -195,6 +219,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                           return { ...prev, hobby: hobby }
                         })
                         setHobbyInputValue(hobby.display)
+                        setFilterData((prev) => ({ ...prev, hobby: hobby._id }))
                       }}
                     >
                       {hobby.display}
@@ -237,27 +262,35 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                 </tr>
               </thead>
               <tbody>
-                {categories.map((cat: any, i) => (
-                  <tr key={i}>
-                    <td className="">
-                      <Link href={`/hobby/${cat.slug}`}>{cat.display}</Link>
-                    </td>
-                    <td>
-                      {subCategories
-                        .sort((a: any, b: any) =>
-                          a.display > b.display
-                            ? 1
-                            : b.display > a.display
-                            ? -1
-                            : 0,
-                        )
-                        .map((subCat: any) => {
-                          return (
-                            subCat.category?._id === cat._id && (
-                              <div
-                                className={styles['table-content-container']}
-                              >
-                                <>
+                {categories
+                  .filter(
+                    (cat: any) =>
+                      !filterData.hobby || // Check if hobby filter is not set
+                      cat._id ===
+                        hobbyData.find((h) => h._id === filterData.hobby)
+                          ?.category?._id,
+                  )
+                  .map((cat: any, i) => (
+                    <tr key={i}>
+                      <td className="">
+                        <Link href={`/hobby/${cat.slug}`}>{cat.display}</Link>
+                      </td>
+                      <td>
+                        {subCategories
+                          .filter(
+                            (subCat: any) =>
+                              !filterData.hobby ||
+                              subCat._id ===
+                                hobbyData.find(
+                                  (h) => h._id === filterData.hobby,
+                                )?.sub_category?._id,
+                          )
+                          .map((subCat: any) => {
+                            return (
+                              subCat.category?._id === cat._id && (
+                                <div
+                                  className={styles['table-content-container']}
+                                >
                                   <p>
                                     <Image src={AddIcon} alt="add" />{' '}
                                     {subCat.display}
@@ -267,26 +300,25 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                     className={styles['vertical-line']}
                                   ></div>
                                   <p className={styles['table-hobby']}>
-                                    {hobbyData.map((hobby: any) => {
+                                    {hobbyData.map((hobby: HobbyType) => {
                                       return (
-                                        hobby?.category?._id === cat._id &&
-                                        hobby?.sub_category?._id ===
+                                        hobby.category?._id === cat._id &&
+                                        hobby.sub_category?._id ===
                                           subCat._id && (
                                           <Link href={`/hobby/${hobby.slug}`}>
-                                            <span> {hobby.display}, </span>
+                                            <span>{hobby.display}, </span>
                                           </Link>
                                         )
                                       )
                                     })}
                                   </p>
-                                </>
-                              </div>
+                                </div>
+                              )
                             )
-                          )
-                        })}
-                    </td>
-                  </tr>
-                ))}
+                          })}
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           )}

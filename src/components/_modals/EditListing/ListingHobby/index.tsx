@@ -295,10 +295,9 @@ const ListingHobbyEditModal: React.FC<Props> = ({
                   )}
                 </section>
 
-                <Button
+                <button
                   className={styles['add-btn']}
                   disabled={addHobbyBtnLoading}
-                  variant="contained"
                   onClick={handleAddHobby}
                 >
                   {addHobbyBtnLoading ? (
@@ -306,7 +305,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
                   ) : (
                     'Add'
                   )}
-                </Button>
+                </button>
               </section>
 
               {/* Hobbies List, that are already Added */}

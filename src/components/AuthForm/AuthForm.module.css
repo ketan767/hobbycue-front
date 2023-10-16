@@ -131,6 +131,7 @@
 
 .password-field div div{
   border-radius: 8px;
+  height: 40px;
 }
 
 .password-field {

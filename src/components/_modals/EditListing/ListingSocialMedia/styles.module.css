@@ -102,22 +102,25 @@
 .dropdown {
   width: 184px;
   height: 40px;
+  border-radius: 8px;
 }
 .deleteIcon {
   margin-left: 4px;
-  cursor: pointer;
+  margin-bottom: 3px;
 }
 .body-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: right;
   align-items: center;
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 500;
   font-size: 14px;
   line-height: 22px;
-  color: #6d747a;
+  color: #8064A2;
   margin-bottom: 24px;
+  gap: 2px;
+  cursor: pointer;
 }
 .inputContainer {
   margin-bottom: 0.8rem;

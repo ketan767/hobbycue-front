@@ -80,7 +80,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       return { ...prev, hobby: null }
     })
     if (isEmptyField(e.target.value)) return setHobbyDropdownList([])
-    const query = `fields=display,genre&level=3&show=true&search=${e.target.value}`
+    const query = `fields=display,genre&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
     console.log('resp', res)
@@ -343,6 +343,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                   sx={{ width: '150px' }}
                 >
                   <Select
+                    className={styles['select-level-main']}
                     value={data.level}
                     onChange={(e) => {
                       setData((prev: any) => {
@@ -373,22 +374,17 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                   <p className={styles['helper-text']}>{inputErrs.full_name}</p>
                 </div> */}
 
-                <Button
+                <button
                   disabled={addHobbyBtnLoading}
-                  variant="contained"
+                  className={styles['add-btn']}
                   onClick={handleAddHobby}
-                  sx={{
-                    fontFamily: 'Poppins',
-                    padding: '8px 23px',
-                    borderRadius: '8px',
-                  }}
                 >
                   {addHobbyBtnLoading ? (
                     <CircularProgress color="inherit" size={'22px'} />
                   ) : (
                     'Add'
                   )}
-                </Button>
+                </button>
               </section>
 
               <h3 className={styles['heading']}>Added Hobbies</h3>
