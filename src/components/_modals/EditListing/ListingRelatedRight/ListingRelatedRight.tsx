@@ -78,14 +78,16 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
     inputRef?.current?.focus()
   }, [])
   useEffect(() => {
-    const updated = listingData.filter(
-      (item: any) =>
-        item.type === listingModalData.type && item.side === 'right',
-    )
-    console.log(listingModalData)
-    // console.log(listingModalData.type);
-    // console.log({updated});
-    setRelatedListingData(updated)
+    if (listingModalData && listingModalData._id) {
+      const updated = listingData.filter(
+        (item: any) =>
+          item.type === listingModalData.type && item.side === 'right',
+      )
+      console.log(listingModalData)
+      // console.log(listingModalData.type);
+      // console.log({updated});
+      setRelatedListingData(updated)
+    }
   }, [listingModalData?._id])
 
   useEffect(() => {
@@ -101,15 +103,17 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
         listings: [...relatedListingsRight],
       },
     }
-    const { err, res } = await updateListing(listingModalData._id, jsonData)
-    setSubmitBtnLoading(false)
-    if (err) return console.log(err)
-    if (res?.data.success) {
-      dispatch(updateListingModalData(res.data.data.listing))
-      if (onComplete) onComplete()
-      else {
-        window.location.reload()
-        dispatch(closeModal())
+    if (listingModalData && listingModalData._id) {
+      const { err, res } = await updateListing(listingModalData._id, jsonData)
+      setSubmitBtnLoading(false)
+      if (err) return console.log(err)
+      if (res?.data.success) {
+        dispatch(updateListingModalData(res.data.data.listing))
+        if (onComplete) onComplete()
+        else {
+          window.location.reload()
+          dispatch(closeModal())
+        }
       }
     }
   }
@@ -176,42 +180,46 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
         },
       }
       setAddPageLoading(true)
-      const { err, res } = await updateListing(listingModalData._id, jsonData)
-      setAddPageLoading(false)
-      if (err) return console.log(err)
-      console.log('resp', res?.data.data.listing)
-      setRelatedListingsRight(
-        res?.data.data.listing.related_listings_right.listings,
-      )
-      if (onComplete) onComplete()
-      else {
-        // window.location.reload()
-        // dispatch(closeModal())
+      if (listingModalData && listingModalData._id) {
+        const { err, res } = await updateListing(listingModalData._id, jsonData)
+        setAddPageLoading(false)
+        if (err) return console.log(err)
+        console.log('resp', res?.data.data.listing)
+        setRelatedListingsRight(
+          res?.data.data.listing.related_listings_right.listings,
+        )
+        if (onComplete) onComplete()
+        else {
+          // window.location.reload()
+          // dispatch(closeModal())
+        }
       }
     }
   }
 
   const handleRemovePage = async (id: any) => {
-    const { err, res } = await deleteRelatedListingRight(
-      listingModalData._id,
-      id,
-    )
+    if (listingModalData && listingModalData._id) {
+      const { err, res } = await deleteRelatedListingRight(
+        listingModalData._id,
+        id,
+      )
 
-    if (err) return console.log(err)
-    console.log('resp', res?.data.data.listing)
+      if (err) return console.log(err)
+      console.log('resp', res?.data.data.listing)
 
-    setRelatedListingsRight(
-      res?.data.data.listing.related_listings_right.listings,
-    )
-    // dispatch(
-    //   updateRelatedListingsLeft(
-    //     res?.data.data.listing.related_listings_right.listings,
-    //   ),
-    // )
-    if (onComplete) onComplete()
-    else {
-      // window.location.reload()
-      // dispatch(closeModal())
+      setRelatedListingsRight(
+        res?.data.data.listing.related_listings_right.listings,
+      )
+      // dispatch(
+      //   updateRelatedListingsLeft(
+      //     res?.data.data.listing.related_listings_right.listings,
+      //   ),
+      // )
+      if (onComplete) onComplete()
+      else {
+        // window.location.reload()
+        // dispatch(closeModal())
+      }
     }
   }
   useEffect(() => {

@@ -71,11 +71,13 @@ const RelatedListingEditModal: React.FC<Props> = ({
     inputRef?.current?.focus()
   }, [])
   useEffect(() => {
-    const updated = listingData.filter(
-      (item: any) =>
-        item.type === listingModalData.type && item.side === 'left',
-    )
-    setRelatedListingData(updated)
+    if (listingModalData && listingModalData._id) {
+      const updated = listingData.filter(
+        (item: any) =>
+          item.type === listingModalData.type && item.side === 'left',
+      )
+      setRelatedListingData(updated)
+    }
   }, [listingModalData?._id])
 
   useEffect(() => {
@@ -91,17 +93,19 @@ const RelatedListingEditModal: React.FC<Props> = ({
         listings: [...relatedListingsLeft],
       },
     }
-    const { err, res } = await updateListing(listingModalData._id, jsonData)
-    console.log('res', res)
-    setSubmitBtnLoading(false)
-    if (err) return console.log(err)
+    if (listingModalData && listingModalData._id) {
+      const { err, res } = await updateListing(listingModalData._id, jsonData)
+      console.log('res', res)
+      setSubmitBtnLoading(false)
+      if (err) return console.log(err)
 
-    if (res?.data.success) {
-      dispatch(updateListingModalData(res.data.data.listing))
-      if (onComplete) onComplete()
-      else {
-        window.location.reload()
-        dispatch(closeModal())
+      if (res?.data.success) {
+        dispatch(updateListingModalData(res.data.data.listing))
+        if (onComplete) onComplete()
+        else {
+          window.location.reload()
+          dispatch(closeModal())
+        }
       }
     }
   }
@@ -133,42 +137,46 @@ const RelatedListingEditModal: React.FC<Props> = ({
         },
       }
       setAddPageLoading(true)
-      const { err, res } = await updateListing(listingModalData._id, jsonData)
-      setAddPageLoading(false)
+      if (listingModalData && listingModalData._id) {
+        const { err, res } = await updateListing(listingModalData._id, jsonData)
+        setAddPageLoading(false)
+        if (err) return console.log(err)
+        console.log('resp', res?.data.data.listing)
+        setRelatedListingsLeft(
+          res?.data.data.listing.related_listings_left.listings,
+        )
+        if (onComplete) onComplete()
+        else {
+          // window.location.reload()
+          // dispatch(closeModal())
+        }
+      }
+    }
+  }
+
+  const handleRemovePage = async (id: string) => {
+    if (listingModalData && listingModalData._id) {
+      const { err, res } = await deleteRelatedListingLeft(
+        listingModalData._id,
+        id,
+      )
+
       if (err) return console.log(err)
       console.log('resp', res?.data.data.listing)
+
       setRelatedListingsLeft(
         res?.data.data.listing.related_listings_left.listings,
       )
+      // dispatch(
+      //   updateRelatedListingsLeft(
+      //     res?.data.data.listing.related_listings_left.listings,
+      //   ),
+      // )
       if (onComplete) onComplete()
       else {
         // window.location.reload()
         // dispatch(closeModal())
       }
-    }
-  }
-
-  const handleRemovePage = async (id: any) => {
-    const { err, res } = await deleteRelatedListingLeft(
-      listingModalData._id,
-      id,
-    )
-
-    if (err) return console.log(err)
-    console.log('resp', res?.data.data.listing)
-
-    setRelatedListingsLeft(
-      res?.data.data.listing.related_listings_left.listings,
-    )
-    // dispatch(
-    //   updateRelatedListingsLeft(
-    //     res?.data.data.listing.related_listings_left.listings,
-    //   ),
-    // )
-    if (onComplete) onComplete()
-    else {
-      // window.location.reload()
-      // dispatch(closeModal())
     }
   }
 
