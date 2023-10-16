@@ -111,7 +111,7 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
             </div>
             <div className={styles.editContainer}>
               <Image src={EditIcon} width={16} height={16} alt="edit" />
-              <p className={styles.editText} onClick={openForgotPasswordEmail} >
+              <p className={styles.editText} onClick={openForgotPasswordEmail}>
                 Used Social Media Login or Forgot Password?{' '}
               </p>
             </div>

@@ -250,6 +250,16 @@
   z-index:20;
   overflow-y: auto;
 }
+
+.helper-text{
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 16px;
+  color: #c0504d;
+  margin-top: 4px;
+  padding-left: 6px;
+  min-height: 1rem;
+}
  .dropdown-warpper .dropdown p {
    font-family: 'Poppins';
    font-style: normal;

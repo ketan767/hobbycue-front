@@ -28,6 +28,7 @@ import ListingGeneralEditModal from '@/components/_modals/EditListing/ListingGen
 import FilledButton from '@/components/_buttons/FilledButton'
 import CoverPhotoLayout from '@/layouts/CoverPhotoLayout/CoverPhotoLayout'
 import ProfileImageLayout from '@/layouts/ProfileImageLayout/ProfileImageLayout'
+import claimSvg from '@/assets/svg/claimedsvg.svg'
 
 import Dropdown from './DropDown'
 import { listingTypes } from '@/constants/constant'
@@ -245,7 +246,8 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
           <div className={styles['content-container']}>
             <div className={styles['name-container']}>
               <h1 className={styles['name']}>
-                {data?.title}{' '}
+                {data?.title}
+                {data?.is_claimed ? <Image alt="claim" src={claimSvg} /> : ''}
                 {listingLayoutMode === 'edit' && (
                   <Image
                     className={styles['edit-icon']}

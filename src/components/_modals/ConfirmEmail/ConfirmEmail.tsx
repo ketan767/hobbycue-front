@@ -54,8 +54,7 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
       return
     }
     if (res?.data.success) {
-      console.log(res.data.data.user)
-      alert(res.data.data.user.otp)
+      alert(res.data.data?.user.otp)
 
       dispatch(openModal({ type: 'reset-password', closable: true }))
       dispatch(updateForgotPasswordEmail(email))
@@ -80,8 +79,8 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
         <section className={styles['body']}>
           <div className={styles.inputField}>
             <label className={styles.label}>
-              Enter the email address below to get forgotten password link to
-              reset your hobbycue password.
+              Enter the email address of the account, and we will send you a
+              verification code to reset password.
             </label>
             <div
               className={`${styles['input-box']} ${

@@ -145,22 +145,6 @@ const ListingTagsEditModal: React.FC<Props> = ({
         </header>
         <hr />
         <section className={styles['body']}>
-          <div className={styles['selected-values']}>
-            {tags
-              ?.filter((item) => selectedTags.includes(item._id))
-              .map((item: any, idx) => {
-                return (
-                  <div key={item} className={styles['selected-value']}>
-                    <p>{item.name}</p>
-                    <Image
-                      src={CrossIcon}
-                      alt="cancel"
-                      onClick={() => handleChange(item._id)}
-                    />
-                  </div>
-                )
-              })}
-          </div>
           <div className={styles['input-box']}>
             <input hidden required />
             <div className={styles['select-container']} ref={dropdownRef}>

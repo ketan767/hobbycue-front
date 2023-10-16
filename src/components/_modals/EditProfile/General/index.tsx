@@ -189,7 +189,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   }, [data.profile_url, user.profile_url])
 
   useEffect(() => {
-    if (onComplete !== undefined) {
+    if (onComplete !== undefined && /^\d+$/.test(user.profile_url)) {
       let profileUrl = data.full_name
       profileUrl = profileUrl?.toLowerCase()
       profileUrl = profileUrl?.replace(/ /g, '-')
@@ -206,7 +206,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
       }
     }
   }, [data.full_name])
-
+  console.log('type', typeof user.profile_url)
   useEffect(() => {
     setData({
       full_name: user.full_name,
