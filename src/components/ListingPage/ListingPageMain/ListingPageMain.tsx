@@ -284,7 +284,11 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
                         >
                           <div className={styles['related']}>
                             <Image
-                              src={DefaultPageImage}
+                              src={
+                                item.profile_image
+                                  ? item.profile_image
+                                  : DefaultPageImage
+                              }
                               alt={item?.title}
                               width="32"
                               height="32"
@@ -787,7 +791,11 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
                         >
                           <div className={styles['related']}>
                             <Image
-                              src={DefaultPageImage}
+                              src={
+                                item.profile_image
+                                  ? item.profile_image
+                                  : DefaultPageImage
+                              }
                               alt={item?.title}
                               width="32"
                               height="32"

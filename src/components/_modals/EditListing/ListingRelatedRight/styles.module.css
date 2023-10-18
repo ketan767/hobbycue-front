@@ -186,6 +186,7 @@
    /* Grey/Darkest */
  
    color: #08090a;
+   overflow-y: auto;
  }
  
  .added-hobby-list table tr {

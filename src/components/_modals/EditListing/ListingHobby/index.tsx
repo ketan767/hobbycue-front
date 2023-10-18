@@ -26,6 +26,7 @@ type DropdownListItem = {
   _id: string
   display: string
   sub_category?: string
+  genre?: any
 }
 
 type ListingHobbyData = {
@@ -51,7 +52,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
 
   const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
   const [showGenreDropdown, setShowGenreDropdown] = useState<boolean>(false)
-
+  const [genreid, setGenreId] = useState('')
   const [hobbyInputValue, setHobbyInputValue] = useState('')
   const [genreInputValue, setGenreInputValue] = useState('')
 
@@ -67,16 +68,19 @@ const ListingHobbyEditModal: React.FC<Props> = ({
 
   const handleHobbyInputChange = async (e: any) => {
     setHobbyInputValue(e.target.value)
+    setGenreInputValue('')
+    setGenreDropdownList([])
+    setGenreId('')
 
     setData((prev) => {
       return { ...prev, hobby: null }
     })
     if (isEmptyField(e.target.value)) return setHobbyDropdownList([])
-    const query = `fields=display,sub_category&show=true&search=${e.target.value}`
+    const query = `fields=display,genre&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
+    console.log('resp', res)
     setHobbyDropdownList(res.data.hobbies)
-    setGenreDropdownList(res.data.hobbies)
   }
   const handleGenreInputChange = async (e: any) => {
     setGenreInputValue(e.target.value)
@@ -85,19 +89,41 @@ const ListingHobbyEditModal: React.FC<Props> = ({
       return { ...prev, genre: null }
     })
     if (isEmptyField(e.target.value)) return setGenreDropdownList([])
-    const query = `fields=display&show=true&search=${e.target.value}`
+    const query = `fields=display&show=true&genre=${genreid}&level=5`
 
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
     setGenreDropdownList(res.data.hobbies)
   }
+  const printgenreid = () => {
+    console.log('genreid', genreid)
+  }
+  const handleHobbySelection = async (selectedHobby: DropdownListItem) => {
+    setShowGenreDropdown(false)
+    setGenreId('')
+    setData((prev) => ({ ...prev, hobby: selectedHobby }))
+    setHobbyInputValue(selectedHobby.display)
+
+    if (selectedHobby.genre && selectedHobby.genre.length > 0) {
+      setGenreId(selectedHobby.genre[0])
+
+      const query = `fields=display&show=true&genre=${selectedHobby.genre[0]}&level=5`
+      const { err, res } = await getAllHobbies(query)
+
+      if (!err) {
+        setGenreDropdownList(res.data.hobbies)
+        setShowGenreDropdown(true)
+      } else {
+        console.error('Error fetching genres:', err)
+      }
+    }
+  }
 
   const handleAddHobby = async () => {
-    setError(null)
-    setNextDisabled(false)
     let selectedHobby = null
     let selectedGenre = null
 
+    // Handle hobby input
     if (!data.hobby) {
       const matchedHobby = hobbyDropdownList.find(
         (hobby) =>
@@ -118,16 +144,20 @@ const ListingHobbyEditModal: React.FC<Props> = ({
     } else {
       selectedHobby = data.hobby
     }
-    if (!data.genre && genreInputValue) {
+
+    // Handle genre input
+    if (!data.genre) {
       const matchedGenre = genreDropdownList.find(
         (genre) =>
           genre.display.toLowerCase() === genreInputValue.toLowerCase(),
       )
 
-      if (matchedGenre) {
-        selectedGenre = matchedGenre
-      } else {
+      if (selectedGenre !== null && selectedGenre !== matchedGenre) {
         setError('Typed Genre not found!')
+        return
+      }
+      if (selectedGenre !== null && !matchedGenre) {
+        setError("This hobby doesn't contain this genre")
         return
       }
     } else {
@@ -240,12 +270,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
                         return (
                           <p
                             key={hobby._id}
-                            onClick={() => {
-                              setData((prev) => {
-                                return { ...prev, hobby: hobby }
-                              })
-                              setHobbyInputValue(hobby.display)
-                            }}
+                            onClick={() => handleHobbySelection(hobby)}
                           >
                             {hobby.display}
                           </p>

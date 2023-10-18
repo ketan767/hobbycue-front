@@ -194,31 +194,35 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
           // dispatch(closeModal())
         }
       }
+      setPageInputValue('')
     }
   }
 
-  const handleRemovePage = async (id: any) => {
+  const handleRemovePage = async (id: string) => {
+    console.log('payloadid', id)
+
+    const updatedListings = relatedListingsRight.filter(
+      (listingId: any) => listingId !== id,
+    )
+    setRelatedListingsRight(updatedListings)
+
+    const jsonData = {
+      related_listings_right: {
+        relation: relation,
+        listings: updatedListings,
+      },
+    }
+
     if (listingModalData && listingModalData._id) {
-      const { err, res } = await deleteRelatedListingRight(
-        listingModalData._id,
-        id,
-      )
+      const { err, res } = await updateListing(listingModalData._id, jsonData)
 
       if (err) return console.log(err)
       console.log('resp', res?.data.data.listing)
 
-      setRelatedListingsRight(
-        res?.data.data.listing.related_listings_right.listings,
-      )
-      // dispatch(
-      //   updateRelatedListingsLeft(
-      //     res?.data.data.listing.related_listings_right.listings,
-      //   ),
-      // )
-      if (onComplete) onComplete()
-      else {
-        // window.location.reload()
-        // dispatch(closeModal())
+      if (res?.data.data.listing) {
+        setRelatedListingsRight(
+          res?.data.data.listing?.related_listings_right.listings,
+        )
       }
     }
   }
@@ -321,7 +325,6 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
                         onClick={() => {
                           setSelectedPage(item)
                           setPageInputValue(item.title)
-                          handleChange(item._id)
                         }}
                         className={styles.dropdownItem}
                       >
@@ -409,7 +412,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
                           fill="none"
                           className={styles['delete-hobby-btn']}
                           onClick={() => {
-                            handleRemovePage(item._id)
+                            handleRemovePage(item.id)
                           }}
                         >
                           <g clip-path="url(#clip0_173_49175)">
