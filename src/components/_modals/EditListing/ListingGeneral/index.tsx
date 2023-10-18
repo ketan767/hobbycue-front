@@ -390,7 +390,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
             {listingModalData.type === listingTypes.PEOPLE ||
             listingModalData.type === listingTypes.PROGRAM ||
             listingModalData.type === listingTypes.PLACE ? (
-              <div className={styles['input-box']}>
+              <div className={styles['note-box']}>
                 <label>Note</label>
                 <input
                   type="text"

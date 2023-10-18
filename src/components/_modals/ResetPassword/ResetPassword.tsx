@@ -79,8 +79,8 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
     setSubmitBtnLoading(true)
     const { err, res } = await resetPassword({
       email: forgotPasswordEmail,
-      otp,
-      newPassword,
+      otp: otp,
+      newPassword: newPassword,
     })
     setSubmitBtnLoading(false)
     if (err) {

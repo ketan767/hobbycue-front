@@ -86,15 +86,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
         return { ...prev, full_name: 'This field is required!' }
       })
     }
-    if (checkFullname(data.full_name)) {
-      fullNameRef.current?.focus()
-      return setInputErrs((prev) => {
-        return {
-          ...prev,
-          full_name: 'First name should not contain any numbers!',
-        }
-      })
-    }
+
     if (!data.display_name || data.display_name === '') {
       displayNameRef.current?.focus()
       return setInputErrs((prev) => {
@@ -273,25 +265,6 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
               <p className={styles['helper-text']}>{inputErrs.tagline}</p>
             </div>
 
-            {/* Display Name */}
-            <div
-              className={`${styles['input-box']} ${
-                inputErrs.display_name ? styles['input-box-error'] : ''
-              }`}
-            >
-              <label className={styles['label-required']}>Display Name</label>
-              <input
-                type="text"
-                placeholder="Display Name"
-                required
-                autoComplete="nickname"
-                value={data.display_name}
-                name="display_name"
-                onChange={handleInputChange}
-              />
-              <p className={styles['helper-text']}>{inputErrs.display_name}</p>
-            </div>
-
             {/* Profile URL */}
             <div
               className={`${styles['input-box']} ${
@@ -313,71 +286,92 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
               </div>
               <p className={styles['helper-text']}>{inputErrs.profile_url}</p>
             </div>
-
-            <div className={styles['year-gender-wrapper']}>
-              {/* Year Of Birth*/}
-              <div className={styles['input-box']}>
-                <label>Year of Birth</label>
+            <section className={styles['three-column-grid']}>
+              {/* Display Name */}
+              <div
+                className={`${styles['input-box']} ${
+                  inputErrs.display_name ? styles['input-box-error'] : ''
+                }`}
+              >
+                <label className={styles['label-required']}>Display Name</label>
                 <input
                   type="text"
-                  placeholder="Year"
+                  placeholder="Display Name"
                   required
-                  autoComplete="bday-year"
-                  value={data.year_of_birth}
-                  name="year_of_birth"
+                  autoComplete="nickname"
+                  value={data.display_name}
+                  name="display_name"
                   onChange={handleInputChange}
                 />
                 <p className={styles['helper-text']}>
-                  {inputErrs.year_of_birth}
+                  {inputErrs.display_name}
                 </p>
               </div>
 
-              {/* Gender */}
-              <div className={styles['input-box']}>
-                <label>Gender</label>
-                <div className={styles['gender-radio-btns']}>
-                  <p
-                    onClick={(e) => {
-                      setData((prev) => {
-                        return { ...prev, gender: 'male' }
-                      })
-                      setInputErrs((prev) => {
-                        return { ...prev, gender: null }
-                      })
-                    }}
-                  >
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <circle cx="8" cy="8" r="7.5" stroke="#8064A2" />
-                      {data.gender === 'male' && (
-                        <circle cx="8" cy="8" r="4" fill="#8064A2" />
-                      )}
-                    </svg>
-                    Male
-                    <input type="radio" required />
-                  </p>
-
-                  <p
-                    onClick={(e) => {
-                      setData((prev) => {
-                        return { ...prev, gender: 'female' }
-                      })
-                      setInputErrs((prev) => {
-                        return { ...prev, gender: null }
-                      })
-                    }}
-                  >
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <circle cx="8" cy="8" r="7.5" stroke="#8064A2" />
-                      {data.gender === 'female' && (
-                        <circle cx="8" cy="8" r="4" fill="#8064A2" />
-                      )}
-                    </svg>
-                    Female
-                    <input type="radio" required />
+              <div className={styles['year-gender-wrapper']}>
+                {/* Year Of Birth*/}
+                <div className={styles['input-box']}>
+                  <label>Year of Birth</label>
+                  <input
+                    type="text"
+                    placeholder="Year"
+                    required
+                    autoComplete="bday-year"
+                    value={data.year_of_birth}
+                    name="year_of_birth"
+                    onChange={handleInputChange}
+                  />
+                  <p className={styles['helper-text']}>
+                    {inputErrs.year_of_birth}
                   </p>
                 </div>
-                <p className={styles['helper-text']}>{inputErrs.gender}</p>
               </div>
+            </section>
+            {/* Gender */}
+            <div className={styles['gender-box']}>
+              <label>Gender</label>
+              <div className={styles['gender-radio-btns']}>
+                <p
+                  onClick={(e) => {
+                    setData((prev) => {
+                      return { ...prev, gender: 'male' }
+                    })
+                    setInputErrs((prev) => {
+                      return { ...prev, gender: null }
+                    })
+                  }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="7.5" stroke="#8064A2" />
+                    {data.gender === 'male' && (
+                      <circle cx="8" cy="8" r="4" fill="#8064A2" />
+                    )}
+                  </svg>
+                  Male
+                  <input type="radio" required />
+                </p>
+
+                <p
+                  onClick={(e) => {
+                    setData((prev) => {
+                      return { ...prev, gender: 'female' }
+                    })
+                    setInputErrs((prev) => {
+                      return { ...prev, gender: null }
+                    })
+                  }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="7.5" stroke="#8064A2" />
+                    {data.gender === 'female' && (
+                      <circle cx="8" cy="8" r="4" fill="#8064A2" />
+                    )}
+                  </svg>
+                  Female
+                  <input type="radio" required />
+                </p>
+              </div>
+              <p className={styles['helper-text']}>{inputErrs.gender}</p>
             </div>
           </>
         </section>
