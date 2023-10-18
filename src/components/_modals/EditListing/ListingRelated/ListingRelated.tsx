@@ -66,7 +66,6 @@ const RelatedListingEditModal: React.FC<Props> = ({
   const [selectedRelated, setSelectedRelated] = useState<string[]>([])
 
   const inputRef = useRef<HTMLInputElement>(null)
-  const updateRelatedList = async () => {}
   useEffect(() => {
     inputRef?.current?.focus()
   }, [])
@@ -143,7 +142,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
         if (err) return console.log(err)
         console.log('resp', res?.data.data.listing)
         setRelatedListingsLeft(
-          res?.data.data.listing.related_listings_left.listings,
+          res?.data.data.listing?.related_listings_left.listings,
         )
         if (onComplete) onComplete()
         else {
@@ -151,45 +150,53 @@ const RelatedListingEditModal: React.FC<Props> = ({
           // dispatch(closeModal())
         }
       }
+      setPageInputValue('')
     }
   }
 
   const handleRemovePage = async (id: string) => {
+    console.log('payloadid', id)
+
+    // First, locally update the relatedListingsLeft state by filtering out the listing with the given id
+    const updatedListings = relatedListingsLeft.filter(
+      (listingId: any) => listingId !== id,
+    )
+    setRelatedListingsLeft(updatedListings)
+
+    // Now, send this updated list to the backend
+    const jsonData = {
+      related_listings_left: {
+        relation: relation,
+        listings: updatedListings,
+      },
+    }
+
     if (listingModalData && listingModalData._id) {
-      const { err, res } = await deleteRelatedListingLeft(
-        listingModalData._id,
-        id,
-      )
+      const { err, res } = await updateListing(listingModalData._id, jsonData)
 
       if (err) return console.log(err)
       console.log('resp', res?.data.data.listing)
 
-      setRelatedListingsLeft(
-        res?.data.data.listing.related_listings_left.listings,
-      )
-      // dispatch(
-      //   updateRelatedListingsLeft(
-      //     res?.data.data.listing.related_listings_left.listings,
-      //   ),
-      // )
-      if (onComplete) onComplete()
-      else {
-        // window.location.reload()
-        // dispatch(closeModal())
+      if (res?.data.data.listing) {
+        setRelatedListingsLeft(
+          res?.data.data.listing?.related_listings_left.listings,
+        )
       }
     }
   }
 
   useEffect(() => {
     const matchedListings = allListingPages.filter((item: any) =>
-      relatedListingsLeft.includes(item._id),
+      relatedListingsLeft?.includes(item._id),
     )
 
     const matchedTitles = matchedListings.map((listing: any) => ({
       id: listing._id,
       title: listing.title,
     }))
+
     setTableData(matchedTitles)
+    console.log('idsss', tableData)
   }, [relatedListingsLeft, allListingPages])
 
   // console.log(tableData)
@@ -343,7 +350,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
               <tbody>
                 {tableData?.map((item: any) => {
                   return (
-                    <tr key={item._id}>
+                    <tr key={item.id}>
                       <td>{item.title}</td>
 
                       <td></td>
@@ -356,7 +363,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
                           fill="none"
                           className={styles['delete-hobby-btn']}
                           onClick={() => {
-                            handleRemovePage(item._id)
+                            handleRemovePage(item.id)
                           }}
                         >
                           <g clip-path="url(#clip0_173_49175)">
