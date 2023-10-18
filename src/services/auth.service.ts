@@ -99,7 +99,7 @@ export const resetPassword = async (data: any): Promise<ApiReturnObject> => {
   const headers = { Authorization: `Bearer ${token}` }
 
   try {
-    const res = await axiosInstance.post(`/auth/forgot-password`, data, {
+    const res = await axiosInstance.patch(`/auth/forgot-password/verify`, data, {
       headers,
     })
     return { res: res, err: null }
