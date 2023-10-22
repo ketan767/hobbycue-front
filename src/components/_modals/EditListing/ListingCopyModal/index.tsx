@@ -69,7 +69,22 @@ const ListingAboutEditModal: React.FC<Props> = ({
     })
   }
   const handleCheckboxToggle = (name: keyof typeof checkboxes) => {
-    setCheckboxes((prev) => ({ ...prev, [name]: !prev[name] }))
+    if (name === 'allSections') {
+      const newValue = !checkboxes.allSections
+      setCheckboxes({
+        allSections: newValue,
+        profileCoverPhoto: newValue,
+        about: newValue,
+        contactInfo: newValue,
+        location: newValue,
+        hobbies: newValue,
+      })
+    } else {
+      setCheckboxes((prev) => {
+        const allSectionsValue = prev[name] ? false : prev.allSections
+        return { ...prev, [name]: !prev[name], allSections: allSectionsValue }
+      })
+    }
   }
 
   const handleBack = async () => {
@@ -241,9 +256,3 @@ const ListingAboutEditModal: React.FC<Props> = ({
 }
 
 export default ListingAboutEditModal
-
-/**
- * @TODO:
- * 1. Loading component until the CK Editor loads.
- * 2. Underline option in the editor
- */

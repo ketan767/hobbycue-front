@@ -43,7 +43,7 @@ import { CircularProgress } from '@mui/material'
 import store, { RootState } from '@/redux/store'
 import { setShowPageLoader } from '@/redux/slices/site'
 import PasswordAnalyzer from '../PasswordAnalyzer/PasswordAnalyzer'
-
+import { updateUserProfile } from '@/services/user.service'
 interface Props {
   isModal?: boolean
 }
@@ -68,7 +68,7 @@ const AuthForm: React.FC<Props> = (props) => {
   const dispatch = useDispatch()
 
   const { authFormData } = useSelector((state: RootState) => state.modal)
-
+  const { user } = useSelector((state: RootState) => state.user)
   const [selectedTab, setSelectedTab] = useState<tabs>('sign-in')
   const [showValidationConditions, setShowValidationConditions] =
     useState(false)
@@ -202,22 +202,42 @@ const AuthForm: React.FC<Props> = (props) => {
 
   // Social Login Handle
   const googleAuthSuccess = async (e: any) => {
-    console.log('g-data', e)
     dispatch(setShowPageLoader(true))
     const { err, res } = await googleAuth({
       googleId: e.profileObj.googleId,
       tokenId: e.tokenId,
       name: e.profileObj.name,
+      imageUrl: e.profileObj.imageUrl,
     })
+    console.log('g-image', e.profileObj.imageUrl)
+    console.log('resgoogle', res)
     dispatch(setShowPageLoader(false))
     if (err) return console.log(err)
     if (res.status === 200 && res.data.success) {
       localStorage.setItem('token', res.data.data.token)
       dispatch(updateIsLoggedIn(true))
       dispatch(closeModal())
+
+      if (e.profileObj.imageUrl) {
+        const googleImageUrl = e.profileObj.imageUrl
+        try {
+          const imageBlob = await fetch(googleImageUrl).then((res) =>
+            res.blob(),
+          )
+          const formData = new FormData()
+          formData.append('user-profile', imageBlob)
+          const updateResponse = await updateUserProfile(formData)
+          console.log('Update Profile Image Response:', updateResponse)
+        } catch (uploadError) {
+          console.error('Error uploading profile image:', uploadError)
+        }
+      } else {
+        console.log('else', e.profileObj.imageUrl)
+      }
       router.push('/community', undefined, { shallow: false })
     }
   }
+
   const googleAuthFailure = (e: any) => console.log(e)
 
   const handleFacebookAuth = async (e: any) => {
@@ -234,7 +254,23 @@ const AuthForm: React.FC<Props> = (props) => {
       localStorage.setItem('token', res.data.data.token)
       dispatch(updateIsLoggedIn(true))
       dispatch(closeModal())
+      if (e.profileObj.imageUrl) {
+        const googleImageUrl = e.profileObj.imageUrl
+        try {
+          const imageBlob = await fetch(googleImageUrl).then((res) =>
+            res.blob(),
+          )
+          const formData = new FormData()
+          formData.append('user-profile', imageBlob)
+          const updateResponse = await updateUserProfile(formData)
+          console.log('Update Profile Image Response:', updateResponse)
+        } catch (uploadError) {
+          console.error('Error uploading profile image:', uploadError)
+        }
+      }
       router.push('/community', undefined, { shallow: false })
+
+      console.log('user', user)
     }
   }
   const getButtonText = () => {

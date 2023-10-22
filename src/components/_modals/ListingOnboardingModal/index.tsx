@@ -9,11 +9,6 @@ import {
   updateMyProfileDetail,
 } from '@/services/user.service'
 
-import ProfileGeneralEditModal from '../EditProfile/General'
-import ProfileAboutEditModal from '../EditProfile/About'
-import ProfileAddressEditModal from '../EditProfile/Address'
-import ProfileHobbyEditModal from '../EditProfile/Hobby'
-
 import styles from './styles.module.css'
 import ListingGeneralEditModal from '../EditListing/ListingGeneral'
 import ListingAboutEditModal from '../EditListing/ListingAbout'
@@ -128,15 +123,6 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
 
       window.location.href = `/page/${res.data.data.listing.page_url}`
     }
-  }
-
-  const fetchDetails = async () => {
-    const { err: profileErr, res: profileRes } = await getMyProfileDetail()
-    const { err: listingErr, res: listingRes } = await getListingPages(
-      `populate=_hobbies,_address&admin=${profileRes?.data.data.user._id}`,
-    )
-    if (listingErr || !listingRes || !listingRes.data.success) return
-    return dispatch(updateUserListing(listingRes.data.data.listings))
   }
 
   return (

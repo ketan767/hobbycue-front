@@ -97,14 +97,14 @@ const defaultSocialMediaURLs: Record<SocialMediaOption, string> = {
   SoundCloud: 'https://soundcloud.com/',
   Pinterest: 'https://pinterest.com/',
   TripAdvisor: 'https://tripadvisor.com/profile/',
-  'Ultimate Guitar': 'https://profile.ultimate-guitar.com/',
+  'Ultimate Guitar': 'https://ultimate-guitar.com/u/',
   Strava: 'https://strava.com/athletes/',
   DeviantArts: 'https://deviantart.com/',
   Behance: 'https://behance.net/',
   GoodReads: 'https://goodreads.com/',
   Smule: 'https://smule.com/',
   Chess: 'https://chess.com/member/',
-  BGG: 'https://boardgamegeek.com/user',
+  BGG: 'https://boardgamegeek.com/user/',
   Others: 'https://',
 }
 

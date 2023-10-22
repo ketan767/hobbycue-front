@@ -39,6 +39,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   const { listingModalData } = useSelector((state: RootState) => state.site)
   const { user } = useSelector((state: RootState) => state.user)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
+  const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [nextDisabled, setNextDisabled] = useState(false)
 
   const [data, setData] = useState<ListingGeneralData>({
@@ -67,6 +68,63 @@ const ListingGeneralEditModal: React.FC<Props> = ({
         [event.target.name]: { value: event.target.value, error: null },
       }
     })
+  }
+  const Backsave = async () => {
+    if (!data.title.value || data.title.value === '') {
+      if (onBackBtnClick) onBackBtnClick()
+      setBackBtnLoading(false)
+
+      console.log(data)
+      return
+    }
+    let jsonData = {
+      type: listingModalData.type,
+      page_type: listingModalData.page_type,
+      title: data.title.value,
+      tagline: data.tagline.value,
+      page_url: data.page_url.value,
+      gender: data.gender.value,
+      year: data.year.value,
+      admin_note: data.admin_note.value,
+    }
+    /**
+     * If Listing ID is in the object, it means we have to UPDATE a listing
+     * Else we have to create NEW listing
+     */
+    if (listingModalData._id) {
+      setBackBtnLoading(true)
+      const { err, res } = await updateListing(listingModalData._id, jsonData)
+      setBackBtnLoading(false)
+      if (err) return console.log(err)
+      if (res?.data.success) {
+        dispatch(updateListingModalData(res.data.data.listing))
+      }
+    } else {
+      setBackBtnLoading(true)
+      const { err, res }: any = await createNewListing(jsonData)
+      setBackBtnLoading(false)
+      if (err) {
+        if (err?.response?.status === 500) {
+          pageUrlRef.current?.focus()
+          setData((prev) => {
+            return {
+              ...prev,
+              page_url: {
+                ...prev.page_url,
+                error: 'This page url is already taken',
+              },
+            }
+          })
+        }
+        return
+      }
+      if (res?.data.success) {
+        console.log('first')
+        dispatch(updateListingModalData(res.data.data.listing))
+        if (onBackBtnClick) onBackBtnClick()
+        setBackBtnLoading(false)
+      }
+    }
   }
 
   const handleSubmit = async () => {
@@ -410,10 +468,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
 
         <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
-            <button
-              className="modal-footer-btn cancel"
-              onClick={onBackBtnClick}
-            >
+            <button className="modal-footer-btn cancel" onClick={Backsave}>
               Back
             </button>
           )}
