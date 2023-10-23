@@ -54,7 +54,7 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
     if (err) return console.log(err)
     if (res.status === 200 && res.data.success) {
       console.log('google', res.data)
-      // window.location.reload()
+      window.location.reload()
 
       // res.data.data.user.google.googleId
       // localStorage.setItem('token', res.data.data.token)
