@@ -232,6 +232,7 @@ const ModalManager: React.FC = () => {
                       onClick={() => {
                         handleClose()
                         setConfirmationModal(false)
+                        window.location.reload()
                       }}
                     >
                       Yes

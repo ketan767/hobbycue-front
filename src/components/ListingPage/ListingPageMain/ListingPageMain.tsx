@@ -712,7 +712,11 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
                     ${data?._address.city ? data._address.city + ',' : ''} 
                     ${data?._address.state ? data._address.state + ',' : ''} 
                     ${data?._address.country || ''}
-                    ${' - ' + data?._address?.pin_code}`}
+                    ${
+                      data?.address?.pin_code
+                        ? ' - ' + data?._address?.pin_code
+                        : ''
+                    }`}
                     </span>
                   ) : (
                     <span className={styles.textdefault}>
@@ -730,7 +734,11 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
                     ${data?._address.city ? data._address.city + ',' : ''} 
                     ${data?._address.state ? data._address.state + ',' : ''} 
                     ${data?._address.country || ''}
-                    ${' - ' + data?._address?.pin_code}`}
+                    ${
+                      data?.address?.pin_code
+                        ? ' - ' + data?._address?.pin_code
+                        : ''
+                    }`}
                     </span>
                   )}
                 </li>
