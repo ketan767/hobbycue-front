@@ -65,16 +65,10 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
 
   const { listingModalData } = useSelector((state: RootState) => state.site)
 
-  const totalSteps: Step[] = [
-    'General',
-    'About',
-    'Contact',
-    'Address',
-    'Hobbies',
-  ]
-  let steps = [...totalSteps]
+  let totalSteps: Step[] = ['General', 'About', 'Contact', 'Address', 'Hobbies']
+
   if (listingModalData.type === listingTypes.PLACE) {
-    steps = [
+    totalSteps = [
       'General',
       'About',
       'Contact',
@@ -84,7 +78,7 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
     ]
   }
   if (listingModalData.type === listingTypes.MakeMyPage) {
-    steps = [
+    totalSteps = [
       'CopyProfileDataModal',
       'General',
       'About',
@@ -95,12 +89,20 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
     ]
   }
   if (listingModalData.type === listingTypes.PROGRAM) {
-    steps = ['General', 'About', 'Contact', 'Address', 'EventHours', 'Hobbies']
+    totalSteps = [
+      'General',
+      'About',
+      'Contact',
+      'Address',
+      'EventHours',
+      'Hobbies',
+    ]
   }
 
   const handleNext = () => {
     const newIndex = totalSteps.indexOf(activeStep) + 1
     setActiveStep(totalSteps[newIndex])
+    console.log('listingModalData', listingModalData)
 
     if (newIndex > furthestStepIndex) {
       setFurthestStepIndex(newIndex)
@@ -108,7 +110,8 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
   }
   const handleBack = () => {
     setActiveStep(
-      (prevActiveStep: Step) => steps[steps.indexOf(prevActiveStep) - 1],
+      (prevActiveStep: Step) =>
+        totalSteps[totalSteps.indexOf(prevActiveStep) - 1],
     )
   }
 
@@ -131,7 +134,7 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
         <h2 className={styles['modal-heading']}>Complete your Listing Page</h2>
       </header>
 
-      {/* <ProgressBar total={steps.length} current={steps.findIndex((str : any) => str === activeStep) + 1} /> */}
+      {/* <ProgressBar total={totalSteps.length} current={totalSteps.findIndex((str : any) => str === activeStep) + 1} /> */}
 
       {activeStep === 'General' && (
         <ListingGeneralEditModal

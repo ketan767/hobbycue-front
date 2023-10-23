@@ -85,6 +85,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [eventData, setEventData] = useState(initialEventHour)
+  const today = new Date().toISOString().split('T')[0]
 
   const handleSubmit = async () => {
     const jsonData = {
@@ -109,10 +110,10 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     if (listingModalData.event_date_time) {
       const { from_time, to_time, from_date, to_date } =
         listingModalData.event_date_time
-        setEventData({from_time, to_time, from_date, to_date})
+      setEventData({ from_time, to_time, from_date, to_date })
     }
   }, [])
-  
+
   useEffect(() => {
     if (listingModalData.event_date_time === undefined) {
       const initial = {
@@ -164,6 +165,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                   value={eventData.from_date}
                   className={styles.inputField}
                   type="date"
+                  min={today}
                   onChange={(e: any) =>
                     onChangeFromday(e.target.value, 'from_date')
                   }
@@ -180,6 +182,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                   value={eventData.to_date}
                   className={styles.inputField}
                   type="date"
+                  min={eventData.from_date}
                   onChange={(e: any) =>
                     onChangeFromday(e.target.value, 'to_date')
                   }
@@ -197,7 +200,9 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                 <label> To Time </label>
                 <InputSelect
                   value={eventData.to_time}
-                  options={timings}
+                  options={timings.slice(
+                    timings.indexOf(eventData.from_time) + 1,
+                  )}
                   onChange={(item: any) => onChangeFromday(item, 'to_time')}
                 />
               </div>
