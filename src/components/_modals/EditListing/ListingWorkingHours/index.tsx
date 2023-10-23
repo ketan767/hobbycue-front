@@ -67,6 +67,7 @@ const timings = [
   '8:00 am',
   '9:00 am',
   '10:00 am',
+  '11:00 am',
   '12:00 am',
   '1:00 pm',
   '2:00 pm',
@@ -78,6 +79,7 @@ const timings = [
   '8:00 pm',
   '9:00 pm',
   '10:00 pm',
+  '11:00 pm',
   '12:00 pm',
 ]
 const ListingWorkingHoursEditModal: React.FC<Props> = ({

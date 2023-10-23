@@ -445,24 +445,19 @@ const ListingGeneralEditModal: React.FC<Props> = ({
             </div>
 
             {/* Note */}
-            {listingModalData.type === listingTypes.PEOPLE ||
-            listingModalData.type === listingTypes.PROGRAM ||
-            listingModalData.type === listingTypes.PLACE ? (
-              <div className={styles['note-box']}>
-                <label>Note</label>
-                <input
-                  type="text"
-                  placeholder="This information is visible only to Admins of this Page"
-                  autoComplete="nickname"
-                  value={data.admin_note.value}
-                  name="admin_note"
-                  onChange={handleInputChange}
-                />
-                <p className={styles['helper-text']}>{data.admin_note.error}</p>
-              </div>
-            ) : (
-              <></>
-            )}
+
+            <div className={styles['note-box']}>
+              <label>Note</label>
+              <input
+                type="text"
+                placeholder="This information is visible only to Admins of this Page"
+                autoComplete="nickname"
+                value={data.admin_note.value}
+                name="admin_note"
+                onChange={handleInputChange}
+              />
+              <p className={styles['helper-text']}>{data.admin_note.error}</p>
+            </div>
           </>
         </section>
 
