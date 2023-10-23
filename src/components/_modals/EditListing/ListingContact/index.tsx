@@ -105,19 +105,34 @@ const ListingContactEditModal: React.FC<Props> = ({
 
   const handleSubmit = async () => {
     console.log(data.website)
-    if (
-      !data.phone.value ||
-      !containOnlyNumbers(data.phone.value.toString().trim()) ||
-      !data.phone.value ||
-      data.phone.value.toString().trim().length !== 10
-    ) {
-      phoneRef.current?.focus()
+    if (!data.phone.value && !data.public_email.value) {
       return setData((prev) => {
         return {
           ...prev,
-          phone: { ...prev.phone, error: 'Enter a valid phone number' },
+          phone: {
+            ...prev.phone,
+            error: 'Enter a valid phone number or email',
+          },
+          public_email: {
+            ...prev.public_email,
+            error: 'Enter a valid phone number or email',
+          },
         }
       })
+    }
+    if (data.phone.value) {
+      if (
+        !containOnlyNumbers(data.phone.value.toString().trim()) ||
+        data.phone.value.toString().trim().length !== 10
+      ) {
+        phoneRef.current?.focus()
+        return setData((prev) => {
+          return {
+            ...prev,
+            phone: { ...prev.phone, error: 'Enter a valid phone number' },
+          }
+        })
+      }
     }
     if (data.website.value && data.website.value !== '') {
       websiteRef.current?.focus()
@@ -149,7 +164,7 @@ const ListingContactEditModal: React.FC<Props> = ({
       dispatch(updateListingModalData(res?.data.data.listing))
       if (onComplete) onComplete()
       else {
-        // window.location.reload()
+        window.location.reload()
         dispatch(closeModal())
       }
     }
@@ -221,6 +236,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                         ...prev,
                         public_email: { value: user.email, error: null },
                         phone: { value: user.phone, error: null },
+                        website: { value: user.website, error: null },
                       }
                     })
                   }
@@ -234,7 +250,9 @@ const ListingContactEditModal: React.FC<Props> = ({
             {listingModalData.type === listingTypes.PLACE ? (
               <div className={styles['two-column-grid']}>
                 {listingModalData.type === listingTypes.PLACE ? (
-                  <div className={styles['input-box']}>
+                  <div
+                    className={`${styles['input-box-admin']} ${styles['input-box']}`}
+                  >
                     <label> Page Admin </label>
                     <input
                       type="text"
@@ -244,6 +262,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                       autoComplete="page_admin"
                       ref={inputRef}
                       onChange={handleInputChange}
+                      disabled
                     />
                   </div>
                 ) : (

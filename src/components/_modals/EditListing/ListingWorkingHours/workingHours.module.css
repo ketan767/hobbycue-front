@@ -184,7 +184,12 @@
 
 .sectionHeadRight p {
   color: #8064a2;
-  margin-left: 6px;
+  margin-left: 3px;
+}
+
+.sectionHeadRight img {
+  width: 12px;
+  margin-bottom: 3px;
 }
 
 .listItem {

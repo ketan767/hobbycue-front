@@ -55,6 +55,7 @@ export const googleAuth = async (data: {
   googleId: String
   tokenId: String
   name: String
+  imageUrl: String
 }): Promise<ApiReturnObject> => {
   try {
     const res = await axiosInstance.post(`/auth/google`, data)

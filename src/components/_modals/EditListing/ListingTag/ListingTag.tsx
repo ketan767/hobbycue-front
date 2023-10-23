@@ -187,6 +187,22 @@ const ListingTagsEditModal: React.FC<Props> = ({
                 </div>
               )}
             </div>
+            <div className={styles['selected-values']}>
+              {tags
+                ?.filter((item) => selectedTags.includes(item._id))
+                .map((item: any, idx) => {
+                  return (
+                    <div key={item} className={styles['selected-value']}>
+                      <p>{item.name}</p>
+                      <Image
+                        src={CrossIcon}
+                        alt="cancel"
+                        onClick={() => handleChange(item._id)}
+                      />
+                    </div>
+                  )
+                })}
+            </div>
             {/* <FormControl variant="outlined" size="small" sx={{ width: '100%' }}>
               <Select
                 value={selectedTags}

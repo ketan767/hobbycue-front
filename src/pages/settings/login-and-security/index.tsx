@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styles from './login.module.css'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import SettingsSidebar from '@/layouts/SettingsSidebar/SettingsSidebar'
@@ -46,12 +46,16 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
       googleId: e.profileObj.googleId,
       tokenId: e.tokenId,
       name: e.profileObj.name,
+      'profile-google': e.profileObj.imageUrl,
     })
+    console.log('g-image', e.profileObj.imageUrl)
+    console.log('g', res)
     dispatch(setShowPageLoader(false))
     if (err) return console.log(err)
     if (res.status === 200 && res.data.success) {
       console.log('google', res.data)
-      window.location.reload()
+      // window.location.reload()
+
       // res.data.data.user.google.googleId
       // localStorage.setItem('token', res.data.data.token)
       // router.push('/community', undefined, { shallow: false })
@@ -94,6 +98,8 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
   const openForgotPasswordEmail = () => {
     dispatch(openModal({ type: 'confirm-email', closable: true }))
   }
+
+  console.log('usergoogle', user)
   return (
     <>
       <PageGridLayout column={2} customStyles={styles['settingcontainer']}>
@@ -124,9 +130,28 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
             Social Media Login{' '}
           </p>
           <div className={styles.socialLoginContainer}>
-            <Image src={GoogleIcon} width={16} height={16} alt="edit" />
+            {user.google?.picture ? (
+              <div className={styles['google-image']}>
+                <Image
+                  src={user.google.picture}
+                  width={20}
+                  height={20}
+                  alt="google"
+                />
+                <div className={styles['google-icon']}>
+                  <Image
+                    src={GoogleIcon}
+                    width={10}
+                    height={10}
+                    alt="google Image"
+                  />
+                </div>
+              </div>
+            ) : (
+              <Image src={GoogleIcon} width={20} height={20} alt="google" />
+            )}
             <p className={styles.socialLoginText}>Connect with Google</p>
-            {!user.google ? (
+            {!user.google?.id ? (
               <GoogleLogin
                 clientId="795616019189-b0s94ri1i98355rjv1pg6ai588k0k87d.apps.googleusercontent.com"
                 render={(renderProps) => (
@@ -151,9 +176,29 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
           </div>
 
           <div className={styles.socialLoginContainer}>
-            <Image src={FacebookIcon} width={16} height={16} alt="edit" />
+            {user.facebook?.picture ? (
+              <div className={styles['google-image']}>
+                <Image
+                  src={user.facebook.picture}
+                  width={20}
+                  height={20}
+                  alt="facebook"
+                />
+                <div className={styles['google-icon']}>
+                  <Image
+                    src={FacebookIcon}
+                    width={10}
+                    height={10}
+                    alt="facebook Image"
+                  />
+                </div>
+              </div>
+            ) : (
+              <Image src={FacebookIcon} width={20} height={20} alt="google" />
+            )}
+
             <p className={styles.socialLoginText}>Connect with Facebook</p>
-            {!user.facebook ? (
+            {!user.facebook?.id ? (
               <FacebookLogin
                 // App ID: 1614660215286765
                 // App Secret: a4839f4438a6b3527ca60636cc5d76a6

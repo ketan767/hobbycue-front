@@ -112,6 +112,15 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
       }
     })
   }
+  const getAvailableDays = (selectedDay: string) => {
+    const index = days.indexOf(selectedDay)
+    return days.slice(index)
+  }
+
+  const getAvailableTimings = (selectedTime: string) => {
+    const index = timings.indexOf(selectedTime)
+    return timings.slice(index + 1)
+  }
 
   const handleSubmit = async () => {
     const jsonData = workingHoursData.map((item: any) => {
@@ -226,7 +235,11 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
             <p>Working Hours</p>
             <div className={styles.sectionHeadRight} onClick={addWorkingHour}>
               <Image src={AddIcon} width={14} height={14} alt="add" />
-              <p> Add another </p>
+              {workingHoursData.length === 0 ? (
+                <p> Add </p>
+              ) : (
+                <p> Add another </p>
+              )}
             </div>
           </div>
           <div className={styles.listContainer}>
@@ -246,7 +259,7 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
                   <div className={styles.listSubItem}>
                     <label> To Day </label>
                     <InputSelect
-                      options={days}
+                      options={getAvailableDays(item.fromDay)}
                       value={item.toDay}
                       onChange={(item: any) =>
                         onChangeFromday(item, 'toDay', idx)
@@ -267,7 +280,7 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
                     <label> To Time </label>
                     <InputSelect
                       value={item.toTime}
-                      options={timings}
+                      options={getAvailableTimings(item.fromTime)}
                       onChange={(item: any) =>
                         onChangeFromday(item, 'toTime', idx)
                       }

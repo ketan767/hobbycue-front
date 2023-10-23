@@ -30,6 +30,36 @@ type Props = {
 
 const ProfileSocialMediaSide = ({ data }: Props) => {
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
+  function renderSocialLink(url: any, iconSrc: any, altText: any) {
+    if (!url) return null
+    return (
+      <Tooltip title={altText}>
+        <a href={url} target="_blank" rel="noopener noreferrer">
+          <Image src={iconSrc} alt={altText} />
+        </a>
+      </Tooltip>
+    )
+  }
+  function extractDomainName(url: any) {
+    if (!url) return 'Others'
+
+    let domain
+    if (url.indexOf('://') > -1) {
+      domain = url.split('/')[2]
+    } else {
+      domain = url.split('/')[0]
+    }
+    domain = domain.split(':')[0]
+    domain = domain.split('?')[0]
+
+    let subDomains = domain.split('.')
+    if (subDomains.length > 2) {
+      domain = subDomains[subDomains.length - 2]
+    } else {
+      domain = subDomains[0]
+    }
+    return domain.charAt(0).toUpperCase() + domain.slice(1)
+  }
 
   const dispatch = useDispatch()
   return (
@@ -42,118 +72,89 @@ const ProfileSocialMediaSide = ({ data }: Props) => {
       >
         <h4 className={styles['heading']}>Social Media</h4>
         <ul className={styles['contact-wrapper']}>
-          {data?.social_media_urls?.facebook_url && (
-            <Tooltip title="Facebook">
-              <Link href={data.social_media_urls.facebook_url}>
-                <Image src={FacebookIcon} alt="Facebook" />
-              </Link>
-            </Tooltip>
-          )}
-          {data?.social_media_urls?.twitter_url && (
-            <Tooltip title="Twitter">
-              <Link href={data.social_media_urls.twitter_url}>
-                <Image src={TwitterIcon} alt="Twitter" />
-              </Link>
-            </Tooltip>
-          )}
-          {data?.social_media_urls?.instagram_url && (
-            <Tooltip title="Instagram">
-              <Link href={data.social_media_urls.instagram_url}>
-                <Image src={InstagramIcon} alt="Instagram" />
-              </Link>
-            </Tooltip>
-          )}
-          {data?.social_media_urls?.behance_url && (
-            <Tooltip title="Behance">
-              <Link href={data.social_media_urls.behance_url}>
-                <Image src={BehanceIcon} alt="Behance" />
-              </Link>
-            </Tooltip>
-          )}
-          {data?.social_media_urls?.bgg_url && (
-            <Tooltip title="BoardGameGeek">
-              <Link href={data.social_media_urls.bgg_url}>
-                <Image src={BGGIcon} alt="BoardGameGeek" />
-              </Link>
-            </Tooltip>
-          )}
-          {data?.social_media_urls?.chess_url && (
-            <Tooltip title="Chess">
-              <Link href={data.social_media_urls.chess_url}>
-                <Image src={ChessIcon} alt="Chess" />
-              </Link>
-            </Tooltip>
-          )}
-          {data?.social_media_urls?.deviantarts_url && (
-            <Tooltip title="DeviantArt">
-              <Link href={data.social_media_urls.deviantarts_url}>
-                <Image src={DeviantArtIcon} alt="DeviantArt" />
-              </Link>
-            </Tooltip>
-          )}
-          {data?.social_media_urls?.goodreads_url && (
-            <Tooltip title="Goodreads">
-              <Link href={data.social_media_urls.goodreads_url}>
-                <Image src={GoodreadsIcon} alt="Goodreads" />
-              </Link>
-            </Tooltip>
-          )}
-          {data?.social_media_urls?.pinterest_url && (
-            <Tooltip title="Pinterest">
-              <Link href={data.social_media_urls.pinterest_url}>
-                <Image src={PinterestIcon} alt="Pinterest" />
-              </Link>
-            </Tooltip>
-          )}
-          {data?.social_media_urls?.smule_url && (
-            <Tooltip title="Smule">
-              <Link href={data.social_media_urls.smule_url}>
-                <Image src={SmuleIcon} alt="Smule" />
-              </Link>
-            </Tooltip>
-          )}
-          {data?.social_media_urls?.soundcloud_url && (
-            <Tooltip title="SoundCloud">
-              <Link href={data.social_media_urls.soundcloud_url}>
-                <Image src={SoundCloudIcon} alt="SoundCloud" />
-              </Link>
-            </Tooltip>
-          )}
-          {data?.social_media_urls?.strava_url && (
-            <Tooltip title="Strava">
-              <Link href={data.social_media_urls.strava_url}>
-                <Image src={StravaIcon} alt="Strava" />
-              </Link>
-            </Tooltip>
-          )}
-          {data?.social_media_urls?.tripadvisor_url && (
-            <Tooltip title="TripAdvisor">
-              <Link href={data.social_media_urls.tripadvisor_url}>
-                <Image src={TripAdvisorIcon} alt="TripAdvisor" />
-              </Link>
-            </Tooltip>
-          )}
-          {data?.social_media_urls?.ultimate_guitar_url && (
-            <Tooltip title="Ultimate Guitar">
-              <Link href={data.social_media_urls.ultimate_guitar_url}>
-                <Image src={UltimateGuitarIcon} alt="Ultimate Guitar" />
-              </Link>
-            </Tooltip>
-          )}
-          {data?.social_media_urls?.youtube_url && (
-            <Tooltip title="YouTube">
-              <Link href={data.social_media_urls.youtube_url}>
-                <Image src={YouTubeIcon} alt="YouTube" />
-              </Link>
-            </Tooltip>
-          )}
-
-          {data?.social_media_urls?.Others_url && (
-            <Tooltip title="Others">
-              <Link href={data?.social_media_urls?.Others_url}>
-                <Image src={OthersIcon} alt="Others" />
-              </Link>
-            </Tooltip>
+          {data?.social_media_urls && (
+            <>
+              {renderSocialLink(
+                data.social_media_urls.facebook_url,
+                FacebookIcon,
+                'Facebook',
+              )}
+              {renderSocialLink(
+                data.social_media_urls.twitter_url,
+                TwitterIcon,
+                'Twitter',
+              )}
+              {renderSocialLink(
+                data.social_media_urls.instagram_url,
+                InstagramIcon,
+                'Instagram',
+              )}
+              {renderSocialLink(
+                data.social_media_urls.behance_url,
+                BehanceIcon,
+                'Behance',
+              )}
+              {renderSocialLink(
+                data.social_media_urls.bgg_url,
+                BGGIcon,
+                'BoardGameGeek',
+              )}
+              {renderSocialLink(
+                data.social_media_urls.chess_url,
+                ChessIcon,
+                'Chess',
+              )}
+              {renderSocialLink(
+                data.social_media_urls.deviantarts_url,
+                DeviantArtIcon,
+                'DeviantArt',
+              )}
+              {renderSocialLink(
+                data.social_media_urls.goodreads_url,
+                GoodreadsIcon,
+                'Goodreads',
+              )}
+              {renderSocialLink(
+                data.social_media_urls.pinterest_url,
+                PinterestIcon,
+                'Pinterest',
+              )}
+              {renderSocialLink(
+                data.social_media_urls.smule_url,
+                SmuleIcon,
+                'Smule',
+              )}
+              {renderSocialLink(
+                data.social_media_urls.soundcloud_url,
+                SoundCloudIcon,
+                'SoundCloud',
+              )}
+              {renderSocialLink(
+                data.social_media_urls.strava_url,
+                StravaIcon,
+                'Strava',
+              )}
+              {renderSocialLink(
+                data.social_media_urls.tripadvisor_url,
+                TripAdvisorIcon,
+                'TripAdvisor',
+              )}
+              {renderSocialLink(
+                data.social_media_urls.ultimate_guitar_url,
+                UltimateGuitarIcon,
+                'Ultimate Guitar',
+              )}
+              {renderSocialLink(
+                data.social_media_urls.youtube_url,
+                YouTubeIcon,
+                'YouTube',
+              )}
+              {renderSocialLink(
+                data.social_media_urls.Others_url,
+                OthersIcon,
+                extractDomainName(data.social_media_urls.Others_url),
+              )}
+            </>
           )}
         </ul>
       </PageContentBox>
