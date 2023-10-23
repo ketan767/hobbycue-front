@@ -59,6 +59,7 @@ const timings = [
   '8:00 am',
   '9:00 am',
   '10:00 am',
+  '11:00 am',
   '12:00 am',
   '1:00 pm',
   '2:00 pm',
@@ -70,6 +71,7 @@ const timings = [
   '8:00 pm',
   '9:00 pm',
   '10:00 pm',
+  '11:00 pm',
   '12:00 pm',
 ]
 const ListingEventHoursEditModal: React.FC<Props> = ({
@@ -84,8 +86,19 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
   console.log('listingModalData:', listingModalData.event_date_time)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
+  const [isSelectingStartDate, setIsSelectingStartDate] = useState(true)
   const [eventData, setEventData] = useState(initialEventHour)
   const today = new Date().toISOString().split('T')[0]
+
+  const handleDateSelection = (selectedDate: string) => {
+    if (isSelectingStartDate) {
+      setEventData((prevData) => ({ ...prevData, from_date: selectedDate }))
+      setIsSelectingStartDate(false)
+    } else {
+      setEventData((prevData) => ({ ...prevData, to_date: selectedDate }))
+      setIsSelectingStartDate(true)
+    }
+  }
 
   const handleSubmit = async () => {
     const jsonData = {
@@ -156,36 +169,24 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
             <div className={styles.listItem}>
               <div className={styles.listSubItem}>
                 <label> From Day </label>
-                {/* <InputSelect
-                  options={days}
-                  value={workingHoursData.fromDay}
-                  onChange={(item: any) => onChangeFromday(item, 'fromDay')}
-                /> */}
+
                 <input
                   value={eventData.from_date}
                   className={styles.inputField}
                   type="date"
                   min={today}
-                  onChange={(e: any) =>
-                    onChangeFromday(e.target.value, 'from_date')
-                  }
+                  onChange={(e: any) => handleDateSelection(e.target.value)}
                 />
               </div>
               <div className={styles.listSubItem}>
                 <label> To Day </label>
-                {/* <InputSelect
-                  options={days}
-                  value={eventData.toDay}
-                  onChange={(item: any) => onChangeFromday(item, 'toDay')}
-                /> */}
+
                 <input
                   value={eventData.to_date}
                   className={styles.inputField}
                   type="date"
                   min={eventData.from_date}
-                  onChange={(e: any) =>
-                    onChangeFromday(e.target.value, 'to_date')
-                  }
+                  onChange={(e: any) => handleDateSelection(e.target.value)}
                 />
               </div>
               <div className={styles.listSubItem}>

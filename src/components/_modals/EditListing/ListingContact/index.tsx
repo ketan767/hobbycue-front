@@ -247,45 +247,26 @@ const ListingContactEditModal: React.FC<Props> = ({
             ) : (
               <></>
             )}
-            {listingModalData.type === listingTypes.PLACE ? (
-              <div className={styles['two-column-grid']}>
-                {listingModalData.type === listingTypes.PLACE ? (
-                  <div
-                    className={`${styles['input-box-admin']} ${styles['input-box']}`}
-                  >
-                    <label> Page Admin </label>
-                    <input
-                      type="text"
-                      placeholder={`Page Admin`}
-                      value={data.page_admin.value}
-                      name="page_admin"
-                      autoComplete="page_admin"
-                      ref={inputRef}
-                      onChange={handleInputChange}
-                      disabled
-                    />
-                  </div>
-                ) : (
-                  <></>
-                )}
-                <div className={styles['input-box']}>
-                  <label>Email ID if different </label>
-                  <input
-                    type="text"
-                    placeholder={`Enter alternate email ID`}
-                    value={data.public_email.value}
-                    name="public_email"
-                    autoComplete="email"
-                    onChange={handleInputChange}
-                  />
-                  <p className={styles['helper-text']}>
-                    {data.public_email.error}
-                  </p>
-                </div>
+
+            <div className={styles['two-column-grid']}>
+              <div
+                className={`${styles['input-box-admin']} ${styles['input-box']}`}
+              >
+                <label> Page Admin </label>
+                <input
+                  type="text"
+                  placeholder={`Page Admin`}
+                  value={data.page_admin.value}
+                  name="page_admin"
+                  autoComplete="page_admin"
+                  ref={inputRef}
+                  onChange={handleInputChange}
+                  disabled
+                />
               </div>
-            ) : (
+
               <div className={styles['input-box']}>
-                <label>Email ID</label>
+                <label>Email ID if different </label>
                 <input
                   type="text"
                   placeholder={`Enter alternate email ID`}
@@ -298,7 +279,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                   {data.public_email.error}
                 </p>
               </div>
-            )}
+            </div>
 
             <section className={styles['two-column-grid']}>
               <div
@@ -353,8 +334,8 @@ const ListingContactEditModal: React.FC<Props> = ({
             {/* Website */}
             <div
               className={`${styles['input-box']} ${
-                data.website.error ? styles['input-box-error'] : ''
-              }`}
+                styles['input-box-website']
+              } ${data.website.error ? styles['input-box-error'] : ''}`}
             >
               <label>Website</label>
               <input
@@ -368,11 +349,15 @@ const ListingContactEditModal: React.FC<Props> = ({
               />
               <p className={styles['helper-text']}>{data.website.error}</p>
             </div>
-
+            <hr className={styles['hr-line']} />
             <p className={styles.kycText}>
               {' '}
-              {/* Seller KYC and Bank details can be entered only on claimed and
-              verified listing pages{' '} */}
+              Seller KYC and Bank details can be entered only on claimed and
+              verified listing pages
+            </p>
+            <p className={styles.kycText}>
+              After updating the Listing Page, it can be Transferred to a
+              different Page Admin
             </p>
           </>
         </section>
