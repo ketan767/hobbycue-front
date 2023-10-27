@@ -55,6 +55,7 @@ const ModalManager: React.FC = () => {
 
   function handleClose() {
     dispatch(closeModal())
+    setConfirmationModal(false)
   }
   useEffect(() => {
     const scrollbarWidth =
