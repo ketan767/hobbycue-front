@@ -1,6 +1,6 @@
 import React from 'react'
 import { Modal, Fade } from '@mui/material'
-import styles from './confirmation.module.css'
+import styles from './SaveExit.module.css'
 import FilledButton from '@/components/_buttons/FilledButton'
 import OutlinedButton from '@/components/_buttons//OutlinedButton'
 interface Props {
@@ -8,17 +8,15 @@ interface Props {
   onConfirm: () => void
   onCancel: () => void
   handleClose: () => void
-  handleBgClick: (event: any) => void
 }
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
 }
-const ConfirmationModal: React.FC<Props> = ({
+const SaveAndExitModal: React.FC<Props> = ({
   isOpen,
   onConfirm,
   onCancel,
   handleClose,
-  handleBgClick,
 }) => {
   return (
     <Modal
@@ -27,7 +25,7 @@ const ConfirmationModal: React.FC<Props> = ({
       closeAfterTransition
       onClose={handleClose}
     >
-      <Fade in={isOpen} exit={!isOpen} onClick={handleBgClick}>
+      <Fade in={isOpen} exit={!isOpen}>
         <div
           className={`${styles['modal-wrapper']} ${
             isOpen ? styles['in-active'] : ''
@@ -35,7 +33,7 @@ const ConfirmationModal: React.FC<Props> = ({
         >
           <div className={`${styles['confirmation-modal']}`}>
             <div className={styles['confirmation-modal-body']}>
-              <p> Are you Sure you want to delete? </p>
+              <p> Would you like to save before exit ? </p>
               <div className={styles['buttons']}>
                 <FilledButton className={styles['button1']} onClick={onConfirm}>
                   Yes
@@ -50,4 +48,4 @@ const ConfirmationModal: React.FC<Props> = ({
   )
 }
 
-export default ConfirmationModal
+export default SaveAndExitModal

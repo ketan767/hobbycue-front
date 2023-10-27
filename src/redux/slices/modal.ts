@@ -47,6 +47,7 @@ interface ModalState {
   authFormData: { email: string; password: string; rememberMe: boolean },
   forgotPasswordEmail: string
   shareUrl : string
+  saveFunction: (() => void) | null;
 }
 
 const initialState: ModalState = {
@@ -58,7 +59,8 @@ const initialState: ModalState = {
     rememberMe: false,
   },
   forgotPasswordEmail: "",
-  shareUrl: ''
+  shareUrl: '',
+  saveFunction: null
 }
 
 const modalSlice = createSlice({
@@ -95,6 +97,6 @@ const modalSlice = createSlice({
   },
 })
 
-export const { openModal, closeModal, updateAuthFormData, resetAuthFormData, updateForgotPasswordEmail, updateShareUrl } = modalSlice.actions
+export const { openModal, closeModal, updateAuthFormData, resetAuthFormData, updateForgotPasswordEmail, updateShareUrl} = modalSlice.actions
 
 export default modalSlice.reducer

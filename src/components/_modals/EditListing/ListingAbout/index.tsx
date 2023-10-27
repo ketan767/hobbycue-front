@@ -15,6 +15,7 @@ import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
+import { useContext } from 'react'
 import FilledButton from '@/components/_buttons/FilledButton'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import SaveModal from '../../SaveModal/saveModal'
@@ -66,7 +67,6 @@ const ListingAboutEditModal: React.FC<Props> = ({
       return { ...prev, description: { value, error: null } }
     })
   }
-
   const handleBack = async () => {
     if (
       !data.description.value ||
@@ -124,6 +124,21 @@ const ListingAboutEditModal: React.FC<Props> = ({
       }
     }
   }
+
+  const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  useEffect(() => {
+    const handleKeyPress = (event: any) => {
+      if (event.key === 'Enter') {
+        nextButtonRef.current?.focus()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [])
 
   useEffect(() => {
     setData((prev) => {
@@ -192,6 +207,7 @@ const ListingAboutEditModal: React.FC<Props> = ({
           )}
 
           <button
+            ref={nextButtonRef}
             className="modal-footer-btn submit"
             onClick={handleSubmit}
             disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}

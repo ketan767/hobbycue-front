@@ -1,16 +1,32 @@
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 import styles from './style.module.css'
 
 type Props = {
   data: ListingPageData['pageData']
 }
+
 const ClaimModal = () => {
   const baseURL =
     window.location.protocol +
     '//' +
     window.location.hostname +
     (window.location.port ? ':' + window.location.port : '')
+
+  const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  useEffect(() => {
+    const handleKeyPress = (event: any) => {
+      if (event.key === 'Enter') {
+        nextButtonRef.current?.focus()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [])
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -68,7 +84,9 @@ const ClaimModal = () => {
           </div>
         </section>
         <footer className={styles['footer']}>
-          <button className="modal-footer-btn submit">Claim</button>
+          <button ref={nextButtonRef} className="modal-footer-btn submit">
+            Claim
+          </button>
         </footer>
       </div>
     </>
