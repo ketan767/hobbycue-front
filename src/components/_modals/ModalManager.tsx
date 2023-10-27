@@ -111,6 +111,12 @@ const ModalManager: React.FC = () => {
     }
   }
 
+  const props = {
+    setConfirmationModal,
+    confirmationModal,
+    handleClose
+  }
+
   return (
     <>
       <Modal
@@ -126,7 +132,7 @@ const ModalManager: React.FC = () => {
         >
           <div
             className={`${styles['modal-wrapper']} ${
-              confirmationModal ? styles['in-active'] : ''
+              confirmationModal ? styles['ins-active'] : ''
             }  `}
           >
             <main>
@@ -164,7 +170,7 @@ const ModalManager: React.FC = () => {
                 <ListingGeneralEditModal />
               )}
               {activeModal === 'listing-about-edit' && (
-                <ListingAboutEditModal />
+                <ListingAboutEditModal {...props} />
               )}
               {activeModal === 'listing-working-hours-edit' && (
                 <ListingWorkingHoursEditModal />
@@ -222,7 +228,7 @@ const ModalManager: React.FC = () => {
                 />
               )}
             </main>
-            {confirmationModal && (
+            {/* {confirmationModal && (
               <div className={`${styles['confirmation-modal']}`}>
                 <div className={styles['confirmation-modal-body']}>
                   <p> Would you like to save before exit ? </p>
@@ -248,7 +254,7 @@ const ModalManager: React.FC = () => {
                   </div>
                 </div>
               </div>
-            )}
+            )} */}
           </div>
         </Fade>
       </Modal>
