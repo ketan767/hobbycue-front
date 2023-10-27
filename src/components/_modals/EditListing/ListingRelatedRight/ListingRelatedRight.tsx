@@ -32,6 +32,7 @@ import {
 import Image from 'next/image'
 import { listingData } from './data'
 import DefaultProfile from '@/assets/svg/default-images/default-people-listing-icon.svg'
+import SaveModal from '../../SaveModal/saveModal'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -41,6 +42,9 @@ const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
+  confirmationModal?: boolean
+  setConfirmationModal?: any
+  handleClose?: any
 }
 
 type ListingAboutData = {
@@ -50,6 +54,9 @@ type ListingAboutData = {
 const RelatedListingRightEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
+  confirmationModal,
+  setConfirmationModal,
+  handleClose,
 }) => {
   const dispatch = useDispatch()
   const { listingModalData } = useSelector((state: RootState) => state.site)
@@ -252,6 +259,16 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
         setDropdownLoading(false)
       })
   }, [pageInputValue])
+
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        setConfirmationModal={setConfirmationModal}
+      />
+    )
+  }
 
   return (
     <>

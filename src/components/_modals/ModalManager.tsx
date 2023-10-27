@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useContext, useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { AuthModal } from './AuthModal'
@@ -42,7 +42,6 @@ import ShareModal from './ShareModal/ShareModal'
 import FilledButton from '../_buttons/FilledButton'
 import OutlinedButton from '../_buttons/OutlinedButton'
 import ClaimModal from './ClaimModal/ClaimModal'
-
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
 }
@@ -114,9 +113,8 @@ const ModalManager: React.FC = () => {
   const props = {
     setConfirmationModal,
     confirmationModal,
-    handleClose
+    handleClose,
   }
-
   return (
     <>
       <Modal
@@ -147,54 +145,58 @@ const ModalManager: React.FC = () => {
               {activeModal === 'upload-image' && <UploadImageModal />}
 
               {activeModal === 'profile-general-edit' && (
-                <ProfileGeneralEditModal />
+                <ProfileGeneralEditModal {...props} />
               )}
               {activeModal === 'profile-about-edit' && (
-                <ProfileAboutEditModal />
+                <ProfileAboutEditModal {...props} />
               )}
               {activeModal === 'profile-address-edit' && (
-                <ProfileAddressEditModal />
+                <ProfileAddressEditModal {...props} />
               )}
               {activeModal === 'profile-hobby-edit' && (
-                <ProfileHobbyEditModal />
+                <ProfileHobbyEditModal {...props} />
               )}
               {activeModal === 'profile-contact-edit' && (
-                <ProfileContactEditModal />
+                <ProfileContactEditModal {...props} />
               )}
               {activeModal === 'CopyProfileDataModal' && <ListingCopyModal />}
 
-              {activeModal === 'listing-type-edit' && <ListingTypeEditModal />}
+              {activeModal === 'listing-type-edit' && (
+                <ListingTypeEditModal {...props} />
+              )}
 
-              {activeModal === 'listing-tags-edit' && <ListingTagsEditModal />}
+              {activeModal === 'listing-tags-edit' && (
+                <ListingTagsEditModal {...props} />
+              )}
               {activeModal === 'listing-general-edit' && (
-                <ListingGeneralEditModal />
+                <ListingGeneralEditModal {...props} />
               )}
               {activeModal === 'listing-about-edit' && (
                 <ListingAboutEditModal {...props} />
               )}
               {activeModal === 'listing-working-hours-edit' && (
-                <ListingWorkingHoursEditModal />
+                <ListingWorkingHoursEditModal {...props} />
               )}
               {activeModal === 'listing-event-hours-edit' && (
-                <ListingEventHoursEditModal />
+                <ListingEventHoursEditModal {...props} />
               )}
               {activeModal === 'listing-contact-edit' && (
-                <ListingContactEditModal />
+                <ListingContactEditModal {...props} />
               )}
               {activeModal === 'listing-address-edit' && (
-                <ListingAddressEditModal />
+                <ListingAddressEditModal {...props} />
               )}
               {activeModal === 'listing-hobby-edit' && (
-                <ListingHobbyEditModal />
+                <ListingHobbyEditModal {...props} />
               )}
               {activeModal === 'related-listing-left-edit' && (
-                <RelatedListingEditModal />
+                <RelatedListingEditModal {...props} />
               )}
               {activeModal === 'related-listing-right-edit' && (
-                <RelatedListingRightEditModal />
+                <RelatedListingRightEditModal {...props} />
               )}
               {activeModal === 'listing-social-media-edit' && (
-                <ListingSocialMediaEditModal />
+                <ListingSocialMediaEditModal {...props} />
               )}
 
               {activeModal === 'claim-listing' && <ClaimModal />}
@@ -238,7 +240,7 @@ const ModalManager: React.FC = () => {
                       onClick={() => {
                         handleClose()
                         setConfirmationModal(false)
-                        window.location.reload()
+                        // window.location.reload()
                       }}
                     >
                       Yes

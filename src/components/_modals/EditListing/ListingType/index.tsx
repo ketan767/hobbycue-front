@@ -27,15 +27,22 @@ import DownArrow from '@/assets/svg/chevron-down.svg'
 import TickIcon from '@/assets/svg/tick.svg'
 import CrossIcon from '@/assets/svg/cross.svg'
 import useOutsideAlerter from '@/hooks/useOutsideAlerter'
+import SaveModal from '../../SaveModal/saveModal'
 
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
+  confirmationModal?: boolean
+  setConfirmationModal?: any
+  handleClose?: any
 }
 
 const ListingTypeEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
+  confirmationModal,
+  setConfirmationModal,
+  handleClose,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -155,6 +162,15 @@ const ListingTypeEditModal: React.FC<Props> = ({
         }
       }
     }
+  }
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        setConfirmationModal={setConfirmationModal}
+      />
+    )
   }
 
   return (

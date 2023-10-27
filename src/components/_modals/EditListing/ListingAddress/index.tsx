@@ -19,10 +19,14 @@ import LocationIcon from '@/assets/svg/location-2.svg'
 import Image from 'next/image'
 import axios from 'axios'
 import { listingTypes } from '@/constants/constant'
+import SaveModal from '../../SaveModal/saveModal'
 
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
+  confirmationModal?: boolean
+  setConfirmationModal?: any
+  handleClose?: any
 }
 
 type ListingAddressData = {
@@ -40,6 +44,9 @@ type ListingAddressData = {
 const ListingAddressEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
+  confirmationModal,
+  setConfirmationModal,
+  handleClose,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -351,6 +358,29 @@ const ListingAddressEditModal: React.FC<Props> = ({
       })
   }
 
+  const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  useEffect(() => {
+    const handleKeyPress = (event: any) => {
+      if (event.key === 'Enter') {
+        nextButtonRef.current?.focus()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [])
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        setConfirmationModal={setConfirmationModal}
+      />
+    )
+  }
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -513,6 +543,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
           )}
 
           <button
+            ref={nextButtonRef}
             className="modal-footer-btn submit"
             onClick={handleSubmit}
             disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}

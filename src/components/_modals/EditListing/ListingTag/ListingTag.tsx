@@ -26,6 +26,7 @@ import DownArrow from '@/assets/svg/chevron-down.svg'
 import TickIcon from '@/assets/svg/tick.svg'
 import CrossIcon from '@/assets/svg/cross.svg'
 import useOutsideAlerter from '@/hooks/useOutsideAlerter'
+import SaveModal from '../../SaveModal/saveModal'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -35,6 +36,9 @@ const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
+  confirmationModal?: boolean
+  setConfirmationModal?: any
+  handleClose?: any
 }
 
 type ListingAboutData = {
@@ -44,6 +48,9 @@ type ListingAboutData = {
 const ListingTagsEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
+  confirmationModal,
+  setConfirmationModal,
+  handleClose,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -136,6 +143,16 @@ const ListingTagsEditModal: React.FC<Props> = ({
     }
   }
   console.log('item', selectedTags)
+
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        setConfirmationModal={setConfirmationModal}
+      />
+    )
+  }
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -145,6 +162,22 @@ const ListingTagsEditModal: React.FC<Props> = ({
         </header>
         <hr />
         <section className={styles['body']}>
+          <div className={styles['selected-values']}>
+            {tags
+              ?.filter((item) => selectedTags.includes(item._id))
+              .map((item: any, idx) => {
+                return (
+                  <div key={item} className={styles['selected-value']}>
+                    <p>{item.name}</p>
+                    <Image
+                      src={CrossIcon}
+                      alt="cancel"
+                      onClick={() => handleChange(item._id)}
+                    />
+                  </div>
+                )
+              })}
+          </div>
           <div className={styles['input-box']}>
             <input hidden required />
             <div className={styles['select-container']} ref={dropdownRef}>
@@ -187,22 +220,7 @@ const ListingTagsEditModal: React.FC<Props> = ({
                 </div>
               )}
             </div>
-            <div className={styles['selected-values']}>
-              {tags
-                ?.filter((item) => selectedTags.includes(item._id))
-                .map((item: any, idx) => {
-                  return (
-                    <div key={item} className={styles['selected-value']}>
-                      <p>{item.name}</p>
-                      <Image
-                        src={CrossIcon}
-                        alt="cancel"
-                        onClick={() => handleChange(item._id)}
-                      />
-                    </div>
-                  )
-                })}
-            </div>
+
             {/* <FormControl variant="outlined" size="small" sx={{ width: '100%' }}>
               <Select
                 value={selectedTags}

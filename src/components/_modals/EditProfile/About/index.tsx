@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
+import SaveModal from '../../SaveModal/saveModal'
 
 const AboutEditor = dynamic(
   () => import('@/components/AboutEditor/AboutEditor'),
@@ -25,6 +26,9 @@ const AboutEditor = dynamic(
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
+  confirmationModal?: boolean
+  setConfirmationModal?: any
+  handleClose?: any
 }
 
 type ProfileAboutData = {
@@ -34,6 +38,9 @@ type ProfileAboutData = {
 const ProfileAboutEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
+  confirmationModal,
+  setConfirmationModal,
+  handleClose,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -137,6 +144,16 @@ const ProfileAboutEditModal: React.FC<Props> = ({
       about: user.about,
     })
   }, [user])
+
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        setConfirmationModal={setConfirmationModal}
+      />
+    )
+  }
 
   return (
     <>

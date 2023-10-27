@@ -14,6 +14,7 @@ import { RootState } from '@/redux/store'
 import LocationIcon from '@/assets/svg/location-2.svg'
 import Image from 'next/image'
 import axios from 'axios'
+import SaveModal from '../../SaveModal/saveModal'
 
 type Props = {
   onComplete?: () => void
@@ -21,6 +22,9 @@ type Props = {
   addLocation?: boolean
   title?: String
   editLocation?: boolean
+  confirmationModal?: boolean
+  setConfirmationModal?: any
+  handleClose?: any
 }
 
 const ProfileAddressEditModal: React.FC<Props> = ({
@@ -29,6 +33,9 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   addLocation,
   title: modalTitle,
   editLocation,
+  confirmationModal,
+  setConfirmationModal,
+  handleClose,
 }) => {
   const dispatch = useDispatch()
   const { user, addressToEdit } = useSelector((state: RootState) => state.user)
@@ -564,6 +571,15 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       .catch((error) => {
         console.error('Error geocoding:', error)
       })
+  }
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        setConfirmationModal={setConfirmationModal}
+      />
+    )
   }
   return (
     <>

@@ -16,10 +16,14 @@ import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
 import Checkbox from '@mui/material/Checkbox'
 import CustomTooltip from '@/components/Tooltip/ToolTip'
+import SaveModal from '../../SaveModal/saveModal'
 
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
+  confirmationModal?: boolean
+  setConfirmationModal?: any
+  handleClose?: any
 }
 type ProfileContactData = {
   public_email: InputData<string>
@@ -31,6 +35,9 @@ type ProfileContactData = {
 const ProfileContactEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
+  confirmationModal,
+  setConfirmationModal,
+  handleClose,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -192,6 +199,16 @@ const ProfileContactEditModal: React.FC<Props> = ({
       }
     })
   }, [user])
+
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        setConfirmationModal={setConfirmationModal}
+      />
+    )
+  }
 
   return (
     <>
