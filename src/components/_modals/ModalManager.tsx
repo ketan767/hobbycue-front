@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useContext, useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { AuthModal } from './AuthModal'
@@ -42,7 +42,6 @@ import ShareModal from './ShareModal/ShareModal'
 import FilledButton from '../_buttons/FilledButton'
 import OutlinedButton from '../_buttons/OutlinedButton'
 import ClaimModal from './ClaimModal/ClaimModal'
-
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
 }
@@ -114,9 +113,8 @@ const ModalManager: React.FC = () => {
   const props = {
     setConfirmationModal,
     confirmationModal,
-    handleClose
+    handleClose,
   }
-
   return (
     <>
       <Modal
@@ -238,7 +236,7 @@ const ModalManager: React.FC = () => {
                       onClick={() => {
                         handleClose()
                         setConfirmationModal(false)
-                        window.location.reload()
+                        // window.location.reload()
                       }}
                     >
                       Yes

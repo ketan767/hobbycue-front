@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { openModal } from '@/redux/slices/modal'
 import { CircularProgress } from '@mui/material'
-import ConfirmationModal from '@/components/_modals/ConfirmationModal'
+import ConfirmationModal from '@/components/_modals/ConfirmDeleteModal'
 import useCheckIfClickedOutside from '@/hooks/useCheckIfClickedOutside'
 import {
   getMyProfileDetail,
