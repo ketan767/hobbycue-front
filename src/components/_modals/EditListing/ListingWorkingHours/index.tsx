@@ -21,10 +21,14 @@ import InputSelect from '@/components/InputSelect/inputSelect'
 import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
 import DeleteIcon from '@/assets/svg/trash-icon-colored.svg'
+import SaveModal from '../../SaveModal/saveModal'
 
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
+  confirmationModal?: boolean
+  setConfirmationModal?: any
+  handleClose?: any
 }
 
 type ListingAddressData = {
@@ -85,6 +89,9 @@ const timings = [
 const ListingWorkingHoursEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
+  confirmationModal,
+  setConfirmationModal,
+  handleClose,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -220,6 +227,15 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
       (item: any, idx: any) => idx !== index,
     )
     setWorkingHoursData(updatedData)
+  }
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        setConfirmationModal={setConfirmationModal}
+      />
+    )
   }
 
   return (

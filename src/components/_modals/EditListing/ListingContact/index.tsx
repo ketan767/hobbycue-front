@@ -23,10 +23,14 @@ import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import Checkbox from '@mui/material/Checkbox'
 import { listingTypes } from '@/constants/constant'
 import CustomTooltip from '@/components/Tooltip/ToolTip'
+import SaveModal from '../../SaveModal/saveModal'
 
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
+  confirmationModal?: boolean
+  setConfirmationModal?: any
+  handleClose?: any
 }
 type ListingContactData = {
   public_email: InputData<string>
@@ -39,6 +43,9 @@ type ListingContactData = {
 const ListingContactEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
+  confirmationModal,
+  setConfirmationModal,
+  handleClose,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -210,6 +217,30 @@ const ListingContactEditModal: React.FC<Props> = ({
     }
   }, [tick])
 
+  const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  useEffect(() => {
+    const handleKeyPress = (event: any) => {
+      if (event.key === 'Enter') {
+        nextButtonRef.current?.focus()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [])
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        setConfirmationModal={setConfirmationModal}
+      />
+    )
+  }
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -380,6 +411,7 @@ const ListingContactEditModal: React.FC<Props> = ({
           )}
 
           <button
+            ref={nextButtonRef}
             className="modal-footer-btn submit"
             onClick={handleSubmit}
             disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}

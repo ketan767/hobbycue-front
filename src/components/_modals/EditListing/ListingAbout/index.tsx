@@ -15,9 +15,6 @@ import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
-import { useContext } from 'react'
-import FilledButton from '@/components/_buttons/FilledButton'
-import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import SaveModal from '../../SaveModal/saveModal'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {

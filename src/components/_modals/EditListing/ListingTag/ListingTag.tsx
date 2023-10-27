@@ -26,6 +26,7 @@ import DownArrow from '@/assets/svg/chevron-down.svg'
 import TickIcon from '@/assets/svg/tick.svg'
 import CrossIcon from '@/assets/svg/cross.svg'
 import useOutsideAlerter from '@/hooks/useOutsideAlerter'
+import SaveModal from '../../SaveModal/saveModal'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -35,6 +36,9 @@ const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
+  confirmationModal?: boolean
+  setConfirmationModal?: any
+  handleClose?: any
 }
 
 type ListingAboutData = {
@@ -44,6 +48,9 @@ type ListingAboutData = {
 const ListingTagsEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
+  confirmationModal,
+  setConfirmationModal,
+  handleClose,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -136,6 +143,16 @@ const ListingTagsEditModal: React.FC<Props> = ({
     }
   }
   console.log('item', selectedTags)
+
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        setConfirmationModal={setConfirmationModal}
+      />
+    )
+  }
   return (
     <>
       <div className={styles['modal-wrapper']}>

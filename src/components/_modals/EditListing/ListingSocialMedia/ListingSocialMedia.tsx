@@ -29,9 +29,13 @@ import TripAdvisorIcon from '@/assets/svg/Tripadvisor.svg'
 import UltimateGuitarIcon from '@/assets/svg/Ultimate-Guitar.svg'
 import YouTubeIcon from '@/assets/svg/Youtube.svg'
 import OthersIcon from '@/assets/svg/other.svg'
+import SaveModal from '../../SaveModal/saveModal'
 
 type Props = {
   data?: ProfilePageData['pageData']
+  confirmationModal?: boolean
+  setConfirmationModal?: any
+  handleClose?: any
 }
 const options: SocialMediaOption[] = [
   'Facebook',
@@ -108,7 +112,12 @@ const defaultSocialMediaURLs: Record<SocialMediaOption, string> = {
   Others: 'https://',
 }
 
-const ListingSocialMediaEditModal = ({ data }: Props) => {
+const ListingSocialMediaEditModal = ({
+  data,
+  confirmationModal,
+  setConfirmationModal,
+  handleClose,
+}: Props) => {
   const [submitBtnLoading, setSubmitBtnLoading] = useState(false)
   const { listingModalData } = useSelector((state: RootState) => state.site)
 
@@ -296,6 +305,16 @@ const ListingSocialMediaEditModal = ({ data }: Props) => {
       window.location.reload()
       dispatch(closeModal())
     }
+  }
+
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        setConfirmationModal={setConfirmationModal}
+      />
+    )
   }
 
   return (

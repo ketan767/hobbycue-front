@@ -23,9 +23,13 @@ import {
   updateEventDateTime,
   updateListingModalData,
 } from '@/redux/slices/site'
+import SaveModal from '../../SaveModal/saveModal'
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
+  confirmationModal?: boolean
+  setConfirmationModal?: any
+  handleClose?: any
 }
 
 type ListingAddressData = {
@@ -77,6 +81,9 @@ const timings = [
 const ListingEventHoursEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
+  confirmationModal,
+  setConfirmationModal,
+  handleClose,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -148,6 +155,15 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     setEventData(updated)
     console.log(updated)
     // setWorkingHoursData(updated)
+  }
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        setConfirmationModal={setConfirmationModal}
+      />
+    )
   }
 
   console.log({ eventData })

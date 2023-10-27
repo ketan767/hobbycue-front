@@ -16,10 +16,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
+import SaveModal from '../../SaveModal/saveModal'
 
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
+  confirmationModal?: boolean
+  setConfirmationModal?: any
+  handleClosee?: any
 }
 const levels = ['Beginner', 'Intermediate', 'Advanced']
 // const levels = {
@@ -43,6 +47,9 @@ type DropdownListItem = {
 const ProfileHobbyEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
+  confirmationModal,
+  setConfirmationModal,
+  handleClosee,
 }) => {
   const dispatch = useDispatch()
 
@@ -261,7 +268,15 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     if (err) return console.log(err)
     console.log('hobby updated-', res?.data)
   }
-
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClosee}
+        handleSubmit={handleSubmit}
+        setConfirmationModal={setConfirmationModal}
+      />
+    )
+  }
   return (
     <>
       <div className={styles['modal-wrapper']}>

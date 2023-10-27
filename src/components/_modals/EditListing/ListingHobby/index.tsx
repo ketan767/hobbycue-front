@@ -16,10 +16,14 @@ import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
 import { addListingHobby, deleteListingHobby } from '@/services/listing.service'
 import { getListingHobbies } from '@/services/listing.service'
+import SaveModal from '../../SaveModal/saveModal'
 
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
+  confirmationModal?: boolean
+  setConfirmationModal?: any
+  handleClose?: any
 }
 
 type DropdownListItem = {
@@ -37,6 +41,9 @@ type ListingHobbyData = {
 const ListingHobbyEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
+  confirmationModal,
+  setConfirmationModal,
+  handleClose,
 }) => {
   const dispatch = useDispatch()
 
@@ -224,6 +231,15 @@ const ListingHobbyEditModal: React.FC<Props> = ({
       setNextDisabled(false)
     }
   }, [hobbiesList])
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        setConfirmationModal={setConfirmationModal}
+      />
+    )
+  }
 
   return (
     <>

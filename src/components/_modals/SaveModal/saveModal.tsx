@@ -17,7 +17,7 @@ const SaveModal: React.FC<Props> = ({
   return (
     <div className={`${styles['confirmation-modal']}`}>
       <div className={styles['confirmation-modal-body']}>
-        <p> Would you like to save before exits ? </p>
+        <p> Would you like to save before exit ? </p>
         <div className={styles['buttons']}>
           <FilledButton className={styles['button1']} onClick={handleSubmit}>
             Yes
