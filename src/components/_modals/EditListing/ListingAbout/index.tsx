@@ -15,6 +15,9 @@ import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
+import FilledButton from '@/components/_buttons/FilledButton'
+import OutlinedButton from '@/components/_buttons/OutlinedButton'
+import SaveModal from '../../SaveModal/saveModal'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -30,6 +33,9 @@ const AboutEditor = dynamic(
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
+  confirmationModal?: boolean
+  setConfirmationModal?: any
+  handleClose?: any
 }
 
 type ListingAboutData = {
@@ -39,6 +45,9 @@ type ListingAboutData = {
 const ListingAboutEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
+  confirmationModal,
+  setConfirmationModal,
+  handleClose,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -135,6 +144,15 @@ const ListingAboutEditModal: React.FC<Props> = ({
     }
   }, [data])
 
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        setConfirmationModal={setConfirmationModal}
+      />
+    )
+  }
   return (
     <>
       <div className={styles['modal-wrapper']}>
