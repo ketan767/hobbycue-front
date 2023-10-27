@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styles from './saveModal.module.css'
 import FilledButton from '@/components/_buttons/FilledButton'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
