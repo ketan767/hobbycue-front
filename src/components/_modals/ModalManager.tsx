@@ -145,54 +145,58 @@ const ModalManager: React.FC = () => {
               {activeModal === 'upload-image' && <UploadImageModal />}
 
               {activeModal === 'profile-general-edit' && (
-                <ProfileGeneralEditModal />
+                <ProfileGeneralEditModal {...props} />
               )}
               {activeModal === 'profile-about-edit' && (
-                <ProfileAboutEditModal />
+                <ProfileAboutEditModal {...props} />
               )}
               {activeModal === 'profile-address-edit' && (
-                <ProfileAddressEditModal />
+                <ProfileAddressEditModal {...props} />
               )}
               {activeModal === 'profile-hobby-edit' && (
-                <ProfileHobbyEditModal />
+                <ProfileHobbyEditModal {...props} />
               )}
               {activeModal === 'profile-contact-edit' && (
-                <ProfileContactEditModal />
+                <ProfileContactEditModal {...props} />
               )}
               {activeModal === 'CopyProfileDataModal' && <ListingCopyModal />}
 
-              {activeModal === 'listing-type-edit' && <ListingTypeEditModal />}
+              {activeModal === 'listing-type-edit' && (
+                <ListingTypeEditModal {...props} />
+              )}
 
-              {activeModal === 'listing-tags-edit' && <ListingTagsEditModal />}
+              {activeModal === 'listing-tags-edit' && (
+                <ListingTagsEditModal {...props} />
+              )}
               {activeModal === 'listing-general-edit' && (
-                <ListingGeneralEditModal />
+                <ListingGeneralEditModal {...props} />
               )}
               {activeModal === 'listing-about-edit' && (
                 <ListingAboutEditModal {...props} />
               )}
               {activeModal === 'listing-working-hours-edit' && (
-                <ListingWorkingHoursEditModal />
+                <ListingWorkingHoursEditModal {...props} />
               )}
               {activeModal === 'listing-event-hours-edit' && (
-                <ListingEventHoursEditModal />
+                <ListingEventHoursEditModal {...props} />
               )}
               {activeModal === 'listing-contact-edit' && (
-                <ListingContactEditModal />
+                <ListingContactEditModal {...props} />
               )}
               {activeModal === 'listing-address-edit' && (
-                <ListingAddressEditModal />
+                <ListingAddressEditModal {...props} />
               )}
               {activeModal === 'listing-hobby-edit' && (
-                <ListingHobbyEditModal />
+                <ListingHobbyEditModal {...props} />
               )}
               {activeModal === 'related-listing-left-edit' && (
-                <RelatedListingEditModal />
+                <RelatedListingEditModal {...props} />
               )}
               {activeModal === 'related-listing-right-edit' && (
-                <RelatedListingRightEditModal />
+                <RelatedListingRightEditModal {...props} />
               )}
               {activeModal === 'listing-social-media-edit' && (
-                <ListingSocialMediaEditModal />
+                <ListingSocialMediaEditModal {...props} />
               )}
 
               {activeModal === 'claim-listing' && <ClaimModal />}

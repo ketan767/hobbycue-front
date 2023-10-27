@@ -2,7 +2,7 @@
 .confirmation-modal {
    background-color: white;
    border-radius: 8px;
-   padding: 30px 30px;
+   padding: 40px 30px 30px 30px;
  }
  .confirmation-modal .buttons {
    display: flex;
@@ -18,3 +18,8 @@
    flex: 1;
    padding: 0.5rem 1rem;
  }
+
+ .button1{
+  font-size: 1rem !important;
+}
+

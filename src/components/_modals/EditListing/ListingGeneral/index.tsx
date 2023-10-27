@@ -15,10 +15,14 @@ import { updateListingModalData } from '@/redux/slices/site'
 import { createNewListing, updateListing } from '@/services/listing.service'
 import axios from 'axios'
 import { listingTypes } from '@/constants/constant'
+import SaveModal from '../../SaveModal/saveModal'
 
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
+  confirmationModal?: boolean
+  setConfirmationModal?: any
+  handleClose?: any
 }
 
 type ListingGeneralData = {
@@ -33,6 +37,9 @@ type ListingGeneralData = {
 const ListingGeneralEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
+  confirmationModal,
+  setConfirmationModal,
+  handleClose,
 }) => {
   const dispatch = useDispatch()
 
@@ -291,6 +298,16 @@ const ListingGeneralEditModal: React.FC<Props> = ({
       setNextDisabled(false)
     }
   }, [data])
+
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        setConfirmationModal={setConfirmationModal}
+      />
+    )
+  }
 
   return (
     <>

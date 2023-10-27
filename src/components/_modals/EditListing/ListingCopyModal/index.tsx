@@ -126,6 +126,20 @@ const ListingAboutEditModal: React.FC<Props> = ({
       }
     })
   }, [user])
+  const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  useEffect(() => {
+    const handleKeyPress = (event: any) => {
+      if (event.key === 'Enter') {
+        nextButtonRef.current?.focus()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [])
 
   useEffect(() => {
     if (isEmpty(data.description.value)) {
@@ -237,6 +251,7 @@ const ListingAboutEditModal: React.FC<Props> = ({
 
         <footer className={styles['footer']}>
           <button
+            ref={nextButtonRef}
             className="modal-footer-btn submit"
             onClick={handleSubmit}
             disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}

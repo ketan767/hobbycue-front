@@ -17,10 +17,14 @@ import { RootState } from '@/redux/store'
 import { updateUser } from '@/redux/slices/user'
 import FilledButton from '@/components/_buttons/FilledButton'
 import axios from 'axios'
+import SaveModal from '../../SaveModal/saveModal'
 
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
+  confirmationModal?: boolean
+  setConfirmationModal?: any
+  handleClose?: any
 }
 
 type ProfileGeneralData = {
@@ -35,6 +39,9 @@ type ProfileGeneralData = {
 const ProfileGeneralEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
+  confirmationModal,
+  setConfirmationModal,
+  handleClose,
 }) => {
   const dispatch = useDispatch()
 
@@ -215,7 +222,15 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   useEffect(() => {
     fullNameRef?.current?.focus()
   }, [])
-
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        setConfirmationModal={setConfirmationModal}
+      />
+    )
+  }
   return (
     <>
       <div className={styles['modal-wrapper']}>
