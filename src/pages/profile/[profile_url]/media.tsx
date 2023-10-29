@@ -24,7 +24,7 @@ interface Props {
   data: ProfilePageData
 }
 
-const ProfilePostsPage: React.FC<Props> = ({ data }) => {
+const ProfileMediaPage: React.FC<Props> = ({ data }) => {
   const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
   const [loadingPosts, setLoadingPosts] = useState(false)
   const [posts, setPosts] = useState([])
@@ -197,8 +197,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   const { err, res } = await getAllUserDetail(
     `profile_url=${query['profile_url']}&populate=_hobbies,_addresses,primary_address,_listings`,
   )
+  const user = res.data?.data?.users[0]
 
   if (err) return { notFound: true }
+  const { err: error, res: response } = await getListingPages(
+    `populate=_hobbies,_address&admin=${user._id}`,
+  )
 
   if (res?.data.success && res.data.data.no_of_users === 0)
     return { notFound: true }
@@ -207,7 +211,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     pageData: res.data.data.users[0],
     postsData: null,
     mediaData: null,
-    listingsData: null,
+    listingsData: response?.data.data.listings,
     blogsData: null,
   }
   return {
@@ -217,4 +221,4 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   }
 }
 
-export default ProfilePostsPage
+export default ProfileMediaPage

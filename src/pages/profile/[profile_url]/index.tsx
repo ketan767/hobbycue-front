@@ -89,7 +89,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
 
   let pinnedPosts = posts.filter((item: any) => item.isPinned === true)
   let unpinnnedPosts = posts.filter((item: any) => item.isPinned !== true)
-
+  console.log('profileurl', data)
   return (
     <>
       <Head>
