@@ -13,7 +13,7 @@ import PageGridLayout from '@/layouts/PageGridLayout'
 import ProfileHobbySideList from '@/components/ProfilePage/ProfileHobbySideList'
 import { getAllPosts } from '@/services/post.service'
 import PostCard from '@/components/PostCard/PostCard'
-
+import { getListingPages } from '@/services/listing.service'
 import styles from '@/styles/ProfilePostsPage.module.css'
 import ProfileAddressSide from '@/components/ProfilePage/ProfileAddressSide'
 import ProfileContactSide from '@/components/ProfilePage/ProfileContactSides'
@@ -80,6 +80,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
   }
   let pinnedPosts = posts.filter((item: any) => item.isPinned === true)
   let unpinnnedPosts = posts.filter((item: any) => item.isPinned !== true)
+  console.log('posts', data)
 
   return (
     <>
@@ -182,8 +183,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   const { err, res } = await getAllUserDetail(
     `profile_url=${query['profile_url']}&populate=_hobbies,_addresses,primary_address,_listings`,
   )
-
+  const user = res.data?.data?.users[0]
   if (err) return { notFound: true }
+  const { err: error, res: response } = await getListingPages(
+    `populate=_hobbies,_address&admin=${user._id}`,
+  )
 
   if (res?.data.success && res.data.data.no_of_users === 0)
     return { notFound: true }
@@ -192,7 +196,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     pageData: res.data.data.users[0],
     postsData: null,
     mediaData: null,
-    listingsData: null,
+    listingsData: response?.data.data.listings,
     blogsData: null,
   }
   return {

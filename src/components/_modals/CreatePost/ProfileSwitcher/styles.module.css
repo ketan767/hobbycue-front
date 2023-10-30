@@ -9,6 +9,12 @@
   position: relative;
   cursor: pointer;
   border: 1px solid #CED4DA !important;
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #ebedf0;
+  border-radius: 8px;
+  width: 242px;
+  max-width: 100%;
 }
 .default-img[data-profile-type='user']{
   width: 32px;

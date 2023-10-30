@@ -39,8 +39,6 @@ import ConfirmEmailModal from './ConfirmEmail/ConfirmEmail'
 import EmailSentModal from './EmailSent/EmailSent'
 import ResetPasswordModal from './ResetPassword/ResetPassword'
 import ShareModal from './ShareModal/ShareModal'
-import FilledButton from '../_buttons/FilledButton'
-import OutlinedButton from '../_buttons/OutlinedButton'
 import ClaimModal from './ClaimModal/ClaimModal'
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -54,8 +52,11 @@ const ModalManager: React.FC = () => {
   )
 
   function handleClose() {
-    dispatch(closeModal())
-    setConfirmationModal(false)
+    if (confirmationModal) {
+      setConfirmationModal(false)
+    } else {
+      dispatch(closeModal())
+    }
   }
   useEffect(() => {
     const scrollbarWidth =
@@ -92,7 +93,7 @@ const ModalManager: React.FC = () => {
 
   const escFunction = useCallback((event: any) => {
     if (event.key === 'Escape') {
-      setConfirmationModal(true)
+      setConfirmationModal((prev) => !prev)
     }
   }, [])
 
