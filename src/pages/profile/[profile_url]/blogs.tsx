@@ -10,7 +10,7 @@ interface Props {
   data: ProfilePageData
 }
 
-const ProfilePostsPage: React.FC<Props> = ({ data }) => {
+const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
   // const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
 
   return (
@@ -26,7 +26,9 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context,
+) => {
   const { query } = context
 
   const { err, res } = await getAllUserDetail(
@@ -35,7 +37,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
   if (err) return { notFound: true }
 
-  if (res?.data.success && res.data.data.no_of_users === 0) return { notFound: true }
+  if (res?.data.success && res.data.data.no_of_users === 0)
+    return { notFound: true }
 
   const data = {
     pageData: res.data.data.users[0],
@@ -51,4 +54,4 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   }
 }
 
-export default ProfilePostsPage
+export default ProfileBlogsPage

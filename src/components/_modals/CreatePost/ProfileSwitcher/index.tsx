@@ -52,7 +52,7 @@ const ProfileSwitcher: React.FC<Props> = ({
   return (
     <>
       <section
-        className={`content-box-wrapper ${styles['profile-switcher']} ${
+        className={`${styles['profile-switcher']} ${
           showDropdown ? styles['show-dropdown'] : ''
         }`}
         ref={dropdownRef}
