@@ -94,19 +94,29 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
       dispatch(closeModal())
     }
   }
-  const handleOutsideClick = (event: MouseEvent) => {
-    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-      setConfirmationModal(true)
-      console.log(confirmationModal)
-    }
-  }
 
-  // Set up the event listener when the component mounts
   useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        console.log('Escape key pressed')
+        setConfirmationModal((prevState) => !prevState)
+      }
+    }
+
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        setConfirmationModal(true)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown, { capture: true })
     document.addEventListener('mousedown', handleOutsideClick)
 
-    // Clean up the event listener when the component unmounts
     return () => {
+      window.removeEventListener('keydown', handleKeyDown, { capture: true })
       document.removeEventListener('mousedown', handleOutsideClick)
     }
   }, [])
