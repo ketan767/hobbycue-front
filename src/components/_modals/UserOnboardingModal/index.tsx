@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -42,8 +42,10 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
   const dispatch = useDispatch()
   const [activeStep, setActiveStep] = useState<steps>('General')
   const [furthestStepIndex, setFurthestStepIndex] = useState<number>(0)
+  const [confirmationModal, setConfirmationModal] = useState(false)
 
   const router = useRouter()
+  const modalRef = useRef<HTMLDivElement>(null)
 
   const { user } = useSelector((state: RootState) => state.user)
 
@@ -82,38 +84,83 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
       // router.push(`/profile/${res?.data?.data?.user?.profile_url}`)
     }
   }
+  function handleClose() {
+    if (confirmationModal) {
+      setConfirmationModal(false)
+    } else {
+      dispatch(closeModal())
+    }
+  }
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      setConfirmationModal(true)
+      console.log(confirmationModal)
+    }
+  }
+
+  // Set up the event listener when the component mounts
+  useEffect(() => {
+    document.addEventListener('mousedown', handleOutsideClick)
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick)
+    }
+  }, [])
 
   return (
-    <div className={styles['modal-container']}>
+    <div
+      ref={modalRef}
+      className={`${styles['modal-container']} ${
+        confirmationModal ? styles['ins-active'] : ''
+      }`}
+    >
       <header className={styles['header']}>
         <h2 className={styles['modal-heading']}>Complete your User Profile</h2>
       </header>
 
       {activeStep === 'General' && (
-        <ProfileGeneralEditModal onComplete={handleNext} />
+        <ProfileGeneralEditModal
+          onComplete={handleNext}
+          setConfirmationModal={setConfirmationModal}
+          confirmationModal={confirmationModal}
+          handleClose={handleClose}
+        />
       )}
       {activeStep === 'About' && (
         <ProfileAboutEditModal
           onComplete={handleNext}
           onBackBtnClick={handleBack}
+          setConfirmationModal={setConfirmationModal}
+          confirmationModal={confirmationModal}
+          handleClose={handleClose}
         />
       )}
       {activeStep === 'Contact' && (
         <ProfileContactEditModal
           onComplete={handleNext}
           onBackBtnClick={handleBack}
+          setConfirmationModal={setConfirmationModal}
+          confirmationModal={confirmationModal}
+          handleClose={handleClose}
         />
       )}
       {activeStep === 'Address' && (
         <ProfileAddressEditModal
           onComplete={handleNext}
           onBackBtnClick={handleBack}
+          setConfirmationModal={setConfirmationModal}
+          confirmationModal={confirmationModal}
+          handleClose={handleClose}
         />
       )}
       {activeStep === 'Hobbies' && (
         <ProfileHobbyEditModal
           onComplete={handleCompleteOnboarding}
           onBackBtnClick={handleBack}
+          setConfirmationModal={setConfirmationModal}
+          confirmationModal={confirmationModal}
+          handleClosee={handleClose}
         />
       )}
 

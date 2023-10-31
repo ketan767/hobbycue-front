@@ -117,6 +117,7 @@ const ModalManager: React.FC = () => {
     confirmationModal,
     handleClose,
   }
+
   return (
     <>
       <Modal

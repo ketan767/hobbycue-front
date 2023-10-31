@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -60,6 +60,8 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
   const dispatch = useDispatch()
   const [activeStep, setActiveStep] = useState<Step>('General')
   const [furthestStepIndex, setFurthestStepIndex] = useState<number>(0)
+  const [confirmationModal, setConfirmationModal] = useState(false)
+  const modalRef = useRef<HTMLDivElement>(null)
 
   const router = useRouter()
 
@@ -108,6 +110,13 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
       setFurthestStepIndex(newIndex)
     }
   }
+  function handleClose() {
+    if (confirmationModal) {
+      setConfirmationModal(false)
+    } else {
+      dispatch(closeModal())
+    }
+  }
   const handleBack = () => {
     setActiveStep(
       (prevActiveStep: Step) =>
@@ -127,9 +136,39 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
       window.location.href = `/page/${res.data.data.listing.page_url}`
     }
   }
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      setConfirmationModal(true)
+      console.log(confirmationModal)
+    }
+  }
+
+  useEffect(() => {
+    const handleKeyDown = (event: any) => {
+      if (event.key === 'Escape') {
+        setConfirmationModal((prev) => !prev)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [confirmationModal])
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleOutsideClick)
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick)
+    }
+  }, [])
 
   return (
-    <div className={styles['modal-container']}>
+    <div
+      ref={modalRef}
+      className={`${styles['modal-container']} ${
+        confirmationModal ? styles['ins-active'] : ''
+      }`}
+    >
       <header className={styles['header']}>
         <h2 className={styles['modal-heading']}>Complete your Listing Page</h2>
       </header>
@@ -143,6 +182,9 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
             dispatch(openModal({ type: 'listing-type-edit', closable: true }))
             dispatch(updateListingTypeModalMode({ mode: 'create' }))
           }}
+          setConfirmationModal={setConfirmationModal}
+          confirmationModal={confirmationModal}
+          handleClose={handleClose}
         />
       )}
 
@@ -150,6 +192,9 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
         <ListingAboutEditModal
           onComplete={handleNext}
           onBackBtnClick={handleBack}
+          setConfirmationModal={setConfirmationModal}
+          confirmationModal={confirmationModal}
+          handleClose={handleClose}
         />
       )}
 
@@ -157,6 +202,9 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
         <ListingContactEditModal
           onComplete={handleNext}
           onBackBtnClick={handleBack}
+          setConfirmationModal={setConfirmationModal}
+          confirmationModal={confirmationModal}
+          handleClose={handleClose}
         />
       )}
 
@@ -164,6 +212,9 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
         <ListingAddressEditModal
           onComplete={handleNext}
           onBackBtnClick={handleBack}
+          setConfirmationModal={setConfirmationModal}
+          confirmationModal={confirmationModal}
+          handleClose={handleClose}
         />
       )}
 
@@ -171,18 +222,27 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
         <ListingWorkingHoursEditModal
           onComplete={handleNext}
           onBackBtnClick={handleBack}
+          setConfirmationModal={setConfirmationModal}
+          confirmationModal={confirmationModal}
+          handleClose={handleClose}
         />
       )}
       {activeStep === 'EventHours' && (
         <ListingEventHoursEditModal
           onComplete={handleNext}
           onBackBtnClick={handleBack}
+          setConfirmationModal={setConfirmationModal}
+          confirmationModal={confirmationModal}
+          handleClose={handleClose}
         />
       )}
       {activeStep === 'Hobbies' && (
         <ListingHobbyEditModal
           onComplete={handleCompleteOnboarding}
           onBackBtnClick={handleBack}
+          setConfirmationModal={setConfirmationModal}
+          confirmationModal={confirmationModal}
+          handleClose={handleClose}
         />
       )}
 
