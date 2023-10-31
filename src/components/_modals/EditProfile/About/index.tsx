@@ -14,6 +14,7 @@ import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import SaveModal from '../../SaveModal/saveModal'
+import CloseIcon from '@/assets/icons/CloseIcon'
 
 const AboutEditor = dynamic(
   () => import('@/components/AboutEditor/AboutEditor'),
@@ -29,6 +30,7 @@ type Props = {
   confirmationModal?: boolean
   setConfirmationModal?: any
   handleClose?: any
+  isError?: boolean
 }
 
 type ProfileAboutData = {
@@ -50,6 +52,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
   const [backDisabled, SetBackDisabled] = useState(false)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
+  const [isError, setIsError] = useState(false)
 
   const [inputErrs, setInputErrs] = useState<{ about: string | null }>({
     about: null,
@@ -98,6 +101,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
       setInputErrs((prev) => {
         return { ...prev, about: 'This field is required!' }
       })
+      setIsError(true)
       return
     }
 
@@ -124,26 +128,35 @@ const ProfileAboutEditModal: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    if (isEmpty(data.about)) {
-      // setNextDisabled(true)
-    } else {
-      setNextDisabled(false)
-    }
-  }, [data])
-
-  useEffect(() => {
-    if (isEmpty(data.about)) {
-      // SetBackDisabled(true)
-    } else {
-      SetBackDisabled(false)
-    }
-  }, [data])
-
-  useEffect(() => {
     setData({
       about: user.about,
     })
   }, [user])
+
+  const HandleSaveError = async () => {
+    if (
+      !data.about ||
+      data.about?.trim() === '' ||
+      data.about === '<p><br></p>'
+    ) {
+      setIsError(true)
+    }
+  }
+
+  useEffect(() => {
+    if (confirmationModal) {
+      HandleSaveError()
+    }
+  }, [confirmationModal])
+
+  useEffect(() => {
+    if (isError) {
+      const timer = setTimeout(() => {
+        setIsError(false)
+      }, 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [isError])
 
   if (confirmationModal) {
     return (
@@ -151,15 +164,24 @@ const ProfileAboutEditModal: React.FC<Props> = ({
         handleClose={handleClose}
         handleSubmit={handleSubmit}
         setConfirmationModal={setConfirmationModal}
+        isError={isError}
       />
     )
   }
 
   return (
     <>
-      <div className={styles['modal-wrapper']}>
+      <div
+        className={`${styles['modal-wrapper']} ${
+          confirmationModal ? styles['ins-active'] : ''
+        }  `}
+      >
         {/* Modal Header */}
         <header className={styles['header']}>
+          <CloseIcon
+            className={styles['modal-close-icon']}
+            onClick={handleClose}
+          />
           <h4 className={styles['heading']}>{'About'}</h4>
         </header>
         <hr />

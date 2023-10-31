@@ -22,6 +22,7 @@ import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
 import DeleteIcon from '@/assets/svg/trash-icon-colored.svg'
 import SaveModal from '../../SaveModal/saveModal'
+import CloseIcon from '@/assets/icons/CloseIcon'
 
 type Props = {
   onComplete?: () => void
@@ -241,6 +242,10 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
   return (
     <>
       <div className={styles['modal-wrapper']}>
+        <CloseIcon
+          className={styles['modal-close-icon']}
+          onClick={handleClose}
+        />
         {/* Modal Header */}
         <header className={styles['header']}>
           <h4 className={styles['heading']}>{'Working Hours'}</h4>
