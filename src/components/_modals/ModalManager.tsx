@@ -91,19 +91,19 @@ const ModalManager: React.FC = () => {
       }, 500)
   }, [activeModal])
 
-  const escFunction = useCallback((event: any) => {
+  const escFunction = (event: KeyboardEvent) => {
     if (event.key === 'Escape') {
       setConfirmationModal((prev) => !prev)
     }
-  }, [])
+  }
 
   useEffect(() => {
-    document.addEventListener('keydown', escFunction, false)
+    document.addEventListener('keydown', escFunction, { capture: true })
 
     return () => {
-      document.removeEventListener('keydown', escFunction, false)
+      document.removeEventListener('keydown', escFunction, { capture: true })
     }
-  }, [escFunction])
+  }, [])
 
   const handleBgClick = (event: any) => {
     // event.preventDefault()
@@ -117,9 +117,11 @@ const ModalManager: React.FC = () => {
     confirmationModal,
     handleClose,
   }
+
   return (
     <>
       <Modal
+        disableEscapeKeyDown
         slots={{ backdrop: CustomBackdrop }}
         open={Boolean(activeModal)}
         closeAfterTransition

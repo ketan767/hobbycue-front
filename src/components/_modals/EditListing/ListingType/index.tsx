@@ -28,6 +28,7 @@ import TickIcon from '@/assets/svg/tick.svg'
 import CrossIcon from '@/assets/svg/cross.svg'
 import useOutsideAlerter from '@/hooks/useOutsideAlerter'
 import SaveModal from '../../SaveModal/saveModal'
+import CloseIcon from '@/assets/icons/CloseIcon'
 
 type Props = {
   onComplete?: () => void
@@ -35,6 +36,7 @@ type Props = {
   confirmationModal?: boolean
   setConfirmationModal?: any
   handleClose?: any
+  isError?: boolean
 }
 
 const ListingTypeEditModal: React.FC<Props> = ({
@@ -54,6 +56,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
   const [value, setValue] = useState<any>([])
   const [error, setError] = useState<string | null>(null)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
+  const [isError, setIsError] = useState(false)
 
   const [showDropdown, setShowDropdown] = useState(false)
   const dropdownRef: any = useRef()
@@ -163,12 +166,34 @@ const ListingTypeEditModal: React.FC<Props> = ({
       }
     }
   }
+  const HandleSaveError = async () => {
+    if (!value || value === '' || value.length === 0) {
+      setIsError(true)
+    }
+  }
+
+  useEffect(() => {
+    if (confirmationModal) {
+      HandleSaveError()
+    }
+  }, [confirmationModal])
+
+  useEffect(() => {
+    if (isError) {
+      const timer = setTimeout(() => {
+        setIsError(false)
+      }, 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [isError])
+
   if (confirmationModal) {
     return (
       <SaveModal
         handleClose={handleClose}
         handleSubmit={handleSubmit}
         setConfirmationModal={setConfirmationModal}
+        isError={isError}
       />
     )
   }
@@ -177,6 +202,10 @@ const ListingTypeEditModal: React.FC<Props> = ({
     <>
       <div className={styles['modal-container']}>
         <div className={styles['modal-wrapper']}>
+          <CloseIcon
+            className={styles['modal-close-icon']}
+            onClick={handleClose}
+          />
           {/* Modal Header */}
           <header className={styles['header']}>
             <h4 className={styles['heading']}>{'Listing Type'}</h4>

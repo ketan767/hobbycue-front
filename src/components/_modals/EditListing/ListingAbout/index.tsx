@@ -16,6 +16,7 @@ import { updateUser } from '@/redux/slices/user'
 import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
 import SaveModal from '../../SaveModal/saveModal'
+import CloseIcon from '@/assets/icons/CloseIcon'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -34,6 +35,7 @@ type Props = {
   confirmationModal?: boolean
   setConfirmationModal?: any
   handleClose?: any
+  isError?: boolean
 }
 
 type ListingAboutData = {
@@ -56,7 +58,7 @@ const ListingAboutEditModal: React.FC<Props> = ({
   })
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
-
+  const [isError, setIsError] = useState(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
   const handleInputChange = (value: string) => {
@@ -156,18 +158,49 @@ const ListingAboutEditModal: React.FC<Props> = ({
     }
   }, [data])
 
+  const HandleSaveError = async () => {
+    if (
+      !data.description.value ||
+      data.description.value === '' ||
+      data.description.value === '<p><br></p>'
+    ) {
+      setIsError(true)
+    }
+  }
+
+  useEffect(() => {
+    if (confirmationModal) {
+      HandleSaveError()
+    }
+  }, [confirmationModal])
+
+  useEffect(() => {
+    if (isError) {
+      const timer = setTimeout(() => {
+        setIsError(false)
+      }, 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [isError])
+
   if (confirmationModal) {
     return (
       <SaveModal
         handleClose={handleClose}
         handleSubmit={handleSubmit}
         setConfirmationModal={setConfirmationModal}
+        isError={isError}
       />
     )
   }
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
+        <CloseIcon
+          className={styles['modal-close-icon']}
+          onClick={handleClose}
+        />
         {/* Modal Header */}
         <header className={styles['header']}>
           <h4 className={styles['heading']}>{'About'}</h4>

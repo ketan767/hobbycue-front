@@ -17,6 +17,7 @@ import { updateListingModalData } from '@/redux/slices/site'
 import Checkbox from '@mui/material/Checkbox'
 import CustomTooltip from '@/components/Tooltip/ToolTip'
 import SaveModal from '../../SaveModal/saveModal'
+import CloseIcon from '@/assets/icons/CloseIcon'
 
 type Props = {
   onComplete?: () => void
@@ -24,6 +25,7 @@ type Props = {
   confirmationModal?: boolean
   setConfirmationModal?: any
   handleClose?: any
+  isError?: boolean
 }
 type ProfileContactData = {
   public_email: InputData<string>
@@ -53,6 +55,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [backDisabled, SetBackDisabled] = useState(false)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
+  const [isError, setIsError] = useState(false)
 
   const [data, setData] = useState<ProfileContactData>({
     phone: { value: '', error: null },
@@ -200,12 +203,37 @@ const ProfileContactEditModal: React.FC<Props> = ({
     })
   }, [user])
 
+  const HandleSaveError = async () => {
+    if (
+      (!data.public_email.value || data.public_email.value === '') &&
+      (!data.phone.value || data.phone.value === '')
+    ) {
+      setIsError(true)
+    }
+  }
+
+  useEffect(() => {
+    if (confirmationModal) {
+      HandleSaveError()
+    }
+  }, [confirmationModal])
+
+  useEffect(() => {
+    if (isError) {
+      const timer = setTimeout(() => {
+        setIsError(false)
+      }, 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [isError])
+
   if (confirmationModal) {
     return (
       <SaveModal
         handleClose={handleClose}
         handleSubmit={handleSubmit}
         setConfirmationModal={setConfirmationModal}
+        isError={isError}
       />
     )
   }
@@ -213,6 +241,10 @@ const ProfileContactEditModal: React.FC<Props> = ({
   return (
     <>
       <div className={styles['modal-wrapper']}>
+        <CloseIcon
+          className={styles['modal-close-icon']}
+          onClick={handleClose}
+        />
         {/* Modal Header */}
         <header className={styles['header']}>
           <h4 className={styles['heading']}>{'Contact Information'}</h4>

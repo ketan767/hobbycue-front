@@ -16,6 +16,7 @@ import { createNewListing, updateListing } from '@/services/listing.service'
 import axios from 'axios'
 import { listingTypes } from '@/constants/constant'
 import SaveModal from '../../SaveModal/saveModal'
+import CloseIcon from '@/assets/icons/CloseIcon'
 
 type Props = {
   onComplete?: () => void
@@ -23,6 +24,7 @@ type Props = {
   confirmationModal?: boolean
   setConfirmationModal?: any
   handleClose?: any
+  isError?: boolean
 }
 
 type ListingGeneralData = {
@@ -48,6 +50,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [nextDisabled, setNextDisabled] = useState(false)
+  const [isError, setIsError] = useState(false)
 
   const [data, setData] = useState<ListingGeneralData>({
     title: { value: '', error: null },
@@ -299,12 +302,39 @@ const ListingGeneralEditModal: React.FC<Props> = ({
     }
   }, [data])
 
+  const HandleSaveError = async () => {
+    if (
+      isEmptyField(data.title.value) ||
+      !data.title.value ||
+      isEmptyField(data.page_url.value) ||
+      !data.page_url.value
+    ) {
+      setIsError(true)
+    }
+  }
+
+  useEffect(() => {
+    if (confirmationModal) {
+      HandleSaveError()
+    }
+  }, [confirmationModal])
+
+  useEffect(() => {
+    if (isError) {
+      const timer = setTimeout(() => {
+        setIsError(false)
+      }, 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [isError])
+
   if (confirmationModal) {
     return (
       <SaveModal
         handleClose={handleClose}
         handleSubmit={handleSubmit}
         setConfirmationModal={setConfirmationModal}
+        isError={isError}
       />
     )
   }
@@ -312,6 +342,10 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   return (
     <>
       <div className={styles['modal-wrapper']}>
+        <CloseIcon
+          className={styles['modal-close-icon']}
+          onClick={handleClose}
+        />
         {/* Modal Header */}
         <header className={styles['header']}>
           <h4 className={styles['heading']}>{'General'}</h4>

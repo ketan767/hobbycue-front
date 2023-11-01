@@ -18,6 +18,7 @@ import { updateUser } from '@/redux/slices/user'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
+import CloseIcon from '@/assets/icons/CloseIcon'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -33,6 +34,7 @@ const AboutEditor = dynamic(
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
+  handleClose?: any
 }
 
 type ListingAboutData = {
@@ -40,6 +42,7 @@ type ListingAboutData = {
 }
 
 const ListingAboutEditModal: React.FC<Props> = ({
+  handleClose,
   onComplete,
   onBackBtnClick,
 }) => {
@@ -152,6 +155,10 @@ const ListingAboutEditModal: React.FC<Props> = ({
   return (
     <>
       <div className={styles['modal-wrapper']}>
+        <CloseIcon
+          className={styles['modal-close-icon']}
+          onClick={handleClose}
+        />
         <label className={styles['heading']}>
           This would create a new Listing page based on your profile
         </label>

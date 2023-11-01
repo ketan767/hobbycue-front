@@ -17,6 +17,7 @@ import { closeModal } from '@/redux/slices/modal'
 import { addListingHobby, deleteListingHobby } from '@/services/listing.service'
 import { getListingHobbies } from '@/services/listing.service'
 import SaveModal from '../../SaveModal/saveModal'
+import CloseIcon from '@/assets/icons/CloseIcon'
 
 type Props = {
   onComplete?: () => void
@@ -24,6 +25,7 @@ type Props = {
   confirmationModal?: boolean
   setConfirmationModal?: any
   handleClose?: any
+  isError?: boolean
 }
 
 type DropdownListItem = {
@@ -62,6 +64,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   const [genreid, setGenreId] = useState('')
   const [hobbyInputValue, setHobbyInputValue] = useState('')
   const [genreInputValue, setGenreInputValue] = useState('')
+  const [isError, setIsError] = useState(false)
 
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     DropdownListItem[]
@@ -231,12 +234,34 @@ const ListingHobbyEditModal: React.FC<Props> = ({
       setNextDisabled(false)
     }
   }, [hobbiesList])
+  const HandleSaveError = async () => {
+    if (hobbiesList.length === 0) {
+      setIsError(true)
+    }
+  }
+
+  useEffect(() => {
+    if (confirmationModal) {
+      HandleSaveError()
+    }
+  }, [confirmationModal])
+
+  useEffect(() => {
+    if (isError) {
+      const timer = setTimeout(() => {
+        setIsError(false)
+      }, 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [isError])
+
   if (confirmationModal) {
     return (
       <SaveModal
         handleClose={handleClose}
         handleSubmit={handleSubmit}
         setConfirmationModal={setConfirmationModal}
+        isError={isError}
       />
     )
   }
@@ -244,6 +269,10 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   return (
     <>
       <div className={styles['modal-wrapper']}>
+        <CloseIcon
+          className={styles['modal-close-icon']}
+          onClick={handleClose}
+        />
         {/* Modal Header */}
         <header className={styles['header']}>
           <h4 className={styles['heading']}>{'Hobbies'}</h4>

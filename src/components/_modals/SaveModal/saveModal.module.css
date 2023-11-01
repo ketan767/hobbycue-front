@@ -23,3 +23,16 @@
   font-size: 1rem !important;
 }
 
+.modal-close-icon {
+  position: absolute;
+  top: var(--spacing-12);
+  right: var(--spacing-12);
+  cursor: pointer;
+  border-radius: 100%;
+  padding: var(--spacing-2);
+  z-index: 10;
+}
+.modal-close-icon:hover {
+  background: #ddd;
+}
+
