@@ -6,6 +6,18 @@
   display: flex;
   flex-direction: column;
 }
+.modal-close-icon {
+  position: absolute;
+  top: var(--spacing-12);
+  right: var(--spacing-12);
+  cursor: pointer;
+  border-radius: 100%;
+  padding: var(--spacing-2);
+  z-index: 10;
+}
+.modal-close-icon:hover {
+  background: #ddd;
+}
 @media screen and (min-width: 1100px) {
   .modal-wrapper{
     max-height: calc(100vh - 6rem);

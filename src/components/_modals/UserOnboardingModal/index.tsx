@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
 import { RootState } from '@/redux/store'
 import { updateMyProfileDetail } from '@/services/user.service'
-
+import CloseIcon from '@/assets/icons/CloseIcon'
 import ProfileGeneralEditModal from '../EditProfile/General'
 import ProfileAboutEditModal from '../EditProfile/About'
 import ProfileAddressEditModal from '../EditProfile/Address'
@@ -46,6 +46,9 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
 
   const router = useRouter()
   const modalRef = useRef<HTMLDivElement>(null)
+  const { activeModal, closable } = useSelector(
+    (state: RootState) => state.modal,
+  )
 
   const { user } = useSelector((state: RootState) => state.user)
 
@@ -91,19 +94,29 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
       dispatch(closeModal())
     }
   }
-  const handleOutsideClick = (event: MouseEvent) => {
-    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-      setConfirmationModal(true)
-      console.log(confirmationModal)
-    }
-  }
 
-  // Set up the event listener when the component mounts
   useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        console.log('Escape key pressed')
+        setConfirmationModal((prevState) => !prevState)
+      }
+    }
+
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        setConfirmationModal(true)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown, { capture: true })
     document.addEventListener('mousedown', handleOutsideClick)
 
-    // Clean up the event listener when the component unmounts
     return () => {
+      window.removeEventListener('keydown', handleKeyDown, { capture: true })
       document.removeEventListener('mousedown', handleOutsideClick)
     }
   }, [])
@@ -111,13 +124,17 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
   return (
     <div
       ref={modalRef}
-      className={`${styles['modal-container']} ${
+      className={`${confirmationModal ? '' : styles['modal-container']} ${
         confirmationModal ? styles['ins-active'] : ''
       }`}
     >
-      <header className={styles['header']}>
-        <h2 className={styles['modal-heading']}>Complete your User Profile</h2>
-      </header>
+      {!confirmationModal && (
+        <header className={styles['header']}>
+          <h2 className={styles['modal-heading']}>
+            Complete your User Profile
+          </h2>
+        </header>
+      )}
 
       {activeStep === 'General' && (
         <ProfileGeneralEditModal
@@ -164,21 +181,23 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
         />
       )}
 
-      <section className={styles['step-indicators']}>
-        {totalSteps.map((step, index) => {
-          const isClickable = index <= furthestStepIndex
+      {!confirmationModal && (
+        <section className={styles['step-indicators']}>
+          {totalSteps.map((step, index) => {
+            const isClickable = index <= furthestStepIndex
 
-          return (
-            <span
-              key={step}
-              className={`${styles['step']} ${
-                isClickable ? styles['active'] : ''
-              }`}
-              onClick={isClickable ? () => setActiveStep(step) : undefined}
-            ></span>
-          )
-        })}
-      </section>
+            return (
+              <span
+                key={step}
+                className={`${styles['step']} ${
+                  isClickable ? styles['active'] : ''
+                }`}
+                onClick={isClickable ? () => setActiveStep(step) : undefined}
+              ></span>
+            )
+          })}
+        </section>
+      )}
     </div>
   )
 }

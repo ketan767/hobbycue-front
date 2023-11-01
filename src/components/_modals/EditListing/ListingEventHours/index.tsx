@@ -24,6 +24,8 @@ import {
   updateListingModalData,
 } from '@/redux/slices/site'
 import SaveModal from '../../SaveModal/saveModal'
+import CloseIcon from '@/assets/icons/CloseIcon'
+
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
@@ -170,6 +172,10 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
   return (
     <>
       <div className={styles['modal-wrapper']}>
+        <CloseIcon
+          className={styles['modal-close-icon']}
+          onClick={handleClose}
+        />
         {/* Modal Header */}
         <header className={styles['header']}>
           <h4 className={styles['heading']}>{'Event Date And Time'}</h4>
