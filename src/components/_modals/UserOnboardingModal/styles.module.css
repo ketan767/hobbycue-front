@@ -20,7 +20,7 @@
 .step-indicators {
   position: absolute;
   left: 50%;
-  bottom: 30px;
+  bottom: 35px;
   transform: translateX(-50%);
 
   display: flex;
@@ -47,6 +47,6 @@
   .modal-container {
     min-height: 20rem;
     height: calc(100vh - 2rem) ;
-    max-height: 50rem;
+    max-height: 60rem;
   }
 }

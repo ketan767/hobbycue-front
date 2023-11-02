@@ -198,3 +198,15 @@
     gap: 1rem;
   }
 }
+.modal-wrapper {
+  max-height: calc(100vh - 6rem);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-wrapper .footer {
+  position: sticky;
+  bottom: 0; 
+  z-index: 10; 
+}
