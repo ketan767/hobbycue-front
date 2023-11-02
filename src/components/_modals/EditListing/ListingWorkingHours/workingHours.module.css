@@ -2,7 +2,7 @@
   background-color: white;
   border-radius: var(--spacing-8);
   max-width: 668px;
-  width: 668px;
+  width: 38rem;
   /* min-height: 30rem; */
   display: flex;
   flex-direction: column;

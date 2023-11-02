@@ -250,3 +250,7 @@ ul.seller-info-wrapper li svg:last-child {
   list-style-type: none;
   margin-bottom: 10px;
 }
+
+.errorBorder {
+  border: 1px solid #C0504D;
+}

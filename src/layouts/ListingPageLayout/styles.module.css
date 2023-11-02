@@ -56,3 +56,28 @@
  }
 
 }
+
+.customSnackbarContent {
+  background-color: #FFD6E0;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+}
+
+.customSnackbarContent .message {
+  display: flex;
+  align-items: center;
+  color: #6D747A;
+  font-weight: 500;
+  margin-right: 12px;
+}
+
+.customSnackbarContent .icon {
+  color: #FF4569;
+  margin-right: 8px;
+}
+
+.customSnackbarContent .CloseIcon {
+  color: #6D747A
+}
