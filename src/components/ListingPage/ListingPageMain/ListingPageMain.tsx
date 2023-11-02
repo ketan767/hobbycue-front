@@ -40,12 +40,24 @@ interface Props {
   data: ListingPageData['pageData']
   children: any
   hobbyError?: boolean
+  pageTypeErr?: boolean
+  AboutErr?: boolean
+  ContactInfoErr?: boolean
+  LocationErr?: boolean
   PageAdmin?: any
   full_name?: string
   profile_url?: string
 }
 
-const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
+const ListingPageMain: React.FC<Props> = ({
+  data,
+  children,
+  hobbyError,
+  pageTypeErr,
+  AboutErr,
+  ContactInfoErr,
+  LocationErr,
+}) => {
   const dispatch = useDispatch()
   const [tags, setTags] = useState([])
   const { listingLayoutMode } = useSelector((state: any) => state.site)
@@ -191,12 +203,14 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
       <PageGridLayout column={3}>
         <aside className={`custom-scrollbar ${styles['page-left-aside']}`}>
           <PageContentBox
+            className={`${pageTypeErr ? styles.errorBorder : ''} ${
+              styles['page-type-container']
+            }`}
             showEditButton={listingLayoutMode === 'edit'}
             onEditBtnClick={() => {
               dispatch(openModal({ type: 'listing-type-edit', closable: true }))
               dispatch(updateListingTypeModalMode({ mode: 'edit' }))
             }}
-            className={styles['page-type-container']}
           >
             {data.page_type.map((type: any, idx: any) => {
               return (
@@ -227,6 +241,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
           </PageContentBox>
           {/* Listing Hobbies */}
           <PageContentBox
+            className={hobbyError ? styles.errorBorder : ''}
             showEditButton={listingLayoutMode === 'edit'}
             onEditBtnClick={() =>
               dispatch(
@@ -235,7 +250,6 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
             }
           >
             <h4 className={styles['heading']}>Hobbies</h4>
-            {hobbyError && <span>Error: No hobby found!</span>}
             {!data || data._hobbies.length === 0 ? (
               <span className={styles.textGray}>{'No Hobbies!'}</span>
             ) : (
@@ -344,6 +358,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
         <aside>
           {/* User Contact Details */}
           <PageContentBox
+            className={ContactInfoErr ? styles.errorBorder : ''}
             showEditButton={listingLayoutMode === 'edit'}
             onEditBtnClick={() =>
               dispatch(
@@ -650,6 +665,7 @@ const ListingPageMain: React.FC<Props> = ({ data, children, hobbyError }) => {
 
           {/* User Location Details */}
           <PageContentBox
+            className={LocationErr ? styles.errorBorder : ''}
             showEditButton={listingLayoutMode === 'edit'}
             onEditBtnClick={() =>
               dispatch(

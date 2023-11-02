@@ -20,9 +20,10 @@ import ListingPostsTab from '../ListingPagePosts/ListingPagePosts'
 
 interface Props {
   data: ListingPageData['pageData']
+  AboutErr?: boolean
 }
 
-const ListingHomeTab: React.FC<Props> = ({ data }) => {
+const ListingHomeTab: React.FC<Props> = ({ data, AboutErr }) => {
   // console.log('🚀 ~ file: ListingHomeTab.tsx:17 ~ data:', data)
   const dispatch = useDispatch()
   const [pagesData, setPagesData] = useState([])
@@ -55,6 +56,7 @@ const ListingHomeTab: React.FC<Props> = ({ data }) => {
       <main>
         {/* User About */}
         <PageContentBox
+          className={AboutErr ? styles.errorBorder : ''}
           showEditButton={listingLayoutMode === 'edit'}
           onEditBtnClick={() =>
             dispatch(openModal({ type: 'listing-about-edit', closable: true }))

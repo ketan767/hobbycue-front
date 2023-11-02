@@ -13,19 +13,34 @@ import { updateListingLayoutMode } from '@/redux/slices/site'
 import ListingHeaderSmall from '@/components/ListingPage/ListingHeader/ListingHeaderSmall'
 import { error } from 'console'
 import { getListingPages } from '@/services/listing.service'
+import Snackbar from '@mui/material/Snackbar'
+import SnackbarContent from '@mui/material/SnackbarContent'
+import IconButton from '@mui/material/IconButton'
+import WarningIcon from '@mui/icons-material/Warning'
+import CloseIcon from '@mui/icons-material/Close'
 
 interface Props {
   activeTab: ListingPageTabs
   data: ListingPageData['pageData']
-  children: React.ReactElement<{ hobbyError?: boolean }>
-  hobbyError?: boolean
+  children: React.ReactElement<{
+    hobbyError?: boolean
+    pageTypeErr?: boolean
+    AboutErr?: boolean
+    ContactInfoErr?: boolean
+    LocationErr?: boolean
+  }>
 }
 
 const ListingPageLayout: React.FC<Props> = ({ data, children, activeTab }) => {
   const router = useRouter()
   const dispatch = useDispatch()
   const [showSmallHeader, setShowSmallHeader] = useState(false)
+  const [pageTypeErr, setpageTypeErr] = useState(false)
   const [hobbyError, setHobbyError] = useState(false)
+  const [AboutErr, setHAboutErr] = useState(false)
+  const [ContactInfoErr, setContactInfoErr] = useState(false)
+  const [LocationErr, setLocationErr] = useState(false)
+  const [snackBarOpen, setSnackBarOpen] = useState(false)
 
   function checkScroll() {
     const scrollValue = window.scrollY || document.documentElement.scrollTop
@@ -34,12 +49,46 @@ const ListingPageLayout: React.FC<Props> = ({ data, children, activeTab }) => {
     else setShowSmallHeader(false)
   }
   const navigationTabs = (tab: any) => {
+    let hasError = false
+
+    setHobbyError(false)
+    setpageTypeErr(false)
+    setHAboutErr(false)
+    setContactInfoErr(false)
+    setLocationErr(false)
+
     if (data.pageData._hobbies.length === 0) {
       setHobbyError(true)
-    } else {
+      hasError = true
+    }
+    if (data.pageData.page_type.length === 0) {
+      setpageTypeErr(true)
+      hasError = true
+    }
+    if (data.pageData._hobbies.length === 0) {
+      setHAboutErr(true)
+      hasError = true
+    }
+    if (!data.pageData.phone && !data.pageData.public_email) {
+      setContactInfoErr(true)
+      hasError = true
+    }
+    if (!data.pageData._address.city) {
+      setLocationErr(true)
+      hasError = true
+    }
+
+    if (!hasError) {
       router.push(`/page/${router.query.page_url}/${tab !== 'home' ? tab : ''}`)
+    } else {
+      setSnackBarOpen(true)
     }
   }
+
+  const handleCloseSnackBar = () => {
+    setSnackBarOpen(false)
+  }
+
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
@@ -86,11 +135,16 @@ const ListingPageLayout: React.FC<Props> = ({ data, children, activeTab }) => {
   let content
 
   if (React.isValidElement(children) && typeof children.type !== 'string') {
-    content = React.cloneElement(children, { hobbyError: hobbyError })
+    content = React.cloneElement(children, {
+      hobbyError,
+      pageTypeErr,
+      AboutErr,
+      ContactInfoErr,
+      LocationErr,
+    })
   } else {
     content = children
   }
-
   return (
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
@@ -116,7 +170,42 @@ const ListingPageLayout: React.FC<Props> = ({ data, children, activeTab }) => {
       </nav>
 
       {/* Profile Page Body, where all contents of different tabs appears. */}
-      <main>{children}</main>
+      <main>
+        {React.cloneElement(children, {
+          hobbyError,
+          pageTypeErr,
+          AboutErr,
+          ContactInfoErr,
+          LocationErr,
+        })}
+      </main>
+      {/* Snackbar component */}
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        open={snackBarOpen}
+        onClose={handleCloseSnackBar}
+        key={'bottom' + 'left'}
+        className={styles.customSnackbar}
+      >
+        <SnackbarContent
+          className={styles.customSnackbarContent}
+          message={
+            <span className={styles.message}>
+              <WarningIcon className={styles.icon} />
+              Fill up the mandatory fields.
+            </span>
+          }
+          action={[
+            <IconButton
+              key="close"
+              className={styles.CloseIcon}
+              onClick={handleCloseSnackBar}
+            >
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
+      </Snackbar>
     </>
   )
 }

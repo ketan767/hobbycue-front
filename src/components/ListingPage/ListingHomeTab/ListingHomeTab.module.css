@@ -136,3 +136,6 @@ ul.seller-info-wrapper li svg:last-child {
 .about-text ul{
   padding-left: 1rem;
 }
+.errorBorder {
+  border: 1px solid #C0504D;
+}
