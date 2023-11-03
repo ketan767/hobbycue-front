@@ -314,7 +314,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
         const { results } = response.data
         console.log('response', response)
         if (results && results.length > 0) {
-          const { formatted_address, address_components } = results[0]
+          const { formatted_address, address_components, geometry } = results[0]
           let locality = ''
           let society = ''
           let city = ''
@@ -342,6 +342,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
               pin_code = component.long_name
             }
           })
+
           setData((prev: any) => {
             return {
               ...prev,
@@ -352,6 +353,8 @@ const ListingAddressEditModal: React.FC<Props> = ({
               pin_code: { value: pin_code, error: null },
               society: { value: society, error: null },
               locality: { value: locality, error: null },
+              latitude: { value: geometry.location.lat, error: null },
+              longitude: { value: geometry.location.lng, error: null },
             }
           })
         }
