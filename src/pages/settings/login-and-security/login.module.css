@@ -88,13 +88,18 @@
 }
 .google-image{
   position: relative;
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
 }
+
+.google-image img {
+  border-radius: 100%;
+}
+
 .google-icon{
   position: absolute;
   width: 10px;
   height: 10px;
-  top:10px;
-  left: 10px;
+  top:14px;
+  left: 18px;
 }

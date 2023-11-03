@@ -39,64 +39,90 @@ export type ModalType =
   | 'add-location'
   | 'user-address-edit'
   | 'CopyProfileDataModal'
+  | 'VerifyActionModal'
+  | 'SetPasswordModal'
 
-interface ModalState {
-  activeModal: ModalType
-  closable: boolean
-  onModalClose?: (() => void) | null
-  authFormData: { email: string; password: string; rememberMe: boolean },
-  forgotPasswordEmail: string
-  shareUrl : string
-  saveFunction: (() => void) | null;
-}
-
-const initialState: ModalState = {
-  activeModal: null,
-  closable: true,
-  authFormData: {
-    email: '',
-    password: '',
-    rememberMe: false,
-  },
-  forgotPasswordEmail: "",
-  shareUrl: '',
-  saveFunction: null
-}
-
-const modalSlice = createSlice({
-  name: 'modal',
-  initialState,
-  reducers: {
-    openModal(
-      state,
-      action: PayloadAction<{ type: ModalType; closable: boolean; onModalClose?: () => void }>,
-    ) {
-      state.activeModal = action.payload.type
-      state.closable = action.payload.closable
-      state.onModalClose = action.payload.onModalClose
+  interface ModalState {
+    activeModal: ModalType
+    closable: boolean
+    onModalClose?: (() => void) | null
+    authFormData: { email: string; password: string; rememberMe: boolean }
+    forgotPasswordEmail: string
+    shareUrl: string
+    onVerify?: (() => void) | null
+    verified?: boolean
+  }
+  
+  const initialState: ModalState = {
+    activeModal: null,
+    closable: true,
+    authFormData: {
+      email: '',
+      password: '',
+      rememberMe: false,
     },
-    closeModal(state) {
-      state.activeModal = null
-      state.closable = true
-      if (state.onModalClose) {
-      state.onModalClose()
-       }
+    forgotPasswordEmail: "",
+    shareUrl: '',
+    onVerify: null,
+    verified: false
+  }
+  
+  const modalSlice = createSlice({
+    name: 'modal',
+    initialState,
+    reducers: {
+      openModal(
+        state,
+        action: PayloadAction<{
+          type: ModalType;
+          closable: boolean;
+          onModalClose?: () => void;
+          onVerify?: () => void; // Callback when verification is successful
+        }>
+      ) {
+        state.activeModal = action.payload.type
+        state.closable = action.payload.closable
+        state.onModalClose = action.payload.onModalClose
+        state.onVerify = action.payload.onVerify
+        state.verified = false
+      },
+      setVerified(state, action: PayloadAction<boolean>) {
+        state.verified = action.payload
+        if (state.verified && state.onVerify) {
+          state.onVerify()
+        }
+      },
+      closeModal(state) {
+        state.activeModal = null
+        state.closable = true
+        state.onVerify = null
+        if (state.onModalClose) {
+          state.onModalClose()
+        }
+      },
+      updateAuthFormData(state, { payload }) {
+        state.authFormData = payload
+      },
+      resetAuthFormData(state) {
+        state.authFormData = { email: '', password: '', rememberMe: false }
+      },
+      updateForgotPasswordEmail(state, { payload }) {
+        state.forgotPasswordEmail = payload
+      },
+      updateShareUrl(state, { payload }) {
+        state.shareUrl = payload
+      },
     },
-    updateAuthFormData(state, { payload }) {
-      state.authFormData = payload
-    },
-    resetAuthFormData(state) {
-      state.authFormData = { email: '', password: '', rememberMe: false }
-    },
-    updateForgotPasswordEmail(state, { payload }) {
-      state.forgotPasswordEmail = payload
-    },
-    updateShareUrl(state, { payload }) {
-      state.shareUrl = payload
-    },
-  },
-})
-
-export const { openModal, closeModal, updateAuthFormData, resetAuthFormData, updateForgotPasswordEmail, updateShareUrl} = modalSlice.actions
-
-export default modalSlice.reducer
+  })
+  
+  export const {
+    openModal,
+    closeModal,
+    updateAuthFormData,
+    resetAuthFormData,
+    updateForgotPasswordEmail,
+    updateShareUrl,
+    setVerified
+  } = modalSlice.actions
+  
+  export default modalSlice.reducer

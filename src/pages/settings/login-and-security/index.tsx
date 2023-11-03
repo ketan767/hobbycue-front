@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './login.module.css'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import SettingsSidebar from '@/layouts/SettingsSidebar/SettingsSidebar'
@@ -30,6 +30,8 @@ type Props = {}
 const LoginAndSecurity: React.FC<Props> = ({}) => {
   const { user } = useSelector((state: RootState) => state.user)
   const dispatch = useDispatch()
+  const [isDisGoogleVerified, setisDisGoogleVerified] = useState(false)
+  const [isDisFaceBookVerified, setisDisFaceBookVerified] = useState(false)
   console.log(user)
   const openChangePasswordModal = () => {
     dispatch(openModal({ type: 'change-password', closable: true }))
@@ -77,23 +79,57 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
       window.location.reload()
     }
   }
-  const handleGoogleDisconnect = async () => {
-    const { err, res } = await disconnectGoogle({})
-    if (err) {
-      return console.log(err)
+
+  const handleGoogleDisconnect = () => {
+    if (!isDisGoogleVerified) {
+      dispatch(
+        openModal({
+          type: 'VerifyActionModal',
+          closable: true,
+          onVerify: () => setisDisGoogleVerified(true),
+        }),
+      )
     }
-    console.log(res.data)
-    window.location.reload()
   }
+  useEffect(() => {
+    const disconnectGoogleAsync = async () => {
+      if (isDisGoogleVerified) {
+        const { err, res } = await disconnectGoogle({})
+        if (err) {
+          return console.log(err)
+        }
+        console.log(res.data)
+        window.location.reload()
+      }
+    }
+    disconnectGoogleAsync()
+  }, [isDisGoogleVerified, dispatch])
 
   const handleFacebookDisconnect = async () => {
-    const { err, res } = await disconnectFacebook({})
-    if (err) {
-      return console.log(err)
+    if (!isDisFaceBookVerified) {
+      dispatch(
+        openModal({
+          type: 'VerifyActionModal',
+          closable: true,
+          onVerify: () => setisDisFaceBookVerified(true),
+        }),
+      )
     }
-    console.log(res.data)
-    window.location.reload()
   }
+
+  useEffect(() => {
+    const disconnectFaceBookAsync = async () => {
+      if (isDisFaceBookVerified) {
+        const { err, res } = await disconnectFacebook({})
+        if (err) {
+          return console.log(err)
+        }
+        console.log(res.data)
+        window.location.reload()
+      }
+    }
+    disconnectFaceBookAsync()
+  }, [isDisFaceBookVerified, dispatch])
 
   const openForgotPasswordEmail = () => {
     dispatch(openModal({ type: 'confirm-email', closable: true }))
@@ -134,8 +170,8 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
               <div className={styles['google-image']}>
                 <Image
                   src={user.google.picture}
-                  width={20}
-                  height={20}
+                  width={30}
+                  height={30}
                   alt="google"
                 />
                 <div className={styles['google-icon']}>
@@ -143,12 +179,12 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
                     src={GoogleIcon}
                     width={10}
                     height={10}
-                    alt="google Image"
+                    alt="google Icon"
                   />
                 </div>
               </div>
             ) : (
-              <Image src={GoogleIcon} width={20} height={20} alt="google" />
+              <Image src={GoogleIcon} width={30} height={30} alt="google" />
             )}
             <p className={styles.socialLoginText}>Connect with Google</p>
             {!user.google?.id ? (
@@ -180,8 +216,8 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
               <div className={styles['google-image']}>
                 <Image
                   src={user.facebook.picture}
-                  width={20}
-                  height={20}
+                  width={30}
+                  height={30}
                   alt="facebook"
                 />
                 <div className={styles['google-icon']}>
@@ -194,7 +230,7 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
                 </div>
               </div>
             ) : (
-              <Image src={FacebookIcon} width={20} height={20} alt="google" />
+              <Image src={FacebookIcon} width={30} height={30} alt="google" />
             )}
 
             <p className={styles.socialLoginText}>Connect with Facebook</p>
