@@ -40,6 +40,9 @@ import EmailSentModal from './EmailSent/EmailSent'
 import ResetPasswordModal from './ResetPassword/ResetPassword'
 import ShareModal from './ShareModal/ShareModal'
 import ClaimModal from './ClaimModal/ClaimModal'
+import VerifyActionModal from './VerifyAction/VerifyAction'
+import SetPasswordModal from './CreatePassword'
+
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
 }
@@ -226,6 +229,8 @@ const ModalManager: React.FC = () => {
                   editLocation={true}
                 />
               )}
+              {activeModal === 'VerifyActionModal' && <VerifyActionModal />}
+              {activeModal === 'SetPasswordModal' && <SetPasswordModal />}
               {/* Modal Close Icon */}
               {closable && (
                 <CloseIcon

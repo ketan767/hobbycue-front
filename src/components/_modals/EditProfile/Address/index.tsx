@@ -529,7 +529,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         const { results } = response.data
         console.log('response', response)
         if (results && results.length > 0) {
-          const { formatted_address, address_components } = results[0]
+          const { formatted_address, address_components, geometry } = results[0]
           let society = data.society
           let locality = data.locality
           let city = data.city
@@ -567,6 +567,10 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               pin_code: data.pin_code ? data.pin_code : pin_code,
               locality: data.locality ? data.locality : locality,
               society: data.society ? data.society : society,
+              latitude: data.latitude ? data.latitude : geometry.location.lat,
+              longitude: data.longitude
+                ? data.longitude
+                : geometry.location.lng,
             }
           })
         }
