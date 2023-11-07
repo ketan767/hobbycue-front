@@ -21,14 +21,12 @@ const sidebarItems = [
     link: '/settings/localization-and-payments',
   },
   {
-    text: 'Data & Others',
+    text: 'Account & Data',
     link: '/settings/data-and-others',
   },
 ]
 
 const SettingsSidebar: React.FC<Props> = ({ active }) => {
-
-
   return (
     <>
       <div className={styles.sidebarContainer}>

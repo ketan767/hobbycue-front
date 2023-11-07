@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
+import { useRouter } from 'next/router'
 import {
   getMyProfileDetail,
   updateMyProfileDetail,
@@ -60,6 +61,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
     year: { value: '', error: null },
     admin_note: { value: '', error: null },
   })
+  const router = useRouter()
   const fullNameRef = useRef<HTMLInputElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const pageUrlRef = useRef<HTMLInputElement>(null)
@@ -188,7 +190,8 @@ const ListingGeneralEditModal: React.FC<Props> = ({
         dispatch(updateListingModalData(res.data.data.listing))
         if (onComplete) onComplete()
         else {
-          window.location.reload()
+          const newUrl = `/page/${data.page_url.value}`
+          window.location.href = newUrl
           dispatch(closeModal())
         }
       }

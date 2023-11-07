@@ -138,7 +138,8 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
       dispatch(updateUser(response?.data.data.user))
       if (onComplete) onComplete()
       else {
-        window.location.reload()
+        const newUrl = `/profile/${data.profile_url}`
+        window.location.href = newUrl
         dispatch(closeModal())
       }
     }

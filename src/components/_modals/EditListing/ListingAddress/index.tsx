@@ -243,21 +243,10 @@ const ListingAddressEditModal: React.FC<Props> = ({
       latitude: { value: res?.data.data.address.latitude, error: null },
       longitude: { value: res?.data.data.address.longitude, error: null },
     })
+    setDataLoaded(true)
   }
 
   useEffect(() => {
-    setDataLoaded(true)
-    setData({
-      street: { value: '', error: null },
-      society: { value: '', error: null },
-      locality: { value: '', error: null },
-      city: { value: '', error: null },
-      pin_code: { value: '', error: null },
-      state: { value: '', error: null },
-      country: { value: '', error: null },
-      latitude: { value: '', error: null },
-      longitude: { value: '', error: null },
-    })
     updateAddress()
   }, [user])
 
@@ -293,6 +282,12 @@ const ListingAddressEditModal: React.FC<Props> = ({
   useEffect(() => {
     if (dataLoaded) {
       if (
+        !data.street.value ||
+        data.street.value === '' ||
+        !data.society.value ||
+        data.society.value === '' ||
+        !data.locality.value ||
+        data.locality.value === '' ||
         !data.city.value ||
         data.city.value === '' ||
         !data.state ||

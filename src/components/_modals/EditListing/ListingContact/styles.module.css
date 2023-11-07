@@ -87,7 +87,7 @@
 }
 
 .input-box-admin input[type='text']{
-  background: rgb(255, 255, 255);
+  background: #f8f9fa;
   cursor: not-allowed;
 }
 

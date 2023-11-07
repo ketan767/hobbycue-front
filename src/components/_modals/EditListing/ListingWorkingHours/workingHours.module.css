@@ -31,6 +31,7 @@
   }
 }
 .delete-icon{
+  margin-top: 7px;
   cursor: pointer;
   margin-left: 1rem;
 }
@@ -224,12 +225,15 @@
 .listSubItem {
   display: flex;
   flex-direction: column;
-  padding: 0 16px;
+  padding: 0 8px;
+  width: 134px;
 }
 
 .listSubItem:first-child {
   padding-left: 0;
+  width: 118px;
 }
+
 
 .listSubItem:nth-child(3) select {
   color: #000000;
