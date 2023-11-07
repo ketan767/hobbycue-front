@@ -24,6 +24,7 @@ const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
     fontWeight: 400,
     lineHeight: '14px',
     letterSpacing: '0.14px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.12)',
   },
 }))
 

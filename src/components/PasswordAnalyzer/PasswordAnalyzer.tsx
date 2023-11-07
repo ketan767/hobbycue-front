@@ -26,7 +26,7 @@ const PasswordAnalyzer: React.FC<Props> = ({ strength }) => {
         {strength >= 3
           ? 'Strong password'
           : strength === 2
-          ? 'Could be strong'
+          ? 'Could be stronger'
           : 'Too weak'}
       </p>
     </div>

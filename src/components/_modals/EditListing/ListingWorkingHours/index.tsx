@@ -45,47 +45,39 @@ type ListingAddressData = {
 }
 const initialWorkingHour = [
   {
-    fromDay: 'Monday',
-    toDay: 'Friday',
-    fromTime: '8:00 am',
-    toTime: '9:00 pm',
+    fromDay: 'Mon',
+    toDay: 'Fri',
+    fromTime: '8:00am',
+    toTime: '9:00pm',
   },
 ]
-const days = [
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-  'Sunday',
-]
+const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 const timings = [
-  '12:00 am',
-  '1:00 am',
-  '2:00 am',
-  '3:00 am',
-  '4:00 am',
-  '5:00 am',
-  '6:00 am',
-  '7:00 am',
-  '8:00 am',
-  '9:00 am',
-  '10:00 am',
-  '11:00 am',
-  '12:00 am',
-  '1:00 pm',
-  '2:00 pm',
-  '3:00 pm',
-  '4:00 pm',
-  '5:00 pm',
-  '6:00 pm',
-  '7:00 pm',
-  '8:00 pm',
-  '9:00 pm',
-  '10:00 pm',
-  '11:00 pm',
-  '12:00 pm',
+  '12:00am',
+  '1:00am',
+  '2:00am',
+  '3:00am',
+  '4:00am',
+  '5:00am',
+  '6:00am',
+  '7:00am',
+  '8:00am',
+  '9:00am',
+  '10:00am',
+  '11:00am',
+  '12:00am',
+  '1:00pm',
+  '2:00pm',
+  '3:00pm',
+  '4:00pm',
+  '5:00pm',
+  '6:00pm',
+  '7:00pm',
+  '8:00pm',
+  '9:00pm',
+  '10:00pm',
+  '11:00pm',
+  '12:00pm',
 ]
 const ListingWorkingHoursEditModal: React.FC<Props> = ({
   onComplete,
@@ -309,12 +301,14 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
                       }
                     />
                   </div>
-                  <Image
-                    src={DeleteIcon}
-                    alt="delete"
-                    className={styles['delete-icon']}
-                    onClick={() => handleDelete(idx)}
-                  />
+                  <div>
+                    <Image
+                      src={DeleteIcon}
+                      alt="delete"
+                      className={styles['delete-icon']}
+                      onClick={() => handleDelete(idx)}
+                    />
+                  </div>
                 </div>
               )
             })}

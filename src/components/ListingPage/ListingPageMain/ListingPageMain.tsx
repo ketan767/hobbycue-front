@@ -36,9 +36,7 @@ import DirectionIcon from '@/assets/svg/direction.svg'
 import DefaultPageImage from '@/assets/svg/default-images/default-people-listing-icon.svg'
 import OthersIcon from '@/assets/svg/other.svg'
 import dynamic from 'next/dynamic'
-const MapWithNoSSR = dynamic(() => import('./../../Gmap'), {
-  ssr: false,
-})
+import MapComponent from '@/components/Gmap'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -73,8 +71,8 @@ const ListingPageMain: React.FC<Props> = ({
   const [relation, setRelation] = useState('')
   const [relationRight, setRelationRight] = useState('')
   const [PageAdmin, setPageAdmin] = useState(null)
-  const lat = data._address.latitude
-  const lng = data._address.longitude
+  const lat = parseFloat(data._address.latitude)
+  const lng = parseFloat(data._address.longitude)
   function renderSocialLink(url: any, iconSrc: any, altText: any) {
     if (!url) return null
     return (
@@ -765,7 +763,7 @@ const ListingPageMain: React.FC<Props> = ({
                 </li>
               )}
             </ul>
-            <MapWithNoSSR lat={lat} lng={lng} />
+            <MapComponent lat={lat} lng={lng} />
           </PageContentBox>
           {data?.type === listingTypes.PLACE && (
             <PageContentBox
