@@ -55,6 +55,7 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [showCrmPassword, setShowCrmPassword] = useState(false)
   const [showcurrPassword, setShowcurrPassword] = useState(false)
   const [showValidations, setShowValidations] = useState(false)
   const [inputValidation, setInputValidation] = useState(
@@ -279,12 +280,25 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
                 errors.confirmPassword ? styles['input-error'] : ''
               }`}
             >
-              <input
+              <TextField
                 value={confirmPassword}
+                type={showCrmPassword ? 'text' : 'password'}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className={styles.input}
                 placeholder="Confirm New Password"
                 ref={confirmPasswordRef}
+                InputProps={{
+                  endAdornment: (
+                    <IconButton
+                      onClick={() => setShowCrmPassword(!showCrmPassword)}
+                    >
+                      {showCrmPassword ? (
+                        <VisibilityRoundedIcon />
+                      ) : (
+                        <VisibilityOffRoundedIcon />
+                      )}
+                    </IconButton>
+                  ),
+                }}
               />
               <p className={styles['helper-text']}>{errors.confirmPassword}</p>
             </div>
