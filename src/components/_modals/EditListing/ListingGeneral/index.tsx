@@ -297,14 +297,20 @@ const ListingGeneralEditModal: React.FC<Props> = ({
     }
   }, [data.title])
 
+  const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
-    if (isEmpty(data.title.value) || isEmpty(data.page_url.value)) {
-      // setNextDisabled(true)
-    } else {
-      setNextDisabled(false)
+    const handleKeyPress = (event: any) => {
+      if (event.key === 'Enter') {
+        nextButtonRef.current?.focus()
+      }
     }
-  }, [data])
 
+    window.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [])
   const HandleSaveError = async () => {
     if (
       isEmptyField(data.title.value) ||
@@ -523,6 +529,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
           )}
 
           <button
+            ref={nextButtonRef}
             className="modal-footer-btn submit"
             onClick={handleSubmit}
             disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}

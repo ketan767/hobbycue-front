@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from './workingHours.module.css'
 import { Button, CircularProgress } from '@mui/material'
 import {
@@ -221,6 +221,21 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
     )
     setWorkingHoursData(updatedData)
   }
+
+  const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  useEffect(() => {
+    const handleKeyPress = (event: any) => {
+      if (event.key === 'Enter') {
+        nextButtonRef.current?.focus()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [])
   if (confirmationModal) {
     return (
       <SaveModal
@@ -326,6 +341,7 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
           )}
 
           <button
+            ref={nextButtonRef}
             className="modal-footer-btn submit"
             onClick={handleSubmit}
             disabled={submitBtnLoading}
