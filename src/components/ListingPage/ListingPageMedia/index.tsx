@@ -16,6 +16,7 @@ import ListingPageCard from '@/components/ListingPageCard/ListingPageCard'
 import PostCard from '@/components/PostCard/PostCard'
 import EditIcon from '@/assets/svg/edit-icon.svg'
 import { uploadImage } from '@/services/post.service'
+import ReactPlayer from 'react-player'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -147,14 +148,20 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
         <PageGridLayout column={2}>
           {listingModalData?.video_url && (
             <div>
-              <video
+              {/* <video
                 width="250"
                 height="240"
                 controls={true}
                 className={styles.video}
               >
                 <source src={listingModalData?.video_url} type="video/mp4" />
-              </video>
+              </video> */}
+              <ReactPlayer
+                width="100%"
+                height="100%"
+                url={listingModalData?.video_url}
+                controls={true}
+              />
             </div>
           )}
           {listingModalData.images?.map((item: any, idx) => {
