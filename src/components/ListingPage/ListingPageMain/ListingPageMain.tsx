@@ -720,7 +720,7 @@ const ListingPageMain: React.FC<Props> = ({
                         data?._address.street
                           ? data._address.street
                               .split(' ')
-                              .slice(0, 4)
+                              .slice(0, 2)
                               .join(' ')
                           : ''
                       }
@@ -728,11 +728,16 @@ const ListingPageMain: React.FC<Props> = ({
                     ${
                       data?._address.society ? data._address.society + ',' : ''
                     } 
+                    ${
+                      data?._address.locality
+                        ? data._address.locality + ','
+                        : ''
+                    } 
                     ${data?._address.city ? data._address.city + ',' : ''} 
                     ${data?._address.state ? data._address.state + ',' : ''} 
-                    ${data?._address.country || ''}
+                    ${data?._address.country ? data._address.country : ''}
                     ${
-                      data?.address?.pin_code
+                      data?._address?.pin_code
                         ? ' - ' + data?._address?.pin_code
                         : ''
                     }`}
@@ -750,11 +755,16 @@ const ListingPageMain: React.FC<Props> = ({
                     ${
                       data?._address.society ? data._address.society + ',' : ''
                     } 
+                    ${
+                      data?._address.locality
+                        ? data._address.locality + ','
+                        : ''
+                    } 
                     ${data?._address.city ? data._address.city + ',' : ''} 
                     ${data?._address.state ? data._address.state + ',' : ''} 
-                    ${data?._address.country || ''}
+                    ${data?._address.country ? data._address.country : ''}
                     ${
-                      data?.address?.pin_code
+                      data?._address?.pin_code
                         ? ' - ' + data?._address?.pin_code
                         : ''
                     }`}
