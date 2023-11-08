@@ -187,6 +187,21 @@ const ListingTypeEditModal: React.FC<Props> = ({
     }
   }, [isError])
 
+  const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  useEffect(() => {
+    const handleKeyPress = (event: any) => {
+      if (event.key === 'Enter') {
+        nextButtonRef.current?.focus()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [])
+
   if (confirmationModal) {
     return (
       <SaveModal
@@ -292,7 +307,11 @@ const ListingTypeEditModal: React.FC<Props> = ({
                 Back
               </Button>
             )}
-            <button className="modal-footer-btn submit" onClick={handleSubmit}>
+            <button
+              ref={nextButtonRef}
+              className="modal-footer-btn submit"
+              onClick={handleSubmit}
+            >
               {submitBtnLoading ? (
                 <CircularProgress color="inherit" size={'22px'} />
               ) : listingTypeModalMode === 'edit' ? (
