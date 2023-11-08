@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
 import {
@@ -225,15 +225,20 @@ const ListingHobbyEditModal: React.FC<Props> = ({
     updateHobbyList()
   }, [])
 
+  const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
-    if (!hobbiesList) {
-      // setNextDisabled(true)
-    } else if (hobbiesList.length === 0) {
-      // setNextDisabled(true)
-    } else {
-      setNextDisabled(false)
+    const handleKeyPress = (event: any) => {
+      if (event.key === 'Enter') {
+        nextButtonRef.current?.focus()
+      }
     }
-  }, [hobbiesList])
+
+    window.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [])
   const HandleSaveError = async () => {
     if (hobbiesList.length === 0) {
       setIsError(true)
@@ -444,6 +449,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
           )}
 
           <button
+            ref={nextButtonRef}
             className="modal-footer-btn submit"
             onClick={handleSubmit}
             disabled={nextDisabled}
