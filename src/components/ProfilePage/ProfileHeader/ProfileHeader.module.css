@@ -113,8 +113,9 @@
 /* Navigation Tabs */
 .navigation-tabs {
   display: flex;
-  gap: 60px;
-  justify-content: center;
+  margin-left: 391px;
+  gap: 38px;
+  justify-content: flex-start;
   margin-top: 14px;
   position: sticky;
   min-height: 40px;

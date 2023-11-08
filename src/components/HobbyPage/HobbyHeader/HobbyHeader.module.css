@@ -88,9 +88,11 @@
 
 .navigation-links {
   display: flex;
-  gap: 30px;
+  margin-left: 391px;
+  gap: 38px;
+  justify-content: flex-start;
   margin-top: 14px;
-  justify-content: center;
+
   background-color: white;
   position: sticky;
   min-height: 40px;
