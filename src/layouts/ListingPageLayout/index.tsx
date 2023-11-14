@@ -16,8 +16,9 @@ import { getListingPages } from '@/services/listing.service'
 import Snackbar from '@mui/material/Snackbar'
 import SnackbarContent from '@mui/material/SnackbarContent'
 import IconButton from '@mui/material/IconButton'
-import WarningIcon from '@mui/icons-material/Warning'
+import WarningIcon from '@/assets/svg/warning-icon.svg'
 import CloseIcon from '@mui/icons-material/Close'
+import Image from 'next/image'
 
 interface Props {
   activeTab: ListingPageTabs
@@ -191,7 +192,7 @@ const ListingPageLayout: React.FC<Props> = ({ data, children, activeTab }) => {
           className={styles.customSnackbarContent}
           message={
             <span className={styles.message}>
-              <WarningIcon className={styles.icon} />
+              <Image src={WarningIcon} alt="Warning" width={40} height={40} />
               Fill up the mandatory fields.
             </span>
           }
