@@ -20,15 +20,15 @@ const PostCardSkeletonLoading: React.FC<Props> = () => {
             <rect x="47" y="7" rx="3" ry="3" width="133" height="13" />
             <rect x="48" y="26" rx="3" ry="3" width="87" height="8" />
             <circle cx="20" cy="23" r="20" />
-            <rect x="5" y="60" rx="5" ry="5" width="510" height="8" />
-            <rect x="5" y="75" rx="5" ry="5" width="510" height="8" />
-            <rect x="5" y="90" rx="5" ry="5" width="510" height="8" />
-            <rect x="5" y="105" rx="5" ry="5" width="510" height="8" />
-            <rect x="5" y="120" rx="5" ry="5" width="510" height="8" />
-            <rect x="5" y="135" rx="5" ry="5" width="510" height="8" />
-            <rect x="5" y="150" rx="5" ry="5" width="510" height="8" />
-            <rect x="5" y="165" rx="5" ry="5" width="510" height="8" />
-            <rect x="5" y="180" rx="5" ry="5" width="400" height="8" />
+            <rect x="5" y="60" rx="5" ry="5" width="680" height="8" />
+            <rect x="5" y="75" rx="5" ry="5" width="680" height="8" />
+            <rect x="5" y="90" rx="5" ry="5" width="680" height="8" />
+            <rect x="5" y="105" rx="5" ry="5" width="680" height="8" />
+            <rect x="5" y="120" rx="5" ry="5" width="680" height="8" />
+            <rect x="5" y="135" rx="5" ry="5" width="680" height="8" />
+            <rect x="5" y="150" rx="5" ry="5" width="680" height="8" />
+            <rect x="5" y="165" rx="5" ry="5" width="680" height="8" />
+            <rect x="5" y="180" rx="5" ry="5" width="580" height="8" />
 
             <circle cx="130" cy="245" r="15" />
             <rect x="0" y="230" rx="17" ry="17" width="107" height="30" />
