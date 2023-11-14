@@ -508,12 +508,9 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   useEffect(() => {
     if (dataLoaded) {
       if (
-        !data.city ||
-        data.city === '' ||
-        !data.state ||
-        data.state === '' ||
-        !data.country ||
-        data.country === ''
+        (!data.city || data.city === '') &&
+        (!data.state || data.state === '') &&
+        (!data.country || data.country === '')
       ) {
         getLocation()
       }
