@@ -59,6 +59,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [dataLoaded, setDataLoaded] = useState(false)
   const [isError, setIsError] = useState(false)
+  const [fetchLocation, setFetchLocation] = useState(false)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -250,18 +251,6 @@ const ListingAddressEditModal: React.FC<Props> = ({
     updateAddress()
   }, [user])
 
-  useEffect(() => {
-    if (
-      isEmpty(data.state.value) ||
-      isEmpty(data.city.value) ||
-      isEmpty(data.country.value)
-    ) {
-      // setNextDisabled(true)
-    } else {
-      setNextDisabled(false)
-    }
-  }, [data])
-
   const getLocation = () => {
     //Get latitude and longitude;
     const successFunction = (position: any) => {
@@ -280,22 +269,19 @@ const ListingAddressEditModal: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    if (dataLoaded) {
-      if (
-        !data.street.value ||
-        data.street.value === '' ||
-        !data.society.value ||
-        data.society.value === '' ||
-        !data.locality.value ||
-        data.locality.value === '' ||
-        !data.city.value ||
-        data.city.value === '' ||
-        !data.state ||
-        data.state.value === '' ||
-        !data.country.value ||
-        data.country.value === ''
-      ) {
-        getLocation()
+    if (!fetchLocation) {
+      if (dataLoaded) {
+        if (
+          (!data.street.value || data.street.value === '') &&
+          (!data.society.value || data.society.value === '') &&
+          (!data.locality.value || data.locality.value === '') &&
+          (!data.city.value || data.city.value === '') &&
+          (!data.state.value || data.state.value === '') &&
+          (!data.country.value || data.country.value === '')
+        ) {
+          getLocation()
+          setFetchLocation(true)
+        }
       }
     }
   }, [dataLoaded, data])
