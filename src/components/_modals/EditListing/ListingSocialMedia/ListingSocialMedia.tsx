@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles.module.css'
 import { CircularProgress, FormControl, MenuItem, Select } from '@mui/material'
 import DeleteIcon from '@/assets/svg/trash-icon.svg'
@@ -306,6 +306,20 @@ const ListingSocialMediaEditModal = ({
       dispatch(closeModal())
     }
   }
+  const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  useEffect(() => {
+    const handleKeyPress = (event: any) => {
+      if (event.key === 'Enter') {
+        nextButtonRef.current?.focus()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [])
 
   if (confirmationModal) {
     return (
@@ -401,6 +415,7 @@ const ListingSocialMediaEditModal = ({
 
       <footer className={styles['footer']}>
         <button
+          ref={nextButtonRef}
           className="modal-footer-btn submit"
           onClick={handleSubmit}
           disabled={submitBtnLoading}

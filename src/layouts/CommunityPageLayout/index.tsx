@@ -115,6 +115,9 @@ const CommunityLayout: React.FC<Props> = ({
     window.location.href = '/settings/localization-and-payments'
   }
   console.log('l', activeProfile.data?._hobbies?.length)
+  console.log('activeprofile', activeProfile)
+  console.log('selected', selectedLocation)
+  console.log('city', activeProfile.data?._addresses[0].city)
   const fetchPosts = async () => {
     if (showPageLoader) {
       dispatch(setShowPageLoader(false))
@@ -137,9 +140,38 @@ const CommunityLayout: React.FC<Props> = ({
         params.append('_hobby', item.hobby._id)
       })
     }
-    if (selectedLocation !== '' && selectedLocation !== 'Everyone') {
-      params.append('visibility', selectedLocation)
+    let selectedPinCode = ''
+    let selectedLocality = ''
+    let selectedSociety = ''
+    const matchingAddress = activeProfile.data?._addresses.find(
+      (address: any) =>
+        address.city === selectedLocation ||
+        address.pin_code === selectedLocation ||
+        address.locality === selectedLocation ||
+        address.society === selectedLocation,
+    )
+
+    if (matchingAddress) {
+      if (matchingAddress.city === selectedLocation) {
+        params.append('visibility', matchingAddress.city)
+        params.append('visibility', matchingAddress.pin_code)
+        params.append('visibility', matchingAddress.locality)
+        params.append('visibility', matchingAddress.society)
+      }
+      if (matchingAddress.pin_code === selectedLocation) {
+        params.append('visibility', matchingAddress.pin_code)
+        params.append('visibility', matchingAddress.locality)
+        params.append('visibility', matchingAddress.society)
+      }
+      if (matchingAddress.locality === selectedLocation) {
+        params.append('visibility', matchingAddress.locality)
+        params.append('visibility', matchingAddress.society)
+      }
+      if (matchingAddress.society === selectedLocation) {
+        params.append('visibility', matchingAddress.society)
+      }
     }
+
     console.log('PARAMS ---', params.toString())
     dispatch(updateLoading(true))
 

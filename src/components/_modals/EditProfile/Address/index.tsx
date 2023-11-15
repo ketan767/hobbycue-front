@@ -508,12 +508,9 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   useEffect(() => {
     if (dataLoaded) {
       if (
-        !data.city ||
-        data.city === '' ||
-        !data.state ||
-        data.state === '' ||
-        !data.country ||
-        data.country === ''
+        (!data.city || data.city === '') &&
+        (!data.state || data.state === '') &&
+        (!data.country || data.country === '')
       ) {
         getLocation()
       }
@@ -606,6 +603,21 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       return () => clearTimeout(timer)
     }
   }, [isError])
+
+  const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  useEffect(() => {
+    const handleKeyPress = (event: any) => {
+      if (event.key === 'Enter') {
+        nextButtonRef.current?.focus()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [])
 
   if (confirmationModal) {
     return (
@@ -798,6 +810,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           )}
 
           <button
+            ref={nextButtonRef}
             className="modal-footer-btn submit"
             onClick={handleSubmit}
             disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}

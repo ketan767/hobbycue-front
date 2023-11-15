@@ -34,6 +34,11 @@ const SaveModal: React.FC<Props> = ({
       setConfirmationModal(false)
     }
   }
+  const HandleNoListing = () => {
+    if (!listingModalData.is_onboarded) {
+      window.location.reload()
+    }
+  }
 
   const handleYesClick = async () => {
     handleSubmit()
@@ -57,6 +62,7 @@ const SaveModal: React.FC<Props> = ({
               handleClose()
               setConfirmationModal(false)
               dispatch(closeModal())
+              HandleNoListing()
             }}
           >
             No

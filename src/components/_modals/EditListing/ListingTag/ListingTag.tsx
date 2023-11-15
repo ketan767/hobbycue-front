@@ -143,6 +143,20 @@ const ListingTagsEditModal: React.FC<Props> = ({
     }
   }
   console.log('item', selectedTags)
+  const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  useEffect(() => {
+    const handleKeyPress = (event: any) => {
+      if (event.key === 'Enter') {
+        nextButtonRef.current?.focus()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [])
 
   if (confirmationModal) {
     return (
@@ -260,6 +274,7 @@ const ListingTagsEditModal: React.FC<Props> = ({
           )}
 
           <button
+            ref={nextButtonRef}
             className="modal-footer-btn submit"
             onClick={handleSubmit}
             disabled={submitBtnLoading}
