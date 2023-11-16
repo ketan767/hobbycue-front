@@ -11,7 +11,7 @@ const initialState: PostState = {
   allPosts: [],
   allPages: [],
   loading: false,
-  pagesLoading: false
+  pagesLoading: true
 }
 
 const postSlice = createSlice({
