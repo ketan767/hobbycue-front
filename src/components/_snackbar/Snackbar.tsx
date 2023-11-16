@@ -35,7 +35,7 @@ const SimpleSnackbar: React.FC<Props> = ({
         open={triggerOpen}
         onClose={handleClose}
         onClick={handleClose}
-        autoHideDuration={200000}
+        autoHideDuration={1500}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
         <SnackbarContent
