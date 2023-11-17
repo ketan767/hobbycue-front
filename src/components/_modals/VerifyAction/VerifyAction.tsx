@@ -75,7 +75,7 @@ const VerifyActionModal: React.FC<Props> = ({}) => {
 
   const handleOpenCreatePassword = async () => {
     const email = user.email
-    dispatch(openModal({ type: 'SetPasswordModal', closable: true }))
+    dispatch(openModal({ type: 'Set-PasswordModal', closable: true }))
     const { err, res } = await forgotPassword({
       email,
     })

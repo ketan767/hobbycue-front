@@ -89,6 +89,8 @@
 .input-box-admin input[type='text']{
   background: #f8f9fa;
   cursor: not-allowed;
+  border: 1px solid var(--grey-light, #CED4DA);
+  color: var(--grey-darker, #6D747A);
 }
 
 .input-box input[type='text']:focus-within {

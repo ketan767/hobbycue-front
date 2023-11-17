@@ -42,6 +42,7 @@ import ShareModal from './ShareModal/ShareModal'
 import ClaimModal from './ClaimModal/ClaimModal'
 import VerifyActionModal from './VerifyAction/VerifyAction'
 import SetPasswordModal from './CreatePassword'
+import { ModalType } from '@/redux/slices/modal'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -53,14 +54,40 @@ const ModalManager: React.FC = () => {
   const { activeModal, closable } = useSelector(
     (state: RootState) => state.modal,
   )
+  const specialCloseHandlers: Partial<{
+    [key in Exclude<ModalType, null>]: () => void
+  }> = {
+    auth: closewithoutCfrm,
+    'email-verify': closewithoutCfrm,
+    'reset-password': closewithoutCfrm,
+    'upload-video-page': closewithoutCfrm,
+    'upload-image-page': closewithoutCfrm,
+    'upload-video-user': closewithoutCfrm,
+    'change-password': closewithoutCfrm,
+    'confirm-email': closewithoutCfrm,
+    'email-sent': closewithoutCfrm,
+    'social-media-share': closewithoutCfrm,
+    'Verify-ActionModal': closewithoutCfrm,
+    'Set-PasswordModal': closewithoutCfrm,
+  }
 
   function handleClose() {
+    console.log('close1')
     if (confirmationModal) {
       setConfirmationModal(false)
     } else {
-      dispatch(closeModal())
+      setConfirmationModal(true)
     }
   }
+  function closewithoutCfrm() {
+    dispatch(closeModal())
+  }
+
+  const activeCloseHandler =
+    activeModal !== null
+      ? specialCloseHandlers[activeModal] ?? handleClose
+      : handleClose
+
   useEffect(() => {
     const scrollbarWidth =
       window.innerWidth - document.documentElement.clientWidth
@@ -210,7 +237,9 @@ const ModalManager: React.FC = () => {
               {activeModal === 'upload-video-page' && <UploadVideoPage />}
               {activeModal === 'upload-image-page' && <UploadImagePage />}
               {activeModal === 'upload-video-user' && <UploadVideoUser />}
-              {activeModal === 'social-media-edit' && <SocialMediaEditModal />}
+              {activeModal === 'social-media-edit' && (
+                <SocialMediaEditModal {...props} />
+              )}
               {activeModal === 'change-password' && <ChangePasswordModal />}
 
               {activeModal === 'confirm-email' && <ConfirmEmailModal />}
@@ -229,13 +258,13 @@ const ModalManager: React.FC = () => {
                   editLocation={true}
                 />
               )}
-              {activeModal === 'VerifyActionModal' && <VerifyActionModal />}
-              {activeModal === 'SetPasswordModal' && <SetPasswordModal />}
+              {activeModal === 'Verify-ActionModal' && <VerifyActionModal />}
+              {activeModal === 'Set-PasswordModal' && <SetPasswordModal />}
               {/* Modal Close Icon */}
               {closable && (
                 <CloseIcon
                   className={styles['modal-close-icon']}
-                  onClick={handleClose}
+                  onClick={activeCloseHandler}
                 />
               )}
             </main>

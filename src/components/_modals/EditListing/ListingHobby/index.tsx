@@ -132,7 +132,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   const handleAddHobby = async () => {
     let selectedHobby = null
     let selectedGenre = null
-
+    setShowGenreDropdown(false)
     // Handle hobby input
     if (!data.hobby) {
       const matchedHobby = hobbyDropdownList.find(
@@ -360,6 +360,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
                                 return { ...prev, genre: genre }
                               })
                               setGenreInputValue(genre?.display)
+                              setShowGenreDropdown(false)
                             }}
                           >
                             {genre?.display}

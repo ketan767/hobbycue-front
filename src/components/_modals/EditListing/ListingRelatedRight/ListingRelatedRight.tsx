@@ -98,8 +98,14 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
   }, [listingModalData?._id])
 
   useEffect(() => {
+    if (
+      listingModalData.related_listings_right.relation &&
+      listingModalData.related_listings_right.relation
+    ) {
+      setRelation(listingModalData.related_listings_right.relation)
+    }
     setRelatedListingsRight(listingModalData.related_listings_right?.listings)
-  }, [])
+  }, [listingModalData])
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
   const handleSubmit = async () => {
