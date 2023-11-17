@@ -288,7 +288,7 @@ const ModalManager: React.FC = () => {
           </div>
         </Fade>
       </Modal>
-      <SimpleSnackbar triggerOpen={snackbar.show} message={snackbar.message} resetSnackbar={resetSnackbar}/>
+      <SimpleSnackbar triggerOpen={snackbar.show} message={snackbar.message} resetSnackbar={resetSnackbar} textColor='#7f63a1' bgColor='#ffffff'/>
     </>
   )
 }
