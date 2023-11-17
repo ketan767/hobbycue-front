@@ -1,18 +1,16 @@
 .select {
-  padding: 8px 12px;
   background: #f7f5f9;
   border-radius: 8px;
-  border: none;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
   color: #6d747a;
 }
 
 .select:active,
 .select:focus {
-  border: none;
-}
-
-.option {
-  background-color: white;
+  outline: none;
 }
 
 .option:hover {
