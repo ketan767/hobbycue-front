@@ -297,15 +297,15 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
               </Tooltip>
 
               {/* More Options Button */}
-
-              <div
-                onClick={(e) => handleDropdown()}
-                className={styles['action-btn']}
-              >
+              <div className={styles['action-btn-dropdown-wrapper']}>
                 <Tooltip title="Click to view options">
-                  <MoreHorizRoundedIcon color="primary" />
+                  <div
+                    onClick={(e) => handleDropdown()}
+                    className={styles['action-btn']}
+                  >
+                    <MoreHorizRoundedIcon color="primary" />
+                  </div>
                 </Tooltip>
-
                 {profileLayoutMode === 'edit'
                   ? open && (
                       <Dropdown
