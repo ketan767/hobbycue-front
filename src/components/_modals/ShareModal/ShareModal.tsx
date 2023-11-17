@@ -32,13 +32,30 @@ import Linkedin from '@/assets/svg/share/linkedin.svg'
 import Instagram from '@/assets/svg/share/instagram.svg'
 import Mail from '@/assets/svg/share/mail.svg'
 import Copy from '@/assets/svg/share/copy.svg'
+import { closeModal } from '@/redux/slices/modal'
+import { useDispatch } from 'react-redux'
+import { SnackbarState } from '../ModalManager'
 
-export default function ShareModal() {
+type Props = {
+  triggerSnackbar:(data:SnackbarState)=>void
+}
+
+const ShareModal:React.FC<Props>=({triggerSnackbar})=>{
+  const dispatch = useDispatch()
   const { shareUrl } = useSelector((state: RootState) => state.modal)
 
   const handleInstagramShare = () => {
     const instagramShareLink = `https://www.instagram.com/?caption=${shareUrl}`
     window.open(instagramShareLink, '_blank')
+  }
+
+  const handleModalClose=()=>{
+    navigator.clipboard.writeText(shareUrl)
+    dispatch(closeModal())
+    triggerSnackbar?.({
+      show:true,
+      message:'Link Copied'
+    })
   }
 
   return (
@@ -77,9 +94,7 @@ export default function ShareModal() {
         </EmailShareButton>
 
         <button
-          onClick={() => {
-            navigator.clipboard.writeText(shareUrl)
-          }}
+          onClick={handleModalClose}
         >
           <Image src={Copy} alt="Copy" />
           Copy Link
@@ -88,3 +103,6 @@ export default function ShareModal() {
     </div>
   )
 }
+
+
+export default ShareModal
