@@ -42,6 +42,7 @@ import ShareModal from './ShareModal/ShareModal'
 import ClaimModal from './ClaimModal/ClaimModal'
 import VerifyActionModal from './VerifyAction/VerifyAction'
 import SetPasswordModal from './CreatePassword'
+import { ModalType } from '@/redux/slices/modal'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import SimpleSnackbar from '../_snackbar/Snackbar'
@@ -56,30 +57,58 @@ export interface SnackbarState {
 }
 
 const ModalManager: React.FC = () => {
-  const [snackbar, setSnackbar] = useState<SnackbarState>({ show: false, message: '' });
+  const [snackbar, setSnackbar] = useState<SnackbarState>({
+    show: false,
+    message: '',
+  })
 
   const triggerSnackbar = (data: SnackbarState) => {
-    setSnackbar(data);
-  };
+    setSnackbar(data)
+  }
 
   const resetSnackbar = (data: SnackbarState) => {
-    setSnackbar(data);
-  };
-  
+    setSnackbar(data)
+  }
 
   const dispatch = useDispatch()
   const [confirmationModal, setConfirmationModal] = useState(false)
   const { activeModal, closable } = useSelector(
     (state: RootState) => state.modal,
   )
+  const specialCloseHandlers: Partial<{
+    [key in Exclude<ModalType, null>]: () => void
+  }> = {
+    auth: closewithoutCfrm,
+    'email-verify': closewithoutCfrm,
+    'reset-password': closewithoutCfrm,
+    'upload-video-page': closewithoutCfrm,
+    'upload-image-page': closewithoutCfrm,
+    'upload-video-user': closewithoutCfrm,
+    'change-password': closewithoutCfrm,
+    'confirm-email': closewithoutCfrm,
+    'email-sent': closewithoutCfrm,
+    'social-media-share': closewithoutCfrm,
+    'Verify-ActionModal': closewithoutCfrm,
+    'Set-PasswordModal': closewithoutCfrm,
+  }
 
   function handleClose() {
+    console.log('close1')
     if (confirmationModal) {
       setConfirmationModal(false)
     } else {
-      dispatch(closeModal())
+      setConfirmationModal(true)
     }
   }
+  function closewithoutCfrm() {
+    dispatch(closeModal())
+  }
+
+  const activeCloseHandler =
+    activeModal !== null
+      ? specialCloseHandlers[activeModal] ?? handleClose
+      : handleClose
+
   useEffect(() => {
     const scrollbarWidth =
       window.innerWidth - document.documentElement.clientWidth
@@ -229,13 +258,17 @@ const ModalManager: React.FC = () => {
               {activeModal === 'upload-video-page' && <UploadVideoPage />}
               {activeModal === 'upload-image-page' && <UploadImagePage />}
               {activeModal === 'upload-video-user' && <UploadVideoUser />}
-              {activeModal === 'social-media-edit' && <SocialMediaEditModal />}
+              {activeModal === 'social-media-edit' && (
+                <SocialMediaEditModal {...props} />
+              )}
               {activeModal === 'change-password' && <ChangePasswordModal />}
 
               {activeModal === 'confirm-email' && <ConfirmEmailModal />}
               {activeModal === 'email-sent' && <EmailSentModal />}
               {activeModal === 'reset-password' && <ResetPasswordModal />}
-              {activeModal === 'social-media-share' && <ShareModal triggerSnackbar={triggerSnackbar}/>}
+              {activeModal === 'social-media-share' && (
+                <ShareModal triggerSnackbar={triggerSnackbar} />
+              )}
               {activeModal === 'add-location' && (
                 <ProfileAddressEditModal
                   addLocation={true}
@@ -248,13 +281,13 @@ const ModalManager: React.FC = () => {
                   editLocation={true}
                 />
               )}
-              {activeModal === 'VerifyActionModal' && <VerifyActionModal />}
-              {activeModal === 'SetPasswordModal' && <SetPasswordModal />}
+              {activeModal === 'Verify-ActionModal' && <VerifyActionModal />}
+              {activeModal === 'Set-PasswordModal' && <SetPasswordModal />}
               {/* Modal Close Icon */}
               {closable && (
                 <CloseIcon
                   className={styles['modal-close-icon']}
-                  onClick={handleClose}
+                  onClick={activeCloseHandler}
                 />
               )}
             </main>
@@ -288,7 +321,13 @@ const ModalManager: React.FC = () => {
           </div>
         </Fade>
       </Modal>
-      <SimpleSnackbar triggerOpen={snackbar.show} message={snackbar.message} resetSnackbar={resetSnackbar} textColor='#7f63a1' bgColor='#ffffff'/>
+      <SimpleSnackbar
+        triggerOpen={snackbar.show}
+        message={snackbar.message}
+        resetSnackbar={resetSnackbar}
+        textColor="#7f63a1"
+        bgColor="#ffffff"
+      />
     </>
   )
 }

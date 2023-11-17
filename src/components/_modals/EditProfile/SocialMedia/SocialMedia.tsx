@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles.module.css'
 import { CircularProgress, FormControl, MenuItem, Select } from '@mui/material'
-import DeleteIcon from '@/assets/svg/trash-icon.svg'
+import DeleteIcon from '@/assets/svg/trash-icon-colored.svg'
 import AddIcon from '@/assets/svg/add.svg'
 import Image from 'next/image'
 import {
@@ -337,14 +337,13 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
       <hr />
 
       <section className={styles['body']}>
-        <div className={styles['body-header']}>
+        <div className={styles['body-header']} onClick={addSocialMedia}>
           <Image
             src={AddIcon}
             alt="add"
             width={12}
             height={12}
             className={styles.deleteIcon}
-            onClick={addSocialMedia}
           />
           Add New
         </div>

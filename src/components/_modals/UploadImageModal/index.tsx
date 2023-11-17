@@ -49,8 +49,16 @@ export const UploadImageModal: React.FC<Props> = (props) => {
           aspectRatio={editPhotoModalData.type === 'cover' ? 3 / 1 : 1}
         />
 
-        <button className={styles['save-btn']} disabled={loading} onClick={handleUpload}>
-          {loading ? <CircularProgress color="inherit" size={'20px'} /> : 'Save Photo'}
+        <button
+          className={styles['save-btn']}
+          disabled={loading}
+          onClick={handleUpload}
+        >
+          {loading ? (
+            <CircularProgress color="inherit" size={'20px'} />
+          ) : (
+            'Save Photo'
+          )}
         </button>
       </div>
     </div>

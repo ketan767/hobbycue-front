@@ -55,7 +55,7 @@ type ListingModalData = {
   cover_image?: string
   _tags?: any
   related_listings_left?: {
-    relation: string
+    relation: any
     listings: any
   }
   related_listings_right?: any

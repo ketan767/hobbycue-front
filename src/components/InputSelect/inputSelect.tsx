@@ -35,7 +35,7 @@ const InputSelect: React.FC<Props> = ({ options, onChange, value }) => {
       <select
         name="select"
         className={styles.select}
-        onChange={(e: any) => {          
+        onChange={(e: any) => {
           onChange(e.target.value)
         }}
         value={value}

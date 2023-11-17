@@ -117,7 +117,7 @@ const CommunityLayout: React.FC<Props> = ({
   console.log('l', activeProfile.data?._hobbies?.length)
   console.log('activeprofile', activeProfile)
   console.log('selected', selectedLocation)
-  console.log('city', activeProfile.data?._addresses[0].city)
+
   const fetchPosts = async () => {
     if (showPageLoader) {
       dispatch(setShowPageLoader(false))

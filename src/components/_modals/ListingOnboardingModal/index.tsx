@@ -114,7 +114,7 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
     if (confirmationModal) {
       setConfirmationModal(false)
     } else {
-      dispatch(closeModal())
+      setConfirmationModal(true)
     }
   }
   const handleBack = () => {
