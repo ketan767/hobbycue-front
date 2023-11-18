@@ -98,8 +98,14 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
   }, [listingModalData?._id])
 
   useEffect(() => {
+    if (
+      listingModalData.related_listings_right.relation &&
+      listingModalData.related_listings_right.relation
+    ) {
+      setRelation(listingModalData.related_listings_right.relation)
+    }
     setRelatedListingsRight(listingModalData.related_listings_right?.listings)
-  }, [])
+  }, [listingModalData])
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
   const handleSubmit = async () => {
@@ -260,6 +266,20 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
       })
   }, [pageInputValue])
 
+  const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  useEffect(() => {
+    const handleKeyPress = (event: any) => {
+      if (event.key === 'Enter') {
+        nextButtonRef.current?.focus()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [])
   if (confirmationModal) {
     return (
       <SaveModal
@@ -469,6 +489,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
           )}
 
           <button
+            ref={nextButtonRef}
             className="modal-footer-btn submit"
             onClick={handleSubmit}
             disabled={submitBtnLoading}

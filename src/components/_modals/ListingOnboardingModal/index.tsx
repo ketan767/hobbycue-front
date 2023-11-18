@@ -114,7 +114,7 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
     if (confirmationModal) {
       setConfirmationModal(false)
     } else {
-      dispatch(closeModal())
+      setConfirmationModal(true)
     }
   }
   const handleBack = () => {
@@ -165,13 +165,17 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
   return (
     <div
       ref={modalRef}
-      className={`${styles['modal-container']} ${
+      className={`${confirmationModal ? '' : styles['modal-container']} ${
         confirmationModal ? styles['ins-active'] : ''
       }`}
     >
-      <header className={styles['header']}>
-        <h2 className={styles['modal-heading']}>Complete your Listing Page</h2>
-      </header>
+      {!confirmationModal && (
+        <header className={styles['header']}>
+          <h2 className={styles['modal-heading']}>
+            Complete your Listing Page
+          </h2>
+        </header>
+      )}
 
       {/* <ProgressBar total={totalSteps.length} current={totalSteps.findIndex((str : any) => str === activeStep) + 1} /> */}
 
@@ -246,21 +250,23 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
         />
       )}
 
-      <section className={styles['step-indicators']}>
-        {totalSteps.map((step, index) => {
-          const isClickable = index <= furthestStepIndex
+      {!confirmationModal && (
+        <section className={styles['step-indicators']}>
+          {totalSteps.map((step, index) => {
+            const isClickable = index <= furthestStepIndex
 
-          return (
-            <span
-              key={step}
-              className={`${styles['step']} ${
-                isClickable ? styles['active'] : ''
-              }`}
-              onClick={isClickable ? () => setActiveStep(step) : undefined}
-            ></span>
-          )
-        })}
-      </section>
+            return (
+              <span
+                key={step}
+                className={`${styles['step']} ${
+                  isClickable ? styles['active'] : ''
+                }`}
+                onClick={isClickable ? () => setActiveStep(step) : undefined}
+              ></span>
+            )
+          })}
+        </section>
+      )}
     </div>
   )
 }

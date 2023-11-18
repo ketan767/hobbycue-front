@@ -39,8 +39,8 @@ export type ModalType =
   | 'add-location'
   | 'user-address-edit'
   | 'CopyProfileDataModal'
-  | 'VerifyActionModal'
-  | 'SetPasswordModal'
+  | 'Verify-ActionModal'
+  | 'Set-PasswordModal'
 
   interface ModalState {
     activeModal: ModalType

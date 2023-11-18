@@ -714,7 +714,7 @@ const ListingPageMain: React.FC<Props> = ({
                     </defs>
                   </svg>
 
-                  {listingLayoutMode === 'edit' ? (
+                  {listingLayoutMode === 'edit' && !data?.wp_data ? (
                     <span className={styles.textdefault}>
                       {`${
                         data?._address.street
@@ -744,30 +744,7 @@ const ListingPageMain: React.FC<Props> = ({
                     </span>
                   ) : (
                     <span className={styles.textdefault}>
-                      {`${
-                        data?._address.street
-                          ? data._address.street
-                              .split(' ')
-                              .slice(0, 4)
-                              .join(' ')
-                          : ''
-                      }
-                    ${
-                      data?._address.society ? data._address.society + ',' : ''
-                    } 
-                    ${
-                      data?._address.locality
-                        ? data._address.locality + ','
-                        : ''
-                    } 
-                    ${data?._address.city ? data._address.city + ',' : ''} 
-                    ${data?._address.state ? data._address.state + ',' : ''} 
-                    ${data?._address.country ? data._address.country : ''}
-                    ${
-                      data?._address?.pin_code
-                        ? ' - ' + data?._address?.pin_code
-                        : ''
-                    }`}
+                      {data.wp_data?.location_str}
                     </span>
                   )}
                 </li>
@@ -815,8 +792,8 @@ const ListingPageMain: React.FC<Props> = ({
                             </defs>
                           </svg>
                           <p className={styles.workingHour}>
-                            {item.from_time} - {item.to_time}, {item.from_day} -{' '}
-                            {item.to_day}
+                            {item.from_day} - {item.to_day}, {item.from_time} -{' '}
+                            {item.to_time}
                           </p>
                         </li>
                       )
