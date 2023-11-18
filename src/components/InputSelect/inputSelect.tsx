@@ -14,6 +14,31 @@ const InputSelect: React.FC<Props> = ({ options, onChange, value, name }) => {
   const [focusedElement, setFocusedElement] = useState(null)
   const elementRef = useRef(null)
 
+  useEffect(() => {        
+    const handleClick = (e: any) => {
+      console.log(e.target?.['id'])
+      if (
+        e.target?.['id'] === 'input-display' ||
+        e.target?.['id'] === 'input-display-text'||
+        e.target?.['id'] === 'input-display-icon'
+      ) {
+        console.log('test-1',displayDropdown)
+      } else {
+        console.log('test-2',displayDropdown)
+        if (displayDropdown) setDisplayDropdown(false)
+        document.removeEventListener('click', handleClick)
+      }
+    }
+
+
+    
+    if (displayDropdown) {
+      document.addEventListener('click', handleClick)
+    }
+    else{
+      document.removeEventListener('click', handleClick)
+    }
+  }, [displayDropdown])
 
   // useEffect(() => {
   //   const handleKeydown = (event: any) => {
@@ -92,8 +117,8 @@ const InputSelect: React.FC<Props> = ({ options, onChange, value, name }) => {
           setFocusedElement(elementRef.current)
         }}
       >
-        <p>{value}</p>
-        <ExpandMoreSharpIcon />
+        <p id="input-display-text">{value}</p>
+        <ExpandMoreSharpIcon id={'input-display-icon'}/>
       </div>
       <ul
         id="input-ul"
