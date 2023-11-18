@@ -98,8 +98,10 @@
   place-items: center;
   position: relative;
 }
-
-.action-btn-wrapper .action-btn img{
+.action-btn:hover {
+  background-color: #ccc1da;
+}
+.action-btn-wrapper .action-btn img {
   border-radius: 8px;
 }
 
@@ -212,7 +214,7 @@
   display: flex;
   column-gap: 12px;
   align-items: flex-end;
-  
+
   justify-content: space-between;
 }
 .name-container .profile-name {
@@ -251,7 +253,7 @@
   padding: 12px;
   transition: 0.2s;
 }
-.contactBtn{
+.contactBtn {
   font-size: 14px;
   font-family: 'Poppins';
   font-style: normal;
@@ -262,7 +264,7 @@
 }
 .customList li:hover {
   background-color: #e5e5e5;
-  color: #8064a2; 
+  color: #8064a2;
 }
 @keyframes scroll-in {
   0% {

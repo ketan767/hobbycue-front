@@ -42,13 +42,35 @@ import ShareModal from './ShareModal/ShareModal'
 import ClaimModal from './ClaimModal/ClaimModal'
 import VerifyActionModal from './VerifyAction/VerifyAction'
 import SetPasswordModal from './CreatePassword'
+
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import SimpleSnackbar from '../_snackbar/Snackbar'
+import { types } from 'util'
+
 import { ModalType } from '@/redux/slices/modal'
+
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
 }
+export interface SnackbarState {
+  show: boolean
+  message: string
+}
 
 const ModalManager: React.FC = () => {
+  const [snackbar, setSnackbar] = useState<SnackbarState>({ show: false, message: '' });
+
+  const triggerSnackbar = (data: SnackbarState) => {
+    setSnackbar(data);
+  };
+
+  const resetSnackbar = (data: SnackbarState) => {
+    setSnackbar(data);
+  };
+  
+
   const dispatch = useDispatch()
   const [confirmationModal, setConfirmationModal] = useState(false)
   const { activeModal, closable } = useSelector(
@@ -245,7 +267,7 @@ const ModalManager: React.FC = () => {
               {activeModal === 'confirm-email' && <ConfirmEmailModal />}
               {activeModal === 'email-sent' && <EmailSentModal />}
               {activeModal === 'reset-password' && <ResetPasswordModal />}
-              {activeModal === 'social-media-share' && <ShareModal />}
+              {activeModal === 'social-media-share' && <ShareModal triggerSnackbar={triggerSnackbar}/>}
               {activeModal === 'add-location' && (
                 <ProfileAddressEditModal
                   addLocation={true}
@@ -298,6 +320,7 @@ const ModalManager: React.FC = () => {
           </div>
         </Fade>
       </Modal>
+      <SimpleSnackbar triggerOpen={snackbar.show} message={snackbar.message} resetSnackbar={resetSnackbar} textColor='#7f63a1' bgColor='#ffffff'/>
     </>
   )
 }
