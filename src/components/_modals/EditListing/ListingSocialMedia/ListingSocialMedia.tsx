@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles.module.css'
 import { CircularProgress, FormControl, MenuItem, Select } from '@mui/material'
-import DeleteIcon from '@/assets/svg/trash-icon.svg'
+import DeleteIcon from '@/assets/svg/trash-icon-colored.svg'
 import AddIcon from '@/assets/svg/add.svg'
 import Image from 'next/image'
 import {

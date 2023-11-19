@@ -4,6 +4,21 @@
   border-radius: 8px;
   border: none;
   color: #6d747a;
+  width: 100%;
+  height: 40px;
+  padding: 8px 16px;
+  border: 1px solid #D1D5DB;
+  border-radius: 8px; 
+  -webkit-appearance: none; 
+  -moz-appearance: none;     
+  appearance: none;          
+
+  background-repeat: no-repeat;
+  background-position: right 16px center; 
+  background-size: 16px; 
+  cursor: pointer;
+  font-size: 16px; 
+  color: #4B5563; 
 }
 
 .select:active,

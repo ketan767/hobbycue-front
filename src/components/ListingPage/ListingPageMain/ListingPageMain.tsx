@@ -792,8 +792,8 @@ const ListingPageMain: React.FC<Props> = ({
                             </defs>
                           </svg>
                           <p className={styles.workingHour}>
-                            {item.from_time} - {item.to_time}, {item.from_day} -{' '}
-                            {item.to_day}
+                            {item.from_day} - {item.to_day}, {item.from_time} -{' '}
+                            {item.to_time}
                           </p>
                         </li>
                       )

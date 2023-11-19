@@ -84,7 +84,7 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
     if (!isDisGoogleVerified) {
       dispatch(
         openModal({
-          type: 'VerifyActionModal',
+          type: 'Verify-ActionModal',
           closable: true,
           onVerify: () => setisDisGoogleVerified(true),
         }),
@@ -109,7 +109,7 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
     if (!isDisFaceBookVerified) {
       dispatch(
         openModal({
-          type: 'VerifyActionModal',
+          type: 'Verify-ActionModal',
           closable: true,
           onVerify: () => setisDisFaceBookVerified(true),
         }),

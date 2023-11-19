@@ -66,7 +66,7 @@ const timings = [
   '9:00 am',
   '10:00 am',
   '11:00 am',
-  '12:00 am',
+  '12:00 pm',
   '1:00 pm',
   '2:00 pm',
   '3:00 pm',
@@ -78,7 +78,6 @@ const timings = [
   '9:00 pm',
   '10:00 pm',
   '11:00 pm',
-  '12:00 pm',
 ]
 const ListingEventHoursEditModal: React.FC<Props> = ({
   onComplete,
@@ -193,19 +192,17 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
         />
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>{'Event Date And Time'}</h4>
+          <h4 className={styles['heading']}>{'Schedule'}</h4>
         </header>
 
         <hr />
 
         <section className={styles['body']}>
-          <div className={styles.sectionHead}>
-            <p>Event Date & Time</p>
-          </div>
+          <div className={styles.sectionHead}></div>
           <div className={styles.listContainer}>
             <div className={styles.listItem}>
               <div className={styles.listSubItem}>
-                <label> From Day </label>
+                <label> From Date </label>
 
                 <input
                   value={eventData.from_date}
@@ -216,7 +213,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                 />
               </div>
               <div className={styles.listSubItem}>
-                <label> To Day </label>
+                <label> To Date </label>
 
                 <input
                   value={eventData.to_date}
