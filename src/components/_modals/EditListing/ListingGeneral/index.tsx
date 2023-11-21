@@ -423,7 +423,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
                 <div className={styles['input-box']}>
                   <label>
                     {listingModalData.type === listingTypes.PLACE
-                      ? 'Year Of Birth/Establishment'
+                      ? 'Year Of Establishment'
                       : 'Year'}
                   </label>
                   <input

@@ -169,9 +169,10 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
             {user.google?.picture ? (
               <div className={styles['google-image']}>
                 <Image
+                  className={styles['user-icon-google']}
                   src={user.google.picture}
-                  width={30}
-                  height={30}
+                  width={32}
+                  height={32}
                   alt="google"
                 />
                 <div className={styles['google-icon']}>
@@ -184,7 +185,7 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
                 </div>
               </div>
             ) : (
-              <Image src={GoogleIcon} width={30} height={30} alt="google" />
+              <Image src={GoogleIcon} width={32} height={32} alt="google" />
             )}
             <p className={styles.socialLoginText}>Connect with Google</p>
             {!user.google?.id ? (
@@ -215,9 +216,10 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
             {user.facebook?.picture ? (
               <div className={styles['google-image']}>
                 <Image
+                  className={styles['user-icon-google']}
                   src={user.facebook.picture}
-                  width={30}
-                  height={30}
+                  width={32}
+                  height={32}
                   alt="facebook"
                 />
                 <div className={styles['google-icon']}>
@@ -230,7 +232,7 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
                 </div>
               </div>
             ) : (
-              <Image src={FacebookIcon} width={30} height={30} alt="google" />
+              <Image src={FacebookIcon} width={32} height={32} alt="google" />
             )}
 
             <p className={styles.socialLoginText}>Connect with Facebook</p>

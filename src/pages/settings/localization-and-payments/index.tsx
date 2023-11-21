@@ -288,17 +288,6 @@ const VisibilityAndNotification: React.FC = () => {
     })
   }
 
-  const handleInpChange = (e: any) => {
-    let {name,value}=e    
-    if(name==='region'){
-      let index=((options.region).indexOf(value));
-      setInpSelectValues({...inpSelectValues,[name]:value,phonePrefix:options.phone[index]})
-    }
-    else
-    setInpSelectValues({...inpSelectValues,[name]:value,})
-  }
-
-  // console.log('user', user?.primary_address?._id)
   return (
     <>
       <PageGridLayout column={2} customStyles={styles['settingcontainer']}>
@@ -411,8 +400,12 @@ const VisibilityAndNotification: React.FC = () => {
             <InputSelect
               options={options['region']}
               value={inpSelectValues.region}
-              onChange={handleInpChange}
-              name={'region'}
+              onChange={(e:any)=>{
+                setInpSelectValues(prevValue=>{
+                  let regionIndex=(options.region).indexOf(e)
+                  return({...prevValue,region:e,phonePrefix:options.phone[regionIndex]})
+                })
+              }}
             />
           </div>
 
@@ -424,8 +417,7 @@ const VisibilityAndNotification: React.FC = () => {
             <InputSelect
               options={options['language']}
               value={inpSelectValues.language}
-              onChange={handleInpChange}
-              name={'language'}
+              onChange={(e:any)=>{setInpSelectValues(prevValue=>({...prevValue,language:e}))}}
               />
           </div>
 
@@ -437,8 +429,7 @@ const VisibilityAndNotification: React.FC = () => {
             <InputSelect
               options={options['currency']}
               value={inpSelectValues.currency}
-              onChange={handleInpChange}
-              name={'currency'}
+              onChange={(e:any)=>{setInpSelectValues(prevValue=>({...prevValue,currency:e}))}}
               />
           </div>
 
@@ -450,8 +441,7 @@ const VisibilityAndNotification: React.FC = () => {
             <InputSelect
               options={options['phone']}
               value={inpSelectValues.phonePrefix}
-              onChange={handleInpChange}
-              name={'phonePrefix'}
+              onChange={(e:any)=>{setInpSelectValues(prevValue=>({...prevValue,phonePrefix:e}))}}
             />
           </div>
 
@@ -463,8 +453,7 @@ const VisibilityAndNotification: React.FC = () => {
             <InputSelect
               options={options['distance']}
               value={inpSelectValues.distance}
-              onChange={handleInpChange}
-              name={'distance'}
+              onChange={(e:any)=>{setInpSelectValues(prevValue=>({...prevValue,distance:e}))}}
             />
           </div>
         </div>
