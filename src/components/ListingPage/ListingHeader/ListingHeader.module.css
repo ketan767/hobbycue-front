@@ -281,9 +281,9 @@
 }
 .container:has(.header).small .navigation-tabs {
   display: flex;
-  margin-left: 391px;
+  
   gap: 38px;
-  justify-content: flex-start;
+  justify-content: center;
   margin-top: 14px;
   position: sticky;
   min-height: 40px;
@@ -298,7 +298,7 @@
 .navigation-tabs {
   display: flex;
   justify-content: center;
-  padding-bottom: 8px;
+
 }
 .navigation-tabs a {
   font-family: 'Poppins';

@@ -72,6 +72,7 @@ const ModalManager: React.FC = () => {
 
   const dispatch = useDispatch()
   const [confirmationModal, setConfirmationModal] = useState(false)
+  const [hasChanges, setHasChanges] = useState(false)
   const { activeModal, closable } = useSelector(
     (state: RootState) => state.modal,
   )
@@ -93,15 +94,21 @@ const ModalManager: React.FC = () => {
   }
 
   function handleClose() {
-    console.log('close1')
     if (confirmationModal) {
       setConfirmationModal(false)
-    } else {
+    } else if (hasChanges) {
       setConfirmationModal(true)
+    } else {
+      dispatch(closeModal())
     }
   }
+
   function closewithoutCfrm() {
     dispatch(closeModal())
+  }
+
+  const handleStatusChange = (isChanged: boolean) => {
+    setHasChanges(isChanged)
   }
 
   const activeCloseHandler =
@@ -142,31 +149,38 @@ const ModalManager: React.FC = () => {
       }, 500)
   }, [activeModal])
 
-  const escFunction = (event: KeyboardEvent) => {
-    if (event.key === 'Escape') {
-      setConfirmationModal((prev) => !prev)
-    }
-  }
+  const escFunction = useCallback(
+    (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        if (confirmationModal) {
+          setConfirmationModal(false)
+        } else if (hasChanges) {
+          setConfirmationModal(true)
+        } else {
+          dispatch(closeModal())
+        }
+      }
+    },
+    [hasChanges, confirmationModal, dispatch],
+  )
 
   useEffect(() => {
     document.addEventListener('keydown', escFunction, { capture: true })
-
     return () => {
       document.removeEventListener('keydown', escFunction, { capture: true })
     }
-  }, [])
+  }, [escFunction])
 
   const handleBgClick = (event: any) => {
-    // event.preventDefault()
     if (event.target === event.currentTarget) {
-      setConfirmationModal(true)
+      handleClose()
     }
   }
-
   const props = {
     setConfirmationModal,
     confirmationModal,
     handleClose,
+    onStatusChange: handleStatusChange,
   }
 
   return (

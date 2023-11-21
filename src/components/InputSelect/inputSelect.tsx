@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './input.module.css'
 
 type Props = {
   options: any
   onChange?: any
   value?: any
+  name?: any
 }
 
 const DropdownArrow = () => (

@@ -36,6 +36,7 @@ type Props = {
   setConfirmationModal?: any
   handleClose?: any
   isError?: boolean
+  onStatusChange?: (isChanged: boolean) => void
 }
 
 type ListingAboutData = {
@@ -48,6 +49,7 @@ const ListingAboutEditModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClose,
+  onStatusChange,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -61,11 +63,25 @@ const ListingAboutEditModal: React.FC<Props> = ({
   const [isError, setIsError] = useState(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
-  const handleInputChange = (value: string) => {
-    setData((prev) => {
-      return { ...prev, description: { value, error: null } }
+  const [initialData, setInitialData] = useState('')
+  const [isChanged, setIsChanged] = useState(false)
+
+  useEffect(() => {
+    const initialValue = listingModalData.description as string
+    setInitialData(initialValue)
+    setData({
+      description: { value: initialValue, error: null },
     })
+  }, [listingModalData.description])
+
+  const handleInputChange = (value: string) => {
+    setData((prev) => ({ ...prev, description: { value, error: null } }))
+    setIsChanged(value !== initialData)
+    if (onStatusChange) {
+      onStatusChange(value !== initialData)
+    }
   }
+
   const handleBack = async () => {
     if (
       !data.description.value ||
@@ -182,6 +198,7 @@ const ListingAboutEditModal: React.FC<Props> = ({
       return () => clearTimeout(timer)
     }
   }, [isError])
+  console.log(isChanged)
 
   if (confirmationModal) {
     return (
@@ -199,7 +216,9 @@ const ListingAboutEditModal: React.FC<Props> = ({
       <div className={styles['modal-wrapper']}>
         <CloseIcon
           className={styles['modal-close-icon']}
-          onClick={handleClose}
+          onClick={() =>
+            isChanged ? setConfirmationModal(true) : handleClose()
+          }
         />
         {/* Modal Header */}
         <header className={styles['header']}>
@@ -257,9 +276,3 @@ const ListingAboutEditModal: React.FC<Props> = ({
 }
 
 export default ListingAboutEditModal
-
-/**
- * @TODO:
- * 1. Loading component until the CK Editor loads.
- * 2. Underline option in the editor
- */

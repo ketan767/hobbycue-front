@@ -1,0 +1,37 @@
+/* Search.css */
+/* This is a template. You'll need to adjust sizes, colors, fonts, etc., to match your Figma design */
+
+/* General styles for layout */
+.page-grid-layout {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    gap: 20px;
+}
+  
+  /* Style for the filter sidebar */
+
+  
+  /* Style for the main content area */
+
+  /* Sections for hobbies and people pages */
+.hobbies-section,
+.people-pages-section {
+margin-bottom: 20px;
+    /* Add more styles for these sections */
+}
+  
+  /* Style for the explore sidebar */
+  
+  /* Style for 'View More' buttons */
+.view-more-button {
+background-color: #000; /* Replace with the actual color from your design */
+color: white;
+border: none;
+padding: 10px 20px;
+margin-top: 10px;
+cursor: pointer;
+    
+}
+  
+  /* Add additional styles below */
+  
