@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { Button, CircularProgress } from '@mui/material'
 
@@ -37,6 +37,21 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
   const [errors, setErrors] = useState({
     email: '',
   })
+
+  const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  useEffect(() => {
+    const handleKeyPress = (event: any) => {
+      if (event.key === 'Enter') {
+        nextButtonRef.current?.focus()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [])
   const handleSubmit = async () => {
     setSubmitBtnLoading(true)
     const { err, res } = await forgotPassword({
@@ -100,6 +115,7 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
 
         <footer className={styles['footer']}>
           <button
+            ref={nextButtonRef}
             className="modal-footer-btn submit"
             onClick={handleSubmit}
             disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}

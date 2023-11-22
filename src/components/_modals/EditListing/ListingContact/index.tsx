@@ -33,6 +33,7 @@ type Props = {
   setConfirmationModal?: any
   handleClose?: any
   isError?: boolean
+  onStatusChange?: (isChanged: boolean) => void
 }
 type ListingContactData = {
   public_email: InputData<string>
@@ -48,6 +49,7 @@ const ListingContactEditModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClose,
+  onStatusChange,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -69,6 +71,35 @@ const ListingContactEditModal: React.FC<Props> = ({
   const inputRef = useRef<HTMLInputElement>(null)
   const phoneRef = useRef<HTMLInputElement>(null)
   const websiteRef = useRef<HTMLInputElement>(null)
+  const [initialData, setInitialData] = useState<ListingContactData>({
+    phone: { value: '', error: null },
+    public_email: { value: '', error: null },
+    website: { value: '', error: null },
+    whatsapp_number: { value: '', error: null },
+    page_admin: { value: '', error: null },
+  })
+  const [isChanged, setIsChanged] = useState(false)
+
+  useEffect(() => {
+    setInitialData((prev) => {
+      return {
+        public_email: {
+          ...prev.public_email,
+          value: listingModalData.public_email as string,
+        },
+        phone: { ...prev.phone, value: listingModalData.phone as string },
+        whatsapp_number: {
+          ...prev.whatsapp_number,
+          value: listingModalData.whatsapp_number as string,
+        },
+        website: { ...prev.website, value: listingModalData.website as string },
+        page_admin: {
+          ...prev.page_admin,
+          value: user.display_name,
+        },
+      }
+    })
+  }, [user])
 
   useEffect(() => {
     inputRef?.current?.focus()
@@ -80,6 +111,13 @@ const ListingContactEditModal: React.FC<Props> = ({
         [event.target.name]: { value: event.target.value, error: null },
       }
     })
+    const currentData = { ...data }
+    const hasChanges =
+      JSON.stringify(currentData) !== JSON.stringify(initialData)
+    setIsChanged(hasChanges)
+    if (onStatusChange) {
+      onStatusChange(hasChanges)
+    }
   }
 
   const handleBack = async () => {

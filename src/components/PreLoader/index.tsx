@@ -16,7 +16,7 @@ const PreLoader: React.FC<Props> = (props) => {
 
   return (
     <section className={styles['loader-wrapper']}>
-      <Image src={'/logo-trans.png'} priority={true} width={300} height={61} alt="Logo" />
+      {/* <Image src={'/logo-trans.png'} priority={true} width={300} height={61} alt="Logo" /> */}
     </section>
   )
 }

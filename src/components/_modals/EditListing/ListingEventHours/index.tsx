@@ -32,6 +32,7 @@ type Props = {
   confirmationModal?: boolean
   setConfirmationModal?: any
   handleClose?: any
+  onStatusChange?: (isChanged: boolean) => void
 }
 
 type ListingAddressData = {
@@ -85,6 +86,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClose,
+  onStatusChange,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -97,6 +99,8 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
   const [isSelectingStartDate, setIsSelectingStartDate] = useState(true)
   const [eventData, setEventData] = useState(initialEventHour)
   const today = new Date().toISOString().split('T')[0]
+  const [initialData, setInitialData] = useState({})
+  const [isChanged, setIsChanged] = useState(false)
 
   const handleDateSelection = (selectedDate: string) => {
     if (isSelectingStartDate) {
@@ -132,6 +136,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
       const { from_time, to_time, from_date, to_date } =
         listingModalData.event_date_time
       setEventData({ from_time, to_time, from_date, to_date })
+      setInitialData({ from_time, to_time, from_date, to_date })
     }
   }, [])
 
@@ -155,8 +160,17 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     }
     setEventData(updated)
     console.log(updated)
+
     // setWorkingHoursData(updated)
   }
+  useEffect(() => {
+    const hasChanges = JSON.stringify(eventData) !== JSON.stringify(initialData)
+    setIsChanged(hasChanges)
+
+    if (onStatusChange) {
+      onStatusChange(hasChanges)
+    }
+  }, [eventData, initialData, onStatusChange])
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
     const handleKeyPress = (event: any) => {

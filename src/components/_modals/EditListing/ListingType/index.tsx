@@ -37,6 +37,7 @@ type Props = {
   setConfirmationModal?: any
   handleClose?: any
   isError?: boolean
+  onStatusChange?: (isChanged: boolean) => void
 }
 
 const ListingTypeEditModal: React.FC<Props> = ({
@@ -45,6 +46,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClose,
+  onStatusChange,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -61,6 +63,8 @@ const ListingTypeEditModal: React.FC<Props> = ({
   const [showDropdown, setShowDropdown] = useState(false)
   const dropdownRef: any = useRef()
   useOutsideAlerter(dropdownRef, () => setShowDropdown(false))
+  const [initialData, setInitialData] = useState<any>([])
+  const [isChanged, setIsChanged] = useState(false)
 
   const handleSubmit = async () => {
     setError('')
@@ -147,6 +151,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
         break
     }
     setValue(listingModalData.page_type as string)
+    setInitialData(listingModalData.page_type as string)
   }, [listingModalData])
 
   const handleChange = (itemToChange: any) => {
@@ -171,6 +176,15 @@ const ListingTypeEditModal: React.FC<Props> = ({
       setIsError(true)
     }
   }
+
+  useEffect(() => {
+    const hasChanges = JSON.stringify(value) !== JSON.stringify(initialData)
+    setIsChanged(hasChanges)
+
+    if (onStatusChange) {
+      onStatusChange(hasChanges)
+    }
+  }, [value, initialData, onStatusChange])
 
   useEffect(() => {
     if (confirmationModal) {

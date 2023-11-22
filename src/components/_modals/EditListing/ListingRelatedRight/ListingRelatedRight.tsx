@@ -45,6 +45,7 @@ type Props = {
   confirmationModal?: boolean
   setConfirmationModal?: any
   handleClose?: any
+  onStatusChange?: (isChanged: boolean) => void
 }
 
 type ListingAboutData = {
@@ -57,6 +58,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClose,
+  onStatusChange,
 }) => {
   const dispatch = useDispatch()
   const { listingModalData } = useSelector((state: RootState) => state.site)
@@ -80,6 +82,8 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
     { _id: string; name: string; description: string }[]
   >([])
   const inputRef = useRef<HTMLInputElement>(null)
+  const [initialData, setInitialData] = useState({})
+  const [isChanged, setIsChanged] = useState(false)
 
   useEffect(() => {
     inputRef?.current?.focus()
@@ -105,6 +109,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
       setRelation(listingModalData.related_listings_right.relation)
     }
     setRelatedListingsRight(listingModalData.related_listings_right?.listings)
+    setInitialData(listingModalData.related_listings_right?.listings)
   }, [listingModalData])
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
@@ -239,6 +244,17 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
       }
     }
   }
+
+  useEffect(() => {
+    const hasChanges =
+      JSON.stringify(relatedListingsRight) !== JSON.stringify(initialData)
+    setIsChanged(hasChanges)
+
+    if (onStatusChange) {
+      onStatusChange(hasChanges)
+    }
+  }, [relatedListingsRight, initialData, onStatusChange])
+
   useEffect(() => {
     const matchedListings = allListingPages.filter((item: any) =>
       relatedListingsRight.includes(item._id),

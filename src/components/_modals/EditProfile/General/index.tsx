@@ -27,6 +27,7 @@ type Props = {
   setConfirmationModal?: any
   handleClose?: any
   isError?: boolean
+  onStatusChange?: (isChanged: boolean) => void
 }
 
 type ProfileGeneralData = {
@@ -44,6 +45,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClose,
+  onStatusChange,
 }) => {
   const dispatch = useDispatch()
 
@@ -51,6 +53,8 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [nextDisabled, setNextDisabled] = useState(false)
   const [isError, setIsError] = useState(false)
+  const [initialData, setInitialData] = useState<ProfileGeneralData>()
+  const [isChanged, setIsChanged] = useState(false)
 
   const fullNameRef = useRef<HTMLInputElement>(null)
   const displayNameRef = useRef<HTMLInputElement>(null)
@@ -76,13 +80,20 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   })
 
   const handleInputChange = (event: any) => {
-    setData((prev) => {
-      return { ...prev, [event.target.name]: event.target.value }
-    })
-    setInputErrs((prev) => {
-      return { ...prev, [event.target.name]: null }
-    })
+    const { name, value } = event.target
+    setData((prev) => ({ ...prev, [name]: value }))
+    setInputErrs((prev) => ({ ...prev, [name]: null }))
+
+    // Compare current data with initial data to check for changes
+    const currentData = { ...data, [name]: value }
+    const hasChanges =
+      JSON.stringify(currentData) !== JSON.stringify(initialData)
+    setIsChanged(hasChanges)
+    if (onStatusChange) {
+      onStatusChange(hasChanges)
+    }
   }
+
   const baseURL =
     window.location.protocol +
     '//' +
@@ -211,14 +222,17 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   }, [data.full_name])
   console.log('type', typeof user.profile_url)
   useEffect(() => {
-    setData({
-      full_name: user.full_name,
-      tagline: user.tagline,
-      display_name: user.display_name,
-      profile_url: user.profile_url,
-      gender: user.gender,
-      year_of_birth: user.year_of_birth,
-    })
+    // Set initial data with user's current profile data
+    const initialProfileData = {
+      full_name: user.full_name || '',
+      tagline: user.tagline || '',
+      display_name: user.display_name || '',
+      profile_url: user.profile_url || '',
+      gender: user.gender || null,
+      year_of_birth: user.year_of_birth || '',
+    }
+    setInitialData(initialProfileData)
+    setData(initialProfileData)
   }, [user])
 
   console.log('data', data)
@@ -285,7 +299,9 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
       <div className={styles['modal-wrapper']}>
         <CloseIcon
           className={styles['modal-close-icon']}
-          onClick={handleClose}
+          onClick={() =>
+            isChanged ? setConfirmationModal(true) : handleClose()
+          }
         />
         {/* Modal Header */}
         <header className={styles['header']}>

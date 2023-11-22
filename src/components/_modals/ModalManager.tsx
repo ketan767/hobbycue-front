@@ -287,12 +287,14 @@ const ModalManager: React.FC = () => {
                 <ProfileAddressEditModal
                   addLocation={true}
                   title={'Add New Location'}
+                  {...props}
                 />
               )}
               {activeModal === 'user-address-edit' && (
                 <ProfileAddressEditModal
                   title="Edit Location"
                   editLocation={true}
+                  {...props}
                 />
               )}
               {activeModal === 'Verify-ActionModal' && <VerifyActionModal />}
