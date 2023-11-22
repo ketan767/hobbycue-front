@@ -5,7 +5,9 @@ type Props = {
   options: any
   onChange?: any
   value?: any
+
   name?: any
+
 }
 
 const DropdownArrow = () => (
@@ -36,9 +38,11 @@ const InputSelect: React.FC<Props> = ({ options, onChange, value }) => {
       <select
         name="select"
         className={styles.select}
+
         onChange={(e: any) => {
           onChange(e.target.value)
         }}
+
         value={value}
         style={{ paddingRight: '30px' }}
       >

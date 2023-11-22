@@ -43,10 +43,12 @@ import ClaimModal from './ClaimModal/ClaimModal'
 import VerifyActionModal from './VerifyAction/VerifyAction'
 import SetPasswordModal from './CreatePassword'
 import { ModalType } from '@/redux/slices/modal'
+
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import SimpleSnackbar from '../_snackbar/Snackbar'
 import { types } from 'util'
+
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -94,12 +96,13 @@ const ModalManager: React.FC = () => {
   }
 
   function handleClose() {
+    console.log('close1')
     if (confirmationModal) {
       setConfirmationModal(false)
     } else if (hasChanges) {
       setConfirmationModal(true)
     } else {
-      dispatch(closeModal())
+      setConfirmationModal(true)
     }
   }
 
@@ -107,9 +110,11 @@ const ModalManager: React.FC = () => {
     dispatch(closeModal())
   }
 
+
   const handleStatusChange = (isChanged: boolean) => {
     setHasChanges(isChanged)
   }
+
 
   const activeCloseHandler =
     activeModal !== null

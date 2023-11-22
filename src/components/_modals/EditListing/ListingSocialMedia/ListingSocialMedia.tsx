@@ -331,6 +331,7 @@ const ListingSocialMediaEditModal = ({
       window.removeEventListener('keydown', handleKeyPress)
     }
   }, [])
+
   useEffect(() => {
     const changesMade =
       JSON.stringify(mediaData) !== JSON.stringify(initialData)
@@ -339,6 +340,7 @@ const ListingSocialMediaEditModal = ({
       onStatusChange(changesMade)
     }
   }, [mediaData, initialData])
+
 
   if (confirmationModal) {
     return (
