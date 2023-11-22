@@ -52,7 +52,6 @@ import SimpleSnackbar from '../_snackbar/Snackbar'
 import { types } from 'util'
 
 
-
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
 }
@@ -105,14 +104,13 @@ const ModalManager: React.FC = () => {
     } else if (hasChanges) {
       setConfirmationModal(true)
     } else {
-      setConfirmationModal(true)
+      dispatch(closeModal())
     }
   }
 
   function closewithoutCfrm() {
     dispatch(closeModal())
   }
-
 
 
   const handleStatusChange = (isChanged: boolean) => {

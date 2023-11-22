@@ -84,7 +84,6 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     setData((prev) => ({ ...prev, [name]: value }))
     setInputErrs((prev) => ({ ...prev, [name]: null }))
 
-    // Compare current data with initial data to check for changes
     const currentData = { ...data, [name]: value }
     const hasChanges =
       JSON.stringify(currentData) !== JSON.stringify(initialData)
