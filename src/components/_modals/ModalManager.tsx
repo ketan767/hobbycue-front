@@ -49,7 +49,6 @@ import 'react-toastify/dist/ReactToastify.css'
 import SimpleSnackbar from '../_snackbar/Snackbar'
 import { types } from 'util'
 
-
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
 }
@@ -102,7 +101,7 @@ const ModalManager: React.FC = () => {
     } else if (hasChanges) {
       setConfirmationModal(true)
     } else {
-      setConfirmationModal(true)
+      dispatch(closeModal())
     }
   }
 
@@ -110,11 +109,9 @@ const ModalManager: React.FC = () => {
     dispatch(closeModal())
   }
 
-
   const handleStatusChange = (isChanged: boolean) => {
     setHasChanges(isChanged)
   }
-
 
   const activeCloseHandler =
     activeModal !== null

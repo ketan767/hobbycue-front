@@ -20,7 +20,7 @@ const SaveModal: React.FC<Props> = ({
   handleClose,
   handleSubmit,
   isError,
-  OnBoarding,
+  OnBoarding = false,
 }) => {
   const { user } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
@@ -32,11 +32,6 @@ const SaveModal: React.FC<Props> = ({
       window.location.reload()
     } else if (isError) {
       setConfirmationModal(false)
-    }
-  }
-  const HandleNoListing = () => {
-    if (!listingModalData.is_onboarded) {
-      window.location.reload()
     }
   }
 
@@ -64,7 +59,6 @@ const SaveModal: React.FC<Props> = ({
               setConfirmationModal(false)
 
               dispatch(closeModal())
-              HandleNoListing()
             }}
           >
             No

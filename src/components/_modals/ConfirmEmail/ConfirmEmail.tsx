@@ -39,6 +39,8 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
   })
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  const emailRef = useRef<HTMLInputElement | null>(null)
+
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
@@ -65,6 +67,7 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
           ...errors,
           email: err?.response?.data?.message,
         })
+        emailRef?.current?.focus()
       }
       return
     }
@@ -80,6 +83,7 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
   //   console.log('user', user)
 
   useEffect(() => {
+    emailRef?.current?.focus()
     setErrors({
       email: '',
     })
@@ -107,6 +111,7 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
                 onChange={(e) => setEmail(e.target.value)}
                 className={styles.input}
                 placeholder="Email Address"
+                ref={emailRef}
               />
               <p className={styles['helper-text']}>{errors.email}</p>
             </div>
