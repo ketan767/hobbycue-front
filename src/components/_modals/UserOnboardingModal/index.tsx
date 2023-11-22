@@ -11,6 +11,7 @@ import ProfileAboutEditModal from '../EditProfile/About'
 import ProfileAddressEditModal from '../EditProfile/Address'
 import ProfileHobbyEditModal from '../EditProfile/Hobby'
 import ProfileContactEditModal from '../EditProfile/ProfileContact'
+import SaveModal from '../SaveModal/saveModal'
 
 import styles from './styles.module.css'
 
@@ -120,6 +121,9 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
       document.removeEventListener('mousedown', handleOutsideClick)
     }
   }, [])
+  if (confirmationModal) {
+    return <SaveModal OnBoarding={true} />
+  }
 
   return (
     <div

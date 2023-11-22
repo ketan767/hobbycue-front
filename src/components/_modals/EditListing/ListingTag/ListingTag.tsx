@@ -39,6 +39,7 @@ type Props = {
   confirmationModal?: boolean
   setConfirmationModal?: any
   handleClose?: any
+  onStatusChange?: (isChanged: boolean) => void
 }
 
 type ListingAboutData = {
@@ -51,6 +52,7 @@ const ListingTagsEditModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClose,
+  onStatusChange,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -67,6 +69,8 @@ const ListingTagsEditModal: React.FC<Props> = ({
   })
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   useOutsideAlerter(dropdownRef, () => setShowDropdown(false))
+  const [initialData, setInitialData] = useState([])
+  const [isChanged, setIsChanged] = useState(false)
 
   const handleInputChange = (value: string) => {
     setData((prev) => {
@@ -108,6 +112,7 @@ const ListingTagsEditModal: React.FC<Props> = ({
         }
       })
       setSelectedTags(selected)
+      setInitialData(selected)
     }
   }, [listingModalData?._tags, tags])
 
@@ -127,11 +132,22 @@ const ListingTagsEditModal: React.FC<Props> = ({
       .then((res: any) => {
         const temp = res.res.data.data.tags
         setTags(temp)
+        setInitialData(temp)
       })
       .catch((err: any) => {
         console.log(err)
       })
   }, [])
+
+  useEffect(() => {
+    const hasChanges =
+      JSON.stringify(selectedTags) !== JSON.stringify(initialData)
+    setIsChanged(hasChanges)
+
+    if (onStatusChange) {
+      onStatusChange(hasChanges)
+    }
+  }, [selectedTags, initialData, onStatusChange])
 
   const handleTagChange = (idToChange: any) => {
     if (selectedTags.includes(idToChange)) {

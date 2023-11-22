@@ -44,6 +44,7 @@ type Props = {
   confirmationModal?: boolean
   setConfirmationModal?: any
   handleClose?: any
+  onStatusChange?: (isChanged: boolean) => void
 }
 
 const RelatedListingEditModal: React.FC<Props> = ({
@@ -52,6 +53,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClose,
+  onStatusChange,
 }) => {
   const dispatch = useDispatch()
   const { listingModalData } = useSelector((state: RootState) => state.site)
@@ -76,6 +78,10 @@ const RelatedListingEditModal: React.FC<Props> = ({
   useEffect(() => {
     inputRef?.current?.focus()
   }, [])
+
+  const [initialData, setInitialData] = useState({})
+  const [isChanged, setIsChanged] = useState(false)
+
   useEffect(() => {
     if (listingModalData && listingModalData._id) {
       const updated = listingData.filter(
@@ -94,6 +100,11 @@ const RelatedListingEditModal: React.FC<Props> = ({
       setRelation(listingModalData.related_listings_left.relation)
     }
     setRelatedListingsLeft(listingModalData.related_listings_left?.listings)
+
+
+    setInitialData(listingModalData.related_listings_left?.listings)
+
+
   }, [listingModalData])
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
@@ -121,6 +132,15 @@ const RelatedListingEditModal: React.FC<Props> = ({
       }
     }
   }
+  useEffect(() => {
+    const hasChanges =
+      JSON.stringify(relatedListingsLeft) !== JSON.stringify(initialData)
+    setIsChanged(hasChanges)
+
+    if (onStatusChange) {
+      onStatusChange(hasChanges)
+    }
+  }, [relatedListingsLeft, initialData, onStatusChange])
 
   useEffect(() => {
     setDropdownLoading(true)

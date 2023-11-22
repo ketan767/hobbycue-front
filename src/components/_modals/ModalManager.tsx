@@ -43,12 +43,14 @@ import ClaimModal from './ClaimModal/ClaimModal'
 import VerifyActionModal from './VerifyAction/VerifyAction'
 import SetPasswordModal from './CreatePassword'
 
+import { ModalType } from '@/redux/slices/modal'
+
+
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import SimpleSnackbar from '../_snackbar/Snackbar'
 import { types } from 'util'
 
-import { ModalType } from '@/redux/slices/modal'
 
 
 const CustomBackdrop: React.FC = () => {
@@ -60,19 +62,22 @@ export interface SnackbarState {
 }
 
 const ModalManager: React.FC = () => {
-  const [snackbar, setSnackbar] = useState<SnackbarState>({ show: false, message: '' });
+  const [snackbar, setSnackbar] = useState<SnackbarState>({
+    show: false,
+    message: '',
+  })
 
   const triggerSnackbar = (data: SnackbarState) => {
-    setSnackbar(data);
-  };
+    setSnackbar(data)
+  }
 
   const resetSnackbar = (data: SnackbarState) => {
-    setSnackbar(data);
-  };
-  
+    setSnackbar(data)
+  }
 
   const dispatch = useDispatch()
   const [confirmationModal, setConfirmationModal] = useState(false)
+  const [hasChanges, setHasChanges] = useState(false)
   const { activeModal, closable } = useSelector(
     (state: RootState) => state.modal,
   )
@@ -97,12 +102,21 @@ const ModalManager: React.FC = () => {
     console.log('close1')
     if (confirmationModal) {
       setConfirmationModal(false)
+    } else if (hasChanges) {
+      setConfirmationModal(true)
     } else {
       setConfirmationModal(true)
     }
   }
+
   function closewithoutCfrm() {
     dispatch(closeModal())
+  }
+
+
+
+  const handleStatusChange = (isChanged: boolean) => {
+    setHasChanges(isChanged)
   }
 
   const activeCloseHandler =
@@ -143,31 +157,38 @@ const ModalManager: React.FC = () => {
       }, 500)
   }, [activeModal])
 
-  const escFunction = (event: KeyboardEvent) => {
-    if (event.key === 'Escape') {
-      setConfirmationModal((prev) => !prev)
-    }
-  }
+  const escFunction = useCallback(
+    (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        if (confirmationModal) {
+          setConfirmationModal(false)
+        } else if (hasChanges) {
+          setConfirmationModal(true)
+        } else {
+          dispatch(closeModal())
+        }
+      }
+    },
+    [hasChanges, confirmationModal, dispatch],
+  )
 
   useEffect(() => {
     document.addEventListener('keydown', escFunction, { capture: true })
-
     return () => {
       document.removeEventListener('keydown', escFunction, { capture: true })
     }
-  }, [])
+  }, [escFunction])
 
   const handleBgClick = (event: any) => {
-    // event.preventDefault()
     if (event.target === event.currentTarget) {
-      setConfirmationModal(true)
+      handleClose()
     }
   }
-
   const props = {
     setConfirmationModal,
     confirmationModal,
     handleClose,
+    onStatusChange: handleStatusChange,
   }
 
   return (
@@ -267,17 +288,21 @@ const ModalManager: React.FC = () => {
               {activeModal === 'confirm-email' && <ConfirmEmailModal />}
               {activeModal === 'email-sent' && <EmailSentModal />}
               {activeModal === 'reset-password' && <ResetPasswordModal />}
-              {activeModal === 'social-media-share' && <ShareModal triggerSnackbar={triggerSnackbar}/>}
+              {activeModal === 'social-media-share' && (
+                <ShareModal triggerSnackbar={triggerSnackbar} />
+              )}
               {activeModal === 'add-location' && (
                 <ProfileAddressEditModal
                   addLocation={true}
                   title={'Add New Location'}
+                  {...props}
                 />
               )}
               {activeModal === 'user-address-edit' && (
                 <ProfileAddressEditModal
                   title="Edit Location"
                   editLocation={true}
+                  {...props}
                 />
               )}
               {activeModal === 'Verify-ActionModal' && <VerifyActionModal />}
@@ -320,7 +345,13 @@ const ModalManager: React.FC = () => {
           </div>
         </Fade>
       </Modal>
-      <SimpleSnackbar triggerOpen={snackbar.show} message={snackbar.message} resetSnackbar={resetSnackbar} textColor='#7f63a1' bgColor='#ffffff'/>
+      <SimpleSnackbar
+        triggerOpen={snackbar.show}
+        message={snackbar.message}
+        resetSnackbar={resetSnackbar}
+        textColor="#7f63a1"
+        bgColor="#ffffff"
+      />
     </>
   )
 }

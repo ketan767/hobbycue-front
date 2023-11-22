@@ -36,7 +36,14 @@ type Props = {
   confirmationModal?: boolean
   setConfirmationModal?: any
   handleClose?: any
+  onStatusChange?: (isChanged: boolean) => void
 }
+
+interface SocialMediaData {
+  socialMedia: string
+  url: string
+}
+
 const options: SocialMediaOption[] = [
   'Facebook',
   'Twitter',
@@ -117,9 +124,12 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClose,
+  onStatusChange,
 }: Props) => {
   const [submitBtnLoading, setSubmitBtnLoading] = useState(false)
   const { user } = useSelector((state: RootState) => state.user)
+  const [initialData, setInitialData] = useState<SocialMediaData[]>([])
+  const [isChanged, setIsChanged] = useState(false)
 
   useEffect(() => {
     if (!user.social_media_urls) return
@@ -223,6 +233,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
     }
     if (arr.length > 0) {
       setMediaData(arr)
+      setInitialData(arr)
     }
   }, [user])
 
@@ -318,6 +329,18 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
     }
   }, [])
   console.log(user)
+
+  useEffect(() => {
+    const changesMade =
+      JSON.stringify(mediaData) !== JSON.stringify(initialData)
+    setIsChanged(changesMade)
+    if (onStatusChange) {
+      onStatusChange(changesMade)
+    }
+  }, [mediaData, initialData])
+
+  console.log('i', initialData)
+  console.log('m', mediaData)
   if (confirmationModal) {
     return (
       <SaveModal

@@ -56,6 +56,9 @@ export const Navbar: React.FC<Props> = ({}) => {
   const toggleMenu = () => {
     setMenuActive(!menuActive)
   }
+  const handleSearch = () => {
+    router.push('/search')
+  }
 
   return (
     <>
@@ -129,7 +132,10 @@ export const Navbar: React.FC<Props> = ({}) => {
                         },
                       }}
                     >
-                      <div className={styles['search-icon-container']}>
+                      <div
+                        className={styles['search-icon-container']}
+                        onClick={handleSearch}
+                      >
                         <Image
                           src={SearchIcon}
                           alt="search"

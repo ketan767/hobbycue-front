@@ -30,6 +30,7 @@ type Props = {
   confirmationModal?: boolean
   setConfirmationModal?: any
   handleClose?: any
+  onStatusChange?: (isChanged: boolean) => void
 }
 
 type ListingAddressData = {
@@ -84,6 +85,7 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClose,
+  onStatusChange,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -104,6 +106,8 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
     longitude: { value: '', error: null },
   })
   const [workingHoursData, setWorkingHoursData] = useState(initialWorkingHour)
+  const [initialData, setInitialData] = useState([])
+  const [isChanged, setIsChanged] = useState(false)
 
   const handleInputChange = (event: any) => {
     setData((prev) => {
@@ -165,8 +169,19 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
     })
     if (workData) {
       setWorkingHoursData(workData)
+      setInitialData(workData)
     }
   }, [listingModalData])
+
+  useEffect(() => {
+    const hasChanges =
+      JSON.stringify(workingHoursData) !== JSON.stringify(initialData)
+    setIsChanged(hasChanges)
+
+    if (onStatusChange) {
+      onStatusChange(hasChanges)
+    }
+  }, [workingHoursData, initialData, onStatusChange])
 
   const addWorkingHour = () => {
     setWorkingHoursData((prev: any) => [...prev, ...initialWorkingHour])

@@ -12,6 +12,7 @@ type Props = {
   handleClose?: any
   handleSubmit?: any
   isError?: any
+  OnBoarding?: any
 }
 
 const SaveModal: React.FC<Props> = ({
@@ -19,6 +20,7 @@ const SaveModal: React.FC<Props> = ({
   handleClose,
   handleSubmit,
   isError,
+  OnBoarding,
 }) => {
   const { user } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
@@ -26,10 +28,8 @@ const SaveModal: React.FC<Props> = ({
 
   const onboardcheck = () => {
     console.log('isError', isError)
-    if (!isError) {
-      if (!user.is_onboarded || !listingModalData.is_onboarded) {
-        window.location.reload()
-      }
+    if (OnBoarding) {
+      window.location.reload()
     } else if (isError) {
       setConfirmationModal(false)
     }
@@ -59,8 +59,10 @@ const SaveModal: React.FC<Props> = ({
           </FilledButton>
           <OutlinedButton
             onClick={() => {
-              handleClose()
+              handleClose
+              onboardcheck()
               setConfirmationModal(false)
+
               dispatch(closeModal())
               HandleNoListing()
             }}

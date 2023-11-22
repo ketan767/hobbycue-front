@@ -25,7 +25,9 @@ type Props = {
   confirmationModal?: boolean
   setConfirmationModal?: any
   handleClosee?: any
+  handleClose?: any
   isError?: boolean
+  onStatusChange?: (isChanged: boolean) => void
 }
 const levels = ['Beginner', 'Intermediate', 'Advanced']
 // const levels = {
@@ -52,6 +54,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClosee,
+  handleClose,
+  onStatusChange,
 }) => {
   const dispatch = useDispatch()
 
@@ -82,6 +86,9 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const [genreDropdownList, setGenreDropdownList] = useState<
     DropdownListItem[]
   >([])
+
+  const [initialData, setInitialData] = useState({})
+  const [isChanged, setIsChanged] = useState(false)
 
   const handleHobbyInputChange = async (e: any) => {
     setHobbyInputValue(e.target.value)
@@ -256,8 +263,16 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     setUserHobbies(user._hobbies)
   }, [user._hobbies])
 
-  const handleClose = () => dispatch(closeModal())
+  useEffect(() => {
+    setInitialData(user._hobbies)
+    const hasChanges =
+      JSON.stringify(userHobbies) !== JSON.stringify(initialData)
+    setIsChanged(hasChanges)
 
+    if (onStatusChange) {
+      onStatusChange(hasChanges)
+    }
+  }, [userHobbies, initialData, onStatusChange])
   const handleLevelChange = async (_id: any, level: string) => {
     let temp = userHobbies.map((item: any) => {
       if (item._id === _id) {
@@ -592,11 +607,3 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 }
 
 export default ProfileHobbyEditModal
-
-/**
- * @TODO:
- * 1. Debounce API req while typing in the hobby/genre search list.
- * 2. Dropdown and Functionality to change the Level of an Hobby in the `Added Hobbies` list.
- * 3. Chnage in query in the Genre search dropdown.
- * 4. Delete button loading while deleting any hobby.
- */

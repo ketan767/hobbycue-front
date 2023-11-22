@@ -358,13 +358,14 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
             </CustomTooltip>
 
             {/* More Options Button */}
-
-            <div
-              onClick={(e) => handleDropdown()}
-              className={styles['action-btn']}
-            >
-              <CustomTooltip title="More options">
-                <MoreHorizRoundedIcon color="primary" />
+            <div className={styles['action-btn-dropdown-wrapper']}>
+              <CustomTooltip title="Click to view options">
+                <div
+                  onClick={(e) => handleDropdown()}
+                  className={styles['action-btn']}
+                >
+                  <MoreHorizRoundedIcon color="primary" />
+                </div>
               </CustomTooltip>
               {listingLayoutMode === 'edit'
                 ? open && (

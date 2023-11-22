@@ -31,6 +31,7 @@ type Props = {
   setConfirmationModal?: any
   handleClose?: any
   isError?: boolean
+  onStatusChange?: (isChanged: boolean) => void
 }
 
 type ProfileAboutData = {
@@ -43,6 +44,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClose,
+  onStatusChange,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -57,13 +59,28 @@ const ProfileAboutEditModal: React.FC<Props> = ({
   const [inputErrs, setInputErrs] = useState<{ about: string | null }>({
     about: null,
   })
+  const [initialData, setInitialData] = useState<ProfileAboutData>({
+    about: '',
+  })
+  const [isChanged, setIsChanged] = useState(false)
+
+  useEffect(() => {
+    // Set initial data when the component mounts
+    setInitialData({ about: user.about })
+  }, [user])
 
   const handleInputChange = (value: string) => {
-    setData((prev) => {
-      return { ...prev, about: value }
-    })
+    setData((prev) => ({ ...prev, about: value }))
     setInputErrs({ about: null })
+
+    const hasChanged = value !== initialData.about
+    setIsChanged(hasChanged)
+
+    if (onStatusChange) {
+      onStatusChange(hasChanged)
+    }
   }
+
   const Backsave = async () => {
     setBackBtnLoading(true)
     if (
@@ -195,7 +212,9 @@ const ProfileAboutEditModal: React.FC<Props> = ({
         <header className={styles['header']}>
           <CloseIcon
             className={styles['modal-close-icon']}
-            onClick={handleClose}
+            onClick={() =>
+              isChanged ? setConfirmationModal(true) : handleClose()
+            }
           />
           <h4 className={styles['heading']}>{'About'}</h4>
         </header>
