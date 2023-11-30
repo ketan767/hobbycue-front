@@ -30,6 +30,7 @@ type Props = {
   handleClose?: any
   isError?: boolean
   onStatusChange?: (isChanged: boolean) => void
+  onBoarding?: boolean
 }
 
 type ListingAddressData = {
@@ -51,6 +52,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
   setConfirmationModal,
   handleClose,
   onStatusChange,
+  onBoarding
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -417,6 +419,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
         handleSubmit={handleSubmit}
         setConfirmationModal={setConfirmationModal}
         isError={isError}
+        OnBoarding={onBoarding}
       />
     )
   }

@@ -26,6 +26,7 @@ type Props = {
   setConfirmationModal?: any
   handleClose?: any
   isError?: boolean
+  onBoarding?:boolean
 }
 
 type DropdownListItem = {
@@ -46,6 +47,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClose,
+  onBoarding
 }) => {
   const dispatch = useDispatch()
 
@@ -267,6 +269,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
         handleSubmit={handleSubmit}
         setConfirmationModal={setConfirmationModal}
         isError={isError}
+        OnBoarding={onBoarding}
       />
     )
   }

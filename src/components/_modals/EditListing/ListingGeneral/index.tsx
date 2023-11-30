@@ -27,6 +27,7 @@ type Props = {
   handleClose?: any
   isError?: boolean
   onStatusChange?: (isChanged: boolean) => void
+  onBoarding?:boolean
 }
 
 type ListingGeneralData = {
@@ -45,6 +46,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   setConfirmationModal,
   handleClose,
   onStatusChange,
+  onBoarding
 }) => {
   const dispatch = useDispatch()
 
@@ -364,13 +366,14 @@ const ListingGeneralEditModal: React.FC<Props> = ({
     }
   }, [isError])
 
-  if (confirmationModal) {
+  if (confirmationModal) {    
     return (
       <SaveModal
         handleClose={handleClose}
         handleSubmit={handleSubmit}
         setConfirmationModal={setConfirmationModal}
         isError={isError}
+        OnBoarding={onBoarding}
       />
     )
   }
