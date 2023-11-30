@@ -89,7 +89,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
   const [initialData, setInitialData] = useState({})
   const [isChanged, setIsChanged] = useState(false)
-
   const handleHobbyInputChange = async (e: any) => {
     setHobbyInputValue(e.target.value)
     setGenreInputValue('')
@@ -314,7 +313,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         nextButtonRef.current?.focus()
       }
     }
-
+    searchref.current?.focus()
     window.addEventListener('keydown', handleKeyPress)
 
     return () => {

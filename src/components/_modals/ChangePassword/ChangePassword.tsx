@@ -61,9 +61,14 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
   const [inputValidation, setInputValidation] = useState(
     validatePasswordConditions(newPassword),
   )
+  const currentPasswordRef = useRef<HTMLInputElement>(null)
   const newPasswordRef = useRef<HTMLInputElement>(null)
   const confirmPasswordRef = useRef<HTMLInputElement>(null)
   const [strength, setStrength] = useState(0)
+
+  useEffect(() => {
+    currentPasswordRef.current?.focus()
+  }, [])
 
   useEffect(() => {
     const result = validatePasswordConditions(newPassword)
@@ -75,16 +80,40 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
     newPassword: '',
     confirmPassword: '',
   })
-  const handleSubmit = async () => {
-    if (newPassword === '') {
-      setErrors({ ...errors, newPassword: 'Please enter a password!' })
+
+  const handleSubmit = async (buttonClicked: string) => {
+    if (currentPassword === '') {
+      currentPasswordRef.current?.focus()
+      setErrors({
+        ...errors,
+        currentPassword: 'Please enter the current password!',
+      })
+      return
+    }
+    if (newPassword === '' && buttonClicked === 'currentPassword') {
+      newPasswordRef.current?.focus()
+      return
+    } else if (newPassword === '' && buttonClicked !== 'currentPassword') {
+      setErrors({ ...errors, newPassword: 'Please enter the new password!' })
       newPasswordRef.current?.focus()
       return
     }
+
     const strengthNum = getStrengthNum(inputValidation)
     if (strengthNum < 3) {
       newPasswordRef.current?.focus()
       setErrors({ ...errors, newPassword: 'Please enter a strong password!' })
+      return
+    }
+    if (confirmPassword === '' && buttonClicked !== 'confirmPassword') {
+      confirmPasswordRef.current?.focus()
+      return
+    } else if (confirmPassword === '' && buttonClicked === 'confirmPassword') {
+      confirmPasswordRef.current?.focus()
+      setErrors({
+        ...errors,
+        confirmPassword: 'Please re-enter the new password!',
+      })
       return
     }
     if (confirmPassword !== newPassword) {
@@ -171,11 +200,17 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
               }`}
             >
               <TextField
+                inputRef={currentPasswordRef}
                 fullWidth
                 required
                 placeholder="Enter Current Password"
                 type={showcurrPassword ? 'text' : 'password'}
                 onChange={(e) => setCurrentPassword(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSubmit('currentPassword')
+                  }
+                }}
                 InputProps={{
                   endAdornment: (
                     <IconButton
@@ -206,12 +241,17 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
               <TextField
                 fullWidth
                 required
-                ref={newPasswordRef}
+                inputRef={newPasswordRef}
                 placeholder="Enter New Password"
                 type={showPassword ? 'text' : 'password'}
                 onFocus={() => setShowValidations(true)}
                 onBlur={() => setShowValidations(false)}
                 onChange={(e) => setNewPassword(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSubmit('newPassword')
+                  }
+                }}
                 InputProps={{
                   endAdornment: (
                     <IconButton onClick={() => setShowPassword(!showPassword)}>
@@ -285,7 +325,12 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
                 type={showCrmPassword ? 'text' : 'password'}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm New Password"
-                ref={confirmPasswordRef}
+                inputRef={confirmPasswordRef}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSubmit('confirmPassword')
+                  }
+                }}
                 InputProps={{
                   endAdornment: (
                     <IconButton
@@ -308,7 +353,7 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
         <footer className={styles['footer']}>
           <button
             className="modal-footer-btn submit"
-            onClick={handleSubmit}
+            onClick={()=>{handleSubmit('confirmPassword')}}
             disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
           >
             {submitBtnLoading ? (

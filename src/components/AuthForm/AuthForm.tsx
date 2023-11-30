@@ -66,6 +66,8 @@ const AuthForm: React.FC<Props> = (props) => {
   const { isModal } = props
   const router = useRouter()
   const dispatch = useDispatch()
+  const emailRef = useRef<HTMLInputElement>(null)
+  const passwordRef = useRef<HTMLInputElement>(null)
 
   const { authFormData } = useSelector((state: RootState) => state.modal)
   const { user } = useSelector((state: RootState) => state.user)
@@ -92,6 +94,11 @@ const AuthForm: React.FC<Props> = (props) => {
     })
     return num
   }
+
+  useEffect(()=>{
+    emailRef.current?.focus()
+  },[])
+
   useEffect(() => {
     const strengthNum = getStrengthNum(inputValidation)
     setStrength(strengthNum)
@@ -121,16 +128,26 @@ const AuthForm: React.FC<Props> = (props) => {
       password: authFormData.password,
       profile_url: '',
     }
+    if (authFormData.password === ''){
+      setSubmitBtnLoading(false)
+      passwordRef.current?.focus()
+      return setInputErrors({
+        email: null,
+        password: 'Please enter the password!',
+      })
+    }
     // Sign In
     if (selectedTab === 'sign-in') {
       const { err, res } = await signIn(data)
       setSubmitBtnLoading(false)
       if (err) {
-        if (err.response.data.message === 'User not found!')
+        if (err.response.data.message === 'User not found!') {
+          emailRef.current?.focus()
           return setInputErrors({
             email: err.response.data.message,
             password: null,
           })
+        }
         if (err.response.data.message === 'Invalid email or password')
           return setInputErrors({
             email: err.response.data.message,
@@ -374,6 +391,7 @@ const AuthForm: React.FC<Props> = (props) => {
       <FormControl className={styles['form-body']}>
         <div className={styles['email-field']}>
           <TextField
+            inputRef={emailRef}
             fullWidth
             label="Email"
             type="email"
@@ -385,11 +403,17 @@ const AuthForm: React.FC<Props> = (props) => {
             error={Boolean(inputErrors.email)}
             helperText={inputErrors.email}
             className={`${styles.inputField} ${isModal ? styles.bgGrey : ''}`}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleSubmit()
+              }
+            }}
           />
         </div>
 
         <div className={styles['password-field']}>
           <TextField
+            inputRef={passwordRef}
             fullWidth
             label="Password"
             type={showPassword ? 'text' : 'password'}
@@ -526,6 +550,7 @@ const AuthForm: React.FC<Props> = (props) => {
           disabled={submitBtnLoading}
           onClick={handleSubmit}
           className={styles['submit-btn']}
+          type="submit"
         >
           {submitBtnLoading ? (
             <CircularProgress className={styles['loader']} size={'16px'} />

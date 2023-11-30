@@ -60,6 +60,8 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   const displayNameRef = useRef<HTMLInputElement>(null)
   const profileUrlRef = useRef<HTMLInputElement>(null)
   const dobRef = useRef<HTMLInputElement>(null)
+  const [urlSpanLength,setUrlSpanLength]=useState<number>(0)
+  const urlSpanRef=useRef<HTMLSpanElement>(null)
 
   const [data, setData] = useState<ProfileGeneralData>({
     full_name: '',
@@ -84,6 +86,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     setData((prev) => ({ ...prev, [name]: value }))
     setInputErrs((prev) => ({ ...prev, [name]: null }))
 
+    // Compare current data with initial data to check for changes
     const currentData = { ...data, [name]: value }
     const hasChanges =
       JSON.stringify(currentData) !== JSON.stringify(initialData)
@@ -238,6 +241,8 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
 
   useEffect(() => {
     fullNameRef?.current?.focus()
+    const length=urlSpanRef.current?.offsetWidth??0
+    setUrlSpanLength(length+12)
   }, [])
   const HandleSaveError = async () => {
     if (
@@ -364,8 +369,9 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
                   name="profile_url"
                   onChange={handleInputChange}
                   ref={profileUrlRef}
+                  style={{paddingLeft:urlSpanLength+'px',paddingTop:'14px'}}
                 />
-                <span>{baseURL + '/profile/'}</span>
+                <span ref={urlSpanRef}>{baseURL + '/profile/'}</span>
               </div>
               <p className={styles['helper-text']}>{inputErrs.profile_url}</p>
             </div>

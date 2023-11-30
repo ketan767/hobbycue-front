@@ -56,6 +56,8 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   const [isError, setIsError] = useState(false)
   const [initialData, setInitialData] = useState({})
   const [isChanged, setIsChanged] = useState(false)
+  const [urlSpanLength,setUrlSpanLength]=useState<number>(0)
+  const urlSpanRef=useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
     setInitialData({
@@ -247,6 +249,8 @@ const ListingGeneralEditModal: React.FC<Props> = ({
       year: { value: listingModalData.year as string, error: null },
       admin_note: { value: listingModalData.admin_note as string, error: null },
     })
+    const length=urlSpanRef.current?.offsetWidth??0
+    setUrlSpanLength(length+12)
   }, [])
   useEffect(() => {
     const hasChanges = JSON.stringify(data) !== JSON.stringify(initialData)
@@ -440,8 +444,9 @@ const ListingGeneralEditModal: React.FC<Props> = ({
                   name="page_url"
                   onChange={handleInputChange}
                   ref={pageUrlRef}
+                  style={{paddingLeft:urlSpanLength+'px',paddingTop:'14px'}}
                 />
-                <span>{baseURL + '/page/'}</span>
+                <span ref={urlSpanRef}>{baseURL + '/page/'}</span>
               </div>
               <p className={styles['helper-text']}>{data.page_url.error}</p>
             </div>
