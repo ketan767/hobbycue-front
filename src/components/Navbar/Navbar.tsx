@@ -5,7 +5,15 @@ import IconButton from '@mui/material/IconButton'
 // import SearchIcon from '@mui/icons-material/Search'
 
 import Image from 'next/image'
-
+import { searchPages } from '@/services/listing.service'
+import {
+  setUserSearchResults,
+  setTypeResultOne,
+  setTypeResultTwo,
+  setTypeResultThree,
+  setSearchString,
+  setHobbiesSearchResult,
+} from '@/redux/slices/search'
 import LogoFull from '@/assets/image/logo-full.svg'
 import LogoSmall from '@/assets/image/logo-small.png'
 import ExploreIcon from '@/assets/svg/navbar-explore-icon.svg'
@@ -14,7 +22,7 @@ import Search from '@/assets/svg/search.svg'
 import SearchIcon from '@/assets/svg/search-small.svg'
 import BellIcon from '@/assets/svg/bell.svg'
 import BarsIcon from '@/assets/svg/bars.svg'
-
+import { searchUsers } from '@/services/user.service'
 import styles from './Navbar.module.css'
 import OutlinedButton from '../_buttons/OutlinedButton'
 import { useDispatch, useSelector } from 'react-redux'
@@ -23,12 +31,24 @@ import { updateIsLoggedIn } from '@/redux/slices/user'
 import Link from 'next/link'
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
 import store, { RootState } from '@/redux/store'
-
+import { getAllHobbies } from '@/services/hobby.service'
 import { useRouter } from 'next/router'
 import { logout } from '@/helper'
 import SideMenu from './SideMenu/SideMenu'
 import CustomizedTooltips from './../Tooltip/ToolTip'
+import pages from '@/pages/community/pages'
 type Props = {}
+
+interface SearchCriteria {
+  full_name?: string
+  tagline?: string
+  city?: string
+  title?: string
+}
+
+type SearchInput = {
+  search: InputData<string>
+}
 
 export const Navbar: React.FC<Props> = ({}) => {
   const dispatch = useDispatch()
@@ -39,6 +59,9 @@ export const Navbar: React.FC<Props> = ({}) => {
     (state: RootState) => state.user,
   )
   // const { isLoggedIn, isAuthenticated, user } = store.getState().user
+  const [data, setData] = useState<SearchInput>({
+    search: { value: '', error: null },
+  })
 
   const [showDropdown, setShowDropdown] = useState<
     'user-menu' | 'hobby-list' | null
@@ -48,6 +71,10 @@ export const Navbar: React.FC<Props> = ({}) => {
     logout()
     setShowDropdown(null)
   }
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value
+    setData((prev) => ({ ...prev, search: { value, error: null } }))
+  }
 
   useEffect(() => {
     setShowDropdown(null)
@@ -56,6 +83,117 @@ export const Navbar: React.FC<Props> = ({}) => {
   const toggleMenu = () => {
     setMenuActive(!menuActive)
   }
+
+  const searchResult = async () => {
+    const searchValue = data.search.value.trim()
+    const taglineValue = ''
+    const cityValue = ''
+    const hobbyValue = ''
+    const titleValue = ''
+
+    if (!searchValue && !taglineValue && !cityValue && !hobbyValue) {
+      console.log('Search fields are empty.')
+      return
+    }
+
+    let searchCriteria = {
+      full_name: searchValue,
+      tagline: taglineValue,
+      city: cityValue,
+      hobby: hobbyValue,
+      title: titleValue,
+    }
+
+    try {
+      const { res: userRes, err: userErr } = await searchUsers(searchCriteria)
+      if (userErr) {
+        console.error('An error occurred during the user search:', userErr)
+      } else {
+        console.log('User search results:', userRes)
+        dispatch(setUserSearchResults(userRes))
+      }
+      // Search by title
+      const { res: titleRes, err: titleErr } = await searchPages({
+        title: searchValue,
+      })
+      if (titleErr) {
+        console.error('An error occurred during the title search:', titleErr)
+        return
+      }
+
+      let combinedResults = titleRes.data.slice(0, 50)
+      let remainingSlots = 50 - combinedResults.length
+
+      if (combinedResults.length < 10) {
+        const { res: taglineRes, err: taglineErr } = await searchPages({
+          tagline: searchValue,
+        })
+        if (!taglineErr) {
+          combinedResults = combinedResults.concat(
+            taglineRes.data.slice(0, remainingSlots),
+          )
+        }
+      }
+      // If title search results are exactly 50, prioritize the first 40 and get 10 by tagline
+      else if (combinedResults.length === 50) {
+        combinedResults = combinedResults.slice(0, 40)
+        const { res: taglineRes, err: taglineErr } = await searchPages({
+          tagline: searchValue,
+        })
+        if (!taglineErr) {
+          combinedResults = combinedResults.concat(taglineRes.data.slice(0, 10))
+        }
+      }
+
+      const typeResultOne = combinedResults.filter(
+        (page: any) => page.type === 1,
+      )
+
+      dispatch(
+        setTypeResultOne({
+          data: typeResultOne,
+          message: 'Search completed successfully.',
+          success: true,
+        }),
+      )
+      const typeResultTwo = combinedResults.filter(
+        (page: any) => page.type === 2,
+      )
+
+      dispatch(
+        setTypeResultTwo({
+          data: typeResultTwo,
+          message: 'Search completed successfully.',
+          success: true,
+        }),
+      )
+      const typeResultThree = combinedResults.filter(
+        (page: any) => page.type === 3,
+      )
+
+      dispatch(
+        setTypeResultThree({
+          data: typeResultThree,
+          message: 'Search completed successfully.',
+          success: true,
+        }),
+      )
+      const query = `fields=display,genre,slug,profile_image&level=3&level=2&level=1&level=0&show=true&search=${searchValue}`
+      const { res: hobbyRes, err: hobbyErr } = await getAllHobbies(query)
+      if (hobbyErr) {
+        console.error('An error occurred during the page search:', hobbyErr)
+      } else {
+        console.log('hobbies search results:', hobbyRes.data.hobbies)
+        dispatch(setHobbiesSearchResult(hobbyRes.data.hobbies))
+      }
+
+      dispatch(setSearchString(searchValue))
+      router.push('/search')
+    } catch (error) {
+      console.error('An error occurred during the combined search:', error)
+    }
+  }
+
   const handleSearch = () => {
     router.push('/search')
   }
@@ -99,6 +237,8 @@ export const Navbar: React.FC<Props> = ({}) => {
               placeholder="Search here..."
               size="small"
               className={styles.inputField}
+              onChange={handleInputChange}
+              value={data.search.value}
               sx={{
                 '& .MuiOutlinedInput-root': {
                   borderRadius: '8px',
@@ -134,7 +274,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                     >
                       <div
                         className={styles['search-icon-container']}
-                        onClick={handleSearch}
+                        onClick={searchResult}
                       >
                         <Image
                           src={SearchIcon}

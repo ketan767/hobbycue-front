@@ -121,9 +121,6 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
       document.removeEventListener('mousedown', handleOutsideClick)
     }
   }, [])
-  if (confirmationModal) {
-    return <SaveModal OnBoarding={true} />
-  }
 
   return (
     <div

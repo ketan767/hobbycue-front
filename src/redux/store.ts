@@ -3,6 +3,7 @@ import postReducer from './slices/post'
 import modalReducer from './slices/modal'
 import userReducer from './slices/user'
 import siteReducer from './slices/site'
+import searchReducer from './slices/search';
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     modal: modalReducer,
     user: userReducer,
     site: siteReducer,
+    search: searchReducer,
   },
 })
 

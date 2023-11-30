@@ -172,3 +172,22 @@ export const updateUserCover = async (formData: FormData) => {
     return { err: error, res: null }
   }
 }
+
+
+export const searchUsers = async (searchCriteria:any) => {
+  try {
+  
+    const queryParams = new URLSearchParams();
+    for (const key in searchCriteria) {
+      if (searchCriteria.hasOwnProperty(key)) {
+        queryParams.append(key, searchCriteria[key]);
+      }
+    }
+    
+    const response = await axiosInstance.get(`/user/user-search?${queryParams.toString()}`);
+    return { res: response.data, err: null };
+  } catch (error) {
+    console.error('Error searching for users:', error);
+    return { res: null, err: error };
+  }
+};
