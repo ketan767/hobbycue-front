@@ -56,6 +56,7 @@ type PeopleData = {
   tagline: string
   _address: { city: string }
   page_url: string
+  page_type: []
 }
 type PlaceData = {
   profile_image: string
@@ -63,6 +64,7 @@ type PlaceData = {
   tagline: string
   _address: { city: string }
   page_url: string
+  page_type: []
 }
 type EventData = {
   profile_image: string
@@ -70,6 +72,7 @@ type EventData = {
   tagline: string
   _address: { city: string }
   page_url: string
+  page_type: []
 }
 
 type hobby = {
@@ -121,10 +124,10 @@ const FilterSidebar = ({}) => {
         <div>
           <h2 className={styles['filter-sidebar']}>Filters</h2>
           <div className={styles['filters-container']}>
-            <div className={styles['filter-item']} onClick={handleShowAll}>
+            {/* <div className={styles['filter-item']} onClick={handleShowAll}>
               <Image src={hobbycue} alt="hobbycue" />
               All of Hobbycue
-            </div>
+            </div> */}
 
             {/* <div className={styles['filter-item']}>
               <Image src={Hobbies} alt="Hobbies" />
@@ -138,13 +141,13 @@ const FilterSidebar = ({}) => {
               <Image src={People} alt="People" />
               People Pages
             </div>
-            <div
+            {/* <div
               className={styles['filter-item']}
               onClick={handleShowAllUsersClick}
             >
               <Image src={User} alt="User" />
               User Profiles
-            </div>
+            </div> */}
             <div
               className={styles['filter-item']}
               onClick={handleShowAllPlaceClick}
@@ -355,7 +358,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
 
       {/* User  */}
 
-      {!HideUser && searchResults.length > 0 && (
+      {/* {!HideUser && searchResults.length > 0 && (
         <section className={styles.userSection}>
           <div className={styles.peopleItemsContainer}>
             <div className={styles.resultHeading}>User Profiles</div>
@@ -393,27 +396,26 @@ const MainContent: React.FC<SearchResultsProps> = ({
                   </div>
                 </div>
               ))}
-          </div>
-
-          <div>
-            {showAllUsers
-              ? undefined
-              : (
-                  <button
-                    onClick={toggleShowAllusers}
-                    className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
-                  >
-                    View More
-                  </button>
-                ) || ''}
+            <div>
+              {showAllUsers
+                ? undefined
+                : (
+                    <button
+                      onClick={toggleShowAllusers}
+                      className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                    >
+                      View More
+                    </button>
+                  ) || ''}
+            </div>
           </div>
         </section>
-      )}
+      )} */}
       {/* People */}
       {!HidePeople && peopleResults.length > 0 && (
         <section className={styles.userSection}>
           <div className={styles.peopleItemsContainer}>
-            <div className={styles.resultHeading}>People Pages</div>
+            <div className={styles.resultHeading}>People</div>
             {peopleResults
               .slice(0, showAllPeople ? undefined : 3)
               .map((page, index) => (
@@ -422,18 +424,18 @@ const MainContent: React.FC<SearchResultsProps> = ({
                   key={index}
                   onClick={() => navigateToPage(page.page_url)}
                 >
-                  <div className={styles.userAvatar}>
+                  <div className={styles.peopleAvatar}>
                     {page.profile_image ? (
                       <Image
                         src={page.profile_image}
                         alt={`${page.title}'s `}
                         width={64}
                         height={64}
-                        className={styles.avatarImage}
+                        className={styles.peopleavatarImage}
                       />
                     ) : (
                       <div
-                        className={`${styles['img']} default-people-listing-icon`}
+                        className={`${styles['people-img']} default-people-listing-icon`}
                       ></div>
                     )}
                   </div>
@@ -443,23 +445,23 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       {page?.tagline || '\u00a0'}
                     </div>
                     <div className={styles.userLocation}>
-                      {page._address?.city || '\u00a0'}
+                      {page.page_type + ' | ' + page._address?.city || '\u00a0'}
                     </div>
                   </div>
                 </div>
               ))}
-          </div>
-          <div>
-            {showAllPeople
-              ? undefined
-              : (
-                  <button
-                    onClick={toggleShowAllpeople}
-                    className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
-                  >
-                    View More
-                  </button>
-                ) || ''}
+            <div>
+              {showAllPeople
+                ? undefined
+                : (
+                    <button
+                      onClick={toggleShowAllpeople}
+                      className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                    >
+                      View More
+                    </button>
+                  ) || ''}
+            </div>
           </div>
         </section>
       )}
@@ -467,7 +469,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
       {!HidePlace && placeResults.length > 0 && (
         <section className={styles.userSection}>
           <div className={styles.peopleItemsContainer}>
-            <div className={styles.resultHeading}>Place</div>
+            <div className={styles.resultHeading}>Places</div>
             {placeResults
               .slice(0, showAllPlace ? undefined : 3)
               .map((page, index) => (
@@ -476,18 +478,18 @@ const MainContent: React.FC<SearchResultsProps> = ({
                   key={index}
                   onClick={() => navigateToPage(page.page_url)}
                 >
-                  <div className={styles.userAvatar}>
+                  <div className={styles.peopleAvatar}>
                     {page.profile_image ? (
                       <Image
                         src={page.profile_image}
                         alt={`${page.title}'s `}
                         width={64}
                         height={64}
-                        className={styles.avatarImage}
+                        className={styles.peopleavatarImage}
                       />
                     ) : (
                       <div
-                        className={`${styles['img']} default-people-listing-icon`}
+                        className={`${styles['people-img']} default-people-listing-icon`}
                       ></div>
                     )}
                   </div>
@@ -497,23 +499,23 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       {page?.tagline || '\u00a0'}
                     </div>
                     <div className={styles.userLocation}>
-                      {page._address?.city || '\u00a0'}
+                      {page.page_type + ' | ' + page._address?.city || '\u00a0'}
                     </div>
                   </div>
                 </div>
               ))}
-          </div>
-          <div>
-            {showAllPlace
-              ? undefined
-              : (
-                  <button
-                    onClick={toggleShowAllplace}
-                    className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
-                  >
-                    View More
-                  </button>
-                ) || ''}
+            <div>
+              {showAllPlace
+                ? undefined
+                : (
+                    <button
+                      onClick={toggleShowAllplace}
+                      className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                    >
+                      View More
+                    </button>
+                  ) || ''}
+            </div>
           </div>
         </section>
       )}
@@ -530,18 +532,18 @@ const MainContent: React.FC<SearchResultsProps> = ({
                   key={index}
                   onClick={() => navigateToPage(page.page_url)}
                 >
-                  <div className={styles.userAvatar}>
+                  <div className={styles.peopleAvatar}>
                     {page.profile_image ? (
                       <Image
                         src={page.profile_image}
                         alt={`${page.title}'s `}
                         width={64}
                         height={64}
-                        className={styles.avatarImage}
+                        className={styles.peopleavatarImage}
                       />
                     ) : (
                       <div
-                        className={`${styles['img']} default-people-listing-icon`}
+                        className={`${styles['people-img']} default-people-listing-icon`}
                       ></div>
                     )}
                   </div>
@@ -551,24 +553,24 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       {page?.tagline || '\u00a0'}
                     </div>
                     <div className={styles.userLocation}>
-                      {page._address?.city || '\u00a0'}
+                      {page.page_type + ' | ' + page._address?.city || '\u00a0'}
                     </div>
                   </div>
                 </div>
               ),
             )}
-          </div>
-          <div>
-            {showAllEvent
-              ? undefined
-              : (
-                  <button
-                    onClick={toggleShowAllevent}
-                    className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
-                  >
-                    View More
-                  </button>
-                ) || ''}
+            <div>
+              {showAllEvent
+                ? undefined
+                : (
+                    <button
+                      onClick={toggleShowAllevent}
+                      className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                    >
+                      View More
+                    </button>
+                  ) || ''}
+            </div>
           </div>
         </section>
       )}

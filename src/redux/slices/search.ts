@@ -20,6 +20,7 @@ interface Page {
   tagline: string
   _address: { city: string }
   page_url:string
+  page_type: []
 }
 
 interface hobbies {
