@@ -399,11 +399,17 @@ const CommunityLayout: React.FC<Props> = ({
               <h3>Hobbies</h3>
               <Image
                 src={EditIcon}
-                onClick={() =>
-                  dispatch(
-                    openModal({ type: 'profile-hobby-edit', closable: true }),
-                  )
-                }
+                onClick={() => {
+                  if (activeProfile?.type === 'user') {
+                    dispatch(
+                      openModal({ type: 'profile-hobby-edit', closable: true }),
+                    )
+                  } else {
+                    dispatch(
+                      openModal({ type: 'listing-hobby-edit', closable: true }),
+                    )
+                  }
+                }}
                 alt="edit"
               />
               {/* <Image src={EditIcon} alt="Edit" /> */}
