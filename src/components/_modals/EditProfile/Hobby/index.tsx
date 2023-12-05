@@ -324,7 +324,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   if (confirmationModal) {
     return (
       <SaveModal
-        handleClose={handleClose}
+        handleClose={handleClosee}
         handleSubmit={handleSubmit}
         setConfirmationModal={setConfirmationModal}
         isError={isError}
@@ -337,7 +337,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       <div className={styles['modal-wrapper']}>
         <CloseIcon
           className={styles['modal-close-icon']}
-          onClick={handleClose}
+          onClick={handleClosee}
         />
         {/* Modal Header */}
         <header className={styles['header']}>

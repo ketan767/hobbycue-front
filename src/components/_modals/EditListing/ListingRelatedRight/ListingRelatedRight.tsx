@@ -13,7 +13,7 @@ import {
   getMyProfileDetail,
   updateMyProfileDetail,
 } from '@/services/user.service'
-
+import { searchPages } from '@/services/listing.service'
 import styles from './styles.module.css'
 import { isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
@@ -84,6 +84,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
   const inputRef = useRef<HTMLInputElement>(null)
   const [initialData, setInitialData] = useState({})
   const [isChanged, setIsChanged] = useState(false)
+  const dropdownRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     inputRef?.current?.focus()
@@ -111,7 +112,6 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
     setRelatedListingsRight(listingModalData.related_listings_right?.listings)
 
     setInitialData(listingModalData.related_listings_right?.listings)
-
   }, [listingModalData])
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
@@ -154,40 +154,18 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
     }
   }
 
-  useEffect(() => {
-    // getListingPages(`title=${pageInputValue}`)
-    //   .then((res: any) => {
-    //     // console.log(res.res.data.data.listings)
-    //     setAllDropdownValues(res.res.data.data.listings)
-    //   })
-    //   .catch((err: any) => {
-    //     console.log(err)
-    //   })
-    getAllUserDetail(`full_name=${pageInputValue}`)
-      .then((res: any) => {
-        console.log('resp', res.res.data.data.users)
-        setAllDropdownValues(res.res.data.data.users)
-      })
-      .catch((err: any) => {
-        console.log(err)
-      })
-  }, [pageInputValue])
-
-  useEffect(() => {
+  const handleSearchPages = async (e: any) => {
+    setShowDropdown(true)
     setDropdownLoading(true)
-    getListingPages(``)
-      .then((res: any) => {
-        console.log('listing', res.res.data)
+    const { res, err } = await searchPages({
+      title: pageInputValue,
+    })
+    console.log(res)
 
-        setAllDropdownValues(res.res.data.data.listings)
-        setAllListingPages(res.res.data.data.listings)
-        setDropdownLoading(false)
-      })
-      .catch((err: any) => {
-        console.log(err)
-        setDropdownLoading(false)
-      })
-  }, [pageInputValue])
+    setAllDropdownValues(res?.data)
+    setAllListingPages(res?.data)
+    setDropdownLoading(false)
+  }
 
   const handleAddPage = async () => {
     if (!relation || relation.trim() === '') {
@@ -270,20 +248,6 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
     console.log('matchtitlerigght', matchedTitles)
   }, [relatedListingsRight, allListingPages])
 
-  useEffect(() => {
-    setDropdownLoading(true)
-    getListingPages(``)
-      .then((res: any) => {
-        console.log('listing', res.res.data)
-        setAllDropdownValues(res.res.data.data.listings)
-        setDropdownLoading(false)
-      })
-      .catch((err: any) => {
-        console.log(err)
-        setDropdownLoading(false)
-      })
-  }, [pageInputValue])
-
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
     const handleKeyPress = (event: any) => {
@@ -298,6 +262,20 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
       window.removeEventListener('keydown', handleKeyPress)
     }
   }, [])
+
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [dropdownRef])
+
   if (confirmationModal) {
     return (
       <SaveModal
@@ -364,15 +342,18 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
                     setShowDropdown(false)
                   }, 300)
                 }
-                onChange={(e: any) => setPageInputValue(e.target.value)}
+                onChange={(e) => {
+                  handleSearchPages(e)
+                  setPageInputValue(e.target.value)
+                }}
               />
               {/* <p className={styles['helper-text']}>{inputErrs.full_name}</p> */}
             </div>
             {showDropdown && (
-              <div className={styles['dropdown']}>
+              <div className={styles['dropdown']} ref={dropdownRef}>
                 {dropdownLoading ? (
                   <div className={styles.dropdownItem}>Loading...</div>
-                ) : allDropdownValues.length !== 0 ? (
+                ) : allDropdownValues?.length !== 0 ? (
                   allDropdownValues.map((item: any) => {
                     return (
                       <div
@@ -380,6 +361,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
                         onClick={() => {
                           setSelectedPage(item)
                           setPageInputValue(item.title)
+                          setShowDropdown(false)
                         }}
                         className={styles.dropdownItem}
                       >

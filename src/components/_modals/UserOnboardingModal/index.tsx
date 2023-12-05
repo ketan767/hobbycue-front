@@ -44,7 +44,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
   const [activeStep, setActiveStep] = useState<steps>('General')
   const [furthestStepIndex, setFurthestStepIndex] = useState<number>(0)
   const [confirmationModal, setConfirmationModal] = useState(false)
-
+  const [hasChanges, setHasChanges] = useState(false)
   const router = useRouter()
   const modalRef = useRef<HTMLDivElement>(null)
   const { activeModal, closable } = useSelector(
@@ -91,9 +91,16 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
   function handleClose() {
     if (confirmationModal) {
       setConfirmationModal(false)
-    } else {
+    } else if (hasChanges) {
       setConfirmationModal(true)
+    } else if (!user.is_onboarded) {
+      setConfirmationModal(true)
+    } else {
+      dispatch(closeModal())
     }
+  }
+  const handleStatusChange = (isChanged: boolean) => {
+    setHasChanges(isChanged)
   }
 
   useEffect(() => {
@@ -143,6 +150,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
           setConfirmationModal={setConfirmationModal}
           confirmationModal={confirmationModal}
           handleClose={handleClose}
+          onStatusChange={handleStatusChange}
         />
       )}
       {activeStep === 'About' && (
@@ -152,6 +160,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
           setConfirmationModal={setConfirmationModal}
           confirmationModal={confirmationModal}
           handleClose={handleClose}
+          onStatusChange={handleStatusChange}
         />
       )}
       {activeStep === 'Contact' && (
@@ -161,6 +170,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
           setConfirmationModal={setConfirmationModal}
           confirmationModal={confirmationModal}
           handleClose={handleClose}
+          onStatusChange={handleStatusChange}
         />
       )}
       {activeStep === 'Address' && (
@@ -170,6 +180,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
           setConfirmationModal={setConfirmationModal}
           confirmationModal={confirmationModal}
           handleClose={handleClose}
+          onStatusChange={handleStatusChange}
         />
       )}
       {activeStep === 'Hobbies' && (
@@ -179,6 +190,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
           setConfirmationModal={setConfirmationModal}
           confirmationModal={confirmationModal}
           handleClosee={handleClose}
+          onStatusChange={handleStatusChange}
         />
       )}
 

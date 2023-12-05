@@ -25,7 +25,9 @@ const AboutEditor: React.FC<Props> = ({
   onChange,
   placeholder,
   error,
+
   elementRef,
+
 }) => {
   const inputRef = useRef<any>(null)
   const inputVideoRef = useRef<HTMLInputElement>(null)
@@ -39,6 +41,7 @@ const AboutEditor: React.FC<Props> = ({
     },
     [onChange],
   )
+
 
   useEffect(() => {
     const handleQuillFocus = () => {
