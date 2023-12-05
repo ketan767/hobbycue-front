@@ -38,7 +38,7 @@
 
 .center-container .cover-img-wrapper {
   position: relative;
-  max-height: 309px;
+  max-height: 310px;
 }
 .center-container .cover-img-wrapper .img {
   width: 100%;
@@ -346,5 +346,15 @@
     font-size: 12px;
     padding: 10px 0;
     min-width: 56px;
+  }
+  .container:has(.header).small {
+    display: none;
+  }
+
+  .profile-left-aside{
+   
+    position: static; 
+    height: auto !important;
+    overflow: auto;
   }
 }

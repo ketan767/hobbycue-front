@@ -23,7 +23,7 @@ const AboutEditor: React.FC<Props> = ({
   value,
   onChange,
   placeholder,
-  error
+  error,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null)
   const inputVideoRef = useRef<HTMLInputElement>(null)
@@ -38,22 +38,27 @@ const AboutEditor: React.FC<Props> = ({
     [onChange],
   )
 
-
   return (
     <div className={`about-quill-container  ${error ? 'quill-error' : ''}  `}>
       <ReactQuill
         theme="snow"
         value={value}
         onChange={(updatedValue) => {
-         onChange(updatedValue)
+          onChange(updatedValue)
         }}
         className={`${styles.quill}`}
         placeholder={placeholder}
         modules={{
           toolbar: {
             container: [
-              ['bold', 'italic', 'underline', { list: 'ordered' }, { list: 'bullet' }],
-            //   [{ list: 'ordered' }, { list: 'bullet' }],
+              [
+                'bold',
+                'italic',
+                'underline',
+                { list: 'ordered' },
+                { list: 'bullet' },
+              ],
+              //   [{ list: 'ordered' }, { list: 'bullet' }],
             ],
           },
         }}

@@ -25,27 +25,50 @@ const ListingHome: React.FC<Props> = (props) => {
     location: false,
     contact: false,
   })
-  // const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
-  // const { listingPageData } = useSelector((state: RootState) => state.site)
+  const { user } = useSelector((state: RootState) => state.user)
+
   console.log('data', props.data)
   useEffect(() => {
     dispatch(updateListingPageData(props.data.pageData))
     dispatch(updateListingModalData(props.data.pageData))
   }, [])
 
-  return (
-    <>
-      <Head>
-        <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
-      </Head>
+  const [isDataLoaded, setIsDataLoaded] = useState(false)
+  const router = useRouter()
+  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null)
 
-      <ListingPageLayout activeTab={'home'} data={props.data}>
-        <ListingPageMain data={props.data.pageData}>
-          <ListingHomeTab data={props.data.pageData} />
-        </ListingPageMain>
-      </ListingPageLayout>
-    </>
-  )
+  useEffect(() => {
+    if (user._id) {
+      const userIsAuthorized =
+        props.data.pageData.is_published ||
+        user._id === props.data.pageData.admin
+      setIsAuthorized(userIsAuthorized)
+
+      if (!userIsAuthorized) {
+        router.push('/404')
+      }
+    }
+  }, [user._id, props.data.pageData, router])
+
+  if (isAuthorized === null) {
+    return <div></div>
+  } else if (!isAuthorized) {
+    return null
+  } else {
+    return (
+      <>
+        <Head>
+          <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
+        </Head>
+
+        <ListingPageLayout activeTab={'home'} data={props.data}>
+          <ListingPageMain data={props.data.pageData}>
+            <ListingHomeTab data={props.data.pageData} />
+          </ListingPageMain>
+        </ListingPageLayout>
+      </>
+    )
+  }
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async (

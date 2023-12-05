@@ -52,7 +52,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
   setConfirmationModal,
   handleClose,
   onStatusChange,
-  onBoarding
+  onBoarding,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -273,6 +273,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
   }
 
   useEffect(() => {
+    streetRef.current?.focus()
     updateAddress()
   }, [user])
 

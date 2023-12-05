@@ -27,7 +27,7 @@ type Props = {
   handleClose?: any
   isError?: boolean
   onStatusChange?: (isChanged: boolean) => void
-  onBoarding?:boolean
+  onBoarding?: boolean
 }
 
 type ListingGeneralData = {
@@ -46,7 +46,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   setConfirmationModal,
   handleClose,
   onStatusChange,
-  onBoarding
+  onBoarding,
 }) => {
   const dispatch = useDispatch()
 
@@ -58,8 +58,8 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   const [isError, setIsError] = useState(false)
   const [initialData, setInitialData] = useState({})
   const [isChanged, setIsChanged] = useState(false)
-  const [urlSpanLength,setUrlSpanLength]=useState<number>(0)
-  const urlSpanRef=useRef<HTMLSpanElement>(null)
+  const [urlSpanLength, setUrlSpanLength] = useState<number>(0)
+  const urlSpanRef = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
     setInitialData({
@@ -251,8 +251,8 @@ const ListingGeneralEditModal: React.FC<Props> = ({
       year: { value: listingModalData.year as string, error: null },
       admin_note: { value: listingModalData.admin_note as string, error: null },
     })
-    const length=urlSpanRef.current?.offsetWidth??0
-    setUrlSpanLength(length+12)
+    const length = urlSpanRef.current?.offsetWidth ?? 0
+    setUrlSpanLength(length + 12)
   }, [])
   useEffect(() => {
     const hasChanges = JSON.stringify(data) !== JSON.stringify(initialData)
@@ -315,6 +315,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   )
 
   useEffect(() => {
+    fullNameRef?.current?.focus()
     if (onComplete !== undefined) {
       let pageUrl: any = data.title.value
       console.log(pageUrl)
@@ -366,7 +367,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
     }
   }, [isError])
 
-  if (confirmationModal) {    
+  if (confirmationModal) {
     return (
       <SaveModal
         handleClose={handleClose}
@@ -408,7 +409,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
                 required
                 value={data.title.value as string}
                 name="title"
-                ref={inputRef}
+                ref={fullNameRef}
                 onChange={handleInputChange}
               />
               <p className={styles['helper-text']}>{data.title.error}</p>
@@ -447,7 +448,10 @@ const ListingGeneralEditModal: React.FC<Props> = ({
                   name="page_url"
                   onChange={handleInputChange}
                   ref={pageUrlRef}
-                  style={{paddingLeft:urlSpanLength+'px',paddingTop:'14px'}}
+                  style={{
+                    paddingLeft: urlSpanLength + 'px',
+                    paddingTop: '14px',
+                  }}
                 />
                 <span ref={urlSpanRef}>{baseURL + '/page/'}</span>
               </div>

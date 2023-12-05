@@ -26,7 +26,7 @@ type Props = {
   setConfirmationModal?: any
   handleClose?: any
   isError?: boolean
-  onBoarding?:boolean
+  onBoarding?: boolean
 }
 
 type DropdownListItem = {
@@ -47,7 +47,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClose,
-  onBoarding
+  onBoarding,
 }) => {
   const dispatch = useDispatch()
 
@@ -60,7 +60,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
     genre: null,
   })
   const [error, setError] = useState<string | null>(null)
-
+  const hobbyRef = useRef<any>(null)
   const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
   const [showGenreDropdown, setShowGenreDropdown] = useState<boolean>(false)
   const [genreid, setGenreId] = useState('')
@@ -224,6 +224,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   }
 
   useEffect(() => {
+    hobbyRef.current?.focus()
     updateHobbyList()
   }, [])
 
@@ -302,6 +303,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
                 <section className={styles['dropdown-wrapper']}>
                   <div className={styles['input-box']}>
                     <input
+                      ref={hobbyRef}
                       type="text"
                       placeholder="Search hobby..."
                       autoComplete="name"

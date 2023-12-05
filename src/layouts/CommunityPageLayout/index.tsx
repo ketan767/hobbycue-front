@@ -145,7 +145,6 @@ const CommunityLayout: React.FC<Props> = ({
     let selectedSociety = ''
 
     const matchingAddress = activeProfile.data?._addresses?.find(
-
       (address: any) =>
         address.city === selectedLocation ||
         address.pin_code === selectedLocation ||
@@ -647,7 +646,7 @@ const CommunityLayout: React.FC<Props> = ({
                   </ul>
                 </section>
                 <section className={styles['filter-section']}>
-                  <p> Filter: </p>
+                  <p> Filter:</p>
                   <div>
                     <Select
                       sx={{
@@ -671,23 +670,29 @@ const CommunityLayout: React.FC<Props> = ({
                       )}
                     </Select>
 
-                    {locations?.length > 0 && (
+                    {visibilityData?.length > 0 && (
                       <Select
-                        sx={{
-                          boxShadow: 'none',
-                          '.MuiOutlinedInput-notchedOutline': { border: 0 },
-                          fieldset: { border: 0 },
+                        defaultValue={selectedLocation}
+                        onChange={(e: any) => {
+                          let val = e.target.value
+                          setSelectedLocation(val)
                         }}
-                        className={styles['location-select']}
                         value={selectedLocation}
-                        onChange={(e) => setSelectedLocation(e.target.value)}
-                        defaultValue={'Location'}
+                        // inputProps={{ 'aria-label': 'Without label' }}
+                        className={` ${styles['location-select']}`}
                       >
-                        {locations.map((item, idx) => {
+                        {visibilityData?.map((item: any, idx) => {
                           return (
-                            <MenuItem key={idx} value={item}>
-                              {item}
-                            </MenuItem>
+                            <>
+                              <DropdownOption
+                                {...item}
+                                key={idx}
+                                currentValue={selectedLocation}
+                                onChange={(val: any) =>
+                                  setSelectedLocation(val)
+                                }
+                              />
+                            </>
                           )
                         })}
                       </Select>
