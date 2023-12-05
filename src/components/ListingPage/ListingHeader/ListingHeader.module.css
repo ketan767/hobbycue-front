@@ -39,7 +39,7 @@
 
 .center-container .cover-img-wrapper {
   position: relative;
-  max-height: 309px;
+  max-height: 310px;
   overflow: hidden;
   border-radius: 8px;
 }
@@ -402,5 +402,8 @@
     width: 20px;
     height: 20px;
     display: flex;
+  }
+  .container:has(.header).small {
+    display: none;
   }
 }

@@ -89,7 +89,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
   const [initialData, setInitialData] = useState({})
   const [isChanged, setIsChanged] = useState(false)
-
   const handleHobbyInputChange = async (e: any) => {
     setHobbyInputValue(e.target.value)
     setGenreInputValue('')
@@ -314,7 +313,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         nextButtonRef.current?.focus()
       }
     }
-
+    searchref.current?.focus()
     window.addEventListener('keydown', handleKeyPress)
 
     return () => {
@@ -325,7 +324,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   if (confirmationModal) {
     return (
       <SaveModal
-        handleClose={handleClose}
+        handleClose={handleClosee}
         handleSubmit={handleSubmit}
         setConfirmationModal={setConfirmationModal}
         isError={isError}
@@ -338,7 +337,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       <div className={styles['modal-wrapper']}>
         <CloseIcon
           className={styles['modal-close-icon']}
-          onClick={handleClose}
+          onClick={handleClosee}
         />
         {/* Modal Header */}
         <header className={styles['header']}>

@@ -65,6 +65,7 @@ const ModalManager: React.FC = () => {
     show: false,
     message: '',
   })
+  const { user } = useSelector((state: RootState) => state.user)
 
   const triggerSnackbar = (data: SnackbarState) => {
     setSnackbar(data)
@@ -98,10 +99,12 @@ const ModalManager: React.FC = () => {
   }
 
   function handleClose() {
-    console.log('close1')
+    console.log('haschange', hasChanges)
     if (confirmationModal) {
       setConfirmationModal(false)
     } else if (hasChanges) {
+      setConfirmationModal(true)
+    } else if (!user.is_onboarded) {
       setConfirmationModal(true)
     } else {
       dispatch(closeModal())
@@ -161,6 +164,8 @@ const ModalManager: React.FC = () => {
         if (confirmationModal) {
           setConfirmationModal(false)
         } else if (hasChanges) {
+          setConfirmationModal(true)
+        } else if (!user.is_onboarded) {
           setConfirmationModal(true)
         } else {
           dispatch(closeModal())

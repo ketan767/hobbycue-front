@@ -412,7 +412,7 @@
   display: flex;
   align-items: center;
   margin-top: 0.5rem;
-  justify-content: space-between;
+  
   display: none;
 }
 .filter-section > p {
@@ -481,6 +481,7 @@
   .community-right-aside {
     position: static;
     overflow: visible;
+    display: none;
   }
   .invite-container-main {
     display: none;
@@ -514,4 +515,9 @@
     border: 0;
     outline: 0;
   }
+  .location-select {
+    width: 144px;
+  }
+ 
+
 }

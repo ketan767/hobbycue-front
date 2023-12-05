@@ -28,6 +28,7 @@ type Props = {
 }
 
 const ConfirmEmailModal: React.FC<Props> = ({}) => {
+  const elementRef=useRef<HTMLInputElement>(null)
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
   const [nextDisabled, setNextDisabled] = useState(false)
@@ -39,9 +40,8 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
   })
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
-  const emailRef = useRef<HTMLInputElement | null>(null)
-
   useEffect(() => {
+    elementRef.current?.focus()
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
         nextButtonRef.current?.focus()
@@ -67,7 +67,6 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
           ...errors,
           email: err?.response?.data?.message,
         })
-        emailRef?.current?.focus()
       }
       return
     }
@@ -83,7 +82,6 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
   //   console.log('user', user)
 
   useEffect(() => {
-    emailRef?.current?.focus()
     setErrors({
       email: '',
     })
@@ -111,7 +109,7 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
                 onChange={(e) => setEmail(e.target.value)}
                 className={styles.input}
                 placeholder="Email Address"
-                ref={emailRef}
+                ref={elementRef}
               />
               <p className={styles['helper-text']}>{errors.email}</p>
             </div>
