@@ -27,7 +27,6 @@ const AboutEditor: React.FC<Props> = ({
   error,
 
   elementRef,
-
 }) => {
   const inputRef = useRef<any>(null)
   const inputVideoRef = useRef<HTMLInputElement>(null)
@@ -42,12 +41,11 @@ const AboutEditor: React.FC<Props> = ({
     [onChange],
   )
 
-
   useEffect(() => {
     const handleQuillFocus = () => {
       const quillEditor = inputRef.current.getEditor()
       if (quillEditor) {
-        const contentLength = value.length
+        const contentLength = value?.length
         quillEditor.setSelection(contentLength, 0)
       }
     }

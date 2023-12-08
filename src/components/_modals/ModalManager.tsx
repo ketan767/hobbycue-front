@@ -42,6 +42,7 @@ import ShareModal from './ShareModal/ShareModal'
 import ClaimModal from './ClaimModal/ClaimModal'
 import VerifyActionModal from './VerifyAction/VerifyAction'
 import SetPasswordModal from './CreatePassword'
+import FullScreenCoverModal from './CoverFullScreen'
 import { ModalType } from '@/redux/slices/modal'
 
 import { ToastContainer } from 'react-toastify'
@@ -306,6 +307,9 @@ const ModalManager: React.FC = () => {
               )}
               {activeModal === 'Verify-ActionModal' && <VerifyActionModal />}
               {activeModal === 'Set-PasswordModal' && <SetPasswordModal />}
+              {activeModal === 'Full-Screen-Cover-Modal' && (
+                <FullScreenCoverModal />
+              )}
               {/* Modal Close Icon */}
               {closable && (
                 <CloseIcon

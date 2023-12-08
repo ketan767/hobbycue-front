@@ -121,6 +121,10 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
     }
   }
 
+  const handleClaim = async () => {
+    dispatch(openModal({ type: 'claim-listing', closable: true }))
+  }
+
   const handleEventEditClick = () => {
     dispatch(
       openModal({
@@ -277,12 +281,21 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
               ) : (
                 <></>
               )}
-              <FilledButton
-                className={styles.contactBtn}
-                onClick={handleContact}
-              >
-                Contact
-              </FilledButton>
+              {data.pageData?.is_claimed ? (
+                <FilledButton
+                  className={styles.contactBtn}
+                  onClick={handleContact}
+                >
+                  Contact
+                </FilledButton>
+              ) : (
+                <FilledButton
+                  className={styles.contactBtn}
+                  onClick={handleClaim}
+                >
+                  Claim
+                </FilledButton>
+              )}
             </div>
 
             {/* Send Email Button  */}

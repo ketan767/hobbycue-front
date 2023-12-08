@@ -56,3 +56,12 @@ type ProfileAddressPayload = {
   longitude: string
   set_as_primary?: boolean
 }
+
+interface ClaimListingPayload {
+  name: string
+  email: string
+  phone: string
+  pageUrl: string
+  HowRelated: string
+  link: string
+}

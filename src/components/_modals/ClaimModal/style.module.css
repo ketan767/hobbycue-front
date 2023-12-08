@@ -96,6 +96,10 @@
   color: #c0504d;
 }
 
+.input-box-error textarea {
+  border: 1px solid #c0504d !important;
+}
+
 /* General Profile */
 .year-gender-wrapper {
   display: flex;

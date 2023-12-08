@@ -41,6 +41,7 @@ export type ModalType =
   | 'CopyProfileDataModal'
   | 'Verify-ActionModal'
   | 'Set-PasswordModal'
+  | 'Full-Screen-Cover-Modal'
 
   interface ModalState {
     activeModal: ModalType

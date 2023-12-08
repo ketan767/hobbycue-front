@@ -37,6 +37,9 @@ import { logout } from '@/helper'
 import SideMenu from './SideMenu/SideMenu'
 import CustomizedTooltips from './../Tooltip/ToolTip'
 import pages from '@/pages/community/pages'
+
+import PreLoader from '@/components/PreLoader'
+
 type Props = {}
 
 interface SearchCriteria {
@@ -58,11 +61,11 @@ export const Navbar: React.FC<Props> = ({}) => {
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
-  // const { isLoggedIn, isAuthenticated, user } = store.getState().user
+
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
   })
-
+  const [showPreLoader, setShowPreLoader] = useState(false)
   const [showDropdown, setShowDropdown] = useState<
     'user-menu' | 'hobby-list' | null
   >(null)
@@ -85,6 +88,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   }
 
   const searchResult = async () => {
+    router.push('/search')
     const searchValue = data.search.value.trim()
     const taglineValue = ''
     const cityValue = ''
@@ -188,14 +192,9 @@ export const Navbar: React.FC<Props> = ({}) => {
       }
 
       dispatch(setSearchString(searchValue))
-      router.push('/search')
     } catch (error) {
       console.error('An error occurred during the combined search:', error)
     }
-  }
-
-  const handleSearch = () => {
-    router.push('/search')
   }
 
   return (

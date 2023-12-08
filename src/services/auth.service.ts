@@ -173,3 +173,12 @@ export const adminSignIn = async (data: SignInPayload): Promise<ApiReturnObject>
     return { err: error, res: null };
   }
 };
+
+export const ClaimListing = async (data: ClaimListingPayload): Promise<ApiReturnObject> => {
+  try {
+    const res = await axiosInstance.post(`/auth/claim-listing`, data);
+    return { res: res, err: null };
+  } catch (error: any) {
+    return { err: error, res: null };
+  }
+};

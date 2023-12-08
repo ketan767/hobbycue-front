@@ -1,15 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react'
-
+import { useDispatch } from 'react-redux'
+import { closeModal } from '@/redux/slices/modal'
 import styles from './style.module.css'
 import { useSelector } from 'react-redux'
-
+import { ClaimListing } from '@/services/auth.service'
+import { CircularProgress } from '@mui/material'
 type Props = {
   data: ListingPageData['pageData']
 }
 
 const ClaimModal = () => {
+  const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
+  const dispatch = useDispatch()
   const pageURL = window.location.href
+
   let userData = useSelector((store: any) => store.user.user)
+
   const [formData, setFormData] = useState({
     profileName: userData.full_name,
     email: userData.email,
@@ -19,6 +25,9 @@ const ClaimModal = () => {
     websiteLink: '',
   })
 
+  const [inputErrs, setInputErrs] = useState<{ [key: string]: string | null }>({
+    userRelation: null,
+  })
 
   const handleInputChange = (e: any) => {
     let { value, name } = e.target
@@ -42,6 +51,34 @@ const ClaimModal = () => {
       window.removeEventListener('keydown', handleKeyPress)
     }
   }, [])
+  const name = formData.profileName
+  const email = formData.email
+  const phone = formData.phone
+  const pageUrl = formData.pageUrl
+  const HowRelated = formData.userRelation
+  const link = formData.websiteLink
+
+  const HandleClaim = async () => {
+    if (!formData.userRelation || formData.userRelation === '') {
+      setInputErrs((prev) => {
+        return { ...prev, userRelation: 'This field is Required' }
+      })
+    } else {
+      setSubmitBtnLoading(true)
+
+      const { err, res } = await ClaimListing({
+        name,
+        email,
+        phone,
+        pageUrl,
+        HowRelated,
+        link,
+      })
+      setSubmitBtnLoading(false)
+      dispatch(closeModal())
+    }
+  }
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -102,7 +139,11 @@ const ClaimModal = () => {
               />
             </div>
           </div>
-          <div className={styles['input-box']}>
+          <div
+            className={`${styles['input-box']} ${
+              inputErrs.userRelation ? styles['input-box-error'] : ''
+            }`}
+          >
             <label>How are you related to this listing?</label>
             <div className={styles['street-input-container']}>
               <textarea
@@ -112,6 +153,7 @@ const ClaimModal = () => {
                 onChange={handleInputChange}
                 value={formData.userRelation}
               />
+              <p className={styles['helper-text']}>{inputErrs.userRelation}</p>
             </div>
           </div>
           <div className={styles['input-box']}>
@@ -128,8 +170,16 @@ const ClaimModal = () => {
           </div>
         </section>
         <footer className={styles['footer']}>
-          <button ref={nextButtonRef} className="modal-footer-btn submit">
-            Claim
+          <button
+            ref={nextButtonRef}
+            onClick={HandleClaim}
+            className="modal-footer-btn submit"
+          >
+            {submitBtnLoading ? (
+              <CircularProgress color="inherit" size={'24px'} />
+            ) : (
+              'Claim'
+            )}
           </button>
         </footer>
       </div>
