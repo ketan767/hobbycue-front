@@ -29,6 +29,8 @@ type Props = {
   setConfirmationModal?: any
   handleClose?: any
   isError?: boolean
+  onStatusChange?: (isChanged: boolean) => void
+  onBoarding?: boolean
 }
 
 type ListingAddressData = {
@@ -49,6 +51,8 @@ const ListingAddressEditModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClose,
+  onStatusChange,
+  onBoarding,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -71,6 +75,8 @@ const ListingAddressEditModal: React.FC<Props> = ({
   const streetRef = useRef<HTMLInputElement>(null)
   const localityRef = useRef<HTMLInputElement>(null)
   const societyRef = useRef<HTMLInputElement>(null)
+  const [initialData, setInitialData] = useState({})
+  const [isChanged, setIsChanged] = useState(false)
 
   useEffect(() => {
     inputRef?.current?.focus()
@@ -128,99 +134,107 @@ const ListingAddressEditModal: React.FC<Props> = ({
       onBackBtnClick()
     }
   }
-
+  useEffect(() => {
+    const hasChanges = JSON.stringify(data) !== JSON.stringify(initialData)
+    setIsChanged(hasChanges)
+    if (onStatusChange) {
+      onStatusChange(hasChanges)
+    }
+  }, [data, initialData, onStatusChange])
   const handleSubmit = async () => {
-    if (listingModalData.type === listingTypes.PLACE) {
-      if (isEmptyField(data.street.value) || !data.street.value) {
-        streetRef.current?.focus()
-        return setData((prev) => {
-          return {
-            ...prev,
-            street: { ...prev.street, error: 'This field is required!' },
-          }
-        })
-      }
-      if (isEmptyField(data.society.value) || !data.society.value) {
-        societyRef.current?.focus()
-        return setData((prev) => {
-          return {
-            ...prev,
-            society: { ...prev.society, error: 'This field is required!' },
-          }
-        })
-      }
-      if (isEmptyField(data.locality.value) || !data.locality.value) {
-        localityRef.current?.focus()
-        return setData((prev) => {
-          return {
-            ...prev,
-            locality: { ...prev.locality, error: 'This field is required!' },
-          }
-        })
-      }
-    }
-    if (isEmptyField(data.city.value) || !data.city.value) {
-      cityRef.current?.focus()
-      return setData((prev) => {
-        return {
-          ...prev,
-          city: { ...prev.city, error: 'This field is required!' },
+    if (isChanged) {
+      if (listingModalData.type === listingTypes.PLACE) {
+        if (isEmptyField(data.street.value) || !data.street.value) {
+          streetRef.current?.focus()
+          return setData((prev) => {
+            return {
+              ...prev,
+              street: { ...prev.street, error: 'This field is required!' },
+            }
+          })
         }
-      })
-    }
-    if (listingModalData.type === listingTypes.PLACE) {
-      if (isEmptyField(data.pin_code.value) || !data.pin_code.value) {
-        pincodeRef.current?.focus()
+        if (isEmptyField(data.society.value) || !data.society.value) {
+          societyRef.current?.focus()
+          return setData((prev) => {
+            return {
+              ...prev,
+              society: { ...prev.society, error: 'This field is required!' },
+            }
+          })
+        }
+        if (isEmptyField(data.locality.value) || !data.locality.value) {
+          localityRef.current?.focus()
+          return setData((prev) => {
+            return {
+              ...prev,
+              locality: { ...prev.locality, error: 'This field is required!' },
+            }
+          })
+        }
+      }
+      if (isEmptyField(data.city.value) || !data.city.value) {
+        cityRef.current?.focus()
         return setData((prev) => {
           return {
             ...prev,
-            pin_code: { ...prev.pin_code, error: 'This field is required!' },
+            city: { ...prev.city, error: 'This field is required!' },
           }
         })
       }
-    }
-    if (isEmptyField(data.state.value) || !data.state.value) {
-      stateRef.current?.focus()
-      return setData((prev) => {
-        return {
-          ...prev,
-          state: { ...prev.state, error: 'This field is required!' },
+      if (listingModalData.type === listingTypes.PLACE) {
+        if (isEmptyField(data.pin_code.value) || !data.pin_code.value) {
+          pincodeRef.current?.focus()
+          return setData((prev) => {
+            return {
+              ...prev,
+              pin_code: { ...prev.pin_code, error: 'This field is required!' },
+            }
+          })
         }
-      })
-    }
-    if (isEmptyField(data.country.value) || !data.country.value) {
-      countryRef.current?.focus()
-      return setData((prev) => {
-        return {
-          ...prev,
-          country: { ...prev.country, error: 'This field is required!' },
-        }
-      })
-    }
+      }
+      if (isEmptyField(data.state.value) || !data.state.value) {
+        stateRef.current?.focus()
+        return setData((prev) => {
+          return {
+            ...prev,
+            state: { ...prev.state, error: 'This field is required!' },
+          }
+        })
+      }
+      if (isEmptyField(data.country.value) || !data.country.value) {
+        countryRef.current?.focus()
+        return setData((prev) => {
+          return {
+            ...prev,
+            country: { ...prev.country, error: 'This field is required!' },
+          }
+        })
+      }
 
-    const jsonData = {
-      street: data.street.value,
-      society: data.society.value,
-      locality: data.locality.value,
-      city: data.city.value,
-      pin_code: data.pin_code.value,
-      state: data.state.value,
-      country: data.country.value,
-      latitude: data.latitude.value,
-      longitude: data.longitude.value,
-    }
-    setSubmitBtnLoading(true)
-    const { err, res } = await updateListingAddress(
-      listingModalData._address?._id
-        ? listingModalData._address?._id
-        : listingModalData._address,
-      jsonData,
-    )
-    if (err) return console.log(err)
-    if (onComplete) onComplete()
-    else {
-      window.location.reload()
-      dispatch(closeModal())
+      const jsonData = {
+        street: data.street.value,
+        society: data.society.value,
+        locality: data.locality.value,
+        city: data.city.value,
+        pin_code: data.pin_code.value,
+        state: data.state.value,
+        country: data.country.value,
+        latitude: data.latitude.value,
+        longitude: data.longitude.value,
+      }
+      setSubmitBtnLoading(true)
+      const { err, res } = await updateListingAddress(
+        listingModalData._address?._id
+          ? listingModalData._address?._id
+          : listingModalData._address,
+        jsonData,
+      )
+      if (err) return console.log(err)
+      if (onComplete) onComplete()
+      else {
+        window.location.reload()
+        dispatch(closeModal())
+      }
     }
   }
 
@@ -244,10 +258,22 @@ const ListingAddressEditModal: React.FC<Props> = ({
       latitude: { value: res?.data.data.address.latitude, error: null },
       longitude: { value: res?.data.data.address.longitude, error: null },
     })
+    setInitialData({
+      street: { value: res?.data.data.address.street, error: null },
+      society: { value: res?.data.data.address.society, error: null },
+      locality: { value: res?.data.data.address.locality, error: null },
+      city: { value: res?.data.data.address.city, error: null },
+      pin_code: { value: res?.data.data.address.pin_code, error: null },
+      state: { value: res?.data.data.address.state, error: null },
+      country: { value: res?.data.data.address.country, error: null },
+      latitude: { value: res?.data.data.address.latitude, error: null },
+      longitude: { value: res?.data.data.address.longitude, error: null },
+    })
     setDataLoaded(true)
   }
 
   useEffect(() => {
+    streetRef.current?.focus()
     updateAddress()
   }, [user])
 
@@ -394,6 +420,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
         handleSubmit={handleSubmit}
         setConfirmationModal={setConfirmationModal}
         isError={isError}
+        OnBoarding={onBoarding}
       />
     )
   }

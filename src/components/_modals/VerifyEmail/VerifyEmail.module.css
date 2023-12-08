@@ -44,6 +44,7 @@
   align-items: center;
   padding: 0.5rem 1rem !important;
   height: 2.5rem;
+  margin-left: auto;
 }
 .textMain{
   font-weight: 500;

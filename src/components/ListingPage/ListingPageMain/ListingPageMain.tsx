@@ -113,6 +113,7 @@ const ListingPageMain: React.FC<Props> = ({
     getListingTags()
       .then((res: any) => {
         const temp = res.res.data.data.tags
+
         let selected: any = []
         temp.forEach((item: any) => {
           if (data._tags.includes(item._id)) {
@@ -714,16 +715,8 @@ const ListingPageMain: React.FC<Props> = ({
                     </defs>
                   </svg>
 
-                  {listingLayoutMode === 'edit' && !data?.wp_data ? (
-                    <span className={styles.textdefault}>
-                      {`${
-                        data?._address.street
-                          ? data._address.street
-                              .split(' ')
-                              .slice(0, 2)
-                              .join(' ')
-                          : ''
-                      }
+                  <span className={styles.textdefault}>
+                    {`${data?._address.street ? data._address.street + ',' : ''}
                   
                     ${
                       data?._address.society ? data._address.society + ',' : ''
@@ -741,12 +734,7 @@ const ListingPageMain: React.FC<Props> = ({
                         ? ' - ' + data?._address?.pin_code
                         : ''
                     }`}
-                    </span>
-                  ) : (
-                    <span className={styles.textdefault}>
-                      {data.wp_data?.location_str}
-                    </span>
-                  )}
+                  </span>
                 </li>
               )}
             </ul>

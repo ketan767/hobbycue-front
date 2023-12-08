@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { Button, CircularProgress } from '@mui/material'
 
@@ -28,6 +28,7 @@ type Props = {
 }
 
 const ConfirmEmailModal: React.FC<Props> = ({}) => {
+  const elementRef=useRef<HTMLInputElement>(null)
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
   const [nextDisabled, setNextDisabled] = useState(false)
@@ -37,6 +38,22 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
   const [errors, setErrors] = useState({
     email: '',
   })
+
+  const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  useEffect(() => {
+    elementRef.current?.focus()
+    const handleKeyPress = (event: any) => {
+      if (event.key === 'Enter') {
+        nextButtonRef.current?.focus()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [])
   const handleSubmit = async () => {
     setSubmitBtnLoading(true)
     const { err, res } = await forgotPassword({
@@ -92,6 +109,7 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
                 onChange={(e) => setEmail(e.target.value)}
                 className={styles.input}
                 placeholder="Email Address"
+                ref={elementRef}
               />
               <p className={styles['helper-text']}>{errors.email}</p>
             </div>
@@ -100,6 +118,7 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
 
         <footer className={styles['footer']}>
           <button
+            ref={nextButtonRef}
             className="modal-footer-btn submit"
             onClick={handleSubmit}
             disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}

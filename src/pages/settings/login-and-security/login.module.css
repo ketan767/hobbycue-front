@@ -3,6 +3,7 @@
   border: 1px solid #ebedf0;
   border-radius: 0px 0px 8px 8px;
   padding: 3rem;
+  width: 42rem;
 }
 
 .textLight {
@@ -83,9 +84,6 @@
   align-items: flex-start;
 }
 
-.settingcontainer{
-  grid-template-columns: 16rem 42rem !important;
-}
 .google-image{
   position: relative;
   width: 30px;
@@ -102,4 +100,18 @@
   height: 10px;
   top:14px;
   left: 18px;
+}
+
+.user-icon-google{
+  border: 1px solid #8064a2;
+}
+
+@media screen and (max-width: 1100px) {
+  .container {
+    width: 100%;
+  }
+
+.settingcontainer{
+  grid-template-rows: 16rem 42rem !important;
+}
 }

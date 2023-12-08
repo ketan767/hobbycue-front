@@ -6,6 +6,9 @@ import { RootState } from '@/redux/store'
 import useOutsideAlerter from '@/hooks/useOutsideAlerter'
 
 import { updateActiveProfile } from '@/redux/slices/user'
+import {
+  updateListingModalData,
+} from '@/redux/slices/site'
 
 type Props = {}
 
@@ -22,6 +25,9 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
 
   const handleUpdateActiveProfile = (type: 'user' | 'listing', data: any) => {
     dispatch(updateActiveProfile({ type, data }))
+    if (type === 'listing') {
+      dispatch(updateListingModalData(data))
+    }
     setShowDropdown(false)
     // window.location.reload()
   }

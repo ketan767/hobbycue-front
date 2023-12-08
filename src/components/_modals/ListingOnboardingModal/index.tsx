@@ -23,6 +23,7 @@ import { ProgressBar } from '@/components/ProgressBar/ProgressBar'
 import { listingTypes } from '@/constants/constant'
 import { updateUserListing } from '@/redux/slices/user'
 import ListingCopyModal from '../EditListing/ListingCopyModal'
+import SaveModal from '../SaveModal/saveModal'
 
 // type OnboardingData = {
 //   full_name: string
@@ -161,6 +162,9 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
       document.removeEventListener('mousedown', handleOutsideClick)
     }
   }, [])
+  // if (confirmationModal) {
+  //   return <SaveModal OnBoarding={true} />
+  // }
 
   return (
     <div
@@ -189,6 +193,7 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
           setConfirmationModal={setConfirmationModal}
           confirmationModal={confirmationModal}
           handleClose={handleClose}
+          onBoarding={true}
         />
       )}
 
@@ -199,6 +204,8 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
           setConfirmationModal={setConfirmationModal}
           confirmationModal={confirmationModal}
           handleClose={handleClose}
+          onBoarding={true}
+
         />
       )}
 
@@ -209,6 +216,8 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
           setConfirmationModal={setConfirmationModal}
           confirmationModal={confirmationModal}
           handleClose={handleClose}
+          onBoarding={true}
+
         />
       )}
 
@@ -219,6 +228,8 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
           setConfirmationModal={setConfirmationModal}
           confirmationModal={confirmationModal}
           handleClose={handleClose}
+          onBoarding={true}
+
         />
       )}
 
@@ -229,6 +240,8 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
           setConfirmationModal={setConfirmationModal}
           confirmationModal={confirmationModal}
           handleClose={handleClose}
+          onBoarding={true}
+
         />
       )}
       {activeStep === 'EventHours' && (
@@ -238,6 +251,8 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
           setConfirmationModal={setConfirmationModal}
           confirmationModal={confirmationModal}
           handleClose={handleClose}
+          onBoarding={true}
+
         />
       )}
       {activeStep === 'Hobbies' && (
@@ -247,6 +262,8 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
           setConfirmationModal={setConfirmationModal}
           confirmationModal={confirmationModal}
           handleClose={handleClose}
+          onBoarding={true}
+
         />
       )}
 

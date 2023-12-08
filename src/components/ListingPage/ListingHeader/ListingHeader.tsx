@@ -4,7 +4,6 @@ import Image from 'next/image'
 
 import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded'
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded'
-import ShareRoundedIcon from '@mui/icons-material/ShareRounded'
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded'
 import CameraIcon from '@/assets/icons/CameraIcon'
 import { useDispatch, useSelector } from 'react-redux'
@@ -22,7 +21,7 @@ import CustomTooltip from '@/components/Tooltip/ToolTip'
 import Calendar from '@/assets/svg/calendar-light.svg'
 import Time from '@/assets/svg/clock-light.svg'
 import EditIcon from '@/assets/svg/edit-colored.svg'
-import ShareIcon from '@/assets/svg/share-outlined.svg'
+import ShareIcon from '../../../assets/icons/ShareIcon'
 import MailIcon from '@/assets/svg/mailicon.svg'
 import ListingGeneralEditModal from '@/components/_modals/EditListing/ListingGeneral'
 import FilledButton from '@/components/_buttons/FilledButton'
@@ -33,6 +32,8 @@ import claimSvg from '@/assets/svg/claimedsvg.svg'
 import Dropdown from './DropDown'
 import { listingTypes } from '@/constants/constant'
 import ListingPageLayout from '@/layouts/ListingPageLayout'
+import RepostIcon from '@/assets/icons/RepostIcon'
+import { ClaimListing } from '@/services/auth.service'
 
 type Props = {
   data: ListingPageData['pageData']
@@ -146,6 +147,10 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
     }
   }
 
+  const handleClaim = async () => {
+    dispatch(openModal({ type: 'claim-listing', closable: true }))
+  }
+
   const handleShare = () => {
     dispatch(updateShareUrl(window.location.href))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
@@ -155,6 +160,10 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
 
   const handleDropdown = () => {
     setOpen(!open)
+  }
+
+  const handleOpenCover = () => {
+    dispatch(openModal({ type: 'Full-Screen-Cover-Modal', closable: false }))
   }
 
   return (
@@ -218,6 +227,7 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
             ></div>
             {data?.cover_image ? (
               <Image
+                onClick={handleOpenCover}
                 className={styles['img']}
                 src={data?.cover_image}
                 alt=""
@@ -303,12 +313,21 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
               ) : (
                 <></>
               )}
-              <FilledButton
-                className={styles.contactBtn}
-                onClick={handleContact}
-              >
-                Contact
-              </FilledButton>
+              {data.pageData?.is_claimed ? (
+                <FilledButton
+                  className={styles.contactBtn}
+                  onClick={handleContact}
+                >
+                  Contact
+                </FilledButton>
+              ) : (
+                <FilledButton
+                  className={styles.contactBtn}
+                  onClick={handleClaim}
+                >
+                  Claim
+                </FilledButton>
+              )}
             </div>
           </div>
         </section>
@@ -332,7 +351,7 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
                   onClick={(e) => console.log(e)}
                   className={styles['action-btn']}
                 >
-                  <Image src={MailIcon} alt="share" />
+                  <RepostIcon />
                 </div>
               </CustomTooltip>
             </Link>
@@ -353,18 +372,19 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
                 onClick={(e) => handleShare()}
                 className={styles['action-btn']}
               >
-                <Image src={ShareIcon} alt="share" />
+                <ShareIcon />
               </div>
             </CustomTooltip>
 
             {/* More Options Button */}
-
-            <div
-              onClick={(e) => handleDropdown()}
-              className={styles['action-btn']}
-            >
-              <CustomTooltip title="More options">
-                <MoreHorizRoundedIcon color="primary" />
+            <div className={styles['action-btn-dropdown-wrapper']}>
+              <CustomTooltip title="Click to view options">
+                <div
+                  onClick={(e) => handleDropdown()}
+                  className={styles['action-btn']}
+                >
+                  <MoreHorizRoundedIcon color="primary" />
+                </div>
               </CustomTooltip>
               {listingLayoutMode === 'edit'
                 ? open && (

@@ -206,3 +206,17 @@ export const getListingTags = async () => {
     return { err: error, res: null }
   }
 }
+
+export const searchPages = async (searchCriteria:any) => {
+  try {
+    const queryParams = new URLSearchParams();
+    for (const key in searchCriteria) {
+      queryParams.append(key, searchCriteria[key]);
+    }
+    const response = await axiosInstance.get(`/listing/listing-search?${queryParams}`);
+    return { res: response.data, err: null };
+  } catch (error) {
+    console.error('Error searching for pages:', error);
+    return { res: null, err: error };
+  }
+};

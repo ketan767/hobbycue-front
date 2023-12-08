@@ -7,6 +7,7 @@ import {
   updateMyProfileDetail,
   updateUserAddress,
 } from '@/services/user.service'
+import { containOnlyNumbers } from '@/utils'
 import { isEmptyField, validateUrl } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
@@ -26,6 +27,7 @@ type Props = {
   setConfirmationModal?: any
   handleClose?: any
   isError?: boolean
+  onStatusChange?: (isChanged: boolean) => void
 }
 type ProfileContactData = {
   public_email: InputData<string>
@@ -40,6 +42,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClose,
+  onStatusChange,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -47,6 +50,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
   const [tick, setTick] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const websiteRef = useRef<HTMLInputElement>(null)
+  const WhtphoneRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     inputRef?.current?.focus()
@@ -56,6 +60,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
   const [backDisabled, SetBackDisabled] = useState(false)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [isError, setIsError] = useState(false)
+  const phoneRef = useRef<HTMLInputElement>(null)
 
   const [data, setData] = useState<ProfileContactData>({
     phone: { value: '', error: null },
@@ -64,13 +69,34 @@ const ProfileContactEditModal: React.FC<Props> = ({
     whatsapp_number: { value: '', error: null },
   })
 
+  const [initialData, setInitialData] = useState<ProfileContactData>()
+  const [isChanged, setIsChanged] = useState(false)
+
+  useEffect(() => {
+    setInitialData({
+      public_email: { value: user.public_email, error: null },
+      phone: { value: user.phone, error: null },
+      website: { value: user.website, error: null },
+      whatsapp_number: { value: user.whatsapp_number, error: null },
+    })
+  }, [user])
+
   const handleInputChange = (event: any) => {
+    const { name, value } = event.target
     setData((prev) => {
       return {
         ...prev,
         [event.target.name]: { value: event.target.value, error: null },
       }
     })
+
+    const currentData = { ...data, [name]: value }
+    const hasChanges =
+      JSON.stringify(currentData) !== JSON.stringify(initialData)
+    setIsChanged(hasChanges)
+    if (onStatusChange) {
+      onStatusChange(hasChanges)
+    }
   }
 
   const Backsave = async () => {
@@ -125,6 +151,37 @@ const ProfileContactEditModal: React.FC<Props> = ({
           },
         }
       })
+    }
+    if (data.phone.value) {
+      if (
+        !containOnlyNumbers(data.phone.value.toString().trim()) ||
+        data.phone.value.toString().trim().length !== 10
+      ) {
+        phoneRef.current?.focus()
+        return setData((prev) => {
+          return {
+            ...prev,
+            phone: { ...prev.phone, error: 'Enter a valid phone number' },
+          }
+        })
+      }
+    }
+    if (data.whatsapp_number.value) {
+      if (
+        !containOnlyNumbers(data.whatsapp_number.value.toString().trim()) ||
+        data.whatsapp_number.value.toString().trim().length !== 10
+      ) {
+        WhtphoneRef.current?.focus()
+        return setData((prev) => {
+          return {
+            ...prev,
+            whatsapp_number: {
+              ...prev.whatsapp_number,
+              error: 'Enter a valid phone number',
+            },
+          }
+        })
+      }
     }
     if (data.website.value && data.website.value !== '') {
       if (!validateUrl(data.website.value)) {
@@ -307,6 +364,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
                   name="phone"
                   autoComplete="phone"
                   onChange={handleInputChange}
+                  ref={phoneRef}
                 />
                 <p className={styles['helper-text']}>{data.phone.error}</p>
               </div>
@@ -336,6 +394,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
                   autoComplete="phone"
                   name="whatsapp_number"
                   onChange={handleInputChange}
+                  ref={WhtphoneRef}
                 />
                 <p className={styles['helper-text']}>
                   {data.whatsapp_number.error}

@@ -11,7 +11,11 @@ import FilledButton from '@/components/_buttons/FilledButton'
 import { RootState } from '@/redux/store'
 import { register } from '@/services/auth.service'
 import { useRouter } from 'next/router'
-import { updateIsAuthenticated, updateIsLoggedIn, updateUser } from '@/redux/slices/user'
+import {
+  updateIsAuthenticated,
+  updateIsLoggedIn,
+  updateUser,
+} from '@/redux/slices/user'
 
 export const VerifyEmailModal: React.FC<PropTypes> = (props) => {
   const dispatch = useDispatch()
@@ -29,7 +33,7 @@ export const VerifyEmailModal: React.FC<PropTypes> = (props) => {
     setSubmitBtnLoading(false)
     if (err) {
       if (err.response.data.message === 'Invalid or expired OTP')
-      return setErrMsg('Invalid or expired OTP')
+        return setErrMsg('Invalid or expired OTP')
       return setErrMsg('Invalid or expired OTP')
     }
 
@@ -48,8 +52,8 @@ export const VerifyEmailModal: React.FC<PropTypes> = (props) => {
     <div className={styles['modal-wrapper']}>
       <h3>Verify your email</h3>
       <p className={styles.textMain}>
-        We have sent a verification code to <span> {email} </span>. Please check your e-mail and enter that code
-        below to proceed.
+        We have sent a verification code to <span> {email}</span>. Please check
+        your e-mail and enter that code below to proceed.
       </p>
       <FormInput
         className={styles['verify-code-input']}
@@ -67,7 +71,11 @@ export const VerifyEmailModal: React.FC<PropTypes> = (props) => {
         onClick={handleRegister}
         className={styles['verify-btn']}
       >
-        {submitBtnLoading ? <CircularProgress color="inherit" size={'20px'} /> : 'Verify Email'}
+        {submitBtnLoading ? (
+          <CircularProgress color="inherit" size={'20px'} />
+        ) : (
+          'Verify Email'
+        )}
       </FilledButton>
     </div>
   )

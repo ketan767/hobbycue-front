@@ -23,6 +23,7 @@ import {
   getListingPages,
   updateListing,
   deleteRelatedListingLeft,
+  searchPages,
 } from '@/services/listing.service'
 import {
   updateListingModalData,
@@ -44,6 +45,7 @@ type Props = {
   confirmationModal?: boolean
   setConfirmationModal?: any
   handleClose?: any
+  onStatusChange?: (isChanged: boolean) => void
 }
 
 const RelatedListingEditModal: React.FC<Props> = ({
@@ -52,6 +54,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClose,
+  onStatusChange,
 }) => {
   const dispatch = useDispatch()
   const { listingModalData } = useSelector((state: RootState) => state.site)
@@ -73,9 +76,15 @@ const RelatedListingEditModal: React.FC<Props> = ({
   const [selectedRelated, setSelectedRelated] = useState<string[]>([])
 
   const inputRef = useRef<HTMLInputElement>(null)
+  const dropdownRef = useRef<HTMLInputElement>(null)
+
   useEffect(() => {
     inputRef?.current?.focus()
   }, [])
+
+  const [initialData, setInitialData] = useState({})
+  const [isChanged, setIsChanged] = useState(false)
+
   useEffect(() => {
     if (listingModalData && listingModalData._id) {
       const updated = listingData.filter(
@@ -94,6 +103,8 @@ const RelatedListingEditModal: React.FC<Props> = ({
       setRelation(listingModalData.related_listings_left.relation)
     }
     setRelatedListingsLeft(listingModalData.related_listings_left?.listings)
+
+    setInitialData(listingModalData.related_listings_left?.listings)
   }, [listingModalData])
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
@@ -121,24 +132,31 @@ const RelatedListingEditModal: React.FC<Props> = ({
       }
     }
   }
-
   useEffect(() => {
-    setDropdownLoading(true)
-    getListingPages(``)
-      .then((res: any) => {
-        console.log('listing', res.res.data)
+    const hasChanges =
+      JSON.stringify(relatedListingsLeft) !== JSON.stringify(initialData)
+    setIsChanged(hasChanges)
 
-        setAllDropdownValues(res.res.data.data.listings)
-        setAllListingPages(res.res.data.data.listings)
-        setDropdownLoading(false)
-      })
-      .catch((err: any) => {
-        console.log(err)
-        setDropdownLoading(false)
-      })
-  }, [pageInputValue])
+    if (onStatusChange) {
+      onStatusChange(hasChanges)
+    }
+  }, [relatedListingsLeft, initialData, onStatusChange])
+
+  const handleSearchPages = async (e: any) => {
+    setShowDropdown(true)
+    setDropdownLoading(true)
+    const { res, err } = await searchPages({
+      title: pageInputValue,
+    })
+    console.log(res)
+
+    setAllDropdownValues(res?.data)
+    setAllListingPages(res?.data)
+    setDropdownLoading(false)
+  }
 
   const handleAddPage = async () => {
+    setShowDropdown(false)
     if (!relation || relation.trim() === '') {
       setError('Please select Relation')
     } else {
@@ -227,6 +245,19 @@ const RelatedListingEditModal: React.FC<Props> = ({
     }
   }, [])
 
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [dropdownRef])
+
   if (confirmationModal) {
     return (
       <SaveModal
@@ -292,20 +323,18 @@ const RelatedListingEditModal: React.FC<Props> = ({
                 value={pageInputValue}
                 onClick={() => setShowDropdown(true)}
                 ref={inputRef}
-                onBlur={() =>
-                  setTimeout(() => {
-                    setShowDropdown(false)
-                  }, 300)
-                }
-                onChange={(e) => setPageInputValue(e.target.value)}
+                onChange={(e) => {
+                  handleSearchPages(e)
+                  setPageInputValue(e.target.value)
+                }}
               />
               {/* <p className={styles['helper-text']}>{inputErrs.full_name}</p> */}
             </div>
             {showDropdown && (
-              <div className={styles['dropdown']}>
+              <div className={styles['dropdown']} ref={dropdownRef}>
                 {dropdownLoading ? (
                   <div className={styles.dropdownItem}>Loading...</div>
-                ) : allDropdownValues.length !== 0 ? (
+                ) : allDropdownValues?.length !== 0 ? (
                   allDropdownValues.map((item: any) => {
                     return (
                       <div
@@ -313,6 +342,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
                         onClick={() => {
                           setSelectedPage(item._id)
                           setPageInputValue(item.title)
+                          setShowDropdown(false)
                         }}
                         className={styles.dropdownItem}
                       >

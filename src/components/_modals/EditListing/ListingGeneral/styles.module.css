@@ -223,7 +223,7 @@
 }
 .profile-url-input input {
   flex-grow: 1;
-  padding-left: 18.1rem !important;
+  /* padding-left: 18.1rem !important; */
 }
 .input-box-error input{
   border: 1px solid #c0504d !important;

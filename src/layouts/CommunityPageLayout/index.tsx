@@ -54,7 +54,9 @@ const CommunityLayout: React.FC<Props> = ({
   })
   const [locations, setLocations] = useState([])
   const [selectedHobby, setSelectedHobby] = useState('')
+  const [selectedGenre, setSelectedGenre] = useState('')
   const [selectedLocation, setSelectedLocation] = useState('Everyone')
+
   const tabs: CommunityPageTabs[] = [
     'posts',
     'links',
@@ -143,7 +145,8 @@ const CommunityLayout: React.FC<Props> = ({
     let selectedPinCode = ''
     let selectedLocality = ''
     let selectedSociety = ''
-    const matchingAddress = activeProfile.data?._addresses.find(
+
+    const matchingAddress = activeProfile.data?._addresses?.find(
       (address: any) =>
         address.city === selectedLocation ||
         address.pin_code === selectedLocation ||
@@ -397,11 +400,17 @@ const CommunityLayout: React.FC<Props> = ({
               <h3>Hobbies</h3>
               <Image
                 src={EditIcon}
-                onClick={() =>
-                  dispatch(
-                    openModal({ type: 'profile-hobby-edit', closable: true }),
-                  )
-                }
+                onClick={() => {
+                  if (activeProfile?.type === 'user') {
+                    dispatch(
+                      openModal({ type: 'profile-hobby-edit', closable: true }),
+                    )
+                  } else {
+                    dispatch(
+                      openModal({ type: 'listing-hobby-edit', closable: true }),
+                    )
+                  }
+                }}
                 alt="edit"
               />
               {/* <Image src={EditIcon} alt="Edit" /> */}
@@ -639,7 +648,7 @@ const CommunityLayout: React.FC<Props> = ({
                   </ul>
                 </section>
                 <section className={styles['filter-section']}>
-                  <p> Filter: </p>
+                  <p> Filter:</p>
                   <div>
                     <Select
                       sx={{
@@ -648,38 +657,46 @@ const CommunityLayout: React.FC<Props> = ({
                         fieldset: { border: 0 },
                       }}
                       className={styles['location-select']}
-                      value={selectedHobby}
+                      value={selectedHobby || ''}
                       onChange={(e) => handleHobbyClick(e.target.value)}
-                      defaultValue={'Hobby'}
+                      displayEmpty
                     >
+                      <MenuItem disabled value="">
+                        <em>Hobby</em>
+                      </MenuItem>
                       {activeProfile.data?._hobbies?.map(
-                        (item: any, idx: number) => {
-                          return (
-                            <MenuItem key={idx} value={item.hobby._id}>
-                              {item?.hobby?.display}
-                            </MenuItem>
-                          )
-                        },
+                        (item: any, idx: any) => (
+                          <MenuItem key={idx} value={item.hobby._id}>
+                            {item.hobby.display}
+                          </MenuItem>
+                        ),
                       )}
                     </Select>
 
-                    {locations?.length > 0 && (
+                    {visibilityData?.length > 0 && (
                       <Select
-                        sx={{
-                          boxShadow: 'none',
-                          '.MuiOutlinedInput-notchedOutline': { border: 0 },
-                          fieldset: { border: 0 },
-                        }}
-                        className={styles['location-select']}
                         value={selectedLocation}
-                        onChange={(e) => setSelectedLocation(e.target.value)}
-                        defaultValue={'Location'}
+                        onChange={(e: any) =>
+                          setSelectedLocation(e.target.value)
+                        }
+                        // inputProps={{ 'aria-label': 'Without label' }}
+                        className={` ${styles['location-select']}`}
                       >
-                        {locations.map((item, idx) => {
+                        <MenuItem value={selectedLocation}>
+                          {selectedLocation}
+                        </MenuItem>
+                        {visibilityData?.map((item: any, idx) => {
                           return (
-                            <MenuItem key={idx} value={item}>
-                              {item}
-                            </MenuItem>
+                            <>
+                              <DropdownOption
+                                {...item}
+                                key={idx}
+                                currentValue={selectedLocation}
+                                onChange={(val: any) =>
+                                  setSelectedLocation(val)
+                                }
+                              />
+                            </>
                           )
                         })}
                       </Select>

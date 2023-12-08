@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState, useEffect } from 'react'
+import React, { useCallback, useRef, useState, useEffect, Ref } from 'react'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 // import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline'
@@ -17,15 +17,18 @@ interface Props {
   onChange: (value: string) => void
   placeholder: any
   error?: any
+  elementRef?: any
 }
 
 const AboutEditor: React.FC<Props> = ({
   value,
   onChange,
   placeholder,
-  error
+  error,
+
+  elementRef,
 }) => {
-  const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<any>(null)
   const inputVideoRef = useRef<HTMLInputElement>(null)
   const [imageIconAdded, setImageIconAdded] = useState(false)
   const [content, setContent] = useState('')
@@ -38,22 +41,45 @@ const AboutEditor: React.FC<Props> = ({
     [onChange],
   )
 
+  useEffect(() => {
+    const handleQuillFocus = () => {
+      const quillEditor = inputRef.current.getEditor()
+      if (quillEditor) {
+        const contentLength = value?.length
+        quillEditor.setSelection(contentLength, 0)
+      }
+    }
+
+    const quillEditor = inputRef.current.getEditor()
+    if (quillEditor) {
+      quillEditor.focus()
+      handleQuillFocus()
+    }
+    return () => {}
+  }, [])
 
   return (
     <div className={`about-quill-container  ${error ? 'quill-error' : ''}  `}>
       <ReactQuill
+        ref={inputRef}
         theme="snow"
         value={value}
         onChange={(updatedValue) => {
-         onChange(updatedValue)
+          onChange(updatedValue)
         }}
         className={`${styles.quill}`}
         placeholder={placeholder}
         modules={{
           toolbar: {
             container: [
-              ['bold', 'italic', 'underline', { list: 'ordered' }, { list: 'bullet' }],
-            //   [{ list: 'ordered' }, { list: 'bullet' }],
+              [
+                'bold',
+                'italic',
+                'underline',
+                { list: 'ordered' },
+                { list: 'bullet' },
+              ],
+              //   [{ list: 'ordered' }, { list: 'bullet' }],
             ],
           },
         }}

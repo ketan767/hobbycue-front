@@ -7,12 +7,16 @@ type Props = {
   triggerOpen?: boolean
   message?: string
   resetSnackbar?: (data: SnackbarState) => void
+  textColor:string
+  bgColor:string
 }
 
 const SimpleSnackbar: React.FC<Props> = ({
   triggerOpen,
   message,
   resetSnackbar,
+  bgColor,
+  textColor
 }) => {
   const [displayMessage, setDisplayMessage] = useState('')
 
@@ -43,6 +47,10 @@ const SimpleSnackbar: React.FC<Props> = ({
             minWidth: '200px',
             display: 'flex',
             justifyContent: 'center',
+            backgroundColor:bgColor,
+            color:textColor,
+            fontWeight:'600',
+            cursor:'pointer'
           }}
           message={<span id="client-snackbar">{displayMessage}</span>}
         />

@@ -25,7 +25,9 @@ type Props = {
   confirmationModal?: boolean
   setConfirmationModal?: any
   handleClosee?: any
+  handleClose?: any
   isError?: boolean
+  onStatusChange?: (isChanged: boolean) => void
 }
 const levels = ['Beginner', 'Intermediate', 'Advanced']
 // const levels = {
@@ -52,6 +54,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClosee,
+  handleClose,
+  onStatusChange,
 }) => {
   const dispatch = useDispatch()
 
@@ -83,6 +87,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     DropdownListItem[]
   >([])
 
+  const [initialData, setInitialData] = useState({})
+  const [isChanged, setIsChanged] = useState(false)
   const handleHobbyInputChange = async (e: any) => {
     setHobbyInputValue(e.target.value)
     setGenreInputValue('')
@@ -140,6 +146,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
   const handleAddHobby = () => {
     setError(null)
+    setShowGenreDowpdown(false)
 
     let selectedHobby = null
     let selectedGenre = null
@@ -256,8 +263,16 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     setUserHobbies(user._hobbies)
   }, [user._hobbies])
 
-  const handleClose = () => dispatch(closeModal())
+  useEffect(() => {
+    setInitialData(user._hobbies)
+    const hasChanges =
+      JSON.stringify(userHobbies) !== JSON.stringify(initialData)
+    setIsChanged(hasChanges)
 
+    if (onStatusChange) {
+      onStatusChange(hasChanges)
+    }
+  }, [userHobbies, initialData, onStatusChange])
   const handleLevelChange = async (_id: any, level: string) => {
     let temp = userHobbies.map((item: any) => {
       if (item._id === _id) {
@@ -299,7 +314,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         nextButtonRef.current?.focus()
       }
     }
-
+    searchref.current?.focus()
     window.addEventListener('keydown', handleKeyPress)
 
     return () => {
@@ -310,7 +325,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   if (confirmationModal) {
     return (
       <SaveModal
-        handleClose={handleClose}
+        handleClose={handleClosee}
         handleSubmit={handleSubmit}
         setConfirmationModal={setConfirmationModal}
         isError={isError}
@@ -323,7 +338,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       <div className={styles['modal-wrapper']}>
         <CloseIcon
           className={styles['modal-close-icon']}
-          onClick={handleClose}
+          onClick={handleClosee}
         />
         {/* Modal Header */}
         <header className={styles['header']}>
@@ -406,6 +421,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                                 return { ...prev, genre: genre }
                               })
                               setGenreInputValue(genre?.display)
+                              setShowGenreDowpdown(false)
                             }}
                           >
                             {genre?.display}
@@ -592,11 +608,3 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 }
 
 export default ProfileHobbyEditModal
-
-/**
- * @TODO:
- * 1. Debounce API req while typing in the hobby/genre search list.
- * 2. Dropdown and Functionality to change the Level of an Hobby in the `Added Hobbies` list.
- * 3. Chnage in query in the Genre search dropdown.
- * 4. Delete button loading while deleting any hobby.
- */

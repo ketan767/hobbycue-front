@@ -1,8 +1,8 @@
 .navigation-tabs {
   display: flex;
-  margin-left: 391px;
+
   gap: 38px;
-  justify-content: flex-start;
+  justify-content: center;
   margin-top: 14px;
   position: sticky;
   min-height: 40px;
@@ -40,11 +40,9 @@
 @media screen and (max-width: 1100px) {
   .nav{
     display: flex;
-    overflow-x: auto;
-    padding: 0 14px;
   }
   .navigation-tabs {
-    gap: 0;
+    gap: 8px;
     overflow-x: auto;
     flex-shrink: 0;
     

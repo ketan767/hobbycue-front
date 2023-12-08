@@ -2,9 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import styles from './ProfileHeader.module.css'
 import Image from 'next/image'
 
-import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded'
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded'
-import ShareRoundedIcon from '@mui/icons-material/ShareRounded'
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded'
 import CameraIcon from '@/assets/icons/CameraIcon'
 import Link from 'next/link'
@@ -20,7 +18,6 @@ import { updateUserCover, updateUserProfile } from '@/services/user.service'
 import { RootState } from '@/redux/store'
 import FilledButton from '@/components/_buttons/FilledButton'
 import { useRouter } from 'next/router'
-import ShareIcon from '@/assets/svg/share-outlined.svg'
 import EditIcon from '@/assets/svg/edit-colored.svg'
 import MailIcon from '@/assets/svg/mailicon.svg'
 import UploadIcon from '@/assets/svg/upload.svg'
@@ -29,7 +26,8 @@ import ProfileImageLayout from '@/layouts/ProfileImageLayout/ProfileImageLayout'
 import Tooltip from '@/components/Tooltip/ToolTip'
 import Dropdown from './DropDown'
 import useOutsideClick from '@/hooks/useOutsideClick'
-
+import RepostIcon from '../../../assets/icons/RepostIcon'
+import ShareIcon from '@/assets/icons/ShareIcon'
 type Props = {
   activeTab: ProfilePageTabs
   data: ProfilePageData['pageData']
@@ -273,7 +271,7 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
                     onClick={(e) => console.log(e)}
                     className={styles['action-btn']}
                   >
-                    <Image src={MailIcon} alt="share" />
+                    <RepostIcon/>
                   </div>
                 </Tooltip>
               </Link>
@@ -294,20 +292,20 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
                   onClick={(e) => handleShare()}
                   className={styles['action-btn']}
                 >
-                  <Image src={ShareIcon} alt="share" />
+                  <ShareIcon/>
                 </div>
               </Tooltip>
 
               {/* More Options Button */}
-
-              <div
-                onClick={(e) => handleDropdown()}
-                className={styles['action-btn']}
-              >
-                <Tooltip title="More options">
-                  <MoreHorizRoundedIcon color="primary" />
+              <div className={styles['action-btn-dropdown-wrapper']}>
+                <Tooltip title="Click to view options">
+                  <div
+                    onClick={(e) => handleDropdown()}
+                    className={styles['action-btn']}
+                  >
+                    <MoreHorizRoundedIcon color="primary" />
+                  </div>
                 </Tooltip>
-
                 {profileLayoutMode === 'edit'
                   ? open && (
                       <Dropdown

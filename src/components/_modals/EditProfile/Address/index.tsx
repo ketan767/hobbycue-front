@@ -27,6 +27,8 @@ type Props = {
   setConfirmationModal?: any
   handleClose?: any
   isError?: boolean
+  onStatusChange?: (isChanged: boolean) => void
+  [key: string]: any
 }
 
 const ProfileAddressEditModal: React.FC<Props> = ({
@@ -38,6 +40,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClose,
+  onStatusChange,
 }) => {
   const dispatch = useDispatch()
   const { user, addressToEdit } = useSelector((state: RootState) => state.user)
@@ -50,6 +53,22 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   const [isError, setIsError] = useState(false)
 
   const inputRef = useRef<HTMLInputElement>(null)
+  const [initialData, setInitialData] = useState({})
+  const [isChanged, setIsChanged] = useState(false)
+
+  useEffect(() => {
+    setInitialData({
+      street: user.primary_address?.street,
+      society: user.primary_address?.society,
+      locality: user.primary_address?.locality,
+      city: user.primary_address?.city,
+      pin_code: user.primary_address?.pin_code,
+      state: user.primary_address?.state,
+      country: user.primary_address?.country,
+      latitude: user.primary_address?.latitude,
+      longitude: user.primary_address?.longitude,
+    })
+  }, [user, editLocation])
 
   useEffect(() => {
     inputRef?.current?.focus()
@@ -88,12 +107,17 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   const addressLabelRef = useRef<HTMLInputElement>(null)
 
   const handleInputChange = (event: any) => {
-    setData((prev) => {
-      return { ...prev, [event.target.name]: event.target.value }
-    })
-    setInputErrs((prev) => {
-      return { ...prev, [event.target.name]: null }
-    })
+    const { name, value } = event.target
+    setData((prev) => ({ ...prev, [name]: value }))
+    setInputErrs((prev) => ({ ...prev, [name]: null }))
+
+    const currentData = { ...data, [name]: value }
+    const hasChanges =
+      JSON.stringify(currentData) !== JSON.stringify(initialData)
+    setIsChanged(hasChanges)
+    if (onStatusChange) {
+      onStatusChange(hasChanges)
+    }
   }
 
   const Backsave = async () => {
@@ -661,7 +685,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   required
                   value={addressLabel}
                   name="label"
-                  ref={inputRef}
+                  ref={addressLabelRef}
                   onChange={(e: any) => setAddressLabel(e.target.value)}
                 />
               </div>

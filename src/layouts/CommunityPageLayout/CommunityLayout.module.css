@@ -412,11 +412,11 @@
   display: flex;
   align-items: center;
   margin-top: 0.5rem;
-  justify-content: space-between;
+  
   display: none;
 }
 .filter-section > p {
-  font-size: 0.625rem;
+  font-size: 14px;
   font-family: Poppins;
   font-style: normal;
   font-weight: 400;
@@ -476,11 +476,13 @@
   }
   .filter-section {
     display: flex;
+    gap: 12px;
   }
   .community-left-aside,
   .community-right-aside {
     position: static;
     overflow: visible;
+    display: none;
   }
   .invite-container-main {
     display: none;
@@ -509,9 +511,14 @@
     padding: 8px;
   }
   .location-select > div {
-    font-size: 10px;
-    padding: 10px;
+    font-size: 14px;
+    padding: 0;
     border: 0;
     outline: 0;
   }
+  .location-select {
+    width: 144px;
+  }
+ 
+
 }

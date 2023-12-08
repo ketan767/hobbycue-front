@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import styles from './localization.module.css'
 import PageGridLayout from '@/layouts/PageGridLayout'
@@ -19,17 +19,27 @@ import {
   getMyProfileDetail,
   updateMyProfileDetail,
 } from '@/services/user.service'
+import { countryData } from '@/utils/countrydata'
 
-const options = [
-  'Everyone',
-  'My City',
-  'My Pincode',
-  'My Locality',
-  'My Society',
-]
+let options = {
+  region: countryData.map((item) => item.name),
+  currency: countryData.map((item) => item.currency),
+  distance: ['km', 'mi'],
+  language: ['English', 'French', 'German'],
+  phone: countryData.map((item) => item.phonePrefix),
+}
+
 const VisibilityAndNotification: React.FC = () => {
   const { user, activeProfile } = useSelector((state: RootState) => state.user)
   const dispatch = useDispatch()
+
+  const [inpSelectValues, setInpSelectValues] = useState({
+    region: options.region[0],
+    language: options.language[0],
+    currency: options.currency[0],
+    phonePrefix: options.phone[0],
+    distance: options.distance[0],
+  })
 
   const handleAddLocation = () => {
     dispatch(openModal({ type: 'add-location', closable: false }))
@@ -75,7 +85,6 @@ const VisibilityAndNotification: React.FC = () => {
     })
   }
 
-  // console.log('user', user?.primary_address?._id)
   return (
     <>
       <PageGridLayout column={2} customStyles={styles['settingcontainer']}>
@@ -184,25 +193,89 @@ const VisibilityAndNotification: React.FC = () => {
           <p className={`${styles.textLight}`}> Localization </p>
 
           <div className={`${styles.flex} ${styles.localizationContainer}`}>
+            <p className={`${styles.textDark} ${styles.labelText}`}> Region </p>
+            <InputSelect
+              options={options['region']}
+              value={inpSelectValues.region}
+              onChange={(e: any) => {
+                setInpSelectValues((prevValue) => {
+                  let regionIndex = options.region.indexOf(e)
+                  return {
+                    ...prevValue,
+                    region: e,
+                    phonePrefix: options.phone[regionIndex],
+                  }
+                })
+              }}
+            />
+          </div>
+
+          <div className={`${styles.flex} ${styles.localizationContainer}`}>
             <p className={`${styles.textDark} ${styles.labelText}`}>
               {' '}
               Language{' '}
             </p>
-            <InputSelect options={options} />
+            <InputSelect
+              options={options['language']}
+              value={inpSelectValues.language}
+              onChange={(e: any) => {
+                setInpSelectValues((prevValue) => ({
+                  ...prevValue,
+                  language: e,
+                }))
+              }}
+            />
           </div>
-          <div className={`${styles.flex} ${styles.localizationContainer}`}>
-            <p className={`${styles.textDark} ${styles.labelText}`}>
-              {' '}
-              Distance{' '}
-            </p>
-            <InputSelect options={options} />
-          </div>
+
           <div className={`${styles.flex} ${styles.localizationContainer}`}>
             <p className={`${styles.textDark} ${styles.labelText}`}>
               {' '}
               Currency{' '}
             </p>
-            <InputSelect options={options} />
+            <InputSelect
+              options={options['currency']}
+              value={inpSelectValues.currency}
+              onChange={(e: any) => {
+                setInpSelectValues((prevValue) => ({
+                  ...prevValue,
+                  currency: e,
+                }))
+              }}
+            />
+          </div>
+
+          <div className={`${styles.flex} ${styles.localizationContainer}`}>
+            <p className={`${styles.textDark} ${styles.labelText}`}>
+              {' '}
+              Phone Prefix{' '}
+            </p>
+            <InputSelect
+              options={options['phone']}
+              value={inpSelectValues.phonePrefix}
+              onChange={(e: any) => {
+                setInpSelectValues((prevValue) => ({
+                  ...prevValue,
+                  phonePrefix: e,
+                }))
+              }}
+            />
+          </div>
+
+          <div className={`${styles.flex} ${styles.localizationContainer}`}>
+            <p className={`${styles.textDark} ${styles.labelText}`}>
+              {' '}
+              Distance{' '}
+            </p>
+            <InputSelect
+              options={options['distance']}
+              value={inpSelectValues.distance}
+              onChange={(e: any) => {
+                setInpSelectValues((prevValue) => ({
+                  ...prevValue,
+                  distance: e,
+                }))
+              }}
+            />
           </div>
         </div>
       </PageGridLayout>

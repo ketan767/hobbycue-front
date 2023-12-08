@@ -33,6 +33,8 @@ type Props = {
   setConfirmationModal?: any
   handleClose?: any
   isError?: boolean
+  onStatusChange?: (isChanged: boolean) => void
+  onBoarding?: boolean
 }
 type ListingContactData = {
   public_email: InputData<string>
@@ -48,6 +50,8 @@ const ListingContactEditModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClose,
+  onStatusChange,
+  onBoarding,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -68,7 +72,39 @@ const ListingContactEditModal: React.FC<Props> = ({
   })
   const inputRef = useRef<HTMLInputElement>(null)
   const phoneRef = useRef<HTMLInputElement>(null)
+  const WhtphoneRef = useRef<HTMLInputElement>(null)
+  const emailRef = useRef<HTMLInputElement>(null)
   const websiteRef = useRef<HTMLInputElement>(null)
+  const [initialData, setInitialData] = useState<ListingContactData>({
+    phone: { value: '', error: null },
+    public_email: { value: '', error: null },
+    website: { value: '', error: null },
+    whatsapp_number: { value: '', error: null },
+    page_admin: { value: '', error: null },
+  })
+  const [isChanged, setIsChanged] = useState(false)
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+  useEffect(() => {
+    setInitialData((prev) => {
+      return {
+        public_email: {
+          ...prev.public_email,
+          value: listingModalData.public_email as string,
+        },
+        phone: { ...prev.phone, value: listingModalData.phone as string },
+        whatsapp_number: {
+          ...prev.whatsapp_number,
+          value: listingModalData.whatsapp_number as string,
+        },
+        website: { ...prev.website, value: listingModalData.website as string },
+        page_admin: {
+          ...prev.page_admin,
+          value: user.display_name,
+        },
+      }
+    })
+  }, [user])
 
   useEffect(() => {
     inputRef?.current?.focus()
@@ -80,6 +116,13 @@ const ListingContactEditModal: React.FC<Props> = ({
         [event.target.name]: { value: event.target.value, error: null },
       }
     })
+    const currentData = { ...data }
+    const hasChanges =
+      JSON.stringify(currentData) !== JSON.stringify(initialData)
+    setIsChanged(hasChanges)
+    if (onStatusChange) {
+      onStatusChange(hasChanges)
+    }
   }
 
   const handleBack = async () => {
@@ -116,6 +159,7 @@ const ListingContactEditModal: React.FC<Props> = ({
   const handleSubmit = async () => {
     console.log(data.website)
     if (!data.phone.value && !data.public_email.value) {
+      emailRef.current?.focus()
       return setData((prev) => {
         return {
           ...prev,
@@ -142,6 +186,38 @@ const ListingContactEditModal: React.FC<Props> = ({
             phone: { ...prev.phone, error: 'Enter a valid phone number' },
           }
         })
+      }
+    }
+    if (data.whatsapp_number.value) {
+      if (
+        !containOnlyNumbers(data.whatsapp_number.value.toString().trim()) ||
+        data.whatsapp_number.value.toString().trim().length !== 10
+      ) {
+        WhtphoneRef.current?.focus()
+        return setData((prev) => {
+          return {
+            ...prev,
+            whatsapp_number: {
+              ...prev.whatsapp_number,
+              error: 'Enter a valid phone number',
+            },
+          }
+        })
+      }
+    }
+    if (data.public_email.value) {
+      if (
+        data.public_email.value &&
+        !emailRegex.test(data.public_email.value.trim())
+      ) {
+        emailRef.current?.focus()
+        return setData((prev) => ({
+          ...prev,
+          public_email: {
+            ...prev.public_email,
+            error: 'Enter a valid email address',
+          },
+        }))
       }
     }
     if (data.website.value && data.website.value !== '') {
@@ -181,6 +257,7 @@ const ListingContactEditModal: React.FC<Props> = ({
   }
 
   useEffect(() => {
+    emailRef?.current?.focus()
     setData((prev) => {
       return {
         public_email: {
@@ -262,6 +339,7 @@ const ListingContactEditModal: React.FC<Props> = ({
         handleSubmit={handleSubmit}
         setConfirmationModal={setConfirmationModal}
         isError={isError}
+        OnBoarding={onBoarding}
       />
     )
   }
@@ -334,6 +412,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                   name="public_email"
                   autoComplete="email"
                   onChange={handleInputChange}
+                  ref={emailRef}
                 />
                 <p className={styles['helper-text']}>
                   {data.public_email.error}
@@ -384,6 +463,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                   autoComplete="phone"
                   name="whatsapp_number"
                   onChange={handleInputChange}
+                  ref={WhtphoneRef}
                 />
                 <p className={styles['helper-text']}>
                   {data.whatsapp_number.error}

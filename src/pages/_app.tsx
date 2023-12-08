@@ -10,12 +10,15 @@ import type { AppProps } from 'next/app'
 
 import store from '@/redux/store'
 import SiteMainLayout from '@/layouts'
-
+import SiteAdminLayout from '@/AdminLayout'
 import '@/styles/_globals.css'
 import { useRouter } from 'next/router'
 import LoadingBackdrop from '@/components/PageLoader'
 
 function App({ Component, pageProps }: AppProps) {
+  const router = useRouter()
+
+  const isAdminPage = router.pathname.startsWith('/admin')
   const theme = createTheme({
     palette: {
       primary: {
@@ -41,9 +44,15 @@ function App({ Component, pageProps }: AppProps) {
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <Provider store={store}>
-            <SiteMainLayout>
-              <Component {...pageProps} />
-            </SiteMainLayout>
+            {isAdminPage ? (
+              <SiteAdminLayout>
+                <Component {...pageProps} />
+              </SiteAdminLayout>
+            ) : (
+              <SiteMainLayout>
+                <Component {...pageProps} />
+              </SiteMainLayout>
+            )}
           </Provider>
         </ThemeProvider>
       </StyledEngineProvider>

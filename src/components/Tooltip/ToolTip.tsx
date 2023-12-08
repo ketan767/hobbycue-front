@@ -17,14 +17,15 @@ const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
   [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: theme.palette.common.white,
     color: '#8064A2',
-
+    margin: '4px 0 0 0 !important',
     fontFamily: 'Poppins, sans-serif',
     fontSize: '14px',
     fontStyle: 'normal',
     fontWeight: 400,
-    lineHeight: '14px',
+    lineHeight: '24px',
     letterSpacing: '0.14px',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.12)',
+    transform: 'none !important',
   },
 }))
 

@@ -26,6 +26,8 @@ type Props = {
   setConfirmationModal?: any
   handleClose?: any
   isError?: boolean
+  onStatusChange?: (isChanged: boolean) => void
+  onBoarding?: boolean
 }
 
 type ListingGeneralData = {
@@ -43,6 +45,8 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClose,
+  onStatusChange,
+  onBoarding,
 }) => {
   const dispatch = useDispatch()
 
@@ -52,6 +56,21 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [nextDisabled, setNextDisabled] = useState(false)
   const [isError, setIsError] = useState(false)
+  const [initialData, setInitialData] = useState({})
+  const [isChanged, setIsChanged] = useState(false)
+  const [urlSpanLength, setUrlSpanLength] = useState<number>(0)
+  const urlSpanRef = useRef<HTMLSpanElement>(null)
+
+  useEffect(() => {
+    setInitialData({
+      title: { value: listingModalData.title as string, error: null },
+      tagline: { value: listingModalData.tagline as string, error: null },
+      page_url: { value: listingModalData.page_url as string, error: null },
+      gender: { value: listingModalData.gender as any, error: null },
+      year: { value: listingModalData.year as string, error: null },
+      admin_note: { value: listingModalData.admin_note as string, error: null },
+    })
+  }, [user])
 
   const [data, setData] = useState<ListingGeneralData>({
     title: { value: '', error: null },
@@ -232,7 +251,17 @@ const ListingGeneralEditModal: React.FC<Props> = ({
       year: { value: listingModalData.year as string, error: null },
       admin_note: { value: listingModalData.admin_note as string, error: null },
     })
+    const length = urlSpanRef.current?.offsetWidth ?? 0
+    setUrlSpanLength(length + 12)
   }, [])
+  useEffect(() => {
+    const hasChanges = JSON.stringify(data) !== JSON.stringify(initialData)
+    setIsChanged(hasChanges)
+
+    if (onStatusChange) {
+      onStatusChange(hasChanges)
+    }
+  }, [data, initialData, onStatusChange])
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -286,6 +315,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   )
 
   useEffect(() => {
+    fullNameRef?.current?.focus()
     if (onComplete !== undefined) {
       let pageUrl: any = data.title.value
       console.log(pageUrl)
@@ -344,6 +374,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
         handleSubmit={handleSubmit}
         setConfirmationModal={setConfirmationModal}
         isError={isError}
+        OnBoarding={onBoarding}
       />
     )
   }
@@ -378,7 +409,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
                 required
                 value={data.title.value as string}
                 name="title"
-                ref={inputRef}
+                ref={fullNameRef}
                 onChange={handleInputChange}
               />
               <p className={styles['helper-text']}>{data.title.error}</p>
@@ -417,8 +448,12 @@ const ListingGeneralEditModal: React.FC<Props> = ({
                   name="page_url"
                   onChange={handleInputChange}
                   ref={pageUrlRef}
+                  style={{
+                    paddingLeft: urlSpanLength + 'px',
+                    paddingTop: '14px',
+                  }}
                 />
-                <span>{baseURL + '/page/'}</span>
+                <span ref={urlSpanRef}>{baseURL + '/page/'}</span>
               </div>
               <p className={styles['helper-text']}>{data.page_url.error}</p>
             </div>
@@ -428,9 +463,9 @@ const ListingGeneralEditModal: React.FC<Props> = ({
               {listingModalData.type !== listingTypes.PROGRAM && (
                 <div className={styles['input-box']}>
                   <label>
-                    {listingModalData.type === listingTypes.PLACE
+                    {listingModalData.type === listingTypes.PEOPLE
                       ? 'Year Of Birth/Establishment'
-                      : 'Year'}
+                      : 'Year Of Establishment'}
                   </label>
                   <input
                     type="text"

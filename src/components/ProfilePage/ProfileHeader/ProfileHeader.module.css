@@ -38,7 +38,7 @@
 
 .center-container .cover-img-wrapper {
   position: relative;
-  max-height: 309px;
+  max-height: 310px;
 }
 .center-container .cover-img-wrapper .img {
   width: 100%;
@@ -98,9 +98,16 @@
   place-items: center;
   position: relative;
 }
-
-.action-btn-wrapper .action-btn img{
+.action-btn:hover {
+  background-color: #ccc1da;
+  transition: 0.2s;
+}
+.action-btn-wrapper .action-btn img {
   border-radius: 8px;
+}
+
+.action-btn-dropdown-wrapper {
+  position: relative;
 }
 
 .makeMyPageButton {
@@ -113,9 +120,9 @@
 /* Navigation Tabs */
 .navigation-tabs {
   display: flex;
-  margin-left: 391px;
+  margin-right: 138px;
   gap: 38px;
-  justify-content: flex-start;
+  justify-content: center;
   margin-top: 14px;
   position: sticky;
   min-height: 40px;
@@ -148,6 +155,7 @@
   position: absolute;
   background: #8064a2;
   border-radius: 2px 2px 0px 0px;
+  z-index: 100;
 }
 
 /* Apply styles when page is scrolled and `small` class is added to `container` */
@@ -212,7 +220,7 @@
   display: flex;
   column-gap: 12px;
   align-items: flex-end;
-  
+
   justify-content: space-between;
 }
 .name-container .profile-name {
@@ -224,9 +232,10 @@
   cursor: pointer;
 }
 .dropdown {
-  position: relative;
-  top: calc(100% + 65px);
-  z-index: 50;
+  position: absolute;
+  top: calc(120%);
+  left: calc(-50%);
+  z-index: 1501;
   box-shadow: 0px 8px 12px 0px rgba(147, 156, 163, 0.12),
     0px 0px 2px 0px rgba(147, 156, 163, 0.36);
   border-radius: 4px;
@@ -251,7 +260,7 @@
   padding: 12px;
   transition: 0.2s;
 }
-.contactBtn{
+.contactBtn {
   font-size: 14px;
   font-family: 'Poppins';
   font-style: normal;
@@ -262,7 +271,7 @@
 }
 .customList li:hover {
   background-color: #e5e5e5;
-  color: #8064a2; 
+  color: #8064a2;
 }
 @keyframes scroll-in {
   0% {
@@ -322,7 +331,7 @@
 @media screen and (max-width: 1100px) {
   .nav {
     display: flex;
-    overflow-x: auto;
+    
     padding: 0 16px;
   }
   .navigation-tabs {
@@ -337,5 +346,15 @@
     font-size: 12px;
     padding: 10px 0;
     min-width: 56px;
+  }
+  .container:has(.header).small {
+    display: none;
+  }
+
+  .profile-left-aside{
+   
+    position: static; 
+    height: auto !important;
+    overflow: auto;
   }
 }
