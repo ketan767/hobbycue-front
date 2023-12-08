@@ -33,7 +33,6 @@ function SiteAdminLayout({ children }: { children: ReactElement }) {
   const [showPreLoader, setShowPreLoader] = useState(true)
 
   const fetchDetails = async () => {
-    // Get Profile (User) Details
     const { err: profileErr, res: profileRes } = await getMyProfileDetail()
     if (
       profileErr?.response?.data?.success === false &&
@@ -44,7 +43,6 @@ function SiteAdminLayout({ children }: { children: ReactElement }) {
       logout()
     }
 
-    // If any error or !success, then set user as `not authenticated`
     if (profileErr || !profileRes || !profileRes.data.success) {
       setShowPreLoader(false)
       return dispatch(updateIsAuthenticated(false))
@@ -53,7 +51,6 @@ function SiteAdminLayout({ children }: { children: ReactElement }) {
     dispatch(updateIsAuthenticated(true))
     dispatch(updateUser(profileRes?.data.data.user))
 
-    // Fetch the user Listings pages.
     const { err: listingErr, res: listingRes } = await getListingPages(
       `populate=_hobbies,_address&admin=${profileRes?.data.data.user._id}`,
     )
@@ -63,7 +60,6 @@ function SiteAdminLayout({ children }: { children: ReactElement }) {
 
     dispatch(updateUserListing(listingRes.data.data.listings))
 
-    // Check the localStorage for `active profile`, then update the active profile using the data.
     const active_profile = localStorage.getItem('active_profile')
 
     const activeProfile: LocalStorageActiveProfile = JSON.parse(
@@ -87,7 +83,6 @@ function SiteAdminLayout({ children }: { children: ReactElement }) {
     setShowPreLoader(false)
   }
 
-  /** To check user logged-in status, as it will open the website */
   useEffect(() => {
     if (isLoggedIn && isAuthenticated) return setShowPreLoader(false)
 
@@ -99,19 +94,15 @@ function SiteAdminLayout({ children }: { children: ReactElement }) {
     } else {
       dispatch(updateIsLoggedIn(true))
       fetchDetails()
-
-      // dispatch(updateActiveProfile({ type: 'user', data: res.data.data.user }))
     }
   }, [isLoggedIn, isAuthenticated])
 
-  /** If user is not onboarded then open the Onboarding model. */
   useEffect(() => {
     if (isLoggedIn && isAuthenticated && !user.is_onboarded) {
       dispatch(openModal({ type: 'user-onboarding', closable: false }))
     }
   }, [isLoggedIn, isAuthenticated, user])
 
-  /** Handles `showPageLoader` while page changes. */
   useEffect(() => {
     let timeout: NodeJS.Timeout
     const handleStart = (url: any, { shallow }: any) => {

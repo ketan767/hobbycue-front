@@ -33,6 +33,7 @@ import Dropdown from './DropDown'
 import { listingTypes } from '@/constants/constant'
 import ListingPageLayout from '@/layouts/ListingPageLayout'
 import RepostIcon from '@/assets/icons/RepostIcon'
+import { ClaimListing } from '@/services/auth.service'
 
 type Props = {
   data: ListingPageData['pageData']
@@ -146,6 +147,10 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
     }
   }
 
+  const handleClaim = async () => {
+    dispatch(openModal({ type: 'claim-listing', closable: true }))
+  }
+
   const handleShare = () => {
     dispatch(updateShareUrl(window.location.href))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
@@ -155,6 +160,10 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
 
   const handleDropdown = () => {
     setOpen(!open)
+  }
+
+  const handleOpenCover = () => {
+    dispatch(openModal({ type: 'Full-Screen-Cover-Modal', closable: false }))
   }
 
   return (
@@ -218,6 +227,7 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
             ></div>
             {data?.cover_image ? (
               <Image
+                onClick={handleOpenCover}
                 className={styles['img']}
                 src={data?.cover_image}
                 alt=""
@@ -303,12 +313,21 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
               ) : (
                 <></>
               )}
-              <FilledButton
-                className={styles.contactBtn}
-                onClick={handleContact}
-              >
-                Contact
-              </FilledButton>
+              {data.pageData?.is_claimed ? (
+                <FilledButton
+                  className={styles.contactBtn}
+                  onClick={handleContact}
+                >
+                  Contact
+                </FilledButton>
+              ) : (
+                <FilledButton
+                  className={styles.contactBtn}
+                  onClick={handleClaim}
+                >
+                  Claim
+                </FilledButton>
+              )}
             </div>
           </div>
         </section>
@@ -332,7 +351,7 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
                   onClick={(e) => console.log(e)}
                   className={styles['action-btn']}
                 >
-                  <RepostIcon/>
+                  <RepostIcon />
                 </div>
               </CustomTooltip>
             </Link>
@@ -353,7 +372,7 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
                 onClick={(e) => handleShare()}
                 className={styles['action-btn']}
               >
-                <ShareIcon/>
+                <ShareIcon />
               </div>
             </CustomTooltip>
 

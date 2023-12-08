@@ -146,6 +146,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
   const handleAddHobby = () => {
     setError(null)
+    setShowGenreDowpdown(false)
 
     let selectedHobby = null
     let selectedGenre = null
@@ -420,6 +421,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                                 return { ...prev, genre: genre }
                               })
                               setGenreInputValue(genre?.display)
+                              setShowGenreDowpdown(false)
                             }}
                           >
                             {genre?.display}

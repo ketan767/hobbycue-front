@@ -103,6 +103,7 @@ line-height: 16px;
   gap: 20px;
   border-bottom: 1px solid var(--grey-light, #CED4DA);
   align-items: center;
+  cursor: pointer;
 }
 
 .userAvatar  {

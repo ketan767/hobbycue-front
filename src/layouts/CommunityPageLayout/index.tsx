@@ -54,7 +54,9 @@ const CommunityLayout: React.FC<Props> = ({
   })
   const [locations, setLocations] = useState([])
   const [selectedHobby, setSelectedHobby] = useState('')
+  const [selectedGenre, setSelectedGenre] = useState('')
   const [selectedLocation, setSelectedLocation] = useState('Everyone')
+
   const tabs: CommunityPageTabs[] = [
     'posts',
     'links',
@@ -657,32 +659,34 @@ const CommunityLayout: React.FC<Props> = ({
                         fieldset: { border: 0 },
                       }}
                       className={styles['location-select']}
-                      value={selectedHobby}
+                      value={selectedHobby || ''}
                       onChange={(e) => handleHobbyClick(e.target.value)}
-                      defaultValue={'Hobby'}
+                      displayEmpty
                     >
+                      <MenuItem disabled value="">
+                        <em>Hobby</em>
+                      </MenuItem>
                       {activeProfile.data?._hobbies?.map(
-                        (item: any, idx: number) => {
-                          return (
-                            <MenuItem key={idx} value={item.hobby._id}>
-                              {item?.hobby?.display}
-                            </MenuItem>
-                          )
-                        },
+                        (item: any, idx: any) => (
+                          <MenuItem key={idx} value={item.hobby._id}>
+                            {item.hobby.display}
+                          </MenuItem>
+                        ),
                       )}
                     </Select>
 
                     {visibilityData?.length > 0 && (
                       <Select
-                        defaultValue={selectedLocation}
-                        onChange={(e: any) => {
-                          let val = e.target.value
-                          setSelectedLocation(val)
-                        }}
                         value={selectedLocation}
+                        onChange={(e: any) =>
+                          setSelectedLocation(e.target.value)
+                        }
                         // inputProps={{ 'aria-label': 'Without label' }}
                         className={` ${styles['location-select']}`}
                       >
+                        <MenuItem value={selectedLocation}>
+                          {selectedLocation}
+                        </MenuItem>
                         {visibilityData?.map((item: any, idx) => {
                           return (
                             <>

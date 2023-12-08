@@ -17,6 +17,7 @@ import CloseIcon from '@/assets/svg/cross.svg'
 import DownIcon from '@/assets/svg/chevron-down.svg'
 
 import { logout } from '@/helper'
+import { Data } from '@react-google-maps/api'
 type Props = {
   handleClose: any
 }
@@ -49,6 +50,9 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
+  const handleLogout = () => {
+    logout()
+  }
 
   useEffect(() => {
     document.body.style.overflow = 'hidden'
@@ -63,21 +67,45 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
     }
   }
 
+  const navigateToUserProfile = () => {
+    router.push(`/profile/${user.profile_url}`)
+    handleClose()
+  }
+
+  useEffect(() => {
+    const handleLinkClick = (event: any) => {
+      // Check if the clicked element is a link or inside a link
+      if (event.target.closest('a')) {
+        handleClose()
+      }
+    }
+
+    const mainElement = document.querySelector(`.${styles['main']}`)
+    mainElement?.addEventListener('click', handleLinkClick)
+
+    return () => {
+      mainElement?.removeEventListener('click', handleLinkClick)
+    }
+  }, [handleClose])
+
   return (
     <div className={styles['container']} ref={parentRef} onClick={handleClick}>
       <div className={styles['wrapper']}>
         <header className={styles.header}>
-          {user?.profile_image ? (
-            <Image
-              className={styles['img']}
-              src={user.profile_image}
-              alt=""
-              width={48}
-              height={48}
-            />
-          ) : (
-            <div className={`${styles['img']} default-user-icon`}></div>
-          )}
+          <div className={styles['profile']} onClick={navigateToUserProfile}>
+            {user?.profile_image ? (
+              <Image
+                className={styles['img']}
+                src={user.profile_image}
+                alt=""
+                width={48}
+                height={48}
+              />
+            ) : (
+              <div className={`${styles['img']} default-user-icon`}></div>
+            )}
+            {user?.full_name}
+          </div>
           <div className={styles['header-icons']}>
             <Image src={BookmarkIcon} alt="bookmark" />
             <Image src={ShoppingIcon} alt="shop" />
@@ -103,7 +131,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
             </header>
             <div className={styles['dropdown-options']}>
               {exploreOptions.map((option: any) => {
-                return <p key={option.text} >{option.text}</p>
+                return <p key={option.text}>{option.text}</p>
               })}
             </div>
           </div>
@@ -270,6 +298,58 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                 </ul>
               </section>
             </div>
+          </div>
+
+          <div
+            className={`${styles['dropdown-container']} ${
+              exploreActive ? styles['dropdown-active'] : ''
+            } `}
+          >
+            <header>
+              <div>
+                <p>Manage</p>
+              </div>
+            </header>
+            <section className={styles['list']}>
+              {/* <ul>
+                <Link href={'/hobby/music'}>
+                  <li>My orders</li>
+                </Link>
+              </ul> */}
+              <ul>
+                <Link href={`/profile/${user.profile_url}/pages`}>
+                  <li>My pages</li>
+                </Link>
+              </ul>
+            </section>
+          </div>
+          <div
+            className={`${styles['dropdown-container']} ${
+              exploreActive ? styles['dropdown-active'] : ''
+            } `}
+          >
+            <header>
+              <div>
+                <p>Account</p>
+              </div>
+            </header>
+            <section className={styles['list']}>
+              {/* <ul>
+                <Link href={'/hobby/music'}>
+                  <li>My orders</li>
+                </Link>
+              </ul> */}
+              <ul>
+                <Link href={`/settings/login-and-security`}>
+                  <li>Settings</li>
+                </Link>
+              </ul>
+              <ul>
+                <Link onClick={handleLogout} href={`/`}>
+                  <li>Signout</li>
+                </Link>
+              </ul>
+            </section>
           </div>
         </main>
       </div>

@@ -309,10 +309,21 @@ const MainContent: React.FC<SearchResultsProps> = ({
     router.push(`page/${pageUrl}`)
   }
 
+  const noResultsFound =
+    searchResults.length === 0 &&
+    peopleResults.length === 0 &&
+    placeResults.length === 0 &&
+    EventResults.length === 0 &&
+    hobbyResults.length === 0
+
   return (
     //hobby
     <main className={styles.searchResults}>
-      {/* <section className={styles.userSection}>
+      {noResultsFound ? (
+        <div className="no-results-message">No results found.</div>
+      ) : (
+        <div>
+          {/* <section className={styles.userSection}>
         <div className={styles.peopleItemsContainer}>
           <div className={styles.resultHeading}>Hobbies</div>
           {hobbyResults
@@ -356,9 +367,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
         </div>
       </section> */}
 
-      {/* User  */}
+          {/* User  */}
 
-      {/* {!HideUser && searchResults.length > 0 && (
+          {/* {!HideUser && searchResults.length > 0 && (
         <section className={styles.userSection}>
           <div className={styles.peopleItemsContainer}>
             <div className={styles.resultHeading}>User Profiles</div>
@@ -411,168 +422,173 @@ const MainContent: React.FC<SearchResultsProps> = ({
           </div>
         </section>
       )} */}
-      {/* People */}
-      {!HidePeople && peopleResults.length > 0 && (
-        <section className={styles.userSection}>
-          <div className={styles.peopleItemsContainer}>
-            <div className={styles.resultHeading}>People</div>
-            {peopleResults
-              .slice(0, showAllPeople ? undefined : 3)
-              .map((page, index) => (
-                <div
-                  className={styles.peopleItem}
-                  key={index}
-                  onClick={() => navigateToPage(page.page_url)}
-                >
-                  <div className={styles.peopleAvatar}>
-                    {page.profile_image ? (
-                      <Image
-                        src={page.profile_image}
-                        alt={`${page.title}'s `}
-                        width={64}
-                        height={64}
-                        className={styles.peopleavatarImage}
-                      />
-                    ) : (
-                      <div
-                        className={`${styles['people-img']} default-people-listing-icon`}
-                      ></div>
-                    )}
-                  </div>
-                  <div className={styles.userDetails}>
-                    <div className={styles.userName}>{page?.title}</div>
-                    <div className={styles.userTagline}>
-                      {page?.tagline || '\u00a0'}
-                    </div>
-                    <div className={styles.userLocation}>
-                      {page.page_type + ' | ' + page._address?.city || '\u00a0'}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            <div>
-              {showAllPeople
-                ? undefined
-                : (
-                    <button
-                      onClick={toggleShowAllpeople}
-                      className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+          {/* People */}
+          {!HidePeople && peopleResults.length > 0 && (
+            <section className={styles.userSection}>
+              <div className={styles.peopleItemsContainer}>
+                <div className={styles.resultHeading}>People</div>
+                {peopleResults
+                  .slice(0, showAllPeople ? undefined : 3)
+                  .map((page, index) => (
+                    <div
+                      className={styles.peopleItem}
+                      key={index}
+                      onClick={() => navigateToPage(page.page_url)}
                     >
-                      View More
-                    </button>
-                  ) || ''}
-            </div>
-          </div>
-        </section>
-      )}
-      {/* Place  */}
-      {!HidePlace && placeResults.length > 0 && (
-        <section className={styles.userSection}>
-          <div className={styles.peopleItemsContainer}>
-            <div className={styles.resultHeading}>Places</div>
-            {placeResults
-              .slice(0, showAllPlace ? undefined : 3)
-              .map((page, index) => (
-                <div
-                  className={styles.peopleItem}
-                  key={index}
-                  onClick={() => navigateToPage(page.page_url)}
-                >
-                  <div className={styles.peopleAvatar}>
-                    {page.profile_image ? (
-                      <Image
-                        src={page.profile_image}
-                        alt={`${page.title}'s `}
-                        width={64}
-                        height={64}
-                        className={styles.peopleavatarImage}
-                      />
-                    ) : (
-                      <div
-                        className={`${styles['people-img']} default-people-listing-icon`}
-                      ></div>
-                    )}
-                  </div>
-                  <div className={styles.userDetails}>
-                    <div className={styles.userName}>{page?.title}</div>
-                    <div className={styles.userTagline}>
-                      {page?.tagline || '\u00a0'}
+                      <div className={styles.peopleAvatar}>
+                        {page.profile_image ? (
+                          <Image
+                            src={page.profile_image}
+                            alt={`${page.title}'s `}
+                            width={64}
+                            height={64}
+                            className={styles.peopleavatarImage}
+                          />
+                        ) : (
+                          <div
+                            className={`${styles['people-img']} default-people-listing-icon`}
+                          ></div>
+                        )}
+                      </div>
+                      <div className={styles.userDetails}>
+                        <div className={styles.userName}>{page?.title}</div>
+                        <div className={styles.userTagline}>
+                          {page?.tagline || '\u00a0'}
+                        </div>
+                        <div className={styles.userLocation}>
+                          {page.page_type + ' | ' + page._address?.city ||
+                            '\u00a0'}
+                        </div>
+                      </div>
                     </div>
-                    <div className={styles.userLocation}>
-                      {page.page_type + ' | ' + page._address?.city || '\u00a0'}
-                    </div>
-                  </div>
+                  ))}
+                <div>
+                  {showAllPeople
+                    ? undefined
+                    : (
+                        <button
+                          onClick={toggleShowAllpeople}
+                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                        >
+                          View More
+                        </button>
+                      ) || ''}
                 </div>
-              ))}
-            <div>
-              {showAllPlace
-                ? undefined
-                : (
-                    <button
-                      onClick={toggleShowAllplace}
-                      className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+              </div>
+            </section>
+          )}
+          {/* Place  */}
+          {!HidePlace && placeResults.length > 0 && (
+            <section className={styles.userSection}>
+              <div className={styles.peopleItemsContainer}>
+                <div className={styles.resultHeading}>Places</div>
+                {placeResults
+                  .slice(0, showAllPlace ? undefined : 3)
+                  .map((page, index) => (
+                    <div
+                      className={styles.peopleItem}
+                      key={index}
+                      onClick={() => navigateToPage(page.page_url)}
                     >
-                      View More
-                    </button>
-                  ) || ''}
-            </div>
-          </div>
-        </section>
-      )}
+                      <div className={styles.peopleAvatar}>
+                        {page.profile_image ? (
+                          <Image
+                            src={page.profile_image}
+                            alt={`${page.title}'s `}
+                            width={64}
+                            height={64}
+                            className={styles.peopleavatarImage}
+                          />
+                        ) : (
+                          <div
+                            className={`${styles['people-img']} default-people-listing-icon`}
+                          ></div>
+                        )}
+                      </div>
+                      <div className={styles.userDetails}>
+                        <div className={styles.userName}>{page?.title}</div>
+                        <div className={styles.userTagline}>
+                          {page?.tagline || '\u00a0'}
+                        </div>
+                        <div className={styles.userLocation}>
+                          {page.page_type + ' | ' + page._address?.city ||
+                            '\u00a0'}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                <div>
+                  {showAllPlace
+                    ? undefined
+                    : (
+                        <button
+                          onClick={toggleShowAllplace}
+                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                        >
+                          View More
+                        </button>
+                      ) || ''}
+                </div>
+              </div>
+            </section>
+          )}
 
-      {/* Event  */}
-      {!HideEvent && EventResults.length > 0 && (
-        <section className={styles.userSection}>
-          <div className={styles.peopleItemsContainer}>
-            <div className={styles.resultHeading}>Programs</div>
-            {EventResults.slice(0, showAllEvent ? undefined : 3).map(
-              (page, index) => (
-                <div
-                  className={styles.peopleItem}
-                  key={index}
-                  onClick={() => navigateToPage(page.page_url)}
-                >
-                  <div className={styles.peopleAvatar}>
-                    {page.profile_image ? (
-                      <Image
-                        src={page.profile_image}
-                        alt={`${page.title}'s `}
-                        width={64}
-                        height={64}
-                        className={styles.peopleavatarImage}
-                      />
-                    ) : (
-                      <div
-                        className={`${styles['people-img']} default-people-listing-icon`}
-                      ></div>
-                    )}
-                  </div>
-                  <div className={styles.userDetails}>
-                    <div className={styles.userName}>{page?.title}</div>
-                    <div className={styles.userTagline}>
-                      {page?.tagline || '\u00a0'}
-                    </div>
-                    <div className={styles.userLocation}>
-                      {page.page_type + ' | ' + page._address?.city || '\u00a0'}
-                    </div>
-                  </div>
-                </div>
-              ),
-            )}
-            <div>
-              {showAllEvent
-                ? undefined
-                : (
-                    <button
-                      onClick={toggleShowAllevent}
-                      className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+          {/* Event  */}
+          {!HideEvent && EventResults.length > 0 && (
+            <section className={styles.userSection}>
+              <div className={styles.peopleItemsContainer}>
+                <div className={styles.resultHeading}>Programs</div>
+                {EventResults.slice(0, showAllEvent ? undefined : 3).map(
+                  (page, index) => (
+                    <div
+                      className={styles.peopleItem}
+                      key={index}
+                      onClick={() => navigateToPage(page.page_url)}
                     >
-                      View More
-                    </button>
-                  ) || ''}
-            </div>
-          </div>
-        </section>
+                      <div className={styles.peopleAvatar}>
+                        {page.profile_image ? (
+                          <Image
+                            src={page.profile_image}
+                            alt={`${page.title}'s `}
+                            width={64}
+                            height={64}
+                            className={styles.peopleavatarImage}
+                          />
+                        ) : (
+                          <div
+                            className={`${styles['people-img']} default-people-listing-icon`}
+                          ></div>
+                        )}
+                      </div>
+                      <div className={styles.userDetails}>
+                        <div className={styles.userName}>{page?.title}</div>
+                        <div className={styles.userTagline}>
+                          {page?.tagline || '\u00a0'}
+                        </div>
+                        <div className={styles.userLocation}>
+                          {page.page_type + ' | ' + page._address?.city ||
+                            '\u00a0'}
+                        </div>
+                      </div>
+                    </div>
+                  ),
+                )}
+                <div>
+                  {showAllEvent
+                    ? undefined
+                    : (
+                        <button
+                          onClick={toggleShowAllevent}
+                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                        >
+                          View More
+                        </button>
+                      ) || ''}
+                </div>
+              </div>
+            </section>
+          )}
+        </div>
       )}
     </main>
   )
