@@ -149,7 +149,7 @@ const ListingPageLayout: React.FC<Props> = ({ data, children, activeTab }) => {
   return (
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
-      <ListingHeader data={data.pageData} />
+      <ListingHeader data={data.pageData} activeTab={activeTab}/>
       {showSmallHeader && (
         <ListingHeaderSmall data={data.pageData} activeTab={activeTab} />
       )}
