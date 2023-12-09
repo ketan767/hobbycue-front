@@ -36,10 +36,12 @@ import {
   setTypeResultThree,
 } from '@/redux/slices/search'
 import { Preview } from '@mui/icons-material'
+import { Select } from '@mui/material'
 
 type Props = {
-  data: any
-  children: any
+  data?: any
+  children?: any
+  onChange?: any
 }
 
 type User = {
@@ -595,7 +597,36 @@ const MainContent: React.FC<SearchResultsProps> = ({
 }
 console.log()
 
+const FilterDropdown: React.FC<Props> = ({ onChange }) => {
+  const dispatch = useDispatch()
+
+  const handleShowAllPeopleClick = () => {
+    dispatch(toggleShowAllPeople())
+  }
+  const handleShowAllPlaceClick = () => {
+    dispatch(toggleShowAllPlace())
+  }
+  const handleShowAllEventClick = () => {
+    dispatch(toggleShowAllEvent())
+  }
+  return (
+    <Select onChange={onChange} className={styles.filterDropdown}>
+      <option onClick={handleShowAllPeopleClick} value="people">
+        People Pages
+      </option>
+      <option onClick={handleShowAllPlaceClick} value="places">
+        Places
+      </option>
+      <option onClick={handleShowAllEventClick} value="programs">
+        Programs
+      </option>
+    </Select>
+  )
+}
+
 const Search: React.FC<Props> = ({ data, children }) => {
+  const [isMobile, setIsMobile] = useState(false)
+
   const userSearchResults = useSelector(
     (state: RootState) => state.search.userSearchResults.data,
   )
@@ -615,16 +646,51 @@ const Search: React.FC<Props> = ({ data, children }) => {
     (state: RootState) => state.search.hobbiesSearchResults.data,
   )
 
+  const dispatch = useDispatch()
+
+  const handleDropdownChange = (event: any) => {
+    const filterValue = event.target.value
+    switch (filterValue) {
+      case 'all':
+        dispatch(toggleShowAll())
+        break
+      case 'people':
+        dispatch(toggleShowAllPeople())
+        break
+      case 'places':
+        dispatch(toggleShowAllPlace())
+        break
+      case 'programs':
+        dispatch(toggleShowAllEvent())
+        break
+      default:
+        break
+    }
+  }
   useEffect(() => {
     console.log('userresultt', userSearchResults)
   }, [])
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 1100)
+    }
+
+    handleResize()
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   return (
     <PageGridLayout column={3} customStyles={styles['pageGridSearch']}>
-      <aside className={`custom-scrollbar ${styles['profile-left-aside']}`}>
-        {' '}
+      {isMobile ? (
+        <aside className={`custom-scrollbar ${styles['profile-left-aside']}`}>
+          <FilterDropdown onChange={handleDropdownChange} />
+        </aside>
+      ) : (
         <FilterSidebar />
-      </aside>
+      )}
       <main>
         <MainContent
           searchResults={userSearchResults || []}

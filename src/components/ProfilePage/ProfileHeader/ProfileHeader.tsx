@@ -28,6 +28,8 @@ import Dropdown from './DropDown'
 import useOutsideClick from '@/hooks/useOutsideClick'
 import RepostIcon from '../../../assets/icons/RepostIcon'
 import ShareIcon from '@/assets/icons/ShareIcon'
+import { updateImageUrl } from '@/redux/slices/modal'
+
 type Props = {
   activeTab: ProfilePageTabs
   data: ProfilePageData['pageData']
@@ -122,6 +124,29 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
     }
   }
 
+  const OpenProfileImage = () => {
+    console.log('pro', data.profile_image)
+    dispatch(updateImageUrl(data?.profile_image))
+    dispatch(
+      openModal({
+        type: 'View-Image-Modal',
+        closable: false,
+        imageurl: data?.profile_image,
+      }),
+    )
+  }
+
+  const OpenCoverImage = () => {
+    dispatch(updateImageUrl(data?.cover_image))
+    dispatch(
+      openModal({
+        type: 'View-Image-Modal',
+        closable: false,
+        imageurl: data?.cover_image,
+      }),
+    )
+  }
+
   return (
     <>
       <div className={`${styles['container']}`}>
@@ -132,8 +157,9 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
             <div className={styles['relative']}>
               {data?.profile_image ? (
                 <Image
-                  className={styles['img']}
-                  src={data.profile_image}
+                  onClick={OpenProfileImage}
+                  className={`${styles['img']} imageclick`}
+                  src={data?.profile_image}
                   alt=""
                   width={160}
                   height={160}
@@ -185,9 +211,10 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
             <div className={styles['cover-img-wrapper']}>
               {data?.cover_image ? (
                 <Image
+                  onClick={OpenCoverImage}
                   className={
                     activeTab === 'home'
-                      ? styles['img']
+                      ? `${styles['img']} imageclick`
                       : `${styles['img-optional']} ${styles['img']}`
                   }
                   src={data.cover_image}
@@ -281,7 +308,7 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
                     onClick={(e) => console.log(e)}
                     className={styles['action-btn']}
                   >
-                    <RepostIcon/>
+                    <RepostIcon />
                   </div>
                 </Tooltip>
               </Link>
@@ -302,7 +329,7 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
                   onClick={(e) => handleShare()}
                   className={styles['action-btn']}
                 >
-                  <ShareIcon/>
+                  <ShareIcon />
                 </div>
               </Tooltip>
 

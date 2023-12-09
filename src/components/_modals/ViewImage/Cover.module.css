@@ -39,3 +39,17 @@
     height: 100%;
     width: 100%;
   }
+  .header {
+    display: flex;
+    padding: var(--spacing-16) var(--spacing-16);
+  }
+
+  .modal-close-icon {
+    position: absolute;
+    top: 0;
+    right: var(--spacing-12);
+    cursor: pointer;
+    border-radius: 100%;
+
+    z-index: 10;
+  }

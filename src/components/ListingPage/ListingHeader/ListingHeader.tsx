@@ -15,7 +15,7 @@ import {
   updateListingProfile,
 } from '@/services/listing.service'
 import { updatePhotoEditModalData } from '@/redux/slices/site'
-import { openModal, updateShareUrl } from '@/redux/slices/modal'
+import { openModal, updateImageUrl, updateShareUrl } from '@/redux/slices/modal'
 import { dateFormat } from '@/utils'
 import CustomTooltip from '@/components/Tooltip/ToolTip'
 import Calendar from '@/assets/svg/calendar-light.svg'
@@ -163,8 +163,27 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
     setOpen(!open)
   }
 
-  const handleOpenCover = () => {
-    dispatch(openModal({ type: 'Full-Screen-Cover-Modal', closable: false }))
+  const OpenProfileImage = () => {
+    console.log('pro', data.profile_image)
+    dispatch(updateImageUrl(data?.profile_image))
+    dispatch(
+      openModal({
+        type: 'View-Image-Modal',
+        closable: false,
+        imageurl: data?.profile_image,
+      }),
+    )
+  }
+
+  const OpenCoverImage = () => {
+    dispatch(updateImageUrl(data?.cover_image))
+    dispatch(
+      openModal({
+        type: 'View-Image-Modal',
+        closable: false,
+        imageurl: data?.cover_image,
+      }),
+    )
   }
 
   return (
@@ -175,7 +194,8 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
           <div className={styles['relative']}>
             {data?.profile_image ? (
               <Image
-                className={styles['img']}
+                onClick={OpenProfileImage}
+                className={`${styles['img']} imageclick`}
                 src={data?.profile_image}
                 alt=""
                 width={160}
@@ -228,9 +248,11 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
             ></div>
             {data?.cover_image ? (
               <Image
-                onClick={handleOpenCover}
+                onClick={OpenCoverImage}
                 className={
-                  activeTab === 'home' ? styles['img'] : `${styles['img-optional']} ${styles['img']}`
+                  activeTab === 'home'
+                    ? `${styles['img']} imageclick`
+                    : `${styles['img-optional']} ${styles['img']}`
                 }
                 src={data?.cover_image}
                 alt=""
@@ -240,7 +262,9 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
             ) : (
               <div
                 className={
-                  activeTab === 'home' ? styles['img'] : `${styles['img-optional']} ${styles['img']}`
+                  activeTab === 'home'
+                    ? styles['img']
+                    : `${styles['img-optional']} ${styles['img']}`
                 }
               >
                 <CoverPhotoLayout

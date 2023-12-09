@@ -41,7 +41,7 @@ export type ModalType =
   | 'CopyProfileDataModal'
   | 'Verify-ActionModal'
   | 'Set-PasswordModal'
-  | 'Full-Screen-Cover-Modal'
+  | 'View-Image-Modal'
 
   interface ModalState {
     activeModal: ModalType
@@ -52,11 +52,13 @@ export type ModalType =
     shareUrl: string
     onVerify?: (() => void) | null
     verified?: boolean
+    imageUrl: string
   }
   
   const initialState: ModalState = {
     activeModal: null,
     closable: true,
+    imageUrl: '',
     authFormData: {
       email: '',
       password: '',
@@ -78,7 +80,8 @@ export type ModalType =
           type: ModalType;
           closable: boolean;
           onModalClose?: () => void;
-          onVerify?: () => void; // Callback when verification is successful
+          onVerify?: () => void;
+          imageurl?: string | undefined
         }>
       ) {
         state.activeModal = action.payload.type
@@ -86,6 +89,7 @@ export type ModalType =
         state.onModalClose = action.payload.onModalClose
         state.onVerify = action.payload.onVerify
         state.verified = false
+        state.imageUrl = action.payload.imageurl || '';
       },
       setVerified(state, action: PayloadAction<boolean>) {
         state.verified = action.payload
@@ -100,6 +104,9 @@ export type ModalType =
         if (state.onModalClose) {
           state.onModalClose()
         }
+      },
+      updateImageUrl(state, action: PayloadAction<string>) {
+        state.imageUrl = action.payload;
       },
       updateAuthFormData(state, { payload }) {
         state.authFormData = payload
@@ -123,7 +130,8 @@ export type ModalType =
     resetAuthFormData,
     updateForgotPasswordEmail,
     updateShareUrl,
-    setVerified
+    setVerified,
+    updateImageUrl
   } = modalSlice.actions
   
   export default modalSlice.reducer
