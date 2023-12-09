@@ -37,9 +37,10 @@ import { ClaimListing } from '@/services/auth.service'
 
 type Props = {
   data: ListingPageData['pageData']
+  activeTab: ListingPageTabs
 }
 
-const ListingHeader: React.FC<Props> = ({ data }) => {
+const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
   const dispatch = useDispatch()
 
   const { listingLayoutMode } = useSelector((state: any) => state.site)
@@ -228,14 +229,20 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
             {data?.cover_image ? (
               <Image
                 onClick={handleOpenCover}
-                className={styles['img']}
+                className={
+                  activeTab === 'home' ? styles['img'] : `${styles['img-optional']} ${styles['img']}`
+                }
                 src={data?.cover_image}
                 alt=""
                 height={296}
                 width={1000}
               />
             ) : (
-              <div className={`${styles['img']}`}>
+              <div
+                className={
+                  activeTab === 'home' ? styles['img'] : `${styles['img-optional']} ${styles['img']}`
+                }
+              >
                 <CoverPhotoLayout
                   type="page"
                   onChange={(e: any) => onInputChange(e, 'cover')}

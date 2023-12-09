@@ -113,30 +113,35 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
               ref={inputRef}
             />
             <p> image </p>
-            <Image
-              src={EditIcon}
-              alt="edit"
-              className={styles.editIcon}
-              onClick={() => {
-                inputRef.current?.click()
-              }}
-            />
+            {data?.admin === user?.user._id && (
+              <Image
+                src={EditIcon}
+                alt="edit"
+                className={styles.editIcon}
+                onClick={() => {
+                  inputRef.current?.click()
+                }}
+              />
+            )}
           </div>
+
           <div className={styles.uploadButton}>
             <p> Video </p>
-            <Image
-              src={EditIcon}
-              alt="edit"
-              className={styles.editIcon}
-              onClick={() => {
-                dispatch(
-                  openModal({
-                    type: 'upload-video-page',
-                    closable: true,
-                  }),
-                )
-              }}
-            />
+            {data?.admin === user?.user._id && (
+              <Image
+                src={EditIcon}
+                alt="edit"
+                className={styles.editIcon}
+                onClick={() => {
+                  dispatch(
+                    openModal({
+                      type: 'upload-video-page',
+                      closable: true,
+                    }),
+                  )
+                }}
+              />
+            )}
           </div>
         </div>
         {/* User About */}
