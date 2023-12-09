@@ -69,4 +69,8 @@ ul.contact-wrapper svg {
   .card-container {
     flex-direction: column;
   }
+  .asideView  {
+    display: none;
+  }
+
 }
