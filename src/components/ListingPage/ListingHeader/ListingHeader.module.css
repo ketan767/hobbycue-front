@@ -329,9 +329,7 @@
   background: #8064a2;
   border-radius: 2px 2px 0px 0px;
 }
-.img {
-  cursor: pointer;
-}
+
 @media screen and (max-width: 1100px) {
   .nav {
     display: flex;
@@ -407,6 +405,9 @@
     display: flex;
   }
   .container:has(.header).small {
+    display: none;
+  }
+  .img-optional{
     display: none;
   }
 }

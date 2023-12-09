@@ -111,7 +111,7 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
 
       <ProfileLayout activeTab={'media'} data={data}>
         <PageGridLayout column={2}>
-          <aside>
+          <aside className={styles['asideView']}>
             {/* User Hobbies */}
             <ProfileHobbySideList data={data.pageData} />
             <ProfilePagesList data={data} />

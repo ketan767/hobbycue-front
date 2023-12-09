@@ -305,4 +305,17 @@
     padding-left: 1rem;
     padding-right: 1rem;
   }
+
+  .inputField {
+    padding-left: 10px;
+    width: 100%;
+  }
+
+  
+  .mobile-search-input-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
 }
+

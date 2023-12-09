@@ -308,6 +308,9 @@ select:-webkit-autofill {
   stroke: #6D747A;
 }
 
+.imageclick {
+  cursor: pointer !important;
+}
 
 @media screen and (max-width: 1300px) {
   .main-site-wrapper {
