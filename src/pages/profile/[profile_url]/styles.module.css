@@ -2,6 +2,7 @@
   height: 288px;
   width: 450px;
   overflow: hidden;
+  cursor: pointer;
 }
 .image img {
   width: 100%;
