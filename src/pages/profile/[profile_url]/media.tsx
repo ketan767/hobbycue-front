@@ -19,6 +19,7 @@ import { openModal } from '@/redux/slices/modal'
 import ProfileHobbySideList from '@/components/ProfilePage/ProfileHobbySideList'
 import ProfilePagesList from '@/components/ProfilePage/ProfilePagesList/ProfilePagesList'
 import ReactPlayer from 'react-player'
+import { updateImageUrl } from '@/redux/slices/modal'
 
 interface Props {
   data: ProfilePageData
@@ -103,6 +104,17 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
     window.location.reload()
   }
 
+  const OpenMediaImage = (image: string) => {
+    dispatch(updateImageUrl(image))
+    dispatch(
+      openModal({
+        type: 'View-Image-Modal',
+        closable: false,
+        imageurl: image,
+      }),
+    )
+  }
+
   return (
     <>
       <Head>
@@ -117,7 +129,7 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
             <ProfilePagesList data={data} />
           </aside>
           <div>
-            {listingLayoutMode !== 'edit' && (
+            {listingLayoutMode === 'edit' && (
               <div className={styles.uploadContainer}>
                 <div className={styles.uploadButton}>
                   <p> image </p>
@@ -176,8 +188,12 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
               )}
               {user.images?.map((item: any, idx: number) => {
                 return (
-                  <div key={idx} className={styles.image}>
-                    <img src={item} />
+                  <div
+                    key={idx}
+                    className={styles.image}
+                    onClick={() => OpenMediaImage(item)}
+                  >
+                    <img src={item} alt={`Media ${idx}`} />
                   </div>
                 )
               })}

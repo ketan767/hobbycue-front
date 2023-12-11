@@ -648,7 +648,6 @@ const CommunityLayout: React.FC<Props> = ({
                   </ul>
                 </section>
                 <section className={styles['filter-section']}>
-                  <p> Filter:</p>
                   <div>
                     <Select
                       sx={{
@@ -661,7 +660,7 @@ const CommunityLayout: React.FC<Props> = ({
                       onChange={(e) => handleHobbyClick(e.target.value)}
                       displayEmpty
                     >
-                      <MenuItem disabled value="">
+                      <MenuItem value="">
                         <em>Hobby</em>
                       </MenuItem>
                       {activeProfile.data?._hobbies?.map(

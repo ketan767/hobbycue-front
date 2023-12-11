@@ -38,7 +38,7 @@ const ListingMedia: React.FC<Props> = (props) => {
       </Head>
 
       <ListingPageLayout activeTab={'media'} data={props.data}>
-        <ListingPageMain data={props.data.pageData}>
+        <ListingPageMain activeTab={'media'} data={props.data.pageData}>
           <ListingMediaTab data={props.data.pageData} />
         </ListingPageMain>
       </ListingPageLayout>

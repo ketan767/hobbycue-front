@@ -276,6 +276,9 @@
   .create-post-btn {
     width: 100%;
   }
+  .background {
+    display: none;
+  }
 }
   .modal-heading::before {
     content: "";
