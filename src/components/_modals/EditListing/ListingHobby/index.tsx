@@ -18,6 +18,9 @@ import { addListingHobby, deleteListingHobby } from '@/services/listing.service'
 import { getListingHobbies } from '@/services/listing.service'
 import SaveModal from '../../SaveModal/saveModal'
 import CloseIcon from '@/assets/icons/CloseIcon'
+import BackIcon from '@/assets/svg/Previous.svg'
+import NextIcon from '@/assets/svg/Next.svg'
+import Image from 'next/image'
 
 type Props = {
   onComplete?: () => void
@@ -446,22 +449,49 @@ const ListingHobbyEditModal: React.FC<Props> = ({
 
         <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
-            <button
-              className="modal-footer-btn cancel"
-              onClick={onBackBtnClick}
-            >
-              Back
-            </button>
+            <>
+              <button
+                className="modal-footer-btn cancel"
+                onClick={onBackBtnClick}
+              >
+                Back
+              </button>
+              {/* SVG Button for Mobile */}
+              <div onClick={onBackBtnClick}>
+                <Image
+                  src={BackIcon}
+                  alt="Back"
+                  className="modal-mob-btn cancel"
+                />
+              </div>
+            </>
           )}
 
           <button
             ref={nextButtonRef}
             className="modal-footer-btn submit"
             onClick={handleSubmit}
-            disabled={nextDisabled}
           >
-            {onComplete ? 'Save' : 'Save'}
+            {onComplete ? 'Next' : 'Save'}
           </button>
+          {/* SVG Button for Mobile */}
+          {onComplete ? (
+            <div onClick={handleSubmit}>
+              <Image
+                src={NextIcon}
+                alt="back"
+                className="modal-mob-btn cancel"
+              />
+            </div>
+          ) : (
+            <button
+              ref={nextButtonRef}
+              className="modal-mob-btn-save"
+              onClick={handleSubmit}
+            >
+              Save
+            </button>
+          )}
         </footer>
       </div>
     </>

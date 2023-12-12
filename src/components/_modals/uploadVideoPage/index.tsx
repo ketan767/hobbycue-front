@@ -30,10 +30,7 @@ type ListingAboutData = {
   description: InputData<string>
 }
 
-const UploadVideoPage: React.FC<Props> = ({
-  onComplete,
-  onBackBtnClick,
-}) => {
+const UploadVideoPage: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
@@ -71,7 +68,11 @@ const UploadVideoPage: React.FC<Props> = ({
           <p className={styles.headerText}> Enter the destination URL </p>
           <label className={styles.label}>URL</label>
           <div className={styles['input-box']}>
-            <input value={url} onChange={(e) => setUrl(e.target.value)} className={styles.input} />
+            <input
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              className={styles.input}
+            />
           </div>
         </section>
 
@@ -90,6 +91,13 @@ const UploadVideoPage: React.FC<Props> = ({
             onClick={handleSubmit}
             disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
           >
+            {submitBtnLoading ? (
+              <CircularProgress color="inherit" size={'24px'} />
+            ) : (
+              'Add Link'
+            )}
+          </button>
+          <button className="modal-mob-btn-save" onClick={handleSubmit}>
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'24px'} />
             ) : (

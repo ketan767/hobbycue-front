@@ -15,6 +15,9 @@ import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import SaveModal from '../../SaveModal/saveModal'
 import CloseIcon from '@/assets/icons/CloseIcon'
+import BackIcon from '@/assets/svg/Previous.svg'
+import NextIcon from '@/assets/svg/Next.svg'
+import Image from 'next/image'
 
 const AboutEditor = dynamic(
   () => import('@/components/AboutEditor/AboutEditor'),
@@ -238,19 +241,25 @@ const ProfileAboutEditModal: React.FC<Props> = ({
 
         <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
-            <button
-              className="modal-footer-btn cancel"
-              onClick={Backsave}
-              disabled={backBtnLoading ? backBtnLoading : backDisabled}
-            >
-              {backBtnLoading ? (
-                <CircularProgress color="inherit" size={'24px'} />
-              ) : onBackBtnClick ? (
-                'Back'
-              ) : (
-                'Back'
-              )}
-            </button>
+            <>
+              <button className="modal-footer-btn cancel" onClick={Backsave}>
+                {backBtnLoading ? (
+                  <CircularProgress color="inherit" size={'24px'} />
+                ) : onBackBtnClick ? (
+                  'Back'
+                ) : (
+                  'Back'
+                )}
+              </button>
+              {/* SVG Button for Mobile */}
+              <div onClick={Backsave}>
+                <Image
+                  src={BackIcon}
+                  alt="Back"
+                  className="modal-mob-btn cancel"
+                />
+              </div>
+            </>
           )}
 
           <button
@@ -267,6 +276,25 @@ const ProfileAboutEditModal: React.FC<Props> = ({
               'Save'
             )}
           </button>
+          {/* SVG Button for Mobile */}
+          {onComplete ? (
+            <div onClick={handleSubmit}>
+              <Image
+                src={NextIcon}
+                alt="back"
+                className="modal-mob-btn cancel"
+              />
+            </div>
+          ) : (
+            <button
+              ref={nextButtonRef}
+              className="modal-mob-btn-save"
+              onClick={handleSubmit}
+              disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
+            >
+              Save
+            </button>
+          )}
         </footer>
       </div>
     </>

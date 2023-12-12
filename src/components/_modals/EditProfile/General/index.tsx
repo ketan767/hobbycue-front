@@ -19,6 +19,9 @@ import FilledButton from '@/components/_buttons/FilledButton'
 import axios from 'axios'
 import SaveModal from '../../SaveModal/saveModal'
 import CloseIcon from '@/assets/icons/CloseIcon'
+import BackIcon from '@/assets/svg/Previous.svg'
+import NextIcon from '@/assets/svg/Next.svg'
+import Image from 'next/image'
 
 type Props = {
   onComplete?: () => void
@@ -493,6 +496,25 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
               'Save'
             )}
           </button>
+          {/* SVG Button for Mobile */}
+          {onComplete ? (
+            <div onClick={handleSubmit}>
+              <Image
+                src={NextIcon}
+                alt="back"
+                className="modal-mob-btn cancel"
+              />
+            </div>
+          ) : (
+            <button
+              ref={nextButtonRef}
+              className="modal-mob-btn-save"
+              onClick={handleSubmit}
+              disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
+            >
+              Save
+            </button>
+          )}
         </footer>
       </div>
     </>

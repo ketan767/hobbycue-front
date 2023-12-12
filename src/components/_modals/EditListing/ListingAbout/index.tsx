@@ -17,6 +17,9 @@ import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
 import SaveModal from '../../SaveModal/saveModal'
 import CloseIcon from '@/assets/icons/CloseIcon'
+import BackIcon from '@/assets/svg/Previous.svg'
+import NextIcon from '@/assets/svg/Next.svg'
+import Image from 'next/image'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -37,7 +40,7 @@ type Props = {
   handleClose?: any
   isError?: boolean
   onStatusChange?: (isChanged: boolean) => void
-  onBoarding?:boolean
+  onBoarding?: boolean
 }
 
 type ListingAboutData = {
@@ -51,7 +54,7 @@ const ListingAboutEditModal: React.FC<Props> = ({
   setConfirmationModal,
   handleClose,
   onStatusChange,
-  onBoarding
+  onBoarding,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -247,15 +250,25 @@ const ListingAboutEditModal: React.FC<Props> = ({
 
         <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
-            <button className="modal-footer-btn cancel" onClick={handleBack}>
-              {backBtnLoading ? (
-                <CircularProgress color="inherit" size={'24px'} />
-              ) : onBackBtnClick ? (
-                'Back'
-              ) : (
-                'Back'
-              )}
-            </button>
+            <>
+              <button className="modal-footer-btn cancel" onClick={handleBack}>
+                {backBtnLoading ? (
+                  <CircularProgress color="inherit" size={'24px'} />
+                ) : onBackBtnClick ? (
+                  'Back'
+                ) : (
+                  'Back'
+                )}
+              </button>
+              {/* SVG Button for Mobile */}
+              <div onClick={handleBack}>
+                <Image
+                  src={BackIcon}
+                  alt="Back"
+                  className="modal-mob-btn cancel"
+                />
+              </div>
+            </>
           )}
 
           <button
@@ -272,6 +285,25 @@ const ListingAboutEditModal: React.FC<Props> = ({
               'Save'
             )}
           </button>
+          {/* SVG Button for Mobile */}
+          {onComplete ? (
+            <div onClick={handleSubmit}>
+              <Image
+                src={NextIcon}
+                alt="back"
+                className="modal-mob-btn cancel"
+              />
+            </div>
+          ) : (
+            <button
+              ref={nextButtonRef}
+              className="modal-mob-btn-save"
+              onClick={handleSubmit}
+              disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
+            >
+              Save
+            </button>
+          )}
         </footer>
       </div>
     </>

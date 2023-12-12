@@ -186,6 +186,27 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
     )
   }
 
+  const isClaimed = data.is_claimed
+  const isEditMode = listingLayoutMode === 'edit'
+
+  console.log('isclaim', isClaimed)
+  console.log('isEditmode', isEditMode)
+  console.log('headerpage', data)
+
+  let button
+  if (!isClaimed && !isEditMode) {
+    button = (
+      <FilledButton className={styles.contactBtn} onClick={handleClaim}>
+        Claim
+      </FilledButton>
+    )
+  } else {
+    button = (
+      <FilledButton className={styles.contactBtn} onClick={handleContact}>
+        Contact
+      </FilledButton>
+    )
+  }
   return (
     <>
       <header className={`site-container ${styles['header']}`}>
@@ -344,21 +365,7 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
               ) : (
                 <></>
               )}
-              {data.pageData?.is_claimed ? (
-                <FilledButton
-                  className={styles.contactBtn}
-                  onClick={handleContact}
-                >
-                  Contact
-                </FilledButton>
-              ) : (
-                <FilledButton
-                  className={styles.contactBtn}
-                  onClick={handleClaim}
-                >
-                  Claim
-                </FilledButton>
-              )}
+              {button}
             </div>
           </div>
         </section>

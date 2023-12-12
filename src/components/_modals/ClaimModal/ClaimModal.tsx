@@ -181,6 +181,17 @@ const ClaimModal = () => {
               'Claim'
             )}
           </button>
+          <button
+            ref={nextButtonRef}
+            className="modal-mob-btn-save"
+            onClick={HandleClaim}
+          >
+            {submitBtnLoading ? (
+              <CircularProgress color="inherit" size={'24px'} />
+            ) : (
+              'Claim'
+            )}
+          </button>
         </footer>
       </div>
     </>

@@ -341,7 +341,6 @@ const ListingSocialMediaEditModal = ({
     }
   }, [mediaData, initialData])
 
-
   if (confirmationModal) {
     return (
       <SaveModal
@@ -446,6 +445,14 @@ const ListingSocialMediaEditModal = ({
           ) : (
             'Save'
           )}
+        </button>
+
+        <button
+          ref={nextButtonRef}
+          className="modal-mob-btn-save"
+          onClick={handleSubmit}
+        >
+          Save
         </button>
       </footer>
     </div>

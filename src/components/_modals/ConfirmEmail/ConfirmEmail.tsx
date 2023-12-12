@@ -28,7 +28,7 @@ type Props = {
 }
 
 const ConfirmEmailModal: React.FC<Props> = ({}) => {
-  const elementRef=useRef<HTMLInputElement>(null)
+  const elementRef = useRef<HTMLInputElement>(null)
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
   const [nextDisabled, setNextDisabled] = useState(false)
@@ -122,6 +122,17 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
             className="modal-footer-btn submit"
             onClick={handleSubmit}
             disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
+          >
+            {submitBtnLoading ? (
+              <CircularProgress color="inherit" size={'16px'} />
+            ) : (
+              'Send'
+            )}
+          </button>
+          <button
+            ref={nextButtonRef}
+            className="modal-mob-btn-save"
+            onClick={handleSubmit}
           >
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'16px'} />
