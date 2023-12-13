@@ -336,8 +336,8 @@
     padding: 0 16px;
   }
   .navigation-tabs {
-    gap: 0px;
-    overflow-x: auto;
+    gap: 8px;
+    
     flex-shrink: 0;
   }
   .navigation-tabs > a {

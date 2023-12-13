@@ -601,7 +601,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
             <div onClick={handleSubmit}>
               <Image
                 src={NextIcon}
-                alt="back"
+                alt="next"
                 className="modal-mob-btn cancel"
               />
             </div>

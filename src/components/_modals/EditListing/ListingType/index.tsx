@@ -56,7 +56,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
     (state: RootState) => state.site,
   )
   const [list, setList] = useState<any>([])
-
+  const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [value, setValue] = useState<any>([])
   const [error, setError] = useState<string | null>(null)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
@@ -319,7 +319,13 @@ const ListingTypeEditModal: React.FC<Props> = ({
                   className="modal-footer-btn cancel"
                   onClick={onBackBtnClick}
                 >
-                  Back
+                  {backBtnLoading ? (
+                    <CircularProgress color="inherit" size={'24px'} />
+                  ) : onBackBtnClick ? (
+                    'Back'
+                  ) : (
+                    'Back'
+                  )}
                 </button>
                 {/* SVG Button for Mobile */}
                 <div onClick={onBackBtnClick}>
@@ -339,10 +345,10 @@ const ListingTypeEditModal: React.FC<Props> = ({
             >
               {submitBtnLoading ? (
                 <CircularProgress color="inherit" size={'24px'} />
-              ) : onComplete ? (
-                'Next'
-              ) : (
+              ) : listingTypeModalMode === 'edit' ? (
                 'Save'
+              ) : (
+                'Next'
               )}
             </button>
             {/* SVG Button for Mobile */}
@@ -360,7 +366,13 @@ const ListingTypeEditModal: React.FC<Props> = ({
                 className="modal-mob-btn-save"
                 onClick={handleSubmit}
               >
-                Save
+                {submitBtnLoading ? (
+                  <CircularProgress color="inherit" size={'16px'} />
+                ) : listingTypeModalMode === 'edit' ? (
+                  'Save'
+                ) : (
+                  'Next'
+                )}
               </button>
             )}
           </footer>

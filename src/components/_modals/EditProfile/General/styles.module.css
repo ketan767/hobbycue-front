@@ -180,6 +180,10 @@
   background: #ddd;
 }
 
+.Back-btn{
+  display: none;
+}
+
 @media screen and (max-width: 1100px) {
   .modal-wrapper {
     max-width: 1100px;
@@ -197,6 +201,13 @@
   .gender-radio-btns {
     gap: 1rem;
   }
+  .next-genral-btn{
+    padding-left: auto;
+
+    --bg-color: rgb(var(--white-rgb)) !important;
+    --color: rgb(var(--primary-100-rgb)) !important
+  }
+  
 }
 .modal-wrapper {
 
@@ -209,4 +220,5 @@
   position: sticky;
   bottom: 0; 
   z-index: 10; 
+  
 }
