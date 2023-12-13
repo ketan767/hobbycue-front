@@ -10,6 +10,7 @@ type Props = {
 
 }
 
+
 const DropdownArrow = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -39,9 +40,11 @@ const InputSelect: React.FC<Props> = ({ options, onChange, value }) => {
         name="select"
         className={styles.select}
 
+
         onChange={(e: any) => {
           onChange(e.target.value)
         }}
+
 
         value={value}
         style={{ paddingRight: '30px' }}
