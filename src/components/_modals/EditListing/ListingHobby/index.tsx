@@ -70,6 +70,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   const [hobbyInputValue, setHobbyInputValue] = useState('')
   const [genreInputValue, setGenreInputValue] = useState('')
   const [isError, setIsError] = useState(false)
+  const [HobbyError, setHobbyError] = useState(false)
 
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     DropdownListItem[]
@@ -135,6 +136,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   }
 
   const handleAddHobby = async () => {
+    setHobbyError(false)
     let selectedHobby = null
     let selectedGenre = null
     setShowGenreDropdown(false)
@@ -147,6 +149,8 @@ const ListingHobbyEditModal: React.FC<Props> = ({
 
       if (!hobbyInputValue.trim()) {
         setError('Please enter a hobby')
+        hobbyRef.current?.focus()
+        setHobbyError(true)
         return
       }
 
@@ -208,6 +212,8 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   const handleSubmit = () => {
     if (hobbiesList.length === 0) {
       setError('Add atleast one hobby!')
+      setHobbyError(true)
+      hobbyRef.current?.focus()
       return
     }
     if (onComplete) onComplete()
@@ -304,7 +310,11 @@ const ListingHobbyEditModal: React.FC<Props> = ({
               <section className={styles['add-new-hobby']}>
                 {/* Hobby Input and Dropdown */}
                 <section className={styles['dropdown-wrapper']}>
-                  <div className={styles['input-box']}>
+                  <div
+                    className={`${styles['input-box']} ${
+                      HobbyError ? styles['input-box-error'] : ''
+                    }`}
+                  >
                     <input
                       ref={hobbyRef}
                       type="text"

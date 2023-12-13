@@ -79,6 +79,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const [showHobbyDowpdown, setShowHobbyDowpdown] = useState<boolean>(false)
   const [showGenreDowpdown, setShowGenreDowpdown] = useState<boolean>(false)
   const [isError, setIsError] = useState(false)
+  const [HobbyError, setHobbyError] = useState(false)
 
   const [hobbyInputValue, setHobbyInputValue] = useState('')
   const [genreid, setGenreId] = useState('')
@@ -149,6 +150,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   }
 
   const handleAddHobby = () => {
+    setHobbyError(false)
     setError(null)
     setShowGenreDowpdown(false)
 
@@ -164,6 +166,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
       if (!hobbyInputValue.trim()) {
         setError('Please enter a hobby')
+        setHobbyError(true)
+        searchref.current?.focus()
         return
       }
 
@@ -171,6 +175,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         selectedHobby = matchedHobby
       } else {
         setError('Typed hobby not found!')
+        setHobbyError(true)
         return
       }
     } else {
@@ -251,8 +256,10 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   }, [user])
 
   const handleSubmit = () => {
+    setHobbyError(false)
     if (userHobbies.length === 0) {
       setError('Add atleast one hobby!')
+      setHobbyError(true)
       searchref.current?.focus()
       return
     }
@@ -362,7 +369,11 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
               <section className={styles['add-new-hobby']}>
                 {/* Hobby Input and Dropdown */}
                 <section className={styles['dropdown-warpper']}>
-                  <div className={styles['input-box']}>
+                  <div
+                    className={`${styles['input-box']} ${
+                      HobbyError ? styles['input-box-error'] : ''
+                    }`}
+                  >
                     <input
                       type="text"
                       placeholder="Search hobby..."

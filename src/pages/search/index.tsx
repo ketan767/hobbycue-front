@@ -15,6 +15,7 @@ import blogs from '../../assets/svg/Search/blogs.svg'
 import classes from '../../assets/svg/Search/classes.svg'
 import posts from '../../assets/svg/Search/posts.svg'
 import rentals from '../../assets/svg/Search/rentals.svg'
+import { MenuItem } from '@mui/material'
 import {
   SearchResults,
   toggleShowAll,
@@ -28,13 +29,7 @@ import PageGridLayout from '@/layouts/PageGridLayout'
 import styles from './styles.module.css'
 
 import { useSelector } from 'react-redux'
-import {
-  setHobbiesSearchResult,
-  setUserSearchResults,
-  setTypeResultOne,
-  setTypeResultTwo,
-  setTypeResultThree,
-} from '@/redux/slices/search'
+
 import { Preview } from '@mui/icons-material'
 import { Select } from '@mui/material'
 
@@ -611,15 +606,15 @@ const FilterDropdown: React.FC<Props> = ({ onChange }) => {
   }
   return (
     <Select onChange={onChange} className={styles.filterDropdown}>
-      <option onClick={handleShowAllPeopleClick} value="people">
+      <MenuItem onClick={handleShowAllPeopleClick} value="people">
         People Pages
-      </option>
-      <option onClick={handleShowAllPlaceClick} value="places">
+      </MenuItem>
+      <MenuItem onClick={handleShowAllPlaceClick} value="places">
         Places
-      </option>
-      <option onClick={handleShowAllEventClick} value="programs">
+      </MenuItem>
+      <MenuItem onClick={handleShowAllEventClick} value="programs">
         Programs
-      </option>
+      </MenuItem>
     </Select>
   )
 }

@@ -87,6 +87,7 @@
 }
 
 .navigation-links {
+  padding: 0 16px;
   display: flex;
   
   gap: 38px;
@@ -228,6 +229,7 @@
     display: none;
   }
   .header {
+    padding: 8px 16px 8px 16px;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -258,4 +260,21 @@
     height: 20px;
     display: flex;
   }
+  .action-btn-wrapper {
+    display: none !important;
+  }
+
+  .navigation-links a {
+    min-width: 6px;
+    font-size: 12px;
+ }
+ .profile-img {
+  order: 2;
+  width: 3.75rem;
+    height: 3.75rem;
+ }
+
+ .container:has(.header).small {
+  display: none;
+ }
 }

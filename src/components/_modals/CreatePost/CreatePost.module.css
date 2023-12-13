@@ -279,6 +279,9 @@
   .background {
     display: none;
   }
+  .modal-heading::before {
+    display: none !important;
+  }
 }
   .modal-heading::before {
     content: "";
