@@ -30,10 +30,7 @@ type ListingAboutData = {
   description: InputData<string>
 }
 
-const UploadVideoUser: React.FC<Props> = ({
-  onComplete,
-  onBackBtnClick,
-}) => {
+const UploadVideoUser: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
@@ -44,7 +41,7 @@ const UploadVideoUser: React.FC<Props> = ({
 
   const handleSubmit = async () => {
     setSubmitBtnLoading(true)
-    const { err, res } = await updateMyProfileDetail( {
+    const { err, res } = await updateMyProfileDetail({
       video_url: url,
     })
     setSubmitBtnLoading(false)
@@ -57,7 +54,7 @@ const UploadVideoUser: React.FC<Props> = ({
       }
     }
   }
-  console.log('user', user);
+  console.log('user', user)
 
   return (
     <>
@@ -71,7 +68,11 @@ const UploadVideoUser: React.FC<Props> = ({
           <p className={styles.headerText}> Enter the destination URL </p>
           <label className={styles.label}>URL</label>
           <div className={styles['input-box']}>
-            <input value={url} onChange={(e) => setUrl(e.target.value)} className={styles.input} />
+            <input
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              className={styles.input}
+            />
           </div>
         </section>
 
@@ -90,6 +91,13 @@ const UploadVideoUser: React.FC<Props> = ({
             onClick={handleSubmit}
             disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
           >
+            {submitBtnLoading ? (
+              <CircularProgress color="inherit" size={'24px'} />
+            ) : (
+              'Add Link'
+            )}
+          </button>
+          <button className="modal-mob-btn-save" onClick={handleSubmit}>
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'24px'} />
             ) : (

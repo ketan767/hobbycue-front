@@ -19,6 +19,8 @@ import { closeModal, openModal } from '@/redux/slices/modal'
 import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
 import CloseIcon from '@/assets/icons/CloseIcon'
+import BackIcon from '@/assets/svg/Previous.svg'
+import NextIcon from '@/assets/svg/Next.svg'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -268,9 +270,28 @@ const ListingAboutEditModal: React.FC<Props> = ({
             ) : onComplete ? (
               'Next'
             ) : (
-              'Next'
+              'Save'
             )}
           </button>
+          {/* SVG Button for Mobile */}
+          {onComplete ? (
+            <div onClick={handleSubmit}>
+              <Image
+                src={NextIcon}
+                alt="back"
+                className="modal-mob-btn cancel"
+              />
+            </div>
+          ) : (
+            <button
+              ref={nextButtonRef}
+              className="modal-mob-btn-save"
+              onClick={handleSubmit}
+              disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
+            >
+              Save
+            </button>
+          )}
         </footer>
       </div>
     </>

@@ -303,6 +303,13 @@ const ListingTagsEditModal: React.FC<Props> = ({
               'Save'
             )}
           </button>
+          <button
+            ref={nextButtonRef}
+            className="modal-mob-btn-save"
+            onClick={handleSubmit}
+          >
+            Save
+          </button>
         </footer>
       </div>
     </>

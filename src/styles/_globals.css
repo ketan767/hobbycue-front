@@ -38,6 +38,7 @@
 }
 @media screen and (max-width: 1100px) {
   :root {
+    
     --navbar-height-desktop: 3rem;
   }
 }
@@ -311,20 +312,83 @@ select:-webkit-autofill {
 .imageclick {
   cursor: pointer !important;
 }
+.modal-mob-btn {
+  display: none;
+}
+.modal-mob-btn-save{
+  display: none;
+}
 
 @media screen and (max-width: 1300px) {
   .main-site-wrapper {
-    margin-left: 16px;
-    margin-right: 16px;
     margin-top: 8px;
+    
   }
 }
 
 @media screen and (max-width: 1100px) {
-.site-container {
-  max-width: var(--max-width);
-  margin: auto;
-}
+  .site-container {
+    max-width: var(--max-width);
+    margin: auto;
+  }
+
+  .modal-footer-btn.submit {
+    display: none;
+  }
+
+  .modal-footer-btn.cancel {
+    display: none;
+  }
+
+  .modal-mob-btn {
+    display: block;
+    --color: rgb(var(--white-rgb));
+    --bg-color: rgb(var(--primary-100-rgb));
+    width: 100%;
+    max-width: 6.25rem;
+    height: var(--spacing-40);
+    background-color: var(--bg-color);
+    color: var(--color);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+    cursor: pointer;
+  }
+  .modal-mob-btn.submit {
+    margin-left: auto;
+  }
+  .modal-mob-btn.submit:disabled {
+    opacity: 0.7;
+  }
+  .modal-mob-btn.cancel {
+    margin-right: auto;
+    --bg-color: rgb(var(--white-rgb));
+    --color: rgb(var(--primary-100-rgb));
+  }
+  .modal-mob-btn:not(:disabled):hover {
+    opacity: 0.9;
+  }
+  
+  .modal-mob-btn-save{
+    display: flex;
+    color: white;
+    font-family: Poppins;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    width: 100%;
+    padding: 8px 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 8px;
+    background: var(--Purple-1, #8064A2);
+  }
+  
+  .modal-mob-btn-save{
+    display: block;
+  }
+
 }
 
 .custom-scrollbar {

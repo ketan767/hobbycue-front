@@ -326,7 +326,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
               </ul> */}
                   <ul>
                     <Link href={`/profile/${user.profile_url}/pages`}>
-                      <li>My pages</li>
+                      <li>My Pages</li>
                     </Link>
                   </ul>
                   <ul className={styles['add-listing-link']}>

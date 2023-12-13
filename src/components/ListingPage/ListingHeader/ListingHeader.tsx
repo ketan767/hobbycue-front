@@ -186,6 +186,59 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
     )
   }
 
+  const isClaimed = data.is_claimed
+  const isEditMode = listingLayoutMode === 'edit'
+
+  let button
+  if (!isClaimed && !isEditMode) {
+    button = (
+      <FilledButton className={styles.contactBtn} onClick={handleClaim}>
+        Claim
+      </FilledButton>
+    )
+  } else {
+    button = (
+      <FilledButton className={styles.contactBtn} onClick={handleContact}>
+        Contact
+      </FilledButton>
+    )
+  }
+
+  function formatDateRange(
+    fromDate: string | number | Date,
+    toDate: string | number | Date,
+  ): string {
+    // Extracting day, month, and year separately
+    const dayOptions: Intl.DateTimeFormatOptions = { day: 'numeric' }
+    const monthYearOptions: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'short',
+    }
+
+    const from = new Date(fromDate)
+    const to = new Date(toDate)
+
+    const fromDay = new Intl.DateTimeFormat('en-US', dayOptions).format(from)
+    const toDay = new Intl.DateTimeFormat('en-US', dayOptions).format(to)
+    const fromMonthYear = new Intl.DateTimeFormat(
+      'en-US',
+      monthYearOptions,
+    ).format(from)
+    const toMonthYear = new Intl.DateTimeFormat(
+      'en-US',
+      monthYearOptions,
+    ).format(to)
+
+    if (
+      from.getMonth() === to.getMonth() &&
+      from.getFullYear() === to.getFullYear()
+    ) {
+      return `${fromDay} - ${toDay} ${fromMonthYear}`
+    } else {
+      return `${fromDay} ${fromMonthYear} - ${toDay} ${toMonthYear}`
+    }
+  }
+
   return (
     <>
       <header className={`site-container ${styles['header']}`}>
@@ -318,12 +371,9 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
                       alt="calendar"
                     />
                     <p className={styles.date}>
-                      {dateFormat.format(
-                        new Date(data?.event_date_time.from_date),
-                      )}{' '}
-                      -{' '}
-                      {dateFormat.format(
-                        new Date(data?.event_date_time.to_date),
+                      {formatDateRange(
+                        data?.event_date_time.from_date,
+                        data?.event_date_time.to_date,
                       )}
                     </p>
                     <Image className={styles['im']} src={Time} alt="Time" />{' '}
@@ -344,21 +394,7 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
               ) : (
                 <></>
               )}
-              {data.pageData?.is_claimed ? (
-                <FilledButton
-                  className={styles.contactBtn}
-                  onClick={handleContact}
-                >
-                  Contact
-                </FilledButton>
-              ) : (
-                <FilledButton
-                  className={styles.contactBtn}
-                  onClick={handleClaim}
-                >
-                  Claim
-                </FilledButton>
-              )}
+              {button}
             </div>
           </div>
         </section>

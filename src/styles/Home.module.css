@@ -330,7 +330,9 @@
 
 
 @media screen and (max-width: 1100px) {
-
+  .landing-contaniner {
+    padding: 0 16px; background-color: #F7F5F9;
+  }
 
   .landing-wrapper .content h1{
     font-size: 18px;
@@ -359,7 +361,7 @@
   }
 
   .landing-wrapper img{
-    top:540px;
+    top: 38rem;
   }
   .cards-container .four-p-card-wrapper {
     padding: 24rem 0;
@@ -453,7 +455,7 @@
 
   .cards-container .four-p-card-wrapper {
     padding-bottom: 0px;
-    padding-top: 17rem;
+    padding-top: 25rem;
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.5rem;

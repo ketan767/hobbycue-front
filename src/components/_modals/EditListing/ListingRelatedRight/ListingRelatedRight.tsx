@@ -33,6 +33,8 @@ import Image from 'next/image'
 import { listingData } from './data'
 import DefaultProfile from '@/assets/svg/default-images/default-people-listing-icon.svg'
 import SaveModal from '../../SaveModal/saveModal'
+import BackIcon from '@/assets/svg/Previous.svg'
+import NextIcon from '@/assets/svg/Next.svg'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -504,6 +506,23 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
               'Save'
             )}
           </button>
+          {onComplete ? (
+            <div onClick={handleSubmit}>
+              <Image
+                src={NextIcon}
+                alt="back"
+                className="modal-mob-btn cancel"
+              />
+            </div>
+          ) : (
+            <button
+              ref={nextButtonRef}
+              className="modal-mob-btn-save"
+              onClick={handleSubmit}
+            >
+              Save
+            </button>
+          )}
         </footer>
       </div>
     </>

@@ -236,4 +236,7 @@ line-height: 16px;
   .explore-sidebar{
     display: none;
   }
+  .peopleItem {
+    padding: 8px 16px 8px 16px;
+  }
 }

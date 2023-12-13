@@ -29,6 +29,8 @@ import CrossIcon from '@/assets/svg/cross.svg'
 import useOutsideAlerter from '@/hooks/useOutsideAlerter'
 import SaveModal from '../../SaveModal/saveModal'
 import CloseIcon from '@/assets/icons/CloseIcon'
+import BackIcon from '@/assets/svg/Previous.svg'
+import NextIcon from '@/assets/svg/Next.svg'
 
 type Props = {
   onComplete?: () => void
@@ -54,7 +56,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
     (state: RootState) => state.site,
   )
   const [list, setList] = useState<any>([])
-
+  const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [value, setValue] = useState<any>([])
   const [error, setError] = useState<string | null>(null)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
@@ -312,28 +314,67 @@ const ListingTypeEditModal: React.FC<Props> = ({
 
           <footer className={styles['footer']}>
             {Boolean(onBackBtnClick) && (
-              <Button
-                variant="outlined"
-                size="medium"
-                color="primary"
-                onClick={onBackBtnClick}
-              >
-                Back
-              </Button>
+              <>
+                <button
+                  className="modal-footer-btn cancel"
+                  onClick={onBackBtnClick}
+                >
+                  {backBtnLoading ? (
+                    <CircularProgress color="inherit" size={'24px'} />
+                  ) : onBackBtnClick ? (
+                    'Back'
+                  ) : (
+                    'Back'
+                  )}
+                </button>
+                {/* SVG Button for Mobile */}
+                <div onClick={onBackBtnClick}>
+                  <Image
+                    src={BackIcon}
+                    alt="Back"
+                    className="modal-mob-btn cancel"
+                  />
+                </div>
+              </>
             )}
+
             <button
               ref={nextButtonRef}
               className="modal-footer-btn submit"
               onClick={handleSubmit}
             >
               {submitBtnLoading ? (
-                <CircularProgress color="inherit" size={'22px'} />
+                <CircularProgress color="inherit" size={'24px'} />
               ) : listingTypeModalMode === 'edit' ? (
                 'Save'
               ) : (
                 'Next'
               )}
             </button>
+            {/* SVG Button for Mobile */}
+            {onComplete ? (
+              <div onClick={handleSubmit}>
+                <Image
+                  src={NextIcon}
+                  alt="back"
+                  className="modal-mob-btn cancel"
+                />
+              </div>
+            ) : (
+              <button
+                ref={nextButtonRef}
+                className="modal-mob-btn-save"
+                onClick={handleSubmit}
+              >
+                {submitBtnLoading ? (
+                  <CircularProgress color="inherit" size={'16px'} />
+                ) : listingTypeModalMode === 'edit' ? (
+                  'Save'
+                ) : (
+                  'Next'
+                )}
+              </button>
+            )}
           </footer>
         </div>
       </div>

@@ -368,14 +368,7 @@ export const CreatePost: React.FC<Props> = ({
         }  `}
       >
         {/* Modal Header */}
-        <header className={styles['header']}>
-          <CloseIcon
-            className={styles['modal-close-icon']}
-            onClick={() =>
-              isChanged ? setConfirmationModal(true) : handleClose()
-            }
-          />
-        </header>
+        <header className={styles['header']}></header>
         <div className={styles['modal-wrapper']}>
           <h3 className={styles['modal-heading']}>Create Post</h3>
           <div className={styles['create-post-modal']}>
