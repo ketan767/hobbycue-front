@@ -74,7 +74,6 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
 
   useEffect(() => {
     const handleLinkClick = (event: any) => {
-      // Check if the clicked element is a link or inside a link
       if (event.target.closest('a')) {
         handleClose()
       }
@@ -91,27 +90,35 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
   return (
     <div className={styles['container']} ref={parentRef} onClick={handleClick}>
       <div className={styles['wrapper']}>
-        <header className={styles.header}>
-          <div className={styles['profile']} onClick={navigateToUserProfile}>
-            {user?.profile_image ? (
-              <Image
-                className={styles['img']}
-                src={user.profile_image}
-                alt=""
-                width={48}
-                height={48}
-              />
-            ) : (
-              <div className={`${styles['img']} default-user-icon`}></div>
-            )}
-            {user?.full_name}
-          </div>
-          <div className={styles['header-icons']}>
-            <Image src={BookmarkIcon} alt="bookmark" />
-            <Image src={ShoppingIcon} alt="shop" />
-            <Image src={CloseIcon} alt="close" onClick={handleClose} />
-          </div>
-        </header>
+        {isLoggedIn ? (
+          <header className={styles.header}>
+            <div className={styles['profile']} onClick={navigateToUserProfile}>
+              {user?.profile_image ? (
+                <Image
+                  className={styles['img']}
+                  src={user.profile_image}
+                  alt=""
+                  width={48}
+                  height={48}
+                />
+              ) : (
+                <div className={`${styles['img']} default-user-icon`}></div>
+              )}
+              {user?.full_name}
+            </div>
+            <div className={styles['header-icons']}>
+              <Image src={BookmarkIcon} alt="bookmark" />
+              <Image src={ShoppingIcon} alt="shop" />
+              <Image src={CloseIcon} alt="close" onClick={handleClose} />
+            </div>
+          </header>
+        ) : (
+          <header className={styles.header}>
+            <div className={styles['header-icons']}>
+              <Image src={CloseIcon} alt="close" onClick={handleClose} />
+            </div>
+          </header>
+        )}
         <main className={styles['main']}>
           <div
             className={`${styles['dropdown-container']} ${
@@ -299,58 +306,66 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
               </section>
             </div>
           </div>
-
-          <div
-            className={`${styles['dropdown-container']} ${
-              exploreActive ? styles['dropdown-active'] : ''
-            } `}
-          >
-            <header>
-              <div>
-                <p>Manage</p>
-              </div>
-            </header>
-            <section className={styles['list']}>
-              {/* <ul>
+          {isLoggedIn ? (
+            <div>
+              <div
+                className={`${styles['dropdown-container']} ${
+                  exploreActive ? styles['dropdown-active'] : ''
+                } `}
+              >
+                <header>
+                  <div>
+                    <p>Manage</p>
+                  </div>
+                </header>
+                <section className={styles['list']}>
+                  {/* <ul>
                 <Link href={'/hobby/music'}>
                   <li>My orders</li>
                 </Link>
               </ul> */}
-              <ul>
-                <Link href={`/profile/${user.profile_url}/pages`}>
-                  <li>My pages</li>
-                </Link>
-              </ul>
-            </section>
-          </div>
-          <div
-            className={`${styles['dropdown-container']} ${
-              exploreActive ? styles['dropdown-active'] : ''
-            } `}
-          >
-            <header>
-              <div>
-                <p>Account</p>
+                  <ul>
+                    <Link href={`/profile/${user.profile_url}/pages`}>
+                      <li>My Pages</li>
+                    </Link>
+                  </ul>
+                  <ul className={styles['add-listing-link']}>
+                    <Link href={`/add-listing`}>
+                      <li>Add Listing Page</li>
+                    </Link>
+                  </ul>
+                </section>
               </div>
-            </header>
-            <section className={styles['list']}>
-              {/* <ul>
+              <div
+                className={`${styles['dropdown-container']} ${
+                  exploreActive ? styles['dropdown-active'] : ''
+                } `}
+              >
+                <header>
+                  <div>
+                    <p>Account</p>
+                  </div>
+                </header>
+                <section className={styles['list']}>
+                  {/* <ul>
                 <Link href={'/hobby/music'}>
                   <li>My orders</li>
                 </Link>
               </ul> */}
-              <ul>
-                <Link href={`/settings/login-and-security`}>
-                  <li>Settings</li>
-                </Link>
-              </ul>
-              <ul>
-                <Link onClick={handleLogout} href={`/`}>
-                  <li>Signout</li>
-                </Link>
-              </ul>
-            </section>
-          </div>
+                  <ul>
+                    <Link href={`/settings/login-and-security`}>
+                      <li>Settings</li>
+                    </Link>
+                  </ul>
+                  <ul onClick={handleLogout}>
+                    <li>Sign Out</li>
+                  </ul>
+                </section>
+              </div>
+            </div>
+          ) : (
+            ''
+          )}
         </main>
       </div>
     </div>

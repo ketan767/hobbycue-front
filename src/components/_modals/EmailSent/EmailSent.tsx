@@ -144,6 +144,9 @@ const EmailSentModal: React.FC<Props> = ({}) => {
               'Save'
             )}
           </button>
+          <button className="modal-mob-btn-save" onClick={handleSubmit}>
+            Save
+          </button>
           <OutlinedButton>Cancel</OutlinedButton>
         </footer>
       </div>

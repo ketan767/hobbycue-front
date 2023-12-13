@@ -13,14 +13,11 @@ import {
   updateListingPageData,
 } from '@/redux/slices/site'
 
-import ListingHomeTab from '@/components/ListingPage/ListingHomeTab/ListingHomeTab'
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
-import ListingPostsTab from '@/components/ListingPage/ListingPagePosts/ListingPagePosts'
-import ListingMediaTab from '@/components/ListingPage/ListingPageMedia'
 
 type Props = { data: ListingPageData }
 
-const ListingMedia: React.FC<Props> = (props) => {
+const ListingStore: React.FC<Props> = (props) => {
   const dispatch = useDispatch()
 
   // const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
@@ -37,9 +34,9 @@ const ListingMedia: React.FC<Props> = (props) => {
         <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
       </Head>
 
-      <ListingPageLayout activeTab={'media'} data={props.data}>
-        <ListingPageMain activeTab={'media'} data={props.data.pageData}>
-          <ListingMediaTab data={props.data.pageData} />
+      <ListingPageLayout activeTab={'store'} data={props.data}>
+        <ListingPageMain data={props.data.pageData}>
+          <div></div>
         </ListingPageMain>
       </ListingPageLayout>
     </>
@@ -76,4 +73,4 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   }
 }
 
-export default ListingMedia
+export default ListingStore

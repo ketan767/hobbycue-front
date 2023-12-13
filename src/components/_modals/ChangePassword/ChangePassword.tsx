@@ -353,11 +353,25 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
         <footer className={styles['footer']}>
           <button
             className="modal-footer-btn submit"
-            onClick={()=>{handleSubmit('confirmPassword')}}
+            onClick={() => {
+              handleSubmit('confirmPassword')
+            }}
             disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
           >
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'16px'} />
+            ) : (
+              'Save'
+            )}
+          </button>
+          <button
+            className="modal-mob-btn-save"
+            onClick={() => {
+              handleSubmit('confirmPassword')
+            }}
+          >
+            {submitBtnLoading ? (
+              <CircularProgress color="inherit" size={'24px'} />
             ) : (
               'Save'
             )}

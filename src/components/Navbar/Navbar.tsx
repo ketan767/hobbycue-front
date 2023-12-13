@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
 import IconButton from '@mui/material/IconButton'
@@ -78,6 +78,39 @@ export const Navbar: React.FC<Props> = ({}) => {
     const value = event.target.value
     setData((prev) => ({ ...prev, search: { value, error: null } }))
   }
+
+  const searchInputRef = useRef<HTMLInputElement>(null)
+  const [isSearchInputVisible, setIsSearchInputVisible] = useState(false)
+
+  const toggleSearchInput = () => {
+    setIsSearchInputVisible(!isSearchInputVisible)
+
+    if (!isSearchInputVisible) {
+      setTimeout(() => searchInputRef.current?.focus(), 0)
+    }
+  }
+
+  const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    searchResult()
+    setIsSearchInputVisible(false)
+  }
+
+  useEffect(() => {
+    const handleBackButton = () => {
+      if (isSearchInputVisible) {
+        setIsSearchInputVisible(false)
+        return false
+      }
+      return true
+    }
+
+    router.beforePopState(handleBackButton)
+
+    return () => {
+      router.beforePopState(() => true)
+    }
+  }, [isSearchInputVisible, router])
 
   useEffect(() => {
     setShowDropdown(null)
@@ -656,9 +689,61 @@ export const Navbar: React.FC<Props> = ({}) => {
               )}
             </ul>
             <ul className={styles['right-listing-small']}>
-              <li>
-                <Image src={Search} alt="search" />
-              </li>
+              <div
+                className={`${styles['mobile-search-input']} ${
+                  isSearchInputVisible
+                    ? styles['mobile-search-input-visible']
+                    : ''
+                }`}
+              >
+                {isSearchInputVisible ? (
+                  <form
+                    onSubmit={handleSearchSubmit}
+                    className={styles['mobile-search-input']}
+                  >
+                    <TextField
+                      variant="outlined"
+                      placeholder="Search here..."
+                      size="small"
+                      autoFocus
+                      onBlur={() => setIsSearchInputVisible(false)}
+                      className={styles.inputField}
+                      onChange={handleInputChange}
+                      value={data.search.value}
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '8px',
+                          padding: 0,
+                          overflow: 'hidden',
+                          borderColor: 'red',
+                          background: '#f8f9fa',
+                          '& fieldset': {
+                            borderColor: '#EBEDF0',
+                            borderRight: 0,
+                          },
+                        },
+                        '& .MuiInputBase-input': {
+                          fontSize: '15px',
+                        },
+                        '& .MuiInputBase-input::placeholder': {
+                          fontSize: '12px',
+                          color: 'black',
+                        },
+                      }}
+                      InputLabelProps={{ shrink: false }}
+                    />
+                  </form>
+                ) : (
+                  <li>
+                    <Image
+                      src={Search}
+                      alt="search"
+                      onClick={toggleSearchInput}
+                    />
+                  </li>
+                )}
+              </div>
+
               <li>
                 <Image src={BellIcon} alt="Bell" />
               </li>
@@ -669,6 +754,7 @@ export const Navbar: React.FC<Props> = ({}) => {
           </section>
         </nav>
       </header>
+
       {menuActive && <SideMenu handleClose={toggleMenu} />}
       {showDropdown && <div className={styles['navbar-backdrop']}></div>}
     </>

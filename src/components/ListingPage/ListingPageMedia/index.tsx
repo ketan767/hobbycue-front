@@ -6,7 +6,7 @@ import PageGridLayout from '@/layouts/PageGridLayout'
 
 import { openModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
-
+import { updateImageUrl } from '@/redux/slices/modal'
 import styles from './styles.module.css'
 import { RootState } from '@/redux/store'
 import axios from 'axios'
@@ -100,44 +100,62 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
     console.log(res)
   }
 
+  const OpenMediaImage = (image: string) => {
+    dispatch(updateImageUrl(image))
+    dispatch(
+      openModal({
+        type: 'View-Image-Modal',
+        closable: false,
+        imageurl: image,
+      }),
+    )
+  }
+
   return (
     <>
       <main>
         <div className={styles.uploadContainer}>
-          <div className={styles.uploadButton}>
-            <input
-              type="file"
-              accept="image/png, image/gif, image/jpeg"
-              className={styles.hidden}
-              onChange={(e) => handleImageChange(e)}
-              ref={inputRef}
-            />
-            <p> image </p>
-            <Image
-              src={EditIcon}
-              alt="edit"
-              className={styles.editIcon}
-              onClick={() => {
-                inputRef.current?.click()
-              }}
-            />
-          </div>
-          <div className={styles.uploadButton}>
-            <p> Video </p>
-            <Image
-              src={EditIcon}
-              alt="edit"
-              className={styles.editIcon}
-              onClick={() => {
-                dispatch(
-                  openModal({
-                    type: 'upload-video-page',
-                    closable: true,
-                  }),
-                )
-              }}
-            />
-          </div>
+          {data?.admin === user?.user._id && (
+            <>
+              <div className={styles.uploadButton}>
+                <input
+                  type="file"
+                  accept="image/png, image/gif, image/jpeg"
+                  className={styles.hidden}
+                  onChange={(e) => handleImageChange(e)}
+                  ref={inputRef}
+                />
+                <p> image </p>
+
+                <Image
+                  src={EditIcon}
+                  alt="edit"
+                  className={styles.editIcon}
+                  onClick={() => {
+                    inputRef.current?.click()
+                  }}
+                />
+              </div>
+
+              <div className={styles.uploadButton}>
+                <p> Video </p>
+
+                <Image
+                  src={EditIcon}
+                  alt="edit"
+                  className={styles.editIcon}
+                  onClick={() => {
+                    dispatch(
+                      openModal({
+                        type: 'upload-video-page',
+                        closable: true,
+                      }),
+                    )
+                  }}
+                />
+              </div>
+            </>
+          )}
         </div>
         {/* User About */}
         {/* <PageContentBox
@@ -145,9 +163,9 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
             dispatch(openModal({ type: 'listing-about-edit', closable: true }))
           }
         > */}
-        <PageGridLayout column={2}>
+        <PageGridLayout column={2} customStyles={styles['media-layout']}>
           {listingModalData?.video_url && (
-            <div>
+            <div className={styles['videos']}>
               {/* <video
                 width="250"
                 height="240"
@@ -166,7 +184,11 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
           )}
           {listingModalData.images?.map((item: any, idx) => {
             return (
-              <div key={idx} className={styles.image}>
+              <div
+                key={idx}
+                className={styles.image}
+                onClick={() => OpenMediaImage(item)}
+              >
                 <img src={item} />
               </div>
             )

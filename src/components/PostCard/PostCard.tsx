@@ -17,6 +17,7 @@ type Props = {
   postData: any
   fromProfile?: boolean
   onPinPost?: any
+  currentSection?: 'posts' | 'links'
 }
 
 const PostCard: React.FC<Props> = (props) => {
@@ -31,7 +32,7 @@ const PostCard: React.FC<Props> = (props) => {
   const [showComments, setShowComments] = useState(
     props.postData.has_link ? true : false,
   )
-
+  const pageUrlClass = styles.postUrl
   useEffect(() => {
     if (postData?.media?.length > 0 || postData?.video_url) {
       setHas_link(false)
@@ -91,11 +92,18 @@ const PostCard: React.FC<Props> = (props) => {
     dispatch(updateShareUrl(`${window.location.origin}/post/${postData._id}`))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
   }
+
+  const handleCardClick = (e: any) => {
+    // Check if the click is on the post-card-wrapper itself, not on its children
+    if (e.currentTarget === e.target) {
+      router.push(`/post/${postData._id}`)
+    }
+  }
   return (
     <>
-      <div className={styles['post-card-wrapper']}>
+      <div className={styles['post-card-wrapper']} onClick={handleCardClick}>
         {/* Card Header */}
-        {!has_link && (
+        {(!has_link || props.currentSection === 'posts') && (
           <header>
             <Link href={`/profile/${postData?._author?.profile_url}`}>
               {postData?.author_type === 'Listing' ? (
@@ -193,97 +201,99 @@ const PostCard: React.FC<Props> = (props) => {
           </header>
         )}
         {/* Card Body */}
-        <Link href={`/post/${postData._id}`}>
-          <section className={styles['body']}>
-            {!has_link && (
-              <div
-                className={styles['content']}
-                dangerouslySetInnerHTML={{
-                  __html: postData?.content.replace(/<img .*?>/g, ''),
-                }}
-              ></div>
-            )}
-            {postData.video_url && (
-              <video width="320" height="240" controls className={styles.video}>
-                <source src={postData.video_url} type="video/mp4"></source>
-              </video>
-            )}
-            {postData.media?.length > 0 ? (
-              <Slider
-                setActiveIdx={setActiveIdx}
-                activeIdx={activeIdx}
-                images={postData.media}
-              ></Slider>
-            ) : (
-              <></>
-            )}
-            {has_link && (
-              <a href={url} className={styles.postMetadata}>
-                <div className={styles.metaImgContainer}>
-                  <img
-                    src={metaData.image ? metaData.image : metaData.icon}
-                    alt="link-image"
-                    width={200}
-                    height={130}
-                  />
-                </div>
-                <div className={styles.metaContent}>
-                  <p className={styles.contentHead}> {metaData.title} </p>
-                  <p className={styles.contentUrl}> {metaData.url} </p>
-                  <div className={styles['meta-author']}>
-                    <p className={styles['author-name']}>
-                      {'Shared by '}
-                      {postData?.author_type === 'User'
-                        ? postData?._author?.display_name
-                        : postData?.author_type === 'Listing'
-                        ? postData?._author?.title
-                        : ''}{' '}
-                    </p>
-                    <p className={styles['date']}>
-                      {'Date - '}
-                      {dateFormat.format(new Date(postData.createdAt))}
-                    </p>
-                  </div>
-                  <p className={styles.metaContentText}>
-                    {/* {metaData.description}{' '} */}
-                    {metaData.description.length > 150
-                      ? metaData.description.slice(0, 150 - 3) + '...'
-                      : metaData.description}
+
+        <section className={styles['body']}>
+          {(!has_link || props.currentSection === 'posts') && (
+            <div
+              className={styles['content']}
+              dangerouslySetInnerHTML={{
+                __html:
+                  has_link && props.currentSection === 'posts'
+                    ? `<a href="${url}" class="${pageUrlClass}" target="_blank">${postData.content}</a>`
+                    : postData.content.replace(/<img .*?>/g, ''),
+              }}
+            ></div>
+          )}
+          {postData.video_url && (
+            <video width="320" height="240" controls className={styles.video}>
+              <source src={postData.video_url} type="video/mp4"></source>
+            </video>
+          )}
+          {postData.media?.length > 0 || props.currentSection === 'links' ? (
+            <Slider
+              setActiveIdx={setActiveIdx}
+              activeIdx={activeIdx}
+              images={postData.media}
+            ></Slider>
+          ) : (
+            <></>
+          )}
+          {has_link && props.currentSection === 'links' && (
+            <a href={url} className={styles.postMetadata}>
+              <div className={styles.metaImgContainer}>
+                <img
+                  src={metaData.image ? metaData.image : metaData.icon}
+                  alt="link-image"
+                  width={200}
+                  height={130}
+                />
+              </div>
+              <div className={styles.metaContent}>
+                <p className={styles.contentHead}> {metaData.title} </p>
+                <p className={styles.contentUrl}> {metaData.url} </p>
+                <div className={styles['meta-author']}>
+                  <p className={styles['author-name']}>
+                    {'Shared by '}
+                    {postData?.author_type === 'User'
+                      ? postData?._author?.display_name
+                      : postData?.author_type === 'Listing'
+                      ? postData?._author?.title
+                      : ''}{' '}
                   </p>
-                  <section className={styles['meta-actions']}>
-                    <PostVotes
-                      data={postData}
-                      styles={styles}
-                      className={styles['meta-votes']}
-                      updatePost={updatePost}
-                    />
-                    <svg
-                      onClick={(e: any) => {
-                        e.stopPropagation()
-                        e.preventDefault()
-                        setShowComments(!showComments)
-                      }}
-                      width="21"
-                      height="21"
-                      viewBox="0 0 21 21"
-                      fill={showComments ? '#8064A2' : 'none'}
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M4.42578 15.4746H4.01157L3.71867 15.7675L1.42578 18.0604V2.47461C1.42578 1.92689 1.87807 1.47461 2.42578 1.47461H18.4258C18.9735 1.47461 19.4258 1.92689 19.4258 2.47461V14.4746C19.4258 15.0223 18.9735 15.4746 18.4258 15.4746H4.42578Z"
-                        stroke="#8064A2"
-                        stroke-width="2"
-                      />
-                    </svg>
-                  </section>
+                  <p className={styles['date']}>
+                    {'Date - '}
+                    {dateFormat.format(new Date(postData.createdAt))}
+                  </p>
                 </div>
-              </a>
-            )}
-          </section>
-        </Link>
+                <p className={styles.metaContentText}>
+                  {/* {metaData.description}{' '} */}
+                  {metaData.description?.length > 150
+                    ? metaData.description.slice(0, 150 - 3) + '...'
+                    : metaData.description}
+                </p>
+                <section className={styles['meta-actions']}>
+                  <PostVotes
+                    data={postData}
+                    styles={styles}
+                    className={styles['meta-votes']}
+                    updatePost={updatePost}
+                  />
+                  <svg
+                    onClick={(e: any) => {
+                      e.stopPropagation()
+                      e.preventDefault()
+                      setShowComments(!showComments)
+                    }}
+                    width="21"
+                    height="21"
+                    viewBox="0 0 21 21"
+                    fill={showComments ? '#8064A2' : 'none'}
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M4.42578 15.4746H4.01157L3.71867 15.7675L1.42578 18.0604V2.47461C1.42578 1.92689 1.87807 1.47461 2.42578 1.47461H18.4258C18.9735 1.47461 19.4258 1.92689 19.4258 2.47461V14.4746C19.4258 15.0223 18.9735 15.4746 18.4258 15.4746H4.42578Z"
+                      stroke="#8064A2"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </section>
+              </div>
+            </a>
+          )}
+        </section>
 
         {/* Card Footer */}
-        {has_link ? (
+        {props.currentSection === 'links' ? (
           <Link
             href={metaData.url}
             target="_blank"

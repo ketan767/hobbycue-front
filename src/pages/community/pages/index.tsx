@@ -45,7 +45,7 @@ const CommunityPages: React.FC<Props> = ({}) => {
             <>
               <PostCardSkeletonLoading />
             </>
-          ) : allPages.length === 0 ? (
+          ) : allPages?.length === 0 ? (
             <p>No pages found</p>
           ) : (
             allPages.map((post: any) => {

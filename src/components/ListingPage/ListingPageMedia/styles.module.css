@@ -1,6 +1,7 @@
 .image {
-  height: 208px;
+  height: 100%;
   overflow: hidden;
+  cursor: pointer;
 }
 .image img {
   width: 100%;
@@ -40,6 +41,13 @@
 }
 .video{
   width: 100%;
+}
+.media-layout{
+  grid-template-columns: 50% 50% !important;
+}
+.videos{
+  height: 100%;
+  border-radius: 8px;
 }
 @media screen and (max-width: 1100px) {
   .medias{

@@ -15,7 +15,7 @@ import {
   updateListingProfile,
 } from '@/services/listing.service'
 import { updatePhotoEditModalData } from '@/redux/slices/site'
-import { openModal, updateShareUrl } from '@/redux/slices/modal'
+import { openModal, updateImageUrl, updateShareUrl } from '@/redux/slices/modal'
 import { dateFormat } from '@/utils'
 import CustomTooltip from '@/components/Tooltip/ToolTip'
 import Calendar from '@/assets/svg/calendar-light.svg'
@@ -37,9 +37,10 @@ import { ClaimListing } from '@/services/auth.service'
 
 type Props = {
   data: ListingPageData['pageData']
+  activeTab: ListingPageTabs
 }
 
-const ListingHeader: React.FC<Props> = ({ data }) => {
+const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
   const dispatch = useDispatch()
 
   const { listingLayoutMode } = useSelector((state: any) => state.site)
@@ -162,8 +163,80 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
     setOpen(!open)
   }
 
-  const handleOpenCover = () => {
-    dispatch(openModal({ type: 'Full-Screen-Cover-Modal', closable: false }))
+  const OpenProfileImage = () => {
+    console.log('pro', data.profile_image)
+    dispatch(updateImageUrl(data?.profile_image))
+    dispatch(
+      openModal({
+        type: 'View-Image-Modal',
+        closable: false,
+        imageurl: data?.profile_image,
+      }),
+    )
+  }
+
+  const OpenCoverImage = () => {
+    dispatch(updateImageUrl(data?.cover_image))
+    dispatch(
+      openModal({
+        type: 'View-Image-Modal',
+        closable: false,
+        imageurl: data?.cover_image,
+      }),
+    )
+  }
+
+  const isClaimed = data.is_claimed
+  const isEditMode = listingLayoutMode === 'edit'
+
+  let button
+  if (!isClaimed && !isEditMode) {
+    button = (
+      <FilledButton className={styles.contactBtn} onClick={handleClaim}>
+        Claim
+      </FilledButton>
+    )
+  } else {
+    button = (
+      <FilledButton className={styles.contactBtn} onClick={handleContact}>
+        Contact
+      </FilledButton>
+    )
+  }
+
+  function formatDateRange(
+    fromDate: string | number | Date,
+    toDate: string | number | Date,
+  ): string {
+    // Extracting day, month, and year separately
+    const dayOptions: Intl.DateTimeFormatOptions = { day: 'numeric' }
+    const monthYearOptions: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'short',
+    }
+
+    const from = new Date(fromDate)
+    const to = new Date(toDate)
+
+    const fromDay = new Intl.DateTimeFormat('en-US', dayOptions).format(from)
+    const toDay = new Intl.DateTimeFormat('en-US', dayOptions).format(to)
+    const fromMonthYear = new Intl.DateTimeFormat(
+      'en-US',
+      monthYearOptions,
+    ).format(from)
+    const toMonthYear = new Intl.DateTimeFormat(
+      'en-US',
+      monthYearOptions,
+    ).format(to)
+
+    if (
+      from.getMonth() === to.getMonth() &&
+      from.getFullYear() === to.getFullYear()
+    ) {
+      return `${fromDay} - ${toDay} ${fromMonthYear}`
+    } else {
+      return `${fromDay} ${fromMonthYear} - ${toDay} ${toMonthYear}`
+    }
   }
 
   return (
@@ -174,7 +247,8 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
           <div className={styles['relative']}>
             {data?.profile_image ? (
               <Image
-                className={styles['img']}
+                onClick={OpenProfileImage}
+                className={`${styles['img']} imageclick`}
                 src={data?.profile_image}
                 alt=""
                 width={160}
@@ -227,15 +301,25 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
             ></div>
             {data?.cover_image ? (
               <Image
-                onClick={handleOpenCover}
-                className={styles['img']}
+                onClick={OpenCoverImage}
+                className={
+                  activeTab === 'home'
+                    ? `${styles['img']} imageclick`
+                    : `${styles['img-optional']} ${styles['img']}`
+                }
                 src={data?.cover_image}
                 alt=""
                 height={296}
                 width={1000}
               />
             ) : (
-              <div className={`${styles['img']}`}>
+              <div
+                className={
+                  activeTab === 'home'
+                    ? styles['img']
+                    : `${styles['img-optional']} ${styles['img']}`
+                }
+              >
                 <CoverPhotoLayout
                   type="page"
                   onChange={(e: any) => onInputChange(e, 'cover')}
@@ -287,12 +371,9 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
                       alt="calendar"
                     />
                     <p className={styles.date}>
-                      {dateFormat.format(
-                        new Date(data?.event_date_time.from_date),
-                      )}{' '}
-                      -{' '}
-                      {dateFormat.format(
-                        new Date(data?.event_date_time.to_date),
+                      {formatDateRange(
+                        data?.event_date_time.from_date,
+                        data?.event_date_time.to_date,
                       )}
                     </p>
                     <Image className={styles['im']} src={Time} alt="Time" />{' '}
@@ -313,21 +394,7 @@ const ListingHeader: React.FC<Props> = ({ data }) => {
               ) : (
                 <></>
               )}
-              {data.pageData?.is_claimed ? (
-                <FilledButton
-                  className={styles.contactBtn}
-                  onClick={handleContact}
-                >
-                  Contact
-                </FilledButton>
-              ) : (
-                <FilledButton
-                  className={styles.contactBtn}
-                  onClick={handleClaim}
-                >
-                  Claim
-                </FilledButton>
-              )}
+              {button}
             </div>
           </div>
         </section>

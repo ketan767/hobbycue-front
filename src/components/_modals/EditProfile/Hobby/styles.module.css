@@ -131,6 +131,9 @@
 
   margin-top: var(--spacing-16);
 }
+.input-box-error input[type='text'] {
+  border: 1px solid #c0504d !important;
+}
 
 .add-hobbies-wrapper .add-new-hobby {
   margin-top: var(--spacing-8);

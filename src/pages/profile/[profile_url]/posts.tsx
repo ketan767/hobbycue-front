@@ -90,7 +90,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
 
       <ProfileLayout activeTab={'posts'} data={data}>
         <PageGridLayout column={3}>
-          <aside>
+          <aside className={styles['asideView']}>
             <ProfileHobbySideList data={data.pageData} />
             <ProfilePagesList data={data} />
           </aside>
@@ -162,7 +162,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
               )}
             </section>
           </main>
-          <aside>
+          <aside className={styles['asideView']}>
             {/* User Locations */}
             <ProfileAddressSide data={data.pageData} />
 

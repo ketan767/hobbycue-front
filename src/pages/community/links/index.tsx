@@ -24,7 +24,7 @@ const CommunityLinks: React.FC<Props> = ({}) => {
     })
     if (!activeProfile?.data?._hobbies) return
     if (activeProfile?.data?._hobbies.length === 0) return
-   
+
     dispatch(updateLoading(true))
     const { err, res } = await getAllPosts(params.toString())
     if (err) return console.log(err)
@@ -33,7 +33,7 @@ const CommunityLinks: React.FC<Props> = ({}) => {
         let content = post.content.replace(/<img .*?>/g, '')
         return { ...post, content }
       })
-      linkPosts = linkPosts.filter((item: any) => (item.has_link === true))
+      linkPosts = linkPosts.filter((item: any) => item.has_link === true)
       dispatch(updatePosts(linkPosts))
     }
     dispatch(updateLoading(false))
@@ -44,7 +44,7 @@ const CommunityLinks: React.FC<Props> = ({}) => {
   }, [activeProfile])
 
   let posts = [...allPosts]
-  posts = posts.filter((item: any) => (item.has_link === true))
+  posts = posts.filter((item: any) => item.has_link === true)
   return (
     <>
       <CommunityPageLayout activeTab="links">
@@ -53,9 +53,15 @@ const CommunityLinks: React.FC<Props> = ({}) => {
             <>
               <PostCardSkeletonLoading />
             </>
-          ) : posts.length > 0 ? (
+          ) : posts?.length > 0 ? (
             posts.map((post: any) => {
-              return <PostCard key={post._id} postData={post} />
+              return (
+                <PostCard
+                  key={post._id}
+                  postData={post}
+                  currentSection="links"
+                />
+              )
             })
           ) : posts.length === 0 ? (
             <>No posts found</>

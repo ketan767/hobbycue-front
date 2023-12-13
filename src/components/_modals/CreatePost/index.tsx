@@ -21,13 +21,23 @@ import CancelBtn from '@/assets/icons/x-icon.svg'
 import FilledButton from '@/components/_buttons/FilledButton'
 import { DropdownOption } from './Dropdown/DropdownOption'
 import InputSelect from '@/components/_formElements/Select/Select'
+import SaveModal from '../SaveModal/saveModal'
+import CloseIcon from '@/assets/icons/CloseIcon'
 
 const CustomEditor = dynamic(() => import('@/components/CustomEditor'), {
   ssr: false,
   loading: () => <h1>Loading...</h1>,
 })
 
-type Props = {}
+type Props = {
+  onComplete?: () => void
+  onBackBtnClick?: () => void
+  confirmationModal?: boolean
+  setConfirmationModal?: any
+  handleClose?: any
+  isError?: boolean
+  onStatusChange?: (isChanged: boolean) => void
+}
 
 type DropdownListItem = {
   _id: string
@@ -46,7 +56,14 @@ type NewPostData = {
   media: []
   video_url: any
 }
-export const CreatePost: React.FC<Props> = (props) => {
+export const CreatePost: React.FC<Props> = ({
+  onComplete,
+  onBackBtnClick,
+  confirmationModal,
+  setConfirmationModal,
+  handleClose,
+  onStatusChange,
+}) => {
   const { user, activeProfile } = useSelector((state: RootState) => state.user)
   const [hobbies, setHobbies] = useState([])
   const [data, setData] = useState<NewPostData>({
@@ -74,6 +91,8 @@ export const CreatePost: React.FC<Props> = (props) => {
   const [hobbyInputValue, setHobbyInputValue] = useState('')
   const [genreInputValue, setGenreInputValue] = useState('')
   const [hasLink, setHasLink] = useState(false)
+  const [isError, setIsError] = useState(false)
+  const [isChanged, setIsChanged] = useState(false)
 
   const hobbyRef = useRef<HTMLInputElement>(null)
   const genreRef = useRef<HTMLInputElement>(null)
@@ -330,70 +349,89 @@ export const CreatePost: React.FC<Props> = (props) => {
     setData((prev: any) => ({ ...prev, visibility: value }))
   }
 
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        setConfirmationModal={setConfirmationModal}
+        isError={isError}
+      />
+    )
+  }
+
   return (
-    <div className={styles['modal-wrapper']}>
-      <h3 className={styles['modal-heading']}>Create Post</h3>
-      <div className={styles['create-post-modal']}>
-        <section className={styles['editor-container']}>
-          <CustomEditor
-            value=""
-            onChange={(value) => {
-              setData((prev) => {
-                return { ...prev, content: value }
-              })
-            }}
-            setData={setData}
-            data={data}
-            image={true}
-            error={errors.content}
-          />
-          {data.video_url && (
-            <div className={styles.videoWrapper}>
-              <div className={styles.imgContainer}>
-                <video width="320" height="180" controls>
-                  <source src={data.video_url} type="video/mp4" />
-                </video>
-                <Image
-                  onClick={() => removeMedia(0, 'video_url')}
-                  src={CancelBtn}
-                  className={styles['img-cancel-icon']}
-                  alt="cancel"
-                />
-              </div>
-            </div>
-          )}
-          {data.media?.length > 0 ? (
-            <div className={styles.imgWrapper}>
-              {data?.media?.map((item: any, idx) => {
-                return (
-                  <div className={styles.imgContainer} key={idx}>
-                    <img src={item} alt="" />
+    <>
+      <div
+        className={`${styles['modal-wrapper']} ${
+          confirmationModal ? styles['ins-active'] : ''
+        }  `}
+      >
+        {/* Modal Header */}
+        <header className={styles['header']}></header>
+        <div className={styles['modal-wrapper']}>
+          <h3 className={styles['modal-heading']}>Create Post</h3>
+          <div className={styles['create-post-modal']}>
+            <section className={styles['editor-container']}>
+              <CustomEditor
+                value=""
+                onChange={(value) => {
+                  setData((prev) => {
+                    return { ...prev, content: value }
+                  })
+                }}
+                setData={setData}
+                data={data}
+                image={true}
+                error={errors.content}
+              />
+              {data.video_url && (
+                <div className={styles.videoWrapper}>
+                  <div className={styles.imgContainer}>
+                    <video width="320" height="180" controls>
+                      <source src={data.video_url} type="video/mp4" />
+                    </video>
                     <Image
-                      onClick={() => removeMedia(idx, 'media')}
+                      onClick={() => removeMedia(0, 'video_url')}
                       src={CancelBtn}
                       className={styles['img-cancel-icon']}
                       alt="cancel"
                     />
                   </div>
-                )
-              })}
-            </div>
-          ) : (
-            <></>
-          )}
-        </section>
-        <aside>
-          <div className={styles['posting-as-container']}>
-            <label>Posting As</label>
-            <CreatePostProfileSwitcher
-              data={data}
-              setData={setData}
-              setHobbies={setHobbies}
-            />
-          </div>
+                </div>
+              )}
+              {data.media?.length > 0 ? (
+                <div className={styles.imgWrapper}>
+                  {data?.media?.map((item: any, idx) => {
+                    return (
+                      <div className={styles.imgContainer} key={idx}>
+                        <img src={item} alt="" />
+                        <Image
+                          onClick={() => removeMedia(idx, 'media')}
+                          src={CancelBtn}
+                          className={styles['img-cancel-icon']}
+                          alt="cancel"
+                        />
+                      </div>
+                    )
+                  })}
+                </div>
+              ) : (
+                <></>
+              )}
+            </section>
+            <aside>
+              <div className={styles['posting-as-container']}>
+                <label>Posting As</label>
+                <CreatePostProfileSwitcher
+                  data={data}
+                  setData={setData}
+                  setHobbies={setHobbies}
+                />
+              </div>
 
-          {/* Hobby Input and Dropdown */}
-          {/* <section className={styles['dropdown-wrapper']}>
+              {/* Hobby Input and Dropdown */}
+              {/* <section className={styles['dropdown-wrapper']}>
             <div
               className={`${styles['input-box']} ${
                 errors.hobby ? styles['error-input-box'] : ''
@@ -439,7 +477,7 @@ export const CreatePost: React.FC<Props> = (props) => {
               </div>
             )}
           </section> */}
-          {/* 
+              {/* 
           <section className={styles['dropdown-wrapper']}>
             <div
               className={`${styles['input-box']}  ${
@@ -487,52 +525,52 @@ export const CreatePost: React.FC<Props> = (props) => {
             )}
           </section> */}
 
-          <div
-            className={`${styles['input-box']}  ${
-              errors.hobby ? styles['error-input-box'] : ''
-            } `}
-          >
-            <label>Select Hobby</label>
-            <Select
-              value={data.hobby}
-              onChange={(e) => {
-                let val = e.target.value
-                const selected = user._hobbies.find(
-                  (item: any) => item.hobby?._id === val,
-                )
-                setData((prev: any) => ({
-                  ...prev,
-                  hobby: val,
-                  genre: selected?.genre?._id,
-                }))
-              }}
-              displayEmpty
-              inputProps={{ 'aria-label': 'Without label' }}
-              className={` ${styles['visibility-dropdown']}`}
-            >
-              {hobbies?.map((item: any, idx: any) => {
-                return (
-                  <MenuItem
-                    key={idx}
-                    value={item.hobby?._id}
-                    selected={item.hobby?._id === data.hobby}
-                  >
-                    <p>
-                      {item.hobby?.display
-                        ? item.hobby?.display
-                        : item.hobby?.slug}{' '}
-                      {item?.genre && ` - ${item?.genre?.display} `}
-                    </p>
-                  </MenuItem>
-                )
-              })}
-            </Select>
-            {errors.hobby && (
-              <p className={styles['error-text']}>{errors.hobby}</p>
-            )}
-          </div>
+              <div
+                className={`${styles['input-box']}  ${
+                  errors.hobby ? styles['error-input-box'] : ''
+                } `}
+              >
+                <label>Select Hobby</label>
+                <Select
+                  value={data.hobby}
+                  onChange={(e) => {
+                    let val = e.target.value
+                    const selected = user._hobbies.find(
+                      (item: any) => item.hobby?._id === val,
+                    )
+                    setData((prev: any) => ({
+                      ...prev,
+                      hobby: val,
+                      genre: selected?.genre?._id,
+                    }))
+                  }}
+                  displayEmpty
+                  inputProps={{ 'aria-label': 'Without label' }}
+                  className={` ${styles['visibility-dropdown']}`}
+                >
+                  {hobbies?.map((item: any, idx: any) => {
+                    return (
+                      <MenuItem
+                        key={idx}
+                        value={item.hobby?._id}
+                        selected={item.hobby?._id === data.hobby}
+                      >
+                        <p>
+                          {item.hobby?.display
+                            ? item.hobby?.display
+                            : item.hobby?.slug}{' '}
+                          {item?.genre && ` - ${item?.genre?.display} `}
+                        </p>
+                      </MenuItem>
+                    )
+                  })}
+                </Select>
+                {errors.hobby && (
+                  <p className={styles['error-text']}>{errors.hobby}</p>
+                )}
+              </div>
 
-          {/* <div
+              {/* <div
             className={`${styles['input-box']}  ${
               errors.genre ? styles['error-input-box'] : ''
             } `}
@@ -569,44 +607,46 @@ export const CreatePost: React.FC<Props> = (props) => {
             )}
           </div> */}
 
-          <div>
-            <label>Who Can View</label>
+              <div>
+                <label>Who Can View</label>
 
-            <InputSelect
-              onChange={(e: any) => {
-                let val = e.target.value
-                setData((prev: any) => ({ ...prev, visibility: val }))
-              }}
-              value={data.visibility}
-              // inputProps={{ 'aria-label': 'Without label' }}
-              // className={` ${styles['visibility-dropdown']}`}
-            >
-              {visibilityData?.map((item: any, idx) => {
-                return (
-                  <>
-                    <DropdownOption
-                      {...item}
-                      key={idx}
-                      currentValue={data.visibility}
-                      onChange={handleAddressChange}
-                    />
-                  </>
-                )
-              })}
-            </InputSelect>
+                <InputSelect
+                  onChange={(e: any) => {
+                    let val = e.target.value
+                    setData((prev: any) => ({ ...prev, visibility: val }))
+                  }}
+                  value={data.visibility}
+                  // inputProps={{ 'aria-label': 'Without label' }}
+                  // className={` ${styles['visibility-dropdown']}`}
+                >
+                  {visibilityData?.map((item: any, idx) => {
+                    return (
+                      <>
+                        <DropdownOption
+                          {...item}
+                          key={idx}
+                          currentValue={data.visibility}
+                          onChange={handleAddressChange}
+                        />
+                      </>
+                    )
+                  })}
+                </InputSelect>
+              </div>
+
+              <FilledButton
+                disabled={submitBtnLoading}
+                onClick={handleSubmit}
+                className={styles['create-post-btn']}
+                loading={submitBtnLoading}
+              >
+                Post
+              </FilledButton>
+            </aside>
+            <div className={styles['background']}></div>
           </div>
-
-          <FilledButton
-            disabled={submitBtnLoading}
-            onClick={handleSubmit}
-            className={styles['create-post-btn']}
-            loading={submitBtnLoading}
-          >
-            Post
-          </FilledButton>
-        </aside>
-        <div className={styles['background']}></div>
+        </div>
       </div>
-    </div>
+    </>
   )
 }

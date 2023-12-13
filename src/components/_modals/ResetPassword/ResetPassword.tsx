@@ -271,6 +271,13 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
               'Verify Action'
             )}
           </button>
+          <button className="modal-mob-btn-save" onClick={handleSubmit}>
+            {submitBtnLoading ? (
+              <CircularProgress color="inherit" size={'16px'} />
+            ) : (
+              'Verify Action'
+            )}
+          </button>
         </footer>
       </div>
     </>

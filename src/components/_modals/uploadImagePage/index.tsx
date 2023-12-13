@@ -58,7 +58,6 @@ const UploadImagePage: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
     }
   }
 
- 
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -94,6 +93,13 @@ const UploadImagePage: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
             onClick={handleSubmit}
             disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
           >
+            {submitBtnLoading ? (
+              <CircularProgress color="inherit" size={'24px'} />
+            ) : (
+              'Add Link'
+            )}
+          </button>
+          <button className="modal-mob-btn-save" onClick={handleSubmit}>
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'24px'} />
             ) : (

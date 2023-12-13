@@ -34,7 +34,7 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
       <ProfileLayout activeTab={'pages'} data={data}>
         {data.pageData && (
           <PageGridLayout column={2}>
-            <aside>
+            <aside className={styles['asideView']}>
               {/* User Hobbies */}
               <ProfileHobbySideList data={data.pageData} />
               <ProfilePagesList data={data} />

@@ -58,7 +58,13 @@ const CommunityHome: React.FC<Props> = ({}) => {
             </>
           ) : allPosts.length > 0 ? (
             allPosts.map((post: any) => {
-              return <PostCard key={post._id} postData={post} />
+              return (
+                <PostCard
+                  key={post._id}
+                  postData={post}
+                  currentSection="posts"
+                />
+              )
             })
           ) : allPosts.length === 0 ? (
             <p className={styles['no-posts-text']}>No posts found</p>

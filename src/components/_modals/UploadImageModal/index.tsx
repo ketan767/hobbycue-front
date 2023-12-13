@@ -44,9 +44,8 @@ export const UploadImageModal: React.FC<Props> = (props) => {
           // background={false}
           responsive={true}
           autoCropArea={1}
-          checkOrientation={false} // https://github.com/fengyuanchen/cropperjs/issues/671
+          // https://github.com/fengyuanchen/cropperjs/issues/671
           guides={true}
-          aspectRatio={editPhotoModalData.type === 'cover' ? 3 / 1 : 1}
         />
 
         <button

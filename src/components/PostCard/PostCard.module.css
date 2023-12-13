@@ -60,6 +60,12 @@
   max-width: 100%;
 }
 
+.postUrl{
+
+  word-break: break-all; 
+  white-space: normal;
+}
+
 /* Footer */
 
 .footer-actions-wrapper {

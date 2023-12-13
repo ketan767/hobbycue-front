@@ -210,6 +210,10 @@ const CommunityLayout: React.FC<Props> = ({
     params = new URLSearchParams(`populate=_author,_genre,_hobby`)
     if (selectedHobby !== '') {
       params.append('_hobby', selectedHobby)
+    } else {
+      activeProfile?.data?._hobbies.forEach((item: any) => {
+        params.append('_hobby', item.hobby._id)
+      })
     }
     if (selectedLocation !== '' && selectedLocation !== 'Everyone') {
       params.append('location', selectedLocation)
@@ -648,7 +652,6 @@ const CommunityLayout: React.FC<Props> = ({
                   </ul>
                 </section>
                 <section className={styles['filter-section']}>
-                  <p> Filter:</p>
                   <div>
                     <Select
                       sx={{
@@ -661,7 +664,7 @@ const CommunityLayout: React.FC<Props> = ({
                       onChange={(e) => handleHobbyClick(e.target.value)}
                       displayEmpty
                     >
-                      <MenuItem disabled value="">
+                      <MenuItem value="">
                         <em>Hobby</em>
                       </MenuItem>
                       {activeProfile.data?._hobbies?.map(

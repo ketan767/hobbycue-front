@@ -11,9 +11,9 @@ const PostCardSkeletonLoading: React.FC<Props> = () => {
         <div className={styles['loader-container']}>
           <ContentLoader
             speed={2}
-            width={800}
+            width="100%"
             height={320}
-            viewBox="0 0 800 320"
+            viewBox="0 7 800 313"
             backgroundColor="#f3f3f3"
             foregroundColor="#ecebeb"
           >

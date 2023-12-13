@@ -208,3 +208,35 @@ line-height: 16px;
 .explore-sidebar button{
   max-width: 281px !important;
 }
+
+@media screen and (max-width: 1100px) {
+
+  .profile-left-aside{
+    height: 50px;
+   margin: 12px 0;
+  }
+
+  .filterDropdown{
+    width: 100%;
+    height: 44px;
+    padding: 12px 0;
+    border-radius: 8px;
+  }
+
+  .peopleItemsContainer {
+    width: 100%;
+  }
+  .userSection{
+    width: 100%;
+  }
+
+  .view-more-btn {
+    width: 85%;
+  }
+  .explore-sidebar{
+    display: none;
+  }
+  .peopleItem {
+    padding: 8px 16px 8px 16px;
+  }
+}

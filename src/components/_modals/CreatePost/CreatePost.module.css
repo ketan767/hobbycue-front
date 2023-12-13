@@ -276,6 +276,12 @@
   .create-post-btn {
     width: 100%;
   }
+  .background {
+    display: none;
+  }
+  .modal-heading::before {
+    display: none !important;
+  }
 }
   .modal-heading::before {
     content: "";

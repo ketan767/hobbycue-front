@@ -15,31 +15,31 @@ import { updatePhotoEditModalData } from '@/redux/slices/site'
 interface Props {
   isOpen?: boolean
   onClose?: () => void
-}
-type ImageData = {
-  cover_image: string
+  handleClose?: () => void
 }
 
-const FullScreenCoverModal: React.FC<Props> = ({ isOpen, onClose }) => {
-  const dispatch = useDispatch()
-  const { listingModalData } = useSelector((state: RootState) => state.site)
-  const { listingLayoutMode } = useSelector((state: any) => state.site)
-
-  const ImageUrl = listingModalData.cover_image
-
-  console.log('coverdata', listingModalData)
+const ViewImageModal: React.FC<Props> = ({ isOpen, onClose, handleClose }) => {
+  const imageUrl = useSelector((state: any) => state.modal.imageUrl)
 
   return (
-    <div className={styles.imageModalContent}>
-      <Image
-        className={styles['img']}
-        src={ImageUrl || ''}
-        alt=""
-        height={296}
-        width={1000}
-      />
-    </div>
+    <>
+      <header className={styles['header']}>
+        <CloseIcon
+          className={styles['modal-close-icon']}
+          onClick={handleClose}
+        />
+      </header>
+      <div className={styles.imageModalContent}>
+        <Image
+          className={styles['img']}
+          src={imageUrl || ''}
+          alt=""
+          height={296}
+          width={1000}
+        />
+      </div>
+    </>
   )
 }
 
-export default FullScreenCoverModal
+export default ViewImageModal

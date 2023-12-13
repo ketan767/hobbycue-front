@@ -18,6 +18,9 @@
   padding: var(--spacing-2);
   z-index: 10;
 }
+.input-box-error input[type='text'] {
+  border: 1px solid #c0504d !important;
+}
 .modal-close-icon:hover {
   background: #ddd;
 }
