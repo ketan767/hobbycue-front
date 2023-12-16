@@ -310,3 +310,11 @@ align-self: flex-start;
 .hobbies-members div:hover{
   color: #8064a2;
 }
+
+@media screen and (max-width: 1100px) {
+  .hobby-left-aside{
+    position: relative !important;
+    top: 0;
+    height: auto;
+  }
+}

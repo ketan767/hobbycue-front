@@ -22,7 +22,7 @@ import ReactPlayer from 'react-player'
 import { updateImageUrl } from '@/redux/slices/modal'
 
 interface Props {
-  data: ProfilePageData
+  data: ProfilePageData['pageData']
 }
 
 const ProfileMediaPage: React.FC<Props> = ({ data }) => {
@@ -30,7 +30,7 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
   const [loadingPosts, setLoadingPosts] = useState(false)
   const [posts, setPosts] = useState([])
   const [media, setMedia] = useState([])
-  const { listingLayoutMode } = useSelector((state: RootState) => state.site)
+  const { profileLayoutMode } = useSelector((state: RootState) => state.site)
 
   const inputRef = useRef<HTMLInputElement>(null)
   const dispatch = useDispatch()
@@ -114,11 +114,12 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
       }),
     )
   }
+  console.log('advd', data.pageData.video_url)
 
   return (
     <>
       <Head>
-        <title>{`Posts | ${data.pageData.full_name} | HobbyCue`}</title>
+        <title>{`Media | ${data.pageData.full_name} | HobbyCue`}</title>
       </Head>
 
       <ProfileLayout activeTab={'media'} data={data}>
@@ -129,7 +130,7 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
             <ProfilePagesList data={data} />
           </aside>
           <div>
-            {listingLayoutMode === 'edit' && (
+            {profileLayoutMode === 'edit' && (
               <div className={styles.uploadContainer}>
                 <div className={styles.uploadButton}>
                   <p> image </p>
@@ -168,7 +169,7 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
               </div>
             )}
             <div className={styles.medias}>
-              {user?.video_url && (
+              {data?.pageData.video_url && (
                 <div className={styles.image}>
                   {/* <video
                     width="250"
@@ -180,13 +181,13 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
                   </video> */}
                   <ReactPlayer
                     width="100%"
-                    height="100%"
-                    url={user?.video_url}
+                    height="250px"
+                    url={data?.pageData?.video_url}
                     controls={true}
                   />
                 </div>
               )}
-              {user.images?.map((item: any, idx: number) => {
+              {data.pageData.images?.map((item: any, idx: number) => {
                 return (
                   <div
                     key={idx}

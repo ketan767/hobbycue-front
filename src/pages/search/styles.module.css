@@ -9,6 +9,9 @@
 
 .hobbies-side-wrapper {
   margin-bottom: var(--spacing-12);
+  position: -webkit-sticky; 
+    position: sticky;
+    top: calc(var(--navbar-height-desktop) + var(--spacing-12));
 }
 .hobbies-side-wrapper header {
   padding: var(--spacing-16);

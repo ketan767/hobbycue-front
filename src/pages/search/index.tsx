@@ -121,10 +121,10 @@ const FilterSidebar = ({}) => {
         <div>
           <h2 className={styles['filter-sidebar']}>Filters</h2>
           <div className={styles['filters-container']}>
-            {/* <div className={styles['filter-item']} onClick={handleShowAll}>
+            <div className={styles['filter-item']} onClick={handleShowAll}>
               <Image src={hobbycue} alt="hobbycue" />
-              All of Hobbycue
-            </div> */}
+              All Pages
+            </div>
 
             {/* <div className={styles['filter-item']}>
               <Image src={Hobbies} alt="Hobbies" />
@@ -593,19 +593,30 @@ const MainContent: React.FC<SearchResultsProps> = ({
 console.log()
 
 const FilterDropdown: React.FC<Props> = ({ onChange }) => {
+  const [value, setValue] = useState('All Pages')
   const dispatch = useDispatch()
-
   const handleShowAllPeopleClick = () => {
+    setValue('people')
     dispatch(toggleShowAllPeople())
   }
   const handleShowAllPlaceClick = () => {
+    setValue('places')
     dispatch(toggleShowAllPlace())
   }
   const handleShowAllEventClick = () => {
+    setValue('programs')
     dispatch(toggleShowAllEvent())
   }
+  const handleShowAll = () => {
+    setValue('All Pages')
+    dispatch(toggleShowAll())
+  }
+
   return (
-    <Select onChange={onChange} className={styles.filterDropdown}>
+    <Select onChange={onChange} className={styles.filterDropdown} value={value}>
+      <MenuItem onClick={handleShowAll} value="All Pages">
+        All Pages
+      </MenuItem>
       <MenuItem onClick={handleShowAllPeopleClick} value="people">
         People Pages
       </MenuItem>

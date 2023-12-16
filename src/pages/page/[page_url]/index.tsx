@@ -50,25 +50,19 @@ const ListingHome: React.FC<Props> = (props) => {
     }
   }, [user._id, props.data.pageData, router])
 
-  if (isAuthorized === null) {
-    return <div></div>
-  } else if (!isAuthorized) {
-    return null
-  } else {
-    return (
-      <>
-        <Head>
-          <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
-        </Head>
+  return (
+    <>
+      <Head>
+        <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
+      </Head>
 
-        <ListingPageLayout activeTab={'home'} data={props.data}>
-          <ListingPageMain data={props.data.pageData}>
-            <ListingHomeTab data={props.data.pageData} />
-          </ListingPageMain>
-        </ListingPageLayout>
-      </>
-    )
-  }
+      <ListingPageLayout activeTab={'home'} data={props.data}>
+        <ListingPageMain data={props.data.pageData}>
+          <ListingHomeTab data={props.data.pageData} />
+        </ListingPageMain>
+      </ListingPageLayout>
+    </>
+  )
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async (

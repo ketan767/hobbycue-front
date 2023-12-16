@@ -43,6 +43,10 @@ const ListingPageLayout: React.FC<Props> = ({ data, children, activeTab }) => {
   const [LocationErr, setLocationErr] = useState(false)
   const [snackBarOpen, setSnackBarOpen] = useState(false)
 
+  const { listingModalData, listingLayoutMode } = useSelector(
+    (state: RootState) => state.site,
+  )
+
   function checkScroll() {
     const scrollValue = window.scrollY || document.documentElement.scrollTop
 
@@ -51,38 +55,45 @@ const ListingPageLayout: React.FC<Props> = ({ data, children, activeTab }) => {
   }
   const navigationTabs = (tab: any) => {
     let hasError = false
+    console.log('layutmode', listingLayoutMode)
 
-    setHobbyError(false)
-    setpageTypeErr(false)
-    setHAboutErr(false)
-    setContactInfoErr(false)
-    setLocationErr(false)
+    if (listingLayoutMode === 'edit') {
+      setHobbyError(false)
+      setpageTypeErr(false)
+      setHAboutErr(false)
+      setContactInfoErr(false)
+      setLocationErr(false)
 
-    if (data.pageData._hobbies.length === 0) {
-      setHobbyError(true)
-      hasError = true
-    }
-    if (data.pageData.page_type.length === 0) {
-      setpageTypeErr(true)
-      hasError = true
-    }
-    if (data.pageData._hobbies.length === 0) {
-      setHAboutErr(true)
-      hasError = true
-    }
-    if (!data.pageData.phone && !data.pageData.public_email) {
-      setContactInfoErr(true)
-      hasError = true
-    }
-    if (!data.pageData._address.city) {
-      setLocationErr(true)
-      hasError = true
-    }
+      if (data.pageData._hobbies.length === 0) {
+        setHobbyError(true)
+        hasError = true
+      }
+      if (data.pageData.page_type.length === 0) {
+        setpageTypeErr(true)
+        hasError = true
+      }
+      if (data.pageData._hobbies.length === 0) {
+        setHAboutErr(true)
+        hasError = true
+      }
+      if (!data.pageData.phone && !data.pageData.public_email) {
+        setContactInfoErr(true)
+        hasError = true
+      }
+      if (!data.pageData._address.city) {
+        setLocationErr(true)
+        hasError = true
+      }
 
-    if (!hasError) {
-      router.push(`/page/${router.query.page_url}/${tab !== 'home' ? tab : ''}`)
+      if (!hasError) {
+        router.push(
+          `/page/${router.query.page_url}/${tab !== 'home' ? tab : ''}`,
+        )
+      } else {
+        setSnackBarOpen(true)
+      }
     } else {
-      setSnackBarOpen(true)
+      router.push(`/page/${router.query.page_url}/${tab !== 'home' ? tab : ''}`)
     }
   }
 
@@ -149,7 +160,7 @@ const ListingPageLayout: React.FC<Props> = ({ data, children, activeTab }) => {
   return (
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
-      <ListingHeader data={data.pageData} activeTab={activeTab}/>
+      <ListingHeader data={data.pageData} activeTab={activeTab} />
       {showSmallHeader && (
         <ListingHeaderSmall data={data.pageData} activeTab={activeTab} />
       )}

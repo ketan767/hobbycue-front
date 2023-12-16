@@ -72,8 +72,8 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
   return (
     <>
       <main>
-        {/* User About */}
-        {!hideStartPost && (
+        {/* Posts */}
+        {listingLayoutMode === 'edit' && (
           <section
             className={`content-box-wrapper ${styles['start-post-btn-container']}`}
           >
