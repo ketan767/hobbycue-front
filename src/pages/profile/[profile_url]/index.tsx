@@ -39,10 +39,12 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
 
   const [pageData, setPageData] = useState(data.pageData)
   const [loadingPosts, setLoadingPosts] = useState(false)
-  const { user } = useSelector((state: any) => state.user)
+
   const [posts, setPosts] = useState([])
   const router = useRouter()
-
+  const { isLoggedIn, isAuthenticated, user } = useSelector(
+    (state: RootState) => state.user,
+  )
   const getPost = async () => {
     setLoadingPosts(true)
     const { err, res } = await getAllPosts(
@@ -90,6 +92,16 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
   let pinnedPosts = posts.filter((item: any) => item.isPinned === true)
   let unpinnnedPosts = posts.filter((item: any) => item.isPinned !== true)
   console.log('profileurl', data)
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      window.location.href = '/'
+    }
+  }, [isLoggedIn, router])
+
+  if (!isLoggedIn) {
+    return null
+  }
   return (
     <>
       <Head>

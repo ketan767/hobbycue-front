@@ -115,13 +115,13 @@ export const searchSlice = createSlice({
 
     
     toggleShowAll: (state) => {
-      state.showAll = !state.showAll;
-      if (state.showAllEvent) {
-        state.showAllUsers = true;
-        state.showAllPeople = true;
-        state.showAllPlace = true;
-        state.showAllEvent = true;
-      }
+
+        state.showAllUsers = false;
+        state.showAllPeople = false;
+        state.showAllPlace = false;
+        state.showAllEvent = false;
+      
+      
     },
 
     toggleShowAllUsers: (state) => {

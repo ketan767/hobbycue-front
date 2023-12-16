@@ -12,10 +12,11 @@
   cursor: pointer;
 }
 .pages-list img {
-  width: 35px;
-  height: 35px;
+  width: 32px;
+  height: 32px;
   object-fit: contain;
   border-radius: 8px;
+  border: 1px solid #8064A2;;
 }
 .pages-list p {
   margin-left: 8px;

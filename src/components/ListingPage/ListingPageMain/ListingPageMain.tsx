@@ -508,7 +508,7 @@ const ListingPageMain: React.FC<Props> = ({
             </PageContentBox>
 
             {/* Seller Details */}
-            <PageContentBox
+            {/* <PageContentBox
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
                 dispatch(
@@ -518,7 +518,7 @@ const ListingPageMain: React.FC<Props> = ({
             >
               <h4 className={styles['heading']}>Seller Information</h4>
               <ul className={styles['seller-info-wrapper']}>
-                {/* KYC */}
+     
                 <li>
                   <svg
                     width="24"
@@ -568,7 +568,7 @@ const ListingPageMain: React.FC<Props> = ({
                   </svg>
                 </li>
 
-                {/* Bank */}
+          
                 <li>
                   <svg
                     width="24"
@@ -672,7 +672,7 @@ const ListingPageMain: React.FC<Props> = ({
                   </svg>
                 </li>
               </ul>
-            </PageContentBox>
+            </PageContentBox> */}
 
             {/* User Location Details */}
             <PageContentBox

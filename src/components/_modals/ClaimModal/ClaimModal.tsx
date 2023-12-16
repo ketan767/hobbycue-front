@@ -22,7 +22,7 @@ const ClaimModal = () => {
     phone: userData.phone,
     pageUrl: pageURL,
     userRelation: '',
-    websiteLink: '',
+    websiteLink: 'https://',
   })
 
   const [inputErrs, setInputErrs] = useState<{ [key: string]: string | null }>({

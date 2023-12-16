@@ -235,8 +235,6 @@ const CommunityLayout: React.FC<Props> = ({
   useEffect(() => {
     if (activeTab === 'posts' || activeTab === 'links') {
       fetchPosts()
-    } else if (activeTab === 'pages') {
-      fetchPages()
     }
   }, [selectedHobby, selectedLocation, activeProfile])
 
