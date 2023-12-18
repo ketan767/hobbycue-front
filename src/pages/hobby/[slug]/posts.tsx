@@ -51,7 +51,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
   return (
     <HobbyPageLayout activeTab="posts" data={data}>
       <main>
-        <div className={styles['start-post-btn']}>
+        {/* <div className={styles['start-post-btn']}>
           <button
             onClick={() => {
               if (isLoggedIn)
@@ -67,7 +67,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
             </svg>
             <span>Start a post</span>
           </button>
-        </div>
+        </div> */}
 
         <section className={styles['posts-container']}>
           {!isLoggedIn || loadingPosts ? (

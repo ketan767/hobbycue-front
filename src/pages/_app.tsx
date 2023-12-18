@@ -17,8 +17,7 @@ import LoadingBackdrop from '@/components/PageLoader'
 
 function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
-  const [scrollPosition, setScrollPosition] = useState(0);
-
+  const [scrollPosition, setScrollPosition] = useState(0)
 
   const isAdminPage = router.pathname.startsWith('/admin')
   const theme = createTheme({
@@ -38,39 +37,27 @@ function App({ Component, pageProps }: AppProps) {
     },
   })
 
-
-//profile,hobby,page pages scroll remember code 
-  const handleRouteChange = () => {
-      setScrollPosition(window.scrollY);
-  };
-
-  // Restore the scroll position when navigating back to a page within the "page" folder
-  const handleRouteChangeComplete = () => {
-    if (router.pathname.startsWith('/page/')) {
-      window.scrollTo(0, scrollPosition);
-    }
-    if (router.pathname.startsWith('/profile/')) {
-      window.scrollTo(0, scrollPosition);
-    }
-    if (router.pathname.startsWith('/hobby/')) {
-      window.scrollTo(0, scrollPosition);
-    }
-  };
-
-  // Attach event listeners
   useEffect(() => {
-    router.events.on('routeChangeStart', handleRouteChange);
-    router.events.on('routeChangeComplete', handleRouteChangeComplete);
+    const savedScrollPosition = localStorage.getItem('scrollPosition')
+    if (savedScrollPosition) {
+      console.log('Restoring scroll position:', savedScrollPosition)
+      window.scrollTo(0, parseInt(savedScrollPosition, 10))
+      localStorage.removeItem('scrollPosition')
+    } else {
+      console.log('No saved scroll position found')
+    }
+
+    const handleRouteChange = () => {
+      console.log('Saving scroll position:', window.scrollY)
+      localStorage.setItem('scrollPosition', window.scrollY.toString())
+    }
+
+    router.events.on('routeChangeStart', handleRouteChange)
 
     return () => {
-      router.events.off('routeChangeStart', handleRouteChange);
-      router.events.off('routeChangeComplete', handleRouteChangeComplete);
-    };
-  }, [router.events, scrollPosition]);
-
-
-
-
+      router.events.off('routeChangeStart', handleRouteChange)
+    }
+  }, [router.events])
 
   return (
     <>

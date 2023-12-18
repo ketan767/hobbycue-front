@@ -28,6 +28,7 @@ import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/
 import { getListingPages } from '@/services/listing.service'
 import PostWrapper from '@/layouts/PinnedPost/PinnedPost'
 import { updateUser } from '@/redux/slices/user'
+import { withAuth } from '@/navigation/withAuth'
 
 interface Props {
   data: ProfilePageData
@@ -93,15 +94,6 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
   let unpinnnedPosts = posts.filter((item: any) => item.isPinned !== true)
   console.log('profileurl', data)
 
-  useEffect(() => {
-    if (!isLoggedIn) {
-      window.location.href = '/'
-    }
-  }, [isLoggedIn, router])
-
-  if (!isLoggedIn) {
-    return null
-  }
   return (
     <>
       <Head>
@@ -218,6 +210,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   context,
 ) => {
   const { query } = context
+  console.log('context', context)
 
   const { err, res } = await getAllUserDetail(
     `profile_url=${query['profile_url']}&populate=_hobbies,_addresses,primary_address,_listings,_listings,_listings`,
@@ -250,4 +243,4 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   }
 }
 
-export default ProfileHome
+export default withAuth(ProfileHome)
