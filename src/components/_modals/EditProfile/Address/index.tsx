@@ -520,7 +520,6 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       handleGeocode(lat, long)
     }
     const errorFunction = (err: any) => {
-      alert('Location permission denied!')
       console.log('err', err)
     }
     if (navigator.geolocation) {

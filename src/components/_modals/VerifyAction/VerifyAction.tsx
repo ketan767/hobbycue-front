@@ -23,7 +23,7 @@ import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded'
 import { signIn } from '@/services/auth.service'
 import { current } from '@reduxjs/toolkit'
 import { setVerified } from './../../../redux/slices/modal'
-import { forgotPassword } from '@/services/auth.service'
+import { passwordRequest } from '@/services/auth.service'
 
 type Props = {
   onComplete?: () => void
@@ -76,7 +76,7 @@ const VerifyActionModal: React.FC<Props> = ({}) => {
   const handleOpenCreatePassword = async () => {
     const email = user.email
     dispatch(openModal({ type: 'Set-PasswordModal', closable: true }))
-    const { err, res } = await forgotPassword({
+    const { err, res } = await passwordRequest({
       email,
     })
     console.log(err)
