@@ -723,7 +723,8 @@ const ListingPageMain: React.FC<Props> = ({
                     </svg>
 
                     <span className={styles.textdefault}>
-                      {`${
+                      {data?.wp_data?.location_str}
+                      {/* {`${
                         data?._address.street ? data._address.street + ',' : ''
                       }
                   
@@ -742,7 +743,7 @@ const ListingPageMain: React.FC<Props> = ({
                       data?._address?.pin_code
                         ? ' - ' + data?._address?.pin_code
                         : ''
-                    }`}
+                    }`} */}
                     </span>
                   </li>
                 )}
