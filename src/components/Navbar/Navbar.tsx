@@ -271,6 +271,11 @@ export const Navbar: React.FC<Props> = ({}) => {
               className={styles.inputField}
               onChange={handleInputChange}
               value={data.search.value}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  searchResult()
+                }
+              }}
               sx={{
                 '& .MuiOutlinedInput-root': {
                   borderRadius: '8px',

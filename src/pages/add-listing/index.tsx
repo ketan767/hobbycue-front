@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
 import styles from '@/styles/AddListing.module.css'
 import { openModal } from '@/redux/slices/modal'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { updateListingModalData, updateListingTypeModalMode } from '@/redux/slices/site'
-import store from '@/redux/store'
+import store, { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
 
 type Props = {}
@@ -11,11 +11,17 @@ type Props = {}
 const AddListing: React.FC<Props> = (props) => {
   const dispatch = useDispatch()
   const router = useRouter()
+  const {isLoggedIn}=useSelector((store:RootState)=>store.user)
 
   const handleClick = (type: ListingPages) => {
-    dispatch(updateListingModalData({ type }))
-    dispatch(openModal({ type: 'listing-type-edit', closable: true }))
-    dispatch(updateListingTypeModalMode({ mode: 'create'}))
+    if(isLoggedIn){
+      dispatch(updateListingModalData({ type }))
+      dispatch(openModal({ type: 'listing-type-edit', closable: true }))
+      dispatch(updateListingTypeModalMode({ mode: 'create'}))
+    }
+    else{
+      dispatch(openModal({type: 'auth', closable: true}))
+    }
     
   }
   return (

@@ -16,6 +16,7 @@ import classes from '../../assets/svg/Search/classes.svg'
 import posts from '../../assets/svg/Search/posts.svg'
 import rentals from '../../assets/svg/Search/rentals.svg'
 import { MenuItem } from '@mui/material'
+import SearchPageFilter from '@/components/SearchPageFilters'
 import {
   SearchResults,
   toggleShowAll,
@@ -89,107 +90,12 @@ type SearchResultsProps = {
   hobbyResults: hobby[]
 }
 
-const FilterSidebar = ({}) => {
-  const dispatch = useDispatch()
-
-  const handleShowAll = () => {
-    dispatch(toggleShowAll())
-  }
-
-  const handleShowAllUsersClick = () => {
-    dispatch(toggleShowAllUsers())
-  }
-  const handleShowAllPeopleClick = () => {
-    dispatch(toggleShowAllPeople())
-  }
-  const handleShowAllPlaceClick = () => {
-    dispatch(toggleShowAllPlace())
-  }
-  const handleShowAllEventClick = () => {
-    dispatch(toggleShowAllEvent())
-  }
-  return (
-    <>
-      <section
-        className={`content-box-wrapper ${styles['hobbies-side-wrapper']}`}
-      >
-        <header>
-          <div className={styles['heading']}>
-            <h1>Search Results</h1>
-          </div>
-        </header>
-        <div>
-          <h2 className={styles['filter-sidebar']}>Filters</h2>
-          <div className={styles['filters-container']}>
-            <div className={styles['filter-item']} onClick={handleShowAll}>
-              <Image src={hobbycue} alt="hobbycue" />
-              All Pages
-            </div>
-
-            {/* <div className={styles['filter-item']}>
-              <Image src={Hobbies} alt="Hobbies" />
-              Hobbies
-            </div> */}
-
-            <div
-              className={styles['filter-item']}
-              onClick={handleShowAllPeopleClick}
-            >
-              <Image src={People} alt="People" />
-              People Pages
-            </div>
-            {/* <div
-              className={styles['filter-item']}
-              onClick={handleShowAllUsersClick}
-            >
-              <Image src={User} alt="User" />
-              User Profiles
-            </div> */}
-            <div
-              className={styles['filter-item']}
-              onClick={handleShowAllPlaceClick}
-            >
-              <Image src={Place} alt="Place" />
-              Places
-            </div>
-            {/* <div className={styles['filter-item']}>
-              <Image src={Product} alt="Product" />
-              Products
-            </div> */}
-            {/* <div className={styles['filter-item']}>
-              <Image src={rentals} alt="rentals" />
-              Rentals
-            </div> */}
-            <div
-              className={styles['filter-item']}
-              onClick={handleShowAllEventClick}
-            >
-              <Image src={Program} alt="Program" />
-              Programs
-            </div>
-            {/* <div className={styles['filter-item']}>
-              <Image src={classes} alt="classes" />
-              Classes
-            </div> */}
-            {/* <div className={styles['filter-item']}>
-              <Image src={posts} alt="posts" />
-              Posts
-            </div> */}
-            {/* <div className={styles['filter-item']}>
-              <Image src={blogs} alt="blogs" />
-              Blogs
-            </div> */}
-          </div>
-        </div>
-      </section>
-    </>
-  )
-}
-
 const ExploreSidebar = () => {
   return (
     <div className={styles['explore-sidebar']}>
-      <button className="modal-footer-btn">Explore More</button>
+      <button disabled className="modal-footer-btn">
+        Explore More
+      </button>
     </div>
   )
 }
@@ -316,9 +222,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
   return (
     //hobby
     <main className={styles.searchResults}>
-      {noResultsFound ? (
-        <div className="no-results-message">No results found.</div>
-      ) : (
+      {!noResultsFound && (
         <div>
           {/* <section className={styles.userSection}>
         <div className={styles.peopleItemsContainer}>
@@ -366,59 +270,59 @@ const MainContent: React.FC<SearchResultsProps> = ({
 
           {/* User  */}
 
-          {/* {!HideUser && searchResults.length > 0 && (
-        <section className={styles.userSection}>
-          <div className={styles.peopleItemsContainer}>
-            <div className={styles.resultHeading}>User Profiles</div>
-            {searchResults
-              .slice(0, showAllUsers ? undefined : 3)
-              .map((user, index) => (
-                <div
-                  className={styles.peopleItem}
-                  key={index}
-                  onClick={() => navigateToProfile(user.profile_url)}
-                >
-                  <div className={styles.userAvatar}>
-                    {user?.profile_image ? (
-                      <Image
-                        src={user?.profile_image}
-                        alt={`${user.full_name}'s profile`}
-                        width={64}
-                        height={64}
-                        className={styles.avatarImage}
-                      />
-                    ) : (
-                      <div
-                        className={`${styles['img']} default-user-icon`}
-                      ></div>
-                    )}
-                  </div>
-                  <div className={styles.userDetails}>
-                    <div className={styles.userName}>{user?.full_name}</div>
-                    <div className={styles.userTagline}>
-                      {user?.tagline || '\u00a0'}
-                    </div>
-                    <div className={styles.userLocation}>
-                      {user.primary_address?.city || '\u00a0'}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            <div>
-              {showAllUsers
-                ? undefined
-                : (
-                    <button
-                      onClick={toggleShowAllusers}
-                      className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+          {!HideUser && searchResults.length > 0 && (
+            <section className={styles.userSection}>
+              <div className={styles.peopleItemsContainer}>
+                <div className={styles.resultHeading}>User Profiles</div>
+                {searchResults
+                  .slice(0, showAllUsers ? undefined : 3)
+                  .map((user, index) => (
+                    <div
+                      className={styles.peopleItem}
+                      key={index}
+                      onClick={() => navigateToProfile(user.profile_url)}
                     >
-                      View More
-                    </button>
-                  ) || ''}
-            </div>
-          </div>
-        </section>
-      )} */}
+                      <div className={styles.userAvatar}>
+                        {user?.profile_image ? (
+                          <Image
+                            src={user?.profile_image}
+                            alt={`${user.full_name}'s profile`}
+                            width={64}
+                            height={64}
+                            className={styles.avatarImage}
+                          />
+                        ) : (
+                          <div
+                            className={`${styles['img']} default-user-icon`}
+                          ></div>
+                        )}
+                      </div>
+                      <div className={styles.userDetails}>
+                        <div className={styles.userName}>{user?.full_name}</div>
+                        <div className={styles.userTagline}>
+                          {user?.tagline || '\u00a0'}
+                        </div>
+                        <div className={styles.userLocation}>
+                          {user.primary_address?.city || '\u00a0'}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                <div>
+                  {showAllUsers
+                    ? undefined
+                    : (
+                        <button
+                          onClick={toggleShowAllusers}
+                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                        >
+                          View More
+                        </button>
+                      ) || ''}
+                </div>
+              </div>
+            </section>
+          )}
           {/* People */}
           {!HidePeople && peopleResults.length > 0 && (
             <section className={styles.userSection}>
@@ -612,10 +516,18 @@ const FilterDropdown: React.FC<Props> = ({ onChange }) => {
     dispatch(toggleShowAll())
   }
 
+  const handleShowAllUsers = () => {
+    setValue('Users')
+    dispatch(toggleShowAllUsers())
+  }
+
   return (
     <Select onChange={onChange} className={styles.filterDropdown} value={value}>
       <MenuItem onClick={handleShowAll} value="All Pages">
-        All Pages
+        All of Hobbycue
+      </MenuItem>
+      <MenuItem onClick={handleShowAllUsers} value="Users">
+        Users
       </MenuItem>
       <MenuItem onClick={handleShowAllPeopleClick} value="people">
         People Pages
@@ -695,7 +607,7 @@ const Search: React.FC<Props> = ({ data, children }) => {
           <FilterDropdown onChange={handleDropdownChange} />
         </aside>
       ) : (
-        <FilterSidebar />
+        <SearchPageFilter />
       )}
       <main>
         <MainContent
