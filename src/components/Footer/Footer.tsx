@@ -10,6 +10,7 @@ import Youtube from '@/assets/svg/social/youtube.svg'
 import Telegram from '@/assets/svg/social/telegram.svg'
 import Mail from '@/assets/svg/social/mail.svg'
 import Image from 'next/image'
+import Link from 'next/link'
 
 const icons = [
   Facebook,
@@ -26,22 +27,34 @@ const Footer: React.FC = () => {
   const data = [
     {
       title: 'Hobbycue',
-      values: ['About Us', 'Our Services', 'Work with Us', 'FAQ', 'Contact Us'],
+      values: [
+        { title: 'About Us', link: 'http://wp.hobbycue.com/about/' },
+        { title: 'Our Services', link: 'http://wp.hobbycue.com/services/' },
+        { title: 'Work with Us', link: 'http://wp.hobbycue.com/work/' },
+        { title: 'FAQ', link: 'http://wp.hobbycue.com/faq/' },
+        { title: 'Contact Us', link: 'http://wp.hobbycue.com/contact/' },
+      ],
     },
     {
       title: 'How do I',
       values: [
-        'Sign Up',
-        'Add a Listing',
-        'Claim Listing',
-        'Post a Query',
-        'Add a Blog Post',
-        'Other Queries',
+        { title: 'Sign Up', link: 'http://wp.hobbycue.com/how-to/' },
+        { title: 'Add a Listing', link: 'http://wp.hobbycue.com/how-to/#add-listing/' },
+        { title: 'Claim Listing', link: 'http://wp.hobbycue.com/how-to/#claim-listing/' },
+        { title: 'Post a Query', link: 'http://wp.hobbycue.com/how-to/#post-query/' },
+        { title: 'Add a Blog Post', link: 'http://wp.hobbycue.com/how-to/#blog-post/' },
+        { title: 'Other Queries', link: 'http://wp.hobbycue.com/how-to/' },
       ],
     },
     {
       title: 'Quick Links',
-      values: ['Listings', 'Blog Posts', 'Shop / Store', 'Community'],
+
+      values: [
+        { title: 'Listings', link: 'http://wp.hobbycue.com/explore/' },
+        { title: 'Blog Posts', link: 'http://wp.hobbycue.com/blog/' },
+        { title: 'Shop / Store', link: 'http://wp.hobbycue.com/shop/' },
+        { title: 'Community', link: 'http://wp.hobbycue.com/activity/' },
+      ],
     },
   ]
   return (
@@ -55,9 +68,11 @@ const Footer: React.FC = () => {
                   <li className={styles.listHeading}> {item.title} </li>
                   {item.values.map((value: any, idx: any) => {
                     return (
-                      <li className={styles.listItem} key={idx}>
-                        {value}{' '}
+                      <Link key={idx} href={value.link}>
+                      <li className={styles.listItem} key={idx} >
+                        {value.title}
                       </li>
+                      </Link>
                     )
                   })}
                 </ul>

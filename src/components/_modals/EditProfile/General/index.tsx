@@ -481,6 +481,9 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
               Back
             </button>
           )}
+          <div onClick={onBackBtnClick}>
+            <Image src={BackIcon} alt="Back" className={styles['Back-btn']} />
+          </div>
 
           <button
             ref={nextButtonRef}
@@ -501,8 +504,8 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
             <div onClick={handleSubmit}>
               <Image
                 src={NextIcon}
-                alt="back"
-                className="modal-mob-btn cancel"
+                alt="next"
+                className={`${styles['next-genral-btn']} modal-mob-btn submit`}
               />
             </div>
           ) : (

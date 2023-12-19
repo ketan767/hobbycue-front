@@ -496,6 +496,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                   )}
                 </button>
               </section>
+              <p className={styles['helper-text']}>{error}</p>
 
               <h3 className={styles['heading']}>Added Hobbies</h3>
 
@@ -582,7 +583,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                 </table>
               </section>
             </section>
-            <p className={styles['helper-text']}>{error}</p>
           </>
         </section>
 

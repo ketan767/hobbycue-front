@@ -51,7 +51,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
   return (
     <HobbyPageLayout activeTab="pages" data={data}>
       <main>
-        <section className={styles['pages-container']}>
+        {/* <section className={styles['pages-container']}>
           {!isLoggedIn || loadingPosts ? (
             <PostCardSkeletonLoading />
           ) : (
@@ -60,7 +60,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
           {pages.map((post: any) => {
             return <ListingCard key={post._id} data={post} />
           })}
-        </section>
+        </section> */}
       </main>
     </HobbyPageLayout>
   )

@@ -18,19 +18,40 @@ const CommunityPages: React.FC<Props> = ({}) => {
   const { allPages, pagesLoading } = useSelector(
     (state: RootState) => state.post,
   )
-
+  console.log('hbb', activeProfile?.data?._hobbies)
   const getPost = async () => {
-    const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
-    activeProfile?.data?._hobbies.forEach((item: any) => {
-      params.append('_hobby', item.hobby._id)
-    })
-    if (!activeProfile?.data?._hobbies) return
-    if (activeProfile?.data?._hobbies.length === 0) return
+    const params = new URLSearchParams(`populate=_hobbies`)
+
+    if (
+      !activeProfile?.data?._hobbies ||
+      activeProfile?.data?._hobbies.length === 0
+    )
+      return
+
     const { err, res } = await getListingPages(`${params}`)
     if (err) return console.log(err)
     if (res?.data.success) {
-      store.dispatch(updatePages(res.data.data.listings))
+      const hobbyDisplayNames = activeProfile.data._hobbies.map(
+        (hobby: any) => hobby.hobby.display,
+      )
+
+      const filteredListings = filterListingsByHobbyDisplayNames(
+        res.data.data.listings,
+        hobbyDisplayNames,
+      )
+      store.dispatch(updatePages(filteredListings))
     }
+  }
+
+  function filterListingsByHobbyDisplayNames(
+    listings: any,
+    hobbyDisplayNames: any,
+  ) {
+    return listings.filter((listing: any) =>
+      listing._hobbies.some((hobby: any) =>
+        hobbyDisplayNames.includes(hobby.hobby.display),
+      ),
+    )
   }
 
   useEffect(() => {

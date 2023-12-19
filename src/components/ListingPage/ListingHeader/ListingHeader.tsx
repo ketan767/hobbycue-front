@@ -45,6 +45,9 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
 
   const { listingLayoutMode } = useSelector((state: any) => state.site)
   const [titleEditModalActive, setTitleEditModalActive] = useState(false)
+  const { isLoggedIn, isAuthenticated, user } = useSelector(
+    (state: RootState) => state.user,
+  )
 
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
     e.preventDefault()
@@ -149,7 +152,11 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
   }
 
   const handleClaim = async () => {
-    dispatch(openModal({ type: 'claim-listing', closable: true }))
+    if (isLoggedIn) {
+      dispatch(openModal({ type: 'claim-listing', closable: true }))
+    } else {
+      dispatch(openModal({ type: 'auth', closable: true }))
+    }
   }
 
   const handleShare = () => {
@@ -208,7 +215,6 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
     fromDate: string | number | Date,
     toDate: string | number | Date,
   ): string {
-    // Extracting day, month, and year separately
     const dayOptions: Intl.DateTimeFormatOptions = { day: 'numeric' }
     const monthYearOptions: Intl.DateTimeFormatOptions = {
       year: 'numeric',

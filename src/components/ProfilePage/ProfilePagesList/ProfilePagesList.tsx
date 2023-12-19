@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { openModal } from '@/redux/slices/modal'
 import { useRouter } from 'next/router'
+import Image from 'next/image'
+import { listingTypes } from '@/constants/constant'
 
 type Props = {
   data: ProfilePageData['pageData']
@@ -12,6 +14,23 @@ type Props = {
 
 const ProfilePagesList = ({ data }: Props) => {
   const router = useRouter()
+
+  function getClassName(type: any) {
+    if (type === 'user') {
+      return 'default-user-icon'
+    } else if (type === listingTypes.PEOPLE) {
+      return 'default-people-listing-icon'
+    } else if (type === listingTypes.PLACE) {
+      return 'default-place-listing-icon'
+    } else if (type === listingTypes.PROGRAM) {
+      return 'default-program-listing-icon'
+    } else if (type === listingTypes.PRODUCT) {
+      return 'default-product-listing-icon'
+    } else if (type === 'listing') {
+      return 'default-people-listing-icon'
+    }
+  }
+
   return (
     <PageContentBox>
       <h4 className={styles['heading']}>Pages</h4>
@@ -24,10 +43,17 @@ const ProfilePagesList = ({ data }: Props) => {
               onClick={() => router.push(`/page/${item.page_url}`)}
             >
               {item.profile_image ? (
-                <img src={item.profile_image} />
+                <div className={styles.listingIcon}>
+                  <Image
+                    alt="PageIcon"
+                    height={32}
+                    width={32}
+                    src={item.profile_image}
+                  />
+                </div>
               ) : (
                 <div
-                  className={`${styles.defaultImg} default-people-listing-icon`}
+                  className={`${styles.defaultImg} ${getClassName(item.type)}`}
                 ></div>
               )}
               <p>{item?.title}</p>

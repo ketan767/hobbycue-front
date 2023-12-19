@@ -401,6 +401,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
                   )}
                 </button>
               </section>
+              <p className={styles['helper-text']}>{error}</p>
 
               {/* Hobbies List, that are already Added */}
               <h3 className={styles['heading']}>Added Hobbies</h3>
@@ -452,7 +453,6 @@ const ListingHobbyEditModal: React.FC<Props> = ({
                   </tbody>
                 </table>
               </section>
-              <p className={styles['helper-text']}>{error}</p>
             </section>
           </>
         </section>
