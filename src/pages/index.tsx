@@ -29,6 +29,32 @@ const Home: React.FC<PropTypes> = function () {
       router.push('/community')
     }
   }, [user.isLoggedIn])
+
+
+  useEffect(() => {
+    // Save the scroll position before navigating to another page
+    const handleBeforeUnload = () => {
+      localStorage.setItem(`scrollPosition-${router.route}`, window.scrollY.toString());
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    // Restore the scroll position when the component mounts
+    const savedScrollPosition = localStorage.getItem(`scrollPosition-${router.route}`);
+    if (savedScrollPosition) {
+      const scrollPosition = parseInt(savedScrollPosition, 10);
+      window.scrollTo(0, scrollPosition);
+    }
+
+    // Clean up the event listener
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      if (localStorage.getItem(`scrollPosition-${router.route}`)) {
+        localStorage.removeItem(`scrollPosition-${router.route}`);
+      }    
+    };
+  }, [router.route]);
+
   return (
     <>
       <Head>
@@ -102,7 +128,7 @@ const Home: React.FC<PropTypes> = function () {
               Find a teacher, coach, or expert for your hobby interest in your
               locality. Find a partner, teammate, accompanist or collaborator.
             </p>
-            <OutlinedButton className={styles['card-btn']} onClick={openLogin}>
+            <OutlinedButton className={styles['card-btn']} onClick={()=>router.push('/search')}>
               Connect
             </OutlinedButton>
           </div>
@@ -124,7 +150,7 @@ const Home: React.FC<PropTypes> = function () {
               event venue. Book a slot at venues that allow booking through
               hobbycue.
             </p>
-            <OutlinedButton className={styles['card-btn']} onClick={openLogin}>
+            <OutlinedButton className={styles['card-btn']} onClick={()=>router.push('/search')}>
               Meet up
             </OutlinedButton>
           </div>
@@ -150,7 +176,7 @@ const Home: React.FC<PropTypes> = function () {
               Find equipment or supplies required for your hobby. Buy, rent or
               borrow from shops, online stores or from community members.
             </p>
-            <OutlinedButton className={styles['card-btn']} onClick={openLogin}>
+            <OutlinedButton className={styles['card-btn']} onClick={()=>router.push('/search')}>
               Get it
             </OutlinedButton>
           </div>
@@ -181,7 +207,7 @@ const Home: React.FC<PropTypes> = function () {
               Find events, meetups and workshops related to your hobby. Register
               or buy tickets online.
             </p>
-            <OutlinedButton className={styles['card-btn']} onClick={openLogin}>
+            <OutlinedButton className={styles['card-btn']} onClick={()=>router.push('/search')}>
               Attend
             </OutlinedButton>
           </div>
@@ -212,7 +238,7 @@ const Home: React.FC<PropTypes> = function () {
               venue or event tickets? Or, you know someone who should be on
               hobbycue? Go ahead and Add your Own page..{' '}
             </p>
-            <OutlinedButton className={styles['card-btn']} onClick={openLogin}>
+            <OutlinedButton className={styles['card-btn']} onClick={()=>router.push('/add-listing')}>
               Add new
             </OutlinedButton>
           </div>

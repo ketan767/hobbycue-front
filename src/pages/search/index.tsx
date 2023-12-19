@@ -222,9 +222,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
   return (
     //hobby
     <main className={styles.searchResults}>
-      {noResultsFound ? (
-        <div className="no-results-message">No results found.</div>
-      ) : (
+      {!noResultsFound && (
         <div>
           {/* <section className={styles.userSection}>
         <div className={styles.peopleItemsContainer}>
