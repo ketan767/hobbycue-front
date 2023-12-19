@@ -36,6 +36,15 @@
   .modal-wrapper .body {
     height: 100%;
   }
+  .input-box {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-32);
+    position: absolute;
+    top: 152px;
+    width: 92%;
+  }
 }
 .modal-wrapper .header,
 .modal-wrapper .body {
@@ -355,5 +364,14 @@
   .modal-wrapper {
     max-height: calc(100vh - 2rem);
     height: 100%;
+  }
+  .input-box {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-32);
+    position: absolute;
+    top: 112px;
+    width: 92%;
   }
 }

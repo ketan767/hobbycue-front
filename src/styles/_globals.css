@@ -340,6 +340,15 @@ select:-webkit-autofill {
     display: none;
   }
 
+  .ql-toolbar.ql-snow .ql-formats button{
+    padding: 0 7px !important;
+  }
+
+  .ql-formats{
+    display: flex;
+    flex-direction: row !important;
+  }
+
   .modal-mob-btn {
     display: block;
     --color: rgb(var(--white-rgb));
@@ -389,6 +398,16 @@ select:-webkit-autofill {
     display: block;
   }
 
+}
+@media screen and (max-width: 500px) {
+  .ql-toolbar.ql-snow .ql-formats button{
+    padding: 0 4px !important;
+  }
+}
+@media screen and (max-width: 380px) {
+  .ql-toolbar.ql-snow .ql-formats button{
+    padding: 0 1px !important;
+  }
 }
 
 .custom-scrollbar {

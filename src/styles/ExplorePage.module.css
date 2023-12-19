@@ -1,0 +1,20 @@
+.explore-wrapper {
+    background-color: var(--bg-rgb);
+    height: 89vh;
+    padding: 1rem 0;
+  }
+  .explore {
+    margin: 0rem 7rem;
+    padding: 1.2rem 1.2rem;
+    border: 2px solid rgb(242, 242, 242);
+    border-radius: 10px;
+    background-color: #ffffff;
+    height: 90%;
+  }
+  
+  .explore p {
+    color: #6d747a;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
