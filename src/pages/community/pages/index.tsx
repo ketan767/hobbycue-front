@@ -4,7 +4,11 @@ import styles from '@/styles/Community.module.css'
 import { useSelector } from 'react-redux'
 import store, { RootState } from '@/redux/store'
 import { getAllPosts } from '@/services/post.service'
-import { updatePages, updatePosts } from '@/redux/slices/post'
+import {
+  updatePages,
+  updatePosts,
+  updatePagesLoading,
+} from '@/redux/slices/post'
 import PostCard from '@/components/PostCard/PostCard'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
@@ -41,6 +45,7 @@ const CommunityPages: React.FC<Props> = ({}) => {
       )
       store.dispatch(updatePages(filteredListings))
     }
+    store.dispatch(updatePagesLoading(false))
   }
 
   function filterListingsByHobbyDisplayNames(
