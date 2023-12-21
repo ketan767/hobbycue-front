@@ -40,6 +40,8 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
 
   const [pageData, setPageData] = useState(data.pageData)
   const [loadingPosts, setLoadingPosts] = useState(false)
+  const [displayAbout, setDisplayAbout] = useState(false)
+  const [displayOther, setDisplayOther] = useState(false)
 
   const [posts, setPosts] = useState([])
   const router = useRouter()
@@ -120,10 +122,13 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                     openModal({ type: 'profile-about-edit', closable: true }),
                   )
                 }
+                setDisplayData={setDisplayAbout}
               >
                 <h4>About</h4>
                 <div
-                  className={`${styles['color-light']} ${styles['about-text']}`}
+                  className={`${styles['color-light']} ${styles['about-text']}${
+                    displayAbout ? ' ' + styles['display-flex-col'] : ''
+                  }`}
                   dangerouslySetInnerHTML={{ __html: pageData?.about }}
                 ></div>
               </PageContentBox>
@@ -136,23 +141,30 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                     openModal({ type: 'profile-general-edit', closable: true }),
                   )
                 }
+                // setDisplayData={setDisplayOther}
               >
-                <h4>Profile URL</h4>
-                <p className={styles['color-light']}>{pageData.profile_url}</p>
-                {pageData.gender && (
-                  <>
-                    <h4>Gender</h4>
-                    <p className={styles['color-light']}>{pageData.gender}</p>
-                  </>
-                )}
-                {pageData.year_of_birth && (
-                  <>
-                    <h4>Year Of Birth</h4>
-                    <p className={styles['color-light']}>
-                      {pageData.year_of_birth}
-                    </p>
-                  </>
-                )}
+                {/* <div
+                  className={`${styles['display-mobile-none']}${
+                    displayOther ? ' ' + styles['display-flex-col'] : ''
+                  }`}
+                > */}
+                  <h4>Profile URL</h4>
+                  <p className={styles['color-light']}>{pageData.profile_url}</p>
+                  {pageData.gender && (
+                    <>
+                      <h4>Gender</h4>
+                      <p className={styles['color-light']}>{pageData.gender}</p>
+                    </>
+                  )}
+                  {pageData.year_of_birth && (
+                    <>
+                      <h4>Year Of Birth</h4>
+                      <p className={styles['color-light']}>
+                        {pageData.year_of_birth}
+                      </p>
+                    </>
+                  )}
+                {/* </div> */}
               </PageContentBox>
 
               <section className={styles['posts-container']}>

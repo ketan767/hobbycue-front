@@ -358,8 +358,4 @@
     height: auto !important;
     overflow: auto;
   }
-
-  .img-optional{
-    display: none;
-  }
 }

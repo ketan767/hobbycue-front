@@ -16,6 +16,7 @@ const ProfileContactSide = ({ data }: Props) => {
   const ulRef = useRef(null)
   const dispatch = useDispatch()
   const [showText, setShowText] = useState(false)
+  const [displayData, setDisplayData] = useState(false)
 
   useEffect(() => {
     const ulElement: any = ulRef.current
@@ -34,9 +35,14 @@ const ProfileContactSide = ({ data }: Props) => {
         onEditBtnClick={() =>
           dispatch(openModal({ type: 'profile-contact-edit', closable: true }))
         }
+        setDisplayData={setDisplayData}
       >
         <h4 className={styles['heading']}>Contact Information</h4>
-        <ul className={styles['contact-wrapper']} ref={ulRef}>
+        <ul
+          className={`${styles['contact-wrapper']} ${
+            displayData && styles['display-mobile-flex']
+          }`}
+        >
           {/* Phone */}
           {data.phone && (
             <Link href={`tel:${data?.name}`}>

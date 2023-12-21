@@ -52,3 +52,12 @@ ul.contact-wrapper svg {
   overflow: hidden;
   color: #08090A;
 }
+
+@media screen and (max-width: 1100px) {
+  .contact-wrapper{
+    display: none !important;
+  }
+  .display-mobile-flex{
+    display: flex !important;
+  }
+}

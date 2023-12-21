@@ -55,5 +55,18 @@
   height: auto !important;
   overflow: auto;
 }
+
+.display-flex-col{
+  display: flex !important;
+  flex-direction: column;
+}
+
+.display-mobile-none{
+  display: none;
+}
+
+.about-text{
+  display: none;
+}
 }
 

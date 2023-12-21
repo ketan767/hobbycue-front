@@ -30,6 +30,7 @@ type Props = {
 
 const ProfileSocialMediaSide = ({ data }: Props) => {
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
+  const [displayData, setDisplayData] = useState(false)
   function renderSocialLink(url: any, iconSrc: any, altText: any) {
     if (!url) return null
     return (
@@ -69,9 +70,14 @@ const ProfileSocialMediaSide = ({ data }: Props) => {
         onEditBtnClick={() =>
           dispatch(openModal({ type: 'social-media-edit', closable: true }))
         }
+        setDisplayData={setDisplayData}
       >
         <h4 className={styles['heading']}>Social Media</h4>
-        <ul className={styles['contact-wrapper']}>
+        <ul
+          className={`${styles['contact-wrapper']} ${
+            displayData && styles['display-mobile-flex']
+          }`}
+        >
           {data?.social_media_urls && (
             <>
               {renderSocialLink(

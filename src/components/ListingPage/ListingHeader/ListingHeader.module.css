@@ -408,7 +408,4 @@
   .container:has(.header).small {
     display: none;
   }
-  .img-optional{
-    display: none;
-  }
 }
