@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
-
+import styles from '@/styles/Page.module.css'
 import { GetServerSideProps } from 'next'
 import { getAllUserDetail } from '@/services/user.service'
 import Head from 'next/head'
@@ -36,7 +36,14 @@ const ListingReviews: React.FC<Props> = (props) => {
 
       <ListingPageLayout activeTab={'reviews'} data={props.data}>
         <ListingPageMain data={props.data.pageData}>
-          <div></div>
+          <section className={styles['data-container']}>
+            <div className={styles['no-data-div']}>
+              <p className={styles['no-data-text']}>
+                This feature is under development. Come back soon to view this
+              </p>
+            </div>
+            <div className={styles['no-data-div']}></div>
+          </section>{' '}
         </ListingPageMain>
       </ListingPageLayout>
     </>

@@ -28,6 +28,9 @@
   column-gap: 12px;
   align-items: center;
 }
+.header-icons > a {
+  display: flex;
+}
 .header-icons img {
   width: 24px;
   height: 24px;
@@ -38,10 +41,26 @@
   border-radius: 50%;
 }
 
+.view-profile-btn {
+  background: #ffffff;
+  border: 1px solid #8064a2;
+  border-radius: 8px;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  color: #8064a2;
+  width: 100%;
+  padding: var(--spacing-4);
+  cursor: pointer;
+  margin: 0 0 5px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .main {
   padding: 1rem;
-  padding-top: 24px;
-
 }
 .profile {
   display: flex;
@@ -109,7 +128,6 @@
   row-gap: 8px;
   list-style-type: none;
   color: #6D747A;
-  ;
 }
 
 

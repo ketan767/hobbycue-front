@@ -1,15 +1,17 @@
-import React from 'react'
+import React, { SetStateAction, useState } from 'react'
 import styles from './PageContentBox.module.css'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import Tooltip from '@/components/Tooltip/ToolTip'
-
+import ChevronDown from '@/assets/svg/chevron-down.svg'
+import Image from 'next/image'
 type Props = {
   children: React.ReactNode
   showEditButton?: boolean
 
   onEditBtnClick?: () => void
   className?: string
+  setDisplayData?: any
 }
 
 const PageContentBox: React.FC<Props> = ({
@@ -17,17 +19,38 @@ const PageContentBox: React.FC<Props> = ({
   onEditBtnClick,
   showEditButton,
   className,
+  setDisplayData,
 }) => {
+  const [showDropdown, setShowDropdown] = useState(false)
   const { listingLayoutMode } = useSelector((state: RootState) => state.site)
+
+  const onDropdownClick = () => {
+    setShowDropdown((prevValue) => !prevValue)
+    if (setDisplayData !== undefined || null)
+      setDisplayData((prevValue: boolean) => !prevValue)
+  }
 
   return (
     <div className={`${styles['wrapper']} ${className}`}>
       {children}
 
+      {
+        <Image
+          src={ChevronDown}
+          alt=""
+          onClick={onDropdownClick}
+          className={`${styles['dropdown-icon']} ${
+            showDropdown && styles['rotate-180deg']
+          }`}
+        />
+      }
+
       {showEditButton && (
         <svg
           onClick={onEditBtnClick}
-          className={styles['edit-btn']}
+          className={`${styles['edit-btn']} ${
+            showDropdown && styles['display-initial']
+          }`}
           width="17"
           height="16"
           viewBox="0 0 17 16"

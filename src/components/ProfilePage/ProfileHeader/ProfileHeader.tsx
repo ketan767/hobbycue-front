@@ -212,24 +212,14 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
               {data?.cover_image ? (
                 <Image
                   onClick={OpenCoverImage}
-                  className={
-                    activeTab === 'home'
-                      ? `${styles['img']} imageclick`
-                      : `${styles['img-optional']} ${styles['img']}`
-                  }
+                  className={`${styles['img']} imageclick`}
                   src={data.cover_image}
                   alt=""
                   height={296}
                   width={1000}
                 />
               ) : (
-                <div
-                  className={
-                    activeTab === 'home'
-                      ? styles['img']
-                      : `${styles['img-optional']} ${styles['img']}`
-                  }
-                >
+                <div className={styles['img']}>
                   <CoverPhotoLayout
                     onChange={(e: any) => onInputChange(e, 'cover')}
                     profileLayoutMode={profileLayoutMode}

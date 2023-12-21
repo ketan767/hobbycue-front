@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './styles.module.css'
 import PageContentBox from '@/layouts/PageContentBox'
 import { useDispatch, useSelector } from 'react-redux'
@@ -14,7 +14,7 @@ type Props = {
 
 const ProfilePagesList = ({ data }: Props) => {
   const router = useRouter()
-
+  const [displayData, setDisplayData] = useState(false)
   function getClassName(type: any) {
     if (type === 'user') {
       return 'default-user-icon'
@@ -32,9 +32,12 @@ const ProfilePagesList = ({ data }: Props) => {
   }
 
   return (
-    <PageContentBox>
+    <PageContentBox
+    setDisplayData={setDisplayData}
+    >
       <h4 className={styles['heading']}>Pages</h4>
-      <ul className={styles['pages-list']}>
+      <ul className={`${styles['pages-list']} ${displayData&&styles['display-mobile-flex']}`}>
+
         {data.listingsData?.map((item: any) => {
           if (typeof item === 'string') return
           return (

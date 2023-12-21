@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './styles.module.css'
 import PageContentBox from '@/layouts/PageContentBox'
 import { useDispatch, useSelector } from 'react-redux'
@@ -12,6 +12,7 @@ type Props = {
 
 const ProfileHobbySideList = ({ data }: Props) => {
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
+  const [displayData, setDisplayData] = useState(false)
   console.log('data', data)
   const dispatch = useDispatch()
   return (
@@ -21,9 +22,10 @@ const ProfileHobbySideList = ({ data }: Props) => {
         onEditBtnClick={() =>
           dispatch(openModal({ type: 'profile-hobby-edit', closable: true }))
         }
+        setDisplayData={setDisplayData}
       >
         <h4 className={styles['heading']}>Hobbies</h4>
-        <ul className={styles['hobby-list']}>
+        <ul className={`${styles['hobby-list']} ${displayData&&styles['display-mobile-flex']}`}>
           {data._hobbies.map((item: any) => {
             if (typeof item === 'string') return
             return (
