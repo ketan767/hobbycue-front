@@ -15,3 +15,12 @@ ul.contact-wrapper {
    list-style: none;
    cursor: pointer;
 }
+
+@media screen and (max-width: 1100px) {
+  .contact-wrapper{
+    display: none !important;
+  }
+  .display-mobile-flex{
+    display: flex !important;
+  }
+}

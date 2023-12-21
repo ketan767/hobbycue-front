@@ -67,7 +67,9 @@ const CommunityHome: React.FC<Props> = ({}) => {
               )
             })
           ) : allPosts.length === 0 ? (
-            <p className={styles['no-posts-text']}>No posts found</p>
+            <div className={styles['no-posts-div']}>
+            <p className={styles['no-posts-text']}>There were no posts for the hobby and the location you have chosen.<br/>Add other hobbies to your profile, or be the first one to start a conversation on yours</p>
+            </div>
           ) : (
             <></>
           )}

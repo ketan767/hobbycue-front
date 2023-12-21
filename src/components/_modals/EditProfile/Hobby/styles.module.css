@@ -13,17 +13,17 @@
 --bg-color: rgb(var(--primary-100-rgb));
   
   width: 100%;
-  max-width: 4.875rem;
-  height: var(--spacing-40); 
+  max-width: 1.5rem;
+  height: 1.5rem; 
   border: none;
-  border-radius: 8px;
-  background-color: var(--bg-color);
+
+  
   color: var(--color);
-  border: 1px solid rgb(var(--primary-100-rgb));
+  
     
   font-weight: 600;
   font-size: 14px;
-  line-height: 16px;
+
   cursor: pointer;
   
 }
@@ -215,6 +215,7 @@
   font-weight: 500;
   font-size: 14px;
   line-height: 22px;
+  padding-bottom: 20px;
   /* identical to box height, or 157% */
 
   /* Grey/Darkest */

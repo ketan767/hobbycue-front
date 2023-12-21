@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './styles.module.css'
 import PageContentBox from '@/layouts/PageContentBox'
 import { useDispatch, useSelector } from 'react-redux'
@@ -12,6 +12,7 @@ type Props = {
 const ProfileAddressSide = ({ data }: Props) => {
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
   const dispatch = useDispatch()
+  const [displayData, setDisplayData] = useState(false)
   let addressText = ''
   if (data?.primary_address?.street) {
     addressText += `${data?.primary_address?.street}, `
@@ -35,9 +36,14 @@ const ProfileAddressSide = ({ data }: Props) => {
         onEditBtnClick={() =>
           dispatch(openModal({ type: 'profile-address-edit', closable: true }))
         }
+        setDisplayData={setDisplayData}
       >
         <h4 className={styles['heading']}>Location</h4>
-        <ul className={styles['location-wrapper']}>
+        <ul
+          className={`${styles['location-wrapper']} ${
+            displayData && styles['display-mobile-flex']
+          }`}
+        >
           <li>
             <svg
               width="24"

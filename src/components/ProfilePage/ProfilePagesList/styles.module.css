@@ -40,3 +40,12 @@
 .pages-list .color-light{
   color: #939CA3 ;
 }
+
+@media screen and (max-width: 1100px) {
+  .pages-list{
+    display: none;
+  }
+  .display-mobile-flex{
+    display: flex;
+  }
+}

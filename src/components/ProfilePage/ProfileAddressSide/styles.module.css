@@ -30,3 +30,12 @@ ul.contact-wrapper svg {
   width: 100%;
   aspect-ratio: 1/1;
 }
+
+@media screen and (max-width:1100px) {
+  .location-wrapper{
+    display: none !important;
+  }
+  .display-mobile-flex{
+    display: flex !important;
+  }
+}

@@ -27,6 +27,8 @@ const ListingHomeTab: React.FC<Props> = ({ data, AboutErr }) => {
   // console.log('🚀 ~ file: ListingHomeTab.tsx:17 ~ data:', data)
   const dispatch = useDispatch()
   const [pagesData, setPagesData] = useState([])
+  const [displayOthers, setDisplayOthers] = useState(false)
+  const [displayAbout, setDisplayAbout] = useState(false)
 
   const { listingLayoutMode } = useSelector((state: RootState) => state.site)
 
@@ -61,12 +63,19 @@ const ListingHomeTab: React.FC<Props> = ({ data, AboutErr }) => {
           onEditBtnClick={() =>
             dispatch(openModal({ type: 'listing-about-edit', closable: true }))
           }
+          setDisplayData={setDisplayAbout}
         >
-          <h4>About</h4>
           <div
-            dangerouslySetInnerHTML={{ __html: data?.description }}
-            className={styles['about-text']}
-          ></div>
+            className={`${styles['other-data-wrapper']}${
+              displayOthers ? ' ' + styles['display-flex'] : ''
+            }`}
+          >
+            <h4>About</h4>
+            <div
+              dangerouslySetInnerHTML={{ __html: data?.description }}
+              className={`${styles['about-text']}}`}
+            ></div>
+          </div>
         </PageContentBox>
 
         {/* User Information */}
@@ -77,27 +86,30 @@ const ListingHomeTab: React.FC<Props> = ({ data, AboutErr }) => {
               openModal({ type: 'listing-general-edit', closable: true }),
             )
           }
+          setDisplayData={setDisplayOthers}
         >
-          <h4>Profile URL</h4>
-          <div>{data?.page_url}</div>
-          {data?.gender && (
-            <>
-              <h4>Gender</h4>
-              <div>{data?.gender}</div>
-            </>
-          )}
-          {data?.year && (
-            <>
-              <h4>Year</h4>
-              <div>{data?.year}</div>
-            </>
-          )}
-          {data?.admin_note && (
-            <>
-              <h4>Notes</h4>
-              <div>{data?.admin_note}</div>
-            </>
-          )}
+          <div className={`${styles['other-data-wraper']}${displayOthers ?" "+ styles['display-flex'] : ''}`}>
+            <h4>Profile URL</h4>
+            <div>{data?.page_url}</div>
+            {data?.gender && (
+              <>
+                <h4>Gender</h4>
+                <div>{data?.gender}</div>
+              </>
+            )}
+            {data?.year && (
+              <>
+                <h4>Year</h4>
+                <div>{data?.year}</div>
+              </>
+            )}
+            {data?.admin_note && (
+              <>
+                <h4>Notes</h4>
+                <div>{data?.admin_note}</div>
+              </>
+            )}
+          </div>
         </PageContentBox>
 
         <ListingPostsTab data={data} hideStartPost={true} />
