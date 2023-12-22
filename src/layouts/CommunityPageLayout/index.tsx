@@ -55,7 +55,7 @@ const CommunityLayout: React.FC<Props> = ({
   const [locations, setLocations] = useState([])
   const [selectedHobby, setSelectedHobby] = useState('')
   const [selectedGenre, setSelectedGenre] = useState('')
-  const [selectedLocation, setSelectedLocation] = useState('Everyone')
+  const [selectedLocation, setSelectedLocation] = useState('')
 
   const tabs: CommunityPageTabs[] = [
     'posts',
@@ -662,9 +662,7 @@ const CommunityLayout: React.FC<Props> = ({
                       onChange={(e) => handleHobbyClick(e.target.value)}
                       displayEmpty
                     >
-                      <MenuItem value="">
-                        <em>Hobby</em>
-                      </MenuItem>
+                      <MenuItem value="">All Hobbies </MenuItem>
                       {activeProfile.data?._hobbies?.map(
                         (item: any, idx: any) => (
                           <MenuItem key={idx} value={item.hobby._id}>
@@ -673,26 +671,21 @@ const CommunityLayout: React.FC<Props> = ({
                         ),
                       )}
                     </Select>
+                    <div className={styles.hobbyDropDownOption}>at</div>
 
                     {visibilityData?.length > 0 && (
                       <Select
                         value={selectedLocation}
-                        onChange={(e: any) =>
-                          setSelectedLocation(e.target.value)
-                        }
                         // inputProps={{ 'aria-label': 'Without label' }}
                         className={` ${styles['location-select']}`}
                       >
-                        <MenuItem value={selectedLocation}>
-                          {selectedLocation}
-                        </MenuItem>
                         {visibilityData?.map((item: any, idx) => {
                           return (
                             <>
                               <DropdownOption
                                 {...item}
                                 key={idx}
-                                currentValue={selectedLocation}
+                                value={selectedLocation}
                                 onChange={(val: any) =>
                                   setSelectedLocation(val)
                                 }
@@ -700,6 +693,15 @@ const CommunityLayout: React.FC<Props> = ({
                             </>
                           )
                         })}
+                        <MenuItem className={styles.editLocation} value="">
+                          Edit Location
+                          <Image
+                            src={EditIcon}
+                            onClick={EditProfileLocation}
+                            className={styles.editLocationResponsive}
+                            alt="edit"
+                          />
+                        </MenuItem>
                       </Select>
                     )}
                   </div>

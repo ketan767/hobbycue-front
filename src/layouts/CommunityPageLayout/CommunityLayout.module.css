@@ -498,6 +498,7 @@
     transform: translateY(calc(0 * var(--navbar-height-desktop)));
     z-index: 1;
     background-color: white;
+    padding: 8px 16px ;
   }
   .community-header .top-margin-card {
     height: 0;
@@ -518,6 +519,22 @@
   }
   .location-select {
     width: 144px;
+  }
+  .hobbyDropDownOption {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-size: 14px;
+    color: var(--Grey-Darker, #6D747A);
+    padding: 0 8px;
+  }
+  .editLocation{
+    color: var(--Grey-Darker, #6D747A);
+    font: "Poppins";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+
+    letter-spacing: 0.07px;
   }
  
 
