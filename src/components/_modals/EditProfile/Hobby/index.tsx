@@ -18,7 +18,9 @@ import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
 import SaveModal from '../../SaveModal/saveModal'
 import CloseIcon from '@/assets/icons/CloseIcon'
-
+import hobbyLvlOne from '@/assets/svg/hobby_level_One.svg'
+import hobbyLvlTwo from '@/assets/svg/hobby_level_Two.svg'
+import hobbyLvlThree from '@/assets/svg/hobby_level_Three.svg'
 import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import Image from 'next/image'
@@ -91,6 +93,11 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const [genreDropdownList, setGenreDropdownList] = useState<
     DropdownListItem[]
   >([])
+  const levels = [
+    { name: 'Beginner', src: hobbyLvlOne },
+    { name: 'Intermediate', src: hobbyLvlTwo },
+    { name: 'Advanced', src: hobbyLvlThree },
+  ]
 
   const [initialData, setInitialData] = useState({})
   const [isChanged, setIsChanged] = useState(false)
@@ -369,8 +376,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                 <table>
                   <thead>
                     <tr>
-                      <td>Hobby</td>
-                      <td>Genre/Style</td>
+                      <td>Hobby - Genre/Style</td>
                       <td>Level</td>
                       <td>Action</td>
                     </tr>
@@ -379,8 +385,14 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                     {userHobbies?.map((hobby: any) => {
                       return (
                         <tr key={hobby._id}>
-                          <td>{hobby?.hobby?.display}</td>
-                          <td>{hobby?.genre?.display || '-'}</td>
+                          <td>
+                            {`${hobby?.hobby?.display}${
+                              hobby?.genre?.display
+                                ? ' - ' + hobby?.genre?.display
+                                : ''
+                            }`}
+                          </td>
+
                           <td>
                             {/* {hobby.level === 1
                               ? 'Beginner'
@@ -405,10 +417,16 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                               }}
                               displayEmpty
                             >
-                              {levels?.map((item: any, idx) => {
+                              {levels.map((item, idx) => {
                                 return (
                                   <MenuItem key={idx} value={idx + 1}>
-                                    <p>{item}</p>
+                                    <div className={styles.levelwithtext}>
+                                      <Image
+                                        alt={`hobby${idx + 1}`}
+                                        src={item.src}
+                                      />
+                                      <p>{item.name}</p>
+                                    </div>
                                   </MenuItem>
                                 )
                               })}
@@ -445,7 +463,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                       )
                     })}
                     <tr>
-                      <td>
+                      <td className={styles.AddHobbyFields}>
                         {/* Hobby Input and Dropdown */}
                         <section className={styles['dropdown-warpper']}>
                           <div
@@ -487,8 +505,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                               </div>
                             )}
                         </section>
-                      </td>
-                      <td>
+
                         <section className={styles['dropdown-warpper']}>
                           <div className={styles['input-box']}>
                             <input
@@ -529,8 +546,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                               </div>
                             )}
                         </section>
-                      </td>
-                      <td>
+
                         <FormControl
                           variant="outlined"
                           size="small"
@@ -547,13 +563,27 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                             displayEmpty
                             inputProps={{ 'aria-label': 'Without label' }}
                           >
-                            <MenuItem value={1}>{'Beginner'}</MenuItem>
-                            <MenuItem value={2}>{'Intermediate'}</MenuItem>
-                            <MenuItem value={3}>{'Advanced'}</MenuItem>
+                            <MenuItem
+                              className={styles.levelwithtext}
+                              value={1}
+                            >
+                              <Image alt="hobbyOne" src={hobbyLvlOne}></Image>
+                              {'Beginner'}
+                            </MenuItem>
+                            <MenuItem value={2}>
+                              <Image alt="hobbyTwo" src={hobbyLvlTwo}></Image>
+                              {'Intermediate'}
+                            </MenuItem>
+                            <MenuItem value={3}>
+                              <Image
+                                alt="hobbyThree"
+                                src={hobbyLvlThree}
+                              ></Image>
+                              {'Advanced'}
+                            </MenuItem>
                           </Select>
                         </FormControl>
-                      </td>
-                      <td>
+
                         <button
                           disabled={addHobbyBtnLoading}
                           className={styles['add-btn']}
