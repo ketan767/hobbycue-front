@@ -31,6 +31,7 @@ import InputSelect from '@/components/_formElements/Select/Select'
 import { DropdownOption } from '@/components/_modals/CreatePost/Dropdown/DropdownOption'
 import { getListingPages } from '@/services/listing.service'
 import { setShowPageLoader } from '@/redux/slices/site'
+import { InviteToCommunity } from '@/services/auth.service'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -53,6 +54,7 @@ const CommunityLayout: React.FC<Props> = ({
     display: '',
   })
   const [locations, setLocations] = useState([])
+  const [email, setEmail] = useState('')
   const [selectedHobby, setSelectedHobby] = useState('')
   const [selectedGenre, setSelectedGenre] = useState('')
   const [selectedLocation, setSelectedLocation] = useState('')
@@ -387,6 +389,17 @@ const CommunityLayout: React.FC<Props> = ({
     }
   }, [activeProfile])
 
+  const Invitecommunity = async () => {
+    const to = email
+    const name = activeProfile?.data.full_name
+    const { err, res } = await InviteToCommunity({
+      to,
+      name,
+    })
+
+    setEmail('')
+  }
+
   return (
     <>
       <PageGridLayout
@@ -662,7 +675,7 @@ const CommunityLayout: React.FC<Props> = ({
                       onChange={(e) => handleHobbyClick(e.target.value)}
                       displayEmpty
                     >
-                      <MenuItem value="">All Hobbies </MenuItem>
+                      <MenuItem value="">All Hobbies</MenuItem>
                       {activeProfile.data?._hobbies?.map(
                         (item: any, idx: any) => (
                           <MenuItem key={idx} value={item.hobby._id}>
@@ -670,6 +683,32 @@ const CommunityLayout: React.FC<Props> = ({
                           </MenuItem>
                         ),
                       )}
+                      <MenuItem
+                        onClick={() => {
+                          if (activeProfile?.type === 'user') {
+                            dispatch(
+                              openModal({
+                                type: 'profile-hobby-edit',
+                                closable: true,
+                              }),
+                            )
+                          } else {
+                            dispatch(
+                              openModal({
+                                type: 'listing-hobby-edit',
+                                closable: true,
+                              }),
+                            )
+                          }
+                        }}
+                      >
+                        Edit Hobbies
+                        <Image
+                          src={EditIcon}
+                          className={styles.hobbyeditresponsive}
+                          alt="edit"
+                        />{' '}
+                      </MenuItem>
                     </Select>
                     <div className={styles.hobbyDropDownOption}>at</div>
 
@@ -685,7 +724,7 @@ const CommunityLayout: React.FC<Props> = ({
                               <DropdownOption
                                 {...item}
                                 key={idx}
-                                value={selectedLocation}
+                                currentValue={selectedLocation}
                                 onChange={(val: any) =>
                                   setSelectedLocation(val)
                                 }
@@ -693,11 +732,13 @@ const CommunityLayout: React.FC<Props> = ({
                             </>
                           )
                         })}
-                        <MenuItem className={styles.editLocation} value="">
+                        <MenuItem
+                          className={styles.editLocation}
+                          onClick={EditProfileLocation}
+                        >
                           Edit Location
                           <Image
                             src={EditIcon}
-                            onClick={EditProfileLocation}
                             className={styles.editLocationResponsive}
                             alt="edit"
                           />
@@ -747,9 +788,15 @@ const CommunityLayout: React.FC<Props> = ({
               </header>
               <span className={styles['divider']}></span>
               <section>
-                <input type="text" name="" id="" />
+                <input
+                  value={email}
+                  name="society"
+                  onChange={(e: any) => setEmail(e.target.value)}
+                  type="email"
+                  id=""
+                />
                 <span className={styles['input-prefix']}></span>
-                <FilledButton>Invite</FilledButton>
+                <FilledButton onClick={Invitecommunity}>Invite</FilledButton>
               </section>
             </section>
 
