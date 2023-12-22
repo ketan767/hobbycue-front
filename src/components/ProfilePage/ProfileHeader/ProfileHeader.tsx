@@ -29,13 +29,13 @@ import useOutsideClick from '@/hooks/useOutsideClick'
 import RepostIcon from '../../../assets/icons/RepostIcon'
 import ShareIcon from '@/assets/icons/ShareIcon'
 import { updateImageUrl } from '@/redux/slices/modal'
+import ProfileNavigationLinks from './ProfileNavigationLinks'
 
 type Props = {
-  activeTab: ProfilePageTabs
   data: ProfilePageData['pageData']
 }
 
-const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
+const ProfileHeader: React.FC<Props> = ({ data }) => {
   const router = useRouter()
   const dispatch = useDispatch()
   const [open, setOpen] = useState(false)
@@ -350,24 +350,7 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
             </div>
           </div>
         </header>
-        {/* Navigation Links */}
-        <nav className={styles['nav']}>
-          <div className={styles['navigation-tabs']}>
-            {tabs.map((tab) => {
-              return (
-                <Link
-                  key={tab}
-                  href={`/profile/${router.query.profile_url}/${
-                    tab !== 'home' ? tab : ''
-                  }`}
-                  className={activeTab === tab ? styles['active'] : ''}
-                >
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </Link>
-              )
-            })}
-          </div>
-        </nav>
+
       </div>
     </>
   )

@@ -6,7 +6,8 @@ import { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
 import { updateProfileLayoutMode } from '@/redux/slices/site'
 import ProfileHeaderSmall from '@/components/ProfilePage/ProfileHeader/ProfileHeaderSmall'
-
+import ProfileNavigationLinks from '@/components/ProfilePage/ProfileHeader/ProfileNavigationLinks'
+import styles from './styles.module.css'
 type Props = {
   activeTab: ProfilePageTabs
   data: ProfilePageData
@@ -57,7 +58,10 @@ const ProfileLayout: React.FC<Props> = ({ children, activeTab, data }) => {
   return (
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
-      <ProfileHeader data={data.pageData} activeTab={activeTab} />
+      <ProfileHeader data={data.pageData} />
+      <div className={styles['nav']}>
+        <ProfileNavigationLinks activeTab={activeTab} />
+      </div>
       {showSmallHeader && (
         <ProfileHeaderSmall data={data.pageData} activeTab={activeTab} />
       )}
