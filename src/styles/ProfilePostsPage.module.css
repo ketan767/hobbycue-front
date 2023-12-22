@@ -12,6 +12,11 @@
   margin-bottom: 1rem;
   border: 0;
 }
+
+.start-post-btn-container-mobile{
+  display: none;
+}
+
 .start-post-btn {
   padding: var(--spacing-12) var(--spacing-16);
   width: 100%;
@@ -23,7 +28,7 @@
   border: none;
   border-radius: 60px;
 
-  background: #F7F5F9;
+  background: #f7f5f9;
   cursor: pointer;
 
   font-weight: 400;
@@ -32,8 +37,33 @@
   color: #8064a2;
 }
 
+.posts-container-mobile {
+  display: none;
+}
+
+.nav-mobile {
+  display: none;
+}
+
 @media screen and (max-width: 1100px) {
-  .asideView  {
+  .start-post-btn-container {
     display: none;
+  }
+  .start-post-btn-container-mobile {
+    display: initial;
+    padding: 8px 16px;
+    background-color: #ffffff;
+  }
+  .posts-container {
+    display: none;
+  }
+  .posts-container-mobile {
+    display: initial;
+  }
+  .nav-mobile {
+    display: initial;
+    padding: 10px 0 0 0;
+    background-color: #ffffff;
+    margin: 0 0 8px 0;
   }
 }

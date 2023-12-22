@@ -31,7 +31,7 @@ const PageContentBox: React.FC<Props> = ({
   }
 
   return (
-    <div className={`${styles['wrapper']} ${className}`}>
+    <div className={`${styles['wrapper']}${className?" "+className:''}`}>
       {children}
 
       {
