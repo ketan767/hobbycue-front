@@ -65,3 +65,12 @@ interface ClaimListingPayload {
   HowRelated: string
   link: string
 }
+
+interface InvitetoHobbycuePayload {
+  to:string
+}
+
+interface InviteToCommunityPayload {
+  to:string
+  name: string
+}

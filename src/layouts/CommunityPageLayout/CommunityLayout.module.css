@@ -536,6 +536,12 @@
 
     letter-spacing: 0.07px;
   }
+  .editLocationResponsive{
+    margin-left: auto;
+  }
  
+  .hobbyeditresponsive{
+    margin-left: auto;
+  }
 
 }
