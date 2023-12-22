@@ -57,11 +57,17 @@
 }
 
 @media screen and (max-width: 1100px) {
+  .wrapper{
+    margin-bottom:0;
+  }
   .dropdown-icon{
     display: initial;
   }
   .wrapper .edit-btn{
     right: 3.5rem;
     display: none;
+  }
+  .wrapper > h4 {
+    margin-bottom:0;
   }
 }

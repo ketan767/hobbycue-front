@@ -29,6 +29,7 @@ import { getListingPages } from '@/services/listing.service'
 import PostWrapper from '@/layouts/PinnedPost/PinnedPost'
 import { updateUser } from '@/redux/slices/user'
 import { withAuth } from '@/navigation/withAuth'
+import ProfileNavigationLinks from '@/components/ProfilePage/ProfileHeader/ProfileNavigationLinks'
 
 interface Props {
   data: ProfilePageData
@@ -127,7 +128,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                 <h4>About</h4>
                 <div
                   className={`${styles['color-light']} ${styles['about-text']}${
-                    displayAbout ? ' ' + styles['display-flex-col'] : ''
+                    displayAbout ? ' ' + styles['about-text-mobile'] : ''
                   }`}
                   dangerouslySetInnerHTML={{ __html: pageData?.about }}
                 ></div>
@@ -141,30 +142,46 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                     openModal({ type: 'profile-general-edit', closable: true }),
                   )
                 }
-                // setDisplayData={setDisplayOther}
+                setDisplayData={setDisplayOther}
               >
-                {/* <div
+                <h4 className={styles['other-info-heading']}>
+                  Other Information
+                </h4>
+                <div
                   className={`${styles['display-mobile-none']}${
-                    displayOther ? ' ' + styles['display-flex-col'] : ''
+                    displayOther
+                      ? ' ' +
+                        styles['display-flex-col'] +
+                        ' ' +
+                        styles['other-info-mob-div']
+                      : ''
                   }`}
-                > */}
-                  <h4>Profile URL</h4>
-                  <p className={styles['color-light']}>{pageData.profile_url}</p>
+                >
+                  <h4 className={styles['other-info-subheading']}>
+                    Profile URL
+                  </h4>
+                  <p className={styles['color-light']}>
+                    {pageData.profile_url}
+                  </p>
                   {pageData.gender && (
                     <>
-                      <h4>Gender</h4>
+                      <h4 className={styles['other-info-subheading']}>
+                        Gender
+                      </h4>
                       <p className={styles['color-light']}>{pageData.gender}</p>
                     </>
                   )}
                   {pageData.year_of_birth && (
                     <>
-                      <h4>Year Of Birth</h4>
+                      <h4 className={styles['other-info-subheading']}>
+                        Year Of Birth
+                      </h4>
                       <p className={styles['color-light']}>
                         {pageData.year_of_birth}
                       </p>
                     </>
                   )}
-                {/* </div> */}
+                </div>
               </PageContentBox>
 
               <section className={styles['posts-container']}>
@@ -211,6 +228,45 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
               <ProfileContactSide data={pageData} />
               <ProfileSocialMediaSide data={pageData} />
             </aside>
+            
+            <div className={styles['nav-mobile']}>
+            <ProfileNavigationLinks activeTab={'home'}/>
+            </div>
+
+            <section className={styles['posts-container-mobile']}>
+                {loadingPosts ? (
+                  <PostCardSkeletonLoading />
+                ) : (
+                  posts.length === 0 && 'No Posts'
+                )}
+
+                {pinnedPosts.map((post: any) => {
+                  return (
+                    <PostWrapper title="Pinned Post" key={post._id}>
+                      <PostCard
+                        key={post._id}
+                        postData={post}
+                        fromProfile={true}
+                        onPinPost={onPinPost}
+                      />
+                    </PostWrapper>
+                  )
+                })}
+                {unpinnnedPosts.length > 0 && (
+                  <PostWrapper title="Recent Post">
+                    {unpinnnedPosts.map((post: any) => {
+                      return (
+                        <PostCard
+                          key={post._id}
+                          postData={post}
+                          fromProfile={true}
+                          onPinPost={onPinPost}
+                        />
+                      )
+                    })}
+                  </PostWrapper>
+                )}
+              </section>
           </PageGridLayout>
         )}
       </ProfileLayout>
