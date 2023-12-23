@@ -116,4 +116,7 @@ p.dropdown-value-active{
   .editLocationResponsive{
     margin-left: auto;
   }
+  p.dropdown-value-active{
+    width: auto;
+  }
 }
