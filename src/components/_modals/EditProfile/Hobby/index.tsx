@@ -368,8 +368,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         <section className={styles['body']}>
           <>
             <section className={styles['add-hobbies-wrapper']}>
-              <h3 className={styles['heading']}>Add Hobby</h3>
-
               <p className={styles['helper-text']}>{error}</p>
 
               <section className={styles['added-hobby-list']}>
@@ -378,7 +376,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                     <tr>
                       <td>Hobby - Genre/Style</td>
                       <td>Level</td>
-                      <td>Action</td>
+                      <td className={styles.hideActionMobile}>Action</td>
                     </tr>
                   </thead>
                   <tbody>
