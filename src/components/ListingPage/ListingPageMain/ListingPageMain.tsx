@@ -267,31 +267,25 @@ const ListingPageMain: React.FC<Props> = ({
             setDisplayData={setShowHobbies}
           >
             <h4 className={styles['heading']}>Hobbies</h4>
-            <div
-              className={`${styles['display-desktop']}${
-                showHobbies ? ' ' + styles['display-mobile'] : ''
-              }`}
-            >
-              {!data || data._hobbies.length === 0 ? (
-                <span className={`${styles['textGray']}`}>{'No Hobbies!'}</span>
-              ) : (
-                <ul className={styles['hobby-list']}>
-                  {data?._hobbies?.map((item: any) => {
-                    if (typeof item === 'string') return
-                    return (
-                      <Link
-                        href={`/hobby/${item?.hobby?.slug}`}
-                        className={styles.textGray}
-                        key={item._id}
-                      >
-                        {item?.hobby?.display}
-                        {item?.genre && ` - ${item?.genre?.display} `}
-                      </Link>
-                    )
-                  })}
-                </ul>
-              )}
-            </div>
+            {!data || data._hobbies.length === 0 ? (
+              <span className={styles.textGray}>{''}</span>
+            ) : (
+              <ul className={styles['hobby-list']}>
+                {data?._hobbies?.map((item: any) => {
+                  if (typeof item === 'string') return
+                  return (
+                    <Link
+                      href={`/hobby/${item?.hobby?.slug}`}
+                      className={styles.textGray}
+                      key={item._id}
+                    >
+                      {item?.hobby?.display}
+                      {item?.genre && ` - ${item?.genre?.display} `}
+                    </Link>
+                  )
+                })}
+              </ul>
+            )}
           </PageContentBox>
           {/* Tags */}
           {listingLayoutMode !== 'edit' &&
@@ -343,53 +337,45 @@ const ListingPageMain: React.FC<Props> = ({
                   ? data?.related_listings_left.relation
                   : 'Related Listing'}{' '}
               </h4>
-              <div
-                className={`${styles['display-desktop']}${
-                  showRelatedListing1 ? ' ' + styles['display-mobile'] : ''
-                }`}
-              >
-                {!listingPagesLeft || listingPagesLeft.length === 0 ? (
-                  <span className={styles.textGray}>
-                    {'Eg: Sishyas related to this page'}
-                  </span>
-                ) : (
-                  <ul className={styles['related-list']}>
-                    {listingPagesLeft?.map((item: any) => {
-                      if (typeof item === 'string') return null
-                      return (
-                        <li key={item._id}>
-                          <Link
-                            className={styles.textGray}
-                            href={`/page/${item.page_url}`}
-                          >
-                            <div className={styles['related']}>
-                              <Image
-                                src={
-                                  item.profile_image
-                                    ? item.profile_image
-                                    : DefaultPageImage
-                                }
-                                alt={item?.title}
-                                width="32"
-                                height="32"
-                              />
-                              <span className={styles['item-title']}>
-                                {item?.title}
-                              </span>
-                            </div>
-                          </Link>
-                        </li>
-                      )
-                    })}
-                  </ul>
-                )}
-              </div>
+              {!listingPagesLeft || listingPagesLeft.length === 0 ? (
+                <span className={styles.textGray}></span>
+              ) : (
+                <ul className={styles['related-list']}>
+                  {listingPagesLeft?.map((item: any) => {
+                    if (typeof item === 'string') return null
+                    return (
+                      <li key={item._id}>
+                        <Link
+                          className={styles.textGray}
+                          href={`/page/${item.page_url}`}
+                        >
+                          <div className={styles['related']}>
+                            <Image
+                              src={
+                                item.profile_image
+                                  ? item.profile_image
+                                  : DefaultPageImage
+                              }
+                              alt={item?.title}
+                              width="32"
+                              height="32"
+                            />
+                            <span className={styles['item-title']}>
+                              {item?.title}
+                            </span>
+                          </div>
+                        </Link>
+                      </li>
+                    )
+                  })}
+                </ul>
+              )}
             </PageContentBox>
           )}
         </aside>
 
         {children}
-        
+
         {activeTab !== 'media' && (
           <aside>
             {/* User Contact Details */}
