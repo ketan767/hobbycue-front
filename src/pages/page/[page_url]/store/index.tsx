@@ -14,6 +14,7 @@ import {
 } from '@/redux/slices/site'
 
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
+import ListingStoreTab from '@/components/ListingPage/ListingPageStore/ListingPageStore'
 
 type Props = { data: ListingPageData }
 
@@ -36,14 +37,9 @@ const ListingStore: React.FC<Props> = (props) => {
 
       <ListingPageLayout activeTab={'store'} data={props.data}>
         <ListingPageMain data={props.data.pageData}>
-          <section className={styles['data-container']}>
-            <div className={styles['no-data-div']}>
-              <p className={styles['no-data-text']}>
-                This feature is under development. Come back soon to view this
-              </p>
-            </div>
-            <div className={styles['no-data-div']}></div>
-          </section>{' '}
+          <div className={styles['display-desktop']}>
+          <ListingStoreTab/>
+          </div>
         </ListingPageMain>
       </ListingPageLayout>
     </>

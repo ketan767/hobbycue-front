@@ -37,12 +37,24 @@
   background: #8064a2;
   border-radius: 2px 2px 0px 0px;
 }
+.nav-mobile{
+  display: none;
+}
+
+.display-mobile{
+  display: none;
+}
 @media screen and (max-width: 1100px) {
   .nav{
+    display: none;
+  }
+  .nav-mobile{
     display: flex;
+    justify-content: center;
+    background-color: #ffffff;
   }
   .navigation-tabs {
-    gap: 8px;
+    gap: 0.9rem;
     overflow-x: auto;
     flex-shrink: 0;
     padding: 0 16px;
@@ -56,6 +68,9 @@
     font-size: 12px;
  }
 
+ .display-mobile{
+  display: initial;
+ }
 }
 .customSnackbar{
   border-radius: 8px;

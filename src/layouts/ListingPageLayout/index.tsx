@@ -19,6 +19,11 @@ import IconButton from '@mui/material/IconButton'
 import WarningIcon from '@/assets/svg/warning-icon.svg'
 import CloseIcon from '@mui/icons-material/Close'
 import Image from 'next/image'
+import ListingPostsTab from '@/components/ListingPage/ListingPagePosts/ListingPagePosts'
+import ListingMediaTab from '@/components/ListingPage/ListingPageMedia'
+import ListingReviewsTab from '@/components/ListingPage/ListingPageReviews/ListingPageReviews'
+import ListingStoreTab from '@/components/ListingPage/ListingPageStore/ListingPageStore'
+import ListingEventsTab from '@/components/ListingPage/ListingPageEvents/ListingPageEvents'
 
 interface Props {
   activeTab: ListingPageTabs
@@ -46,6 +51,8 @@ const ListingPageLayout: React.FC<Props> = ({ data, children, activeTab }) => {
   const { listingModalData, listingLayoutMode } = useSelector(
     (state: RootState) => state.site,
   )
+
+  console.log(activeTab, 'activeTab')
 
   function checkScroll() {
     const scrollValue = window.scrollY || document.documentElement.scrollTop
@@ -191,6 +198,48 @@ const ListingPageLayout: React.FC<Props> = ({ data, children, activeTab }) => {
           LocationErr,
         })}
       </main>
+      <div style={{ backgroundColor: '#f8f9fa' }}>
+        <nav className={styles['nav-mobile']}>
+          <div className={styles['navigation-tabs']}>
+            {tabs.map((tab) => {
+              return (
+                <a
+                  key={tab}
+                  onClick={() => navigationTabs(tab)}
+                  className={activeTab === tab ? styles['active'] : ''}
+                >
+                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                </a>
+              )
+            })}
+          </div>
+        </nav>
+        {(activeTab === 'home' || activeTab === 'posts') && (
+          <div className={styles['display-mobile']}>
+            <ListingPostsTab data={data} hideStartPost={true} />
+          </div>
+        )}
+        {activeTab === 'media' && (
+          <div className={styles['display-mobile']}>
+            <ListingMediaTab data={data?.pageData} />
+          </div>
+        )}
+        {activeTab === 'reviews' && (
+          <div className={styles['display-mobile']}>
+            <ListingReviewsTab />
+          </div>
+        )}
+        {activeTab === 'store' && (
+          <div className={styles['display-mobile']}>
+            <ListingStoreTab />
+          </div>
+        )}
+        {activeTab === 'events' && (
+          <div className={styles['display-mobile']}>
+            <ListingEventsTab />
+          </div>
+        )}
+      </div>
       {/* Snackbar component */}
       <Snackbar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
