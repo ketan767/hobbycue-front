@@ -714,24 +714,18 @@ const CommunityLayout: React.FC<Props> = ({
 
                     {visibilityData?.length > 0 && (
                       <Select
-                        value={selectedLocation}
-                        // inputProps={{ 'aria-label': 'Without label' }}
+                        value={selectedLocation || ''}
+                        onChange={(val: any) => setSelectedLocation(val)}
                         className={` ${styles['location-select']}`}
                       >
-                        {visibilityData?.map((item: any, idx) => {
-                          return (
-                            <>
-                              <DropdownOption
-                                {...item}
-                                key={idx}
-                                currentValue={selectedLocation}
-                                onChange={(val: any) =>
-                                  setSelectedLocation(val)
-                                }
-                              />
-                            </>
-                          )
-                        })}
+                        {visibilityData?.map((item: any, idx) => (
+                          <DropdownOption
+                            {...item}
+                            key={idx}
+                            currentValue={selectedLocation}
+                            onChange={(val: any) => setSelectedLocation(val)}
+                          />
+                        ))}
                         <MenuItem
                           className={styles.editLocation}
                           onClick={EditProfileLocation}
