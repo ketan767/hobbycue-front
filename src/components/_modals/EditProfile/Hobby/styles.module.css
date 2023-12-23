@@ -367,4 +367,34 @@
     display: none;
   }
  
+  .add-btn {
+    margin: auto;
+  }
+  .added-hobby-list table tr td:nth-child(1) {
+    flex: 2;
+  }
+  .added-hobby-list table tr td:nth-child(2) {
+    flex: 1 0;
+  }
+  .added-hobby-list table tr td:nth-child(3) {
+    text-align: right; 
+    padding-left: var(--spacing-24);
+  }
+  .hobby-dropdown{
+    width: 4rem;
+    background-color: #F7F5F9;
+    height: 1.875rem;
+  }
+  .select-level-main{
+    width: 4rem;
+  }
+  .select-level-main p {
+    display: none;
+  }
+  .levelwithtext p {
+    display: none;
+  }
+  .lvltext{
+    display: none;
+  }
 }
