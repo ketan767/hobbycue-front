@@ -568,18 +568,20 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                               value={1}
                             >
                               <Image alt="hobbyOne" src={hobbyLvlOne}></Image>
-                              {'Beginner'}
+                              <span className={styles.lvltext}>Beginner</span>
                             </MenuItem>
                             <MenuItem value={2}>
                               <Image alt="hobbyTwo" src={hobbyLvlTwo}></Image>
-                              {'Intermediate'}
+                              <span className={styles.lvltext}>
+                                Intermediate
+                              </span>
                             </MenuItem>
                             <MenuItem value={3}>
                               <Image
                                 alt="hobbyThree"
                                 src={hobbyLvlThree}
                               ></Image>
-                              {'Advanced'}
+                              <span className={styles.lvltext}>Advanced</span>
                             </MenuItem>
                           </Select>
                         </FormControl>

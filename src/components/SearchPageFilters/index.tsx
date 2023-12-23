@@ -22,8 +22,8 @@ const SearchPageFilter = () => {
 
   const handleFilterClick = (filterType: any) => {
     if (activeFilter === filterType) {
-      setActiveFilter('') // Deselect if the same filter is clicked
-      dispatch(toggleShowAll()) // Dispatch action to show all
+      setActiveFilter('')
+      dispatch(toggleShowAll())
     } else {
       setActiveFilter(filterType)
       switch (filterType) {
@@ -106,7 +106,6 @@ const SearchPageFilter = () => {
             <Image src={Product} alt="Product" />
             Products
           </div>
-          {/* Add other filter items here */}
         </div>
       </div>
     </section>

@@ -257,7 +257,7 @@ const ListingPageMain: React.FC<Props> = ({
           >
             <h4 className={styles['heading']}>Hobbies</h4>
             {!data || data._hobbies.length === 0 ? (
-              <span className={styles.textGray}>{'No Hobbies!'}</span>
+              <span className={styles.textGray}>{''}</span>
             ) : (
               <ul className={styles['hobby-list']}>
                 {data?._hobbies?.map((item: any) => {
@@ -321,9 +321,7 @@ const ListingPageMain: React.FC<Props> = ({
                   : 'Related Listing'}{' '}
               </h4>
               {!listingPagesLeft || listingPagesLeft.length === 0 ? (
-                <span className={styles.textGray}>
-                  {'Eg: Sishyas related to this page'}
-                </span>
+                <span className={styles.textGray}></span>
               ) : (
                 <ul className={styles['related-list']}>
                   {listingPagesLeft?.map((item: any) => {

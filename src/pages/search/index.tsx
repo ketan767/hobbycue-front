@@ -497,45 +497,55 @@ const MainContent: React.FC<SearchResultsProps> = ({
 console.log()
 
 const FilterDropdown: React.FC<Props> = ({ onChange }) => {
-  const [value, setValue] = useState('All Pages')
+  const [activeFilter, setActiveFilter] = useState('all')
   const dispatch = useDispatch()
-  const handleShowAllPeopleClick = () => {
-    setValue('people')
-    dispatch(toggleShowAllPeople())
-  }
-  const handleShowAllPlaceClick = () => {
-    setValue('places')
-    dispatch(toggleShowAllPlace())
-  }
-  const handleShowAllEventClick = () => {
-    setValue('programs')
-    dispatch(toggleShowAllEvent())
-  }
-  const handleShowAll = () => {
-    setValue('All Pages')
-    dispatch(toggleShowAll())
-  }
-
-  const handleShowAllUsers = () => {
-    setValue('Users')
-    dispatch(toggleShowAllUsers())
+  const handleFilterClick = (filterType: any) => {
+    if (activeFilter === filterType) {
+      setActiveFilter('')
+      dispatch(toggleShowAll())
+    } else {
+      setActiveFilter(filterType)
+      switch (filterType) {
+        case 'all':
+          dispatch(toggleShowAll())
+          break
+        case 'users':
+          dispatch(toggleShowAllUsers())
+          break
+        case 'people':
+          dispatch(toggleShowAllPeople())
+          break
+        case 'places':
+          dispatch(toggleShowAllPlace())
+          break
+        case 'events':
+          dispatch(toggleShowAllEvent())
+          break
+        default:
+          break
+      }
+    }
   }
 
   return (
-    <Select onChange={onChange} className={styles.filterDropdown} value={value}>
-      <MenuItem onClick={handleShowAll} value="All Pages">
+    <Select
+      onChange={onChange}
+      className={styles.filterDropdown}
+      value={activeFilter}
+    >
+      <MenuItem onClick={() => handleFilterClick('all')} value="all">
         All of Hobbycue
       </MenuItem>
-      <MenuItem onClick={handleShowAllUsers} value="Users">
+      <MenuItem onClick={() => handleFilterClick('users')} value="users">
         Users
       </MenuItem>
-      <MenuItem onClick={handleShowAllPeopleClick} value="people">
+      <MenuItem onClick={() => handleFilterClick('people')} value="People">
         People Pages
       </MenuItem>
-      <MenuItem onClick={handleShowAllPlaceClick} value="places">
+      <MenuItem onClick={() => handleFilterClick('places')} value="Places">
         Places
       </MenuItem>
-      <MenuItem onClick={handleShowAllEventClick} value="programs">
+      <MenuItem onClick={() => handleFilterClick('events')} value="events">
         Programs
       </MenuItem>
     </Select>
