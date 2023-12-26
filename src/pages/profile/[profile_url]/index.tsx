@@ -106,167 +106,175 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
       <ProfileLayout activeTab={'home'} data={data}>
         {data.pageData && (
           <PageGridLayout column={3}>
-            <aside
-              className={`custom-scrollbar ${styles['profile-left-aside']}`}
-            >
-              {/* User Hobbies */}
-              <ProfileHobbySideList data={pageData} />
-              <ProfilePagesList data={data} />
-            </aside>
-
-            <main>
-              {/* User About */}
-              <PageContentBox
-                showEditButton={profileLayoutMode === 'edit'}
-                onEditBtnClick={() =>
-                  dispatch(
-                    openModal({ type: 'profile-about-edit', closable: true }),
-                  )
-                }
-                setDisplayData={setDisplayAbout}
+            {/* <p>Expand</p> */}
+            {/* <div> */}
+              <aside
+                className={`custom-scrollbar ${styles['profile-left-aside']}`}
               >
-                <h4>About</h4>
-                <div
-                  className={`${styles['color-light']} ${styles['about-text']}${
-                    displayAbout ? ' ' + styles['about-text-mobile'] : ''
-                  }`}
-                  dangerouslySetInnerHTML={{ __html: pageData?.about }}
-                ></div>
-              </PageContentBox>
+                {/* User Hobbies */}
+                <ProfileHobbySideList data={pageData} />
+                <ProfilePagesList data={data} />
+              </aside>
 
-              {/* User Information */}
-              <PageContentBox
-                showEditButton={profileLayoutMode === 'edit'}
-                onEditBtnClick={() =>
-                  dispatch(
-                    openModal({ type: 'profile-general-edit', closable: true }),
-                  )
-                }
-                setDisplayData={setDisplayOther}
-              >
-                <h4 className={styles['other-info-heading']}>
-                  Other Information
-                </h4>
-                <div
-                  className={`${styles['display-mobile-none']}${
-                    displayOther
-                      ? ' ' +
-                        styles['display-flex-col'] +
-                        ' ' +
-                        styles['other-info-mob-div']
-                      : ''
-                  }`}
+              <main>
+                {/* User About */}
+                <PageContentBox
+                  showEditButton={profileLayoutMode === 'edit'}
+                  onEditBtnClick={() =>
+                    dispatch(
+                      openModal({ type: 'profile-about-edit', closable: true }),
+                    )
+                  }
+                  setDisplayData={setDisplayAbout}
                 >
-                  <h4 className={styles['other-info-subheading']}>
-                    Profile URL
+                  <h4>About</h4>
+                  <div
+                    className={`${styles['color-light']} ${
+                      styles['about-text']
+                    }${displayAbout ? ' ' + styles['about-text-mobile'] : ''}`}
+                    dangerouslySetInnerHTML={{ __html: pageData?.about }}
+                  ></div>
+                </PageContentBox>
+
+                {/* User Information */}
+                <PageContentBox
+                  showEditButton={profileLayoutMode === 'edit'}
+                  onEditBtnClick={() =>
+                    dispatch(
+                      openModal({
+                        type: 'profile-general-edit',
+                        closable: true,
+                      }),
+                    )
+                  }
+                  setDisplayData={setDisplayOther}
+                >
+                  <h4 className={styles['other-info-heading']}>
+                    Other Information
                   </h4>
-                  <p className={styles['color-light']}>
-                    {pageData.profile_url}
-                  </p>
-                  {pageData.gender && (
-                    <>
-                      <h4 className={styles['other-info-subheading']}>
-                        Gender
-                      </h4>
-                      <p className={styles['color-light']}>{pageData.gender}</p>
-                    </>
-                  )}
-                  {pageData.year_of_birth && (
-                    <>
-                      <h4 className={styles['other-info-subheading']}>
-                        Year Of Birth
-                      </h4>
-                      <p className={styles['color-light']}>
-                        {pageData.year_of_birth}
-                      </p>
-                    </>
-                  )}
-                </div>
-              </PageContentBox>
+                  <div
+                    className={`${styles['display-mobile-none']}${
+                      displayOther
+                        ? ' ' +
+                          styles['display-flex-col'] +
+                          ' ' +
+                          styles['other-info-mob-div']
+                        : ''
+                    }`}
+                  >
+                    <h4 className={styles['other-info-subheading']}>
+                      Profile URL
+                    </h4>
+                    <p className={styles['color-light']}>
+                      {pageData.profile_url}
+                    </p>
+                    {pageData.gender && (
+                      <>
+                        <h4 className={styles['other-info-subheading']}>
+                          Gender
+                        </h4>
+                        <p className={styles['color-light']}>
+                          {pageData.gender}
+                        </p>
+                      </>
+                    )}
+                    {pageData.year_of_birth && (
+                      <>
+                        <h4 className={styles['other-info-subheading']}>
+                          Year Of Birth
+                        </h4>
+                        <p className={styles['color-light']}>
+                          {pageData.year_of_birth}
+                        </p>
+                      </>
+                    )}
+                  </div>
+                </PageContentBox>
 
-              <section className={styles['posts-container']}>
-                {loadingPosts ? (
-                  <PostCardSkeletonLoading />
-                ) : (
-                  posts.length === 0 && 'No Posts'
-                )}
+                <section className={styles['posts-container']}>
+                  {loadingPosts ? (
+                    <PostCardSkeletonLoading />
+                  ) : (
+                    posts.length === 0 && 'No Posts'
+                  )}
 
-                {pinnedPosts.map((post: any) => {
-                  return (
-                    <PostWrapper title="Pinned Post" key={post._id}>
-                      <PostCard
-                        key={post._id}
-                        postData={post}
-                        fromProfile={true}
-                        onPinPost={onPinPost}
-                      />
-                    </PostWrapper>
-                  )
-                })}
-                {unpinnnedPosts.length > 0 && (
-                  <PostWrapper title="Recent Post">
-                    {unpinnnedPosts.map((post: any) => {
-                      return (
+                  {pinnedPosts.map((post: any) => {
+                    return (
+                      <PostWrapper title="Pinned Post" key={post._id}>
                         <PostCard
                           key={post._id}
                           postData={post}
                           fromProfile={true}
                           onPinPost={onPinPost}
                         />
-                      )
-                    })}
-                  </PostWrapper>
-                )}
-              </section>
-            </main>
+                      </PostWrapper>
+                    )
+                  })}
+                  {unpinnnedPosts.length > 0 && (
+                    <PostWrapper title="Recent Post">
+                      {unpinnnedPosts.map((post: any) => {
+                        return (
+                          <PostCard
+                            key={post._id}
+                            postData={post}
+                            fromProfile={true}
+                            onPinPost={onPinPost}
+                          />
+                        )
+                      })}
+                    </PostWrapper>
+                  )}
+                </section>
+              </main>
 
-            <aside>
-              {/* User Locations */}
-              <ProfileAddressSide data={pageData} />
+              <aside>
+                {/* User Locations */}
+                <ProfileAddressSide data={pageData} />
 
-              {/* User Contact Details */}
-              <ProfileContactSide data={pageData} />
-              <ProfileSocialMediaSide data={pageData} />
-            </aside>
-            
+                {/* User Contact Details */}
+                <ProfileContactSide data={pageData} />
+                <ProfileSocialMediaSide data={pageData} />
+              </aside>
+            {/* </div> */}
+
             <div className={styles['nav-mobile']}>
-            <ProfileNavigationLinks activeTab={'home'}/>
+              <ProfileNavigationLinks activeTab={'home'} />
             </div>
 
             <section className={styles['posts-container-mobile']}>
-                {loadingPosts ? (
-                  <PostCardSkeletonLoading />
-                ) : (
-                  posts.length === 0 && 'No Posts'
-                )}
+              {loadingPosts ? (
+                <PostCardSkeletonLoading />
+              ) : (
+                posts.length === 0 && 'No Posts'
+              )}
 
-                {pinnedPosts.map((post: any) => {
-                  return (
-                    <PostWrapper title="Pinned Post" key={post._id}>
+              {pinnedPosts.map((post: any) => {
+                return (
+                  <PostWrapper title="Pinned Post" key={post._id}>
+                    <PostCard
+                      key={post._id}
+                      postData={post}
+                      fromProfile={true}
+                      onPinPost={onPinPost}
+                    />
+                  </PostWrapper>
+                )
+              })}
+              {unpinnnedPosts.length > 0 && (
+                <PostWrapper title="Recent Post">
+                  {unpinnnedPosts.map((post: any) => {
+                    return (
                       <PostCard
                         key={post._id}
                         postData={post}
                         fromProfile={true}
                         onPinPost={onPinPost}
                       />
-                    </PostWrapper>
-                  )
-                })}
-                {unpinnnedPosts.length > 0 && (
-                  <PostWrapper title="Recent Post">
-                    {unpinnnedPosts.map((post: any) => {
-                      return (
-                        <PostCard
-                          key={post._id}
-                          postData={post}
-                          fromProfile={true}
-                          onPinPost={onPinPost}
-                        />
-                      )
-                    })}
-                  </PostWrapper>
-                )}
-              </section>
+                    )
+                  })}
+                </PostWrapper>
+              )}
+            </section>
           </PageGridLayout>
         )}
       </ProfileLayout>
