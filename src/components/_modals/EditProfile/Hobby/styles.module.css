@@ -155,7 +155,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  top: calc(100% + var(--spacing-4));
+  bottom: calc(100% + var(--spacing-4));
   background: #ffffff;
   border-radius: var(--spacing-4);
   padding: var(--spacing-4);

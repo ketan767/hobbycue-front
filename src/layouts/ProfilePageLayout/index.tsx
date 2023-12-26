@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 
 import ProfileHeader from '../../components/ProfilePage/ProfileHeader/ProfileHeader'
+import ChevronDown from '@/assets/svg/chevron-down.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
@@ -8,13 +9,22 @@ import { updateProfileLayoutMode } from '@/redux/slices/site'
 import ProfileHeaderSmall from '@/components/ProfilePage/ProfileHeader/ProfileHeaderSmall'
 import ProfileNavigationLinks from '@/components/ProfilePage/ProfileHeader/ProfileNavigationLinks'
 import styles from './styles.module.css'
+import Image from 'next/image'
 type Props = {
   activeTab: ProfilePageTabs
   data: ProfilePageData
-  children: React.ReactNode
+  children: React.ReactElement
+  setExpandAll?: any
+  expandAll?: boolean
 }
 
-const ProfileLayout: React.FC<Props> = ({ children, activeTab, data }) => {
+const ProfileLayout: React.FC<Props> = ({
+  children,
+  activeTab,
+  data,
+  setExpandAll,
+  expandAll,
+}) => {
   const router = useRouter()
   const dispatch = useDispatch()
 
@@ -62,11 +72,24 @@ const ProfileLayout: React.FC<Props> = ({ children, activeTab, data }) => {
       <div className={styles['nav']}>
         <ProfileNavigationLinks activeTab={activeTab} />
       </div>
+
+      <div
+        onClick={() => setExpandAll((prevValue: boolean) => !prevValue)}
+        className={styles['expand-all']}
+      >
+        {expandAll ? <p>Contract All</p> : <p>Expand All</p>}
+        <Image
+          src={ChevronDown}
+          className={`${expandAll ? styles['rotate-180'] : styles['rotate-0']}`}
+          alt=""
+        />
+      </div>
+
       {showSmallHeader && (
         <ProfileHeaderSmall data={data.pageData} activeTab={activeTab} />
       )}
       {/* Profile Page Body, where all contents of different tabs appears. */}
-      <main>{children}</main>
+      <main>{React.cloneElement(children, { expandAll })}</main>
     </>
   )
 }
