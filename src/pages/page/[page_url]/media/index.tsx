@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
-
+import styles from '@/styles/Page.module.css'
 import { GetServerSideProps } from 'next'
 import { getAllUserDetail } from '@/services/user.service'
 import Head from 'next/head'
@@ -39,7 +39,9 @@ const ListingMedia: React.FC<Props> = (props) => {
 
       <ListingPageLayout activeTab={'media'} data={props.data}>
         <ListingPageMain activeTab={'media'} data={props.data.pageData}>
+          <div className={styles['display-desktop']}>
           <ListingMediaTab data={props.data.pageData} />
+          </div>
         </ListingPageMain>
       </ListingPageLayout>
     </>

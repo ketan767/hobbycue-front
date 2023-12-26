@@ -27,7 +27,7 @@
   color: #08090a;
 }
 .wrapper > div:not(:last-child) {
-  margin-bottom: var(--spacing-24);
+  /* margin-bottom: var(--spacing-24); */
 }
 
 .wrapper .edit-btn {

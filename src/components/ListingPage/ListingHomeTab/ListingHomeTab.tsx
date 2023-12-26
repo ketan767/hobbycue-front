@@ -16,7 +16,7 @@ import InstagramIcon from '../../../assets/svg/Instagram.svg'
 import { getPages } from '@/services/listing.service'
 import ListingPageCard from '@/components/ListingPageCard/ListingPageCard'
 import PostCard from '@/components/PostCard/PostCard'
-import ListingPostsTab from '../ListingPagePosts/ListingPagePosts'
+import ListingPagePosts from '../ListingPagePosts/ListingPagePosts'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -27,9 +27,8 @@ const ListingHomeTab: React.FC<Props> = ({ data, AboutErr }) => {
   // console.log('🚀 ~ file: ListingHomeTab.tsx:17 ~ data:', data)
   const dispatch = useDispatch()
   const [pagesData, setPagesData] = useState([])
-  const [displayOthers, setDisplayOthers] = useState(false)
-  const [displayAbout, setDisplayAbout] = useState(false)
-
+  const [showOthers, setShowOthers] = useState(false)
+  const [showAbout, setShowAbout] = useState(false)
   const { listingLayoutMode } = useSelector((state: RootState) => state.site)
 
   useEffect(() => {
@@ -63,19 +62,15 @@ const ListingHomeTab: React.FC<Props> = ({ data, AboutErr }) => {
           onEditBtnClick={() =>
             dispatch(openModal({ type: 'listing-about-edit', closable: true }))
           }
-          setDisplayData={setDisplayAbout}
+          setDisplayData={setShowAbout}
         >
+          <h4>About</h4>
           <div
-            className={`${styles['other-data-wrapper']}${
-              displayOthers ? ' ' + styles['display-flex'] : ''
+            className={`${styles['about-text']} ${styles['display-desktop']}${
+              showAbout ? ' ' + styles['display-mobile'] : ''
             }`}
-          >
-            <h4>About</h4>
-            <div
-              dangerouslySetInnerHTML={{ __html: data?.description }}
-              className={`${styles['about-text']}}`}
-            ></div>
-          </div>
+            dangerouslySetInnerHTML={{ __html: data?.description }}
+          ></div>
         </PageContentBox>
 
         {/* User Information */}
@@ -86,33 +81,39 @@ const ListingHomeTab: React.FC<Props> = ({ data, AboutErr }) => {
               openModal({ type: 'listing-general-edit', closable: true }),
             )
           }
-          setDisplayData={setDisplayOthers}
+          setDisplayData={setShowOthers}
         >
-          <div className={`${styles['other-data-wraper']}${displayOthers ?" "+ styles['display-flex'] : ''}`}>
+          <h4 className={styles['display-mobile']}>Other Information</h4>
+          <div
+            className={`${styles['other-data-wrapper']} ${
+              showOthers ? ' ' + styles['other-data-wrapper-mobile'] : ''
+            }`}
+          >
             <h4>Profile URL</h4>
-            <div>{data?.page_url}</div>
+            <div className={styles.textGray}>{data?.page_url}</div>
             {data?.gender && (
               <>
                 <h4>Gender</h4>
-                <div>{data?.gender}</div>
+                <div className={styles.textGray}>{data?.gender}</div>
               </>
             )}
             {data?.year && (
               <>
                 <h4>Year</h4>
-                <div>{data?.year}</div>
+                <div className={styles.textGray}>{data?.year}</div>
               </>
             )}
             {data?.admin_note && (
               <>
                 <h4>Notes</h4>
-                <div>{data?.admin_note}</div>
+                <div className={styles.textGray}>{data?.admin_note}</div>
               </>
             )}
           </div>
         </PageContentBox>
-
-        <ListingPostsTab data={data} hideStartPost={true} />
+        <div className={styles['display-desktop']}>
+          <ListingPagePosts data={data} hideStartPost={true} />
+        </div>
       </main>
     </>
   )

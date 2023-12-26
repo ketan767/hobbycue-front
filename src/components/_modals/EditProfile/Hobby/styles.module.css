@@ -95,7 +95,7 @@
   font-size: 14px;
   line-height: 16px;
   /* color: #878c90; */
-  min-width: 6.25rem;
+  min-width: 2.25rem;
 }
 .input-box input[type='text']::placeholder {
   font-size: 14px;
@@ -147,6 +147,7 @@
 
 .dropdown-warpper {
   position: relative;
+  z-index: 1;
 }
 
 .dropdown-warpper .dropdown {
@@ -218,7 +219,6 @@
   font-weight: 500;
   font-size: 14px;
   line-height: 22px;
-  padding-bottom: 20px;
   /* identical to box height, or 157% */
 
   /* Grey/Darkest */
@@ -343,7 +343,9 @@
     flex: 2;
   }
   .added-hobby-list table tr td:nth-child(2) {
-    flex: 1 0;
+
+    flex: 0 0;
+
   }
   .added-hobby-list table tr td:nth-child(3) {
     text-align: right; 
@@ -366,4 +368,5 @@
   .lvltext{
     display: none;
   }
+
 }
