@@ -50,6 +50,7 @@ interface Props {
   full_name?: string
   profile_url?: string
   activeTab?: any
+  expandAll?:boolean
 }
 
 const ListingPageMain: React.FC<Props> = ({
@@ -61,6 +62,7 @@ const ListingPageMain: React.FC<Props> = ({
   ContactInfoErr,
   LocationErr,
   activeTab,
+  expandAll
 }) => {
   const dispatch = useDispatch()
   const [tags, setTags] = useState([])
@@ -187,6 +189,21 @@ const ListingPageMain: React.FC<Props> = ({
         })
     })
   }, [data?.related_listings_left?.listings])
+
+useEffect(()=>{
+  if(expandAll!==undefined)
+  {
+    setShowContact(expandAll)
+    setShowHobbies(expandAll)
+    setShowLocation(expandAll)
+    setShowRelatedListing1(expandAll)
+    setShowRelatedListing2(expandAll)
+    setShowSocialMedia(expandAll)
+    setShowTags(expandAll)
+    setShowWorkingHours(expandAll)
+  }
+},[expandAll])
+
   console.log('listingPagesRight', listingPagesRight)
   const openGoogleMaps = () => {
     let addressText = ''
@@ -265,27 +282,34 @@ const ListingPageMain: React.FC<Props> = ({
               )
             }
             setDisplayData={setShowHobbies}
+            expandData={expandAll}
           >
             <h4 className={styles['heading']}>Hobbies</h4>
-            {!data || data._hobbies.length === 0 ? (
-              <span className={styles.textGray}>{''}</span>
-            ) : (
-              <ul className={styles['hobby-list']}>
-                {data?._hobbies?.map((item: any) => {
-                  if (typeof item === 'string') return
-                  return (
-                    <Link
-                      href={`/hobby/${item?.hobby?.slug}`}
-                      className={styles.textGray}
-                      key={item._id}
-                    >
-                      {item?.hobby?.display}
-                      {item?.genre && ` - ${item?.genre?.display} `}
-                    </Link>
-                  )
-                })}
-              </ul>
-            )}
+            <div
+              className={`${styles['display-desktop']}${
+                showHobbies ? ' ' + styles['display-mobile'] : ''
+              }`}
+            >
+              {!data || data._hobbies.length === 0 ? (
+                <span className={`${styles['textGray']}`}>{'No Hobbies!'}</span>
+              ) : (
+                <ul className={styles['hobby-list']}>
+                  {data?._hobbies?.map((item: any) => {
+                    if (typeof item === 'string') return
+                    return (
+                      <Link
+                        href={`/hobby/${item?.hobby?.slug}`}
+                        className={styles.textGray}
+                        key={item._id}
+                      >
+                        {item?.hobby?.display}
+                        {item?.genre && ` - ${item?.genre?.display} `}
+                      </Link>
+                    )
+                  })}
+                </ul>
+              )}
+            </div>
           </PageContentBox>
           {/* Tags */}
           {listingLayoutMode !== 'edit' &&
@@ -298,6 +322,7 @@ const ListingPageMain: React.FC<Props> = ({
                 )
               }
               setDisplayData={setShowTags}
+              expandData={expandAll}
             >
               <h4 className={styles['heading']}>Tags</h4>
               <ul
@@ -330,6 +355,7 @@ const ListingPageMain: React.FC<Props> = ({
                 )
               }
               setDisplayData={setShowRelatedListing1}
+              expandData={expandAll}
             >
               <h4 className={styles['heading']}>
                 {' '}
@@ -337,45 +363,53 @@ const ListingPageMain: React.FC<Props> = ({
                   ? data?.related_listings_left.relation
                   : 'Related Listing'}{' '}
               </h4>
-              {!listingPagesLeft || listingPagesLeft.length === 0 ? (
-                <span className={styles.textGray}></span>
-              ) : (
-                <ul className={styles['related-list']}>
-                  {listingPagesLeft?.map((item: any) => {
-                    if (typeof item === 'string') return null
-                    return (
-                      <li key={item._id}>
-                        <Link
-                          className={styles.textGray}
-                          href={`/page/${item.page_url}`}
-                        >
-                          <div className={styles['related']}>
-                            <Image
-                              src={
-                                item.profile_image
-                                  ? item.profile_image
-                                  : DefaultPageImage
-                              }
-                              alt={item?.title}
-                              width="32"
-                              height="32"
-                            />
-                            <span className={styles['item-title']}>
-                              {item?.title}
-                            </span>
-                          </div>
-                        </Link>
-                      </li>
-                    )
-                  })}
-                </ul>
-              )}
+              <div
+                className={`${styles['display-desktop']}${
+                  showRelatedListing1 ? ' ' + styles['display-mobile'] : ''
+                }`}
+              >
+                {!listingPagesLeft || listingPagesLeft.length === 0 ? (
+                  <span className={styles.textGray}>
+                    {'Eg: Sishyas related to this page'}
+                  </span>
+                ) : (
+                  <ul className={styles['related-list']}>
+                    {listingPagesLeft?.map((item: any) => {
+                      if (typeof item === 'string') return null
+                      return (
+                        <li key={item._id}>
+                          <Link
+                            className={styles.textGray}
+                            href={`/page/${item.page_url}`}
+                          >
+                            <div className={styles['related']}>
+                              <Image
+                                src={
+                                  item.profile_image
+                                    ? item.profile_image
+                                    : DefaultPageImage
+                                }
+                                alt={item?.title}
+                                width="32"
+                                height="32"
+                              />
+                              <span className={styles['item-title']}>
+                                {item?.title}
+                              </span>
+                            </div>
+                          </Link>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                )}
+              </div>
             </PageContentBox>
           )}
         </aside>
 
         {children}
-
+        
         {activeTab !== 'media' && (
           <aside>
             {/* User Contact Details */}
@@ -388,6 +422,7 @@ const ListingPageMain: React.FC<Props> = ({
                 )
               }
               setDisplayData={setShowContact}
+              expandData={expandAll}
             >
               <h4 className={styles['heading']}>Contact Information</h4>
               <ul
@@ -705,6 +740,7 @@ const ListingPageMain: React.FC<Props> = ({
                 )
               }
               setDisplayData={setShowLocation}
+              expandData={expandAll}
             >
               <div className={`${styles['location-heading']} `}>
                 <h4>Location</h4>
@@ -794,6 +830,7 @@ const ListingPageMain: React.FC<Props> = ({
                   )
                 }
                 setDisplayData={setShowWorkingHours}
+                expandData={expandAll}
               >
                 <h4 className={styles['heading']}>Working Hours</h4>
                 <div
@@ -853,6 +890,7 @@ const ListingPageMain: React.FC<Props> = ({
                   )
                 }
                 setDisplayData={setShowRelatedListing2}
+                expandData={expandAll}
               >
                 <h4 className={styles['heading']}>
                   {relationRight && relationRight.trim() !== ''
@@ -976,6 +1014,7 @@ const ListingPageMain: React.FC<Props> = ({
                   )
                 }
                 setDisplayData={setShowSocialMedia}
+                expandData={expandAll}
               >
                 <h4 className={styles['heading']}>Social Media</h4>
 

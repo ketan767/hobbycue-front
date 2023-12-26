@@ -25,6 +25,7 @@ const ListingHome: React.FC<Props> = (props) => {
     location: false,
     contact: false,
   })
+  const [expandAll,setExpandAll]=useState(false)
   const { user } = useSelector((state: RootState) => state.user)
 
   console.log('data', props.data)
@@ -56,9 +57,9 @@ const ListingHome: React.FC<Props> = (props) => {
         <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
       </Head>
 
-      <ListingPageLayout activeTab={'home'} data={props.data}>
-        <ListingPageMain data={props.data.pageData}>
-          <ListingHomeTab data={props.data.pageData} />
+      <ListingPageLayout activeTab={'home'} data={props.data} expandAll={expandAll} setExpandAll={setExpandAll}>
+        <ListingPageMain data={props.data.pageData} expandAll={expandAll}>
+          <ListingHomeTab data={props.data.pageData} expandAll={expandAll}/>
         </ListingPageMain>
       </ListingPageLayout>
     </>

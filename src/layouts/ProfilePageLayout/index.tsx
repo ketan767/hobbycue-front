@@ -14,7 +14,7 @@ type Props = {
   activeTab: ProfilePageTabs
   data: ProfilePageData
   children: React.ReactElement
-  setExpandAll?: any
+  setExpandAll?: React.Dispatch<React.SetStateAction<boolean>>
   expandAll?: boolean
 }
 
@@ -73,8 +73,15 @@ const ProfileLayout: React.FC<Props> = ({
         <ProfileNavigationLinks activeTab={activeTab} />
       </div>
 
+      {showSmallHeader && (
+        <ProfileHeaderSmall data={data.pageData} activeTab={activeTab} />
+      )}
+
       <div
-        onClick={() => setExpandAll((prevValue: boolean) => !prevValue)}
+        onClick={() => {
+          if (setExpandAll !== undefined)
+            setExpandAll((prevValue: boolean) => !prevValue)
+        }}
         className={styles['expand-all']}
       >
         {expandAll ? <p>Contract All</p> : <p>Expand All</p>}
@@ -84,10 +91,6 @@ const ProfileLayout: React.FC<Props> = ({
           alt=""
         />
       </div>
-
-      {showSmallHeader && (
-        <ProfileHeaderSmall data={data.pageData} activeTab={activeTab} />
-      )}
       {/* Profile Page Body, where all contents of different tabs appears. */}
       <main>{React.cloneElement(children, { expandAll })}</main>
     </>
