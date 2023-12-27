@@ -4,6 +4,7 @@ import styles from './styles.module.css'
 import { ReactNode } from 'react'
 import Link from 'next/link'
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
+import ChevronDown from '@/assets/svg/chevron-down.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import ListingHeader from '@/components/ListingPage/ListingHeader/ListingHeader'
@@ -35,9 +36,17 @@ interface Props {
     ContactInfoErr?: boolean
     LocationErr?: boolean
   }>
+  setExpandAll?: React.Dispatch<React.SetStateAction<boolean>>
+  expandAll?: boolean
 }
 
-const ListingPageLayout: React.FC<Props> = ({ data, children, activeTab }) => {
+const ListingPageLayout: React.FC<Props> = ({
+  data,
+  children,
+  activeTab,
+  expandAll,
+  setExpandAll,
+}) => {
   const router = useRouter()
   const dispatch = useDispatch()
   const [showSmallHeader, setShowSmallHeader] = useState(false)
@@ -187,6 +196,21 @@ const ListingPageLayout: React.FC<Props> = ({ data, children, activeTab }) => {
           })}
         </div>
       </nav>
+
+      <div
+        onClick={() => {
+          if (setExpandAll !== undefined)
+            setExpandAll((prevValue: boolean) => !prevValue)
+        }}
+        className={styles['expand-all']}
+      >
+        {expandAll ? <p>Contract All</p> : <p>Expand All</p>}
+        <Image
+          src={ChevronDown}
+          className={`${expandAll ? styles['rotate-180'] : styles['rotate-0']}`}
+          alt=""
+        />
+      </div>
 
       {/* Profile Page Body, where all contents of different tabs appears. */}
       <main>
