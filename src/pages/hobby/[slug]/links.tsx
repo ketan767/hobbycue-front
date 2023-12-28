@@ -23,6 +23,7 @@ type Props = { data: { hobbyData: any } }
 const HobbyPostsPage: React.FC<Props> = (props) => {
   const data = props.data.hobbyData
 
+  const [expandAll, setExpandAll] = useState(false)
   const dispatch = useDispatch()
   const { isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
@@ -51,9 +52,15 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
   }, [])
 
   return (
-    <HobbyPageLayout activeTab="links" data={data}>
-      <main>
-        {/* <div className={styles['start-post-btn']}>
+    <>
+      <HobbyPageLayout
+        activeTab="links"
+        data={data}
+        expandAll={expandAll}
+        setExpandAll={setExpandAll}
+      >
+        <main className={`${styles['display-desktop']}`}>
+          {/* <div className={styles['start-post-btn']}>
           <button
             onClick={() => {
               if (isLoggedIn)
@@ -71,7 +78,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
           </button>
         </div> */}
 
-        {/* <section className={styles['posts-container']}>
+          {/* <section className={styles['posts-container']}>
           {!isLoggedIn || loadingPosts ? (
             <PostCardSkeletonLoading />
           ) : (
@@ -81,8 +88,10 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
             return <PostCard key={post._id} postData={post} />
           })}
         </section> */}
-      </main>
-    </HobbyPageLayout>
+        </main>
+      </HobbyPageLayout>
+      <main className={`${styles['display-mobile']}`}></main>
+    </>
   )
 }
 

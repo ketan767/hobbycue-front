@@ -208,15 +208,33 @@
 }
 
 .members .heading {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-16);
+}
+
+.members .heading > h4 {
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 600;
   font-size: 14px;
   line-height: 21px;
   color: #000000;
-  padding: 16px;
   margin: 0;
 }
+
+.rotate-180 {
+  transform: rotate(180deg) scale(1.5);
+}
+
+.members .heading > img {
+  transform: scale(1.5);
+  width: 20px;
+  height: 17px;
+}
+
 .members hr {
   margin: 0;
 }
@@ -260,19 +278,19 @@
 .pages-container > a {
   overflow: hidden;
 }
-.keyword-container{
+.keyword-container {
   display: flex;
   align-items: center;
   column-gap: 12px;
   /* flex-wrap: wrap; */
 }
-.keyword-container ul{
+.keyword-container ul {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   column-gap: 12px;
 }
-.keyword-container li{
+.keyword-container li {
   list-style: none;
 }
 .keyword-container h4.keyword-text {
@@ -282,10 +300,10 @@
   font-weight: 600;
   line-height: 20px;
   flex-shrink: 0;
-align-self: flex-start;
+  align-self: flex-start;
 }
 
-.hobby-left-aside{
+.hobby-left-aside {
   top: 215px;
   position: sticky;
   overflow: auto;
@@ -293,28 +311,91 @@ align-self: flex-start;
   height: 400px;
 }
 
-.member-img{
+.member-img {
   border-radius: 50%;
   border: 1px solid #8064a2;
 }
-.hobbies-members{
+.hobbies-members {
   display: grid;
   grid-template-columns: 2rem 1fr;
   vertical-align: middle;
 }
 
-.hobbies-members div{
+.hobbies-members div {
   padding-top: 2px;
 }
 
-.hobbies-members div:hover{
+.hobbies-members div:hover {
   color: #8064a2;
 }
 
+.display-mobile {
+  display: none !important;
+}
+.display-flex-mobile {
+  display: none !important;
+}
+
+.dual-section-wrapper {
+  display: flex;
+  gap: 24px;
+  align-items: start;
+}
+
+.rotate-180 {
+  transform: rotate(180deg) scale(1.5) !important;
+}
+.rotate-0 {
+  transform: rotate(0deg) scale(1.5);
+}
+
+.expand-all {
+  display: none;
+}
+.expand-all > img {
+  aspect-ratio: 1;
+  transform: scale(1.5);
+}
+.expand-all > p {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
 @media screen and (max-width: 1100px) {
-  .hobby-left-aside{
+  .hobby-left-aside {
     position: relative !important;
     top: 0;
     height: auto;
+  }
+  .keyword-container ul {
+    display: none;
+  }
+  .display-desktop {
+    display: none !important;
+  }
+  .display-mobile {
+    display: initial !important;
+  }
+  .display-flex-mobile {
+    display: flex !important;
+  }
+  .dual-section-wrapper {
+    flex-direction: column;
+    gap: 0;
+  }
+  .related-hobbies-content {
+    margin: 10px 0 0 0;
+  }
+  .posts-container {
+    margin: 10px 0 0 0;
+  }
+  .expand-all {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
+    margin: 0 1rem 1rem 0;
+    gap: 10px;
   }
 }

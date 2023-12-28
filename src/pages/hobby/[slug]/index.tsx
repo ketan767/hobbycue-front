@@ -18,6 +18,11 @@ type Props = { data: { hobbyData: any } }
 
 const HobbyDetail: React.FC<Props> = (props) => {
   const router = useRouter()
+  const [showAbout, setShowAbout] = useState(false)
+  const [showKeywords, setShowKeywords] = useState(false)
+  const [showNextLevels, setShowNextLevels] = useState(false)
+  const [showRelatedHobbies, setShowRelatedHobbies] = useState(false)
+  const [expandAll,setExpandAll]=useState(false)
 
   const { isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
@@ -39,7 +44,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
     if (err) return
 
     if (res?.data.success && res.data.no_of_hobbies === 0) return
-    if(res.data.hobbies[0]){
+    if (res.data.hobbies[0]) {
       setData(res.data.hobbies[0])
     }
   }
@@ -64,23 +69,42 @@ const HobbyDetail: React.FC<Props> = (props) => {
     fetchAndUpdateNextLevels(`fields=display,slug&sort=level&${query}`)
   }, [data])
 
-  return (
-    <HobbyPageLayout activeTab="about" data={data}>
-      {/* Body / Main Content */}
+  useEffect(()=>{
+    setShowAbout(expandAll)
+    setShowKeywords(expandAll)
+    setShowNextLevels(expandAll)
+    setShowRelatedHobbies(expandAll)
+  },[expandAll])
 
+  return (
+    <HobbyPageLayout activeTab="about" data={data} expandAll={expandAll} setExpandAll={setExpandAll}>
       <main>
         {/* About Section */}
-        <PageContentBox showEditButton={false}>
+        <PageContentBox showEditButton={false} setDisplayData={setShowAbout} expandData={expandAll}>
           <h4>About</h4>
-          <div>{data?.description}</div>
+          <div
+            className={`${styles['display-desktop']}${
+              showAbout ? ' ' + styles['display-mobile'] : ''
+            }`}
+          >
+            {data?.description}
+          </div>
         </PageContentBox>
 
         {/* Keywords Section */}
         {data?.keywords?.length > 0 && (
-          <PageContentBox showEditButton={false}>
+          <PageContentBox
+            showEditButton={false}
+            setDisplayData={setShowKeywords}
+            expandData={expandAll}
+          >
             <div className={styles['keyword-container']}>
               <h4 className={styles['keyword-text']}>Keyword :</h4>
-              <ul className={styles['keyword-list']}>
+              <ul
+                className={`${styles['keyword-list']}${
+                  showKeywords ? ' ' + styles['display-flex-mobile'] : ''
+                }`}
+              >
                 {data?.keywords?.map((item: any, idx: number) => (
                   <li key={idx}>
                     {item} {idx + 1 === data?.keywords.length ? '' : ','}{' '}
@@ -92,12 +116,13 @@ const HobbyDetail: React.FC<Props> = (props) => {
         )}
 
         {/* Next Levels and Related Hobbies */}
-        <section
-          style={{ display: 'flex', gap: '24px', alignItems: 'start' }}
-          className={styles['']}
-        >
+        <section style={{}} className={styles['dual-section-wrapper']}>
           {/* Next Levels */}
-          <PageContentBox showEditButton={false}>
+          <PageContentBox
+            showEditButton={false}
+            setDisplayData={setShowNextLevels}
+            expandData={expandAll}
+          >
             <h4>
               {data?.level === 0
                 ? 'Sub-Categories'
@@ -111,7 +136,11 @@ const HobbyDetail: React.FC<Props> = (props) => {
                 ? 'Next Level'
                 : 'Next Level'}
             </h4>
-            <div>
+            <div
+              className={`${styles['display-desktop']}${
+                showNextLevels ? ' ' + styles['display-mobile'] : ''
+              }`}
+            >
               {data.level !== 5 && nextLevels.length > 0 ? (
                 <>
                   <ul className={styles['next-level-items']}>
@@ -131,9 +160,17 @@ const HobbyDetail: React.FC<Props> = (props) => {
           </PageContentBox>
 
           {/* Related Hobbies */}
-          <PageContentBox showEditButton={false}>
+          <PageContentBox
+            showEditButton={false}
+            setDisplayData={setShowRelatedHobbies}
+            expandData={expandAll}
+          >
             <h4>Related</h4>
-            <div>
+            <div
+              className={`${styles['display-desktop']}${
+                showRelatedHobbies ? ' ' + styles['display-mobile'] : ''
+              }`}
+            >
               {data?.related_hobbies?.length > 0 ? (
                 <>
                   <ul className={styles['items']}>

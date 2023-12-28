@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './styles.module.css'
 import { GetServerSideProps } from 'next'
 import { getAllUserDetail } from '@/services/user.service'
@@ -17,6 +17,7 @@ interface Props {
 
 const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
   // const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
+  const [expandAll,setExpandAll]=useState(false)
 
   return (
     <>
@@ -24,12 +25,12 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
         <title>{`Posts | ${data.pageData.full_name} | HobbyCue`}</title>
       </Head>
 
-      <ProfileLayout activeTab={'blogs'} data={data}>
+      <ProfileLayout activeTab={'blogs'} data={data} expandAll={expandAll} setExpandAll={setExpandAll}>
         <PageGridLayout column={2}>
           <aside>
             {/* User Hobbies */}
-            <ProfileHobbySideList data={data.pageData} />
-            <ProfilePagesList data={data} />
+            <ProfileHobbySideList data={data.pageData} expandData={expandAll}/>
+            <ProfilePagesList data={data} expandData={expandAll}/>
           </aside>
           <div className={styles['nav-mobile']}>
             <ProfileNavigationLinks activeTab={'blogs'}/>
