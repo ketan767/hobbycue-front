@@ -1,19 +1,19 @@
-import { useRef, useEffect, useMemo, useState } from 'react'
-import { Provider } from 'react-redux'
-import Head from 'next/head'
 import {
-  createTheme,
   StyledEngineProvider,
   ThemeProvider,
+  createTheme,
 } from '@mui/material/styles'
 import type { AppProps } from 'next/app'
+import Head from 'next/head'
+import { useEffect, useState } from 'react'
+import { Provider } from 'react-redux'
 
-import store from '@/redux/store'
-import SiteMainLayout from '@/layouts'
 import SiteAdminLayout from '@/AdminLayout'
+import ScrollToTop from '@/components/ScrollToTop'
+import SiteMainLayout from '@/layouts'
+import store from '@/redux/store'
 import '@/styles/_globals.css'
 import { useRouter } from 'next/router'
-import LoadingBackdrop from '@/components/PageLoader'
 
 function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
@@ -74,6 +74,7 @@ function App({ Component, pageProps }: AppProps) {
             ) : (
               <SiteMainLayout>
                 <Component {...pageProps} />
+                <ScrollToTop />
               </SiteMainLayout>
             )}
           </Provider>
