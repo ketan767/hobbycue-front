@@ -34,6 +34,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
   const [posts, setPosts] = useState([])
   const dispatch = useDispatch()
   const { user } = useSelector((state: any) => state.user)
+  const [expandAll,setExpandAll]=useState(false)
   const getPost = async () => {
     setLoadingPosts(true)
     const { err, res } = await getAllPosts(
@@ -89,11 +90,11 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
         <title>{`Posts | ${data.pageData.full_name} | HobbyCue`}</title>
       </Head>
 
-      <ProfileLayout activeTab={'posts'} data={data}>
+      <ProfileLayout activeTab={'posts'} data={data} expandAll={expandAll} setExpandAll={setExpandAll}>
         <PageGridLayout column={3}>
           <aside className={styles['asideView']}>
-            <ProfileHobbySideList data={data.pageData} />
-            <ProfilePagesList data={data} />
+            <ProfileHobbySideList data={data.pageData} expandData={expandAll}/>
+            <ProfilePagesList data={data} expandData={expandAll}/>
           </aside>
           <main>
             <section
@@ -165,10 +166,10 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
           </main>
           <aside className={styles['asideView']}>
             {/* User Locations */}
-            <ProfileAddressSide data={data.pageData} />
+            <ProfileAddressSide data={data.pageData} expandData={expandAll}/>
 
             {/* User Contact Details */}
-            <ProfileContactSide data={data.pageData} />
+            <ProfileContactSide data={data.pageData} expandData={expandAll}/>
           </aside>
 
           <div className={styles['nav-mobile']}>

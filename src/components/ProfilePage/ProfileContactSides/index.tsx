@@ -9,9 +9,10 @@ import Whatsapp from '@/assets/svg/whatsapp.svg'
 import Link from 'next/link'
 type Props = {
   data: ProfilePageData['pageData']
+  expandData?:boolean
 }
 
-const ProfileContactSide = ({ data }: Props) => {
+const ProfileContactSide = ({ data, expandData }: Props) => {
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
   const ulRef = useRef(null)
   const dispatch = useDispatch()
@@ -28,6 +29,10 @@ const ProfileContactSide = ({ data }: Props) => {
     }
   }, [data])
 
+  useEffect(() => {
+    if (expandData !== undefined) setDisplayData(expandData)
+  }, [expandData])
+
   return (
     <>
       <PageContentBox
@@ -36,6 +41,7 @@ const ProfileContactSide = ({ data }: Props) => {
           dispatch(openModal({ type: 'profile-contact-edit', closable: true }))
         }
         setDisplayData={setDisplayData}
+        expandData={expandData}
       >
         <h4 className={styles['heading']}>Contact Information</h4>
         <ul

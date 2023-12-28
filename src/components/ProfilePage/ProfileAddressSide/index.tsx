@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './styles.module.css'
 import PageContentBox from '@/layouts/PageContentBox'
 import { useDispatch, useSelector } from 'react-redux'
@@ -7,9 +7,10 @@ import { openModal } from '@/redux/slices/modal'
 
 type Props = {
   data: ProfilePageData['pageData']
+  expandData?:boolean
 }
 
-const ProfileAddressSide = ({ data }: Props) => {
+const ProfileAddressSide = ({ data, expandData }: Props) => {
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
   const dispatch = useDispatch()
   const [displayData, setDisplayData] = useState(false)
@@ -29,6 +30,11 @@ const ProfileAddressSide = ({ data }: Props) => {
   if (data?.primary_address?.country) {
     addressText += `${data?.primary_address?.country}, `
   }
+
+  useEffect(() => {
+    if (expandData !== undefined) setDisplayData(expandData)
+  }, [expandData])
+
   return (
     <>
       <PageContentBox
@@ -37,6 +43,7 @@ const ProfileAddressSide = ({ data }: Props) => {
           dispatch(openModal({ type: 'profile-address-edit', closable: true }))
         }
         setDisplayData={setDisplayData}
+        expandData={expandData}
       >
         <h4 className={styles['heading']}>Location</h4>
         <ul

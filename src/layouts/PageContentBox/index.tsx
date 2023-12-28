@@ -1,4 +1,4 @@
-import React, { SetStateAction, useState } from 'react'
+import React, { SetStateAction, useEffect, useState } from 'react'
 import styles from './PageContentBox.module.css'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
@@ -12,6 +12,7 @@ type Props = {
   onEditBtnClick?: () => void
   className?: string
   setDisplayData?: any
+  expandData?: boolean
 }
 
 const PageContentBox: React.FC<Props> = ({
@@ -20,6 +21,7 @@ const PageContentBox: React.FC<Props> = ({
   showEditButton,
   className,
   setDisplayData,
+  expandData,
 }) => {
   const [showDropdown, setShowDropdown] = useState(false)
   const { listingLayoutMode } = useSelector((state: RootState) => state.site)
@@ -30,8 +32,12 @@ const PageContentBox: React.FC<Props> = ({
       setDisplayData((prevValue: boolean) => !prevValue)
   }
 
+  useEffect(() => {
+    if (expandData !== undefined) setShowDropdown(expandData)
+  }, [expandData])
+
   return (
-    <div className={`${styles['wrapper']}${className?" "+className:''}`}>
+    <div className={`${styles['wrapper']}${className ? ' ' + className : ''}`}>
       {children}
 
       {

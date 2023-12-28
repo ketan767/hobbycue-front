@@ -71,6 +71,10 @@
   display: none;
 }
 
+.posts-container-mobile{
+  display: none;
+}
+
 @media screen and (max-width: 1100px) {
 .profile-left-aside{  
   position: static; 

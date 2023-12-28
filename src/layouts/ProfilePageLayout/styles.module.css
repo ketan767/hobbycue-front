@@ -1,5 +1,31 @@
-@media screen and (max-width:1100px) {
+.rotate-180 {
+  transform: rotate(180deg) scale(1.5);
+}
+.rotate-0 {
+  transform: rotate(0deg) scale(1.5);
+}
+
+.expand-all {
+  display: none;
+}
+.expand-all > img {
+  aspect-ratio: 1;
+}
+.expand-all > p {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 20px;
+}
+@media screen and (max-width: 1100px) {
   .nav {
     display: none !important;
+  }
+  .expand-all {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
+    margin: 0 1rem 1rem 0;
+    gap: 10px;
   }
 }
