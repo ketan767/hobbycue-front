@@ -22,7 +22,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
   const [showKeywords, setShowKeywords] = useState(false)
   const [showNextLevels, setShowNextLevels] = useState(false)
   const [showRelatedHobbies, setShowRelatedHobbies] = useState(false)
-  const [expandAll,setExpandAll]=useState(false)
+  const [expandAll, setExpandAll] = useState(false)
 
   const { isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
@@ -69,18 +69,27 @@ const HobbyDetail: React.FC<Props> = (props) => {
     fetchAndUpdateNextLevels(`fields=display,slug&sort=level&${query}`)
   }, [data])
 
-  useEffect(()=>{
+  useEffect(() => {
     setShowAbout(expandAll)
     setShowKeywords(expandAll)
     setShowNextLevels(expandAll)
     setShowRelatedHobbies(expandAll)
-  },[expandAll])
-
+  }, [expandAll])
+  console.log('hobbydata', data)
   return (
-    <HobbyPageLayout activeTab="about" data={data} expandAll={expandAll} setExpandAll={setExpandAll}>
+    <HobbyPageLayout
+      activeTab="about"
+      data={data}
+      expandAll={expandAll}
+      setExpandAll={setExpandAll}
+    >
       <main>
         {/* About Section */}
-        <PageContentBox showEditButton={false} setDisplayData={setShowAbout} expandData={expandAll}>
+        <PageContentBox
+          showEditButton={false}
+          setDisplayData={setShowAbout}
+          expandData={expandAll}
+        >
           <h4>About</h4>
           <div
             className={`${styles['display-desktop']}${
