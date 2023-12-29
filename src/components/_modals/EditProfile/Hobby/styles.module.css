@@ -37,7 +37,6 @@
   }
   .modal-wrapper .body {
     height: 100%;
-    overflow: auto;
     flex: 1;
   }
 }

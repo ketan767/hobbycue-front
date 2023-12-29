@@ -546,10 +546,10 @@ const FilterDropdown: React.FC<Props> = ({ onChange }) => {
       <MenuItem onClick={() => handleFilterClick('users')} value="users">
         Users
       </MenuItem>
-      <MenuItem onClick={() => handleFilterClick('people')} value="People">
+      <MenuItem onClick={() => handleFilterClick('people')} value="people">
         People Pages
       </MenuItem>
-      <MenuItem onClick={() => handleFilterClick('places')} value="Places">
+      <MenuItem onClick={() => handleFilterClick('places')} value="places">
         Places
       </MenuItem>
       <MenuItem onClick={() => handleFilterClick('events')} value="events">
