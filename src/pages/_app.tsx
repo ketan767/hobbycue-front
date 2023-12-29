@@ -73,8 +73,10 @@ function App({ Component, pageProps }: AppProps) {
               </SiteAdminLayout>
             ) : (
               <SiteMainLayout>
-                <Component {...pageProps} />
-                <ScrollToTop />
+                <>
+                  <Component {...pageProps} />
+                  <ScrollToTop />
+                </>
               </SiteMainLayout>
             )}
           </Provider>
