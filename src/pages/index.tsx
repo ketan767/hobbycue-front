@@ -1,20 +1,20 @@
-import TestimonialImg from '@/assets/image/testimonial.png'
-import PeopleIllustration from '@/assets/svg/community-bottom.svg'
-import landingIllustration from '@/assets/svg/landing-illustration.svg'
-import Microphone from '@/assets/svg/microphone.svg'
-import PauseIcon from '@/assets/svg/play_arrow.svg'
-import AuthForm from '@/components/AuthForm/AuthForm'
-import Footer from '@/components/Footer/Footer'
-import FilledButton from '@/components/_buttons/FilledButton'
-import OutlinedButton from '@/components/_buttons/OutlinedButton'
-import { openModal } from '@/redux/slices/modal'
-import { RootState } from '@/redux/store'
-import styles from '@/styles/Home.module.css'
 import Head from 'next/head'
 import Image from 'next/image'
-import { useRouter } from 'next/router'
+import styles from '@/styles/Home.module.css'
 import React, { useEffect } from 'react'
+import landingIllustration from '@/assets/svg/landing-illustration.svg'
+import PeopleIllustration from '@/assets/svg/community-bottom.svg'
+import AuthForm from '@/components/AuthForm/AuthForm'
+import OutlinedButton from '@/components/_buttons/OutlinedButton'
+import FilledButton from '@/components/_buttons/FilledButton'
+import Footer from '@/components/Footer/Footer'
+import { openModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
+import { useRouter } from 'next/router'
+import PauseIcon from '@/assets/svg/play_arrow.svg'
+import Microphone from '@/assets/svg/microphone.svg'
+import TestimonialImg from '@/assets/image/testimonial.png'
 
 const Home: React.FC<PropTypes> = function () {
   const dispatch = useDispatch()
@@ -30,34 +30,30 @@ const Home: React.FC<PropTypes> = function () {
     }
   }, [user.isLoggedIn])
 
+
   useEffect(() => {
     // Save the scroll position before navigating to another page
     const handleBeforeUnload = () => {
-      localStorage.setItem(
-        `scrollPosition-${router.route}`,
-        window.scrollY.toString(),
-      )
-    }
+      localStorage.setItem(`scrollPosition-${router.route}`, window.scrollY.toString());
+    };
 
-    window.addEventListener('beforeunload', handleBeforeUnload)
+    window.addEventListener('beforeunload', handleBeforeUnload);
 
     // Restore the scroll position when the component mounts
-    const savedScrollPosition = localStorage.getItem(
-      `scrollPosition-${router.route}`,
-    )
+    const savedScrollPosition = localStorage.getItem(`scrollPosition-${router.route}`);
     if (savedScrollPosition) {
-      const scrollPosition = parseInt(savedScrollPosition, 10)
-      window.scrollTo(0, scrollPosition)
+      const scrollPosition = parseInt(savedScrollPosition, 10);
+      window.scrollTo(0, scrollPosition);
     }
 
     // Clean up the event listener
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload)
+      window.removeEventListener('beforeunload', handleBeforeUnload);
       if (localStorage.getItem(`scrollPosition-${router.route}`)) {
-        localStorage.removeItem(`scrollPosition-${router.route}`)
-      }
-    }
-  }, [router.route])
+        localStorage.removeItem(`scrollPosition-${router.route}`);
+      }    
+    };
+  }, [router.route]);
 
   return (
     <>
@@ -132,10 +128,7 @@ const Home: React.FC<PropTypes> = function () {
               Find a teacher, coach, or expert for your hobby interest in your
               locality. Find a partner, teammate, accompanist or collaborator.
             </p>
-            <OutlinedButton
-              className={styles['card-btn']}
-              onClick={() => router.push('/search')}
-            >
+            <OutlinedButton className={styles['card-btn']} onClick={()=>router.push('/search')}>
               Connect
             </OutlinedButton>
           </div>
@@ -157,10 +150,7 @@ const Home: React.FC<PropTypes> = function () {
               event venue. Book a slot at venues that allow booking through
               hobbycue.
             </p>
-            <OutlinedButton
-              className={styles['card-btn']}
-              onClick={() => router.push('/search')}
-            >
+            <OutlinedButton className={styles['card-btn']} onClick={()=>router.push('/search')}>
               Meet up
             </OutlinedButton>
           </div>
@@ -186,10 +176,7 @@ const Home: React.FC<PropTypes> = function () {
               Find equipment or supplies required for your hobby. Buy, rent or
               borrow from shops, online stores or from community members.
             </p>
-            <OutlinedButton
-              className={styles['card-btn']}
-              onClick={() => router.push('/search')}
-            >
+            <OutlinedButton className={styles['card-btn']} onClick={()=>router.push('/search')}>
               Get it
             </OutlinedButton>
           </div>
@@ -220,10 +207,7 @@ const Home: React.FC<PropTypes> = function () {
               Find events, meetups and workshops related to your hobby. Register
               or buy tickets online.
             </p>
-            <OutlinedButton
-              className={styles['card-btn']}
-              onClick={() => router.push('/search')}
-            >
+            <OutlinedButton className={styles['card-btn']} onClick={()=>router.push('/search')}>
               Attend
             </OutlinedButton>
           </div>
@@ -254,10 +238,7 @@ const Home: React.FC<PropTypes> = function () {
               venue or event tickets? Or, you know someone who should be on
               hobbycue? Go ahead and Add your Own page..{' '}
             </p>
-            <OutlinedButton
-              className={styles['card-btn']}
-              onClick={() => router.push('/add-listing')}
-            >
+            <OutlinedButton className={styles['card-btn']} onClick={()=>router.push('/add-listing')}>
               Add new
             </OutlinedButton>
           </div>
