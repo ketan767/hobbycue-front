@@ -55,7 +55,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
   const { listingModalData, listingTypeModalMode } = useSelector(
     (state: RootState) => state.site,
   )
-  const [list, setList] = useState<any>([])
+  const [list, setList] = useState<{ name: string; description: string }[]>([])
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [value, setValue] = useState<any>([])
   const [error, setError] = useState<string | null>(null)
@@ -102,36 +102,164 @@ const ListingTypeEditModal: React.FC<Props> = ({
       }
     }
   }
-  const peoplePageTypeList: PeoplePageType[] = [
-    'Teacher',
-    'Trainer',
-    'Coach',
-    'Instructor',
-    'Academia',
-    'Professional',
-    'Seller',
-    'Specialist',
-    'Ensemble',
-    'Company',
-    'Business',
-    'Society',
-    'Association',
-    'Organization',
+  const peoplePageTypeList: PeoplePageType = [
+    {
+      name: 'Teacher',
+      description: 'Trainer, Instructor - usually for an Art',
+    },
+    {
+      name: 'Trainer',
+      description: '',
+    },
+    {
+      name: 'Coach',
+      description: 'Trainer, Instructor - usually for a Sport',
+    },
+    {
+      name: 'Instructor',
+      description: '',
+    },
+    {
+      name: 'Academia',
+      description: 'Expert, Researcher',
+    },
+    {
+      name: 'Professional',
+      description: 'Artist, Sportsperson as source of income',
+    },
+    {
+      name: 'Seller',
+      description: 'Seller or Online Store',
+    },
+    {
+      name: 'Specialist',
+      description: 'Anchor, MC, Technician, etc.',
+    },
+    {
+      name: 'Ensemble',
+      description: 'A group that performs together',
+    },
+    {
+      name: 'Company',
+      description: '',
+    },
+    {
+      name: 'Business',
+      description: 'Company or Organization',
+    },
+    {
+      name: 'Society',
+      description: '',
+    },
+    {
+      name: 'Association',
+      description: 'Club, Society, Trust, Sabha or other Organization',
+    },
+    {
+      name: 'Organization',
+      description: 'Sabha',
+    },
   ]
-  const placePageTypeList: PlacePageType[] = [
-    'Shop',
-    'School',
-    'Auditorium',
-    'Clubhouse',
-    'Studio',
-    'Play Area',
-    'Campus',
+
+  const placePageTypeList: ProgramPageType = [
+    {
+      name: 'Shop',
+      description: 'Buy or Rent Items or Services',
+    },
+    {
+      name: 'Gallery',
+      description: 'View Exhibits',
+    },
+    {
+      name: 'School',
+      description: 'Institute or Academy',
+    },
+    {
+      name: 'Auditorium',
+      description: 'Performance Venue',
+    },
+    {
+      name: 'Clubhouse',
+      description: 'Practice or Play Area for Club member',
+    },
+    {
+      name: 'Studio',
+      description: 'Practice area for artists and others',
+    },
+    {
+      name: 'Play Area',
+      description: 'Court, Field, or Stadium for Sports',
+    },
+    {
+      name: 'Campus',
+      description: '',
+    },
+    {
+      name: 'Apartment',
+      description: 'Flat or Condo with shared amenities',
+    },
   ]
-  const programPageTypeList: ProgramPageType[] = [
-    'Classes',
-    'Workshop',
-    'Performance',
-    'Event',
+
+  const programPageTypeList: { name: string; description: string }[] = [
+    {
+      name: 'Classes',
+      description: 'Recurring Classes',
+    },
+    {
+      name: 'Workshop',
+      description: 'Seminar, Webinar or Class',
+    },
+    {
+      name: 'Performance',
+      description: 'Live Show',
+    },
+    {
+      name: 'Competition',
+      description: 'Contests to Rank and/or give Prizes',
+    },
+    {
+      name: 'Event',
+      description: 'Other types of Events',
+    },
+    {
+      name: 'Other',
+      description: 'Request addition of options',
+    },
+  ]
+
+  const productPageTypeList: ProductPageType = [
+    {
+      name: 'Item Sale',
+      description: 'Shippable product',
+    },
+    {
+      name: 'Item Rental',
+      description: 'Equipment on rent',
+    },
+    {
+      name: 'Space Rental',
+      description: 'Book a play court or studio',
+    },
+    {
+      name: 'Consult / Service',
+      description: 'Consultation or service appointment',
+    },
+    {
+      name: 'Live Classes',
+      description: 'Recurring classes registration',
+    },
+    {
+      name: 'Online Access',
+      description: 'To view or download digital content',
+    },
+    {
+      name: 'Event Ticket',
+      description: 'Scheduled programs',
+    },
+    {
+      name: 'Voucher',
+      description: 'Redeemable code',
+    },
   ]
 
   useEffect(() => {
@@ -146,7 +274,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
         setList(programPageTypeList)
         break
       case 4:
-        setList(programPageTypeList)
+        setList(productPageTypeList)
         break
       default:
         setList([])
@@ -278,31 +406,37 @@ const ListingTypeEditModal: React.FC<Props> = ({
                   </div>
                   {showDropdown && (
                     <div className={styles['options-container']}>
-                      {list.map((item: any, idx: any) => {
-                        return (
-                          <div
-                            className={`${styles['single-option']}  ${
-                              value?.includes(item)
-                                ? styles['selcted-option']
-                                : ''
-                            }`}
-                            key={item}
-                            onClick={() => {
-                              handleChange(item)
-                              setShowDropdown(false)
-                            }}
-                          >
-                            <p className={styles.tagDesc}>
-                              {item}
-                              <Image
-                                src={TickIcon}
-                                alt="down"
-                                className={styles['tick-icon']}
-                              />
-                            </p>
-                          </div>
-                        )
-                      })}
+                      {list.map(
+                        (
+                          item: { name: string; description: string },
+                          idx: number,
+                        ) => {
+                          return (
+                            <div
+                              className={`${styles['single-option']}  ${
+                                value?.includes(item.name)
+                                  ? styles['selcted-option']
+                                  : ''
+                              }`}
+                              key={item.name}
+                              onClick={() => {
+                                handleChange(item.name)
+                                setShowDropdown(false)
+                              }}
+                            >
+                              <p className={styles.tagDesc}>{item.name}</p>
+                              <p className={styles.tagDesc}>
+                                {item.description}
+                                <Image
+                                  src={TickIcon}
+                                  alt="down"
+                                  className={styles['tick-icon']}
+                                />
+                              </p>
+                            </div>
+                          )
+                        },
+                      )}
                     </div>
                   )}
                 </div>

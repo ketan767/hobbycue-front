@@ -1,6 +1,6 @@
-"use client";
+'use client'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useState } from 'react'
 
 import { GetServerSideProps } from 'next'
 import { getAllUserDetail } from '@/services/user.service'
@@ -26,20 +26,21 @@ interface Props {
 const ProfileListingsPage: React.FC<Props> = ({ data }) => {
   const dispatch = useDispatch()
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
-  
+  const [expandAll,setExpandAll]=useState(false)
+
   return (
     <>
       <Head>
         <title>{`Posts | ${data.pageData.full_name} | HobbyCue`}</title>
       </Head>
 
-      <ProfileLayout activeTab={'pages'} data={data}>
+      <ProfileLayout activeTab={'pages'} data={data} expandAll={expandAll} setExpandAll={setExpandAll}>
         {data.pageData && (
           <PageGridLayout column={2}>
             <aside>
               {/* User Hobbies */}
-              <ProfileHobbySideList data={data.pageData} />
-              <ProfilePagesList data={data} />
+              <ProfileHobbySideList data={data.pageData} expandData={expandAll}/>
+              <ProfilePagesList data={data} expandData={expandAll}/>
             </aside>
 
             <main>
@@ -50,13 +51,13 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
               </div>
             </main>
             <div className={styles['nav-mobile']}>
-            <ProfileNavigationLinks activeTab={'pages'}/>
+              <ProfileNavigationLinks activeTab={'pages'} />
             </div>
             <div className={styles['card-container-mobile']}>
-                {data.listingsData.map((listing: any) => {
-                  return <ListingCard key={listing._id} data={listing} />
-                })}
-              </div>
+              {data.listingsData.map((listing: any) => {
+                return <ListingCard key={listing._id} data={listing} />
+              })}
+            </div>
           </PageGridLayout>
         )}
       </ProfileLayout>

@@ -68,6 +68,9 @@ ul.contact-wrapper svg {
 .nav-mobile{
   display: none;
 }
+.card-container-mobile{
+  display: none;
+}
 @media screen and (max-width: 1100px) {
   .card-container {
     display: none;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import Image from 'next/image'
 
 import PageContentBox from '@/layouts/PageContentBox'
@@ -21,9 +21,10 @@ import ListingPagePosts from '../ListingPagePosts/ListingPagePosts'
 interface Props {
   data: ListingPageData['pageData']
   AboutErr?: boolean
+  expandAll?: boolean
 }
 
-const ListingHomeTab: React.FC<Props> = ({ data, AboutErr }) => {
+const ListingHomeTab: React.FC<Props> = ({ data, AboutErr, expandAll }) => {
   // console.log('🚀 ~ file: ListingHomeTab.tsx:17 ~ data:', data)
   const dispatch = useDispatch()
   const [pagesData, setPagesData] = useState([])
@@ -52,6 +53,13 @@ const ListingHomeTab: React.FC<Props> = ({ data, AboutErr }) => {
       })
   }, [])
 
+  useEffect(() => {
+    if (expandAll !== undefined) {
+      setShowAbout(expandAll)
+      setShowOthers(expandAll)
+    }
+  }, [expandAll])
+
   return (
     <>
       <main>
@@ -63,6 +71,7 @@ const ListingHomeTab: React.FC<Props> = ({ data, AboutErr }) => {
             dispatch(openModal({ type: 'listing-about-edit', closable: true }))
           }
           setDisplayData={setShowAbout}
+          expandData={expandAll}
         >
           <h4>About</h4>
           <div
@@ -82,6 +91,7 @@ const ListingHomeTab: React.FC<Props> = ({ data, AboutErr }) => {
             )
           }
           setDisplayData={setShowOthers}
+          expandData={expandAll}
         >
           <h4 className={styles['display-mobile']}>Other Information</h4>
           <div

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './styles.module.css'
 import PageContentBox from '@/layouts/PageContentBox'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,9 +10,10 @@ import { listingTypes } from '@/constants/constant'
 
 type Props = {
   data: ProfilePageData['pageData']
+  expandData?:boolean
 }
 
-const ProfilePagesList = ({ data }: Props) => {
+const ProfilePagesList = ({ data, expandData }: Props) => {
   const router = useRouter()
   const [displayData, setDisplayData] = useState(false)
   function getClassName(type: any) {
@@ -31,9 +32,14 @@ const ProfilePagesList = ({ data }: Props) => {
     }
   }
 
+  useEffect(() => {
+    if (expandData !== undefined) setDisplayData(expandData)
+  }, [expandData])
+
   return (
     <PageContentBox
     setDisplayData={setDisplayData}
+    expandData={expandData}
     >
       <h4 className={styles['heading']}>Pages</h4>
       <ul className={`${styles['pages-list']} ${displayData&&styles['display-mobile-flex']}`}>

@@ -31,7 +31,7 @@
   }
   .modal-wrapper .body {
     height: 100%;
-    overflow: auto;
+    /* overflow: auto; */
   }
 }
 .modal-wrapper .header,
@@ -143,12 +143,12 @@
   position: absolute;
   left: 0;
   right: 0;
-  top: calc(100% + var(--spacing-4));
+  bottom: calc(100% + var(--spacing-4));
   background: #ffffff;
   border-radius: var(--spacing-4);
   padding: var(--spacing-4);
   filter: drop-shadow(0px 0px 2px rgba(147, 156, 163, 0.36))
-    drop-shadow(0px 8px 12px rgba(147, 156, 163, 0.12));
+  drop-shadow(0px 8px 12px rgba(147, 156, 163, 0.12));
   z-index: 20;
   overflow-y: auto;
   height: 15rem;
