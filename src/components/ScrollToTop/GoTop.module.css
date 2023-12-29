@@ -10,7 +10,15 @@
   right: 60px;
 }
 
+.container:hover {
+  background-color: #8064a2;
+}
+
 .iconSize {
   width: 16px;
   height: 16px;
+}
+
+.iconSize:hover {
+  color: white;
 }
