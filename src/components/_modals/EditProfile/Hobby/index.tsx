@@ -379,7 +379,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                       <td className={styles.hideActionMobile}>Action</td>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody style={{display:"inline-table"}}>
                     {userHobbies?.map((hobby: any) => {
                       return (
                         <tr key={hobby._id}>
