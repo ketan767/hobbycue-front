@@ -31,7 +31,7 @@
   }
   .modal-wrapper .body {
     height: 100%;
-    overflow: auto;
+    /* overflow: auto; */
   }
 }
 .modal-wrapper .header,

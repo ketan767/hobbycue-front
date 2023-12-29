@@ -33,6 +33,7 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
   const [media, setMedia] = useState([])
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
 
+  const [expandAll, setExpandAll] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const dispatch = useDispatch()
 
@@ -123,12 +124,17 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
         <title>{`Media | ${data.pageData.full_name} | HobbyCue`}</title>
       </Head>
 
-      <ProfileLayout activeTab={'media'} data={data}>
+      <ProfileLayout
+        activeTab={'media'}
+        data={data}
+        expandAll={expandAll}
+        setExpandAll={setExpandAll}
+      >
         <PageGridLayout column={2}>
           <aside>
             {/* User Hobbies */}
-            <ProfileHobbySideList data={data.pageData} />
-            <ProfilePagesList data={data} />
+            <ProfileHobbySideList data={data.pageData} expandData={expandAll}/>
+            <ProfilePagesList data={data} expandData={expandAll}/>
           </aside>
           <div className={styles['nav-mobile']}>
             <ProfileNavigationLinks activeTab={'media'} />

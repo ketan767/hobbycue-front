@@ -244,6 +244,7 @@ useEffect(()=>{
               dispatch(openModal({ type: 'listing-type-edit', closable: true }))
               dispatch(updateListingTypeModalMode({ mode: 'edit' }))
             }}
+            expandData={expandAll}
           >
             {data.page_type.map((type: any, idx: any) => {
               return (

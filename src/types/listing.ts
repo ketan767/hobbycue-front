@@ -6,33 +6,25 @@
  */
 type ListingPages = 1 | 2 | 3 | 4 | 5
 
-type PeoplePageType =
-  | 'Teacher'
-  | 'Trainer'
-  | 'Coach'
-  | 'Instructor'
-  | 'Academia'
-  | 'Professional'
-  | 'Seller'
-  | 'Specialist'
-  | 'Ensemble'
-  | 'Company'
-  | 'Business'
-  | 'Society'
-  | 'Association'
-  | 'Organization'
+type PeoplePageType =  {
+  name: string;
+  description: string;
+}[];
 
-type PlacePageType =
-  | 'Shop'
-  | 'School'
-  | 'Auditorium'
-  | 'Clubhouse'
-  | 'Studio'
-  | 'Play Area'
-  | 'Campus'
+type PlacePageType =  {
+  name: string;
+  description: string;
+}[];
 
-type ProgramPageType = 'Classes' | 'Workshop' | 'Performance' | 'Event'
+type ProgramPageType =  {
+  name: string;
+  description: string;
+}[];
 
+type ProductPageType = {
+  name: string;
+  description: string;
+}[];
 // Listing Page
 type ListingPageTabs = 'home' | 'posts' | 'media' | 'reviews' | 'events' | 'store'
 

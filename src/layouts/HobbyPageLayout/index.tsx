@@ -14,14 +14,25 @@ import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import PageContentBox from '../PageContentBox'
 import Link from 'next/link'
 import HobbyPageHeaderSmall from '@/components/HobbyPage/HobbyHeader/HobbyPageHeaderSmall'
+import ChevronDown from '@/assets/svg/chevron-down.svg'
+import Image from 'next/image'
+import HobbyNavigationLinks from '@/components/HobbyPage/HobbyHeader/HobbyNavigationLinks'
 
 type Props = {
   activeTab: HobbyPageTabs
   data: any
   children: React.ReactNode
+  setExpandAll?: React.Dispatch<React.SetStateAction<boolean>>
+  expandAll?: boolean
 }
 
-const HobbyPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
+const HobbyPageLayout: React.FC<Props> = ({
+  children,
+  activeTab,
+  data,
+  expandAll,
+  setExpandAll,
+}) => {
   const [showSmallHeader, setShowSmallHeader] = useState(false)
   const [members, setMembers] = useState([])
   const hideLastColumnPages = ['pages', 'blogs']
@@ -29,6 +40,9 @@ const HobbyPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
   const router = useRouter()
   const [seeAll, setSeeAll] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [showMembers, setShowMembers] = useState(false)
+  const [showHobbiesClassification, setShowHobbiesClassification] =
+    useState(false)
 
   useEffect(() => {
     if (hideLastColumnPages.includes(activeTab)) {
@@ -74,6 +88,13 @@ const HobbyPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
     // return window.removeEventListener('scroll', checkScroll)
   }, [])
 
+  useEffect(() => {
+    if (expandAll !== undefined) {
+      setShowHobbiesClassification(expandAll)
+      setShowMembers(expandAll)
+    }
+  }, [expandAll])
+
   const toggleMembers = () => {
     setSeeAll(!seeAll)
   }
@@ -85,38 +106,80 @@ const HobbyPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
         <HobbyPageHeaderSmall data={data} activeTab={activeTab} />
       )}
 
-      {/* Profile Page Body, where all contents of different tabs appears. */}
+      <div
+        onClick={() => {
+          if (setExpandAll !== undefined)
+            setExpandAll((prevValue: boolean) => !prevValue)
+        }}
+        className={styles['expand-all']}
+      >
+        {expandAll ? <p>Contract All</p> : <p>Expand All</p>}
+        <Image
+          src={ChevronDown}
+          className={`${expandAll ? styles['rotate-180'] :''}`}
+          alt=""
+        />
+      </div>
+
       <PageGridLayout column={!hideLastColumn ? 3 : 2}>
         <aside className={`custom-scrollbar ${styles['hobby-left-aside']}`}>
-          <PageContentBox showEditButton={false}>
+          <PageContentBox
+            showEditButton={false}
+            setDisplayData={setShowHobbiesClassification}
+            expandData={expandAll}
+          >
             <h4 className={styles['heading']}>Hobbies Classification</h4>
-            <ul className={styles['classification-items']}>
-              <Link href={`/hobby/${data?.category?.slug}`}>
-                <li>{data?.category?.display}</li>
-              </Link>
-              <Link href={`/hobby/${data?.sub_category?.slug}`}>
-                <li>{data?.sub_category?.display}</li>
-              </Link>
-              {data?.tags &&
-                data?.tags.map((tag: any, idx: number) => {
-                  return (
-                    <Link key={idx} href={`/hobby/${tag?.slug}`}>
-                      <li>{tag.display}</li>
-                    </Link>
-                  )
-                })}
-              <li className={styles['active']}>{data?.display}</li>
-            </ul>
+            <div
+              className={`${styles['display-desktop']}${
+                showHobbiesClassification ? ' ' + styles['display-mobile'] : ''
+              }`}
+            >
+              <ul className={styles['classification-items']}>
+                <Link href={`/hobby/${data?.category?.slug}`}>
+                  <li>{data?.category?.display}</li>
+                </Link>
+                <Link href={`/hobby/${data?.sub_category?.slug}`}>
+                  <li>{data?.sub_category?.display}</li>
+                </Link>
+                {data?.tags &&
+                  data?.tags.map((tag: any, idx: number) => {
+                    return (
+                      <Link key={idx} href={`/hobby/${tag?.slug}`}>
+                        <li>{tag.display}</li>
+                      </Link>
+                    )
+                  })}
+                <li className={styles['active']}>{data?.display}</li>
+              </ul>
+            </div>
           </PageContentBox>
         </aside>
-        <main>{children}</main>
+        <main className={styles['display-desktop']}>{children}</main>
 
         {!hideLastColumn && (
           <aside>
             <div className={styles['members']}>
-              <h4 className={styles['heading']}>Members</h4>
-              <hr />
-              <div className={styles['member-list']}>
+              <div className={styles['heading']}>
+                <h4>Members</h4>
+                <Image
+                  src={ChevronDown}
+                  alt=""
+                  onClick={() => setShowMembers((prevValue) => !prevValue)}
+                  className={`${styles['display-mobile']} ${
+                    showMembers ? styles['rotate-180'] : ''
+                  }`}
+                />
+              </div>
+              <hr
+                className={`${styles['display-desktop']}${
+                  showMembers ? ' ' + styles['display-flex-mobile'] : ''
+                }`}
+              />
+              <div
+                className={`${styles['member-list']} ${
+                  styles['display-desktop']
+                }${showMembers ? ' ' + styles['display-flex-mobile'] : ''}`}
+              >
                 {loading ? (
                   <p>Loading...</p>
                 ) : members.length > 0 ? (
@@ -127,12 +190,13 @@ const HobbyPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
                         <p key={idx}>
                           <Link href={`/profile/${user.profile_url}`}>
                             <div className={styles['hobbies-members']}>
-                              <img
+                              <Image
                                 className={styles['member-img']}
                                 width="24"
                                 height="24"
                                 src={user.profile_image}
-                              ></img>
+                                alt=""
+                              />
                               <div>{user.full_name}</div>
                             </div>
                           </Link>
@@ -155,6 +219,10 @@ const HobbyPageLayout: React.FC<Props> = ({ children, activeTab, data }) => {
             </div>
           </aside>
         )}
+        <main className={styles['display-mobile']}>{children}</main>
+        <div className={`${styles['display-mobile']}`}>
+          <HobbyNavigationLinks activeTab={activeTab} />
+        </div>
       </PageGridLayout>
     </>
   )

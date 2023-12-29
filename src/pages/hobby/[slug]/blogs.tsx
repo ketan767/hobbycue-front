@@ -23,19 +23,24 @@ type Props = { data: { hobbyData: any } }
 const HobbyBlogsPage: React.FC<Props> = (props) => {
   const data = props.data.hobbyData
 
+  const [expandAll,setExpandAll]=useState(false)
   const dispatch = useDispatch()
   const { isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
   )
-
-
+  
 
   return (
-    <HobbyPageLayout activeTab="blogs" data={data}>
-      <main>
-       <p>No blogs available!</p>
+    <>
+      <HobbyPageLayout activeTab="blogs" data={data} expandAll={expandAll} setExpandAll={setExpandAll}>
+        <main className={`${styles['display-desktop']}`}>
+          <p>No blogs available!</p>
+        </main>
+      </HobbyPageLayout>
+      <main className={`${styles['display-mobile']}`}>
+        <p>No blogs available!</p>
       </main>
-    </HobbyPageLayout>
+    </>
   )
 }
 

@@ -33,6 +33,7 @@ import { useSelector } from 'react-redux'
 
 import { Preview } from '@mui/icons-material'
 import { Select } from '@mui/material'
+import { openModal } from '@/redux/slices/modal'
 
 type Props = {
   data?: any
@@ -114,6 +115,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const showAllEvent = useSelector((state: any) => state.search.showAllEvent)
 
   const dispatch = useDispatch()
+  const { isLoggedIn, isAuthenticated, user } = useSelector(
+    (state: RootState) => state.user,
+  )
 
   const [HideUser, setHideUser] = useState(false)
   const [HidePeople, setHidePeople] = useState(false)
@@ -205,9 +209,12 @@ const MainContent: React.FC<SearchResultsProps> = ({
   }, [showAllEvent])
 
   const navigateToProfile = (profileUrl: string) => {
-    router.push(`profile/${profileUrl}`)
+    if (isLoggedIn) {
+      router.push(`profile/${profileUrl}`)
+    } else {
+      dispatch(openModal({ type: 'auth', closable: true }))
+    }
   }
-
   const navigateToPage = (pageUrl: string) => {
     router.push(`page/${pageUrl}`)
   }
@@ -539,10 +546,10 @@ const FilterDropdown: React.FC<Props> = ({ onChange }) => {
       <MenuItem onClick={() => handleFilterClick('users')} value="users">
         Users
       </MenuItem>
-      <MenuItem onClick={() => handleFilterClick('people')} value="People">
+      <MenuItem onClick={() => handleFilterClick('people')} value="people">
         People Pages
       </MenuItem>
-      <MenuItem onClick={() => handleFilterClick('places')} value="Places">
+      <MenuItem onClick={() => handleFilterClick('places')} value="places">
         Places
       </MenuItem>
       <MenuItem onClick={() => handleFilterClick('events')} value="events">
