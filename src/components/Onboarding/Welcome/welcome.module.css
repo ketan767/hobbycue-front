@@ -1,0 +1,36 @@
+.modal-wrapper {
+  background-color: white;
+  border-radius: var(--spacing-8);
+  max-width: 490px;
+  width: 490px;
+  min-height: auto;
+  display: flex;
+  flex-direction: column;
+  margin-top: 250px;
+}
+
+.modalContent {
+  text-align: center;
+  padding: 24px;
+}
+
+.iconContainerStyle {
+  margin-bottom: 24px;
+}
+
+.iconStyle {
+  margin-left: 'auto';
+  margin-right: 'auto';
+  height: '3rem';
+  width: '3rem';
+}
+
+.titleStyle {
+  font-size: '1.125rem';
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.descriptionStyle {
+  color: '#718096';
+}

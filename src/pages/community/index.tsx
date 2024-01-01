@@ -1,17 +1,19 @@
-import React, { useEffect, useState } from 'react'
-import { withAuth } from '@/navigation/withAuth'
-import styles from '@/styles/Community.module.css'
-import { useDispatch, useSelector } from 'react-redux'
-import store, { RootState } from '@/redux/store'
-import { getAllPosts } from '@/services/post.service'
-import { updateLoading, updatePosts } from '@/redux/slices/post'
+import welcomWishIcon from '@/assets/image/welcome-wishlist.png'
+import tipsSliceIconLeft from '@/assets/svg/tips-slice-left.svg'
+import tipsSliceIconRight from '@/assets/svg/tips-slice-right.svg'
+import TipsCard from '@/components/Onboarding/TIps'
+import Welcome from '@/components/Onboarding/Welcome'
 import PostCard from '@/components/PostCard/PostCard'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
-import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
-import { checkIfUrlExists } from '@/utils'
+import { withAuth } from '@/navigation/withAuth'
+import { updateLoading, updatePosts } from '@/redux/slices/post'
+import { RootState } from '@/redux/store'
+import { getAllPosts } from '@/services/post.service'
+import styles from '@/styles/Community.module.css'
 import { useRouter } from 'next/router'
-import { openModal } from '@/redux/slices/modal'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 type Props = {}
 
@@ -46,6 +48,35 @@ const CommunityHome: React.FC<Props> = ({}) => {
     if (allPosts.length === 0) getPost()
   }, [activeProfile])
 
+  // onboarding tips
+  const welcomeContent = {
+    iconSrc: welcomWishIcon,
+    title: 'Welcome to HobbyCue',
+    description:
+      'Choose from one of the options to continue. You can always find them on the top navigation.',
+  }
+
+  const myCommunity = {
+    title: 'My Community',
+    description: 'Communities specific to your Hobbies + Location.',
+    sliceIcon: tipsSliceIconLeft,
+    customStyle: { position: 'absolute', top: -155, left: 120 },
+  }
+
+  const searchTips = {
+    title: 'Search',
+    description: 'Search the site and you may find your next cue.',
+    sliceIcon: tipsSliceIconLeft,
+    customStyle: { position: 'absolute', top: -155, left: 450 },
+  }
+
+  const myProfileTips = {
+    title: 'My Profile',
+    description: 'View your Profile, Add Pics, Social and more.',
+    sliceIcon: tipsSliceIconRight,
+    customStyle: { position: 'absolute', top: -155, right: 450 },
+  }
+
   return (
     <>
       <CommunityPageLayout activeTab="posts">
@@ -68,7 +99,17 @@ const CommunityHome: React.FC<Props> = ({}) => {
             })
           ) : allPosts.length === 0 ? (
             <div className={styles['no-posts-div']}>
-            <p className={styles['no-posts-text']}>There were no posts for the hobby and the location you have chosen.<br/>Add other hobbies to your profile, or be the first one to start a conversation on yours</p>
+              <p className={styles['no-posts-text']}>
+                There were no posts for the hobby and the location you have
+                chosen.
+                <br />
+                Add other hobbies to your profile, or be the first one to start
+                a conversation on yours
+              </p>
+              <Welcome {...(welcomeContent as any)} />
+              <TipsCard {...(myCommunity as any)} />
+              <TipsCard {...(searchTips as any)} />
+              <TipsCard {...(myProfileTips as any)} />
             </div>
           ) : (
             <></>
