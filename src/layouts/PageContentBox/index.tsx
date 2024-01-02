@@ -40,23 +40,21 @@ const PageContentBox: React.FC<Props> = ({
     <div className={`${styles['wrapper']}${className ? ' ' + className : ''}`}>
       {children}
 
-      {
+      {(setDisplayData !== undefined) &&
         <Image
           src={ChevronDown}
           alt=""
           onClick={onDropdownClick}
-          className={`${styles['dropdown-icon']} ${
-            showDropdown && styles['rotate-180deg']
-          }`}
+          className={`${styles['dropdown-icon']} ${showDropdown && styles['rotate-180deg']
+            }`}
         />
       }
 
       {showEditButton && (
         <svg
           onClick={onEditBtnClick}
-          className={`${styles['edit-btn']} ${
-            showDropdown && styles['display-initial']
-          }`}
+          className={`${styles['edit-btn']}${(setDisplayData===undefined)?" "+ styles['edit-icon-without-dropdown']:""} ${showDropdown && styles['display-initial']
+            }`}
           width="17"
           height="16"
           viewBox="0 0 17 16"

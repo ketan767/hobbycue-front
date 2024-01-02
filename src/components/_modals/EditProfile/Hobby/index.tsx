@@ -379,7 +379,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                       <td className={styles.hideActionMobile}>Action</td>
                     </tr>
                   </thead>
-                  <tbody style={{display:"inline-table"}}>
+                  <tbody style={{ display: 'inline-table' }}>
                     {userHobbies?.map((hobby: any) => {
                       return (
                         <tr key={hobby._id}>
@@ -492,9 +492,10 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                                   return (
                                     <p
                                       key={hobby._id}
-                                      onClick={() =>
+                                      onClick={() => {
                                         handleHobbySelection(hobby)
-                                      }
+                                        setShowHobbyDowpdown(false)
+                                      }}
                                     >
                                       {hobby.display}
                                     </p>
