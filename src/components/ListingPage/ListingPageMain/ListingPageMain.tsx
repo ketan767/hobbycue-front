@@ -50,7 +50,7 @@ interface Props {
   full_name?: string
   profile_url?: string
   activeTab?: any
-  expandAll?:boolean
+  expandAll?: boolean
 }
 
 const ListingPageMain: React.FC<Props> = ({
@@ -62,7 +62,7 @@ const ListingPageMain: React.FC<Props> = ({
   ContactInfoErr,
   LocationErr,
   activeTab,
-  expandAll
+  expandAll,
 }) => {
   const dispatch = useDispatch()
   const [tags, setTags] = useState([])
@@ -190,19 +190,18 @@ const ListingPageMain: React.FC<Props> = ({
     })
   }, [data?.related_listings_left?.listings])
 
-useEffect(()=>{
-  if(expandAll!==undefined)
-  {
-    setShowContact(expandAll)
-    setShowHobbies(expandAll)
-    setShowLocation(expandAll)
-    setShowRelatedListing1(expandAll)
-    setShowRelatedListing2(expandAll)
-    setShowSocialMedia(expandAll)
-    setShowTags(expandAll)
-    setShowWorkingHours(expandAll)
-  }
-},[expandAll])
+  useEffect(() => {
+    if (expandAll !== undefined) {
+      setShowContact(expandAll)
+      setShowHobbies(expandAll)
+      setShowLocation(expandAll)
+      setShowRelatedListing1(expandAll)
+      setShowRelatedListing2(expandAll)
+      setShowSocialMedia(expandAll)
+      setShowTags(expandAll)
+      setShowWorkingHours(expandAll)
+    }
+  }, [expandAll])
 
   console.log('listingPagesRight', listingPagesRight)
   const openGoogleMaps = () => {
@@ -292,7 +291,7 @@ useEffect(()=>{
               }`}
             >
               {!data || data._hobbies.length === 0 ? (
-                <span className={`${styles['textGray']}`}>{'No Hobbies!'}</span>
+                <span className={`${styles['textGray']}`}>{''}</span>
               ) : (
                 <ul className={styles['hobby-list']}>
                   {data?._hobbies?.map((item: any) => {
@@ -410,7 +409,7 @@ useEffect(()=>{
         </aside>
 
         {children}
-        
+
         {activeTab !== 'media' && (
           <aside>
             {/* User Contact Details */}
