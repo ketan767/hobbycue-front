@@ -295,7 +295,7 @@ const ListingPageMain: React.FC<Props> = ({
               }`}
             >
               {!data || data._hobbies.length === 0 ? (
-                <span className={`${styles['textGray']}`}>{'No Hobbies!'}</span>
+                <span className={`${styles['textGray']}`}>{''}</span>
               ) : (
                 <ul className={styles['hobby-list']}>
                   {data?._hobbies?.map((item: any) => {
