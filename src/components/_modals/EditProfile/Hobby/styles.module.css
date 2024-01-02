@@ -405,9 +405,12 @@
     flex: 2 !important;
   }
   .added-hobby-list table tr td:nth-child(2) {
+
     flex: 0 0;
+
     display: flex;
     justify-content: center;
+
   }
   .added-hobby-list table tr td:nth-child(3) {
     text-align: right;
@@ -458,4 +461,5 @@
   .render-p {
     display: none;
   }
+
 }
