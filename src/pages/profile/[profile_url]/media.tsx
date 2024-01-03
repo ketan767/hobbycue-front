@@ -20,6 +20,7 @@ import ProfileHobbySideList from '@/components/ProfilePage/ProfileHobbySideList'
 import ProfilePagesList from '@/components/ProfilePage/ProfilePagesList/ProfilePagesList'
 import ReactPlayer from 'react-player'
 import { updateImageUrl } from '@/redux/slices/modal'
+import ProfileNavigationLinks from '@/components/ProfilePage/ProfileHeader/ProfileNavigationLinks'
 
 interface Props {
   data: ProfilePageData['pageData']
@@ -32,6 +33,7 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
   const [media, setMedia] = useState([])
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
 
+  const [expandAll, setExpandAll] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const dispatch = useDispatch()
 
@@ -122,13 +124,21 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
         <title>{`Media | ${data.pageData.full_name} | HobbyCue`}</title>
       </Head>
 
-      <ProfileLayout activeTab={'media'} data={data}>
+      <ProfileLayout
+        activeTab={'media'}
+        data={data}
+        expandAll={expandAll}
+        setExpandAll={setExpandAll}
+      >
         <PageGridLayout column={2}>
-          <aside className={styles['asideView']}>
+          <aside>
             {/* User Hobbies */}
-            <ProfileHobbySideList data={data.pageData} />
-            <ProfilePagesList data={data} />
+            <ProfileHobbySideList data={data.pageData} expandData={expandAll}/>
+            <ProfilePagesList data={data} expandData={expandAll}/>
           </aside>
+          <div className={styles['nav-mobile']}>
+            <ProfileNavigationLinks activeTab={'media'} />
+          </div>
           <div>
             {profileLayoutMode === 'edit' && (
               <div className={styles.uploadContainer}>

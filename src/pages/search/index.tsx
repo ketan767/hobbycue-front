@@ -33,6 +33,7 @@ import { useSelector } from 'react-redux'
 
 import { Preview } from '@mui/icons-material'
 import { Select } from '@mui/material'
+import { openModal } from '@/redux/slices/modal'
 
 type Props = {
   data?: any
@@ -114,6 +115,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const showAllEvent = useSelector((state: any) => state.search.showAllEvent)
 
   const dispatch = useDispatch()
+  const { isLoggedIn, isAuthenticated, user } = useSelector(
+    (state: RootState) => state.user,
+  )
 
   const [HideUser, setHideUser] = useState(false)
   const [HidePeople, setHidePeople] = useState(false)
@@ -205,9 +209,12 @@ const MainContent: React.FC<SearchResultsProps> = ({
   }, [showAllEvent])
 
   const navigateToProfile = (profileUrl: string) => {
-    router.push(`profile/${profileUrl}`)
+    if (isLoggedIn) {
+      router.push(`profile/${profileUrl}`)
+    } else {
+      dispatch(openModal({ type: 'auth', closable: true }))
+    }
   }
-
   const navigateToPage = (pageUrl: string) => {
     router.push(`page/${pageUrl}`)
   }
@@ -497,45 +504,55 @@ const MainContent: React.FC<SearchResultsProps> = ({
 console.log()
 
 const FilterDropdown: React.FC<Props> = ({ onChange }) => {
-  const [value, setValue] = useState('All Pages')
+  const [activeFilter, setActiveFilter] = useState('all')
   const dispatch = useDispatch()
-  const handleShowAllPeopleClick = () => {
-    setValue('people')
-    dispatch(toggleShowAllPeople())
-  }
-  const handleShowAllPlaceClick = () => {
-    setValue('places')
-    dispatch(toggleShowAllPlace())
-  }
-  const handleShowAllEventClick = () => {
-    setValue('programs')
-    dispatch(toggleShowAllEvent())
-  }
-  const handleShowAll = () => {
-    setValue('All Pages')
-    dispatch(toggleShowAll())
-  }
-
-  const handleShowAllUsers = () => {
-    setValue('Users')
-    dispatch(toggleShowAllUsers())
+  const handleFilterClick = (filterType: any) => {
+    if (activeFilter === filterType) {
+      setActiveFilter('')
+      dispatch(toggleShowAll())
+    } else {
+      setActiveFilter(filterType)
+      switch (filterType) {
+        case 'all':
+          dispatch(toggleShowAll())
+          break
+        case 'users':
+          dispatch(toggleShowAllUsers())
+          break
+        case 'people':
+          dispatch(toggleShowAllPeople())
+          break
+        case 'places':
+          dispatch(toggleShowAllPlace())
+          break
+        case 'events':
+          dispatch(toggleShowAllEvent())
+          break
+        default:
+          break
+      }
+    }
   }
 
   return (
-    <Select onChange={onChange} className={styles.filterDropdown} value={value}>
-      <MenuItem onClick={handleShowAll} value="All Pages">
+    <Select
+      onChange={onChange}
+      className={styles.filterDropdown}
+      value={activeFilter}
+    >
+      <MenuItem onClick={() => handleFilterClick('all')} value="all">
         All of Hobbycue
       </MenuItem>
-      <MenuItem onClick={handleShowAllUsers} value="Users">
+      <MenuItem onClick={() => handleFilterClick('users')} value="users">
         Users
       </MenuItem>
-      <MenuItem onClick={handleShowAllPeopleClick} value="people">
+      <MenuItem onClick={() => handleFilterClick('people')} value="people">
         People Pages
       </MenuItem>
-      <MenuItem onClick={handleShowAllPlaceClick} value="places">
+      <MenuItem onClick={() => handleFilterClick('places')} value="places">
         Places
       </MenuItem>
-      <MenuItem onClick={handleShowAllEventClick} value="programs">
+      <MenuItem onClick={() => handleFilterClick('events')} value="events">
         Programs
       </MenuItem>
     </Select>

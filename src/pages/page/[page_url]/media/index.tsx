@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
-
+import styles from '@/styles/Page.module.css'
 import { GetServerSideProps } from 'next'
 import { getAllUserDetail } from '@/services/user.service'
 import Head from 'next/head'
@@ -22,7 +22,7 @@ type Props = { data: ListingPageData }
 
 const ListingMedia: React.FC<Props> = (props) => {
   const dispatch = useDispatch()
-
+  const [expandAll,setExpandAll]=useState(false)
   // const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
   // const { listingPageData } = useSelector((state: RootState) => state.site)
   console.log('posts data', props.data)
@@ -37,9 +37,11 @@ const ListingMedia: React.FC<Props> = (props) => {
         <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
       </Head>
 
-      <ListingPageLayout activeTab={'media'} data={props.data}>
-        <ListingPageMain activeTab={'media'} data={props.data.pageData}>
+      <ListingPageLayout activeTab={'media'} data={props.data} expandAll={expandAll} setExpandAll={setExpandAll}>
+        <ListingPageMain activeTab={'media'} data={props.data.pageData} expandAll={expandAll}>
+          <div className={styles['display-desktop']}>
           <ListingMediaTab data={props.data.pageData} />
+          </div>
         </ListingPageMain>
       </ListingPageLayout>
     </>

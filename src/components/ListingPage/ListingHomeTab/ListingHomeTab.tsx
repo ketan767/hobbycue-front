@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import Image from 'next/image'
 
 import PageContentBox from '@/layouts/PageContentBox'
@@ -16,18 +16,20 @@ import InstagramIcon from '../../../assets/svg/Instagram.svg'
 import { getPages } from '@/services/listing.service'
 import ListingPageCard from '@/components/ListingPageCard/ListingPageCard'
 import PostCard from '@/components/PostCard/PostCard'
-import ListingPostsTab from '../ListingPagePosts/ListingPagePosts'
+import ListingPagePosts from '../ListingPagePosts/ListingPagePosts'
 
 interface Props {
   data: ListingPageData['pageData']
   AboutErr?: boolean
+  expandAll?: boolean
 }
 
-const ListingHomeTab: React.FC<Props> = ({ data, AboutErr }) => {
+const ListingHomeTab: React.FC<Props> = ({ data, AboutErr, expandAll }) => {
   // console.log('🚀 ~ file: ListingHomeTab.tsx:17 ~ data:', data)
   const dispatch = useDispatch()
   const [pagesData, setPagesData] = useState([])
-
+  const [showOthers, setShowOthers] = useState(false)
+  const [showAbout, setShowAbout] = useState(false)
   const { listingLayoutMode } = useSelector((state: RootState) => state.site)
 
   useEffect(() => {
@@ -51,56 +53,85 @@ const ListingHomeTab: React.FC<Props> = ({ data, AboutErr }) => {
       })
   }, [])
 
+  useEffect(() => {
+    if (expandAll !== undefined) {
+      setShowAbout(expandAll)
+      setShowOthers(expandAll)
+    }
+  }, [expandAll])
+
   return (
     <>
       <main>
         {/* User About */}
-        <PageContentBox
-          className={AboutErr ? styles.errorBorder : ''}
-          showEditButton={listingLayoutMode === 'edit'}
-          onEditBtnClick={() =>
-            dispatch(openModal({ type: 'listing-about-edit', closable: true }))
-          }
+        <div
+          className={styles['display-desktop']}
         >
-          <h4>About</h4>
-          <div
-            dangerouslySetInnerHTML={{ __html: data?.description }}
-            className={styles['about-text']}
-          ></div>
-        </PageContentBox>
+          <PageContentBox
+            className={AboutErr ? styles.errorBorder : ''}
+            showEditButton={listingLayoutMode === 'edit'}
+            onEditBtnClick={() =>
+              dispatch(
+                openModal({ type: 'listing-about-edit', closable: true }),
+              )
+            }
+          >
+            <h4>About</h4>
+            <div
+              className={`${styles['about-text']}`}
+              dangerouslySetInnerHTML={{ __html: data?.description }}
+            ></div>
+          </PageContentBox>
+        </div>
 
         {/* User Information */}
-        <PageContentBox
-          showEditButton={listingLayoutMode === 'edit'}
-          onEditBtnClick={() =>
-            dispatch(
-              openModal({ type: 'listing-general-edit', closable: true }),
-            )
+        <div
+          className={
+            !(listingLayoutMode === 'edit') ? styles['display-none'] : ''
           }
         >
-          <h4>Profile URL</h4>
-          <div>{data?.page_url}</div>
-          {data?.gender && (
-            <>
-              <h4>Gender</h4>
-              <div>{data?.gender}</div>
-            </>
-          )}
-          {data?.year && (
-            <>
-              <h4>Year</h4>
-              <div>{data?.year}</div>
-            </>
-          )}
-          {data?.admin_note && (
-            <>
-              <h4>Notes</h4>
-              <div>{data?.admin_note}</div>
-            </>
-          )}
-        </PageContentBox>
-
-        <ListingPostsTab data={data} hideStartPost={true} />
+          <PageContentBox
+            showEditButton={listingLayoutMode === 'edit'}
+            onEditBtnClick={() =>
+              dispatch(
+                openModal({ type: 'listing-general-edit', closable: true }),
+              )
+            }
+            setDisplayData={setShowOthers}
+            expandData={expandAll}
+          >
+            <h4 className={styles['display-mobile']}>Other Information</h4>
+            <div
+              className={`${styles['other-data-wrapper']} ${
+                showOthers ? ' ' + styles['other-data-wrapper-mobile'] : ''
+              }`}
+            >
+              <h4>Profile URL</h4>
+              <div className={styles.textGray}>{data?.page_url}</div>
+              {data?.gender && (
+                <>
+                  <h4>Gender</h4>
+                  <div className={styles.textGray}>{data?.gender}</div>
+                </>
+              )}
+              {data?.year && (
+                <>
+                  <h4>Year</h4>
+                  <div className={styles.textGray}>{data?.year}</div>
+                </>
+              )}
+              {data?.admin_note && (
+                <>
+                  <h4>Notes</h4>
+                  <div className={styles.textGray}>{data?.admin_note}</div>
+                </>
+              )}
+            </div>
+          </PageContentBox>
+        </div>
+        <div className={styles['display-desktop']}>
+          <ListingPagePosts data={data} hideStartPost={true} />
+        </div>
       </main>
     </>
   )

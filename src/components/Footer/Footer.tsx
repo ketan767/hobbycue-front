@@ -4,24 +4,16 @@ import styles from './footer.module.css'
 import Facebook from '@/assets/svg/social/facebook.svg'
 import Instagram from '@/assets/svg/social/instagram.svg'
 import Twitter from '@/assets/svg/social/twitter.svg'
-import Pintrest from '@/assets/svg/social/pintrest.svg'
+import Pintrest from '@/assets/svg/social/Pinterest.svg'
 import Google from '@/assets/svg/social/google.svg'
 import Youtube from '@/assets/svg/social/youtube.svg'
 import Telegram from '@/assets/svg/social/telegram.svg'
 import Mail from '@/assets/svg/social/mail.svg'
 import Image from 'next/image'
 import Link from 'next/link'
+import { InviteToHobbycue } from '@/services/auth.service'
 
-const icons = [
-  Facebook,
-  Twitter,
-  Instagram,
-  Pintrest,
-  Google,
-  Youtube,
-  Telegram,
-  Mail,
-]
+const icons = [Facebook, Twitter, Instagram, Pintrest, Youtube, Telegram]
 const Footer: React.FC = () => {
   const [email, setEmail] = useState('')
   const data = [
@@ -39,10 +31,22 @@ const Footer: React.FC = () => {
       title: 'How do I',
       values: [
         { title: 'Sign Up', link: 'http://wp.hobbycue.com/how-to/' },
-        { title: 'Add a Listing', link: 'http://wp.hobbycue.com/how-to/#add-listing/' },
-        { title: 'Claim Listing', link: 'http://wp.hobbycue.com/how-to/#claim-listing/' },
-        { title: 'Post a Query', link: 'http://wp.hobbycue.com/how-to/#post-query/' },
-        { title: 'Add a Blog Post', link: 'http://wp.hobbycue.com/how-to/#blog-post/' },
+        {
+          title: 'Add a Listing',
+          link: 'http://wp.hobbycue.com/how-to/#add-listing/',
+        },
+        {
+          title: 'Claim Listing',
+          link: 'http://wp.hobbycue.com/how-to/#claim-listing/',
+        },
+        {
+          title: 'Post a Query',
+          link: 'http://wp.hobbycue.com/how-to/#post-query/',
+        },
+        {
+          title: 'Add a Blog Post',
+          link: 'http://wp.hobbycue.com/how-to/#blog-post/',
+        },
         { title: 'Other Queries', link: 'http://wp.hobbycue.com/how-to/' },
       ],
     },
@@ -57,6 +61,13 @@ const Footer: React.FC = () => {
       ],
     },
   ]
+  const to = email
+  const sendInvite = async () => {
+    const { err, res } = await InviteToHobbycue({
+      to,
+    })
+    setEmail('')
+  }
   return (
     <>
       <div className={styles.container}>
@@ -69,9 +80,9 @@ const Footer: React.FC = () => {
                   {item.values.map((value: any, idx: any) => {
                     return (
                       <Link key={idx} href={value.link}>
-                      <li className={styles.listItem} key={idx} >
-                        {value.title}
-                      </li>
+                        <li className={styles.listItem} key={idx}>
+                          {value.title}
+                        </li>
                       </Link>
                     )
                   })}
@@ -84,7 +95,16 @@ const Footer: React.FC = () => {
               <p className={styles.listHeading}> Social Media </p>
               <div className={styles.iconsContainer}>
                 {icons.map((Icon: any, idx: any) => {
-                  return <Image src={Icon} alt="social-media" key={idx} />
+                  return (
+                    <Image
+                      className={styles.socialIcons}
+                      height={32}
+                      width={32}
+                      src={Icon}
+                      alt="social-media"
+                      key={idx}
+                    />
+                  )
                 })}
               </div>
             </div>
@@ -98,7 +118,9 @@ const Footer: React.FC = () => {
                   name="society"
                   onChange={(e: any) => setEmail(e.target.value)}
                 />
-                <button className={styles.button}>Invite</button>
+                <button onClick={sendInvite} className={styles.button}>
+                  Invite
+                </button>
               </div>
             </div>
           </div>

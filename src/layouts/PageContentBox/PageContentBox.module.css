@@ -27,7 +27,7 @@
   color: #08090a;
 }
 .wrapper > div:not(:last-child) {
-  margin-bottom: var(--spacing-24);
+  /* margin-bottom: var(--spacing-24); */
 }
 
 .wrapper .edit-btn {
@@ -35,4 +35,42 @@
   top: 1rem;
   right: 1rem;
   cursor: pointer;
+}
+
+.dropdown-icon{
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 20px;
+  height: 20px;
+  display: none;
+  transform: rotate(0deg) scale(1.25);
+}
+
+.display-initial{
+  display: initial !important;
+}
+
+.rotate-180deg{
+  transform: rotate(180deg) scale(1.25);
+}
+
+.edit-icon-without-dropdown{
+  right: 1rem !important;
+  display: initial !important;
+}
+@media screen and (max-width: 1100px) {
+  .wrapper{
+    margin-bottom:0;
+  }
+  .dropdown-icon{
+    display: initial;
+  }
+  .wrapper .edit-btn{
+    right: 3.5rem;
+    display: none;
+  }
+  .wrapper > h4 {
+    margin-bottom:0;
+  }
 }

@@ -31,11 +31,10 @@ import ShareIcon from '@/assets/icons/ShareIcon'
 import { updateImageUrl } from '@/redux/slices/modal'
 
 type Props = {
-  activeTab: ProfilePageTabs
   data: ProfilePageData['pageData']
 }
 
-const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
+const ProfileHeader: React.FC<Props> = ({ data }) => {
   const router = useRouter()
   const dispatch = useDispatch()
   const [open, setOpen] = useState(false)
@@ -44,7 +43,6 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
     setOpen(!open)
   }
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
-  const tabs: ProfilePageTabs[] = ['home', 'posts', 'media', 'pages', 'blogs']
 
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
     e.preventDefault()
@@ -212,24 +210,14 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
               {data?.cover_image ? (
                 <Image
                   onClick={OpenCoverImage}
-                  className={
-                    activeTab === 'home'
-                      ? `${styles['img']} imageclick`
-                      : `${styles['img-optional']} ${styles['img']}`
-                  }
+                  className={`${styles['img']} imageclick`}
                   src={data.cover_image}
                   alt=""
                   height={296}
                   width={1000}
                 />
               ) : (
-                <div
-                  className={
-                    activeTab === 'home'
-                      ? styles['img']
-                      : `${styles['img-optional']} ${styles['img']}`
-                  }
-                >
+                <div className={styles['img']}>
                   <CoverPhotoLayout
                     onChange={(e: any) => onInputChange(e, 'cover')}
                     profileLayoutMode={profileLayoutMode}
@@ -284,8 +272,7 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
           </section>
 
           {/* Action Buttons */}
-
-          <div className={styles['actions-container']}>
+          <div className={styles['actions-container-desktop']}>
             {profileLayoutMode === 'edit' && (
               <FilledButton
                 onClick={() => {
@@ -360,24 +347,71 @@ const ProfileHeader: React.FC<Props> = ({ activeTab, data }) => {
             </div>
           </div>
         </header>
-        {/* Navigation Links */}
-        <nav className={styles['nav']}>
-          <div className={styles['navigation-tabs']}>
-            {tabs.map((tab) => {
-              return (
-                <Link
-                  key={tab}
-                  href={`/profile/${router.query.profile_url}/${
-                    tab !== 'home' ? tab : ''
-                  }`}
-                  className={activeTab === tab ? styles['active'] : ''}
+
+        {/* Action Buttons */}
+        <div className={styles['actions-container-mobile']}>
+          <div className={styles['action-btn-wrapper']}>
+            {/* Send Email Button  */}
+            <Link href={`mailto:${data.public_email || data.email}`}>
+              <Tooltip title="Repost">
+                <div
+                  onClick={(e) => console.log(e)}
+                  className={styles['action-btn']}
                 >
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </Link>
-              )
-            })}
+                  <RepostIcon />
+                </div>
+              </Tooltip>
+            </Link>
+
+            {/* Bookmark Button */}
+            <Tooltip title="Bookmark">
+              <div
+                onClick={(e) => console.log(e)}
+                className={styles['action-btn']}
+              >
+                <BookmarkBorderRoundedIcon color="primary" />
+              </div>
+            </Tooltip>
+
+            {/* Share Button */}
+            <Tooltip title="Share">
+              <div
+                onClick={(e) => handleShare()}
+                className={styles['action-btn']}
+              >
+                <ShareIcon />
+              </div>
+            </Tooltip>
+
+            {/* More Options Button */}
+            <div className={styles['action-btn-dropdown-wrapper']}>
+              <Tooltip title="Click to view options">
+                <div
+                  onClick={(e) => handleDropdown()}
+                  className={styles['action-btn']}
+                >
+                  <MoreHorizRoundedIcon color="primary" />
+                </div>
+              </Tooltip>
+              {profileLayoutMode === 'edit'
+                ? open && (
+                    <Dropdown userType={'edit'} handleClose={handleDropdown} />
+                  )
+                : open && (
+                    <Dropdown
+                      userType={'anonymous'}
+                      handleClose={handleDropdown}
+                    />
+                  )}
+            </div>
+            <FilledButton
+                className={styles.contactBtn}
+                onClick={handleContact}
+              >
+                Contact
+              </FilledButton>
           </div>
-        </nav>
+        </div>
       </div>
     </>
   )

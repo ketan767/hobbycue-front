@@ -18,7 +18,9 @@ import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
 import SaveModal from '../../SaveModal/saveModal'
 import CloseIcon from '@/assets/icons/CloseIcon'
-
+import hobbyLvlOne from '@/assets/svg/hobby_level_One.svg'
+import hobbyLvlTwo from '@/assets/svg/hobby_level_Two.svg'
+import hobbyLvlThree from '@/assets/svg/hobby_level_Three.svg'
 import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import Image from 'next/image'
@@ -91,6 +93,11 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const [genreDropdownList, setGenreDropdownList] = useState<
     DropdownListItem[]
   >([])
+  const levels = [
+    { name: 'Beginner', src: hobbyLvlOne },
+    { name: 'Intermediate', src: hobbyLvlTwo },
+    { name: 'Advanced', src: hobbyLvlThree },
+  ]
 
   const [initialData, setInitialData] = useState({})
   const [isChanged, setIsChanged] = useState(false)
@@ -361,161 +368,31 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         <section className={styles['body']}>
           <>
             <section className={styles['add-hobbies-wrapper']}>
-              <p className={styles['info']}>
-                Added hobbies appear in the table below.
-              </p>
-
-              <h3 className={styles['heading']}>Add Hobby</h3>
-              <section className={styles['add-new-hobby']}>
-                {/* Hobby Input and Dropdown */}
-                <section className={styles['dropdown-warpper']}>
-                  <div
-                    className={`${styles['input-box']} ${
-                      HobbyError ? styles['input-box-error'] : ''
-                    }`}
-                  >
-                    <input
-                      type="text"
-                      placeholder="Search hobby..."
-                      autoComplete="name"
-                      required
-                      value={hobbyInputValue}
-                      onFocus={() => setShowHobbyDowpdown(true)}
-                      onBlur={() =>
-                        setTimeout(() => {
-                          setShowHobbyDowpdown(false)
-                        }, 300)
-                      }
-                      ref={searchref}
-                      onChange={handleHobbyInputChange}
-                    />
-                  </div>
-                  {showHobbyDowpdown && hobbyDropdownList.length !== 0 && (
-                    <div className={styles['dropdown']}>
-                      {hobbyDropdownList.map((hobby) => {
-                        return (
-                          <p
-                            key={hobby._id}
-                            onClick={() => handleHobbySelection(hobby)}
-                          >
-                            {hobby.display}
-                          </p>
-                        )
-                      })}
-                    </div>
-                  )}
-                </section>
-
-                {/* Genre Input and Dropdown */}
-                <section className={styles['dropdown-warpper']}>
-                  <div className={styles['input-box']}>
-                    <input
-                      type="text"
-                      placeholder="Genre/Style"
-                      autoComplete="name"
-                      required
-                      value={genreInputValue}
-                      onFocus={() => setShowGenreDowpdown(true)}
-                      onBlur={() =>
-                        setTimeout(() => {
-                          setShowGenreDowpdown(false)
-                        }, 300)
-                      }
-                      onChange={handleGenreInputChange}
-                    />
-                    {/* <p className={styles['helper-text']}>{inputErrs.full_name}</p> */}
-                  </div>
-                  {showGenreDowpdown && genreDropdownList.length !== 0 && (
-                    <div className={styles['dropdown']}>
-                      {genreDropdownList.map((genre) => {
-                        return (
-                          <p
-                            key={genre?._id}
-                            onClick={() => {
-                              setData((prev) => {
-                                return { ...prev, genre: genre }
-                              })
-                              setGenreInputValue(genre?.display)
-                              setShowGenreDowpdown(false)
-                            }}
-                          >
-                            {genre?.display}
-                          </p>
-                        )
-                      })}
-                    </div>
-                  )}
-                </section>
-
-                <FormControl
-                  variant="outlined"
-                  size="small"
-                  sx={{ width: '150px' }}
-                >
-                  <Select
-                    className={styles['select-level-main']}
-                    value={data.level}
-                    onChange={(e) => {
-                      setData((prev: any) => {
-                        return { ...prev, level: e.target.value }
-                      })
-                    }}
-                    displayEmpty
-                    inputProps={{ 'aria-label': 'Without label' }}
-                  >
-                    <MenuItem value={1}>{'Beginner'}</MenuItem>
-                    <MenuItem value={2}>{'Intermediate'}</MenuItem>
-                    <MenuItem value={3}>{'Advanced'}</MenuItem>
-                  </Select>
-                </FormControl>
-                {/* <div className={styles['input-box']}>
-                  <input
-                    type="text"
-                    placeholder="Full Name"
-                    autoComplete="name"
-                    required
-                    value={'data'}
-                    onChange={(e) =>
-                      setData((prev) => {
-                        return { ...prev, full_name: e.target.value }
-                      })
-                    }
-                  />
-                  <p className={styles['helper-text']}>{inputErrs.full_name}</p>
-                </div> */}
-
-                <button
-                  disabled={addHobbyBtnLoading}
-                  className={styles['add-btn']}
-                  onClick={handleAddHobby}
-                >
-                  {addHobbyBtnLoading ? (
-                    <CircularProgress color="inherit" size={'22px'} />
-                  ) : (
-                    'Add'
-                  )}
-                </button>
-              </section>
               <p className={styles['helper-text']}>{error}</p>
-
-              <h3 className={styles['heading']}>Added Hobbies</h3>
 
               <section className={styles['added-hobby-list']}>
                 <table>
                   <thead>
                     <tr>
-                      <td>Hobby</td>
-                      <td>Genre/Style</td>
+                      <td>Hobby - Genre/Style</td>
                       <td>Level</td>
-                      <td>Action</td>
+                      <td className={styles.hideActionMobile}>Action</td>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody style={{ display: 'inline-table' }}>
                     {userHobbies?.map((hobby: any) => {
                       return (
                         <tr key={hobby._id}>
-                          <td>{hobby?.hobby?.display}</td>
-                          <td>{hobby?.genre?.display || '-'}</td>
+                          <td>
+                            <div>
+                              {`${hobby?.hobby?.display}${
+                                hobby?.genre?.display
+                                  ? ' - ' + hobby?.genre?.display
+                                  : ''
+                              }`}
+                            </div>
+                          </td>
+
                           <td>
                             {/* {hobby.level === 1
                               ? 'Beginner'
@@ -539,14 +416,29 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                                 },
                               }}
                               displayEmpty
+                              renderValue={(selected) => (
+                                <div className={styles.levelwithtext}>
+                                  <Image
+                                    alt={`hobby${selected}`}
+                                    src={levels[selected - 1]?.src}
+                                  />
+                                  <p className={styles['render-p']}>
+                                    {levels[selected - 1]?.name}
+                                  </p>
+                                </div>
+                              )}
                             >
-                              {levels?.map((item: any, idx) => {
-                                return (
-                                  <MenuItem key={idx} value={idx + 1}>
-                                    <p>{item}</p>
-                                  </MenuItem>
-                                )
-                              })}
+                              {levels.map((item, idx) => (
+                                <MenuItem key={idx} value={idx + 1}>
+                                  <div className={styles.levelwithtext}>
+                                    <Image
+                                      alt={`hobby${idx + 1}`}
+                                      src={item.src}
+                                    />
+                                    <p>{item.name}</p>
+                                  </div>
+                                </MenuItem>
+                              ))}
                             </Select>
                           </td>
                           <td>
@@ -579,6 +471,172 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                         </tr>
                       )
                     })}
+
+                    <tr>
+                      <td className={styles.AddHobbyFields}>
+                        {/* Hobby Input and Dropdown */}
+                        <section className={styles['dropdown-wrapper']}>
+                          <div
+                            className={`${styles['input-box']} ${
+                              HobbyError ? styles['input-box-error'] : ''
+                            }`}
+                          >
+                            <input
+                              type="text"
+                              placeholder="Search hobby..."
+                              autoComplete="name"
+                              required
+                              value={hobbyInputValue}
+                              onFocus={() => setShowHobbyDowpdown(true)}
+                              onBlur={() =>
+                                setTimeout(() => {
+                                  setShowHobbyDowpdown(false)
+                                }, 300)
+                              }
+                              ref={searchref}
+                              onChange={handleHobbyInputChange}
+                            />
+                          </div>
+                          {showHobbyDowpdown &&
+                            hobbyDropdownList.length !== 0 && (
+                              <div className={styles['dropdown']}>
+                                {hobbyDropdownList.map((hobby) => {
+                                  return (
+                                    <p
+                                      key={hobby._id}
+                                      onClick={() => {
+                                        handleHobbySelection(hobby)
+                                        setShowHobbyDowpdown(false)
+                                      }}
+                                    >
+                                      {hobby.display}
+                                    </p>
+                                  )
+                                })}
+                              </div>
+                            )}
+                        </section>
+
+                        <section className={styles['dropdown-wrapper']}>
+                          <div className={styles['input-box']}>
+                            <input
+                              type="text"
+                              placeholder="Genre/Style"
+                              autoComplete="name"
+                              required
+                              value={genreInputValue}
+                              onFocus={() => setShowGenreDowpdown(true)}
+                              onBlur={() =>
+                                setTimeout(() => {
+                                  setShowGenreDowpdown(false)
+                                }, 300)
+                              }
+                              onChange={handleGenreInputChange}
+                            />
+                            {/* <p className={styles['helper-text']}>{inputErrs.full_name}</p> */}
+                          </div>
+                          {showGenreDowpdown &&
+                            genreDropdownList.length !== 0 && (
+                              <div className={styles['dropdown']}>
+                                {genreDropdownList.map((genre) => {
+                                  return (
+                                    <p
+                                      key={genre?._id}
+                                      onClick={() => {
+                                        setData((prev) => {
+                                          return { ...prev, genre: genre }
+                                        })
+                                        setGenreInputValue(genre?.display)
+                                        setShowGenreDowpdown(false)
+                                      }}
+                                    >
+                                      {genre?.display}
+                                    </p>
+                                  )
+                                })}
+                              </div>
+                            )}
+                        </section>
+                      </td>
+                      <td>
+                        <FormControl
+                          variant="outlined"
+                          size="small"
+                          sx={{ width: '150px' }}
+                        >
+                          <Select
+                            className={styles['select-level-main']}
+                            value={data.level}
+                            onChange={(e) => {
+                              setData((prev: any) => {
+                                return { ...prev, level: e.target.value }
+                              })
+                            }}
+                            displayEmpty
+                            inputProps={{ 'aria-label': 'Without label' }}
+                          >
+                            <MenuItem
+                              className={styles['levelwithtext-add']}
+                              value={1}
+                            >
+                              <Image alt="hobbyOne" src={hobbyLvlOne}></Image>
+                              <span className={styles.lvltext}>Beginner</span>
+                            </MenuItem>
+                            <MenuItem
+                              value={2}
+                              className={styles['levelwithtext-add']}
+                            >
+                              <Image alt="hobbyTwo" src={hobbyLvlTwo}></Image>
+                              <span className={styles.lvltext}>
+                                Intermediate
+                              </span>
+                            </MenuItem>
+                            <MenuItem
+                              value={3}
+                              className={styles['levelwithtext-add']}
+                            >
+                              <Image
+                                alt="hobbyThree"
+                                src={hobbyLvlThree}
+                              ></Image>
+                              <span className={styles.lvltext}>Advanced</span>
+                            </MenuItem>
+                          </Select>
+                        </FormControl>
+                      </td>
+                      {/* </td> */}
+                      <td>
+                        <button
+                          disabled={addHobbyBtnLoading}
+                          className={styles['add-btn']}
+                          onClick={handleAddHobby}
+                        >
+                          {addHobbyBtnLoading ? (
+                            <CircularProgress color="inherit" size={'22px'} />
+                          ) : (
+                            <svg
+                              width="24"
+                              height="24"
+                              viewBox="0 0 16 16"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <g clip-path="url(#clip0_704_44049)">
+                                <path
+                                  d="M13.1429 8.85714H8.85714V13.1429C8.85714 13.6143 8.47143 14 8 14C7.52857 14 7.14286 13.6143 7.14286 13.1429V8.85714H2.85714C2.38571 8.85714 2 8.47143 2 8C2 7.52857 2.38571 7.14286 2.85714 7.14286H7.14286V2.85714C7.14286 2.38571 7.52857 2 8 2C8.47143 2 8.85714 2.38571 8.85714 2.85714V7.14286H13.1429C13.6143 7.14286 14 7.52857 14 8C14 8.47143 13.6143 8.85714 13.1429 8.85714Z"
+                                  fill="#8064A2"
+                                />
+                              </g>
+                              <defs>
+                                <clipPath id="clip0_704_44049">
+                                  <rect width="16" height="16" fill="white" />
+                                </clipPath>
+                              </defs>
+                            </svg>
+                          )}
+                        </button>
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </section>

@@ -319,12 +319,6 @@ select:-webkit-autofill {
   display: none;
 }
 
-@media screen and (max-width: 1300px) {
-  .main-site-wrapper {
-    margin-top: 8px;
-    
-  }
-}
 
 @media screen and (max-width: 1100px) {
   .site-container {
@@ -338,6 +332,15 @@ select:-webkit-autofill {
 
   .modal-footer-btn.cancel {
     display: none;
+  }
+
+  .ql-toolbar.ql-snow .ql-formats button{
+    padding: 0 7px !important;
+  }
+
+  .ql-formats{
+    display: flex;
+    flex-direction: row !important;
   }
 
   .modal-mob-btn {
@@ -389,6 +392,16 @@ select:-webkit-autofill {
     display: block;
   }
 
+}
+@media screen and (max-width: 500px) {
+  .ql-toolbar.ql-snow .ql-formats button{
+    padding: 0 4px !important;
+  }
+}
+@media screen and (max-width: 380px) {
+  .ql-toolbar.ql-snow .ql-formats button{
+    padding: 0 1px !important;
+  }
 }
 
 .custom-scrollbar {

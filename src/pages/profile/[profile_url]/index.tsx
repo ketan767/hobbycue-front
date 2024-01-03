@@ -29,6 +29,7 @@ import { getListingPages } from '@/services/listing.service'
 import PostWrapper from '@/layouts/PinnedPost/PinnedPost'
 import { updateUser } from '@/redux/slices/user'
 import { withAuth } from '@/navigation/withAuth'
+import ProfileNavigationLinks from '@/components/ProfilePage/ProfileHeader/ProfileNavigationLinks'
 
 interface Props {
   data: ProfilePageData
@@ -38,8 +39,11 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
   const dispatch = useDispatch()
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
 
+  const [expandAll, setExpandAll] = useState(false)
   const [pageData, setPageData] = useState(data.pageData)
   const [loadingPosts, setLoadingPosts] = useState(false)
+  const [displayAbout, setDisplayAbout] = useState(false)
+  const [displayOther, setDisplayOther] = useState(false)
 
   const [posts, setPosts] = useState([])
   const router = useRouter()
@@ -94,66 +98,112 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
   let unpinnnedPosts = posts.filter((item: any) => item.isPinned !== true)
   console.log('profileurl', data)
 
+  useEffect(() => {
+    if (expandAll !== undefined) {
+      setDisplayAbout(expandAll)
+      setDisplayOther(expandAll)
+    }
+  }, [expandAll])
+
   return (
     <>
       <Head>
         <title>{`${data.pageData.full_name} | HobbyCue`}</title>
       </Head>
 
-      <ProfileLayout activeTab={'home'} data={data}>
+      <ProfileLayout
+        activeTab={'home'}
+        data={data}
+        expandAll={expandAll}
+        setExpandAll={setExpandAll}
+      >
         {data.pageData && (
           <PageGridLayout column={3}>
             <aside
               className={`custom-scrollbar ${styles['profile-left-aside']}`}
             >
               {/* User Hobbies */}
-              <ProfileHobbySideList data={pageData} />
-              <ProfilePagesList data={data} />
+              <ProfileHobbySideList data={pageData} expandData={expandAll} />
+              <ProfilePagesList data={data} expandData={expandAll} />
             </aside>
 
             <main>
-              {/* User About */}
-              <PageContentBox
-                showEditButton={profileLayoutMode === 'edit'}
-                onEditBtnClick={() =>
-                  dispatch(
-                    openModal({ type: 'profile-about-edit', closable: true }),
-                  )
-                }
-              >
-                <h4>About</h4>
-                <div
-                  className={`${styles['color-light']} ${styles['about-text']}`}
-                  dangerouslySetInnerHTML={{ __html: pageData?.about }}
-                ></div>
-              </PageContentBox>
+              {/* User About for desktop view*/}
+              <div className={styles['display-desktop']}>
+                <PageContentBox
+                  showEditButton={profileLayoutMode === 'edit'}
+                  onEditBtnClick={() =>
+                    dispatch(
+                      openModal({ type: 'profile-about-edit', closable: true }),
+                    )
+                  }
+                  setDisplayData={setDisplayAbout}
+                >
+                  <h4>About</h4>
+                  <div
+                    className={`${styles['color-light']} ${styles['about-text']}}`}
+                    dangerouslySetInnerHTML={{ __html: pageData?.about }}
+                  ></div>
+                </PageContentBox>
+              </div>
 
               {/* User Information */}
-              <PageContentBox
-                showEditButton={profileLayoutMode === 'edit'}
-                onEditBtnClick={() =>
-                  dispatch(
-                    openModal({ type: 'profile-general-edit', closable: true }),
-                  )
-                }
-              >
-                <h4>Profile URL</h4>
-                <p className={styles['color-light']}>{pageData.profile_url}</p>
-                {pageData.gender && (
-                  <>
-                    <h4>Gender</h4>
-                    <p className={styles['color-light']}>{pageData.gender}</p>
-                  </>
-                )}
-                {pageData.year_of_birth && (
-                  <>
-                    <h4>Year Of Birth</h4>
+              <div className={profileLayoutMode==='edit'?'':" "+styles['display-none']}>
+                <PageContentBox
+                  showEditButton={profileLayoutMode === 'edit'}
+                  onEditBtnClick={() =>
+                    dispatch(
+                      openModal({
+                        type: 'profile-general-edit',
+                        closable: true,
+                      }),
+                    )
+                  }
+                  setDisplayData={setDisplayOther}
+                  expandData={expandAll}
+                >
+                  <h4 className={styles['other-info-heading']}>
+                    Other Information
+                  </h4>
+                  <div
+                    className={`${styles['display-desktop']}${
+                      displayOther
+                        ? ' ' +
+                          styles['display-flex-col'] +
+                          ' ' +
+                          styles['other-info-mob-div']
+                        : ''
+                    }`}
+                  >
+                    <h4 className={styles['other-info-subheading']}>
+                      Profile URL
+                    </h4>
                     <p className={styles['color-light']}>
-                      {pageData.year_of_birth}
+                      {pageData.profile_url}
                     </p>
-                  </>
-                )}
-              </PageContentBox>
+                    {pageData.gender && (
+                      <>
+                        <h4 className={styles['other-info-subheading']}>
+                          Gender
+                        </h4>
+                        <p className={styles['color-light']}>
+                          {pageData.gender}
+                        </p>
+                      </>
+                    )}
+                    {pageData.year_of_birth && (
+                      <>
+                        <h4 className={styles['other-info-subheading']}>
+                          Year Of Birth
+                        </h4>
+                        <p className={styles['color-light']}>
+                          {pageData.year_of_birth}
+                        </p>
+                      </>
+                    )}
+                  </div>
+                </PageContentBox>
+              </div>
 
               <section className={styles['posts-container']}>
                 {loadingPosts ? (
@@ -193,12 +243,68 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
 
             <aside>
               {/* User Locations */}
-              <ProfileAddressSide data={pageData} />
+              <ProfileAddressSide data={pageData} expandData={expandAll} />
 
               {/* User Contact Details */}
-              <ProfileContactSide data={pageData} />
-              <ProfileSocialMediaSide data={pageData} />
+              <ProfileContactSide data={pageData} expandData={expandAll} />
+              <ProfileSocialMediaSide data={pageData} expandData={expandAll} />
             </aside>
+
+            <div className={styles['nav-mobile']}>
+              <ProfileNavigationLinks activeTab={'home'} />
+            </div>
+            {/* About for mobile view */}
+            <div className={styles['display-mobile']}>
+              <PageContentBox
+                showEditButton={profileLayoutMode === 'edit'}
+                onEditBtnClick={() =>
+                  dispatch(
+                    openModal({ type: 'profile-about-edit', closable: true }),
+                  )
+                }
+              >
+                <h4>About</h4>
+                <div
+                  className={`${styles['color-light']} ${styles['about-text']} ${styles['about-text-mobile']}`}
+                  dangerouslySetInnerHTML={{ __html: pageData?.about }}
+                ></div>
+              </PageContentBox>
+            </div>
+
+            <section className={styles['posts-container-mobile']}>
+              {loadingPosts ? (
+                <PostCardSkeletonLoading />
+              ) : (
+                posts.length === 0 && 'No Posts'
+              )}
+
+              {pinnedPosts.map((post: any) => {
+                return (
+                  <PostWrapper title="Pinned Post" key={post._id}>
+                    <PostCard
+                      key={post._id}
+                      postData={post}
+                      fromProfile={true}
+                      onPinPost={onPinPost}
+                    />
+                  </PostWrapper>
+                )
+              })}
+              {unpinnnedPosts.length > 0 && (
+                <PostWrapper title="Recent Post">
+                  {unpinnnedPosts.map((post: any) => {
+                    return (
+                      <PostCard
+                        key={post._id}
+                        postData={post}
+                        fromProfile={true}
+                        onPinPost={onPinPost}
+                      />
+                    )
+                  })}
+                </PostWrapper>
+              )}
+            </section>
           </PageGridLayout>
         )}
       </ProfileLayout>

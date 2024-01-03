@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
-
+import styles from '@/styles/Page.module.css'
 import { GetServerSideProps } from 'next'
 import { getAllUserDetail } from '@/services/user.service'
 import Head from 'next/head'
@@ -14,12 +14,13 @@ import {
 } from '@/redux/slices/site'
 
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
+import ListingStoreTab from '@/components/ListingPage/ListingPageStore/ListingPageStore'
 
 type Props = { data: ListingPageData }
 
 const ListingStore: React.FC<Props> = (props) => {
   const dispatch = useDispatch()
-
+  const [expandAll,setExpandAll]=useState(false)
   // const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
   // const { listingPageData } = useSelector((state: RootState) => state.site)
   console.log('posts data', props.data)
@@ -34,9 +35,11 @@ const ListingStore: React.FC<Props> = (props) => {
         <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
       </Head>
 
-      <ListingPageLayout activeTab={'store'} data={props.data}>
-        <ListingPageMain data={props.data.pageData}>
-          <div></div>
+      <ListingPageLayout activeTab={'store'} data={props.data} expandAll={expandAll} setExpandAll={setExpandAll}>
+        <ListingPageMain data={props.data.pageData} expandAll={expandAll}>
+          <div className={styles['display-desktop']}>
+          <ListingStoreTab/>
+          </div>
         </ListingPageMain>
       </ListingPageLayout>
     </>

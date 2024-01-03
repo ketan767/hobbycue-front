@@ -22,7 +22,13 @@ const CommunityBlogs: React.FC<Props> = ({}) => {
   return (
     <>
       <CommunityPageLayout activeTab="store">
-        <section className={styles['pages-container']}></section>
+        {/* <section className={styles['pages-container']}> */}
+          <div className={styles['no-store-div']}>
+            <p className={styles['no-posts-text']}>
+              This feature is under development. Come back soon to view this 
+            </p>
+          </div>
+        {/* </section> */}
       </CommunityPageLayout>
     </>
   )

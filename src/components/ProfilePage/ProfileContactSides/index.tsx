@@ -9,13 +9,15 @@ import Whatsapp from '@/assets/svg/whatsapp.svg'
 import Link from 'next/link'
 type Props = {
   data: ProfilePageData['pageData']
+  expandData?:boolean
 }
 
-const ProfileContactSide = ({ data }: Props) => {
+const ProfileContactSide = ({ data, expandData }: Props) => {
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
   const ulRef = useRef(null)
   const dispatch = useDispatch()
   const [showText, setShowText] = useState(false)
+  const [displayData, setDisplayData] = useState(false)
 
   useEffect(() => {
     const ulElement: any = ulRef.current
@@ -27,6 +29,10 @@ const ProfileContactSide = ({ data }: Props) => {
     }
   }, [data])
 
+  useEffect(() => {
+    if (expandData !== undefined) setDisplayData(expandData)
+  }, [expandData])
+
   return (
     <>
       <PageContentBox
@@ -34,9 +40,15 @@ const ProfileContactSide = ({ data }: Props) => {
         onEditBtnClick={() =>
           dispatch(openModal({ type: 'profile-contact-edit', closable: true }))
         }
+        setDisplayData={setDisplayData}
+        expandData={expandData}
       >
         <h4 className={styles['heading']}>Contact Information</h4>
-        <ul className={styles['contact-wrapper']} ref={ulRef}>
+        <ul
+          className={`${styles['contact-wrapper']} ${
+            displayData && styles['display-mobile-flex']
+          }`}
+        >
           {/* Phone */}
           {data.phone && (
             <Link href={`tel:${data?.name}`}>

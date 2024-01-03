@@ -59,10 +59,8 @@
   }
 
   .step-indicators {
-
-    bottom: 0;
+    bottom: 30px;
     transform: translateX(-50%);
-  
     display: flex;
     gap: 27px;
   }

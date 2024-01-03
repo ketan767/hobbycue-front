@@ -304,122 +304,31 @@ const ListingHobbyEditModal: React.FC<Props> = ({
               <p className={styles['info']}>
                 Added hobbies appear in the table below.
               </p>
-
-              {/* Add New Hobbies Dropdown and Add Button */}
-              <h3 className={styles['heading']}>Add Hobby</h3>
-              <section className={styles['add-new-hobby']}>
-                {/* Hobby Input and Dropdown */}
-                <section className={styles['dropdown-wrapper']}>
-                  <div
-                    className={`${styles['input-box']} ${
-                      HobbyError ? styles['input-box-error'] : ''
-                    }`}
-                  >
-                    <input
-                      ref={hobbyRef}
-                      type="text"
-                      placeholder="Search hobby..."
-                      autoComplete="name"
-                      required
-                      value={hobbyInputValue}
-                      onFocus={() => setShowHobbyDropdown(true)}
-                      onBlur={() =>
-                        setTimeout(() => {
-                          setShowHobbyDropdown(false)
-                        }, 300)
-                      }
-                      onChange={handleHobbyInputChange}
-                    />
-                    {/* <p className={styles['helper-text']}>{inputErrs.full_name}</p> */}
-                  </div>
-                  {showHobbyDropdown && hobbyDropdownList.length !== 0 && (
-                    <div className={styles['dropdown']}>
-                      {hobbyDropdownList.map((hobby) => {
-                        return (
-                          <p
-                            key={hobby._id}
-                            onClick={() => handleHobbySelection(hobby)}
-                          >
-                            {hobby.display}
-                          </p>
-                        )
-                      })}
-                    </div>
-                  )}
-                </section>
-
-                {/* Genre Input and Dropdown */}
-                <section className={styles['dropdown-wrapper']}>
-                  <div className={styles['input-box']}>
-                    <input
-                      type="text"
-                      placeholder="Genre/Style"
-                      autoComplete="name"
-                      required
-                      value={genreInputValue}
-                      onFocus={() => setShowGenreDropdown(true)}
-                      onBlur={() =>
-                        setTimeout(() => {
-                          setShowGenreDropdown(false)
-                        }, 300)
-                      }
-                      onChange={handleGenreInputChange}
-                    />
-                    {/* <p className={styles['helper-text']}>{inputErrs.full_name}</p> */}
-                  </div>
-                  {showGenreDropdown && genreDropdownList.length !== 0 && (
-                    <div className={styles['dropdown']}>
-                      {genreDropdownList.map((genre) => {
-                        return (
-                          <p
-                            key={genre?._id}
-                            onClick={() => {
-                              setData((prev) => {
-                                return { ...prev, genre: genre }
-                              })
-                              setGenreInputValue(genre?.display)
-                              setShowGenreDropdown(false)
-                            }}
-                          >
-                            {genre?.display}
-                          </p>
-                        )
-                      })}
-                    </div>
-                  )}
-                </section>
-
-                <button
-                  className={styles['add-btn']}
-                  disabled={addHobbyBtnLoading}
-                  onClick={handleAddHobby}
-                >
-                  {addHobbyBtnLoading ? (
-                    <CircularProgress color="inherit" size={'22px'} />
-                  ) : (
-                    'Add'
-                  )}
-                </button>
-              </section>
-              <p className={styles['helper-text']}>{error}</p>
-
+               
               {/* Hobbies List, that are already Added */}
               <h3 className={styles['heading']}>Added Hobbies</h3>
               <section className={styles['added-hobby-list']}>
                 <table>
                   <thead>
                     <tr>
-                      <td>Hobby</td>
-                      <td>Genre/Style</td>
-                      <td>Action</td>
+                      <td>Hobby-Genre/Style</td>
+                      <td className={styles.hideActionMobile}>Action</td>
                     </tr>
                   </thead>
                   <tbody>
                     {hobbiesList?.map((hobby: any) => {
                       return (
                         <tr key={hobby._id}>
-                          <td>{hobby?.hobby?.display}</td>
-                          <td>{hobby?.genre?.display || '-'}</td>
+                          <td>
+                            <div>
+                              {`${hobby?.hobby?.display}${
+                                hobby?.genre?.display
+                                  ? ' - ' + hobby?.genre?.display
+                                  : ''
+                              }`}
+                            </div>
+                          </td>
+                          {/* <td>{hobby?.genre?.display || '-'}</td> */}
                           <td>
                             <svg
                               width="24"
@@ -450,6 +359,124 @@ const ListingHobbyEditModal: React.FC<Props> = ({
                         </tr>
                       )
                     })}
+                    <tr>
+                      <td>
+                        {/* Hobby Input and Dropdown */}
+                        <section className={styles['dropdown-wrapper']}>
+                          <div
+                            className={`${styles['input-box']} ${
+                              HobbyError ? styles['input-box-error'] : ''
+                            }`}
+                          >
+                            <input
+                              ref={hobbyRef}
+                              type="text"
+                              placeholder="Search hobby..."
+                              autoComplete="name"
+                              required
+                              value={hobbyInputValue}
+                              onFocus={() => setShowHobbyDropdown(true)}
+                              onBlur={() =>
+                                setTimeout(() => {
+                                  setShowHobbyDropdown(false)
+                                }, 300)
+                              }
+                              onChange={handleHobbyInputChange}
+                            />
+                          </div>
+                          {showHobbyDropdown &&
+                            hobbyDropdownList.length !== 0 && (
+                              <div className={styles['dropdown']}>
+                                {hobbyDropdownList.map((hobby) => {
+                                  return (
+                                    <p
+                                      key={hobby._id}
+                                      onClick={() => {
+                                        handleHobbySelection(hobby)
+                                        setShowHobbyDropdown(false)
+                                      }}
+                                    >
+                                      {hobby.display}
+                                    </p>
+                                  )
+                                })}
+                              </div>
+                            )}
+                        </section>
+
+                        <section className={styles['dropdown-wrapper']}>
+                          <div className={styles['input-box']}>
+                            <input
+                              type="text"
+                              placeholder="Genre/Style"
+                              autoComplete="name"
+                              required
+                              value={genreInputValue}
+                              onFocus={() => setShowGenreDropdown(true)}
+                              onBlur={() =>
+                                setTimeout(() => {
+                                  setShowGenreDropdown(false)
+                                }, 300)
+                              }
+                              onChange={handleGenreInputChange}
+                            />
+                            {/* <p className={styles['helper-text']}>{inputErrs.full_name}</p> */}
+                          </div>
+                          {showGenreDropdown &&
+                            genreDropdownList.length !== 0 && (
+                              <div className={styles['dropdown']}>
+                                {genreDropdownList.map((genre) => {
+                                  return (
+                                    <p
+                                      key={genre?._id}
+                                      onClick={() => {
+                                        setData((prev) => {
+                                          return { ...prev, genre: genre }
+                                        })
+                                        setGenreInputValue(genre?.display)
+                                        setShowGenreDropdown(false)
+                                      }}
+                                    >
+                                      {genre?.display}
+                                    </p>
+                                  )
+                                })}
+                              </div>
+                            )}
+                        </section>
+                      </td>
+                      <td>
+                        <button
+                          disabled={addHobbyBtnLoading}
+                          className={styles['add-btn']}
+                          onClick={handleAddHobby}
+                        >
+                          {addHobbyBtnLoading ? (
+                            <CircularProgress color="inherit" size={'22px'} />
+                          ) : (
+                            <svg
+                              width="24"
+                              height="24"
+                              viewBox="0 0 16 16"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <g clip-path="url(#clip0_704_44049)">
+                                <path
+                                  d="M13.1429 8.85714H8.85714V13.1429C8.85714 13.6143 8.47143 14 8 14C7.52857 14 7.14286 13.6143 7.14286 13.1429V8.85714H2.85714C2.38571 8.85714 2 8.47143 2 8C2 7.52857 2.38571 7.14286 2.85714 7.14286H7.14286V2.85714C7.14286 2.38571 7.52857 2 8 2C8.47143 2 8.85714 2.38571 8.85714 2.85714V7.14286H13.1429C13.6143 7.14286 14 7.52857 14 8C14 8.47143 13.6143 8.85714 13.1429 8.85714Z"
+                                  fill="#8064A2"
+                                />
+                              </g>
+                              <defs>
+                                <clipPath id="clip0_704_44049">
+                                  <rect width="16" height="16" fill="white" />
+                                </clipPath>
+                              </defs>
+                            </svg>
+                          )}
+                        </button>
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </section>

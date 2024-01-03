@@ -115,6 +115,22 @@ ul.seller-info-wrapper li svg:last-child {
   margin-left: var(--spacing-16);
 }
 
+.other-data-wrapper{
+  display: flex;
+  flex-direction: column;
+}
+
+.other-data-wrapper>h4{
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  color: #000000;
+  margin-bottom: 16px !important;
+}
+.other-data-wrapper>h4:not(:first-child){
+  margin: 32px 0 0;
+}
+
 .socialIcons {
   display: flex;
 }
@@ -132,10 +148,50 @@ ul.seller-info-wrapper li svg:last-child {
   color: #939CA3;
 }
 
+.about-text{
+  margin: 0;
+}
+
 .about-text ol,
 .about-text ul{
   padding-left: 1rem;
 }
 .errorBorder {
   border: 1px solid #C0504D;
+}
+
+.display-mobile{
+  display: none;
+}
+
+.display-desktop{
+  display: initial;
+}
+.display-none{
+  display: none !important;
+}
+
+@media screen and (max-width:1100px) {
+  .other-data-wrapper-mobile{
+    display: flex !important;
+    flex-direction: column;
+    margin: 16px 0 0 0;
+  }
+  .other-data-wrapper{
+    display: none;
+  }
+  .other-data-wrapper>h4{
+    margin-bottom: 10px !important;
+  }
+  .about-text >p{
+    padding:10px 0 0 0 ;
+  }
+
+  .display-desktop{
+    display: none !important;
+  }
+  .display-mobile{
+    display: initial !important;
+  }
+  
 }

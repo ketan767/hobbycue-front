@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './styles.module.css'
 import PageContentBox from '@/layouts/PageContentBox'
 import { useDispatch, useSelector } from 'react-redux'
@@ -26,10 +26,13 @@ import Link from 'next/link'
 
 type Props = {
   data: ProfilePageData['pageData']
+  expandData?: boolean
 }
 
-const ProfileSocialMediaSide = ({ data }: Props) => {
+const ProfileSocialMediaSide = ({ data, expandData }: Props) => {
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
+  const [displayData, setDisplayData] = useState(false)
+  const dispatch = useDispatch()
   function renderSocialLink(url: any, iconSrc: any, altText: any) {
     if (!url) return null
     return (
@@ -61,7 +64,10 @@ const ProfileSocialMediaSide = ({ data }: Props) => {
     return domain.charAt(0).toUpperCase() + domain.slice(1)
   }
 
-  const dispatch = useDispatch()
+  useEffect(() => {
+    if (expandData !== undefined) setDisplayData(expandData)
+  }, [expandData])
+
   return (
     <>
       <PageContentBox
@@ -69,9 +75,15 @@ const ProfileSocialMediaSide = ({ data }: Props) => {
         onEditBtnClick={() =>
           dispatch(openModal({ type: 'social-media-edit', closable: true }))
         }
+        setDisplayData={setDisplayData}
+        expandData={expandData}
       >
         <h4 className={styles['heading']}>Social Media</h4>
-        <ul className={styles['contact-wrapper']}>
+        <ul
+          className={`${styles['contact-wrapper']} ${
+            displayData && styles['display-mobile-flex']
+          }`}
+        >
           {data?.social_media_urls && (
             <>
               {renderSocialLink(
