@@ -64,63 +64,71 @@ const ListingHomeTab: React.FC<Props> = ({ data, AboutErr, expandAll }) => {
     <>
       <main>
         {/* User About */}
-        <PageContentBox
-          className={AboutErr ? styles.errorBorder : ''}
-          showEditButton={listingLayoutMode === 'edit'}
-          onEditBtnClick={() =>
-            dispatch(openModal({ type: 'listing-about-edit', closable: true }))
-          }
-          setDisplayData={setShowAbout}
-          expandData={expandAll}
+        <div
+          className={styles['display-desktop']}
         >
-          <h4>About</h4>
-          <div
-            className={`${styles['about-text']} ${styles['display-desktop']}${
-              showAbout ? ' ' + styles['display-mobile'] : ''
-            }`}
-            dangerouslySetInnerHTML={{ __html: data?.description }}
-          ></div>
-        </PageContentBox>
+          <PageContentBox
+            className={AboutErr ? styles.errorBorder : ''}
+            showEditButton={listingLayoutMode === 'edit'}
+            onEditBtnClick={() =>
+              dispatch(
+                openModal({ type: 'listing-about-edit', closable: true }),
+              )
+            }
+          >
+            <h4>About</h4>
+            <div
+              className={`${styles['about-text']}`}
+              dangerouslySetInnerHTML={{ __html: data?.description }}
+            ></div>
+          </PageContentBox>
+        </div>
 
         {/* User Information */}
-        <PageContentBox
-          showEditButton={listingLayoutMode === 'edit'}
-          onEditBtnClick={() =>
-            dispatch(
-              openModal({ type: 'listing-general-edit', closable: true }),
-            )
+        <div
+          className={
+            !(listingLayoutMode === 'edit') ? styles['display-none'] : ''
           }
-          setDisplayData={setShowOthers}
-          expandData={expandAll}
         >
-          <h4 className={styles['display-mobile']}>Other Information</h4>
-          <div
-            className={`${styles['other-data-wrapper']} ${
-              showOthers ? ' ' + styles['other-data-wrapper-mobile'] : ''
-            }`}
+          <PageContentBox
+            showEditButton={listingLayoutMode === 'edit'}
+            onEditBtnClick={() =>
+              dispatch(
+                openModal({ type: 'listing-general-edit', closable: true }),
+              )
+            }
+            setDisplayData={setShowOthers}
+            expandData={expandAll}
           >
-            <h4>Profile URL</h4>
-            <div className={styles.textGray}>{data?.page_url}</div>
-            {data?.gender && (
-              <>
-                <h4>Gender</h4>
-                <div className={styles.textGray}>{data?.gender}</div>
-              </>
-            )}
-            {data?.year && (
-              <>
-                <h4>Year</h4>
-                <div className={styles.textGray}>{data?.year}</div>
-              </>
-            )}
-            {data?.admin_note && (
-              <>
-                <h4>Notes</h4>
-                <div className={styles.textGray}>{data?.admin_note}</div>
-              </>
-            )}
-          </div>
-        </PageContentBox>
+            <h4 className={styles['display-mobile']}>Other Information</h4>
+            <div
+              className={`${styles['other-data-wrapper']} ${
+                showOthers ? ' ' + styles['other-data-wrapper-mobile'] : ''
+              }`}
+            >
+              <h4>Profile URL</h4>
+              <div className={styles.textGray}>{data?.page_url}</div>
+              {data?.gender && (
+                <>
+                  <h4>Gender</h4>
+                  <div className={styles.textGray}>{data?.gender}</div>
+                </>
+              )}
+              {data?.year && (
+                <>
+                  <h4>Year</h4>
+                  <div className={styles.textGray}>{data?.year}</div>
+                </>
+              )}
+              {data?.admin_note && (
+                <>
+                  <h4>Notes</h4>
+                  <div className={styles.textGray}>{data?.admin_note}</div>
+                </>
+              )}
+            </div>
+          </PageContentBox>
+        </div>
         <div className={styles['display-desktop']}>
           <ListingPagePosts data={data} hideStartPost={true} />
         </div>

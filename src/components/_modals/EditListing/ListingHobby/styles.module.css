@@ -38,7 +38,7 @@
 .modal-wrapper .body {
   padding: var(--spacing-16) var(--spacing-24);
 }
-.modal-wrapper .body{
+.modal-wrapper .body {
   padding-bottom: 0;
 }
 .modal-wrapper .footer {
@@ -78,7 +78,7 @@
   background: #f8f9fa;
   border: 1px solid #ebedf0;
   border-radius: 8px;
-  padding: calc(var(--spacing-8) + var(--spacing-4));
+  padding: var(--spacing-8);
 
   /* font-family: 'Poppins'; */
   /* font-style: normal; */
@@ -86,7 +86,7 @@
   font-size: 12px;
   line-height: 16px;
   /* color: #878c90; */
-  min-width: 13rem;
+  max-width: 9.5rem;
 }
 .input-box input[type='text']:focus-within {
   outline: none;
@@ -130,8 +130,21 @@
   align-items: center;
   /* justify-content: space-between; */
 }
-.add-hobbies-wrapper .add-new-hobby .add-btn {
-  margin-left: auto;
+
+.add-btn {
+  width: 100%;
+  max-width: 1.5rem;
+  height: 1.5rem;
+  border: none;
+
+  color: var(--color);
+
+  font-weight: 600;
+  font-size: 14px;
+
+  cursor: pointer;
+  border-radius: 50%;
+  margin: 5px auto 0 12px;
 }
 
 .dropdown-wrapper {
@@ -139,19 +152,19 @@
 }
 
 .dropdown-wrapper .dropdown {
-  width: 100%;
+  width: 150%;
   position: absolute;
   left: 0;
   right: 0;
-  bottom: calc(100% + var(--spacing-4));
+  top: calc(100% + var(--spacing-4));
   background: #ffffff;
   border-radius: var(--spacing-4);
   padding: var(--spacing-4);
   filter: drop-shadow(0px 0px 2px rgba(147, 156, 163, 0.36))
-  drop-shadow(0px 8px 12px rgba(147, 156, 163, 0.12));
+    drop-shadow(0px 8px 12px rgba(147, 156, 163, 0.12));
   z-index: 20;
-  overflow-y: auto;
-  height: 15rem;
+  max-height: 200px;
+  overflow: auto;
 }
 .dropdown-wrapper .dropdown p {
   font-family: 'Poppins';
@@ -191,13 +204,29 @@
 
   color: #6d747a;
 }
-.added-hobby-list table tbody {
-  display: block;
-  background: #ffffff;
-overflow: auto;
-  max-height: 18rem;
+.added-hobby-list table thead tr {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  padding: 0 var(--spacing-12);
+.added-hobby-list table thead tr td:nth-child(1) {
+  display: flex;
+  justify-content: flex-start;
+  flex: 1;
+}
+.hideActionMobile {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.added-hobby-list table tbody {
+  display: inline-table;
+  background: #ffffff;
+  overflow: auto;
+  max-height: 15.4rem;
+
   border: 1px solid #ced4da;
   border-top: none;
   border-radius: 0 0 8px 8px;
@@ -207,34 +236,71 @@ overflow: auto;
   font-weight: 500;
   font-size: 14px;
   line-height: 22px;
-  /* identical to box height, or 157% */
-
-  /* Grey/Darkest */
-
+  width: 100%;
   color: #08090a;
 }
 
-.added-hobby-list table tr {
+.added-hobby-list table tbody tr {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.added-hobby-list table tr td:nth-child(1) {
-  flex: 0 1 120px;
+
+.added-hobby-list table tbody > tr:not(:last-child) > td > div:first-child {
+  background-color: rgba(247, 245, 249, 1);
+  border-radius: 24px;
+  color: rgba(128, 100, 162, 1);
+  line-height: 18px;
+  padding: 4px 12px;
 }
-.added-hobby-list table tr td:nth-child(2) {
-  flex: 0 1 130px;
+
+.added-hobby-list table tbody tr:last-child > td:nth-child(1) section {
+  width: auto;
 }
-.added-hobby-list table tr td:nth-child(3) {
-  flex: 0 1 120px;
+.added-hobby-list
+  table
+  tbody
+  tr:last-child
+  > td:nth-child(2)
+  > div
+  > div
+  > div:first-child {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  font-weight: 600;
+  color: rgba(109, 116, 122, 1);
+  font-size: 14px;
+  background-color: #f7f5f9;
+  border-radius: 8px;
+  /* padding:5px 15px; */
 }
-.added-hobby-list table tr td:nth-child(4) {
-  flex: 0 1 40px;
+.added-hobby-list
+  table
+  tbody
+  tr:last-child
+  > td:nth-child(2)
+  > div
+  > div
+  > div:first-child
+  > p {
+  display: initial;
+}
+.added-hobby-list table tbody tr:last-child > td:nth-child(2) fieldset {
+  border: none;
+  display: flex;
+  gap: 10px !important;
+}
+
+.added-hobby-list table tbody tr:last-child > td:first-child {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
 }
 
 .added-hobby-list table tbody tr {
   position: relative;
-  padding: var(--spacing-8) 0;
+  padding: var(--spacing-8);
 }
 .added-hobby-list table tbody tr::after {
   content: '';
@@ -243,6 +309,7 @@ overflow: auto;
   width: 100%;
   background: #ced4da;
   bottom: 0;
+  left: 0;
 }
 .added-hobby-list table tbody tr:last-child:after {
   display: none;
@@ -251,7 +318,7 @@ overflow: auto;
 .added-hobby-list .delete-hobby-btn {
   cursor: pointer;
 }
-.helper-text{
+.helper-text {
   font-weight: 400;
   font-size: 10px;
   line-height: 16px;
@@ -261,26 +328,6 @@ overflow: auto;
   min-height: 1rem;
 }
 
-.add-btn {
- 
-  --color: rgb(var(--white-rgb));
-  --bg-color: rgb(var(--primary-100-rgb));
-    
-    width: 100%;
-    max-width: 4.875rem;
-    height: var(--spacing-40); 
-    border: none;
-    border-radius: 8px;
-    background-color: var(--bg-color);
-    color: var(--color);
-    border: 1px solid rgb(var(--primary-100-rgb));
-      
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 16px;
-    cursor: pointer;
-    
-  }
 @media screen and (max-width: 1100px) {
   .modal-wrapper {
     width: auto;
@@ -296,5 +343,25 @@ overflow: auto;
   }
   .add-hobbies-wrapper .add-new-hobby > section {
     width: calc(50% - 10px);
+  }
+  .hideActionMobile {
+    display: none;
+  }
+  .add-btn {
+    margin: auto;
+  }
+  .added-hobby-list table tbody {
+    max-height: 15rem;
+    padding: 0;
+    display: inline-table;
+    width: 100%;
+  }
+  .input-box input[type='text'] {
+    max-width: 7rem;
+  }
+  .added-hobby-list table tbody tr:last-child > td:first-child {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
   }
 }
