@@ -30,6 +30,7 @@ import ListingStoreTab from '@/components/ListingPage/ListingPageStore/ListingPa
 import ListingEventsTab from '@/components/ListingPage/ListingPageEvents/ListingPageEvents'
 import PageContentBox from '../PageContentBox'
 import { openModal } from '@/redux/slices/modal'
+import EditIcon from '@/assets/svg/edit-colored.svg'
 
 interface Props {
   activeTab: ListingPageTabs
@@ -201,17 +202,21 @@ const ListingPageLayout: React.FC<Props> = ({
           })}
         </div>
       </nav>
-      <div className={`${styles['expand-all-page-type-wrapper']} ${styles['display-flex-mobile']}`}>
+      <div
+        className={`${styles['expand-all-page-type-wrapper']} ${styles['display-flex-mobile']}`}
+      >
         <div
           className={`${styles['display-flex-mobile']} ${styles['listing-page-type-wrapper']}`}
           onClick={() => {
-            dispatch(openModal({ type: 'listing-type-edit', closable: true }))
-            dispatch(updateListingTypeModalMode({ mode: 'edit' }))
+            if (listingLayoutMode === 'edit') {
+              dispatch(openModal({ type: 'listing-type-edit', closable: true }))
+              dispatch(updateListingTypeModalMode({ mode: 'edit' }))
+            }
           }}
         >
           {data.pageData.page_type.map((type: any, idx: any) => {
             return (
-              <div className={styles['listing-page-type']} key={idx}>
+              <div key={idx}>
                 <svg
                   width="24"
                   height="24"
@@ -235,7 +240,9 @@ const ListingPageLayout: React.FC<Props> = ({
               </div>
             )
           })}
+          {listingLayoutMode === 'edit' && <Image src={EditIcon} alt="" />}
         </div>
+
         <div
           onClick={() => {
             if (setExpandAll !== undefined)
@@ -280,6 +287,25 @@ const ListingPageLayout: React.FC<Props> = ({
             })}
           </div>
         </nav>
+        {activeTab === 'home' && (
+          <div className={styles['display-mobile']}>
+            <PageContentBox
+              className={AboutErr ? styles.errorBorder : ''}
+              showEditButton={listingLayoutMode === 'edit'}
+              onEditBtnClick={() =>
+                dispatch(
+                  openModal({ type: 'listing-about-edit', closable: true }),
+                )
+              }
+            >
+              <h4>About</h4>
+              <div
+                className={`${styles['about-text']} ${styles['display-mobile']}`}
+                dangerouslySetInnerHTML={{ __html: data.pageData?.description }}
+              ></div>
+            </PageContentBox>
+          </div>
+        )}
         {(activeTab === 'home' || activeTab === 'posts') && (
           <div className={styles['display-mobile']}>
             <ListingPostsTab data={data} hideStartPost={true} />

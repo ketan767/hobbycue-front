@@ -8,9 +8,6 @@
 }
 
 .add-btn {
-  --color: rgb(var(--white-rgb));
-  --bg-color: rgb(var(--primary-100-rgb));
-
   width: 100%;
   max-width: 1.5rem;
   height: 1.5rem;
@@ -23,8 +20,9 @@
 
   cursor: pointer;
   border-radius: 50%;
-  margin: 8px auto 0 12px;
+  margin: 5px auto 0 12px;
 }
+
 @media screen and (min-width: 1100px) {
   .modal-wrapper {
     max-height: calc(100vh - 6rem);
@@ -51,13 +49,9 @@
 }
 
 .heading {
-  /* font-family: 'Poppins'; */
-  /* font-style: normal; */
   font-weight: 600;
   font-size: 18px;
   line-height: 26px;
-  /* identical to box height, or 144% */
-
   color: #000000;
 }
 
@@ -65,12 +59,9 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-4);
-  padding-right: 24px;
-  /* margin-bottom: var(--spacing-32); */
+  width: 7rem;
 }
 .input-box label {
-  /* font-family: 'Poppins'; */
-  /* font-style: normal; */
   font-weight: 500;
   font-size: 14px;
   line-height: 22px;
@@ -82,18 +73,16 @@
   background: #f8f9fa;
   border: 1px solid #ebedf0;
   border-radius: 8px;
-  padding: calc(var(--spacing-8) + var(--spacing-4));
+  padding: calc(var(--spacing-4) + var(--spacing-4));
 
-  /* font-family: 'Poppins'; */
-  /* font-style: normal; */
   font-weight: 400;
   font-size: 14px;
   line-height: 16px;
-  /* color: #878c90; */
   min-width: 2.25rem;
 }
 .input-box input[type='text']::placeholder {
-  font-size: 14px;
+  font-size: 12px;
+  color: rgba(147, 156, 163, 1);
 }
 .input-box input[type='text']:focus-within {
   outline: none;
@@ -149,7 +138,7 @@
 }
 
 .dropdown-wrapper .dropdown {
-  width: 100%;
+  width: 150%;
   position: absolute;
 
   left: 0;
@@ -169,7 +158,7 @@
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
-  line-height: 18px;
+  line-height: 20px;
 
   letter-spacing: 0.005em;
 
@@ -178,6 +167,7 @@
   color: #6d747a;
   cursor: pointer;
 }
+
 .dropdown-wrapper .dropdown p:hover {
   background: #f7f5f9;
   color: #8064a2;
@@ -203,14 +193,76 @@
   color: #6d747a;
 }
 
+.added-hobby-list table thead tr {
+  position: relative;
+}
+.added-hobby-list table thead tr td:nth-child(1) {
+  display: flex;
+  justify-content: flex-start;
+  flex: 1.5;
+}
 .added-hobby-list table thead tr td:nth-child(2) {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
+  flex: 1;
 }
-.added-hobby-list table tbody tr:last-child > td > div:first-child {
+
+.added-hobby-list table tr:not(:last-child) td:first-child > div:first-child {
+  background: rgba(247, 245, 249, 1);
+  color: rgba(128, 100, 162, 1);
+  width: fit-content;
+  padding: var(--spacing-4) var(--spacing-12);
+  border-radius: 24px;
+}
+
+.hideActionMobile {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.added-hobby-list table tbody tr:last-child > td:nth-child(2) > div {
+  width: auto;
+}
+.added-hobby-list
+  table
+  tbody
+  tr:last-child
+  > td:nth-child(2)
+  > div
+  > div
+  > div:first-child {
   display: flex;
-  justify-content: space-between;
+  gap: 15px;
+  align-items: center;
+  font-weight: 600;
+  color: rgba(109, 116, 122, 1);
+  font-size: 14px;
+  background-color: #f7f5f9;
+  border-radius: 8px;
+  /* padding:5px 15px; */
+}
+.added-hobby-list
+  table
+  tbody
+  tr:last-child
+  > td:nth-child(2)
+  > div
+  > div
+  > div:first-child
+  > p {
+  display: initial;
+}
+.added-hobby-list table tbody tr:last-child > td:nth-child(2) fieldset {
+  border: none;
+  display: flex;
+  gap: 10px !important;
+}
+
+.added-hobby-list table tbody tr:last-child > td:first-child {
+  display: flex;
   flex-direction: row;
+  gap: 4px;
 }
 
 .added-hobby-list table tbody {
@@ -219,7 +271,6 @@
   overflow: auto;
   max-height: 15.4rem;
 
-  padding: 0 var(--spacing-12);
   border: 1px solid #ced4da;
   border-top: none;
   border-radius: 0 0 8px 8px;
@@ -229,10 +280,7 @@
   font-weight: 500;
   font-size: 14px;
   line-height: 22px;
-  /* identical to box height, or 157% */
-
-  /* Grey/Darkest */
-
+  width: 100%;
   color: #08090a;
 }
 
@@ -240,31 +288,28 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 .added-hobby-list table tr td:nth-child(1) {
-  flex: 100%;
+  flex: 1.5;
 }
 .added-hobby-list table tr td:nth-child(2) {
-  flex: 130px;
+  flex: 1;
 }
-.added-hobby-list table tr td:nth-child(3) {
-  text-align: right;
-  padding-left: var(--spacing-24);
+.added-hobby-list table tbody tr td:last-child {
+  position: absolute;
+  right: 4px;
+  top: 10px;
 }
 
 .AddHobbyFields {
   display: flex;
   grid-template-columns: 1 1 1;
 }
-.levelwithtext {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}
 
 .added-hobby-list table tbody tr {
   position: relative;
-  padding: var(--spacing-8) 0;
+  padding: var(--spacing-8);
 }
 .added-hobby-list table tbody tr::after {
   content: '';
@@ -289,9 +334,33 @@
 }
 
 .hobby-dropdown {
-  width: 7.875rem;
-  background-color: #f7f5f9;
+  background-color: rgba(248, 249, 250, 1);
   height: 1.875rem;
+  border-radius: 8px;
+}
+.levelwithtext {
+  padding: 0px;
+  color: rgba(109, 116, 122, 1);
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  gap: 12px;
+}
+
+.levelwithtext > img {
+  margin: 0 0 0 10px;
+}
+.levelwithtext-add {
+  padding: 6px;
+  color: rgba(109, 116, 122, 1);
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  gap: 12px;
+}
+
+.levelwithtext-add > img {
+  margin: 0 0 0 10px;
 }
 .helper-text {
   font-weight: 400;
@@ -303,8 +372,11 @@
   min-height: 1rem;
 }
 .select-level-main {
+  background-color: rgba(248, 249, 250, 1);
+  border: none;
+  height: 1.875rem;
   border-radius: 8px;
-  border-color: #ebedf0;
+  outline: none;
 }
 
 .modal-close-icon {
@@ -348,10 +420,6 @@
   .hobby-dropdown .MuiMenuItem-root p {
     display: none;
   }
-  .add-btn {
-    margin: auto;
-  }
-
   .input-box {
     padding-right: 0;
   }
@@ -359,34 +427,11 @@
     padding: var(--spacing-8) !important;
   }
 
-  .added-hobby-list table tbody tr:last-child > td > div:nth-child(1) {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    flex-direction: row;
-    flex: 1.9;
-  }
-  .added-hobby-list table tbody tr:last-child > td > div:nth-child(2) {
-    align-items: center;
-    justify-content: center !important;
-    flex: 1;
-  }
-  .added-hobby-list table tbody tr:last-child > td > div:nth-child(3) {
-    display: flex;
-    justify-content: end;
-    align-items: center;
-    flex-direction: row;
-    flex: 0.45;
-  }
-  .added-hobby-list table tbody tr:last-child > td > div:nth-child(3)> button {
-    margin: 0 2px 0 0;
-  }
-
   .added-hobby-list table thead tr td:nth-child(1) {
-    flex: 2.2;
+    flex: 1.8;
   }
   .added-hobby-list table thead tr td:nth-child(2) {
-    margin: 0 -1.2rem 0 0;
+    flex: 1;
   }
 
   .added-hobby-list table tbody tr {
@@ -394,24 +439,11 @@
     padding: var(--spacing-8);
   }
 
-  .added-hobby-list table tr:not(:last-child) td > div:first-child {
-    background: rgba(247, 245, 249, 1);
-    color: rgba(128, 100, 162, 1);
-    width: fit-content;
-    padding: var(--spacing-4) var(--spacing-12);
-    border-radius: 24px;
-  }
-  .added-hobby-list table tr td:nth-child(1) {
-    flex: 2 !important;
+  .added-hobby-list table tbody tr td:nth-child(1) {
+    flex: 1.8;
   }
   .added-hobby-list table tr td:nth-child(2) {
-    flex: 0 0;
-    display: flex;
-    justify-content: center;
-  }
-  .added-hobby-list table tr td:nth-child(3) {
-    text-align: right;
-    padding-left: var(--spacing-24);
+    flex: 1;
   }
   .hobby-dropdown {
     width: 4.5rem;
@@ -423,12 +455,6 @@
   }
   .select-level-main p {
     display: none;
-  }
-  .levelwithtext p {
-    /* display: none; */
-  }
-  .lvltext {
-    /* display: none; */
   }
 
   .add-btn {
@@ -457,5 +483,31 @@
   }
   .render-p {
     display: none;
+  }
+
+  .hideActionMobile {
+    display: none;
+  }
+
+  .added-hobby-list
+    table
+    tbody
+    tr:last-child
+    > td:nth-child(2)
+    > div
+    > div
+    > div:first-child
+    > span {
+    display: none;
+  }
+  .added-hobby-list
+    table
+    tbody
+    tr:last-child
+    > td:nth-child(2)
+    > div
+    > div
+    > div:first-child {
+    padding: 5px 15px;
   }
 }
