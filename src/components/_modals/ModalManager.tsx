@@ -44,6 +44,7 @@ import VerifyActionModal from './VerifyAction/VerifyAction'
 import SetPasswordModal from './CreatePassword'
 import ViewImageModal from './ViewImage'
 import { ModalType } from '@/redux/slices/modal'
+import UserOnboardingWelcomeModal from './UserOnboardingWelcomeModal/UserOnboardingWelcomeModal.tsx'
 
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -214,7 +215,7 @@ const ModalManager: React.FC = () => {
               confirmationModal ? styles['ins-active'] : ''
             }  `}
           >
-            <main>
+            <main className={!(activeModal==='user-onboarding-welcome')?styles['pos-relative']:""}>
               {activeModal === 'auth' && <AuthModal />}
               {activeModal === 'email-verify' && <VerifyEmailModal />}
               {activeModal === 'user-onboarding' && <UserOnboardingModal />}
@@ -278,6 +279,9 @@ const ModalManager: React.FC = () => {
               )}
               {activeModal === 'listing-social-media-edit' && (
                 <ListingSocialMediaEditModal {...props} />
+              )}
+              {activeModal === 'user-onboarding-welcome' && (
+                <UserOnboardingWelcomeModal />
               )}
 
               {activeModal === 'claim-listing' && <ClaimModal />}
