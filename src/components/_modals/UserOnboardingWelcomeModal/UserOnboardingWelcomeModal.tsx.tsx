@@ -9,7 +9,7 @@ const UserOnboardingWelcomeModal = () => {
   const initialInnerWidth = () => {
     let width = window.innerWidth
     if (width - 1300 >= 0) {
-      return width - 1300
+      return ((width - 1300) / 2)
     } else return 0
   }
   const [screenWidth, setScreenWidth] = useState(initialInnerWidth)
@@ -32,7 +32,7 @@ const UserOnboardingWelcomeModal = () => {
     <div className={styles.wrapper}>
       <div>
         <div
-          style={{ left: `calc(0.1rem + ${screenWidth}px)` }}
+          style={{ left: `calc(0rem + ${screenWidth}px - 5px)` }}
           className={styles['my-community-wrapper']}
         >
           <Image src="/logo-welcome-small.svg" alt="" width={55} height={55} />
