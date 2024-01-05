@@ -52,7 +52,11 @@ import VerifyActionModal from './VerifyAction/VerifyAction'
 import SetPasswordModal from './CreatePassword'
 import ViewImageModal from './ViewImage'
 import { ModalType } from '@/redux/slices/modal'
+
 import UserOnboardingWelcomeModal from './UserOnboardingWelcomeModal/UserOnboardingWelcomeModal.tsx'
+
+import ExpiredPassword from './ExpiredPasswordModal'
+
 
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -309,6 +313,7 @@ const ModalManager: React.FC = () => {
               {activeModal === 'upload-video-page' && <UploadVideoPage />}
               {activeModal === 'upload-image-page' && <UploadImagePage />}
               {activeModal === 'upload-video-user' && <UploadVideoUser />}
+              {activeModal === 'ExpiredPassword' && <ExpiredPassword />}
               {activeModal === 'social-media-edit' && (
                 <SocialMediaEditModal {...props} />
               )}
