@@ -1,4 +1,12 @@
-import { useContext, useCallback, useEffect, useState } from 'react'
+import {
+  useContext,
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+  LegacyRef,
+  MutableRefObject,
+} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { AuthModal } from './AuthModal'
@@ -60,6 +68,8 @@ export interface SnackbarState {
 }
 
 const ModalManager: React.FC = () => {
+  const mainRef = useRef<HTMLDivElement>(null)
+  const modalWrapperRef = useRef<HTMLDivElement>(null)
   const [snackbar, setSnackbar] = useState<SnackbarState>({
     show: false,
     message: '',
@@ -181,7 +191,10 @@ const ModalManager: React.FC = () => {
   }, [escFunction])
 
   const handleBgClick = (event: any) => {
-    if (event.target === event.currentTarget) {
+    if (
+      event.target === mainRef.current ||
+      event.target === modalWrapperRef.current
+    ) {
       handleClose()
     }
   }
@@ -214,8 +227,16 @@ const ModalManager: React.FC = () => {
             className={`${styles['modal-wrapper']} ${
               confirmationModal ? styles['ins-active'] : ''
             }  `}
+            ref={modalWrapperRef}
           >
-            <main className={!(activeModal==='user-onboarding-welcome')?styles['pos-relative']:""}>
+            <main
+              className={
+                !(activeModal === 'user-onboarding-welcome')
+                  ? styles['pos-relative']
+                  : ''
+              }
+              ref={mainRef}
+            >
               {activeModal === 'auth' && <AuthModal />}
               {activeModal === 'email-verify' && <VerifyEmailModal />}
               {activeModal === 'user-onboarding' && <UserOnboardingModal />}
