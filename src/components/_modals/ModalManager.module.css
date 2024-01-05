@@ -17,7 +17,7 @@
   backdrop-filter: blur(4px);
 }
 
-.modal-wrapper main {
+.pos-relative {
   position: relative;
 }
 .modal-wrapper main .modal-close-icon {

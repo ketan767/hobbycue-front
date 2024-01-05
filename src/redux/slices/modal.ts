@@ -42,7 +42,9 @@ export type ModalType =
   | 'Verify-ActionModal'
   | 'Set-PasswordModal'
   | 'View-Image-Modal'
+  | 'user-onboarding-welcome'
   | 'ExpiredPassword'
+
 
   interface ModalState {
     activeModal: ModalType
