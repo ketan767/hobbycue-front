@@ -95,9 +95,9 @@ const AuthForm: React.FC<Props> = (props) => {
     return num
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     emailRef.current?.focus()
-  },[])
+  }, [])
 
   useEffect(() => {
     const strengthNum = getStrengthNum(inputValidation)
@@ -128,7 +128,7 @@ const AuthForm: React.FC<Props> = (props) => {
       password: authFormData.password,
       profile_url: '',
     }
-    if (authFormData.password === ''){
+    if (authFormData.password === '') {
       setSubmitBtnLoading(false)
       passwordRef.current?.focus()
       return setInputErrors({
@@ -153,6 +153,10 @@ const AuthForm: React.FC<Props> = (props) => {
             email: err.response.data.message,
             password: err.response.data.message,
           })
+        if (err.response.data.message === 'User not verified') {
+          dispatch(openModal({ type: 'ExpiredPassword', closable: true }))
+        }
+
         if (
           err.response.data.message ===
           'Account is connected with Social Media!'
@@ -161,7 +165,7 @@ const AuthForm: React.FC<Props> = (props) => {
             email: err.response.data.message,
             password: null,
           })
-        return alert(err.response?.data?.messgae)
+        return ''
       }
 
       if (res.status === 200 && res.data.success) {

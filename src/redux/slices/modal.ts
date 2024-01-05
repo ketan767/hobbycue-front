@@ -42,6 +42,7 @@ export type ModalType =
   | 'Verify-ActionModal'
   | 'Set-PasswordModal'
   | 'View-Image-Modal'
+  | 'ExpiredPassword'
 
   interface ModalState {
     activeModal: ModalType
