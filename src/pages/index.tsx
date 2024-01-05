@@ -2,6 +2,7 @@ import TestimonialImg from '@/assets/image/testimonial.png'
 import PeopleIllustration from '@/assets/svg/community-bottom.svg'
 import landingIllustration from '@/assets/svg/landing-illustration.svg'
 import Microphone from '@/assets/svg/microphone.svg'
+import PlayIcon from '@/assets/svg/pause-icon.svg'
 import PauseIcon from '@/assets/svg/play_arrow.svg'
 import AuthForm from '@/components/AuthForm/AuthForm'
 import Footer from '@/components/Footer/Footer'
@@ -13,17 +14,21 @@ import styles from '@/styles/Home.module.css'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 const Home: React.FC<PropTypes> = function () {
+  const audioRef = useRef(null)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [duration, setDuration] = useState(0)
+
   const dispatch = useDispatch()
   const openLogin = () => {
     dispatch(openModal({ type: 'auth', closable: true }))
   }
   const user = useSelector((state: RootState) => state.user)
   const router = useRouter()
-  const { audio } = router.query
+
   useEffect(() => {
     if (user.isLoggedIn) {
       router.push('/community')
@@ -58,6 +63,34 @@ const Home: React.FC<PropTypes> = function () {
       }
     }
   }, [router.route])
+
+  // audio duration format
+  const formatTime = (timeInSeconds: any) => {
+    const minutes = Math.floor(timeInSeconds / 60)
+    const seconds = Math.floor(timeInSeconds % 60)
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
+  }
+
+  useEffect(() => {
+    const updateDuration = () => {
+      setDuration(audioRef.current.duration)
+    }
+
+    audioRef.current.addEventListener('loadedmetadata', updateDuration)
+
+    return () => {
+      audioRef.current.removeEventListener('loadedmetadata', updateDuration)
+    }
+  }, [])
+
+  const togglePlay = () => {
+    if (isPlaying) {
+      audioRef.current.pause()
+    } else {
+      audioRef.current.play()
+    }
+    setIsPlaying(!isPlaying)
+  }
 
   return (
     <>
@@ -299,14 +332,18 @@ const Home: React.FC<PropTypes> = function () {
           <div className={styles['testimonial-footer']}>
             <div className={styles['testimonial-audio']}>
               <div className={styles['pause-icon-container']}>
-                <Image src={PauseIcon} alt="pause" />
-                {/* <AudioPlayerComponent
-                  audioSrc={'@/assets/audio/home-demo-audio.mp4'}
-                /> */}
+                <audio ref={audioRef} src="./audio.mp4"></audio>
+                <Image
+                  style={{ cursor: 'pointer' }}
+                  onClick={togglePlay}
+                  src={isPlaying ? PlayIcon : PauseIcon}
+                  alt="pause"
+                />
               </div>
+
               <div className={styles['progressbar']}>
-                <input type="range" />
-                <span>0:00</span>
+                <input type="range" value={0} max={duration} step="0.1" />
+                <span>{duration > 0 && <p>{formatTime(duration)}</p>}</span>
               </div>
               <div className={styles['profile-container']}>
                 <Image

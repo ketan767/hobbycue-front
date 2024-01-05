@@ -114,6 +114,9 @@
   border-radius: 0px 8px 8px 0px;
   cursor: pointer;
 }
+.listContainer .expandIcon {
+  display: none;
+}
 
 @media screen and (max-width: 1100px) {
   .wrapper {
@@ -135,5 +138,42 @@
     padding: 20px 0;
     padding-top: 0;
     column-gap: 18px;
+  }
+
+  .listContainer {
+    position: relative;
+  }
+
+  .listContainer .listItem {
+    display: none;
+  }
+
+  .listExpand {
+    display: flex;
+  }
+
+  .listContainerExapnd {
+    transition: all;
+    display: block;
+    list-style-type: none;
+  }
+
+  .listContainer .listHeading {
+    position: relative;
+  }
+
+  .listContainer .expandIcon {
+    position: absolute;
+    right: -300px;
+    top: 0;
+    display: block;
+    cursor: pointer;
+  }
+
+  .expandIconStyle {
+    position: absolute;
+    right: 24px;
+
+    cursor: pointer;
   }
 }

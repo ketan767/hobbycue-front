@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import styles from './footer.module.css'
 
+import expandDown from '@/assets/svg/chevron-down.svg'
+import expandUp from '@/assets/svg/chevron-up.svg'
 import Facebook from '@/assets/svg/social/facebook.svg'
 import Google from '@/assets/svg/social/google.svg'
 import Instagram from '@/assets/svg/social/instagram.svg'
@@ -86,18 +88,37 @@ const Footer: React.FC = () => {
           <div className={styles.contentWrapper}>
             {data.map((item: any, idx: any) => {
               return (
-                <ul key={idx} className={styles.listContainer}>
+                <ul
+                  key={idx}
+                  className={
+                    expand ? styles?.listContainerExapnd : styles.listContainer
+                  }
+                >
                   <li className={styles.listHeading}> {item.title} </li>
 
                   {item.values.map((value: any, idx: any) => {
                     return (
                       <Link key={idx} href={value.link}>
-                        <li className={styles.listItem} key={idx}>
+                        <li
+                          className={
+                            expand ? styles.listExpand : styles.listItem
+                          }
+                          key={idx}
+                        >
                           {value.title}
                         </li>
                       </Link>
                     )
                   })}
+
+                  <li
+                    onClick={() => setExpand(!expand)}
+                    className={
+                      expand ? styles.expandIconStyle : styles.expandIcon
+                    }
+                  >
+                    <Image src={expand ? expandUp : expandDown} alt="icon" />
+                  </li>
                 </ul>
               )
             })}
