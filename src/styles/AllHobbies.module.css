@@ -148,8 +148,8 @@
   display: flex;
   flex-direction: column;
   /* padding: 16px 10px; */
-  border-left: 1px solid #CED4DA;
-  border-right: 1px solid #CED4DA;
+  border-left: 1px solid #ced4da;
+  border-right: 1px solid #ced4da;
 }
 
 .hobbies-table * {
@@ -211,10 +211,10 @@
   font-size: 14px;
   padding: 8px 103px 8px 24px;
 }
-.table-content-container{
+.table-content-container {
   position: relative;
 }
-.hobbies-table tbody tr td .vertical-line{
+.hobbies-table tbody tr td .vertical-line {
   position: absolute;
   left: 140px;
   top: -10px;
@@ -223,7 +223,7 @@
   padding: 0;
   margin-top: 0;
   padding-top: 0;
-  background-color: #CED4DA;
+  background-color: #ced4da;
 }
 
 .dropdown {
@@ -258,11 +258,12 @@
   background: #f7f5f9;
   color: #8064a2;
 }
-.dropdown, .dropdown p {
+.dropdown,
+.dropdown p {
   box-sizing: border-box;
 }
 
-.hobby-filter{
+.hobby-filter {
   top: calc(100vh - calc(var(--navbar-height-desktop)));
   position: sticky;
 }

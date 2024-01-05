@@ -51,7 +51,7 @@
   position: relative;
   text-transform: none;
   font-family: Poppins;
-  background-color: #F7F5F9;
+  background-color: #f7f5f9;
 }
 
 .social-login-btn::before {
@@ -81,19 +81,19 @@
   z-index: 1;
   position: relative;
 }
-.divider::before{
+.divider::before {
   content: '';
   position: absolute;
   top: 50%;
   left: 0;
   transform: translateY(-50%);
-  background-color: #CED4DA;
+  background-color: #ced4da;
   width: 100%;
   height: 2px;
   z-index: -1;
 }
-.divider span{
-  background-color: #F7F5F9;
+.divider span {
+  background-color: #f7f5f9;
   display: inline-block;
   padding: 0 4px;
 }
@@ -124,12 +124,12 @@
   color: rgba(var(--gray-100-rgb));
 }
 
-.email-field div div{
+.email-field div div {
   border-radius: 8px;
   height: 40px;
 }
 
-.password-field div div{
+.password-field div div {
   border-radius: 8px;
   height: 40px;
 }
@@ -138,20 +138,20 @@
   position: relative;
 }
 
-.password-field label{
+.password-field label {
   font-family: 'Poppins';
-font-style: normal;
-font-weight: 400;
-font-size: 12px;
-line-height: 20px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 20px;
 }
 
-.email-field label{
+.email-field label {
   font-family: 'Poppins';
-font-style: normal;
-font-weight: 400;
-font-size: 12px;
-line-height: 20px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 20px;
 }
 
 .password-field .show-pass-icon {
@@ -164,10 +164,9 @@ line-height: 20px;
   transform: translateY(-50%);
 }
 
-.password-field button{
+.password-field button {
   height: 10px;
 }
-
 
 .validation-messages {
   margin-left: 195px;
@@ -240,7 +239,7 @@ line-height: 20px;
   color: rgba(var(--gray-50-rgb));
   margin: auto;
 }
-.agree-tnc-info span{
+.agree-tnc-info span {
   color: black;
 }
 .form-footer .submit-btn {
@@ -248,45 +247,44 @@ line-height: 20px;
   width: 100%;
   font-size: 14px;
   color: #ffffff;
-  background: #8064A2;
+  background: #8064a2;
   height: 40px;
-
 }
 .form-footer .submit-btn:hover {
-  background-color: #8064A2;
+  background-color: #8064a2;
   color: white;
 }
 .bgGrey input {
   border-radius: 4px;
   background-color: #ebedf0 !important;
 }
-.bgGrey > div{
+.bgGrey > div {
   background-color: #ebedf0 !important;
 }
 .bgGrey fieldset {
   border: 0;
 }
 
-.modal-form-contanier .forgot-pass-btn span{
+.modal-form-contanier .forgot-pass-btn span {
   color: #000;
   font-size: 14px;
   font-family: Poppins;
   line-height: 16px;
 }
 .modal-form-contanier .form-footer .submit-btn {
-  border: 1px solid #8064A2;
+  border: 1px solid #8064a2;
 }
 
 .modal-form-contanier .form-footer .submit-btn:hover {
-  background-color: #8064A2;
+  background-color: #8064a2;
   color: white;
 }
-.loader{
+.loader {
   color: #ffffff;
 }
 
 @media screen and (max-width: 1100px) {
-  .tab{
+  .tab {
     display: grid;
     grid-template-columns: 1fr;
   }
@@ -297,20 +295,20 @@ line-height: 20px;
     font-size: 12px;
     border: 1px solid;
     color: #ffffff;
-    background-color: #8064A2;
+    background-color: #8064a2;
   }
   .tab-btn {
     text-transform: none;
     font-weight: 600;
     font-size: 16px;
-    
+
     /* min-height: 32px; */
     font-family: var(--font-poppins);
   }
   .social-login-btn {
     font-size: 12px;
   }
-  .modal-form-contanier .forgot-pass-btn span{
+  .modal-form-contanier .forgot-pass-btn span {
     font-size: 12px;
   }
   .modal-form-contanier .form-footer .submit-btn {
@@ -319,5 +317,4 @@ line-height: 20px;
   .social-login-btn {
     height: 32px;
   }
-  
 }

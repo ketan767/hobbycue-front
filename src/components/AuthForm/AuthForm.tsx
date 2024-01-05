@@ -1,23 +1,21 @@
-import Link from 'next/link'
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
-import Tabs from '@mui/material/Tabs'
-import Tab from '@mui/material/Tab'
-import TextField from '@mui/material/TextField'
-import FormControl from '@mui/material/FormControl'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded'
+import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
+import FormControl from '@mui/material/FormControl'
+import FormControlLabel from '@mui/material/FormControlLabel'
 import IconButton from '@mui/material/IconButton'
-import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded'
-import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded'
+import Tab from '@mui/material/Tab'
+import Tabs from '@mui/material/Tabs'
+import TextField from '@mui/material/TextField'
 
-import { GoogleLogin } from 'react-google-login'
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
+import { GoogleLogin } from 'react-google-login'
 
 import OutlinedButton from '../_buttons/OutlinedButton'
 
-import styles from './AuthForm.module.css'
 import {
   facebookAuth,
   googleAuth,
@@ -25,6 +23,7 @@ import {
   signIn,
 } from '@/services/auth.service'
 import { useDispatch, useSelector } from 'react-redux'
+import styles from './AuthForm.module.css'
 
 import {
   closeModal,
@@ -32,18 +31,14 @@ import {
   resetAuthFormData,
   updateAuthFormData,
 } from '@/redux/slices/modal'
-import { useRouter } from 'next/router'
-import {
-  updateIsAuthenticated,
-  updateIsLoggedIn,
-  updateUser,
-} from '@/redux/slices/user'
-import { validateEmail, validatePassword } from '@/utils'
-import { CircularProgress } from '@mui/material'
-import store, { RootState } from '@/redux/store'
 import { setShowPageLoader } from '@/redux/slices/site'
-import PasswordAnalyzer from '../PasswordAnalyzer/PasswordAnalyzer'
+import { updateIsLoggedIn } from '@/redux/slices/user'
+import { RootState } from '@/redux/store'
 import { updateUserProfile } from '@/services/user.service'
+import { validateEmail } from '@/utils'
+import { CircularProgress } from '@mui/material'
+import { useRouter } from 'next/router'
+import PasswordAnalyzer from '../PasswordAnalyzer/PasswordAnalyzer'
 interface Props {
   isModal?: boolean
 }
@@ -95,9 +90,9 @@ const AuthForm: React.FC<Props> = (props) => {
     return num
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     emailRef.current?.focus()
-  },[])
+  }, [])
 
   useEffect(() => {
     const strengthNum = getStrengthNum(inputValidation)
@@ -128,7 +123,7 @@ const AuthForm: React.FC<Props> = (props) => {
       password: authFormData.password,
       profile_url: '',
     }
-    if (authFormData.password === ''){
+    if (authFormData.password === '') {
       setSubmitBtnLoading(false)
       passwordRef.current?.focus()
       return setInputErrors({

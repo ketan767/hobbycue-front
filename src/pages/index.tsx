@@ -23,7 +23,7 @@ const Home: React.FC<PropTypes> = function () {
   }
   const user = useSelector((state: RootState) => state.user)
   const router = useRouter()
-
+  const { audio } = router.query
   useEffect(() => {
     if (user.isLoggedIn) {
       router.push('/community')
@@ -300,6 +300,9 @@ const Home: React.FC<PropTypes> = function () {
             <div className={styles['testimonial-audio']}>
               <div className={styles['pause-icon-container']}>
                 <Image src={PauseIcon} alt="pause" />
+                {/* <AudioPlayerComponent
+                  audioSrc={'@/assets/audio/home-demo-audio.mp4'}
+                /> */}
               </div>
               <div className={styles['progressbar']}>
                 <input type="range" />

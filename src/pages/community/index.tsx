@@ -12,7 +12,7 @@ import { RootState } from '@/redux/store'
 import { getAllPosts } from '@/services/post.service'
 import styles from '@/styles/Community.module.css'
 import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 type Props = {}
@@ -22,6 +22,21 @@ const CommunityHome: React.FC<Props> = ({}) => {
   const { allPosts, loading } = useSelector((state: RootState) => state.post)
   const router = useRouter()
   const dispatch = useDispatch()
+
+  const [isBlurred, setIsBlurred] = useState(false)
+
+  useEffect(() => {
+    // Blur the screen after mounting
+    setIsBlurred(true)
+
+    // Remove the blur after 20 seconds
+    const blurTimeout = setTimeout(() => {
+      setIsBlurred(false)
+    }, 20000)
+
+    // Clean up the timeout to avoid memory leaks
+    return () => clearTimeout(blurTimeout)
+  }, [])
 
   const getPost = async () => {
     const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
@@ -74,7 +89,7 @@ const CommunityHome: React.FC<Props> = ({}) => {
     title: 'My Profile',
     description: 'View your Profile, Add Pics, Social and more.',
     sliceIcon: tipsSliceIconRight,
-    customStyle: { position: 'absolute', top: -155, right: 450 },
+    customStyle: { position: 'absolute', top: -155, right: 50, zIndex: 50 },
   }
 
   return (
@@ -106,7 +121,15 @@ const CommunityHome: React.FC<Props> = ({}) => {
                 Add other hobbies to your profile, or be the first one to start
                 a conversation on yours
               </p>
-              <Welcome {...(welcomeContent as any)} />
+              <div
+                style={{
+                  display: 'flex',
+                  flex: 1,
+                  justifyContent: 'center',
+                }}
+              >
+                <Welcome {...(welcomeContent as any)} />
+              </div>
               <TipsCard {...(myCommunity as any)} />
               <TipsCard {...(searchTips as any)} />
               <TipsCard {...(myProfileTips as any)} />

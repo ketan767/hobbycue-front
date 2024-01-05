@@ -2,16 +2,16 @@ import React, { useState } from 'react'
 import styles from './footer.module.css'
 
 import Facebook from '@/assets/svg/social/facebook.svg'
-import Instagram from '@/assets/svg/social/instagram.svg'
-import Twitter from '@/assets/svg/social/twitter.svg'
-import Pintrest from '@/assets/svg/social/pintrest.svg'
 import Google from '@/assets/svg/social/google.svg'
-import Youtube from '@/assets/svg/social/youtube.svg'
-import Telegram from '@/assets/svg/social/telegram.svg'
+import Instagram from '@/assets/svg/social/instagram.svg'
 import Mail from '@/assets/svg/social/mail.svg'
+import Pintrest from '@/assets/svg/social/pintrest.svg'
+import Telegram from '@/assets/svg/social/telegram.svg'
+import Twitter from '@/assets/svg/social/twitter.svg'
+import Youtube from '@/assets/svg/social/youtube.svg'
+import { InviteToHobbycue } from '@/services/auth.service'
 import Image from 'next/image'
 import Link from 'next/link'
-import { InviteToHobbycue } from '@/services/auth.service'
 
 const icons = [
   Facebook,
@@ -25,6 +25,8 @@ const icons = [
 ]
 const Footer: React.FC = () => {
   const [email, setEmail] = useState('')
+  const [expand, setExpand] = useState(false)
+
   const data = [
     {
       title: 'Hobbycue',
@@ -86,6 +88,7 @@ const Footer: React.FC = () => {
               return (
                 <ul key={idx} className={styles.listContainer}>
                   <li className={styles.listHeading}> {item.title} </li>
+
                   {item.values.map((value: any, idx: any) => {
                     return (
                       <Link key={idx} href={value.link}>
