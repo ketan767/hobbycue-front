@@ -5,56 +5,60 @@ import {
 } from 'next'
 import { ISitemapField } from 'next-sitemap'
 import { getAllUserUrls } from '@/services/user.service'
-import { get } from 'http'
+import { getAllListingUrls } from '@/services/listing.service'
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { res, err } = await getAllUserUrls()
-  if (err) {
-    console.error('Error fetching user URLs:', err)
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
+  const { res: userRes, err: userErr } = await getAllUserUrls()
+
+  const { res: pagesRes, err: pagesErr } = await getAllListingUrls()
+
+  if (userErr || pagesErr) {
+    console.error('Error fetching user or pages URLs:', userErr || pagesErr)
     return {
       notFound: true,
     }
   }
 
-  const usersres: any[] = res?.data?.data
+  const usersData: any[] = userRes?.data?.data || []
+  const pagesData: any[] = pagesRes?.data?.data || []
 
-  const users: ISitemapField[] = usersres.map((user) => ({
-    loc: `https://hobbycue-front.vercel.app/profile/${user.profile_url}`,
+  const users: ISitemapField[] = usersData.map((user) => ({
+    loc: `${baseUrl}/profile/${user.profile_url}`,
+
     lastmod: new Date().toISOString(),
   }))
 
-  // Generate XML manually from the users array
-  const generateXML = (users: ISitemapField[]): string => {
-    let xmlString = '<?xml version="1.0" encoding="UTF-8"?>\n'
-    xmlString +=
-      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+  // Assuming pages have a URL structure like 'https://hobbycue-front.vercel.app/pages/pageId'
+  const pages: ISitemapField[] = pagesData.map((page) => ({
+    loc: `${baseUrl}/pages/${page.page_url}`,
 
-    users.forEach((user) => {
-      xmlString += '\t<url>\n'
-      xmlString += `\t\t<loc>${user.loc}</loc>\n`
-      xmlString += `\t\t<lastmod>${user.lastmod}</lastmod>\n`
-      xmlString += '\t</url>\n'
-    })
+    lastmod: new Date().toISOString(),
+  }))
 
-    xmlString += '</urlset>'
-    return xmlString
-  }
+  // Combine user profiles and pages into a single sitemap
+  const allUrls: ISitemapField[] = [...users, ...pages]
 
-  const sitemapString = generateXML(users)
-  console.log('Generated sitemap:', sitemapString)
+  const sitemapJSON = allUrls.map((item) => ({
+    loc: item.loc,
+    lastmod: item.lastmod,
+  }))
+
+  console.log('Generated sitemap:', sitemapJSON)
+
+  ctx.res.setHeader('Content-Type', 'application/json')
 
   return {
     props: {
-      users,
-      sitemapXML: sitemapString,
+      sitemapJSON,
     },
   }
 }
 
-export default function Site({ sitemapXML }: { sitemapXML: string }) {
+export default function Site({ sitemapJSON }: { sitemapJSON: object[] }) {
   return (
     <div>
-      <pre>{sitemapXML}</pre>
+      <pre>{JSON.stringify(sitemapJSON, null, 2)}</pre>
     </div>
   )
 }

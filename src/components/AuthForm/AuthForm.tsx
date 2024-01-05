@@ -44,6 +44,7 @@ import store, { RootState } from '@/redux/store'
 import { setShowPageLoader } from '@/redux/slices/site'
 import PasswordAnalyzer from '../PasswordAnalyzer/PasswordAnalyzer'
 import { updateUserProfile } from '@/services/user.service'
+import { passwordRequest } from '@/services/auth.service'
 interface Props {
   isModal?: boolean
 }
@@ -154,6 +155,10 @@ const AuthForm: React.FC<Props> = (props) => {
             password: err.response.data.message,
           })
         if (err.response.data.message === 'User not verified') {
+          const email = authFormData.email
+          const { err, res } = await passwordRequest({
+            email,
+          })
           dispatch(openModal({ type: 'ExpiredPassword', closable: true }))
         }
 

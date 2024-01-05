@@ -220,3 +220,15 @@ export const searchPages = async (searchCriteria:any) => {
     return { res: null, err: error };
   }
 };
+
+export const getAllListingUrls = async (
+
+  ): Promise<ApiReturnObject> => {
+    try {
+      const res = await axiosInstance.get(`/listing/urls`)
+      return { res: res, err: null }
+    } catch (error) {
+      console.error(error)
+      return { err: error, res: null }
+    }
+  }
