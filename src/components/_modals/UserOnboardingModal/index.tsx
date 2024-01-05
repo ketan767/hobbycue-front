@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { closeModal } from '@/redux/slices/modal'
+import { closeModal, openModal } from '@/redux/slices/modal'
 import { RootState } from '@/redux/store'
 import { updateMyProfileDetail } from '@/services/user.service'
 import CloseIcon from '@/assets/icons/CloseIcon'
@@ -14,6 +14,7 @@ import ProfileContactEditModal from '../EditProfile/ProfileContact'
 import SaveModal from '../SaveModal/saveModal'
 
 import styles from './styles.module.css'
+import { updateUser } from '@/redux/slices/user'
 
 // type OnboardingData = {
 //   full_name: string
@@ -82,10 +83,10 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
     const { err, res } = await updateMyProfileDetail(data)
     if (err) return console.log(err)
     if (res?.data.success) {
+      dispatch(updateUser(res.data.data.user))
       dispatch(closeModal())
-      router.push('/community')
-      window.location.reload()
-      // router.push(`/profile/${res?.data?.data?.user?.profile_url}`)
+      router.push(`/profile/${user.profile_url}`)
+      dispatch(openModal({ type: 'user-onboarding-welcome', closable: false }))
     }
   }
   function handleClose() {

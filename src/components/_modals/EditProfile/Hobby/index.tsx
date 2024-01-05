@@ -270,7 +270,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       searchref.current?.focus()
       return
     }
-    if (onComplete) onComplete()
+    if (onComplete !== undefined) onComplete()
     else {
       window.location.reload()
       dispatch(closeModal())
