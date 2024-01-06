@@ -44,7 +44,7 @@ import store, { RootState } from '@/redux/store'
 import { setShowPageLoader } from '@/redux/slices/site'
 import PasswordAnalyzer from '../PasswordAnalyzer/PasswordAnalyzer'
 import { updateUserProfile } from '@/services/user.service'
-import { passwordRequest } from '@/services/auth.service'
+import { forgotPassword } from '@/services/auth.service'
 interface Props {
   isModal?: boolean
 }
@@ -140,25 +140,30 @@ const AuthForm: React.FC<Props> = (props) => {
     // Sign In
     if (selectedTab === 'sign-in') {
       const { err, res } = await signIn(data)
-      setSubmitBtnLoading(false)
+
       if (err) {
         if (err.response.data.message === 'User not found!') {
+          setSubmitBtnLoading(false)
           emailRef.current?.focus()
           return setInputErrors({
             email: err.response.data.message,
             password: null,
           })
         }
-        if (err.response.data.message === 'Invalid email or password')
+        if (err.response.data.message === 'Invalid email or password') {
+          setSubmitBtnLoading(false)
           return setInputErrors({
             email: err.response.data.message,
             password: err.response.data.message,
           })
+        }
+
         if (err.response.data.message === 'User not verified') {
           const email = authFormData.email
-          const { err, res } = await passwordRequest({
+          const { err, res } = await forgotPassword({
             email,
           })
+          setSubmitBtnLoading(false)
           dispatch(openModal({ type: 'ExpiredPassword', closable: true }))
         }
 
