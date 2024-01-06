@@ -10,6 +10,9 @@ import ProfileHobbySideList from '@/components/ProfilePage/ProfileHobbySideList'
 import ProfilePagesList from '@/components/ProfilePage/ProfilePagesList/ProfilePagesList'
 import { getListingPages } from '@/services/listing.service'
 import ProfileNavigationLinks from '@/components/ProfilePage/ProfileHeader/ProfileNavigationLinks'
+import ProfileAddressSide from '@/components/ProfilePage/ProfileAddressSide'
+import ProfileContactSide from '@/components/ProfilePage/ProfileContactSides'
+import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/ProfileSocialMedia'
 
 interface Props {
   data: ProfilePageData
@@ -17,7 +20,7 @@ interface Props {
 
 const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
   // const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
-  const [expandAll,setExpandAll]=useState(false)
+  const [expandAll, setExpandAll] = useState(false)
 
   return (
     <>
@@ -25,16 +28,34 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
         <title>{`Posts | ${data.pageData.full_name} | HobbyCue`}</title>
       </Head>
 
-      <ProfileLayout activeTab={'blogs'} data={data} expandAll={expandAll} setExpandAll={setExpandAll}>
+      <ProfileLayout
+        activeTab={'blogs'}
+        data={data}
+        expandAll={expandAll}
+        setExpandAll={setExpandAll}
+      >
         <PageGridLayout column={2}>
           <aside>
             {/* User Hobbies */}
-            <ProfileHobbySideList data={data.pageData} expandData={expandAll}/>
-            <ProfilePagesList data={data} expandData={expandAll}/>
+            <ProfileHobbySideList data={data.pageData} expandData={expandAll} />
+            <ProfilePagesList data={data} expandData={expandAll} />
+
+            <div className={styles['display-mobile']}>
+              <ProfileAddressSide data={data.pageData} expandData={expandAll} />
+
+              {/* User Contact Details */}
+              <ProfileContactSide data={data.pageData} expandData={expandAll} />
+
+              {/*User Social Media visible only for mobile view */}
+              <ProfileSocialMediaSide
+                data={data.pageData}
+                expandData={expandAll}
+              />
+            </div>
           </aside>
           <div className={styles['nav-mobile']}>
-            <ProfileNavigationLinks activeTab={'blogs'}/>
-            </div>
+            <ProfileNavigationLinks activeTab={'blogs'} />
+          </div>
           <section className={styles['pages-container']}>
             <div className={styles['no-posts-div']}>
               <p className={styles['no-posts-text']}>

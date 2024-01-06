@@ -229,10 +229,11 @@ const ListingPageMain: React.FC<Props> = ({
     window.open(mapsUrl, '_blank')
   }
 
-  console.log('data', data)
+  // console.log('data', data)
+  
   return (
     <>
-      <PageGridLayout column={activeTab === 'media' ? 2 : 3}>
+      <PageGridLayout column={activeTab==="home"||activeTab==="posts"?3:2}>
         <aside className={`custom-scrollbar ${styles['page-left-aside']}`}>
           <div className={styles['display-desktop']}>
             <PageContentBox
@@ -414,161 +415,161 @@ const ListingPageMain: React.FC<Props> = ({
 
         {children}
 
-        {activeTab !== 'media' && (
-          <aside>
-            {/* User Contact Details */}
-            <PageContentBox
-              className={ContactInfoErr ? styles.errorBorder : ''}
-              showEditButton={listingLayoutMode === 'edit'}
-              onEditBtnClick={() =>
-                dispatch(
-                  openModal({ type: 'listing-contact-edit', closable: true }),
-                )
-              }
-              setDisplayData={setShowContact}
-              expandData={expandAll}
+        <aside
+          className={
+            (activeTab === 'home' || activeTab === 'posts')
+              ? ''
+              : styles['display-mobile-initial']
+          }
+        >
+          {/* User Contact Details */}
+          <PageContentBox
+            className={ContactInfoErr ? styles.errorBorder : ''}
+            showEditButton={listingLayoutMode === 'edit'}
+            onEditBtnClick={() =>
+              dispatch(
+                openModal({ type: 'listing-contact-edit', closable: true }),
+              )
+            }
+            setDisplayData={setShowContact}
+            expandData={expandAll}
+          >
+            <h4 className={styles['heading']}>Contact Information</h4>
+            <ul
+              className={`${styles['contact-wrapper']} ${
+                styles['display-desktop']
+              }${showContact ? ' ' + styles['display-mobile'] : ''}`}
             >
-              <h4 className={styles['heading']}>Contact Information</h4>
-              <ul
-                className={`${styles['contact-wrapper']} ${
-                  styles['display-desktop']
-                }${showContact ? ' ' + styles['display-mobile'] : ''}`}
-              >
-                {/* Page Admin */}
-                {(PageAdmin as any)?.full_name && (
-                  <Link href={`/profile/${(PageAdmin as any)?.profile_url}`}>
-                    <Image
-                      src={AdminSvg}
-                      alt="whatsapp"
-                      width={24}
-                      height={24}
-                    />
-                    <span className={styles.textdefault}>
-                      {(PageAdmin as any)?.full_name}
-                    </span>
-                  </Link>
-                )}
-                {/* Phone */}
-                {data?.name && (
-                  <Link href={`tel:${data?.name}`}>
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <g clipPath="url(#clip0_230_34018)">
-                        <path
-                          d="M19.23 15.2578L16.69 14.9678C16.08 14.8978 15.48 15.1078 15.05 15.5378L13.21 17.3778C10.38 15.9378 8.06004 13.6278 6.62004 10.7878L8.47004 8.93781C8.90004 8.50781 9.11004 7.90781 9.04004 7.29781L8.75004 4.77781C8.63004 3.76781 7.78004 3.00781 6.76004 3.00781H5.03004C3.90004 3.00781 2.96004 3.94781 3.03004 5.07781C3.56004 13.6178 10.39 20.4378 18.92 20.9678C20.05 21.0378 20.99 20.0978 20.99 18.9678V17.2378C21 16.2278 20.24 15.3778 19.23 15.2578Z"
-                          fill="#8064A2"
-                        />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_230_34018">
-                          <rect width="24" height="24" fill="white" />
-                        </clipPath>
-                      </defs>
-                    </svg>
-
-                    <span className={styles.textdefault}>{data?.name} </span>
-                  </Link>
-                )}
-                {data?.phone && (
-                  <Link href={`tel:${data?.phone}`}>
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <g clipPath="url(#clip0_230_34018)">
-                        <path
-                          d="M19.23 15.2578L16.69 14.9678C16.08 14.8978 15.48 15.1078 15.05 15.5378L13.21 17.3778C10.38 15.9378 8.06004 13.6278 6.62004 10.7878L8.47004 8.93781C8.90004 8.50781 9.11004 7.90781 9.04004 7.29781L8.75004 4.77781C8.63004 3.76781 7.78004 3.00781 6.76004 3.00781H5.03004C3.90004 3.00781 2.96004 3.94781 3.03004 5.07781C3.56004 13.6178 10.39 20.4378 18.92 20.9678C20.05 21.0378 20.99 20.0978 20.99 18.9678V17.2378C21 16.2278 20.24 15.3778 19.23 15.2578Z"
-                          fill="#8064A2"
-                        />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_230_34018">
-                          <rect width="24" height="24" fill="white" />
-                        </clipPath>
-                      </defs>
-                    </svg>
-
-                    <span className={styles.textdefault}>{data?.phone} </span>
-                  </Link>
-                )}
-
-                {/* WhatsApp Number */}
-                {data?.whatsapp_number && (
-                  <Link href={`https://wa.me/${data?.whatsapp_number}`}>
-                    <Image
-                      src={WhatsappIcon}
-                      alt="whatsapp11"
-                      width={24}
-                      height={24}
-                    />
-                    <span className={styles.textdefault}>
-                      {data?.whatsapp_number}{' '}
-                    </span>
-                  </Link>
-                )}
-
-                {/* Email */}
-                {data?.public_email && (
-                  <Link href={`mailto:${data?.public_email}`}>
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <g clipPath="url(#clip0_230_34011)">
-                        <path
-                          d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM19.6 8.25L12.53 12.67C12.21 12.87 11.79 12.87 11.47 12.67L4.4 8.25C4.15 8.09 4 7.82 4 7.53C4 6.86 4.73 6.46 5.3 6.81L12 11L18.7 6.81C19.27 6.46 20 6.86 20 7.53C20 7.82 19.85 8.09 19.6 8.25Z"
-                          fill="#8064A2"
-                        />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_230_34011">
-                          <rect width="24" height="24" fill="white" />
-                        </clipPath>
-                      </defs>
-                    </svg>
-
-                    <span className={styles.textdefault}>
-                      {data?.public_email}{' '}
-                    </span>
-                  </Link>
-                )}
-
-                {/* Website */}
-                {data?.website && (
-                  <Link href={data.website}>
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <circle cx="12" cy="12" r="12" fill="#8064A2" />
+              {/* Page Admin */}
+              {(PageAdmin as any)?.full_name && (
+                <Link href={`/profile/${(PageAdmin as any)?.profile_url}`}>
+                  <Image src={AdminSvg} alt="whatsapp" width={24} height={24} />
+                  <span className={styles.textdefault}>
+                    {(PageAdmin as any)?.full_name}
+                  </span>
+                </Link>
+              )}
+              {/* Phone */}
+              {data?.name && (
+                <Link href={`tel:${data?.name}`}>
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g clipPath="url(#clip0_230_34018)">
                       <path
-                        d="M17.3333 15.9974C18.0667 15.9974 18.6667 15.3974 18.6667 14.6641V7.9974C18.6667 7.26406 18.0667 6.66406 17.3333 6.66406H6.66667C5.93333 6.66406 5.33333 7.26406 5.33333 7.9974V14.6641C5.33333 15.3974 5.93333 15.9974 6.66667 15.9974H4.66667C4.3 15.9974 4 16.2974 4 16.6641C4 17.0307 4.3 17.3307 4.66667 17.3307H19.3333C19.7 17.3307 20 17.0307 20 16.6641C20 16.2974 19.7 15.9974 19.3333 15.9974H17.3333ZM7.33333 7.9974H16.6667C17.0333 7.9974 17.3333 8.2974 17.3333 8.66406V13.9974C17.3333 14.3641 17.0333 14.6641 16.6667 14.6641H7.33333C6.96667 14.6641 6.66667 14.3641 6.66667 13.9974V8.66406C6.66667 8.2974 6.96667 7.9974 7.33333 7.9974Z"
-                        fill="white"
+                        d="M19.23 15.2578L16.69 14.9678C16.08 14.8978 15.48 15.1078 15.05 15.5378L13.21 17.3778C10.38 15.9378 8.06004 13.6278 6.62004 10.7878L8.47004 8.93781C8.90004 8.50781 9.11004 7.90781 9.04004 7.29781L8.75004 4.77781C8.63004 3.76781 7.78004 3.00781 6.76004 3.00781H5.03004C3.90004 3.00781 2.96004 3.94781 3.03004 5.07781C3.56004 13.6178 10.39 20.4378 18.92 20.9678C20.05 21.0378 20.99 20.0978 20.99 18.9678V17.2378C21 16.2278 20.24 15.3778 19.23 15.2578Z"
+                        fill="#8064A2"
                       />
-                    </svg>
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_230_34018">
+                        <rect width="24" height="24" fill="white" />
+                      </clipPath>
+                    </defs>
+                  </svg>
 
-                    <span className={styles.textdefault}>{data?.website} </span>
-                  </Link>
-                )}
-              </ul>
-            </PageContentBox>
+                  <span className={styles.textdefault}>{data?.name} </span>
+                </Link>
+              )}
+              {data?.phone && (
+                <Link href={`tel:${data?.phone}`}>
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g clipPath="url(#clip0_230_34018)">
+                      <path
+                        d="M19.23 15.2578L16.69 14.9678C16.08 14.8978 15.48 15.1078 15.05 15.5378L13.21 17.3778C10.38 15.9378 8.06004 13.6278 6.62004 10.7878L8.47004 8.93781C8.90004 8.50781 9.11004 7.90781 9.04004 7.29781L8.75004 4.77781C8.63004 3.76781 7.78004 3.00781 6.76004 3.00781H5.03004C3.90004 3.00781 2.96004 3.94781 3.03004 5.07781C3.56004 13.6178 10.39 20.4378 18.92 20.9678C20.05 21.0378 20.99 20.0978 20.99 18.9678V17.2378C21 16.2278 20.24 15.3778 19.23 15.2578Z"
+                        fill="#8064A2"
+                      />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_230_34018">
+                        <rect width="24" height="24" fill="white" />
+                      </clipPath>
+                    </defs>
+                  </svg>
 
-            {/* Seller Details */}
-            {/* <PageContentBox
+                  <span className={styles.textdefault}>{data?.phone} </span>
+                </Link>
+              )}
+
+              {/* WhatsApp Number */}
+              {data?.whatsapp_number && (
+                <Link href={`https://wa.me/${data?.whatsapp_number}`}>
+                  <Image
+                    src={WhatsappIcon}
+                    alt="whatsapp11"
+                    width={24}
+                    height={24}
+                  />
+                  <span className={styles.textdefault}>
+                    {data?.whatsapp_number}{' '}
+                  </span>
+                </Link>
+              )}
+
+              {/* Email */}
+              {data?.public_email && (
+                <Link href={`mailto:${data?.public_email}`}>
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g clipPath="url(#clip0_230_34011)">
+                      <path
+                        d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM19.6 8.25L12.53 12.67C12.21 12.87 11.79 12.87 11.47 12.67L4.4 8.25C4.15 8.09 4 7.82 4 7.53C4 6.86 4.73 6.46 5.3 6.81L12 11L18.7 6.81C19.27 6.46 20 6.86 20 7.53C20 7.82 19.85 8.09 19.6 8.25Z"
+                        fill="#8064A2"
+                      />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_230_34011">
+                        <rect width="24" height="24" fill="white" />
+                      </clipPath>
+                    </defs>
+                  </svg>
+
+                  <span className={styles.textdefault}>
+                    {data?.public_email}{' '}
+                  </span>
+                </Link>
+              )}
+
+              {/* Website */}
+              {data?.website && (
+                <Link href={data.website}>
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle cx="12" cy="12" r="12" fill="#8064A2" />
+                    <path
+                      d="M17.3333 15.9974C18.0667 15.9974 18.6667 15.3974 18.6667 14.6641V7.9974C18.6667 7.26406 18.0667 6.66406 17.3333 6.66406H6.66667C5.93333 6.66406 5.33333 7.26406 5.33333 7.9974V14.6641C5.33333 15.3974 5.93333 15.9974 6.66667 15.9974H4.66667C4.3 15.9974 4 16.2974 4 16.6641C4 17.0307 4.3 17.3307 4.66667 17.3307H19.3333C19.7 17.3307 20 17.0307 20 16.6641C20 16.2974 19.7 15.9974 19.3333 15.9974H17.3333ZM7.33333 7.9974H16.6667C17.0333 7.9974 17.3333 8.2974 17.3333 8.66406V13.9974C17.3333 14.3641 17.0333 14.6641 16.6667 14.6641H7.33333C6.96667 14.6641 6.66667 14.3641 6.66667 13.9974V8.66406C6.66667 8.2974 6.96667 7.9974 7.33333 7.9974Z"
+                      fill="white"
+                    />
+                  </svg>
+
+                  <span className={styles.textdefault}>{data?.website} </span>
+                </Link>
+              )}
+            </ul>
+          </PageContentBox>
+
+          {/* Seller Details */}
+          {/* <PageContentBox
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
                 dispatch(
@@ -734,62 +735,62 @@ const ListingPageMain: React.FC<Props> = ({
               </ul>
             </PageContentBox> */}
 
-            {/* User Location Details */}
-            <PageContentBox
-              className={LocationErr ? styles.errorBorder : ''}
-              showEditButton={listingLayoutMode === 'edit'}
-              onEditBtnClick={() =>
-                dispatch(
-                  openModal({ type: 'listing-address-edit', closable: true }),
-                )
-              }
-              setDisplayData={setShowLocation}
-              expandData={expandAll}
+          {/* User Location Details */}
+          <PageContentBox
+            className={LocationErr ? styles.errorBorder : ''}
+            showEditButton={listingLayoutMode === 'edit'}
+            onEditBtnClick={() =>
+              dispatch(
+                openModal({ type: 'listing-address-edit', closable: true }),
+              )
+            }
+            setDisplayData={setShowLocation}
+            expandData={expandAll}
+          >
+            <div className={`${styles['location-heading']} `}>
+              <h4>Location</h4>
+            </div>
+            <div
+              className={`${styles['display-desktop']}${
+                showLocation ? ' ' + styles['display-mobile'] : ''
+              }`}
             >
-              <div className={`${styles['location-heading']} `}>
-                <h4>Location</h4>
-              </div>
-              <div
-                className={`${styles['display-desktop']}${
-                  showLocation ? ' ' + styles['display-mobile'] : ''
-                }`}
-              >
-                {listingLayoutMode === 'view' && (
-                  <div
-                    className={styles['direction-container']}
-                    onClick={openGoogleMaps}
-                  >
-                    <Image src={DirectionIcon} alt="direction" />
-                    <p> Get Direction </p>
-                  </div>
-                )}
-                <ul className={`${styles['location-wrapper']}`}>
-                  {/* Address */}
-                  {data?._address && (
-                    <li>
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <g clip-path="url(#clip0_173_56226)">
-                          <path
-                            d="M12 2C7.8 2 4 5.22 4 10.2C4 13.38 6.45 17.12 11.34 21.43C11.72 21.76 12.29 21.76 12.67 21.43C17.55 17.12 20 13.38 20 10.2C20 5.22 16.2 2 12 2ZM12 12C10.9 12 10 11.1 10 10C10 8.9 10.9 8 12 8C13.1 8 14 8.9 14 10C14 11.1 13.1 12 12 12Z"
-                            fill="#8064A2"
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_173_56226">
-                            <rect width="24" height="24" fill="white" />
-                          </clipPath>
-                        </defs>
-                      </svg>
+              {listingLayoutMode === 'view' && (
+                <div
+                  className={styles['direction-container']}
+                  onClick={openGoogleMaps}
+                >
+                  <Image src={DirectionIcon} alt="direction" />
+                  <p> Get Direction </p>
+                </div>
+              )}
+              <ul className={`${styles['location-wrapper']}`}>
+                {/* Address */}
+                {data?._address && (
+                  <li>
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g clip-path="url(#clip0_173_56226)">
+                        <path
+                          d="M12 2C7.8 2 4 5.22 4 10.2C4 13.38 6.45 17.12 11.34 21.43C11.72 21.76 12.29 21.76 12.67 21.43C17.55 17.12 20 13.38 20 10.2C20 5.22 16.2 2 12 2ZM12 12C10.9 12 10 11.1 10 10C10 8.9 10.9 8 12 8C13.1 8 14 8.9 14 10C14 11.1 13.1 12 12 12Z"
+                          fill="#8064A2"
+                        />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_173_56226">
+                          <rect width="24" height="24" fill="white" />
+                        </clipPath>
+                      </defs>
+                    </svg>
 
-                      <span className={styles.textdefault}>
-                        {data?.wp_data?.location_str}
-                        {/* {`${
+                    <span className={styles.textdefault}>
+                      {data?.wp_data?.location_str}
+                      {/* {`${
                         data?._address.street ? data._address.street + ',' : ''
                       }
                       
@@ -809,315 +810,260 @@ const ListingPageMain: React.FC<Props> = ({
                         ? ' - ' + data?._address?.pin_code
                         : ''
                       }`} */}
-                      </span>
-                    </li>
-                  )}
-                </ul>
-              </div>
-              <div
-                className={`${styles['location-map']} ${
-                  styles['display-desktop']
-                }${showLocation ? ' ' + styles['display-mobile'] : ''}`}
-              >
-                <MapComponent lat={lat} lng={lng} />
-              </div>
-            </PageContentBox>
-            {data?.type === listingTypes.PLACE && (
-              <PageContentBox
-                showEditButton={listingLayoutMode === 'edit'}
-                onEditBtnClick={() =>
-                  dispatch(
-                    openModal({
-                      type: 'listing-working-hours-edit',
-                      closable: true,
-                    }),
-                  )
-                }
-                setDisplayData={setShowWorkingHours}
-                expandData={expandAll}
-              >
-                <h4 className={styles['heading']}>Working Hours</h4>
-                <div
-                  className={`${styles['working-hours-wrapper']} ${
-                    styles['display-desktop']
-                  }${showWorkingHours ? ' ' + styles['display-mobile'] : ''}`}
-                >
-                  {/* Working Hours  */}
-                  {data?.work_hours && (
-                    <ul>
-                      {data?.work_hours.map((item: any, idx: number) => {
-                        return (
-                          <li key={idx} className={styles.workingListItem}>
-                            <svg
-                              width="24"
-                              height="24"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <g clip-path="url(#clip0_173_56222)">
-                                <path
-                                  d="M12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2ZM15.55 15.8L11.47 13.29C11.17 13.11 10.99 12.79 10.99 12.44V7.75C11 7.34 11.34 7 11.75 7C12.16 7 12.5 7.34 12.5 7.75V12.2L16.34 14.51C16.7 14.73 16.82 15.2 16.6 15.56C16.38 15.91 15.91 16.02 15.55 15.8Z"
-                                  fill="#8064A2"
-                                />
-                              </g>
-                              <defs>
-                                <clipPath id="clip0_173_56222">
-                                  <rect width="24" height="24" fill="white" />
-                                </clipPath>
-                              </defs>
-                            </svg>
-                            <p className={styles.workingHour}>
-                              {item.from_day} - {item.to_day}, {item.from_time}{' '}
-                              - {item.to_time}
-                            </p>
-                          </li>
-                        )
-                      })}
-                    </ul>
-                  )}
-                </div>
-              </PageContentBox>
-            )}
-
-            {/* Related Listing */}
-            {listingLayoutMode !== 'edit' &&
-            (!listingPagesRight || listingPagesRight.length === 0) ? null : (
-              <PageContentBox
-                showEditButton={listingLayoutMode === 'edit'}
-                onEditBtnClick={() =>
-                  dispatch(
-                    openModal({
-                      type: 'related-listing-right-edit',
-                      closable: true,
-                    }),
-                  )
-                }
-                setDisplayData={setShowRelatedListing2}
-                expandData={expandAll}
-              >
-                <h4 className={styles['heading']}>
-                  {relationRight && relationRight.trim() !== ''
-                    ? relationRight
-                    : 'Related Listing'}
-                </h4>
-
-                <div
-                  className={`${styles['display-desktop']}${
-                    showRelatedListing2 ? ' ' + styles['display-mobile'] : ''
-                  }`}
-                >
-                  {!listingPagesRight || listingPagesRight.length === 0 ? (
-                    <span className={styles.textGray}>
-                      {'Eg: Guru related to this page'}
                     </span>
-                  ) : (
-                    <ul className={styles['related-list']}>
-                      {listingPagesRight?.map((item: any) => {
-                        if (typeof item === 'string') return null
-                        return (
-                          <li key={item._id}>
-                            <Link
-                              className={styles.textGray}
-                              href={`/page/${item.page_url}`}
-                            >
-                              <div className={styles['related']}>
-                                <Image
-                                  src={
-                                    item.profile_image
-                                      ? item.profile_image
-                                      : DefaultPageImage
-                                  }
-                                  alt={item?.title}
-                                  width="32"
-                                  height="32"
-                                />
-                                <span className={styles['item-title']}>
-                                  {item?.title}
-                                </span>
-                              </div>
-                            </Link>
-                          </li>
-                        )
-                      })}
-                    </ul>
-                  )}
-                </div>
-              </PageContentBox>
-            )}
-
-            {/* {data?.type === 4 && (
+                  </li>
+                )}
+              </ul>
+            </div>
+            <div
+              className={`${styles['location-map']} ${
+                styles['display-desktop']
+              }${showLocation ? ' ' + styles['display-mobile'] : ''}`}
+            >
+              <MapComponent lat={lat} lng={lng} />
+            </div>
+          </PageContentBox>
+          {data?.type === listingTypes.PLACE && (
             <PageContentBox
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
                 dispatch(
                   openModal({
-                    type: 'listing-event-hours-edit',
+                    type: 'listing-working-hours-edit',
                     closable: true,
                   }),
                 )
               }
+              setDisplayData={setShowWorkingHours}
+              expandData={expandAll}
             >
-              <h4 className={styles['heading']}>Event Hours</h4>
-              <div className={styles['working-hours-wrapper']}>
-                {data?.event_date_time && (
-                  <div>
-                    <li className={styles.workingListItem}>
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <g clip-path="url(#clip0_173_56222)">
-                          <path
-                            d="M12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2ZM15.55 15.8L11.47 13.29C11.17 13.11 10.99 12.79 10.99 12.44V7.75C11 7.34 11.34 7 11.75 7C12.16 7 12.5 7.34 12.5 7.75V12.2L16.34 14.51C16.7 14.73 16.82 15.2 16.6 15.56C16.38 15.91 15.91 16.02 15.55 15.8Z"
-                            fill="#8064A2"
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_173_56222">
-                            <rect width="24" height="24" fill="white" />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                      <p className={styles.workingHour}>
-                        {dateFormat.format(
-                          new Date(data?.event_date_time.from_date),
-                        )}{' '}
-                        -{' '}
-                        {dateFormat.format(
-                          new Date(data?.event_date_time.to_date),
-                        )}
-                        , {data?.event_date_time.from_time} -{' '}
-                        {data?.event_date_time.to_time}
-                      </p>
-                    </li>
-                  </div>
+              <h4 className={styles['heading']}>Working Hours</h4>
+              <div
+                className={`${styles['working-hours-wrapper']} ${
+                  styles['display-desktop']
+                }${showWorkingHours ? ' ' + styles['display-mobile'] : ''}`}
+              >
+                {/* Working Hours  */}
+                {data?.work_hours && (
+                  <ul>
+                    {data?.work_hours.map((item: any, idx: number) => {
+                      return (
+                        <li key={idx} className={styles.workingListItem}>
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <g clip-path="url(#clip0_173_56222)">
+                              <path
+                                d="M12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2ZM15.55 15.8L11.47 13.29C11.17 13.11 10.99 12.79 10.99 12.44V7.75C11 7.34 11.34 7 11.75 7C12.16 7 12.5 7.34 12.5 7.75V12.2L16.34 14.51C16.7 14.73 16.82 15.2 16.6 15.56C16.38 15.91 15.91 16.02 15.55 15.8Z"
+                                fill="#8064A2"
+                              />
+                            </g>
+                            <defs>
+                              <clipPath id="clip0_173_56222">
+                                <rect width="24" height="24" fill="white" />
+                              </clipPath>
+                            </defs>
+                          </svg>
+                          <p className={styles.workingHour}>
+                            {item.from_day} - {item.to_day}, {item.from_time} -{' '}
+                            {item.to_time}
+                          </p>
+                        </li>
+                      )
+                    })}
+                  </ul>
                 )}
               </div>
             </PageContentBox>
-          )} */}
+          )}
 
-            {listingLayoutMode !== 'edit' &&
-            (!listingPagesRight ||
-              listingPagesRight.length === 0) ? null : data?.type ===
-                listingTypes.PROGRAM ||
-              data?.type === listingTypes.PRODUCT ||
-              data?.type === listingTypes.PLACE ||
-              data?.type === listingTypes.PEOPLE ? (
-              <PageContentBox
-                showEditButton={listingLayoutMode === 'edit'}
-                onEditBtnClick={() =>
-                  dispatch(
-                    openModal({
-                      type: 'listing-social-media-edit',
-                      closable: true,
-                    }),
-                  )
-                }
-                setDisplayData={setShowSocialMedia}
-                expandData={expandAll}
+          {/* Related Listing */}
+          {listingLayoutMode !== 'edit' &&
+          (!listingPagesRight || listingPagesRight.length === 0) ? null : (
+            <PageContentBox
+              showEditButton={listingLayoutMode === 'edit'}
+              onEditBtnClick={() =>
+                dispatch(
+                  openModal({
+                    type: 'related-listing-right-edit',
+                    closable: true,
+                  }),
+                )
+              }
+              setDisplayData={setShowRelatedListing2}
+              expandData={expandAll}
+            >
+              <h4 className={styles['heading']}>
+                {relationRight && relationRight.trim() !== ''
+                  ? relationRight
+                  : 'Related Listing'}
+              </h4>
+
+              <div
+                className={`${styles['display-desktop']}${
+                  showRelatedListing2 ? ' ' + styles['display-mobile'] : ''
+                }`}
               >
-                <h4 className={styles['heading']}>Social Media</h4>
+                {!listingPagesRight || listingPagesRight.length === 0 ? (
+                  <span className={styles.textGray}>
+                    {'Eg: Guru related to this page'}
+                  </span>
+                ) : (
+                  <ul className={styles['related-list']}>
+                    {listingPagesRight?.map((item: any) => {
+                      if (typeof item === 'string') return null
+                      return (
+                        <li key={item._id}>
+                          <Link
+                            className={styles.textGray}
+                            href={`/page/${item.page_url}`}
+                          >
+                            <div className={styles['related']}>
+                              <Image
+                                src={
+                                  item.profile_image
+                                    ? item.profile_image
+                                    : DefaultPageImage
+                                }
+                                alt={item?.title}
+                                width="32"
+                                height="32"
+                              />
+                              <span className={styles['item-title']}>
+                                {item?.title}
+                              </span>
+                            </div>
+                          </Link>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                )}
+              </div>
+            </PageContentBox>
+          )}
 
-                <ul
-                  className={`${styles['social-contact-wrapper']} ${
-                    styles['display-desktop']
-                  }${showSocialMedia ? ' ' + styles['display-mobile'] : ''}`}
-                >
-                  {data?.social_media_urls && (
-                    <>
-                      {renderSocialLink(
-                        data.social_media_urls.facebook_url,
-                        FacebookIcon,
-                        'Facebook',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.twitter_url,
-                        TwitterIcon,
-                        'Twitter',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.instagram_url,
-                        InstagramIcon,
-                        'Instagram',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.behance_url,
-                        BehanceIcon,
-                        'Behance',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.bgg_url,
-                        BGGIcon,
-                        'BoardGameGeek',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.chess_url,
-                        ChessIcon,
-                        'Chess',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.deviantarts_url,
-                        DeviantArtIcon,
-                        'DeviantArt',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.goodreads_url,
-                        GoodreadsIcon,
-                        'Goodreads',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.pinterest_url,
-                        PinterestIcon,
-                        'Pinterest',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.smule_url,
-                        SmuleIcon,
-                        'Smule',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.soundcloud_url,
-                        SoundCloudIcon,
-                        'SoundCloud',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.strava_url,
-                        StravaIcon,
-                        'Strava',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.tripadvisor_url,
-                        TripAdvisorIcon,
-                        'TripAdvisor',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.ultimate_guitar_url,
-                        UltimateGuitarIcon,
-                        'Ultimate Guitar',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.youtube_url,
-                        YouTubeIcon,
-                        'YouTube',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.Others_url,
-                        OthersIcon,
-                        extractDomainName(data.social_media_urls.Others_url),
-                      )}
-                    </>
-                  )}
-                </ul>
-              </PageContentBox>
-            ) : (
-              <></>
-            )}
-          </aside>
-        )}
+          {listingLayoutMode !== 'edit' &&
+          (!listingPagesRight ||
+            listingPagesRight.length === 0) ? null : data?.type ===
+              listingTypes.PROGRAM ||
+            data?.type === listingTypes.PRODUCT ||
+            data?.type === listingTypes.PLACE ||
+            data?.type === listingTypes.PEOPLE ? (
+            <PageContentBox
+              showEditButton={listingLayoutMode === 'edit'}
+              onEditBtnClick={() =>
+                dispatch(
+                  openModal({
+                    type: 'listing-social-media-edit',
+                    closable: true,
+                  }),
+                )
+              }
+              setDisplayData={setShowSocialMedia}
+              expandData={expandAll}
+            >
+              <h4 className={styles['heading']}>Social Media</h4>
+
+              <ul
+                className={`${styles['social-contact-wrapper']} ${
+                  styles['display-desktop']
+                }${showSocialMedia ? ' ' + styles['display-mobile'] : ''}`}
+              >
+                {data?.social_media_urls && (
+                  <>
+                    {renderSocialLink(
+                      data.social_media_urls.facebook_url,
+                      FacebookIcon,
+                      'Facebook',
+                    )}
+                    {renderSocialLink(
+                      data.social_media_urls.twitter_url,
+                      TwitterIcon,
+                      'Twitter',
+                    )}
+                    {renderSocialLink(
+                      data.social_media_urls.instagram_url,
+                      InstagramIcon,
+                      'Instagram',
+                    )}
+                    {renderSocialLink(
+                      data.social_media_urls.behance_url,
+                      BehanceIcon,
+                      'Behance',
+                    )}
+                    {renderSocialLink(
+                      data.social_media_urls.bgg_url,
+                      BGGIcon,
+                      'BoardGameGeek',
+                    )}
+                    {renderSocialLink(
+                      data.social_media_urls.chess_url,
+                      ChessIcon,
+                      'Chess',
+                    )}
+                    {renderSocialLink(
+                      data.social_media_urls.deviantarts_url,
+                      DeviantArtIcon,
+                      'DeviantArt',
+                    )}
+                    {renderSocialLink(
+                      data.social_media_urls.goodreads_url,
+                      GoodreadsIcon,
+                      'Goodreads',
+                    )}
+                    {renderSocialLink(
+                      data.social_media_urls.pinterest_url,
+                      PinterestIcon,
+                      'Pinterest',
+                    )}
+                    {renderSocialLink(
+                      data.social_media_urls.smule_url,
+                      SmuleIcon,
+                      'Smule',
+                    )}
+                    {renderSocialLink(
+                      data.social_media_urls.soundcloud_url,
+                      SoundCloudIcon,
+                      'SoundCloud',
+                    )}
+                    {renderSocialLink(
+                      data.social_media_urls.strava_url,
+                      StravaIcon,
+                      'Strava',
+                    )}
+                    {renderSocialLink(
+                      data.social_media_urls.tripadvisor_url,
+                      TripAdvisorIcon,
+                      'TripAdvisor',
+                    )}
+                    {renderSocialLink(
+                      data.social_media_urls.ultimate_guitar_url,
+                      UltimateGuitarIcon,
+                      'Ultimate Guitar',
+                    )}
+                    {renderSocialLink(
+                      data.social_media_urls.youtube_url,
+                      YouTubeIcon,
+                      'YouTube',
+                    )}
+                    {renderSocialLink(
+                      data.social_media_urls.Others_url,
+                      OthersIcon,
+                      extractDomainName(data.social_media_urls.Others_url),
+                    )}
+                  </>
+                )}
+              </ul>
+            </PageContentBox>
+          ) : (
+            <></>
+          )}
+        </aside>
       </PageGridLayout>
     </>
   )

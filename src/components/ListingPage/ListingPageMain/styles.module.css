@@ -259,6 +259,10 @@ ul.seller-info-wrapper li svg:last-child {
   display: initial;
 }
 
+.display-mobile-initial{
+  display: none !important;
+}
+
 .location-map>div{
   width: 100%;
 }
@@ -277,6 +281,9 @@ ul.seller-info-wrapper li svg:last-child {
   }
   .display-mobile{
     display: flex !important;
+  }
+  .display-mobile-initial{
+    display: initial !important;
   }
 
   .location-heading{

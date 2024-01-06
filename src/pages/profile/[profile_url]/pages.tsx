@@ -18,6 +18,9 @@ import ListingCard from '@/components/ListingCard/ListingCard'
 import ProfileHobbySideList from '@/components/ProfilePage/ProfileHobbySideList'
 import ProfilePagesList from '@/components/ProfilePage/ProfilePagesList/ProfilePagesList'
 import ProfileNavigationLinks from '@/components/ProfilePage/ProfileHeader/ProfileNavigationLinks'
+import ProfileAddressSide from '@/components/ProfilePage/ProfileAddressSide'
+import ProfileContactSide from '@/components/ProfilePage/ProfileContactSides'
+import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/ProfileSocialMedia'
 
 interface Props {
   data: ProfilePageData
@@ -41,6 +44,20 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
               {/* User Hobbies */}
               <ProfileHobbySideList data={data.pageData} expandData={expandAll}/>
               <ProfilePagesList data={data} expandData={expandAll}/>
+
+              <div className={styles['display-mobile']}>
+              <ProfileAddressSide data={data.pageData} expandData={expandAll} />
+
+              {/* User Contact Details */}
+              <ProfileContactSide data={data.pageData} expandData={expandAll} />
+
+              {/*User Social Media visible only for mobile view */}
+              <ProfileSocialMediaSide
+                data={data.pageData}
+                expandData={expandAll}
+              />
+            </div>
+
             </aside>
 
             <main>

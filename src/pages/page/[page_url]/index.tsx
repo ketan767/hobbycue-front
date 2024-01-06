@@ -58,7 +58,7 @@ const ListingHome: React.FC<Props> = (props) => {
       </Head>
 
       <ListingPageLayout activeTab={'home'} data={props.data} expandAll={expandAll} setExpandAll={setExpandAll}>
-        <ListingPageMain data={props.data.pageData} expandAll={expandAll}>
+        <ListingPageMain data={props.data.pageData} expandAll={expandAll} activeTab={"home"}>
           <ListingHomeTab data={props.data.pageData} expandAll={expandAll}/>
         </ListingPageMain>
       </ListingPageLayout>
