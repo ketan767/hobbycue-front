@@ -43,6 +43,7 @@ import PasswordAnalyzer from '../PasswordAnalyzer/PasswordAnalyzer'
 
 import { forgotPassword } from '@/services/auth.service'
 
+import { updateForgotPasswordEmail } from '@/redux/slices/modal'
 interface Props {
   isModal?: boolean
 }
@@ -161,6 +162,7 @@ const AuthForm: React.FC<Props> = (props) => {
           const { err, res } = await forgotPassword({
             email,
           })
+          dispatch(updateForgotPasswordEmail(email))
           setSubmitBtnLoading(false)
           dispatch(openModal({ type: 'ExpiredPassword', closable: true }))
         }
