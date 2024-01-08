@@ -18,7 +18,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 const Home: React.FC<PropTypes> = function () {
-  const audioRef = useRef(null)
+  const audioRef = useRef<HTMLAudioElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [duration, setDuration] = useState(0)
 
@@ -73,21 +73,20 @@ const Home: React.FC<PropTypes> = function () {
 
   useEffect(() => {
     const updateDuration = () => {
-      setDuration(audioRef.current.duration)
+      if (audioRef.current) setDuration(audioRef.current?.duration)
     }
-
-    audioRef.current.addEventListener('loadedmetadata', updateDuration)
-
+    audioRef.current?.addEventListener('loadedmetadata', updateDuration)
+    let currentRef = audioRef.current
     return () => {
-      audioRef.current.removeEventListener('loadedmetadata', updateDuration)
+      currentRef?.removeEventListener('loadedmetadata', updateDuration)
     }
   }, [])
 
   const togglePlay = () => {
     if (isPlaying) {
-      audioRef.current.pause()
+      audioRef.current?.pause()
     } else {
-      audioRef.current.play()
+      audioRef.current?.play()
     }
     setIsPlaying(!isPlaying)
   }
@@ -108,7 +107,7 @@ const Home: React.FC<PropTypes> = function () {
       <section className={styles['landing-contaniner']}>
         <div className={styles['landing-bg']}>
           <main className={`site-container ${styles['landing-wrapper']}`}>
-            <div className={styles['content']}>
+            <div className={`${styles['content']} ${styles['intro-content']}`}>
               <h1>
                 Explore your <span>hobby</span> or <span>passion</span>
               </h1>
