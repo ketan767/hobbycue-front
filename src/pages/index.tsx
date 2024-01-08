@@ -18,7 +18,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 const Home: React.FC<PropTypes> = function () {
-  const audioRef = useRef(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [duration, setDuration] = useState(0)
 
@@ -73,23 +72,37 @@ const Home: React.FC<PropTypes> = function () {
 
   useEffect(() => {
     const updateDuration = () => {
-      setDuration(audioRef.current.duration)
+      if (audioRef.current) {
+        const audioElement = audioRef.current as HTMLAudioElement
+        setDuration(audioElement.duration)
+      }
     }
 
-    audioRef.current.addEventListener('loadedmetadata', updateDuration)
+    if (audioRef.current) {
+      const audioElement = audioRef.current as HTMLAudioElement
+      audioElement.addEventListener('loadedmetadata', updateDuration)
+    }
 
     return () => {
-      audioRef.current.removeEventListener('loadedmetadata', updateDuration)
+      if (audioRef.current) {
+        const audioElement = audioRef.current as HTMLAudioElement
+        audioElement.removeEventListener('loadedmetadata', updateDuration)
+      }
     }
   }, [])
 
+  const audioRef = useRef<HTMLAudioElement>(null)
+
   const togglePlay = () => {
-    if (isPlaying) {
-      audioRef.current.pause()
-    } else {
-      audioRef.current.play()
+    if (audioRef.current) {
+      const audioElement = audioRef.current as HTMLAudioElement
+      if (isPlaying) {
+        audioElement.pause()
+      } else {
+        audioElement.play()
+      }
+      setIsPlaying(!isPlaying)
     }
-    setIsPlaying(!isPlaying)
   }
 
   return (
