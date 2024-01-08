@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { withAuth } from '@/navigation/withAuth'
-import styles from '@/styles/Community.module.css'
-import { useDispatch, useSelector } from 'react-redux'
-import store, { RootState } from '@/redux/store'
-import { getAllPosts } from '@/services/post.service'
-import { updateLoading, updatePosts } from '@/redux/slices/post'
 import PostCard from '@/components/PostCard/PostCard'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
-import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
-import { checkIfUrlExists } from '@/utils'
+import { withAuth } from '@/navigation/withAuth'
+import { updateLoading, updatePosts } from '@/redux/slices/post'
+import { RootState } from '@/redux/store'
+import { getAllPosts } from '@/services/post.service'
+import styles from '@/styles/Community.module.css'
 import { useRouter } from 'next/router'
-import { openModal } from '@/redux/slices/modal'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 type Props = {}
 
@@ -20,6 +17,21 @@ const CommunityHome: React.FC<Props> = ({}) => {
   const { allPosts, loading } = useSelector((state: RootState) => state.post)
   const router = useRouter()
   const dispatch = useDispatch()
+
+  const [isBlurred, setIsBlurred] = useState(false)
+
+  useEffect(() => {
+    // Blur the screen after mounting
+    setIsBlurred(true)
+
+    // Remove the blur after 20 seconds
+    const blurTimeout = setTimeout(() => {
+      setIsBlurred(false)
+    }, 20000)
+
+    // Clean up the timeout to avoid memory leaks
+    return () => clearTimeout(blurTimeout)
+  }, [])
 
   const getPost = async () => {
     const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
@@ -68,7 +80,20 @@ const CommunityHome: React.FC<Props> = ({}) => {
             })
           ) : allPosts.length === 0 ? (
             <div className={styles['no-posts-div']}>
-            <p className={styles['no-posts-text']}>There were no posts for the hobby and the location you have chosen.<br/>Add other hobbies to your profile, or be the first one to start a conversation on yours</p>
+              <p className={styles['no-posts-text']}>
+                There were no posts for the hobby and the location you have
+                chosen.
+                <br />
+                Add other hobbies to your profile, or be the first one to start
+                a conversation on yours
+              </p>
+              <div
+                style={{
+                  display: 'flex',
+                  flex: 1,
+                  justifyContent: 'center',
+                }}
+              ></div>
             </div>
           ) : (
             <></>

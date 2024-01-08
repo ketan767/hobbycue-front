@@ -36,7 +36,6 @@
   flex-direction: column;
   gap: var(--spacing-16);
 }
-
 .social-login-btn {
   width: 100%;
   background: transparent;
@@ -51,9 +50,8 @@
   position: relative;
   text-transform: none;
   font-family: Poppins;
-  background-color: #F7F5F9;
+  background-color: #f7f5f9;
 }
-
 .social-login-btn::before {
   position: absolute;
   top: 10px;
@@ -65,13 +63,11 @@
 .social-login-btn.facebook::before {
   content: url('../../assets/svg/facebook-icon.svg');
 }
-
 .social-login-btn:hover {
   background-color: #dfdce4;
   -webkit-box-shadow: inset 0px 0px 0px 1px var(--color-primary-lighter);
   box-shadow: inset 0px 0px 0px 1px var(--color-primary-lighter);
 }
-
 .divider {
   margin: var(--spacing-24) auto;
   text-align: center;
@@ -81,24 +77,23 @@
   z-index: 1;
   position: relative;
 }
-.divider::before{
+.divider::before {
   content: '';
   position: absolute;
   top: 50%;
   left: 0;
   transform: translateY(-50%);
-  background-color: #CED4DA;
+  background-color: #ced4da;
   width: 100%;
   height: 2px;
   z-index: -1;
 }
-.divider span{
-  background-color: #F7F5F9;
+.divider span {
+  background-color: #f7f5f9;
   display: inline-block;
   padding: 0 4px;
 }
 /* FORM  */
-
 .form-body {
   display: flex;
   flex-direction: column;
@@ -123,37 +118,31 @@
   font-size: 0.9rem;
   color: rgba(var(--gray-100-rgb));
 }
-
-.email-field div div{
+.email-field div div {
   border-radius: 8px;
   height: 40px;
 }
-
-.password-field div div{
+.password-field div div {
   border-radius: 8px;
   height: 40px;
 }
-
 .password-field {
   position: relative;
 }
-
-.password-field label{
+.password-field label {
   font-family: 'Poppins';
-font-style: normal;
-font-weight: 400;
-font-size: 12px;
-line-height: 20px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 20px;
 }
-
-.email-field label{
+.email-field label {
   font-family: 'Poppins';
-font-style: normal;
-font-weight: 400;
-font-size: 12px;
-line-height: 20px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 20px;
 }
-
 .password-field .show-pass-icon {
   all: unset;
   height: -webkit-fill-available;
@@ -163,12 +152,9 @@ line-height: 20px;
   top: 50%;
   transform: translateY(-50%);
 }
-
-.password-field button{
+.password-field button {
   height: 10px;
 }
-
-
 .validation-messages {
   margin-left: 195px;
   position: absolute;
@@ -202,12 +188,10 @@ line-height: 20px;
 /* .validation-messages p.valid::before {
   content: url('../../assets/svg/green-check-icon.svg');
 } */
-
 /* Form Footer */
 .form-footer {
   margin-top: var(--spacing-24);
 }
-
 .form-footer .form-footer-top {
   display: flex;
   justify-content: space-between;
@@ -240,7 +224,7 @@ line-height: 20px;
   color: rgba(var(--gray-50-rgb));
   margin: auto;
 }
-.agree-tnc-info span{
+.agree-tnc-info span {
   color: black;
 }
 .form-footer .submit-btn {
@@ -248,47 +232,46 @@ line-height: 20px;
   width: 100%;
   font-size: 14px;
   color: #ffffff;
-  background: #8064A2;
+  background: #8064a2;
   height: 40px;
-
 }
 .form-footer .submit-btn:hover {
-  background-color: #8064A2;
+  background-color: #8064a2;
   color: white;
 }
 .bgGrey input {
   border-radius: 4px;
   background-color: #ebedf0 !important;
 }
-.bgGrey > div{
+.bgGrey > div {
   background-color: #ebedf0 !important;
 }
 .bgGrey fieldset {
   border: 0;
 }
-
-.modal-form-contanier .forgot-pass-btn span{
+.modal-form-contanier .forgot-pass-btn span {
   color: #000;
   font-size: 14px;
   font-family: Poppins;
   line-height: 16px;
 }
 .modal-form-contanier .form-footer .submit-btn {
-  border: 1px solid #8064A2;
+  border: 1px solid #8064a2;
 }
-
 .modal-form-contanier .form-footer .submit-btn:hover {
-  background-color: #8064A2;
+  background-color: #8064a2;
   color: white;
 }
-.loader{
+.loader {
   color: #ffffff;
 }
 
+/* style for responsive devices 1100px */
 @media screen and (max-width: 1100px) {
-  .tab{
-    display: grid;
-    grid-template-columns: 1fr;
+  .tab {
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
   }
 
   .form-footer .submit-btn {
@@ -297,20 +280,20 @@ line-height: 20px;
     font-size: 12px;
     border: 1px solid;
     color: #ffffff;
-    background-color: #8064A2;
+    background-color: #8064a2;
   }
   .tab-btn {
     text-transform: none;
     font-weight: 600;
     font-size: 16px;
-    
+
     /* min-height: 32px; */
     font-family: var(--font-poppins);
   }
   .social-login-btn {
     font-size: 12px;
   }
-  .modal-form-contanier .forgot-pass-btn span{
+  .modal-form-contanier .forgot-pass-btn span {
     font-size: 12px;
   }
   .modal-form-contanier .form-footer .submit-btn {
@@ -319,5 +302,44 @@ line-height: 20px;
   .social-login-btn {
     height: 32px;
   }
-  
+
+  .auth-form-content-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .social-login-btns {
+    order: 2;
+  }
+
+  .divider {
+    order: 1;
+    margin-bottom: -3px;
+  }
+
+  .divider::before {
+    content: '';
+    position: absolute;
+    background-color: #ced4da;
+    width: 100%;
+    left: -100px;
+    height: 2px;
+    z-index: 10;
+  }
+
+  .divider::after {
+    content: '';
+    position: absolute;
+    background-color: #ced4da;
+    margin-top: 6px;
+    width: 100%;
+    right: -100px;
+    height: 2px;
+    z-index: 8;
+  }
+
+  .form-body {
+    order: 0;
+    margin-top: 28px;
+  }
 }

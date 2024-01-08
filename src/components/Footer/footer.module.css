@@ -114,9 +114,13 @@
   border-radius: 0px 8px 8px 0px;
   cursor: pointer;
 }
+.listContainer .expandIcon {
+  display: none;
+}
 
 @media screen and (max-width: 1100px) {
   .wrapper {
+    margin: 0 24px;
     display: grid;
     align-items: center;
   }
@@ -127,6 +131,7 @@
     flex: 5;
     padding-right: 1rem;
   }
+
   .iconsContainer {
     display: flex;
     align-items: center;
@@ -135,20 +140,42 @@
     column-gap: 18px;
   }
 
+
+  .listContainer {
+    position: relative;
+
   .wrapper {
     padding: 0 30px;
     display: grid;
     align-items: center;
+
   }
 
-  .contentWrapper {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    padding-right: 1rem;
+  .listContainer .listItem {
+    display: none;
   }
-  .iconsContainer {
+
+  .listExpand {
     display: flex;
+
+  }
+
+  .listContainerExapnd {
+    transition: all;
+    display: block;
+    list-style-type: none;
+  }
+  .listContainer .listHeading {
+    position: relative;
+    cursor: pointer;
+  }
+  .listContainerExapnd {
+    transition: all;
+    display: block;
+    list-style-type: none;
+  }
+  .listContainer {
+
     align-items: center;
     padding: 20px 0;
     padding-top: 0;
@@ -159,10 +186,18 @@
     margin-left: 50px;
     margin-bottom: 20px;
     text-align: center;
+
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: space-around;
+  }
+
+  .expandIcon {
+    display: block;
+  }
+
+  .expandIconStyle {
+    cursor: pointer;
   }
   .socialIcons{
     width: 24px;
