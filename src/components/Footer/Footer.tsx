@@ -94,7 +94,14 @@ const Footer: React.FC = () => {
                     expand ? styles?.listContainerExapnd : styles.listContainer
                   }
                 >
-                  <li className={styles.listHeading}> {item.title} </li>
+                  <li
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => setExpand(!expand)}
+                    className={styles.listHeading}
+                  >
+                    {' '}
+                    {item.title}{' '}
+                  </li>
 
                   {item.values.map((value: any, idx: any) => {
                     return (

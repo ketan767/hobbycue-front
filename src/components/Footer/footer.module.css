@@ -157,23 +157,26 @@
     display: block;
     list-style-type: none;
   }
-
   .listContainer .listHeading {
     position: relative;
+    cursor: pointer;
+  }
+  .listContainerExapnd {
+    transition: all;
+    display: block;
+    list-style-type: none;
+  }
+  .listContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
   }
 
-  .listContainer .expandIcon {
-    position: absolute;
-    right: -300px;
-    top: 0;
+  .expandIcon {
     display: block;
-    cursor: pointer;
   }
 
   .expandIconStyle {
-    position: absolute;
-    right: 24px;
-
     cursor: pointer;
   }
 }
