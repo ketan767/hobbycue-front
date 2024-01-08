@@ -34,7 +34,7 @@ const ListingHome: React.FC<Props> = (props) => {
       </Head>
 
       <ListingPageLayout activeTab={'posts'} data={props.data} expandAll={expandAll} setExpandAll={setExpandAll}>
-        <ListingPageMain data={props.data.pageData} expandAll={expandAll}>
+        <ListingPageMain data={props.data.pageData} expandAll={expandAll} activeTab={"posts"}>
           <div className={styles['display-desktop']}>
           <ListingPostsTab data={props.data.pageData} />
           </div>

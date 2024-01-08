@@ -148,7 +148,13 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
               </div>
 
               {/* User Information */}
-              <div className={profileLayoutMode==='edit'?'':" "+styles['display-none']}>
+              <div
+                className={
+                  profileLayoutMode === 'edit'
+                    ? styles['display-desktop']
+                    : styles['display-none']
+                }
+              >
                 <PageContentBox
                   showEditButton={profileLayoutMode === 'edit'}
                   onEditBtnClick={() =>
@@ -205,7 +211,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                 </PageContentBox>
               </div>
 
-              <section className={styles['posts-container']}>
+              {/* <section className={styles['posts-container']}>
                 {loadingPosts ? (
                   <PostCardSkeletonLoading />
                 ) : (
@@ -238,7 +244,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                     })}
                   </PostWrapper>
                 )}
-              </section>
+              </section> */}
             </main>
 
             <aside>
@@ -271,7 +277,60 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
               </PageContentBox>
             </div>
 
-            <section className={styles['posts-container-mobile']}>
+            {/* User Information for mobile view */}
+            <div
+              className={
+                profileLayoutMode === 'edit'
+                  ? styles['display-mobile']
+                  : styles['display-none']
+              }
+            >
+              <PageContentBox
+                showEditButton={profileLayoutMode === 'edit'}
+                onEditBtnClick={() =>
+                  dispatch(
+                    openModal({
+                      type: 'profile-general-edit',
+                      closable: true,
+                    }),
+                  )
+                }
+              >
+                <h4 className={styles['other-info-heading']}>
+                  Other Information
+                </h4>
+                <div
+                  className={`${styles['display-flex-col']} ${styles['other-info-mob-div']}`}
+                >
+                  <h4 className={styles['other-info-subheading']}>
+                    Profile URL
+                  </h4>
+                  <p className={styles['color-light']}>
+                    {pageData.profile_url}
+                  </p>
+                  {pageData.gender && (
+                    <>
+                      <h4 className={styles['other-info-subheading']}>
+                        Gender
+                      </h4>
+                      <p className={styles['color-light']}>{pageData.gender}</p>
+                    </>
+                  )}
+                  {pageData.year_of_birth && (
+                    <>
+                      <h4 className={styles['other-info-subheading']}>
+                        Year Of Birth
+                      </h4>
+                      <p className={styles['color-light']}>
+                        {pageData.year_of_birth}
+                      </p>
+                    </>
+                  )}
+                </div>
+              </PageContentBox>
+            </div>
+
+            {/* <section className={styles['posts-container-mobile']}>
               {loadingPosts ? (
                 <PostCardSkeletonLoading />
               ) : (
@@ -304,7 +363,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                   })}
                 </PostWrapper>
               )}
-            </section>
+            </section> */}
           </PageGridLayout>
         )}
       </ProfileLayout>

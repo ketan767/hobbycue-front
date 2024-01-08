@@ -1,21 +1,28 @@
 import React, { useState } from 'react'
 import styles from './footer.module.css'
 
+import expandDown from '@/assets/svg/chevron-down.svg'
+import expandUp from '@/assets/svg/chevron-up.svg'
 import Facebook from '@/assets/svg/social/facebook.svg'
 import Instagram from '@/assets/svg/social/instagram.svg'
-import Twitter from '@/assets/svg/social/twitter.svg'
+
+import Mail from '@/assets/svg/social/mail.svg'
+
 import Pintrest from '@/assets/svg/social/Pinterest.svg'
 import Google from '@/assets/svg/social/google.svg'
-import Youtube from '@/assets/svg/social/youtube.svg'
+
 import Telegram from '@/assets/svg/social/telegram.svg'
-import Mail from '@/assets/svg/social/mail.svg'
+import Twitter from '@/assets/svg/social/twitter.svg'
+import Youtube from '@/assets/svg/social/youtube.svg'
+import { InviteToHobbycue } from '@/services/auth.service'
 import Image from 'next/image'
 import Link from 'next/link'
-import { InviteToHobbycue } from '@/services/auth.service'
 
 const icons = [Facebook, Twitter, Instagram, Pintrest, Youtube, Telegram]
 const Footer: React.FC = () => {
   const [email, setEmail] = useState('')
+  const [expand, setExpand] = useState(false)
+
   const data = [
     {
       title: 'Hobbycue',
@@ -75,17 +82,44 @@ const Footer: React.FC = () => {
           <div className={styles.contentWrapper}>
             {data.map((item: any, idx: any) => {
               return (
-                <ul key={idx} className={styles.listContainer}>
-                  <li className={styles.listHeading}> {item.title} </li>
+                <ul
+                  key={idx}
+                  className={
+                    expand ? styles?.listContainerExapnd : styles.listContainer
+                  }
+                >
+                  <li
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => setExpand(!expand)}
+                    className={styles.listHeading}
+                  >
+                    {' '}
+                    {item.title}{' '}
+                  </li>
+
                   {item.values.map((value: any, idx: any) => {
                     return (
                       <Link key={idx} href={value.link}>
-                        <li className={styles.listItem} key={idx}>
+                        <li
+                          className={
+                            expand ? styles.listExpand : styles.listItem
+                          }
+                          key={idx}
+                        >
                           {value.title}
                         </li>
                       </Link>
                     )
                   })}
+
+                  <li
+                    onClick={() => setExpand(!expand)}
+                    className={
+                      expand ? styles.expandIconStyle : styles.expandIcon
+                    }
+                  >
+                    <Image src={expand ? expandUp : expandDown} alt="icon" />
+                  </li>
                 </ul>
               )
             })}

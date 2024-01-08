@@ -1,23 +1,21 @@
-import Link from 'next/link'
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
-import Tabs from '@mui/material/Tabs'
-import Tab from '@mui/material/Tab'
-import TextField from '@mui/material/TextField'
-import FormControl from '@mui/material/FormControl'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded'
+import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
+import FormControl from '@mui/material/FormControl'
+import FormControlLabel from '@mui/material/FormControlLabel'
 import IconButton from '@mui/material/IconButton'
-import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded'
-import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded'
+import Tab from '@mui/material/Tab'
+import Tabs from '@mui/material/Tabs'
+import TextField from '@mui/material/TextField'
 
-import { GoogleLogin } from 'react-google-login'
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
+import { GoogleLogin } from 'react-google-login'
 
 import OutlinedButton from '../_buttons/OutlinedButton'
 
-import styles from './AuthForm.module.css'
 import {
   facebookAuth,
   googleAuth,
@@ -25,6 +23,7 @@ import {
   signIn,
 } from '@/services/auth.service'
 import { useDispatch, useSelector } from 'react-redux'
+import styles from './AuthForm.module.css'
 
 import {
   closeModal,
@@ -32,19 +31,19 @@ import {
   resetAuthFormData,
   updateAuthFormData,
 } from '@/redux/slices/modal'
-import { useRouter } from 'next/router'
-import {
-  updateIsAuthenticated,
-  updateIsLoggedIn,
-  updateUser,
-} from '@/redux/slices/user'
-import { validateEmail, validatePassword } from '@/utils'
-import { CircularProgress } from '@mui/material'
-import store, { RootState } from '@/redux/store'
 import { setShowPageLoader } from '@/redux/slices/site'
-import PasswordAnalyzer from '../PasswordAnalyzer/PasswordAnalyzer'
+import { updateIsLoggedIn } from '@/redux/slices/user'
+import { RootState } from '@/redux/store'
 import { updateUserProfile } from '@/services/user.service'
+
+
+import { validateEmail } from '@/utils'
+import { CircularProgress } from '@mui/material'
+import { useRouter } from 'next/router'
+import PasswordAnalyzer from '../PasswordAnalyzer/PasswordAnalyzer'
+
 import { forgotPassword } from '@/services/auth.service'
+
 import { updateForgotPasswordEmail } from '@/redux/slices/modal'
 interface Props {
   isModal?: boolean
@@ -366,215 +365,221 @@ const AuthForm: React.FC<Props> = (props) => {
         />
       </Tabs>
 
-      {/* Google - Facebook Login Buttons */}
-      <section className={styles['social-login-btns']}>
-        <GoogleLogin
-          clientId="795616019189-b0s94ri1i98355rjv1pg6ai588k0k87d.apps.googleusercontent.com"
-          render={(renderProps) => (
-            <Button
-              className={`${styles['social-login-btn']} ${styles['google']}`}
-              onClick={renderProps.onClick}
-            >
-              Continue with Google
-            </Button>
-          )}
-          onSuccess={googleAuthSuccess}
-          onFailure={googleAuthFailure}
-        />
-        <FacebookLogin
-          // App ID: 1614660215286765
-          // App Secret: a4839f4438a6b3527ca60636cc5d76a6
-          appId="1614660215286765"
-          callback={handleFacebookAuth}
-          render={(renderProps: any) => (
-            <Button
-              className={`${styles['social-login-btn']} ${styles['facebook']}`}
-              onClick={renderProps.onClick}
-            >
-              Continue with Facebook
-            </Button>
-          )}
-        />
-      </section>
-
-      {/* Divider */}
-      <div className={styles['divider']}>
-        {selectedTab === 'sign-in' && <span>Or Sign In with</span>}
-        {selectedTab === 'join-in' && <span>Or Join In with</span>}
-      </div>
-
-      {/* Email - Password Fields */}
-      <FormControl className={styles['form-body']}>
-        <div className={styles['email-field']}>
-          <TextField
-            inputRef={emailRef}
-            fullWidth
-            label="Email"
-            type="email"
-            variant="outlined"
-            size="small"
-            name="email"
-            value={authFormData.email}
-            onChange={(e) => handleInputChange(e.target.name, e.target.value)}
-            error={Boolean(inputErrors.email)}
-            helperText={inputErrors.email}
-            className={`${styles.inputField} ${isModal ? styles.bgGrey : ''}`}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleSubmit()
-              }
-            }}
+      <div className={styles['auth-form-content-wrapper']}>
+        {/* Google - Facebook Login Buttons */}
+        <section className={styles['social-login-btns']}>
+          <GoogleLogin
+            clientId="795616019189-b0s94ri1i98355rjv1pg6ai588k0k87d.apps.googleusercontent.com"
+            render={(renderProps) => (
+              <Button
+                className={`${styles['social-login-btn']} ${styles['google']}`}
+                onClick={renderProps.onClick}
+              >
+                Continue with Google
+              </Button>
+            )}
+            onSuccess={googleAuthSuccess}
+            onFailure={googleAuthFailure}
           />
+          <FacebookLogin
+            // App ID: 1614660215286765
+            // App Secret: a4839f4438a6b3527ca60636cc5d76a6
+            appId="1614660215286765"
+            callback={handleFacebookAuth}
+            render={(renderProps: any) => (
+              <Button
+                className={`${styles['social-login-btn']} ${styles['facebook']}`}
+                onClick={renderProps.onClick}
+              >
+                Continue with Facebook
+              </Button>
+            )}
+          />
+        </section>
+        {/* Divider */}
+        <div className={styles['divider']}>
+          {selectedTab === 'sign-in' && <span>Or Sign In with</span>}
+          {selectedTab === 'join-in' && <span>Or Join In with</span>}
         </div>
 
-        <div className={styles['password-field']}>
-          <TextField
-            inputRef={passwordRef}
-            fullWidth
-            label="Password"
-            type={showPassword ? 'text' : 'password'}
-            sx={{
-              '& .MuiOutlinedInput-root': { padding: 0, background: 'white' },
-            }}
-            variant="outlined"
-            autoComplete={
-              selectedTab === 'join-in' ? 'new-password' : 'current-password'
-            }
-            size="small"
-            name="password"
-            value={authFormData.password}
-            onChange={(e) => handleInputChange(e.target.name, e.target.value)}
-            error={Boolean(inputErrors.password)}
-            helperText={inputErrors.password}
-            onFocus={() => setShowValidationConditions(true)}
-            onBlur={() => setShowValidationConditions(false)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleSubmit()
+        {/* Email - Password Fields */}
+        <FormControl className={styles['form-body']}>
+          <div className={styles['email-field']}>
+            <TextField
+              inputRef={emailRef}
+              fullWidth
+              label="Email"
+              type="email"
+              variant="outlined"
+              size="small"
+              name="email"
+              value={authFormData.email}
+              onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+              error={Boolean(inputErrors.email)}
+              helperText={inputErrors.email}
+              className={`${styles.inputField} ${isModal ? styles.bgGrey : ''}`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleSubmit()
+                }
+              }}
+            />
+          </div>
+
+          <div className={styles['password-field']}>
+            <TextField
+              inputRef={passwordRef}
+              fullWidth
+              label="Password"
+              type={showPassword ? 'text' : 'password'}
+              sx={{
+                '& .MuiOutlinedInput-root': { padding: 0, background: 'white' },
+              }}
+              variant="outlined"
+              autoComplete={
+                selectedTab === 'join-in' ? 'new-password' : 'current-password'
               }
-            }}
-            className={`${styles.inputField} ${isModal ? styles.bgGrey : ''}`}
-            InputProps={{
-              endAdornment: (
-                <IconButton onClick={() => setShowPassword(!showPassword)}>
-                  {showPassword ? (
-                    <VisibilityRoundedIcon />
-                  ) : (
-                    <VisibilityOffRoundedIcon />
-                  )}
-                </IconButton>
-              ),
-            }}
-          />
+              size="small"
+              name="password"
+              value={authFormData.password}
+              onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+              error={Boolean(inputErrors.password)}
+              helperText={inputErrors.password}
+              onFocus={() => setShowValidationConditions(true)}
+              onBlur={() => setShowValidationConditions(false)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleSubmit()
+                }
+              }}
+              className={`${styles.inputField} ${isModal ? styles.bgGrey : ''}`}
+              InputProps={{
+                endAdornment: (
+                  <IconButton onClick={() => setShowPassword(!showPassword)}>
+                    {showPassword ? (
+                      <VisibilityRoundedIcon />
+                    ) : (
+                      <VisibilityOffRoundedIcon />
+                    )}
+                  </IconButton>
+                ),
+              }}
+            />
 
-          {/* Validation Conditions Box */}
-          {selectedTab === 'join-in' && showValidationConditions && (
-            <div className={styles['validation-messages']}>
-              <p
-                className={inputValidation.length ? styles['valid'] : undefined}
-              >
-                At least 8 character in length.
-              </p>
-              <p className={threeConditionsValid >= 3 ? styles['valid'] : ''}>
-                3 out of 4 conditions below
-              </p>
-              <p
-                className={
-                  inputValidation.lowercase ? styles['valid'] : undefined
-                }
-              >
-                Lower case letters (a-z)
-              </p>
-              <p
-                className={
-                  inputValidation.uppercase ? styles['valid'] : undefined
-                }
-              >
-                Upper case letters (A-Z)
-              </p>
-              <p
-                className={inputValidation.number ? styles['valid'] : undefined}
-              >
-                Numbers (0-9)
-              </p>
-              <p
-                className={
-                  inputValidation.specialChar ? styles['valid'] : undefined
-                }
-              >
-                Special characters (@,#,$)
-              </p>
-            </div>
-          )}
-        </div>
-        {selectedTab === 'join-in' && authFormData.password && (
-          <PasswordAnalyzer strength={strength - 2} />
-        )}
-      </FormControl>
-
-      {/* Remember Me - Forgot Password / Accept Terms & Submit Button */}
-      <section className={styles['form-footer']}>
-        <div className={styles['form-footer-top']}>
-          {selectedTab === 'sign-in' && (
-            <>
-              <FormControlLabel
-                className={styles['remember-me-btn']}
-                style={{ margin: 0 }}
-                control={
-                  <Checkbox
-                    size="small"
-                    color="primary"
-                    name="rememberMe"
-                    value={!authFormData.rememberMe}
-                    checked={authFormData.rememberMe}
-                    onChange={(e) =>
-                      handleInputChange(
-                        e.target.name,
-                        e.target.value === 'true',
-                      )
-                    }
-                  />
-                }
-                label={'Remember Me'}
-              />
-              <button className={styles['forgot-pass-btn']}>
-                <svg
-                  width="12"
-                  height="15"
-                  viewBox="0 0 12 15"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+            {/* Validation Conditions Box */}
+            {selectedTab === 'join-in' && showValidationConditions && (
+              <div className={styles['validation-messages']}>
+                <p
+                  className={
+                    inputValidation.length ? styles['valid'] : undefined
+                  }
                 >
-                  <path
-                    d="M10 5.33342H9.33335V4.00008C9.33335 2.16008 7.84002 0.666748 6.00002 0.666748C4.16002 0.666748 2.66669 2.16008 2.66669 4.00008V5.33342H2.00002C1.26669 5.33342 0.666687 5.93341 0.666687 6.66675V13.3334C0.666687 14.0667 1.26669 14.6667 2.00002 14.6667H10C10.7334 14.6667 11.3334 14.0667 11.3334 13.3334V6.66675C11.3334 5.93341 10.7334 5.33342 10 5.33342ZM6.00002 11.3334C5.26669 11.3334 4.66669 10.7334 4.66669 10.0001C4.66669 9.26675 5.26669 8.66675 6.00002 8.66675C6.73335 8.66675 7.33335 9.26675 7.33335 10.0001C7.33335 10.7334 6.73335 11.3334 6.00002 11.3334ZM4.00002 5.33342V4.00008C4.00002 2.89341 4.89335 2.00008 6.00002 2.00008C7.10669 2.00008 8.00002 2.89341 8.00002 4.00008V5.33342H4.00002Z"
-                    fill="#939CA3"
-                  />
-                </svg>
+                  At least 8 character in length.
+                </p>
+                <p className={threeConditionsValid >= 3 ? styles['valid'] : ''}>
+                  3 out of 4 conditions below
+                </p>
+                <p
+                  className={
+                    inputValidation.lowercase ? styles['valid'] : undefined
+                  }
+                >
+                  Lower case letters (a-z)
+                </p>
+                <p
+                  className={
+                    inputValidation.uppercase ? styles['valid'] : undefined
+                  }
+                >
+                  Upper case letters (A-Z)
+                </p>
+                <p
+                  className={
+                    inputValidation.number ? styles['valid'] : undefined
+                  }
+                >
+                  Numbers (0-9)
+                </p>
+                <p
+                  className={
+                    inputValidation.specialChar ? styles['valid'] : undefined
+                  }
+                >
+                  Special characters (@,#,$)
+                </p>
+              </div>
+            )}
+          </div>
+          {selectedTab === 'join-in' && authFormData.password && (
+            <PasswordAnalyzer strength={strength - 2} />
+          )}
+        </FormControl>
+        {/* Remember Me - Forgot Password / Accept Terms & Submit Button */}
+        <section className={styles['form-footer']}>
+          <div className={styles['form-footer-top']}>
+            {selectedTab === 'sign-in' && (
+              <>
+                <FormControlLabel
+                  className={styles['remember-me-btn']}
+                  style={{ margin: 0 }}
+                  control={
+                    <Checkbox
+                      size="small"
+                      color="primary"
+                      name="rememberMe"
+                      value={!authFormData.rememberMe}
+                      checked={authFormData.rememberMe}
+                      onChange={(e) =>
+                        handleInputChange(
+                          e.target.name,
+                          e.target.value === 'true',
+                        )
+                      }
+                    />
+                  }
+                  label={'Remember Me'}
+                />
+                <button className={styles['forgot-pass-btn']}>
+                  <svg
+                    width="12"
+                    height="15"
+                    viewBox="0 0 12 15"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M10 5.33342H9.33335V4.00008C9.33335 2.16008 7.84002 0.666748 6.00002 0.666748C4.16002 0.666748 2.66669 2.16008 2.66669 4.00008V5.33342H2.00002C1.26669 5.33342 0.666687 5.93341 0.666687 6.66675V13.3334C0.666687 14.0667 1.26669 14.6667 2.00002 14.6667H10C10.7334 14.6667 11.3334 14.0667 11.3334 13.3334V6.66675C11.3334 5.93341 10.7334 5.33342 10 5.33342ZM6.00002 11.3334C5.26669 11.3334 4.66669 10.7334 4.66669 10.0001C4.66669 9.26675 5.26669 8.66675 6.00002 8.66675C6.73335 8.66675 7.33335 9.26675 7.33335 10.0001C7.33335 10.7334 6.73335 11.3334 6.00002 11.3334ZM4.00002 5.33342V4.00008C4.00002 2.89341 4.89335 2.00008 6.00002 2.00008C7.10669 2.00008 8.00002 2.89341 8.00002 4.00008V5.33342H4.00002Z"
+                      fill="#939CA3"
+                    />
+                  </svg>
 
-                <span onClick={openForgotPasswordEmail}>Forgot password?</span>
-              </button>
-            </>
-          )}
-          {selectedTab === 'join-in' && (
-            <p className={styles['agree-tnc-info']}>
-              By continuing, you agree to our <span> Terms of Service </span>{' '}
-              and <span> Privacy Policy </span>.
-            </p>
-          )}
-        </div>
-        <OutlinedButton
-          disabled={submitBtnLoading}
-          onClick={handleSubmit}
-          className={styles['submit-btn']}
-          type="submit"
-        >
-          {submitBtnLoading ? (
-            <CircularProgress className={styles['loader']} size={'16px'} />
-          ) : (
-            getButtonText()
-          )}
-        </OutlinedButton>
-      </section>
+                  <span onClick={openForgotPasswordEmail}>
+                    Forgot password?
+                  </span>
+                </button>
+              </>
+            )}
+            {selectedTab === 'join-in' && (
+              <p className={styles['agree-tnc-info']}>
+                By continuing, you agree to our <span> Terms of Service </span>{' '}
+                and <span> Privacy Policy </span>.
+              </p>
+            )}
+          </div>
+          <OutlinedButton
+            disabled={submitBtnLoading}
+            onClick={handleSubmit}
+            className={styles['submit-btn']}
+            type="submit"
+          >
+            {submitBtnLoading ? (
+              <CircularProgress className={styles['loader']} size={'16px'} />
+            ) : (
+              getButtonText()
+            )}
+          </OutlinedButton>
+        </section>
+      </div>
     </div>
   )
 }

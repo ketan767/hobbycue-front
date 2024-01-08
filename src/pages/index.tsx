@@ -2,6 +2,7 @@ import TestimonialImg from '@/assets/image/testimonial.png'
 import PeopleIllustration from '@/assets/svg/community-bottom.svg'
 import landingIllustration from '@/assets/svg/landing-illustration.svg'
 import Microphone from '@/assets/svg/microphone.svg'
+import PlayIcon from '@/assets/svg/pause-icon.svg'
 import PauseIcon from '@/assets/svg/play_arrow.svg'
 import AuthForm from '@/components/AuthForm/AuthForm'
 import Footer from '@/components/Footer/Footer'
@@ -13,10 +14,13 @@ import styles from '@/styles/Home.module.css'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 const Home: React.FC<PropTypes> = function () {
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [duration, setDuration] = useState(0)
+
   const dispatch = useDispatch()
   const openLogin = () => {
     dispatch(openModal({ type: 'auth', closable: true }))
@@ -58,6 +62,48 @@ const Home: React.FC<PropTypes> = function () {
       }
     }
   }, [router.route])
+
+  // audio duration format
+  const formatTime = (timeInSeconds: any) => {
+    const minutes = Math.floor(timeInSeconds / 60)
+    const seconds = Math.floor(timeInSeconds % 60)
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
+  }
+
+  useEffect(() => {
+    const updateDuration = () => {
+      if (audioRef.current) {
+        const audioElement = audioRef.current as HTMLAudioElement
+        setDuration(audioElement.duration)
+      }
+    }
+
+    if (audioRef.current) {
+      const audioElement = audioRef.current as HTMLAudioElement
+      audioElement.addEventListener('loadedmetadata', updateDuration)
+    }
+
+    return () => {
+      if (audioRef.current) {
+        const audioElement = audioRef.current as HTMLAudioElement
+        audioElement.removeEventListener('loadedmetadata', updateDuration)
+      }
+    }
+  }, [])
+
+  const audioRef = useRef<HTMLAudioElement>(null)
+
+  const togglePlay = () => {
+    if (audioRef.current) {
+      const audioElement = audioRef.current as HTMLAudioElement
+      if (isPlaying) {
+        audioElement.pause()
+      } else {
+        audioElement.play()
+      }
+      setIsPlaying(!isPlaying)
+    }
+  }
 
   return (
     <>
@@ -299,11 +345,18 @@ const Home: React.FC<PropTypes> = function () {
           <div className={styles['testimonial-footer']}>
             <div className={styles['testimonial-audio']}>
               <div className={styles['pause-icon-container']}>
-                <Image src={PauseIcon} alt="pause" />
+                <audio ref={audioRef} src="./audio.mp4"></audio>
+                <Image
+                  style={{ cursor: 'pointer' }}
+                  onClick={togglePlay}
+                  src={isPlaying ? PlayIcon : PauseIcon}
+                  alt="pause"
+                />
               </div>
+
               <div className={styles['progressbar']}>
-                <input type="range" />
-                <span>0:00</span>
+                <input type="range" value={0} max={duration} step="0.1" />
+                <span>{duration > 0 && <p>{formatTime(duration)}</p>}</span>
               </div>
               <div className={styles['profile-container']}>
                 <Image

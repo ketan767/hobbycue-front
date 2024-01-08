@@ -24,6 +24,7 @@ import { openModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import PostWrapper from '@/layouts/PinnedPost/PinnedPost'
 import ProfileNavigationLinks from '@/components/ProfilePage/ProfileHeader/ProfileNavigationLinks'
+import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/ProfileSocialMedia'
 
 interface Props {
   data: ProfilePageData
@@ -170,6 +171,11 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
 
             {/* User Contact Details */}
             <ProfileContactSide data={data.pageData} expandData={expandAll}/>
+
+            {/*User Social Media visible only for mobile view */}
+            <div className={styles['display-mobile']}>
+            <ProfileSocialMediaSide data={data.pageData} expandData={expandAll}/>
+            </div>
           </aside>
 
           <div className={styles['nav-mobile']}>
