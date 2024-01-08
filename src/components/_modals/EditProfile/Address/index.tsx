@@ -585,7 +585,9 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               ...prev,
               state: data.state ? data.state : state,
               city: data.city ? data.city : city,
-              street: data.street ? data.street : formatted_address,
+              street: data.street
+                ? data.street
+                : formatted_address.split(',')[0],
               country: data.country ? data.country : country,
               pin_code: data.pin_code ? data.pin_code : pin_code,
               locality: data.locality ? data.locality : locality,
