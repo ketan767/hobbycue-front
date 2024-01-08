@@ -1,8 +1,3 @@
-import welcomWishIcon from '@/assets/image/welcome-wishlist.png'
-import tipsSliceIconLeft from '@/assets/svg/tips-slice-left.svg'
-import tipsSliceIconRight from '@/assets/svg/tips-slice-right.svg'
-import TipsCard from '@/components/Onboarding/TIps'
-import Welcome from '@/components/Onboarding/Welcome'
 import PostCard from '@/components/PostCard/PostCard'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
@@ -63,35 +58,6 @@ const CommunityHome: React.FC<Props> = ({}) => {
     if (allPosts.length === 0) getPost()
   }, [activeProfile])
 
-  // onboarding tips
-  const welcomeContent = {
-    iconSrc: welcomWishIcon,
-    title: 'Welcome to HobbyCue',
-    description:
-      'Choose from one of the options to continue. You can always find them on the top navigation.',
-  }
-
-  const myCommunity = {
-    title: 'My Community',
-    description: 'Communities specific to your Hobbies + Location.',
-    sliceIcon: tipsSliceIconLeft,
-    customStyle: { position: 'absolute', top: -155, left: 120 },
-  }
-
-  const searchTips = {
-    title: 'Search',
-    description: 'Search the site and you may find your next cue.',
-    sliceIcon: tipsSliceIconLeft,
-    customStyle: { position: 'absolute', top: -155, left: 450 },
-  }
-
-  const myProfileTips = {
-    title: 'My Profile',
-    description: 'View your Profile, Add Pics, Social and more.',
-    sliceIcon: tipsSliceIconRight,
-    customStyle: { position: 'absolute', top: -155, right: 50, zIndex: 50 },
-  }
-
   return (
     <>
       <CommunityPageLayout activeTab="posts">
@@ -127,12 +93,7 @@ const CommunityHome: React.FC<Props> = ({}) => {
                   flex: 1,
                   justifyContent: 'center',
                 }}
-              >
-                <Welcome {...(welcomeContent as any)} />
-              </div>
-              <TipsCard {...(myCommunity as any)} />
-              <TipsCard {...(searchTips as any)} />
-              <TipsCard {...(myProfileTips as any)} />
+              ></div>
             </div>
           ) : (
             <></>
