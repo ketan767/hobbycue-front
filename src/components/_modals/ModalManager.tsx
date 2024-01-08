@@ -1,4 +1,12 @@
-import { useContext, useCallback, useEffect, useState } from 'react'
+import {
+  useContext,
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+  LegacyRef,
+  MutableRefObject,
+} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { AuthModal } from './AuthModal'
@@ -45,6 +53,11 @@ import SetPasswordModal from './CreatePassword'
 import ViewImageModal from './ViewImage'
 import { ModalType } from '@/redux/slices/modal'
 
+import UserOnboardingWelcomeModal from './UserOnboardingWelcomeModal/UserOnboardingWelcomeModal.tsx'
+
+import ExpiredPassword from './ExpiredPasswordModal'
+
+
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import SimpleSnackbar from '../_snackbar/Snackbar'
@@ -59,6 +72,8 @@ export interface SnackbarState {
 }
 
 const ModalManager: React.FC = () => {
+  const mainRef = useRef<HTMLDivElement>(null)
+  const modalWrapperRef = useRef<HTMLDivElement>(null)
   const [snackbar, setSnackbar] = useState<SnackbarState>({
     show: false,
     message: '',
@@ -180,7 +195,10 @@ const ModalManager: React.FC = () => {
   }, [escFunction])
 
   const handleBgClick = (event: any) => {
-    if (event.target === event.currentTarget) {
+    if (
+      event.target === mainRef.current ||
+      event.target === modalWrapperRef.current
+    ) {
       handleClose()
     }
   }
@@ -213,8 +231,16 @@ const ModalManager: React.FC = () => {
             className={`${styles['modal-wrapper']} ${
               confirmationModal ? styles['ins-active'] : ''
             }  `}
+            ref={modalWrapperRef}
           >
-            <main>
+            <main
+              className={
+                !(activeModal === 'user-onboarding-welcome')
+                  ? styles['pos-relative']
+                  : ''
+              }
+              ref={mainRef}
+            >
               {activeModal === 'auth' && <AuthModal />}
               {activeModal === 'email-verify' && <VerifyEmailModal />}
               {activeModal === 'user-onboarding' && <UserOnboardingModal />}
@@ -279,11 +305,15 @@ const ModalManager: React.FC = () => {
               {activeModal === 'listing-social-media-edit' && (
                 <ListingSocialMediaEditModal {...props} />
               )}
+              {activeModal === 'user-onboarding-welcome' && (
+                <UserOnboardingWelcomeModal />
+              )}
 
               {activeModal === 'claim-listing' && <ClaimModal />}
               {activeModal === 'upload-video-page' && <UploadVideoPage />}
               {activeModal === 'upload-image-page' && <UploadImagePage />}
               {activeModal === 'upload-video-user' && <UploadVideoUser />}
+              {activeModal === 'ExpiredPassword' && <ExpiredPassword />}
               {activeModal === 'social-media-edit' && (
                 <SocialMediaEditModal {...props} />
               )}

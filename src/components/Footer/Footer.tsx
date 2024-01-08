@@ -6,8 +6,14 @@ import expandUp from '@/assets/svg/chevron-up.svg'
 import Facebook from '@/assets/svg/social/facebook.svg'
 import Google from '@/assets/svg/social/google.svg'
 import Instagram from '@/assets/svg/social/instagram.svg'
+
 import Mail from '@/assets/svg/social/mail.svg'
-import Pintrest from '@/assets/svg/social/pintrest.svg'
+
+import Twitter from '@/assets/svg/social/twitter.svg'
+import Pintrest from '@/assets/svg/social/Pinterest.svg'
+import Google from '@/assets/svg/social/google.svg'
+import Youtube from '@/assets/svg/social/youtube.svg'
+
 import Telegram from '@/assets/svg/social/telegram.svg'
 import Twitter from '@/assets/svg/social/twitter.svg'
 import Youtube from '@/assets/svg/social/youtube.svg'
@@ -15,16 +21,7 @@ import { InviteToHobbycue } from '@/services/auth.service'
 import Image from 'next/image'
 import Link from 'next/link'
 
-const icons = [
-  Facebook,
-  Twitter,
-  Instagram,
-  Pintrest,
-  Google,
-  Youtube,
-  Telegram,
-  Mail,
-]
+const icons = [Facebook, Twitter, Instagram, Pintrest, Youtube, Telegram]
 const Footer: React.FC = () => {
   const [email, setEmail] = useState('')
   const [expand, setExpand] = useState(false)
@@ -135,7 +132,16 @@ const Footer: React.FC = () => {
               <p className={styles.listHeading}> Social Media </p>
               <div className={styles.iconsContainer}>
                 {icons.map((Icon: any, idx: any) => {
-                  return <Image src={Icon} alt="social-media" key={idx} />
+                  return (
+                    <Image
+                      className={styles.socialIcons}
+                      height={32}
+                      width={32}
+                      src={Icon}
+                      alt="social-media"
+                      key={idx}
+                    />
+                  )
                 })}
               </div>
             </div>

@@ -140,8 +140,15 @@
     column-gap: 18px;
   }
 
+
   .listContainer {
     position: relative;
+
+  .wrapper {
+    padding: 0 30px;
+    display: grid;
+    align-items: center;
+
   }
 
   .listContainer .listItem {
@@ -150,6 +157,7 @@
 
   .listExpand {
     display: flex;
+
   }
 
   .listContainerExapnd {
@@ -167,6 +175,18 @@
     list-style-type: none;
   }
   .listContainer {
+
+    align-items: center;
+    padding: 20px 0;
+    padding-top: 0;
+    column-gap: 16px;
+  }
+
+  .contentWrapper {
+    margin-left: 50px;
+    margin-bottom: 20px;
+    text-align: center;
+
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -178,5 +198,9 @@
 
   .expandIconStyle {
     cursor: pointer;
+  }
+  .socialIcons{
+    width: 24px;
+    height: 24px;
   }
 }

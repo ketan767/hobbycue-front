@@ -37,10 +37,10 @@ import { useDispatch } from 'react-redux'
 import { SnackbarState } from '../ModalManager'
 
 type Props = {
-  triggerSnackbar:(data:SnackbarState)=>void
+  triggerSnackbar: (data: SnackbarState) => void
 }
 
-const ShareModal:React.FC<Props>=({triggerSnackbar})=>{
+const ShareModal: React.FC<Props> = ({ triggerSnackbar }) => {
   const dispatch = useDispatch()
   const { shareUrl } = useSelector((state: RootState) => state.modal)
 
@@ -49,12 +49,12 @@ const ShareModal:React.FC<Props>=({triggerSnackbar})=>{
     window.open(instagramShareLink, '_blank')
   }
 
-  const handleModalClose=()=>{
+  const handleModalClose = () => {
     navigator.clipboard.writeText(shareUrl)
     dispatch(closeModal())
     triggerSnackbar?.({
-      show:true,
-      message:'Link Copied'
+      show: true,
+      message: 'Link Copied',
     })
   }
 
@@ -93,9 +93,7 @@ const ShareModal:React.FC<Props>=({triggerSnackbar})=>{
           Mail
         </EmailShareButton>
 
-        <button
-          onClick={handleModalClose}
-        >
+        <button onClick={handleModalClose}>
           <Image src={Copy} alt="Copy" />
           Copy Link
         </button>
@@ -103,6 +101,5 @@ const ShareModal:React.FC<Props>=({triggerSnackbar})=>{
     </div>
   )
 }
-
 
 export default ShareModal
