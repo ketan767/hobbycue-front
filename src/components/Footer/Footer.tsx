@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import styles from './footer.module.css'
 
-import expandDown from '@/assets/svg/chevron-down.svg'
-import expandUp from '@/assets/svg/chevron-up.svg'
 import Facebook from '@/assets/svg/social/facebook.svg'
 import Google from '@/assets/svg/social/google.svg'
 import Instagram from '@/assets/svg/social/instagram.svg'
@@ -95,7 +93,7 @@ const Footer: React.FC = () => {
                   }
                 >
                   <li
-                    style={{ cursor: 'pointer' }}
+                    style={{ cursor: 'pointer', listStyleType: 'none' }}
                     onClick={() => setExpand(!expand)}
                     className={styles.listHeading}
                   >
@@ -107,6 +105,7 @@ const Footer: React.FC = () => {
                     return (
                       <Link key={idx} href={value.link}>
                         <li
+                          style={{ listStyleType: 'none' }}
                           className={
                             expand ? styles.listExpand : styles.listItem
                           }
@@ -118,14 +117,14 @@ const Footer: React.FC = () => {
                     )
                   })}
 
-                  <li
+                  {/* <li
                     onClick={() => setExpand(!expand)}
                     className={
                       expand ? styles.expandIconStyle : styles.expandIcon
                     }
                   >
                     <Image src={expand ? expandUp : expandDown} alt="icon" />
-                  </li>
+                  </li> */}
                 </ul>
               )
             })}

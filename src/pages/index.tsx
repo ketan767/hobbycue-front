@@ -73,21 +73,21 @@ const Home: React.FC<PropTypes> = function () {
 
   useEffect(() => {
     const updateDuration = () => {
-      setDuration(audioRef.current.duration)
+      setDuration(audioRef?.current?.duration)
     }
 
-    audioRef.current.addEventListener('loadedmetadata', updateDuration)
+    audioRef?.current?.addEventListener('loadedmetadata', updateDuration)
 
     return () => {
-      audioRef.current.removeEventListener('loadedmetadata', updateDuration)
+      audioRef?.current?.removeEventListener('loadedmetadata', updateDuration)
     }
   }, [])
 
   const togglePlay = () => {
     if (isPlaying) {
-      audioRef.current.pause()
+      audioRef?.current?.pause()
     } else {
-      audioRef.current.play()
+      audioRef?.current?.play()
     }
     setIsPlaying(!isPlaying)
   }
