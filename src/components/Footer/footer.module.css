@@ -159,6 +159,7 @@
     padding-top: 0;
     column-gap: 18px;
   }
+
   .wrapper {
     padding: 0 30px;
     display: grid;
@@ -191,6 +192,7 @@
   .socialIcons {
     width: 24px;
     height: 24px;
+
   }
 
   .rightSection .listHeading{

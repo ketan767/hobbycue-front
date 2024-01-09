@@ -72,6 +72,7 @@ const Home: React.FC<PropTypes> = function () {
 
   useEffect(() => {
     const updateDuration = () => {
+
       if (audioRef.current) {
         const audioElement = audioRef.current as HTMLAudioElement
         setDuration(audioElement.duration)
@@ -88,12 +89,14 @@ const Home: React.FC<PropTypes> = function () {
         const audioElement = audioRef.current as HTMLAudioElement
         audioElement.removeEventListener('loadedmetadata', updateDuration)
       }
+
     }
   }, [])
 
   const audioRef = useRef<HTMLAudioElement>(null)
 
   const togglePlay = () => {
+
     if (audioRef.current) {
       const audioElement = audioRef.current as HTMLAudioElement
       if (isPlaying) {
@@ -102,6 +105,7 @@ const Home: React.FC<PropTypes> = function () {
         audioElement.play()
       }
       setIsPlaying(!isPlaying)
+
     }
   }
 

@@ -7,9 +7,11 @@ import ChevronDown from '@/assets/svg/chevron-down.svg'
 
 import Pintrest from '@/assets/svg/social/Pinterest.svg'
 
-import Telegram from '@/assets/svg/social/telegram.svg'
 import Twitter from '@/assets/svg/social/twitter.svg'
 import Youtube from '@/assets/svg/social/youtube.svg'
+
+
+import Telegram from '@/assets/svg/social/telegram.svg'
 import { InviteToHobbycue } from '@/services/auth.service'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -103,44 +105,52 @@ const Footer: React.FC = () => {
           <div className={styles.contentWrapper}>
             {data.map((item: any, idx: any) => {
               return (
-                <div key={idx}>
-                  <div onClick={() => handleSetExpand(item.title)}>
-                    <p
-                      style={{ cursor: 'pointer' }}
-                      className={styles.listHeading}
-                    >
-                      {item.title}
-                    </p>
-                    <Image
-                      src={ChevronDown}
-                      alt=""
-                      width={20}
-                      height={20}
-                      className={`${styles['chevron-down']}${
-                        handleExpand(item.title)
-                          ? ' ' + styles['rotate-180']
-                          : ''
-                      }`}
-                    />
-                  </div>
-                  <ul
+
+                <ul
+                  key={idx}
+                  className={
+                    expand ? styles?.listContainerExapnd : styles.listContainer
+                  }
+                >
+                  <li
+                    style={{ cursor: 'pointer', listStyleType: 'none' }}
+                    onClick={() => setExpand(!expand)}
+                    className={styles.listHeading}
+                  >
+                    {' '}
+                    {item.title}{' '}
+                  </li>
+
+                  {item.values.map((value: any, idx: any) => {
+                    return (
+                      <Link key={idx} href={value.link}>
+                        <li
+                          style={{ listStyleType: 'none' }}
+                          className={
+                            expand ? styles.listExpand : styles.listItem
+                          }
+                          key={idx}
+                        >
+                          {value.title}
+                        </li>
+                      </Link>
+                    )
+                  })}
+
+                  {/* <li
+                    onClick={() => setExpand(!expand)}
+
                     className={
                       handleExpand(item.title)
                         ? styles?.listContainerExapnd
                         : styles.listContainer
                     }
                   >
-                    {item.values.map((value: any, idx: any) => {
-                      return (
-                        <Link key={idx} href={value.link}>
-                          <li className={styles.listItem} key={idx}>
-                            {value.title}
-                          </li>
-                        </Link>
-                      )
-                    })}
-                  </ul>
-                </div>
+
+                    <Image src={expand ? expandUp : expandDown} alt="icon" />
+                  </li> */}
+                </ul>
+
               )
             })}
           </div>
