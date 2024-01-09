@@ -64,9 +64,7 @@ const ListingHomeTab: React.FC<Props> = ({ data, AboutErr, expandAll }) => {
     <>
       <main>
         {/* User About */}
-        <div
-          className={styles['display-desktop']}
-        >
+        <div className={styles['display-desktop']}>
           <PageContentBox
             className={AboutErr ? styles.errorBorder : ''}
             showEditButton={listingLayoutMode === 'edit'}
@@ -87,7 +85,9 @@ const ListingHomeTab: React.FC<Props> = ({ data, AboutErr, expandAll }) => {
         {/* User Information */}
         <div
           className={
-            !(listingLayoutMode === 'edit') ? styles['display-none'] : ''
+            !(listingLayoutMode === 'edit')
+              ? styles['display-none']
+              : styles['display-desktop']
           }
         >
           <PageContentBox
@@ -128,9 +128,6 @@ const ListingHomeTab: React.FC<Props> = ({ data, AboutErr, expandAll }) => {
               )}
             </div>
           </PageContentBox>
-        </div>
-        <div className={styles['display-desktop']}>
-          <ListingPagePosts data={data} hideStartPost={true} />
         </div>
       </main>
     </>

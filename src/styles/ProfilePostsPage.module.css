@@ -13,7 +13,7 @@
   border: 0;
 }
 
-.start-post-btn-container-mobile{
+.start-post-btn-container-mobile {
   display: none;
 }
 
@@ -45,6 +45,18 @@
   display: none;
 }
 
+.display-mobile {
+  display: none !important;
+}
+
+.display-desktop {
+  display: initial !important;
+}
+
+.display-none {
+  display: none !important;
+}
+
 @media screen and (max-width: 1100px) {
   .start-post-btn-container {
     display: none;
@@ -65,5 +77,11 @@
     padding: 10px 0 0 0;
     background-color: #ffffff;
     margin: 0 0 8px 0;
+  }
+  .display-mobile {
+    display: initial !important;
+  }
+  .display-desktop {
+    display: none !important;
   }
 }

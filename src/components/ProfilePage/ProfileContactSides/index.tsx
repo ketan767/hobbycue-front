@@ -145,13 +145,15 @@ const ProfileContactSide = ({ data, expandData }: Props) => {
             </a>
           )}
 
-          <p
-            className={`${styles['text']} ${
-              showText ? styles['show'] : styles['hide']
-            } `}
-          >
-            No contact information
-          </p>
+          {(!data.website&&!data.public_email&&!data.whatsapp_number&&!data.phone)&&
+            <p
+              className={`${styles['text']} ${
+                showText ? styles['show'] : styles['hide']
+              } `}
+            >
+              No contact information
+            </p>
+          }
         </ul>
       </PageContentBox>
     </>

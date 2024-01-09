@@ -18,6 +18,9 @@ import ListingCard from '@/components/ListingCard/ListingCard'
 import ProfileHobbySideList from '@/components/ProfilePage/ProfileHobbySideList'
 import ProfilePagesList from '@/components/ProfilePage/ProfilePagesList/ProfilePagesList'
 import ProfileNavigationLinks from '@/components/ProfilePage/ProfileHeader/ProfileNavigationLinks'
+import ProfileAddressSide from '@/components/ProfilePage/ProfileAddressSide'
+import ProfileContactSide from '@/components/ProfilePage/ProfileContactSides'
+import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/ProfileSocialMedia'
 
 interface Props {
   data: ProfilePageData
@@ -26,7 +29,7 @@ interface Props {
 const ProfileListingsPage: React.FC<Props> = ({ data }) => {
   const dispatch = useDispatch()
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
-  const [expandAll,setExpandAll]=useState(false)
+  const [expandAll, setExpandAll] = useState(true)
 
   return (
     <>
@@ -34,13 +37,28 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
         <title>{`Posts | ${data.pageData.full_name} | HobbyCue`}</title>
       </Head>
 
-      <ProfileLayout activeTab={'pages'} data={data} expandAll={expandAll} setExpandAll={setExpandAll}>
+      <ProfileLayout
+        activeTab={'pages'}
+        data={data}
+        expandAll={expandAll}
+        setExpandAll={setExpandAll}
+      >
         {data.pageData && (
           <PageGridLayout column={2}>
-            <aside>
+            <aside className={expandAll ? '' : styles['display-none']}>
               {/* User Hobbies */}
-              <ProfileHobbySideList data={data.pageData} expandData={expandAll}/>
-              <ProfilePagesList data={data} expandData={expandAll}/>
+              <ProfileHobbySideList data={data.pageData} />
+              <ProfilePagesList data={data} />
+
+              <div className={styles['display-mobile']}>
+                <ProfileAddressSide data={data.pageData} />
+
+                {/* User Contact Details */}
+                <ProfileContactSide data={data.pageData} />
+
+                {/*User Social Media visible only for mobile view */}
+                <ProfileSocialMediaSide data={data.pageData} />
+              </div>
             </aside>
 
             <main>

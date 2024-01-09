@@ -304,9 +304,45 @@ const ListingPageLayout: React.FC<Props> = ({
                 dangerouslySetInnerHTML={{ __html: data.pageData?.description }}
               ></div>
             </PageContentBox>
+            <PageContentBox
+              showEditButton={listingLayoutMode === 'edit'}
+              onEditBtnClick={() =>
+                dispatch(
+                  openModal({ type: 'listing-general-edit', closable: true }),
+                )
+              }
+            >
+              <h4 className={styles['display-mobile']}>Other Information</h4>
+              <div className={`${styles['other-data-wrapper-mobile']}`}>
+                <h4>Profile URL</h4>
+                <div className={styles.textGray}>{data.pageData?.page_url}</div>
+                {data.pageData?.gender && (
+                  <>
+                    <h4>Gender</h4>
+                    <div className={styles.textGray}>
+                      {data.pageData?.gender}
+                    </div>
+                  </>
+                )}
+                {data.pageData?.year && (
+                  <>
+                    <h4>Year</h4>
+                    <div className={styles.textGray}>{data.pageData?.year}</div>
+                  </>
+                )}
+                {data.pageData?.admin_note && (
+                  <>
+                    <h4>Notes</h4>
+                    <div className={styles.textGray}>
+                      {data.pageData?.admin_note}
+                    </div>
+                  </>
+                )}
+              </div>
+            </PageContentBox>
           </div>
         )}
-        {(activeTab === 'home' || activeTab === 'posts') && (
+        {activeTab === 'posts' && (
           <div className={styles['display-mobile']}>
             <ListingPostsTab data={data} hideStartPost={true} />
           </div>

@@ -3,10 +3,13 @@ import styles from './footer.module.css'
 
 import Facebook from '@/assets/svg/social/facebook.svg'
 import Instagram from '@/assets/svg/social/instagram.svg'
+import ChevronDown from '@/assets/svg/chevron-down.svg'
 
 import Pintrest from '@/assets/svg/social/Pinterest.svg'
+
 import Twitter from '@/assets/svg/social/twitter.svg'
 import Youtube from '@/assets/svg/social/youtube.svg'
+
 
 import Telegram from '@/assets/svg/social/telegram.svg'
 import { InviteToHobbycue } from '@/services/auth.service'
@@ -16,7 +19,32 @@ import Link from 'next/link'
 const icons = [Facebook, Twitter, Instagram, Pintrest, Youtube, Telegram]
 const Footer: React.FC = () => {
   const [email, setEmail] = useState('')
-  const [expand, setExpand] = useState(false)
+  const [expandHobbyCue, setExpandHobbyCue] = useState(false)
+  const [expandHowDoI, setExpandHowDoI] = useState(false)
+  const [expandQuickLinks, setExpandQuickLinks] = useState(false)
+
+  const handleExpand = (type: string) => {
+    if (type === 'Hobbycue') {
+      return expandHobbyCue
+    }
+    if (type === 'How do I') {
+      return expandHowDoI
+    }
+    if (type === 'Quick Links') {
+      return expandQuickLinks
+    }
+  }
+  const handleSetExpand = (type: string) => {
+    if (type === 'Hobbycue') {
+      setExpandHobbyCue(!expandHobbyCue)
+    }
+    if (type === 'How do I') {
+      setExpandHowDoI(!expandHowDoI)
+    }
+    if (type === 'Quick Links') {
+      setExpandQuickLinks(!expandQuickLinks)
+    }
+  }
 
   const data = [
     {
@@ -77,6 +105,7 @@ const Footer: React.FC = () => {
           <div className={styles.contentWrapper}>
             {data.map((item: any, idx: any) => {
               return (
+
                 <ul
                   key={idx}
                   className={
@@ -110,16 +139,22 @@ const Footer: React.FC = () => {
 
                   {/* <li
                     onClick={() => setExpand(!expand)}
+
                     className={
-                      expand ? styles.expandIconStyle : styles.expandIcon
+                      handleExpand(item.title)
+                        ? styles?.listContainerExapnd
+                        : styles.listContainer
                     }
                   >
+
                     <Image src={expand ? expandUp : expandDown} alt="icon" />
                   </li> */}
                 </ul>
+
               )
             })}
           </div>
+
           <div className={styles.rightSection}>
             <div>
               <p className={styles.listHeading}> Social Media </p>

@@ -8,7 +8,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import ListingPageLayout from '@/layouts/ListingPageLayout'
 import { getListingPages } from '@/services/listing.service'
-import { updateListingModalData, updateListingPageData } from '@/redux/slices/site'
+import {
+  updateListingModalData,
+  updateListingPageData,
+} from '@/redux/slices/site'
 
 import ListingHomeTab from '@/components/ListingPage/ListingHomeTab/ListingHomeTab'
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
@@ -18,7 +21,7 @@ type Props = { data: ListingPageData }
 
 const ListingHome: React.FC<Props> = (props) => {
   const dispatch = useDispatch()
-  const [expandAll,setExpandAll]=useState(false)
+  const [expandAll, setExpandAll] = useState(true)
   // const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
   // const { listingPageData } = useSelector((state: RootState) => state.site)
   // console.log('posts data', props.data)
@@ -33,10 +36,19 @@ const ListingHome: React.FC<Props> = (props) => {
         <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
       </Head>
 
-      <ListingPageLayout activeTab={'posts'} data={props.data} expandAll={expandAll} setExpandAll={setExpandAll}>
-        <ListingPageMain data={props.data.pageData} expandAll={expandAll}>
+      <ListingPageLayout
+        activeTab={'posts'}
+        data={props.data}
+        expandAll={expandAll}
+        setExpandAll={setExpandAll}
+      >
+        <ListingPageMain
+          data={props.data.pageData}
+          expandAll={expandAll}
+          activeTab={'posts'}
+        >
           <div className={styles['display-desktop']}>
-          <ListingPostsTab data={props.data.pageData} />
+            <ListingPostsTab data={props.data.pageData} />
           </div>
         </ListingPageMain>
       </ListingPageLayout>
@@ -44,7 +56,9 @@ const ListingHome: React.FC<Props> = (props) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context,
+) => {
   const { query } = context
 
   const { err, res } = await getListingPages(

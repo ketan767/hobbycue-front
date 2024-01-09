@@ -205,9 +205,14 @@ const MainContent: React.FC<SearchResultsProps> = ({
     hobbyResults.length === 0
 
   return (
-    //hobby
     <main className={styles.searchResults}>
-      {!noResultsFound && (
+      {noResultsFound ? 
+      <div className={styles['no-results-wrapper']}>
+        <p>
+        Use the Search box at the top to look up pages on your hobby or an existing user.  If you don&apos;t find any pages, you may Add Listing Page from the menu at top right corner
+        </p>
+      </div>
+      : (
         <div>
           {/* <section className={styles.userSection}>
         <div className={styles.peopleItemsContainer}>

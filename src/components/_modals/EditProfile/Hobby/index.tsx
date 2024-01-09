@@ -108,6 +108,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     setGenreInputValue('')
     setGenreDropdownList([])
     setGenreId('')
+    setHobbyError(false)
+    setError(null)
 
     setData((prev) => {
       return { ...prev, hobby: null }
@@ -297,8 +299,85 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     }
   }, [user])
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setHobbyError(false)
+    setError(null)
+    setShowGenreDowpdown(false)
+
+    let selectedHobby = null
+    let selectedGenre = null
+
+    // Handle hobby input
+    if (!data.hobby) {
+      const matchedHobby = hobbyDropdownList.find(
+        (hobby) =>
+          hobby.display.toLowerCase() === hobbyInputValue.toLowerCase(),
+      )
+
+      if (!hobbyInputValue.trim()) {
+        window.location.reload()
+        handleClose()
+        return
+      }
+
+      if (matchedHobby) {
+        selectedHobby = matchedHobby
+      } else {
+        setError('Typed hobby not found!')
+        setHobbyError(true)
+        return
+      }
+    } else {
+      selectedHobby = data.hobby
+    }
+
+    // Handle genre input
+    if (!data.genre) {
+      const matchedGenre = genreDropdownList.find(
+        (genre) =>
+          genre.display.toLowerCase() === genreInputValue.toLowerCase(),
+      )
+
+      if (selectedGenre !== null && selectedGenre !== matchedGenre) {
+        setError('Typed Genre not found!')
+        return
+      }
+      if (selectedGenre !== null && !matchedGenre) {
+        setError("This hobby doesn't contain this genre")
+        return
+      }
+    } else {
+      selectedGenre = data.genre
+    }
+
+    setAddHobbyBtnLoading(true)
+
+    let jsonData = {
+      hobby: selectedHobby?._id,
+      genre: selectedGenre?._id,
+      level: data.level,
+    }
+
+    await addUserHobby(jsonData, async (err, res) => {
+      console.log('json', jsonData)
+      console.log('Button clicked!')
+      if (err) {
+        setAddHobbyBtnLoading(false)
+        return console.log(err)
+      }
+
+      const { err: error, res: response } = await getMyProfileDetail()
+      setAddHobbyBtnLoading(false)
+      if (error) return console.log(error)
+
+      if (response?.data.success) {
+        dispatch(updateUser(response?.data.data.user))
+        setHobbyInputValue('')
+        setGenreInputValue('')
+        setData({ level: 1, hobby: null, genre: null })
+      }
+    })
+
     if (userHobbies.length === 0) {
       setError('Add atleast one hobby!')
       setHobbyError(true)
@@ -722,7 +801,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'24px'} />
             ) : onComplete ? (
-              'Save'
+              'Finish'
             ) : (
               'Save'
             )}

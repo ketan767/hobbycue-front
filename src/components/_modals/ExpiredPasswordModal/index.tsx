@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { Button, CircularProgress } from '@mui/material'
-
+import { useRouter } from 'next/router'
 import {
   getMyProfileDetail,
   updateMyProfileDetail,
@@ -17,10 +17,11 @@ import { updateUser } from '@/redux/slices/user'
 import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
-import { changePassword, resetPassword } from '@/services/auth.service'
+import { resetExpiredPassword, signIn } from '@/services/auth.service'
 import IconButton from '@mui/material/IconButton'
 import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded'
 import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded'
+import { updateIsLoggedIn } from '@/redux/slices/user'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -48,6 +49,7 @@ function validatePasswordConditions(password: string) {
 }
 
 const ExpiredPassword: React.FC<Props> = ({}) => {
+  const router = useRouter()
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
   const [url, setUrl] = useState('')
@@ -72,18 +74,20 @@ const ExpiredPassword: React.FC<Props> = ({}) => {
     confirmPassword: '',
   })
   const handleSubmit = async () => {
+    console.log('email', forgotPasswordEmail)
     if (confirmPassword !== newPassword) {
       setErrors({ ...errors, confirmPassword: 'Passwords does not match!' })
       return
     }
     setSubmitBtnLoading(true)
-    const { err, res } = await resetPassword({
+    const { err, res } = await resetExpiredPassword({
       email: forgotPasswordEmail,
       otp: otp,
       newPassword: newPassword,
     })
-    setSubmitBtnLoading(false)
+
     if (err) {
+      setSubmitBtnLoading(false)
       if (err?.response?.data?.message) {
         setErrors({
           ...errors,
@@ -94,8 +98,21 @@ const ExpiredPassword: React.FC<Props> = ({}) => {
     }
     if (res?.data.success) {
       console.log(res.data)
-      dispatch(closeModal())
-      window.location.reload()
+
+      const data = {
+        email: forgotPasswordEmail,
+        password: newPassword,
+        profile_url: '',
+      }
+      const { err: signErr, res: signRes } = await signIn(data)
+
+      if (signRes.status === 200 && signRes.data.success) {
+        localStorage.setItem('token', signRes.data.data.token)
+        setSubmitBtnLoading(false)
+        dispatch(updateIsLoggedIn(true))
+        dispatch(closeModal())
+        router.push('/community', undefined, { shallow: false })
+      }
     }
   }
   //   console.log('user', user)
