@@ -18,7 +18,9 @@ function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
   const [scrollPosition, setScrollPosition] = useState(0)
 
-  const isAdminPage = router.pathname.startsWith('/admin')
+  const isAdminPage =
+    router.pathname.startsWith('/server-sitemap.xml') ||
+    router.pathname.startsWith('/admin')
   const theme = createTheme({
     palette: {
       primary: {
