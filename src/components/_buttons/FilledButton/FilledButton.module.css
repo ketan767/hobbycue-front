@@ -1,5 +1,5 @@
 .button {
-  background-color: #7f63a1;
+  background-color: rgb(var(--primary-100-rgb));
   font-size: 14px;
   color: white;
   font-weight: 600;
@@ -16,4 +16,8 @@
 .button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+.button:focus{
+  border: 1px solid #ffffff;
+  outline: 1px solid rgb(var(--primary-100-rgb));
 }

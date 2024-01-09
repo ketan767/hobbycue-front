@@ -166,11 +166,23 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
           </header>
         )}
         <main className={styles['main']}>
+          {isLoggedIn ? (
             <Link prefetch={true} href={`/profile/${user.profile_url}`}>
               <button className={styles['view-profile-btn']}>
                 View Profile
               </button>
             </Link>
+          ) : (
+            <button
+              className={styles['view-profile-btn']}
+              onClick={() => {
+                dispatch(openModal({ type: 'auth', closable: true }))
+                handleClose()
+              }}
+            >
+              Sign in
+            </button>
+          )}
           <div
             className={`${styles['dropdown-container']} ${
               exploreActive ? styles['dropdown-active'] : ''

@@ -249,6 +249,16 @@
   > td:nth-child(2)
   > div
   > div
+  > div:first-child:focus {
+  border: 2px solid rgba(128, 100, 162, 1);
+}
+.added-hobby-list
+  table
+  tbody
+  tr:last-child
+  > td:nth-child(2)
+  > div
+  > div
   > div:first-child
   > p {
   display: initial;

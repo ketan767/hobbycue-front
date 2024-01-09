@@ -87,6 +87,8 @@ const ListingHobbyEditModal: React.FC<Props> = ({
     setGenreInputValue('')
     setGenreDropdownList([])
     setGenreId('')
+    setError(null)
+    setHobbyError(false)
 
     setData((prev) => {
       return { ...prev, hobby: null }
@@ -137,9 +139,10 @@ const ListingHobbyEditModal: React.FC<Props> = ({
 
   const handleAddHobby = async () => {
     setHobbyError(false)
+    setError(null)
+    setShowGenreDropdown(false)
     let selectedHobby = null
     let selectedGenre = null
-    setShowGenreDropdown(false)
     // Handle hobby input
     if (!data.hobby) {
       const matchedHobby = hobbyDropdownList.find(
@@ -157,6 +160,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
       if (matchedHobby) {
         selectedHobby = matchedHobby
       } else {
+        setHobbyError(true)
         setError('Typed hobby not found!')
         return
       }
@@ -209,7 +213,70 @@ const ListingHobbyEditModal: React.FC<Props> = ({
     await updateHobbyList()
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setHobbyError(false)
+    setError(null)
+    setShowGenreDropdown(false)
+    let selectedHobby = null
+    let selectedGenre = null
+    // Handle hobby input
+    if (!data.hobby) {
+      const matchedHobby = hobbyDropdownList.find(
+        (hobby) =>
+          hobby.display.toLowerCase() === hobbyInputValue.toLowerCase(),
+      )
+
+      if (!hobbyInputValue.trim()) {
+        window.location.reload()
+        handleClose()
+        return
+      }
+
+      if (matchedHobby) {
+        selectedHobby = matchedHobby
+      } else {
+        setHobbyError(true)
+        setError('Typed hobby not found!')
+        return
+      }
+    } else {
+      selectedHobby = data.hobby
+    }
+
+    // Handle genre input
+    if (!data.genre) {
+      const matchedGenre = genreDropdownList.find(
+        (genre) =>
+          genre.display.toLowerCase() === genreInputValue.toLowerCase(),
+      )
+
+      if (selectedGenre !== null && selectedGenre !== matchedGenre) {
+        setError('Typed Genre not found!')
+        return
+      }
+      if (selectedGenre !== null && !matchedGenre) {
+        setError("This hobby doesn't contain this genre")
+        return
+      }
+    } else {
+      selectedGenre = data.genre
+    }
+
+    if (!data.hobby || !listingModalData._id) return
+
+    setAddHobbyBtnLoading(true)
+    let jsonData = { hobbyId: data.hobby?._id, genreId: data.genre?._id }
+    const { err, res } = await addListingHobby(listingModalData._id, jsonData)
+    if (err) {
+      setAddHobbyBtnLoading(false)
+      return console.log(err)
+    }
+    await updateHobbyList()
+    setHobbyInputValue('')
+    setGenreInputValue('')
+    setData({ hobby: null, genre: null })
+    setAddHobbyBtnLoading(false)
+
     if (hobbiesList.length === 0) {
       setError('Add atleast one hobby!')
       setHobbyError(true)
@@ -304,6 +371,8 @@ const ListingHobbyEditModal: React.FC<Props> = ({
               <p className={styles['info']}>
                 Added hobbies appear in the table below.
               </p>
+
+              <p className={styles['helper-text']}>{error}</p>
 
               {/* Hobbies List, that are already Added */}
               <h3 className={styles['heading']}>Added Hobbies</h3>
