@@ -2,19 +2,13 @@ import React, { useState } from 'react'
 import styles from './footer.module.css'
 
 import Facebook from '@/assets/svg/social/facebook.svg'
-import Google from '@/assets/svg/social/google.svg'
 import Instagram from '@/assets/svg/social/instagram.svg'
 
-import Mail from '@/assets/svg/social/mail.svg'
-
-import Twitter from '@/assets/svg/social/twitter.svg'
 import Pintrest from '@/assets/svg/social/Pinterest.svg'
-import Google from '@/assets/svg/social/google.svg'
+import Twitter from '@/assets/svg/social/twitter.svg'
 import Youtube from '@/assets/svg/social/youtube.svg'
 
 import Telegram from '@/assets/svg/social/telegram.svg'
-import Twitter from '@/assets/svg/social/twitter.svg'
-import Youtube from '@/assets/svg/social/youtube.svg'
 import { InviteToHobbycue } from '@/services/auth.service'
 import Image from 'next/image'
 import Link from 'next/link'
