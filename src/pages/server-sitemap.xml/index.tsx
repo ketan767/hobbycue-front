@@ -46,7 +46,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   console.log('Generated sitemap:', sitemapJSON)
 
-  ctx.res.setHeader('Content-Type', 'application/json')
+  ctx.res.setHeader('Content-Type', 'application/xml')
 
   return {
     props: {
