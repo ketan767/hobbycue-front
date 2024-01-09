@@ -128,79 +128,82 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
             </aside>
 
             <main>
-              {/* User About */}
-              <PageContentBox
-                showEditButton={profileLayoutMode === 'edit'}
-                onEditBtnClick={() =>
-                  dispatch(
-                    openModal({ type: 'profile-about-edit', closable: true }),
-                  )
-                }
-                setDisplayData={setDisplayAbout}
-                expandData={expandAll}
-              >
-                <h4>About</h4>
-                <div
-                  className={`${styles['color-light']} ${styles['about-text']}${
-                    displayAbout ? ' ' + styles['about-text-mobile'] : ''
-                  }`}
-                  dangerouslySetInnerHTML={{ __html: pageData?.about }}
-                ></div>
-              </PageContentBox>
+              {/* User About for desktop view*/}
+              <div className={styles['display-desktop']}>
+                <PageContentBox
+                  showEditButton={profileLayoutMode === 'edit'}
+                  onEditBtnClick={() =>
+                    dispatch(
+                      openModal({ type: 'profile-about-edit', closable: true }),
+                    )
+                  }
+                  setDisplayData={setDisplayAbout}
+                >
+                  <h4>About</h4>
+                  <div
+                    className={`${styles['color-light']} ${styles['about-text']}}`}
+                    dangerouslySetInnerHTML={{ __html: pageData?.about }}
+                  ></div>
+                </PageContentBox>
+              </div>
 
               {/* User Information */}
-              <PageContentBox
-                showEditButton={profileLayoutMode === 'edit'}
-                onEditBtnClick={() =>
-                  dispatch(
-                    openModal({
-                      type: 'profile-general-edit',
-                      closable: true,
-                    }),
-                  )
-                }
-                setDisplayData={setDisplayOther}
-                expandData={expandAll}
-              >
-                <h4 className={styles['other-info-heading']}>
-                  Other Information
-                </h4>
-                <div
-                  className={`${styles['display-mobile-none']}${
-                    displayOther
-                      ? ' ' +
-                        styles['display-flex-col'] +
-                        ' ' +
-                        styles['other-info-mob-div']
-                      : ''
-                  }`}
+              <div className={profileLayoutMode==='edit'?'':" "+styles['display-none']}>
+                <PageContentBox
+                  showEditButton={profileLayoutMode === 'edit'}
+                  onEditBtnClick={() =>
+                    dispatch(
+                      openModal({
+                        type: 'profile-general-edit',
+                        closable: true,
+                      }),
+                    )
+                  }
+                  setDisplayData={setDisplayOther}
+                  expandData={expandAll}
                 >
-                  <h4 className={styles['other-info-subheading']}>
-                    Profile URL
+                  <h4 className={styles['other-info-heading']}>
+                    Other Information
                   </h4>
-                  <p className={styles['color-light']}>
-                    {pageData.profile_url}
-                  </p>
-                  {pageData.gender && (
-                    <>
-                      <h4 className={styles['other-info-subheading']}>
-                        Gender
-                      </h4>
-                      <p className={styles['color-light']}>{pageData.gender}</p>
-                    </>
-                  )}
-                  {pageData.year_of_birth && (
-                    <>
-                      <h4 className={styles['other-info-subheading']}>
-                        Year Of Birth
-                      </h4>
-                      <p className={styles['color-light']}>
-                        {pageData.year_of_birth}
-                      </p>
-                    </>
-                  )}
-                </div>
-              </PageContentBox>
+                  <div
+                    className={`${styles['display-desktop']}${
+                      displayOther
+                        ? ' ' +
+                          styles['display-flex-col'] +
+                          ' ' +
+                          styles['other-info-mob-div']
+                        : ''
+                    }`}
+                  >
+                    <h4 className={styles['other-info-subheading']}>
+                      Profile URL
+                    </h4>
+                    <p className={styles['color-light']}>
+                      {pageData.profile_url}
+                    </p>
+                    {pageData.gender && (
+                      <>
+                        <h4 className={styles['other-info-subheading']}>
+                          Gender
+                        </h4>
+                        <p className={styles['color-light']}>
+                          {pageData.gender}
+                        </p>
+                      </>
+                    )}
+                    {pageData.year_of_birth && (
+                      <>
+                        <h4 className={styles['other-info-subheading']}>
+                          Year Of Birth
+                        </h4>
+                        <p className={styles['color-light']}>
+                          {pageData.year_of_birth}
+                        </p>
+                      </>
+                    )}
+                  </div>
+                </PageContentBox>
+              </div>
 
               <section className={styles['posts-container']}>
                 {loadingPosts ? (
@@ -249,6 +252,23 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
 
             <div className={styles['nav-mobile']}>
               <ProfileNavigationLinks activeTab={'home'} />
+            </div>
+            {/* About for mobile view */}
+            <div className={styles['display-mobile']}>
+              <PageContentBox
+                showEditButton={profileLayoutMode === 'edit'}
+                onEditBtnClick={() =>
+                  dispatch(
+                    openModal({ type: 'profile-about-edit', closable: true }),
+                  )
+                }
+              >
+                <h4>About</h4>
+                <div
+                  className={`${styles['color-light']} ${styles['about-text']} ${styles['about-text-mobile']}`}
+                  dangerouslySetInnerHTML={{ __html: pageData?.about }}
+                ></div>
+              </PageContentBox>
             </div>
 
             <section className={styles['posts-container-mobile']}>

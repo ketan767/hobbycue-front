@@ -10,7 +10,10 @@ import { RootState } from '@/redux/store'
 import ListingHeader from '@/components/ListingPage/ListingHeader/ListingHeader'
 import { useRouter } from 'next/router'
 import ListingHomeTab from '@/components/ListingPage/ListingHomeTab/ListingHomeTab'
-import { updateListingLayoutMode } from '@/redux/slices/site'
+import {
+  updateListingLayoutMode,
+  updateListingTypeModalMode,
+} from '@/redux/slices/site'
 import ListingHeaderSmall from '@/components/ListingPage/ListingHeader/ListingHeaderSmall'
 import { error } from 'console'
 import { getListingPages } from '@/services/listing.service'
@@ -25,6 +28,9 @@ import ListingMediaTab from '@/components/ListingPage/ListingPageMedia'
 import ListingReviewsTab from '@/components/ListingPage/ListingPageReviews/ListingPageReviews'
 import ListingStoreTab from '@/components/ListingPage/ListingPageStore/ListingPageStore'
 import ListingEventsTab from '@/components/ListingPage/ListingPageEvents/ListingPageEvents'
+import PageContentBox from '../PageContentBox'
+import { openModal } from '@/redux/slices/modal'
+import EditIcon from '@/assets/svg/edit-colored.svg'
 
 interface Props {
   activeTab: ListingPageTabs
@@ -196,20 +202,63 @@ const ListingPageLayout: React.FC<Props> = ({
           })}
         </div>
       </nav>
-
       <div
-        onClick={() => {
-          if (setExpandAll !== undefined)
-            setExpandAll((prevValue: boolean) => !prevValue)
-        }}
-        className={styles['expand-all']}
+        className={`${styles['expand-all-page-type-wrapper']} ${styles['display-flex-mobile']}`}
       >
-        {expandAll ? <p>Contract All</p> : <p>Expand All</p>}
-        <Image
-          src={ChevronDown}
-          className={`${expandAll ? styles['rotate-180'] : styles['rotate-0']}`}
-          alt=""
-        />
+        <div
+          className={`${styles['display-flex-mobile']} ${styles['listing-page-type-wrapper']}`}
+          onClick={() => {
+            if (listingLayoutMode === 'edit') {
+              dispatch(openModal({ type: 'listing-type-edit', closable: true }))
+              dispatch(updateListingTypeModalMode({ mode: 'edit' }))
+            }
+          }}
+        >
+          {data.pageData.page_type.map((type: any, idx: any) => {
+            return (
+              <div key={idx}>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g clip-path="url(#clip0_173_56244)">
+                    <path
+                      d="M17 10.43V2H7V10.43C7 10.78 7.18 11.11 7.49 11.29L11.67 13.8L10.68 16.14L7.27 16.43L9.86 18.67L9.07 22L12 20.23L14.93 22L14.15 18.67L16.74 16.43L13.33 16.14L12.34 13.8L16.52 11.29C16.82 11.11 17 10.79 17 10.43ZM13 12.23L12 12.83L11 12.23V3H13V12.23Z"
+                      fill="#0096C8"
+                    />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_173_56244">
+                      <rect width="24" height="24" fill="white" />
+                    </clipPath>
+                  </defs>
+                </svg>
+                <p>{type}</p>
+              </div>
+            )
+          })}
+          {listingLayoutMode === 'edit' && <Image src={EditIcon} alt="" />}
+        </div>
+
+        <div
+          onClick={() => {
+            if (setExpandAll !== undefined)
+              setExpandAll((prevValue: boolean) => !prevValue)
+          }}
+          className={styles['expand-all']}
+        >
+          {expandAll ? <p>Collapse All</p> : <p>Expand All</p>}
+          <Image
+            src={ChevronDown}
+            className={`${
+              expandAll ? styles['rotate-180'] : styles['rotate-0']
+            }`}
+            alt=""
+          />
+        </div>
       </div>
 
       {/* Profile Page Body, where all contents of different tabs appears. */}
@@ -238,6 +287,25 @@ const ListingPageLayout: React.FC<Props> = ({
             })}
           </div>
         </nav>
+        {activeTab === 'home' && (
+          <div className={styles['display-mobile']}>
+            <PageContentBox
+              className={AboutErr ? styles.errorBorder : ''}
+              showEditButton={listingLayoutMode === 'edit'}
+              onEditBtnClick={() =>
+                dispatch(
+                  openModal({ type: 'listing-about-edit', closable: true }),
+                )
+              }
+            >
+              <h4>About</h4>
+              <div
+                className={`${styles['about-text']} ${styles['display-mobile']}`}
+                dangerouslySetInnerHTML={{ __html: data.pageData?.description }}
+              ></div>
+            </PageContentBox>
+          </div>
+        )}
         {(activeTab === 'home' || activeTab === 'posts') && (
           <div className={styles['display-mobile']}>
             <ListingPostsTab data={data} hideStartPost={true} />

@@ -140,8 +140,15 @@
     column-gap: 18px;
   }
 
+
   .listContainer {
     position: relative;
+
+  .wrapper {
+    padding: 0 30px;
+    display: grid;
+    align-items: center;
+
   }
 
   .listContainer .listItem {
@@ -176,5 +183,9 @@
     position: absolute;
     right: 24px;
     cursor: pointer;
+  }
+  .socialIcons{
+    width: 24px;
+    height: 24px;
   }
 }

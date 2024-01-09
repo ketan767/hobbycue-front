@@ -35,10 +35,14 @@ import { setShowPageLoader } from '@/redux/slices/site'
 import { updateIsLoggedIn } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import { updateUserProfile } from '@/services/user.service'
+
 import { validateEmail } from '@/utils'
 import { CircularProgress } from '@mui/material'
 import { useRouter } from 'next/router'
 import PasswordAnalyzer from '../PasswordAnalyzer/PasswordAnalyzer'
+
+import { passwordRequest } from '@/services/auth.service'
+
 interface Props {
   isModal?: boolean
 }
@@ -148,6 +152,14 @@ const AuthForm: React.FC<Props> = (props) => {
             email: err.response.data.message,
             password: err.response.data.message,
           })
+        if (err.response.data.message === 'User not verified') {
+          const email = authFormData.email
+          const { err, res } = await passwordRequest({
+            email,
+          })
+          dispatch(openModal({ type: 'ExpiredPassword', closable: true }))
+        }
+
         if (
           err.response.data.message ===
           'Account is connected with Social Media!'
@@ -156,7 +168,7 @@ const AuthForm: React.FC<Props> = (props) => {
             email: err.response.data.message,
             password: null,
           })
-        return alert(err.response?.data?.messgae)
+        return ''
       }
 
       if (res.status === 200 && res.data.success) {

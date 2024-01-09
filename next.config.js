@@ -12,6 +12,19 @@ const nextConfig = {
       },
     ],
   },
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.(mp4)$/,
+      use: {
+        loader: 'file-loader',
+        options: {
+          name: '[name].[ext]',
+          outputPath: 'assets/audio/', // Adjust the output path as needed
+        },
+      },
+    })
+    return config
+  },
 }
 
 module.exports = nextConfig

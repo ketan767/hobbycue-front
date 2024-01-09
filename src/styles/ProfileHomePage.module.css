@@ -74,12 +74,30 @@
 .posts-container-mobile{
   display: none;
 }
+.display-desktop{
+  display: initial;
+}
+
+.display-mobile{
+  display: none !important;
+}
+
+.display-none{
+  display: none;
+}
 
 @media screen and (max-width: 1100px) {
 .profile-left-aside{  
   position: static; 
   height: auto !important;
   overflow: auto;
+}
+.display-mobile{
+  display: initial !important;
+}
+
+.display-desktop{
+  display:none !important;
 }
 
 .nav-mobile{
@@ -92,10 +110,6 @@
 .display-flex-col{
   display: flex !important;
   flex-direction: column;
-}
-
-.display-mobile-none{
-  display: none;
 }
 
 .about-text{

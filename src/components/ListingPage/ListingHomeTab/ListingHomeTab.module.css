@@ -167,6 +167,9 @@ ul.seller-info-wrapper li svg:last-child {
 .display-desktop{
   display: initial;
 }
+.display-none{
+  display: none !important;
+}
 
 @media screen and (max-width:1100px) {
   .other-data-wrapper-mobile{
