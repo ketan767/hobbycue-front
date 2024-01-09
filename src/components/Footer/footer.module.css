@@ -140,52 +140,51 @@
     column-gap: 18px;
   }
 
-
   .listContainer {
     position: relative;
 
-  .wrapper {
-    padding: 0 30px;
-    display: grid;
-    align-items: center;
+    .wrapper {
+      padding: 0 30px;
+      display: grid;
+      align-items: center;
+    }
 
-  }
+    .listContainer .listItem {
+      display: none;
+      list-style-type: none;
+    }
 
-  .listContainer .listItem {
-    display: none;
-    list-style-type: none;
-  }
+    .listExpand {
+      display: flex;
+      list-style-type: none;
+    }
 
-  .listExpand {
-    display: flex;
-    list-style-type: none;
-  }
+    .listContainerExapnd {
+      transition: all;
+      display: block;
+      list-style-type: none;
+    }
 
-  .listContainerExapnd {
-    transition: all;
-    display: block;
-    list-style-type: none;
-  }
+    .listContainer .listHeading {
+      position: relative;
+    }
 
-  .listContainer .listHeading {
-    position: relative;
-  }
+    .listContainer .expandIcon {
+      position: absolute;
+      right: -300px;
+      top: 0;
+      display: block;
+      cursor: pointer;
+    }
 
-  .listContainer .expandIcon {
-    position: absolute;
-    right: -300px;
-    top: 0;
-    display: block;
-    cursor: pointer;
-  }
-
-  .expandIconStyle {
-    position: absolute;
-    right: 24px;
-    cursor: pointer;
-  }
-  .socialIcons{
-    width: 24px;
-    height: 24px;
+    .expandIconStyle {
+      position: absolute;
+      right: 24px;
+      cursor: pointer;
+    }
+    .socialIcons {
+      width: 24px;
+      height: 24px;
+    }
   }
 }
