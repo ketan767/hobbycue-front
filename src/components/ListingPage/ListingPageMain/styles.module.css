@@ -58,7 +58,7 @@
   font-weight: 500;
 }
 
-ul.location-wrapper{
+ul.location-wrapper {
   margin-top: var(--spacing-16);
   display: flex;
   flex-direction: column;
@@ -156,12 +156,12 @@ ul.seller-info-wrapper li svg:last-child {
   word-break: break-word;
 }
 
-.textdefault{
+.textdefault {
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;
   letter-spacing: 0.04em;
-  color: #08090A;
+  color: #08090a;
   word-break: break-word;
 }
 
@@ -218,12 +218,14 @@ ul.seller-info-wrapper li svg:last-child {
   cursor: pointer;
 }
 
-.page-left-aside{
+.page-left-aside {
   position: -webkit-sticky;
   top: 217px;
-  position: sticky; 
+  position: sticky;
   transition: 0.6s;
-  height: calc(100vh - calc(var(--navbar-height-desktop) + var(--spacing-8)) - 10rem);
+  height: calc(
+    100vh - calc(var(--navbar-height-desktop) + var(--spacing-8)) - 10rem
+  );
   overflow: auto;
 }
 .related {
@@ -231,18 +233,18 @@ ul.seller-info-wrapper li svg:last-child {
   align-items: center;
 }
 
-.related img{
+.related img {
   border-radius: 4px;
 }
 .item-title {
-  margin-left: 10px; 
-  color: #08090A;
+  margin-left: 10px;
+  color: #08090a;
 }
 
 .related-list {
   list-style-type: none; /* This will remove the bullet points */
   padding: 0; /* This will remove any default padding */
-  margin: 0;  /* This will remove any default margin */
+  margin: 0; /* This will remove any default margin */
 }
 
 /* If you only want to target the li inside .related-list */
@@ -252,42 +254,51 @@ ul.seller-info-wrapper li svg:last-child {
 }
 
 .errorBorder {
-  border: 1px solid #C0504D;
+  border: 1px solid #c0504d;
 }
 
-.display-desktop{
+.display-desktop {
   display: initial;
 }
 
-.display-mobile-initial{
+.display-mobile-initial {
   display: none !important;
 }
 
-.location-map>div{
+.location-map > div {
   width: 100%;
 }
 
+.display-none {
+  display: none !important;
+}
+
+.display-initial {
+  display: initial !important;
+}
+
 @media screen and (max-width: 1100px) {
-  .page-left-aside{
+  .page-left-aside {
     position: -webkit-sticky;
     height: auto !important;
-    position: static; 
+    position: static;
     transition: 0.6s;
-    height: calc(100vh - calc(var(--navbar-height-desktop) + var(--spacing-8)) - 10rem);
+    height: calc(
+      100vh - calc(var(--navbar-height-desktop) + var(--spacing-8)) - 10rem
+    );
     overflow: auto;
   }
-  .display-desktop{
+  .display-desktop {
     display: none !important;
   }
-  .display-mobile{
+  .display-mobile {
     display: flex !important;
   }
-  .display-mobile-initial{
+  .display-mobile-initial {
     display: initial !important;
   }
 
-  .location-heading{
+  .location-heading {
     margin-bottom: 0 !important;
   }
-  
 }

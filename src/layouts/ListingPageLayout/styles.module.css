@@ -195,12 +195,13 @@
 }
 
 @media screen and (max-width: 400px) {
-  .expand-all-page-type-wrapper {
-    flex-wrap: wrap;
-  }
   .listing-page-type-wrapper {
-    gap: 25px;
+    gap: 5px;
     width: 100%;
+    padding: var(--spacing-8);
+  }
+  .listing-page-type-wrapper > div {
+    gap: 2px;
   }
   .navigation-tabs {
     gap: 0.3rem;

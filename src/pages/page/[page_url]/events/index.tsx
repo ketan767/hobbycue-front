@@ -20,7 +20,7 @@ type Props = { data: ListingPageData }
 
 const ListingEvents: React.FC<Props> = (props) => {
   const dispatch = useDispatch()
-  const [expandAll,setExpandAll]=useState(false)
+  const [expandAll, setExpandAll] = useState(true)
   // const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
   // const { listingPageData } = useSelector((state: RootState) => state.site)
   console.log('posts data', props.data)
@@ -35,10 +35,19 @@ const ListingEvents: React.FC<Props> = (props) => {
         <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
       </Head>
 
-      <ListingPageLayout activeTab={'events'} data={props.data} expandAll={expandAll} setExpandAll={setExpandAll}>
-        <ListingPageMain data={props.data.pageData} expandAll={expandAll} activeTab={"events"}>
+      <ListingPageLayout
+        activeTab={'events'}
+        data={props.data}
+        expandAll={expandAll}
+        setExpandAll={setExpandAll}
+      >
+        <ListingPageMain
+          data={props.data.pageData}
+          expandAll={expandAll}
+          activeTab={'events'}
+        >
           <div className={styles['display-desktop']}>
-          <ListingEventsTab/>
+            <ListingEventsTab />
           </div>
         </ListingPageMain>
       </ListingPageLayout>
