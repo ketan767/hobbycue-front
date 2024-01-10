@@ -18,6 +18,7 @@ import { addListingHobby, deleteListingHobby } from '@/services/listing.service'
 import { getListingHobbies } from '@/services/listing.service'
 import SaveModal from '../../SaveModal/saveModal'
 import CloseIcon from '@/assets/icons/CloseIcon'
+import addhobby from '@/assets/svg/addhobby.svg'
 import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import Image from 'next/image'
@@ -523,25 +524,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
                           {addHobbyBtnLoading ? (
                             <CircularProgress color="inherit" size={'22px'} />
                           ) : (
-                            <svg
-                              width="24"
-                              height="24"
-                              viewBox="0 0 16 16"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <g clip-path="url(#clip0_704_44049)">
-                                <path
-                                  d="M13.1429 8.85714H8.85714V13.1429C8.85714 13.6143 8.47143 14 8 14C7.52857 14 7.14286 13.6143 7.14286 13.1429V8.85714H2.85714C2.38571 8.85714 2 8.47143 2 8C2 7.52857 2.38571 7.14286 2.85714 7.14286H7.14286V2.85714C7.14286 2.38571 7.52857 2 8 2C8.47143 2 8.85714 2.38571 8.85714 2.85714V7.14286H13.1429C13.6143 7.14286 14 7.52857 14 8C14 8.47143 13.6143 8.85714 13.1429 8.85714Z"
-                                  fill="#8064A2"
-                                />
-                              </g>
-                              <defs>
-                                <clipPath id="clip0_704_44049">
-                                  <rect width="16" height="16" fill="white" />
-                                </clipPath>
-                              </defs>
-                            </svg>
+                            <Image src={addhobby} alt="add hobby"></Image>
                           )}
                         </button>
                       </td>
