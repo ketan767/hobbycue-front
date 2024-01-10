@@ -58,6 +58,8 @@ type ProfileAddressPayload = {
 }
 
 interface ClaimListingPayload {
+  userId?: string,
+   listingId?: any,
   name: string
   email: string
   phone: string

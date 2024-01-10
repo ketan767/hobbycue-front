@@ -1,15 +1,11 @@
 import React, { useState } from 'react'
 import styles from './footer.module.css'
 
-import expandDown from '@/assets/svg/chevron-down.svg'
-import expandUp from '@/assets/svg/chevron-up.svg'
 import Facebook from '@/assets/svg/social/facebook.svg'
 import Instagram from '@/assets/svg/social/instagram.svg'
-
-import Mail from '@/assets/svg/social/mail.svg'
+import ChevronDown from '@/assets/svg/chevron-down.svg'
 
 import Pintrest from '@/assets/svg/social/Pinterest.svg'
-import Google from '@/assets/svg/social/google.svg'
 
 import Telegram from '@/assets/svg/social/telegram.svg'
 import Twitter from '@/assets/svg/social/twitter.svg'
@@ -21,7 +17,32 @@ import Link from 'next/link'
 const icons = [Facebook, Twitter, Instagram, Pintrest, Youtube, Telegram]
 const Footer: React.FC = () => {
   const [email, setEmail] = useState('')
-  const [expand, setExpand] = useState(false)
+  const [expandHobbyCue, setExpandHobbyCue] = useState(false)
+  const [expandHowDoI, setExpandHowDoI] = useState(false)
+  const [expandQuickLinks, setExpandQuickLinks] = useState(false)
+
+  const handleExpand = (type: string) => {
+    if (type === 'Hobbycue') {
+      return expandHobbyCue
+    }
+    if (type === 'How do I') {
+      return expandHowDoI
+    }
+    if (type === 'Quick Links') {
+      return expandQuickLinks
+    }
+  }
+  const handleSetExpand = (type: string) => {
+    if (type === 'Hobbycue') {
+      setExpandHobbyCue(!expandHobbyCue)
+    }
+    if (type === 'How do I') {
+      setExpandHowDoI(!expandHowDoI)
+    }
+    if (type === 'Quick Links') {
+      setExpandQuickLinks(!expandQuickLinks)
+    }
+  }
 
   const data = [
     {
@@ -82,48 +103,48 @@ const Footer: React.FC = () => {
           <div className={styles.contentWrapper}>
             {data.map((item: any, idx: any) => {
               return (
-                <ul
-                  key={idx}
-                  className={
-                    expand ? styles?.listContainerExapnd : styles.listContainer
-                  }
-                >
-                  <li
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => setExpand(!expand)}
-                    className={styles.listHeading}
-                  >
-                    {' '}
-                    {item.title}{' '}
-                  </li>
-
-                  {item.values.map((value: any, idx: any) => {
-                    return (
-                      <Link key={idx} href={value.link}>
-                        <li
-                          className={
-                            expand ? styles.listExpand : styles.listItem
-                          }
-                          key={idx}
-                        >
-                          {value.title}
-                        </li>
-                      </Link>
-                    )
-                  })}
-
-                  <li
-                    onClick={() => setExpand(!expand)}
+                <div key={idx}>
+                  <div onClick={() => handleSetExpand(item.title)}>
+                    <p
+                      style={{ cursor: 'pointer' }}
+                      className={styles.listHeading}
+                    >
+                      {item.title}
+                    </p>
+                    <Image
+                      src={ChevronDown}
+                      alt=""
+                      width={20}
+                      height={20}
+                      className={`${styles['chevron-down']}${
+                        handleExpand(item.title)
+                          ? ' ' + styles['rotate-180']
+                          : ''
+                      }`}
+                    />
+                  </div>
+                  <ul
                     className={
-                      expand ? styles.expandIconStyle : styles.expandIcon
+                      handleExpand(item.title)
+                        ? styles?.listContainerExapnd
+                        : styles.listContainer
                     }
                   >
-                    <Image src={expand ? expandUp : expandDown} alt="icon" />
-                  </li>
-                </ul>
+                    {item.values.map((value: any, idx: any) => {
+                      return (
+                        <Link key={idx} href={value.link}>
+                          <li className={styles.listItem} key={idx}>
+                            {value.title}
+                          </li>
+                        </Link>
+                      )
+                    })}
+                  </ul>
+                </div>
               )
             })}
           </div>
+
           <div className={styles.rightSection}>
             <div>
               <p className={styles.listHeading}> Social Media </p>

@@ -30,6 +30,7 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
   const [pagesData, setPagesData] = useState([])
   const { listingLayoutMode } = useSelector((state: RootState) => state.site)
   const { user } = useSelector((state: RootState) => state)
+  const { is_onboarded } = useSelector((state: any) => state.user.user)
 
   useEffect(() => {
     fetchPages()
@@ -78,9 +79,14 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
             className={`content-box-wrapper ${styles['start-post-btn-container']}`}
           >
             <button
-              onClick={() =>
-                dispatch(openModal({ type: 'create-post', closable: true }))
-              }
+              onClick={() => {
+                if (is_onboarded)
+                  dispatch(openModal({ type: 'create-post', closable: true }))
+                else
+                  dispatch(
+                    openModal({ type: 'user-onboarding', closable: true }),
+                  )
+              }}
               className={styles['start-post-btn']}
             >
               <svg

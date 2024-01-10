@@ -36,7 +36,7 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
   const [media, setMedia] = useState([])
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
 
-  const [expandAll, setExpandAll] = useState(false)
+  const [expandAll, setExpandAll] = useState(true)
   const inputRef = useRef<HTMLInputElement>(null)
   const dispatch = useDispatch()
 
@@ -134,22 +134,19 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
         setExpandAll={setExpandAll}
       >
         <PageGridLayout column={2}>
-          <aside>
+          <aside className={expandAll ? '' : styles['display-none']}>
             {/* User Hobbies */}
-            <ProfileHobbySideList data={data.pageData} expandData={expandAll} />
-            <ProfilePagesList data={data} expandData={expandAll} />
+            <ProfileHobbySideList data={data.pageData} />
+            <ProfilePagesList data={data} />
 
             <div className={styles['display-mobile']}>
-              <ProfileAddressSide data={data.pageData} expandData={expandAll} />
+              <ProfileAddressSide data={data.pageData} />
 
               {/* User Contact Details */}
-              <ProfileContactSide data={data.pageData} expandData={expandAll} />
+              <ProfileContactSide data={data.pageData} />
 
               {/*User Social Media visible only for mobile view */}
-              <ProfileSocialMediaSide
-                data={data.pageData}
-                expandData={expandAll}
-              />
+              <ProfileSocialMediaSide data={data.pageData} />
             </div>
           </aside>
           <div className={styles['nav-mobile']}>

@@ -20,7 +20,7 @@
 
   cursor: pointer;
   border-radius: 50%;
-  margin: 5px auto 0 12px;
+  margin: 5px auto 0 0;
 }
 
 @media screen and (min-width: 1100px) {
@@ -249,6 +249,16 @@
   > td:nth-child(2)
   > div
   > div
+  > div:first-child:focus {
+  border: 2px solid rgba(128, 100, 162, 1);
+}
+.added-hobby-list
+  table
+  tbody
+  tr:last-child
+  > td:nth-child(2)
+  > div
+  > div
   > div:first-child
   > p {
   display: initial;
@@ -298,7 +308,7 @@
 }
 .added-hobby-list table tbody tr td:last-child {
   position: absolute;
-  right: 4px;
+  right: 15px;
   top: 10px;
 }
 

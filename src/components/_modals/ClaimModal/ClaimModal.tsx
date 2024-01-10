@@ -3,8 +3,9 @@ import { useDispatch } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
 import styles from './style.module.css'
 import { useSelector } from 'react-redux'
-import { ClaimListing } from '@/services/auth.service'
+import { ClaimListing, ClaimRequest } from '@/services/auth.service'
 import { CircularProgress } from '@mui/material'
+import { RootState } from '@/redux/store'
 type Props = {
   data: ListingPageData['pageData']
 }
@@ -15,8 +16,11 @@ const ClaimModal = () => {
   const pageURL = window.location.href
 
   let userData = useSelector((store: any) => store.user.user)
+  const { listingModalData } = useSelector((state: RootState) => state.site)
 
   const [formData, setFormData] = useState({
+    id: userData._id,
+    listing_id: listingModalData._id,
     profileName: userData.full_name,
     email: userData.email,
     phone: userData.phone,
@@ -51,6 +55,8 @@ const ClaimModal = () => {
       window.removeEventListener('keydown', handleKeyPress)
     }
   }, [])
+  const userId = formData.id
+  const listingId = formData.listing_id
   const name = formData.profileName
   const email = formData.email
   const phone = formData.phone
@@ -66,16 +72,32 @@ const ClaimModal = () => {
     } else {
       setSubmitBtnLoading(true)
 
-      const { err, res } = await ClaimListing({
-        name,
-        email,
-        phone,
-        pageUrl,
-        HowRelated,
-        link,
-      })
-      setSubmitBtnLoading(false)
-      dispatch(closeModal())
+      if (userData.email === listingModalData.public_email) {
+        const { err, res } = await ClaimListing({
+          userId,
+          listingId,
+          name,
+          email,
+          phone,
+          pageUrl,
+          HowRelated,
+          link,
+        })
+        setSubmitBtnLoading(false)
+        dispatch(closeModal())
+        window.location.reload()
+      } else {
+        const { err, res } = await ClaimRequest({
+          name,
+          email,
+          phone,
+          pageUrl,
+          HowRelated,
+          link,
+        })
+        setSubmitBtnLoading(false)
+        dispatch(closeModal())
+      }
     }
   }
 

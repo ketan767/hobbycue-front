@@ -1,24 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
-import { useDispatch } from 'react-redux'
-import { searchUsers } from '@/services/user.service'
-import Image from 'next/image'
-import hobbycue from '../../assets/svg/Search/hobbycue.png'
-import history from '../../assets/svg/Search/history.svg'
-import People from '../../assets/svg/Search/People.svg'
-import Place from '../../assets/svg/Search/Place.svg'
-import Product from '../../assets/svg/Search/Product.svg'
-import Hobbies from '../../assets/svg/Search/Hobbies.svg'
-import Program from '../../assets/svg/Search/Program.svg'
-import User from '../../assets/svg/Search/User.svg'
-import blogs from '../../assets/svg/Search/blogs.svg'
-import classes from '../../assets/svg/Search/classes.svg'
-import posts from '../../assets/svg/Search/posts.svg'
-import rentals from '../../assets/svg/Search/rentals.svg'
-import { MenuItem } from '@mui/material'
 import SearchPageFilter from '@/components/SearchPageFilters'
+import PageGridLayout from '@/layouts/PageGridLayout'
+import { openModal } from '@/redux/slices/modal'
 import {
-  SearchResults,
   toggleShowAll,
   toggleShowAllEvent,
   toggleShowAllPeople,
@@ -26,21 +9,19 @@ import {
   toggleShowAllUsers,
 } from '@/redux/slices/search'
 import { RootState } from '@/redux/store'
-import PageGridLayout from '@/layouts/PageGridLayout'
+import { MenuItem, Select } from '@mui/material'
+import Image from 'next/image'
+import { useRouter } from 'next/router'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import User from '../../assets/svg/Search/User.svg'
 import styles from './styles.module.css'
-
-import { useSelector } from 'react-redux'
-
-import { Preview } from '@mui/icons-material'
-import { Select } from '@mui/material'
-import { openModal } from '@/redux/slices/modal'
 
 type Props = {
   data?: any
   children?: any
   onChange?: any
 }
-
 type User = {
   profile_image: string
   full_name: string
@@ -48,7 +29,6 @@ type User = {
   primary_address: { city: string }
   profile_url: string
 }
-
 type PeopleData = {
   profile_image: string
   title: string
@@ -73,7 +53,6 @@ type EventData = {
   page_url: string
   page_type: []
 }
-
 type hobby = {
   _id: string
   profile_image: string | null
@@ -81,7 +60,6 @@ type hobby = {
   slug: string
   display: string
 }
-
 type SearchResultsProps = {
   searchResults: User[]
 
@@ -227,9 +205,14 @@ const MainContent: React.FC<SearchResultsProps> = ({
     hobbyResults.length === 0
 
   return (
-    //hobby
     <main className={styles.searchResults}>
-      {!noResultsFound && (
+      {noResultsFound ? 
+      <div className={styles['no-results-wrapper']}>
+        <p>
+        Use the Search box at the top to look up pages on your hobby or an existing user.  If you don&apos;t find any pages, you may Add Listing Page from the menu at top right corner
+        </p>
+      </div>
+      : (
         <div>
           {/* <section className={styles.userSection}>
         <div className={styles.peopleItemsContainer}>

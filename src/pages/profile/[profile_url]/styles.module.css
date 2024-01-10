@@ -105,6 +105,10 @@
   display: none !important;
 }
 
+.display-none {
+  display: none !important;
+}
+
 @media screen and (max-width: 1100px) {
   .medias {
     display: flex;

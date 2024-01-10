@@ -39,7 +39,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
   const dispatch = useDispatch()
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
 
-  const [expandAll, setExpandAll] = useState(false)
+  const [expandAll, setExpandAll] = useState(true)
   const [pageData, setPageData] = useState(data.pageData)
   const [loadingPosts, setLoadingPosts] = useState(false)
   const [displayAbout, setDisplayAbout] = useState(false)
@@ -120,11 +120,22 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
         {data.pageData && (
           <PageGridLayout column={3}>
             <aside
-              className={`custom-scrollbar ${styles['profile-left-aside']}`}
+              className={`custom-scrollbar ${styles['profile-left-aside']} ${
+                expandAll ? '' : styles['display-none']
+              }`}
             >
               {/* User Hobbies */}
-              <ProfileHobbySideList data={pageData} expandData={expandAll} />
-              <ProfilePagesList data={data} expandData={expandAll} />
+              <ProfileHobbySideList data={pageData} />
+              <ProfilePagesList data={data} />
+
+              <div className={styles['display-mobile']}>
+                {/* User Locations */}
+                <ProfileAddressSide data={pageData} />
+
+                {/* User Contact Details */}
+                <ProfileContactSide data={pageData} />
+                <ProfileSocialMediaSide data={pageData} />
+              </div>
             </aside>
 
             <main>
@@ -247,13 +258,13 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
               </section> */}
             </main>
 
-            <aside>
+            <aside className={styles['display-desktop']}>
               {/* User Locations */}
-              <ProfileAddressSide data={pageData} expandData={expandAll} />
+              <ProfileAddressSide data={pageData} />
 
               {/* User Contact Details */}
-              <ProfileContactSide data={pageData} expandData={expandAll} />
-              <ProfileSocialMediaSide data={pageData} expandData={expandAll} />
+              <ProfileContactSide data={pageData} />
+              <ProfileSocialMediaSide data={pageData} />
             </aside>
 
             <div className={styles['nav-mobile']}>
