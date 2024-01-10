@@ -305,79 +305,81 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     setError(null)
     setShowGenreDowpdown(false)
 
-    let selectedHobby = null
-    let selectedGenre = null
+    if (hobbyInputValue) {
+      let selectedHobby = null
+      let selectedGenre = null
 
-    // Handle hobby input
-    if (!data.hobby) {
-      const matchedHobby = hobbyDropdownList.find(
-        (hobby) =>
-          hobby.display.toLowerCase() === hobbyInputValue.toLowerCase(),
-      )
+      // Handle hobby input
+      if (!data.hobby) {
+        const matchedHobby = hobbyDropdownList.find(
+          (hobby) =>
+            hobby.display.toLowerCase() === hobbyInputValue.toLowerCase(),
+        )
 
-      if (!hobbyInputValue.trim()) {
-        window.location.reload()
-        handleClose()
-        return
-      }
+        if (!hobbyInputValue.trim()) {
+          window.location.reload()
+          handleClose()
+          return
+        }
 
-      if (matchedHobby) {
-        selectedHobby = matchedHobby
+        if (matchedHobby) {
+          selectedHobby = matchedHobby
+        } else {
+          setError('Typed hobby not found!')
+          setHobbyError(true)
+          return
+        }
       } else {
-        setError('Typed hobby not found!')
-        setHobbyError(true)
-        return
+        selectedHobby = data.hobby
       }
-    } else {
-      selectedHobby = data.hobby
-    }
 
-    // Handle genre input
-    if (!data.genre) {
-      const matchedGenre = genreDropdownList.find(
-        (genre) =>
-          genre.display.toLowerCase() === genreInputValue.toLowerCase(),
-      )
+      // Handle genre input
+      if (!data.genre) {
+        const matchedGenre = genreDropdownList.find(
+          (genre) =>
+            genre.display.toLowerCase() === genreInputValue.toLowerCase(),
+        )
 
-      if (selectedGenre !== null && selectedGenre !== matchedGenre) {
-        setError('Typed Genre not found!')
-        return
+        if (selectedGenre !== null && selectedGenre !== matchedGenre) {
+          setError('Typed Genre not found!')
+          return
+        }
+        if (selectedGenre !== null && !matchedGenre) {
+          setError("This hobby doesn't contain this genre")
+          return
+        }
+      } else {
+        selectedGenre = data.genre
       }
-      if (selectedGenre !== null && !matchedGenre) {
-        setError("This hobby doesn't contain this genre")
-        return
+
+      setAddHobbyBtnLoading(true)
+
+      let jsonData = {
+        hobby: selectedHobby?._id,
+        genre: selectedGenre?._id,
+        level: data.level,
       }
-    } else {
-      selectedGenre = data.genre
-    }
 
-    setAddHobbyBtnLoading(true)
+      await addUserHobby(jsonData, async (err, res) => {
+        console.log('json', jsonData)
+        console.log('Button clicked!')
+        if (err) {
+          setAddHobbyBtnLoading(false)
+          return console.log(err)
+        }
 
-    let jsonData = {
-      hobby: selectedHobby?._id,
-      genre: selectedGenre?._id,
-      level: data.level,
-    }
-
-    await addUserHobby(jsonData, async (err, res) => {
-      console.log('json', jsonData)
-      console.log('Button clicked!')
-      if (err) {
+        const { err: error, res: response } = await getMyProfileDetail()
         setAddHobbyBtnLoading(false)
-        return console.log(err)
-      }
+        if (error) return console.log(error)
 
-      const { err: error, res: response } = await getMyProfileDetail()
-      setAddHobbyBtnLoading(false)
-      if (error) return console.log(error)
-
-      if (response?.data.success) {
-        dispatch(updateUser(response?.data.data.user))
-        setHobbyInputValue('')
-        setGenreInputValue('')
-        setData({ level: 1, hobby: null, genre: null })
-      }
-    })
+        if (response?.data.success) {
+          dispatch(updateUser(response?.data.data.user))
+          setHobbyInputValue('')
+          setGenreInputValue('')
+          setData({ level: 1, hobby: null, genre: null })
+        }
+      })
+    }
 
     if (userHobbies.length === 0) {
       setError('Add atleast one hobby!')

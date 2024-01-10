@@ -218,65 +218,67 @@ const ListingHobbyEditModal: React.FC<Props> = ({
     setHobbyError(false)
     setError(null)
     setShowGenreDropdown(false)
-    let selectedHobby = null
-    let selectedGenre = null
-    // Handle hobby input
-    if (!data.hobby) {
-      const matchedHobby = hobbyDropdownList.find(
-        (hobby) =>
-          hobby.display.toLowerCase() === hobbyInputValue.toLowerCase(),
-      )
+    if (hobbyInputValue) {
+      let selectedHobby = null
+      let selectedGenre = null
+      // Handle hobby input
+      if (!data.hobby) {
+        const matchedHobby = hobbyDropdownList.find(
+          (hobby) =>
+            hobby.display.toLowerCase() === hobbyInputValue.toLowerCase(),
+        )
 
-      if (!hobbyInputValue.trim()) {
-        window.location.reload()
-        handleClose()
-        return
-      }
+        if (!hobbyInputValue.trim()) {
+          window.location.reload()
+          handleClose()
+          return
+        }
 
-      if (matchedHobby) {
-        selectedHobby = matchedHobby
+        if (matchedHobby) {
+          selectedHobby = matchedHobby
+        } else {
+          setHobbyError(true)
+          setError('Typed hobby not found!')
+          return
+        }
       } else {
-        setHobbyError(true)
-        setError('Typed hobby not found!')
-        return
+        selectedHobby = data.hobby
       }
-    } else {
-      selectedHobby = data.hobby
-    }
 
-    // Handle genre input
-    if (!data.genre) {
-      const matchedGenre = genreDropdownList.find(
-        (genre) =>
-          genre.display.toLowerCase() === genreInputValue.toLowerCase(),
-      )
+      // Handle genre input
+      if (!data.genre) {
+        const matchedGenre = genreDropdownList.find(
+          (genre) =>
+            genre.display.toLowerCase() === genreInputValue.toLowerCase(),
+        )
 
-      if (selectedGenre !== null && selectedGenre !== matchedGenre) {
-        setError('Typed Genre not found!')
-        return
+        if (selectedGenre !== null && selectedGenre !== matchedGenre) {
+          setError('Typed Genre not found!')
+          return
+        }
+        if (selectedGenre !== null && !matchedGenre) {
+          setError("This hobby doesn't contain this genre")
+          return
+        }
+      } else {
+        selectedGenre = data.genre
       }
-      if (selectedGenre !== null && !matchedGenre) {
-        setError("This hobby doesn't contain this genre")
-        return
+
+      if (!data.hobby || !listingModalData._id) return
+
+      setAddHobbyBtnLoading(true)
+      let jsonData = { hobbyId: data.hobby?._id, genreId: data.genre?._id }
+      const { err, res } = await addListingHobby(listingModalData._id, jsonData)
+      if (err) {
+        setAddHobbyBtnLoading(false)
+        return console.log(err)
       }
-    } else {
-      selectedGenre = data.genre
-    }
-
-    if (!data.hobby || !listingModalData._id) return
-
-    setAddHobbyBtnLoading(true)
-    let jsonData = { hobbyId: data.hobby?._id, genreId: data.genre?._id }
-    const { err, res } = await addListingHobby(listingModalData._id, jsonData)
-    if (err) {
+      await updateHobbyList()
+      setHobbyInputValue('')
+      setGenreInputValue('')
+      setData({ hobby: null, genre: null })
       setAddHobbyBtnLoading(false)
-      return console.log(err)
     }
-    await updateHobbyList()
-    setHobbyInputValue('')
-    setGenreInputValue('')
-    setData({ hobby: null, genre: null })
-    setAddHobbyBtnLoading(false)
 
     if (hobbiesList.length === 0) {
       setError('Add atleast one hobby!')

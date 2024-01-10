@@ -211,6 +211,15 @@ export const ClaimListing = async (data: ClaimListingPayload): Promise<ApiReturn
   }
 };
 
+export const ClaimRequest = async (data: ClaimListingPayload): Promise<ApiReturnObject> => {
+  try {
+    const res = await axiosInstance.post(`/auth/claim-request`, data);
+    return { res: res, err: null };
+  } catch (error: any) {
+    return { err: error, res: null };
+  }
+};
+
 export const InviteToHobbycue = async (data: InvitetoHobbycuePayload): Promise<ApiReturnObject> => {
   try {
     const res = await axiosInstance.post(`/auth/invite`, data);
