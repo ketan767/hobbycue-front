@@ -88,6 +88,7 @@ const ListingContactEditModal: React.FC<Props> = ({
     page_admin: { value: '', error: null },
   })
   const [selectedCountryCode, setSelectedCountryCode] = useState('+91')
+  const [selectedWpCountryCode, setWpSelectedCountryCode] = useState('+91')
   const [isChanged, setIsChanged] = useState(false)
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -163,6 +164,9 @@ const ListingContactEditModal: React.FC<Props> = ({
   }
   const handlePrefixChange = (value: string) => {
     setSelectedCountryCode(value)
+  }
+  const handleWpPrefixChange = (value: string) => {
+    setWpSelectedCountryCode(value)
   }
 
   const handleSubmit = async () => {
@@ -436,7 +440,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                 }`}
               >
                 <label>Phone Number</label>
-                <div>
+                <div className={styles['phone-prefix-input']}>
                   <Select
                     value={selectedCountryCode}
                     className={styles['country-select']}
@@ -481,15 +485,30 @@ const ListingContactEditModal: React.FC<Props> = ({
                     </div>
                   </CustomTooltip>
                 </label>
-                <input
-                  type="text"
-                  placeholder={`+91`}
-                  value={data.whatsapp_number.value}
-                  autoComplete="phone"
-                  name="whatsapp_number"
-                  onChange={handleInputChange}
-                  ref={WhtphoneRef}
-                />
+                <div className={styles['phone-prefix-input']}>
+                  <Select
+                    value={selectedWpCountryCode}
+                    className={styles['country-select']}
+                    onChange={(event) =>
+                      handleWpPrefixChange(event.target.value as string)
+                    }
+                  >
+                    {countryData.map((country) => (
+                      <MenuItem value={country.phonePrefix}>
+                        {country.phonePrefix}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  <input
+                    type="text"
+                    placeholder={`+91`}
+                    value={data.whatsapp_number.value}
+                    autoComplete="phone"
+                    name="whatsapp_number"
+                    onChange={handleInputChange}
+                    ref={WhtphoneRef}
+                  />
+                </div>
                 <p className={styles['helper-text']}>
                   {data.whatsapp_number.error}
                 </p>
