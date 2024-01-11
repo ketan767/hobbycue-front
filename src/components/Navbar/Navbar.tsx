@@ -425,15 +425,15 @@ export const Navbar: React.FC<Props> = ({}) => {
                           <li>Cooking</li>
                         </Link>
 
-                        <Link href={'/hobby/gardening'}>
+                        <Link href={'/hobby/garden'}>
                           <li>Garden</li>
                         </Link>
 
-                        <Link href={'/hobby/model-making'}>
+                        <Link href={'/hobby/model'}>
                           <li>Model</li>
                         </Link>
 
-                        <Link href={'/hobby/making-utility'}>
+                        <Link href={'/hobby/utility'}>
                           <li>Utility</li>
                         </Link>
                       </ul>
@@ -461,7 +461,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           <li>Outdoor</li>
                         </Link>
 
-                        <Link href={'/hobby/traveling'}>
+                        <Link href={'/hobby/travel'}>
                           <li>Travel</li>
                         </Link>
                         <Link href={'/hobby/wellness'}>
@@ -472,7 +472,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                     <section className={styles['list']}>
                       <h4>
                         <Link
-                          href={'/hobby/collect'}
+                          href={'/hobby/collecting'}
                           className={styles['hobbiescategory']}
                         >
                           {' '}
@@ -483,7 +483,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                       <ul>
                         <li>Items</li>
 
-                        <Link href={'/hobby/record-keeping'}>
+                        <Link href={'/hobby/records'}>
                           <li>Record</li>
                         </Link>
 
