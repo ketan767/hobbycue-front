@@ -6,5 +6,5 @@ Allow: /
 Host: localhost:8000
 
 # Sitemaps
-Sitemap: localhost:8000/sitemap-0.xml
+Sitemap: localhost:8000/sitemap.xml
 Sitemap: localhost:8000/server-sitemap.xml
