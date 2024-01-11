@@ -1,3 +1,8 @@
+import SiteAdminLayout from '@/AdminLayout'
+import ScrollToTop from '@/components/ScrollToTop'
+import SiteMainLayout from '@/layouts'
+import store from '@/redux/store'
+import '@/styles/_globals.css'
 import {
   StyledEngineProvider,
   ThemeProvider,
@@ -5,21 +10,17 @@ import {
 } from '@mui/material/styles'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Provider } from 'react-redux'
-
-import SiteAdminLayout from '@/AdminLayout'
-import ScrollToTop from '@/components/ScrollToTop'
-import SiteMainLayout from '@/layouts'
-import store from '@/redux/store'
-import '@/styles/_globals.css'
-import { useRouter } from 'next/router'
 
 function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
   const [scrollPosition, setScrollPosition] = useState(0)
 
-  const isAdminPage = router.pathname.startsWith('/admin')
+  const isAdminPage =
+    router.pathname.startsWith('/server-sitemap.xml') ||
+    router.pathname.startsWith('/admin')
   const theme = createTheme({
     palette: {
       primary: {

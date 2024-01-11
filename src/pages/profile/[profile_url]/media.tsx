@@ -21,6 +21,9 @@ import ProfilePagesList from '@/components/ProfilePage/ProfilePagesList/ProfileP
 import ReactPlayer from 'react-player'
 import { updateImageUrl } from '@/redux/slices/modal'
 import ProfileNavigationLinks from '@/components/ProfilePage/ProfileHeader/ProfileNavigationLinks'
+import ProfileAddressSide from '@/components/ProfilePage/ProfileAddressSide'
+import ProfileContactSide from '@/components/ProfilePage/ProfileContactSides'
+import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/ProfileSocialMedia'
 
 interface Props {
   data: ProfilePageData['pageData']
@@ -33,7 +36,7 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
   const [media, setMedia] = useState([])
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
 
-  const [expandAll, setExpandAll] = useState(false)
+  const [expandAll, setExpandAll] = useState(true)
   const inputRef = useRef<HTMLInputElement>(null)
   const dispatch = useDispatch()
 
@@ -131,10 +134,20 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
         setExpandAll={setExpandAll}
       >
         <PageGridLayout column={2}>
-          <aside>
+          <aside className={expandAll ? '' : styles['display-none']}>
             {/* User Hobbies */}
-            <ProfileHobbySideList data={data.pageData} expandData={expandAll}/>
-            <ProfilePagesList data={data} expandData={expandAll}/>
+            <ProfileHobbySideList data={data.pageData} />
+            <ProfilePagesList data={data} />
+
+            <div className={styles['display-mobile']}>
+              <ProfileAddressSide data={data.pageData} />
+
+              {/* User Contact Details */}
+              <ProfileContactSide data={data.pageData} />
+
+              {/*User Social Media visible only for mobile view */}
+              <ProfileSocialMediaSide data={data.pageData} />
+            </div>
           </aside>
           <div className={styles['nav-mobile']}>
             <ProfileNavigationLinks activeTab={'media'} />

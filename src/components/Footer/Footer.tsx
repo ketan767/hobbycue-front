@@ -3,19 +3,47 @@ import styles from './footer.module.css'
 
 import Facebook from '@/assets/svg/social/facebook.svg'
 import Instagram from '@/assets/svg/social/instagram.svg'
-import Twitter from '@/assets/svg/social/twitter.svg'
+import ChevronDown from '@/assets/svg/chevron-down.svg'
+
 import Pintrest from '@/assets/svg/social/Pinterest.svg'
-import Google from '@/assets/svg/social/google.svg'
-import Youtube from '@/assets/svg/social/youtube.svg'
+
 import Telegram from '@/assets/svg/social/telegram.svg'
-import Mail from '@/assets/svg/social/mail.svg'
+import Twitter from '@/assets/svg/social/twitter.svg'
+import Youtube from '@/assets/svg/social/youtube.svg'
+import { InviteToHobbycue } from '@/services/auth.service'
 import Image from 'next/image'
 import Link from 'next/link'
-import { InviteToHobbycue } from '@/services/auth.service'
 
 const icons = [Facebook, Twitter, Instagram, Pintrest, Youtube, Telegram]
 const Footer: React.FC = () => {
   const [email, setEmail] = useState('')
+  const [expandHobbyCue, setExpandHobbyCue] = useState(false)
+  const [expandHowDoI, setExpandHowDoI] = useState(false)
+  const [expandQuickLinks, setExpandQuickLinks] = useState(false)
+
+  const handleExpand = (type: string) => {
+    if (type === 'Hobbycue') {
+      return expandHobbyCue
+    }
+    if (type === 'How do I') {
+      return expandHowDoI
+    }
+    if (type === 'Quick Links') {
+      return expandQuickLinks
+    }
+  }
+  const handleSetExpand = (type: string) => {
+    if (type === 'Hobbycue') {
+      setExpandHobbyCue(!expandHobbyCue)
+    }
+    if (type === 'How do I') {
+      setExpandHowDoI(!expandHowDoI)
+    }
+    if (type === 'Quick Links') {
+      setExpandQuickLinks(!expandQuickLinks)
+    }
+  }
+
   const data = [
     {
       title: 'Hobbycue',
@@ -75,21 +103,48 @@ const Footer: React.FC = () => {
           <div className={styles.contentWrapper}>
             {data.map((item: any, idx: any) => {
               return (
-                <ul key={idx} className={styles.listContainer}>
-                  <li className={styles.listHeading}> {item.title} </li>
-                  {item.values.map((value: any, idx: any) => {
-                    return (
-                      <Link key={idx} href={value.link}>
-                        <li className={styles.listItem} key={idx}>
-                          {value.title}
-                        </li>
-                      </Link>
-                    )
-                  })}
-                </ul>
+                <div key={idx}>
+                  <div onClick={() => handleSetExpand(item.title)}>
+                    <p
+                      style={{ cursor: 'pointer' }}
+                      className={styles.listHeading}
+                    >
+                      {item.title}
+                    </p>
+                    <Image
+                      src={ChevronDown}
+                      alt=""
+                      width={20}
+                      height={20}
+                      className={`${styles['chevron-down']}${
+                        handleExpand(item.title)
+                          ? ' ' + styles['rotate-180']
+                          : ''
+                      }`}
+                    />
+                  </div>
+                  <ul
+                    className={
+                      handleExpand(item.title)
+                        ? styles?.listContainerExapnd
+                        : styles.listContainer
+                    }
+                  >
+                    {item.values.map((value: any, idx: any) => {
+                      return (
+                        <Link key={idx} href={value.link}>
+                          <li className={styles.listItem} key={idx}>
+                            {value.title}
+                          </li>
+                        </Link>
+                      )
+                    })}
+                  </ul>
+                </div>
               )
             })}
           </div>
+
           <div className={styles.rightSection}>
             <div>
               <p className={styles.listHeading}> Social Media </p>

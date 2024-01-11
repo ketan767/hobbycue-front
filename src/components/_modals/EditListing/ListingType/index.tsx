@@ -411,30 +411,37 @@ const ListingTypeEditModal: React.FC<Props> = ({
                           item: { name: string; description: string },
                           idx: number,
                         ) => {
-                          return (
-                            <div
-                              className={`${styles['single-option']}  ${
-                                value?.includes(item.name)
-                                  ? styles['selcted-option']
-                                  : ''
-                              }`}
-                              key={item.name}
-                              onClick={() => {
-                                handleChange(item.name)
-                                setShowDropdown(false)
-                              }}
-                            >
-                              <p className={styles.tagDesc}>{item.name}</p>
-                              <p className={styles.tagDesc}>
-                                {item.description}
-                                <Image
-                                  src={TickIcon}
-                                  alt="down"
-                                  className={styles['tick-icon']}
-                                />
-                              </p>
-                            </div>
+                          const desc = item.description.trim()
+
+                          if (
+                            desc !== '' &&
+                            desc !== null &&
+                            desc !== undefined
                           )
+                            return (
+                              <div
+                                className={`${styles['single-option']}  ${
+                                  value?.includes(item.name)
+                                    ? styles['selcted-option']
+                                    : ''
+                                }`}
+                                key={item.name}
+                                onClick={() => {
+                                  handleChange(item.name)
+                                  setShowDropdown(false)
+                                }}
+                              >
+                                <p className={styles.tagDesc}>{item.name}</p>
+                                <p className={styles.tagDesc}>
+                                  {item.description}
+                                  <Image
+                                    src={TickIcon}
+                                    alt="down"
+                                    className={styles['tick-icon']}
+                                  />
+                                </p>
+                              </div>
+                            )
                         },
                       )}
                     </div>

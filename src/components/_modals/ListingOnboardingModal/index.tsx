@@ -128,6 +128,7 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
   const handleCompleteOnboarding = async () => {
     const { err, res } = await updateListing(listingModalData._id, {
       is_onboarded: true,
+      is_claimed: true,
     })
     if (err) return console.log(err)
     if (res?.data.success) {
@@ -205,7 +206,6 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
           confirmationModal={confirmationModal}
           handleClose={handleClose}
           onBoarding={true}
-
         />
       )}
 
@@ -217,7 +217,6 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
           confirmationModal={confirmationModal}
           handleClose={handleClose}
           onBoarding={true}
-
         />
       )}
 
@@ -229,7 +228,6 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
           confirmationModal={confirmationModal}
           handleClose={handleClose}
           onBoarding={true}
-
         />
       )}
 
@@ -241,7 +239,6 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
           confirmationModal={confirmationModal}
           handleClose={handleClose}
           onBoarding={true}
-
         />
       )}
       {activeStep === 'EventHours' && (
@@ -252,7 +249,6 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
           confirmationModal={confirmationModal}
           handleClose={handleClose}
           onBoarding={true}
-
         />
       )}
       {activeStep === 'Hobbies' && (
@@ -263,7 +259,6 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
           confirmationModal={confirmationModal}
           handleClose={handleClose}
           onBoarding={true}
-
         />
       )}
 

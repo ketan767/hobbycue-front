@@ -123,6 +123,20 @@ export const resetPassword = async (data: any): Promise<ApiReturnObject> => {
   }
 }
 
+export const resetExpiredPassword = async (data: any): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.patch(`/auth/expired-password/verify`, data, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error: any) {
+    return { err: error, res: null }
+  }
+}
+
 export const connectGoogle = async (data: any): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
@@ -191,6 +205,15 @@ export const adminSignIn = async (data: SignInPayload): Promise<ApiReturnObject>
 export const ClaimListing = async (data: ClaimListingPayload): Promise<ApiReturnObject> => {
   try {
     const res = await axiosInstance.post(`/auth/claim-listing`, data);
+    return { res: res, err: null };
+  } catch (error: any) {
+    return { err: error, res: null };
+  }
+};
+
+export const ClaimRequest = async (data: ClaimListingPayload): Promise<ApiReturnObject> => {
+  try {
+    const res = await axiosInstance.post(`/auth/claim-request`, data);
     return { res: res, err: null };
   } catch (error: any) {
     return { err: error, res: null };

@@ -24,6 +24,7 @@ import { openModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import PostWrapper from '@/layouts/PinnedPost/PinnedPost'
 import ProfileNavigationLinks from '@/components/ProfilePage/ProfileHeader/ProfileNavigationLinks'
+import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/ProfileSocialMedia'
 
 interface Props {
   data: ProfilePageData
@@ -34,7 +35,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
   const [posts, setPosts] = useState([])
   const dispatch = useDispatch()
   const { user } = useSelector((state: any) => state.user)
-  const [expandAll,setExpandAll]=useState(false)
+  const [expandAll, setExpandAll] = useState(true)
   const getPost = async () => {
     setLoadingPosts(true)
     const { err, res } = await getAllPosts(
@@ -90,20 +91,40 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
         <title>{`Posts | ${data.pageData.full_name} | HobbyCue`}</title>
       </Head>
 
-      <ProfileLayout activeTab={'posts'} data={data} expandAll={expandAll} setExpandAll={setExpandAll}>
+      <ProfileLayout
+        activeTab={'posts'}
+        data={data}
+        expandAll={expandAll}
+        setExpandAll={setExpandAll}
+      >
         <PageGridLayout column={3}>
-          <aside className={styles['asideView']}>
-            <ProfileHobbySideList data={data.pageData} expandData={expandAll}/>
-            <ProfilePagesList data={data} expandData={expandAll}/>
+          <aside className={expandAll ? '' : styles['display-none']}>
+            <ProfileHobbySideList data={data.pageData} />
+            <ProfilePagesList data={data} />
+            <div className={styles['display-mobile']}>
+              {/* User Locations */}
+              <ProfileAddressSide data={data.pageData} />
+
+              {/* User Contact Details */}
+              <ProfileContactSide data={data.pageData} />
+
+              {/*User Social Media visible only for mobile view */}
+              <ProfileSocialMediaSide data={data.pageData} />
+            </div>
           </aside>
           <main>
             <section
               className={`content-box-wrapper ${styles['start-post-btn-container']}`}
             >
               <button
-                onClick={() =>
-                  dispatch(openModal({ type: 'create-post', closable: true }))
-                }
+                onClick={() => {
+                  if (user.is_onboarded)
+                    dispatch(openModal({ type: 'create-post', closable: true }))
+                  else
+                    dispatch(
+                      openModal({ type: 'user-onboarding', closable: true }),
+                    )
+                }}
                 className={styles['start-post-btn']}
               >
                 <svg
@@ -164,12 +185,15 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
               )}
             </section>
           </main>
-          <aside className={styles['asideView']}>
+          <aside className={styles['display-desktop']}>
             {/* User Locations */}
-            <ProfileAddressSide data={data.pageData} expandData={expandAll}/>
+            <ProfileAddressSide data={data.pageData} />
 
             {/* User Contact Details */}
-            <ProfileContactSide data={data.pageData} expandData={expandAll}/>
+            <ProfileContactSide data={data.pageData} />
+
+            {/*User Social Media visible only for mobile view */}
+            <ProfileSocialMediaSide data={data.pageData} />
           </aside>
 
           <div className={styles['nav-mobile']}>
@@ -180,9 +204,14 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
             className={`content-box-wrapper ${styles['start-post-btn-container-mobile']}`}
           >
             <button
-              onClick={() =>
-                dispatch(openModal({ type: 'create-post', closable: true }))
-              }
+              onClick={() => {
+                if (user.is_onboarded)
+                  dispatch(openModal({ type: 'create-post', closable: true }))
+                else
+                  dispatch(
+                    openModal({ type: 'user-onboarding', closable: true }),
+                  )
+              }}
               className={styles['start-post-btn']}
             >
               <svg

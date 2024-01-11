@@ -356,7 +356,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
           setData((prev: any) => {
             return {
               ...prev,
-              street: { value: formatted_address, error: null },
+              street: { value: formatted_address.split(',')[0], error: null },
               state: { value: state, error: null },
               city: { value: city, error: null },
               country: { value: country, error: null },

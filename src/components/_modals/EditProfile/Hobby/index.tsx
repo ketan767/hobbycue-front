@@ -1,29 +1,29 @@
-import React, { useEffect, useState, useRef } from 'react'
-import styles from './styles.module.css'
-import { Button, CircularProgress } from '@mui/material'
 import {
   addUserHobby,
   deleteUserHobby,
   getMyProfileDetail,
-  updateMyProfileDetail,
   updateUserHobbyLevel,
 } from '@/services/user.service'
+import { CircularProgress } from '@mui/material'
+import React, { useEffect, useRef, useState } from 'react'
+import styles from './styles.module.css'
 
-import { FormControl, MenuItem, Select, TextField } from '@mui/material'
-import { getAllHobbies } from '@/services/hobby.service'
-import { isEmptyField } from '@/utils'
-import { useDispatch, useSelector } from 'react-redux'
+import CloseIcon from '@/assets/icons/CloseIcon'
+import NextIcon from '@/assets/svg/Next.svg'
+import BackIcon from '@/assets/svg/Previous.svg'
+import hobbyLvlOne from '@/assets/svg/hobby_level_One.svg'
+import hobbyLvlThree from '@/assets/svg/hobby_level_Three.svg'
+import hobbyLvlTwo from '@/assets/svg/hobby_level_Two.svg'
+import addhobby from '@/assets/svg/addhobby.svg'
+import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
-import { closeModal } from '@/redux/slices/modal'
-import SaveModal from '../../SaveModal/saveModal'
-import CloseIcon from '@/assets/icons/CloseIcon'
-import hobbyLvlOne from '@/assets/svg/hobby_level_One.svg'
-import hobbyLvlTwo from '@/assets/svg/hobby_level_Two.svg'
-import hobbyLvlThree from '@/assets/svg/hobby_level_Three.svg'
-import BackIcon from '@/assets/svg/Previous.svg'
-import NextIcon from '@/assets/svg/Next.svg'
+import { getAllHobbies } from '@/services/hobby.service'
+import { isEmptyField } from '@/utils'
+import { FormControl, MenuItem, Select } from '@mui/material'
 import Image from 'next/image'
+import { useDispatch, useSelector } from 'react-redux'
+import SaveModal from '../../SaveModal/saveModal'
 
 type Props = {
   onComplete?: () => void
@@ -64,6 +64,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   onStatusChange,
 }) => {
   const dispatch = useDispatch()
+  const [showModal, setShowModal] = useState(false)
 
   const { user } = useSelector((state: RootState) => state.user)
   const searchref = useRef<HTMLInputElement>(null)
@@ -82,7 +83,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const [showGenreDowpdown, setShowGenreDowpdown] = useState<boolean>(false)
   const [isError, setIsError] = useState(false)
   const [HobbyError, setHobbyError] = useState(false)
-
+  const [focusedHobbyIndex, setFocusedHobbyIndex] = useState<number>(-1)
   const [hobbyInputValue, setHobbyInputValue] = useState('')
   const [genreid, setGenreId] = useState('')
   const [genreInputValue, setGenreInputValue] = useState('')
@@ -93,6 +94,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const [genreDropdownList, setGenreDropdownList] = useState<
     DropdownListItem[]
   >([])
+
   const levels = [
     { name: 'Beginner', src: hobbyLvlOne },
     { name: 'Intermediate', src: hobbyLvlTwo },
@@ -101,21 +103,57 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
   const [initialData, setInitialData] = useState({})
   const [isChanged, setIsChanged] = useState(false)
+
   const handleHobbyInputChange = async (e: any) => {
     setHobbyInputValue(e.target.value)
     setGenreInputValue('')
     setGenreDropdownList([])
     setGenreId('')
+    setHobbyError(false)
+    setError(null)
 
     setData((prev) => {
       return { ...prev, hobby: null }
     })
-    if (isEmptyField(e.target.value)) return setHobbyDropdownList([])
+
+    if (isEmptyField(e.target.value)) {
+      setHobbyDropdownList([])
+      setFocusedHobbyIndex(-1)
+      return
+    }
+
     const query = `fields=display,genre&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
     const { err, res } = await getAllHobbies(query)
+
     if (err) return console.log(err)
-    console.log('resp', res)
+
     setHobbyDropdownList(res.data.hobbies)
+    setFocusedHobbyIndex(-1)
+  }
+
+  const handleHobbyKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (hobbyDropdownList.length === 0) return
+
+    switch (e.key) {
+      case 'ArrowDown':
+        setFocusedHobbyIndex((prevIndex) =>
+          prevIndex < hobbyDropdownList.length - 1 ? prevIndex + 1 : prevIndex,
+        )
+        break
+      case 'ArrowUp':
+        setFocusedHobbyIndex((prevIndex) =>
+          prevIndex > 0 ? prevIndex - 1 : prevIndex,
+        )
+        break
+      case 'Enter':
+        if (focusedHobbyIndex !== -1) {
+          handleHobbySelection(hobbyDropdownList[focusedHobbyIndex])
+          setShowHobbyDowpdown(false)
+        }
+        break
+      default:
+        break
+    }
   }
 
   const handleGenreInputChange = async (e: any) => {
@@ -262,8 +300,87 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     }
   }, [user])
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setHobbyError(false)
+    setError(null)
+    setShowGenreDowpdown(false)
+
+    if (hobbyInputValue) {
+      let selectedHobby = null
+      let selectedGenre = null
+
+      // Handle hobby input
+      if (!data.hobby) {
+        const matchedHobby = hobbyDropdownList.find(
+          (hobby) =>
+            hobby.display.toLowerCase() === hobbyInputValue.toLowerCase(),
+        )
+
+        if (!hobbyInputValue.trim()) {
+          window.location.reload()
+          handleClose()
+          return
+        }
+
+        if (matchedHobby) {
+          selectedHobby = matchedHobby
+        } else {
+          setError('Typed hobby not found!')
+          setHobbyError(true)
+          return
+        }
+      } else {
+        selectedHobby = data.hobby
+      }
+
+      // Handle genre input
+      if (!data.genre) {
+        const matchedGenre = genreDropdownList.find(
+          (genre) =>
+            genre.display.toLowerCase() === genreInputValue.toLowerCase(),
+        )
+
+        if (selectedGenre !== null && selectedGenre !== matchedGenre) {
+          setError('Typed Genre not found!')
+          return
+        }
+        if (selectedGenre !== null && !matchedGenre) {
+          setError("This hobby doesn't contain this genre")
+          return
+        }
+      } else {
+        selectedGenre = data.genre
+      }
+
+      setAddHobbyBtnLoading(true)
+
+      let jsonData = {
+        hobby: selectedHobby?._id,
+        genre: selectedGenre?._id,
+        level: data.level,
+      }
+
+      await addUserHobby(jsonData, async (err, res) => {
+        console.log('json', jsonData)
+        console.log('Button clicked!')
+        if (err) {
+          setAddHobbyBtnLoading(false)
+          return console.log(err)
+        }
+
+        const { err: error, res: response } = await getMyProfileDetail()
+        setAddHobbyBtnLoading(false)
+        if (error) return console.log(error)
+
+        if (response?.data.success) {
+          dispatch(updateUser(response?.data.data.user))
+          setHobbyInputValue('')
+          setGenreInputValue('')
+          setData({ level: 1, hobby: null, genre: null })
+        }
+      })
+    }
+
     if (userHobbies.length === 0) {
       setError('Add atleast one hobby!')
       setHobbyError(true)
@@ -291,19 +408,27 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       onStatusChange(hasChanges)
     }
   }, [userHobbies, initialData, onStatusChange])
+
   const handleLevelChange = async (_id: any, level: string) => {
     let temp = userHobbies.map((item: any) => {
-      if (item._id === _id) {
+      if (item?._id === _id) {
         return { ...item, level }
       } else {
         return item
       }
     })
+
     setUserHobbies(temp)
+
     const { err, res } = await updateUserHobbyLevel(_id, { level })
     if (err) return console.log(err)
     console.log('hobby updated-', res?.data)
+
+    // Comment out or remove the following lines to disable the modal
+    setShowModal(true) // Remove or comment this line to disable the modal
+    // console.log("Modal should be shown automatically.");
   }
+
   const HandleSaveError = async () => {
     if (userHobbies.length === 0) {
       setIsError(true)
@@ -402,11 +527,11 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                               ? 'Advanced'
                               : ''} */}
                             <Select
-                              value={hobby.level}
+                              value={hobby?.level}
                               className={styles['hobby-dropdown']}
                               onChange={(e) => {
-                                let val = e.target.value
-                                handleLevelChange(hobby._id, val)
+                                let val: any = e?.target?.value
+                                handleLevelChange(hobby?._id, val)
                               }}
                               sx={{
                                 boxShadow: 'none',
@@ -417,7 +542,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                               }}
                               displayEmpty
                               renderValue={(selected) => (
-                                <div className={styles.levelwithtext}>
+                                <div className={styles?.levelwithtext}>
                                   <Image
                                     alt={`hobby${selected}`}
                                     src={levels[selected - 1]?.src}
@@ -428,14 +553,14 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                                 </div>
                               )}
                             >
-                              {levels.map((item, idx) => (
+                              {levels?.map((item, idx) => (
                                 <MenuItem key={idx} value={idx + 1}>
                                   <div className={styles.levelwithtext}>
                                     <Image
                                       alt={`hobby${idx + 1}`}
-                                      src={item.src}
+                                      src={item?.src}
                                     />
-                                    <p>{item.name}</p>
+                                    <p>{item?.name}</p>
                                   </div>
                                 </MenuItem>
                               ))}
@@ -475,7 +600,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                     <tr>
                       <td className={styles.AddHobbyFields}>
                         {/* Hobby Input and Dropdown */}
-                        <section className={styles['dropdown-wrapper']}>
+                        <div className={styles['dropdown-wrapper']}>
                           <div
                             className={`${styles['input-box']} ${
                               HobbyError ? styles['input-box-error'] : ''
@@ -489,33 +614,38 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                               value={hobbyInputValue}
                               onFocus={() => setShowHobbyDowpdown(true)}
                               onBlur={() =>
-                                setTimeout(() => {
-                                  setShowHobbyDowpdown(false)
-                                }, 300)
+                                setTimeout(
+                                  () => setShowHobbyDowpdown(false),
+                                  300,
+                                )
                               }
                               ref={searchref}
                               onChange={handleHobbyInputChange}
+                              onKeyDown={handleHobbyKeyDown}
                             />
                           </div>
                           {showHobbyDowpdown &&
                             hobbyDropdownList.length !== 0 && (
                               <div className={styles['dropdown']}>
-                                {hobbyDropdownList.map((hobby) => {
-                                  return (
-                                    <p
-                                      key={hobby._id}
-                                      onClick={() => {
-                                        handleHobbySelection(hobby)
-                                        setShowHobbyDowpdown(false)
-                                      }}
-                                    >
-                                      {hobby.display}
-                                    </p>
-                                  )
-                                })}
+                                {hobbyDropdownList.map((hobby, index) => (
+                                  <p
+                                    key={hobby._id}
+                                    onClick={() => {
+                                      handleHobbySelection(hobby)
+                                      setShowHobbyDowpdown(false)
+                                    }}
+                                    className={
+                                      index === focusedHobbyIndex
+                                        ? styles.focused
+                                        : ''
+                                    }
+                                  >
+                                    {hobby.display}
+                                  </p>
+                                ))}
                               </div>
                             )}
-                        </section>
+                        </div>
 
                         <section className={styles['dropdown-wrapper']}>
                           <div className={styles['input-box']}>
@@ -569,11 +699,11 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                             value={data.level}
                             onChange={(e) => {
                               setData((prev: any) => {
-                                return { ...prev, level: e.target.value }
+                                return { ...prev, level: e?.target?.value }
                               })
                             }}
                             displayEmpty
-                            inputProps={{ 'aria-label': 'Without label' }}
+                            inputProps={{ 'aria-label': ' label' }}
                           >
                             <MenuItem
                               className={styles['levelwithtext-add']}
@@ -604,6 +734,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                           </Select>
                         </FormControl>
                       </td>
+
                       {/* </td> */}
                       <td>
                         <button
@@ -614,25 +745,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                           {addHobbyBtnLoading ? (
                             <CircularProgress color="inherit" size={'22px'} />
                           ) : (
-                            <svg
-                              width="24"
-                              height="24"
-                              viewBox="0 0 16 16"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <g clip-path="url(#clip0_704_44049)">
-                                <path
-                                  d="M13.1429 8.85714H8.85714V13.1429C8.85714 13.6143 8.47143 14 8 14C7.52857 14 7.14286 13.6143 7.14286 13.1429V8.85714H2.85714C2.38571 8.85714 2 8.47143 2 8C2 7.52857 2.38571 7.14286 2.85714 7.14286H7.14286V2.85714C7.14286 2.38571 7.52857 2 8 2C8.47143 2 8.85714 2.38571 8.85714 2.85714V7.14286H13.1429C13.6143 7.14286 14 7.52857 14 8C14 8.47143 13.6143 8.85714 13.1429 8.85714Z"
-                                  fill="#8064A2"
-                                />
-                              </g>
-                              <defs>
-                                <clipPath id="clip0_704_44049">
-                                  <rect width="16" height="16" fill="white" />
-                                </clipPath>
-                              </defs>
-                            </svg>
+                            <Image src={addhobby} alt="add hobby"></Image>
                           )}
                         </button>
                       </td>
@@ -673,7 +786,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'24px'} />
             ) : onComplete ? (
-              'Save'
+              'Finish'
             ) : (
               'Save'
             )}

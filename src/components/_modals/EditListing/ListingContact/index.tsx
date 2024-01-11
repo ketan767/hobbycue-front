@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress } from '@mui/material'
+import { MenuItem, Select } from '@mui/material'
 import {
   addUserAddress,
   getMyProfileDetail,
@@ -27,6 +28,7 @@ import SaveModal from '../../SaveModal/saveModal'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
+import { countryData } from '@/utils/countrydata'
 import Image from 'next/image'
 
 type Props = {
@@ -85,6 +87,7 @@ const ListingContactEditModal: React.FC<Props> = ({
     whatsapp_number: { value: '', error: null },
     page_admin: { value: '', error: null },
   })
+  const [selectedCountryCode, setSelectedCountryCode] = useState('+91')
   const [isChanged, setIsChanged] = useState(false)
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -157,6 +160,9 @@ const ListingContactEditModal: React.FC<Props> = ({
 
       if (onBackBtnClick) onBackBtnClick()
     }
+  }
+  const handlePrefixChange = (value: string) => {
+    setSelectedCountryCode(value)
   }
 
   const handleSubmit = async () => {
@@ -430,16 +436,32 @@ const ListingContactEditModal: React.FC<Props> = ({
                 }`}
               >
                 <label>Phone Number</label>
-                <input
-                  type="text"
-                  placeholder={`+91`}
-                  value={data.phone.value}
-                  name="phone"
-                  autoComplete="phone"
-                  required
-                  ref={phoneRef}
-                  onChange={handleInputChange}
-                />
+                <div>
+                  <Select
+                    value={selectedCountryCode}
+                    className={styles['country-select']}
+                    onChange={(event) =>
+                      handlePrefixChange(event.target.value as string)
+                    }
+                  >
+                    {countryData.map((country) => (
+                      <MenuItem value={country.phonePrefix}>
+                        {country.phonePrefix}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  <input
+                    type="text"
+                    placeholder={`+91`}
+                    value={data.phone.value}
+                    name="phone"
+                    autoComplete="phone"
+                    required
+                    ref={phoneRef}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
                 <p className={styles['helper-text']}>{data.phone.error}</p>
               </div>
               <div className={styles['input-box']}>
