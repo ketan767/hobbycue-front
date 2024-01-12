@@ -307,6 +307,7 @@ const ListingContactEditModal: React.FC<Props> = ({
           whatsapp_number: { value: data.phone.value, error: null },
         }
       })
+      setWpSelectedCountryCode(selectedCountryCode)
     }
   }, [tick])
 
@@ -448,8 +449,8 @@ const ListingContactEditModal: React.FC<Props> = ({
                       handlePrefixChange(event.target.value as string)
                     }
                   >
-                    {countryData.map((country) => (
-                      <MenuItem value={country.phonePrefix}>
+                    {countryData.map((country, idx) => (
+                      <MenuItem key={idx} value={country.phonePrefix}>
                         {country.phonePrefix}
                       </MenuItem>
                     ))}
@@ -463,6 +464,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                     required
                     ref={phoneRef}
                     onChange={handleInputChange}
+                    className={styles['phone-input']}
                   />
                 </div>
 
@@ -493,8 +495,8 @@ const ListingContactEditModal: React.FC<Props> = ({
                       handleWpPrefixChange(event.target.value as string)
                     }
                   >
-                    {countryData.map((country) => (
-                      <MenuItem value={country.phonePrefix}>
+                    {countryData.map((country, idx) => (
+                      <MenuItem key={idx} value={country.phonePrefix}>
                         {country.phonePrefix}
                       </MenuItem>
                     ))}
@@ -507,6 +509,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                     name="whatsapp_number"
                     onChange={handleInputChange}
                     ref={WhtphoneRef}
+                    className={styles['phone-input']}
                   />
                 </div>
                 <p className={styles['helper-text']}>

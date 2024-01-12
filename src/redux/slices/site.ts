@@ -29,8 +29,8 @@ type ListingModalData = {
     to_time: any
     from_date: any
     to_date: any
-  },
-  images?: [],
+  }
+  images?: []
   social_media_urls?: any
   is_published?: boolean
   is_onboarded?: boolean
@@ -72,7 +72,12 @@ interface AuthState {
     onComplete: any
   }
   showPageLoader: boolean
-  listingTypeModalMode? : any
+  listingTypeModalMode?: any
+  expandMenu: {
+    hobby: boolean
+    listing: boolean
+    profile: boolean
+  }
 }
 
 const initialState: AuthState = {
@@ -95,7 +100,12 @@ const initialState: AuthState = {
     onComplete: null,
   },
   showPageLoader: false,
-  listingTypeModalMode : 'create'
+  listingTypeModalMode: 'create',
+  expandMenu: {
+    hobby: true,
+    listing: true,
+    profile: true
+  },
 }
 
 /** Template Listing Data 
@@ -179,6 +189,15 @@ const siteSlice = createSlice({
     updateListingTypeModalMode: (state, { payload }) => {
       state.listingTypeModalMode = payload.mode
     },
+    updateHobbyMenuExpandAll: (state, { payload }) => {
+      state.expandMenu.hobby = payload
+    },
+    updateListingMenuExpandAll: (state, { payload }) => {
+      state.expandMenu.listing = payload
+    },
+    updateProfileMenuExpandAll: (state, { payload }) => {
+      state.expandMenu.profile = payload
+    },
   },
 })
 
@@ -191,7 +210,10 @@ export const {
   updateEventDateTime,
   updateRelatedListingsLeft,
   setShowPageLoader,
-  updateListingTypeModalMode
+  updateListingTypeModalMode,
+  updateHobbyMenuExpandAll,
+  updateListingMenuExpandAll,
+  updateProfileMenuExpandAll,
 } = siteSlice.actions
 
 export default siteSlice.reducer

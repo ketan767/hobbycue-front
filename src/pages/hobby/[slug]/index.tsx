@@ -11,8 +11,9 @@ import PageContentBox from '@/layouts/PageContentBox'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import HobbyPageLayout from '@/layouts/HobbyPageLayout'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
+import { updateHobbyMenuExpandAll } from '@/redux/slices/site'
 
 type Props = { data: { hobbyData: any } }
 
@@ -22,7 +23,9 @@ const HobbyDetail: React.FC<Props> = (props) => {
   const [showKeywords, setShowKeywords] = useState(false)
   const [showNextLevels, setShowNextLevels] = useState(false)
   const [showRelatedHobbies, setShowRelatedHobbies] = useState(false)
-  const [expandAll, setExpandAll] = useState(false)
+  const {hobby}=useSelector((state:RootState)=>state?.site.expandMenu)
+  const [expandAll, setExpandAll] = useState(hobby)
+  const dispatch=useDispatch()
 
   const { isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
@@ -69,26 +72,24 @@ const HobbyDetail: React.FC<Props> = (props) => {
     fetchAndUpdateNextLevels(`fields=display,slug&sort=level&${query}`)
   }, [data])
 
-  useEffect(() => {
-    setShowAbout(expandAll)
-    setShowKeywords(expandAll)
-    setShowNextLevels(expandAll)
-    setShowRelatedHobbies(expandAll)
-  }, [expandAll])
+  const handleExpandAll: (value: boolean) => void = (value) => {
+    setExpandAll(value);
+    dispatch(updateHobbyMenuExpandAll(value))
+  };
+
   console.log('hobbydata', data)
   return (
     <HobbyPageLayout
       activeTab="about"
       data={data}
       expandAll={expandAll}
-      setExpandAll={setExpandAll}
+      setExpandAll={handleExpandAll}
     >
-      <main>
+      <main className={expandAll?"":styles['display-none']}>
         {/* About Section */}
         <PageContentBox
           showEditButton={false}
           setDisplayData={setShowAbout}
-          expandData={expandAll}
         >
           <h4>About</h4>
           <div
@@ -105,7 +106,6 @@ const HobbyDetail: React.FC<Props> = (props) => {
           <PageContentBox
             showEditButton={false}
             setDisplayData={setShowKeywords}
-            expandData={expandAll}
           >
             <div className={styles['keyword-container']}>
               <h4 className={styles['keyword-text']}>Keyword :</h4>
@@ -130,7 +130,6 @@ const HobbyDetail: React.FC<Props> = (props) => {
           <PageContentBox
             showEditButton={false}
             setDisplayData={setShowNextLevels}
-            expandData={expandAll}
           >
             <h4>
               {data?.level === 0
@@ -172,7 +171,6 @@ const HobbyDetail: React.FC<Props> = (props) => {
           <PageContentBox
             showEditButton={false}
             setDisplayData={setShowRelatedHobbies}
-            expandData={expandAll}
           >
             <h4>Related</h4>
             <div

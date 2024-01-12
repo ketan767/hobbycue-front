@@ -14,7 +14,7 @@ type Props = {
   activeTab: ProfilePageTabs
   data: ProfilePageData
   children: React.ReactElement
-  setExpandAll?: React.Dispatch<React.SetStateAction<boolean>>
+  setExpandAll?: (value: boolean) => void
   expandAll?: boolean
 }
 
@@ -80,7 +80,7 @@ const ProfileLayout: React.FC<Props> = ({
       <div
         onClick={() => {
           if (setExpandAll !== undefined)
-            setExpandAll((prevValue: boolean) => !prevValue)
+            setExpandAll(!expandAll)
         }}
         className={styles['expand-all']}
       >

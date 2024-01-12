@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles.module.css'
-import { Button, CircularProgress } from '@mui/material'
+import { Button, CircularProgress, MenuItem, Select } from '@mui/material'
 import {
   addUserAddress,
   getMyProfileDetail,
@@ -22,6 +22,7 @@ import CloseIcon from '@/assets/icons/CloseIcon'
 import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import Image from 'next/image'
+import { countryData } from '@/utils/countrydata'
 
 type Props = {
   onComplete?: () => void
@@ -54,6 +55,8 @@ const ProfileContactEditModal: React.FC<Props> = ({
   const inputRef = useRef<HTMLInputElement>(null)
   const websiteRef = useRef<HTMLInputElement>(null)
   const WhtphoneRef = useRef<HTMLInputElement>(null)
+  const [selectedCountryCode, setSelectedCountryCode] = useState('+91')
+  const [selectedWpCountryCode, setWpSelectedCountryCode] = useState('+91')
 
   useEffect(() => {
     inputRef?.current?.focus()
@@ -237,6 +240,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
           whatsapp_number: { value: data.phone.value, error: null },
         }
       })
+      setWpSelectedCountryCode(selectedCountryCode)
     }
   }, [tick])
 
@@ -270,6 +274,13 @@ const ProfileContactEditModal: React.FC<Props> = ({
     ) {
       setIsError(true)
     }
+  }
+
+  const handlePrefixChange = (value: string) => {
+    setSelectedCountryCode(value)
+  }
+  const handleWpPrefixChange = (value: string) => {
+    setWpSelectedCountryCode(value)
   }
 
   useEffect(() => {
@@ -360,15 +371,31 @@ const ProfileContactEditModal: React.FC<Props> = ({
                 }`}
               >
                 <label>Phone Number</label>
-                <input
-                  type="text"
-                  placeholder={`Enter Phone Number`}
-                  value={data.phone.value}
-                  name="phone"
-                  autoComplete="phone"
-                  onChange={handleInputChange}
-                  ref={phoneRef}
-                />
+                <div className={styles['phone-prefix-input']}>
+                  <Select
+                    value={selectedCountryCode}
+                    className={styles['country-select']}
+                    onChange={(event) =>
+                      handlePrefixChange(event.target.value as string)
+                    }
+                  >
+                    {countryData.map((country, idx) => (
+                      <MenuItem key={idx} value={country.phonePrefix}>
+                        {country.phonePrefix}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  <input
+                    type="text"
+                    placeholder={`Enter Phone Number`}
+                    value={data.phone.value}
+                    name="phone"
+                    autoComplete="phone"
+                    onChange={handleInputChange}
+                    ref={phoneRef}
+                    className={styles['phone-input']}
+                  />
+                </div>
                 <p className={styles['helper-text']}>{data.phone.error}</p>
               </div>
 
@@ -390,15 +417,31 @@ const ProfileContactEditModal: React.FC<Props> = ({
                     </div>
                   </CustomTooltip>
                 </label>
-                <input
-                  type="text"
-                  placeholder={`Enter WhatsApp Number`}
-                  value={data.whatsapp_number.value}
-                  autoComplete="phone"
-                  name="whatsapp_number"
-                  onChange={handleInputChange}
-                  ref={WhtphoneRef}
-                />
+                <div className={styles['phone-prefix-input']}>
+                  <Select
+                    value={selectedWpCountryCode}
+                    className={styles['country-select']}
+                    onChange={(event) =>
+                      handleWpPrefixChange(event.target.value as string)
+                    }
+                  >
+                    {countryData.map((country, idx) => (
+                      <MenuItem key={idx} value={country.phonePrefix}>
+                        {country.phonePrefix}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  <input
+                    type="text"
+                    placeholder={`Enter WhatsApp Number`}
+                    value={data.whatsapp_number.value}
+                    autoComplete="phone"
+                    name="whatsapp_number"
+                    onChange={handleInputChange}
+                    ref={WhtphoneRef}
+                    className={styles['phone-input']}
+                  />
+                </div>
                 <p className={styles['helper-text']}>
                   {data.whatsapp_number.error}
                 </p>
