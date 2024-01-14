@@ -21,6 +21,7 @@ import ProfileNavigationLinks from '@/components/ProfilePage/ProfileHeader/Profi
 import ProfileAddressSide from '@/components/ProfilePage/ProfileAddressSide'
 import ProfileContactSide from '@/components/ProfilePage/ProfileContactSides'
 import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/ProfileSocialMedia'
+import { updateProfileMenuExpandAll } from '@/redux/slices/site'
 
 interface Props {
   data: ProfilePageData
@@ -29,8 +30,12 @@ interface Props {
 const ProfileListingsPage: React.FC<Props> = ({ data }) => {
   const dispatch = useDispatch()
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
-  const [expandAll, setExpandAll] = useState(true)
-
+  const { profile } = useSelector((state: RootState) => state?.site.expandMenu)
+  const [expandAll, setExpandAll] = useState(profile)
+  const handleExpandAll: (value: boolean) => void = (value) => {
+    setExpandAll(value)
+    dispatch(updateProfileMenuExpandAll(value))
+  }
   return (
     <>
       <Head>
@@ -41,7 +46,7 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
         activeTab={'pages'}
         data={data}
         expandAll={expandAll}
-        setExpandAll={setExpandAll}
+        setExpandAll={handleExpandAll}
       >
         {data.pageData && (
           <PageGridLayout column={2}>

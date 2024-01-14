@@ -293,8 +293,9 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                 >
                                   <p>
                                     <Image src={AddIcon} alt="add" />{' '}
+                                    <Link href={`/hobby/${subCat.slug}`}>
                                     {subCat.display}
-                                    <Link href={`/hobby/${subCat.slug}`}></Link>
+                                    </Link>
                                   </p>
                                   <div
                                     className={styles['vertical-line']}

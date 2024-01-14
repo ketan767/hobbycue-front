@@ -9,6 +9,7 @@ import { RootState } from '@/redux/store'
 import ListingPageLayout from '@/layouts/ListingPageLayout'
 import { getListingPages } from '@/services/listing.service'
 import {
+  updateListingMenuExpandAll,
   updateListingModalData,
   updateListingPageData,
 } from '@/redux/slices/site'
@@ -25,7 +26,8 @@ const ListingHome: React.FC<Props> = (props) => {
     location: false,
     contact: false,
   })
-  const [expandAll, setExpandAll] = useState(true)
+  const { listing } = useSelector((state: RootState) => state?.site.expandMenu)
+  const [expandAll, setExpandAll] = useState(listing)
   const { user } = useSelector((state: RootState) => state.user)
 
   console.log('data', props.data)
@@ -51,6 +53,11 @@ const ListingHome: React.FC<Props> = (props) => {
     }
   }, [user._id, props.data.pageData, router])
 
+  const handleExpandAll: (value: boolean) => void = (value) => {
+    setExpandAll(value)
+    dispatch(updateListingMenuExpandAll(value))
+  }
+
   return (
     <>
       <Head>
@@ -61,7 +68,7 @@ const ListingHome: React.FC<Props> = (props) => {
         activeTab={'home'}
         data={props.data}
         expandAll={expandAll}
-        setExpandAll={setExpandAll}
+        setExpandAll={handleExpandAll}
       >
         <ListingPageMain
           data={props.data.pageData}

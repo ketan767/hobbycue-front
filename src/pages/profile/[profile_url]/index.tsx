@@ -30,6 +30,7 @@ import PostWrapper from '@/layouts/PinnedPost/PinnedPost'
 import { updateUser } from '@/redux/slices/user'
 import { withAuth } from '@/navigation/withAuth'
 import ProfileNavigationLinks from '@/components/ProfilePage/ProfileHeader/ProfileNavigationLinks'
+import { updateProfileMenuExpandAll } from '@/redux/slices/site'
 
 interface Props {
   data: ProfilePageData
@@ -39,7 +40,8 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
   const dispatch = useDispatch()
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
 
-  const [expandAll, setExpandAll] = useState(true)
+  const { profile } = useSelector((state: RootState) => state?.site.expandMenu)
+  const [expandAll, setExpandAll] = useState(profile)
   const [pageData, setPageData] = useState(data.pageData)
   const [loadingPosts, setLoadingPosts] = useState(false)
   const [displayAbout, setDisplayAbout] = useState(false)
@@ -105,6 +107,11 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
     }
   }, [expandAll])
 
+  const handleExpandAll: (value: boolean) => void = (value) => {
+    setExpandAll(value)
+    dispatch(updateProfileMenuExpandAll(value))
+  }
+
   return (
     <>
       <Head>
@@ -115,7 +122,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
         activeTab={'home'}
         data={data}
         expandAll={expandAll}
-        setExpandAll={setExpandAll}
+        setExpandAll={handleExpandAll}
       >
         {data.pageData && (
           <PageGridLayout column={3}>
