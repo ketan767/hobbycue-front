@@ -73,6 +73,11 @@
     height: 100%;
     overflow: auto;
   }
+  .footer{
+    position: sticky;
+    bottom: 0;
+    z-index: 1001;
+  }
 }
 .modal-wrapper .header,
 .modal-wrapper .body {
