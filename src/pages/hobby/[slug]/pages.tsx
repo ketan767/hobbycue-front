@@ -18,6 +18,7 @@ import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import PostCard from '@/components/PostCard/PostCard'
 import { openModal } from '@/redux/slices/modal'
 import ListingCard from '@/components/ListingCard/ListingCard'
+import { updateHobbyMenuExpandAll } from '@/redux/slices/site'
 
 type Props = { data: { hobbyData: any } }
 
@@ -25,7 +26,8 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
   const data = props.data.hobbyData
 
   const dispatch = useDispatch()
-  const [expandAll, setExpandAll] = useState(false)
+  const { hobby } = useSelector((state: RootState) => state?.site.expandMenu)
+  const [expandAll, setExpandAll] = useState(hobby)
   const { isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
   )
@@ -48,6 +50,11 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
     getPost()
   }, [])
 
+  const handleExpandAll: (value: boolean) => void = (value) => {
+    setExpandAll(value)
+    dispatch(updateHobbyMenuExpandAll(value))
+  }
+
   return (
     <>
       {' '}
@@ -55,7 +62,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
         activeTab="pages"
         data={data}
         expandAll={expandAll}
-        setExpandAll={setExpandAll}
+        setExpandAll={handleExpandAll}
       >
         <main className={`${styles['display-desktop']}`}>
           {/* <section className={styles['pages-container']}>

@@ -9,6 +9,7 @@ import { RootState } from '@/redux/store'
 import ListingPageLayout from '@/layouts/ListingPageLayout'
 import { getListingPages } from '@/services/listing.service'
 import {
+  updateListingMenuExpandAll,
   updateListingModalData,
   updateListingPageData,
 } from '@/redux/slices/site'
@@ -21,7 +22,9 @@ type Props = { data: ListingPageData }
 
 const ListingHome: React.FC<Props> = (props) => {
   const dispatch = useDispatch()
-  const [expandAll, setExpandAll] = useState(true)
+  const { listing } = useSelector((state: RootState) => state?.site.expandMenu)
+  const [expandAll, setExpandAll] = useState(listing)
+
   // const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
   // const { listingPageData } = useSelector((state: RootState) => state.site)
   // console.log('posts data', props.data)
@@ -29,6 +32,11 @@ const ListingHome: React.FC<Props> = (props) => {
     dispatch(updateListingPageData(props.data.pageData))
     dispatch(updateListingModalData(props.data.pageData))
   }, [])
+
+  const handleExpandAll: (value: boolean) => void = (value) => {
+    setExpandAll(value)
+    dispatch(updateListingMenuExpandAll(value))
+  }
 
   return (
     <>
@@ -40,7 +48,7 @@ const ListingHome: React.FC<Props> = (props) => {
         activeTab={'posts'}
         data={props.data}
         expandAll={expandAll}
-        setExpandAll={setExpandAll}
+        setExpandAll={handleExpandAll}
       >
         <ListingPageMain
           data={props.data.pageData}

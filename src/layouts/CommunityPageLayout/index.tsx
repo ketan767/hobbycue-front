@@ -81,7 +81,7 @@ const CommunityLayout: React.FC<Props> = ({
   const getPost = async () => {
     const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
     activeProfile?.data?._hobbies.forEach((item: any) => {
-      params.append('_hobby', item.hobby._id)
+      params.append('_hobby', item.hobby?._id)
     })
     if (!activeProfile?.data?._hobbies) return
 
@@ -444,9 +444,9 @@ const CommunityLayout: React.FC<Props> = ({
                     return (
                       <li
                         key={hobby._id}
-                        onClick={() => handleHobbyClick(hobby.hobby._id)}
+                        onClick={() => handleHobbyClick(hobby.hobby?._id)}
                         className={
-                          selectedHobby === hobby.hobby._id
+                          selectedHobby === hobby.hobby?._id
                             ? styles.selectedItem
                             : ''
                         }
@@ -683,8 +683,8 @@ const CommunityLayout: React.FC<Props> = ({
                       <MenuItem value="">All Hobbies</MenuItem>
                       {activeProfile.data?._hobbies?.map(
                         (item: any, idx: any) => (
-                          <MenuItem key={idx} value={item.hobby._id}>
-                            {item.hobby.display}
+                          <MenuItem key={idx} value={item.hobby?._id}>
+                            {item.hobby?.display}
                           </MenuItem>
                         ),
                       )}

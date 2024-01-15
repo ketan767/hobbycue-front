@@ -183,7 +183,7 @@
 .modal-wrapper .footer {
   position: sticky;
   bottom: 0; 
-  z-index: 10; 
+  z-index: 1001; 
 }
 
 .modal-wrapper {

@@ -42,7 +42,7 @@ interface Props {
     ContactInfoErr?: boolean
     LocationErr?: boolean
   }>
-  setExpandAll?: React.Dispatch<React.SetStateAction<boolean>>
+  setExpandAll?: (value: boolean) => void
   expandAll?: boolean
 }
 
@@ -246,7 +246,7 @@ const ListingPageLayout: React.FC<Props> = ({
         <div
           onClick={() => {
             if (setExpandAll !== undefined)
-              setExpandAll((prevValue: boolean) => !prevValue)
+              setExpandAll(!expandAll)
           }}
           className={styles['expand-all']}
         >
