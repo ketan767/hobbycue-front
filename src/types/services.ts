@@ -22,7 +22,7 @@ type UpdateProfilePayload = {
   profile_url?: string
   gender?: 'male' | 'female' | null
   year_of_birth?: string
-  phone?: string
+  phone?: {number: string, prefix: string}
   website?: string
   about?: string
 
