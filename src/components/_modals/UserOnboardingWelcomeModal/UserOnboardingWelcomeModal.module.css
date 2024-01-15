@@ -161,7 +161,7 @@
 
 .welcome-wrapper {
   position: absolute;
-  top: 50vh;
+  top: 55vh;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #ffffff;
@@ -225,7 +225,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 36px 24px 20rem;
+  padding: 60px 24px 30rem;
   border-radius: 24px 24px 0 0;
   gap: 24px;
 }
