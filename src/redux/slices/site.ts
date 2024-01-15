@@ -17,9 +17,15 @@ type ListingModalData = {
   tagline?: string
   description?: string
   public_email?: string
-  phone?: string
+  phone?: {
+    number?: any
+    prefix?: any
+  };
   website?: string
-  whatsapp_number?: string
+  whatsapp_number?: {
+    number?: any
+    prefix?: any
+  };
   _address?: any
   _hobbies?: any
   work_hours?: any

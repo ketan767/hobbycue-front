@@ -43,9 +43,17 @@ type Props = {
 }
 type ListingContactData = {
   public_email: InputData<string>
-  phone: InputData<string>
+  phone: {
+    number: string
+    prefix: string
+    error?: string | null
+  }
   website: InputData<string>
-  whatsapp_number: InputData<string>
+  whatsapp_number: {
+    number: string
+    prefix: string
+    error?: string | null
+  }
   page_admin: InputData<string>
 }
 
@@ -69,10 +77,10 @@ const ListingContactEditModal: React.FC<Props> = ({
   const [tick, setTick] = useState(false)
   const [isError, setIsError] = useState(false)
   const [data, setData] = useState<ListingContactData>({
-    phone: { value: '', error: null },
+    phone: { number: '', prefix: '', error: null },
     public_email: { value: '', error: null },
     website: { value: '', error: null },
-    whatsapp_number: { value: '', error: null },
+    whatsapp_number: { number: '', prefix: '', error: null },
     page_admin: { value: '', error: null },
   })
   const inputRef = useRef<HTMLInputElement>(null)
@@ -81,10 +89,10 @@ const ListingContactEditModal: React.FC<Props> = ({
   const emailRef = useRef<HTMLInputElement>(null)
   const websiteRef = useRef<HTMLInputElement>(null)
   const [initialData, setInitialData] = useState<ListingContactData>({
-    phone: { value: '', error: null },
+    phone: { number: '', prefix: '', error: null },
     public_email: { value: '', error: null },
     website: { value: '', error: null },
-    whatsapp_number: { value: '', error: null },
+    whatsapp_number: { number: '', prefix: '', error: null },
     page_admin: { value: '', error: null },
   })
   const [selectedCountryCode, setSelectedCountryCode] = useState('+91')
@@ -99,11 +107,17 @@ const ListingContactEditModal: React.FC<Props> = ({
           ...prev.public_email,
           value: listingModalData.public_email as string,
         },
-        phone: { ...prev.phone, value: listingModalData.phone as string },
+        phone: {
+          ...prev.phone,
+          number: listingModalData.phone?.number as string,
+          prefix: listingModalData.phone?.prefix as string,
+        },
         whatsapp_number: {
           ...prev.whatsapp_number,
-          value: listingModalData.whatsapp_number as string,
+          number: listingModalData.whatsapp_number?.number as string,
+          prefix: listingModalData.whatsapp_number?.prefix as string,
         },
+
         website: { ...prev.website, value: listingModalData.website as string },
         page_admin: {
           ...prev.page_admin,
@@ -117,16 +131,31 @@ const ListingContactEditModal: React.FC<Props> = ({
     inputRef?.current?.focus()
   }, [])
   const handleInputChange = (event: any) => {
-    setData((prev) => {
-      return {
+    const { name, value } = event.target
+
+    // Check if the input is for phone or whatsapp number
+    if (name === 'phone' || name === 'whatsapp_number') {
+      setData((prev) => ({
         ...prev,
-        [event.target.name]: { value: event.target.value, error: null },
-      }
-    })
+        [name]: {
+          ...prev[name as keyof ListingContactData],
+          number: value || '',
+          error: null,
+        },
+      }))
+    } else {
+      // For other input fields
+      setData((prev) => ({
+        ...prev,
+        [name]: { value, error: null },
+      }))
+    }
+
     const currentData = { ...data }
     const hasChanges =
       JSON.stringify(currentData) !== JSON.stringify(initialData)
     setIsChanged(hasChanges)
+
     if (onStatusChange) {
       onStatusChange(hasChanges)
     }
@@ -137,19 +166,19 @@ const ListingContactEditModal: React.FC<Props> = ({
     const { phone, public_email, website, whatsapp_number } = data
 
     if (
-      !phone.value &&
+      !phone.number &&
       !public_email.value &&
       !website.value &&
-      !whatsapp_number.value
+      !whatsapp_number.number
     ) {
       onBackBtnClick && onBackBtnClick()
       return
     } else {
       const jsonData = {
-        phone: data.phone.value,
+        phone: data.phone.number,
         public_email: data.public_email.value,
         website: data.website.value,
-        whatsapp_number: data.whatsapp_number.value,
+        whatsapp_number: data.whatsapp_number.number,
       }
 
       const { err, res } = await updateListing(listingModalData._id, jsonData)
@@ -171,7 +200,7 @@ const ListingContactEditModal: React.FC<Props> = ({
 
   const handleSubmit = async () => {
     console.log(data.website)
-    if (!data.phone.value && !data.public_email.value) {
+    if (!data.phone.number && !data.public_email.value) {
       emailRef.current?.focus()
       return setData((prev) => {
         return {
@@ -187,10 +216,10 @@ const ListingContactEditModal: React.FC<Props> = ({
         }
       })
     }
-    if (data.phone.value) {
+    if (data.phone.number) {
       if (
-        !containOnlyNumbers(data.phone.value.toString().trim()) ||
-        data.phone.value.toString().trim().length !== 10
+        !containOnlyNumbers(data.phone.number.toString().trim()) ||
+        data.phone.number.toString().trim().length !== 10
       ) {
         phoneRef.current?.focus()
         return setData((prev) => {
@@ -201,10 +230,10 @@ const ListingContactEditModal: React.FC<Props> = ({
         })
       }
     }
-    if (data.whatsapp_number.value) {
+    if (data.whatsapp_number.number) {
       if (
-        !containOnlyNumbers(data.whatsapp_number.value.toString().trim()) ||
-        data.whatsapp_number.value.toString().trim().length !== 10
+        !containOnlyNumbers(data.whatsapp_number.number.toString().trim()) ||
+        data.whatsapp_number.number.toString().trim().length !== 10
       ) {
         WhtphoneRef.current?.focus()
         return setData((prev) => {
@@ -248,10 +277,16 @@ const ListingContactEditModal: React.FC<Props> = ({
       }
     }
     const jsonData = {
-      phone: data.phone.value,
+      phone: {
+        number: data.phone.number,
+        prefix: selectedCountryCode,
+      },
       public_email: data.public_email.value,
       website: data.website.value,
-      whatsapp_number: data.whatsapp_number.value,
+      whatsapp_number: {
+        number: data.whatsapp_number.number,
+        prefix: selectedWpCountryCode,
+      },
     }
     console.log('jsonData', jsonData)
 
@@ -277,10 +312,15 @@ const ListingContactEditModal: React.FC<Props> = ({
           ...prev.public_email,
           value: listingModalData.public_email as string,
         },
-        phone: { ...prev.phone, value: listingModalData.phone as string },
+        phone: {
+          ...prev.phone,
+          number: listingModalData.phone?.number as string,
+          prefix: listingModalData.phone?.prefix as string,
+        },
         whatsapp_number: {
           ...prev.whatsapp_number,
-          value: listingModalData.whatsapp_number as string,
+          number: listingModalData.whatsapp_number?.number as string,
+          prefix: listingModalData.whatsapp_number?.prefix as string,
         },
         website: { ...prev.website, value: listingModalData.website as string },
         page_admin: {
@@ -289,27 +329,24 @@ const ListingContactEditModal: React.FC<Props> = ({
         },
       }
     })
+    setSelectedCountryCode(listingModalData.phone?.prefix as string)
+    setWpSelectedCountryCode(listingModalData.whatsapp_number?.prefix as string)
   }, [user])
-
-  useEffect(() => {
-    if (isEmpty(data.phone.value)) {
-      // setNextDisabled(true)
-    } else {
-      setNextDisabled(false)
-    }
-  }, [data])
 
   useEffect(() => {
     if (tick) {
       setData((prev) => {
         return {
           ...prev,
-          whatsapp_number: { value: data.phone.value, error: null },
+          whatsapp_number: {
+            number: data.phone.number,
+            prefix: selectedCountryCode,
+          },
         }
       })
       setWpSelectedCountryCode(selectedCountryCode)
     }
-  }, [tick])
+  }, [tick, data.phone.number, selectedCountryCode])
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
@@ -326,7 +363,7 @@ const ListingContactEditModal: React.FC<Props> = ({
     }
   }, [])
   const HandleSaveError = async () => {
-    if (!data.phone.value && !data.public_email.value) {
+    if (!data.phone.number && !data.public_email.value) {
       setIsError(true)
     }
   }
@@ -387,7 +424,11 @@ const ListingContactEditModal: React.FC<Props> = ({
                       return {
                         ...prev,
                         public_email: { value: user.email, error: null },
-                        phone: { value: user.phone, error: null },
+                        phone: {
+                          number: data.phone.number,
+                          prefix: selectedCountryCode,
+                          error: null,
+                        },
                         website: { value: user.website, error: null },
                       }
                     })
@@ -458,7 +499,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                   <input
                     type="text"
                     placeholder={`+91`}
-                    value={data.phone.value}
+                    value={data.phone.number}
                     name="phone"
                     autoComplete="phone"
                     required
@@ -504,7 +545,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                   <input
                     type="text"
                     placeholder={`+91`}
-                    value={data.whatsapp_number.value}
+                    value={data.whatsapp_number.number}
                     autoComplete="phone"
                     name="whatsapp_number"
                     onChange={handleInputChange}

@@ -466,8 +466,8 @@ const ListingPageMain: React.FC<Props> = ({
                     <span className={styles.textdefault}>{data?.name} </span>
                   </Link>
                 )}
-                {data?.phone && (
-                  <Link href={`tel:${data?.phone}`}>
+                {data?.phone.number && (
+                  <Link href={`tel:${data?.phone.number}`}>
                     <svg
                       width="24"
                       height="24"
@@ -488,13 +488,15 @@ const ListingPageMain: React.FC<Props> = ({
                       </defs>
                     </svg>
 
-                    <span className={styles.textdefault}>{data?.phone} </span>
+                    <span className={styles.textdefault}>
+                      {`${data.phone?.prefix}+' '+${data?.phone.number}`}{' '}
+                    </span>
                   </Link>
                 )}
 
                 {/* WhatsApp Number */}
-                {data?.whatsapp_number && (
-                  <Link href={`https://wa.me/${data?.whatsapp_number}`}>
+                {data?.whatsapp_number?.number && (
+                  <Link href={`https://wa.me/${data?.whatsapp_number.number}`}>
                     <Image
                       src={WhatsappIcon}
                       alt="whatsapp11"
@@ -502,7 +504,7 @@ const ListingPageMain: React.FC<Props> = ({
                       height={24}
                     />
                     <span className={styles.textdefault}>
-                      {data?.whatsapp_number}{' '}
+                      {`${data?.whatsapp_number.prefix}+' '+${data?.whatsapp_number.number}`}{' '}
                     </span>
                   </Link>
                 )}
@@ -1114,8 +1116,8 @@ const ListingPageMain: React.FC<Props> = ({
                   <span className={styles.textdefault}>{data?.name} </span>
                 </Link>
               )}
-              {data?.phone && (
-                <Link href={`tel:${data?.phone}`}>
+              {data?.phone.number && (
+                <Link href={`tel:${data?.phone.number}`}>
                   <svg
                     width="24"
                     height="24"
@@ -1136,12 +1138,14 @@ const ListingPageMain: React.FC<Props> = ({
                     </defs>
                   </svg>
 
-                  <span className={styles.textdefault}>{data?.phone} </span>
+                  <span className={styles.textdefault}>
+                    {`${data?.phone?.prefix} ${data?.phone?.number}`}
+                  </span>
                 </Link>
               )}
 
               {/* WhatsApp Number */}
-              {data?.whatsapp_number && (
+              {data?.whatsapp_number?.number && (
                 <Link href={`https://wa.me/${data?.whatsapp_number}`}>
                   <Image
                     src={WhatsappIcon}
@@ -1150,7 +1154,7 @@ const ListingPageMain: React.FC<Props> = ({
                     height={24}
                   />
                   <span className={styles.textdefault}>
-                    {data?.whatsapp_number}{' '}
+                    {`${data?.whatsapp_number?.prefix} ${data?.whatsapp_number?.number}`}
                   </span>
                 </Link>
               )}
