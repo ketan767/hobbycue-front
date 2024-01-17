@@ -45,11 +45,17 @@ const HobbyStorePage: React.FC<Props> = (props) => {
         setExpandAll={handleExpandAll}
       >
         <main className={`${styles['display-desktop']}`}>
-          <p>No data available!</p>
+          <div className={styles['no-posts-container']}>
+            <p>
+              This feature is under development. Come back soon to view this
+            </p>
+          </div>{' '}
         </main>
       </HobbyPageLayout>
       <main className={`${styles['display-mobile']}`}>
-        <p>No data available!</p>
+        <div className={styles['no-posts-container']}>
+          <p>No posts available</p>
+        </div>{' '}
       </main>
     </>
   )

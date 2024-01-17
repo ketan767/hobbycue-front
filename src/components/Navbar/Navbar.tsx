@@ -481,7 +481,9 @@ export const Navbar: React.FC<Props> = ({}) => {
                       </h4>
 
                       <ul>
-                        <li>Items</li>
+                        <Link href={'/hobby/items'}>
+                          <li>Collecting Items</li>
+                        </Link>
 
                         <Link href={'/hobby/records'}>
                           <li>Record</li>

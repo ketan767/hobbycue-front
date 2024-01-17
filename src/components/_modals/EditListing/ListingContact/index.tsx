@@ -483,19 +483,20 @@ const ListingContactEditModal: React.FC<Props> = ({
               >
                 <label>Phone Number</label>
                 <div className={styles['phone-prefix-input']}>
-                  <Select
+                  <select
                     value={selectedCountryCode}
                     className={styles['country-select']}
-                    onChange={(event) =>
+                    onChange={(event) => {
                       handlePrefixChange(event.target.value as string)
-                    }
+                    }}
                   >
                     {countryData.map((country, idx) => (
-                      <MenuItem key={idx} value={country.phonePrefix}>
+                      <option key={idx} value={country.phonePrefix}>
                         {country.phonePrefix}
-                      </MenuItem>
+                      </option>
                     ))}
-                  </Select>
+                  </select>
+
                   <input
                     type="text"
                     placeholder={`+91`}
@@ -529,7 +530,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                   </CustomTooltip>
                 </label>
                 <div className={styles['phone-prefix-input']}>
-                  <Select
+                  <select
                     value={selectedWpCountryCode}
                     className={styles['country-select']}
                     onChange={(event) =>
@@ -537,11 +538,11 @@ const ListingContactEditModal: React.FC<Props> = ({
                     }
                   >
                     {countryData.map((country, idx) => (
-                      <MenuItem key={idx} value={country.phonePrefix}>
+                      <option key={idx} value={country.phonePrefix}>
                         {country.phonePrefix}
-                      </MenuItem>
+                      </option>
                     ))}
-                  </Select>
+                  </select>
                   <input
                     type="text"
                     placeholder={`+91`}

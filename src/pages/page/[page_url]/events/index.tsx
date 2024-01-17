@@ -38,26 +38,34 @@ const ListingEvents: React.FC<Props> = (props) => {
 
   return (
     <>
-      <Head>
-        <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
-      </Head>
+      {props.data.pageData.type === 3 ? (
+        <div className={styles['no-events-wrapper']}>
+          No events for page type Program
+        </div>
+      ) : (
+        <div>
+          <Head>
+            <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
+          </Head>
 
-      <ListingPageLayout
-        activeTab={'events'}
-        data={props.data}
-        expandAll={expandAll}
-        setExpandAll={handleExpandAll}
-      >
-        <ListingPageMain
-          data={props.data.pageData}
-          expandAll={expandAll}
-          activeTab={'events'}
-        >
-          <div className={styles['display-desktop']}>
-            <ListingEventsTab />
-          </div>
-        </ListingPageMain>
-      </ListingPageLayout>
+          <ListingPageLayout
+            activeTab={'events'}
+            data={props.data}
+            expandAll={expandAll}
+            setExpandAll={handleExpandAll}
+          >
+            <ListingPageMain
+              data={props.data.pageData}
+              expandAll={expandAll}
+              activeTab={'events'}
+            >
+              <div className={styles['display-desktop']}>
+                <ListingEventsTab />
+              </div>
+            </ListingPageMain>
+          </ListingPageLayout>
+        </div>
+      )}
     </>
   )
 }

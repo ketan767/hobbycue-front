@@ -113,6 +113,11 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
             </button>
           </section>
         )}
+        {pinnedPosts.length === 0 && unpinnnedPosts.length === 0 && (
+          <div className={styles['no-posts-container']}>
+            <p>No posts available</p>
+          </div>
+        )}
         {pinnedPosts.map((post: any) => {
           return (
             <PostWrapper title="Pinned Post" key={post._id}>

@@ -85,7 +85,14 @@ const ListingCard: React.FC<Props> = ({ data }) => {
                   }
                   alt="type"
                 />
-                <p> {data.page_type} </p>
+                <p>
+                  {' '}
+                  {data.page_type.map((item: string, idx:number) => {
+                    if (idx === 0) {
+                      return item
+                    } else return ', ' + item
+                  })}{' '}
+                </p>
               </p>
             </div>
           </div>

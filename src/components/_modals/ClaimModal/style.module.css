@@ -68,11 +68,10 @@
   border: 1px solid #ebedf0;
   border-radius: 8px;
   padding: calc(var(--spacing-8) + var(--spacing-4));
-  font-weight: 600;
-  font-size: 13px;
+  font-weight: 400;
+  font-size: 14px;
   min-width: 6.25rem;
   line-height: 22px;
-  color: #6d747a;
 }
 .input-box input[type='text']:focus-within {
   outline: none;
@@ -183,11 +182,10 @@
   resize: none;
   gap: 10px;
   flex-shrink: 0;
-  font-weight: 600;
-  font-size: 13px;
+  font-weight: 400;
+  font-size: 12px;
   min-width: 6.25rem;
   line-height: 22px;
-  color: #6d747a;
 }
 
 .long-input-box:focus-within{

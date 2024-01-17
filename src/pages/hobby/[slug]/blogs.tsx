@@ -43,8 +43,13 @@ const HobbyBlogsPage: React.FC<Props> = (props) => {
         expandAll={expandAll}
         setExpandAll={handleExpandAll}
       >
-        <main className={`${styles['display-desktop']}`}>
-          <p>No blogs available!</p>
+        <main className={`${styles['display-desktop']} ${styles['dual-section-wrapper']}`}>
+          <div className={styles['no-posts-container']}>
+            <p>
+              This feature is under development. Come back soon to view this
+            </p>
+          </div>
+          <div className={styles['no-posts-container']}></div>
         </main>
       </HobbyPageLayout>
       <main className={`${styles['display-mobile']}`}>
