@@ -341,7 +341,7 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
             <div className={styles['name-container']}>
               <h1 className={styles['name']}>
                 {data?.title}
-                {data?.is_claimed ? <Image alt="claim" src={claimSvg} /> : ''}
+                {data?.is_verified ? <Image alt="claim" src={claimSvg} /> : ''}
                 {listingLayoutMode === 'edit' && (
                   <Image
                     className={styles['edit-icon']}
@@ -390,9 +390,7 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
               ) : (
                 <></>
               )}
-              <div className={styles['display-desktop']}>
-              {button}
-              </div>
+              <div className={styles['display-desktop']}>{button}</div>
             </div>
           </div>
         </section>
@@ -466,74 +464,74 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
         </div>
       </header>
       <div className={styles['actions-container-mobile']}>
-          {listingLayoutMode === 'edit' && (
-            <FilledButton
-              className={
-                data.is_published ? styles.unpublishBtn : styles.publishBtn
-              }
-              onClick={handlePublish}
-            >
-              {data.is_published ? 'Unpublish' : 'Publish'}
-            </FilledButton>
-          )}
-          {/* Action Buttons */}
-          <div className={styles['action-btn-wrapper']}>
-            {/* Send Email Button  */}
-            <Link href={`mailto:${data.public_email || data.email}`}>
-              <CustomTooltip title="Repost">
-                <div
-                  onClick={(e) => console.log(e)}
-                  className={styles['action-btn']}
-                >
-                  <RepostIcon />
-                </div>
-              </CustomTooltip>
-            </Link>
-
-            {/* Bookmark Button */}
-            <CustomTooltip title="Bookmark">
+        {listingLayoutMode === 'edit' && (
+          <FilledButton
+            className={
+              data.is_published ? styles.unpublishBtn : styles.publishBtn
+            }
+            onClick={handlePublish}
+          >
+            {data.is_published ? 'Unpublish' : 'Publish'}
+          </FilledButton>
+        )}
+        {/* Action Buttons */}
+        <div className={styles['action-btn-wrapper']}>
+          {/* Send Email Button  */}
+          <Link href={`mailto:${data.public_email || data.email}`}>
+            <CustomTooltip title="Repost">
               <div
                 onClick={(e) => console.log(e)}
                 className={styles['action-btn']}
               >
-                <BookmarkBorderRoundedIcon color="primary" />
+                <RepostIcon />
               </div>
             </CustomTooltip>
+          </Link>
 
-            {/* Share Button */}
-            <CustomTooltip title="Share">
+          {/* Bookmark Button */}
+          <CustomTooltip title="Bookmark">
+            <div
+              onClick={(e) => console.log(e)}
+              className={styles['action-btn']}
+            >
+              <BookmarkBorderRoundedIcon color="primary" />
+            </div>
+          </CustomTooltip>
+
+          {/* Share Button */}
+          <CustomTooltip title="Share">
+            <div
+              onClick={(e) => handleShare()}
+              className={styles['action-btn']}
+            >
+              <ShareIcon />
+            </div>
+          </CustomTooltip>
+
+          {/* More Options Button */}
+          <div className={styles['action-btn-dropdown-wrapper']}>
+            <CustomTooltip title="Click to view options">
               <div
-                onClick={(e) => handleShare()}
+                onClick={(e) => handleDropdown()}
                 className={styles['action-btn']}
               >
-                <ShareIcon />
+                <MoreHorizRoundedIcon color="primary" />
               </div>
             </CustomTooltip>
-
-            {/* More Options Button */}
-            <div className={styles['action-btn-dropdown-wrapper']}>
-              <CustomTooltip title="Click to view options">
-                <div
-                  onClick={(e) => handleDropdown()}
-                  className={styles['action-btn']}
-                >
-                  <MoreHorizRoundedIcon color="primary" />
-                </div>
-              </CustomTooltip>
-              {listingLayoutMode === 'edit'
-                ? open && (
-                    <Dropdown userType={'edit'} handleClose={handleDropdown} />
-                  )
-                : open && (
-                    <Dropdown
-                      userType={'anonymous'}
-                      handleClose={handleDropdown}
-                    />
-                  )}
-            </div>
-            {button}
+            {listingLayoutMode === 'edit'
+              ? open && (
+                  <Dropdown userType={'edit'} handleClose={handleDropdown} />
+                )
+              : open && (
+                  <Dropdown
+                    userType={'anonymous'}
+                    handleClose={handleDropdown}
+                  />
+                )}
           </div>
+          {button}
         </div>
+      </div>
     </>
   )
 }

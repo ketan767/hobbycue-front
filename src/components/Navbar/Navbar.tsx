@@ -183,7 +183,7 @@ export const Navbar: React.FC<Props> = ({}) => {
       }
 
       const typeResultOne = combinedResults.filter(
-        (page: any) => page.type === 1,
+        (page: any) => page.type === 1 && page.is_published === true,
       )
 
       dispatch(
@@ -194,7 +194,7 @@ export const Navbar: React.FC<Props> = ({}) => {
         }),
       )
       const typeResultTwo = combinedResults.filter(
-        (page: any) => page.type === 2,
+        (page: any) => page.type === 2 && page.is_published === true,
       )
 
       dispatch(
@@ -205,7 +205,7 @@ export const Navbar: React.FC<Props> = ({}) => {
         }),
       )
       const typeResultThree = combinedResults.filter(
-        (page: any) => page.type === 3,
+        (page: any) => page.type === 3 && page.is_published === true,
       )
 
       dispatch(
