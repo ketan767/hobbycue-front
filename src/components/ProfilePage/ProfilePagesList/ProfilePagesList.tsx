@@ -10,7 +10,7 @@ import { listingTypes } from '@/constants/constant'
 
 type Props = {
   data: ProfilePageData['pageData']
-  expandData?:boolean
+  expandData?: boolean
 }
 
 const ProfilePagesList = ({ data, expandData }: Props) => {
@@ -37,13 +37,13 @@ const ProfilePagesList = ({ data, expandData }: Props) => {
   }, [expandData])
 
   return (
-    <PageContentBox
-    setDisplayData={setDisplayData}
-    expandData={expandData}
-    >
+    <PageContentBox setDisplayData={setDisplayData} expandData={expandData}>
       <h4 className={styles['heading']}>Pages</h4>
-      <ul className={`${styles['pages-list']} ${displayData&&styles['display-mobile-flex']}`}>
-
+      <ul
+        className={`${styles['pages-list']} ${
+          displayData && styles['display-mobile-flex']
+        }`}
+      >
         {data.listingsData?.map((item: any) => {
           if (typeof item === 'string') return
           return (

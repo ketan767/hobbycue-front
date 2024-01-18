@@ -50,8 +50,8 @@ const ProfileContactSide = ({ data, expandData }: Props) => {
           }`}
         >
           {/* Phone */}
-          {data.phone && (
-            <Link href={`tel:${data?.name}`}>
+          {data.phone.number && (
+            <Link href={`tel:${data?.phone.number}`}>
               <li className={styles['list-item']}>
                 <svg
                   width="24"
@@ -79,9 +79,9 @@ const ProfileContactSide = ({ data, expandData }: Props) => {
           )}
 
           {/* WhatsApp Number */}
-          {data.whatsapp_number && (
+          {data.whatsapp_number.number && (
             <a
-              href={`https://wa.me/${data?.whatsapp_number}`}
+              href={`https://wa.me/${data?.whatsapp_number.number}`}
               target="_blank"
               rel="noopener noreferrer"
             >
