@@ -402,6 +402,11 @@
   background: #ddd;
 }
 
+.dropdown-option-focus{
+  background: #f7f5f9;
+  color: #8064a2 !important;
+}
+
 @media screen and (max-width: 1100px) {
   .modal-wrapper {
     width: auto;

@@ -67,6 +67,11 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
         setExpandAll={handleExpandAll}
       >
         <main className={`${styles['display-desktop']}`}>
+          <div className={styles['no-posts-container']}>
+            <p>
+              This feature is under development. Come back soon to view this
+            </p>
+          </div>
           {/* <div className={styles['start-post-btn']}>
           <button
             onClick={() => {

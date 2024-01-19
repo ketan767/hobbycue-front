@@ -1,3 +1,7 @@
+.all-hobby-wrapper{
+  width: 100%;
+  background-color: #f8f9fa;
+}
 .page-container {
   display: grid;
   grid-template-columns: 230px auto;

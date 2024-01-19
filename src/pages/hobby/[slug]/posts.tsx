@@ -86,7 +86,11 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
             {!isLoggedIn || loadingPosts ? (
               <PostCardSkeletonLoading />
             ) : (
-              posts.length === 0 && 'No Posts'
+              posts.length === 0 && (
+                <div className={styles['no-posts-container']}>
+                  <p>No posts available</p>
+                </div>
+              )
             )}
             {posts.map((post: any) => {
               return <PostCard key={post._id} postData={post} />

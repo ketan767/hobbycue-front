@@ -91,4 +91,34 @@ export const listingData = [
     relation: 'See Also',
     side: 'right',
   },
+  {
+    _id: 16,
+    type: 3,
+    relation: 'Venue',
+    side: 'right',
+  },
+  {
+    _id: 17,
+    type: 3,
+    relation: 'Host',
+    side: 'right',
+  },
+  {
+    _id: 18,
+    type: 3,
+    relation: 'Artists',
+    side: 'left',
+  },
+  {
+    _id: 19,
+    type: 3,
+    relation: 'Owner',
+    side: 'left',
+  },
+  {
+    _id: 19,
+    type: 3,
+    relation: 'See also',
+    side: 'left',
+  },
 ]

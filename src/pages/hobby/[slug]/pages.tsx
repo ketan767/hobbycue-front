@@ -75,6 +75,14 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
             return <ListingCard key={post._id} data={post} />
           })}
         </section> */}
+          <div className={styles['dual-section-wrapper']}>
+            <div className={styles['no-posts-container']}>
+              <p>
+                This feature is under development. Come back soon to view this
+              </p>
+            </div>
+            <div className={styles['no-posts-container']}></div>
+          </div>
         </main>
       </HobbyPageLayout>
       <main className={`${styles['display-mobile']}`}></main>

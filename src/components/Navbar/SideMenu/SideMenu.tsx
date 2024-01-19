@@ -358,7 +358,9 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                 </h4>
 
                 <ul>
-                  <li>Items</li>
+                  <Link href={'/hobby/items'}>
+                  <li>Collecting items</li>
+                  </Link>
 
                   <Link href={'/hobby/record-keeping'}>
                     <li>Record</li>

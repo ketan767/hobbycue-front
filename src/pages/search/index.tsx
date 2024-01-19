@@ -206,13 +206,15 @@ const MainContent: React.FC<SearchResultsProps> = ({
 
   return (
     <main className={styles.searchResults}>
-      {noResultsFound ? 
-      <div className={styles['no-results-wrapper']}>
-        <p>
-        Use the Search box at the top to look up pages on your hobby or an existing user.  If you don&apos;t find any pages, you may Add Listing Page from the menu at top right corner
-        </p>
-      </div>
-      : (
+      {noResultsFound ? (
+        <div className={styles['no-results-wrapper']}>
+          <p>
+            Use the Search box at the top to look up pages on your hobby or an
+            existing user. If you don&apos;t find any pages, you may Add Listing
+            Page from the menu at top right corner
+          </p>
+        </div>
+      ) : (
         <div>
           {/* <section className={styles.userSection}>
         <div className={styles.peopleItemsContainer}>
@@ -347,8 +349,15 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           {page?.tagline || '\u00a0'}
                         </div>
                         <div className={styles.userLocation}>
-                          {page.page_type + ' | ' + page._address?.city ||
-                            '\u00a0'}
+                          {page.page_type.map((item, idx) => {
+                            if (idx === 0) {
+                              return item
+                            } else {
+                              return ' ' + item
+                            }
+                          }) +
+                            ' | ' +
+                            page._address?.city || '\u00a0'}
                         </div>
                       </div>
                     </div>

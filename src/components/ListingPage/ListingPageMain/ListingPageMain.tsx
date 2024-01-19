@@ -489,7 +489,7 @@ const ListingPageMain: React.FC<Props> = ({
                     </svg>
 
                     <span className={styles.textdefault}>
-                      {`${data.phone?.prefix}+' '+${data?.phone.number}`}{' '}
+                      {`${data.phone?.prefix} ${data?.phone.number}`}{' '}
                     </span>
                   </Link>
                 )}

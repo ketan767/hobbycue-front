@@ -221,11 +221,11 @@ const RelatedListingEditModal: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    const matchedListings = allListingPages.filter((item: any) =>
+    const matchedListings = allListingPages?.filter((item: any) =>
       relatedListingsLeft?.includes(item._id),
     )
 
-    const matchedTitles = matchedListings.map((listing: any) => ({
+    const matchedTitles = matchedListings?.map((listing: any) => ({
       id: listing._id,
       title: listing.title,
     }))

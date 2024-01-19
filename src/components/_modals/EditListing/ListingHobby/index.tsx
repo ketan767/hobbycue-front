@@ -563,7 +563,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
             className="modal-footer-btn submit"
             onClick={handleSubmit}
           >
-            {onComplete ? 'Next' : 'Save'}
+            {onComplete ? 'Finish' : 'Save'}
           </button>
           {/* SVG Button for Mobile */}
           {onComplete ? (
