@@ -91,4 +91,16 @@ export const listingData = [
     relation: 'See Also',
     side: 'right',
   },
+  {
+    _id: 16,
+    type: 3,
+    relation: 'Venue',
+    side: 'right',
+  },
+  {
+    _id: 17,
+    type: 3,
+    relation: 'Host',
+    side: 'right',
+  },
 ]
