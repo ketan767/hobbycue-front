@@ -22,7 +22,7 @@ const CommunityPages: React.FC<Props> = ({}) => {
   const { allPages, pagesLoading } = useSelector(
     (state: RootState) => state.post,
   )
-  console.log('hbb', activeProfile?.data?._hobbies)
+
   const getPost = async () => {
     const params = new URLSearchParams(`populate=_hobbies&is_published=true`)
 
