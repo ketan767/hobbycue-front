@@ -163,7 +163,11 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
               {loadingPosts ? (
                 <PostCardSkeletonLoading />
               ) : (
-                posts.length === 0 && 'No Posts'
+                posts.length === 0 && (
+                  <div className={styles['no-posts-container']}>
+                    <p>No posts available</p>
+                  </div>
+                )
               )}
 
               {pinnedPosts.map((post: any) => {
@@ -251,7 +255,11 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
             {loadingPosts ? (
               <PostCardSkeletonLoading />
             ) : (
-              posts.length === 0 && 'No Posts'
+              posts.length === 0 && (
+                <div className={styles['no-posts-container']}>
+                  <p>No posts available</p>
+                </div>
+              )
             )}
 
             {pinnedPosts.map((post: any) => {

@@ -132,7 +132,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
   }, [filterData.category])
 
   return (
-    <>
+    <div className={styles['all-hobby-wrapper']}>
       <div className={`site-container ${styles['page-container']}`}>
         <aside className={styles['hobby-filter']}>
           {/* Filters */}
@@ -325,7 +325,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
           )}
         </main>
       </div>
-    </>
+    </div>
   )
 }
 
