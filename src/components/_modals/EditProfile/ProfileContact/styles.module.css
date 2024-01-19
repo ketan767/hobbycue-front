@@ -27,8 +27,8 @@
 }
 
 .country-select {
-  border-right: 10px solid rgba(235, 237, 240, 1) !important;
-  padding: 0 0 0 10px;
+  border-right: 5px solid rgba(235, 237, 240, 1) !important;
+  padding: 0 0 0 5px;
   border: none;
   border-top-left-radius: 7px;
   border-bottom-left-radius: 7px;

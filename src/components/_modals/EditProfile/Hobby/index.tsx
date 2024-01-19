@@ -527,7 +527,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     }
   }, [focusedHobbyIndex])
 
-
   useEffect(() => {
     // Update the scroll position of the dropdown when the selected option changes
     const dropdown = genreDropdownRef.current

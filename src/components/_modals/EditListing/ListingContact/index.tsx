@@ -499,7 +499,7 @@ const ListingContactEditModal: React.FC<Props> = ({
 
                   <input
                     type="text"
-                    placeholder={`+91`}
+                    placeholder={`Phone number`}
                     value={data.phone.number}
                     name="phone"
                     autoComplete="phone"
@@ -545,7 +545,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                   </select>
                   <input
                     type="text"
-                    placeholder={`+91`}
+                    placeholder={`Phone number`}
                     value={data.whatsapp_number.number}
                     autoComplete="phone"
                     name="whatsapp_number"
