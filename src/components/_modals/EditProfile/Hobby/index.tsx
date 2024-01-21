@@ -356,15 +356,24 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         )
 
         if (!hobbyInputValue.trim()) {
-          window.location.reload()
-          handleClose()
-          return
+          if (userHobbies.length > 0) {
+            window.location.reload()
+            handleClose()
+            return
+          } else {
+            setError('Add atleast one hobby!')
+            setHobbyError(true)
+            searchref.current?.focus()
+            setHobbyInputValue('')
+            return
+          }
         }
 
         if (matchedHobby) {
           selectedHobby = matchedHobby
         } else {
           setError('Typed hobby not found!')
+          searchref.current?.focus()
           setHobbyError(true)
           return
         }
@@ -401,7 +410,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
       await addUserHobby(jsonData, async (err, res) => {
         console.log('json', jsonData)
-        console.log('Button clicked!')
         if (err) {
           setAddHobbyBtnLoading(false)
           return console.log(err)
@@ -413,9 +421,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
         if (response?.data.success) {
           dispatch(updateUser(response?.data.data.user))
-          setHobbyInputValue('')
-          setGenreInputValue('')
-          setData({ level: 1, hobby: null, genre: null })
+          handleClose()
         }
       })
     }
