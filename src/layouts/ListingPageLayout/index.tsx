@@ -287,7 +287,7 @@ const ListingPageLayout: React.FC<Props> = ({
         <nav className={styles['nav-mobile']}>
           <div className={styles['navigation-tabs']}>
             {tabs.map((tab) => {
-               if (tab === 'events') {
+              if (tab === 'events') {
                 if (data.pageData.type !== 3)
                   return (
                     <a
@@ -389,7 +389,7 @@ const ListingPageLayout: React.FC<Props> = ({
         )}
         {activeTab === 'events' && (
           <div className={styles['display-mobile']}>
-            <ListingEventsTab />
+            <ListingEventsTab data={data.pageData} />
           </div>
         )}
       </div>

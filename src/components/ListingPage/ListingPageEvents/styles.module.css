@@ -18,3 +18,10 @@
   font-weight: 500;
   color: #6d747a;
 }
+.card-container {
+  display: flex;
+  row-gap: 12px;
+  column-gap: 25px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}

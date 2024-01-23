@@ -122,7 +122,7 @@ const ListingPageMain: React.FC<Props> = ({
   const FetchAdmin = async () => {
     let adminId = data.admin
     const admin: any = await getAllUserDetail(`_id=${adminId}`)
-    setPageAdmin(admin.res.data.data.users[0])
+    setPageAdmin(admin.res?.data.data.users[0])
   }
   useEffect(() => {
     getListingTags()
@@ -899,9 +899,7 @@ const ListingPageMain: React.FC<Props> = ({
                   }`}
                 >
                   {!listingPagesRight || listingPagesRight.length === 0 ? (
-                    <span className={styles.textGray}>
-                      {'Eg: Guru related to this page'}
-                    </span>
+                    <span className={styles.textGray}></span>
                   ) : (
                     <ul className={styles['related-list']}>
                       {listingPagesRight?.map((item: any) => {
@@ -1613,87 +1611,87 @@ const ListingPageMain: React.FC<Props> = ({
                   styles['display-desktop']
                 }${showSocialMedia ? ' ' + styles['display-mobile'] : ''}`}
               >
-                {data?.social_media_urls && (
+                {data && (
                   <>
                     {renderSocialLink(
-                      data.social_media_urls.facebook_url,
+                      data.social_media_urls?.facebook_url,
                       FacebookIcon,
                       'Facebook',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.twitter_url,
+                      data.social_media_urls?.twitter_url,
                       TwitterIcon,
                       'Twitter',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.instagram_url,
+                      data.social_media_urls?.instagram_url,
                       InstagramIcon,
                       'Instagram',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.behance_url,
+                      data.social_media_urls?.behance_url,
                       BehanceIcon,
                       'Behance',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.bgg_url,
+                      data.social_media_urls?.bgg_url,
                       BGGIcon,
                       'BoardGameGeek',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.chess_url,
+                      data.social_media_urls?.chess_url,
                       ChessIcon,
                       'Chess',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.deviantarts_url,
+                      data.social_media_urls?.deviantarts_url,
                       DeviantArtIcon,
                       'DeviantArt',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.goodreads_url,
+                      data.social_media_urls?.goodreads_url,
                       GoodreadsIcon,
                       'Goodreads',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.pinterest_url,
+                      data.social_media_urls?.pinterest_url,
                       PinterestIcon,
                       'Pinterest',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.smule_url,
+                      data.social_media_urls?.smule_url,
                       SmuleIcon,
                       'Smule',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.soundcloud_url,
+                      data.social_media_urls?.soundcloud_url,
                       SoundCloudIcon,
                       'SoundCloud',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.strava_url,
+                      data.social_media_urls?.strava_url,
                       StravaIcon,
                       'Strava',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.tripadvisor_url,
+                      data.social_media_urls?.tripadvisor_url,
                       TripAdvisorIcon,
                       'TripAdvisor',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.ultimate_guitar_url,
+                      data.social_media_urls?.ultimate_guitar_url,
                       UltimateGuitarIcon,
                       'Ultimate Guitar',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.youtube_url,
+                      data.social_media_urls?.youtube_url,
                       YouTubeIcon,
                       'YouTube',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.Others_url,
+                      data.social_media_urls?.Others_url,
                       OthersIcon,
-                      extractDomainName(data.social_media_urls.Others_url),
+                      extractDomainName(data.social_media_urls?.Others_url),
                     )}
                   </>
                 )}
