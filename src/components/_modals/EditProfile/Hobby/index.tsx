@@ -343,7 +343,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     setHobbyError(false)
     setError(null)
     setShowGenreDowpdown(false)
-
+    let isOnboarded = false
     if (hobbyInputValue) {
       let selectedHobby = null
       let selectedGenre = null
@@ -356,15 +356,24 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         )
 
         if (!hobbyInputValue.trim()) {
-          window.location.reload()
-          handleClose()
-          return
+          if (userHobbies.length > 0) {
+            window.location.reload()
+            handleClose()
+            return
+          } else {
+            setError('Add atleast one hobby!')
+            setHobbyError(true)
+            searchref.current?.focus()
+            setHobbyInputValue('')
+            return
+          }
         }
 
         if (matchedHobby) {
           selectedHobby = matchedHobby
         } else {
           setError('Typed hobby not found!')
+          searchref.current?.focus()
           setHobbyError(true)
           return
         }
@@ -401,7 +410,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
       await addUserHobby(jsonData, async (err, res) => {
         console.log('json', jsonData)
-        console.log('Button clicked!')
         if (err) {
           setAddHobbyBtnLoading(false)
           return console.log(err)
@@ -412,21 +420,30 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         if (error) return console.log(error)
 
         if (response?.data.success) {
+          console.warn('hobby added sucessfully')
+          if (onComplete !== undefined){
+            isOnboarded = true;
+            onComplete()
+            return            
+          }
           dispatch(updateUser(response?.data.data.user))
-          setHobbyInputValue('')
-          setGenreInputValue('')
-          setData({ level: 1, hobby: null, genre: null })
+          handleClose()
+          window.location.reload()
+          return
         }
       })
     }
 
-    if (userHobbies.length === 0) {
+    if (userHobbies.length === 0 && !isOnboarded) {
       setError('Add atleast one hobby!')
       setHobbyError(true)
       searchref.current?.focus()
       return
     }
-    if (onComplete !== undefined) onComplete()
+    if (onComplete !== undefined){
+      onComplete()
+    }
+      
     else {
       window.location.reload()
       dispatch(closeModal())
