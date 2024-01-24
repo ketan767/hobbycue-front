@@ -25,11 +25,17 @@ const DropdownMenu: React.FC<Props> = ({
   const optionWrapperRef = useRef<HTMLDivElement>(null)
   const optionRef = useRef<HTMLDivElement>(null)
   const [showDropdown, setShowDropdown] = useState(false)
+  const [optionIndex, setOptionIndex] = useState(-1)
+  const [inputValue, setInputValue] = useState('')
+  const [displayOptions, setDisplayOptions] = useState(options)
+
   const handleShowDropdown = () => {
     setShowDropdown((prevValue) => !prevValue)
   }
-  const [optionIndex, setOptionIndex] = useState(-1)
-  useOutsideClick(dropdownRef, () => setShowDropdown(false))
+
+  useOutsideClick(dropdownRef, () => {
+    setShowDropdown(false)
+  })
 
   useEffect(() => {
     if (optionsPosition === 'top') {
@@ -62,15 +68,35 @@ const DropdownMenu: React.FC<Props> = ({
   }, [showDropdown, optionsPosition])
 
   useEffect(() => {
+    setDisplayOptions(
+      options.filter((option: string, idx: number) => {
+        if (option.toLowerCase().includes(inputValue.toLowerCase())) {
+          return option
+        }
+      }),
+    )
+  }, [inputValue, options])
+
+  useEffect(() => {
     const handleKeyDown = (e: React.KeyboardEvent) => {
       e.preventDefault()
-
-      console.log(e)
+      if (search) {
+        if (/^[a-zA-Z]$/.test(e.key)) {
+          setInputValue((prevValue) => prevValue + e.key)
+          return
+        }
+        if (/^\d$/.test(e.key)) {
+          setInputValue((prevValue) => prevValue + e.key)
+          return
+        }
+      }
       switch (e.key) {
         case 'ArrowDown':
-          setOptionIndex((prevValue) => {
-            return prevValue + 1
-          })
+          if (optionIndex < options.length) {
+            setOptionIndex((prevValue) => {
+              return prevValue + 1
+            })
+          }
           break
         case 'ArrowUp':
           if (optionIndex > -1) {
@@ -79,13 +105,20 @@ const DropdownMenu: React.FC<Props> = ({
             })
           }
           break
-
+        case 'Backspace':
+          if (inputValue.length > 0) {
+            setInputValue((prevValue) =>
+              prevValue.slice(0, prevValue.length - 1),
+            )
+          }
+          break
         case 'Enter':
           setOptionIndex((prevValue) => {
             return prevValue
           })
           if (optionIndex > -1 && optionIndex < options.length) {
             onOptionClick(optionRef.current)
+            setOptionIndex(-1)
             setShowDropdown(false)
           }
           break
@@ -104,7 +137,7 @@ const DropdownMenu: React.FC<Props> = ({
       optionRef.current.scrollIntoView({
         behavior: 'auto',
         block: 'nearest',
-      });
+      })
     }
     return () => {
       window.removeEventListener(
@@ -112,44 +145,54 @@ const DropdownMenu: React.FC<Props> = ({
         handleKeyDown as unknown as (e: KeyboardEvent) => void,
       )
     }
-  }, [showDropdown, optionIndex])
-
-
+  }, [showDropdown, optionIndex, inputValue])
 
   return (
     <div className={styles['dropdown-wrapper']} ref={dropdownRef}>
       <div className={styles['dropdown-select']} onClick={handleShowDropdown}>
-        <p>
-          {value ||
-            options[0].split(' ').reverse()[0].split('(')[1].split(')')[0]}
-          -
-        </p>
+        <p>{value}-</p>
         {/* <Image src={ChevronDown} alt="arrow" width={20} height={20} /> */}
       </div>
       <div
-        className={`${styles['dropdown-options-container']}${
+        className={`${styles['dropdown-options-wrapper']}${
           showDropdown ? '' : ' ' + styles['display-none']
         }`}
         ref={optionWrapperRef}
       >
-        {options.map((item: any, idx: number) => {
-          return (
-            <div
-              key={idx}
-              id={`${idx}`}
-              className={`${styles['dropdown-option']}${
-                valueIndex === idx ? ' ' + styles['selected-option'] : ''
-              }${optionIndex === idx ?' '+styles['focused-option'] : ''}`}
-              onClick={(e) => {
-                onOptionClick(e.target)
-                handleShowDropdown()
-              }}
-              ref={optionIndex === idx ? optionRef : null}
-            >
-              {item}
-            </div>
-          )
-        })}
+        {search === true && (
+          <>
+            <input type="text" placeholder="Search..." value={inputValue} />
+            <hr />
+          </>
+        )}
+        <div className={styles['dropdown-options-container']}>
+          {displayOptions.map((item: any, idx: number) => {
+            return (
+              <div
+                key={idx}
+                id={`${options.findIndex(
+                  (option: string, index: number) => item === option,
+                )}`}
+                className={`${styles['dropdown-option']}${
+                  valueIndex ===
+                  options.findIndex(
+                    (option: string, index: number) => item === option,
+                  )
+                    ? ' ' + styles['selected-option']
+                    : ''
+                }${optionIndex === idx ? ' ' + styles['focused-option'] : ''}`}
+                onClick={(e) => {
+                  setOptionIndex(-1)
+                  onOptionClick(e.target)
+                  handleShowDropdown()
+                }}
+                ref={optionIndex === idx ? optionRef : null}
+              >
+                {item}
+              </div>
+            )
+          })}
+        </div>
       </div>
     </div>
   )
