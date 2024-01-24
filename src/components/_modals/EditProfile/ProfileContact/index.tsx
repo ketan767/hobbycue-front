@@ -23,6 +23,7 @@ import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import Image from 'next/image'
 import { countryData } from '@/utils/countrydata'
+import DropdownMenu from '@/components/DropdownMenu'
 
 type Props = {
   onComplete?: () => void
@@ -296,8 +297,9 @@ const ProfileContactEditModal: React.FC<Props> = ({
         website: { ...prev.website, value: user.website as string },
       }
     })
-    setSelectedCountryCode(user.phone?.prefix)
-    setWpSelectedCountryCode(user.whatsapp_number?.prefix)
+    if (user.phone?.prefix) setSelectedCountryCode(user.phone?.prefix)
+    if (user.whatsapp_number?.prefix)
+      setWpSelectedCountryCode(user.whatsapp_number?.prefix)
   }, [user])
 
   const HandleSaveError = async () => {
@@ -309,11 +311,13 @@ const ProfileContactEditModal: React.FC<Props> = ({
     }
   }
 
-  const handlePrefixChange = (value: string) => {
-    setSelectedCountryCode(value)
+  const handleWpPrefixChange = (element: any) => {
+    const id = element?.id    
+    setWpSelectedCountryCode(countryData[id]?.phonePrefix)    
   }
-  const handleWpPrefixChange = (value: string) => {
-    setWpSelectedCountryCode(value)
+  const handlePrefixChange = (element: any) => {
+    const id = element?.id    
+    setSelectedCountryCode(countryData[id]?.phonePrefix)    
   }
 
   useEffect(() => {
@@ -405,19 +409,20 @@ const ProfileContactEditModal: React.FC<Props> = ({
               >
                 <label>Phone Number</label>
                 <div className={styles['phone-prefix-input']}>
-                  <select
+                <DropdownMenu
                     value={selectedCountryCode}
-                    className={styles['country-select']}
-                    onChange={(event) =>
-                      handlePrefixChange(event.target.value as string)
-                    }
-                  >
-                    {countryData.map((country, idx) => (
-                      <option key={idx} value={country.phonePrefix}>
-                        {country.phonePrefix}
-                      </option>
-                    ))}
-                  </select>
+                    valueIndex={countryData.findIndex(
+                      (country, idx) =>
+                        country.phonePrefix === selectedCountryCode,
+                    )}
+                    options={countryData.map(
+                      (country, idx) =>
+                        `${country.name} (${country.phonePrefix})`,
+                    )}
+                    onOptionClick={handlePrefixChange}
+                    optionsPosition="bottom"
+                    search={true}
+                  />
                   <input
                     type="text"
                     placeholder={`Enter Phone Number`}
@@ -451,19 +456,20 @@ const ProfileContactEditModal: React.FC<Props> = ({
                   </CustomTooltip>
                 </label>
                 <div className={styles['phone-prefix-input']}>
-                  <select
+                  <DropdownMenu
                     value={selectedWpCountryCode}
-                    className={styles['country-select']}
-                    onChange={(event) =>
-                      handleWpPrefixChange(event.target.value as string)
-                    }
-                  >
-                    {countryData.map((country, idx) => (
-                      <option key={idx} value={country.phonePrefix}>
-                        {country.phonePrefix}
-                      </option>
-                    ))}
-                  </select>
+                    valueIndex={countryData.findIndex(
+                      (country, idx) =>
+                        country.phonePrefix === selectedWpCountryCode,
+                    )}
+                    options={countryData.map(
+                      (country, idx) =>
+                        `${country.name} (${country.phonePrefix})`,
+                    )}
+                    onOptionClick={handleWpPrefixChange}
+                    optionsPosition="bottom"
+                    search={true}
+                  />
                   <input
                     type="text"
                     placeholder={`Enter WhatsApp Number`}
