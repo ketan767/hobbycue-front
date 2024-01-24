@@ -60,7 +60,7 @@ const ListingEvents: React.FC<Props> = (props) => {
               activeTab={'events'}
             >
               <div className={styles['display-desktop']}>
-                <ListingEventsTab />
+                <ListingEventsTab data={props.data.pageData} />
               </div>
             </ListingPageMain>
           </ListingPageLayout>

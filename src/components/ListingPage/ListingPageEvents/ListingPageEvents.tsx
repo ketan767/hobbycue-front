@@ -37,7 +37,7 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
   return (
     <>
       <main>
-        {eventData?.res?.data?.length === 0 ? (
+        {eventData?.res?.data?.result.length === 0 ? (
           <section className={styles['data-container']}>
             <div className={styles['no-data-div']}>
               <p className={styles['no-data-text']}>No events</p>
@@ -46,10 +46,22 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
           </section>
         ) : (
           <div className={styles['card-container']}>
-            {eventData?.res?.data?.map((listings: any) => {
+            {eventData?.res?.data?.result.map((listings: any) => {
               return (
-                <ListingCard key={listings.listings} data={listings.listings} />
+                <ListingCard
+                  key={listings.listings._id}
+                  data={listings.listings}
+                />
               )
+            })}
+
+            {eventData?.res?.data?.listingMap?.map((listings: any) => {
+              const listingId = listings._id
+              const title =
+                eventData?.res?.data?.listingMap?.[listingId]?.title ||
+                'Title not available'
+
+              return <ListingCard key={listingId} data={listings} />
             })}
           </div>
         )}
