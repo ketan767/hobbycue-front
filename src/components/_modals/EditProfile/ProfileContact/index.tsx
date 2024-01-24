@@ -312,11 +312,11 @@ const ProfileContactEditModal: React.FC<Props> = ({
   }
 
   const handleWpPrefixChange = (element: any) => {
-    const id = element.id    
+    const id = element?.id    
     setWpSelectedCountryCode(countryData[id]?.phonePrefix)    
   }
   const handlePrefixChange = (element: any) => {
-    const id = element.id    
+    const id = element?.id    
     setSelectedCountryCode(countryData[id]?.phonePrefix)    
   }
 
@@ -421,6 +421,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
                     )}
                     onOptionClick={handlePrefixChange}
                     optionsPosition="bottom"
+                    search={true}
                   />
                   <input
                     type="text"
@@ -467,6 +468,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
                     )}
                     onOptionClick={handleWpPrefixChange}
                     optionsPosition="bottom"
+                    search={true}
                   />
                   <input
                     type="text"
