@@ -65,24 +65,21 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
         setExpandAll={handleExpandAll}
       >
         <main className={`${styles['display-desktop']}`}>
-          {/* <section className={styles['pages-container']}>
-          {!isLoggedIn || loadingPosts ? (
-            <PostCardSkeletonLoading />
-          ) : (
-            pages.length === 0 && <p className={styles.noMembers}>No pages</p>
-          )}
-          {pages.map((post: any) => {
-            return <ListingCard key={post._id} data={post} />
-          })}
-        </section> */}
-          <div className={styles['dual-section-wrapper']}>
-            <div className={styles['no-posts-container']}>
-              <p>
-                This feature is under development. Come back soon to view this
-              </p>
+          <section className={styles['pages-container']}>
+            {!isLoggedIn || (loadingPosts && <PostCardSkeletonLoading />)}
+            {pages.map((post: any) => {
+              return <ListingCard key={post._id} data={post} />
+            })}
+          </section>
+          {pages.length === 0 && (
+            <div className={styles['dual-section-wrapper']}>
+              <div className={styles['no-posts-container']}>
+                <p>
+                  No pages available
+                </p>
+              </div>
             </div>
-            <div className={styles['no-posts-container']}></div>
-          </div>
+          )}
         </main>
       </HobbyPageLayout>
       <main className={`${styles['display-mobile']}`}></main>

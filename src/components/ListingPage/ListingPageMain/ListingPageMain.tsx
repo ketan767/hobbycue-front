@@ -37,6 +37,7 @@ import DefaultPageImage from '@/assets/svg/default-images/default-people-listing
 import OthersIcon from '@/assets/svg/other.svg'
 import dynamic from 'next/dynamic'
 import MapComponent from '@/components/Gmap'
+import { RootState } from '@/redux/store'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -67,6 +68,9 @@ const ListingPageMain: React.FC<Props> = ({
   const dispatch = useDispatch()
   const [tags, setTags] = useState([])
   const { listingLayoutMode } = useSelector((state: any) => state.site)
+  const { isLoggedIn, isAuthenticated, user } = useSelector(
+    (state: RootState) => state.user,
+  )
 
   console.log('page', data)
   const [selectedTags, setSelectedTags] = useState([])
@@ -427,7 +431,7 @@ const ListingPageMain: React.FC<Props> = ({
                 }${showContact ? ' ' + styles['display-mobile'] : ''}`}
               >
                 {/* Page Admin */}
-                {(PageAdmin as any)?.full_name && (
+                {(PageAdmin as any)?.full_name && isLoggedIn && (
                   <Link href={`/profile/${(PageAdmin as any)?.profile_url}`}>
                     <Image
                       src={AdminSvg}
@@ -439,6 +443,23 @@ const ListingPageMain: React.FC<Props> = ({
                       {(PageAdmin as any)?.full_name}
                     </span>
                   </Link>
+                )}
+                {(PageAdmin as any)?.full_name && !isLoggedIn && (
+                  <a
+                    onClick={(e) =>
+                      dispatch(openModal({ type: 'auth', closable: true }))
+                    }
+                  >
+                    <Image
+                      src={AdminSvg}
+                      alt="whatsapp"
+                      width={24}
+                      height={24}
+                    />
+                    <span className={styles.textdefault}>
+                      {(PageAdmin as any)?.full_name}
+                    </span>
+                  </a>
                 )}
                 {/* Phone */}
                 {data?.name && (
@@ -1080,13 +1101,25 @@ const ListingPageMain: React.FC<Props> = ({
               }${showContact ? ' ' + styles['display-mobile'] : ''}`}
             >
               {/* Page Admin */}
-              {(PageAdmin as any)?.full_name && (
+              {(PageAdmin as any)?.full_name && isLoggedIn && (
                 <Link href={`/profile/${(PageAdmin as any)?.profile_url}`}>
                   <Image src={AdminSvg} alt="whatsapp" width={24} height={24} />
                   <span className={styles.textdefault}>
                     {(PageAdmin as any)?.full_name}
                   </span>
                 </Link>
+              )}
+              {(PageAdmin as any)?.full_name && !isLoggedIn && (
+                <a
+                  onClick={(e) =>
+                    dispatch(openModal({ type: 'auth', closable: true }))
+                  }
+                >
+                  <Image src={AdminSvg} alt="whatsapp" width={24} height={24} />
+                  <span className={styles.textdefault}>
+                    {(PageAdmin as any)?.full_name}
+                  </span>
+                </a>
               )}
               {/* Phone */}
               {data?.name && (

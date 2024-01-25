@@ -59,8 +59,6 @@ import UserOnboardingWelcomeModal from './UserOnboardingWelcomeModal/UserOnboard
 import ExpiredPassword from './ExpiredPasswordModal'
 
 
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 import SimpleSnackbar from '../_snackbar/Snackbar'
 import { types } from 'util'
 

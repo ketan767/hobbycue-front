@@ -61,12 +61,6 @@ const CustomEditor: React.FC<Props> = ({
       img.src = '/image.svg'
       img.addEventListener('click', openInput)
       toolbar?.append(img)
-
-      const vid = document.createElement('img')
-      vid.src = '/video.svg'
-      vid.addEventListener('click', openInputVideo)
-      toolbar?.append(vid)
-      setImageIconAdded(true)
     }
   }
 
@@ -85,15 +79,6 @@ const CustomEditor: React.FC<Props> = ({
     images.forEach((item: any) => {
       handleImageUpload(item, false)
     })
-  }
-
-  const handleVideoChange = (e: any) => {
-    if (data.video_url !== '') return alert('Maximum 1 video can be uploaded')
-    if (data.media.length > 0)
-      return alert('Only video or image can be uploaded')
-
-    const video = e.target.files[0]
-    handleImageUpload(video, true)
   }
 
   const handleImageUpload = async (image: any, isVideo: boolean) => {
@@ -177,13 +162,7 @@ const CustomEditor: React.FC<Props> = ({
         onChange={(e) => handleImageChange(e)}
         ref={inputRef}
       />
-      <input
-        type="file"
-        accept="video/mp4, video/x-m4v, video/*"
-        className={styles.hidden}
-        onChange={(e) => handleVideoChange(e)}
-        ref={inputVideoRef}
-      />
+
       {error && <p className={styles['error-text']}>{error}</p>}
     </>
   )

@@ -46,6 +46,7 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
           </section>
         ) : (
           <div className={styles['card-container']}>
+            {/* For artists and venues */}
             {eventData?.res?.data?.result.map((listings: any) => {
               return (
                 <ListingCard
@@ -54,14 +55,11 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
                 />
               )
             })}
-
+            {/* For page events */}
             {eventData?.res?.data?.listingMap?.map((listings: any) => {
               const listingId = listings._id
-              const title =
-                eventData?.res?.data?.listingMap?.[listingId]?.title ||
-                'Title not available'
 
-              return <ListingCard key={listingId} data={listings} />
+              return <ListingCard key={listingId} data={listings.listings} />
             })}
           </div>
         )}
