@@ -13,6 +13,7 @@ import { RootState } from '@/redux/store'
 import styles from '@/styles/Home.module.css'
 import Head from 'next/head'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -382,7 +383,9 @@ const Home: React.FC<PropTypes> = function () {
                 className={styles.testimonial}
               />
               <div>
-                <p> Shubha Nagarajan </p>
+                <Link href={'/page/shubha-nagarajan'}>
+                  <p> Shubha Nagarajan </p>
+                </Link>
                 <span> Classical Dancer </span>
               </div>
             </div>
