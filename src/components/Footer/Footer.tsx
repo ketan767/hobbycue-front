@@ -14,7 +14,17 @@ import { InviteToHobbycue } from '@/services/auth.service'
 import Image from 'next/image'
 import Link from 'next/link'
 
-const icons = [Facebook, Twitter, Instagram, Pintrest, Youtube, Telegram]
+const icons = [
+  { name: Facebook, link: 'https://www.facebook.com/hobbycue.community' },
+  { name: Twitter, link: 'https://twitter.com/hobbycue' },
+  { name: Instagram, link: 'https://www.instagram.com/hobbycue.community' },
+  { name: Pintrest, link: 'https://in.pinterest.com/hobbycue/' },
+  {
+    name: Youtube,
+    link: 'https://www.youtube.com/channel/UCEPxiQLanjReHcRe0FaHvrQ',
+  },
+  { name: Telegram, link: 'https://t.me/hobbycue' },
+]
 const Footer: React.FC = () => {
   const [email, setEmail] = useState('')
   const [expandHobbyCue, setExpandHobbyCue] = useState(false)
@@ -151,14 +161,15 @@ const Footer: React.FC = () => {
               <div className={styles.iconsContainer}>
                 {icons.map((Icon: any, idx: any) => {
                   return (
-                    <Image
-                      className={styles.socialIcons}
-                      height={32}
-                      width={32}
-                      src={Icon}
-                      alt="social-media"
-                      key={idx}
-                    />
+                    <Link href={Icon.link} key={idx} >
+                      <Image
+                        className={styles.socialIcons}
+                        height={32}
+                        width={32}
+                        src={Icon.name}
+                        alt="social-media"
+                      />
+                    </Link>
                   )
                 })}
               </div>

@@ -25,13 +25,14 @@ import Link from 'next/link'
 import { getAllHobbies, getTrendingHobbies } from '@/services/hobby.service'
 import DefaultHobbyImg from '@/assets/svg/default-images/default-hobbies.svg'
 import DefaultHobbyImgcover from '@/assets/svg/default-images/default-hobby-cover.svg'
-import { MenuItem, Select } from '@mui/material'
+import { MenuItem, Select, Snackbar } from '@mui/material'
 import FilledButton from '@/components/_buttons/FilledButton'
 import InputSelect from '@/components/_formElements/Select/Select'
 import { DropdownOption } from '@/components/_modals/CreatePost/Dropdown/DropdownOption'
 import { getListingPages } from '@/services/listing.service'
 import { setShowPageLoader } from '@/redux/slices/site'
 import { InviteToCommunity } from '@/services/auth.service'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -58,7 +59,11 @@ const CommunityLayout: React.FC<Props> = ({
   const [selectedHobby, setSelectedHobby] = useState('')
   const [selectedGenre, setSelectedGenre] = useState('')
   const [selectedLocation, setSelectedLocation] = useState('')
-
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
   const tabs: CommunityPageTabs[] = [
     'posts',
     'links',
@@ -398,8 +403,20 @@ const CommunityLayout: React.FC<Props> = ({
       to,
       name,
     })
-
-    setEmail('')
+    if (res.data?.success) {
+      setSnackbar({
+        display: true,
+        type: 'success',
+        message: 'Invitation sent sucessfully!',
+      })
+    }
+    if (err) {
+      setSnackbar({
+        display: true,
+        type: 'error',
+        message: 'Invitation failed.',
+      })
+    }
   }
 
   return (
@@ -618,8 +635,13 @@ const CommunityLayout: React.FC<Props> = ({
                         dispatch(
                           openModal({ type: 'create-post', closable: true }),
                         )
-                        else
-                        dispatch(openModal({type:"user-onboarding", closable:true}))
+                      else
+                        dispatch(
+                          openModal({
+                            type: 'user-onboarding',
+                            closable: true,
+                          }),
+                        )
                     }}
                     className={styles['start-post-btn']}
                   >
@@ -827,6 +849,16 @@ const CommunityLayout: React.FC<Props> = ({
           </aside>
         )}
       </PageGridLayout>
+      {
+        <CustomSnackbar
+          message={snackbar.message}
+          triggerOpen={snackbar.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }
