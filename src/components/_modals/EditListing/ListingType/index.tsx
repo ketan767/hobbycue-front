@@ -71,7 +71,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
   const handleSubmit = async () => {
     setError('')
     if (!value || value === '' || value.length === 0) {
-      return setError('Select a listing type!')
+      return setError('Select a Category!')
     }
     if (listingTypeModalMode === 'edit') {
       handleEdit()
@@ -290,7 +290,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
       setValue((prev: any) => prev.filter((item: any) => item !== itemToChange))
     } else {
       if (value?.length >= 2) {
-        setError('You can select only two listing types')
+        setError('You can select only two Categories')
       } else {
         setError('') // Clear error when adding a value within the limit
         if (value) {
@@ -367,15 +367,15 @@ const ListingTypeEditModal: React.FC<Props> = ({
           />
           {/* Modal Header */}
           <header className={styles['header']}>
-            <h4 className={styles['heading']}>{'Listing Type'}</h4>
+            <h4 className={styles['heading']}>{'Category'}</h4>
           </header>
 
           <hr />
 
           <section className={styles['body']}>
             <p className={styles['info']}>
-              Please select two of the most appropriate listing types. One type
-              is recommended. Use another type only if it is significantly
+              Please select two of the most appropriate categories. One type is
+              recommended. Use another type only if it is significantly
               different
             </p>
             <div className={styles['selected-values']}>
@@ -401,7 +401,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
                     className={styles['select-input']}
                     onClick={() => setShowDropdown(true)}
                   >
-                    <p> Select listing type </p>
+                    <p> Select Category </p>
                     <Image src={DownArrow} alt="down" />
                   </div>
                   {showDropdown && (

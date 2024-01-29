@@ -450,7 +450,7 @@ export const Navbar: React.FC<Props> = ({}) => {
 
                       <ul>
                         <Link href={'/hobby/animal-fancy'}>
-                          <li>Animals</li>
+                          <li>Animal-Fancy</li>
                         </Link>
 
                         <Link href={'/hobby/observe'}>
@@ -482,11 +482,11 @@ export const Navbar: React.FC<Props> = ({}) => {
 
                       <ul>
                         <Link href={'/hobby/items'}>
-                          <li>Collecting Items</li>
+                          <li>Items</li>
                         </Link>
 
                         <Link href={'/hobby/records'}>
-                          <li>Record</li>
+                          <li>Records</li>
                         </Link>
 
                         <li>Spotting</li>
