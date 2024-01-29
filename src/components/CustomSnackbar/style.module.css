@@ -1,0 +1,38 @@
+.errorSnackbar {
+  border-radius: 8px;
+  border: 1px solid var(--red-lighter, #ffbec0);
+}
+.successSnackbar {
+  border-radius: 8px;
+  border: 1px solid #9fdfbe;
+}
+.errorSnackbarContent {
+  background-color: #ffd6e0;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+}
+.successSnackbarContent {
+  background-color: #e8f7ee;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  padding: 6px 16px;
+}
+
+.message {
+  display: flex;
+  align-items: center;
+  color: var(--grey-darker, #6d747a);
+  font-weight: 500;
+  margin-right: 12px;
+}
+.typeIcon {
+  transform: scale(1.8);
+  margin: 0 10px -5px 0;
+}
+
+.customSnackbarContent .CloseIcon {
+  color: #6d747a;
+}
