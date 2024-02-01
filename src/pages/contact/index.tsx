@@ -63,7 +63,9 @@ const Contact: React.FC<Props> = ({}) => {
   const phoneRef = useRef<HTMLInputElement>(null)
   const YouAreRef = useRef<HTMLInputElement>(null)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
-
+  const { isLoggedIn, isAuthenticated, user } = useSelector(
+    (state: RootState) => state.user,
+  )
   const YouareData: Array<{ value: string }> = [
     { value: 'Site / App user' },
     { value: 'Partner / Seller' },
@@ -201,7 +203,7 @@ const Contact: React.FC<Props> = ({}) => {
   return (
     <>
       <PageGridLayout column={3}>
-        <ProfileSwitcher />
+        {isLoggedIn ? <ProfileSwitcher /> : <div></div>}
         <div className={styles['modal-wrapper']}>
           <header className={styles['header']}>
             <h4 className={styles['heading']}>{'Contact Us'}</h4>
