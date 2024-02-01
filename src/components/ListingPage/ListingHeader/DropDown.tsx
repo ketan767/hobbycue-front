@@ -11,16 +11,24 @@ type Props = {
 const Dropdown: React.FC<Props> = ({ handleClose, userType }) => {
   const dispatch = useDispatch()
   const ref = useRef<HTMLDivElement>(null)
-  const ref2 = useRef<HTMLLIElement>(null)
+  const Claimref = useRef<HTMLLIElement>(null)
+  const supportRef = useRef<HTMLLIElement>(null)
 
   useEffect(() => {
     function handleClickOutside(event: any) {
       if (ref.current && !ref.current.contains(event.target)) {
         if (
-          event.target.nodeName == ref2.current?.nodeName &&
-          event.target.textContent === ref2.current?.textContent
+          event.target.nodeName == Claimref.current?.nodeName &&
+          event.target.textContent === Claimref.current?.textContent
         ) {
           dispatch(openModal({ type: 'claim-listing', closable: true }))
+        }
+
+        if (
+          event.target.nodeName == supportRef.current?.nodeName &&
+          event.target.textContent === supportRef.current?.textContent
+        ) {
+          dispatch(openModal({ type: 'SupportModal', closable: true }))
         }
         handleClose()
       }
@@ -38,17 +46,17 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType }) => {
   return (
     <div className={styles['dropdown']} ref={ref}>
       <ul className={styles['customList']}>
-        {userType === 'edit' && <li>Support</li>}
+        {userType === 'edit' && <li ref={supportRef}>Support</li>}
         {userType === 'anonymous' && (
           <>
-            <li ref={ref2}>Claim</li>
+            <li ref={Claimref}>Claim</li>
             <li>Review</li>
             <li>Report</li>
           </>
         )}
         {userType === 'page' && (
           <>
-            <li ref={ref2}>Claim</li>
+            <li ref={Claimref}>Claim</li>
             <li>Review</li>
             <li>Report</li>
           </>
