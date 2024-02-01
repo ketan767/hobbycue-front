@@ -38,7 +38,15 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType }) => {
   return (
     <div className={styles['dropdown']} ref={ref}>
       <ul className={styles['customList']}>
-        {userType === 'edit' && <li>Support</li>}
+        {userType === 'edit' && (
+          <li
+            onClick={(e) => {
+              dispatch(openModal({ type: 'SupportModal', closable: true }))
+            }}
+          >
+            Support
+          </li>
+        )}
         {userType === 'anonymous' && (
           <>
             <li ref={ref2}>Claim</li>

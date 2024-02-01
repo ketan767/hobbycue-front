@@ -13,6 +13,7 @@
   border-bottom-left-radius: 7px;
   border-top-left-radius: 7px;
   cursor: pointer;
+  font-size: 12px;
 }
 .dropdown-options-wrapper {
   position: fixed !important;

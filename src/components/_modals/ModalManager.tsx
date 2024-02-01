@@ -52,11 +52,11 @@ import VerifyActionModal from './VerifyAction/VerifyAction'
 import SetPasswordModal from './CreatePassword'
 import ViewImageModal from './ViewImage'
 import { ModalType } from '@/redux/slices/modal'
+import SupportModal from './support'
 
 import UserOnboardingWelcomeModal from './UserOnboardingWelcomeModal/UserOnboardingWelcomeModal.tsx'
 
 import ExpiredPassword from './ExpiredPasswordModal'
-
 
 import SimpleSnackbar from '../_snackbar/Snackbar'
 import { types } from 'util'
@@ -303,6 +303,7 @@ const ModalManager: React.FC = () => {
               {activeModal === 'listing-social-media-edit' && (
                 <ListingSocialMediaEditModal {...props} />
               )}
+              {activeModal === 'SupportModal' && <SupportModal {...props} />}
               {activeModal === 'user-onboarding-welcome' && (
                 <UserOnboardingWelcomeModal />
               )}
