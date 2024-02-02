@@ -275,6 +275,7 @@
     background-color: white;
     border-radius: 8px;
     width: 100%;
+    z-index: 1;
   }
   .select-container .single-option.selcted-option .tagText,
   .select-container .single-option.selcted-option .tagDesc {

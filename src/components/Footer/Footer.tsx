@@ -62,7 +62,7 @@ const Footer: React.FC = () => {
         { title: 'Our Services', link: 'http://wp.hobbycue.com/services/' },
         { title: 'Work with Us', link: 'http://wp.hobbycue.com/work/' },
         { title: 'FAQ', link: 'http://wp.hobbycue.com/faq/' },
-        { title: 'Contact Us', link: 'http://wp.hobbycue.com/contact/' },
+        { title: 'Contact Us', link: '/contact/' },
       ],
     },
     {
@@ -161,7 +161,7 @@ const Footer: React.FC = () => {
               <div className={styles.iconsContainer}>
                 {icons.map((Icon: any, idx: any) => {
                   return (
-                    <Link href={Icon.link} key={idx} >
+                    <Link href={Icon.link} key={idx}>
                       <Image
                         className={styles.socialIcons}
                         height={32}

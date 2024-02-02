@@ -66,8 +66,8 @@ const SupportModal: React.FC<Props> = ({
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [isError, setIsError] = useState(false)
 
-  const [inputErrs, setInputErrs] = useState<{ review: string | null }>({
-    review: null,
+  const [inputErrs, setInputErrs] = useState<{ error: string | null }>({
+    error: null,
   })
   const [initialData, setInitialData] = useState<supportData>({
     review: '',
@@ -85,9 +85,10 @@ const SupportModal: React.FC<Props> = ({
     })
   }, [user])
 
-  const handleInputChange = (value: string) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = event.target.value
     setData((prev) => ({ ...prev, review: value }))
-    setInputErrs({ review: null })
+    setInputErrs({ error: null })
 
     const hasChanged = value !== initialData.review
     setIsChanged(hasChanged)
@@ -126,13 +127,10 @@ const SupportModal: React.FC<Props> = ({
   }
 
   const handleSubmit = async () => {
-    if (
-      !data.review ||
-      data.review?.trim() === '' ||
-      data.review === '<p><br></p>'
-    ) {
+    console.log('support', data)
+    if (!data.review || data.review === '') {
       setInputErrs((prev) => {
-        return { ...prev, review: 'This field is required!' }
+        return { ...prev, error: 'This field is required!' }
       })
       setIsError(true)
       return
@@ -162,7 +160,7 @@ const SupportModal: React.FC<Props> = ({
 
   useEffect(() => {
     setData({
-      review: user.review,
+      review: '',
       name: user.full_name,
       email: user.public_email,
     })
@@ -239,16 +237,18 @@ const SupportModal: React.FC<Props> = ({
         <hr />
         <section className={styles['body']}>
           <div className={styles['input-box']}>
-            <input hidden required />
-            {/* <CustomCKEditor value={data.review} onChange={handleInputChange} placeholder='Briefly describe review yourself' /> */}
-            <AboutEditor
-              value={data.review}
-              onChange={handleInputChange}
-              error={inputErrs.review ? true : false}
-              placeholder="Briefly describe review yourself"
-            />
-            {inputErrs.review && (
-              <p className={styles['error-msg']}>{inputErrs.review}</p>
+            <div className={styles['street-input-container']}>
+              <textarea
+                className={styles['long-input-box']}
+                required
+                placeholder="Write your review here"
+                name="message"
+                onChange={handleInputChange}
+                value={data.review}
+              />
+            </div>
+            {inputErrs.error && (
+              <p className={styles['error-msg']}>{inputErrs.error}</p>
             )}
           </div>
         </section>
