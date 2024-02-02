@@ -1,4 +1,4 @@
-const siteUrl = 'localhost:8000'
+const siteUrl = 'https://localhost:8000'
 
 module.exports = {
   siteUrl,
