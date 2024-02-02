@@ -1,8 +1,4 @@
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  GetServerSidePropsResult,
-} from 'next'
+import { GetServerSideProps } from 'next'
 import { ISitemapField } from 'next-sitemap'
 import { getAllUserUrls } from '@/services/user.service'
 import { getAllListingUrls } from '@/services/listing.service'
@@ -17,8 +13,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const query = ''
   const { res: hobbyRes, err: hobbyErr } = await getAllHobbies(query)
 
-  if (userErr || pagesErr) {
-    console.error('Error fetching user or pages URLs:', userErr || pagesErr)
+  if (userErr || pagesErr || hobbyErr) {
+    console.error('Error fetching user or pages URLs:', userErr || pagesErr || hobbyErr)
     return {
       notFound: true,
     }
@@ -53,20 +49,37 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   }))
 
   console.log('Generated sitemap:', sitemapJSON)
+  const sitemap = generateSiteMap(sitemapJSON)
 
-  ctx.res.setHeader('Content-Type', 'application/xml')
-
+  ctx.res.setHeader('Content-Type', 'text/xml')
+  ctx.res.write(sitemap)
+  ctx.res.end()
   return {
-    props: {
-      sitemapJSON,
-    },
+    props: {},
   }
 }
 
-export default function Site({ sitemapJSON }: { sitemapJSON: object[] }) {
-  return (
-    <div>
-      <pre>{JSON.stringify(sitemapJSON, null, 2)}</pre>
-    </div>
-  )
+const generateSiteMap = (data: any) => {
+  const posts: { loc: string; lastmod: string }[] = []
+
+  for (const i in data) {
+    posts.push(data[i])
+  }
+
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  return `<?xml version="1.0" encoding="UTF-8"?>
+  <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+      <loc>${baseUrl}</loc>
+    </url>
+    ${
+      posts &&
+      posts
+        .map((item) => {
+          return `<url><loc>${item?.loc}</loc><lastmod>${item?.lastmod}</lastmod></url>`}).join('')
+    }
+  </urlset>
+  `
 }
+
+export default function Sitemap() {}
