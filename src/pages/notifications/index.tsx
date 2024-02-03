@@ -4,17 +4,14 @@ import styles from '@/styles/ExplorePage.module.css'
 
 type Props = {}
 
-const Explore: React.FC<Props> = (props) => {
+const Notifications: React.FC<Props> = (props) => {
   return (
     <div className={styles['explore-wrapper']}>
       <div className={styles.explore}>
-        <p>
-          The Explore functionality is under development. You may use the search
-          feature in the top navigation bar
-        </p>
+        <p>This feature is under development. Come back soon to view this</p>
       </div>
     </div>
   )
 }
 
-export default Explore
+export default Notifications
