@@ -9,12 +9,12 @@
 }
 @media screen and (min-width: 1100px) {
   .modal-wrapper {
-    max-height: calc(100vh - 6rem);
+    max-height: calc(100vh - 2rem);
     height: 100%;
   }
   .modal-wrapper .body {
     height: 100%;
-    overflow: auto;
+   
   }
 }
 .modal-wrapper .header,
@@ -147,4 +147,9 @@ line-height: 22px; /* 157.143% */
   justify-content: space-between; 
   align-items: center;
   gap: 10px; 
+}
+
+.tempmsg {
+  font-size: 14px;
+  color: #6d747a;
 }
