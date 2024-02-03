@@ -561,8 +561,15 @@ const AuthForm: React.FC<Props> = (props) => {
             )}
             {selectedTab === 'join-in' && (
               <p className={styles['agree-tnc-info']}>
-                By continuing, you agree to our <span> Terms of Service </span>{' '}
-                and <span> Privacy Policy </span>.
+                By continuing, you agree to our
+                <span>
+                  <a href="/terms"> Terms of Service </a>
+                </span>{' '}
+                and
+                <span>
+                  <a href="/privacy"> Privacy Policy</a>
+                </span>
+                .
               </p>
             )}
           </div>

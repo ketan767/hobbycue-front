@@ -1,6 +1,7 @@
 .explore-wrapper {
     background-color: #f8f9fa;
-    height: 89vh;
+    min-height: 80vh;
+    height: 100%;
     padding: 1rem 0;
   }
   .explore {
@@ -9,7 +10,8 @@
     border: 2px solid rgb(242, 242, 242);
     border-radius: 10px;
     background-color: #ffffff;
-    height: 90%;
+    min-height: 80vh;
+    height: 100%;
   }
   
   .explore p {
@@ -18,3 +20,14 @@
     font-weight: 500;
   }
   
+  .pageheading {
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+
+  .heading {
+    font-weight: 500;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }

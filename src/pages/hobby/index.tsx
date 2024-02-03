@@ -294,7 +294,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                   <p>
                                     <Image src={AddIcon} alt="add" />{' '}
                                     <Link href={`/hobby/${subCat.slug}`}>
-                                    {subCat.display}
+                                      {subCat.display}
                                     </Link>
                                   </p>
                                   <div
@@ -347,9 +347,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   return {
     props: {
       data: {
-        categories: category.res.data.hobbies,
-        sub_categories: subCategory.res.data.hobbies,
-        hobbies: hobby.res.data.hobbies,
+        categories: category.res?.data.hobbies,
+        sub_categories: subCategory.res?.data.hobbies,
+        hobbies: hobby.res?.data.hobbies,
       },
     },
   }

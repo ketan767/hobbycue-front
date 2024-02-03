@@ -512,7 +512,7 @@ export const Navbar: React.FC<Props> = ({}) => {
 
               {/* Bookmark */}
               <li>
-                <Link href={'#'}>
+                <Link href={'/bookmarks'}>
                   <CustomizedTooltips title="Bookmark">
                     <svg
                       width="24"
@@ -539,7 +539,7 @@ export const Navbar: React.FC<Props> = ({}) => {
 
               {/* Notification */}
               <li>
-                <Link href={'#'}>
+                <Link href={'/notifications'}>
                   <CustomizedTooltips title="Notification">
                     <svg
                       width="24"
@@ -566,7 +566,7 @@ export const Navbar: React.FC<Props> = ({}) => {
 
               {/* Cart */}
               <li>
-                <Link href={'#'}>
+                <Link href={'/cart'}>
                   <CustomizedTooltips title="Cart">
                     <svg
                       width="24"
