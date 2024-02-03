@@ -652,8 +652,12 @@ export const Navbar: React.FC<Props> = ({}) => {
 
                       <section className={styles['manage']}>
                         <h5>Manage</h5>
-                        <p>My Activity</p>
-                        <p>My Orders</p>
+                        <Link href={`/activity`}>
+                          <p>My Activity</p>
+                        </Link>
+                        <Link href={`/orders`}>
+                          <p>My Orders</p>
+                        </Link>
                         <Link href={`/profile/${user.profile_url}/pages`}>
                           <p>My Pages</p>
                         </Link>
