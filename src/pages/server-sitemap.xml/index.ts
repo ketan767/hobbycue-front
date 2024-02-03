@@ -13,8 +13,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const query = ''
   const { res: hobbyRes, err: hobbyErr } = await getAllHobbies(query)
 
-  if (userErr || pagesErr || hobbyErr) {
-    console.error('Error fetching user or pages URLs:', userErr || pagesErr || hobbyErr)
+  if (userErr || pagesErr) {
+    console.error('Error fetching user or pages URLs:', userErr || pagesErr)
     return {
       notFound: true,
     }

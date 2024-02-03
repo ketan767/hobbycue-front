@@ -493,9 +493,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
     </main>
   )
 }
-console.log()
 
-const FilterDropdown: React.FC<Props> = ({ onChange }) => {
+const FilterDropdown: React.FC<Props> = () => {
   const [activeFilter, setActiveFilter] = useState('all')
   const dispatch = useDispatch()
   const handleFilterClick = (filterType: any) => {
@@ -528,7 +527,6 @@ const FilterDropdown: React.FC<Props> = ({ onChange }) => {
 
   return (
     <Select
-      onChange={onChange}
       className={styles.filterDropdown}
       value={activeFilter}
     >
@@ -573,27 +571,6 @@ const Search: React.FC<Props> = ({ data, children }) => {
     (state: RootState) => state.search.hobbiesSearchResults.data,
   )
 
-  const dispatch = useDispatch()
-
-  const handleDropdownChange = (event: any) => {
-    const filterValue = event.target.value
-    switch (filterValue) {
-      case 'all':
-        dispatch(toggleShowAll())
-        break
-      case 'people':
-        dispatch(toggleShowAllPeople())
-        break
-      case 'places':
-        dispatch(toggleShowAllPlace())
-        break
-      case 'programs':
-        dispatch(toggleShowAllEvent())
-        break
-      default:
-        break
-    }
-  }
   useEffect(() => {
     console.log('userresultt', userSearchResults)
   }, [])
@@ -613,7 +590,7 @@ const Search: React.FC<Props> = ({ data, children }) => {
     <PageGridLayout column={3} customStyles={styles['pageGridSearch']}>
       {isMobile ? (
         <aside className={`custom-scrollbar ${styles['profile-left-aside']}`}>
-          <FilterDropdown onChange={handleDropdownChange} />
+          <FilterDropdown/>
         </aside>
       ) : (
         <SearchPageFilter />

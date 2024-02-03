@@ -37,6 +37,7 @@ interface Props {
 }
 
 const ProfileHome: React.FC<Props> = ({ data }) => {
+  console.warn({data});
   const dispatch = useDispatch()
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
 
@@ -111,6 +112,10 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
     setExpandAll(value)
     dispatch(updateProfileMenuExpandAll(value))
   }
+
+  useEffect(()=>{
+    setPageData(data?.pageData)
+  },[data?.pageData])
 
   return (
     <>
