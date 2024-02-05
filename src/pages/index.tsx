@@ -73,7 +73,6 @@ const Home: React.FC<PropTypes> = function () {
 
   useEffect(() => {
     const updateDuration = () => {
-
       if (audioRef.current) {
         const audioElement = audioRef.current as HTMLAudioElement
         setDuration(audioElement.duration)
@@ -90,14 +89,12 @@ const Home: React.FC<PropTypes> = function () {
         const audioElement = audioRef.current as HTMLAudioElement
         audioElement.removeEventListener('loadedmetadata', updateDuration)
       }
-
     }
   }, [])
 
   const audioRef = useRef<HTMLAudioElement>(null)
 
   const togglePlay = () => {
-
     if (audioRef.current) {
       const audioElement = audioRef.current as HTMLAudioElement
       if (isPlaying) {
@@ -106,7 +103,6 @@ const Home: React.FC<PropTypes> = function () {
         audioElement.play()
       }
       setIsPlaying(!isPlaying)
-
     }
   }
 
@@ -376,19 +372,19 @@ const Home: React.FC<PropTypes> = function () {
                 />
               </div>
             </div>
-            <div className={styles['testimonial-right']}>
-              <Image
-                src={TestimonialImg}
-                alt="TestimonialImg"
-                className={styles.testimonial}
-              />
-              <div>
-                <Link href={'/page/shubha-nagarajan'}>
+            <Link href={'/page/shubha-nagarajan'}>
+              <div className={styles['testimonial-right']}>
+                <Image
+                  src={TestimonialImg}
+                  alt="TestimonialImg"
+                  className={styles.testimonial}
+                />
+                <div>
                   <p> Shubha Nagarajan </p>
-                </Link>
-                <span> Classical Dancer </span>
+                  <span> Classical Dancer </span>
+                </div>
               </div>
-            </div>
+            </Link>
           </div>
         </div>
       </section>
@@ -413,7 +409,7 @@ const Home: React.FC<PropTypes> = function () {
       </section>
       {/* <section className={`site-container ${styles.bigTextContainer}`}>
       </section> */}
-      <section className={`site-container`}>
+      <section className={styles['footer-wrapper']}>
         <Footer />
       </section>
     </>

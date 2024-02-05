@@ -254,6 +254,11 @@
   padding: 4px 12px;
 }
 
+.added-hobby-list table tbody tr:last-child > td:last-child {
+  position: absolute;
+  right: 22px;
+  top: 9px;
+}
 .added-hobby-list table tbody tr:last-child > td:nth-child(1) section {
   width: auto;
 }
@@ -363,5 +368,10 @@
     display: flex;
     flex-direction: row;
     gap: 10px;
+  }
+  .added-hobby-list table tbody tr:last-child > td:last-child {
+    position: absolute;
+    right: 22px;
+    top: 14px;
   }
 }

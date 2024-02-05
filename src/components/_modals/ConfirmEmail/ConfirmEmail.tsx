@@ -71,8 +71,6 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
       return
     }
     if (res?.data.success) {
-      alert(res.data.data?.user.otp)
-
       dispatch(openModal({ type: 'reset-password', closable: true }))
       dispatch(updateForgotPasswordEmail(email))
       // dispatch(closeModal())
