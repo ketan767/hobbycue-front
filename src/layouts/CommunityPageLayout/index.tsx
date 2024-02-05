@@ -25,7 +25,7 @@ import Link from 'next/link'
 import { getAllHobbies, getTrendingHobbies } from '@/services/hobby.service'
 import DefaultHobbyImg from '@/assets/svg/default-images/default-hobbies.svg'
 import DefaultHobbyImgcover from '@/assets/svg/default-images/default-hobby-cover.svg'
-import { MenuItem, Select, Snackbar } from '@mui/material'
+import { CircularProgress, MenuItem, Select, Snackbar } from '@mui/material'
 import FilledButton from '@/components/_buttons/FilledButton'
 import InputSelect from '@/components/_formElements/Select/Select'
 import { DropdownOption } from '@/components/_modals/CreatePost/Dropdown/DropdownOption'
@@ -75,7 +75,7 @@ const CommunityLayout: React.FC<Props> = ({
   const [seeMoreHobby, setSeeMoreHobby] = useState(
     activeProfile.data?._hobbies?.length > 3 ? true : false,
   )
-
+  const [inviteBtnLoader, setInviteBtnLoader] = useState(false)
   const [trendingHobbies, setTrendingHobbies] = useState([])
   console.log('Number of hobbies:', activeProfile.data?._hobbies?.length)
 
@@ -397,18 +397,23 @@ const CommunityLayout: React.FC<Props> = ({
   const Invitecommunity = async () => {
     const to = email
     const name = activeProfile?.data.full_name
+    setInviteBtnLoader(true)
     const { err, res } = await InviteToCommunity({
       to,
       name,
     })
     if (res.data?.success) {
+      setInviteBtnLoader(false)
       setSnackbar({
         display: true,
         type: 'success',
         message: 'Invitation sent sucessfully!',
       })
+      setEmail('')
     }
     if (err) {
+      setEmail('')
+      setInviteBtnLoader(false)
       setSnackbar({
         display: true,
         type: 'error',
@@ -815,7 +820,17 @@ const CommunityLayout: React.FC<Props> = ({
                   id=""
                 />
                 <span className={styles['input-prefix']}></span>
-                <FilledButton onClick={Invitecommunity}>Invite</FilledButton>
+                <FilledButton
+                  onClick={Invitecommunity}
+                  className={inviteBtnLoader ? styles['invite-loader-btn'] : ''}
+                >
+                  {inviteBtnLoader ? (
+                    <CircularProgress color="inherit" size={'20px'} />
+                  ) : (
+                    'Invite'
+                  )}
+                </FilledButton>
+                {/* <CircularProgress color="inherit" size={'22px'} /> */}
               </section>
             </section>
 

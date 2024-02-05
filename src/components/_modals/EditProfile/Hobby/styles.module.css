@@ -59,7 +59,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-4);
-  width: 7rem;
+  width: 9rem;
 }
 .input-box label {
   font-weight: 500;
@@ -308,7 +308,7 @@
 }
 .added-hobby-list table tbody tr td:last-child {
   position: absolute;
-  right: 15px;
+  right: 20px;
   top: 10px;
 }
 
@@ -437,6 +437,7 @@
   }
   .input-box {
     padding-right: 0;
+    width: 8.5rem;
   }
   .input-box > input {
     padding: var(--spacing-8) !important;
@@ -529,5 +530,11 @@
     position: sticky;
     bottom: 0;
     z-index: 1001;
+  }
+}
+@media screen and (max-width:500px) {
+  .input-box {
+    padding-right: 0;
+    width: 6.3rem;
   }
 }

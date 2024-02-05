@@ -13,6 +13,8 @@ import Youtube from '@/assets/svg/social/youtube.svg'
 import { InviteToHobbycue } from '@/services/auth.service'
 import Image from 'next/image'
 import Link from 'next/link'
+import { CircularProgress } from '@mui/material'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 const icons = [
   { name: Facebook, link: 'https://www.facebook.com/hobbycue.community' },
@@ -30,7 +32,12 @@ const Footer: React.FC = () => {
   const [expandHobbyCue, setExpandHobbyCue] = useState(false)
   const [expandHowDoI, setExpandHowDoI] = useState(false)
   const [expandQuickLinks, setExpandQuickLinks] = useState(false)
-
+  const [inviteBtnLoader, setInviteBtnLoader] = useState(false)
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
   const handleExpand = (type: string) => {
     if (type === 'Hobbycue') {
       return expandHobbyCue
@@ -101,11 +108,30 @@ const Footer: React.FC = () => {
   ]
   const to = email
   const sendInvite = async () => {
+    setInviteBtnLoader(true)
     const { err, res } = await InviteToHobbycue({
       to,
     })
-    setEmail('')
+    if (res.data?.success) {
+      setInviteBtnLoader(false)
+      setSnackbar({
+        display: true,
+        type: 'success',
+        message: 'Invitation sent sucessfully!',
+      })
+      setEmail('')
+    }
+    if (err) {
+      setEmail('')
+      setInviteBtnLoader(false)
+      setSnackbar({
+        display: true,
+        type: 'error',
+        message: 'Invitation failed.',
+      })
+    }
   }
+
   return (
     <>
       <div className={styles.container}>
@@ -185,7 +211,11 @@ const Footer: React.FC = () => {
                   onChange={(e: any) => setEmail(e.target.value)}
                 />
                 <button onClick={sendInvite} className={styles.button}>
-                  Invite
+                  {inviteBtnLoader ? (
+                    <CircularProgress color="inherit" size={'20px'} />
+                  ) : (
+                    'Invite'
+                  )}
                 </button>
               </div>
             </div>
@@ -193,6 +223,16 @@ const Footer: React.FC = () => {
         </div>
       </div>
       <div className={styles.bottombar}>© Purple Cues Private Limited</div>
+      {
+        <CustomSnackbar
+          message={snackbar.message}
+          triggerOpen={snackbar.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }
