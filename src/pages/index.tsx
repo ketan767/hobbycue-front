@@ -17,6 +17,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { showAllEventTrue, showAllPeopleTrue, showAllPlaceTrue, showAllProductsTrue } from '@/redux/slices/search'
 
 const Home: React.FC<PropTypes> = function () {
   const [isPlaying, setIsPlaying] = useState(false)
@@ -73,6 +74,7 @@ const Home: React.FC<PropTypes> = function () {
 
   useEffect(() => {
     const updateDuration = () => {
+
       if (audioRef.current) {
         const audioElement = audioRef.current as HTMLAudioElement
         setDuration(audioElement.duration)
@@ -89,12 +91,14 @@ const Home: React.FC<PropTypes> = function () {
         const audioElement = audioRef.current as HTMLAudioElement
         audioElement.removeEventListener('loadedmetadata', updateDuration)
       }
+
     }
   }, [])
 
   const audioRef = useRef<HTMLAudioElement>(null)
 
   const togglePlay = () => {
+
     if (audioRef.current) {
       const audioElement = audioRef.current as HTMLAudioElement
       if (isPlaying) {
@@ -103,6 +107,7 @@ const Home: React.FC<PropTypes> = function () {
         audioElement.play()
       }
       setIsPlaying(!isPlaying)
+
     }
   }
 
@@ -181,7 +186,7 @@ const Home: React.FC<PropTypes> = function () {
             </p>
             <OutlinedButton
               className={styles['card-btn']}
-              onClick={() => router.push('/search')}
+              onClick={() => {dispatch(showAllPeopleTrue());router.push('/search')}}
             >
               Connect
             </OutlinedButton>
@@ -206,7 +211,7 @@ const Home: React.FC<PropTypes> = function () {
             </p>
             <OutlinedButton
               className={styles['card-btn']}
-              onClick={() => router.push('/search')}
+              onClick={() =>{dispatch(showAllPlaceTrue());router.push('/search')}}
             >
               Meet up
             </OutlinedButton>
@@ -235,7 +240,7 @@ const Home: React.FC<PropTypes> = function () {
             </p>
             <OutlinedButton
               className={styles['card-btn']}
-              onClick={() => router.push('/search')}
+              onClick={() => {dispatch(showAllProductsTrue());router.push('/search')}}
             >
               Get it
             </OutlinedButton>
@@ -269,7 +274,7 @@ const Home: React.FC<PropTypes> = function () {
             </p>
             <OutlinedButton
               className={styles['card-btn']}
-              onClick={() => router.push('/search')}
+              onClick={() => {dispatch(showAllEventTrue());router.push('/search')}}
             >
               Attend
             </OutlinedButton>
@@ -372,19 +377,19 @@ const Home: React.FC<PropTypes> = function () {
                 />
               </div>
             </div>
-            <Link href={'/page/shubha-nagarajan'}>
-              <div className={styles['testimonial-right']}>
-                <Image
-                  src={TestimonialImg}
-                  alt="TestimonialImg"
-                  className={styles.testimonial}
-                />
-                <div>
+            <div className={styles['testimonial-right']}>
+              <Image
+                src={TestimonialImg}
+                alt="TestimonialImg"
+                className={styles.testimonial}
+              />
+              <div>
+                <Link href={'/page/shubha-nagarajan'}>
                   <p> Shubha Nagarajan </p>
-                  <span> Classical Dancer </span>
-                </div>
+                </Link>
+                <span> Classical Dancer </span>
               </div>
-            </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -409,7 +414,7 @@ const Home: React.FC<PropTypes> = function () {
       </section>
       {/* <section className={`site-container ${styles.bigTextContainer}`}>
       </section> */}
-      <section className={styles['footer-wrapper']}>
+      <section className={`site-container`}>
         <Footer />
       </section>
     </>

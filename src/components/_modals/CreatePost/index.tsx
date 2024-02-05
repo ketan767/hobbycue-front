@@ -372,7 +372,7 @@ export const CreatePost: React.FC<Props> = ({
         <div className={styles['modal-wrapper']}>
           <h3 className={styles['modal-heading']}>Create Post</h3>
           <div className={styles['create-post-modal']}>
-            <section className={styles['editor-container']}>
+            <section className={styles['editor-container']+" btnOutlinePurple"}>
               <CustomEditor
                 value=""
                 onChange={(value) => {

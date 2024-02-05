@@ -142,15 +142,15 @@ const CustomEditor: React.FC<Props> = ({
                   },
                 },
                 'underline',
-                'emoji',
+                // 'emoji',
               ],
               [{ list: 'ordered' }, { list: 'bullet' }],
             ],
             // handlers: { emoji: function () {} },
           },
-          'emoji-toolbar': true,
-          'emoji-textarea': true,
-          'emoji-shortname': true,
+          // 'emoji-toolbar': true,
+          // 'emoji-textarea': true,
+          // 'emoji-shortname': true,
         }}
       />
 

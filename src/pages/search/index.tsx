@@ -7,6 +7,7 @@ import {
   toggleShowAllPeople,
   toggleShowAllPlace,
   toggleShowAllUsers,
+  toggleShowAllProducts
 } from '@/redux/slices/search'
 import { RootState } from '@/redux/store'
 import { MenuItem, Select } from '@mui/material'
@@ -91,6 +92,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const showAllPeople = useSelector((state: any) => state.search.showAllPeople)
   const showAllPlace = useSelector((state: any) => state.search.showAllPlace)
   const showAllEvent = useSelector((state: any) => state.search.showAllEvent)
+  const showAllProducts = useSelector((state: any) => state.search.showAllProducts)
 
   const dispatch = useDispatch()
   const { isLoggedIn, isAuthenticated, user } = useSelector(
@@ -101,6 +103,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const [HidePeople, setHidePeople] = useState(false)
   const [HidePlace, setHidePlace] = useState(false)
   const [HideEvent, setHideEvent] = useState(false)
+  const [HideProduct, setHideProduct] = useState(false)
   const [HideHobbies, setHideHobbies] = useState(false)
 
   const router = useRouter()
@@ -124,11 +127,13 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHidePlace(true)
       setHideEvent(true)
       setHideHobbies(true)
+      setHideProduct(true)
     } else {
       setHidePeople(false)
       setHidePlace(false)
       setHideEvent(false)
       setHideHobbies(false)
+      setHideProduct(true)
     }
   }, [showAllUsers])
 
@@ -142,11 +147,13 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHidePlace(true)
       setHideEvent(true)
       setHideHobbies(true)
+      setHideProduct(true)
     } else {
       setHideUser(false)
       setHidePlace(false)
       setHideEvent(false)
       setHideHobbies(false)
+      setHideProduct(false)
     }
   }, [showAllPeople])
 
@@ -160,11 +167,13 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHidePeople(true)
       setHideEvent(true)
       setHideHobbies(true)
+      setHideProduct(true)
     } else {
       setHideUser(false)
       setHidePeople(false)
       setHideEvent(false)
       setHideHobbies(false)
+      setHideProduct(false)
     }
   }, [showAllPlace])
 
@@ -178,13 +187,35 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHidePeople(true)
       setHidePlace(true)
       setHideHobbies(true)
+      setHideProduct(true)
     } else {
       setHideUser(false)
       setHidePeople(false)
       setHidePlace(false)
       setHideHobbies(false)
+      setHideProduct(false)
     }
   }, [showAllEvent])
+
+  const toggleShowAllproducts = () => {
+    dispatch(toggleShowAllProducts())
+  }
+
+  useEffect(() => {
+    if (showAllProducts) {
+      setHideUser(true)
+      setHidePeople(true)
+      setHidePlace(true)
+      setHideHobbies(true)
+      setHideProduct(true)
+    } else {
+      setHideUser(false)
+      setHidePeople(false)
+      setHidePlace(false)
+      setHideHobbies(false)
+      setHideProduct(false)
+    }
+  }, [showAllProducts])
 
   const navigateToProfile = (profileUrl: string) => {
     if (isLoggedIn) {
@@ -519,6 +550,9 @@ const FilterDropdown: React.FC<Props> = () => {
         case 'events':
           dispatch(toggleShowAllEvent())
           break
+        case 'products':
+          dispatch(toggleShowAllProducts())
+          break
         default:
           break
       }
@@ -544,6 +578,9 @@ const FilterDropdown: React.FC<Props> = () => {
       </MenuItem>
       <MenuItem onClick={() => handleFilterClick('events')} value="events">
         Programs
+      </MenuItem>
+      <MenuItem onClick={() => handleFilterClick('products')} value="products">
+        Products
       </MenuItem>
     </Select>
   )
