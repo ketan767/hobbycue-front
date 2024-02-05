@@ -392,17 +392,30 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
         <nav>
           <div className={styles['navigation-tabs']}>
             {tabs.map((tab) => {
-              return (
-                <Link
-                  key={tab}
-                  href={`/page/${router.query.page_url}/${
-                    tab !== 'home' ? tab : ''
-                  }`}
-                  className={activeTab === tab ? styles['active'] : ''}
-                >
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </Link>
-              )
+              if (tab === 'events') {
+                if (data.type !== 3)
+                  return (
+                    <Link
+                      key={tab}
+                      href={`/page/${router.query.page_url}/${tab}`}
+                      className={activeTab === tab ? styles['active'] : ''}
+                    >
+                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    </Link>
+                  )
+              } else {
+                return (
+                  <Link
+                    key={tab}
+                    href={`/page/${router.query.page_url}/${
+                      tab !== 'home' ? tab : ''
+                    }`}
+                    className={activeTab === tab ? styles['active'] : ''}
+                  >
+                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  </Link>
+                )
+              }
             })}
           </div>
         </nav>

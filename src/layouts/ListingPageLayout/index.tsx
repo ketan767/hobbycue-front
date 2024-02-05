@@ -42,7 +42,7 @@ interface Props {
     ContactInfoErr?: boolean
     LocationErr?: boolean
   }>
-  setExpandAll?: React.Dispatch<React.SetStateAction<boolean>>
+  setExpandAll?: (value: boolean) => void
   expandAll?: boolean
 }
 
@@ -190,15 +190,28 @@ const ListingPageLayout: React.FC<Props> = ({
       <nav className={styles['nav']}>
         <div className={styles['navigation-tabs']}>
           {tabs.map((tab) => {
-            return (
-              <a
-                key={tab}
-                onClick={() => navigationTabs(tab)}
-                className={activeTab === tab ? styles['active'] : ''}
-              >
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </a>
-            )
+            if (tab === 'events') {
+              if (data.pageData.type !== 3)
+                return (
+                  <a
+                    key={tab}
+                    onClick={() => navigationTabs(tab)}
+                    className={activeTab === tab ? styles['active'] : ''}
+                  >
+                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  </a>
+                )
+            } else {
+              return (
+                <a
+                  key={tab}
+                  onClick={() => navigationTabs(tab)}
+                  className={activeTab === tab ? styles['active'] : ''}
+                >
+                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                </a>
+              )
+            }
           })}
         </div>
       </nav>
@@ -245,8 +258,7 @@ const ListingPageLayout: React.FC<Props> = ({
 
         <div
           onClick={() => {
-            if (setExpandAll !== undefined)
-              setExpandAll((prevValue: boolean) => !prevValue)
+            if (setExpandAll !== undefined) setExpandAll(!expandAll)
           }}
           className={styles['expand-all']}
         >
@@ -275,15 +287,28 @@ const ListingPageLayout: React.FC<Props> = ({
         <nav className={styles['nav-mobile']}>
           <div className={styles['navigation-tabs']}>
             {tabs.map((tab) => {
-              return (
-                <a
-                  key={tab}
-                  onClick={() => navigationTabs(tab)}
-                  className={activeTab === tab ? styles['active'] : ''}
-                >
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </a>
-              )
+              if (tab === 'events') {
+                if (data.pageData.type !== 3)
+                  return (
+                    <a
+                      key={tab}
+                      onClick={() => navigationTabs(tab)}
+                      className={activeTab === tab ? styles['active'] : ''}
+                    >
+                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    </a>
+                  )
+              } else {
+                return (
+                  <a
+                    key={tab}
+                    onClick={() => navigationTabs(tab)}
+                    className={activeTab === tab ? styles['active'] : ''}
+                  >
+                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  </a>
+                )
+              }
             })}
           </div>
         </nav>
@@ -364,7 +389,7 @@ const ListingPageLayout: React.FC<Props> = ({
         )}
         {activeTab === 'events' && (
           <div className={styles['display-mobile']}>
-            <ListingEventsTab />
+            <ListingEventsTab data={data.pageData} />
           </div>
         )}
       </div>

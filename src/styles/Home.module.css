@@ -121,8 +121,10 @@
 }
 
 .bigTextContainer {
-  margin-bottom: 5rem;
   background-color: #f7fdff;
+  margin: 0 auto 5rem;
+  max-width: 100%;
+  padding: 4% 7% 0;
 }
 .bigTextContainer .getStartedBtn {
   margin-bottom: 121px;
@@ -525,10 +527,13 @@
   }
 
   .bigTextContainer {
-    margin: 0 24px;
-    margin-bottom: 0rem;
-    margin-top: 4rem;
     background-color: #f7fdff;
+    max-width: 100%;
+    margin: 0;
+    margin-top: 4rem;
+  }
+  .people-illustration {
+    height: 10rem;
   }
 
   .bigText {

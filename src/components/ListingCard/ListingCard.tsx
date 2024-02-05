@@ -15,7 +15,7 @@ type Props = {
 
 const ListingCard: React.FC<Props> = ({ data }) => {
   // console.log('🚀 ~ file: ListingCard.tsx:13 ~ data:', data)
-  // console.log('data', data)
+  console.log('Carddata', data)
   const type = getListingTypeName(data.type)
   return (
     <>
@@ -85,7 +85,14 @@ const ListingCard: React.FC<Props> = ({ data }) => {
                   }
                   alt="type"
                 />
-                <p> {data.page_type} </p>
+                <p>
+                  {' '}
+                  {data.page_type?.map((item: string, idx: number) => {
+                    if (idx === 0) {
+                      return item
+                    } else return ', ' + item
+                  })}{' '}
+                </p>
               </p>
             </div>
           </div>

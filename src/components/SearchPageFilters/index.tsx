@@ -74,18 +74,18 @@ const SearchPageFilter = () => {
             All of HobbyCue
           </div>
           <div
-            className={getFilterItemClass('people')}
-            onClick={() => handleFilterClick('people')}
-          >
-            <Image src={People} alt="People" />
-            People Pages
-          </div>
-          <div
             className={getFilterItemClass('users')}
             onClick={() => handleFilterClick('users')}
           >
             <Image src={User} alt="User" />
             User Profiles
+          </div>
+          <div
+            className={getFilterItemClass('people')}
+            onClick={() => handleFilterClick('people')}
+          >
+            <Image src={People} alt="People" />
+            People Pages
           </div>
           <div
             className={getFilterItemClass('places')}

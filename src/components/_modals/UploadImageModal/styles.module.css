@@ -1,9 +1,9 @@
 .modal-wrapper {
   background-color: white;
   width: 55rem;
-  /* width: 100%; */
   mix-blend-mode: normal;
   border-radius: var(--spacing-8);
+  margin-top: auto;
 }
 .modal-heading {
   padding: var(--spacing-16) var(--spacing-24);
@@ -44,4 +44,10 @@
 
   border: none;
   cursor: pointer;
+}
+
+@media screen and (max-width: 1100px) {
+  .modal-wrapper {
+    width: 100%;
+  }
 }

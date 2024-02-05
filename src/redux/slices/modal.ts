@@ -44,6 +44,7 @@ export type ModalType =
   | 'View-Image-Modal'
   | 'user-onboarding-welcome'
   | 'ExpiredPassword'
+  | 'SupportModal'
 
 
   interface ModalState {

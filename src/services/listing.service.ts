@@ -221,6 +221,21 @@ export const searchPages = async (searchCriteria:any) => {
   }
 };
 
+export const GetListingEvents = async (search_id: any, relation?: string) => {
+  try {
+    const queryParams = new URLSearchParams({
+      search_id,
+      relation: relation || '',
+    });
+
+    const res = await axiosInstance.get(`/listing/listing-events/?${queryParams}`);
+    return { res: res.data, err: null };
+  } catch (error) {
+    console.error(error);
+    return { err: error, res: null };
+  }
+};
+
 export const getAllListingUrls = async (
 
   ): Promise<ApiReturnObject> => {

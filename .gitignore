@@ -41,4 +41,6 @@ chat-gpt
 /.vscode/settings.json
 
 /public/sitemap.xml
-/public/robots.txt
+/public/robots.
+
+.env

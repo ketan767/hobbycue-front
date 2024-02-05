@@ -9,6 +9,7 @@ import { RootState } from '@/redux/store'
 import ListingPageLayout from '@/layouts/ListingPageLayout'
 import { getListingPages } from '@/services/listing.service'
 import {
+  updateListingMenuExpandAll,
   updateListingModalData,
   updateListingPageData,
 } from '@/redux/slices/site'
@@ -20,7 +21,8 @@ type Props = { data: ListingPageData }
 
 const ListingEvents: React.FC<Props> = (props) => {
   const dispatch = useDispatch()
-  const [expandAll, setExpandAll] = useState(true)
+  const { listing } = useSelector((state: RootState) => state?.site.expandMenu)
+  const [expandAll, setExpandAll] = useState(listing)
   // const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
   // const { listingPageData } = useSelector((state: RootState) => state.site)
   console.log('posts data', props.data)
@@ -29,28 +31,41 @@ const ListingEvents: React.FC<Props> = (props) => {
     dispatch(updateListingModalData(props.data.pageData))
   }, [])
 
+  const handleExpandAll: (value: boolean) => void = (value) => {
+    setExpandAll(value)
+    dispatch(updateListingMenuExpandAll(value))
+  }
+
   return (
     <>
-      <Head>
-        <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
-      </Head>
+      {props.data.pageData.type === 3 ? (
+        <div className={styles['no-events-wrapper']}>
+          No events for page type Program
+        </div>
+      ) : (
+        <div>
+          <Head>
+            <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
+          </Head>
 
-      <ListingPageLayout
-        activeTab={'events'}
-        data={props.data}
-        expandAll={expandAll}
-        setExpandAll={setExpandAll}
-      >
-        <ListingPageMain
-          data={props.data.pageData}
-          expandAll={expandAll}
-          activeTab={'events'}
-        >
-          <div className={styles['display-desktop']}>
-            <ListingEventsTab />
-          </div>
-        </ListingPageMain>
-      </ListingPageLayout>
+          <ListingPageLayout
+            activeTab={'events'}
+            data={props.data}
+            expandAll={expandAll}
+            setExpandAll={handleExpandAll}
+          >
+            <ListingPageMain
+              data={props.data.pageData}
+              expandAll={expandAll}
+              activeTab={'events'}
+            >
+              <div className={styles['display-desktop']}>
+                <ListingEventsTab data={props.data.pageData} />
+              </div>
+            </ListingPageMain>
+          </ListingPageLayout>
+        </div>
+      )}
     </>
   )
 }

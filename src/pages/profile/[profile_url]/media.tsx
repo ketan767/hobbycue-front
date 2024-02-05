@@ -24,6 +24,7 @@ import ProfileNavigationLinks from '@/components/ProfilePage/ProfileHeader/Profi
 import ProfileAddressSide from '@/components/ProfilePage/ProfileAddressSide'
 import ProfileContactSide from '@/components/ProfilePage/ProfileContactSides'
 import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/ProfileSocialMedia'
+import { updateProfileMenuExpandAll } from '@/redux/slices/site'
 
 interface Props {
   data: ProfilePageData['pageData']
@@ -36,7 +37,8 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
   const [media, setMedia] = useState([])
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
 
-  const [expandAll, setExpandAll] = useState(true)
+  const { profile } = useSelector((state: RootState) => state?.site.expandMenu)
+  const [expandAll, setExpandAll] = useState(profile)
   const inputRef = useRef<HTMLInputElement>(null)
   const dispatch = useDispatch()
 
@@ -121,6 +123,11 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
   }
   console.log('advd', data.pageData.video_url)
 
+  const handleExpandAll: (value: boolean) => void = (value) => {
+    setExpandAll(value)
+    dispatch(updateProfileMenuExpandAll(value))
+  }
+
   return (
     <>
       <Head>
@@ -131,7 +138,7 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
         activeTab={'media'}
         data={data}
         expandAll={expandAll}
-        setExpandAll={setExpandAll}
+        setExpandAll={handleExpandAll}
       >
         <PageGridLayout column={2}>
           <aside className={expandAll ? '' : styles['display-none']}>

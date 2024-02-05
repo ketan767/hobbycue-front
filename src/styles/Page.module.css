@@ -19,12 +19,23 @@
   color: #6d747a;
 }
 
-.display-desktop{
+.display-desktop {
   display: initial;
 }
 
-@media screen and (max-width:1100px) {
-  .display-desktop{
+.no-events-wrapper {
+  margin: 1rem;
+  background-color: #ffffff;
+  padding: var(--spacing-8) var(--spacing-16);
+  border: 1px solid rgb(var(--primary-50-rgb));
+  border-radius: 8px;
+  height: 10rem;
+  color: rgb(var(--gray-100-rgb));
+  font-size: 14px;
+  font-weight: 500;
+}
+@media screen and (max-width: 1100px) {
+  .display-desktop {
     display: none;
   }
 }

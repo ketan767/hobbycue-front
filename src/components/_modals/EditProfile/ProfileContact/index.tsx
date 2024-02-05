@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles.module.css'
-import { Button, CircularProgress } from '@mui/material'
+import { Button, CircularProgress, MenuItem, Select } from '@mui/material'
 import {
   addUserAddress,
   getMyProfileDetail,
@@ -22,6 +22,8 @@ import CloseIcon from '@/assets/icons/CloseIcon'
 import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import Image from 'next/image'
+import { countryData } from '@/utils/countrydata'
+import DropdownMenu from '@/components/DropdownMenu'
 
 type Props = {
   onComplete?: () => void
@@ -34,9 +36,17 @@ type Props = {
 }
 type ProfileContactData = {
   public_email: InputData<string>
-  phone: InputData<string>
+  phone: {
+    number: string
+    prefix: string
+    error?: string | null
+  }
   website: InputData<string>
-  whatsapp_number: InputData<string>
+  whatsapp_number: {
+    number: string
+    prefix: string
+    error?: string | null
+  }
 }
 
 const ProfileContactEditModal: React.FC<Props> = ({
@@ -54,6 +64,8 @@ const ProfileContactEditModal: React.FC<Props> = ({
   const inputRef = useRef<HTMLInputElement>(null)
   const websiteRef = useRef<HTMLInputElement>(null)
   const WhtphoneRef = useRef<HTMLInputElement>(null)
+  const [selectedCountryCode, setSelectedCountryCode] = useState('+91')
+  const [selectedWpCountryCode, setWpSelectedCountryCode] = useState('+91')
 
   useEffect(() => {
     inputRef?.current?.focus()
@@ -66,10 +78,10 @@ const ProfileContactEditModal: React.FC<Props> = ({
   const phoneRef = useRef<HTMLInputElement>(null)
 
   const [data, setData] = useState<ProfileContactData>({
-    phone: { value: '', error: null },
+    phone: { number: '', prefix: '', error: null },
     public_email: { value: '', error: null },
     website: { value: '', error: null },
-    whatsapp_number: { value: '', error: null },
+    whatsapp_number: { number: '', prefix: '', error: null },
   })
 
   const [initialData, setInitialData] = useState<ProfileContactData>()
@@ -78,25 +90,36 @@ const ProfileContactEditModal: React.FC<Props> = ({
   useEffect(() => {
     setInitialData({
       public_email: { value: user.public_email, error: null },
-      phone: { value: user.phone, error: null },
+      phone: { number: '', prefix: '', error: null },
       website: { value: user.website, error: null },
-      whatsapp_number: { value: user.whatsapp_number, error: null },
+      whatsapp_number: { number: '', prefix: '', error: null },
     })
   }, [user])
 
   const handleInputChange = (event: any) => {
     const { name, value } = event.target
-    setData((prev) => {
-      return {
-        ...prev,
-        [event.target.name]: { value: event.target.value, error: null },
-      }
-    })
 
-    const currentData = { ...data, [name]: value }
+    if (name === 'phone' || name === 'whatsapp_number') {
+      setData((prev) => ({
+        ...prev,
+        [name]: {
+          ...prev[name as keyof ProfileContactData],
+          number: value || '',
+          error: null,
+        },
+      }))
+    } else {
+      setData((prev) => ({
+        ...prev,
+        [name]: { value, error: null },
+      }))
+    }
+
+    const currentData = { ...data }
     const hasChanges =
       JSON.stringify(currentData) !== JSON.stringify(initialData)
     setIsChanged(hasChanges)
+
     if (onStatusChange) {
       onStatusChange(hasChanges)
     }
@@ -106,16 +129,19 @@ const ProfileContactEditModal: React.FC<Props> = ({
     setBackBtnLoading(true)
     if (
       (!data.public_email.value || data.public_email.value === '') &&
-      (!data.phone.value || data.phone.value === '')
+      (!data.phone.number || data.phone.number === '')
     ) {
       if (onBackBtnClick) onBackBtnClick()
       setBackBtnLoading(false)
     } else {
       const jsonData = {
-        phone: data.phone.value,
+        phone: { number: data.phone.number, prefix: selectedCountryCode },
         public_email: data.public_email.value,
         website: data.website.value,
-        whatsapp_number: data.whatsapp_number.value,
+        whatsapp_number: {
+          number: data.whatsapp_number.number,
+          prefix: selectedWpCountryCode,
+        },
       }
 
       setBackBtnLoading(true)
@@ -142,7 +168,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
   const handleSubmit = async () => {
     if (
       (!data.public_email.value || data.public_email.value === '') &&
-      (!data.phone.value || data.phone.value === '')
+      (!data.phone.number || data.phone.number === '')
     ) {
       inputRef.current?.focus()
       return setData((prev) => {
@@ -155,10 +181,10 @@ const ProfileContactEditModal: React.FC<Props> = ({
         }
       })
     }
-    if (data.phone.value) {
+    if (data.phone.number) {
       if (
-        !containOnlyNumbers(data.phone.value.toString().trim()) ||
-        data.phone.value.toString().trim().length !== 10
+        !containOnlyNumbers(data.phone.number.toString().trim()) ||
+        data.phone.number.toString().trim().length !== 10
       ) {
         phoneRef.current?.focus()
         return setData((prev) => {
@@ -169,10 +195,10 @@ const ProfileContactEditModal: React.FC<Props> = ({
         })
       }
     }
-    if (data.whatsapp_number.value) {
+    if (data.whatsapp_number.number) {
       if (
-        !containOnlyNumbers(data.whatsapp_number.value.toString().trim()) ||
-        data.whatsapp_number.value.toString().trim().length !== 10
+        !containOnlyNumbers(data.whatsapp_number.number.toString().trim()) ||
+        data.whatsapp_number.number.toString().trim().length !== 10
       ) {
         WhtphoneRef.current?.focus()
         return setData((prev) => {
@@ -201,10 +227,16 @@ const ProfileContactEditModal: React.FC<Props> = ({
       }
     }
     const jsonData = {
-      phone: data.phone.value,
+      phone: {
+        number: data.phone.number,
+        prefix: selectedCountryCode,
+      },
       public_email: data.public_email.value,
       website: data.website.value,
-      whatsapp_number: data.whatsapp_number.value,
+      whatsapp_number: {
+        number: data.whatsapp_number.number,
+        prefix: selectedWpCountryCode,
+      },
     }
 
     setSubmitBtnLoading(true)
@@ -234,9 +266,13 @@ const ProfileContactEditModal: React.FC<Props> = ({
       setData((prev) => {
         return {
           ...prev,
-          whatsapp_number: { value: data.phone.value, error: null },
+          whatsapp_number: {
+            number: data.phone.number,
+            prefix: selectedCountryCode,
+          },
         }
       })
+      setWpSelectedCountryCode(selectedCountryCode)
     }
   }, [tick])
 
@@ -253,23 +289,35 @@ const ProfileContactEditModal: React.FC<Props> = ({
           ...prev.public_email,
           value: publicEmail as string,
         },
-        phone: { ...prev.phone, value: user.phone as string },
+        phone: { ...prev.phone, number: user.phone?.number as string },
         whatsapp_number: {
           ...prev.whatsapp_number,
-          value: user.whatsapp_number as string,
+          number: user.whatsapp_number?.number as string,
         },
         website: { ...prev.website, value: user.website as string },
       }
     })
+    if (user.phone?.prefix) setSelectedCountryCode(user.phone?.prefix)
+    if (user.whatsapp_number?.prefix)
+      setWpSelectedCountryCode(user.whatsapp_number?.prefix)
   }, [user])
 
   const HandleSaveError = async () => {
     if (
       (!data.public_email.value || data.public_email.value === '') &&
-      (!data.phone.value || data.phone.value === '')
+      (!data.phone.number || data.phone.number === '')
     ) {
       setIsError(true)
     }
+  }
+
+  const handleWpPrefixChange = (element: any) => {
+    const id = element?.id    
+    setWpSelectedCountryCode(countryData[id]?.phonePrefix)    
+  }
+  const handlePrefixChange = (element: any) => {
+    const id = element?.id    
+    setSelectedCountryCode(countryData[id]?.phonePrefix)    
   }
 
   useEffect(() => {
@@ -360,15 +408,32 @@ const ProfileContactEditModal: React.FC<Props> = ({
                 }`}
               >
                 <label>Phone Number</label>
-                <input
-                  type="text"
-                  placeholder={`Enter Phone Number`}
-                  value={data.phone.value}
-                  name="phone"
-                  autoComplete="phone"
-                  onChange={handleInputChange}
-                  ref={phoneRef}
-                />
+                <div className={styles['phone-prefix-input']}>
+                <DropdownMenu
+                    value={selectedCountryCode}
+                    valueIndex={countryData.findIndex(
+                      (country, idx) =>
+                        country.phonePrefix === selectedCountryCode,
+                    )}
+                    options={countryData.map(
+                      (country, idx) =>
+                        `${country.name} (${country.phonePrefix})`,
+                    )}
+                    onOptionClick={handlePrefixChange}
+                    optionsPosition="bottom"
+                    search={true}
+                  />
+                  <input
+                    type="text"
+                    placeholder={`Enter Phone Number`}
+                    value={data.phone.number}
+                    name="phone"
+                    autoComplete="phone"
+                    onChange={handleInputChange}
+                    ref={phoneRef}
+                    className={styles['phone-input']}
+                  />
+                </div>
                 <p className={styles['helper-text']}>{data.phone.error}</p>
               </div>
 
@@ -390,15 +455,32 @@ const ProfileContactEditModal: React.FC<Props> = ({
                     </div>
                   </CustomTooltip>
                 </label>
-                <input
-                  type="text"
-                  placeholder={`Enter WhatsApp Number`}
-                  value={data.whatsapp_number.value}
-                  autoComplete="phone"
-                  name="whatsapp_number"
-                  onChange={handleInputChange}
-                  ref={WhtphoneRef}
-                />
+                <div className={styles['phone-prefix-input']}>
+                  <DropdownMenu
+                    value={selectedWpCountryCode}
+                    valueIndex={countryData.findIndex(
+                      (country, idx) =>
+                        country.phonePrefix === selectedWpCountryCode,
+                    )}
+                    options={countryData.map(
+                      (country, idx) =>
+                        `${country.name} (${country.phonePrefix})`,
+                    )}
+                    onOptionClick={handleWpPrefixChange}
+                    optionsPosition="bottom"
+                    search={true}
+                  />
+                  <input
+                    type="text"
+                    placeholder={`Enter WhatsApp Number`}
+                    value={data.whatsapp_number.number}
+                    autoComplete="phone"
+                    name="whatsapp_number"
+                    onChange={handleInputChange}
+                    ref={WhtphoneRef}
+                    className={styles['phone-input']}
+                  />
+                </div>
                 <p className={styles['helper-text']}>
                   {data.whatsapp_number.error}
                 </p>

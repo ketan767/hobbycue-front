@@ -17,24 +17,39 @@ import { useDispatch, useSelector } from 'react-redux'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import PostCard from '@/components/PostCard/PostCard'
 import { openModal } from '@/redux/slices/modal'
+import { updateHobbyMenuExpandAll } from '@/redux/slices/site'
 
 type Props = { data: { hobbyData: any } }
 
 const HobbyBlogsPage: React.FC<Props> = (props) => {
   const data = props.data.hobbyData
 
-  const [expandAll,setExpandAll]=useState(false)
+  const { hobby } = useSelector((state: RootState) => state?.site.expandMenu)
+  const [expandAll, setExpandAll] = useState(hobby)
   const dispatch = useDispatch()
   const { isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
   )
-  
 
+  const handleExpandAll: (value: boolean) => void = (value) => {
+    setExpandAll(value)
+    dispatch(updateHobbyMenuExpandAll(value))
+  }
   return (
     <>
-      <HobbyPageLayout activeTab="blogs" data={data} expandAll={expandAll} setExpandAll={setExpandAll}>
-        <main className={`${styles['display-desktop']}`}>
-          <p>No blogs available!</p>
+      <HobbyPageLayout
+        activeTab="blogs"
+        data={data}
+        expandAll={expandAll}
+        setExpandAll={handleExpandAll}
+      >
+        <main className={`${styles['display-desktop']} ${styles['dual-section-wrapper']}`}>
+          <div className={styles['no-posts-container']}>
+            <p>
+              This feature is under development. Come back soon to view this
+            </p>
+          </div>
+          <div className={styles['no-posts-container']}></div>
         </main>
       </HobbyPageLayout>
       <main className={`${styles['display-mobile']}`}>

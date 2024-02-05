@@ -38,3 +38,15 @@ export const getHobbyPages = async (query: string | null): Promise<ApiReturnObje
     return { err: error, res: null }
   }
 }
+
+export const getAllHobbiesUrls = async (
+
+  ): Promise<ApiReturnObject> => {
+    try {
+      const res = await axiosInstance.get(`/hobby/urls`)
+      return { res: res, err: null }
+    } catch (error) {
+      console.error(error)
+      return { err: error, res: null }
+    }
+  }

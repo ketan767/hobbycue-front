@@ -9,7 +9,7 @@ import Whatsapp from '@/assets/svg/whatsapp.svg'
 import Link from 'next/link'
 type Props = {
   data: ProfilePageData['pageData']
-  expandData?:boolean
+  expandData?: boolean
 }
 
 const ProfileContactSide = ({ data, expandData }: Props) => {
@@ -50,8 +50,8 @@ const ProfileContactSide = ({ data, expandData }: Props) => {
           }`}
         >
           {/* Phone */}
-          {data.phone && (
-            <Link href={`tel:${data?.name}`}>
+          {data.phone.number && (
+            <Link href={`tel:${data?.phone.number}`}>
               <li className={styles['list-item']}>
                 <svg
                   width="24"
@@ -73,22 +73,24 @@ const ProfileContactSide = ({ data, expandData }: Props) => {
                   </defs>
                 </svg>
 
-                <span>{data.phone} </span>
+                <span>{`${data.phone.prefix} ${data.phone.number}`} </span>
               </li>
             </Link>
           )}
 
           {/* WhatsApp Number */}
-          {data.whatsapp_number && (
+          {data.whatsapp_number.number && (
             <a
-              href={`https://wa.me/${data?.whatsapp_number}`}
+              href={`https://wa.me/${data?.whatsapp_number.number}`}
               target="_blank"
               rel="noopener noreferrer"
             >
               <li className={styles['list-item']}>
                 <Image src={Whatsapp} alt="whatsapp" width={24} height={24} />
 
-                <span>{data.whatsapp_number} </span>
+                <span>
+                  {`${data.whatsapp_number.prefix} ${data.whatsapp_number.number}`}{' '}
+                </span>
               </li>
             </a>
           )}
@@ -145,15 +147,18 @@ const ProfileContactSide = ({ data, expandData }: Props) => {
             </a>
           )}
 
-          {(!data.website&&!data.public_email&&!data.whatsapp_number&&!data.phone)&&
-            <p
-              className={`${styles['text']} ${
-                showText ? styles['show'] : styles['hide']
-              } `}
-            >
-              No contact information
-            </p>
-          }
+          {!data.website &&
+            !data.public_email &&
+            !data.whatsapp_number &&
+            !data.phone && (
+              <p
+                className={`${styles['text']} ${
+                  showText ? styles['show'] : styles['hide']
+                } `}
+              >
+                No contact information
+              </p>
+            )}
         </ul>
       </PageContentBox>
     </>

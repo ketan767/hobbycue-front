@@ -13,14 +13,31 @@ import Youtube from '@/assets/svg/social/youtube.svg'
 import { InviteToHobbycue } from '@/services/auth.service'
 import Image from 'next/image'
 import Link from 'next/link'
+import { CircularProgress } from '@mui/material'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
-const icons = [Facebook, Twitter, Instagram, Pintrest, Youtube, Telegram]
+const icons = [
+  { name: Facebook, link: 'https://www.facebook.com/hobbycue.community' },
+  { name: Twitter, link: 'https://twitter.com/hobbycue' },
+  { name: Instagram, link: 'https://www.instagram.com/hobbycue.community' },
+  { name: Pintrest, link: 'https://in.pinterest.com/hobbycue/' },
+  {
+    name: Youtube,
+    link: 'https://www.youtube.com/channel/UCEPxiQLanjReHcRe0FaHvrQ',
+  },
+  { name: Telegram, link: 'https://t.me/hobbycue' },
+]
 const Footer: React.FC = () => {
   const [email, setEmail] = useState('')
   const [expandHobbyCue, setExpandHobbyCue] = useState(false)
   const [expandHowDoI, setExpandHowDoI] = useState(false)
   const [expandQuickLinks, setExpandQuickLinks] = useState(false)
-
+  const [inviteBtnLoader, setInviteBtnLoader] = useState(false)
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
   const handleExpand = (type: string) => {
     if (type === 'Hobbycue') {
       return expandHobbyCue
@@ -52,7 +69,7 @@ const Footer: React.FC = () => {
         { title: 'Our Services', link: 'http://wp.hobbycue.com/services/' },
         { title: 'Work with Us', link: 'http://wp.hobbycue.com/work/' },
         { title: 'FAQ', link: 'http://wp.hobbycue.com/faq/' },
-        { title: 'Contact Us', link: 'http://wp.hobbycue.com/contact/' },
+        { title: 'Contact Us', link: '/contact/' },
       ],
     },
     {
@@ -91,11 +108,30 @@ const Footer: React.FC = () => {
   ]
   const to = email
   const sendInvite = async () => {
+    setInviteBtnLoader(true)
     const { err, res } = await InviteToHobbycue({
       to,
     })
-    setEmail('')
+    if (res.data?.success) {
+      setInviteBtnLoader(false)
+      setSnackbar({
+        display: true,
+        type: 'success',
+        message: 'Invitation sent sucessfully!',
+      })
+      setEmail('')
+    }
+    if (err) {
+      setEmail('')
+      setInviteBtnLoader(false)
+      setSnackbar({
+        display: true,
+        type: 'error',
+        message: 'Invitation failed.',
+      })
+    }
   }
+
   return (
     <>
       <div className={styles.container}>
@@ -151,14 +187,15 @@ const Footer: React.FC = () => {
               <div className={styles.iconsContainer}>
                 {icons.map((Icon: any, idx: any) => {
                   return (
-                    <Image
-                      className={styles.socialIcons}
-                      height={32}
-                      width={32}
-                      src={Icon}
-                      alt="social-media"
-                      key={idx}
-                    />
+                    <Link href={Icon.link} key={idx}>
+                      <Image
+                        className={styles.socialIcons}
+                        height={32}
+                        width={32}
+                        src={Icon.name}
+                        alt="social-media"
+                      />
+                    </Link>
                   )
                 })}
               </div>
@@ -174,7 +211,11 @@ const Footer: React.FC = () => {
                   onChange={(e: any) => setEmail(e.target.value)}
                 />
                 <button onClick={sendInvite} className={styles.button}>
-                  Invite
+                  {inviteBtnLoader ? (
+                    <CircularProgress color="inherit" size={'20px'} />
+                  ) : (
+                    'Invite'
+                  )}
                 </button>
               </div>
             </div>
@@ -182,6 +223,16 @@ const Footer: React.FC = () => {
         </div>
       </div>
       <div className={styles.bottombar}>© Purple Cues Private Limited</div>
+      {
+        <CustomSnackbar
+          message={snackbar.message}
+          triggerOpen={snackbar.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

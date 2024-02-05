@@ -25,13 +25,14 @@ import Link from 'next/link'
 import { getAllHobbies, getTrendingHobbies } from '@/services/hobby.service'
 import DefaultHobbyImg from '@/assets/svg/default-images/default-hobbies.svg'
 import DefaultHobbyImgcover from '@/assets/svg/default-images/default-hobby-cover.svg'
-import { MenuItem, Select } from '@mui/material'
+import { CircularProgress, MenuItem, Select, Snackbar } from '@mui/material'
 import FilledButton from '@/components/_buttons/FilledButton'
 import InputSelect from '@/components/_formElements/Select/Select'
 import { DropdownOption } from '@/components/_modals/CreatePost/Dropdown/DropdownOption'
 import { getListingPages } from '@/services/listing.service'
 import { setShowPageLoader } from '@/redux/slices/site'
 import { InviteToCommunity } from '@/services/auth.service'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -58,7 +59,11 @@ const CommunityLayout: React.FC<Props> = ({
   const [selectedHobby, setSelectedHobby] = useState('')
   const [selectedGenre, setSelectedGenre] = useState('')
   const [selectedLocation, setSelectedLocation] = useState('')
-
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
   const tabs: CommunityPageTabs[] = [
     'posts',
     'links',
@@ -70,7 +75,7 @@ const CommunityLayout: React.FC<Props> = ({
   const [seeMoreHobby, setSeeMoreHobby] = useState(
     activeProfile.data?._hobbies?.length > 3 ? true : false,
   )
-
+  const [inviteBtnLoader, setInviteBtnLoader] = useState(false)
   const [trendingHobbies, setTrendingHobbies] = useState([])
   console.log('Number of hobbies:', activeProfile.data?._hobbies?.length)
 
@@ -81,7 +86,7 @@ const CommunityLayout: React.FC<Props> = ({
   const getPost = async () => {
     const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
     activeProfile?.data?._hobbies.forEach((item: any) => {
-      params.append('_hobby', item.hobby._id)
+      params.append('_hobby', item.hobby?._id)
     })
     if (!activeProfile?.data?._hobbies) return
 
@@ -392,12 +397,29 @@ const CommunityLayout: React.FC<Props> = ({
   const Invitecommunity = async () => {
     const to = email
     const name = activeProfile?.data.full_name
+    setInviteBtnLoader(true)
     const { err, res } = await InviteToCommunity({
       to,
       name,
     })
-
-    setEmail('')
+    if (res.data?.success) {
+      setInviteBtnLoader(false)
+      setSnackbar({
+        display: true,
+        type: 'success',
+        message: 'Invitation sent sucessfully!',
+      })
+      setEmail('')
+    }
+    if (err) {
+      setEmail('')
+      setInviteBtnLoader(false)
+      setSnackbar({
+        display: true,
+        type: 'error',
+        message: 'Invitation failed.',
+      })
+    }
   }
 
   return (
@@ -442,9 +464,9 @@ const CommunityLayout: React.FC<Props> = ({
                     return (
                       <li
                         key={hobby._id}
-                        onClick={() => handleHobbyClick(hobby.hobby._id)}
+                        onClick={() => handleHobbyClick(hobby.hobby?._id)}
                         className={
-                          selectedHobby === hobby.hobby._id
+                          selectedHobby === hobby.hobby?._id
                             ? styles.selectedItem
                             : ''
                         }
@@ -616,8 +638,13 @@ const CommunityLayout: React.FC<Props> = ({
                         dispatch(
                           openModal({ type: 'create-post', closable: true }),
                         )
-                        else
-                        dispatch(openModal({type:"user-onboarding", closable:true}))
+                      else
+                        dispatch(
+                          openModal({
+                            type: 'user-onboarding',
+                            closable: true,
+                          }),
+                        )
                     }}
                     className={styles['start-post-btn']}
                   >
@@ -681,8 +708,8 @@ const CommunityLayout: React.FC<Props> = ({
                       <MenuItem value="">All Hobbies</MenuItem>
                       {activeProfile.data?._hobbies?.map(
                         (item: any, idx: any) => (
-                          <MenuItem key={idx} value={item.hobby._id}>
-                            {item.hobby.display}
+                          <MenuItem key={idx} value={item.hobby?._id}>
+                            {item.hobby?.display}
                           </MenuItem>
                         ),
                       )}
@@ -793,7 +820,17 @@ const CommunityLayout: React.FC<Props> = ({
                   id=""
                 />
                 <span className={styles['input-prefix']}></span>
-                <FilledButton onClick={Invitecommunity}>Invite</FilledButton>
+                <FilledButton
+                  onClick={Invitecommunity}
+                  className={inviteBtnLoader ? styles['invite-loader-btn'] : ''}
+                >
+                  {inviteBtnLoader ? (
+                    <CircularProgress color="inherit" size={'20px'} />
+                  ) : (
+                    'Invite'
+                  )}
+                </FilledButton>
+                {/* <CircularProgress color="inherit" size={'22px'} /> */}
               </section>
             </section>
 
@@ -825,6 +862,16 @@ const CommunityLayout: React.FC<Props> = ({
           </aside>
         )}
       </PageGridLayout>
+      {
+        <CustomSnackbar
+          message={snackbar.message}
+          triggerOpen={snackbar.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

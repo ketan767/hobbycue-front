@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import PostCard from '@/components/PostCard/PostCard'
 import { openModal } from '@/redux/slices/modal'
+import { updateHobbyMenuExpandAll } from '@/redux/slices/site'
 
 type Props = { data: { hobbyData: any } }
 
@@ -24,7 +25,8 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
   const data = props.data.hobbyData
 
   const dispatch = useDispatch()
-  const [expandAll, setExpandAll] = useState(false)
+  const { hobby } = useSelector((state: RootState) => state?.site.expandMenu)
+  const [expandAll, setExpandAll] = useState(hobby)
   const { isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
   )
@@ -48,13 +50,18 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
     getPost()
   }, [])
 
+  const handleExpandAll: (value: boolean) => void = (value) => {
+    setExpandAll(value)
+    dispatch(updateHobbyMenuExpandAll(value))
+  }
+
   return (
     <div>
       <HobbyPageLayout
         activeTab="posts"
         data={data}
         expandAll={expandAll}
-        setExpandAll={setExpandAll}
+        setExpandAll={handleExpandAll}
       >
         <main className={`${styles['display-desktop']}`}>
           {/* <div className={styles['start-post-btn']}>
@@ -79,7 +86,11 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
             {!isLoggedIn || loadingPosts ? (
               <PostCardSkeletonLoading />
             ) : (
-              posts.length === 0 && 'No Posts'
+              posts.length === 0 && (
+                <div className={styles['no-posts-container']}>
+                  <p>No posts available</p>
+                </div>
+              )
             )}
             {posts.map((post: any) => {
               return <PostCard key={post._id} postData={post} />
@@ -88,9 +99,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
         </main>
       </HobbyPageLayout>
       <main className={`${styles['display-mobile']}`}>
-        <section
-          className={`${styles['posts-container']}}`}
-        >
+        <section className={`${styles['posts-container']}}`}>
           {!isLoggedIn || loadingPosts ? (
             <PostCardSkeletonLoading />
           ) : (

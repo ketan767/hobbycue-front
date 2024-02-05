@@ -17,27 +17,45 @@ import { useDispatch, useSelector } from 'react-redux'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import PostCard from '@/components/PostCard/PostCard'
 import { openModal } from '@/redux/slices/modal'
+import { updateHobbyMenuExpandAll } from '@/redux/slices/site'
 
 type Props = { data: { hobbyData: any } }
 
 const HobbyStorePage: React.FC<Props> = (props) => {
   const data = props.data.hobbyData
 
-  const [expandAll,setExpandAll]=useState(false)
+  const { hobby } = useSelector((state: RootState) => state?.site.expandMenu)
+  const [expandAll, setExpandAll] = useState(hobby)
   const dispatch = useDispatch()
   const { isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
   )
 
+  const handleExpandAll: (value: boolean) => void = (value) => {
+    setExpandAll(value)
+    dispatch(updateHobbyMenuExpandAll(value))
+  }
+
   return (
     <>
-      <HobbyPageLayout activeTab="store" data={data} expandAll={expandAll} setExpandAll={setExpandAll}>
+      <HobbyPageLayout
+        activeTab="store"
+        data={data}
+        expandAll={expandAll}
+        setExpandAll={handleExpandAll}
+      >
         <main className={`${styles['display-desktop']}`}>
-          <p>No data available!</p>
+          <div className={styles['no-posts-container']}>
+            <p>
+              This feature is under development. Come back soon to view this
+            </p>
+          </div>{' '}
         </main>
       </HobbyPageLayout>
       <main className={`${styles['display-mobile']}`}>
-        <p>No data available!</p>
+        <div className={styles['no-posts-container']}>
+          <p>No posts available</p>
+        </div>{' '}
       </main>
     </>
   )

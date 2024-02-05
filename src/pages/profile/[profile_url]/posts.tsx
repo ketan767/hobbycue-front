@@ -25,6 +25,8 @@ import { updateUser } from '@/redux/slices/user'
 import PostWrapper from '@/layouts/PinnedPost/PinnedPost'
 import ProfileNavigationLinks from '@/components/ProfilePage/ProfileHeader/ProfileNavigationLinks'
 import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/ProfileSocialMedia'
+import { RootState } from '@/redux/store'
+import { updateProfileMenuExpandAll } from '@/redux/slices/site'
 
 interface Props {
   data: ProfilePageData
@@ -35,7 +37,9 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
   const [posts, setPosts] = useState([])
   const dispatch = useDispatch()
   const { user } = useSelector((state: any) => state.user)
-  const [expandAll, setExpandAll] = useState(true)
+  const { profile } = useSelector((state: RootState) => state?.site.expandMenu)
+  const [expandAll, setExpandAll] = useState(profile)
+  
   const getPost = async () => {
     setLoadingPosts(true)
     const { err, res } = await getAllPosts(
@@ -85,6 +89,11 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
   let unpinnnedPosts = posts.filter((item: any) => item.isPinned !== true)
   console.log('posts', data)
 
+  const handleExpandAll: (value: boolean) => void = (value) => {
+    setExpandAll(value)
+    dispatch(updateProfileMenuExpandAll(value))
+  }
+
   return (
     <>
       <Head>
@@ -95,7 +104,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
         activeTab={'posts'}
         data={data}
         expandAll={expandAll}
-        setExpandAll={setExpandAll}
+        setExpandAll={handleExpandAll}
       >
         <PageGridLayout column={3}>
           <aside className={expandAll ? '' : styles['display-none']}>
@@ -154,7 +163,11 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
               {loadingPosts ? (
                 <PostCardSkeletonLoading />
               ) : (
-                posts.length === 0 && 'No Posts'
+                posts.length === 0 && (
+                  <div className={styles['no-posts-container']}>
+                    <p>No posts available</p>
+                  </div>
+                )
               )}
 
               {pinnedPosts.map((post: any) => {
@@ -242,7 +255,11 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
             {loadingPosts ? (
               <PostCardSkeletonLoading />
             ) : (
-              posts.length === 0 && 'No Posts'
+              posts.length === 0 && (
+                <div className={styles['no-posts-container']}>
+                  <p>No posts available</p>
+                </div>
+              )
             )}
 
             {pinnedPosts.map((post: any) => {

@@ -22,7 +22,7 @@ type UpdateProfilePayload = {
   profile_url?: string
   gender?: 'male' | 'female' | null
   year_of_birth?: string
-  phone?: string
+  phone?: {number: string, prefix: string}
   website?: string
   about?: string
 
@@ -75,4 +75,26 @@ interface InvitetoHobbycuePayload {
 interface InviteToCommunityPayload {
   to:string
   name: string
+}
+
+interface ContactUspayload {
+  name: string;
+  email: string;
+  phone: {
+    number: string | null;
+    prefix: string | null;
+  };
+  whatsapp_number?: {
+    number: string | null;
+    prefix: string | null;
+  };
+  YouAre: string;
+  Regarding: string;
+  Message: string | null;
+}
+
+interface supportPayload {
+  review: string
+  name?: string
+  email?: string
 }

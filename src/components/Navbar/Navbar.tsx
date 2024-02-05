@@ -183,7 +183,7 @@ export const Navbar: React.FC<Props> = ({}) => {
       }
 
       const typeResultOne = combinedResults.filter(
-        (page: any) => page.type === 1,
+        (page: any) => page.type === 1 && page.is_published === true,
       )
 
       dispatch(
@@ -194,7 +194,7 @@ export const Navbar: React.FC<Props> = ({}) => {
         }),
       )
       const typeResultTwo = combinedResults.filter(
-        (page: any) => page.type === 2,
+        (page: any) => page.type === 2 && page.is_published === true,
       )
 
       dispatch(
@@ -205,7 +205,7 @@ export const Navbar: React.FC<Props> = ({}) => {
         }),
       )
       const typeResultThree = combinedResults.filter(
-        (page: any) => page.type === 3,
+        (page: any) => page.type === 3 && page.is_published === true,
       )
 
       dispatch(
@@ -450,7 +450,7 @@ export const Navbar: React.FC<Props> = ({}) => {
 
                       <ul>
                         <Link href={'/hobby/animal-fancy'}>
-                          <li>Animals</li>
+                          <li>Animal-Fancy</li>
                         </Link>
 
                         <Link href={'/hobby/observe'}>
@@ -481,10 +481,12 @@ export const Navbar: React.FC<Props> = ({}) => {
                       </h4>
 
                       <ul>
-                        <li>Items</li>
+                        <Link href={'/hobby/items'}>
+                          <li>Items</li>
+                        </Link>
 
                         <Link href={'/hobby/records'}>
-                          <li>Record</li>
+                          <li>Records</li>
                         </Link>
 
                         <li>Spotting</li>
@@ -510,7 +512,7 @@ export const Navbar: React.FC<Props> = ({}) => {
 
               {/* Bookmark */}
               <li>
-                <Link href={'#'}>
+                <Link href={'/bookmarks'}>
                   <CustomizedTooltips title="Bookmark">
                     <svg
                       width="24"
@@ -537,7 +539,7 @@ export const Navbar: React.FC<Props> = ({}) => {
 
               {/* Notification */}
               <li>
-                <Link href={'#'}>
+                <Link href={'/notifications'}>
                   <CustomizedTooltips title="Notification">
                     <svg
                       width="24"
@@ -564,7 +566,7 @@ export const Navbar: React.FC<Props> = ({}) => {
 
               {/* Cart */}
               <li>
-                <Link href={'#'}>
+                <Link href={'/cart'}>
                   <CustomizedTooltips title="Cart">
                     <svg
                       width="24"
@@ -650,8 +652,12 @@ export const Navbar: React.FC<Props> = ({}) => {
 
                       <section className={styles['manage']}>
                         <h5>Manage</h5>
-                        <p>My Activity</p>
-                        <p>My Orders</p>
+                        <Link href={`/activity`}>
+                          <p>My Activity</p>
+                        </Link>
+                        <Link href={`/orders`}>
+                          <p>My Orders</p>
+                        </Link>
                         <Link href={`/profile/${user.profile_url}/pages`}>
                           <p>My Pages</p>
                         </Link>

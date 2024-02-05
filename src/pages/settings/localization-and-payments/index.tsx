@@ -29,17 +29,18 @@ let options = {
   phone: countryData.map((item) => item.phonePrefix),
 }
 
+const defaultValues = {
+  region: options.region[options.region.indexOf('India')],
+  language: options.language[0],
+  currency: options.currency[0],
+  phonePrefix: options.phone[options.region.indexOf('India')],
+  distance: options.distance[0],
+}
+
 const VisibilityAndNotification: React.FC = () => {
+  const [inpSelectValues, setInpSelectValues] = useState(defaultValues)
   const { user, activeProfile } = useSelector((state: RootState) => state.user)
   const dispatch = useDispatch()
-
-  const [inpSelectValues, setInpSelectValues] = useState({
-    region: options.region[0],
-    language: options.language[0],
-    currency: options.currency[0],
-    phonePrefix: options.phone[0],
-    distance: options.distance[0],
-  })
 
   const handleAddLocation = () => {
     dispatch(openModal({ type: 'add-location', closable: false }))
@@ -135,7 +136,7 @@ const VisibilityAndNotification: React.FC = () => {
             </div>
           </div>
 
-          <div className={`${styles.cardContainer}`}>
+          {/* <div className={`${styles.cardContainer}`}>
             <div className={`${styles.addressLeft}`}>
               <Image
                 src={RadioUnselected}
@@ -188,7 +189,7 @@ const VisibilityAndNotification: React.FC = () => {
               alt="edit"
               className={styles.addIcon}
             />
-          </div>
+          </div> */}
 
           <p className={`${styles.textLight}`}> Localization </p>
 

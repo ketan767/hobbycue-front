@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { SetStateAction, useEffect, useRef, useState } from 'react'
 import styles from '@/styles/HobbyDetail.module.css'
 
 import ProfileHeader from '../../components/ProfilePage/ProfileHeader/ProfileHeader'
@@ -17,12 +17,12 @@ import HobbyPageHeaderSmall from '@/components/HobbyPage/HobbyHeader/HobbyPageHe
 import ChevronDown from '@/assets/svg/chevron-down.svg'
 import Image from 'next/image'
 import HobbyNavigationLinks from '@/components/HobbyPage/HobbyHeader/HobbyNavigationLinks'
-
+import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
 type Props = {
   activeTab: HobbyPageTabs
   data: any
   children: React.ReactNode
-  setExpandAll?: React.Dispatch<React.SetStateAction<boolean>>
+  setExpandAll: (value: boolean) => void
   expandAll?: boolean
 }
 
@@ -88,13 +88,6 @@ const HobbyPageLayout: React.FC<Props> = ({
     // return window.removeEventListener('scroll', checkScroll)
   }, [])
 
-  useEffect(() => {
-    if (expandAll !== undefined) {
-      setShowHobbiesClassification(expandAll)
-      setShowMembers(expandAll)
-    }
-  }, [expandAll])
-
   const toggleMembers = () => {
     setSeeAll(!seeAll)
   }
@@ -109,7 +102,7 @@ const HobbyPageLayout: React.FC<Props> = ({
       <div
         onClick={() => {
           if (setExpandAll !== undefined)
-            setExpandAll((prevValue: boolean) => !prevValue)
+            setExpandAll(!expandAll)
         }}
         className={styles['expand-all']}
       >
@@ -122,11 +115,10 @@ const HobbyPageLayout: React.FC<Props> = ({
       </div>
 
       <PageGridLayout column={!hideLastColumn ? 3 : 2}>
-        <aside className={`custom-scrollbar ${styles['hobby-left-aside']}`}>
+        <aside className={`custom-scrollbar ${styles['hobby-left-aside']} ${expandAll?"":styles['display-none']}`}>
           <PageContentBox
             showEditButton={false}
             setDisplayData={setShowHobbiesClassification}
-            expandData={expandAll}
           >
             <h4 className={styles['heading']}>Hobbies Classification</h4>
             <div
@@ -157,7 +149,7 @@ const HobbyPageLayout: React.FC<Props> = ({
         <main className={styles['display-desktop']}>{children}</main>
 
         {!hideLastColumn && (
-          <aside>
+          <aside className={expandAll?"":styles['display-none']}>
             <div className={styles['members']}>
               <div className={styles['heading']}>
                 <h4>Members</h4>
@@ -194,7 +186,7 @@ const HobbyPageLayout: React.FC<Props> = ({
                                 className={styles['member-img']}
                                 width="24"
                                 height="24"
-                                src={user.profile_image}
+                                src={user.profile_image || defaultUserIcon}
                                 alt=""
                               />
                               <div>{user.full_name}</div>

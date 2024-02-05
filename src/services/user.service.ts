@@ -203,3 +203,22 @@ export const getAllUserUrls = async (
     return { err: error, res: null }
   }
 }
+
+export const addContactUs = async (data: ContactUspayload): Promise<ApiReturnObject> => {
+  try {
+    const res = await axiosInstance.post(`/user/add-contact`, data);
+    return { res: res, err: null };
+  } catch (error: any) {
+    return { err: error, res: null };
+  }
+};
+
+
+export const support = async (data: supportPayload): Promise<ApiReturnObject> => {
+  try {
+    const res = await axiosInstance.post(`/user/add-support`, data);
+    return { res: res, err: null };
+  } catch (error: any) {
+    return { err: error, res: null };
+  }
+};

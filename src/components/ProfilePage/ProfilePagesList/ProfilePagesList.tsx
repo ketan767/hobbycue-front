@@ -7,13 +7,15 @@ import { openModal } from '@/redux/slices/modal'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
 import { listingTypes } from '@/constants/constant'
+import { listingData } from '@/components/_modals/EditListing/ListingRelated/data'
 
 type Props = {
   data: ProfilePageData['pageData']
-  expandData?:boolean
+  expandData?: boolean
 }
 
 const ProfilePagesList = ({ data, expandData }: Props) => {
+  const { user } = useSelector((state: RootState) => state.user)
   const router = useRouter()
   const [displayData, setDisplayData] = useState(false)
   function getClassName(type: any) {
@@ -36,18 +38,24 @@ const ProfilePagesList = ({ data, expandData }: Props) => {
     if (expandData !== undefined) setDisplayData(expandData)
   }, [expandData])
 
-  return (
-    <PageContentBox
-    setDisplayData={setDisplayData}
-    expandData={expandData}
-    >
-      <h4 className={styles['heading']}>Pages</h4>
-      <ul className={`${styles['pages-list']} ${displayData&&styles['display-mobile-flex']}`}>
+  console.log('listingAdminid', data.listingsData)
+  console.log('user_id', user._id)
 
+  return (
+    <PageContentBox setDisplayData={setDisplayData} expandData={expandData}>
+      <h4 className={styles['heading']}>Pages</h4>
+      <ul
+        className={`${styles['pages-list']} ${
+          displayData && styles['display-mobile-flex']
+        } `}
+      >
         {data.listingsData?.map((item: any) => {
           if (typeof item === 'string') return
           return (
             <li
+              className={`${
+                item?.admin !== user?._id && styles['unclaimed-page']
+              }`}
               key={item._id}
               onClick={() => router.push(`/page/${item.page_url}`)}
             >

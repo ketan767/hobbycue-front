@@ -132,7 +132,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
   }, [filterData.category])
 
   return (
-    <>
+    <div className={styles['all-hobby-wrapper']}>
       <div className={`site-container ${styles['page-container']}`}>
         <aside className={styles['hobby-filter']}>
           {/* Filters */}
@@ -293,8 +293,9 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                 >
                                   <p>
                                     <Image src={AddIcon} alt="add" />{' '}
-                                    {subCat.display}
-                                    <Link href={`/hobby/${subCat.slug}`}></Link>
+                                    <Link href={`/hobby/${subCat.slug}`}>
+                                      {subCat.display}
+                                    </Link>
                                   </p>
                                   <div
                                     className={styles['vertical-line']}
@@ -324,7 +325,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
           )}
         </main>
       </div>
-    </>
+    </div>
   )
 }
 
@@ -346,9 +347,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   return {
     props: {
       data: {
-        categories: category.res.data.hobbies,
-        sub_categories: subCategory.res.data.hobbies,
-        hobbies: hobby.res.data.hobbies,
+        categories: category.res?.data.hobbies,
+        sub_categories: subCategory.res?.data.hobbies,
+        hobbies: hobby.res?.data.hobbies,
       },
     },
   }

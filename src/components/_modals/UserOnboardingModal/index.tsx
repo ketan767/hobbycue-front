@@ -86,6 +86,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
       dispatch(updateUser(res.data.data.user))
       dispatch(closeModal())
       router.push(`/profile/${user.profile_url}`)
+      // window.location.href = `/profile/${user.profile_url}`; // This will force a reload
       dispatch(openModal({ type: 'user-onboarding-welcome', closable: false }))
     }
   }

@@ -30,16 +30,19 @@ import PostWrapper from '@/layouts/PinnedPost/PinnedPost'
 import { updateUser } from '@/redux/slices/user'
 import { withAuth } from '@/navigation/withAuth'
 import ProfileNavigationLinks from '@/components/ProfilePage/ProfileHeader/ProfileNavigationLinks'
+import { updateProfileMenuExpandAll } from '@/redux/slices/site'
 
 interface Props {
   data: ProfilePageData
 }
 
 const ProfileHome: React.FC<Props> = ({ data }) => {
+  console.warn({data});
   const dispatch = useDispatch()
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
 
-  const [expandAll, setExpandAll] = useState(true)
+  const { profile } = useSelector((state: RootState) => state?.site.expandMenu)
+  const [expandAll, setExpandAll] = useState(profile)
   const [pageData, setPageData] = useState(data.pageData)
   const [loadingPosts, setLoadingPosts] = useState(false)
   const [displayAbout, setDisplayAbout] = useState(false)
@@ -105,6 +108,15 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
     }
   }, [expandAll])
 
+  const handleExpandAll: (value: boolean) => void = (value) => {
+    setExpandAll(value)
+    dispatch(updateProfileMenuExpandAll(value))
+  }
+
+  useEffect(()=>{
+    setPageData(data?.pageData)
+  },[data?.pageData])
+
   return (
     <>
       <Head>
@@ -115,7 +127,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
         activeTab={'home'}
         data={data}
         expandAll={expandAll}
-        setExpandAll={setExpandAll}
+        setExpandAll={handleExpandAll}
       >
         {data.pageData && (
           <PageGridLayout column={3}>
@@ -401,15 +413,27 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 
   if (!user) return { notFound: true }
 
-  const { err: error, res: response } = await getListingPages(
+  const { err: error1, res: response1 } = await getListingPages(
     `populate=_hobbies,_address&admin=${user._id}`,
+  )
+  const { err: error2, res: response2 } = await getListingPages(
+    `populate=_hobbies,_address&public_email=${user.email}`,
+  )
+  const combinedListingsData = [
+    ...(response1?.data.data.listings || []),
+    ...(response2?.data.data.listings || []),
+  ]
+
+  const uniqueListingsData = combinedListingsData.filter(
+    (listing, index, self) =>
+      index === self.findIndex((l) => l.page_url === listing.page_url),
   )
 
   const data = {
     pageData: res.data.data.users[0],
     postsData: null,
     mediaData: null,
-    listingsData: response?.data.data.listings,
+    listingsData: uniqueListingsData,
     blogsData: null,
   }
   return {

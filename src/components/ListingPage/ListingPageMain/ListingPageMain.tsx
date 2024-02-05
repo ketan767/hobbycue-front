@@ -37,6 +37,7 @@ import DefaultPageImage from '@/assets/svg/default-images/default-people-listing
 import OthersIcon from '@/assets/svg/other.svg'
 import dynamic from 'next/dynamic'
 import MapComponent from '@/components/Gmap'
+import { RootState } from '@/redux/store'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -67,6 +68,9 @@ const ListingPageMain: React.FC<Props> = ({
   const dispatch = useDispatch()
   const [tags, setTags] = useState([])
   const { listingLayoutMode } = useSelector((state: any) => state.site)
+  const { isLoggedIn, isAuthenticated, user } = useSelector(
+    (state: RootState) => state.user,
+  )
 
   console.log('page', data)
   const [selectedTags, setSelectedTags] = useState([])
@@ -122,7 +126,7 @@ const ListingPageMain: React.FC<Props> = ({
   const FetchAdmin = async () => {
     let adminId = data.admin
     const admin: any = await getAllUserDetail(`_id=${adminId}`)
-    setPageAdmin(admin.res.data.data.users[0])
+    setPageAdmin(admin.res?.data.data.users[0])
   }
   useEffect(() => {
     getListingTags()
@@ -427,7 +431,7 @@ const ListingPageMain: React.FC<Props> = ({
                 }${showContact ? ' ' + styles['display-mobile'] : ''}`}
               >
                 {/* Page Admin */}
-                {(PageAdmin as any)?.full_name && (
+                {(PageAdmin as any)?.full_name && isLoggedIn && (
                   <Link href={`/profile/${(PageAdmin as any)?.profile_url}`}>
                     <Image
                       src={AdminSvg}
@@ -439,6 +443,23 @@ const ListingPageMain: React.FC<Props> = ({
                       {(PageAdmin as any)?.full_name}
                     </span>
                   </Link>
+                )}
+                {(PageAdmin as any)?.full_name && !isLoggedIn && (
+                  <a
+                    onClick={(e) =>
+                      dispatch(openModal({ type: 'auth', closable: true }))
+                    }
+                  >
+                    <Image
+                      src={AdminSvg}
+                      alt="whatsapp"
+                      width={24}
+                      height={24}
+                    />
+                    <span className={styles.textdefault}>
+                      {(PageAdmin as any)?.full_name}
+                    </span>
+                  </a>
                 )}
                 {/* Phone */}
                 {data?.name && (
@@ -466,8 +487,8 @@ const ListingPageMain: React.FC<Props> = ({
                     <span className={styles.textdefault}>{data?.name} </span>
                   </Link>
                 )}
-                {data?.phone && (
-                  <Link href={`tel:${data?.phone}`}>
+                {data?.phone.number && (
+                  <Link href={`tel:${data?.phone.number}`}>
                     <svg
                       width="24"
                       height="24"
@@ -488,13 +509,15 @@ const ListingPageMain: React.FC<Props> = ({
                       </defs>
                     </svg>
 
-                    <span className={styles.textdefault}>{data?.phone} </span>
+                    <span className={styles.textdefault}>
+                      {`${data.phone?.prefix} ${data?.phone.number}`}{' '}
+                    </span>
                   </Link>
                 )}
 
                 {/* WhatsApp Number */}
-                {data?.whatsapp_number && (
-                  <Link href={`https://wa.me/${data?.whatsapp_number}`}>
+                {data?.whatsapp_number?.number && (
+                  <Link href={`https://wa.me/${data?.whatsapp_number.number}`}>
                     <Image
                       src={WhatsappIcon}
                       alt="whatsapp11"
@@ -502,7 +525,7 @@ const ListingPageMain: React.FC<Props> = ({
                       height={24}
                     />
                     <span className={styles.textdefault}>
-                      {data?.whatsapp_number}{' '}
+                      {`${data?.whatsapp_number.prefix}+' '+${data?.whatsapp_number.number}`}{' '}
                     </span>
                   </Link>
                 )}
@@ -897,9 +920,7 @@ const ListingPageMain: React.FC<Props> = ({
                   }`}
                 >
                   {!listingPagesRight || listingPagesRight.length === 0 ? (
-                    <span className={styles.textGray}>
-                      {'Eg: Guru related to this page'}
-                    </span>
+                    <span className={styles.textGray}></span>
                   ) : (
                     <ul className={styles['related-list']}>
                       {listingPagesRight?.map((item: any) => {
@@ -1080,13 +1101,25 @@ const ListingPageMain: React.FC<Props> = ({
               }${showContact ? ' ' + styles['display-mobile'] : ''}`}
             >
               {/* Page Admin */}
-              {(PageAdmin as any)?.full_name && (
+              {(PageAdmin as any)?.full_name && isLoggedIn && (
                 <Link href={`/profile/${(PageAdmin as any)?.profile_url}`}>
                   <Image src={AdminSvg} alt="whatsapp" width={24} height={24} />
                   <span className={styles.textdefault}>
                     {(PageAdmin as any)?.full_name}
                   </span>
                 </Link>
+              )}
+              {(PageAdmin as any)?.full_name && !isLoggedIn && (
+                <a
+                  onClick={(e) =>
+                    dispatch(openModal({ type: 'auth', closable: true }))
+                  }
+                >
+                  <Image src={AdminSvg} alt="whatsapp" width={24} height={24} />
+                  <span className={styles.textdefault}>
+                    {(PageAdmin as any)?.full_name}
+                  </span>
+                </a>
               )}
               {/* Phone */}
               {data?.name && (
@@ -1114,8 +1147,8 @@ const ListingPageMain: React.FC<Props> = ({
                   <span className={styles.textdefault}>{data?.name} </span>
                 </Link>
               )}
-              {data?.phone && (
-                <Link href={`tel:${data?.phone}`}>
+              {data?.phone.number && (
+                <Link href={`tel:${data?.phone.number}`}>
                   <svg
                     width="24"
                     height="24"
@@ -1136,12 +1169,14 @@ const ListingPageMain: React.FC<Props> = ({
                     </defs>
                   </svg>
 
-                  <span className={styles.textdefault}>{data?.phone} </span>
+                  <span className={styles.textdefault}>
+                    {`${data?.phone?.prefix} ${data?.phone?.number}`}
+                  </span>
                 </Link>
               )}
 
               {/* WhatsApp Number */}
-              {data?.whatsapp_number && (
+              {data?.whatsapp_number?.number && (
                 <Link href={`https://wa.me/${data?.whatsapp_number}`}>
                   <Image
                     src={WhatsappIcon}
@@ -1150,7 +1185,7 @@ const ListingPageMain: React.FC<Props> = ({
                     height={24}
                   />
                   <span className={styles.textdefault}>
-                    {data?.whatsapp_number}{' '}
+                    {`${data?.whatsapp_number?.prefix} ${data?.whatsapp_number?.number}`}
                   </span>
                 </Link>
               )}
@@ -1609,87 +1644,87 @@ const ListingPageMain: React.FC<Props> = ({
                   styles['display-desktop']
                 }${showSocialMedia ? ' ' + styles['display-mobile'] : ''}`}
               >
-                {data?.social_media_urls && (
+                {data && (
                   <>
                     {renderSocialLink(
-                      data.social_media_urls.facebook_url,
+                      data.social_media_urls?.facebook_url,
                       FacebookIcon,
                       'Facebook',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.twitter_url,
+                      data.social_media_urls?.twitter_url,
                       TwitterIcon,
                       'Twitter',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.instagram_url,
+                      data.social_media_urls?.instagram_url,
                       InstagramIcon,
                       'Instagram',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.behance_url,
+                      data.social_media_urls?.behance_url,
                       BehanceIcon,
                       'Behance',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.bgg_url,
+                      data.social_media_urls?.bgg_url,
                       BGGIcon,
                       'BoardGameGeek',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.chess_url,
+                      data.social_media_urls?.chess_url,
                       ChessIcon,
                       'Chess',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.deviantarts_url,
+                      data.social_media_urls?.deviantarts_url,
                       DeviantArtIcon,
                       'DeviantArt',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.goodreads_url,
+                      data.social_media_urls?.goodreads_url,
                       GoodreadsIcon,
                       'Goodreads',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.pinterest_url,
+                      data.social_media_urls?.pinterest_url,
                       PinterestIcon,
                       'Pinterest',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.smule_url,
+                      data.social_media_urls?.smule_url,
                       SmuleIcon,
                       'Smule',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.soundcloud_url,
+                      data.social_media_urls?.soundcloud_url,
                       SoundCloudIcon,
                       'SoundCloud',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.strava_url,
+                      data.social_media_urls?.strava_url,
                       StravaIcon,
                       'Strava',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.tripadvisor_url,
+                      data.social_media_urls?.tripadvisor_url,
                       TripAdvisorIcon,
                       'TripAdvisor',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.ultimate_guitar_url,
+                      data.social_media_urls?.ultimate_guitar_url,
                       UltimateGuitarIcon,
                       'Ultimate Guitar',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.youtube_url,
+                      data.social_media_urls?.youtube_url,
                       YouTubeIcon,
                       'YouTube',
                     )}
                     {renderSocialLink(
-                      data.social_media_urls.Others_url,
+                      data.social_media_urls?.Others_url,
                       OthersIcon,
-                      extractDomainName(data.social_media_urls.Others_url),
+                      extractDomainName(data.social_media_urls?.Others_url),
                     )}
                   </>
                 )}

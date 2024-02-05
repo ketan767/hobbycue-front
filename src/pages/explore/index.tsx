@@ -17,4 +17,4 @@ const Explore: React.FC<Props> = (props) => {
   )
 }
 
-export default withAuth(Explore)
+export default Explore
