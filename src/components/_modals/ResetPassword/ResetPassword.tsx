@@ -119,6 +119,10 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
   }, [otp, newPassword, confirmPassword])
 
   useEffect(() => {
+    setInputValidation(validatePasswordConditions(newPassword))
+  }, [newPassword])
+
+  useEffect(() => {
     const strengthNum = getStrengthNum(inputValidation)
     setStrength(strengthNum)
   }, [newPassword, inputValidation])
