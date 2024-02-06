@@ -37,7 +37,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
   const getPost = async () => {
     setLoadingPosts(true)
     const { err, res } = await getAllPosts(
-      `_hobby=${data._id}&populate=_author,_genre,_hobby`,
+      `_hobby=${data._id}&populate=_author,_genre,_hobby&has_link=false`,
     )
 
     if (err) return console.log(err)
