@@ -3,6 +3,7 @@
     min-height: 80vh;
     height: 100%;
     padding: 1rem 0;
+    max-width: 1440px;
   }
   .explore {
     margin: 0rem 7rem;
@@ -31,3 +32,15 @@
     margin-top: 15px;
     margin-bottom: 10px;
   }
+
+@media screen and (max-width:767px) {
+  .explore{
+    margin: 0 1rem;
+  }
+}
+
+@media screen and (min-width:1440px) {
+  .explore-wrapper{
+    margin-left: calc(50vw - 720px);
+  }
+}
