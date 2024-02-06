@@ -233,7 +233,7 @@ const ListingAboutEditModal: React.FC<Props> = ({
         <hr />
         <section className={styles['body']}>
           <div className={styles['input-box']}>
-            <label>About</label>
+            {/* <label>About</label> */}
             <input hidden required />
             {/* <CustomCKEditor value={data.description.value as string} onChange={handleInputChange} placeholder='Briefly describe your listing page' /> */}
             <AboutEditor

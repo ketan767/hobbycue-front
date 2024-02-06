@@ -229,7 +229,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
         <hr />
         <section className={styles['body']}>
           <div className={styles['input-box']}>
-            <label>About</label>
+            {/* <label>About</label> */}
             <input hidden required />
             {/* <CustomCKEditor value={data.about} onChange={handleInputChange} placeholder='Briefly describe about yourself' /> */}
             <AboutEditor

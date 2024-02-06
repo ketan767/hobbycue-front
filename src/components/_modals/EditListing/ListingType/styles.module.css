@@ -61,6 +61,10 @@
   background-color: #EBEDF0;
 }
 
+.tagDesc:first-child{
+  max-width: 150px;
+}
+
 @media screen and (min-width: 1100px) {
 
   .modal-container{

@@ -127,6 +127,24 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
     setStrength(strengthNum)
   }, [newPassword, inputValidation])
 
+  useEffect(() => {
+    const handleKeyPress = (event: any) => {
+      if (event.key === 'Enter') {
+        if(event?.target?.tagName==="INPUT"){
+          return
+        }else{
+          handleSubmit()
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [])
+
   let threeConditionsValid = 0
   if (inputValidation.uppercase) {
     threeConditionsValid += 1

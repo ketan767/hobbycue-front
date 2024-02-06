@@ -1,6 +1,6 @@
 .container {
   padding: 40px 0px;
-  margin: 0 7.05rem;
+  margin: 0 5rem;
 }
 .wrapper {
   display: flex;
@@ -9,7 +9,7 @@
 .contentWrapper {
   display: flex;
   justify-content: space-between;
-  flex: 5;
+  flex: 4;
   padding-right: 1rem;
 }
 .listContainer {
@@ -32,7 +32,7 @@
   align-items: center;
   padding: 20px 0;
   padding-top: 0;
-  column-gap: 24px;
+  column-gap: 15px;
 }
 .iconsContainer img {
   cursor: pointer;
