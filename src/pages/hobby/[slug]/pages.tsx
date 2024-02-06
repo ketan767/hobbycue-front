@@ -37,12 +37,12 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
 
   const getPost = async () => {
     setLoadingPosts(true)
-    const { err, res } = await getHobbyPages(`${data._id}`)
+    const { err, res } = await getHobbyPages(`${data.display}`)
     setLoadingPosts(false)
     if (err) return console.log(err)
     if (res.data.success) {
       console.log('pages', res.data.data.listings)
-      setPages(res.data.data.listings)
+      setPages(res.data.data)
     }
   }
 
@@ -54,7 +54,8 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
     setExpandAll(value)
     dispatch(updateHobbyMenuExpandAll(value))
   }
-
+  console.log('hobby', data)
+  console.log('pages', pages)
   return (
     <>
       {' '}
@@ -74,9 +75,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
           {pages.length === 0 && (
             <div className={styles['dual-section-wrapper']}>
               <div className={styles['no-posts-container']}>
-                <p>
-                  No pages available
-                </p>
+                <p>No pages available</p>
               </div>
             </div>
           )}
