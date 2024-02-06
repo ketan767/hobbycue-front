@@ -68,9 +68,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
       >
         <main className={`${styles['display-desktop']}`}>
           <div className={styles['no-posts-container']}>
-            <p>
-              This feature is under development. Come back soon to view this
-            </p>
+            <p>No links posts found</p>
           </div>
           {/* <div className={styles['start-post-btn']}>
           <button

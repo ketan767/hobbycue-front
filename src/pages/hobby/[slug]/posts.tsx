@@ -39,13 +39,14 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
     const { err, res } = await getAllPosts(
       `_hobby=${data._id}&populate=_author,_genre,_hobby`,
     )
-    setLoadingPosts(false)
+
     if (err) return console.log(err)
     if (res.data.success) {
       setPosts(res.data.data.posts)
     }
+    setLoadingPosts(false)
   }
-
+  console.log('post', posts)
   useEffect(() => {
     getPost()
   }, [])
@@ -83,7 +84,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
         </div> */}
 
           <section className={`${styles['posts-container']}`}>
-            {!isLoggedIn || loadingPosts ? (
+            {loadingPosts ? (
               <PostCardSkeletonLoading />
             ) : (
               posts.length === 0 && (
@@ -100,7 +101,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
       </HobbyPageLayout>
       <main className={`${styles['display-mobile']}`}>
         <section className={`${styles['posts-container']}}`}>
-          {!isLoggedIn || loadingPosts ? (
+          {loadingPosts ? (
             <PostCardSkeletonLoading />
           ) : (
             posts.length === 0 && 'No Posts'

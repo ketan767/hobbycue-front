@@ -74,22 +74,22 @@ const ListingAboutEditModal: React.FC<Props> = ({
     })
   }
   const handleCheckboxToggle = (name: keyof typeof checkboxes) => {
-    if (name === 'allSections') {
-      const newValue = !checkboxes.allSections
-      setCheckboxes({
-        allSections: newValue,
-        profileCoverPhoto: newValue,
-        about: newValue,
-        contactInfo: newValue,
-        location: newValue,
-        hobbies: newValue,
-      })
-    } else {
-      setCheckboxes((prev) => {
-        const allSectionsValue = prev[name] ? false : prev.allSections
-        return { ...prev, [name]: !prev[name], allSections: allSectionsValue }
-      })
-    }
+    // if (name === 'allSections') {
+    //   const newValue = !checkboxes.allSections
+    //   setCheckboxes({
+    //     allSections: newValue,
+    //     profileCoverPhoto: newValue,
+    //     about: newValue,
+    //     contactInfo: newValue,
+    //     location: newValue,
+    //     hobbies: newValue,
+    //   })
+    // } else {
+    //   setCheckboxes((prev) => {
+    //     const allSectionsValue = prev[name] ? false : prev.allSections
+    //     return { ...prev, [name]: !prev[name], allSections: allSectionsValue }
+    //   })
+    // }
   }
 
   const handleBack = async () => {
@@ -255,7 +255,12 @@ const ListingAboutEditModal: React.FC<Props> = ({
               onClick={() => handleCheckboxToggle('hobbies')}
             />
           </div>
+
           <hr className={styles['hr-line']} />
+          <p className={styles.tempmsg}>
+            The copy feature is under development, but you can create a listing
+            Page by entering information
+          </p>
         </section>
 
         <footer className={styles['footer']}>
@@ -270,7 +275,7 @@ const ListingAboutEditModal: React.FC<Props> = ({
             ) : onComplete ? (
               'Next'
             ) : (
-              'Save'
+              'Next'
             )}
           </button>
           {/* SVG Button for Mobile */}
