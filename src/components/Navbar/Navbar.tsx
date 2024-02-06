@@ -13,6 +13,7 @@ import {
   setTypeResultThree,
   setSearchString,
   setHobbiesSearchResult,
+  Page,
 } from '@/redux/slices/search'
 import LogoFull from '@/assets/image/logo-full.svg'
 import LogoSmall from '@/assets/image/logo-small.png'
@@ -39,6 +40,7 @@ import CustomizedTooltips from './../Tooltip/ToolTip'
 import pages from '@/pages/community/pages'
 
 import PreLoader from '@/components/PreLoader'
+import { setShowPageLoader } from '@/redux/slices/site'
 
 type Props = {}
 
@@ -65,10 +67,17 @@ export const Navbar: React.FC<Props> = ({}) => {
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
   })
-  const [showPreLoader, setShowPreLoader] = useState(false)
   const [showDropdown, setShowDropdown] = useState<
     'user-menu' | 'hobby-list' | null
   >(null)
+
+  useEffect(() => {
+    if (router.asPath === '/search') {
+      return
+    } else {
+      setData((prev) => ({ ...prev, search: { value: '', error: null } }))
+    }
+  }, [router.asPath])
 
   const handleLogout = () => {
     logout()
@@ -142,6 +151,7 @@ export const Navbar: React.FC<Props> = ({}) => {
     }
 
     try {
+      dispatch(setShowPageLoader(true))
       const { res: userRes, err: userErr } = await searchUsers(searchCriteria)
       if (userErr) {
         console.error('An error occurred during the user search:', userErr)
@@ -150,6 +160,7 @@ export const Navbar: React.FC<Props> = ({}) => {
         dispatch(setUserSearchResults(userRes))
       }
       // Search by title
+      dispatch(setShowPageLoader(true))
       const { res: titleRes, err: titleErr } = await searchPages({
         title: searchValue,
       })
@@ -157,65 +168,68 @@ export const Navbar: React.FC<Props> = ({}) => {
         console.error('An error occurred during the title search:', titleErr)
         return
       }
+      console.warn({ titleRes })
+      let combinedResults = new Set(titleRes.data.slice(0, 50))
+      let remainingSlots = 50 - combinedResults.size
 
-      let combinedResults = titleRes.data.slice(0, 50)
-      let remainingSlots = 50 - combinedResults.length
-
-      if (combinedResults.length < 10) {
+      if (combinedResults.size < 10) {
+        dispatch(setShowPageLoader(true))
         const { res: taglineRes, err: taglineErr } = await searchPages({
           tagline: searchValue,
         })
         if (!taglineErr) {
-          combinedResults = combinedResults.concat(
+          combinedResults = combinedResults.add(
             taglineRes.data.slice(0, remainingSlots),
           )
         }
       }
       // If title search results are exactly 50, prioritize the first 40 and get 10 by tagline
-      else if (combinedResults.length === 50) {
-        combinedResults = combinedResults.slice(0, 40)
+      else if (combinedResults.size === 50) {
+        dispatch(setShowPageLoader(true))
+        combinedResults = new Set(Array.from(combinedResults).slice(0, 40))
         const { res: taglineRes, err: taglineErr } = await searchPages({
           tagline: searchValue,
         })
         if (!taglineErr) {
-          combinedResults = combinedResults.concat(taglineRes.data.slice(0, 10))
+          combinedResults = combinedResults.add(taglineRes.data.slice(0, 10))
         }
       }
 
-      const typeResultOne = combinedResults.filter(
+      const typeResultOne = Array.from(combinedResults).filter(
         (page: any) => page.type === 1 && page.is_published === true,
       )
 
       dispatch(
         setTypeResultOne({
-          data: typeResultOne,
+          data: typeResultOne as Page[],
           message: 'Search completed successfully.',
           success: true,
         }),
       )
-      const typeResultTwo = combinedResults.filter(
+      const typeResultTwo = Array.from(combinedResults).filter(
         (page: any) => page.type === 2 && page.is_published === true,
       )
 
       dispatch(
         setTypeResultTwo({
-          data: typeResultTwo,
+          data: typeResultTwo as Page[],
           message: 'Search completed successfully.',
           success: true,
         }),
       )
-      const typeResultThree = combinedResults.filter(
+      const typeResultThree = Array.from(combinedResults).filter(
         (page: any) => page.type === 3 && page.is_published === true,
       )
 
       dispatch(
         setTypeResultThree({
-          data: typeResultThree,
+          data: typeResultThree as Page[],
           message: 'Search completed successfully.',
           success: true,
         }),
       )
       const query = `fields=display,genre,slug,profile_image&level=3&level=2&level=1&level=0&show=true&search=${searchValue}`
+      dispatch(setShowPageLoader(true))
       const { res: hobbyRes, err: hobbyErr } = await getAllHobbies(query)
       if (hobbyErr) {
         console.error('An error occurred during the page search:', hobbyErr)
@@ -223,9 +237,10 @@ export const Navbar: React.FC<Props> = ({}) => {
         console.log('hobbies search results:', hobbyRes.data.hobbies)
         dispatch(setHobbiesSearchResult(hobbyRes.data.hobbies))
       }
-
+      dispatch(setShowPageLoader(false))
       dispatch(setSearchString(searchValue))
     } catch (error) {
+      dispatch(setShowPageLoader(false))
       console.error('An error occurred during the combined search:', error)
     }
   }

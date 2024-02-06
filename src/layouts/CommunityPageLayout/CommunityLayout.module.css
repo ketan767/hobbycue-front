@@ -188,6 +188,9 @@
   font-weight: 600;
   line-height: 16px;
 }
+.invite-loader-btn{
+  padding: 7.6px 10px !important;
+}
 .invite-wrapper > section .input-prefix {
   position: absolute;
   top: 50%;

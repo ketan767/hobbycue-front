@@ -17,6 +17,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { showAllEventTrue, showAllPeopleTrue, showAllPlaceTrue, showAllProductsTrue } from '@/redux/slices/search'
 
 const Home: React.FC<PropTypes> = function () {
   const [isPlaying, setIsPlaying] = useState(false)
@@ -185,7 +186,7 @@ const Home: React.FC<PropTypes> = function () {
             </p>
             <OutlinedButton
               className={styles['card-btn']}
-              onClick={() => router.push('/search')}
+              onClick={() => {dispatch(showAllPeopleTrue());router.push('/search')}}
             >
               Connect
             </OutlinedButton>
@@ -210,7 +211,7 @@ const Home: React.FC<PropTypes> = function () {
             </p>
             <OutlinedButton
               className={styles['card-btn']}
-              onClick={() => router.push('/search')}
+              onClick={() =>{dispatch(showAllPlaceTrue());router.push('/search')}}
             >
               Meet up
             </OutlinedButton>
@@ -239,7 +240,7 @@ const Home: React.FC<PropTypes> = function () {
             </p>
             <OutlinedButton
               className={styles['card-btn']}
-              onClick={() => router.push('/search')}
+              onClick={() => {dispatch(showAllProductsTrue());router.push('/search')}}
             >
               Get it
             </OutlinedButton>
@@ -273,7 +274,7 @@ const Home: React.FC<PropTypes> = function () {
             </p>
             <OutlinedButton
               className={styles['card-btn']}
-              onClick={() => router.push('/search')}
+              onClick={() => {dispatch(showAllEventTrue());router.push('/search')}}
             >
               Attend
             </OutlinedButton>

@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   toggleShowAll,
   toggleShowAllEvent,
   toggleShowAllPeople,
   toggleShowAllPlace,
+  toggleShowAllProducts,
   toggleShowAllUsers,
 } from '@/redux/slices/search'
 import hobbycue from '../../assets/svg/Search/hobbycue.png'
@@ -19,6 +20,18 @@ import styles from './styles.module.css'
 const SearchPageFilter = () => {
   const dispatch = useDispatch()
   const [activeFilter, setActiveFilter] = useState('all')
+  const showAll = useSelector((state: any) => state.search.showAll)
+  const showAllUsers = useSelector((state: any) => state.search.showAllUsers)
+  const showAllPeople = useSelector((state: any) => state.search.showAllPeople)
+  const showAllPlace = useSelector((state: any) => state.search.showAllPlace)
+  const showAllEvent = useSelector((state: any) => state.search.showAllEvent)
+  const showAllProducts = useSelector((state: any) => state.search.showAllProducts)
+  useEffect(()=>{if(showAll){setActiveFilter("all")}},[showAll]);
+  useEffect(()=>{if(showAllUsers){setActiveFilter("users")}},[showAllUsers]);
+  useEffect(()=>{if(showAllPeople){setActiveFilter("people")}},[showAllPeople]);
+  useEffect(()=>{if(showAllPlace){setActiveFilter("places")}},[showAllPlace]);
+  useEffect(()=>{if(showAllEvent){setActiveFilter("events")}},[showAllEvent]);
+  useEffect(()=>{if(showAllProducts){setActiveFilter("products")}},[showAllProducts]);
 
   const handleFilterClick = (filterType: any) => {
     if (activeFilter === filterType) {
@@ -41,6 +54,9 @@ const SearchPageFilter = () => {
           break
         case 'events':
           dispatch(toggleShowAllEvent())
+          break
+        case 'products':
+          dispatch(toggleShowAllProducts())
           break
         default:
           break
@@ -102,7 +118,9 @@ const SearchPageFilter = () => {
             Programs
           </div>
 
-          <div className={styles['filter-item']}>
+          <div className={getFilterItemClass('products')}
+            onClick={() => handleFilterClick('products')}
+          >
             <Image src={Product} alt="Product" />
             Products
           </div>

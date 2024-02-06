@@ -40,20 +40,6 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
   })
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
-  useEffect(() => {
-    elementRef.current?.focus()
-    const handleKeyPress = (event: any) => {
-      if (event.key === 'Enter') {
-        nextButtonRef.current?.focus()
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyPress)
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyPress)
-    }
-  }, [])
   const handleSubmit = async () => {
     setSubmitBtnLoading(true)
     const { err, res } = await forgotPassword({
@@ -71,8 +57,6 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
       return
     }
     if (res?.data.success) {
-      alert(res.data.data?.user.otp)
-
       dispatch(openModal({ type: 'reset-password', closable: true }))
       dispatch(updateForgotPasswordEmail(email))
       // dispatch(closeModal())
@@ -80,6 +64,21 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
     }
   }
   //   console.log('user', user)
+
+  useEffect(() => {
+    elementRef.current?.focus()
+    const handleKeyPress = (event: any) => {
+      if (event.key === 'Enter') {
+        nextButtonRef.current?.focus();
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [])
 
   useEffect(() => {
     setErrors({
@@ -129,7 +128,7 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
               'Send'
             )}
           </button>
-          <button
+          {/* <button
             ref={nextButtonRef}
             className="modal-mob-btn-save"
             onClick={handleSubmit}
@@ -139,7 +138,7 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
             ) : (
               'Send'
             )}
-          </button>
+          </button> */}
         </footer>
       </div>
     </>

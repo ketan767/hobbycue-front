@@ -12,7 +12,7 @@ interface User {
   profile_url:string
 }
 
-interface Page {
+export interface Page {
   titleResults: any
   taglineResults: any
   profile_image: string
@@ -50,6 +50,7 @@ interface SearchState {
   showAllPeople: boolean;
   showAllPlace: boolean;
   showAllEvent: boolean;
+  showAllProducts:boolean;
   
 }
 
@@ -87,6 +88,7 @@ const initialState: SearchState = {
   showAllPeople: false,
   showAllPlace: false,
   showAllEvent: false,
+  showAllProducts: false,
 };
 
 export const searchSlice = createSlice({
@@ -120,6 +122,7 @@ export const searchSlice = createSlice({
         state.showAllPeople = false;
         state.showAllPlace = false;
         state.showAllEvent = false;
+        state.showAllProducts = false;
       
       
     },
@@ -130,6 +133,7 @@ export const searchSlice = createSlice({
         state.showAllPeople = false;
         state.showAllPlace = false;
         state.showAllEvent = false;
+        state.showAllProducts = false;
       }
     },
     toggleShowAllPeople: (state) => {
@@ -138,6 +142,7 @@ export const searchSlice = createSlice({
         state.showAllUsers = false;
         state.showAllPlace = false;
         state.showAllEvent = false;
+        state.showAllProducts = false;
       }
     },
     toggleShowAllPlace: (state) => {
@@ -146,6 +151,7 @@ export const searchSlice = createSlice({
         state.showAllUsers = false;
         state.showAllPeople = false;
         state.showAllEvent = false;
+        state.showAllProducts = false;
       }
     },
     toggleShowAllEvent: (state) => {
@@ -154,12 +160,69 @@ export const searchSlice = createSlice({
         state.showAllUsers = false;
         state.showAllPeople = false;
         state.showAllPlace = false;
+        state.showAllProducts = false;
+      }
+    },
+    toggleShowAllProducts: (state) => {
+      state.showAllProducts = !state.showAllProducts;
+      if (state.showAllEvent) {
+        state.showAllUsers = false;
+        state.showAllPeople = false;
+        state.showAllPlace = false;
+        state.showAllEvent = false;
+      }
+    },
+    showAllUsersTrue: (state) => {
+      state.showAllUsers = true;
+      if (state.showAllUsers) {
+        state.showAllPeople = false;
+        state.showAllPlace = false;
+        state.showAllEvent = false;
+        state.showAllProducts = false;
+      }
+    },
+    showAllPeopleTrue: (state) => {
+      state.showAllPeople = true;
+      if (state.showAllPeople) {
+        state.showAllUsers = false;
+        state.showAllPlace = false;
+        state.showAllEvent = false;
+        state.showAllProducts = false;
+      }
+    },
+    showAllPlaceTrue: (state) => {
+      state.showAllPlace = true;
+      if (state.showAllPlace) {
+        state.showAllUsers = false;
+        state.showAllPeople = false;
+        state.showAllEvent = false;
+        state.showAllProducts = false;
+      }
+    },
+    showAllEventTrue: (state) => {
+      state.showAllEvent = true;
+      if (state.showAllEvent) {
+        state.showAllUsers = false;
+        state.showAllPeople = false;
+        state.showAllPlace = false;
+        state.showAllProducts = false;
+      }
+    },
+    showAllProductsTrue: (state) => {
+      state.showAllProducts = true;
+      if (state.showAllEvent) {
+        state.showAllUsers = false;
+        state.showAllPeople = false;
+        state.showAllPlace = false;
+        state.showAllEvent = false;
       }
     },
   },
 });
 
 export const { setUserSearchResults, setTypeResultOne,setTypeResultTwo, setTypeResultThree, setSearchString,
-   setHobbiesSearchResult,toggleShowAll, toggleShowAllUsers, toggleShowAllPeople, toggleShowAllPlace, toggleShowAllEvent} = searchSlice.actions;
+   setHobbiesSearchResult,toggleShowAll, toggleShowAllUsers, toggleShowAllPeople, toggleShowAllPlace, toggleShowAllEvent,toggleShowAllProducts,
+  showAllEventTrue,showAllPeopleTrue,showAllPlaceTrue,showAllUsersTrue,showAllProductsTrue
+  } = searchSlice.actions;
 
 export default searchSlice.reducer;

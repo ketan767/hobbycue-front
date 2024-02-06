@@ -17,7 +17,7 @@ import HobbyPageHeaderSmall from '@/components/HobbyPage/HobbyHeader/HobbyPageHe
 import ChevronDown from '@/assets/svg/chevron-down.svg'
 import Image from 'next/image'
 import HobbyNavigationLinks from '@/components/HobbyPage/HobbyHeader/HobbyNavigationLinks'
-
+import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
 type Props = {
   activeTab: HobbyPageTabs
   data: any
@@ -186,7 +186,7 @@ const HobbyPageLayout: React.FC<Props> = ({
                                 className={styles['member-img']}
                                 width="24"
                                 height="24"
-                                src={user.profile_image}
+                                src={user.profile_image || defaultUserIcon}
                                 alt=""
                               />
                               <div>{user.full_name}</div>
