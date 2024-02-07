@@ -61,6 +61,7 @@ import ExpiredPassword from './ExpiredPasswordModal'
 
 import SimpleSnackbar from '../_snackbar/Snackbar'
 import { types } from 'util'
+import ReportModal from './Report'
 
 
 const CustomBackdrop: React.FC = () => {
@@ -307,6 +308,7 @@ const ModalManager: React.FC = () => {
                 <ListingSocialMediaEditModal {...props} />
               )}
               {activeModal === 'SupportModal' && <SupportModal {...props} />}
+              {activeModal === 'ReportModal' && <ReportModal {...props} />}
               {activeModal === 'user-onboarding-welcome' && (
                 <UserOnboardingWelcomeModal />
               )}
