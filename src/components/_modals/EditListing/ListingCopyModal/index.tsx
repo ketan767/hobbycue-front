@@ -161,11 +161,14 @@ const ListingAboutEditModal: React.FC<Props> = ({
           className={styles['modal-close-icon']}
           onClick={handleClose}
         />
+        <section className={styles['header']}>
+          <h1>Make My Page</h1>
+        </section>
         <label className={styles['heading']}>
           This would create a new Listing page based on your profile
         </label>
         <section className={styles['body']}>
-          <h1>What section you would like to copy</h1>
+          <h2>What section you would like to copy</h2>
 
           <hr className={styles['hr-line']} />
           <div className={styles['checkbox-row']}>
