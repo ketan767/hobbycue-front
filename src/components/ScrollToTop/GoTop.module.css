@@ -13,17 +13,19 @@
 .container:hover {
   background-color: #7f63a1;
 }
+.container:hover path {
+  fill: #ffffff !important;
+}
 
-.iconSize {
+.svg-icon {
   width: 16px;
   height: 16px;
 }
-
-.iconSize:hover {
-  color: white;
+.svg-icon path {
+  fill: #939ca3;
 }
 
-@media screen and (max-width:1100px) {
+@media screen and (max-width: 1100px) {
   .container {
     width: 40px;
     height: 40px;
