@@ -17,8 +17,19 @@
    
   }
 }
-.modal-wrapper .header,
+.modal-wrapper .header{
+  border-bottom: 1px solid #CED4DA;
+  padding: var(--spacing-16) var(--spacing-24);
+}
+.modal-wrapper .header h1{
+font-size: 18px;
+font-weight: 600;
+line-height: 26px;
+letter-spacing: 0em;
+text-align: left;
+}
 .modal-wrapper .body {
+  margin: 0 0 3.6rem 0;
   padding: var(--spacing-16) var(--spacing-24);
 }
 .modal-wrapper .footer {
@@ -122,7 +133,7 @@
   line-height: 26px;
 }
 
-.modal-wrapper section h1{
+.modal-wrapper section h2{
   font-family: 'Poppins';
   font-size: 18px;
   font-weight: 600;
