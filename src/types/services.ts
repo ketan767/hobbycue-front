@@ -90,11 +90,14 @@ interface ContactUspayload {
   };
   YouAre: string;
   Regarding: string;
-  Message: string | null;
+  description: string | null;
+  user_id: string 
 }
 
 interface supportPayload {
-  review: string
+  description: string
   name?: string
   email?: string
+  user_id?: string
+  type: string
 }

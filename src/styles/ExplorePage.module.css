@@ -2,11 +2,11 @@
     background-color: #f8f9fa;
     min-height: 80vh;
     height: 100%;
-    padding: 1rem 0;
+   
     max-width: 1440px;
   }
   .explore {
-    margin: 0rem 7rem;
+
     padding: 1.2rem 1.2rem;
     border: 2px solid rgb(242, 242, 242);
     border-radius: 10px;
@@ -28,19 +28,50 @@
   }
 
   .heading {
+    color: var(--Purple-1, #8064a2);
+    font-family: Poppins;
+    font-size: 16px;
+    font-style: normal;
     font-weight: 500;
-    margin-top: 15px;
-    margin-bottom: 10px;
+    line-height: 16px;
+    margin: 10px 8px 100px;
+   
   }
 
+  
+  .community-left-aside,
+  .community-right-aside{
+    position: sticky;
+    top: calc(var(--navbar-height-desktop) + var(--spacing-12));
+  }
+  .community-left-aside,
+  .community-right-aside {
+    height: calc(
+      100vh - calc(var(--navbar-height-desktop) + var(--spacing-24)) - 1rem
+    );
+    overflow: auto;
+    margin: 0 1rem;
+    margin-bottom: 24px;
+  }
+  
 @media screen and (max-width:767px) {
   .explore{
     margin: 0 1rem;
   }
 }
 
-@media screen and (min-width:1440px) {
-  .explore-wrapper{
-    margin-left: calc(50vw - 720px);
+
+
+@media screen and (max-width: 1100px) {
+  .community-left-aside,
+  .community-right-aside {
+    height: auto;
+  }
+  .profileSwitcherWrapper {
+    display: none;
+    
+  }
+  .heading {
+    margin: 10px 8px 10px;
   }
 }
