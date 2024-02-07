@@ -10,7 +10,8 @@
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   margin-bottom: 1rem;
-  border: 0;
+  /* border: 0; */
+  border: 2px solid #ebedf0;
 }
 
 .start-post-btn-container-mobile {
@@ -57,7 +58,7 @@
   display: none !important;
 }
 .no-posts-container {
-  margin: var(--spacing-8);
+  margin: 0;
   padding: var(--spacing-12) var(--spacing-16);
   border-radius: 8px;
   border: 2px solid #ebedf0;
