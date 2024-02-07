@@ -8,13 +8,20 @@ import ChevronDown from '@/assets/svg/chevron-down.svg'
 import Pintrest from '@/assets/svg/social/Pinterest.svg'
 
 import Telegram from '@/assets/svg/social/telegram.svg'
-import Twitter from '@/assets/svg/social/twitter.svg'
+import Twitter from '@/assets/svg/social/X.svg'
+import LinkedIn from '@/assets/svg/social/LinkedIn.svg'
 import Youtube from '@/assets/svg/social/youtube.svg'
+import Message from '@/assets/svg/social/Message.svg'
 import { InviteToHobbycue } from '@/services/auth.service'
 import Image from 'next/image'
 import Link from 'next/link'
 import { CircularProgress } from '@mui/material'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import { useDispatch, useSelector } from 'react-redux'
+import { showAllProductsTrue } from '@/redux/slices/search'
+import { RootState } from '@/redux/store'
+import { openModal } from '@/redux/slices/modal'
+import { useRouter } from 'next/router'
 
 const icons = [
   { name: Facebook, link: 'https://www.facebook.com/hobbycue.community' },
@@ -22,10 +29,15 @@ const icons = [
   { name: Instagram, link: 'https://www.instagram.com/hobbycue.community' },
   { name: Pintrest, link: 'https://in.pinterest.com/hobbycue/' },
   {
+    name: LinkedIn,
+    link: 'https://www.youtube.com/channel/UCEPxiQLanjReHcRe0FaHvrQ',
+  },
+  {
     name: Youtube,
     link: 'https://www.youtube.com/channel/UCEPxiQLanjReHcRe0FaHvrQ',
   },
   { name: Telegram, link: 'https://t.me/hobbycue' },
+  { name: Message, link: 'https://t.me/hobbycue' },
 ]
 const Footer: React.FC = () => {
   const [email, setEmail] = useState('')
@@ -38,6 +50,12 @@ const Footer: React.FC = () => {
     display: false,
     message: '',
   })
+  const dispatch = useDispatch();
+  const { isLoggedIn, isAuthenticated, user } = useSelector(
+    (state: RootState) => state.user,
+  );
+  const router = useRouter();
+
   const handleExpand = (type: string) => {
     if (type === 'Hobbycue') {
       return expandHobbyCue
@@ -65,44 +83,61 @@ const Footer: React.FC = () => {
     {
       title: 'Hobbycue',
       values: [
-        { title: 'About Us', link: 'http://wp.hobbycue.com/about/' },
-        { title: 'Our Services', link: 'http://wp.hobbycue.com/services/' },
-        { title: 'Work with Us', link: 'http://wp.hobbycue.com/work/' },
-        { title: 'FAQ', link: 'http://wp.hobbycue.com/faq/' },
+        { title: 'About Us', link: 'http://blog.hobbycue.com/about/' },
+        { title: 'Our Services', link: 'http://blog.hobbycue.com/services/' },
+        { title: 'Work with Us', link: 'http://blog.hobbycue.com/work/' },
+        { title: 'FAQ', link: 'http://blog.hobbycue.com/faq/' },
         { title: 'Contact Us', link: '/contact/' },
       ],
     },
     {
       title: 'How do I',
       values: [
-        { title: 'Sign Up', link: 'http://wp.hobbycue.com/how-to/' },
+        { title: 'Sign Up', link: 'http://blog.hobbycue.com/how-to/' },
         {
           title: 'Add a Listing',
-          link: 'http://wp.hobbycue.com/how-to/#add-listing/',
+          link: 'http://blog.hobbycue.com/how-to/#add-listing/',
         },
         {
           title: 'Claim Listing',
-          link: 'http://wp.hobbycue.com/how-to/#claim-listing/',
+          link: 'http://blog.hobbycue.com/how-to/#claim-listing/',
         },
         {
           title: 'Post a Query',
-          link: 'http://wp.hobbycue.com/how-to/#post-query/',
+          link: 'http://blog.hobbycue.com/how-to/#post-query/',
         },
         {
           title: 'Add a Blog Post',
-          link: 'http://wp.hobbycue.com/how-to/#blog-post/',
+          link: 'http://blog.hobbycue.com/how-to/#blog-post/',
         },
-        { title: 'Other Queries', link: 'http://wp.hobbycue.com/how-to/' },
+        { title: 'Other Queries', link: 'http://blog.hobbycue.com/how-to/' },
       ],
     },
     {
       title: 'Quick Links',
 
       values: [
-        { title: 'Listings', link: 'http://wp.hobbycue.com/explore/' },
-        { title: 'Blog Posts', link: 'http://wp.hobbycue.com/blog/' },
-        { title: 'Shop / Store', link: 'http://wp.hobbycue.com/shop/' },
-        { title: 'Community', link: 'http://wp.hobbycue.com/activity/' },
+        { title: 'Listing Pages', link: '/search' },
+        { title: 'Blog Posts', link: 'http://blog.hobbycue.com' },
+        {
+          title: 'Shop / Store',
+          link: '/search',
+          func: () => {
+            dispatch(showAllProductsTrue());
+            router.push("/search");
+          },
+        },
+        {
+          title: 'Community',
+          link: '/community',
+          func: () => {
+            if (isLoggedIn) {
+              return
+            } else {
+              dispatch(openModal({ type: 'auth', closable: true }))
+            }
+          },
+        },
       ],
     },
   ]
@@ -168,7 +203,16 @@ const Footer: React.FC = () => {
                   >
                     {item.values.map((value: any, idx: any) => {
                       return (
-                        <Link key={idx} href={value.link}>
+                        <Link
+                          key={idx}
+                          onClick={(e) => {
+                            if (value.func) {
+                              e.preventDefault();
+                              value.func();
+                            }
+                          }}
+                          href={value.link}
+                        >
                           <li className={styles.listItem} key={idx}>
                             {value.title}
                           </li>
@@ -183,24 +227,6 @@ const Footer: React.FC = () => {
 
           <div className={styles.rightSection}>
             <div>
-              <p className={styles.listHeading}> Social Media </p>
-              <div className={styles.iconsContainer}>
-                {icons.map((Icon: any, idx: any) => {
-                  return (
-                    <Link href={Icon.link} key={idx}>
-                      <Image
-                        className={styles.socialIcons}
-                        height={32}
-                        width={32}
-                        src={Icon.name}
-                        alt="social-media"
-                      />
-                    </Link>
-                  )
-                })}
-              </div>
-            </div>
-            <div className={styles.inviteContainer}>
               <p className={styles.listHeading}> Invite Friends </p>
               <div className={styles['input-box']}>
                 <input
@@ -217,6 +243,24 @@ const Footer: React.FC = () => {
                     'Invite'
                   )}
                 </button>
+              </div>
+            </div>
+            <div className={styles.inviteContainer}>
+              <p className={styles.listHeading}> Social Media </p>
+              <div className={styles.iconsContainer}>
+                {icons.map((Icon: any, idx: any) => {
+                  return (
+                    <Link href={Icon.link} key={idx}>
+                      <Image
+                        className={styles.socialIcons}
+                        height={32}
+                        width={32}
+                        src={Icon.name}
+                        alt="social-media"
+                      />
+                    </Link>
+                  )
+                })}
               </div>
             </div>
           </div>

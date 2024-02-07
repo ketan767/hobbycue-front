@@ -450,7 +450,22 @@ const ProfileContactEditModal: React.FC<Props> = ({
                         className={styles.checkbox}
                         value={!tick}
                         checked={tick}
-                        onChange={(e) => setTick(!tick)}
+                        onChange={(e) => {
+                          if(tick===true){
+                            if(tick===true){
+                              setData((prev) => {
+                                return {
+                                  ...prev,
+                                  whatsapp_number: {
+                                    number: "",
+                                    prefix: "+91",
+                                  },
+                                }
+                              })
+                              setWpSelectedCountryCode("+91")
+                            }
+                          }
+                          setTick(!tick)}}
                       />{' '}
                     </div>
                   </CustomTooltip>

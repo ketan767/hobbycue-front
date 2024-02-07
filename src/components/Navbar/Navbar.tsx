@@ -408,10 +408,6 @@ export const Navbar: React.FC<Props> = ({}) => {
                       </h4>
 
                       <ul>
-                        <Link href={'/hobby/fitness'}>
-                          <li>Fitness</li>
-                        </Link>
-
                         <Link href={'/hobby/games'}>
                           <li>Games</li>
                         </Link>
@@ -503,8 +499,6 @@ export const Navbar: React.FC<Props> = ({}) => {
                         <Link href={'/hobby/records'}>
                           <li>Records</li>
                         </Link>
-
-                        <li>Spotting</li>
                       </ul>
                     </section>
                     <section className={styles['list']}>
