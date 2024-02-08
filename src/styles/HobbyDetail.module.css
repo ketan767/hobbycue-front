@@ -270,7 +270,6 @@
 }
 
 .pages-container {
-  margin-top: var(--spacing-16);
   display: grid;
   grid-template-columns: 1fr 1fr; /* Two equal-width columns */
   gap: var(--spacing-16); /* Gap between grid items */
@@ -367,7 +366,7 @@
 }
 
 .no-posts-container {
-  margin: var(--spacing-8);
+  /* margin: var(--spacing-8); */
   padding: var(--spacing-12) var(--spacing-16);
   border-radius: 8px;
   border: 2px solid #ebedf0;
@@ -380,7 +379,16 @@
   font-weight: 500;
   color: rgba(var(--gray-100-rgb));
 }
-
+.items{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.items li{
+list-style: none;
+color: #08090a;
+line-height: 20px;
+}
 @media screen and (max-width: 1100px) {
   .hobby-left-aside {
     position: relative !important;
