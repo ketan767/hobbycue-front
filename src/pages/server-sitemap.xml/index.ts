@@ -11,7 +11,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { res: pagesRes, err: pagesErr } = await getAllListingUrls()
 
   const { res: hobbyRes, err: hobbyErr } = await getAllHobbiesUrls()
-  
+
   if (userErr || pagesErr) {
     console.error('Error fetching user or pages URLs:', userErr || pagesErr)
     return {
@@ -21,33 +21,32 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const usersData: any[] = userRes?.data?.data || []
   const pagesData: any[] = pagesRes?.data?.data || []
-  const hobyData: any[] = hobbyRes?.data?.data || [];
-  console.log('urls',hobyData)
+  const hobyData: any[] = hobbyRes?.data?.data || []
+  console.log('urls', hobyData)
 
   const users: ISitemapField[] = usersData.map((user) => ({
     loc: `${baseUrl}/profile/${encodeURIComponent(user.profile_url)}`,
     lastmod: new Date().toISOString(),
-  }));
+  }))
 
   const pages: ISitemapField[] = pagesData.map((page) => ({
     loc: `${baseUrl}/pages/${encodeURIComponent(page.page_url)}`,
     lastmod: new Date().toISOString(),
-  }));
-  
+  }))
+
   const hobby: ISitemapField[] = hobyData.map((page) => ({
     loc: `${baseUrl}/hobby/${encodeURIComponent(page.page_url)}`,
     lastmod: new Date().toISOString(),
-  }));
-  
-  const allUrls: ISitemapField[] = [...users, ...pages, ...hobby]
-
-  const sitemapJSON = allUrls.map((item) => ({
-    loc: item.loc,
-    lastmod: item.lastmod,
   }))
 
-  
-  const sitemap = generateSiteMap(sitemapJSON)
+  // const allUrls: ISitemapField[] = [...users, ...pages, ...hobby]
+
+  // const sitemapJSON = allUrls.map((item) => ({
+  //   loc: item.loc,
+  //   lastmod: item.lastmod,
+  // }))
+
+  const sitemap = generateSiteMap({ users, pages, hobby })
 
   ctx.res.setHeader('Content-Type', 'text/xml')
   ctx.res.write(sitemap)
@@ -58,24 +57,45 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 }
 
 const generateSiteMap = (data: any) => {
-  const posts: { loc: string; lastmod: string }[] = []
+  // const posts: { loc: string; lastmod: string }[] = []
+  const { users, pages, hobby } = data
+  // for (const i in data) {
+  //   posts.push(data[i])
+  // }
 
-  for (const i in data) {
-    posts.push(data[i])
-  }
-
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
   return `<?xml version="1.0" encoding="UTF-8"?>
   <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
       <loc>${baseUrl}</loc>
     </url>
+    <item>
     ${
-      posts &&
-      posts
-        .map((item) => {
-          return `<url><loc>${item?.loc}</loc><lastmod>${item?.lastmod}</lastmod></url>`}).join('')
-    }
+      users &&
+      users
+        .map((item: any) => {
+          return `<url><loc>${item?.loc}</loc><lastmod>${item?.lastmod}</lastmod></url>`
+        })
+        .join('')
+    }</item>
+    <item>
+    ${
+      pages &&
+      pages
+        .map((item: any) => {
+          return `<url><loc>${item?.loc}</loc><lastmod>${item?.lastmod}</lastmod></url>`
+        })
+        .join('')
+    }</item>
+    <item>
+    ${
+      hobby &&
+      hobby
+        .map((item: any) => {
+          return `<url><loc>${item?.loc}</loc><lastmod>${item?.lastmod}</lastmod></url>`
+        })
+        .join('')
+    }</item>
   </urlset>
   `
 }
