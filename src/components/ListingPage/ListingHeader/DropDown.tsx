@@ -36,7 +36,7 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType }) => {
           event.target.nodeName == reportRef.current?.nodeName &&
           event.target.textContent === reportRef.current?.textContent
         ) {
-          dispatch(openModal({ type: 'ReportModal', closable: true }))
+          dispatch(openModal({ type: 'ListingReportModal', closable: true }))
         }
         handleClose()
       }

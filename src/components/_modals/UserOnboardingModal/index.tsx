@@ -15,6 +15,7 @@ import SaveModal from '../SaveModal/saveModal'
 
 import styles from './styles.module.css'
 import { updateUser } from '@/redux/slices/user'
+import { sendWelcomeMail } from '@/services/auth.service'
 
 // type OnboardingData = {
 //   full_name: string
@@ -79,6 +80,11 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
   }
 
   const handleCompleteOnboarding = async () => {
+    const payload: InviteToCommunityPayload = {
+      to: user.public_email,
+      name: user.full_name,
+    }
+    await sendWelcomeMail(payload)
     const data = { is_onboarded: true }
     const { err, res } = await updateMyProfileDetail(data)
     if (err) return console.log(err)

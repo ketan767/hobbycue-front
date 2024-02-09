@@ -100,4 +100,15 @@ interface supportPayload {
   email?: string
   user_id?: string
   type: string
+
+}
+
+
+interface ReportPayload {
+  description: string
+  name?: string
+  email?: string
+  user_id?: string
+  type: string
+  reported_user_id?:string
 }

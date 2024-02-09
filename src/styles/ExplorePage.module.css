@@ -50,13 +50,14 @@
       100vh - calc(var(--navbar-height-desktop) + var(--spacing-24)) - 1rem
     );
     overflow: auto;
-    margin: 0 1rem;
+    
     margin-bottom: 24px;
   }
   
 @media screen and (max-width:767px) {
   .explore{
-    margin: 0 1rem;
+    
+    margin: 1rem 1rem;
   }
 }
 
@@ -73,5 +74,9 @@
   }
   .heading {
     margin: 10px 8px 10px;
+  }
+  .community-left-aside,
+  .community-right-aside {
+    margin: 0 1rem;
   }
 }
