@@ -168,6 +168,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     // setWorkingHoursData(updated)
   }
 
+
   useEffect(() => {
     const hasChanges = JSON.stringify(eventData) !== JSON.stringify(initialData)
     setIsChanged(hasChanges)
@@ -176,6 +177,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
       onStatusChange(hasChanges)
     }
   }, [eventData, initialData, onStatusChange])
+
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {

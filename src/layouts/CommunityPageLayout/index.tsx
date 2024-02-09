@@ -153,7 +153,9 @@ const CommunityLayout: React.FC<Props> = ({
     let selectedLocality = ''
     let selectedSociety = ''
 
+
     const matchingAddress = activeProfile.data?._addresses?.find(
+
       (address: any) =>
         address.city === selectedLocation ||
         address.pin_code === selectedLocation ||
