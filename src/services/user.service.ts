@@ -224,9 +224,9 @@ export const support = async (data: supportPayload): Promise<ApiReturnObject> =>
 };
 
 
-export const report = async (data: supportPayload): Promise<ApiReturnObject> => {
+export const ReportUser = async (data: ReportPayload): Promise<ApiReturnObject> => {
   try {
-    const res = await axiosInstance.post(`/user/add-report`, data);
+    const res = await axiosInstance.post(`/user/user-report`, data);
     return { res: res, err: null };
   } catch (error: any) {
     return { err: error, res: null };

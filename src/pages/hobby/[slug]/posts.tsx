@@ -65,7 +65,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
         setExpandAll={handleExpandAll}
       >
         <main className={`${styles['display-desktop']}`}>
-          {isLoggedIn && (
+          {/* {isLoggedIn && (
             <div className={styles['start-post-btn']}>
               <button
                 onClick={() => {
@@ -83,7 +83,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
                 <span>Start a post</span>
               </button>
             </div>
-          )}
+          )} */}
 
           <section className={`${styles['posts-container']}`}>
             {loadingPosts ? (

@@ -3,9 +3,10 @@ import dynamic from 'next/dynamic'
 import { Button, CircularProgress } from '@mui/material'
 
 import {
+  getAllUserDetail,
   getMyProfileDetail,
-  report,
   updateMyProfileDetail,
+  ReportUser,
 } from '@/services/user.service'
 
 import styles from './styles.module.css'
@@ -14,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
-import SaveModal from '../SaveModal/saveModal'
+import SaveModal from '../../SaveModal/saveModal'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
@@ -36,9 +37,10 @@ type reportData = {
   email: string
   user_id: string
   type: string
+  reported_user_id: string
 }
 
-const ReportModal: React.FC<Props> = ({
+const UserReport: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
   confirmationModal,
@@ -55,6 +57,7 @@ const ReportModal: React.FC<Props> = ({
     email: '',
     user_id: '',
     type: '',
+    reported_user_id: '',
   })
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backDisabled, SetBackDisabled] = useState(false)
@@ -71,6 +74,7 @@ const ReportModal: React.FC<Props> = ({
     email: user.public_email,
     user_id: user._id,
     type: 'user',
+    reported_user_id: '',
   })
   const [isChanged, setIsChanged] = useState(false)
 
@@ -81,6 +85,7 @@ const ReportModal: React.FC<Props> = ({
       email: user.public_email,
       user_id: user._id,
       type: 'user',
+      reported_user_id: '',
     })
   }, [user])
 
@@ -108,7 +113,7 @@ const ReportModal: React.FC<Props> = ({
     }
 
     setSubmitBtnLoading(true)
-    const { err, res } = await report(data)
+    const { err, res } = await ReportUser(data)
 
     if (err) {
       setSubmitBtnLoading(false)
@@ -136,6 +141,7 @@ const ReportModal: React.FC<Props> = ({
       email: user.public_email,
       user_id: user._id,
       type: 'user',
+      reported_user_id: '',
     })
   }, [user])
 
@@ -288,4 +294,4 @@ const ReportModal: React.FC<Props> = ({
   )
 }
 
-export default ReportModal
+export default UserReport

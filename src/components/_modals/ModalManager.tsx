@@ -63,7 +63,8 @@ import SimpleSnackbar from '../_snackbar/Snackbar'
 import { types } from 'util'
 
 import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
-import ReportModal from './Report'
+import UserReport from './EditProfile/ReportUser'
+import ListingReport from './EditListing/ListingReport'
 
 
 const CustomBackdrop: React.FC = () => {
@@ -320,7 +321,10 @@ const ModalManager: React.FC = () => {
                 <ListingSocialMediaEditModal {...props} />
               )}
               {activeModal === 'SupportModal' && <SupportModal {...props} />}
-              {activeModal === 'ReportModal' && <ReportModal {...props} />}
+              {activeModal === 'UserReportModal' && <UserReport {...props} />}
+              {activeModal === 'ListingReportModal' && (
+                <ListingReport {...props} />
+              )}
               {activeModal === 'user-onboarding-welcome' && (
                 <UserOnboardingWelcomeModal />
               )}
