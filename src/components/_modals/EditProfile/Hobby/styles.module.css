@@ -459,7 +459,18 @@
     flex: 1.8;
   }
   .added-hobby-list table tr td:nth-child(2) {
-    flex: 1;
+
+
+    flex: 0 0;
+
+    display: flex;
+    justify-content: center;
+
+  }
+  .added-hobby-list table tr td:nth-child(3) {
+    text-align: right;
+    padding-left: var(--spacing-24);
+
   }
   .hobby-dropdown {
     width: 4.5rem;
@@ -501,6 +512,7 @@
     display: none;
   }
 
+
   .hideActionMobile {
     display: none;
   }
@@ -526,11 +538,13 @@
     > div:first-child {
     padding: 5px 15px;
   }
+
   .footer {
     position: sticky;
     bottom: 0;
     z-index: 1001;
   }
+
 }
 @media screen and (max-width:500px) {
   .input-box {
