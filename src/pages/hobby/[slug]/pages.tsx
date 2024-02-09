@@ -38,10 +38,14 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
   const getPost = async () => {
     setLoadingPosts(true)
     const { err, res } = await getHobbyPages(`${data.display}`)
-    setLoadingPosts(false)
-    if (err) return console.log(err)
+
+    if (err) {
+      setLoadingPosts(false)
+      return console.log(err)
+    }
     if (res.data.success) {
-      console.log('pages', res.data.data.listings)
+      setLoadingPosts(false)
+      console.log('pages', res.data.data)
       setPages(res.data.data)
     }
   }
@@ -67,12 +71,13 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
       >
         <main className={`${styles['display-desktop']}`}>
           <section className={styles['pages-container']}>
-            {!isLoggedIn || (loadingPosts && <PostCardSkeletonLoading />)}
-            {pages.map((post: any) => {
-              return <ListingCard key={post._id} data={post} />
-            })}
+            {loadingPosts && <PostCardSkeletonLoading />}
+            {pages.length !== 0 &&
+              pages.map((post: any, idx: number) => {
+                return <ListingCard key={idx} data={post} />
+              })}
           </section>
-          {pages.length === 0 && (
+          {pages.length === 0 && !loadingPosts && (
             <div className={styles['dual-section-wrapper']}>
               <div className={styles['no-posts-container']}>
                 <p>No pages available</p>

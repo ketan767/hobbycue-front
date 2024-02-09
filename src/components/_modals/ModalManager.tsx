@@ -60,6 +60,7 @@ import ExpiredPassword from './ExpiredPasswordModal'
 
 import SimpleSnackbar from '../_snackbar/Snackbar'
 import { types } from 'util'
+import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -67,6 +68,7 @@ const CustomBackdrop: React.FC = () => {
 export interface SnackbarState {
   show: boolean
   message: string
+  type: 'error' | 'success'
 }
 
 const ModalManager: React.FC = () => {
@@ -75,6 +77,7 @@ const ModalManager: React.FC = () => {
   const [snackbar, setSnackbar] = useState<SnackbarState>({
     show: false,
     message: '',
+    type: 'success',
   })
   const { user } = useSelector((state: RootState) => state.user)
 
@@ -120,6 +123,14 @@ const ModalManager: React.FC = () => {
     } else {
       dispatch(closeModal())
     }
+  }
+
+  function closeSnackbar() {
+    setSnackbar({
+      show: false,
+      message: '',
+      type: 'success',
+    })
   }
 
   function closewithoutCfrm() {
@@ -381,12 +392,18 @@ const ModalManager: React.FC = () => {
           </div>
         </Fade>
       </Modal>
-      <SimpleSnackbar
+      {/* <SimpleSnackbar
         triggerOpen={snackbar.show}
         message={snackbar.message}
         resetSnackbar={resetSnackbar}
         textColor="#7f63a1"
         bgColor="#ffffff"
+      /> */}
+      <CustomSnackbar
+        triggerOpen={snackbar.show}
+        message="Link Copied"
+        type="success"
+        closeSnackbar={closeSnackbar}
       />
     </>
   )
