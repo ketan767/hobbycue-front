@@ -7,8 +7,8 @@ type Props = {
   triggerOpen?: boolean
   message?: string
   resetSnackbar?: (data: SnackbarState) => void
-  textColor:string
-  bgColor:string
+  textColor: string
+  bgColor: string
 }
 
 const SimpleSnackbar: React.FC<Props> = ({
@@ -16,7 +16,7 @@ const SimpleSnackbar: React.FC<Props> = ({
   message,
   resetSnackbar,
   bgColor,
-  textColor
+  textColor,
 }) => {
   const [displayMessage, setDisplayMessage] = useState('')
 
@@ -31,30 +31,34 @@ const SimpleSnackbar: React.FC<Props> = ({
     if (reason === 'clickaway') {
       return
     }
-    resetSnackbar?.({ show: false, message: displayMessage })
+    resetSnackbar?.({
+      show: false,
+      message: displayMessage,
+      type: 'error',
+    })
   }
 
   return (
-      <Snackbar
-        open={triggerOpen}
-        onClose={handleClose}
-        onClick={handleClose}
-        autoHideDuration={1500}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <SnackbarContent
-          style={{
-            minWidth: '200px',
-            display: 'flex',
-            justifyContent: 'center',
-            backgroundColor:bgColor,
-            color:textColor,
-            fontWeight:'600',
-            cursor:'pointer'
-          }}
-          message={<span id="client-snackbar">{displayMessage}</span>}
-        />
-      </Snackbar>
+    <Snackbar
+      open={triggerOpen}
+      onClose={handleClose}
+      onClick={handleClose}
+      autoHideDuration={1500}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+    >
+      <SnackbarContent
+        style={{
+          minWidth: '200px',
+          display: 'flex',
+          justifyContent: 'center',
+          backgroundColor: bgColor,
+          color: textColor,
+          fontWeight: '600',
+          cursor: 'pointer',
+        }}
+        message={<span id="client-snackbar">{displayMessage}</span>}
+      />
+    </Snackbar>
   )
 }
 
