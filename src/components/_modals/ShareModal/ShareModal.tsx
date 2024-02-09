@@ -55,6 +55,7 @@ const ShareModal: React.FC<Props> = ({ triggerSnackbar }) => {
     triggerSnackbar?.({
       show: true,
       message: 'Link Copied',
+      type:'success',
     })
   }
 

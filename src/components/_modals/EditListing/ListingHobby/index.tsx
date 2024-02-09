@@ -371,9 +371,6 @@ const ListingHobbyEditModal: React.FC<Props> = ({
         <section className={styles['body']}>
           <>
             <section className={styles['add-hobbies-wrapper']}>
-              <p className={styles['info']}>
-                Added hobbies appear in the table below.
-              </p>
 
               <p className={styles['helper-text']}>{error}</p>
 

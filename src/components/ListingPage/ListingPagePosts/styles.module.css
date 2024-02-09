@@ -153,7 +153,6 @@
 }
 
 .no-posts-container {
-  margin: var(--spacing-8);
   padding: var(--spacing-12) var(--spacing-16);
   border-radius: 8px;
   border: 2px solid #ebedf0;

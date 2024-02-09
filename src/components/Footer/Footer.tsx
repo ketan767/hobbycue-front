@@ -12,6 +12,16 @@ import Twitter from '@/assets/svg/social/X.svg'
 import LinkedIn from '@/assets/svg/social/LinkedIn.svg'
 import Youtube from '@/assets/svg/social/youtube.svg'
 import Message from '@/assets/svg/social/Message.svg'
+
+import HoverFacebook from '@/assets/svg/hover/Facebook.svg';
+import HoverIntsa from '@/assets/svg/hover/Instagram.svg';
+import HoverPinterest from '@/assets/svg/hover/Pinterest.svg';
+import HoverTelegram from '@/assets/svg/hover/Telegram.svg';
+import HoverTwitter from '@/assets/svg/hover/X.svg';
+import HoverLinkedIn from '@/assets/svg/hover/Linkedin.svg';
+import HoverYoutube from '@/assets/svg/hover/Youtube.svg';
+import HoverMessage from '@/assets/svg/hover/Message.svg';
+
 import { InviteToHobbycue } from '@/services/auth.service'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -24,20 +34,22 @@ import { openModal } from '@/redux/slices/modal'
 import { useRouter } from 'next/router'
 
 const icons = [
-  { name: Facebook, link: 'https://www.facebook.com/hobbycue.community' },
-  { name: Twitter, link: 'https://twitter.com/hobbycue' },
-  { name: Instagram, link: 'https://www.instagram.com/hobbycue.community' },
-  { name: Pintrest, link: 'https://in.pinterest.com/hobbycue/' },
+  { name: Facebook, link: 'https://www.facebook.com/hobbycue.community',hover:HoverFacebook },
+  { name: Twitter, link: 'https://twitter.com/hobbycue',hover:HoverTwitter },
+  { name: Instagram, link: 'https://www.instagram.com/hobbycue.community',hover:HoverIntsa },
+  { name: Pintrest, link: 'https://in.pinterest.com/hobbycue/',hover:HoverPinterest },
   {
     name: LinkedIn,
     link: 'https://www.youtube.com/channel/UCEPxiQLanjReHcRe0FaHvrQ',
+    hover:HoverLinkedIn
   },
   {
     name: Youtube,
     link: 'https://www.youtube.com/channel/UCEPxiQLanjReHcRe0FaHvrQ',
+    hover:HoverYoutube
   },
-  { name: Telegram, link: 'https://t.me/hobbycue' },
-  { name: Message, link: 'https://t.me/hobbycue' },
+  { name: Telegram, link: 'https://t.me/hobbycue',hover:HoverTelegram },
+  { name: Message, link: 'https://t.me/hobbycue',hover:HoverMessage },
 ]
 const Footer: React.FC = () => {
   const [email, setEmail] = useState('')
@@ -252,6 +264,8 @@ const Footer: React.FC = () => {
                   return (
                     <Link href={Icon.link} key={idx}>
                       <Image
+                       onMouseEnter={(e)=>{e.currentTarget.src=Icon.hover.src}}
+                       onMouseLeave={(e)=>{e.currentTarget.src=Icon.name.src}}
                         className={styles.socialIcons}
                         height={32}
                         width={32}
