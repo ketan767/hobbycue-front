@@ -222,3 +222,13 @@ export const support = async (data: supportPayload): Promise<ApiReturnObject> =>
     return { err: error, res: null };
   }
 };
+
+
+export const ReportUser = async (data: ReportPayload): Promise<ApiReturnObject> => {
+  try {
+    const res = await axiosInstance.post(`/user/user-report`, data);
+    return { res: res, err: null };
+  } catch (error: any) {
+    return { err: error, res: null };
+  }
+};

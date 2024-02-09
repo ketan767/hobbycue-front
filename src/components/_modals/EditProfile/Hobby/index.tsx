@@ -421,10 +421,10 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
         if (response?.data.success) {
           console.warn('hobby added sucessfully')
-          if (onComplete !== undefined){
-            isOnboarded = true;
+          if (onComplete !== undefined) {
+            isOnboarded = true
             onComplete()
-            return            
+            return
           }
           dispatch(updateUser(response?.data.data.user))
           handleClose()
@@ -440,11 +440,9 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       searchref.current?.focus()
       return
     }
-    if (onComplete !== undefined){
+    if (onComplete !== undefined) {
       onComplete()
-    }
-      
-    else {
+    } else {
       window.location.reload()
       dispatch(closeModal())
     }
@@ -595,8 +593,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         <section className={styles['body']}>
           <>
             <section className={styles['add-hobbies-wrapper']}>
-              <p className={styles['helper-text']}>{error}</p>
-
               <section className={styles['added-hobby-list']}>
                 <table>
                   <thead>

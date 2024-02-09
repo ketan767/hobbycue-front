@@ -268,24 +268,26 @@ const PostCard: React.FC<Props> = (props) => {
                     className={styles['meta-votes']}
                     updatePost={updatePost}
                   />
-                  <svg
-                    onClick={(e: any) => {
-                      e.stopPropagation()
-                      e.preventDefault()
-                      setShowComments(!showComments)
-                    }}
-                    width="21"
-                    height="21"
-                    viewBox="0 0 21 21"
-                    fill={showComments ? '#8064A2' : 'none'}
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M4.42578 15.4746H4.01157L3.71867 15.7675L1.42578 18.0604V2.47461C1.42578 1.92689 1.87807 1.47461 2.42578 1.47461H18.4258C18.9735 1.47461 19.4258 1.92689 19.4258 2.47461V14.4746C19.4258 15.0223 18.9735 15.4746 18.4258 15.4746H4.42578Z"
-                      stroke="#8064A2"
-                      stroke-width="2"
-                    />
-                  </svg>
+                  {(props.currentSection !== 'links') && (
+                    <svg
+                      onClick={(e: any) => {
+                        e.stopPropagation()
+                        e.preventDefault()
+                        setShowComments(!showComments)
+                      }}
+                      width="21"
+                      height="21"
+                      viewBox="0 0 21 21"
+                      fill={showComments ? '#8064A2' : 'none'}
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M4.42578 15.4746H4.01157L3.71867 15.7675L1.42578 18.0604V2.47461C1.42578 1.92689 1.87807 1.47461 2.42578 1.47461H18.4258C18.9735 1.47461 19.4258 1.92689 19.4258 2.47461V14.4746C19.4258 15.0223 18.9735 15.4746 18.4258 15.4746H4.42578Z"
+                        stroke="#8064A2"
+                        stroke-width="2"
+                      />
+                    </svg>
+                  )}
                 </section>
               </div>
             </a>

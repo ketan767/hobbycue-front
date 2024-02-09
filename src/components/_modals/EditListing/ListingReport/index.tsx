@@ -3,8 +3,8 @@ import dynamic from 'next/dynamic'
 import { Button, CircularProgress } from '@mui/material'
 
 import {
+  getAllUserDetail,
   getMyProfileDetail,
-  support,
   updateMyProfileDetail,
 } from '@/services/user.service'
 
@@ -14,19 +14,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
-import SaveModal from '../SaveModal/saveModal'
+import SaveModal from '../../SaveModal/saveModal'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import Image from 'next/image'
-
-const AboutEditor = dynamic(
-  () => import('@/components/AboutEditor/AboutEditor'),
-  {
-    ssr: false,
-    loading: () => <h1>Loading...</h1>,
-  },
-)
+import { ReportListing } from '@/services/listing.service'
 
 type Props = {
   onComplete?: () => void
@@ -38,15 +31,16 @@ type Props = {
   onStatusChange?: (isChanged: boolean) => void
 }
 
-type supportData = {
+type reportData = {
   description: string
   name: string
   email: string
   user_id: string
   type: string
+  reported_user_id: string
 }
 
-const SupportModal: React.FC<Props> = ({
+const ListingReport: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
   confirmationModal,
@@ -57,12 +51,13 @@ const SupportModal: React.FC<Props> = ({
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
 
-  const [data, setData] = useState<supportData>({
+  const [data, setData] = useState<reportData>({
     description: '',
     name: '',
     email: '',
     user_id: '',
     type: '',
+    reported_user_id: '',
   })
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backDisabled, SetBackDisabled] = useState(false)
@@ -73,12 +68,13 @@ const SupportModal: React.FC<Props> = ({
   const [inputErrs, setInputErrs] = useState<{ error: string | null }>({
     error: null,
   })
-  const [initialData, setInitialData] = useState<supportData>({
+  const [initialData, setInitialData] = useState<reportData>({
     description: '',
     name: user.full_name,
     email: user.public_email,
     user_id: user._id,
     type: 'user',
+    reported_user_id: '',
   })
   const [isChanged, setIsChanged] = useState(false)
 
@@ -89,6 +85,7 @@ const SupportModal: React.FC<Props> = ({
       email: user.public_email,
       user_id: user._id,
       type: 'user',
+      reported_user_id: '',
     })
   }, [user])
 
@@ -105,36 +102,8 @@ const SupportModal: React.FC<Props> = ({
     }
   }
 
-  const Backsave = async () => {
-    setBackBtnLoading(true)
-    if (
-      !data.description ||
-      data.description?.trim() === '' ||
-      data.description === '<p><br></p>'
-    ) {
-      if (onBackBtnClick) onBackBtnClick()
-      setBackBtnLoading(false)
-    } else {
-      const { err, res } = await support(data)
-
-      if (err) {
-        return console.log(err)
-      }
-      setBackBtnLoading(true)
-      const { err: error, res: response } = await getMyProfileDetail()
-
-      if (error) return console.log(error)
-      if (response?.data.success) {
-        dispatch(updateUser(response.data.data.user))
-
-        if (onBackBtnClick) onBackBtnClick()
-        setBackBtnLoading(false)
-      }
-    }
-  }
-
   const handleSubmit = async () => {
-    console.log('support', data)
+    console.log('report', data)
     if (!data.description || data.description === '') {
       setInputErrs((prev) => {
         return { ...prev, error: 'This field is required!' }
@@ -144,7 +113,7 @@ const SupportModal: React.FC<Props> = ({
     }
 
     setSubmitBtnLoading(true)
-    const { err, res } = await support(data)
+    const { err, res } = await ReportListing(data)
 
     if (err) {
       setSubmitBtnLoading(false)
@@ -172,6 +141,7 @@ const SupportModal: React.FC<Props> = ({
       email: user.public_email,
       user_id: user._id,
       type: 'user',
+      reported_user_id: '',
     })
   }, [user])
 
@@ -241,7 +211,7 @@ const SupportModal: React.FC<Props> = ({
               isChanged ? setConfirmationModal(true) : handleClose()
             }
           />
-          <h4 className={styles['heading']}>{'Support'}</h4>
+          <h4 className={styles['heading']}>{'Report'}</h4>
         </header>
         <hr />
         <section className={styles['body']}>
@@ -265,7 +235,7 @@ const SupportModal: React.FC<Props> = ({
         <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
             <>
-              <button className="modal-footer-btn cancel" onClick={Backsave}>
+              <button className="modal-footer-btn cancel">
                 {backBtnLoading ? (
                   <CircularProgress color="inherit" size={'24px'} />
                 ) : onBackBtnClick ? (
@@ -275,7 +245,7 @@ const SupportModal: React.FC<Props> = ({
                 )}
               </button>
               {/* SVG Button for Mobile */}
-              <div onClick={Backsave}>
+              <div>
                 <Image
                   src={BackIcon}
                   alt="Back"
@@ -324,4 +294,4 @@ const SupportModal: React.FC<Props> = ({
   )
 }
 
-export default SupportModal
+export default ListingReport

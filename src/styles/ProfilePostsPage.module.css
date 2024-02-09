@@ -58,6 +58,7 @@
   display: none !important;
 }
 .no-posts-container {
+
   margin: 0;
   padding: var(--spacing-12) var(--spacing-16);
   border-radius: 8px;

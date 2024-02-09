@@ -247,3 +247,13 @@ export const getAllListingUrls = async (
       return { err: error, res: null }
     }
   }
+
+  
+  export const ReportListing = async (data: ReportPayload): Promise<ApiReturnObject> => {
+    try {
+      const res = await axiosInstance.post(`/listing/listing-report`, data);
+      return { res: res, err: null };
+    } catch (error: any) {
+      return { err: error, res: null };
+    }
+  };

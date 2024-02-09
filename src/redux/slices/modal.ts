@@ -45,6 +45,8 @@ export type ModalType =
   | 'user-onboarding-welcome'
   | 'ExpiredPassword'
   | 'SupportModal'
+  | 'UserReportModal'
+  | 'ListingReportModal'
 
 
   interface ModalState {

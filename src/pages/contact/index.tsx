@@ -167,15 +167,16 @@ const Contact: React.FC<Props> = ({}) => {
     const email = data.public_email.value
     const phone = {
       number: data.phone.number,
-      prefix: data.phone.prefix,
+      prefix: selectedCountryCode,
     }
     const whatsapp_number = {
       number: data.whatsapp_number.number,
-      prefix: data.whatsapp_number.prefix,
+      prefix: selectedWpCountryCode,
     }
     const YouAre = data.YouAre.value
     const Regarding = data.Regarding.value
-    const Message = data.message.value
+    const description = data.message.value
+    const user_id = !isLoggedIn ? 'Not logged In' : user._id
 
     setSubmitBtnLoading(true)
 
@@ -187,7 +188,8 @@ const Contact: React.FC<Props> = ({}) => {
         whatsapp_number,
         YouAre,
         Regarding,
-        Message,
+        description,
+        user_id,
       })
 
       if (err) {
@@ -199,6 +201,7 @@ const Contact: React.FC<Props> = ({}) => {
       setSubmitBtnLoading(false)
     }
   }
+  console.log('uer', user)
 
   return (
     <>

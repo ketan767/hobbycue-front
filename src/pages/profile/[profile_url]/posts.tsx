@@ -178,6 +178,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
                       postData={post}
                       fromProfile={true}
                       onPinPost={onPinPost}
+                      currentSection='posts'
                     />
                   </PostWrapper>
                 )
@@ -191,6 +192,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
                         postData={post}
                         fromProfile={true}
                         onPinPost={onPinPost}
+                        currentSection='posts'
                       />
                     )
                   })}
@@ -270,6 +272,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
                     postData={post}
                     fromProfile={true}
                     onPinPost={onPinPost}
+                    currentSection='posts'
                   />
                 </PostWrapper>
               )
@@ -283,6 +286,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
                       postData={post}
                       fromProfile={true}
                       onPinPost={onPinPost}
+                      currentSection='posts'
                     />
                   )
                 })}
