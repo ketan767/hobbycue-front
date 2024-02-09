@@ -9,6 +9,7 @@ import Link from 'next/link'
 import PostCommentVotes from './CommentVotes'
 import { format, render, cancel, register } from 'timeago.js'
 import TextareaAutosize from 'react-textarea-autosize'
+import CommentCheckWithUrl from './CommentCheckWithUrl'
 
 type Props = {
   styles: any
@@ -158,7 +159,9 @@ const PostComments = ({ data, styles }: Props) => {
                       </header>
 
                       {/* Content */}
-                      <p className={styles['content']}>{comment.content}</p>
+                      <CommentCheckWithUrl>
+                        {comment.content}
+                      </CommentCheckWithUrl>
 
                       {/* Footer */}
                       <footer>
@@ -234,7 +237,10 @@ const PostComments = ({ data, styles }: Props) => {
                     </header>
 
                     {/* Content */}
-                    <p className={styles['content']}>{comments?.[0].content}</p>
+                    {/* <p className={styles['content']}>{comments?.[0].content}</p> */}
+                    <CommentCheckWithUrl>
+                    {comments?.[0].content}
+                    </CommentCheckWithUrl>
 
                     {/* Footer */}
                     <footer>

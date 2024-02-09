@@ -2,13 +2,26 @@ import React, { useEffect, useState } from 'react'
 
 import styles from './UserOnboardingWelcomeModal.module.css'
 import Image from 'next/image'
-import SearchIcon from '@mui/icons-material/Search'
 import FilledButton from '@/components/_buttons/FilledButton'
 import { useRouter } from 'next/router'
 import { useDispatch } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
+import { IconButton, InputAdornment, TextField } from '@mui/material'
+import SearchIcon from '@/assets/svg/search-small.svg'
+import { setShowPageLoader } from '@/redux/slices/site'
+import { searchUsers } from '@/services/user.service'
+import { Page, setHobbiesSearchResult, setSearchString, setTypeResultOne, setTypeResultThree, setTypeResultTwo, setUserSearchResults } from '@/redux/slices/search'
+import { searchPages } from '@/services/listing.service'
+import { getAllHobbies } from '@/services/hobby.service'
+
+type SearchInput = {
+  search: InputData<string>
+}
 
 const UserOnboardingWelcomeModal = () => {
+  const [data, setData] = useState<SearchInput>({
+    search: { value: '', error: null },
+  })
   const dispatch = useDispatch()
   const router = useRouter()
   const initialInnerWidth = () => {
@@ -18,7 +31,126 @@ const UserOnboardingWelcomeModal = () => {
     } else return 0
   }
   const [screenWidth, setScreenWidth] = useState(initialInnerWidth)
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value
+    setData((prev) => ({ ...prev, search: { value, error: null } }))
+  }
+  const searchResult = async () => {
+    dispatch(closeModal())
+    router.push('/search')
+    const searchValue = data.search.value.trim()
+    const taglineValue = ''
+    const cityValue = ''
+    const hobbyValue = ''
+    const titleValue = ''
 
+    if (!searchValue && !taglineValue && !cityValue && !hobbyValue) {
+      console.log('Search fields are empty.')
+      return
+    }
+
+    let searchCriteria = {
+      full_name: searchValue,
+      tagline: taglineValue,
+      city: cityValue,
+      hobby: hobbyValue,
+      title: titleValue,
+    }
+
+    try {
+      dispatch(setShowPageLoader(true))
+      const { res: userRes, err: userErr } = await searchUsers(searchCriteria)
+      if (userErr) {
+        console.error('An error occurred during the user search:', userErr)
+      } else {
+        console.log('User search results:', userRes)
+        dispatch(setUserSearchResults(userRes))
+      }
+      // Search by title
+      dispatch(setShowPageLoader(true))
+      const { res: titleRes, err: titleErr } = await searchPages({
+        title: searchValue,
+      })
+      if (titleErr) {
+        console.error('An error occurred during the title search:', titleErr)
+        return
+      }
+      console.warn({ titleRes })
+      let combinedResults = new Set(titleRes.data.slice(0, 50))
+      let remainingSlots = 50 - combinedResults.size
+
+      if (combinedResults.size < 10) {
+        dispatch(setShowPageLoader(true))
+        const { res: taglineRes, err: taglineErr } = await searchPages({
+          tagline: searchValue,
+        })
+        if (!taglineErr) {
+          combinedResults = combinedResults.add(
+            taglineRes.data.slice(0, remainingSlots),
+          )
+        }
+      }
+      // If title search results are exactly 50, prioritize the first 40 and get 10 by tagline
+      else if (combinedResults.size === 50) {
+        dispatch(setShowPageLoader(true))
+        combinedResults = new Set(Array.from(combinedResults).slice(0, 40))
+        const { res: taglineRes, err: taglineErr } = await searchPages({
+          tagline: searchValue,
+        })
+        if (!taglineErr) {
+          combinedResults = combinedResults.add(taglineRes.data.slice(0, 10))
+        }
+      }
+
+      const typeResultOne = Array.from(combinedResults).filter(
+        (page: any) => page.type === 1 && page.is_published === true,
+      )
+
+      dispatch(
+        setTypeResultOne({
+          data: typeResultOne as Page[],
+          message: 'Search completed successfully.',
+          success: true,
+        }),
+      )
+      const typeResultTwo = Array.from(combinedResults).filter(
+        (page: any) => page.type === 2 && page.is_published === true,
+      )
+
+      dispatch(
+        setTypeResultTwo({
+          data: typeResultTwo as Page[],
+          message: 'Search completed successfully.',
+          success: true,
+        }),
+      )
+      const typeResultThree = Array.from(combinedResults).filter(
+        (page: any) => page.type === 3 && page.is_published === true,
+      )
+
+      dispatch(
+        setTypeResultThree({
+          data: typeResultThree as Page[],
+          message: 'Search completed successfully.',
+          success: true,
+        }),
+      )
+      const query = `fields=display,genre,slug,profile_image&level=3&level=2&level=1&level=0&show=true&search=${searchValue}`
+      dispatch(setShowPageLoader(true))
+      const { res: hobbyRes, err: hobbyErr } = await getAllHobbies(query)
+      if (hobbyErr) {
+        console.error('An error occurred during the page search:', hobbyErr)
+      } else {
+        console.log('hobbies search results:', hobbyRes.data.hobbies)
+        dispatch(setHobbiesSearchResult(hobbyRes.data.hobbies))
+      }
+      dispatch(setShowPageLoader(false))
+      dispatch(setSearchString(searchValue))
+    } catch (error) {
+      dispatch(setShowPageLoader(false))
+      console.error('An error occurred during the combined search:', error)
+    }
+  }
   useEffect(() => {
     const updateScreenWidth = () => {
       let width = window.innerWidth
@@ -70,17 +202,76 @@ const UserOnboardingWelcomeModal = () => {
           </div>
         </div>
         <div
-          style={{ left: `calc(5.4rem + ${screenWidth}px)` }}
+          style={{ left: `calc(9.4rem + ${screenWidth}px)` }}
           className={styles['search-wrapper']}
         >
-          <div className={styles['search']}>
-            <div>
+          {/* <div className={styles['search']}> */}
+          <TextField
+              variant="outlined"
+              placeholder="Search here..."
+              size="small"
+              className={styles.inputField}
+              onChange={handleInputChange}
+              value={data.search.value}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  searchResult()
+                }
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '8px',
+                  padding: 0,
+                  overflow: 'hidden',
+                  borderColor: 'red',
+                  background: '#f8f9fa',
+                  '& fieldset': {
+                    borderColor: '#EBEDF0',
+                    borderRight: 0,
+                  },
+                },
+                '& .MuiInputBase-input': {
+                  fontSize: '15px',
+                },
+                '& .MuiInputBase-input::placeholder': {
+                  fontSize: '12px',
+                  color: 'black',
+                },
+              }}
+              InputLabelProps={{ shrink: false }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      sx={{
+                        bgcolor: 'primary.main',
+                        borderRadius: '0px 8px 8px 0px',
+                        '&:hover': {
+                          bgcolor: 'primary.dark',
+                        },
+                      }}
+                    >
+                      <div
+                        className={styles['search-icon-container']}
+                        onClick={searchResult}
+                      >
+                        <Image
+                          src={SearchIcon}
+                          alt="search"
+                          width={16}
+                          height={16}
+                        />
+                      </div>
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            {/* <div>
               <p>Search here...</p>
-            </div>
-            <div>
-              <SearchIcon />
-            </div>
-          </div>
+            </div> */}
+           
+          {/* </div> */}
           <div>
             <div className={styles['search-content']}>
               <svg

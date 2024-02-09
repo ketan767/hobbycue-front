@@ -52,9 +52,21 @@
   position: absolute;
   top: 1.3rem;
 }
-.search-wrapper .search {
+.search-wrapper .inputField {
   display: flex;
   flex-direction: row;
+}
+.inputField {
+  width: 300px;
+}
+.inputField::placeholder {
+  font-family: 'Poppins';
+  font-weight: 300;
+  color: #939ca3;
+}
+.inputField input {
+  background: #f8f9fa;
+  outline: none;
 }
 .search > div:first-child {
   width: 16rem;
@@ -89,7 +101,7 @@
 .search-wrapper > div:last-child > .search-content {
   position: absolute;
   top: 0.5rem;
-  left: 16rem;
+  left: 13rem;
   width: 17rem;
 }
 .search-content > svg {
@@ -112,6 +124,14 @@
   color: rgba(109, 116, 122, 1);
   line-height: 16px;
   margin-top: 8px;
+}
+
+.search-icon-container{
+  width: 22px;
+  height: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .my-profile-wrapper {

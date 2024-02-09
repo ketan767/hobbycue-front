@@ -1,5 +1,4 @@
-'use client'
-import { useRouter } from 'next/router'
+'use client';
 import React, { useState } from 'react'
 
 import { GetServerSideProps } from 'next'
