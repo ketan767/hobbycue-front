@@ -7,7 +7,7 @@ import {
   toggleShowAllPeople,
   toggleShowAllPlace,
   toggleShowAllUsers,
-  toggleShowAllProducts
+  toggleShowAllProducts,
 } from '@/redux/slices/search'
 import { RootState } from '@/redux/store'
 import { MenuItem, Select } from '@mui/material'
@@ -92,7 +92,10 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const showAllPeople = useSelector((state: any) => state.search.showAllPeople)
   const showAllPlace = useSelector((state: any) => state.search.showAllPlace)
   const showAllEvent = useSelector((state: any) => state.search.showAllEvent)
-  const showAllProducts = useSelector((state: any) => state.search.showAllProducts)
+  const showAllProducts = useSelector(
+    (state: any) => state.search.showAllProducts,
+  )
+  const searchString = useSelector((state: any) => state.search.searchString)
 
   const dispatch = useDispatch()
   const { isLoggedIn, isAuthenticated, user } = useSelector(
@@ -239,11 +242,15 @@ const MainContent: React.FC<SearchResultsProps> = ({
     <main className={styles.searchResults}>
       {noResultsFound ? (
         <div className={styles['no-results-wrapper']}>
-          <p>
-            Use the Search box at the top to look up pages on your hobby or an
-            existing user. If you don&apos;t find any pages, you may Add Listing
-            Page from the menu at top right corner
-          </p>
+          {searchString === '' ? (
+            <p>
+              Use the Search box at the top to look up pages on your hobby or an
+              existing user. If you don&apos;t find any pages, you may Add
+              Listing Page from the menu at top right corner
+            </p>
+          ) : (
+            <p>No results for {searchString}</p>
+          )}
         </div>
       ) : (
         <div>

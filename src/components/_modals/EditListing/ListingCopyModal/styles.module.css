@@ -108,6 +108,9 @@ text-align: left;
 .modal-close-icon:hover {
   background: #ddd;
 }
+.addIcon{
+  cursor: not-allowed;
+}
 @media screen and (max-width: 1100px) {
   .modal-wrapper {
     width: auto;
@@ -164,3 +167,4 @@ line-height: 22px; /* 157.143% */
   font-size: 14px;
   color: #6d747a;
 }
+
