@@ -15,19 +15,19 @@ type Props = {
 
 const ListingCard: React.FC<Props> = ({ data }) => {
   // console.log('🚀 ~ file: ListingCard.tsx:13 ~ data:', data)
-  console.log('Carddata', data)
-  const type = getListingTypeName(data.type)
+  // console.log('Carddata', data)
+  const type = getListingTypeName(data?.type)
   return (
     <>
       <Link
-        key={data._id}
-        href={`/page/${data.page_url}`}
+        key={data?._id}
+        href={`/page/${data?.page_url}`}
         className={styles.container}
       >
         <div className={styles.imgContainer}>
           {data?.cover_image ? (
             <Image
-              src={data.cover_image}
+              src={data?.cover_image}
               width={300}
               height={100}
               alt="cover"
@@ -36,13 +36,13 @@ const ListingCard: React.FC<Props> = ({ data }) => {
           ) : (
             <div
               className={
-                data.type == 1
+                data?.type == 1
                   ? `${styles['coverImage']} default-people-listing-cover`
-                  : data.type == 2
+                  : data?.type == 2
                   ? `${styles['coverImage']} default-place-listing-cover`
-                  : data.type == 3
+                  : data?.type == 3
                   ? `${styles['coverImage']} default-program-listing-cover`
-                  : data.type == 4
+                  : data?.type == 4
                   ? `${styles['coverImage']} default-product-listing-cover`
                   : `${styles['coverImage']} default-people-listing-cover`
               }
@@ -54,7 +54,7 @@ const ListingCard: React.FC<Props> = ({ data }) => {
             {data?.profile_image ? (
               <div className={styles.contentImageContainer}>
                 <Image
-                  src={data.profile_image}
+                  src={data?.profile_image}
                   width={48}
                   height={48}
                   alt="cover"
@@ -64,30 +64,34 @@ const ListingCard: React.FC<Props> = ({ data }) => {
             ) : (
               <div
                 className={
-                  data.type == 1
+                  data?.type == 1
                     ? `${styles['contentImage']} default-people-listing-icon`
-                    : data.type == 2
+                    : data?.type == 2
                     ? `${styles['contentImage']} default-place-listing-icon`
-                    : data.type == 3
+                    : data?.type == 3
                     ? `${styles['contentImage']} default-program-listing-icon`
-                    : data.type == 4
+                    : data?.type == 4
                     ? `${styles['contentImage']} default-product-listing-icon`
                     : `${styles['contentImage']} default-people-listing-icon`
                 }
               ></div>
             )}
             <div className={styles.contentTitle}>
-              <p className={styles.title}> {data.title} </p>
+              <p className={styles.title}> {data?.title} </p>
               <p className={styles.titleType}>
                 <Image
                   src={
-                    data.type === 1 ? People : data.type === 2 ? Place : Program
+                    data?.type === 1
+                      ? People
+                      : data?.type === 2
+                      ? Place
+                      : Program
                   }
                   alt="type"
                 />
                 <p>
                   {' '}
-                  {data.page_type?.map((item: string, idx: number) => {
+                  {data?.page_type?.map((item: string, idx: number) => {
                     if (idx === 0) {
                       return item
                     } else return ', ' + item
@@ -97,13 +101,15 @@ const ListingCard: React.FC<Props> = ({ data }) => {
             </div>
           </div>
 
-          <p className={styles.tagline}> {data.tagline} </p>
+          <p className={styles.tagline}> {data?.tagline} </p>
 
           <div className={styles.bottom}>
             <Image src={LocationIcon} width={16} height={16} alt="location" />
-            <p className={styles.location}>
-              {data._address?.city} {', '} {data._address?.country}{' '}
-            </p>
+            {(data?._address?.city || data?._address?.country) && (
+              <p className={styles.location}>
+                {data?._address?.city} {', '} {data?._address?.country}{' '}
+              </p>
+            )}
           </div>
           <div className={styles.bottom}>
             <Image src={HobbyIcon} width={16} height={16} alt="hobby" />
