@@ -89,7 +89,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
 
   useEffect(() => {
     setInitialData({
-      public_email: { value: user.public_email, error: null },
+      public_email: { value: user?.public_email, error: null },
       phone: { number: '', prefix: '', error: null },
       website: { value: user.website, error: null },
       whatsapp_number: { number: '', prefix: '', error: null },
@@ -312,12 +312,12 @@ const ProfileContactEditModal: React.FC<Props> = ({
   }
 
   const handleWpPrefixChange = (element: any) => {
-    const id = element?.id    
-    setWpSelectedCountryCode(countryData[id]?.phonePrefix)    
+    const id = element?.id
+    setWpSelectedCountryCode(countryData[id]?.phonePrefix)
   }
   const handlePrefixChange = (element: any) => {
-    const id = element?.id    
-    setSelectedCountryCode(countryData[id]?.phonePrefix)    
+    const id = element?.id
+    setSelectedCountryCode(countryData[id]?.phonePrefix)
   }
 
   useEffect(() => {
@@ -409,7 +409,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
               >
                 <label>Phone Number</label>
                 <div className={styles['phone-prefix-input']}>
-                <DropdownMenu
+                  <DropdownMenu
                     value={selectedCountryCode}
                     valueIndex={countryData.findIndex(
                       (country, idx) =>
@@ -451,21 +451,22 @@ const ProfileContactEditModal: React.FC<Props> = ({
                         value={!tick}
                         checked={tick}
                         onChange={(e) => {
-                          if(tick===true){
-                            if(tick===true){
+                          if (tick === true) {
+                            if (tick === true) {
                               setData((prev) => {
                                 return {
                                   ...prev,
                                   whatsapp_number: {
-                                    number: "",
-                                    prefix: "+91",
+                                    number: '',
+                                    prefix: '+91',
                                   },
                                 }
                               })
-                              setWpSelectedCountryCode("+91")
+                              setWpSelectedCountryCode('+91')
                             }
                           }
-                          setTick(!tick)}}
+                          setTick(!tick)
+                        }}
                       />{' '}
                     </div>
                   </CustomTooltip>

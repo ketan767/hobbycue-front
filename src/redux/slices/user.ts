@@ -4,6 +4,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 export interface AuthState {
   isLoggedIn: Boolean
   isAuthenticated: Boolean
+  profileData: any
   user: any
   listing: any
   activeProfile: {
@@ -17,6 +18,7 @@ const initialState: AuthState = {
   isLoggedIn: false,
   isAuthenticated: false,
   user: {},
+  profileData:{},
   listing: [],
   activeProfile: {
     type: 'user',
@@ -37,6 +39,9 @@ const authSlice = createSlice({
     },
     updateUser: (state, { payload }) => {
       state.user = payload
+    },
+    updateProfileData: (state, { payload }) => {
+      state.profileData = payload
     },
     updateUserListing: (state, { payload }) => {
       state.listing = payload
@@ -66,6 +71,7 @@ export const {
   updateActiveProfile,
   updateUserListing,
   updateAddressToEdit,
+  updateProfileData,
 } = authSlice.actions
 
 export default authSlice.reducer

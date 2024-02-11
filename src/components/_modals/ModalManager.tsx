@@ -52,7 +52,7 @@ import VerifyActionModal from './VerifyAction/VerifyAction'
 import SetPasswordModal from './CreatePassword'
 import ViewImageModal from './ViewImage'
 import { ModalType } from '@/redux/slices/modal'
-import SupportModal from './support'
+import SupportModal from './EditListing/ListingSupport'
 
 import UserOnboardingWelcomeModal from './UserOnboardingWelcomeModal/UserOnboardingWelcomeModal.tsx'
 
@@ -63,6 +63,9 @@ import { types } from 'util'
 import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import UserReport from './EditProfile/ReportUser'
 import ListingReport from './EditListing/ListingReport'
+import ContactToOwner from './ContactOwner'
+import ListingSupportModal from './EditListing/ListingSupport'
+import SupportUserModal from './EditProfile/supportUser'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -316,10 +319,18 @@ const ModalManager: React.FC = () => {
               {activeModal === 'listing-social-media-edit' && (
                 <ListingSocialMediaEditModal {...props} />
               )}
-              {activeModal === 'SupportModal' && <SupportModal {...props} />}
+              {activeModal === 'ListingSupportModal' && (
+                <ListingSupportModal {...props} />
+              )}
+              {activeModal === 'SupportUserModal' && (
+                <SupportUserModal {...props} />
+              )}
               {activeModal === 'UserReportModal' && <UserReport {...props} />}
               {activeModal === 'ListingReportModal' && (
                 <ListingReport {...props} />
+              )}
+              {activeModal === 'ContactToOwner' && (
+                <ContactToOwner {...props} />
               )}
               {activeModal === 'user-onboarding-welcome' && (
                 <UserOnboardingWelcomeModal />

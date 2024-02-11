@@ -143,12 +143,7 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
   }
 
   const handleContact = () => {
-    console.log('data', data)
-    if (data.public_email) {
-      window.open(
-        `mailto:${data.public_email}?subject=Subject&body=Body%20goes%20here`,
-      )
-    }
+    dispatch(openModal({ type: 'ContactToOwner', closable: true }))
   }
 
   const handleClaim = async () => {

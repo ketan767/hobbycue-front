@@ -4,7 +4,6 @@ import { Button, CircularProgress } from '@mui/material'
 
 import {
   getMyProfileDetail,
-  support,
   updateMyProfileDetail,
 } from '@/services/user.service'
 
@@ -20,14 +19,6 @@ import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import Image from 'next/image'
 
-const AboutEditor = dynamic(
-  () => import('@/components/AboutEditor/AboutEditor'),
-  {
-    ssr: false,
-    loading: () => <h1>Loading...</h1>,
-  },
-)
-
 type Props = {
   onComplete?: () => void
   onBackBtnClick?: () => void
@@ -38,15 +29,12 @@ type Props = {
   onStatusChange?: (isChanged: boolean) => void
 }
 
-type supportData = {
+type ContactOwnerData = {
   description: string
-  name: string
-  email: string
-  user_id: string
-  type: string
+  subject: string
 }
 
-const SupportModal: React.FC<Props> = ({
+const ContactToOwner: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
   confirmationModal,
@@ -57,42 +45,50 @@ const SupportModal: React.FC<Props> = ({
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
 
-  const [data, setData] = useState<supportData>({
+  const [data, setData] = useState<ContactOwnerData>({
     description: '',
-    name: '',
-    email: '',
-    user_id: '',
-    type: '',
+    subject: '',
   })
+  const subjectref = useRef<HTMLInputElement>(null)
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backDisabled, SetBackDisabled] = useState(false)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [isError, setIsError] = useState(false)
 
-  const [inputErrs, setInputErrs] = useState<{ error: string | null }>({
-    error: null,
+  const [inputErrs, setInputErrs] = useState<{ [key: string]: string | null }>({
+    description: null,
+    subject: null,
   })
-  const [initialData, setInitialData] = useState<supportData>({
+  const [initialData, setInitialData] = useState<ContactOwnerData>({
     description: '',
-    name: user.full_name,
-    email: user.public_email,
-    user_id: user._id,
-    type: 'user',
+    subject: '',
   })
   const [isChanged, setIsChanged] = useState(false)
 
   useEffect(() => {
     setInitialData({
-      description: user.description,
-      name: user.full_name,
-      email: user.public_email,
-      user_id: user._id,
-      type: 'user',
+      description: '',
+      subject: '',
     })
   }, [user])
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value
+    setData((prev) => ({ ...prev, subject: value }))
+    setInputErrs({ error: null })
+
+    const hasChanged = value !== initialData.subject
+    setIsChanged(hasChanged)
+
+    if (onStatusChange) {
+      onStatusChange(hasChanged)
+    }
+  }
+
+  const handleTextAreaChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
     const value = event.target.value
     setData((prev) => ({ ...prev, description: value }))
     setInputErrs({ error: null })
@@ -105,36 +101,8 @@ const SupportModal: React.FC<Props> = ({
     }
   }
 
-  const Backsave = async () => {
-    setBackBtnLoading(true)
-    if (
-      !data.description ||
-      data.description?.trim() === '' ||
-      data.description === '<p><br></p>'
-    ) {
-      if (onBackBtnClick) onBackBtnClick()
-      setBackBtnLoading(false)
-    } else {
-      const { err, res } = await support(data)
-
-      if (err) {
-        return console.log(err)
-      }
-      setBackBtnLoading(true)
-      const { err: error, res: response } = await getMyProfileDetail()
-
-      if (error) return console.log(error)
-      if (response?.data.success) {
-        dispatch(updateUser(response.data.data.user))
-
-        if (onBackBtnClick) onBackBtnClick()
-        setBackBtnLoading(false)
-      }
-    }
-  }
-
   const handleSubmit = async () => {
-    console.log('support', data)
+    console.log('ContactOwner', data)
     if (!data.description || data.description === '') {
       setInputErrs((prev) => {
         return { ...prev, error: 'This field is required!' }
@@ -144,36 +112,7 @@ const SupportModal: React.FC<Props> = ({
     }
 
     setSubmitBtnLoading(true)
-    const { err, res } = await support(data)
-
-    if (err) {
-      setSubmitBtnLoading(false)
-      return console.log(err)
-    }
-
-    const { err: error, res: response } = await getMyProfileDetail()
-    setSubmitBtnLoading(false)
-
-    if (error) return console.log(error)
-    if (response?.data.success) {
-      dispatch(updateUser(response.data.data.user))
-      if (onComplete) onComplete()
-      else {
-        window.location.reload()
-        dispatch(closeModal())
-      }
-    }
   }
-
-  useEffect(() => {
-    setData({
-      description: '',
-      name: user.full_name,
-      email: user.public_email,
-      user_id: user._id,
-      type: 'user',
-    })
-  }, [user])
 
   const HandleSaveError = async () => {
     if (
@@ -202,6 +141,7 @@ const SupportModal: React.FC<Props> = ({
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
+    subjectref?.current?.focus()
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
         nextButtonRef.current?.click()
@@ -241,10 +181,29 @@ const SupportModal: React.FC<Props> = ({
               isChanged ? setConfirmationModal(true) : handleClose()
             }
           />
-          <h4 className={styles['heading']}>{'Support'}</h4>
+          <h4 className={styles['heading']}>{'Message'}</h4>
         </header>
         <hr />
         <section className={styles['body']}>
+          {/* Subject */}
+          <div
+            className={`${styles['input-box']} ${
+              inputErrs.subject ? styles['input-box-error'] : ''
+            }`}
+          >
+            <label className={styles['label-required']}>Subject</label>
+            <input
+              type="text"
+              placeholder="Subject"
+              autoComplete="name"
+              required
+              value={data.subject}
+              name="full_name"
+              onChange={handleInputChange}
+              ref={subjectref}
+            />
+            <p className={styles['helper-text']}>{inputErrs.full_name}</p>
+          </div>
           <div className={styles['input-box']}>
             <div className={styles['street-input-container']}>
               <textarea
@@ -252,7 +211,7 @@ const SupportModal: React.FC<Props> = ({
                 required
                 placeholder="Write your description here"
                 name="message"
-                onChange={handleInputChange}
+                onChange={handleTextAreaChange}
                 value={data.description}
               />
             </div>
@@ -265,7 +224,7 @@ const SupportModal: React.FC<Props> = ({
         <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
             <>
-              <button className="modal-footer-btn cancel" onClick={Backsave}>
+              <button className="modal-footer-btn cancel">
                 {backBtnLoading ? (
                   <CircularProgress color="inherit" size={'24px'} />
                 ) : onBackBtnClick ? (
@@ -275,7 +234,7 @@ const SupportModal: React.FC<Props> = ({
                 )}
               </button>
               {/* SVG Button for Mobile */}
-              <div onClick={Backsave}>
+              <div>
                 <Image
                   src={BackIcon}
                   alt="Back"
@@ -324,4 +283,4 @@ const SupportModal: React.FC<Props> = ({
   )
 }
 
-export default SupportModal
+export default ContactToOwner

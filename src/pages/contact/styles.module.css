@@ -84,6 +84,9 @@
   .modal-wrapper .body {
     padding: var(--spacing-16) var(--spacing-24);
   }
+  .submit-btn{
+    display: block !important;
+  }
 
   
   .two-column-grid {

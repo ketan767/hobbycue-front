@@ -1177,7 +1177,12 @@ const ListingPageMain: React.FC<Props> = ({
 
               {/* WhatsApp Number */}
               {data?.whatsapp_number?.number && (
-                <Link href={`https://wa.me/${data?.whatsapp_number}`}>
+                <Link
+                  href={`https://wa.me/${
+                    data?.whatsapp_number?.prefix +
+                    data?.whatsapp_number?.number
+                  }`}
+                >
                   <Image
                     src={WhatsappIcon}
                     alt="whatsapp11"

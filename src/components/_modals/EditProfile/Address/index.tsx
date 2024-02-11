@@ -815,7 +815,12 @@ const ProfileAddressEditModal: React.FC<Props> = ({
             <div className={styles['input-box']}>
               <label>Location ID</label>
 
-              <input type="text" placeholder={`Map to existing Location...`} />
+              <input
+                className={styles['temp-input-box']}
+                disabled
+                type="text"
+                placeholder={`This feature is under development. Come back soon to view this`}
+              />
             </div>
           </>
         </section>

@@ -532,19 +532,19 @@ const ListingContactEditModal: React.FC<Props> = ({
                         value={!tick}
                         checked={tick}
                         onChange={(e) => {
-                          if(tick===true){
+                          if (tick === true) {
                             setData((prev) => {
                               return {
                                 ...prev,
                                 whatsapp_number: {
-                                  number: "",
-                                  prefix: "+91",
+                                  number: '',
+                                  prefix: '+91',
                                 },
                               }
                             })
-                            setWpSelectedCountryCode("+91")
+                            setWpSelectedCountryCode('+91')
                           }
-                          setTick(!tick);
+                          setTick(!tick)
                         }}
                       />
                     </div>
@@ -601,11 +601,7 @@ const ListingContactEditModal: React.FC<Props> = ({
               <p className={styles['helper-text']}>{data.website.error}</p>
             </div>
             <hr className={styles['hr-line']} />
-            <p className={styles.kycText}>
-              {' '}
-              Seller KYC and Bank details can be entered only on claimed and
-              verified listing pages
-            </p>
+
             <p className={styles.kycText}>
               After updating the Listing Page, it can be Transferred to a
               different Page Admin
