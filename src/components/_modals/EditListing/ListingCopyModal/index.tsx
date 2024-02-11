@@ -12,8 +12,9 @@ import { isEmpty, isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import Image from 'next/image'
-import checkedboxChecked from '../../../../assets/svg/checkbox-checked.svg'
-import checkedboxUnChecked from '../../../../assets/svg/Checkbox-unchecked.svg'
+import checkedboxChecked from '@/assets/svg/checkbox-checked.svg'
+import checkedboxUnChecked from '@/assets/svg/Checkbox-unchecked.svg'
+import chechboxDisabled from '@/assets/svg/checkbox-disabled.svg'
 import { updateUser } from '@/redux/slices/user'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { updateListing } from '@/services/listing.service'
@@ -176,7 +177,8 @@ const ListingAboutEditModal: React.FC<Props> = ({
 
             <Image
               src={
-                checkboxes.allSections ? checkedboxChecked : checkedboxUnChecked
+                // checkboxes.allSections ? checkedboxChecked : checkedboxUnChecked
+                chechboxDisabled
               }
               width={16}
               height={16}
@@ -191,9 +193,10 @@ const ListingAboutEditModal: React.FC<Props> = ({
 
             <Image
               src={
-                checkboxes.profileCoverPhoto
-                  ? checkedboxChecked
-                  : checkedboxUnChecked
+                // checkboxes.profileCoverPhoto
+                //   ? checkedboxChecked
+                //   : checkedboxUnChecked
+                chechboxDisabled
               }
               width={16}
               height={16}
@@ -207,7 +210,10 @@ const ListingAboutEditModal: React.FC<Props> = ({
             <label>About</label>
 
             <Image
-              src={checkboxes.about ? checkedboxChecked : checkedboxUnChecked}
+              src={
+                // checkboxes.about ? checkedboxChecked : checkedboxUnChecked
+                chechboxDisabled
+              }
               width={16}
               height={16}
               alt="radio"
@@ -221,7 +227,8 @@ const ListingAboutEditModal: React.FC<Props> = ({
 
             <Image
               src={
-                checkboxes.contactInfo ? checkedboxChecked : checkedboxUnChecked
+                // checkboxes.contactInfo ? checkedboxChecked : checkedboxUnChecked
+                chechboxDisabled
               }
               width={16}
               height={16}
@@ -236,7 +243,8 @@ const ListingAboutEditModal: React.FC<Props> = ({
 
             <Image
               src={
-                checkboxes.location ? checkedboxChecked : checkedboxUnChecked
+                // checkboxes.location ? checkedboxChecked : checkedboxUnChecked
+                chechboxDisabled
               }
               width={16}
               height={16}
@@ -250,7 +258,10 @@ const ListingAboutEditModal: React.FC<Props> = ({
             <label>Hobbies </label>
 
             <Image
-              src={checkboxes.hobbies ? checkedboxChecked : checkedboxUnChecked}
+              src={
+                // checkboxes.hobbies ? checkedboxChecked : checkedboxUnChecked
+                chechboxDisabled
+              }
               width={16}
               height={16}
               alt="radio"
