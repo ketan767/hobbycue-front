@@ -136,6 +136,17 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
       })
     }
 
+    const onlyAlphabetsAndHyphensRegex = /^[a-zA-Z-]*$/
+
+    // Check if the profile_url value contains any characters other than alphabetic characters and hyphens
+    if (!onlyAlphabetsAndHyphensRegex.test(data.profile_url)) {
+      profileUrlRef.current?.focus()
+      return setInputErrs((prev) => ({
+        ...prev,
+        profile_url: 'Only alphabetic characters and hyphens are allowed!',
+      }))
+    }
+
     setSubmitBtnLoading(true)
     const { err, res } = await updateMyProfileDetail(data)
     if (err) {

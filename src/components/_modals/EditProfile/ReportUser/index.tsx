@@ -50,6 +50,7 @@ const UserReport: React.FC<Props> = ({
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
+  const currprofile = useSelector((state: RootState) => state.user.profileData)
 
   const [data, setData] = useState<reportData>({
     description: '',
@@ -59,6 +60,7 @@ const UserReport: React.FC<Props> = ({
     type: '',
     reported_user_id: '',
   })
+  const textAreaRef = useRef<HTMLTextAreaElement | null>(null)
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backDisabled, SetBackDisabled] = useState(false)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
@@ -71,21 +73,21 @@ const UserReport: React.FC<Props> = ({
   const [initialData, setInitialData] = useState<reportData>({
     description: '',
     name: user.full_name,
-    email: user.public_email,
+    email: user?.public_email,
     user_id: user._id,
     type: 'user',
-    reported_user_id: '',
+    reported_user_id: currprofile?._id,
   })
   const [isChanged, setIsChanged] = useState(false)
 
   useEffect(() => {
     setInitialData({
-      description: user.description,
+      description: '',
       name: user.full_name,
-      email: user.public_email,
+      email: user?.public_email,
       user_id: user._id,
       type: 'user',
-      reported_user_id: '',
+      reported_user_id: currprofile?._id,
     })
   }, [user])
 
@@ -128,7 +130,6 @@ const UserReport: React.FC<Props> = ({
       dispatch(updateUser(response.data.data.user))
       if (onComplete) onComplete()
       else {
-        window.location.reload()
         dispatch(closeModal())
       }
     }
@@ -138,10 +139,10 @@ const UserReport: React.FC<Props> = ({
     setData({
       description: '',
       name: user.full_name,
-      email: user.public_email,
+      email: user?.public_email,
       user_id: user._id,
       type: 'user',
-      reported_user_id: '',
+      reported_user_id: currprofile?._id,
     })
   }, [user])
 
@@ -172,6 +173,7 @@ const UserReport: React.FC<Props> = ({
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
+    textAreaRef?.current?.focus()
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
         nextButtonRef.current?.click()
@@ -224,6 +226,7 @@ const UserReport: React.FC<Props> = ({
                 name="message"
                 onChange={handleInputChange}
                 value={data.description}
+                ref={textAreaRef}
               />
             </div>
             {inputErrs.error && (

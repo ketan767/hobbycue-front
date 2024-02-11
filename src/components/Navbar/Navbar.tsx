@@ -316,6 +316,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
+                      onClick={searchResult}
                       sx={{
                         bgcolor: 'primary.main',
                         borderRadius: '0px 8px 8px 0px',
@@ -324,10 +325,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                         },
                       }}
                     >
-                      <div
-                        className={styles['search-icon-container']}
-                        onClick={searchResult}
-                      >
+                      <div className={styles['search-icon-container']}>
                         <Image
                           src={SearchIcon}
                           alt="search"

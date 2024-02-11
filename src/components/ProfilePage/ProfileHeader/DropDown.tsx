@@ -22,7 +22,7 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType }) => {
           event.target.nodeName == supportRef.current?.nodeName &&
           event.target.textContent === supportRef.current?.textContent
         ) {
-          dispatch(openModal({ type: 'SupportModal', closable: true }))
+          dispatch(openModal({ type: 'SupportUserModal', closable: true }))
         }
 
         if (

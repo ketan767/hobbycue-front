@@ -81,7 +81,9 @@ const ProfileContactSide = ({ data, expandData }: Props) => {
           {/* WhatsApp Number */}
           {data.whatsapp_number.number && (
             <a
-              href={`https://wa.me/${data?.whatsapp_number.number}`}
+              href={`https://wa.me/${
+                data?.whatsapp_number?.prefix + data?.whatsapp_number?.number
+              }`}
               target="_blank"
               rel="noopener noreferrer"
             >

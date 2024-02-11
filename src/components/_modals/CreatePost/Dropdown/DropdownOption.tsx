@@ -28,6 +28,12 @@ export const DropdownOption: React.FC<Props> = (props) => {
     e.stopPropagation()
     setActive(!active)
   }
+  console.warn(
+    currentValue === display?.split(' ')[0],
+    display,
+    { currentValue },
+    { value },
+  )
 
   if (type === 'text') {
     return (
@@ -48,7 +54,7 @@ export const DropdownOption: React.FC<Props> = (props) => {
       <aside
         className={`
     ${styles['heading']} 
-    ${currentValue === display ? styles['city-select'] : ''} 
+    ${currentValue === display?.split(' ')[0] ? styles['city-select'] : ''} 
     ${active ? styles['active'] : ''}
   `}
         onClick={() => onChange(display.split(' ')[0])}

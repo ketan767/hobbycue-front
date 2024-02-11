@@ -202,6 +202,25 @@ const Contact: React.FC<Props> = ({}) => {
     }
   }
   console.log('uer', user)
+  useEffect(() => {
+    if (isLoggedIn) {
+      setData((prev) => ({
+        ...prev,
+        name: { value: user?.full_name, error: null },
+        public_email: { value: user?.public_email, error: null },
+        phone: {
+          number: user.phone?.number,
+          prefix: user.phone?.prefix,
+          error: null,
+        },
+        whatsapp_number: {
+          number: user.whatsapp_number?.number,
+          prefix: user.whatsapp_number?.prefix,
+          error: null,
+        },
+      }))
+    }
+  }, [user])
 
   return (
     <>
@@ -312,21 +331,22 @@ const Contact: React.FC<Props> = ({}) => {
                           value={!tick}
                           checked={tick}
                           onChange={(e) => {
-                            if(tick===true){
-                              if(tick===true){
+                            if (tick === true) {
+                              if (tick === true) {
                                 setData((prev) => {
                                   return {
                                     ...prev,
                                     whatsapp_number: {
-                                      number: "",
-                                      prefix: "+91",
+                                      number: '',
+                                      prefix: '+91',
                                     },
                                   }
                                 })
-                                setWpSelectedCountryCode("+91")
+                                setWpSelectedCountryCode('+91')
                               }
                             }
-                            setTick(!tick)}}
+                            setTick(!tick)
+                          }}
                         />{' '}
                       </div>
                     </CustomTooltip>

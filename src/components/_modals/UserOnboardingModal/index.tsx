@@ -81,7 +81,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
 
   const handleCompleteOnboarding = async () => {
     const payload: InviteToCommunityPayload = {
-      to: user.public_email,
+      to: user?.public_email,
       name: user.full_name,
     }
     await sendWelcomeMail(payload)

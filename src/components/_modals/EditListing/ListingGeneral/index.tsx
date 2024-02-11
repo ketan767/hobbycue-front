@@ -180,6 +180,20 @@ const ListingGeneralEditModal: React.FC<Props> = ({
         }
       })
     }
+
+    const onlyAlphabetsAndHyphensRegex = /^[a-zA-Z-]*$/
+
+    // Check if the page_url value contains any characters other than alphabetic characters and hyphens
+    if (!onlyAlphabetsAndHyphensRegex.test(data.page_url.value)) {
+      pageUrlRef.current?.focus()
+      return setData((prev) => ({
+        ...prev,
+        page_url: {
+          ...prev.page_url,
+          error: 'Only alphabetic characters and hyphens are allowed!',
+        },
+      }))
+    }
     console.log(data)
     // if(data.year.value && data.year.value?.trim() !== '' && !containOnlyNumbers(data.year.value)) {
     //   return setData((prev) => {

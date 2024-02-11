@@ -27,7 +27,7 @@ import PinnedPostWrapper from '@/layouts/PinnedPost/PinnedPost'
 import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/ProfileSocialMedia'
 import { getListingPages } from '@/services/listing.service'
 import PostWrapper from '@/layouts/PinnedPost/PinnedPost'
-import { updateUser } from '@/redux/slices/user'
+import { updateProfileData, updateUser } from '@/redux/slices/user'
 import { withAuth } from '@/navigation/withAuth'
 import ProfileNavigationLinks from '@/components/ProfilePage/ProfileHeader/ProfileNavigationLinks'
 import { updateProfileMenuExpandAll } from '@/redux/slices/site'
@@ -37,7 +37,7 @@ interface Props {
 }
 
 const ProfileHome: React.FC<Props> = ({ data }) => {
-  console.warn({data});
+  console.warn({ data })
   const dispatch = useDispatch()
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
 
@@ -113,9 +113,10 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
     dispatch(updateProfileMenuExpandAll(value))
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     setPageData(data?.pageData)
-  },[data?.pageData])
+    dispatch(updateProfileData(data.pageData))
+  }, [data?.pageData])
 
   return (
     <>

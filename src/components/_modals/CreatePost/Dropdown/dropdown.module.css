@@ -3,15 +3,15 @@
   padding: 0 4px;
   border-bottom: 1px solid #ced4da;
 }
-.dropdown-container:last-child{
+.dropdown-container:last-child {
   border-bottom: 0;
 }
-.dropdown-container{
+.dropdown-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
 
-.drop-down{
+.drop-down {
   display: flex;
   align-items: center;
   padding: 11px;
@@ -26,12 +26,12 @@
   width: 180px;
 }
 
-.heading:hover{
+.heading:hover {
   background-color: #f7f5f9;
   border-radius: 4px;
 }
 
-.heading::selection{
+.heading::selection {
   color: #8064a2;
 }
 
@@ -39,7 +39,7 @@
   transition: rotate(180deg);
   transition: 0.2s;
 }
-.drop-down:hover{
+.drop-down:hover {
   border-radius: 4px;
   background-color: #f7f5f9;
 }
@@ -60,10 +60,10 @@
 .dropdown-options.active {
   max-height: 1200px;
 }
-.value-container{
-   padding-left: 4px;
-   padding-right: 4px;
-   border-bottom: 1px solid #CED4DA;
+.value-container {
+  padding-left: 4px;
+  padding-right: 4px;
+  border-bottom: 1px solid #ced4da;
 }
 p.dropdown-value {
   padding-left: 8px;
@@ -73,25 +73,26 @@ p.dropdown-value {
   cursor: pointer;
 }
 
-p.dropdown-value-active{
-   background-color: #f7f5f9;
-   color: #8064a2 !important;
-   border-radius: 4px;
-   width: 218px;
+p.dropdown-value-active {
+  background-color: #f7f5f9;
+  color: #8064a2 !important;
+  border-radius: 4px;
+  width: 218px;
 }
 .dropdown-options p.option-active {
   background-color: #f7f5f9;
   color: #8064a2;
   border-radius: 4px;
 }
-
-.city-select{
+.city-select {
   background-color: #f7f5f9;
-  color:#8064a2 !important
+}
+.city-select > p {
+  color: #8064a2 !important;
 }
 
 @media screen and (max-width: 1100px) {
-  .dropdown-container{
+  .dropdown-container {
     display: grid;
     grid-template-columns: 144px 36px;
   }
@@ -103,7 +104,7 @@ p.dropdown-value-active{
     padding-bottom: 8px;
     cursor: pointer;
     font-size: 14px;
-    color: var(--Grey-Darker, #6D747A);
+    color: var(--Grey-Darker, #6d747a);
   }
   .heading {
     font-size: 14px;
@@ -113,10 +114,10 @@ p.dropdown-value-active{
     color: var(--grey-dark, #939ca3);
     padding-left: 12px;
   }
-  .editLocationResponsive{
+  .editLocationResponsive {
     margin-left: auto;
   }
-  p.dropdown-value-active{
+  p.dropdown-value-active {
     width: auto;
   }
 }

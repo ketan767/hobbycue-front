@@ -3,8 +3,8 @@ import dynamic from 'next/dynamic'
 import { Button, CircularProgress } from '@mui/material'
 
 import {
-  getAllUserDetail,
   getMyProfileDetail,
+  support,
   updateMyProfileDetail,
 } from '@/services/user.service'
 
@@ -19,7 +19,14 @@ import CloseIcon from '@/assets/icons/CloseIcon'
 import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import Image from 'next/image'
-import { ReportListing } from '@/services/listing.service'
+
+const AboutEditor = dynamic(
+  () => import('@/components/AboutEditor/AboutEditor'),
+  {
+    ssr: false,
+    loading: () => <h1>Loading...</h1>,
+  },
+)
 
 type Props = {
   onComplete?: () => void
@@ -31,16 +38,15 @@ type Props = {
   onStatusChange?: (isChanged: boolean) => void
 }
 
-type reportData = {
+type supportData = {
   description: string
   name: string
   email: string
   user_id: string
   type: string
-  reported_user_id: string
 }
 
-const ListingReport: React.FC<Props> = ({
+const SupportUserModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
   confirmationModal,
@@ -51,33 +57,28 @@ const ListingReport: React.FC<Props> = ({
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
 
-  const [data, setData] = useState<reportData>({
+  const [data, setData] = useState<supportData>({
     description: '',
     name: '',
     email: '',
     user_id: '',
     type: '',
-    reported_user_id: '',
   })
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backDisabled, SetBackDisabled] = useState(false)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [isError, setIsError] = useState(false)
-  const listingPageData = useSelector(
-    (state: RootState) => state.site.listingPageData,
-  )
 
   const [inputErrs, setInputErrs] = useState<{ error: string | null }>({
     error: null,
   })
-  const [initialData, setInitialData] = useState<reportData>({
+  const [initialData, setInitialData] = useState<supportData>({
     description: '',
     name: user.full_name,
     email: user?.public_email,
     user_id: user._id,
-    type: listingPageData.type,
-    reported_user_id: listingPageData._id,
+    type: 'user',
   })
   const [isChanged, setIsChanged] = useState(false)
 
@@ -87,8 +88,7 @@ const ListingReport: React.FC<Props> = ({
       name: user.full_name,
       email: user?.public_email,
       user_id: user._id,
-      type: listingPageData.type,
-      reported_user_id: listingPageData._id,
+      type: 'user',
     })
   }, [user])
 
@@ -105,8 +105,36 @@ const ListingReport: React.FC<Props> = ({
     }
   }
 
+  const Backsave = async () => {
+    setBackBtnLoading(true)
+    if (
+      !data.description ||
+      data.description?.trim() === '' ||
+      data.description === '<p><br></p>'
+    ) {
+      if (onBackBtnClick) onBackBtnClick()
+      setBackBtnLoading(false)
+    } else {
+      const { err, res } = await support(data)
+
+      if (err) {
+        return console.log(err)
+      }
+      setBackBtnLoading(true)
+      const { err: error, res: response } = await getMyProfileDetail()
+
+      if (error) return console.log(error)
+      if (response?.data.success) {
+        dispatch(updateUser(response.data.data.user))
+
+        if (onBackBtnClick) onBackBtnClick()
+        setBackBtnLoading(false)
+      }
+    }
+  }
+
   const handleSubmit = async () => {
-    console.log('report', data)
+    console.log('support', data)
     if (!data.description || data.description === '') {
       setInputErrs((prev) => {
         return { ...prev, error: 'This field is required!' }
@@ -116,7 +144,7 @@ const ListingReport: React.FC<Props> = ({
     }
 
     setSubmitBtnLoading(true)
-    const { err, res } = await ReportListing(data)
+    const { err, res } = await support(data)
 
     if (err) {
       setSubmitBtnLoading(false)
@@ -142,8 +170,7 @@ const ListingReport: React.FC<Props> = ({
       name: user.full_name,
       email: user?.public_email,
       user_id: user._id,
-      type: listingPageData.type,
-      reported_user_id: listingPageData._id,
+      type: 'user',
     })
   }, [user])
 
@@ -213,7 +240,7 @@ const ListingReport: React.FC<Props> = ({
               isChanged ? setConfirmationModal(true) : handleClose()
             }
           />
-          <h4 className={styles['heading']}>{'Report'}</h4>
+          <h4 className={styles['heading']}>{'Support'}</h4>
         </header>
         <hr />
         <section className={styles['body']}>
@@ -237,7 +264,7 @@ const ListingReport: React.FC<Props> = ({
         <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
             <>
-              <button className="modal-footer-btn cancel">
+              <button className="modal-footer-btn cancel" onClick={Backsave}>
                 {backBtnLoading ? (
                   <CircularProgress color="inherit" size={'24px'} />
                 ) : onBackBtnClick ? (
@@ -247,7 +274,7 @@ const ListingReport: React.FC<Props> = ({
                 )}
               </button>
               {/* SVG Button for Mobile */}
-              <div>
+              <div onClick={Backsave}>
                 <Image
                   src={BackIcon}
                   alt="Back"
@@ -296,4 +323,4 @@ const ListingReport: React.FC<Props> = ({
   )
 }
 
-export default ListingReport
+export default SupportUserModal
