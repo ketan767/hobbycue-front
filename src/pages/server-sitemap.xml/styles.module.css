@@ -1,0 +1,58 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.container h1{
+    align-self: flex-start;
+    font-size: 30px;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.container h2{
+    font-size: 20px;
+    font-weight: 600;
+    color: rgb(57, 57, 57);
+    margin: 10px 0;
+}
+
+.container p{
+    align-self: flex-start;
+}
+
+.container table{
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.container table thead div{
+    display: flex;
+    text-align: start;
+    font-weight: 500;
+    /* border-bottom: 1px solid black; */
+
+}
+.container table{
+    border-collapse: collapse;
+}
+
+.container table tr td{
+    padding: 3px;
+}
+
+.container table thead{
+    border-bottom: 1px solid black !important;
+}
+
+.container table tbody tr{
+    background: #eee;
+    font-size: 11px;
+}
+
+.container table tbody tr td a:hover{
+    text-decoration: underline;
+}
