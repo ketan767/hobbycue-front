@@ -85,7 +85,18 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   })
 
   const handleInputChange = (event: any) => {
-    const { name, value } = event.target
+    const { name, value } = event.target;
+    if(name==="year_of_birth"){
+      if(value.length>=4){
+        const currentYear = new Date().getFullYear();
+        if(isNaN(value)){
+          alert("Please enter numbers only")
+        }
+        else if((currentYear - value)>100||(currentYear - value)<13){
+          alert("Your age should be between 13 to 100")
+        }
+      }
+    }
     setData((prev) => ({ ...prev, [name]: value }))
     setInputErrs((prev) => ({ ...prev, [name]: null }))
 

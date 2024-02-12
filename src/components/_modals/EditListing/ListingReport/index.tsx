@@ -172,7 +172,17 @@ const ListingReport: React.FC<Props> = ({
     }
   }, [isError])
 
-  const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  const nextButtonRef = useRef<HTMLButtonElement | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  useEffect(()=>{
+    const focusTextarea = () => {
+      if(textareaRef.current){
+      textareaRef.current?.focus();
+    }
+  }
+    focusTextarea();
+  },[textareaRef.current]);
+
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
@@ -220,6 +230,7 @@ const ListingReport: React.FC<Props> = ({
           <div className={styles['input-box']}>
             <div className={styles['street-input-container']}>
               <textarea
+                ref={textareaRef}
                 className={styles['long-input-box']}
                 required
                 placeholder="Write your description here"
