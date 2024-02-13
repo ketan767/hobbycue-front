@@ -199,6 +199,7 @@
 }
 .checkbox {
   padding: 0px;
+  margin: -1px 0 0 0;
 }
 .whatsapp-label {
   display: flex;
@@ -259,6 +260,13 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--spacing-0);
+  }
+  .whatsapp-label{
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    align-items: center;
+    line-height: 0 !important;
+    gap: 8px;
   }
 }
 .modal-close-icon {

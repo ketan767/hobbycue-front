@@ -174,7 +174,7 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
                 fullWidth
                 required
                 ref={newPasswordRef}
-                placeholder="Enter New Password"
+                placeholder="New Password"
                 type={showPassword ? 'text' : 'password'}
                 onFocus={() => setShowValidations(true)}
                 onBlur={() => setShowValidations(false)}
@@ -239,7 +239,7 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 className={styles.input}
-                placeholder="Enter New Password"
+                placeholder="New Password"
               /> */}
               <p className={styles['helper-text']}>{errors.newPassword}</p>
             </div>

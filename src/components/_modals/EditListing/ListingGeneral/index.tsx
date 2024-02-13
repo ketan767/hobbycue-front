@@ -467,10 +467,10 @@ const ListingGeneralEditModal: React.FC<Props> = ({
                   ref={pageUrlRef}
                   style={{
                     paddingLeft: urlSpanLength + 'px',
-                    paddingTop: '14px',
+                    paddingTop: '13px',
                   }}
                 />
-                <span ref={urlSpanRef}>{baseURL + '/page/'}</span>
+                <span ref={urlSpanRef}>{'/page/'}</span>
               </div>
               <p className={styles['helper-text']}>{data.page_url.error}</p>
             </div>

@@ -758,9 +758,10 @@ export const Navbar: React.FC<Props> = ({}) => {
                   </li>
                 )}
               </div>
-
               <li>
-                <Image src={BellIcon} alt="Bell" />
+                <Link href={'/notifications'}>
+                  <Image src={BellIcon} alt="Bell" />
+                </Link>
               </li>
               <li>
                 <Image src={BarsIcon} alt="Bars" onClick={toggleMenu} />
