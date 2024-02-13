@@ -28,12 +28,6 @@ export const DropdownOption: React.FC<Props> = (props) => {
     e.stopPropagation()
     setActive(!active)
   }
-  console.warn(
-    currentValue === display?.split(' ')[0],
-    display,
-    { currentValue },
-    { value },
-  )
 
   if (type === 'text') {
     return (
