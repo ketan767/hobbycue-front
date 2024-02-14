@@ -271,8 +271,9 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
               Logout{' '}
             </p>
             <p
+              style={{cursor:"not-allowed"}}
               className={`${styles.logoutText} ${styles.clickable}`}
-              onClick={handleLogout}
+              // onClick={handleLogout}
             >
               {' '}
               Logout of all browsers{' '}

@@ -14,6 +14,7 @@
   position: -webkit-sticky;
   position: sticky;
   top: calc(var(--navbar-height-desktop) + var(--spacing-12));
+  max-width: 229px;
 }
 .hobbies-side-wrapper header {
   padding: var(--spacing-16);
@@ -31,7 +32,7 @@
   flex-direction: column;
   padding: 10px;
 
-  width: 250px;
+  /* width: 250px; */
 }
 .filter-item {
   display: flex;
@@ -57,7 +58,7 @@
   line-height: 16px;
 
   flex-shrink: 0;
-  margin: 40px 0 15px 23px;
+  margin: 7px 0 15px 23px;
 }
 
 .heading {

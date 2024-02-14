@@ -374,9 +374,7 @@ const ListingPageMain: React.FC<Props> = ({
                 }`}
               >
                 {!listingPagesLeft || listingPagesLeft.length === 0 ? (
-                  <span className={styles.textGray}>
-                    {'Eg: Sishyas related to this page'}
-                  </span>
+                  null
                 ) : (
                   <ul className={styles['related-list']}>
                     {listingPagesLeft?.map((item: any) => {
@@ -1585,9 +1583,7 @@ const ListingPageMain: React.FC<Props> = ({
                 }`}
               >
                 {!listingPagesRight || listingPagesRight.length === 0 ? (
-                  <span className={styles.textGray}>
-                    {'Eg: Guru related to this page'}
-                  </span>
+                  null
                 ) : (
                   <ul className={styles['related-list']}>
                     {listingPagesRight?.map((item: any) => {
