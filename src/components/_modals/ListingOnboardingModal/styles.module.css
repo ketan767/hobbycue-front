@@ -70,6 +70,10 @@
     font-weight: 600;
   }
 
+  .modal-container .header {
+    padding: var(--spacing-8) var(--spacing-16);
+  }
+
   .step-indicators {
     bottom: 30px;
     transform: translateX(-50%);
@@ -82,11 +86,13 @@
     
   }
   .modal-container .header {
+    position: sticky;
     display: flex;
     align-items: center; 
     gap: 38px;
-    background: var(--background-white, #FFF);
+    background: var(--Base-White, #FFF);
     box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.08);
+
   }
   .responsive-logo{
     display: block;

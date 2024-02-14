@@ -436,10 +436,10 @@ const ListingAddressEditModal: React.FC<Props> = ({
         />
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>{'Address'}</h4>
+          <h4 className={styles['heading']}>{'Location'}</h4>
         </header>
 
-        <hr />
+        <hr className={styles['modal-hr']} />
 
         <section className={styles['body']}>
           <>
