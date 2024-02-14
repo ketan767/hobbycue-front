@@ -90,6 +90,9 @@
   align-items: center;
   column-gap: 12px;
 }
+
+
+
 .dropdown {
   width: 184px;
   font-size: 12px;
@@ -140,4 +143,14 @@
 
     
   }
+}
+
+@media screen and (max-width:767px) {
+  .iconText{
+    display: none;
+  }
+  .inputContainer > div{
+  width: inherit;
+  min-width: 70px;
+}
 }

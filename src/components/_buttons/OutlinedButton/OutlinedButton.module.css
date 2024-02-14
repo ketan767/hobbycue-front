@@ -27,8 +27,8 @@
 }
 
 .button:not(:disabled):hover {
-  background-color: rgba(var(--primary-100-rgb));
-  color: white;
+  background-color: #F7F5F9;
+  color: #8064a2;
 }
 
 .button:disabled {

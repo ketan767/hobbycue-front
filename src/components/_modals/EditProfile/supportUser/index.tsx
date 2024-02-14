@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, TextareaHTMLAttributes } from 'react'
 import dynamic from 'next/dynamic'
 import { Button, CircularProgress } from '@mui/material'
 
@@ -199,7 +199,16 @@ const SupportUserModal: React.FC<Props> = ({
     }
   }, [isError])
 
-  const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  const nextButtonRef = useRef<HTMLButtonElement | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  useEffect(()=>{
+    const focusTextarea = () => {
+      if(textareaRef.current){
+      textareaRef.current?.focus();
+    }
+  }
+    focusTextarea();
+  },[textareaRef.current]);
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
@@ -212,7 +221,7 @@ const SupportUserModal: React.FC<Props> = ({
     return () => {
       window.removeEventListener('keydown', handleKeyPress)
     }
-  }, [])
+  }, []);
 
   if (confirmationModal) {
     return (
@@ -253,6 +262,7 @@ const SupportUserModal: React.FC<Props> = ({
                 name="message"
                 onChange={handleInputChange}
                 value={data.description}
+                ref={textareaRef}
               />
             </div>
             {inputErrs.error && (
