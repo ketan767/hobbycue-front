@@ -698,108 +698,110 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                     <tr>
                       <td className={styles.AddHobbyFields}>
                         {/* Hobby Input and Dropdown */}
-                        <div className={styles['dropdown-wrapper']}>
-                          <div
-                            className={`${styles['input-box']} ${
-                              HobbyError ? styles['input-box-error'] : ''
-                            }`}
-                          >
-                            <input
-                              type="text"
-                              placeholder="Search hobby..."
-                              autoComplete="name"
-                              required
-                              value={hobbyInputValue}
-                              onFocus={() => setShowHobbyDowpdown(true)}
-                              onBlur={() =>
-                                setTimeout(
-                                  () => setShowHobbyDowpdown(false),
-                                  300,
-                                )
-                              }
-                              ref={searchref}
-                              onChange={handleHobbyInputChange}
-                              onKeyDown={handleHobbyKeyDown}
-                            />
-                          </div>
-                          {showHobbyDowpdown &&
-                            hobbyDropdownList.length !== 0 && (
-                              <div
-                                className={styles['dropdown']}
-                                ref={hobbyDropdownRef}
-                              >
-                                {hobbyDropdownList.map((hobby, index) => (
-                                  <p
-                                    id={`option-h-${index}`}
-                                    key={hobby._id}
-                                    onClick={() => {
-                                      handleHobbySelection(hobby)
-                                      setShowHobbyDowpdown(false)
-                                    }}
-                                    className={
-                                      index === focusedHobbyIndex
-                                        ? styles['dropdown-option-focus']
-                                        : ''
-                                    }
-                                  >
-                                    {hobby.display}
-                                  </p>
-                                ))}
-                              </div>
-                            )}
-                        </div>
-
-                        <section className={styles['dropdown-wrapper']}>
-                          <div className={styles['input-box']}>
-                            <input
-                              ref={genreInputRef}
-                              type="text"
-                              placeholder="Genre/Style"
-                              autoComplete="name"
-                              required
-                              value={genreInputValue}
-                              onFocus={() => setShowGenreDowpdown(true)}
-                              onBlur={() =>
-                                setTimeout(() => {
-                                  setShowGenreDowpdown(false)
-                                }, 300)
-                              }
-                              onChange={handleGenreInputChange}
-                              onKeyDown={handleGenreKeyDown}
-                            />
-                            {/* <p className={styles['helper-text']}>{inputErrs.full_name}</p> */}
-                          </div>
-                          {showGenreDowpdown &&
-                            genreDropdownList.length !== 0 && (
-                              <div
-                                className={styles['dropdown']}
-                                ref={genreDropdownRef}
-                              >
-                                {genreDropdownList.map((genre, index) => {
-                                  return (
+                        <div>
+                          <div className={styles['dropdown-wrapper']}>
+                            <div
+                              className={`${styles['input-box']} ${
+                                HobbyError ? styles['input-box-error'] : ''
+                              }`}
+                            >
+                              <input
+                                type="text"
+                                placeholder="Search hobby..."
+                                autoComplete="name"
+                                required
+                                value={hobbyInputValue}
+                                onFocus={() => setShowHobbyDowpdown(true)}
+                                onBlur={() =>
+                                  setTimeout(
+                                    () => setShowHobbyDowpdown(false),
+                                    300,
+                                  )
+                                }
+                                ref={searchref}
+                                onChange={handleHobbyInputChange}
+                                onKeyDown={handleHobbyKeyDown}
+                              />
+                            </div>
+                            {showHobbyDowpdown &&
+                              hobbyDropdownList.length !== 0 && (
+                                <div
+                                  className={styles['dropdown']}
+                                  ref={hobbyDropdownRef}
+                                >
+                                  {hobbyDropdownList.map((hobby, index) => (
                                     <p
-                                      id={`option-g-${index}`}
-                                      key={genre?._id}
+                                      id={`option-h-${index}`}
+                                      key={hobby._id}
                                       onClick={() => {
-                                        setData((prev) => {
-                                          return { ...prev, genre: genre }
-                                        })
-                                        setGenreInputValue(genre?.display)
-                                        setShowGenreDowpdown(false)
+                                        handleHobbySelection(hobby)
+                                        setShowHobbyDowpdown(false)
                                       }}
                                       className={
-                                        index === focusedGenreIndex
+                                        index === focusedHobbyIndex
                                           ? styles['dropdown-option-focus']
                                           : ''
                                       }
                                     >
-                                      {genre?.display}
+                                      {hobby.display}
                                     </p>
-                                  )
-                                })}
-                              </div>
-                            )}
-                        </section>
+                                  ))}
+                                </div>
+                              )}
+                          </div>
+
+                          <div className={styles['dropdown-wrapper']}>
+                            <div className={styles['input-box']}>
+                              <input
+                                ref={genreInputRef}
+                                type="text"
+                                placeholder="Genre/Style"
+                                autoComplete="name"
+                                required
+                                value={genreInputValue}
+                                onFocus={() => setShowGenreDowpdown(true)}
+                                onBlur={() =>
+                                  setTimeout(() => {
+                                    setShowGenreDowpdown(false)
+                                  }, 300)
+                                }
+                                onChange={handleGenreInputChange}
+                                onKeyDown={handleGenreKeyDown}
+                              />
+                              {/* <p className={styles['helper-text']}>{inputErrs.full_name}</p> */}
+                            </div>
+                            {showGenreDowpdown &&
+                              genreDropdownList.length !== 0 && (
+                                <div
+                                  className={styles['dropdown']}
+                                  ref={genreDropdownRef}
+                                >
+                                  {genreDropdownList.map((genre, index) => {
+                                    return (
+                                      <p
+                                        id={`option-g-${index}`}
+                                        key={genre?._id}
+                                        onClick={() => {
+                                          setData((prev) => {
+                                            return { ...prev, genre: genre }
+                                          })
+                                          setGenreInputValue(genre?.display)
+                                          setShowGenreDowpdown(false)
+                                        }}
+                                        className={
+                                          index === focusedGenreIndex
+                                            ? styles['dropdown-option-focus']
+                                            : ''
+                                        }
+                                      >
+                                        {genre?.display}
+                                      </p>
+                                    )
+                                  })}
+                                </div>
+                              )}
+                          </div>
+                        </div>
                       </td>
                       <td>
                         <FormControl

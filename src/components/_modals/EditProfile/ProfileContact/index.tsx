@@ -274,7 +274,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
       })
       setWpSelectedCountryCode(selectedCountryCode)
     }
-  }, [tick])
+  }, [data.phone.number, selectedCountryCode, tick])
 
   useEffect(() => {
     setData((prev) => {
@@ -320,6 +320,12 @@ const ProfileContactEditModal: React.FC<Props> = ({
     setSelectedCountryCode(countryData[id]?.phonePrefix)
   }
 
+  const checkEmpty = (data: any) => {
+    if (data === '' || data === undefined || data === null) {
+      return true
+    } else return false
+  }
+
   useEffect(() => {
     if (confirmationModal) {
       HandleSaveError()
@@ -349,6 +355,19 @@ const ProfileContactEditModal: React.FC<Props> = ({
       window.removeEventListener('keydown', handleKeyPress)
     }
   }, [])
+  useEffect(() => {
+    if (
+      checkEmpty(user.phone?.number) &&
+      checkEmpty(user.whatsapp_number?.number)
+    ) {
+      setTick(true)
+    } else if (
+      user.phone?.number === user.whatsapp_number?.number &&
+      user.phone?.prefix === user.whatsapp_number?.prefix
+    ) {
+      setTick(true)
+    } else setTick(false)
+  }, [user.phone?.number, user.phone?.prefix, user.whatsapp_number?.number, user.whatsapp_number?.prefix])
 
   if (confirmationModal) {
     return (
@@ -387,7 +406,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
                 <label>Email ID</label>
                 <input
                   type="text"
-                  placeholder={`Enter email ID`}
+                  placeholder={`Email ID`}
                   value={data.public_email.value}
                   ref={inputRef}
                   name="public_email"
@@ -398,7 +417,6 @@ const ProfileContactEditModal: React.FC<Props> = ({
                   {data.public_email.error}
                 </p>
               </div>
-              <div className={styles['input-box']}></div>
             </div>
             <section className={styles['two-column-grid']}>
               {/* Phone Number */}
@@ -425,7 +443,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
                   />
                   <input
                     type="text"
-                    placeholder={`Enter Phone Number`}
+                    placeholder={`Phone Number`}
                     value={data.phone.number}
                     name="phone"
                     autoComplete="phone"
@@ -488,7 +506,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
                   />
                   <input
                     type="text"
-                    placeholder={`Enter WhatsApp Number`}
+                    placeholder={`WhatsApp Number`}
                     value={data.whatsapp_number.number}
                     autoComplete="phone"
                     name="whatsapp_number"

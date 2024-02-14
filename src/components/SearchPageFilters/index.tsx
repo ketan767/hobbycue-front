@@ -9,7 +9,7 @@ import {
   toggleShowAllProducts,
   toggleShowAllUsers,
 } from '@/redux/slices/search'
-import hobbycue from '../../assets/svg/Search/hobbycue.png'
+import hobbycue from '../../assets/svg/Search/hobbycue.svg'
 import People from '../../assets/svg/Search/People.svg'
 import User from '../../assets/svg/Search/User.svg'
 import Place from '../../assets/svg/Search/Place.svg'
@@ -25,13 +25,39 @@ const SearchPageFilter = () => {
   const showAllPeople = useSelector((state: any) => state.search.showAllPeople)
   const showAllPlace = useSelector((state: any) => state.search.showAllPlace)
   const showAllEvent = useSelector((state: any) => state.search.showAllEvent)
-  const showAllProducts = useSelector((state: any) => state.search.showAllProducts)
-  useEffect(()=>{if(showAll){setActiveFilter("all")}},[showAll]);
-  useEffect(()=>{if(showAllUsers){setActiveFilter("users")}},[showAllUsers]);
-  useEffect(()=>{if(showAllPeople){setActiveFilter("people")}},[showAllPeople]);
-  useEffect(()=>{if(showAllPlace){setActiveFilter("places")}},[showAllPlace]);
-  useEffect(()=>{if(showAllEvent){setActiveFilter("events")}},[showAllEvent]);
-  useEffect(()=>{if(showAllProducts){setActiveFilter("products")}},[showAllProducts]);
+  const showAllProducts = useSelector(
+    (state: any) => state.search.showAllProducts,
+  )
+  useEffect(() => {
+    if (showAll) {
+      setActiveFilter('all')
+    }
+  }, [showAll])
+  useEffect(() => {
+    if (showAllUsers) {
+      setActiveFilter('users')
+    }
+  }, [showAllUsers])
+  useEffect(() => {
+    if (showAllPeople) {
+      setActiveFilter('people')
+    }
+  }, [showAllPeople])
+  useEffect(() => {
+    if (showAllPlace) {
+      setActiveFilter('places')
+    }
+  }, [showAllPlace])
+  useEffect(() => {
+    if (showAllEvent) {
+      setActiveFilter('events')
+    }
+  }, [showAllEvent])
+  useEffect(() => {
+    if (showAllProducts) {
+      setActiveFilter('products')
+    }
+  }, [showAllProducts])
 
   const handleFilterClick = (filterType: any) => {
     if (activeFilter === filterType) {
@@ -118,7 +144,8 @@ const SearchPageFilter = () => {
             Programs
           </div>
 
-          <div className={getFilterItemClass('products')}
+          <div
+            className={getFilterItemClass('products')}
             onClick={() => handleFilterClick('products')}
           >
             <Image src={Product} alt="Product" />

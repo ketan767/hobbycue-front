@@ -203,7 +203,7 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
                 inputRef={currentPasswordRef}
                 fullWidth
                 required
-                placeholder="Enter Current Password"
+                placeholder="Current Password"
                 type={showcurrPassword ? 'text' : 'password'}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 onKeyDown={(e) => {
@@ -242,7 +242,7 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
                 fullWidth
                 required
                 inputRef={newPasswordRef}
-                placeholder="Enter New Password"
+                placeholder="New Password"
                 type={showPassword ? 'text' : 'password'}
                 onFocus={() => setShowValidations(true)}
                 onBlur={() => setShowValidations(false)}

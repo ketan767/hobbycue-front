@@ -37,6 +37,13 @@
   background-color: rgb(var(--primary-100-rgb));
   cursor: pointer;
 }
+.modal-heading-hr{
+  display: none;
+}
+
+.responsive-logo{
+  display: none;
+}
 @media screen and (max-width: 1100px) {
   .step-indicators {
     bottom: 72px;
@@ -57,11 +64,37 @@
     max-height: 100%;
     min-height: 100%;
   }
+  .modal-heading {
+    font-size: 14px;
+    line-height: 16px;
+    font-weight: 600;
+  }
+
+  .modal-container .header {
+    padding: var(--spacing-8) var(--spacing-16);
+  }
 
   .step-indicators {
     bottom: 30px;
     transform: translateX(-50%);
     display: flex;
     gap: 27px;
+    z-index: 12
+  }
+  .modal-heading-hr{
+    display: block;
+    
+  }
+  .modal-container .header {
+    position: sticky;
+    display: flex;
+    align-items: center; 
+    gap: 38px;
+    background: var(--Base-White, #FFF);
+    box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.08);
+
+  }
+  .responsive-logo{
+    display: block;
   }
 }

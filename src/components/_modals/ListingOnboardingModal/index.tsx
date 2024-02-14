@@ -8,13 +8,14 @@ import {
   getMyProfileDetail,
   updateMyProfileDetail,
 } from '@/services/user.service'
-
+import Image from 'next/image'
 import styles from './styles.module.css'
 import ListingGeneralEditModal from '../EditListing/ListingGeneral'
 import ListingAboutEditModal from '../EditListing/ListingAbout'
 import ListingAddressEditModal from '../EditListing/ListingAddress'
 import ListingContactEditModal from '../EditListing/ListingContact'
 import ListingHobbyEditModal from '../EditListing/ListingHobby'
+import hobbycueLogo from '../../../assets/svg/Search/hobbycue.svg'
 import { getListingPages, updateListing } from '@/services/listing.service'
 import ListingWorkingHoursEditModal from '../EditListing/ListingWorkingHours'
 import ListingEventHoursEditModal from '../EditListing/ListingEventHours'
@@ -175,11 +176,18 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
       }`}
     >
       {!confirmationModal && (
-        <header className={styles['header']}>
-          <h2 className={styles['modal-heading']}>
-            Complete your Listing Page
-          </h2>
-        </header>
+        <>
+          <header className={styles['header']}>
+            <Image
+              className={styles['responsive-logo']}
+              src={hobbycueLogo}
+              alt="hobbycue"
+            />
+            <h2 className={styles['modal-heading']}>
+              Complete your Listing Page
+            </h2>
+          </header>
+        </>
       )}
 
       {/* <ProgressBar total={totalSteps.length} current={totalSteps.findIndex((str : any) => str === activeStep) + 1} /> */}

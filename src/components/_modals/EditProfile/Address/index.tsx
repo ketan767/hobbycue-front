@@ -737,7 +737,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                 <label>Locality</label>
                 <input
                   type="text"
-                  placeholder={`Enter Locality`}
+                  placeholder={`Locality`}
                   value={data.locality}
                   name="locality"
                   onChange={handleInputChange}
@@ -754,7 +754,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                 <label className={styles['label-required']}>City</label>
                 <input
                   type="text"
-                  placeholder={`Enter City Name`}
+                  placeholder={`City Name`}
                   required
                   value={data.city}
                   ref={cityRef}
@@ -767,7 +767,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                 <label>PIN Code</label>
                 <input
                   type="text"
-                  placeholder={`Enter PIN Code`}
+                  placeholder={`PIN Code`}
                   required
                   value={data.pin_code}
                   name="pin_code"
@@ -785,7 +785,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                 <label className={styles['label-required']}>State</label>
                 <input
                   type="text"
-                  placeholder={`Enter State Name`}
+                  placeholder={`State Name`}
                   required
                   value={data.state}
                   ref={stateRef}
@@ -802,7 +802,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                 <label className={styles['label-required']}>Country</label>
                 <input
                   type="text"
-                  placeholder={`Enter Country Name`}
+                  placeholder={`Country Name`}
                   required
                   value={data.country}
                   name="country"
