@@ -187,7 +187,6 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
               Complete your Listing Page
             </h2>
           </header>
-          <hr className={styles['modal-heading-hr']} />
         </>
       )}
 

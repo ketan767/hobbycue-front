@@ -391,7 +391,12 @@ const ListingContactEditModal: React.FC<Props> = ({
     } else {
       setTick(false)
     }
-  }, [listingModalData.phone?.number, listingModalData.phone?.prefix, listingModalData.whatsapp_number?.number, listingModalData.whatsapp_number?.prefix])
+  }, [
+    listingModalData.phone?.number,
+    listingModalData.phone?.prefix,
+    listingModalData.whatsapp_number?.number,
+    listingModalData.whatsapp_number?.prefix,
+  ])
 
   useEffect(() => {
     if (confirmationModal) {
@@ -432,7 +437,7 @@ const ListingContactEditModal: React.FC<Props> = ({
           <h4 className={styles['heading']}>{'Contact Information'}</h4>
         </header>
 
-        <hr />
+        <hr className={styles['modal-hr']} />
 
         <section className={styles['body']}>
           <>

@@ -366,12 +366,11 @@ const ListingHobbyEditModal: React.FC<Props> = ({
           <h4 className={styles['heading']}>{'Hobbies'}</h4>
         </header>
 
-        <hr />
+        <hr className={styles['modal-hr']} />
 
         <section className={styles['body']}>
           <>
             <section className={styles['add-hobbies-wrapper']}>
-
               <p className={styles['helper-text']}>{error}</p>
 
               {/* Hobbies List, that are already Added */}
