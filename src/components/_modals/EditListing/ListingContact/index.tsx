@@ -376,6 +376,24 @@ const ListingContactEditModal: React.FC<Props> = ({
   }
 
   useEffect(() => {
+    if (
+      listingModalData.whatsapp_number?.number === '' &&
+      listingModalData.phone?.number === ''
+    ) {
+      setTick(true)
+    } else if (
+      listingModalData.phone?.number ===
+        listingModalData.whatsapp_number?.number &&
+      listingModalData.phone?.prefix ===
+        listingModalData.whatsapp_number?.prefix
+    ) {
+      setTick(true)
+    } else {
+      setTick(false)
+    }
+  }, [listingModalData.phone?.number, listingModalData.phone?.prefix, listingModalData.whatsapp_number?.number, listingModalData.whatsapp_number?.prefix])
+
+  useEffect(() => {
     if (confirmationModal) {
       HandleSaveError()
     }
@@ -469,7 +487,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                 <label>Email ID if different </label>
                 <input
                   type="text"
-                  placeholder={`Enter alternate email ID`}
+                  placeholder={`Alternate email ID`}
                   value={data.public_email.value}
                   name="public_email"
                   autoComplete="email"

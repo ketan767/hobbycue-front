@@ -385,10 +385,10 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
                   ref={profileUrlRef}
                   style={{
                     paddingLeft: urlSpanLength + 'px',
-                    paddingTop: '14px',
+                    paddingTop: '13px',
                   }}
                 />
-                <span ref={urlSpanRef}>{baseURL + '/profile/'}</span>
+                <span ref={urlSpanRef}>{'/profile/'}</span>
               </div>
               <p className={styles['helper-text']}>{inputErrs.profile_url}</p>
             </div>

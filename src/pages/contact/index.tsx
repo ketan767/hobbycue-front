@@ -266,7 +266,7 @@ const Contact: React.FC<Props> = ({}) => {
                     <label>Email ID</label>
                     <input
                       type="text"
-                      placeholder={`Enter email ID`}
+                      placeholder={`Email ID`}
                       value={data.public_email.value}
                       ref={inputRef}
                       name="public_email"
@@ -305,7 +305,7 @@ const Contact: React.FC<Props> = ({}) => {
                     />
                     <input
                       type="text"
-                      placeholder={`Enter Phone Number`}
+                      placeholder={`Phone Number`}
                       value={data.phone.number}
                       name="phone"
                       autoComplete="phone"
@@ -368,7 +368,7 @@ const Contact: React.FC<Props> = ({}) => {
                     />
                     <input
                       type="text"
-                      placeholder={`Enter WhatsApp Number`}
+                      placeholder={`WhatsApp Number`}
                       value={data.whatsapp_number.number}
                       autoComplete="phone"
                       name="whatsapp_number"

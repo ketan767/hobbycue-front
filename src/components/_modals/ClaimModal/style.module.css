@@ -145,6 +145,15 @@
 .street-input-container{
   position: relative;
 }
+.street-input-container span{
+  position: absolute;
+  top: 11px;
+  left: var(--spacing-12);
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 22px;
+  color: #6d747a;
+}
 .locationImg{
   position: absolute;
   right: 8px;

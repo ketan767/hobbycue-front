@@ -93,7 +93,7 @@ const EmailSentModal: React.FC<Props> = ({}) => {
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 className={styles.input}
-                placeholder="Enter Current Password"
+                placeholder="Current Password"
               />
               <p className={styles['helper-text']}>{errors.currentPassword}</p>
             </div>
@@ -109,7 +109,7 @@ const EmailSentModal: React.FC<Props> = ({}) => {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 className={styles.input}
-                placeholder="Enter New Password"
+                placeholder="New Password"
               />
               <p className={styles['helper-text']}>{errors.newPassword}</p>
             </div>
