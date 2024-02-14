@@ -8,6 +8,7 @@
 }
 .checkbox {
   padding: 0px;
+  margin: -1px 0 0 0;
 }
 .input-box {
   display: flex;
@@ -37,7 +38,7 @@
   background-color: rgba(235, 237, 240, 1);
   cursor: pointer;
 }
-.country-select option{
+.country-select option {
   cursor: pointer;
 }
 
@@ -219,4 +220,20 @@
 }
 .input-box-error input {
   border: 1px solid #c0504d !important;
+}
+@media screen and (max-width:1100px) {
+  .whatsapp-label {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    align-items: center;
+    line-height: 0 !important;
+    gap: 8px;
+  }
+  .two-column-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .emailContainer{
+    width: 100%;
+  }
 }

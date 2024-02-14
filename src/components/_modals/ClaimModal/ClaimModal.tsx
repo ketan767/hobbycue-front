@@ -13,7 +13,9 @@ type Props = {
 const ClaimModal = () => {
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const dispatch = useDispatch()
-  const pageURL = window.location.href
+  const pageURL = window.location.href.split('/').reverse()[0]
+  const listingUrlSpanRef = useRef<HTMLSpanElement>(null)
+  const [listingUrlSpanLength, setListingUrlSpanLength] = useState(0)
 
   let userData = useSelector((store: any) => store.user.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
@@ -100,6 +102,10 @@ const ClaimModal = () => {
       }
     }
   }
+  useEffect(() => {
+    setListingUrlSpanLength(listingUrlSpanRef?.current?.offsetWidth || 0)
+  }, [])
+  console.warn(listingUrlSpanRef.current?.offsetWidth)
 
   return (
     <>
@@ -158,7 +164,11 @@ const ClaimModal = () => {
                 name="pageUrl"
                 onChange={handleInputChange}
                 value={formData.pageUrl}
+                style={{
+                  paddingLeft: listingUrlSpanLength + 'px',
+                }}
               />
+              <span ref={listingUrlSpanRef}>{'/page/'}</span>
             </div>
           </div>
           <div

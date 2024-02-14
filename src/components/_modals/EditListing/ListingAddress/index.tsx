@@ -495,7 +495,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                 <label>Locality</label>
                 <input
                   type="text"
-                  placeholder={`Enter Locality`}
+                  placeholder={`Locality`}
                   value={data.locality.value}
                   required={listingModalData.type === listingTypes.PLACE}
                   name="locality"
@@ -514,7 +514,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                 <label>City</label>
                 <input
                   type="text"
-                  placeholder={`Enter City Name`}
+                  placeholder={`City Name`}
                   required
                   value={data.city.value}
                   name="city"
@@ -527,7 +527,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                 <label>PIN Code</label>
                 <input
                   type="text"
-                  placeholder={`Enter PIN Code`}
+                  placeholder={`PIN Code`}
                   value={data.pin_code.value}
                   required={listingModalData.type === listingTypes.PLACE}
                   name="pin_code"
@@ -546,7 +546,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                 <label>State</label>
                 <input
                   type="text"
-                  placeholder={`Enter State Name`}
+                  placeholder={`State Name`}
                   required
                   value={data.state.value}
                   name="state"
@@ -563,7 +563,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                 <label>Country</label>
                 <input
                   type="text"
-                  placeholder={`Enter Country Name`}
+                  placeholder={`Country Name`}
                   required
                   value={data.country.value}
                   ref={countryRef}

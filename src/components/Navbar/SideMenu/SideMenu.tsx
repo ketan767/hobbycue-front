@@ -108,7 +108,9 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
               {user?.full_name}
             </div>
             <div className={styles['header-icons']}>
-              <Link href={''}>
+              <Link
+                href={'/bookmarks'}
+              >
                 <CustomizedTooltips title="Bookmark">
                   <svg
                     width="24"
@@ -130,7 +132,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                     </defs>
                   </svg>
                 </CustomizedTooltips>
-              </Link>{' '}
+              </Link>
               <Link href={'#'}>
                 <CustomizedTooltips title="Cart">
                   <svg
