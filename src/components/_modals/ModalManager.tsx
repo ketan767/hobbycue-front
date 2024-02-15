@@ -66,6 +66,7 @@ import ListingReport from './EditListing/ListingReport'
 import ContactToOwner from './ContactOwner'
 import ListingSupportModal from './EditListing/ListingSupport'
 import SupportUserModal from './EditProfile/supportUser'
+import AddHobby from './AddHobby/AddHobbyModal'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -261,7 +262,7 @@ const ModalManager: React.FC = () => {
               {activeModal === 'listing-onboarding' && (
                 <ListingOnboardingModal />
               )}
-
+              {activeModal === 'add-hobby' && <AddHobby handleClose={handleClose}/>}
               {activeModal === 'create-post' && <CreatePost />}
               {activeModal === 'upload-image' && <UploadImageModal />}
 
