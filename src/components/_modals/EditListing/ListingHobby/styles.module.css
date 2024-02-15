@@ -86,7 +86,6 @@
   font-size: 12px;
   line-height: 16px;
   /* color: #878c90; */
-  max-width: 9.5rem;
 }
 .input-box input[type='text']:focus-within {
   outline: none;
@@ -134,7 +133,7 @@
 .add-btn {
   width: 100%;
   max-width: 1.5rem;
-  height: 1.5rem;
+  height: 1rem;
   border: none;
 
   color: var(--color);
@@ -254,6 +253,9 @@
   padding: 4px 12px;
 }
 
+.added-hobby-list table tbody tr:not(:last-child) > td:last-child {
+  margin-right: 12px;
+}
 .added-hobby-list table tbody tr:last-child > td:last-child {
   position: absolute;
   right: 22px;
@@ -301,6 +303,7 @@
   display: flex;
   flex-direction: row;
   gap: 4px;
+  width: 80%;
 }
 
 .added-hobby-list table tbody tr {
@@ -337,7 +340,9 @@
   .modal-wrapper {
     width: auto;
     height: 93.5%;
+    border-radius: 0;
   }
+  
   
   .add-hobbies-wrapper .add-new-hobby {
     flex-wrap: wrap;
@@ -358,13 +363,12 @@
     display: inline-table;
     width: 100%;
   }
-  .input-box input[type='text'] {
-    max-width: 7rem;
-  }
+
   .added-hobby-list table tbody tr:last-child > td:first-child {
     display: flex;
     flex-direction: row;
     gap: 10px;
+    width: 80%;
   }
   .added-hobby-list table tbody tr:last-child > td:last-child {
     position: absolute;

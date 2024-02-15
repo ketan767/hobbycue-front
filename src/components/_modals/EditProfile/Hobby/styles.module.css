@@ -418,6 +418,7 @@
   .modal-wrapper {
     width: auto;
     height: 93.5%;
+    border-radius: 0;
   }
   .modal-wrapper .body {
     padding-left: 5px;
@@ -520,6 +521,9 @@
 
 
   .hideActionMobile {
+    display: none;
+  }
+  .modal-hr{
     display: none;
   }
 

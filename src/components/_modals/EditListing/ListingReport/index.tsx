@@ -172,16 +172,16 @@ const ListingReport: React.FC<Props> = ({
     }
   }, [isError])
 
-  const nextButtonRef = useRef<HTMLButtonElement | null>(null);
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  useEffect(()=>{
+  const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+  useEffect(() => {
     const focusTextarea = () => {
-      if(textareaRef.current){
-      textareaRef.current?.focus();
+      if (textareaRef.current) {
+        textareaRef.current?.focus()
+      }
     }
-  }
-    focusTextarea();
-  },[textareaRef.current]);
+    focusTextarea()
+  }, [textareaRef.current])
 
   useEffect(() => {
     const handleKeyPress = (event: any) => {
@@ -225,7 +225,7 @@ const ListingReport: React.FC<Props> = ({
           />
           <h4 className={styles['heading']}>{'Report'}</h4>
         </header>
-        <hr />
+        <hr className={styles['modal-hr']} />
         <section className={styles['body']}>
           <div className={styles['input-box']}>
             <div className={styles['street-input-container']}>

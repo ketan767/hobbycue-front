@@ -112,41 +112,58 @@ const ProfileAboutEditModal: React.FC<Props> = ({
     }
   }
 
+  const cleanString = (string: string) => {
+    return string
+      .replaceAll('<br>', '')
+      .replaceAll('<p>', '')
+      .replaceAll('</p>', '')
+      .trim()
+  }
+
   const handleSubmit = async () => {
-    if (
-      !data.about ||
-      data.about?.trim() === '' ||
-      data.about === '<p><br></p>'
-    ) {
-      setInputErrs((prev) => {
-        return { ...prev, about: 'This field is required!' }
-      })
-      setIsError(true)
-      return
-    }
-
-    setSubmitBtnLoading(true)
-    const { err, res } = await updateMyProfileDetail(data)
-
-    if (err) {
+    if (!data.about || cleanString(data.about) === '') {
+      if (data.about !== user.about) {
+        const newData = { about: cleanString(data.about) }
+        setSubmitBtnLoading(true)
+        const { err, res } = await updateMyProfileDetail(newData)
+        if (err) {
+          setSubmitBtnLoading(false)
+          return console.log(err)
+        }
+        const { err: error, res: response } = await getMyProfileDetail()
+        setSubmitBtnLoading(false)
+        if (error) return console.log(error)
+        if (response?.data.success) {
+          dispatch(updateUser(response.data.data.user))
+          if (onComplete) onComplete()
+          else {
+            window.location.reload()
+            dispatch(closeModal())
+            return
+          }
+        }
+      } else dispatch(closeModal())
+    } else {
+      const newData = { about: cleanString(data.about) }
+      setSubmitBtnLoading(true)
+      const { err, res } = await updateMyProfileDetail(newData)
+      if (err) {
+        setSubmitBtnLoading(false)
+        return console.log(err)
+      }
+      const { err: error, res: response } = await getMyProfileDetail()
       setSubmitBtnLoading(false)
-      return console.log(err)
-    }
-
-    const { err: error, res: response } = await getMyProfileDetail()
-    setSubmitBtnLoading(false)
-
-    if (error) return console.log(error)
-    if (response?.data.success) {
-      dispatch(updateUser(response.data.data.user))
-      if (onComplete) onComplete()
-      else {
-        window.location.reload()
-        dispatch(closeModal())
+      if (error) return console.log(error)
+      if (response?.data.success) {
+        dispatch(updateUser(response.data.data.user))
+        if (onComplete) onComplete()
+        else {
+          window.location.reload()
+          dispatch(closeModal())
+        }
       }
     }
   }
-
   useEffect(() => {
     setData({
       about: user.about,
@@ -182,12 +199,12 @@ const ProfileAboutEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        if(event?.srcElement?.className?.includes("ql-editor")){
-          return;
-        }else{
-        nextButtonRef.current?.click()
+        if (event?.srcElement?.className?.includes('ql-editor')) {
+          return
+        } else {
+          nextButtonRef.current?.click()
         }
-        console.log({event})
+        console.log({ event })
       }
     }
 
@@ -226,7 +243,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
           />
           <h4 className={styles['heading']}>{'About'}</h4>
         </header>
-        <hr />
+        <hr className={styles['modal-hr']} />
         <section className={styles['body']}>
           <div className={styles['input-box']}>
             {/* <label>About</label> */}

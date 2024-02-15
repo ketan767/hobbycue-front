@@ -34,8 +34,23 @@
     font-style: normal;
     font-weight: 500;
     line-height: 16px;
-    margin: 10px 8px 100px;
-   
+    margin: 0 0 100px;
+  }
+
+  .heading h1{
+    padding: var(--spacing-16);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--Purple-1, #8064a2);
+    font-family: Poppins;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 16px;
   }
 
   
@@ -50,7 +65,7 @@
       100vh - calc(var(--navbar-height-desktop) + var(--spacing-24)) - 1rem
     );
     overflow: auto;
-    
+    width: 229px;
     margin-bottom: 24px;
   }
   

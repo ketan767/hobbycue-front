@@ -218,7 +218,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
           <h4 className={styles['heading']}>{'Schedule'}</h4>
         </header>
 
-        <hr />
+        <hr className={styles['modal-hr']} />
 
         <section className={styles['body']}>
           <div className={styles.sectionHead}></div>

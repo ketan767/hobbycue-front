@@ -360,7 +360,7 @@ const ListingSocialMediaEditModal = ({
         <h4 className={styles['heading']}>{'Social Media'}</h4>
       </header>
 
-      <hr />
+      <hr className={styles['modal-hr']} />
 
       <section className={styles['body']}>
         <div className={styles['body-header']} onClick={addSocialMedia}>

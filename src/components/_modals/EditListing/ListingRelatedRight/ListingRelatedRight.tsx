@@ -297,7 +297,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
         <header className={styles['header']}>
           <h4 className={styles['heading']}>{'Related Listing'}</h4>
         </header>
-        <hr />
+        <hr className={styles['modal-hr']} />
         <section className={styles['body']}>
           <div className={styles['input-box']}>
             <label>Relation</label>
@@ -442,7 +442,6 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
                   return (
                     <tr key={item._id}>
                       <td>{item?.title}</td>
-                      {/* <td>{item?.genre?.display || '-'}</td> */}
                       <td></td>
                       <td></td>
                       <td>

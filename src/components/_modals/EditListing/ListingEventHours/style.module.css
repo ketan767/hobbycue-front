@@ -260,4 +260,7 @@
   .inputField {
     width: auto;
   }
+  .modal-hr{
+    display: none;
+  }
 }

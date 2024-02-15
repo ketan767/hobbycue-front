@@ -190,7 +190,7 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
         <header className={styles['header']}>
           <h4 className={styles['heading']}>Change Password</h4>
         </header>
-        <hr />
+        <hr className={styles['modal-hr']} />
         <section className={styles['body']}>
           <div className={styles.inputField}>
             <label className={styles.label}>Current Password</label>

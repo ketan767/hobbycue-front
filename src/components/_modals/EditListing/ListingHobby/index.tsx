@@ -13,7 +13,7 @@ import { isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
-import { closeModal } from '@/redux/slices/modal'
+import { closeModal, openModal } from '@/redux/slices/modal'
 import { addListingHobby, deleteListingHobby } from '@/services/listing.service'
 import { getListingHobbies } from '@/services/listing.service'
 import SaveModal from '../../SaveModal/saveModal'
@@ -161,8 +161,9 @@ const ListingHobbyEditModal: React.FC<Props> = ({
       if (matchedHobby) {
         selectedHobby = matchedHobby
       } else {
-        setHobbyError(true)
-        setError('Typed hobby not found!')
+        // setHobbyError(true)
+        // setError('Typed hobby not found!')
+        dispatch(openModal({ type: 'add-hobby', closable: true }))
         return
       }
     } else {
@@ -237,8 +238,9 @@ const ListingHobbyEditModal: React.FC<Props> = ({
         if (matchedHobby) {
           selectedHobby = matchedHobby
         } else {
-          setHobbyError(true)
-          setError('Typed hobby not found!')
+          // setHobbyError(true)
+          // setError('Typed hobby not found!')
+          dispatch(openModal({ type: 'add-hobby', closable: true }))
           return
         }
       } else {

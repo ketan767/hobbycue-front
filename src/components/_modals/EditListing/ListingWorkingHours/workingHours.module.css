@@ -257,6 +257,7 @@
     width: auto;
     height: 100%;
     min-height: 23rem;
+    border-radius: 0;
   }
   .modal-wrapper .body {
     padding-left: 20px;
@@ -278,6 +279,8 @@
   .inputField{
    width: 100%;
   }
-  
+  .modal-hr{
+    display: none;
+  }
 }
 

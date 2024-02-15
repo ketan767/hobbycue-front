@@ -63,7 +63,7 @@ const UploadVideoPage: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
         <header className={styles['header']}>
           <h4 className={styles['heading']}>{'Add Video Link'}</h4>
         </header>
-        <hr />
+        <hr className={styles['modal-hr']} />
         <section className={styles['body']}>
           <p className={styles.headerText}> Enter the destination URL </p>
           <label className={styles.label}>URL</label>

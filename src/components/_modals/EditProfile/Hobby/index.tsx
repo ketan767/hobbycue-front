@@ -15,7 +15,7 @@ import hobbyLvlOne from '@/assets/svg/hobby_level_One.svg'
 import hobbyLvlThree from '@/assets/svg/hobby_level_Three.svg'
 import hobbyLvlTwo from '@/assets/svg/hobby_level_Two.svg'
 import addhobby from '@/assets/svg/addhobby.svg'
-import { closeModal } from '@/redux/slices/modal'
+import { closeModal, openModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import { getAllHobbies } from '@/services/hobby.service'
@@ -258,8 +258,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       if (matchedHobby) {
         selectedHobby = matchedHobby
       } else {
-        setError('Typed hobby not found!')
-        setHobbyError(true)
+        dispatch(openModal({ type: 'add-hobby', closable: true }))
         return
       }
     } else {
@@ -372,9 +371,10 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         if (matchedHobby) {
           selectedHobby = matchedHobby
         } else {
-          setError('Typed hobby not found!')
-          searchref.current?.focus()
-          setHobbyError(true)
+          // setError('Typed hobby not found!')
+          // searchref.current?.focus()
+          // setHobbyError(true)
+          dispatch(openModal({ type: 'add-hobby', closable: true }))
           return
         }
       } else {
@@ -588,7 +588,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           <h4 className={styles['heading']}>{'Hobbies'}</h4>
         </header>
 
-        <hr />
+        <hr className={styles['modal-hr']} />
 
         <section className={styles['body']}>
           <>
