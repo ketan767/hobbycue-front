@@ -278,7 +278,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
         <header className={styles['header']}>
           <h4 className={styles['heading']}>{'Related Listingss'}</h4>
         </header>
-        <hr />
+        <hr className={styles['modal-hr']} />
         <section className={styles['body']}>
           <div className={styles['input-box']}>
             <label>Relation</label>

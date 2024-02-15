@@ -357,7 +357,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
         <h4 className={styles['heading']}>{'Social Media'}</h4>
       </header>
 
-      <hr />
+      <hr className={styles['modal-hr']} />
 
       <section className={styles['body']}>
         <div className={styles['body-header']} onClick={addSocialMedia}>
@@ -401,7 +401,12 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
                           width={24}
                           height={24}
                         />
-                        <p className={styles.iconText} style={{ marginLeft: '8px' }}>{option}</p>
+                        <p
+                          className={styles.iconText}
+                          style={{ marginLeft: '8px' }}
+                        >
+                          {option}
+                        </p>
                       </div>
                     </MenuItem>
                   )

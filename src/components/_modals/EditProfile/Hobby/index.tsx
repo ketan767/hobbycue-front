@@ -588,7 +588,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           <h4 className={styles['heading']}>{'Hobbies'}</h4>
         </header>
 
-        <hr />
+        <hr className={styles['modal-hr']} />
 
         <section className={styles['body']}>
           <>

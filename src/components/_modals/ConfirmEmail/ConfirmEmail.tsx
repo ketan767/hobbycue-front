@@ -69,7 +69,7 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
     elementRef.current?.focus()
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        nextButtonRef.current?.focus();
+        nextButtonRef.current?.focus()
       }
     }
 
@@ -128,7 +128,7 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
               'Send'
             )}
           </button>
-          {/* <button
+          <button
             ref={nextButtonRef}
             className="modal-mob-btn-save"
             onClick={handleSubmit}
@@ -138,7 +138,7 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
             ) : (
               'Send'
             )}
-          </button> */}
+          </button>
         </footer>
       </div>
     </>

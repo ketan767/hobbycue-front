@@ -367,7 +367,12 @@ const ProfileContactEditModal: React.FC<Props> = ({
     ) {
       setTick(true)
     } else setTick(false)
-  }, [user.phone?.number, user.phone?.prefix, user.whatsapp_number?.number, user.whatsapp_number?.prefix])
+  }, [
+    user.phone?.number,
+    user.phone?.prefix,
+    user.whatsapp_number?.number,
+    user.whatsapp_number?.prefix,
+  ])
 
   if (confirmationModal) {
     return (
@@ -392,7 +397,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
           <h4 className={styles['heading']}>{'Contact Information'}</h4>
         </header>
 
-        <hr />
+        <hr className={styles['modal-hr']} />
 
         <section className={styles['body']}>
           <>

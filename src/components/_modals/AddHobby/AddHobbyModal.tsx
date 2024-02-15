@@ -24,14 +24,16 @@ const AddHobby: React.FC<Props> = ({ handleClose, handleSubmit }) => {
           onClick={handleClose}
         />
       </div>
-      <hr />
+      <hr className={styles['modal-hr']} />
       <div className={styles['content']}>
         <p>
           Add <span>Pickleball</span> as a hobby so that we can grow this as a
           community
         </p>
         <div className={styles['buttons']}>
-          <FilledButton className={styles['button1']} onClick={handleClose}>Send Request</FilledButton>
+          <FilledButton className={styles['button1']} onClick={handleClose}>
+            Send Request
+          </FilledButton>
         </div>
       </div>
     </div>

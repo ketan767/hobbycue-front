@@ -73,4 +73,8 @@
     border-radius: 100%;
     z-index: 10;
   }
+  .modal-hr{
+    display: none;
+  }
+
 }

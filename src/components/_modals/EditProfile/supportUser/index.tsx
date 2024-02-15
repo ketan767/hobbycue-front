@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useRef, TextareaHTMLAttributes } from 'react'
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  TextareaHTMLAttributes,
+} from 'react'
 import dynamic from 'next/dynamic'
 import { Button, CircularProgress } from '@mui/material'
 
@@ -199,16 +204,16 @@ const SupportUserModal: React.FC<Props> = ({
     }
   }, [isError])
 
-  const nextButtonRef = useRef<HTMLButtonElement | null>(null);
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  useEffect(()=>{
+  const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+  useEffect(() => {
     const focusTextarea = () => {
-      if(textareaRef.current){
-      textareaRef.current?.focus();
+      if (textareaRef.current) {
+        textareaRef.current?.focus()
+      }
     }
-  }
-    focusTextarea();
-  },[textareaRef.current]);
+    focusTextarea()
+  }, [textareaRef.current])
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
@@ -221,7 +226,7 @@ const SupportUserModal: React.FC<Props> = ({
     return () => {
       window.removeEventListener('keydown', handleKeyPress)
     }
-  }, []);
+  }, [])
 
   if (confirmationModal) {
     return (
@@ -251,7 +256,7 @@ const SupportUserModal: React.FC<Props> = ({
           />
           <h4 className={styles['heading']}>{'Support'}</h4>
         </header>
-        <hr />
+        <hr className={styles['modal-hr']} />
         <section className={styles['body']}>
           <div className={styles['input-box']}>
             <div className={styles['street-input-container']}>

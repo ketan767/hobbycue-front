@@ -45,7 +45,7 @@
   }
   .modal-wrapper {
     background-color: white;
-    border-radius: var(--spacing-8);
+    border-radius: 0;
     max-width: 50rem;
     width: 375px;
     min-height: auto;
@@ -65,5 +65,8 @@
   .body {
     font-size: 10px;
     line-height: 15px;
+  }
+  .modal-hr{
+    display: none;
   }
 }

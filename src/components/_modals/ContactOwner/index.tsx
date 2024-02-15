@@ -183,7 +183,7 @@ const ContactToOwner: React.FC<Props> = ({
           />
           <h4 className={styles['heading']}>{'Message'}</h4>
         </header>
-        <hr />
+        <hr className={styles['modal-hr']} />
         <section className={styles['body']}>
           {/* Subject */}
           <div
