@@ -1,9 +1,9 @@
 .container {
   background: #ffffff;
   border: 1px solid #ebedf0;
-  border-radius: 0px 0px 8px 8px;
+  border-radius: 8px;
   padding: 3rem;
-  width: 42rem;
+  width: 671px;
 }
 
 .textLight {

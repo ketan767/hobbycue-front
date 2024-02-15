@@ -255,6 +255,12 @@
   background: #f8f9fa;
   outline: none;
 }
+.inputField>div:hover{
+  outline: 1px solid #8064A2;
+}
+.inputField>div:hover>fieldset{
+  display: none;
+}
 .navbar-right > ul.right-listing-small{
   display: none ;
 }

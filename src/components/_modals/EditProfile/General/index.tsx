@@ -90,10 +90,14 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
       if(value.length>=4){
         const currentYear = new Date().getFullYear();
         if(isNaN(value)){
-          alert("Please enter numbers only")
+          setInputErrs((prev) => {
+            return { ...prev, year_of_birth: "Please enter numbers only" }
+          })
         }
         else if((currentYear - value)>100||(currentYear - value)<13){
-          alert("Your age should be between 13 to 100")
+          setInputErrs((prev) => {
+            return { ...prev, year_of_birth: "Your age should be between 13 to 100" }
+          })
         }
       }
     }
