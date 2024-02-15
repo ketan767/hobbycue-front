@@ -10,6 +10,14 @@
    font-size: 16px;
    line-height: 26px;
    margin-bottom: 28px;
+   font-weight: 600;
+   font-size: 14px;
+   line-height: 20px;
+   color: var(--Purple-1, #8064a2);
+   font-family: Poppins;
+   font-size: 20px;
+   font-style: normal;
+   line-height: 16px;
 }
 
 .text {

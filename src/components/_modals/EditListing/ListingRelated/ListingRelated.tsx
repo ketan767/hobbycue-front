@@ -276,7 +276,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
       <div className={styles['modal-wrapper']}>
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>{'Related Listing'}</h4>
+          <h4 className={styles['heading']}>{'Related Listingss'}</h4>
         </header>
         <hr />
         <section className={styles['body']}>

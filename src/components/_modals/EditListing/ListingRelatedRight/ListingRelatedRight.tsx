@@ -440,7 +440,6 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
                   return (
                     <tr key={item._id}>
                       <td>{item?.title}</td>
-                      {/* <td>{item?.genre?.display || '-'}</td> */}
                       <td></td>
                       <td></td>
                       <td>

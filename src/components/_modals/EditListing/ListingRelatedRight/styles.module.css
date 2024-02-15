@@ -195,13 +195,13 @@
    align-items: center;
  }
  .added-hobby-list table tr td:nth-child(1) {
-   flex: 0 1 120px;
+   flex: 0 1 100%;
  }
  .added-hobby-list table tr td:nth-child(2) {
-   flex: 0 1 130px;
+   flex: 0 1 0;
  }
  .added-hobby-list table tr td:nth-child(3) {
-   flex: 0 1 120px;
+   flex: 0 1 0;
  }
  .added-hobby-list table tr td:nth-child(4) {
    flex: 0 1 40px;
