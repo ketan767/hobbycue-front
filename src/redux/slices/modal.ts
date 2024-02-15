@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 export type ModalType =
   | null
   | 'auth'
+  | 'add-hobby'
   | 'email-verify'
   | 'user-onboarding'
   | 'listing-onboarding'

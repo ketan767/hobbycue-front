@@ -1,0 +1,80 @@
+.add-hobby {
+  background-color: white;
+  border-radius: 8px;
+  max-width: 400px;
+  margin: auto;
+}
+.add-hobby .buttons {
+  display: flex;
+  align-items: center;
+  column-gap: 1rem;
+  justify-content: center;
+  margin-top: 1rem;
+  margin-right: auto;
+  max-width: 200px;
+}
+.add-hobby .buttons button {
+  flex: 1;
+  padding: 0.5rem 1rem;
+}
+.header {
+  position: relative;
+  margin: 0 30px 0;
+  padding: 14px 0;
+  display: flex;
+  justify-content: center;
+}
+.header > p {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0em;
+  text-align: left;
+}
+.content {
+  padding: 30px;
+}
+.content > p {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: rgba(109, 116, 122, 1);
+}
+.content > p > span {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 22px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: rgba(109, 116, 122, 1);
+}
+.button1 {
+  font-size: 1rem !important;
+}
+.modal-close-icon {
+  display: none;
+}
+.modal-close-icon:hover {
+  background: #ddd;
+}
+
+@media screen and (max-width: 1100px) {
+  .add-hobby {
+    margin-top: 50vh;
+    transform: translate(0, -50%);
+  }
+  .modal-close-icon {
+    display: initial;
+    top: var(--spacing-12);
+    right: 0px;
+    position: absolute;
+    cursor: pointer;
+    border-radius: 100%;
+    z-index: 10;
+  }
+  .modal-hr{
+    display: none;
+  }
+
+}

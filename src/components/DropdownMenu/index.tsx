@@ -162,7 +162,7 @@ const DropdownMenu: React.FC<Props> = ({
         {search === true && (
           <>
             <input type="text" placeholder="Search..." value={inputValue} />
-            <hr />
+            <hr className={styles['modal-hr']} />
           </>
         )}
         <div className={styles['dropdown-options-container']}>

@@ -190,7 +190,7 @@ const ListingTagsEditModal: React.FC<Props> = ({
         <header className={styles['header']}>
           <h4 className={styles['heading']}>{'Tags'}</h4>
         </header>
-        <hr />
+        <hr className={styles['modal-hr']} />
         <section className={styles['body']}>
           <div className={styles['selected-values']}>
             {tags

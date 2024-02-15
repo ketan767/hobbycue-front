@@ -272,6 +272,9 @@
     padding-left: 20px;
     padding-right: 20px;
   }
+  .modal-hr{
+    display: none;
+  }
 }
 .options-container {
   display: flex;

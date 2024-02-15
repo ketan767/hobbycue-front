@@ -272,6 +272,7 @@
   .modal-wrapper {
     /* max-width: 350px; */
     width: 100%;
+    border-radius: 0;
   }
   .create-post-btn {
     width: 100%;
@@ -281,6 +282,11 @@
   }
   .modal-heading::before {
     display: none !important;
+  }
+  .create-post-modal > aside {
+    width: 100%;
+
+    
   }
 }
   .modal-heading::before {

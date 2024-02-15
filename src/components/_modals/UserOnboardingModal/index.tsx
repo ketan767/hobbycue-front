@@ -12,7 +12,8 @@ import ProfileAddressEditModal from '../EditProfile/Address'
 import ProfileHobbyEditModal from '../EditProfile/Hobby'
 import ProfileContactEditModal from '../EditProfile/ProfileContact'
 import SaveModal from '../SaveModal/saveModal'
-
+import hobbycueLogo from '../../../assets/svg/Search/hobbycue.svg'
+import Image from 'next/image'
 import styles from './styles.module.css'
 import { updateUser } from '@/redux/slices/user'
 import { sendWelcomeMail } from '@/services/auth.service'
@@ -146,6 +147,11 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
     >
       {!confirmationModal && (
         <header className={styles['header']}>
+          <Image
+            className={styles['responsive-logo']}
+            src={hobbycueLogo}
+            alt="hobbycue"
+          />
           <h2 className={styles['modal-heading']}>
             Complete your User Profile
           </h2>

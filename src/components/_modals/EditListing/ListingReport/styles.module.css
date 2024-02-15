@@ -173,6 +173,7 @@
   .modal-wrapper {
     width: auto;
     height: 93.5%;
+    border-radius: 0;
   }
   .modal-wrapper .body {
     padding-left: 20px;
@@ -182,5 +183,8 @@
   position: sticky;
   bottom: 0;
   z-index: 1001;
+}
+.modal-hr{
+  display: none;
 }
 }

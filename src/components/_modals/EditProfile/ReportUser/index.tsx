@@ -215,7 +215,7 @@ const UserReport: React.FC<Props> = ({
           />
           <h4 className={styles['heading']}>{'Report'}</h4>
         </header>
-        <hr />
+        <hr className={styles['modal-hr']} />
         <section className={styles['body']}>
           <div className={styles['input-box']}>
             <div className={styles['street-input-container']}>

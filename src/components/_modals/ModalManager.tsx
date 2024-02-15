@@ -53,7 +53,7 @@ import SetPasswordModal from './CreatePassword'
 import ViewImageModal from './ViewImage'
 import { ModalType } from '@/redux/slices/modal'
 import SupportModal from './EditListing/ListingSupport'
-
+import hobbycueLogo from '../../assets/svg/Search/hobbycue.svg'
 import UserOnboardingWelcomeModal from './UserOnboardingWelcomeModal/UserOnboardingWelcomeModal.tsx'
 
 import ExpiredPassword from './ExpiredPasswordModal'
@@ -66,6 +66,7 @@ import ListingReport from './EditListing/ListingReport'
 import ContactToOwner from './ContactOwner'
 import ListingSupportModal from './EditListing/ListingSupport'
 import SupportUserModal from './EditProfile/supportUser'
+import AddHobby from './AddHobby/AddHobbyModal'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -255,13 +256,29 @@ const ModalManager: React.FC = () => {
               }
               ref={mainRef}
             >
+              {activeModal !== 'listing-onboarding' &&
+                activeModal !== 'user-onboarding' && (
+                  <>
+                    <header className={styles['header']}>
+                      <Image
+                        className={styles['responsive-logo']}
+                        src={hobbycueLogo}
+                        alt="hobbycue"
+                      />
+                      <h2 className={styles['modal-heading']}></h2>
+                    </header>
+                  </>
+                )}
+
               {activeModal === 'auth' && <AuthModal />}
               {activeModal === 'email-verify' && <VerifyEmailModal />}
               {activeModal === 'user-onboarding' && <UserOnboardingModal />}
               {activeModal === 'listing-onboarding' && (
                 <ListingOnboardingModal />
               )}
-
+              {activeModal === 'add-hobby' && (
+                <AddHobby handleClose={handleClose} />
+              )}
               {activeModal === 'create-post' && <CreatePost />}
               {activeModal === 'upload-image' && <UploadImageModal />}
 

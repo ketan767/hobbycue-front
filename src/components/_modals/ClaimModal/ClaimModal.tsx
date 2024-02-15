@@ -114,7 +114,7 @@ const ClaimModal = () => {
           <h4 className={styles['heading']}>{'Claim Listing'}</h4>
         </header>
 
-        <hr />
+        <hr className={styles['modal-hr']} />
         <section className={styles['body']}>
           {/* Logged in as  */}
           <div className={styles['input-box']}>
