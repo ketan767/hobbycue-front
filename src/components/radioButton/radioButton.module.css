@@ -11,6 +11,11 @@
    border: 1px solid #8064A2;
 }
 
+.container:disabled.active{
+   background-color: #CED4DA !important;
+   border: 1px solid #CED4DA !important;
+}
+
 .circle {
    background-color: #8064A2;
    width: 16px;

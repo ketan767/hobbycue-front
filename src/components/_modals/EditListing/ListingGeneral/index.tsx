@@ -180,6 +180,18 @@ const ListingGeneralEditModal: React.FC<Props> = ({
         }
       })
     }
+      if(data.year.value.length){
+        const currentYear = new Date().getFullYear();
+        if(isNaN(Number(data.year.value))){
+          setData((prev) => {
+            return { ...prev, year:{...prev.year,error:"Year of Birth/Establishment should be a number"} }
+          })
+        }else if((currentYear - Number(data.year.value))>100||(currentYear - Number(data.year.value))<13){
+          setData((prev) => {
+            return { ...prev, year:{...prev.year,error:"Age should be between 13 to 100"} }
+          })
+        }
+      }
 
     const onlyAlphabetsAndHyphensRegex = /^[a-zA-Z-]*$/
 

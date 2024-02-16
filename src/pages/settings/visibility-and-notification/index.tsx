@@ -9,6 +9,8 @@ import Image from 'next/image'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import RadioButton from '@/components/radioButton/radioButton'
 import { withAuth } from '@/navigation/withAuth'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
 
 type Props = {}
 const options = [
@@ -19,6 +21,7 @@ const options = [
   'My Society',
 ]
 const VisibilityAndNotification: React.FC<Props> = ({}) => {
+ const userProfileUrl = useSelector((state:RootState)=>state?.user?.user?.profile_url);
   return (
     <>
       <PageGridLayout column={2} customStyles={styles['settingcontainer']}>
@@ -67,31 +70,31 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
           </p>
           <div className={styles.notifyEditContainer}>
             <p className={`${styles.textDark}`}>
-              Mentions me using @rakesh-shah
+              Mentions me using @{userProfileUrl}
             </p>
             <RadioButton active={false} />
           </div>
           <div className={styles.notifyEditContainer}>
             <p className={`${styles.textDark}`}>Comments on my post</p>
-            <RadioButton active={true} />
+            <RadioButton disabled active={true} />
           </div>
           <div className={styles.notifyEditContainer}>
             <p className={`${styles.textDark}`}>
               Accepts my request to join hobbycue
             </p>
-            <RadioButton active={true} />
+            <RadioButton disabled active={true} />
           </div>
           <div className={styles.notifyEditContainer}>
             <p className={`${styles.textDark}`}>Invites me to join a group</p>
-            <RadioButton active={true} />
+            <RadioButton disabled active={true} />
           </div>
           <div className={styles.notifyEditContainer}>
             <p className={`${styles.textDark}`}>Upvotes my content</p>
-            <RadioButton active={true} />
+            <RadioButton disabled active={true} />
           </div>
           <div className={styles.notifyEditContainer}>
             <p className={`${styles.textDark}`}>Shares my content</p>
-            <RadioButton active={true} />
+            <RadioButton disabled active={true} />
           </div>
 
           <div
