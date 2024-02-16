@@ -34,10 +34,22 @@ type Props = {
   [key: string]: any
 }
 
+type AddressObj = {
+  street_number?: string
+  premise?: string
+  locality?: string
+  administrative_area_level_1?: string
+  country?: string
+  postal_code?: string
+  sublocality_level_1?: string
+  sublocality_level_3?: string
+}
+
 type DropdownListItem = {
   address: string
   place_id: string
   formatted_address: string
+  addressObj: AddressObj
 }
 
 const ProfileAddressEditModal: React.FC<Props> = ({
@@ -268,11 +280,11 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     }
     if (
       !data.city ||
-      data.city === '' ||
-      !data.state ||
-      data.state === '' ||
-      !data.country ||
-      data.country === ''
+      data.city === '' 
+      // !data.state ||
+      // data.state === '' ||
+      // !data.country ||
+      // data.country === ''
     ) {
       let errors: typeof inputErrs = {}
 
@@ -281,15 +293,15 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         errors.city = 'This field is required!'
       }
 
-      if (!data.state || data.state === '') {
-        stateRef.current?.focus()
-        errors.state = 'This field is required!'
-      }
+      // if (!data.state || data.state === '') {
+      //   stateRef.current?.focus()
+      //   errors.state = 'This field is required!'
+      // }
 
-      if (!data.country || data.country === '') {
-        countryRef.current?.focus()
-        errors.country = 'This field is required!'
-      }
+      // if (!data.country || data.country === '') {
+      //   countryRef.current?.focus()
+      //   errors.country = 'This field is required!'
+      // }
 
       return setInputErrs((prev) => {
         return { ...prev, ...errors }
@@ -302,18 +314,18 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         return { ...prev, city: 'This field is required!' }
       })
     }
-    if (!data.state || data.state === '') {
-      stateRef.current?.focus()
-      return setInputErrs((prev) => {
-        return { ...prev, state: 'This field is required!' }
-      })
-    }
-    if (!data.country || data.country === '') {
-      countryRef.current?.focus()
-      return setInputErrs((prev) => {
-        return { ...prev, country: 'This field is required!' }
-      })
-    }
+    // if (!data.state || data.state === '') {
+    //   stateRef.current?.focus()
+    //   return setInputErrs((prev) => {
+    //     return { ...prev, state: 'This field is required!' }
+    //   })
+    // }
+    // if (!data.country || data.country === '') {
+    //   countryRef.current?.focus()
+    //   return setInputErrs((prev) => {
+    //     return { ...prev, country: 'This field is required!' }
+    //   })
+    // }
     if (checkFullname(data.city)) {
       cityRef.current?.focus()
       return setInputErrs((prev) => {
@@ -323,25 +335,25 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         }
       })
     }
-    if (checkFullname(data.state)) {
-      stateRef.current?.focus()
-      return setInputErrs((prev) => {
-        return {
-          ...prev,
-          state: 'State should not contain any numbers!',
-        }
-      })
-    }
+    // if (checkFullname(data.state)) {
+    //   stateRef.current?.focus()
+    //   return setInputErrs((prev) => {
+    //     return {
+    //       ...prev,
+    //       state: 'State should not contain any numbers!',
+    //     }
+    //   })
+    // }
 
-    if (checkFullname(data.country)) {
-      countryRef.current?.focus()
-      return setInputErrs((prev) => {
-        return {
-          ...prev,
-          country: 'Country should not contain any numbers!',
-        }
-      })
-    }
+    // if (checkFullname(data.country)) {
+    //   countryRef.current?.focus()
+    //   return setInputErrs((prev) => {
+    //     return {
+    //       ...prev,
+    //       country: 'Country should not contain any numbers!',
+    //     }
+    //   })
+    // }
     setSubmitBtnLoading(true)
     if (editLocation) {
       let reqBody: any = { ...data }
@@ -564,31 +576,41 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           setShowDropdownList(
             results.map((result: any) => {
               const { address_components } = result
+              console.log({ address_components })
               let addressParts: string[] = []
+              let addressObj: AddressObj = {}
               address_components.forEach((component: any) => {
                 if (component.types.includes('street_number')) {
                   addressParts.push(component.long_name)
+                  addressObj.street_number = component.long_name
                 }
                 if (component.types.includes('premise')) {
                   addressParts.push(component.long_name)
+                  addressObj.premise = component.long_name
                 }
                 if (component.types.includes('locality')) {
                   addressParts.push(component.long_name)
+                  addressObj.locality = component.long_name
                 }
                 if (component.types.includes('administrative_area_level_1')) {
                   addressParts.push(component.long_name)
+                  addressObj.administrative_area_level_1 = component.long_name
                 }
                 if (component.types.includes('country')) {
                   addressParts.push(component.long_name)
+                  addressObj.country = component.long_name
                 }
                 if (component.types.includes('postal_code')) {
                   addressParts.push(component.long_name)
+                  addressObj.postal_code = component.long_name
                 }
                 if (component.types.includes('sublocality_level_1')) {
                   addressParts.push(component.long_name)
+                  addressObj.sublocality_level_1 = component.long_name
                 }
                 if (component.types.includes('sublocality_level_3')) {
                   addressParts.push(component.long_name)
+                  addressObj.sublocality_level_3 = component.long_name
                 }
               })
               console.log('addpart', addressParts)
@@ -597,6 +619,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                 ...result,
 
                 formatted_address: addressParts.join(', '),
+                addressObj,
               }
             }),
           )
@@ -649,6 +672,23 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       window.removeEventListener('keydown', handleKeyPress)
     }
   }, [])
+
+  const handleSelectAddress = (data: DropdownListItem) => {
+    console.log({ data })
+    setShowDropdown(false);
+    const { addressObj } = data
+    setData((prev: ProfileAddressPayload) => ({
+      ...prev,
+      pin_code: addressObj.postal_code ?? '',
+      country: addressObj.country ?? '',
+      city: addressObj.locality ?? '',
+      state: addressObj.administrative_area_level_1 ?? '',
+      society: addressObj.premise ?? '',
+      street: addressObj.street_number ?? '',
+      locality: addressObj.sublocality_level_1 ?? ''
+    }))
+    setIsChanged(true)
+  }
 
   if (confirmationModal) {
     return (
@@ -727,7 +767,12 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                 <div className={styles['dropdown']}>
                   {dropdownList.map((location) => {
                     return location.formatted_address ? (
-                      <p key={location.place_id}>
+                      <p
+                        onClick={() => {
+                          handleSelectAddress(location)
+                        }}
+                        key={location.place_id}
+                      >
                         {location.formatted_address}
                       </p>
                     ) : null
@@ -797,11 +842,11 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   inputErrs.state ? styles['input-box-error'] : ''
                 }`}
               >
-                <label className={styles['label-required']}>State</label>
+                {/* <label className={styles['label-required']}>State</label> */}
                 <input
                   type="text"
                   placeholder={`State Name`}
-                  required
+                  // required
                   value={data.state}
                   ref={stateRef}
                   name="state"
@@ -814,11 +859,11 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   inputErrs.country ? styles['input-box-error'] : ''
                 }`}
               >
-                <label className={styles['label-required']}>Country</label>
+                {/* <label className={styles['label-required']}>Country</label> */}
                 <input
                   type="text"
                   placeholder={`Country Name`}
-                  required
+                  // required
                   value={data.country}
                   name="country"
                   ref={countryRef}
