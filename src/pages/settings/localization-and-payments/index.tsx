@@ -122,20 +122,6 @@ const VisibilityAndNotification: React.FC = () => {
 
           <div className={styles.line}></div>
 
-          <div className={`${styles.flex} ${styles.addSectionContainer}`}>
-            <p className={`${styles.textLight}`}> Payment options </p>
-            <div className={`${styles.flex}`}>
-              <Image
-                src={AddIcon}
-                width={16}
-                height={16}
-                alt="add"
-                className={styles.addIcon}
-              />
-              <p className={styles.textColored}> add a credit or debit card </p>
-            </div>
-          </div>
-
           {/* <div className={`${styles.cardContainer}`}>
             <div className={`${styles.addressLeft}`}>
               <Image
@@ -278,6 +264,21 @@ const VisibilityAndNotification: React.FC = () => {
               }}
             />
           </div>
+          <div className={styles.line}></div>
+<p className={styles.underDev}>This feature is under development. Come back soon to view this.</p>
+<div className={`${styles.flex} ${styles.addSectionContainer}`}>
+  <p className={`${styles.textLight}`}> Payment options </p>
+  <div className={`${styles.flex}`}>
+    <Image
+      src={AddIcon}
+      width={16}
+      height={16}
+      alt="add"
+      className={styles.addIcon}
+    />
+    <p className={styles.textColored}> add a credit or debit card </p>
+  </div>
+</div>
         </div>
       </PageGridLayout>
     </>

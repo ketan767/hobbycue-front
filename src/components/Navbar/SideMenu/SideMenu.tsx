@@ -133,7 +133,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                   </svg>
                 </CustomizedTooltips>
               </Link>
-              <Link href={'#'}>
+              <Link href={'/cart'}>
                 <CustomizedTooltips title="Cart">
                   <svg
                     width="24"
@@ -392,6 +392,12 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                 </Link>
               </ul> */}
                   <ul>
+                  <Link href={`/activity`}>
+                          <li>My Activity</li>
+                        </Link>
+                        <Link href={`/orders`}>
+                          <li>My Orders</li>
+                        </Link>
                     <Link href={`/profile/${user.profile_url}/pages`}>
                       <li>My Pages</li>
                     </Link>

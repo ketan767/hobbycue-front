@@ -1,9 +1,9 @@
 .container {
-  border-radius: 0px 0px 8px 8px;
+  border-radius: 8px;
   border: 1px solid var(--grey-lighter, #ebedf0);
   background: var(--grey-white, #fff);
   padding: 26px 24px;
-  max-width: 608px;
+  max-width: 671px;
 }
 
 .header {

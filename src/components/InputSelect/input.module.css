@@ -34,3 +34,10 @@
   background-color: white;
   padding: 6px 2px;
 }
+
+@media screen and (max-width:1100px) {
+  .select{
+    /* padding: 8px 6px; */
+  }
+  
+}

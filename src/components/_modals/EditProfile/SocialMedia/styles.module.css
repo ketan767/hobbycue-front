@@ -152,6 +152,9 @@
   .iconText{
     display: none;
   }
+  li .iconText{
+    display: block;
+  }
   .inputContainer > div{
   width: inherit;
   min-width: 70px;

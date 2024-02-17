@@ -43,7 +43,7 @@
 
 @media screen and (max-width: 1100px){
   .step-indicators {
-    bottom: 33px;
+    bottom: 29px;
     position: sticky;
     transform: none !important;
     justify-content: center;

@@ -1,8 +1,9 @@
 .container {
   background: #ffffff;
   border: 1px solid #ebedf0;
-  border-radius: 0px 0px 8px 8px;
+  border-radius: 8px;
   padding: 11px 15px;
+  width: 671px;
 }
 
 .textLight {
@@ -37,6 +38,15 @@
   background: #ebedf0;
   margin-bottom: 24px;
 }
+
+.underDev{
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 22px;
+  color: #6d747a;
+  margin-bottom: 12px;
+}
+
 .clickable{
   cursor: pointer;
 }
@@ -116,6 +126,6 @@
   cursor: pointer;
 }
 
-.settingcontainer{
+/* .settingcontainer{
   grid-template-columns: 16rem 42rem !important;
-}
+} */
