@@ -281,7 +281,6 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
 
         <section className={styles['body']}>
           <div className={styles.sectionHead}>
-            <p>Working Hours</p>
             <div className={styles.sectionHeadRight} onClick={addWorkingHour}>
               <Image src={AddIcon} width={14} height={14} alt="add" />
               {workingHoursData.length === 0 ? (

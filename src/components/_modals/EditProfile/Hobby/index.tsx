@@ -10,6 +10,7 @@ import styles from './styles.module.css'
 
 import CloseIcon from '@/assets/icons/CloseIcon'
 import NextIcon from '@/assets/svg/Next.svg'
+import CheckIcon from '@/assets/svg/Check.svg'
 import BackIcon from '@/assets/svg/Previous.svg'
 import hobbyLvlOne from '@/assets/svg/hobby_level_One.svg'
 import hobbyLvlThree from '@/assets/svg/hobby_level_Three.svg'
@@ -910,7 +911,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           {onComplete ? (
             <div onClick={handleSubmit}>
               <Image
-                src={NextIcon}
+                src={CheckIcon}
                 alt="back"
                 className="modal-mob-btn cancel"
               />
