@@ -417,7 +417,7 @@
 @media screen and (max-width: 1100px) {
   .modal-wrapper {
     width: auto;
-    height: 89%;
+    height: 93.5%;
     border-radius: 0;
   }
   .modal-wrapper .body {
@@ -537,13 +537,16 @@
     padding: 5px 15px;
   }
   .footer {
-    position: fixed;
-    width: 100%;
+    position: sticky;
     bottom: 0;
     z-index: 1001;
   }
 }
 @media screen and (max-width: 500px) {
+  /* .input-box {
+    padding-right: 0;
+    width: 6.3rem;
+  } */
   .added-hobby-list table tbody tr:last-child > td:nth-child(2) > div {
     width:5rem;
   }
