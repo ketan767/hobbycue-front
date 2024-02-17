@@ -11,11 +11,7 @@
   padding: var(--spacing-16) var(--spacing-24);
   padding-bottom: 8px;
 }
-
 .modal-wrapper .footer {
-  position: sticky;
-  bottom: 0;
-  z-index: 1001;
   padding: var(--spacing-16) var(--spacing-24);
   margin-top: auto;
   display: flex;
@@ -104,10 +100,7 @@
   align-items: center;
   gap: var(--spacing-8);
 
-  /* font-famil  padding: var(--spacing-16) var(--spacing-24);
-  margin-top: auto;
-  display: flex;
-  justify-content: space-between;y: 'Poppins'; */
+  /* font-family: 'Poppins'; */
   /* font-style: normal; */
   font-weight: 500;
   font-size: 14px;
@@ -144,8 +137,9 @@
   border: 1px solid #c0504d !important;
 }
 @media screen and (min-width: 1100px) {
-  .modal-wrapper {
+  .modal-wrapper{
     max-height: calc(100vh - 6rem);
+
   }
   .modal-wrapper .body {
     height: 485px;
@@ -157,15 +151,16 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--spacing-24);
+
 }
-.gender-box {
+.gender-box{
   display: flex;
   flex-direction: column;
   gap: var(--spacing-4);
   position: relative;
 }
 
-.gender-box label {
+.gender-box label{
   font-weight: 500;
   font-size: 14px;
   line-height: 22px;
@@ -185,14 +180,8 @@
   background: #ddd;
 }
 
-.Back-btn {
+.Back-btn{
   display: none;
-}
-
-.modal-wrapper {
-  height: 93.5%;
-  display: flex;
-  flex-direction: column;
 }
 
 @media screen and (max-width: 1100px) {
@@ -200,32 +189,40 @@
     max-width: 1100px;
     width: auto;
     max-height: 100%;
-    height: 89%;
+    height: 100%;
     border-radius: 0;
   }
   .modal-wrapper .body {
     padding-left: 20px;
     padding-right: 20px;
   }
-  .modal-wrapper 
   .year-gender-wrapper {
     column-gap: 8px;
-  }
-  .modal-wrapper .footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
   }
   .gender-radio-btns {
     gap: 1rem;
   }
-  .next-genral-btn {
+  .next-genral-btn{
     padding-left: auto;
 
     --bg-color: rgb(var(--white-rgb)) !important;
-    --color: rgb(var(--primary-100-rgb)) !important;
+    --color: rgb(var(--primary-100-rgb)) !important
   }
-  .modal-hr {
+  .modal-hr{
     display: none;
   }
+  
+}
+.modal-wrapper {
+
+  height: 93.5%;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-wrapper .footer {
+  position: sticky;
+  bottom: 0; 
+  z-index: 1001; 
+  
 }

@@ -36,7 +36,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
 
   const fetchAndUpdateNextLevels = async (q: string) => {
     const { err, res } = await getAllHobbies(q)
-    // if (err) return router.push('/hobby')
+    if (err) return router.push('/hobby')
     setNextLevels(res.data?.hobbies)
   }
 
