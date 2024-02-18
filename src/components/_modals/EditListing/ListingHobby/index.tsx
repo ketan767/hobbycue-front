@@ -349,7 +349,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
       <SaveModal
         handleClose={handleClose}
         handleSubmit={handleSubmit}
-        setConfirmationModal={setConfirmationModal}
+        setConfirmationModal={setConfirmationModal} 
         isError={isError}
         OnBoarding={onBoarding}
       />
