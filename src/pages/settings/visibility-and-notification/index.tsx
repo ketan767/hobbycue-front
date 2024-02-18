@@ -64,6 +64,8 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
 
           <div className={styles.line}></div>
 
+          <p className={styles.underDev}>This feature is under development. Come back soon to view this.</p>
+
           <p className={`${styles.textLight} ${styles.title}`}>
             {' '}
             Notify me when someone{' '}
@@ -72,7 +74,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
             <p className={`${styles.textDark}`}>
               Mentions me using @{userProfileUrl}
             </p>
-            <RadioButton active={false} />
+            <RadioButton disabled active={false} />
           </div>
           <div className={styles.notifyEditContainer}>
             <p className={`${styles.textDark}`}>Comments on my post</p>

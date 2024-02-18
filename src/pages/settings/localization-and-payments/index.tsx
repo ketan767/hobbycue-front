@@ -265,7 +265,7 @@ const VisibilityAndNotification: React.FC = () => {
             />
           </div>
           <div className={styles.line}></div>
-
+<p className={styles.underDev}>This feature is under development. Come back soon to view this.</p>
 <div className={`${styles.flex} ${styles.addSectionContainer}`}>
   <p className={`${styles.textLight}`}> Payment options </p>
   <div className={`${styles.flex}`}>

@@ -38,6 +38,15 @@
   background: #ebedf0;
   margin-bottom: 24px;
 }
+
+.underDev{
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 22px;
+  color: #6d747a;
+  margin-bottom: 12px;
+}
+
 .clickable{
   cursor: pointer;
 }
