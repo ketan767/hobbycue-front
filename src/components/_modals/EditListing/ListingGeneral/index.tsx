@@ -180,7 +180,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
         }
       })
     }
-      if(data.year.value.length){
+      if(data.year.value?.length){
         const currentYear = new Date().getFullYear();
         if(isNaN(Number(data.year.value))){
           setData((prev) => {
