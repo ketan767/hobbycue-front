@@ -392,7 +392,10 @@ const ListingTypeEditModal: React.FC<Props> = ({
                 )
               })}
             </div>
-            <div className={styles['input-box']}>
+            <div
+              className={styles['input-box']}
+              style={value?.length === 0 || !value ? { marginTop: '1rem' } : {}}
+            >
               <input hidden required />
 
               <FormControl variant="outlined" size="small">

@@ -112,35 +112,50 @@ const ListingAboutEditModal: React.FC<Props> = ({
     }
   }
 
-  const handleSubmit = async () => {
-    if (
-      !data.description.value ||
-      data.description.value === '' ||
-      data.description.value === '<p><br></p>'
-    ) {
-      return setData((prev) => {
-        return {
-          ...prev,
-          description: {
-            ...prev.description,
-            error: 'This field is required!',
-          },
-        }
-      })
-    }
+  const cleanString = (string: string) => {
+    return string
+      .replaceAll('<br>', '')
+      .replaceAll('<p>', '')
+      .replaceAll('</p>', '')
+      .trim()
+  }
+  useEffect(() => {
+    console.warn({ listingModalData }, { data })
+  }, [data, listingModalData])
 
-    setSubmitBtnLoading(true)
-    const { err, res } = await updateListing(listingModalData._id, {
-      description: data.description.value,
-    })
-    setSubmitBtnLoading(false)
-    if (err) return console.log(err)
-    if (res?.data.success) {
-      dispatch(updateListingModalData(res.data.data.listing))
-      if (onComplete) onComplete()
-      else {
-        window.location.reload()
-        dispatch(closeModal())
+  const handleSubmit = async () => {
+    if (!data.description.value || cleanString(data.description.value) === '') {
+      if (data.description.value !== listingModalData.description) {
+        setSubmitBtnLoading(true)
+        const { err, res } = await updateListing(listingModalData._id, {
+          description: cleanString(data.description.value),
+        })
+        setSubmitBtnLoading(false)
+        if (err) return console.log(err)
+        if (res?.data.success) {
+          dispatch(updateListingModalData(res.data.data.listing))
+          if (onComplete) onComplete()
+          else {
+            window.location.reload()
+            dispatch(closeModal())
+          }
+        }
+      } else if (listingModalData.is_onboarded) dispatch(closeModal())
+      else if (onComplete) onComplete()
+    } else {
+      setSubmitBtnLoading(true)
+      const { err, res } = await updateListing(listingModalData._id, {
+        description: data.description.value.trim(),
+      })
+      setSubmitBtnLoading(false)
+      if (err) return console.log(err)
+      if (res?.data.success) {
+        dispatch(updateListingModalData(res.data.data.listing))
+        if (onComplete) onComplete()
+        else {
+          window.location.reload()
+          dispatch(closeModal())
+        }
       }
     }
   }

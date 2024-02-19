@@ -433,7 +433,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
                 <label>Phone Number</label>
                 <div className={styles['phone-prefix-input']}>
                   <DropdownMenu
-                    value={selectedCountryCode}
+                    value={selectedCountryCode+"-"}
                     valueIndex={countryData.findIndex(
                       (country, idx) =>
                         country.phonePrefix === selectedCountryCode,
@@ -496,7 +496,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
                 </label>
                 <div className={styles['phone-prefix-input']}>
                   <DropdownMenu
-                    value={selectedWpCountryCode}
+                    value={selectedWpCountryCode+"-"}
                     valueIndex={countryData.findIndex(
                       (country, idx) =>
                         country.phonePrefix === selectedWpCountryCode,
