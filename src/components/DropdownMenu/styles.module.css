@@ -15,7 +15,19 @@
   cursor: pointer;
   font-size: 12px;
 }
+.dropdown-select > svg {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  font-size: 2;
+  transform: translate(0, -52%);
+}
+.rotate-180 {
+  transform: translate(0, -52%) rotate(180deg);
+}
 .dropdown-options-wrapper {
+  display: flex;
+  flex-direction: column;
   position: fixed !important;
   left: auto;
   top: auto;
@@ -45,9 +57,16 @@
   background-color: rgba(var(--gray-50-rgb));
 }
 .dropdown-options-container {
+  display: flex;
+  flex-direction: column;
+  align-items: normal;
   padding: 4px;
 }
 .dropdown-option {
+  display: flex;
+  gap: 8px;
+  flex-direction: row;
+  justify-content: flex-start;
   padding: 8px;
   cursor: pointer;
   font-size: 14px;

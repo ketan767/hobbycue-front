@@ -1,25 +1,32 @@
 import Image from 'next/image'
 import styles from './styles.module.css'
-import ChevronDown from '@/assets/svg/chevron-down.svg'
+import DownArrow from '@/assets/svg/DownArrow.svg'
 import React, { useEffect, useRef, useState } from 'react'
 import useOutsideClick from '@/hooks/useOutsideClick'
+import { ArrowDropDown } from '@mui/icons-material'
 
 type Props = {
   options: any
+  iconOptions?: any
   onOptionClick?: any
   value?: any
   valueIndex?: number
   search?: boolean
   optionsPosition?: 'top' | 'bottom'
+  dropdownIcon?: boolean
+  dropdownHeaderStyle?: object
 }
 
 const DropdownMenu: React.FC<Props> = ({
   options,
+  iconOptions,
   onOptionClick,
   value,
   valueIndex,
   search,
   optionsPosition,
+  dropdownIcon,
+  dropdownHeaderStyle,
 }) => {
   const dropdownRef = useRef<HTMLDivElement>(null)
   const optionWrapperRef = useRef<HTMLDivElement>(null)
@@ -27,7 +34,15 @@ const DropdownMenu: React.FC<Props> = ({
   const [showDropdown, setShowDropdown] = useState(false)
   const [optionIndex, setOptionIndex] = useState(-1)
   const [inputValue, setInputValue] = useState('')
-  const [displayOptions, setDisplayOptions] = useState(options)
+  const [displayOptions, setDisplayOptions] = useState(
+    iconOptions
+      ? options.map((option: any, idx: number) => {
+          return { title: option, img: iconOptions[idx] || null }
+        })
+      : options.map((option: any, idx: number) => {
+          return { title: option, img: null }
+        }),
+  )
 
   const handleShowDropdown = () => {
     setShowDropdown((prevValue) => !prevValue)
@@ -68,14 +83,17 @@ const DropdownMenu: React.FC<Props> = ({
   }, [showDropdown, optionsPosition])
 
   useEffect(() => {
-    setDisplayOptions(
-      options.filter((option: string, idx: number) => {
-        if (option.toLowerCase().includes(inputValue.toLowerCase())) {
-          return option
-        }
-      }),
-    )
-  }, [inputValue, options])
+    const filteredOptions = options
+      .filter((option: string) =>
+        option.toLowerCase().includes(inputValue.toLowerCase()),
+      )
+      .map((option: string) => ({
+        title: option,
+        img: iconOptions ? iconOptions[options.indexOf(option)] || null : null,
+      }))
+
+    setDisplayOptions(filteredOptions)
+  }, [iconOptions, inputValue, options])
 
   useEffect(() => {
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -149,9 +167,18 @@ const DropdownMenu: React.FC<Props> = ({
 
   return (
     <div className={styles['dropdown-wrapper']} ref={dropdownRef}>
-      <div className={styles['dropdown-select']} onClick={handleShowDropdown}>
-        <p>{value}-</p>
-        {/* <Image src={ChevronDown} alt="arrow" width={20} height={20} /> */}
+      <div
+        className={styles['dropdown-select']}
+        style={dropdownHeaderStyle}
+        onClick={handleShowDropdown}
+      >
+        <p>{value}</p>
+        {dropdownIcon && (
+          <ArrowDropDown
+            color="action"
+            className={showDropdown ? styles['rotate-180'] : ''}
+          />
+        )}
       </div>
       <div
         className={`${styles['dropdown-options-wrapper']}${
@@ -171,12 +198,12 @@ const DropdownMenu: React.FC<Props> = ({
               <div
                 key={idx}
                 id={`${options.findIndex(
-                  (option: string, index: number) => item === option,
+                  (option: string, index: number) => item.title === option,
                 )}`}
                 className={`${styles['dropdown-option']}${
                   valueIndex ===
                   options.findIndex(
-                    (option: string, index: number) => item === option,
+                    (option: string, index: number) => item.title === option,
                   )
                     ? ' ' + styles['selected-option']
                     : ''
@@ -188,7 +215,10 @@ const DropdownMenu: React.FC<Props> = ({
                 }}
                 ref={optionIndex === idx ? optionRef : null}
               >
-                {item}
+                {item?.img !== undefined && item?.img !== null && (
+                  <Image src={item.img} width={17} height={17} alt="" />
+                )}
+                {item.title}
               </div>
             )
           })}

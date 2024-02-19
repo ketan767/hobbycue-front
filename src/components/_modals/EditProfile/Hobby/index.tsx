@@ -25,6 +25,7 @@ import { FormControl, MenuItem, Select } from '@mui/material'
 import Image from 'next/image'
 import { useDispatch, useSelector } from 'react-redux'
 import SaveModal from '../../SaveModal/saveModal'
+import DropdownMenu from '@/components/DropdownMenu'
 
 type Props = {
   onComplete?: () => void
@@ -195,19 +196,11 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           }))
           setShowGenreDowpdown(false)
           setGenreInputValue(genreDropdownList[focusedGenreIndex]?.display)
-          console.warn(
-            'Selected Genre',
-            genreDropdownList[focusedGenreIndex].display,
-          )
         }
         break
       default:
         break
     }
-  }
-
-  const printgenreid = () => {
-    console.log('genreid', genreid)
   }
 
   const handleHobbySelection = async (selectedHobby: DropdownListItem) => {
@@ -421,7 +414,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         if (error) return console.log(error)
 
         if (response?.data.success) {
-          console.warn('hobby added sucessfully')
           if (onComplete !== undefined) {
             isOnboarded = true
             onComplete()
@@ -489,7 +481,9 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       setIsError(true)
     }
   }
-
+  useEffect(() => {
+    console.warn(data)
+  }, [data])
   useEffect(() => {
     if (confirmationModal) {
       HandleSaveError()
@@ -805,7 +799,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                         </div>
                       </td>
                       <td>
-                        <FormControl
+                        {/* <FormControl
                           variant="outlined"
                           size="small"
                           sx={{ width: '150px' }}
@@ -848,10 +842,53 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                               <span className={styles.lvltext}>Advanced</span>
                             </MenuItem>
                           </Select>
-                        </FormControl>
+                        </FormControl> */}
+                        <DropdownMenu
+                          value={
+                            <div
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                gap: '8px',
+                              }}
+                            >
+                              <Image
+                                src={levels[data.level - 1]?.src.src}
+                                width={17}
+                                height={17}
+                                alt=""
+                              />
+                              <p
+                                style={{
+                                  fontWeight: '600',
+                                  color: '#6d747a',
+                                  fontSize: '14px',
+                                }}
+                                className={styles['display-desktop']}
+                              >
+                                {levels[data.level - 1]?.name}
+                              </p>
+                            </div>
+                          }
+                          options={levels.map((item) => item.name)}
+                          iconOptions={levels.map((item) => item.src?.src)}
+                          onOptionClick={(e: any) => {
+                            setData((prev: any) => {
+                              return { ...prev, level: parseInt(e?.id) + 1 }
+                            })
+                          }}
+                          dropdownHeaderStyle={{
+                            background: '#F8F9FA',
+                            borderRadius: '8px',
+                            padding: '6px 16px 6px 16px',
+                            width:"82%"
+                          }}
+                          valueIndex={data?.level - 1}
+                          dropdownIcon
+                        />
                       </td>
 
-                      {/* </td> */}
                       <td>
                         <button
                           disabled={addHobbyBtnLoading}

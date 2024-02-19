@@ -22,7 +22,6 @@
   left: 50%;
   bottom: 35px;
   transform: translateX(-50%);
-  width: 50%;
   display: flex;
   justify-content: center;
   gap: 27px;
@@ -46,14 +45,14 @@
   display: none;
 }
 
-/* @media screen and (min-width: 1100px) {
+@media screen and (min-width: 1100px) {
   .modal-container {
     min-height: 20rem;
     height: calc(100vh - 2rem) ;
     max-height: 60rem;
     min-width: 600px;
   }
-} */
+}
 
 @media screen and (max-width: 1100px) {
   .modal-container {
@@ -67,10 +66,10 @@
     font-weight: 600;
   }
   .step-indicators {
-    bottom: 30px;
     position: fixed;
     bottom: 30px;
     justify-content: center;
+    gap: 27px;
     z-index: 1001;
   }
   .modal-heading-hr {
