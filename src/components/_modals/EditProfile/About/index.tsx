@@ -142,9 +142,10 @@ const ProfileAboutEditModal: React.FC<Props> = ({
             return
           }
         }
-      } else dispatch(closeModal())
+      } else if (user.isOnboarded) dispatch(closeModal())
+      else if (onComplete) onComplete()
     } else {
-      const newData = { about: cleanString(data.about) }
+      const newData = { about: (data.about.trim()) }
       setSubmitBtnLoading(true)
       const { err, res } = await updateMyProfileDetail(newData)
       if (err) {
