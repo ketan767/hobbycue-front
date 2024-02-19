@@ -43,9 +43,7 @@ const DropdownMenu: React.FC<Props> = ({
           return { title: option, img: null }
         }),
   )
-  useEffect(() => {
-    console.warn({ displayOptions })
-  }, [displayOptions])
+
   const handleShowDropdown = () => {
     setShowDropdown((prevValue) => !prevValue)
   }

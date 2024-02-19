@@ -196,10 +196,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           }))
           setShowGenreDowpdown(false)
           setGenreInputValue(genreDropdownList[focusedGenreIndex]?.display)
-          console.warn(
-            'Selected Genre',
-            genreDropdownList[focusedGenreIndex].display,
-          )
         }
         break
       default:
@@ -418,7 +414,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         if (error) return console.log(error)
 
         if (response?.data.success) {
-          console.warn('hobby added sucessfully')
           if (onComplete !== undefined) {
             isOnboarded = true
             onComplete()
@@ -486,7 +481,9 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       setIsError(true)
     }
   }
-
+  useEffect(() => {
+    console.warn(data)
+  }, [data])
   useEffect(() => {
     if (confirmationModal) {
       HandleSaveError()
@@ -857,7 +854,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                               }}
                             >
                               <Image
-                                src={levels[data.level].src.src}
+                                src={levels[data.level - 1]?.src.src}
                                 width={17}
                                 height={17}
                                 alt=""
@@ -868,8 +865,9 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                                   color: '#6d747a',
                                   fontSize: '14px',
                                 }}
+                                className={styles['display-desktop']}
                               >
-                                {levels[data.level].name}
+                                {levels[data.level - 1]?.name}
                               </p>
                             </div>
                           }
@@ -877,15 +875,16 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                           iconOptions={levels.map((item) => item.src?.src)}
                           onOptionClick={(e: any) => {
                             setData((prev: any) => {
-                              return { ...prev, level: e?.id }
+                              return { ...prev, level: parseInt(e?.id) + 1 }
                             })
                           }}
                           dropdownHeaderStyle={{
                             background: '#F8F9FA',
                             borderRadius: '8px',
                             padding: '6px 16px 6px 16px',
+                            width:"82%"
                           }}
-                          valueIndex={data?.level}
+                          valueIndex={data?.level - 1}
                           dropdownIcon
                         />
                       </td>
