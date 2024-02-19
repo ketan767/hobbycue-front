@@ -71,7 +71,7 @@
 }
 .hobbies-side-wrapper section ul li {
   border-radius: var(--spacing-8);
-  padding: var(--spacing-4) var(--spacing-8);
+  padding: var(--spacing-8) var(--spacing-8);
 
   font-weight: 500;
   font-size: 14px;
@@ -89,6 +89,7 @@
 
 .hobbies-side-wrapper section ul li.selectedItem {
   color: var(--purple-1, #8064a2);
+  padding: 8px;
 }
 
 /* Side Location Wrapper */
@@ -258,12 +259,22 @@
   padding: var(--spacing-12) var(--spacing-16);
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .start-post-btn-container :hover {
   background-color: #8064a2;
   color: white;
   transition: 0.2s;
+}
+
+.profile-img{
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
 }
 
 .start-post-btn {

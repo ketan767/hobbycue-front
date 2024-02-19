@@ -48,6 +48,25 @@ type ListingAddressData = {
   longitude: InputData<string>
 }
 
+
+type AddressObj = {
+  street_number?: string
+  premise?: string
+  locality?: string
+  administrative_area_level_1?: string
+  country?: string
+  postal_code?: string
+  sublocality_level_1?: string
+  sublocality_level_3?: string
+}
+
+type DropdownListItem = {
+  address: string
+  place_id: string
+  formatted_address: string
+  addressObj: AddressObj
+}
+
 const ListingAddressEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
@@ -80,6 +99,8 @@ const ListingAddressEditModal: React.FC<Props> = ({
   const societyRef = useRef<HTMLInputElement>(null)
   const [initialData, setInitialData] = useState({})
   const [isChanged, setIsChanged] = useState(false)
+  const [ShowDropdown, setShowDropdown] = useState<boolean>(false)
+  const [dropdownList, setShowDropdownList] = useState<DropdownListItem[]>([])
 
   useEffect(() => {
     inputRef?.current?.focus()
@@ -316,6 +337,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
   }, [dataLoaded, data])
 
   const handleGeocode = (lat: any, long: any) => {
+    setShowDropdown(true)
     axios
       .get(
         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyCSFbd4Cf-Ui3JvMvEiXXs9xfGJaveKO_Y`,
@@ -323,50 +345,58 @@ const ListingAddressEditModal: React.FC<Props> = ({
       .then((response) => {
         const { results } = response.data
         console.log('response', response)
+
         if (results && results.length > 0) {
-          const { formatted_address, address_components, geometry } = results[0]
-          let locality = ''
-          let society = ''
-          let city = ''
-          let state = ''
-          let country = ''
-          let pin_code = ''
+          setShowDropdownList(
+            results.map((result: any) => {
+              const { address_components } = result
+              console.log({ address_components })
+              let addressParts: string[] = []
+              let addressObj: AddressObj = {}
+              address_components.forEach((component: any) => {
+                if (component.types.includes('street_number')) {
+                  addressParts.push(component.long_name)
+                  addressObj.street_number = component.long_name
+                }
+                if (component.types.includes('premise')) {
+                  addressParts.push(component.long_name)
+                  addressObj.premise = component.long_name
+                }
+                if (component.types.includes('locality')) {
+                  addressParts.push(component.long_name)
+                  addressObj.locality = component.long_name
+                }
+                if (component.types.includes('administrative_area_level_1')) {
+                  addressParts.push(component.long_name)
+                  addressObj.administrative_area_level_1 = component.long_name
+                }
+                if (component.types.includes('country')) {
+                  addressParts.push(component.long_name)
+                  addressObj.country = component.long_name
+                }
+                if (component.types.includes('postal_code')) {
+                  addressParts.push(component.long_name)
+                  addressObj.postal_code = component.long_name
+                }
+                if (component.types.includes('sublocality_level_1')) {
+                  addressParts.push(component.long_name)
+                  addressObj.sublocality_level_1 = component.long_name
+                }
+                if (component.types.includes('sublocality_level_3')) {
+                  addressParts.push(component.long_name)
+                  addressObj.sublocality_level_3 = component.long_name
+                }
+              })
+              console.log('addpart', addressParts)
 
-          address_components.forEach((component: any) => {
-            if (component.types.includes('sublocality_level_3')) {
-              society = component.long_name
-            }
-            if (component.types.includes('sublocality_level_1')) {
-              locality = component.long_name
-            }
-            if (component.types.includes('locality')) {
-              city = component.long_name
-            }
-            if (component.types.includes('administrative_area_level_1')) {
-              state = component.long_name
-            }
-            if (component.types.includes('country')) {
-              country = component.long_name
-            }
-            if (component.types.includes('postal_code')) {
-              pin_code = component.long_name
-            }
-          })
+              return {
+                ...result,
 
-          setData((prev: any) => {
-            return {
-              ...prev,
-              street: { value: formatted_address.split(',')[0], error: null },
-              state: { value: state, error: null },
-              city: { value: city, error: null },
-              country: { value: country, error: null },
-              pin_code: { value: pin_code, error: null },
-              society: { value: society, error: null },
-              locality: { value: locality, error: null },
-              latitude: { value: geometry.location.lat, error: null },
-              longitude: { value: geometry.location.lng, error: null },
-            }
-          })
+                formatted_address: addressParts.join(', '),
+                addressObj,
+              }
+            }),
+          )
         }
       })
       .catch((error) => {
@@ -416,6 +446,21 @@ const ListingAddressEditModal: React.FC<Props> = ({
     }
   }, [isError])
 
+
+  const handleSelectAddress=(data:DropdownListItem)=>{
+    setShowDropdown(false);
+    const { addressObj } = data;
+    setData((prev)=>({...prev,
+    pin_code:{value:addressObj.postal_code??'',error:null},
+      country: {value:addressObj.country ?? '',error:null},
+      city: {value:addressObj.locality ?? '',error:null},
+      state: {value:addressObj.administrative_area_level_1 ?? '',error:null},
+      society: {value:addressObj.premise ?? '',error:null},
+      street: {value:addressObj.street_number ?? '',error:null},
+      locality: {value:addressObj.sublocality_level_1 ?? '',error:null}
+    }))
+  }
+
   if (confirmationModal) {
     return (
       <SaveModal
@@ -458,6 +503,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   name="street"
                   required={listingModalData.type === listingTypes.PLACE}
                   onChange={handleInputChange}
+                  onFocus={() => setShowDropdown(true)}
                   ref={streetRef}
                 />
                 <Image
@@ -467,6 +513,22 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   onClick={getLocation}
                 />
               </div>
+              {ShowDropdown && dropdownList.length !== 0 && (
+                <div className={styles['dropdown']}>
+                  {dropdownList.map((location) => {
+                    return location.formatted_address ? (
+                      <p
+                        onClick={() => {
+                          handleSelectAddress(location)
+                        }}
+                        key={location.place_id}
+                      >
+                        {location.formatted_address}
+                      </p>
+                    ) : null
+                  })}
+                </div>
+              )}
               <p className={styles['helper-text']}>{data.street.error}</p>
             </div>
             <section className={styles['two-column-grid']}>

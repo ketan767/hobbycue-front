@@ -11,6 +11,7 @@ import EditIcon from '@/assets/svg/edit-icon.svg'
 import { openModal } from '@/redux/slices/modal'
 import { getAllPosts } from '@/services/post.service'
 import { GetServerSideProps } from 'next'
+import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
 import {
   updateLoading,
   updatePages,
@@ -46,7 +47,7 @@ const CommunityLayout: React.FC<Props> = ({
   singlePostPage,
 }) => {
   const dispatch = useDispatch()
-  const { activeProfile, user } = useSelector((state: any) => state.user)
+  const { activeProfile, user } = useSelector((state: RootState) => state.user)
   const { allPosts } = useSelector((state: RootState) => state.post)
   const [isLoadingPosts, setIsLoadingPosts] = useState(false)
   const [hobbyGroup, setHobbyGroup] = useState({
@@ -58,7 +59,7 @@ const CommunityLayout: React.FC<Props> = ({
   const [email, setEmail] = useState('')
   const [selectedHobby, setSelectedHobby] = useState('')
   const [selectedGenre, setSelectedGenre] = useState('')
-  const [selectedLocation, setSelectedLocation] = useState('')
+  const [selectedLocation, setSelectedLocation] = useState('All Locations')
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -305,8 +306,8 @@ const CommunityLayout: React.FC<Props> = ({
         if (activeProfile.data?._addresses?.length > 0) {
           let visibilityArr: any = [
             {
-              value: 'Everyone',
-              display: 'Everyone',
+              value: 'All Locations',
+              display: 'All Locations',
               type: 'text',
             },
           ]
@@ -505,7 +506,13 @@ const CommunityLayout: React.FC<Props> = ({
               <InputSelect
                 onChange={(e: any) => {
                   let val = e.target.value
-                  setSelectedLocation(val)
+                  setSelectedLocation((prev)=>{
+                          if(prev===val){
+                            return "All Locations"
+                          }else{
+                          return val
+                          }
+                        })
                 }}
                 value={selectedLocation}
                 // inputProps={{ 'aria-label': 'Without label' }}
@@ -518,7 +525,13 @@ const CommunityLayout: React.FC<Props> = ({
                         {...item}
                         key={idx}
                         currentValue={selectedLocation}
-                        onChange={(val: any) => setSelectedLocation(val)}
+                        onChange={(val: any) => setSelectedLocation((prev)=>{
+                          if(prev===val){
+                            return "All Locations"
+                          }else{
+                          return val
+                          }
+                        })}
                       />
                     </>
                   )
@@ -632,6 +645,11 @@ const CommunityLayout: React.FC<Props> = ({
                 <section
                   className={`content-box-wrapper ${styles['start-post-btn-container']}`}
                 >
+                  <Image
+                  src={user?.user?.profile_image??defaultUserIcon}
+                  alt=''
+                  className={styles['profile-img']}
+                  />
                   <button
                     onClick={() => {
                       if (user.is_onboarded)
@@ -745,7 +763,13 @@ const CommunityLayout: React.FC<Props> = ({
                     {visibilityData?.length > 0 && (
                       <Select
                         value={selectedLocation || ''}
-                        onChange={(val: any) => setSelectedLocation(val)}
+                        onChange={(val: any) => setSelectedLocation((prev)=>{
+                          if(prev===val){
+                            return "All Locations"
+                          }else{
+                          return val
+                          }
+                        })}
                         className={` ${styles['location-select']}`}
                       >
                         {visibilityData?.map((item: any, idx) => (
@@ -753,7 +777,13 @@ const CommunityLayout: React.FC<Props> = ({
                             {...item}
                             key={idx}
                             currentValue={selectedLocation}
-                            onChange={(val: any) => setSelectedLocation(val)}
+                            onChange={(val: any) => setSelectedLocation((prev)=>{
+                          if(prev===val){
+                            return "All Locations"
+                          }else{
+                          return val
+                          }
+                        })}
                           />
                         ))}
                         <MenuItem
