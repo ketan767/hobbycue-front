@@ -44,7 +44,11 @@
 .responsive-logo{
   display: none;
 }
-
+@media screen and (max-width: 1100px) {
+  .step-indicators {
+    bottom: 72px;
+  }
+}
 @media screen and (min-width: 1100px) {
   .modal-container {
     min-height: 20rem;
@@ -71,13 +75,11 @@
   }
 
   .step-indicators {
-
-    position: fixed;
     bottom: 30px;
-    justify-content: center;
+    transform: translateX(-50%);
+    display: flex;
     gap: 27px;
-    z-index: 1001;
-
+    z-index: 12
   }
   .modal-heading-hr{
     display: block;
