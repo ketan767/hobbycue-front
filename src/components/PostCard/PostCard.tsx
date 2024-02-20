@@ -12,6 +12,7 @@ import useCheckIfClickedOutside from '@/hooks/useCheckIfClickedOutside'
 import Slider from '../Slider/Slider'
 import { openModal, updateShareUrl } from '@/redux/slices/modal'
 import { useDispatch } from 'react-redux'
+import CustomizedTooltips from '../Tooltip/ToolTip'
 
 type Props = {
   postData: any
@@ -22,7 +23,7 @@ type Props = {
 
 const PostCard: React.FC<Props> = (props) => {
   // const [type, setType] = useState<'User' | 'Listing'>()
-
+console.log({postData:props.postData.visibility})
   const router = useRouter()
   const [has_link, setHas_link] = useState(props.postData.has_link)
   // console.log('🚀 ~ file: PostCard.tsx:20 ~ router:', router)
@@ -155,8 +156,8 @@ const PostCard: React.FC<Props> = (props) => {
                   </Link>
                 </span>
                 <span>
-                  {postData?._author?.state
-                    ? ` | ${postData?._author?.state}`
+                  {postData?.visibility
+                    ? ` | ${postData?.visibility}`
                     : ''}
                 </span>
               </p>
@@ -366,6 +367,7 @@ const PostCard: React.FC<Props> = (props) => {
               </svg>
 
               {/* Bookmark Icon */}
+              <CustomizedTooltips title='This feature is under development'>
               <svg
                 className={styles['bookmark-icon']}
                 width="24"
@@ -385,7 +387,7 @@ const PostCard: React.FC<Props> = (props) => {
                     <rect width="24" height="24" fill="white" />
                   </clipPath>
                 </defs>
-              </svg>
+              </svg></CustomizedTooltips>
             </section>
 
             {/* Comments Section */}

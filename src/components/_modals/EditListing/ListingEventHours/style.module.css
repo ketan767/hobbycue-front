@@ -234,19 +234,23 @@
 @media screen and (max-width: 1100px) {
   .modal-wrapper {
     width: auto;
+
     margin-bottom: 2rem;
     max-height: none;
+
   }
   .modal-wrapper .body {
     padding-left: 20px;
     padding-right: 20px;
   }
+
   .modal-wrapper .footer {
     background: var(--base-white, #fff);
     position: fixed;
     bottom: 0;
     width: 100%;
   }
+
   .listItem {
     flex-wrap: wrap;
     row-gap: 12px;

@@ -73,7 +73,7 @@ export const CreatePost: React.FC<Props> = ({
     genre: null,
     content: '',
     contentToDisplay: '',
-    visibility: 'Everyone',
+    visibility: 'All Locations',
     media: [],
     video_url: '',
   })
@@ -120,8 +120,8 @@ export const CreatePost: React.FC<Props> = ({
     ) {
       let visibilityArr: any = [
         {
-          value: 'Everyone',
-          display: 'Everyone',
+          value: 'All Locations',
+          display: 'All Locations',
           type: 'text',
         },
       ]
