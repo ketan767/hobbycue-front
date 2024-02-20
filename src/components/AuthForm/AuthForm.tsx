@@ -36,6 +36,7 @@ import { updateIsLoggedIn } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import { updateUserProfile } from '@/services/user.service'
 
+
 import { validateEmail } from '@/utils'
 import { CircularProgress } from '@mui/material'
 import { useRouter } from 'next/router'

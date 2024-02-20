@@ -50,16 +50,18 @@ import ShareModal from './ShareModal/ShareModal'
 import ClaimModal from './ClaimModal/ClaimModal'
 import VerifyActionModal from './VerifyAction/VerifyAction'
 import SetPasswordModal from './CreatePassword'
+
 import ViewImageModal from './ViewImage'
+
 import { ModalType } from '@/redux/slices/modal'
 import SupportModal from './EditListing/ListingSupport'
 import hobbycueLogo from '../../assets/svg/Search/hobbycue.svg'
 import UserOnboardingWelcomeModal from './UserOnboardingWelcomeModal/UserOnboardingWelcomeModal.tsx'
-
 import ExpiredPassword from './ExpiredPasswordModal'
 
 import SimpleSnackbar from '../_snackbar/Snackbar'
 import { types } from 'util'
+
 import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import UserReport from './EditProfile/ReportUser'
 import ListingReport from './EditListing/ListingReport'
@@ -67,6 +69,7 @@ import ContactToOwner from './ContactOwner'
 import ListingSupportModal from './EditListing/ListingSupport'
 import SupportUserModal from './EditProfile/supportUser'
 import AddHobby from './AddHobby/AddHobbyModal'
+
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -142,6 +145,7 @@ const ModalManager: React.FC = () => {
   function closewithoutCfrm() {
     dispatch(closeModal())
   }
+
 
   const handleStatusChange = (isChanged: boolean) => {
     setHasChanges(isChanged)

@@ -106,7 +106,9 @@ const RelatedListingEditModal: React.FC<Props> = ({
     }
     setRelatedListingsLeft(listingModalData.related_listings_left?.listings)
 
+
     setInitialData(listingModalData.related_listings_left?.listings)
+
   }, [listingModalData])
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 

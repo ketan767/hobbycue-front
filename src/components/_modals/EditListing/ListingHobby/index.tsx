@@ -17,7 +17,6 @@ import { closeModal, openModal } from '@/redux/slices/modal'
 import { addListingHobby, deleteListingHobby } from '@/services/listing.service'
 import { getListingHobbies } from '@/services/listing.service'
 import SaveModal from '../../SaveModal/saveModal'
-import CheckIcon from '@/assets/svg/Check.svg'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import addhobby from '@/assets/svg/addhobby.svg'
 import BackIcon from '@/assets/svg/Previous.svg'
@@ -568,7 +567,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
           {onComplete ? (
             <div onClick={handleSubmit}>
               <Image
-                src={CheckIcon}
+                src={NextIcon}
                 alt="back"
                 className="modal-mob-btn cancel"
               />
