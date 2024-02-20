@@ -47,6 +47,10 @@
   margin-top: auto;
   display: flex;
   justify-content: space-between;
+
+  position: sticky;
+  bottom: 0;
+
 }
 .modal-wrapper .footer .submit {
   margin-left: auto;

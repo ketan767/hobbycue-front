@@ -2,6 +2,11 @@
   background-color: white;
   border-radius: var(--spacing-8);
   max-width: 50rem;
+
+  max-height: calc(100vh - 6rem);
+
+  height: 93.5%;
+
   width: 38rem;
   /* min-height: 32rem; */
   display: flex;
@@ -15,10 +20,7 @@
 }
 
 @media screen and (min-width: 1100px) {
-  .modal-wrapper {
-    max-height: calc(100vh - 6rem);
-    height: 100%;
-  }
+
   .modal-wrapper .body {
     height: 100%;
     overflow: auto;
@@ -241,7 +243,10 @@
 @media screen and (max-width: 1100px) {
   .modal-wrapper {
     width: auto;
-    height: 93.5%;
+
+    max-height: none;
+    margin-bottom: 5rem;
+
   }
   .modal-wrapper .body {
     padding: var(--spacing-16) var(--spacing-16);
