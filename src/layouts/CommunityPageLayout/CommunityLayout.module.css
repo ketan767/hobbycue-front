@@ -272,6 +272,7 @@
 }
 
 .profile-img{
+  display: none;
   width: 40px;
   height: 40px;
   border-radius: 100%;
@@ -556,6 +557,9 @@
  
   .hobbyeditresponsive{
     margin-left: auto;
+  }
+  .profile-img{
+    display: block;
   }
 
 }
