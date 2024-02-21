@@ -262,7 +262,7 @@
     grid-template-columns: 1fr;
   }
   .posts-container {
-    margin-top: 36px;
+    margin-top: 8px;
     display: flex;
     flex-direction: column;
     gap: var(--spacing-12);

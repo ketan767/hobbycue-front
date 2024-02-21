@@ -10,7 +10,15 @@ import { IconButton, InputAdornment, TextField } from '@mui/material'
 import SearchIcon from '@/assets/svg/search-small.svg'
 import { setShowPageLoader } from '@/redux/slices/site'
 import { searchUsers } from '@/services/user.service'
-import { Page, setHobbiesSearchResult, setSearchString, setTypeResultOne, setTypeResultThree, setTypeResultTwo, setUserSearchResults } from '@/redux/slices/search'
+import {
+  Page,
+  setHobbiesSearchResult,
+  setSearchString,
+  setTypeResultOne,
+  setTypeResultThree,
+  setTypeResultTwo,
+  setUserSearchResults,
+} from '@/redux/slices/search'
 import { searchPages } from '@/services/listing.service'
 import { getAllHobbies } from '@/services/hobby.service'
 
@@ -207,70 +215,70 @@ const UserOnboardingWelcomeModal = () => {
         >
           {/* <div className={styles['search']}> */}
           <TextField
-              variant="outlined"
-              placeholder="Search here..."
-              size="small"
-              className={styles.inputField}
-              onChange={handleInputChange}
-              value={data.search.value}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  searchResult()
-                }
-              }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '8px',
-                  padding: 0,
-                  overflow: 'hidden',
-                  borderColor: 'red',
-                  background: '#f8f9fa',
-                  '& fieldset': {
-                    borderColor: '#EBEDF0',
-                    borderRight: 0,
-                  },
+            variant="outlined"
+            placeholder="Search for anything on your hobbies..."
+            size="small"
+            className={styles.inputField}
+            onChange={handleInputChange}
+            value={data.search.value}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                searchResult()
+              }
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '8px',
+                padding: 0,
+                overflow: 'hidden',
+                borderColor: 'red',
+                background: '#f8f9fa',
+                '& fieldset': {
+                  borderColor: '#EBEDF0',
+                  borderRight: 0,
                 },
-                '& .MuiInputBase-input': {
-                  fontSize: '15px',
-                },
-                '& .MuiInputBase-input::placeholder': {
-                  fontSize: '12px',
-                  color: 'black',
-                },
-              }}
-              InputLabelProps={{ shrink: false }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      sx={{
-                        bgcolor: 'primary.main',
-                        borderRadius: '0px 8px 8px 0px',
-                        '&:hover': {
-                          bgcolor: 'primary.dark',
-                        },
-                      }}
+              },
+              '& .MuiInputBase-input': {
+                fontSize: '15px',
+              },
+              '& .MuiInputBase-input::placeholder': {
+                fontSize: '12px',
+                color: 'black',
+              },
+            }}
+            InputLabelProps={{ shrink: false }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    sx={{
+                      bgcolor: 'primary.main',
+                      borderRadius: '0px 8px 8px 0px',
+                      '&:hover': {
+                        bgcolor: 'primary.dark',
+                      },
+                    }}
+                  >
+                    <div
+                      className={styles['search-icon-container']}
+                      onClick={searchResult}
                     >
-                      <div
-                        className={styles['search-icon-container']}
-                        onClick={searchResult}
-                      >
-                        <Image
-                          src={SearchIcon}
-                          alt="search"
-                          width={16}
-                          height={16}
-                        />
-                      </div>
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-            {/* <div>
+                      <Image
+                        src={SearchIcon}
+                        alt="search"
+                        width={16}
+                        height={16}
+                      />
+                    </div>
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+          {/* <div>
               <p>Search here...</p>
             </div> */}
-           
+
           {/* </div> */}
           <div>
             <div className={styles['search-content']}>

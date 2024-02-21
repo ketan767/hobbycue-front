@@ -233,7 +233,7 @@
   z-index: 5;
 }
 .inputField {
-  width: 300px;
+  width: 400px;
 }
 .inputField::placeholder {
   font-family: 'Poppins';

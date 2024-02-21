@@ -23,9 +23,9 @@ const HobbyDetail: React.FC<Props> = (props) => {
   const [showKeywords, setShowKeywords] = useState(false)
   const [showNextLevels, setShowNextLevels] = useState(false)
   const [showRelatedHobbies, setShowRelatedHobbies] = useState(false)
-  const {hobby}=useSelector((state:RootState)=>state?.site.expandMenu)
+  const { hobby } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(hobby)
-  const dispatch=useDispatch()
+  const dispatch = useDispatch()
 
   const { isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
@@ -73,24 +73,21 @@ const HobbyDetail: React.FC<Props> = (props) => {
   }, [data])
 
   const handleExpandAll: (value: boolean) => void = (value) => {
-    setExpandAll(value);
+    setExpandAll(value)
     dispatch(updateHobbyMenuExpandAll(value))
-  };
+  }
 
   console.log('hobbydata', data)
   return (
     <HobbyPageLayout
-      activeTab="about"
+      activeTab="home"
       data={data}
       expandAll={expandAll}
       setExpandAll={handleExpandAll}
     >
-      <main className={expandAll?"":styles['display-none']}>
+      <main className={expandAll ? '' : styles['display-none']}>
         {/* About Section */}
-        <PageContentBox
-          showEditButton={false}
-          setDisplayData={setShowAbout}
-        >
+        <PageContentBox showEditButton={false} setDisplayData={setShowAbout}>
           <h4>About</h4>
           <div
             className={`${styles['display-desktop']}${
