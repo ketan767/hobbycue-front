@@ -213,7 +213,9 @@
 @media screen and (max-width: 1100px) {
   .modal-wrapper {
     width: auto;
-    height: 93.5%;
+    max-height: none;
+    margin: -5px 0 4rem 0;
+    padding: 5px 0 0 0;
   }
   .modal-wrapper .body {
     padding-left: 20px;
@@ -239,5 +241,8 @@
   }
   .modal-hr{
     display: none;
+  }
+  .modal-close-icon {
+    position: fixed !important;
   }
 }

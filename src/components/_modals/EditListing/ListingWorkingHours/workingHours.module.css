@@ -251,10 +251,12 @@
 }
 @media screen and (max-width: 1100px) {
   .modal-wrapper {
-    width: auto;
-    border-radius: 0;
+    max-width: 1100px;
+    width: 100%;
     max-height: none;
-    margin-bottom: 2rem;
+    height: 92.5%;
+    margin: -5px 0 5rem 0;
+    padding: 5px 0 0 0;
   }
   .modal-wrapper .body {
     padding-left: 20px;
@@ -262,12 +264,13 @@
     padding-bottom: 20px;
   }
   .modal-wrapper .footer {
+    background: var(--Base-White, #fff);
     padding: var(--spacing-16) var(--spacing-16);
+    box-shadow: 0px -6px 15px 0px rgba(0, 0, 0, 0.06);
     position: fixed;
     bottom: 0;
     width: 100%;
-    background: var(--Base-White, #fff);
-    box-shadow: 0px -1px 12px 0px rgba(0, 0, 0, 0.06);
+    z-index: 1000;
   }
   .listItem {
     padding-right: 0;
@@ -290,5 +293,8 @@
   }
   .delete-icon {
     margin-top: 5px;
+  }
+  .modal-close-icon {
+    position: fixed !important;
   }
 }

@@ -68,27 +68,6 @@
     overflow: auto;
   }
 }
-
-@media screen and (max-width: 1100px) {
-  .modal-wrapper {
-    height: 89%;
-    width: 100%;
-    border-radius: 0;
-  }
-  .modal-wrapper .body {
-    height: 100%;
-    overflow: auto;
-  }
-  .footer {
-    position: fixed;
-    width: 100%;
-    bottom: 0;
-    z-index: 1001;
-  }
-  .modal-hr{
-    display: none;
-  }
-}
 .modal-wrapper .header,
 .modal-wrapper .body {
   padding: var(--spacing-16) var(--spacing-24);
@@ -226,7 +205,30 @@
 .input-box-error input {
   border: 1px solid #c0504d !important;
 }
-@media screen and (max-width:1100px) {
+@media screen and (max-width: 1100px) {
+  .modal-wrapper {
+    max-width: 1100px;
+    width: 100%;
+    max-height: none;
+    height: 92.5%;
+    margin: -5px 0 3rem 0;
+    padding: 5px 0 0 0;
+  }
+  .modal-wrapper .body {
+    height: 100%;
+    overflow: auto;
+  }
+  .footer {
+    background: var(--Base-White, #fff);
+    box-shadow: 0px -6px 15px 0px rgba(0, 0, 0, 0.06);
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    z-index: 1001;
+  }
+  .modal-hr {
+    display: none;
+  }
   .whatsapp-label {
     flex-direction: row-reverse;
     justify-content: flex-end;
@@ -238,7 +240,10 @@
     grid-template-columns: 1fr;
     gap: 0;
   }
-  .emailContainer{
+  .emailContainer {
     width: 100%;
+  }
+  .modal-close-icon {
+    position: fixed !important;
   }
 }

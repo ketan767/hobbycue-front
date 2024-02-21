@@ -700,27 +700,6 @@ const CommunityLayout: React.FC<Props> = ({
                     <span>Start a post</span>
                   </button>
                 </section>
-                <section
-                  className={`content-box-wrapper ${styles['navigation-links']}`}
-                >
-                  <ul>
-                    {tabs.map((tab, idx) => {
-                      return (
-                        <li
-                          key={idx}
-                          className={activeTab === tab ? styles['active'] : ''}
-                        >
-                          <Link
-                            key={tab}
-                            href={`/community/${tab !== 'posts' ? tab : ''}`}
-                          >
-                            {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                          </Link>
-                        </li>
-                      )
-                    })}
-                  </ul>
-                </section>
                 <section className={styles['filter-section']}>
                   <div>
                     <Select
@@ -729,7 +708,7 @@ const CommunityLayout: React.FC<Props> = ({
                         '.MuiOutlinedInput-notchedOutline': { border: 0 },
                         fieldset: { border: 0 },
                       }}
-                      className={styles['location-select']}
+                      className={styles['hobby-select']}
                       value={selectedHobby || ''}
                       onChange={(e) => handleHobbyClick(e.target.value)}
                       displayEmpty
@@ -772,7 +751,7 @@ const CommunityLayout: React.FC<Props> = ({
                     <div className={styles.hobbyDropDownOption}>at</div>
 
                     {visibilityData?.length > 0 && (
-                      <Select
+                      <InputSelect
                         value={selectedLocation || ''}
                         onChange={(val: any) => setSelectedLocation((prev)=>{
                           if(prev===val){
@@ -808,9 +787,30 @@ const CommunityLayout: React.FC<Props> = ({
                             alt="edit"
                           />
                         </MenuItem>
-                      </Select>
+                      </InputSelect>
                     )}
                   </div>
+                </section>
+                <section
+                  className={`content-box-wrapper ${styles['navigation-links']}`}
+                >
+                  <ul>
+                    {tabs.map((tab, idx) => {
+                      return (
+                        <li
+                          key={idx}
+                          className={activeTab === tab ? styles['active'] : ''}
+                        >
+                          <Link
+                            key={tab}
+                            href={`/community/${tab !== 'posts' ? tab : ''}`}
+                          >
+                            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                          </Link>
+                        </li>
+                      )
+                    })}
+                  </ul>
                 </section>
               </div>
               {hideThirdColumnTabs.includes(activeTab) && (

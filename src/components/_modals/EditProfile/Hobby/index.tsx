@@ -131,7 +131,27 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
     if (err) return console.log(err)
 
-    setHobbyDropdownList(res.data.hobbies)
+    // Modify the sorting logic to prioritize items where the search keyword appears at the beginning
+    const sortedHobbies = res.data.hobbies.sort((a: any, b: any) => {
+      const indexA = a.display
+        .toLowerCase()
+        .indexOf(e.target.value.toLowerCase())
+      const indexB = b.display
+        .toLowerCase()
+        .indexOf(e.target.value.toLowerCase())
+
+      if (indexA === 0 && indexB !== 0) {
+        return -1
+      } else if (indexB === 0 && indexA !== 0) {
+        return 1
+      }
+
+      // Otherwise, use default sorting behavior
+      return 0
+    })
+
+    setHobbyDropdownList(sortedHobbies)
+
     setFocusedHobbyIndex(-1)
   }
 
@@ -171,7 +191,25 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
-    setGenreDropdownList(res.data.hobbies)
+
+    const sortedGenres = res.data.hobbies.sort((a: any, b: any) => {
+      const indexA = a.display
+        .toLowerCase()
+        .indexOf(e.target.value.toLowerCase())
+      const indexB = b.display
+        .toLowerCase()
+        .indexOf(e.target.value.toLowerCase())
+
+      if (indexA === 0 && indexB !== 0) {
+        return -1
+      } else if (indexB === 0 && indexA !== 0) {
+        return 1
+      }
+
+      return 0
+    })
+
+    setGenreDropdownList(sortedGenres)
   }
 
   const handleGenreKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -895,7 +933,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                             background: '#F8F9FA',
                             borderRadius: '8px',
                             padding: '6px 16px 6px 16px',
-                            width:"82%"
+                            width: '82%',
                           }}
                           valueIndex={data?.level - 1}
                           dropdownIcon

@@ -153,20 +153,26 @@
 
 @media screen and (max-width: 1100px) {
   .modal-wrapper {
-    width: auto;
-    height: 89%;
-    border-radius: 0;
+    max-width: 1100px;
+    width: 100%;
+    max-height: none;
+    margin: -5px 0 2rem 0;
+    padding: 5px 0 0 0;
   }
   .modal-wrapper .body {
-    padding-left: 20px;
-    padding-right: 20px;
+    padding: var(--spacing-16) var(--spacing-16);
   }
   .modal-hr {
     display: none;
   }
   .footer {
+    background: var(--Base-White, #fff);
+    box-shadow: 0px -6px 15px 0px rgba(0, 0, 0, 0.06);
     position: fixed !important;
     bottom: 0;
     width: 100%;
+  }
+  .modal-close-icon {
+    position: fixed !important;
   }
 }

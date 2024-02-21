@@ -488,7 +488,11 @@ const ListingContactEditModal: React.FC<Props> = ({
                 />
               </div>
 
-              <div className={styles['input-box']}>
+              <div
+                className={`${styles['input-box']} ${
+                  data.public_email.error ? styles['input-box-error'] : ''
+                }`}
+              >
                 <label>Email ID if different </label>
                 <input
                   type="text"

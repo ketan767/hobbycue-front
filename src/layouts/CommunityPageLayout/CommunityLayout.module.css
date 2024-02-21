@@ -275,6 +275,7 @@
   width: 40px;
   height: 40px;
   border-radius: 100%;
+  display: none;
 }
 
 .start-post-btn {
@@ -408,8 +409,20 @@
 }
 .location-select {
   width: 100%;
+  border-radius: 8px;
   font-size: 14px;
   font-family: Poppins;
+  color: #fff !important;
+  font-family: "Poppins";
+  font-weight: 500;
+  line-height: 20px;
+
+}
+.hobby-select{
+  width: 126px;
+  height: 46px;
+  font-size: 14px;
+  font-family: "Poppins";
   font-weight: 500;
   line-height: 20px;
   color: #6d747a;
@@ -426,6 +439,7 @@
   display: flex;
   align-items: center;
   margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
   
   display: none;
 }
@@ -556,6 +570,10 @@
  
   .hobbyeditresponsive{
     margin-left: auto;
+  }
+
+  .profile-img{
+    display: block;
   }
 
 }

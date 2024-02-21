@@ -69,7 +69,7 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
     elementRef.current?.focus()
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        nextButtonRef.current?.focus()
+        nextButtonRef.current?.click()
       }
     }
 
