@@ -111,20 +111,6 @@ text-align: left;
 .addIcon{
   cursor: not-allowed;
 }
-@media screen and (max-width: 1100px) {
-  .modal-wrapper {
-    width: auto;
-    height: 100%;
-  }
-  .modal-wrapper .body {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-  .modal-hr{
-    display: none;
-  }
-}
-
 .hr-line{
   margin: 1rem 0;
   
@@ -171,3 +157,32 @@ line-height: 22px; /* 157.143% */
   color: #6d747a;
 }
 
+@media screen and (max-width: 1100px) {
+  .modal-wrapper {
+    max-width: 1100px;
+    width: 100%;
+    max-height: none;
+    height: 92.5%;
+    margin: -5px 0 5rem 0;
+    padding: 5px 0 0 0;
+  }
+  .modal-wrapper .body {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .modal-wrapper .footer {
+    background: var(--Base-White, #fff);
+    padding: var(--spacing-16) var(--spacing-16);
+    box-shadow: 0px -6px 15px 0px rgba(0, 0, 0, 0.06);
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 1000;
+  }
+  .modal-hr{
+    display: none;
+  }
+  .modal-close-icon {
+    position: fixed !important;
+  }
+}
