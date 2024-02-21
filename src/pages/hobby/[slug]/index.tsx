@@ -64,7 +64,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
     if (data.level === 1)
       query = `category=${data?.category?._id}&sub_category=${data?._id}&level=2&level=3`
     if (data.level === 2)
-      query = `category=${data?.category?._id}&sub_category=${data?.sub_category?._id}&level=3`
+      query = `category=${data?.category?._id}&sub_category=${data?.sub_category?._id}&level=3&show=true&tags=${data?._id}`
     if (data.level === 3) query = `level=5&show=true&genre=${data.genre[0]}`
 
     if (!query) return

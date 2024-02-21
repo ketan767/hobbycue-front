@@ -183,4 +183,7 @@
   .modal-close-icon {
     position: fixed !important;
   }
+  .modal-wrapper .body {
+    padding: var(--spacing-16) var(--spacing-16);
+  }
 }
