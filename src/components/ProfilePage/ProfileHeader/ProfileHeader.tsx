@@ -200,8 +200,12 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
                   }
                 />
               )}
+            {data?.tagline ? (
+                  <p className={styles['tagline']}>{data?.tagline}</p>
+                ) : (
+                  <p className={styles['tagline']}>&nbsp;</p>
+                )}
             </div>
-            {/* <p className={styles['tagline']}>{data.tagline}</p> */}
           </div>
 
           {/* Center Section */}

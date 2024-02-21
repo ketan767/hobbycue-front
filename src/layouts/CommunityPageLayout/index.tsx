@@ -346,6 +346,11 @@ const CommunityLayout: React.FC<Props> = ({
               })
             }
           })
+      if(visibilityArr[1]){
+        if(visibilityArr[1].display){
+          setSelectedLocation(visibilityArr[1]?.display?.split(' ')[0]||"All locations")
+        }
+      }
           setVisibilityData(visibilityArr)
         }
       }
@@ -394,6 +399,12 @@ const CommunityLayout: React.FC<Props> = ({
       setVisibilityData(visibilityArr)
     }
   }, [activeProfile])
+
+  // useEffect(()=>{
+  //   console.warn({selectedLocation})
+  //   console.warn({visibilityData})
+  // }
+  // ,[selectedLocation,visibilityData])
 
   const Invitecommunity = async () => {
     const to = email

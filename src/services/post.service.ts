@@ -222,3 +222,26 @@ export const downvotePostComment = async (
     return { err: error, res: null }
   }
 }
+
+/** DownVote Post `PATCH: /api/post/remove-upvote/:postId` */
+export const removeVote = async (
+  postId: string,
+  data: {
+    downvoteBy: 'user' | 'listing'
+    userId?: string
+    listingId?: string
+  },
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.patch(`/post/remove-upvote/${postId}`, data, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}

@@ -227,6 +227,17 @@ const ListingPageMain: React.FC<Props> = ({
     window.open(mapsUrl, '_blank')
   }
 
+const openModalHobbiesModal = () => {
+  if(window.innerWidth<1100){
+      setShowHobbies(true)
+    }
+  }
+  useEffect(()=>{
+    openModalHobbiesModal();
+    window.addEventListener("resize",openModalHobbiesModal);
+    return window.removeEventListener("resize",openModalHobbiesModal)
+  },[])
+
   // console.log('data', data)
 
   return (
@@ -292,6 +303,7 @@ const ListingPageMain: React.FC<Props> = ({
             setDisplayData={setShowHobbies}
           >
             <h4 className={styles['heading']}>Hobbies</h4>
+            {/* yahi hai */}
             <div
               className={`${styles['display-desktop']}${
                 showHobbies ? ' ' + styles['display-mobile'] : ''
