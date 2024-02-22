@@ -340,12 +340,15 @@
   .profile-img-wrapper .tagline {
     display: block;
   }
-  .center-container .name-container,
-  .center-container .tagline {
+  .center-container .name-container{
     display: none;
   }
+  /* .center-container .tagline {
+    display: none;
+  } */
   .header .center-container {
     order: 1;
+    margin-bottom: -10px;
   }
   .header .profile-img-wrapper {
     order: 2;

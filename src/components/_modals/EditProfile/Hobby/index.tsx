@@ -323,7 +323,13 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       genre: selectedGenre?._id,
       level: data.level,
     }
-
+    const sameAsPrevious = userHobbies?.find((obj:any)=>obj?.hobby?._id===jsonData.hobby&&obj?.genre?._id===jsonData.genre);
+    if(sameAsPrevious){
+      setHobbyError(true);
+    setError("Same hobby detected in the hobbies list");
+    setAddHobbyBtnLoading(false);
+      return;
+    }
     addUserHobby(jsonData, async (err, res) => {
       console.log('json', jsonData)
       console.log('Button clicked!')
@@ -368,7 +374,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     } else {
       setNextDisabled(false)
     }
-  }, [user])
+  }, [user]);
 
   const handleSubmit = async () => {
     setHobbyError(false)
@@ -438,6 +444,13 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         hobby: selectedHobby?._id,
         genre: selectedGenre?._id,
         level: data.level,
+      }
+      const sameAsPrevious = userHobbies?.find((obj:any)=>obj?.hobby?._id===jsonData.hobby&&obj?.genre?._id===jsonData.genre);
+      if(sameAsPrevious){
+        setHobbyError(true);
+      setError("Same hobby detected in the hobbies list");
+      setAddHobbyBtnLoading(false);
+        return;
       }
 
       await addUserHobby(jsonData, async (err, res) => {

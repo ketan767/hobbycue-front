@@ -83,7 +83,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   const [nextDisabled, setNextDisabled] = useState(false)
 
   const [addHobbyBtnLoading, setAddHobbyBtnLoading] = useState<boolean>(false)
-
+console.warn({hobbiesList})
   const handleHobbyInputChange = async (e: any) => {
     setHobbyInputValue(e.target.value)
     setGenreInputValue('')
@@ -231,6 +231,13 @@ const ListingHobbyEditModal: React.FC<Props> = ({
 
     setAddHobbyBtnLoading(true)
     let jsonData = { hobbyId: data.hobby?._id, genreId: data.genre?._id }
+    const sameAsPrevious = hobbiesList?.find((obj:any)=>obj?.hobby?._id===jsonData.hobbyId&&obj?.genre?._id===jsonData.genreId);
+    if(sameAsPrevious){
+      setHobbyError(true);
+    setError("Same hobby detected in the hobbies list");
+    setAddHobbyBtnLoading(false);
+      return;
+    }
     const { err, res } = await addListingHobby(listingModalData._id, jsonData)
     if (err) {
       setAddHobbyBtnLoading(false)
@@ -308,6 +315,13 @@ const ListingHobbyEditModal: React.FC<Props> = ({
 
       setAddHobbyBtnLoading(true)
       let jsonData = { hobbyId: data.hobby?._id, genreId: data.genre?._id }
+      const sameAsPrevious = hobbiesList?.find((obj:any)=>obj?.hobby?._id===jsonData.hobbyId&&obj?.genre?._id===jsonData.genreId);
+      if(sameAsPrevious){
+        setHobbyError(true);
+      setError("Same hobby detected in the hobbies list");
+      setAddHobbyBtnLoading(false);
+        return;
+      }
       const { err, res } = await addListingHobby(listingModalData._id, jsonData)
       if (err) {
         setAddHobbyBtnLoading(false)

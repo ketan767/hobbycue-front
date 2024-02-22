@@ -290,6 +290,11 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
                 />
               )}
             </h1>
+            {data?.tagline ? (
+                <p className={styles['tagline']}>{data?.tagline}</p>
+              ) : (
+                <p className={styles['tagline']}>&nbsp;</p>
+              )}
           </div>
         </div>
 
