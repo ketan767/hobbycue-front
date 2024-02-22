@@ -279,17 +279,20 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
             )}
           </div>
           <div className={styles['name-container']}>
+          <div
+              style={{display:"flex",gap:"8px", alignItems:"center"}}
+              >
             <h1 className={styles['name']}>
               {data?.title}{' '}
-              {listingLayoutMode === 'edit' && (
+              
+            </h1>{listingLayoutMode === 'edit' && (
                 <Image
                   className={styles['edit-icon']}
                   src={EditIcon}
                   alt="edit"
                   onClick={openTitleEditModal}
                 />
-              )}
-            </h1>
+              )}</div>
             {data?.tagline ? (
                 <p className={styles['tagline']}>{data?.tagline}</p>
               ) : (

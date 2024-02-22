@@ -572,7 +572,7 @@ const FilterDropdown: React.FC<Props> = () => {
       value={activeFilter}
     >
       <MenuItem onClick={() => handleFilterClick('all')} value="all">
-        All of Hobbycue
+        All of HobbyCue
       </MenuItem>
       <MenuItem onClick={() => handleFilterClick('users')} value="users">
         Users
