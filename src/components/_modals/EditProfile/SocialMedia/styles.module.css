@@ -3,7 +3,6 @@
   border-radius: var(--spacing-8);
   max-width: 50rem;
   width: 38rem;
-  min-height: 10rem;
   display: flex;
   flex-direction: column;
 }
@@ -91,15 +90,13 @@
   column-gap: 12px;
 }
 
-
-
 .dropdown {
   width: 184px;
   font-size: 12px;
-  font-family: "Poppins";
+  font-family: 'Poppins';
   border-radius: 8px;
   border: 1px solid #ebedf0 !important;
-  background: var(--Grey-Hover, #F8F9FA);
+  background: var(--Grey-Hover, #f8f9fa);
   height: 40px;
 }
 .deleteIcon {
@@ -116,7 +113,7 @@
   font-weight: 500;
   font-size: 14px;
   line-height: 22px;
-  color: #8064A2;
+  color: #8064a2;
   margin-bottom: 24px;
   gap: 2px;
   cursor: pointer;
@@ -129,34 +126,44 @@
   font-size: 12px;
 }
 
-.menu-item{
+.menu-item {
   display: flex;
   align-items: center;
- 
 }
 
 @media screen and (max-width: 1100px) {
-
   .modal-wrapper {
+    max-width: 1100px;
     width: 100%;
-    height: 100%;
-    border-radius: 0;
-
+    max-height: none;
+    margin: -5px 0 2rem 0;
+    padding: 5px 0 0 0;
+    height: 92%;
   }
-  .modal-hr{
+  .modal-wrapper .footer {
+    background: var(--Base-White, #fff);
+    box-shadow: 0px -6px 15px 0px rgba(0, 0, 0, 0.06);
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+  }
+  .modal-hr {
     display: none;
+  }
+  .modal-close-icon {
+    position: fixed !important;
   }
 }
 
-@media screen and (max-width:767px) {
-  .iconText{
+@media screen and (max-width: 767px) {
+  .iconText {
     display: none;
   }
-  li .iconText{
+  li .iconText {
     display: block;
   }
-  .inputContainer > div{
-  width: inherit;
-  min-width: 70px;
-}
+  .inputContainer > div {
+    width: inherit;
+    min-width: 70px;
+  }
 }

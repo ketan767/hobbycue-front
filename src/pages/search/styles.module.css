@@ -67,7 +67,7 @@
 }
 
 .pageGridSearch {
-  grid-template-columns: 16rem auto 18.3rem !important;
+  grid-template-columns: 14.3rem auto 18.3rem !important;
 }
 
 .filter-item img {

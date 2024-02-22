@@ -23,9 +23,9 @@ const HobbyDetail: React.FC<Props> = (props) => {
   const [showKeywords, setShowKeywords] = useState(false)
   const [showNextLevels, setShowNextLevels] = useState(false)
   const [showRelatedHobbies, setShowRelatedHobbies] = useState(false)
-  const {hobby}=useSelector((state:RootState)=>state?.site.expandMenu)
+  const { hobby } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(hobby)
-  const dispatch=useDispatch()
+  const dispatch = useDispatch()
 
   const { isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
@@ -64,7 +64,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
     if (data.level === 1)
       query = `category=${data?.category?._id}&sub_category=${data?._id}&level=2&level=3`
     if (data.level === 2)
-      query = `category=${data?.category?._id}&sub_category=${data?.sub_category?._id}&level=3`
+      query = `category=${data?.category?._id}&sub_category=${data?.sub_category?._id}&level=3&show=true&tags=${data?._id}`
     if (data.level === 3) query = `level=5&show=true&genre=${data.genre[0]}`
 
     if (!query) return
@@ -73,24 +73,21 @@ const HobbyDetail: React.FC<Props> = (props) => {
   }, [data])
 
   const handleExpandAll: (value: boolean) => void = (value) => {
-    setExpandAll(value);
+    setExpandAll(value)
     dispatch(updateHobbyMenuExpandAll(value))
-  };
+  }
 
   console.log('hobbydata', data)
   return (
     <HobbyPageLayout
-      activeTab="about"
+      activeTab="home"
       data={data}
       expandAll={expandAll}
       setExpandAll={handleExpandAll}
     >
-      <main className={expandAll?"":styles['display-none']}>
+      <main className={expandAll ? '' : styles['display-none']}>
         {/* About Section */}
-        <PageContentBox
-          showEditButton={false}
-          setDisplayData={setShowAbout}
-        >
+        <PageContentBox showEditButton={false} setDisplayData={setShowAbout}>
           <h4>About</h4>
           <div
             className={`${styles['display-desktop']}${

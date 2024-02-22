@@ -14,6 +14,7 @@ type Props = {
 
 const ProfileContactSide = ({ data, expandData }: Props) => {
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
+  const {user} = useSelector((state:RootState)=>state.user);
   const ulRef = useRef(null)
   const dispatch = useDispatch()
   const [showText, setShowText] = useState(false)
@@ -32,6 +33,8 @@ const ProfileContactSide = ({ data, expandData }: Props) => {
   useEffect(() => {
     if (expandData !== undefined) setDisplayData(expandData)
   }, [expandData])
+
+  const itsMe = data?.public_email === user?.email;
 
   return (
     <>
@@ -98,7 +101,7 @@ const ProfileContactSide = ({ data, expandData }: Props) => {
           )}
 
           {/* Email */}
-          {data.public_email && (
+          {data.public_email && itsMe && (
             <Link href={`mailto:${data?.public_email}`}>
               <li className={styles['list-item']}>
                 <svg

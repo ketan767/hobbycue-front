@@ -83,7 +83,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   const [nextDisabled, setNextDisabled] = useState(false)
 
   const [addHobbyBtnLoading, setAddHobbyBtnLoading] = useState<boolean>(false)
-
+console.warn({hobbiesList})
   const handleHobbyInputChange = async (e: any) => {
     setHobbyInputValue(e.target.value)
     setGenreInputValue('')
@@ -98,9 +98,28 @@ const ListingHobbyEditModal: React.FC<Props> = ({
     if (isEmptyField(e.target.value)) return setHobbyDropdownList([])
     const query = `fields=display,genre&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
     const { err, res } = await getAllHobbies(query)
+
     if (err) return console.log(err)
-    console.log('resp', res)
-    setHobbyDropdownList(res.data.hobbies)
+
+    // Modify the sorting logic to prioritize items where the search keyword appears at the beginning
+    const sortedHobbies = res.data.hobbies.sort((a: any, b: any) => {
+      const indexA = a.display
+        .toLowerCase()
+        .indexOf(e.target.value.toLowerCase())
+      const indexB = b.display
+        .toLowerCase()
+        .indexOf(e.target.value.toLowerCase())
+
+      if (indexA === 0 && indexB !== 0) {
+        return -1
+      } else if (indexB === 0 && indexA !== 0) {
+        return 1
+      }
+
+      return 0
+    })
+
+    setHobbyDropdownList(sortedHobbies)
   }
   const handleGenreInputChange = async (e: any) => {
     setGenreInputValue(e.target.value)
@@ -113,7 +132,25 @@ const ListingHobbyEditModal: React.FC<Props> = ({
 
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
-    setGenreDropdownList(res.data.hobbies)
+
+    const sortedGenres = res.data.hobbies.sort((a: any, b: any) => {
+      const indexA = a.display
+        .toLowerCase()
+        .indexOf(e.target.value.toLowerCase())
+      const indexB = b.display
+        .toLowerCase()
+        .indexOf(e.target.value.toLowerCase())
+
+      if (indexA === 0 && indexB !== 0) {
+        return -1
+      } else if (indexB === 0 && indexA !== 0) {
+        return 1
+      }
+
+      return 0
+    })
+
+    setGenreDropdownList(sortedGenres)
   }
   const printgenreid = () => {
     console.log('genreid', genreid)
@@ -194,6 +231,13 @@ const ListingHobbyEditModal: React.FC<Props> = ({
 
     setAddHobbyBtnLoading(true)
     let jsonData = { hobbyId: data.hobby?._id, genreId: data.genre?._id }
+    const sameAsPrevious = hobbiesList?.find((obj:any)=>obj?.hobby?._id===jsonData.hobbyId&&obj?.genre?._id===jsonData.genreId);
+    if(sameAsPrevious){
+      setHobbyError(true);
+    setError("Same hobby detected in the hobbies list");
+    setAddHobbyBtnLoading(false);
+      return;
+    }
     const { err, res } = await addListingHobby(listingModalData._id, jsonData)
     if (err) {
       setAddHobbyBtnLoading(false)
@@ -271,6 +315,13 @@ const ListingHobbyEditModal: React.FC<Props> = ({
 
       setAddHobbyBtnLoading(true)
       let jsonData = { hobbyId: data.hobby?._id, genreId: data.genre?._id }
+      const sameAsPrevious = hobbiesList?.find((obj:any)=>obj?.hobby?._id===jsonData.hobbyId&&obj?.genre?._id===jsonData.genreId);
+      if(sameAsPrevious){
+        setHobbyError(true);
+      setError("Same hobby detected in the hobbies list");
+      setAddHobbyBtnLoading(false);
+        return;
+      }
       const { err, res } = await addListingHobby(listingModalData._id, jsonData)
       if (err) {
         setAddHobbyBtnLoading(false)
@@ -350,7 +401,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
       <SaveModal
         handleClose={handleClose}
         handleSubmit={handleSubmit}
-        setConfirmationModal={setConfirmationModal} 
+        setConfirmationModal={setConfirmationModal}
         isError={isError}
         OnBoarding={onBoarding}
       />

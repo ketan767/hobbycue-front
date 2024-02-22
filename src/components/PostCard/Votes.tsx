@@ -1,5 +1,5 @@
 import { RootState } from '@/redux/store'
-import { downvotePost, upvotePost } from '@/services/post.service'
+import { downvotePost, upvotePost, removeVote } from '@/services/post.service'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -95,6 +95,28 @@ const PostVotes: React.FC<Props> = ({
     }
   }
 
+  const removeVoteFunc = async () => {
+    let jsonData = {
+      downvoteBy: activeProfile.type, // 'user' | 'listing'
+      userId: activeProfile.data._id,
+      listingId: activeProfile.data._id,
+    }
+    setVoteStatus(null)
+    setLoading(true)
+    const { err, res } = await removeVote(data._id, jsonData as any)
+    if (err) {
+      console.log(err)
+      setLoading(false)
+      updateVoteStatus()
+      return
+    }
+    console.log('🚀 ~ file: Votes.tsx:67 ~ handleDownVote ~ res:', res)
+    if (res.data.success) {
+      setLoading(false)
+      updatePost()
+    }
+  }
+
   useEffect(() => {
     updateVoteStatus()
   }, [data, activeProfile.data, activeProfile.type])
@@ -104,7 +126,16 @@ const PostVotes: React.FC<Props> = ({
       <div
         className={`${styles['upvote-downvote']} ${className ? className : ''}`}
       >
-        <div className={styles['upvote']} onClick={handleUpVote}>
+        <div
+          className={styles['upvote']}
+          onClick={() => {
+            if (voteStatus === 'up') {
+              removeVoteFunc()
+            } else {
+              handleUpVote()
+            }
+          }}
+        >
           <svg
             width="24"
             height="21"
@@ -124,7 +155,13 @@ const PostVotes: React.FC<Props> = ({
         <span className={styles['divider']}></span>
 
         <svg
-          onClick={handleDownVote}
+          onClick={() => {
+            if (voteStatus === 'down') {
+              removeVoteFunc()
+            } else {
+              handleDownVote()
+            }
+          }}
           width="24"
           height="22"
           viewBox="0 0 24 22"

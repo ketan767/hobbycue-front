@@ -239,7 +239,8 @@
   .modal-wrapper {
     width: auto;
     max-height: none;
-    margin-bottom: 5rem;
+    margin: -5px 0 5rem 0;
+    padding: 5px 0 0 0;
   }
   .modal-wrapper .body {
     padding: var(--spacing-16) var(--spacing-16);
@@ -276,12 +277,15 @@
   }
 
   .modal-hr {
-    display: none;
+    display: none; 
   }
 
   .modal-wrapper .header {
     padding: var(--spacing-16) var(--spacing-16);
     padding-bottom: 0;
+  }
+  .modal-close-icon {
+    position: fixed !important;
   }
 }
 .modal-close-icon {

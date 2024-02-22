@@ -11,7 +11,10 @@ import { useRouter } from 'next/router'
 import useCheckIfClickedOutside from '@/hooks/useCheckIfClickedOutside'
 import Slider from '../Slider/Slider'
 import { openModal, updateShareUrl } from '@/redux/slices/modal'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import CustomizedTooltips from '../Tooltip/ToolTip'
+import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
+import { RootState } from '@/redux/store'
 
 type Props = {
   postData: any
@@ -22,12 +25,20 @@ type Props = {
 
 const PostCard: React.FC<Props> = (props) => {
   // const [type, setType] = useState<'User' | 'Listing'>()
-
-  const router = useRouter()
-  const [has_link, setHas_link] = useState(props.postData.has_link)
+// console.log({postData:props.postData.visibility})
+  const router = useRouter();
+  const {user} = useSelector((state:RootState)=>state.user);
+  const [has_link, setHas_link] = useState(props.postData.has_link);
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  });
+  const [openAction,setOpenAction] = useState(false);
   // console.log('🚀 ~ file: PostCard.tsx:20 ~ router:', router)
   const { fromProfile, onPinPost } = props
   const optionRef: any = useRef(null)
+  const editReportDeleteRef:any = useRef(null);
   const [postData, setPostData] = useState(props.postData)
   const [showComments, setShowComments] = useState(
     props.postData.has_link ? true : false,
@@ -51,6 +62,23 @@ const PostCard: React.FC<Props> = (props) => {
   })
   useCheckIfClickedOutside(optionRef, () => setOptionsActive(false))
 
+  const modalRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event:Event) {
+      if (editReportDeleteRef.current && !editReportDeleteRef.current.contains(event.target)) {
+        setOpenAction(false);
+      }
+    }
+
+    // Bind the event listener
+    document.addEventListener("click", handleClickOutside);
+
+    // Unbind the event listener on cleanup
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
   const updatePost = async () => {
     const { err, res } = await getAllPosts(
       `_id=${postData._id}&populate=_author,_genre,_hobby`,
@@ -99,6 +127,14 @@ const PostCard: React.FC<Props> = (props) => {
       router.push(`/post/${postData._id}`)
     }
   }
+ const postedByMe = postData?._author?.email === user?.email;
+ const showFeatureUnderDevelopment = () => {
+  setSnackbar({
+    display: true,
+    type: "warning",
+    message: "This feature is under development",
+  })
+ }
   return (
     <>
       <div className={styles['post-card-wrapper']} onClick={handleCardClick}>
@@ -155,21 +191,31 @@ const PostCard: React.FC<Props> = (props) => {
                   </Link>
                 </span>
                 <span>
-                  {postData?._author?.state
-                    ? ` | ${postData?._author?.state}`
+                  {postData?.visibility
+                    ? ` | ${postData?.visibility}`
                     : ''}
                 </span>
               </p>
             </div>
-            <div className={styles.actionIcon}>
+            <div ref={editReportDeleteRef} className={styles.actionIcon}>
+              {openAction===true &&
+              <div className={styles.editReportDelete}>
+                {postedByMe&&<>
+                <button onClick={()=>{showFeatureUnderDevelopment();setOpenAction(false)}} >Edit</button>
+                <button onClick={()=>{showFeatureUnderDevelopment();setOpenAction(false)}} >Delete</button>
+                </>}
+                <button onClick={()=>{showFeatureUnderDevelopment();setOpenAction(false)}} >Report</button>
+              </div>
+              }
               <svg
+              /////
                 ref={optionRef}
                 className={styles['more-actions-icon']}
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
                 fill="none"
-                onClick={() => setOptionsActive(true)}
+                onClick={() => {setOptionsActive(true);setOpenAction(true)}}
               >
                 <g clip-path="url(#clip0_173_72891)">
                   <path
@@ -366,7 +412,8 @@ const PostCard: React.FC<Props> = (props) => {
               </svg>
 
               {/* Bookmark Icon */}
-              <svg
+              {/* <CustomizedTooltips title='This feature is under development'> */}
+              <svg onClick={showFeatureUnderDevelopment}
                 className={styles['bookmark-icon']}
                 width="24"
                 height="24"
@@ -386,6 +433,7 @@ const PostCard: React.FC<Props> = (props) => {
                   </clipPath>
                 </defs>
               </svg>
+              {/* </CustomizedTooltips> */}
             </section>
 
             {/* Comments Section */}
@@ -393,6 +441,16 @@ const PostCard: React.FC<Props> = (props) => {
           </footer>
         )}
       </div>
+      {
+        <CustomSnackbar
+          message={snackbar.message}
+          triggerOpen={snackbar.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

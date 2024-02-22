@@ -281,7 +281,7 @@ export const Navbar: React.FC<Props> = ({}) => {
 
             <TextField
               variant="outlined"
-              placeholder="Search here..."
+              placeholder="Search for anything on your hobbies..."
               size="small"
               className={styles.inputField}
               onChange={handleInputChange}

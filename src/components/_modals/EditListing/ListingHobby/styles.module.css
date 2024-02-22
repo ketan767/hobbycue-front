@@ -397,4 +397,7 @@
     padding-top: 0 !important;
     padding: var(--spacing-16) var(--spacing-16);
   }
+  .modal-close-icon {
+    position: fixed !important;
+  }
 }

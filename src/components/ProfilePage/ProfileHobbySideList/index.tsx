@@ -20,6 +20,16 @@ const ProfileHobbySideList = ({ data, expandData }: Props) => {
   useEffect(() => {
     if (expandData !== undefined) setDisplayData(expandData)
   }, [expandData])
+  const openModalHobbiesModal = () => {
+    if(window.innerWidth<1100){
+        setDisplayData(true)
+      }
+    }
+    useEffect(()=>{
+      openModalHobbiesModal();
+      window.addEventListener("resize",openModalHobbiesModal);
+      return window.removeEventListener("resize",openModalHobbiesModal)
+    },[])
 
   return (
     <>
