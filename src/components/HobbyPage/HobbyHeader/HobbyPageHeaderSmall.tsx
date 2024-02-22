@@ -23,7 +23,7 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
   console.log('🚀 ~ file: HobbyHeader.tsx:22 ~ HobbyPageHeader ~ data:', data)
   const router = useRouter()
   const tabs: HobbyPageTabs[] = [
-    'about',
+    'home',
     'posts',
     'links',
     'pages',
@@ -121,7 +121,7 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
               <Link
                 key={tab}
                 href={`/hobby/${router.query.slug}/${
-                  tab !== 'about' ? tab : ''
+                  tab !== 'home' ? tab : ''
                 }`}
                 className={activeTab === tab ? styles['active'] : ''}
               >
