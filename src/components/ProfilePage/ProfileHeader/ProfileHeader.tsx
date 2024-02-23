@@ -185,6 +185,9 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
               )}
             </div>
             <div className={styles['name-container']}>
+              <div
+              style={{display:"flex",gap:"8px", alignItems:"center"}}
+              >
               <h1 className={styles['name']}>{data.full_name}</h1>
               {profileLayoutMode === 'edit' && (
                 <Image
@@ -199,7 +202,7 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
                     )
                   }
                 />
-              )}
+              )}</div>
             {data?.tagline ? (
                   <p className={styles['tagline']}>{data?.tagline}</p>
                 ) : (
