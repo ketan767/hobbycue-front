@@ -84,6 +84,14 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     year_of_birth: null,
   })
 
+  const yearOfBirthCheck = (year: any) => {
+    if (isNaN(year)) {
+      return false
+    }
+    const currentYear = new Date().getFullYear()
+    return currentYear - year
+  }
+
   const handleInputChange = (event: any) => {
     const { name, value } = event.target;
     if(name==="year_of_birth"){
@@ -140,17 +148,37 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
         return { ...prev, profile_url: 'This field is required!' }
       })
     }
-    if (
-      !containOnlyNumbers(data.year_of_birth) &&
-      data.year_of_birth &&
-      data.year_of_birth !== ''
-    ) {
-      dobRef.current?.focus()
-      return setInputErrs((prev) => {
-        return { ...prev, year_of_birth: 'Enter a valid year of birth' }
-      })
+    if (data.year_of_birth && data.year_of_birth !== '') {
+      if (containOnlyNumbers(data?.year_of_birth)) {
+        var check = yearOfBirthCheck(data.year_of_birth)
+        dobRef.current?.focus()
+        if (check !== false) {
+          if (check >= 100) {
+            return setInputErrs((prev) => {
+              return { ...prev, year_of_birth: 'Maximum age should be 100' }
+            })
+          }
+          if (check < 0) {
+            return setInputErrs((prev) => {
+              return { ...prev, year_of_birth: 'Enter a valid year of birth' }
+            })
+          }
+          if (check < 13) {
+            return setInputErrs((prev) => {
+              return { ...prev, year_of_birth: 'Minimum age should be 13' }
+            })
+          }
+        } else {
+          return setInputErrs((prev) => {
+            return { ...prev, year_of_birth: 'Enter a valid year of birth' }
+          })
+        }
+      } else {
+        return setInputErrs((prev) => {
+          return { ...prev, year_of_birth: 'Enter a valid year of birth' }
+        })
+      }
     }
-
     const onlyAlphabetsAndHyphensRegex = /^[a-zA-Z-]*$/
 
     // Check if the profile_url value contains any characters other than alphabetic characters and hyphens

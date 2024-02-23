@@ -18,6 +18,7 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { showAllEventTrue, showAllPeopleTrue, showAllPlaceTrue, showAllProductsTrue } from '@/redux/slices/search'
+import DownloadInMobile from '@/components/DownloadInMobile'
 
 const Home: React.FC<PropTypes> = function () {
   const [isPlaying, setIsPlaying] = useState(false)
@@ -124,6 +125,7 @@ const Home: React.FC<PropTypes> = function () {
       </Head>
 
       {/** Landing Container **/}
+      {/* <DownloadInMobile/> */}
       <section className={styles['landing-contaniner']}>
         <div className={styles['landing-bg']}>
           <main className={`site-container ${styles['landing-wrapper']}`}>
@@ -220,17 +222,12 @@ const Home: React.FC<PropTypes> = function () {
           {/* Product Card */}
           <div className={`${styles['card']}`}>
             <h3 className={styles['card-title']}>
-              <svg
-                width="35"
-                viewBox="0 0 38 32"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M27.6833 11.9995L20.3833 1.06621C20.0667 0.599544 19.5333 0.366211 19 0.366211C18.4667 0.366211 17.9333 0.599544 17.6167 1.08288L10.3167 11.9995H2.33332C1.41666 11.9995 0.666656 12.7495 0.666656 13.6662C0.666656 13.8162 0.683323 13.9662 0.733323 14.1162L4.96666 29.5662C5.34999 30.9662 6.63332 31.9995 8.16666 31.9995H29.8333C31.3667 31.9995 32.65 30.9662 33.05 29.5662L37.2833 14.1162L37.3333 13.6662C37.3333 12.7495 36.5833 11.9995 35.6667 11.9995H27.6833ZM14 11.9995L19 4.66621L24 11.9995H14ZM19 25.3329C17.1667 25.3329 15.6667 23.8329 15.6667 21.9995C15.6667 20.1662 17.1667 18.6662 19 18.6662C20.8333 18.6662 22.3333 20.1662 22.3333 21.9995C22.3333 23.8329 20.8333 25.3329 19 25.3329Z"
-                  fill="#C0504D"
-                />
-              </svg>
+              
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
+  <path d="M36.5335 12.086V12.3026L34.1002 21.3026C33.8126 22.3709 33.1789 23.3135 32.2982 23.9831C31.4176 24.6526 30.3398 25.0112 29.2335 25.0026H16.4835C15.2319 25.0077 14.0238 24.5431 13.098 23.7007C12.1723 22.8583 11.5962 21.6993 11.4835 20.4526L10.4002 8.18598C10.3626 7.77044 10.1706 7.3841 9.86203 7.10329C9.55344 6.82248 9.15075 6.66762 8.73353 6.66931H5.11686C4.67483 6.66931 4.25091 6.49372 3.93835 6.18116C3.62579 5.8686 3.4502 5.44467 3.4502 5.00265C3.4502 4.56062 3.62579 4.13669 3.93835 3.82413C4.25091 3.51157 4.67483 3.33598 5.11686 3.33598H8.73353C9.98521 3.3309 11.1933 3.79547 12.119 4.63791C13.0448 5.48035 13.6209 6.63937 13.7335 7.88598V8.33598H33.2169C33.692 8.33225 34.1624 8.43014 34.5966 8.62308C35.0308 8.81601 35.4187 9.09955 35.7344 9.45466C36.05 9.80978 36.2861 10.2283 36.4268 10.6821C36.5675 11.1359 36.6096 11.6146 36.5502 12.086H36.5335Z" fill="#C0504D"/>
+  <path d="M15.1169 36.6693C17.418 36.6693 19.2835 34.8038 19.2835 32.5026C19.2835 30.2014 17.418 28.3359 15.1169 28.3359C12.8157 28.3359 10.9502 30.2014 10.9502 32.5026C10.9502 34.8038 12.8157 36.6693 15.1169 36.6693Z" fill="#C0504D"/>
+  <path d="M28.4499 36.6693C30.7511 36.6693 32.6165 34.8038 32.6165 32.5026C32.6165 30.2014 30.7511 28.3359 28.4499 28.3359C26.1487 28.3359 24.2832 30.2014 24.2832 32.5026C24.2832 34.8038 26.1487 36.6693 28.4499 36.6693Z" fill="#C0504D"/>
+</svg>
 
               <span>Product</span>
             </h3>
@@ -317,7 +314,8 @@ const Home: React.FC<PropTypes> = function () {
       </section>
 
       {/** Testimonial Container  **/}
-      <section className={`site-container ${styles['testimonial-contaniner']}`}>
+      <section>
+      <div className={`site-container ${styles['testimonial-contaniner']}`}>
         <h3 className={styles['title']}>
           <svg
             width="40"
@@ -333,7 +331,6 @@ const Home: React.FC<PropTypes> = function () {
           </svg>
           <span>Testimonials</span>
         </h3>
-
         <div className={styles['testimonial']}>
           <p className={styles['content']}>
             In a fast growing and ever changing city like Bangalore, it
@@ -392,6 +389,7 @@ const Home: React.FC<PropTypes> = function () {
             </div>
           </div>
         </div>
+      </div>
       </section>
 
       <section className={`site-container ${styles.bigTextContainer}`}>

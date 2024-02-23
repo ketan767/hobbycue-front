@@ -68,7 +68,7 @@ const DataAndOthers: React.FC<Props> = ({}) => {
               onClick={() =>
                 handleRunSupportAPI(
                   'Request for personal data export.',
-                  'Your request for personal data export has been done successfully',
+                  'Your request for personal data export has been sent successfully',
                   'Your request for personal data export is failed',
                 )
               }
@@ -89,7 +89,7 @@ const DataAndOthers: React.FC<Props> = ({}) => {
               onClick={() =>
                 handleRunSupportAPI(
                   'Account deactivation request.',
-                  'Your account deactivation request has been done successfully',
+                  'Your account deactivation request has been sent successfully',
                   'Your request for account deactivation is failed',
                 )
               }
@@ -128,7 +128,7 @@ const DataAndOthers: React.FC<Props> = ({}) => {
               onClick={() =>
                 handleRunSupportAPI(
                   'Account deletion request.',
-                  'Your account deletion request has been done successfully',
+                  'Your account deletion request has been sent successfully',
                   'Your request for account deletion is failed',
                 )
               }

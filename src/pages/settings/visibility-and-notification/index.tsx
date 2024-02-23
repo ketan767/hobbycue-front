@@ -14,19 +14,25 @@ import { RootState } from '@/redux/store'
 
 type Props = {}
 const options = [
-  'Everyone',
+  'All Locations',
   'My City',
   'My Pincode',
   'My Locality',
   'My Society',
 ]
 const VisibilityAndNotification: React.FC<Props> = ({}) => {
- const userProfileUrl = useSelector((state:RootState)=>state?.user?.user?.profile_url);
+  const userProfileUrl = useSelector(
+    (state: RootState) => state?.user?.user?.profile_url,
+  )
   return (
     <>
       <PageGridLayout column={2} customStyles={styles['settingcontainer']}>
         <SettingsSidebar active="" />
+
         <div className={styles.container}>
+          <p className={styles.underDev}>
+            Below features are under development. Come back soon to view this.
+          </p>
           <p className={`${styles.textLight} ${styles.title}`}>
             {' '}
             By default, who can view{' '}
@@ -35,7 +41,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
           <div className={`${styles.viewOptionContainer}`}>
             <p className={`${styles.textDark}`}> View my posts </p>
             <div>
-              <select name="Select" className={styles.select}>
+              <select disabled name="Select" className={styles.select}>
                 {options.map((item: any) => {
                   return (
                     <option key={item} className={styles.option}>
@@ -50,7 +56,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
           <div className={`${styles.viewOptionContainer}`}>
             <p className={`${styles.textDark}`}> View my E-Mail ID </p>
             <div>
-              <select name="Select" className={styles.select}>
+              <select disabled name="Select" className={styles.select}>
                 {options.map((item: any) => {
                   return (
                     <option key={item} className={styles.option}>
@@ -63,8 +69,6 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
           </div>
 
           <div className={styles.line}></div>
-
-          <p className={styles.underDev}>This feature is under development. Come back soon to view this.</p>
 
           <p className={`${styles.textLight} ${styles.title}`}>
             {' '}
@@ -104,7 +108,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
           >
             <p className={`${styles.textDark}`}> Email updates </p>
             <div>
-              <select name="Select" className={styles.select}>
+              <select disabled name="Select" className={styles.select}>
                 {options.map((item: any) => {
                   return (
                     <option key={item} className={styles.option}>

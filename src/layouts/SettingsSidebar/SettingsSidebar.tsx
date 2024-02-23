@@ -4,6 +4,7 @@ import styles from './sidebar.module.css'
 import Link from 'next/link'
 import { RootState } from '@/redux/store'
 import { useSelector } from 'react-redux'
+import { usePathname } from 'next/navigation'
 
 type Props = { active: any }
 
@@ -27,6 +28,8 @@ const sidebarItems = [
 ]
 
 const SettingsSidebar: React.FC<Props> = ({ active }) => {
+  const pathname = usePathname();
+  console.warn({pathname})
   return (
     <>
       <div className={styles.sidebarContainer}>
@@ -37,7 +40,7 @@ const SettingsSidebar: React.FC<Props> = ({ active }) => {
               <Link
                 href={item.link}
                 key={item.text}
-                className={styles.listItem}
+                className={`${styles.listItem} ${pathname===item.link?styles.activeLink:""}`}
               >
                 {item.text}
               </Link>

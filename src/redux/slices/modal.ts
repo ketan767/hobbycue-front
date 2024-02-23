@@ -49,7 +49,8 @@ export type ModalType =
   | 'SupportUserModal'
   | 'UserReportModal'
   | 'ListingReportModal'
-  | 'ContactToOwner'
+  | 'ListingContactToOwner'
+  | 'UserContactToOwner'
 
 
   interface ModalState {

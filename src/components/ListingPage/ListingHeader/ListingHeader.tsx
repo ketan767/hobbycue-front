@@ -143,7 +143,7 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
   }
 
   const handleContact = () => {
-    dispatch(openModal({ type: 'ContactToOwner', closable: true }))
+    dispatch(openModal({ type: 'ListingContactToOwner', closable: true }))
   }
 
   const handleClaim = async () => {
@@ -279,22 +279,25 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
             )}
           </div>
           <div className={styles['name-container']}>
+          <div
+              style={{display:"flex",gap:"8px", alignItems:"center"}}
+              >
             <h1 className={styles['name']}>
               {data?.title}{' '}
-              {listingLayoutMode === 'edit' && (
+              
+            </h1>{listingLayoutMode === 'edit' && (
                 <Image
                   className={styles['edit-icon']}
                   src={EditIcon}
                   alt="edit"
                   onClick={openTitleEditModal}
                 />
-              )}
-            </h1>
+              )}</div>
             {data?.tagline ? (
-                <p className={styles['tagline']}>{data?.tagline}</p>
-              ) : (
-                <p className={styles['tagline']}>&nbsp;</p>
-              )}
+              <p className={styles['tagline']}>{data?.tagline}</p>
+            ) : (
+              <p className={styles['tagline']}>&nbsp;</p>
+            )}
           </div>
         </div>
 

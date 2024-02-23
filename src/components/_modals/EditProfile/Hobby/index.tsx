@@ -323,12 +323,16 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       genre: selectedGenre?._id,
       level: data.level,
     }
-    const sameAsPrevious = userHobbies?.find((obj:any)=>obj?.hobby?._id===jsonData.hobby&&obj?.genre?._id===jsonData.genre);
-    if(sameAsPrevious){
-      setHobbyError(true);
-    setError("Same hobby detected in the hobbies list");
-    setAddHobbyBtnLoading(false);
-      return;
+    const sameAsPrevious = userHobbies?.find(
+      (obj: any) =>
+        obj?.hobby?._id === jsonData.hobby &&
+        obj?.genre?._id === jsonData.genre,
+    )
+    if (sameAsPrevious) {
+      setHobbyError(true)
+      setError('Same hobby detected in the hobbies list')
+      setAddHobbyBtnLoading(false)
+      return
     }
     addUserHobby(jsonData, async (err, res) => {
       console.log('json', jsonData)
@@ -445,12 +449,16 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         genre: selectedGenre?._id,
         level: data.level,
       }
-      const sameAsPrevious = userHobbies?.find((obj:any)=>obj?.hobby?._id===jsonData.hobby&&obj?.genre?._id===jsonData.genre);
-      if(sameAsPrevious){
-        setHobbyError(true);
-      setError("Same hobby detected in the hobbies list");
-      setAddHobbyBtnLoading(false);
-        return;
+      const sameAsPrevious = userHobbies?.find(
+        (obj: any) =>
+          obj?.hobby?._id === jsonData.hobby &&
+          obj?.genre?._id === jsonData.genre,
+      )
+      if (sameAsPrevious) {
+        setHobbyError(true)
+        setError('Same hobby detected in the hobbies list')
+        setAddHobbyBtnLoading(false)
+        return
       }
 
       await addUserHobby(jsonData, async (err, res) => {
@@ -916,7 +924,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                                   color: '#6d747a',
                                   fontSize: '14px',
                                 }}
-                                className={styles['display-desktop']}
+                                className={`${styles['display-desktop']} ${styles['new-hobby-level-dropdown']}`}
                               >
                                 {levels[data.level - 1]?.name}
                               </p>
@@ -929,12 +937,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                               return { ...prev, level: parseInt(e?.id) + 1 }
                             })
                           }}
-                          dropdownHeaderStyle={{
-                            background: '#F8F9FA',
-                            borderRadius: '8px',
-                            padding: '6px 16px 6px 16px',
-                            width: '82%',
-                          }}
+                          dropdownHeaderClass={styles['new-hobby-level-dropdown-header']}
                           valueIndex={data?.level - 1}
                           dropdownIcon
                         />

@@ -13,11 +13,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
-import SaveModal from '../SaveModal/saveModal'
+import SaveModal from '../../SaveModal/saveModal'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import Image from 'next/image'
+import { sendMailtoOwner } from '@/services/auth.service'
 
 type Props = {
   onComplete?: () => void
@@ -30,11 +31,14 @@ type Props = {
 }
 
 type ContactOwnerData = {
-  description: string
-  subject: string
+  message: string
+  sub: string
+  name: string
+  senderName: string
+  to: string
 }
 
-const ContactToOwner: React.FC<Props> = ({
+const UserContactToOwner: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
   confirmationModal,
@@ -44,12 +48,17 @@ const ContactToOwner: React.FC<Props> = ({
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
+  const currprofile = useSelector((state: RootState) => state.user.profileData)
+  console.log('active profile', currprofile)
 
   const [data, setData] = useState<ContactOwnerData>({
-    description: '',
-    subject: '',
+    message: '',
+    sub: '',
+    name: currprofile.full_name,
+    senderName: user.full_name,
+    to: currprofile?.public_email,
   })
-  const subjectref = useRef<HTMLInputElement>(null)
+  const subref = useRef<HTMLInputElement>(null)
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backDisabled, SetBackDisabled] = useState(false)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
@@ -57,28 +66,37 @@ const ContactToOwner: React.FC<Props> = ({
   const [isError, setIsError] = useState(false)
 
   const [inputErrs, setInputErrs] = useState<{ [key: string]: string | null }>({
-    description: null,
-    subject: null,
+    message: null,
+    sub: null,
+    name: null,
+    senderName: null,
+    to: null,
   })
   const [initialData, setInitialData] = useState<ContactOwnerData>({
-    description: '',
-    subject: '',
+    message: '',
+    sub: '',
+    name: currprofile.full_name,
+    senderName: user.full_name,
+    to: currprofile?.public_email,
   })
   const [isChanged, setIsChanged] = useState(false)
 
   useEffect(() => {
     setInitialData({
-      description: '',
-      subject: '',
+      message: '',
+      sub: '',
+      name: '',
+      senderName: '',
+      to: '',
     })
   }, [user])
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
-    setData((prev) => ({ ...prev, subject: value }))
+    setData((prev) => ({ ...prev, sub: value }))
     setInputErrs({ error: null })
 
-    const hasChanged = value !== initialData.subject
+    const hasChanged = value !== initialData.sub
     setIsChanged(hasChanged)
 
     if (onStatusChange) {
@@ -90,10 +108,10 @@ const ContactToOwner: React.FC<Props> = ({
     event: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
     const value = event.target.value
-    setData((prev) => ({ ...prev, description: value }))
+    setData((prev) => ({ ...prev, message: value }))
     setInputErrs({ error: null })
 
-    const hasChanged = value !== initialData.description
+    const hasChanged = value !== initialData.message
     setIsChanged(hasChanged)
 
     if (onStatusChange) {
@@ -103,7 +121,7 @@ const ContactToOwner: React.FC<Props> = ({
 
   const handleSubmit = async () => {
     console.log('ContactOwner', data)
-    if (!data.description || data.description === '') {
+    if (!data.message || data.message === '') {
       setInputErrs((prev) => {
         return { ...prev, error: 'This field is required!' }
       })
@@ -112,13 +130,18 @@ const ContactToOwner: React.FC<Props> = ({
     }
 
     setSubmitBtnLoading(true)
+
+    const { err, res } = await sendMailtoOwner(data)
+    if (res?.data.success) {
+      dispatch(closeModal())
+    }
   }
 
   const HandleSaveError = async () => {
     if (
-      !data.description ||
-      data.description?.trim() === '' ||
-      data.description === '<p><br></p>'
+      !data.message ||
+      data.message?.trim() === '' ||
+      data.message === '<p><br></p>'
     ) {
       setIsError(true)
     }
@@ -141,7 +164,7 @@ const ContactToOwner: React.FC<Props> = ({
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
-    subjectref?.current?.focus()
+    subref?.current?.focus()
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
         nextButtonRef.current?.click()
@@ -188,7 +211,7 @@ const ContactToOwner: React.FC<Props> = ({
           {/* Subject */}
           <div
             className={`${styles['input-box']} ${
-              inputErrs.subject ? styles['input-box-error'] : ''
+              inputErrs.sub ? styles['input-box-error'] : ''
             }`}
           >
             <label className={styles['label-required']}>Subject</label>
@@ -197,10 +220,10 @@ const ContactToOwner: React.FC<Props> = ({
               placeholder="Subject"
               autoComplete="name"
               required
-              value={data.subject}
+              value={data.sub}
               name="full_name"
               onChange={handleInputChange}
-              ref={subjectref}
+              ref={subref}
             />
             <p className={styles['helper-text']}>{inputErrs.full_name}</p>
           </div>
@@ -209,10 +232,10 @@ const ContactToOwner: React.FC<Props> = ({
               <textarea
                 className={styles['long-input-box']}
                 required
-                placeholder="Write your description here"
+                placeholder="Write your message here"
                 name="message"
                 onChange={handleTextAreaChange}
-                value={data.description}
+                value={data.message}
               />
             </div>
             {inputErrs.error && (
@@ -283,4 +306,4 @@ const ContactToOwner: React.FC<Props> = ({
   )
 }
 
-export default ContactToOwner
+export default UserContactToOwner

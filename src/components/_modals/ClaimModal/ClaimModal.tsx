@@ -6,11 +6,15 @@ import { useSelector } from 'react-redux'
 import { ClaimListing, ClaimRequest } from '@/services/auth.service'
 import { CircularProgress } from '@mui/material'
 import { RootState } from '@/redux/store'
+import DropdownMenu from '@/components/DropdownMenu'
+import { countryData } from '@/utils/countrydata'
 type Props = {
   data: ListingPageData['pageData']
 }
 
 const ClaimModal = () => {
+  const phoneRef = useRef<HTMLInputElement>(null)
+  const [selectedCountryCode, setSelectedCountryCode] = useState('+91')
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const dispatch = useDispatch()
   const pageURL = window.location.href.split('/').reverse()[0]
@@ -25,7 +29,8 @@ const ClaimModal = () => {
     listing_id: listingModalData._id,
     profileName: userData.full_name,
     email: userData.email,
-    phone: userData.phone,
+    phonenumber: userData.phone.number,
+    phonePrefix: selectedCountryCode,
     pageUrl: pageURL,
     userRelation: '',
     websiteLink: 'https://',
@@ -37,10 +42,18 @@ const ClaimModal = () => {
 
   const handleInputChange = (e: any) => {
     let { value, name } = e.target
-    setFormData((prevValue) => ({
-      ...prevValue,
-      [name]: value,
-    }))
+
+    if (name === 'phone') {
+      setFormData((prevValue) => ({
+        ...prevValue,
+        phonenumber: value,
+      }))
+    } else {
+      setFormData((prevValue) => ({
+        ...prevValue,
+        [name]: value,
+      }))
+    }
   }
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
@@ -61,7 +74,8 @@ const ClaimModal = () => {
   const listingId = formData.listing_id
   const name = formData.profileName
   const email = formData.email
-  const phone = formData.phone
+  const phonenumber = formData.phonenumber
+  const phonePrefix = selectedCountryCode
   const pageUrl = formData.pageUrl
   const HowRelated = formData.userRelation
   const link = formData.websiteLink
@@ -80,7 +94,8 @@ const ClaimModal = () => {
           listingId,
           name,
           email,
-          phone,
+          phonenumber,
+          phonePrefix,
           pageUrl,
           HowRelated,
           link,
@@ -92,7 +107,8 @@ const ClaimModal = () => {
         const { err, res } = await ClaimRequest({
           name,
           email,
-          phone,
+          phonenumber,
+          phonePrefix,
           pageUrl,
           HowRelated,
           link,
@@ -102,6 +118,12 @@ const ClaimModal = () => {
       }
     }
   }
+
+  const handlePrefixChange = (element: any) => {
+    const id = element?.id
+    setSelectedCountryCode(countryData[id]?.phonePrefix)
+  }
+
   useEffect(() => {
     setListingUrlSpanLength(listingUrlSpanRef?.current?.offsetWidth || 0)
   }, [])
@@ -142,15 +164,38 @@ const ClaimModal = () => {
                 />
               </div>
             </div>
-            <div className={styles['input-box']}>
+            <div
+              className={`${styles['input-box']} ${
+                formData.phonenumber?.error ? styles['input-box-error'] : ''
+              }`}
+            >
               <label>Phone Number</label>
-              <div className={styles['street-input-container']}>
+              <div className={styles['phone-prefix-input']}>
+                <DropdownMenu
+                  value={selectedCountryCode}
+                  valueIndex={countryData.findIndex(
+                    (country, idx) =>
+                      country.phonePrefix === formData.phonePrefix,
+                  )}
+                  options={countryData.map(
+                    (country, idx) =>
+                      `${country.name} (${country.phonePrefix})`,
+                  )}
+                  onOptionClick={handlePrefixChange}
+                  optionsPosition="bottom"
+                  search={true}
+                  dropdownHeaderClass={''}
+                />
                 <input
                   type="text"
-                  required
+                  placeholder={`Phone number`}
+                  value={formData.phonenumber}
                   name="phone"
+                  autoComplete="phone"
+                  required
+                  ref={phoneRef}
                   onChange={handleInputChange}
-                  value={formData.phone}
+                  className={styles['phone-input']}
                 />
               </div>
             </div>
@@ -165,7 +210,7 @@ const ClaimModal = () => {
                 onChange={handleInputChange}
                 value={formData.pageUrl}
                 style={{
-                  paddingLeft: listingUrlSpanLength + 'px',
+                  paddingLeft: listingUrlSpanLength + 12 + 'px',
                 }}
               />
               <span ref={listingUrlSpanRef}>{'/page/'}</span>
