@@ -120,7 +120,9 @@ const ModalManager: React.FC = () => {
 
   function handleClose() {
     console.log('haschange', hasChanges)
-    if (confirmationModal) {
+    if (activeModal === 'View-Image-Modal') {
+      dispatch(closeModal())
+    } else if (confirmationModal) {
       setConfirmationModal(false)
     } else if (hasChanges) {
       setConfirmationModal(true)

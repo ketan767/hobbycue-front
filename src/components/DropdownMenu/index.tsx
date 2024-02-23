@@ -14,7 +14,7 @@ type Props = {
   search?: boolean
   optionsPosition?: 'top' | 'bottom'
   dropdownIcon?: boolean
-  dropdownHeaderStyle?: object
+  dropdownHeaderClass: string
 }
 
 const DropdownMenu: React.FC<Props> = ({
@@ -26,7 +26,7 @@ const DropdownMenu: React.FC<Props> = ({
   search,
   optionsPosition,
   dropdownIcon,
-  dropdownHeaderStyle,
+  dropdownHeaderClass,
 }) => {
   const dropdownRef = useRef<HTMLDivElement>(null)
   const optionWrapperRef = useRef<HTMLDivElement>(null)
@@ -168,8 +168,9 @@ const DropdownMenu: React.FC<Props> = ({
   return (
     <div className={styles['dropdown-wrapper']} ref={dropdownRef}>
       <div
-        className={styles['dropdown-select']}
-        style={dropdownHeaderStyle}
+        className={`${dropdownHeaderClass ? dropdownHeaderClass : ''} ${
+          styles['dropdown-select']
+        }`}
         onClick={handleShowDropdown}
       >
         <p>{value}</p>
