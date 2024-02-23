@@ -14,7 +14,7 @@ type Props = {
   search?: boolean
   optionsPosition?: 'top' | 'bottom'
   dropdownIcon?: boolean
-  dropdownHeaderClass: string
+  dropdownHeaderClass?: string
 }
 
 const DropdownMenu: React.FC<Props> = ({

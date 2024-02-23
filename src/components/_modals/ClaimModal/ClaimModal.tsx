@@ -184,6 +184,7 @@ const ClaimModal = () => {
                   onOptionClick={handlePrefixChange}
                   optionsPosition="bottom"
                   search={true}
+                  dropdownHeaderClass={''}
                 />
                 <input
                   type="text"
@@ -209,7 +210,7 @@ const ClaimModal = () => {
                 onChange={handleInputChange}
                 value={formData.pageUrl}
                 style={{
-                  paddingLeft: listingUrlSpanLength + 'px',
+                  paddingLeft: listingUrlSpanLength + 12 + 'px',
                 }}
               />
               <span ref={listingUrlSpanRef}>{'/page/'}</span>
