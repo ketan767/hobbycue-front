@@ -84,7 +84,8 @@ const ModalManager: React.FC = () => {
     show: false,
     message: '',
     type: 'success',
-  })
+  });
+  const [closeIconClicked,setCloseIconClicked] = useState<boolean>(false);
   const { user } = useSelector((state: RootState) => state.user)
 
   const triggerSnackbar = (data: SnackbarState) => {
@@ -177,6 +178,7 @@ const ModalManager: React.FC = () => {
     }
   }, [activeModal])
 
+  useEffect(()=>{setCloseIconClicked(false)},[activeModal])
   useEffect(() => {
     if (activeModal !== null) document.body.style.overflow = 'hidden'
     else
@@ -349,6 +351,11 @@ const ModalManager: React.FC = () => {
               {activeModal === 'ContactToOwner' && (
                 <ContactToOwner {...props} />
               )}
+
+              {/* 
+              On user-onboarding-welcome, UserOnboardingWelcomeModal is shown via navbar component for some functionalities
+              */}
+
               {activeModal === 'user-onboarding-welcome' && (
                 <UserOnboardingWelcomeModal />
               )}
@@ -389,10 +396,10 @@ const ModalManager: React.FC = () => {
                 <ViewImageModal {...viewImageProps} />
               )}
               {/* Modal Close Icon */}
-              {closable && (
+              {closable && activeModal !== "user-onboarding-welcome" && (
                 <CloseIcon
-                  className={styles['modal-close-icon']}
-                  onClick={activeCloseHandler}
+                  className={styles['modal-close-icon']+` ${closeIconClicked?styles['close-icon-clicked']:""}`}
+                  onClick={()=>{activeCloseHandler();setCloseIconClicked((prev)=>!prev)}}
                 />
               )}
             </main>

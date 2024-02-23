@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useRef, useEffect, useState } from 'react'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -62,6 +64,9 @@ export const Navbar: React.FC<Props> = ({}) => {
 
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
+  )
+  const { activeModal } = useSelector(
+    (state: RootState) => state.modal,
   )
 
   const [data, setData] = useState<SearchInput>({
