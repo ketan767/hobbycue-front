@@ -246,3 +246,12 @@ export const InviteToCommunity = async (data: InviteToCommunityPayload): Promise
     return { err: error, res: null };
   }
 };
+
+export const sendMailtoOwner = async (data: ContactToOwner): Promise<ApiReturnObject> => {
+  try {
+    const res = await axiosInstance.post(`/auth/send-mail-owner`, data);
+    return { res: res, err: null };
+  } catch (error: any) {
+    return { err: error, res: null };
+  }
+};

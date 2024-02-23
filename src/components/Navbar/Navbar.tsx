@@ -156,13 +156,22 @@ export const Navbar: React.FC<Props> = ({}) => {
     }
 
     try {
-      dispatch(setShowPageLoader(true))
-      const { res: userRes, err: userErr } = await searchUsers(searchCriteria)
+      const { res: userRes, err: userErr } = await searchUsers({
+        full_name: searchValue,
+      })
       if (userErr) {
-        console.error('An error occurred during the user search:', userErr)
       } else {
-        console.log('User search results:', userRes)
-        dispatch(setUserSearchResults(userRes))
+        if (userRes?.length < 10) {
+          const { res: taglineRes, err: taglineErr } = await searchUsers({
+            tagline: searchValue,
+          })
+          if (!taglineErr) {
+            const combinedResults = userRes.concat(taglineRes)
+            dispatch(setUserSearchResults(combinedResults))
+          }
+        } else {
+          dispatch(setUserSearchResults(userRes))
+        }
       }
       // Search by title
       dispatch(setShowPageLoader(true))
@@ -177,6 +186,17 @@ export const Navbar: React.FC<Props> = ({}) => {
       let combinedResults = new Set(titleRes.data.slice(0, 50))
       let remainingSlots = 50 - combinedResults.size
 
+      if (combinedResults.size < 10) {
+        dispatch(setShowPageLoader(true))
+        const { res: taglineRes, err: taglineErr } = await searchPages({
+          tagline: searchValue,
+        })
+        if (!taglineErr) {
+          taglineRes.data.slice(0, remainingSlots).forEach((item: any) => {
+            combinedResults.add(item)
+          })
+        }
+      }
       if (combinedResults.size < 10) {
         dispatch(setShowPageLoader(true))
         const { res: taglineRes, err: taglineErr } = await searchPages({

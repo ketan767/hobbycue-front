@@ -37,7 +37,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
   const fetchAndUpdateNextLevels = async (q: string) => {
     const { err, res } = await getAllHobbies(q)
     // if (err) return router.push('/hobby')
-    setNextLevels(res.data?.hobbies)
+    setNextLevels(res?.data?.hobbies)
   }
 
   const fetchData = async () => {
@@ -146,7 +146,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
                 showNextLevels ? ' ' + styles['display-mobile'] : ''
               }`}
             >
-              {data.level !== 5 && nextLevels.length > 0 ? (
+              {data.level !== 5 && nextLevels?.length > 0 ? (
                 <>
                   <ul className={styles['next-level-items']}>
                     {nextLevels.map((item: any, idx: number) => {

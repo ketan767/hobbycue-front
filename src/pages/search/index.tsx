@@ -567,10 +567,7 @@ const FilterDropdown: React.FC<Props> = () => {
   }
 
   return (
-    <Select
-      className={styles.filterDropdown}
-      value={activeFilter}
-    >
+    <Select className={styles.filterDropdown} value={activeFilter}>
       <MenuItem onClick={() => handleFilterClick('all')} value="all">
         All of HobbyCue
       </MenuItem>
@@ -634,7 +631,7 @@ const Search: React.FC<Props> = ({ data, children }) => {
     <PageGridLayout column={3} customStyles={styles['pageGridSearch']}>
       {isMobile ? (
         <aside className={`custom-scrollbar ${styles['profile-left-aside']}`}>
-          <FilterDropdown/>
+          <FilterDropdown />
         </aside>
       ) : (
         <SearchPageFilter />

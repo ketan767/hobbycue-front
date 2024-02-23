@@ -143,7 +143,7 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
   }
 
   const handleContact = () => {
-    dispatch(openModal({ type: 'ContactToOwner', closable: true }))
+    dispatch(openModal({ type: 'ListingContactToOwner', closable: true }))
   }
 
   const handleClaim = async () => {
@@ -294,10 +294,10 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
                 />
               )}</div>
             {data?.tagline ? (
-                <p className={styles['tagline']}>{data?.tagline}</p>
-              ) : (
-                <p className={styles['tagline']}>&nbsp;</p>
-              )}
+              <p className={styles['tagline']}>{data?.tagline}</p>
+            ) : (
+              <p className={styles['tagline']}>&nbsp;</p>
+            )}
           </div>
         </div>
 

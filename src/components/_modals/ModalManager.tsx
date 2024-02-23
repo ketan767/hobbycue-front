@@ -63,10 +63,11 @@ import { types } from 'util'
 import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import UserReport from './EditProfile/ReportUser'
 import ListingReport from './EditListing/ListingReport'
-import ContactToOwner from './ContactOwner'
+import ContactToOwner from './EditListing/ListingContactOwner'
 import ListingSupportModal from './EditListing/ListingSupport'
 import SupportUserModal from './EditProfile/supportUser'
 import AddHobby from './AddHobby/AddHobbyModal'
+import ListingContactToOwner from './EditListing/ListingContactOwner'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -121,7 +122,9 @@ const ModalManager: React.FC = () => {
 
   function handleClose() {
     console.log('haschange', hasChanges)
-    if (confirmationModal) {
+    if (activeModal === 'View-Image-Modal') {
+      dispatch(closeModal())
+    } else if (confirmationModal) {
       setConfirmationModal(false)
     } else if (hasChanges) {
       setConfirmationModal(true)
@@ -348,8 +351,11 @@ const ModalManager: React.FC = () => {
               {activeModal === 'ListingReportModal' && (
                 <ListingReport {...props} />
               )}
-              {activeModal === 'ContactToOwner' && (
-                <ContactToOwner {...props} />
+              {activeModal === 'ListingContactToOwner' && (
+                <ListingContactToOwner {...props} />
+              )}
+              {activeModal === 'UserContactToOwner' && (
+                <ListingContactToOwner {...props} />
               )}
 
               {/* 

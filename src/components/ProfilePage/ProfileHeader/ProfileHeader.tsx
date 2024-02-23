@@ -114,12 +114,7 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
   }
 
   const handleContact = () => {
-    console.log('data', data)
-    if (data.email) {
-      window.open(
-        `mailto:${data.email}?subject=Subject&body=Body%20goes%20here`,
-      )
-    }
+    dispatch(openModal({ type: 'UserContactToOwner', closable: false }))
   }
 
   const OpenProfileImage = () => {
@@ -186,28 +181,29 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
             </div>
             <div className={styles['name-container']}>
               <div
-              style={{display:"flex",gap:"8px", alignItems:"center"}}
+                style={{ display: 'flex', gap: '8px', alignItems: 'center' }}
               >
-              <h1 className={styles['name']}>{data.full_name}</h1>
-              {profileLayoutMode === 'edit' && (
-                <Image
-                  src={EditIcon}
-                  alt="edit"
-                  onClick={() =>
-                    dispatch(
-                      openModal({
-                        type: 'profile-general-edit',
-                        closable: true,
-                      }),
-                    )
-                  }
-                />
-              )}</div>
-            {data?.tagline ? (
-                  <p className={styles['tagline']}>{data?.tagline}</p>
-                ) : (
-                  <p className={styles['tagline']}>&nbsp;</p>
+                <h1 className={styles['name']}>{data.full_name}</h1>
+                {profileLayoutMode === 'edit' && (
+                  <Image
+                    src={EditIcon}
+                    alt="edit"
+                    onClick={() =>
+                      dispatch(
+                        openModal({
+                          type: 'profile-general-edit',
+                          closable: true,
+                        }),
+                      )
+                    }
+                  />
                 )}
+              </div>
+              {data?.tagline ? (
+                <p className={styles['tagline']}>{data?.tagline}</p>
+              ) : (
+                <p className={styles['tagline']}>&nbsp;</p>
+              )}
             </div>
           </div>
 
@@ -411,12 +407,9 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
                     />
                   )}
             </div>
-            <FilledButton
-                className={styles.contactBtn}
-                onClick={handleContact}
-              >
-                Contact
-              </FilledButton>
+            <FilledButton className={styles.contactBtn} onClick={handleContact}>
+              Contact
+            </FilledButton>
           </div>
         </div>
       </div>
