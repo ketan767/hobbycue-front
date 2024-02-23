@@ -349,6 +349,7 @@
     min-width: 6px;
     font-size: 12px;
   }
+  
 }
 .publishBtn {
   width: 100%;
@@ -452,11 +453,5 @@
   }
   .content-container {
     margin: 0;
-  }
-  .contactBtn {
-    width: 78px !important;
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 }
