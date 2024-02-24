@@ -9,6 +9,7 @@ import { getAllHobbies } from '@/services/hobby.service'
 import {
   createListingPost,
   createUserPost,
+  getMetadata,
   uploadImage,
 } from '@/services/post.service'
 import { closeModal } from '@/redux/slices/modal'
@@ -91,9 +92,16 @@ export const CreatePost: React.FC<Props> = ({
   const [hobbyInputValue, setHobbyInputValue] = useState('')
   const [genreInputValue, setGenreInputValue] = useState('')
   const [hasLink, setHasLink] = useState(false)
+  const [url, setUrl] = useState('')
   const [isError, setIsError] = useState(false)
   const [isChanged, setIsChanged] = useState(false)
-
+  const [metaData, setMetaData] = useState({
+    title: '',
+    description: '',
+    image: '',
+    icon: '',
+    url: '',
+  })
   const hobbyRef = useRef<HTMLInputElement>(null)
   const genreRef = useRef<HTMLInputElement>(null)
 
@@ -109,6 +117,34 @@ export const CreatePost: React.FC<Props> = ({
     const isUrl = checkIfUrlExists(data.content.replace(/<img .*?>/g, ''))
     setHasLink(isUrl)
   }, [data.content])
+
+  useEffect(() => {
+    console.warn(hasLink)
+  }, [hasLink])
+
+  useEffect(() => {
+    if (hasLink) {
+      const regex =
+        /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
+      const url = data.content.match(regex)
+      if (url) {
+        setUrl(url[0])
+      }
+      if (url) {
+        getMetadata(url[0])
+          .then((res: any) => {
+            setMetaData(res.res.data.data.data)
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
+    }
+  }, [data.content, hasLink])
+
+  useEffect(() => {
+    console.log({ metaData })
+  }, [metaData])
 
   useEffect(() => {
     if (
