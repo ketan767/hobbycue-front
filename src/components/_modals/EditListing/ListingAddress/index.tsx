@@ -166,7 +166,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
     }
   }, [data, initialData, onStatusChange])
   const handleSubmit = async () => {
-    if (isChanged) {
+    // if (isChanged) {
       if (listingModalData.type === listingTypes.PLACE) {
         if (isEmptyField(data.street.value) || !data.street.value) {
           streetRef.current?.focus()
@@ -259,7 +259,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
         window.location.reload()
         dispatch(closeModal())
       }
-    }
+    // }
   }
 
   const updateAddress = async () => {
@@ -306,6 +306,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
     const successFunction = (position: any) => {
       var lat = position.coords.latitude
       var long = position.coords.longitude
+      setData((prev)=>({...prev,latitude:{value:lat,error:null},longitude:{value:long,error:null}}));
       console.log(lat)
       console.log(long)
       handleGeocode(lat, long)
