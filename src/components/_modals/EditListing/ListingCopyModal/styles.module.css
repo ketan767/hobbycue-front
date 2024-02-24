@@ -154,7 +154,8 @@ line-height: 22px; /* 157.143% */
 
 .tempmsg {
   font-size: 14px;
-  color: #6d747a;
+  font-weight: 500;
+  color: var(--Red, #C0504D);
 }
 
 @media screen and (max-width: 1100px) {
