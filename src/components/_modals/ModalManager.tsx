@@ -68,6 +68,7 @@ import ListingSupportModal from './EditListing/ListingSupport'
 import SupportUserModal from './EditProfile/supportUser'
 import AddHobby from './AddHobby/AddHobbyModal'
 import ListingContactToOwner from './EditListing/ListingContactOwner'
+import UserContactToOwner from './EditProfile/UserContactOwner'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -355,7 +356,7 @@ const ModalManager: React.FC = () => {
                 <ListingContactToOwner {...props} />
               )}
               {activeModal === 'UserContactToOwner' && (
-                <ListingContactToOwner {...props} />
+                <UserContactToOwner {...props} />
               )}
 
               {/* 

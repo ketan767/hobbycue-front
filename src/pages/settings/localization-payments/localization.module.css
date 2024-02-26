@@ -43,7 +43,7 @@
   font-weight: 500;
   font-size: 14px;
   line-height: 22px;
-  color: #6d747a;
+  color: var(--Red, #C0504D);
   margin-bottom: 12px;
 }
 
