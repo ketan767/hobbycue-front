@@ -29,7 +29,6 @@ const sidebarItems = [
 
 const SettingsSidebar: React.FC<Props> = ({ active }) => {
   const pathname = usePathname();
-  console.warn({pathname})
   return (
     <>
       <div className={styles.sidebarContainer}>

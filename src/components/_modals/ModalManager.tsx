@@ -220,7 +220,8 @@ const ModalManager: React.FC = () => {
       event.target === mainRef.current ||
       event.target === modalWrapperRef.current
     ) {
-      handleClose()
+      handleClose();
+      setCloseIconClicked((prev)=>!prev)
     }
   }
   const props = {
@@ -405,7 +406,7 @@ const ModalManager: React.FC = () => {
               {/* Modal Close Icon */}
               {closable && activeModal !== "user-onboarding-welcome" && (
                 <CloseIcon
-                  className={styles['modal-close-icon']+` ${closeIconClicked?styles['close-icon-clicked']:""}`}
+                  className={styles['modal-close-icon']}
                   onClick={()=>{activeCloseHandler();setCloseIconClicked((prev)=>!prev)}}
                 />
               )}

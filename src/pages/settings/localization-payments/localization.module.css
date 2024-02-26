@@ -39,7 +39,7 @@
   margin-bottom: 24px;
 }
 
-.underDev{
+.underDev {
   font-weight: 500;
   font-size: 14px;
   line-height: 22px;
@@ -47,9 +47,10 @@
   margin-bottom: 12px;
 }
 
-.clickable{
+.clickable {
   cursor: pointer;
 }
+
 .flex {
   display: flex;
   align-items: center;
@@ -63,6 +64,7 @@
   padding-right: 4px;
   margin-bottom: 24px;
 }
+
 
 .addIcon {
   margin-right: 4px;
@@ -99,9 +101,11 @@
   padding: 4px 0;
   margin-bottom: 10px;
 }
-.edit-icon-container{
+
+.edit-icon-container {
   position: relative;
 }
+
 .optionsContainer {
   position: absolute;
   top: calc(100% - 2px);
@@ -114,10 +118,12 @@
   opacity: 0;
   pointer-events: none;
 }
-.optionsContainer.options-active{
+
+.optionsContainer.options-active {
   opacity: 1;
   pointer-events: all;
 }
+
 .optionsContainer li {
   list-style: none;
   color: #6d747a;
@@ -129,3 +135,25 @@
 /* .settingcontainer{
   grid-template-columns: 16rem 42rem !important;
 } */
+
+@media screen and (max-width:1100px) {
+  .container {
+    width: auto;
+    border-radius: none;
+    overflow: hidden;
+    padding: 30px 16px;
+  }
+
+  .selectedCard {
+    border-radius: 8px;
+    background: var(--Purple-3, #F7F5F9);
+  }
+
+  .cardContainer {
+    padding: 8px 3.9px;
+  }
+
+  .textLight{
+    margin-bottom: 14px;
+  }
+}

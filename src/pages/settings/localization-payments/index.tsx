@@ -20,6 +20,8 @@ import {
   updateMyProfileDetail,
 } from '@/services/user.service'
 import { countryData } from '@/utils/countrydata'
+import { useMediaQuery } from '@mui/material'
+import SettingsDropdownLayout from '@/layouts/SettingsDropdownLayout'
 
 let options = {
   region: countryData.map((item) => item.name),
@@ -85,11 +87,13 @@ const VisibilityAndNotification: React.FC = () => {
       }
     })
   }
+  const isMobile = useMediaQuery('(max-width:1100px)');
 
   return (
     <>
       <PageGridLayout column={2} customStyles={styles['settingcontainer']}>
-        <SettingsSidebar active="" />
+      <SettingsDropdownLayout>
+        {isMobile?null:<SettingsSidebar active="localization-payments" />}
         <div className={styles.container}>
           <div className={`${styles.flex} ${styles.addSectionContainer}`}>
             <p className={`${styles.textLight}`}> Addresses </p>
@@ -280,6 +284,7 @@ const VisibilityAndNotification: React.FC = () => {
   </div>
 </div>
         </div>
+        </SettingsDropdownLayout>
       </PageGridLayout>
     </>
   )

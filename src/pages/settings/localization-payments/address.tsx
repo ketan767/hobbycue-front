@@ -75,7 +75,7 @@ const Address: React.FC<Props> = ({
   }
   console.log('address', address)
   return (
-    <div className={`${styles.cardContainer}`} key={address?._id}>
+    <div className={`${styles.cardContainer} ${user?.primary_address?._id === address?._id?styles.selectedCard:""}`} key={address?._id}>
       <div className={`${styles.addressLeft}`}>
         <Image
           src={
