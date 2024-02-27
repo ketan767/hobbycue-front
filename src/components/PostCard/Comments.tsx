@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { addPostComment, getPostComment } from '@/services/post.service'
 import { dateFormatShort, isEmptyField } from '@/utils'
@@ -10,6 +10,7 @@ import PostCommentVotes from './CommentVotes'
 import { format, render, cancel, register } from 'timeago.js'
 import TextareaAutosize from 'react-textarea-autosize'
 import CommentCheckWithUrl from './CommentCheckWithUrl'
+import { closeModal } from '@/redux/slices/modal'
 
 type Props = {
   styles: any
@@ -19,6 +20,7 @@ type Props = {
 
 const PostComments = ({ data, styles }: Props) => {
   const router = useRouter()
+  const dispatch=useDispatch()
   const inputRef: any = useRef<HTMLTextAreaElement>(null)
   const { activeProfile } = useSelector((state: RootState) => state.user)
   const [comments, setComments] = useState<any>([])
@@ -275,7 +277,7 @@ const PostComments = ({ data, styles }: Props) => {
                     </footer>
                   </section>
                 </div>
-                <Link href={`/post/${data._id}?comments=show`}>
+                <Link href={`/post/${data._id}?comments=show`} onClick={()=>{dispatch(closeModal())}}>
                   <p className={styles['see-more-comments']}>
                     See more comments
                   </p>
