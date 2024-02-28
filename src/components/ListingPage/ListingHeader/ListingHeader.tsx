@@ -34,6 +34,7 @@ import { listingTypes } from '@/constants/constant'
 import ListingPageLayout from '@/layouts/ListingPageLayout'
 import RepostIcon from '@/assets/icons/RepostIcon'
 import { ClaimListing } from '@/services/auth.service'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   data: ListingPageData['pageData']
@@ -42,13 +43,23 @@ type Props = {
 
 const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
   const dispatch = useDispatch()
-
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
   const { listingLayoutMode } = useSelector((state: any) => state.site)
   const [titleEditModalActive, setTitleEditModalActive] = useState(false)
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
-
+  const showFeatureUnderDevelopment = () => {
+    setSnackbar({
+      display: true,
+      type: 'warning',
+      message: 'This feature is under development',
+    })
+  }
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
     e.preventDefault()
     let files = e.target.files
@@ -425,7 +436,7 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
             {/* Bookmark Button */}
             <CustomTooltip title="Bookmark">
               <div
-                onClick={(e) => console.log(e)}
+                onClick={showFeatureUnderDevelopment}
                 className={styles['action-btn']}
               >
                 <BookmarkBorderRoundedIcon color="primary" />
@@ -494,7 +505,7 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
           {/* Bookmark Button */}
           <CustomTooltip title="Bookmark">
             <div
-              onClick={(e) => console.log(e)}
+              onClick={showFeatureUnderDevelopment}
               className={styles['action-btn']}
             >
               <BookmarkBorderRoundedIcon color="primary" />
@@ -535,6 +546,16 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
           {button}
         </div>
       </div>
+      {
+        <CustomSnackbar
+          message={snackbar.message}
+          triggerOpen={snackbar.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }
