@@ -3,15 +3,17 @@ import { createSlice } from '@reduxjs/toolkit'
 interface PostState {
   allPosts: object[]
   allPages: object[]
-  loading: boolean,
+  loading: boolean
   pagesLoading: boolean
+  activePost: any
 }
 
 const initialState: PostState = {
   allPosts: [],
   allPages: [],
   loading: false,
-  pagesLoading: true
+  pagesLoading: true,
+  activePost: {} ,
 }
 
 const postSlice = createSlice({
@@ -29,6 +31,9 @@ const postSlice = createSlice({
     },
     updatePagesLoading: (state, { payload }) => {
       state.pagesLoading = payload
+    },
+    setActivePost: (state, { payload }) => {
+      state.activePost = payload
     },
     // updateBlogCategories: (state, { payload }) => {
     //   state.allCategories = payload
@@ -48,5 +53,11 @@ const postSlice = createSlice({
   },
 })
 
-export const { updatePosts, updatePages, updateLoading, updatePagesLoading } = postSlice.actions
+export const {
+  updatePosts,
+  updatePages,
+  updateLoading,
+  updatePagesLoading,
+  setActivePost,
+} = postSlice.actions
 export default postSlice.reducer

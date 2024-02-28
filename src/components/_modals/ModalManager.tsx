@@ -69,6 +69,7 @@ import SupportUserModal from './EditProfile/supportUser'
 import AddHobby from './AddHobby/AddHobbyModal'
 import ListingContactToOwner from './EditListing/ListingContactOwner'
 import UserContactToOwner from './EditProfile/UserContactOwner'
+import { PostModal } from './PostModal/PostModal'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -86,8 +87,8 @@ const ModalManager: React.FC = () => {
     show: false,
     message: '',
     type: 'success',
-  });
-  const [closeIconClicked,setCloseIconClicked] = useState<boolean>(false);
+  })
+  const [closeIconClicked, setCloseIconClicked] = useState<boolean>(false)
   const { user } = useSelector((state: RootState) => state.user)
 
   const triggerSnackbar = (data: SnackbarState) => {
@@ -182,7 +183,9 @@ const ModalManager: React.FC = () => {
     }
   }, [activeModal])
 
-  useEffect(()=>{setCloseIconClicked(false)},[activeModal])
+  useEffect(() => {
+    setCloseIconClicked(false)
+  }, [activeModal])
   useEffect(() => {
     if (activeModal !== null) document.body.style.overflow = 'hidden'
     else
@@ -278,6 +281,7 @@ const ModalManager: React.FC = () => {
 
               {activeModal === 'auth' && <AuthModal />}
               {activeModal === 'email-verify' && <VerifyEmailModal />}
+              {activeModal === 'post' && <PostModal {...props} />}
               {activeModal === 'user-onboarding' && <UserOnboardingModal />}
               {activeModal === 'listing-onboarding' && (
                 <ListingOnboardingModal />
@@ -403,10 +407,16 @@ const ModalManager: React.FC = () => {
                 <ViewImageModal {...viewImageProps} />
               )}
               {/* Modal Close Icon */}
-              {closable && activeModal !== "user-onboarding-welcome" && (
+              {closable && activeModal !== 'user-onboarding-welcome' && (
                 <CloseIcon
-                  className={styles['modal-close-icon']+` ${closeIconClicked?styles['close-icon-clicked']:""}`}
-                  onClick={()=>{activeCloseHandler();setCloseIconClicked((prev)=>!prev)}}
+                  className={
+                    styles['modal-close-icon'] +
+                    ` ${closeIconClicked ? styles['close-icon-clicked'] : ''}`
+                  }
+                  onClick={() => {
+                    activeCloseHandler()
+                    setCloseIconClicked((prev) => !prev)
+                  }}
                 />
               )}
             </main>
