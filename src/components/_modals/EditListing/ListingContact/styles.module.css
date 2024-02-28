@@ -202,7 +202,10 @@
 }
 .whatsapp-label {
   display: flex;
-  justify-content: space-between;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
 }
 .input-box-error input {
   border: 1px solid #c0504d !important;

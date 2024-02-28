@@ -257,3 +257,12 @@ export const getAllListingUrls = async (
       return { err: error, res: null };
     }
   };
+
+  export const checkListingUrl = async (url: string, cb: CallbackFunction) => {
+    const token = localStorage.getItem('token')
+    const headers = { Authorization: `Bearer ${token}` }
+    await axiosInstance
+      .get(`/listing/check-page-url/${url}`, { headers })
+      .then((res) => cb(null, res))
+      .catch((err) => cb(err, null))
+  }

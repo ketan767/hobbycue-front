@@ -200,7 +200,7 @@ const PostCard: React.FC<Props> = (props) => {
               <Link href={`/profile/${postData?._author?.profile_url}`}>
                 <p className={styles['author-name']}>
                   {postData?.author_type === 'User'
-                    ? postData?._author?.display_name
+                    ? postData?._author?.full_name
                     : postData?.author_type === 'Listing'
                     ? postData?._author?.title
                     : ''}
@@ -351,7 +351,7 @@ const PostCard: React.FC<Props> = (props) => {
                   <p className={styles['author-name']}>
                     {'Shared by '}
                     {postData?.author_type === 'User'
-                      ? postData?._author?.display_name
+                      ? postData?._author?.full_name
                       : postData?.author_type === 'Listing'
                       ? postData?._author?.title
                       : ''}{' '}
