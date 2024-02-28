@@ -109,6 +109,25 @@
 @media screen and (max-width: 1100px) {
   .container {
     width: 100%;
+    padding: 16px 21px;
+  }
+  .textLight{
+    margin-bottom: 20px;
+  }
+  .email{
+    color: var(--Grey-Darkest, #08090A);
+
+/* Text md/Regular */
+font-family: Poppins;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 22px; /* 137.5% */
+  }
+
+  .socialLoginContainer img{
+    width: 16px;
+    height: 16px;
   }
 
 .settingcontainer{

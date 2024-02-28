@@ -67,7 +67,7 @@
     overflow: auto;
     padding: 0;
   }
-  /* .header {
+  .header {
     display: block;
     position: sticky;
     top: 0;
@@ -78,7 +78,7 @@
     background: var(--Base-White, #fff);
     box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.08);
     padding: var(--spacing-12) var(--spacing-16);
-  } */
+  }
   .responsive-logo {
     display: block;
   }
@@ -96,7 +96,7 @@
   }
   .close-icon-clicked {
     left: calc(50vw + 136px) !important;
-    top: calc(50vh - 86px) !important;
+    top: calc(50vh - 30px) !important;
   }
 }
 .button1 {

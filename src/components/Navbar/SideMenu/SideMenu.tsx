@@ -426,7 +426,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                 </Link>
               </ul> */}
                   <ul>
-                    <Link href={`/settings/login-and-security`}>
+                    <Link href={`/settings/login-security`}>
                       <li>Settings</li>
                     </Link>
                   </ul>

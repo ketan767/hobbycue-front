@@ -11,6 +11,8 @@ import RadioButton from '@/components/radioButton/radioButton'
 import { withAuth } from '@/navigation/withAuth'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
+import { useMediaQuery } from '@mui/material'
+import SettingsDropdownLayout from '@/layouts/SettingsDropdownLayout'
 
 type Props = {}
 const options = [
@@ -24,11 +26,13 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
   const userProfileUrl = useSelector(
     (state: RootState) => state?.user?.user?.profile_url,
   )
+  
+    const isMobile = useMediaQuery('(max-width:1100px)');
   return (
     <>
       <PageGridLayout column={2} customStyles={styles['settingcontainer']}>
-        <SettingsSidebar active="" />
-
+      <SettingsDropdownLayout>
+        {isMobile?null:<SettingsSidebar active="visibility-notification" />}
         <div className={styles.container}>
           <p className={styles.underDev}>
             Below features are under development. Come back soon to view this.
@@ -120,6 +124,7 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
             </div>
           </div>
         </div>
+        </SettingsDropdownLayout>
       </PageGridLayout>
     </>
   )

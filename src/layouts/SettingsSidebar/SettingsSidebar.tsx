@@ -11,25 +11,24 @@ type Props = { active: any }
 const sidebarItems = [
   {
     text: 'Login & Security',
-    link: '/settings/login-and-security',
+    link: '/settings/login-security',
   },
   {
     text: 'Visibility & Notification',
-    link: '/settings/visibility-and-notification',
+    link: '/settings/visibility-notification',
   },
   {
     text: 'Localization & Payments',
-    link: '/settings/localization-and-payments',
+    link: '/settings/localization-payments',
   },
   {
     text: 'Account & Data',
-    link: '/settings/data-and-others',
+    link: '/settings/data-others',
   },
 ]
 
 const SettingsSidebar: React.FC<Props> = ({ active }) => {
   const pathname = usePathname();
-  console.warn({pathname})
   return (
     <>
       <div className={styles.sidebarContainer}>

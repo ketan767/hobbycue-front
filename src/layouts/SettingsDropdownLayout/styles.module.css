@@ -1,0 +1,24 @@
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.singleDropdown {
+    display: flex;
+    padding: 15px 14px 15px 16px;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--Grey-Light, #CED4DA);
+}
+
+.singleDropdown p {
+    color: var(--Grey-Darkest, #08090A);
+
+    /* Text sm/Semibold */
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 16px;
+    /* 114.286% */
+}

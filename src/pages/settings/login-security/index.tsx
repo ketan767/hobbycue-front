@@ -24,6 +24,8 @@ import {
 } from '@/services/auth.service'
 import FilledButton from '@/components/_buttons/FilledButton'
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
+import SettingsDropdownLayout from '@/layouts/SettingsDropdownLayout'
+import { useMediaQuery } from '@mui/material'
 
 type Props = {}
 
@@ -135,11 +137,14 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
     dispatch(openModal({ type: 'confirm-email', closable: true }))
   }
 
-  console.log('usergoogle', user)
+  console.log('usergoogle', user);
+  const isMobile = useMediaQuery('(max-width:1100px)');
+  
   return (
     <>
       <PageGridLayout column={2} customStyles={styles['settingcontainer']}>
-        <SettingsSidebar active="" />
+        <SettingsDropdownLayout>
+        {isMobile?null:<SettingsSidebar active="login-security" />}
         <div className={styles.container}>
           <p className={`${styles.textLight} ${styles.title}`}> Email Login </p>
           <p className={styles.email}>Email ID: {user.email} </p>
@@ -280,6 +285,7 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
             </p>
           </div>
         </div>
+        </SettingsDropdownLayout>
       </PageGridLayout>
     </>
   )
