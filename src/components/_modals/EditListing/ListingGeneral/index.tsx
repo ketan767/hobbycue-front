@@ -6,6 +6,7 @@ import {
   getMyProfileDetail,
   updateMyProfileDetail,
 } from '@/services/user.service'
+import { checkListingUrl } from '@/services/listing.service';
 import { containOnlyNumbers, isEmpty, isEmptyField } from '@/utils'
 import { closeModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
@@ -395,6 +396,21 @@ const ListingGeneralEditModal: React.FC<Props> = ({
       return () => clearTimeout(timer)
     }
   }, [isError])
+
+  useEffect(()=>{
+    checkListingUrl(data.page_url.value,(err,res)=>{
+      if(data.page_url.value.length===0){
+        return;
+      }
+      if(err){
+        if("response" in err){
+          if(err.response.status===404){
+            setData(prev=>({...prev,page_url:{...prev.page_url,error:"This listing url is already taken"}}))
+          }
+        }
+      }
+    });
+  },[data.page_url.value])
 
   if (confirmationModal) {
     return (
