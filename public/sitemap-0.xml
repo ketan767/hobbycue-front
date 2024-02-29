@@ -21,10 +21,12 @@
 <url><loc>https://localhost:8000/search</loc><lastmod>2024-02-23T06:49:52.717Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://localhost:8000/server-sitemap.xml</loc><lastmod>2024-02-23T06:49:52.717Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://localhost:8000/settings</loc><lastmod>2024-02-23T06:49:52.717Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+
 <url><loc>https://localhost:8000/settings/data-others</loc><lastmod>2024-02-23T06:49:52.717Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://localhost:8000/settings/localization-payments</loc><lastmod>2024-02-23T06:49:52.717Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://localhost:8000/settings/localization-payments/address</loc><lastmod>2024-02-23T06:49:52.717Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://localhost:8000/settings/login-security</loc><lastmod>2024-02-23T06:49:52.717Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://localhost:8000/settings/visibility-notification</loc><lastmod>2024-02-23T06:49:52.717Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+
 <url><loc>https://localhost:8000/terms</loc><lastmod>2024-02-23T06:49:52.717Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 </urlset>
