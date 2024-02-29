@@ -25,7 +25,12 @@ const Explore: React.FC<Props> = (props) => {
       </aside>
       <div className={styles['explore-wrapper']}>
         <div className={styles.explore}>
-          <p>This feature is under development. Come back soon to view this</p>
+          <p>
+            The Explore functionality is under development. Use the Search box
+            at the top to look up pages on your hobby by other users. If you
+            don't find any pages, you may Add Listing Page from the menu at the
+            top right corner.{' '}
+          </p>
         </div>
       </div>
     </PageGridLayout>

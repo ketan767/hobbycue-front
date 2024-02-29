@@ -150,7 +150,7 @@ const Footer: React.FC = () => {
             }
           },
         },
-        { title: 'Sitemap', link: '/server-sitemap.xml' },
+        { title: 'Sitemap', link: '/sitemap' },
       ],
     },
   ]

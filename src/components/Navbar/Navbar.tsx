@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useRef, useEffect, useState } from 'react'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -62,6 +64,9 @@ export const Navbar: React.FC<Props> = ({}) => {
 
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
+  )
+  const { activeModal } = useSelector(
+    (state: RootState) => state.modal,
   )
 
   const [data, setData] = useState<SearchInput>({
@@ -311,6 +316,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                   searchResult()
                 }
               }}
+              style={isLoggedIn?{width:"400px"}:{width:"100%"}}
               sx={{
                 '& .MuiOutlinedInput-root': {
                   borderRadius: '8px',
@@ -702,7 +708,7 @@ export const Navbar: React.FC<Props> = ({}) => {
 
                       <section className={styles['account']}>
                         <h5>Account</h5>
-                        <Link href={`/settings/login-and-security`}>
+                        <Link href={`/settings/login-security`}>
                           <p>Settings</p>
                         </Link>
                         <p onClick={handleLogout}>Sign Out</p>

@@ -6,7 +6,11 @@ import Link from 'next/link'
 import BarsIcon from '../../assets/svg/vertical-bars.svg'
 import PostVotes from './Votes'
 import PostComments from './Comments'
-import { getAllPosts, getMetadata } from '@/services/post.service'
+import {
+  getAllPosts,
+  getMetadata,
+  getPostComment,
+} from '@/services/post.service'
 import { useRouter } from 'next/router'
 import useCheckIfClickedOutside from '@/hooks/useCheckIfClickedOutside'
 import Slider from '../Slider/Slider'
@@ -15,6 +19,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import CustomizedTooltips from '../Tooltip/ToolTip'
 import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import { RootState } from '@/redux/store'
+import { setActivePost } from '@/redux/slices/post'
 
 type Props = {
   postData: any
@@ -25,23 +30,28 @@ type Props = {
 
 const PostCard: React.FC<Props> = (props) => {
   // const [type, setType] = useState<'User' | 'Listing'>()
-// console.log({postData:props.postData.visibility})
-  const router = useRouter();
-  const {user} = useSelector((state:RootState)=>state.user);
-  const [has_link, setHas_link] = useState(props.postData.has_link);
+  // console.warn({props})
+  const router = useRouter()
+  const { user } = useSelector((state: RootState) => state.user)
+  const [has_link, setHas_link] = useState(props.postData.has_link)
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
     message: '',
-  });
-  const [openAction,setOpenAction] = useState(false);
+  })
+  const [openAction, setOpenAction] = useState(false)
   // console.log('🚀 ~ file: PostCard.tsx:20 ~ router:', router)
   const { fromProfile, onPinPost } = props
   const optionRef: any = useRef(null)
-  const editReportDeleteRef:any = useRef(null);
+  const editReportDeleteRef: any = useRef(null)
   const [postData, setPostData] = useState(props.postData)
+  const [comments, setComments] = useState([])
   const [showComments, setShowComments] = useState(
-    props.postData.has_link ? true : false,
+    props.currentSection === 'links'
+      ? false
+      : props.postData.has_link
+      ? true
+      : false,
   )
   const pageUrlClass = styles.postUrl
   useEffect(() => {
@@ -62,23 +72,26 @@ const PostCard: React.FC<Props> = (props) => {
   })
   useCheckIfClickedOutside(optionRef, () => setOptionsActive(false))
 
-  const modalRef = useRef(null);
+  const modalRef = useRef(null)
 
   useEffect(() => {
-    function handleClickOutside(event:Event) {
-      if (editReportDeleteRef.current && !editReportDeleteRef.current.contains(event.target)) {
-        setOpenAction(false);
+    function handleClickOutside(event: Event) {
+      if (
+        editReportDeleteRef.current &&
+        !editReportDeleteRef.current.contains(event.target)
+      ) {
+        setOpenAction(false)
       }
     }
 
     // Bind the event listener
-    document.addEventListener("click", handleClickOutside);
+    document.addEventListener('click', handleClickOutside)
 
     // Unbind the event listener on cleanup
     return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, []);
+      document.removeEventListener('click', handleClickOutside)
+    }
+  }, [])
   const updatePost = async () => {
     const { err, res } = await getAllPosts(
       `_id=${postData._id}&populate=_author,_genre,_hobby`,
@@ -121,20 +134,33 @@ const PostCard: React.FC<Props> = (props) => {
     dispatch(openModal({ type: 'social-media-share', closable: true }))
   }
 
-  const handleCardClick = (e: any) => {
+  const handleCardClick = async (e: any) => {
     // Check if the click is on the post-card-wrapper itself, not on its children
-    if (e.currentTarget === e.target) {
-      router.push(`/post/${postData._id}`)
-    }
+    // if (e.currentTarget === e.target) {
+    //   router.push(`/post/${postData._id}`)
+    // }
+    await fetchComments()
   }
- const postedByMe = postData?._author?.email === user?.email;
- const showFeatureUnderDevelopment = () => {
-  setSnackbar({
-    display: true,
-    type: "warning",
-    message: "This feature is under development",
-  })
- }
+  const postedByMe = postData?._author?.email === user?.email
+  const showFeatureUnderDevelopment = () => {
+    setSnackbar({
+      display: true,
+      type: 'warning',
+      message: 'This feature is under development',
+    })
+  }
+  const fetchComments = async () => {
+    const { err, res } = await getPostComment(
+      `_post=${props.postData._id}&populate=_author`,
+    )
+    if (err) return console.log(err)
+    setComments(res?.data?.data?.comments)
+  }
+  useEffect(() => {
+    if (props.currentSection === 'links') {
+      fetchComments()
+    }
+  }, [])
   return (
     <>
       <div className={styles['post-card-wrapper']} onClick={handleCardClick}>
@@ -174,48 +200,76 @@ const PostCard: React.FC<Props> = (props) => {
               <Link href={`/profile/${postData?._author?.profile_url}`}>
                 <p className={styles['author-name']}>
                   {postData?.author_type === 'User'
-                    ? postData?._author?.display_name
+                    ? postData?._author?.full_name
                     : postData?.author_type === 'Listing'
                     ? postData?._author?.title
                     : ''}
                 </p>
               </Link>
-              <p className={styles['post-other-info']}>
+              <p
+                className={styles['post-other-info']}
+                onClick={() => {
+                  dispatch(setActivePost({ ...postData, comments: comments }))
+                  dispatch(openModal({ type: 'post', closable: false }))
+                }}
+              >
                 <span>
                   {dateFormat.format(new Date(postData.createdAt))}
                   {' | '}
                 </span>
                 <span>
-                  <Link href={`/hobby/${postData?._hobby?.slug}`}>
                     {postData?._hobby?.display}
-                  </Link>
                 </span>
                 <span>
-                  {postData?.visibility
-                    ? ` | ${postData?.visibility}`
-                    : ''}
+                  {postData?.visibility ? ` | ${postData?.visibility}` : ''}
                 </span>
               </p>
             </div>
             <div ref={editReportDeleteRef} className={styles.actionIcon}>
-              {openAction===true &&
-              <div className={styles.editReportDelete}>
-                {postedByMe&&<>
-                <button onClick={()=>{showFeatureUnderDevelopment();setOpenAction(false)}} >Edit</button>
-                <button onClick={()=>{showFeatureUnderDevelopment();setOpenAction(false)}} >Delete</button>
-                </>}
-                <button onClick={()=>{showFeatureUnderDevelopment();setOpenAction(false)}} >Report</button>
-              </div>
-              }
+              {openAction === true && (
+                <div className={styles.editReportDelete}>
+                  {postedByMe && (
+                    <>
+                      <button
+                        onClick={() => {
+                          showFeatureUnderDevelopment()
+                          setOpenAction(false)
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => {
+                          showFeatureUnderDevelopment()
+                          setOpenAction(false)
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </>
+                  )}
+                  <button
+                    onClick={() => {
+                      showFeatureUnderDevelopment()
+                      setOpenAction(false)
+                    }}
+                  >
+                    Report
+                  </button>
+                </div>
+              )}
               <svg
-              /////
+                /////
                 ref={optionRef}
                 className={styles['more-actions-icon']}
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
                 fill="none"
-                onClick={() => {setOptionsActive(true);setOpenAction(true)}}
+                onClick={() => {
+                  setOptionsActive(true)
+                  setOpenAction(true)
+                }}
               >
                 <g clip-path="url(#clip0_173_72891)">
                   <path
@@ -275,23 +329,29 @@ const PostCard: React.FC<Props> = (props) => {
             <></>
           )}
           {has_link && props.currentSection === 'links' && (
-            <a href={url} className={styles.postMetadata}>
-              <div className={styles.metaImgContainer}>
+            <div className={styles.postMetadata}>
+              <a href={url} target="_blank" className={styles.metaImgContainer}>
                 <img
                   src={metaData.image ? metaData.image : metaData.icon}
                   alt="link-image"
                   width={200}
                   height={130}
                 />
-              </div>
+              </a>
               <div className={styles.metaContent}>
-                <p className={styles.contentHead}> {metaData.title} </p>
-                <p className={styles.contentUrl}> {metaData.url} </p>
+                <a href={url} target="_blank" className={styles.contentHead}>
+                  {' '}
+                  {metaData.title}{' '}
+                </a>
+                <a href={url} target="_blank" className={styles.contentUrl}>
+                  {' '}
+                  {metaData.url}{' '}
+                </a>
                 <div className={styles['meta-author']}>
                   <p className={styles['author-name']}>
                     {'Shared by '}
                     {postData?.author_type === 'User'
-                      ? postData?._author?.display_name
+                      ? postData?._author?.full_name
                       : postData?.author_type === 'Listing'
                       ? postData?._author?.title
                       : ''}{' '}
@@ -301,20 +361,48 @@ const PostCard: React.FC<Props> = (props) => {
                     {dateFormat.format(new Date(postData.createdAt))}
                   </p>
                 </div>
-                <p className={styles.metaContentText}>
-                  {/* {metaData.description}{' '} */}
+                {/* <p className={styles.metaContentText}>
                   {metaData.description?.length > 150
                     ? metaData.description.slice(0, 150 - 3) + '...'
                     : metaData.description}
-                </p>
-                <section className={styles['meta-actions']}>
+                </p> */}
+                <section
+                  className={styles['meta-actions'] + ` ${styles['links']}`}
+                >
                   <PostVotes
                     data={postData}
                     styles={styles}
                     className={styles['meta-votes']}
                     updatePost={updatePost}
                   />
-                  {(props.currentSection !== 'links') && (
+                  {props?.currentSection === 'links' && (
+                    <div className={styles['comment-and-count']}>
+                      <svg
+                        onClick={() => setShowComments(!showComments)}
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 18 18"
+                        fill="none"
+                      >
+                        <g clip-path="url(#clip0_10350_4296)">
+                          <path
+                            d="M15 12.8775L14.1225 12H3V3H15V12.8775ZM15 1.5H3C2.175 1.5 1.5 2.175 1.5 3V12C1.5 12.825 2.175 13.5 3 13.5H13.5L16.5 16.5V3C16.5 2.175 15.825 1.5 15 1.5Z"
+                            fill="#8064A2"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_10350_4296">
+                            <rect width="18" height="18" fill="white" />
+                          </clipPath>
+                        </defs>
+                      </svg>
+                      <p className={styles['comments-count']}>
+                        {comments.length}
+                      </p>
+                    </div>
+                  )}
+                  {props.currentSection !== 'links' && (
                     <svg
                       onClick={(e: any) => {
                         e.stopPropagation()
@@ -336,20 +424,18 @@ const PostCard: React.FC<Props> = (props) => {
                   )}
                 </section>
               </div>
-            </a>
+            </div>
           )}
         </section>
 
         {/* Card Footer */}
         {props.currentSection === 'links' ? (
-          <Link
-            href={metaData.url}
-            target="_blank"
-            className={styles['metadata-footer']}
-          >
-            {metaData.url}
+          <div className={styles['metadata-footer']}>
+            <Link href={metaData.url} target="_blank">
+              {url}
+            </Link>
             {showComments && <PostComments data={postData} styles={styles} />}
-          </Link>
+          </div>
         ) : (
           <footer>
             <section className={styles['footer-actions-wrapper']}>
@@ -365,7 +451,8 @@ const PostCard: React.FC<Props> = (props) => {
                 width="21"
                 height="21"
                 viewBox="0 0 21 21"
-                fill={showComments ? '#8064A2' : 'none'}
+                // fill={showComments ? '#8064A2' : 'none'}
+                fill='none'
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
@@ -413,7 +500,8 @@ const PostCard: React.FC<Props> = (props) => {
 
               {/* Bookmark Icon */}
               {/* <CustomizedTooltips title='This feature is under development'> */}
-              <svg onClick={showFeatureUnderDevelopment}
+              <svg
+                onClick={showFeatureUnderDevelopment}
                 className={styles['bookmark-icon']}
                 width="24"
                 height="24"

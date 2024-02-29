@@ -88,9 +88,15 @@
     line-height: 16px;
     font-weight: 600;
   }
-  .modal-close-icon {
+
+  .modal-close-icon{
     position: fixed !important;
     z-index: 1001 !important;
+
+  }
+  .close-icon-clicked {
+    left: calc(50vw + 136px) !important;
+    top: calc(50vh - 30px) !important;
   }
 }
 .button1 {
