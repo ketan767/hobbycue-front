@@ -17,7 +17,12 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { showAllEventTrue, showAllPeopleTrue, showAllPlaceTrue, showAllProductsTrue } from '@/redux/slices/search'
+import {
+  showAllEventTrue,
+  showAllPeopleTrue,
+  showAllPlaceTrue,
+  showAllProductsTrue,
+} from '@/redux/slices/search'
 import DownloadInMobile from '@/components/DownloadInMobile'
 
 const Home: React.FC<PropTypes> = function () {
@@ -75,7 +80,6 @@ const Home: React.FC<PropTypes> = function () {
 
   useEffect(() => {
     const updateDuration = () => {
-
       if (audioRef.current) {
         const audioElement = audioRef.current as HTMLAudioElement
         setDuration(audioElement.duration)
@@ -92,14 +96,12 @@ const Home: React.FC<PropTypes> = function () {
         const audioElement = audioRef.current as HTMLAudioElement
         audioElement.removeEventListener('loadedmetadata', updateDuration)
       }
-
     }
   }, [])
 
   const audioRef = useRef<HTMLAudioElement>(null)
 
   const togglePlay = () => {
-
     if (audioRef.current) {
       const audioElement = audioRef.current as HTMLAudioElement
       if (isPlaying) {
@@ -108,7 +110,6 @@ const Home: React.FC<PropTypes> = function () {
         audioElement.play()
       }
       setIsPlaying(!isPlaying)
-
     }
   }
 
@@ -188,7 +189,10 @@ const Home: React.FC<PropTypes> = function () {
             </p>
             <OutlinedButton
               className={styles['card-btn']}
-              onClick={() => {dispatch(showAllPeopleTrue());router.push('/search')}}
+              onClick={() => {
+                dispatch(showAllPeopleTrue())
+                router.push('/search')
+              }}
             >
               Connect
             </OutlinedButton>
@@ -213,7 +217,10 @@ const Home: React.FC<PropTypes> = function () {
             </p>
             <OutlinedButton
               className={styles['card-btn']}
-              onClick={() =>{dispatch(showAllPlaceTrue());router.push('/search')}}
+              onClick={() => {
+                dispatch(showAllPlaceTrue())
+                router.push('/search')
+              }}
             >
               Meet up
             </OutlinedButton>
@@ -222,12 +229,26 @@ const Home: React.FC<PropTypes> = function () {
           {/* Product Card */}
           <div className={`${styles['card']}`}>
             <h3 className={styles['card-title']}>
-              
-            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
-  <path d="M36.5335 12.086V12.3026L34.1002 21.3026C33.8126 22.3709 33.1789 23.3135 32.2982 23.9831C31.4176 24.6526 30.3398 25.0112 29.2335 25.0026H16.4835C15.2319 25.0077 14.0238 24.5431 13.098 23.7007C12.1723 22.8583 11.5962 21.6993 11.4835 20.4526L10.4002 8.18598C10.3626 7.77044 10.1706 7.3841 9.86203 7.10329C9.55344 6.82248 9.15075 6.66762 8.73353 6.66931H5.11686C4.67483 6.66931 4.25091 6.49372 3.93835 6.18116C3.62579 5.8686 3.4502 5.44467 3.4502 5.00265C3.4502 4.56062 3.62579 4.13669 3.93835 3.82413C4.25091 3.51157 4.67483 3.33598 5.11686 3.33598H8.73353C9.98521 3.3309 11.1933 3.79547 12.119 4.63791C13.0448 5.48035 13.6209 6.63937 13.7335 7.88598V8.33598H33.2169C33.692 8.33225 34.1624 8.43014 34.5966 8.62308C35.0308 8.81601 35.4187 9.09955 35.7344 9.45466C36.05 9.80978 36.2861 10.2283 36.4268 10.6821C36.5675 11.1359 36.6096 11.6146 36.5502 12.086H36.5335Z" fill="#C0504D"/>
-  <path d="M15.1169 36.6693C17.418 36.6693 19.2835 34.8038 19.2835 32.5026C19.2835 30.2014 17.418 28.3359 15.1169 28.3359C12.8157 28.3359 10.9502 30.2014 10.9502 32.5026C10.9502 34.8038 12.8157 36.6693 15.1169 36.6693Z" fill="#C0504D"/>
-  <path d="M28.4499 36.6693C30.7511 36.6693 32.6165 34.8038 32.6165 32.5026C32.6165 30.2014 30.7511 28.3359 28.4499 28.3359C26.1487 28.3359 24.2832 30.2014 24.2832 32.5026C24.2832 34.8038 26.1487 36.6693 28.4499 36.6693Z" fill="#C0504D"/>
-</svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="40"
+                height="40"
+                viewBox="0 0 40 40"
+                fill="none"
+              >
+                <path
+                  d="M36.5335 12.086V12.3026L34.1002 21.3026C33.8126 22.3709 33.1789 23.3135 32.2982 23.9831C31.4176 24.6526 30.3398 25.0112 29.2335 25.0026H16.4835C15.2319 25.0077 14.0238 24.5431 13.098 23.7007C12.1723 22.8583 11.5962 21.6993 11.4835 20.4526L10.4002 8.18598C10.3626 7.77044 10.1706 7.3841 9.86203 7.10329C9.55344 6.82248 9.15075 6.66762 8.73353 6.66931H5.11686C4.67483 6.66931 4.25091 6.49372 3.93835 6.18116C3.62579 5.8686 3.4502 5.44467 3.4502 5.00265C3.4502 4.56062 3.62579 4.13669 3.93835 3.82413C4.25091 3.51157 4.67483 3.33598 5.11686 3.33598H8.73353C9.98521 3.3309 11.1933 3.79547 12.119 4.63791C13.0448 5.48035 13.6209 6.63937 13.7335 7.88598V8.33598H33.2169C33.692 8.33225 34.1624 8.43014 34.5966 8.62308C35.0308 8.81601 35.4187 9.09955 35.7344 9.45466C36.05 9.80978 36.2861 10.2283 36.4268 10.6821C36.5675 11.1359 36.6096 11.6146 36.5502 12.086H36.5335Z"
+                  fill="#C0504D"
+                />
+                <path
+                  d="M15.1169 36.6693C17.418 36.6693 19.2835 34.8038 19.2835 32.5026C19.2835 30.2014 17.418 28.3359 15.1169 28.3359C12.8157 28.3359 10.9502 30.2014 10.9502 32.5026C10.9502 34.8038 12.8157 36.6693 15.1169 36.6693Z"
+                  fill="#C0504D"
+                />
+                <path
+                  d="M28.4499 36.6693C30.7511 36.6693 32.6165 34.8038 32.6165 32.5026C32.6165 30.2014 30.7511 28.3359 28.4499 28.3359C26.1487 28.3359 24.2832 30.2014 24.2832 32.5026C24.2832 34.8038 26.1487 36.6693 28.4499 36.6693Z"
+                  fill="#C0504D"
+                />
+              </svg>
 
               <span>Product</span>
             </h3>
@@ -237,7 +258,10 @@ const Home: React.FC<PropTypes> = function () {
             </p>
             <OutlinedButton
               className={styles['card-btn']}
-              onClick={() => {dispatch(showAllProductsTrue());router.push('/search')}}
+              onClick={() => {
+                dispatch(showAllProductsTrue())
+                router.push('/search')
+              }}
             >
               Get it
             </OutlinedButton>
@@ -271,7 +295,10 @@ const Home: React.FC<PropTypes> = function () {
             </p>
             <OutlinedButton
               className={styles['card-btn']}
-              onClick={() => {dispatch(showAllEventTrue());router.push('/search')}}
+              onClick={() => {
+                dispatch(showAllEventTrue())
+                router.push('/search')
+              }}
             >
               Attend
             </OutlinedButton>
@@ -315,81 +342,81 @@ const Home: React.FC<PropTypes> = function () {
 
       {/** Testimonial Container  **/}
       <section>
-      <div className={`site-container ${styles['testimonial-contaniner']}`}>
-        <h3 className={styles['title']}>
-          <svg
-            width="40"
-            height="40"
-            viewBox="0 0 40 40"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M20 40.0005C31.0277 40.0005 40 31.0282 40 20.0005C40 16.7252 39.1373 13.6637 37.7383 10.9341L36 7.99854L33 4.99854L29.0566 2.2583C26.3293 0.862223 23.2723 0.000490634 20 0.000490347C8.9723 0.000489383 2.71253e-06 8.97278 1.74846e-06 20.0005C7.84383e-07 31.0282 8.97229 40.0005 20 40.0005ZM26 26.9985C23.791 26.9985 22 25.2075 22 22.9985C22 22.9125 22.0204 22.8316 22.0254 22.7466C22.0114 22.6656 22 22.5826 22 22.4966C22 22.2216 22.0526 15.7084 26.5996 12.2974C26.8696 12.0954 27.185 11.9966 27.498 11.9966C27.954 11.9966 28.4042 12.2051 28.6992 12.5981C29.1962 13.2611 29.0624 14.2008 28.4004 14.6978C26.8924 15.8288 26.0568 17.5196 25.5898 19.0396C25.7268 19.0256 25.859 18.9985 26 18.9985C28.209 18.9985 30 20.7895 30 22.9985C30 25.2075 28.209 26.9985 26 26.9985ZM14 26.9985C11.791 26.9985 10 25.2075 10 22.9985C10 22.9125 10.0204 22.8316 10.0254 22.7466C10.0114 22.6656 10 22.5826 10 22.4966C10 22.2216 10.0526 15.7084 14.5996 12.2974C14.8696 12.0954 15.185 11.9966 15.498 11.9966C15.954 11.9966 16.4042 12.2051 16.6992 12.5981C17.1962 13.2611 17.0624 14.2008 16.4004 14.6978C14.8924 15.8288 14.0568 17.5195 13.5898 19.0396C13.7268 19.0256 13.859 18.9985 14 18.9985C16.209 18.9985 18 20.7895 18 22.9985C18 25.2075 16.209 26.9985 14 26.9985Z"
-              fill="#8064A2"
-            />
-          </svg>
-          <span>Testimonials</span>
-        </h3>
-        <div className={styles['testimonial']}>
-          <p className={styles['content']}>
-            In a fast growing and ever changing city like Bangalore, it
-            sometimes becomes very difficult to find or connect with like minded
-            people. Websites like hobbycue.com is a great service which helps me
-            get in touch with, communicate, connect, and exchange ideas with
-            other dancers. It also provides the extra benefit of finding
-            products and services that I can avail, which I can be assured is
-            going to be of great quality as it comes recommended by people of
-            the hobbycue community. To have discussions, to get visibility, and
-            to be able to safely explore various hobbies and activities in my
-            city, all under one roof, is an excellent idea and I highly
-            recommend it.
-          </p>
-          <div className={styles['testimonial-footer']}>
-            <div className={styles['testimonial-audio']}>
-              <div className={styles['pause-icon-container']}>
-                <audio ref={audioRef} src="./audio.mp4"></audio>
-                <Image
-                  style={{ cursor: 'pointer' }}
-                  onClick={togglePlay}
-                  src={isPlaying ? PlayIcon : PauseIcon}
-                  alt="pause"
-                />
-              </div>
-
-              <div className={styles['progressbar']}>
-                <input type="range" value={0} max={duration} step="0.1" />
-                <span>{duration > 0 && <p>{formatTime(duration)}</p>}</span>
-              </div>
-              <div className={styles['profile-container']}>
-                <Image
-                  src={TestimonialImg}
-                  alt="TestimonialImg"
-                  className={styles.testimonial}
-                />
-                <Image
-                  src={Microphone}
-                  alt="Microphone"
-                  className={styles.microphone}
-                />
-              </div>
-            </div>
-            <div className={styles['testimonial-right']}>
-              <Image
-                src={TestimonialImg}
-                alt="TestimonialImg"
-                className={styles.testimonial}
+        <div className={`site-container ${styles['testimonial-contaniner']}`}>
+          <h3 className={styles['title']}>
+            <svg
+              width="40"
+              height="40"
+              viewBox="0 0 40 40"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M20 40.0005C31.0277 40.0005 40 31.0282 40 20.0005C40 16.7252 39.1373 13.6637 37.7383 10.9341L36 7.99854L33 4.99854L29.0566 2.2583C26.3293 0.862223 23.2723 0.000490634 20 0.000490347C8.9723 0.000489383 2.71253e-06 8.97278 1.74846e-06 20.0005C7.84383e-07 31.0282 8.97229 40.0005 20 40.0005ZM26 26.9985C23.791 26.9985 22 25.2075 22 22.9985C22 22.9125 22.0204 22.8316 22.0254 22.7466C22.0114 22.6656 22 22.5826 22 22.4966C22 22.2216 22.0526 15.7084 26.5996 12.2974C26.8696 12.0954 27.185 11.9966 27.498 11.9966C27.954 11.9966 28.4042 12.2051 28.6992 12.5981C29.1962 13.2611 29.0624 14.2008 28.4004 14.6978C26.8924 15.8288 26.0568 17.5196 25.5898 19.0396C25.7268 19.0256 25.859 18.9985 26 18.9985C28.209 18.9985 30 20.7895 30 22.9985C30 25.2075 28.209 26.9985 26 26.9985ZM14 26.9985C11.791 26.9985 10 25.2075 10 22.9985C10 22.9125 10.0204 22.8316 10.0254 22.7466C10.0114 22.6656 10 22.5826 10 22.4966C10 22.2216 10.0526 15.7084 14.5996 12.2974C14.8696 12.0954 15.185 11.9966 15.498 11.9966C15.954 11.9966 16.4042 12.2051 16.6992 12.5981C17.1962 13.2611 17.0624 14.2008 16.4004 14.6978C14.8924 15.8288 14.0568 17.5195 13.5898 19.0396C13.7268 19.0256 13.859 18.9985 14 18.9985C16.209 18.9985 18 20.7895 18 22.9985C18 25.2075 16.209 26.9985 14 26.9985Z"
+                fill="#8064A2"
               />
-              <div>
-                <Link href={'/page/shubha-nagarajan'}>
-                  <p> Shubha Nagarajan </p>
-                </Link>
-                <span> Classical Dancer </span>
+            </svg>
+            <span>Testimonials</span>
+          </h3>
+          <div className={styles['testimonial']}>
+            <p className={styles['content']}>
+              In a fast growing and ever changing city like Bangalore, it
+              sometimes becomes very difficult to find or connect with like
+              minded people. Websites like hobbycue.com is a great service which
+              helps me get in touch with, communicate, connect, and exchange
+              ideas with other dancers. It also provides the extra benefit of
+              finding products and services that I can avail, which I can be
+              assured is going to be of great quality as it comes recommended by
+              people of the hobbycue community. To have discussions, to get
+              visibility, and to be able to safely explore various hobbies and
+              activities in my city, all under one roof, is an excellent idea
+              and I highly recommend it.
+            </p>
+            <div className={styles['testimonial-footer']}>
+              <div className={styles['testimonial-audio']}>
+                <div className={styles['pause-icon-container']}>
+                  <audio ref={audioRef} src="./audio.mp4"></audio>
+                  <Image
+                    style={{ cursor: 'pointer' }}
+                    onClick={togglePlay}
+                    src={isPlaying ? PlayIcon : PauseIcon}
+                    alt="pause"
+                  />
+                </div>
+
+                <div className={styles['progressbar']}>
+                  <input type="range" value={0} max={duration} step="0.1" />
+                  <span>{duration > 0 && <p>{formatTime(duration)}</p>}</span>
+                </div>
+                <div className={styles['profile-container']}>
+                  <Image
+                    src={TestimonialImg}
+                    alt="TestimonialImg"
+                    className={styles.testimonial}
+                  />
+                  <Image
+                    src={Microphone}
+                    alt="Microphone"
+                    className={styles.microphone}
+                  />
+                </div>
               </div>
+              <Link href={'/page/shubha-nagarajan'}>
+                <div className={styles['testimonial-right']}>
+                  <Image
+                    src={TestimonialImg}
+                    alt="TestimonialImg"
+                    className={styles.testimonial}
+                  />
+                  <div>
+                    <p> Shubha Nagarajan </p>
+                    <span> Classical Dancer </span>
+                  </div>
+                </div>
+              </Link>
             </div>
           </div>
         </div>
-      </div>
       </section>
 
       <section className={`site-container ${styles.bigTextContainer}`}>
@@ -412,7 +439,7 @@ const Home: React.FC<PropTypes> = function () {
       </section>
       {/* <section className={`site-container ${styles.bigTextContainer}`}>
       </section> */}
-      <section className={`site-container`}>
+      <section className={`site-container ${styles['site-container-footer']}`}>
         <Footer />
       </section>
     </>

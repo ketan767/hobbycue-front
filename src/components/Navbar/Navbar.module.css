@@ -232,9 +232,9 @@
   background: #000;
   z-index: 5;
 }
-.inputField {
+/* .inputField {
   width: 400px;
-}
+} */
 .inputField::placeholder {
   font-family: 'Poppins';
   font-weight: 300;
