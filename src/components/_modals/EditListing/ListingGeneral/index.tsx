@@ -6,7 +6,7 @@ import {
   getMyProfileDetail,
   updateMyProfileDetail,
 } from '@/services/user.service'
-import { checkListingUrl } from '@/services/listing.service';
+import { checkListingUrl } from '@/services/listing.service'
 import { containOnlyNumbers, isEmpty, isEmptyField } from '@/utils'
 import { closeModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
@@ -181,18 +181,30 @@ const ListingGeneralEditModal: React.FC<Props> = ({
         }
       })
     }
-      if(data.year.value?.length){
-        const currentYear = new Date().getFullYear();
-        if(isNaN(Number(data.year.value))){
-          setData((prev) => {
-            return { ...prev, year:{...prev.year,error:"Year of Birth/Establishment should be a number"} }
-          })
-        }else if((currentYear - Number(data.year.value))>100||(currentYear - Number(data.year.value))<13){
-          setData((prev) => {
-            return { ...prev, year:{...prev.year,error:"Age should be between 13 to 100"} }
-          })
-        }
+    if (data.year.value?.length) {
+      const currentYear = new Date().getFullYear()
+      if (isNaN(Number(data.year.value))) {
+        setData((prev) => {
+          return {
+            ...prev,
+            year: {
+              ...prev.year,
+              error: 'Year of Birth/Establishment should be a number',
+            },
+          }
+        })
+      } else if (
+        currentYear - Number(data.year.value) > 100 ||
+        currentYear - Number(data.year.value) < 13
+      ) {
+        setData((prev) => {
+          return {
+            ...prev,
+            year: { ...prev.year, error: 'Age should be between 13 to 100' },
+          }
+        })
       }
+    }
 
     const onlyAlphabetsAndHyphensRegex = /^[a-zA-Z-]*$/
 
@@ -397,20 +409,26 @@ const ListingGeneralEditModal: React.FC<Props> = ({
     }
   }, [isError])
 
-  useEffect(()=>{
-    checkListingUrl(data.page_url.value,(err,res)=>{
-      if(data.page_url.value.length===0){
-        return;
+  useEffect(() => {
+    checkListingUrl(data.page_url.value, (err, res) => {
+      if (data.page_url.value?.length === 0) {
+        return
       }
-      if(err){
-        if("response" in err){
-          if(err.response.status===404){
-            setData(prev=>({...prev,page_url:{...prev.page_url,error:"This listing url is already taken"}}))
+      if (err) {
+        if ('response' in err) {
+          if (err.response.status === 404) {
+            setData((prev) => ({
+              ...prev,
+              page_url: {
+                ...prev.page_url,
+                error: 'This listing url is already taken',
+              },
+            }))
           }
         }
       }
-    });
-  },[data.page_url.value])
+    })
+  }, [data.page_url.value])
 
   if (confirmationModal) {
     return (

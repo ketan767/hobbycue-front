@@ -146,6 +146,7 @@
   letter-spacing: 0.04em;
   color: #ffffff;
   z-index: 1;
+  border-radius: 8px 8px 0 0;
 }
 
 .hobbies-table tbody {
