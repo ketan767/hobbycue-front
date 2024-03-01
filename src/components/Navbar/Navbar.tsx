@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import React, { useRef, useEffect, useState } from 'react'
 import TextField from '@mui/material/TextField'
@@ -65,9 +65,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
-  const { activeModal } = useSelector(
-    (state: RootState) => state.modal,
-  )
+  const { activeModal } = useSelector((state: RootState) => state.modal)
 
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
@@ -182,8 +180,8 @@ export const Navbar: React.FC<Props> = ({}) => {
         console.error('An error occurred during the title search:', titleErr)
         return
       }
-      console.warn({ titleRes })
-      let combinedResults = new Set(titleRes.data.slice(0, 50))
+
+      let combinedResults = new Set(titleRes.data.slice(0, 100))
       let remainingSlots = 50 - combinedResults.size
 
       if (combinedResults.size < 10) {
@@ -209,9 +207,9 @@ export const Navbar: React.FC<Props> = ({}) => {
         }
       }
       // If title search results are exactly 50, prioritize the first 40 and get 10 by tagline
-      else if (combinedResults.size === 50) {
+      else if (combinedResults.size >= 100) {
         dispatch(setShowPageLoader(true))
-        combinedResults = new Set(Array.from(combinedResults).slice(0, 40))
+        combinedResults = new Set(Array.from(combinedResults).slice(0, 70))
         const { res: taglineRes, err: taglineErr } = await searchPages({
           tagline: searchValue,
         })
@@ -316,7 +314,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                   searchResult()
                 }
               }}
-              style={isLoggedIn?{width:"400px"}:{width:"100%"}}
+              style={isLoggedIn ? { width: '400px' } : { width: '100%' }}
               sx={{
                 '& .MuiOutlinedInput-root': {
                   borderRadius: '8px',

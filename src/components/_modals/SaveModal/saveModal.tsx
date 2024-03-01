@@ -6,6 +6,7 @@ import FilledButton from '@/components/_buttons/FilledButton'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import CloseIcon from '@/assets/icons/CloseIcon'
+import { useRouter } from 'next/router'
 
 type Props = {
   setConfirmationModal?: any
@@ -13,6 +14,8 @@ type Props = {
   handleSubmit?: any
   isError?: any
   OnBoarding?: any
+  hasChange?: any
+  reloadrouter?: any
 }
 
 const SaveModal: React.FC<Props> = ({
@@ -21,11 +24,13 @@ const SaveModal: React.FC<Props> = ({
   handleSubmit,
   isError,
   OnBoarding = false,
+  hasChange,
+  reloadrouter,
 }) => {
   const { user } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
   const dispatch = useDispatch()
-
+  const router = useRouter()
   const onboardcheck = () => {
     console.log('isError', isError)
     if (OnBoarding) {
@@ -38,6 +43,11 @@ const SaveModal: React.FC<Props> = ({
   const handleYesClick = async () => {
     handleSubmit()
     onboardcheck()
+  }
+
+  if (reloadrouter) {
+    router.reload()
+    return <div></div>
   }
 
   return (
