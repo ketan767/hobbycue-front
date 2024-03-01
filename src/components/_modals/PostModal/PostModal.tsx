@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { checkIfUrlExists, dateFormat, isEmptyField } from '@/utils'
 import { getAllHobbies } from '@/services/hobby.service'
 import {
+  addPostComment,
   createListingPost,
   createUserPost,
   getAllPosts,
@@ -32,27 +33,24 @@ import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { setActivePost } from '@/redux/slices/post'
 
 type Props = {
-  onComplete?: () => void
-  onBackBtnClick?: () => void
   confirmationModal?: boolean
   setConfirmationModal?: any
   handleClose?: any
-  isError?: boolean
-  onStatusChange?: (isChanged: boolean) => void
 }
 
 export const PostModal: React.FC<Props> = ({
-  onComplete,
-  onBackBtnClick,
   confirmationModal,
   setConfirmationModal,
   handleClose,
-  onStatusChange,
 }) => {
   const { activePost } = useSelector((state: RootState) => state.post)
   const dispatch = useDispatch()
   const [comments, setComments] = useState([])
   const [showComments, setShowComments] = useState(true)
+  const [displayMoreComments, setDisplayMoreComments] = useState(false)
+  const { activeProfile } = useSelector((state: RootState) => state.user)
+  const [isChanged, setIsChanged] = useState(false)
+  const [newComment, setNewComment] = useState('')
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -66,6 +64,32 @@ export const PostModal: React.FC<Props> = ({
       if (err) return console.log(err)
       setComments(res?.data?.data?.comments)
     }
+  }
+
+  const addComment = async (event: any) => {
+    if (isEmptyField(newComment)) return
+    const jsonData = {
+      postId: activePost._id,
+      commentBy:
+        activeProfile.type === 'user'
+          ? 'User'
+          : activeProfile.type === 'listing'
+          ? 'Listing'
+          : '',
+      commentById: activeProfile.data._id,
+      content: newComment,
+      date: Date.now(),
+    }
+    if (!jsonData.commentBy) return
+    const { err, res } = await addPostComment(jsonData)
+    if (err) {
+      console.log(err)
+      return
+    } else {
+      dispatch(closeModal())
+      window.location.reload()
+    }
+    await fetchComments()
   }
 
   useEffect(() => {
@@ -100,11 +124,18 @@ export const PostModal: React.FC<Props> = ({
     console.log({ activePost }, { comments })
   }, [activePost, comments])
 
+  useEffect(() => {
+    if (newComment === '') {
+      setIsChanged(false)
+    } else {
+      setIsChanged(true)
+    }
+  }, [newComment])
   if (confirmationModal) {
     return (
       <SaveModal
         handleClose={handleClose}
-        // handleSubmit={handleSubmit}
+        handleSubmit={addComment}
         setConfirmationModal={setConfirmationModal}
         // isError={isError}
       />
@@ -114,7 +145,16 @@ export const PostModal: React.FC<Props> = ({
   return (
     <>
       <div className={`${styles['modal-wrapper']}`}>
-        <div className={`${styles['header']}`}>
+        <CloseIcon
+          className={styles['modal-close-icon']}
+          onClick={() =>
+            isChanged ? setConfirmationModal(true) : handleClose()
+          }
+        />
+        <div
+          className={`${styles['header']}`}
+          style={displayMoreComments ? { display: 'none' } : {}}
+        >
           <div className={`${styles['header-user']}`}>
             <Image
               src={activePost?._author?.profile_image}
@@ -126,7 +166,7 @@ export const PostModal: React.FC<Props> = ({
               <p>{activePost?._author?.full_name}</p>
               <p>
                 <span>
-                  {dateFormat.format(new Date(activePost?.createdAt))}
+                  {dateFormat?.format(new Date(activePost?.createdAt))}
                   {' | '}
                 </span>
                 <span>
@@ -138,7 +178,7 @@ export const PostModal: React.FC<Props> = ({
             </div>
           </div>
           <div className={`${styles['header-options']}`}>
-            <svg
+            {/* <svg
               className={styles['more-actions-icon']}
               width="24"
               height="24"
@@ -156,11 +196,14 @@ export const PostModal: React.FC<Props> = ({
                   <rect width="24" height="24" fill="white" />
                 </clipPath>
               </defs>
-            </svg>
+            </svg> */}
           </div>
         </div>
 
-        <div className={`${styles['body']}`}>
+        <div
+          className={`${styles['body']}`}
+          style={displayMoreComments ? { display: 'none' } : {}}
+        >
           <div
             className={styles['post-content']}
             dangerouslySetInnerHTML={{
@@ -190,7 +233,7 @@ export const PostModal: React.FC<Props> = ({
                   e.preventDefault()
                   setShowComments((prevValue) => !prevValue)
                 }}
-                cursor={"pointer"}
+                cursor={'pointer'}
                 width="21"
                 height="21"
                 viewBox="0 0 21 21"
@@ -268,7 +311,17 @@ export const PostModal: React.FC<Props> = ({
             </div>
           </div>
         </div>
-        {showComments && <PostComments data={activePost} styles={styles} />}
+        {showComments && (
+          <PostComments
+            data={activePost}
+            styles={styles}
+            onMoreComments={() => {
+              setDisplayMoreComments((prevValue) => !prevValue)
+            }}
+            showAllComments={displayMoreComments}
+            getInput={(input) => setNewComment(input)}
+          />
+        )}
       </div>
       {
         <CustomSnackbar
