@@ -2,12 +2,13 @@ import SearchPageFilter from '@/components/SearchPageFilters'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import { openModal } from '@/redux/slices/modal'
 import {
-  toggleShowAll,
+  // toggleShowAll,
   toggleShowAllEvent,
   toggleShowAllPeople,
   toggleShowAllPlace,
   toggleShowAllUsers,
   toggleShowAllProducts,
+  showAllTrue,
 } from '@/redux/slices/search'
 import { RootState } from '@/redux/store'
 import { MenuItem, Select } from '@mui/material'
@@ -102,12 +103,22 @@ const MainContent: React.FC<SearchResultsProps> = ({
     (state: RootState) => state.user,
   )
 
+  const initialViewMoreState = {
+    user:3,
+    people:3,
+    place:3,
+    event:3,
+    product:3,
+    hobby:3
+  }
+
   const [HideUser, setHideUser] = useState(false)
   const [HidePeople, setHidePeople] = useState(false)
   const [HidePlace, setHidePlace] = useState(false)
   const [HideEvent, setHideEvent] = useState(false)
   const [HideProduct, setHideProduct] = useState(false)
   const [HideHobbies, setHideHobbies] = useState(false)
+  const [viewMoreState,setViewMoreState] = useState(initialViewMoreState);
 
   const router = useRouter()
 
@@ -136,7 +147,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHidePlace(false)
       setHideEvent(false)
       setHideHobbies(false)
-      setHideProduct(true)
+      setHideProduct(false)
     }
   }, [showAllUsers])
 
@@ -232,11 +243,50 @@ const MainContent: React.FC<SearchResultsProps> = ({
   }
 
   const noResultsFound =
-    searchResults.length === 0 &&
-    peopleResults.length === 0 &&
-    placeResults.length === 0 &&
-    EventResults.length === 0 &&
-    hobbyResults.length === 0
+    (searchResults.length === 0 && showAllUsers) ||
+    (peopleResults.length === 0 && showAllPeople) ||
+    (placeResults.length === 0 && showAllPlace) ||
+    (EventResults.length === 0 && showAllEvent) ||
+    (showAllProducts); // since no api integrations done for products
+
+// console.log({HideEvent,HideHobbies,HidePeople,HidePlace,HideProduct,HideUser});
+useEffect(()=>{
+  if(showAll){
+    setViewMoreState(initialViewMoreState);
+  }
+// eslint-disable-next-line react-hooks/exhaustive-deps
+},[showAll]);
+
+useEffect(()=>{
+  if(showAllPeople){
+    setViewMoreState((prev)=>({...prev,people:peopleResults.length}))
+  }
+// eslint-disable-next-line react-hooks/exhaustive-deps
+},[showAllPeople]);
+
+useEffect(()=>{
+  if(showAllUsers){
+    setViewMoreState((prev)=>({...prev,user:searchResults.length}))
+  }
+// eslint-disable-next-line react-hooks/exhaustive-deps
+},[showAllUsers]);
+useEffect(()=>{
+  if(showAllPlace){
+    setViewMoreState((prev)=>({...prev,place:placeResults.length}))
+  }
+// eslint-disable-next-line react-hooks/exhaustive-deps
+},[showAllPlace]);
+useEffect(()=>{
+  if(showAllEvent){
+    setViewMoreState((prev)=>({...prev,event:EventResults.length}))
+  }
+// eslint-disable-next-line react-hooks/exhaustive-deps
+},[showAllEvent]);
+useEffect(()=>{
+  if(showAllProducts){
+    setViewMoreState((prev)=>({...prev,product:-1}))
+  }
+},[showAllProducts]);
 
   return (
     <main className={styles.searchResults}>
@@ -300,12 +350,12 @@ const MainContent: React.FC<SearchResultsProps> = ({
 
           {/* User  */}
 
-          {!HideUser && searchResults.length > 0 && (
+          {((showAllUsers && searchResults.length > 0) || (showAll && searchResults.length > 0)) && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>User Profiles</div>
                 {searchResults
-                  .slice(0, showAllUsers ? undefined : 3)
+                  .slice(0, viewMoreState.user)
                   .map((user, index) => (
                     <div
                       className={styles.peopleItem}
@@ -339,11 +389,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     </div>
                   ))}
                 <div>
-                  {showAllUsers
+                  {viewMoreState.user === searchResults.length
                     ? undefined
                     : (
                         <button
-                          onClick={toggleShowAllusers}
+                          onClick={()=>{setViewMoreState(prev=>({...prev,user:searchResults.length}))}}
                           className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
                         >
                           View More
@@ -354,12 +404,12 @@ const MainContent: React.FC<SearchResultsProps> = ({
             </section>
           )}
           {/* People */}
-          {!HidePeople && peopleResults.length > 0 && (
+          {((showAllPeople && peopleResults.length > 0) || (showAll && peopleResults.length > 0)) && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>People</div>
                 {peopleResults
-                  .slice(0, showAllPeople ? undefined : 3)
+                  .slice(0, viewMoreState.people)
                   .map((page, index) => (
                     <div
                       className={styles.peopleItem}
@@ -401,11 +451,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     </div>
                   ))}
                 <div>
-                  {showAllPeople
+                  {viewMoreState.people === peopleResults.length
                     ? undefined
                     : (
                         <button
-                          onClick={toggleShowAllpeople}
+                          onClick={()=>{setViewMoreState(prev=>({...prev,people:peopleResults.length}))}}
                           className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
                         >
                           View More
@@ -416,12 +466,12 @@ const MainContent: React.FC<SearchResultsProps> = ({
             </section>
           )}
           {/* Place  */}
-          {!HidePlace && placeResults.length > 0 && (
+          {((showAllPlace && placeResults.length > 0) || (showAll && placeResults.length > 0)) && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>Places</div>
                 {placeResults
-                  .slice(0, showAllPlace ? undefined : 3)
+                  .slice(0, viewMoreState.place)
                   .map((page, index) => (
                     <div
                       className={styles.peopleItem}
@@ -456,11 +506,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     </div>
                   ))}
                 <div>
-                  {showAllPlace
+                  {viewMoreState.place === placeResults.length
                     ? undefined
                     : (
                         <button
-                          onClick={toggleShowAllplace}
+                          onClick={()=>{setViewMoreState((prev)=>({...prev,place:placeResults.length}))}}
                           className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
                         >
                           View More
@@ -472,11 +522,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
           )}
 
           {/* Event  */}
-          {!HideEvent && EventResults.length > 0 && (
+          {((showAllEvent && EventResults.length > 0) || (showAll && EventResults.length > 0)) && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>Programs</div>
-                {EventResults.slice(0, showAllEvent ? undefined : 3).map(
+                {EventResults.slice(0, viewMoreState.event).map(
                   (page, index) => (
                     <div
                       className={styles.peopleItem}
@@ -512,11 +562,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                   ),
                 )}
                 <div>
-                  {showAllEvent
+                  {viewMoreState.event === EventResults.length
                     ? undefined
                     : (
                         <button
-                          onClick={toggleShowAllevent}
+                          onClick={()=>{setViewMoreState(prev=>({...prev,event:EventResults.length}))}}
                           className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
                         >
                           View More
@@ -537,13 +587,13 @@ const FilterDropdown: React.FC<Props> = () => {
   const dispatch = useDispatch()
   const handleFilterClick = (filterType: any) => {
     if (activeFilter === filterType) {
-      setActiveFilter('')
-      dispatch(toggleShowAll())
+      setActiveFilter('all')
+      dispatch(showAllTrue())
     } else {
       setActiveFilter(filterType)
       switch (filterType) {
         case 'all':
-          dispatch(toggleShowAll())
+          dispatch(showAllTrue())
           break
         case 'users':
           dispatch(toggleShowAllUsers())
