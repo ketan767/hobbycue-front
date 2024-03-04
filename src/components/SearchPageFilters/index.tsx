@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  toggleShowAll,
+  showAllTrue,
+  // toggleShowAll,
   toggleShowAllEvent,
   toggleShowAllPeople,
   toggleShowAllPlace,
@@ -61,13 +62,13 @@ const SearchPageFilter = () => {
 
   const handleFilterClick = (filterType: any) => {
     if (activeFilter === filterType) {
-      setActiveFilter('')
-      dispatch(toggleShowAll())
+      setActiveFilter('all')
+      dispatch(showAllTrue())
     } else {
       setActiveFilter(filterType)
       switch (filterType) {
         case 'all':
-          dispatch(toggleShowAll())
+          dispatch(showAllTrue())
           break
         case 'users':
           dispatch(toggleShowAllUsers())

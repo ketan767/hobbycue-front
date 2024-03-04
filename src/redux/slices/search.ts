@@ -83,7 +83,7 @@ const initialState: SearchState = {
   },
   searchString: '',
 
-  showAll:false,
+  showAll:true,
   showAllUsers: false,
   showAllPeople: false,
   showAllPlace: false,
@@ -124,52 +124,71 @@ export const searchSlice = createSlice({
         state.showAllEvent = false;
         state.showAllProducts = false;
       
-      
     },
 
     toggleShowAllUsers: (state) => {
-      state.showAllUsers = !state.showAllUsers;
-      if (state.showAllUsers) {
+      if (!state.showAllUsers) {
         state.showAllPeople = false;
         state.showAllPlace = false;
         state.showAllEvent = false;
         state.showAllProducts = false;
+        state.showAll = false;
+        state.showAllUsers = true;
+      } else {
+        state.showAll = true;
+        state.showAllUsers = false;
       }
     },
     toggleShowAllPeople: (state) => {
-      state.showAllPeople = !state.showAllPeople;
-      if (state.showAllPeople) {
+      if (!state.showAllPeople) {
         state.showAllUsers = false;
         state.showAllPlace = false;
         state.showAllEvent = false;
         state.showAllProducts = false;
+        state.showAll = false;
+        state.showAllPeople = true;
+      } else {
+        state.showAll = true;
+        state.showAllPeople = false;
       }
     },
     toggleShowAllPlace: (state) => {
-      state.showAllPlace = !state.showAllPlace;
-      if (state.showAllPlace) {
+      if (!state.showAllPlace) {
         state.showAllUsers = false;
         state.showAllPeople = false;
         state.showAllEvent = false;
         state.showAllProducts = false;
+        state.showAll = false;
+        state.showAllPlace = true;
+      } else {
+        state.showAll = true;
+        state.showAllPlace = false;
       }
     },
     toggleShowAllEvent: (state) => {
-      state.showAllEvent = !state.showAllEvent;
-      if (state.showAllEvent) {
+      if (!state.showAllEvent) {
         state.showAllUsers = false;
         state.showAllPeople = false;
         state.showAllPlace = false;
         state.showAllProducts = false;
+        state.showAll = false;
+        state.showAllEvent = true;
+      } else {
+        state.showAll = true;
+        state.showAllEvent = false;
       }
     },
     toggleShowAllProducts: (state) => {
-      state.showAllProducts = !state.showAllProducts;
-      if (state.showAllEvent) {
+      if (!state.showAllEvent) {
         state.showAllUsers = false;
         state.showAllPeople = false;
         state.showAllPlace = false;
         state.showAllEvent = false;
+        state.showAll = false;
+        state.showAllProducts = true;
+      } else {
+        state.showAll = true;
+        state.showAllProducts = false;
       }
     },
     showAllUsersTrue: (state) => {
@@ -217,12 +236,20 @@ export const searchSlice = createSlice({
         state.showAllEvent = false;
       }
     },
+    showAllTrue: (state) => {
+      state.showAll = true;
+      state.showAllUsers = false;
+      state.showAllPeople = false;
+      state.showAllEvent = false;
+      state.showAllProducts = false;
+      state.showAllPlace = false;
+    }
   },
 });
 
 export const { setUserSearchResults, setTypeResultOne,setTypeResultTwo, setTypeResultThree, setSearchString,
    setHobbiesSearchResult,toggleShowAll, toggleShowAllUsers, toggleShowAllPeople, toggleShowAllPlace, toggleShowAllEvent,toggleShowAllProducts,
-  showAllEventTrue,showAllPeopleTrue,showAllPlaceTrue,showAllUsersTrue,showAllProductsTrue
+  showAllEventTrue,showAllPeopleTrue,showAllPlaceTrue,showAllUsersTrue,showAllProductsTrue, showAllTrue
   } = searchSlice.actions;
 
 export default searchSlice.reducer;
