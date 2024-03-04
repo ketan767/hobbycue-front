@@ -92,12 +92,13 @@ const HobbyDetail: React.FC<Props> = (props) => {
     >
       <main className={expandAll ? '' : styles['display-none']}>
         {/* About Section */}
-        <PageContentBox showEditButton={false} setDisplayData={setShowAbout}>
+        {/* <PageContentBox showEditButton={false} setDisplayData={setShowAbout}> */}
+        <PageContentBox>
           <h4>About</h4>
           <div
-            className={`${styles['display-desktop']}${
-              showAbout ? ' ' + styles['display-mobile'] : ''
-            }`}
+            // className={`${styles['display-desktop']}${
+            //   showAbout ? ' ' + styles['display-mobile'] : ''
+            // }`}
           >
             {data?.description}
           </div>
@@ -106,15 +107,13 @@ const HobbyDetail: React.FC<Props> = (props) => {
         {/* Keywords Section */}
         {data?.keywords?.length > 0 && (
           <PageContentBox
-            showEditButton={false}
-            setDisplayData={setShowKeywords}
+            // showEditButton={false}
+            // setDisplayData={setShowKeywords}
           >
             <div className={styles['keyword-container']}>
               <h4 className={styles['keyword-text']}>Keyword :</h4>
               <ul
-                className={`${styles['keyword-list']}${
-                  showKeywords ? ' ' + styles['display-flex-mobile'] : ''
-                }`}
+                className={`${styles['keyword-list']}`}
               >
                 {data?.keywords?.map((item: any, idx: number) => (
                   <li key={idx}>
@@ -130,8 +129,8 @@ const HobbyDetail: React.FC<Props> = (props) => {
         <section style={{}} className={styles['dual-section-wrapper']}>
           {/* Next Levels */}
           <PageContentBox
-            showEditButton={false}
-            setDisplayData={setShowNextLevels}
+            // showEditButton={false}
+            // setDisplayData={setShowNextLevels}
           >
             <h4>
               {data?.level === 0
@@ -147,9 +146,9 @@ const HobbyDetail: React.FC<Props> = (props) => {
                 : 'Next Level'}
             </h4>
             <div
-              className={`${styles['display-desktop']}${
-                showNextLevels ? ' ' + styles['display-mobile'] : ''
-              }`}
+              // className={`${styles['display-desktop']}${
+              //   showNextLevels ? ' ' + styles['display-mobile'] : ''
+              // }`}
             >
               {data.level !== 5 && nextLevels?.length > 0 ? (
                 <>
@@ -171,14 +170,14 @@ const HobbyDetail: React.FC<Props> = (props) => {
 
           {/* Related Hobbies */}
           <PageContentBox
-            showEditButton={false}
-            setDisplayData={setShowRelatedHobbies}
+            // showEditButton={false}
+            // setDisplayData={setShowRelatedHobbies}
           >
             <h4>Related</h4>
             <div
-              className={`${styles['display-desktop']}${
-                showRelatedHobbies ? ' ' + styles['display-mobile'] : ''
-              }`}
+              // className={`${styles['display-desktop']}${
+              //   showRelatedHobbies ? ' ' + styles['display-mobile'] : ''
+              // }`}
             >
               {data?.related_hobbies?.length > 0 ? (
                 <>

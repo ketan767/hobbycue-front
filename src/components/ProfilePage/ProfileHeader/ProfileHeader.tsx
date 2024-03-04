@@ -55,6 +55,8 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
   }
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
 
+  const location = window.location.href
+
   const showFeatureUnderDevelopment = () => {
     setSnackbar({
       display: true,
@@ -407,7 +409,18 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
             )}
             <div className={styles['action-btn-wrapper']}>
               {/* Send Email Button  */}
-              <Link href={`mailto:${data.public_email || data.email}`}>
+              {/* <Link href={`mailto:${data.public_email || data.email}`}> */}
+              <div
+                onClick={() => {
+                  dispatch(
+                    openModal({
+                      type: 'create-post',
+                      closable: true,
+                      propData: { defaultValue: location },
+                    }),
+                  )
+                }}
+              >
                 <Tooltip title="Repost">
                   <div
                     onClick={(e) => console.log(e)}
@@ -416,7 +429,8 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
                     <RepostIcon />
                   </div>
                 </Tooltip>
-              </Link>
+              </div>
+              {/* </Link> */}
 
               {/* Bookmark Button */}
               <Tooltip title="Bookmark">
@@ -470,7 +484,18 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
         <div className={styles['actions-container-mobile']}>
           <div className={styles['action-btn-wrapper']}>
             {/* Send Email Button  */}
-            <Link href={`mailto:${data.public_email || data.email}`}>
+            {/* <Link href={`mailto:${data.public_email || data.email}`}> */}
+            <div
+              onClick={() => {
+                dispatch(
+                  openModal({
+                    type: 'create-post',
+                    closable: true,
+                    propData: { defaultValue: location },
+                  }),
+                )
+              }}
+            >
               <Tooltip title="Repost">
                 <div
                   onClick={(e) => console.log(e)}
@@ -479,7 +504,8 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
                   <RepostIcon />
                 </div>
               </Tooltip>
-            </Link>
+            </div>
+            {/* </Link> */}
 
             {/* Bookmark Button */}
             <Tooltip title="Bookmark">

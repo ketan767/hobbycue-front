@@ -24,6 +24,7 @@ import CloseIcon from '@/assets/icons/CloseIcon'
 import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import Image from 'next/image'
+import FilledButton from '@/components/_buttons/FilledButton'
 
 const AboutEditor = dynamic(
   () => import('@/components/AboutEditor/AboutEditor'),

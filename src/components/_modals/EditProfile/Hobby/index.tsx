@@ -293,7 +293,13 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         selectedHobby = matchedHobby
         setErrorOrmsg('hobby added Successfully!')
       } else {
-        dispatch(openModal({ type: 'add-hobby', closable: true }))
+        dispatch(
+          openModal({
+            type: 'add-hobby',
+            closable: true,
+            propData: { defaultValue: hobbyInputValue },
+          }),
+        )
         return
       }
     } else {
@@ -423,7 +429,13 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           // setErrorOrmsg('Typed hobby not found!')
           // searchref.current?.focus()
           // setHobbyError(true)
-          dispatch(openModal({ type: 'add-hobby', closable: true }))
+          dispatch(
+            openModal({
+              type: 'add-hobby',
+              closable: true,
+              propData: { defaultValue: hobbyInputValue }
+            }),
+          )
           return
         }
       } else {

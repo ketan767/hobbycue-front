@@ -202,21 +202,23 @@ const ListingContactEditModal: React.FC<Props> = ({
   }
   const handleSubmit = async () => {
     console.log(data.website)
-    if (!data.phone.number && !data.public_email.value) {
-      emailRef.current?.focus()
-      return setData((prev) => {
-        return {
-          ...prev,
-          phone: {
-            ...prev.phone,
-            error: 'Enter a valid phone number or email',
-          },
-          public_email: {
-            ...prev.public_email,
-            error: 'Enter a valid phone number or email',
-          },
-        }
-      })
+    if (!data.whatsapp_number.number) {
+      if (!data.phone.number && !data.public_email.value) {
+        emailRef.current?.focus()
+        return setData((prev) => {
+          return {
+            ...prev,
+            phone: {
+              ...prev.phone,
+              error: 'At least one mode of contact is required',
+            },
+            public_email: {
+              ...prev.public_email,
+              error: 'At least one mode of contact is required',
+            },
+          }
+        })
+      }
     }
     if (data.phone.number) {
       if (
@@ -446,7 +448,7 @@ const ListingContactEditModal: React.FC<Props> = ({
             listingModalData.type === listingTypes.PROGRAM ||
             listingModalData.type === listingTypes.PLACE ? (
               <div className={styles.useEmailContainer}>
-                <p>Either Phone Number or Email ID is required.</p>
+                <p>At least one mode of contact is required</p>
                 <OutlinedButton
                   className={styles['use-mine-button']}
                   onClick={() =>
@@ -548,7 +550,7 @@ const ListingContactEditModal: React.FC<Props> = ({
               </div>
               <div className={styles['input-box']}>
                 <label className={styles['whatsapp-label']}>
-                  WhatsApp Number
+                  WhatsApp
                   <CustomTooltip title="Use same">
                     <div>
                       <Checkbox
