@@ -249,12 +249,6 @@ const SupportUserModal: React.FC<Props> = ({
       >
         {/* Modal Header */}
         <header className={styles['header']}>
-          <CloseIcon
-            className={styles['modal-close-icon']}
-            onClick={() =>
-              isChanged ? setConfirmationModal(true) : handleClose()
-            }
-          />
           <h4 className={styles['heading']}>{'Support'}</h4>
         </header>
         <hr className={styles['modal-hr']} />
