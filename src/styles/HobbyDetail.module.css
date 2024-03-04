@@ -395,9 +395,9 @@ line-height: 20px;
     top: 0;
     height: auto;
   }
-  .keyword-container ul {
+  /* .keyword-container ul {
     display: none;
-  }
+  } */
   .display-desktop {
     display: none !important;
   }

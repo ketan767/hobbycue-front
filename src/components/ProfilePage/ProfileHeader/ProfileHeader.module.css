@@ -76,12 +76,12 @@
   overflow: hidden;
   white-space: nowrap; /* Ensure text doesn't wrap */
   text-overflow: ellipsis; /* Apply ellipsis */
-  width: 700px;
+  max-width: 650px;
 }
 .text-ellipsis-mobile {
   overflow: hidden;
-  white-space: nowrap; /* Ensure text doesn't wrap */
-  text-overflow: ellipsis; /* Apply ellipsis */
+  white-space: nowrap;
+  text-overflow: ellipsis
 }
 
 .center-container .category {

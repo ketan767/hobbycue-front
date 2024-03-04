@@ -129,6 +129,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   const addressLabelRef = useRef<HTMLInputElement>(null)
 
   const handleInputChange = (event: any) => {
+    setShowDropdown(false)
     const { name, value } = event.target
     setData((prev) => ({ ...prev, [name]: value }))
     setInputErrs((prev) => ({ ...prev, [name]: null }))
@@ -754,13 +755,17 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   name="street"
                   ref={inputRef}
                   onFocus={() => setShowDropdown(true)}
+                  onBlur={() => setShowDropdown(false)}
                   onChange={handleInputChange}
                 />
                 <Image
                   src={LocationIcon}
                   alt="location"
                   className={styles.locationImg}
-                  onClick={getLocation}
+                  onClick={() => {
+                    getLocation
+                    inputRef?.current?.focus()
+                  }}
                 />
               </div>
               {ShowDropdown && dropdownList.length !== 0 && (

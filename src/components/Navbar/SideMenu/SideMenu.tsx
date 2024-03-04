@@ -108,9 +108,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
               {user?.full_name}
             </div>
             <div className={styles['header-icons']}>
-              <Link
-                href={'/bookmarks'}
-              >
+              <Link href={'/bookmarks'}>
                 <CustomizedTooltips title="Bookmark">
                   <svg
                     width="24"
@@ -337,7 +335,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                   </Link>
 
                   <Link href={'/hobby/outdoor'}>
-                    <li>Outdoor</li>
+                    <li>Outdoors</li>
                   </Link>
 
                   <Link href={'/hobby/traveling'}>
@@ -392,12 +390,12 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                 </Link>
               </ul> */}
                   <ul>
-                  <Link href={`/activity`}>
-                          <li>My Activity</li>
-                        </Link>
-                        <Link href={`/orders`}>
-                          <li>My Orders</li>
-                        </Link>
+                    <Link href={`/activity`}>
+                      <li>My Activity</li>
+                    </Link>
+                    <Link href={`/orders`}>
+                      <li>My Orders</li>
+                    </Link>
                     <Link href={`/profile/${user.profile_url}/pages`}>
                       <li>My Pages</li>
                     </Link>

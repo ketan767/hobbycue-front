@@ -32,6 +32,7 @@ type Props = {
   handleClose?: any
   isError?: boolean
   onBoarding?: boolean
+  onStatusChange?: (isChanged: boolean) => void
 }
 
 type DropdownListItem = {
@@ -52,6 +53,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClose,
+  onStatusChange,
   onBoarding,
 }) => {
   const dispatch = useDispatch()
@@ -64,7 +66,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
     hobby: null,
     genre: null,
   })
-  const [error, setError] = useState<string | null>(null)
+  const [errorOrmsg, setErrorOrmsg] = useState<string | null>(null)
   const hobbyRef = useRef<any>(null)
   const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
   const [showGenreDropdown, setShowGenreDropdown] = useState<boolean>(false)
@@ -73,6 +75,9 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   const [genreInputValue, setGenreInputValue] = useState('')
   const [isError, setIsError] = useState(false)
   const [HobbyError, setHobbyError] = useState(false)
+  const [initialData, setInitialData] = useState<never[]>([])
+  const [isChanged, setIsChanged] = useState(false)
+  const [isChangeadded, setIsChangeadded] = useState(false)
 
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     DropdownListItem[]
@@ -83,13 +88,13 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   const [nextDisabled, setNextDisabled] = useState(false)
 
   const [addHobbyBtnLoading, setAddHobbyBtnLoading] = useState<boolean>(false)
-console.warn({hobbiesList})
+  console.warn({ hobbiesList })
   const handleHobbyInputChange = async (e: any) => {
     setHobbyInputValue(e.target.value)
     setGenreInputValue('')
     setGenreDropdownList([])
     setGenreId('')
-    setError(null)
+    setErrorOrmsg(null)
     setHobbyError(false)
 
     setData((prev) => {
@@ -171,14 +176,13 @@ console.warn({hobbiesList})
         setGenreDropdownList(res.data.hobbies)
         setShowGenreDropdown(true)
       } else {
-        console.error('Error fetching genres:', err)
       }
     }
   }
 
   const handleAddHobby = async () => {
     setHobbyError(false)
-    setError(null)
+    setErrorOrmsg(null)
     setShowGenreDropdown(false)
     let selectedHobby = null
     let selectedGenre = null
@@ -190,7 +194,7 @@ console.warn({hobbiesList})
       )
 
       if (!hobbyInputValue.trim()) {
-        setError('Please enter a hobby')
+        setErrorOrmsg('Please enter a hobby')
         hobbyRef.current?.focus()
         setHobbyError(true)
         return
@@ -198,6 +202,7 @@ console.warn({hobbiesList})
 
       if (matchedHobby) {
         selectedHobby = matchedHobby
+        setErrorOrmsg('hobby added Successfully!')
       } else {
         // setHobbyError(true)
         // setError('Typed hobby not found!')
@@ -206,6 +211,7 @@ console.warn({hobbiesList})
       }
     } else {
       selectedHobby = data.hobby
+      setErrorOrmsg('hobby added Successfully!')
     }
 
     // Handle genre input
@@ -216,11 +222,12 @@ console.warn({hobbiesList})
       )
 
       if (selectedGenre !== null && selectedGenre !== matchedGenre) {
-        setError('Typed Genre not found!')
+        setErrorOrmsg('Typed Genre not found!')
+        setHobbyError(true)
         return
       }
       if (selectedGenre !== null && !matchedGenre) {
-        setError("This hobby doesn't contain this genre")
+        setErrorOrmsg("This hobby doesn't contain this genre")
         return
       }
     } else {
@@ -231,12 +238,16 @@ console.warn({hobbiesList})
 
     setAddHobbyBtnLoading(true)
     let jsonData = { hobbyId: data.hobby?._id, genreId: data.genre?._id }
-    const sameAsPrevious = hobbiesList?.find((obj:any)=>obj?.hobby?._id===jsonData.hobbyId&&obj?.genre?._id===jsonData.genreId);
-    if(sameAsPrevious){
-      setHobbyError(true);
-    setError("Same hobby detected in the hobbies list");
-    setAddHobbyBtnLoading(false);
-      return;
+    const sameAsPrevious = hobbiesList?.find(
+      (obj: any) =>
+        obj?.hobby?._id === jsonData.hobbyId &&
+        obj?.genre?._id === jsonData.genreId,
+    )
+    if (sameAsPrevious) {
+      setHobbyError(true)
+      setErrorOrmsg('Same hobby detected in the hobbies list')
+      setAddHobbyBtnLoading(false)
+      return
     }
     const { err, res } = await addListingHobby(listingModalData._id, jsonData)
     if (err) {
@@ -251,18 +262,19 @@ console.warn({hobbiesList})
   }
 
   const handleDeleteHobby = async (id: string) => {
-    if (!listingModalData._id) return console.error('Listing ID Not Found!')
+    if (!listingModalData._id) return
 
     // @TODO: Error Handling
     const { err, res } = await deleteListingHobby(listingModalData._id, id)
     if (err) return console.log(err)
 
     await updateHobbyList()
+    setErrorOrmsg('hobby deleted Successfully!')
   }
 
   const handleSubmit = async () => {
     setHobbyError(false)
-    setError(null)
+    setErrorOrmsg(null)
     setShowGenreDropdown(false)
     if (hobbyInputValue) {
       let selectedHobby = null
@@ -300,11 +312,11 @@ console.warn({hobbiesList})
         )
 
         if (selectedGenre !== null && selectedGenre !== matchedGenre) {
-          setError('Typed Genre not found!')
+          setErrorOrmsg('Typed Genre not found!')
           return
         }
         if (selectedGenre !== null && !matchedGenre) {
-          setError("This hobby doesn't contain this genre")
+          setErrorOrmsg("This hobby doesn't contain this genre")
           return
         }
       } else {
@@ -315,12 +327,16 @@ console.warn({hobbiesList})
 
       setAddHobbyBtnLoading(true)
       let jsonData = { hobbyId: data.hobby?._id, genreId: data.genre?._id }
-      const sameAsPrevious = hobbiesList?.find((obj:any)=>obj?.hobby?._id===jsonData.hobbyId&&obj?.genre?._id===jsonData.genreId);
-      if(sameAsPrevious){
-        setHobbyError(true);
-      setError("Same hobby detected in the hobbies list");
-      setAddHobbyBtnLoading(false);
-        return;
+      const sameAsPrevious = hobbiesList?.find(
+        (obj: any) =>
+          obj?.hobby?._id === jsonData.hobbyId &&
+          obj?.genre?._id === jsonData.genreId,
+      )
+      if (sameAsPrevious) {
+        setHobbyError(true)
+        setErrorOrmsg('Same hobby detected in the hobbies list')
+        setAddHobbyBtnLoading(false)
+        return
       }
       const { err, res } = await addListingHobby(listingModalData._id, jsonData)
       if (err) {
@@ -335,7 +351,7 @@ console.warn({hobbiesList})
     }
 
     if (hobbiesList.length === 0) {
-      setError('Add atleast one hobby!')
+      setErrorOrmsg('Add atleast one hobby!')
       setHobbyError(true)
       hobbyRef.current?.focus()
       return
@@ -347,14 +363,39 @@ console.warn({hobbiesList})
     }
   }
 
+  useEffect(() => {
+    // To show exit save modal
+    let hasChanges = false
+    if (hobbyInputValue !== '') {
+      hasChanges = true
+      setIsChanged(hasChanges)
+    } else {
+      hasChanges = false
+      setIsChanged(hasChanges)
+    }
+
+    // To reload the page
+    const hasChangesadded =
+      JSON.stringify(hobbiesList) !== JSON.stringify(initialData)
+    setIsChangeadded(hasChangesadded)
+
+    if (onStatusChange) {
+      if (isChanged || hasChangesadded) onStatusChange(true)
+    }
+  }, [hobbiesList, hobbyInputValue, onStatusChange])
+
   const updateHobbyList = async () => {
-    if (!listingModalData._id) return console.error('No Listing ID Found!')
+    if (!listingModalData._id) return
 
     const { err, res } = await getListingHobbies(listingModalData._id)
     if (err) return console.log(err)
 
     setHobbiesList(res?.data.data.hobbies)
   }
+
+  useEffect(() => {
+    setInitialData(listingModalData?._hobbies)
+  }, [listingModalData?._id])
 
   useEffect(() => {
     hobbyRef.current?.focus()
@@ -404,6 +445,8 @@ console.warn({hobbiesList})
         setConfirmationModal={setConfirmationModal}
         isError={isError}
         OnBoarding={onBoarding}
+        hasChange={isChanged}
+        reloadrouter={isChangeadded}
       />
     )
   }
@@ -425,8 +468,6 @@ console.warn({hobbiesList})
         <section className={styles['body']}>
           <>
             <section className={styles['add-hobbies-wrapper']}>
-              <p className={styles['helper-text']}>{error}</p>
-
               {/* Hobbies List, that are already Added */}
               {/* <h3 className={styles['heading']}>Added Hobbies</h3> */}
               <section className={styles['added-hobby-list']}>
@@ -583,6 +624,15 @@ console.warn({hobbiesList})
                     </tr>
                   </tbody>
                 </table>
+                <p
+                  className={
+                    HobbyError
+                      ? styles['helper-text']
+                      : styles['helper-text-green']
+                  }
+                >
+                  {errorOrmsg}
+                </p>
               </section>
             </section>
           </>

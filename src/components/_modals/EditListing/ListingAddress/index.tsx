@@ -48,7 +48,6 @@ type ListingAddressData = {
   longitude: InputData<string>
 }
 
-
 type AddressObj = {
   street_number?: string
   premise?: string
@@ -118,6 +117,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
   })
 
   const handleInputChange = (event: any) => {
+    setShowDropdown(false)
     setData((prev) => {
       return {
         ...prev,
@@ -167,98 +167,98 @@ const ListingAddressEditModal: React.FC<Props> = ({
   }, [data, initialData, onStatusChange])
   const handleSubmit = async () => {
     // if (isChanged) {
-      if (listingModalData.type === listingTypes.PLACE) {
-        if (isEmptyField(data.street.value) || !data.street.value) {
-          streetRef.current?.focus()
-          return setData((prev) => {
-            return {
-              ...prev,
-              street: { ...prev.street, error: 'This field is required!' },
-            }
-          })
-        }
-        if (isEmptyField(data.society.value) || !data.society.value) {
-          societyRef.current?.focus()
-          return setData((prev) => {
-            return {
-              ...prev,
-              society: { ...prev.society, error: 'This field is required!' },
-            }
-          })
-        }
-        if (isEmptyField(data.locality.value) || !data.locality.value) {
-          localityRef.current?.focus()
-          return setData((prev) => {
-            return {
-              ...prev,
-              locality: { ...prev.locality, error: 'This field is required!' },
-            }
-          })
-        }
-      }
-      if (isEmptyField(data.city.value) || !data.city.value) {
-        cityRef.current?.focus()
+    if (listingModalData.type === listingTypes.PLACE) {
+      if (isEmptyField(data.street.value) || !data.street.value) {
+        streetRef.current?.focus()
         return setData((prev) => {
           return {
             ...prev,
-            city: { ...prev.city, error: 'This field is required!' },
+            street: { ...prev.street, error: 'This field is required!' },
           }
         })
       }
-      if (listingModalData.type === listingTypes.PLACE) {
-        if (isEmptyField(data.pin_code.value) || !data.pin_code.value) {
-          pincodeRef.current?.focus()
-          return setData((prev) => {
-            return {
-              ...prev,
-              pin_code: { ...prev.pin_code, error: 'This field is required!' },
-            }
-          })
+      if (isEmptyField(data.society.value) || !data.society.value) {
+        societyRef.current?.focus()
+        return setData((prev) => {
+          return {
+            ...prev,
+            society: { ...prev.society, error: 'This field is required!' },
+          }
+        })
+      }
+      if (isEmptyField(data.locality.value) || !data.locality.value) {
+        localityRef.current?.focus()
+        return setData((prev) => {
+          return {
+            ...prev,
+            locality: { ...prev.locality, error: 'This field is required!' },
+          }
+        })
+      }
+    }
+    if (isEmptyField(data.city.value) || !data.city.value) {
+      cityRef.current?.focus()
+      return setData((prev) => {
+        return {
+          ...prev,
+          city: { ...prev.city, error: 'This field is required!' },
         }
-      }
-      if (isEmptyField(data.state.value) || !data.state.value) {
-        stateRef.current?.focus()
+      })
+    }
+    if (listingModalData.type === listingTypes.PLACE) {
+      if (isEmptyField(data.pin_code.value) || !data.pin_code.value) {
+        pincodeRef.current?.focus()
         return setData((prev) => {
           return {
             ...prev,
-            state: { ...prev.state, error: 'This field is required!' },
+            pin_code: { ...prev.pin_code, error: 'This field is required!' },
           }
         })
       }
-      if (isEmptyField(data.country.value) || !data.country.value) {
-        countryRef.current?.focus()
-        return setData((prev) => {
-          return {
-            ...prev,
-            country: { ...prev.country, error: 'This field is required!' },
-          }
-        })
-      }
+    }
+    if (isEmptyField(data.state.value) || !data.state.value) {
+      stateRef.current?.focus()
+      return setData((prev) => {
+        return {
+          ...prev,
+          state: { ...prev.state, error: 'This field is required!' },
+        }
+      })
+    }
+    if (isEmptyField(data.country.value) || !data.country.value) {
+      countryRef.current?.focus()
+      return setData((prev) => {
+        return {
+          ...prev,
+          country: { ...prev.country, error: 'This field is required!' },
+        }
+      })
+    }
 
-      const jsonData = {
-        street: data.street.value,
-        society: data.society.value,
-        locality: data.locality.value,
-        city: data.city.value,
-        pin_code: data.pin_code.value,
-        state: data.state.value,
-        country: data.country.value,
-        latitude: data.latitude.value,
-        longitude: data.longitude.value,
-      }
-      setSubmitBtnLoading(true)
-      const { err, res } = await updateListingAddress(
-        listingModalData._address?._id
-          ? listingModalData._address?._id
-          : listingModalData._address,
-        jsonData,
-      )
-      if (err) return console.log(err)
-      if (onComplete) onComplete()
-      else {
-        window.location.reload()
-        dispatch(closeModal())
-      }
+    const jsonData = {
+      street: data.street.value,
+      society: data.society.value,
+      locality: data.locality.value,
+      city: data.city.value,
+      pin_code: data.pin_code.value,
+      state: data.state.value,
+      country: data.country.value,
+      latitude: data.latitude.value,
+      longitude: data.longitude.value,
+    }
+    setSubmitBtnLoading(true)
+    const { err, res } = await updateListingAddress(
+      listingModalData._address?._id
+        ? listingModalData._address?._id
+        : listingModalData._address,
+      jsonData,
+    )
+    if (err) return console.log(err)
+    if (onComplete) onComplete()
+    else {
+      window.location.reload()
+      dispatch(closeModal())
+    }
     // }
   }
 
@@ -306,7 +306,11 @@ const ListingAddressEditModal: React.FC<Props> = ({
     const successFunction = (position: any) => {
       var lat = position.coords.latitude
       var long = position.coords.longitude
-      setData((prev)=>({...prev,latitude:{value:lat,error:null},longitude:{value:long,error:null}}));
+      setData((prev) => ({
+        ...prev,
+        latitude: { value: lat, error: null },
+        longitude: { value: long, error: null },
+      }))
       console.log(lat)
       console.log(long)
       handleGeocode(lat, long)
@@ -447,18 +451,21 @@ const ListingAddressEditModal: React.FC<Props> = ({
     }
   }, [isError])
 
-
-  const handleSelectAddress=(data:DropdownListItem)=>{
-    setShowDropdown(false);
-    const { addressObj } = data;
-    setData((prev)=>({...prev,
-    pin_code:{value:addressObj.postal_code??'',error:null},
-      country: {value:addressObj.country ?? '',error:null},
-      city: {value:addressObj.locality ?? '',error:null},
-      state: {value:addressObj.administrative_area_level_1 ?? '',error:null},
-      society: {value:addressObj.premise ?? '',error:null},
-      street: {value:addressObj.street_number ?? '',error:null},
-      locality: {value:addressObj.sublocality_level_1 ?? '',error:null}
+  const handleSelectAddress = (data: DropdownListItem) => {
+    setShowDropdown(false)
+    const { addressObj } = data
+    setData((prev) => ({
+      ...prev,
+      pin_code: { value: addressObj.postal_code ?? '', error: null },
+      country: { value: addressObj.country ?? '', error: null },
+      city: { value: addressObj.locality ?? '', error: null },
+      state: {
+        value: addressObj.administrative_area_level_1 ?? '',
+        error: null,
+      },
+      society: { value: addressObj.premise ?? '', error: null },
+      street: { value: addressObj.street_number ?? '', error: null },
+      locality: { value: addressObj.sublocality_level_1 ?? '', error: null },
     }))
   }
 
@@ -505,13 +512,17 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   required={listingModalData.type === listingTypes.PLACE}
                   onChange={handleInputChange}
                   onFocus={() => setShowDropdown(true)}
+                  onBlur={() => setShowDropdown(false)}
                   ref={streetRef}
                 />
                 <Image
                   src={LocationIcon}
                   alt="location"
                   className={styles.locationImg}
-                  onClick={getLocation}
+                  onClick={() => {
+                    getLocation
+                    streetRef?.current?.focus()
+                  }}
                 />
               </div>
               {ShowDropdown && dropdownList.length !== 0 && (

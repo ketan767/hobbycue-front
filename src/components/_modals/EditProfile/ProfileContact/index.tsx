@@ -433,7 +433,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
                 <label>Phone Number</label>
                 <div className={styles['phone-prefix-input']}>
                   <DropdownMenu
-                    value={selectedCountryCode+"-"}
+                    value={selectedCountryCode + '-'}
                     valueIndex={countryData.findIndex(
                       (country, idx) =>
                         country.phonePrefix === selectedCountryCode,
@@ -463,7 +463,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
               {/* WhatsApp Number */}
               <div className={styles['input-box']}>
                 <label className={styles['whatsapp-label']}>
-                  WhatsApp Number
+                  WhatsApp
                   <CustomTooltip title="Use same">
                     <div>
                       <Checkbox
@@ -496,7 +496,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
                 </label>
                 <div className={styles['phone-prefix-input']}>
                   <DropdownMenu
-                    value={selectedWpCountryCode+"-"}
+                    value={selectedWpCountryCode + '-'}
                     valueIndex={countryData.findIndex(
                       (country, idx) =>
                         country.phonePrefix === selectedWpCountryCode,
