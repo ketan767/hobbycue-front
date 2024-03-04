@@ -102,9 +102,9 @@ const ModalManager: React.FC = () => {
   const dispatch = useDispatch()
   const [confirmationModal, setConfirmationModal] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
-  const { activeModal, closable } = useSelector(
+  const { activeModal, closable, propData } = useSelector(
     (state: RootState) => state.modal,
-  )
+  )  
   const specialCloseHandlers: Partial<{
     [key in Exclude<ModalType, null>]: () => void
   }> = {
@@ -232,6 +232,7 @@ const ModalManager: React.FC = () => {
     confirmationModal,
     handleClose,
     onStatusChange: handleStatusChange,
+    propData
   }
 
   const viewImageProps = {
@@ -288,9 +289,9 @@ const ModalManager: React.FC = () => {
                 <ListingOnboardingModal />
               )}
               {activeModal === 'add-hobby' && (
-                <AddHobby handleClose={handleClose} />
+                <AddHobby handleClose={handleClose} propData={propData}/>
               )}
-              {activeModal === 'create-post' && <CreatePost />}
+              {activeModal === 'create-post' && <CreatePost propData={propData}/>}
               {activeModal === 'upload-image' && <UploadImageModal />}
 
               {activeModal === 'profile-general-edit' && (

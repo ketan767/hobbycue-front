@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styles from './ProfileHeader.module.css'
 import { openModal } from '@/redux/slices/modal'
 import useOutsideClick from '@/hooks/useOutsideClick'
+import { RootState } from '@/redux/store'
 
 type Props = {
   handleClose?: any
@@ -14,7 +15,7 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType }) => {
   const ref = useRef<HTMLDivElement>(null)
   const supportRef = useRef<HTMLLIElement>(null)
   const reportRef = useRef<HTMLLIElement>(null)
-
+  const { isLoggedIn } = useSelector((state: RootState) => state.user)
   useEffect(() => {
     function handleClickOutside(event: any) {
       if (ref.current && !ref.current.contains(event.target)) {
@@ -29,7 +30,8 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType }) => {
           event.target.nodeName == reportRef.current?.nodeName &&
           event.target.textContent === reportRef.current?.textContent
         ) {
-          dispatch(openModal({ type: 'UserReportModal', closable: true }))
+          if (isLoggedIn)
+            dispatch(openModal({ type: 'UserReportModal', closable: true }))
         }
         handleClose()
       }

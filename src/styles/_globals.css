@@ -38,7 +38,6 @@
 }
 @media screen and (max-width: 1100px) {
   :root {
-    
     --navbar-height-desktop: 3rem;
   }
 }
@@ -143,12 +142,29 @@ select:-webkit-autofill {
   border-radius: 8px;
   background-color: var(--bg-color);
   color: var(--color);
-  border: 1px solid rgb(var(--primary-100-rgb));
+  /* border: 1px solid rgb(var(--primary-100-rgb)); */
 
   font-weight: 600;
   font-size: 14px;
   line-height: 16px;
   cursor: pointer;
+}
+.modal-footer-btn:not(:disabled):hover {
+  opacity: 0.9;
+}
+.modal-footer-btn:focus {
+  outline: 1px solid #ffffff !important;
+  border: 1px solid rgba(var(--primary-100-rgb)) !important;
+}
+.modal-footer-btn:focus::before {
+  content: '';
+  border: 1px solid rgba(var(--primary-100-rgb));
+  width: calc(100% + 3.8px);
+  height: calc(100% + 3.8px);
+  position: absolute;
+  top: -2.8px;
+  left: -2.8px;
+  border-radius: 0.5rem;
 }
 .modal-footer-btn.submit {
   margin-left: auto;
@@ -160,9 +176,6 @@ select:-webkit-autofill {
   margin-right: auto;
   --bg-color: rgb(var(--white-rgb));
   --color: rgb(var(--primary-100-rgb));
-}
-.modal-footer-btn:not(:disabled):hover {
-  opacity: 0.9;
 }
 
 /* Default Images */
@@ -213,17 +226,17 @@ select:-webkit-autofill {
   background-size: cover;
 }
 .ql-toolbar.ql-snow + .ql-container.ql-snow {
-  border-top: 1px solid #EBEDF0 !important;
+  border-top: 1px solid #ebedf0 !important;
   border-bottom: 0;
   border-radius: 8px 8px 0 0;
-  border-color: 1px solid #EBEDF0 !important;
+  border-color: 1px solid #ebedf0 !important;
 }
 
 .ql-toolbar.ql-snow {
   display: flex;
   align-items: center;
   border-radius: 0 0 8px 8px;
-  border-color: 1px solid #EBEDF0 !important;
+  border-color: 1px solid #ebedf0 !important;
   height: 48px;
 }
 .ql-toolbar.ql-snow .ql-formats button {
@@ -298,15 +311,15 @@ select:-webkit-autofill {
 .about-quill-container.quill-error {
   border: 1px solid #c0504d;
 }
-.ql-snow.ql-toolbar button svg{
+.ql-snow.ql-toolbar button svg {
   width: 24px;
   height: 24px;
 }
 .ql-snow.ql-toolbar button svg path,
 .ql-snow.ql-toolbar button svg line,
 .ql-snow.ql-toolbar button svg circle,
-.ql-snow.ql-toolbar button svg path rect{
-  stroke: #6D747A;
+.ql-snow.ql-toolbar button svg path rect {
+  stroke: #6d747a;
 }
 
 .imageclick {
@@ -315,14 +328,13 @@ select:-webkit-autofill {
 .modal-mob-btn {
   display: none;
 }
-.modal-mob-btn-save{
+.modal-mob-btn-save {
   display: none;
 }
 
-.btnOutlinePurple button:focus-visible{
-  outline-color:#8064A2;
+.btnOutlinePurple button:focus-visible {
+  outline-color: #8064a2;
 }
-
 
 @media screen and (max-width: 1100px) {
   .site-container {
@@ -338,11 +350,11 @@ select:-webkit-autofill {
     display: none;
   }
 
-  .ql-toolbar.ql-snow .ql-formats button{
+  .ql-toolbar.ql-snow .ql-formats button {
     padding: 0 7px !important;
   }
 
-  .ql-formats{
+  .ql-formats {
     display: flex;
     flex-direction: row !important;
   }
@@ -375,8 +387,8 @@ select:-webkit-autofill {
   .modal-mob-btn:not(:disabled):hover {
     opacity: 0.9;
   }
-  
-  .modal-mob-btn-save{
+
+  .modal-mob-btn-save {
     display: flex;
     color: white;
     font-family: Poppins;
@@ -389,21 +401,20 @@ select:-webkit-autofill {
     align-items: center;
     gap: 8px;
     border-radius: 8px;
-    background: var(--Purple-1, #8064A2);
-  }
-  
-  .modal-mob-btn-save{
-    display: block;
+    background: var(--Purple-1, #8064a2);
   }
 
+  .modal-mob-btn-save {
+    display: block;
+  }
 }
 @media screen and (max-width: 500px) {
-  .ql-toolbar.ql-snow .ql-formats button{
+  .ql-toolbar.ql-snow .ql-formats button {
     padding: 0 4px !important;
   }
 }
 @media screen and (max-width: 380px) {
-  .ql-toolbar.ql-snow .ql-formats button{
+  .ql-toolbar.ql-snow .ql-formats button {
     padding: 0 1px !important;
   }
 }

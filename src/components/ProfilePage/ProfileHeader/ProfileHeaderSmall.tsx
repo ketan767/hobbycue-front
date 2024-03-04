@@ -35,6 +35,7 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
   const tabs: ProfilePageTabs[] = ['home', 'posts', 'media', 'pages', 'blogs']
 
   const [open, setOpen] = useState(false)
+  const location = window.location.href
 
   const handleDropdown = () => {
     setOpen(!open)
@@ -187,16 +188,26 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
               Contact
             </FilledButton>
             {/* Send Email Button  */}
-            <Tooltip title="Repost">
-              <Link href={`mailto:${data.public_email || data.email}`}>
+            <div
+              onClick={() => {
+                dispatch(
+                  openModal({
+                    type: 'create-post',
+                    closable: true,
+                    propData: { defaultValue: location },
+                  }),
+                )
+              }}
+            >
+              <Tooltip title="Repost">
                 <div
                   onClick={(e) => console.log(e)}
                   className={styles['action-btn']}
                 >
                   <Image src={MailIcon} alt="share" />
                 </div>
-              </Link>
-            </Tooltip>
+              </Tooltip>
+            </div>
 
             {/* Bookmark Button */}
             <Tooltip title="Bookmark">

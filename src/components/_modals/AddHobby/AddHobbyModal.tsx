@@ -10,9 +10,10 @@ import CloseIcon from '@/assets/icons/CloseIcon'
 type Props = {
   handleClose?: any
   handleSubmit?: any
+  propData?: any
 }
 
-const AddHobby: React.FC<Props> = ({ handleClose, handleSubmit }) => {
+const AddHobby: React.FC<Props> = ({ handleClose, handleSubmit, propData }) => {
   const dispatch = useDispatch()
 
   return (
@@ -21,14 +22,16 @@ const AddHobby: React.FC<Props> = ({ handleClose, handleSubmit }) => {
         <p>Add Hobby</p>
         <CloseIcon
           className={styles['modal-close-icon']}
-          onClick={handleClose}
+          onClick={() => {
+            dispatch(closeModal())
+          }}
         />
       </div>
       <hr className={styles['modal-hr']} />
       <div className={styles['content']}>
         <p>
-          Add <span>Pickleball</span> as a hobby so that we can grow this as a
-          community
+          Add <span>{propData?.defaultValue ?? 'Pickleball'}</span> as a hobby
+          so that we can grow this as a community
         </p>
         <div className={styles['buttons']}>
           <FilledButton className={styles['button1']} onClick={handleClose}>

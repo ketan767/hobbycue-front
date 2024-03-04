@@ -211,10 +211,10 @@ const HobbyPageLayout: React.FC<Props> = ({
             </div>
           </aside>
         )}
-        <main className={styles['display-mobile']}>{children}</main>
         <div className={`${styles['display-mobile']}`}>
           <HobbyNavigationLinks activeTab={activeTab} />
         </div>
+        <main className={styles['display-mobile']}>{children}</main>
       </PageGridLayout>
     </>
   )

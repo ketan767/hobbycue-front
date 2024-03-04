@@ -24,6 +24,7 @@ import { DropdownOption } from './Dropdown/DropdownOption'
 import InputSelect from '@/components/_formElements/Select/Select'
 import SaveModal from '../SaveModal/saveModal'
 import CloseIcon from '@/assets/icons/CloseIcon'
+import { useRouter } from 'next/router'
 
 const CustomEditor = dynamic(() => import('@/components/CustomEditor'), {
   ssr: false,
@@ -38,6 +39,7 @@ type Props = {
   handleClose?: any
   isError?: boolean
   onStatusChange?: (isChanged: boolean) => void
+  propData?: any
 }
 
 type DropdownListItem = {
@@ -64,6 +66,7 @@ export const CreatePost: React.FC<Props> = ({
   setConfirmationModal,
   handleClose,
   onStatusChange,
+  propData,
 }) => {
   const { user, activeProfile } = useSelector((state: RootState) => state.user)
   const [hobbies, setHobbies] = useState([])
@@ -72,7 +75,7 @@ export const CreatePost: React.FC<Props> = ({
     data: null,
     hobby: null,
     genre: null,
-    content: '',
+    content: propData?.defaultValue ?? '',
     contentToDisplay: '',
     visibility: 'All Locations',
     media: [],
@@ -408,7 +411,9 @@ export const CreatePost: React.FC<Props> = ({
         <div className={styles['modal-wrapper']}>
           <h3 className={styles['modal-heading']}>Create Post</h3>
           <div className={styles['create-post-modal']}>
-            <section className={styles['editor-container']+" btnOutlinePurple"}>
+            <section
+              className={styles['editor-container'] + ' btnOutlinePurple'}
+            >
               <CustomEditor
                 value=""
                 onChange={(value) => {
