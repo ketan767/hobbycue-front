@@ -133,7 +133,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
         // if(event?.target?.tagName==="INPUT"){
         //   return
         // }else{
-          handleSubmit()
+        handleSubmit()
         // }
       }
     }

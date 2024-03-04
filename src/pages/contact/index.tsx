@@ -176,7 +176,11 @@ const Contact: React.FC<Props> = ({}) => {
     const YouAre = data.YouAre.value
     const Regarding = data.Regarding.value
     const description = data.message.value
-    const user_id = !isLoggedIn ? 'Not logged In' : activeProfile.type==='listing'? activeProfile?.data?._id:user?._id
+    const user_id = !isLoggedIn
+      ? 'Not logged In'
+      : activeProfile.type === 'listing'
+      ? activeProfile?.data?._id
+      : user?._id
 
     setSubmitBtnLoading(true)
 
@@ -206,16 +210,28 @@ const Contact: React.FC<Props> = ({}) => {
     if (isLoggedIn) {
       setData((prev) => ({
         ...prev,
-        name: { value: activeProfile.type==="user"?user?.full_name:activeProfile?.data?.title, error: null },
-        public_email: { value: activeProfile.type==="user"?user?.public_email:activeProfile?.data?.public_email, error: null },
+        name: {
+          value:
+            activeProfile.type === 'user'
+              ? user?.full_name
+              : activeProfile?.data?.title,
+          error: null,
+        },
+        public_email: {
+          value:
+            activeProfile.type === 'user'
+              ? user?.public_email
+              : activeProfile?.data?.public_email,
+          error: null,
+        },
         phone: {
-          number: activeProfile.data?.phone?.number??"",
-          prefix: activeProfile.data?.phone?.prefix??"",
+          number: activeProfile.data?.phone?.number ?? '',
+          prefix: activeProfile.data?.phone?.prefix ?? '',
           error: null,
         },
         whatsapp_number: {
-          number: activeProfile.data?.whatsapp_number?.number??"",
-          prefix: activeProfile.data?.whatsapp_number?.prefix??"",
+          number: activeProfile.data?.whatsapp_number?.number ?? '',
+          prefix: activeProfile.data?.whatsapp_number?.prefix ?? '',
           error: null,
         },
       }))
@@ -320,7 +336,7 @@ const Contact: React.FC<Props> = ({}) => {
                 {/* WhatsApp Number */}
                 <div className={styles['input-box']}>
                   <label className={styles['whatsapp-label']}>
-                    WhatsApp Number
+                    WhatsApp
                     <CustomTooltip title="Use same">
                       <div>
                         <Checkbox
