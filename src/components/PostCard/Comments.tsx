@@ -42,7 +42,7 @@ const PostComments = ({
   )
   const fetchComments = async () => {
     const { err, res } = await getPostComment(
-      `_post=${data._id}&populate=_author`,
+      `_post=${data?._id}&populate=_author`,
     )
     if (err) return console.log(err)
     setComments(res?.data?.data?.comments)
@@ -53,18 +53,18 @@ const PostComments = ({
 
     if (isEmptyField(inputValue)) return
     const jsonData = {
-      postId: data._id,
+      postId: data?._id,
       commentBy:
-        activeProfile.type === 'user'
+        activeProfile?.type === 'user'
           ? 'User'
           : activeProfile.type === 'listing'
           ? 'Listing'
           : '',
-      commentById: activeProfile.data._id,
+      commentById: activeProfile?.data?._id,
       content: inputValue,
       date: Date.now(),
     }
-    if (!jsonData.commentBy) return
+    if (!jsonData?.commentBy) return
     setLoading(true)
     const { err, res } = await addPostComment(jsonData)
     if (err) {
