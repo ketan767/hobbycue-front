@@ -3,6 +3,7 @@
   width: 100%;
 
   overflow: hidden;
+  min-height: 294px;
 }
 
 .container .image {
@@ -43,4 +44,10 @@
 }
 .rightIcon {
   right: 8px;
+}
+
+@media screen and (max-width:1100px) {
+  .container{
+    min-height: 128px;
+  }
 }

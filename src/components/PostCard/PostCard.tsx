@@ -30,7 +30,7 @@ type Props = {
 
 const PostCard: React.FC<Props> = (props) => {
   // const [type, setType] = useState<'User' | 'Listing'>()
-  // console.warn({props})
+  console.warn({props})
   const router = useRouter()
   const { user } = useSelector((state: RootState) => state.user)
   const [has_link, setHas_link] = useState(props.postData.has_link)
