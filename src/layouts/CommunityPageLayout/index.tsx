@@ -72,10 +72,12 @@ const CommunityLayout: React.FC<Props> = ({
     'store',
     'blogs',
   ]
-  const [visibilityData, setVisibilityData] = useState([{display:'All Locations',value:"All Locations"}])
+  const [visibilityData, setVisibilityData] = useState([
+    { display: 'All Locations', value: 'All Locations' },
+  ])
   const [seeMoreHobby, setSeeMoreHobby] = useState(
     // activeProfile.data?._hobbies?.length > 3 ? true : false,
-    false
+    false,
   )
   const [inviteBtnLoader, setInviteBtnLoader] = useState(false)
   const [trendingHobbies, setTrendingHobbies] = useState([])
@@ -189,7 +191,7 @@ const CommunityLayout: React.FC<Props> = ({
 
     const { err, res } = await getAllPosts(params.toString())
     if (err) return console.log(err)
-    if (res.data.success) {
+    if (res?.data?.success) {
       let posts = res.data.data.posts.map((post: any) => {
         let content = post.content.replace(/<img .*?>/g, '')
         return { ...post, content }
@@ -347,11 +349,13 @@ const CommunityLayout: React.FC<Props> = ({
               })
             }
           })
-      if(visibilityArr[1]){
-        if(visibilityArr[1].display){
-          setSelectedLocation(visibilityArr[1]?.display?.split(' ')[0]||"All locations")
-        }
-      }
+          if (visibilityArr[1]) {
+            if (visibilityArr[1].display) {
+              setSelectedLocation(
+                visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
+              )
+            }
+          }
           setVisibilityData(visibilityArr)
         }
       }
@@ -518,13 +522,13 @@ const CommunityLayout: React.FC<Props> = ({
               <InputSelect
                 onChange={(e: any) => {
                   let val = e.target.value
-                  setSelectedLocation((prev)=>{
-                          if(prev===val){
-                            return "All Locations"
-                          }else{
-                          return val
-                          }
-                        })
+                  setSelectedLocation((prev) => {
+                    if (prev === val) {
+                      return 'All Locations'
+                    } else {
+                      return val
+                    }
+                  })
                 }}
                 value={selectedLocation}
                 // inputProps={{ 'aria-label': 'Without label' }}
@@ -537,13 +541,15 @@ const CommunityLayout: React.FC<Props> = ({
                         {...item}
                         key={idx}
                         currentValue={selectedLocation}
-                        onChange={(val: any) => setSelectedLocation((prev)=>{
-                          if(prev===val){
-                            return "All Locations"
-                          }else{
-                          return val
-                          }
-                        })}
+                        onChange={(val: any) =>
+                          setSelectedLocation((prev) => {
+                            if (prev === val) {
+                              return 'All Locations'
+                            } else {
+                              return val
+                            }
+                          })
+                        }
                       />
                     </>
                   )
@@ -658,9 +664,9 @@ const CommunityLayout: React.FC<Props> = ({
                   className={`content-box-wrapper ${styles['start-post-btn-container']}`}
                 >
                   <Image
-                  src={user?.user?.profile_image??defaultUserIcon}
-                  alt=''
-                  className={styles['profile-img']}
+                    src={user?.user?.profile_image ?? defaultUserIcon}
+                    alt=""
+                    className={styles['profile-img']}
                   />
                   <button
                     onClick={() => {
@@ -754,13 +760,15 @@ const CommunityLayout: React.FC<Props> = ({
                     {visibilityData?.length > 0 && (
                       <InputSelect
                         value={selectedLocation || ''}
-                        onChange={(val: any) => setSelectedLocation((prev)=>{
-                          if(prev===val){
-                            return "All Locations"
-                          }else{
-                          return val
-                          }
-                        })}
+                        onChange={(val: any) =>
+                          setSelectedLocation((prev) => {
+                            if (prev === val) {
+                              return 'All Locations'
+                            } else {
+                              return val
+                            }
+                          })
+                        }
                         className={` ${styles['location-select']}`}
                       >
                         {visibilityData?.map((item: any, idx) => (
@@ -768,13 +776,15 @@ const CommunityLayout: React.FC<Props> = ({
                             {...item}
                             key={idx}
                             currentValue={selectedLocation}
-                            onChange={(val: any) => setSelectedLocation((prev)=>{
-                          if(prev===val){
-                            return "All Locations"
-                          }else{
-                          return val
-                          }
-                        })}
+                            onChange={(val: any) =>
+                              setSelectedLocation((prev) => {
+                                if (prev === val) {
+                                  return 'All Locations'
+                                } else {
+                                  return val
+                                }
+                              })
+                            }
                           />
                         ))}
                         <MenuItem

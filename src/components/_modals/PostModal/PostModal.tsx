@@ -69,14 +69,14 @@ export const PostModal: React.FC<Props> = ({
   const addComment = async (event: any) => {
     if (isEmptyField(newComment)) return
     const jsonData = {
-      postId: activePost._id,
+      postId: activePost?._id,
       commentBy:
-        activeProfile.type === 'user'
+        activeProfile?.type === 'user'
           ? 'User'
-          : activeProfile.type === 'listing'
+          : activeProfile?.type === 'listing'
           ? 'Listing'
           : '',
-      commentById: activeProfile.data._id,
+      commentById: activeProfile?.data._id,
       content: newComment,
       date: Date.now(),
     }
@@ -325,8 +325,8 @@ export const PostModal: React.FC<Props> = ({
       </div>
       {
         <CustomSnackbar
-          message={snackbar.message}
-          triggerOpen={snackbar.display}
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
           type={snackbar.type === 'success' ? 'success' : 'error'}
           closeSnackbar={() => {
             setSnackbar((prevValue) => ({ ...prevValue, display: false }))
