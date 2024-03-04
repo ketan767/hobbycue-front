@@ -24,7 +24,9 @@ const CommunityPages: React.FC<Props> = ({}) => {
   )
 
   const getPost = async () => {
-    const params = new URLSearchParams(`populate=_hobbies&is_published=true`)
+    const params = new URLSearchParams(
+      `populate=_hobbies,_address&is_published=true`,
+    )
 
     if (
       !activeProfile?.data?._hobbies ||

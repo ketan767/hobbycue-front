@@ -7,6 +7,10 @@
   flex-direction: column;
 }
 
+.long-input-box:focus-visible {
+  outline: 1px solid #8064a2;
+}
+
 .long-input-box{
   display: flex;
   width: 100%;
