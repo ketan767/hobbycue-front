@@ -155,7 +155,7 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
   }
 
   const handleContact = () => {
-    dispatch(openModal({ type: 'ContactToOwner', closable: true }))
+    dispatch(openModal({ type: 'ListingContactToOwner', closable: true }))
   }
 
   const handleShare = () => {

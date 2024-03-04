@@ -4,7 +4,7 @@ import styles from './UserOnboardingWelcomeModal.module.css'
 import Image from 'next/image'
 import FilledButton from '@/components/_buttons/FilledButton'
 import { useRouter } from 'next/router'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
 import { IconButton, InputAdornment, TextField } from '@mui/material'
 import SearchIcon from '@/assets/svg/search-small.svg'
@@ -21,12 +21,14 @@ import {
 } from '@/redux/slices/search'
 import { searchPages } from '@/services/listing.service'
 import { getAllHobbies } from '@/services/hobby.service'
+import { RootState } from '@/redux/store'
 
 type SearchInput = {
   search: InputData<string>
 }
 
 const UserOnboardingWelcomeModal = () => {
+  const {user} = useSelector((state: RootState)=>state.user);
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
   })
@@ -180,7 +182,7 @@ const UserOnboardingWelcomeModal = () => {
           style={{ left: `calc(0rem + ${screenWidth}px - 5px)` }}
           className={styles['my-community-wrapper']}
         >
-          <Image src="/logo-welcome-small.svg" alt="" width={55} height={55} />
+          <Image src="/logo-welcome-small.svg" onClick={()=>{dispatch(closeModal())}} alt="" width={55} height={55} />
           <div>
             <div className={styles['my-community']}>
               <svg
@@ -312,7 +314,10 @@ const UserOnboardingWelcomeModal = () => {
           className={styles['my-profile-wrapper']}
         >
           <div className={styles['my-profile']}>
-            <Image src={'/testPerson.png'} alt="" width={50} height={50} />
+            {user.profile_image? <Image src={'/testPerson.png'} alt="" width={50} height={50} />:
+            <div style={{width:"50px",height:"50px"}} className='default-user-icon'></div>
+            }
+           
           </div>
           <div>
             <div className={styles['my-profile-content']}>
@@ -360,6 +365,7 @@ const UserOnboardingWelcomeModal = () => {
           <div className={styles['my-community-wrapper-mobile']}>
             <Image
               src="/logo-welcome-small.svg"
+              onClick={()=>{dispatch(closeModal())}}
               alt=""
               width={40}
               height={40}
@@ -390,7 +396,7 @@ const UserOnboardingWelcomeModal = () => {
             </div>
           </div>
           <div className={styles['search-wrapper-mobile']}>
-            <Image src={'/searchIcon.svg'} width={30} height={30} alt="" />
+            <Image onClick={searchResult} src={'/searchIcon.svg'} width={30} height={30} alt="" />
             <div>
               <div className={styles['search-mobile']}>
                 <svg

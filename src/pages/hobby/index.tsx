@@ -41,6 +41,7 @@ type HobbyType = {
 }
 
 const ALlHobbies: React.FC<Props> = ({ data }) => {
+  console.warn({data})
   const [categories, setCategories] = useState([])
   const [subCategories, setSubCategories] = useState([])
   const [hobbyData, setHobbyData] = useState<HobbyType[]>([])
@@ -59,24 +60,49 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
     subCategory: '',
     hobby: '',
   })
-  const { isLoggedIn, isAuthenticated, user } = useSelector(
-    (state: RootState) => state.user,
-  )
+  // const { isLoggedIn, isAuthenticated, user } = useSelector(
+  //   (state: RootState) => state.user,
+  // )
   const [hobbyInputValue, setHobbyInputValue] = useState('')
   const handleHobbyInputChange = async (e: any) => {
     setHobbyInputValue(e.target.value)
     if (e.target.value === '') {
       setFilterData((prev) => ({ ...prev, hobby: '' }))
     }
+    if (isEmptyField(e.target.value)) return setHobbyDropdownList([]);
 
+    let filteredHobbies = data.hobbies;
+    const normalizedSearchTerm = e.target.value.toLowerCase();
+
+    if (filterData.category) {
+      filteredHobbies = filteredHobbies.filter((hobby:any) => hobby?.category?._id === filterData.category);
+    }
+
+    if (filterData.subCategory) {
+      filteredHobbies = filteredHobbies.filter((hobby:any) => hobby?.sub_category?._id === filterData.subCategory);
+    }
+    if (e.target.value) {
+      filteredHobbies = filteredHobbies.filter((hobby:any) =>
+      hobby.display.toLowerCase().includes(normalizedSearchTerm)
+      );
+    }
+
+    filteredHobbies = filteredHobbies.sort((a:any, b:any) => {
+      const aIndex = a?.display?.toLowerCase()?.indexOf(normalizedSearchTerm);
+      const bIndex = b?.display?.toLowerCase()?.indexOf(normalizedSearchTerm);
+      return aIndex - bIndex;
+    });
+    // return filteredHobbies;
     setData((prev) => {
       return { ...prev, hobby: null }
     })
-    if (isEmptyField(e.target.value)) return setHobbyDropdownList([])
-    const query = `fields=display,sub_category&show=true&search=${e.target.value}`
-    const { err, res } = await getAllHobbies(query)
-    if (err) return console.log(err)
-    setHobbyDropdownList(res.data.hobbies)
+
+    setHobbyDropdownList(filteredHobbies)
+
+    // const query = `fields=display,sub_category&show=true&search=${e.target.value}`
+    // const { err, res } = await getAllHobbies(query)
+    // if (err) return console.log(err)
+    // setHobbyDropdownList(res.data.hobbies)
   }
   const params = new URLSearchParams()
   const handleFilter = async () => {
@@ -140,7 +166,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
           <div className={styles['filter-wrapper']}>
             <header>
               <h4 className={styles['heading']}>Filter</h4>
-              <button onClick={handleFilter}>Apply</button>
+              {/* <button onClick={handleFilter}>Apply</button> */}
             </header>
 
             <div className={styles['select-filter']}>

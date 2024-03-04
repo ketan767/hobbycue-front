@@ -63,10 +63,13 @@ import { types } from 'util'
 import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import UserReport from './EditProfile/ReportUser'
 import ListingReport from './EditListing/ListingReport'
-import ContactToOwner from './ContactOwner'
+import ContactToOwner from './EditListing/ListingContactOwner'
 import ListingSupportModal from './EditListing/ListingSupport'
 import SupportUserModal from './EditProfile/supportUser'
 import AddHobby from './AddHobby/AddHobbyModal'
+import ListingContactToOwner from './EditListing/ListingContactOwner'
+import UserContactToOwner from './EditProfile/UserContactOwner'
+import { PostModal } from './PostModal/PostModal'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -85,6 +88,7 @@ const ModalManager: React.FC = () => {
     message: '',
     type: 'success',
   })
+  const [closeIconClicked, setCloseIconClicked] = useState<boolean>(false)
   const { user } = useSelector((state: RootState) => state.user)
 
   const triggerSnackbar = (data: SnackbarState) => {
@@ -98,9 +102,9 @@ const ModalManager: React.FC = () => {
   const dispatch = useDispatch()
   const [confirmationModal, setConfirmationModal] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
-  const { activeModal, closable } = useSelector(
+  const { activeModal, closable, propData } = useSelector(
     (state: RootState) => state.modal,
-  )
+  )  
   const specialCloseHandlers: Partial<{
     [key in Exclude<ModalType, null>]: () => void
   }> = {
@@ -120,7 +124,9 @@ const ModalManager: React.FC = () => {
 
   function handleClose() {
     console.log('haschange', hasChanges)
-    if (confirmationModal) {
+    if (activeModal === 'View-Image-Modal') {
+      dispatch(closeModal())
+    } else if (confirmationModal) {
       setConfirmationModal(false)
     } else if (hasChanges) {
       setConfirmationModal(true)
@@ -178,6 +184,9 @@ const ModalManager: React.FC = () => {
   }, [activeModal])
 
   useEffect(() => {
+    setCloseIconClicked(false)
+  }, [activeModal])
+  useEffect(() => {
     if (activeModal !== null) document.body.style.overflow = 'hidden'
     else
       setTimeout(() => {
@@ -214,7 +223,8 @@ const ModalManager: React.FC = () => {
       event.target === mainRef.current ||
       event.target === modalWrapperRef.current
     ) {
-      handleClose()
+      handleClose();
+      setCloseIconClicked((prev)=>!prev)
     }
   }
   const props = {
@@ -222,6 +232,7 @@ const ModalManager: React.FC = () => {
     confirmationModal,
     handleClose,
     onStatusChange: handleStatusChange,
+    propData
   }
 
   const viewImageProps = {
@@ -272,14 +283,15 @@ const ModalManager: React.FC = () => {
 
               {activeModal === 'auth' && <AuthModal />}
               {activeModal === 'email-verify' && <VerifyEmailModal />}
+              {activeModal === 'post' && <PostModal {...props} />}
               {activeModal === 'user-onboarding' && <UserOnboardingModal />}
               {activeModal === 'listing-onboarding' && (
                 <ListingOnboardingModal />
               )}
               {activeModal === 'add-hobby' && (
-                <AddHobby handleClose={handleClose} />
+                <AddHobby handleClose={handleClose} propData={propData}/>
               )}
-              {activeModal === 'create-post' && <CreatePost />}
+              {activeModal === 'create-post' && <CreatePost propData={propData}/>}
               {activeModal === 'upload-image' && <UploadImageModal />}
 
               {activeModal === 'profile-general-edit' && (
@@ -346,9 +358,17 @@ const ModalManager: React.FC = () => {
               {activeModal === 'ListingReportModal' && (
                 <ListingReport {...props} />
               )}
-              {activeModal === 'ContactToOwner' && (
-                <ContactToOwner {...props} />
+              {activeModal === 'ListingContactToOwner' && (
+                <ListingContactToOwner {...props} />
               )}
+              {activeModal === 'UserContactToOwner' && (
+                <UserContactToOwner {...props} />
+              )}
+
+              {/* 
+              On user-onboarding-welcome, UserOnboardingWelcomeModal is shown via navbar component for some functionalities
+              */}
+
               {activeModal === 'user-onboarding-welcome' && (
                 <UserOnboardingWelcomeModal />
               )}
@@ -389,10 +409,18 @@ const ModalManager: React.FC = () => {
                 <ViewImageModal {...viewImageProps} />
               )}
               {/* Modal Close Icon */}
-              {closable && (
+              {closable && activeModal !== 'user-onboarding-welcome' && (
                 <CloseIcon
-                  className={styles['modal-close-icon']}
-                  onClick={activeCloseHandler}
+
+                  className={
+                    styles['modal-close-icon'] +
+                    ` ${closeIconClicked ? styles['close-icon-clicked'] : ''}`
+                  }
+                  onClick={() => {
+                    activeCloseHandler()
+                    setCloseIconClicked((prev) => !prev)
+                  }}
+
                 />
               )}
             </main>

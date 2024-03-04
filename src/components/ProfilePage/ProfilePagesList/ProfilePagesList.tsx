@@ -15,6 +15,7 @@ type Props = {
 }
 
 const ProfilePagesList = ({ data, expandData }: Props) => {
+  const { profileLayoutMode } = useSelector((state: RootState) => state.site)
   const { user } = useSelector((state: RootState) => state.user)
   const router = useRouter()
   const [displayData, setDisplayData] = useState(false)
@@ -53,9 +54,6 @@ const ProfilePagesList = ({ data, expandData }: Props) => {
           if (typeof item === 'string') return
           return (
             <li
-              className={`${
-                item?.admin !== user?._id && styles['unclaimed-page']
-              }`}
               key={item._id}
               onClick={() => router.push(`/page/${item.page_url}`)}
             >
@@ -73,7 +71,15 @@ const ProfilePagesList = ({ data, expandData }: Props) => {
                   className={`${styles.defaultImg} ${getClassName(item.type)}`}
                 ></div>
               )}
-              <p>{item?.title}</p>
+              <p
+                className={`${
+                  item?.admin !== user?._id && profileLayoutMode === 'edit'
+                    ? styles['unclaimed-page']
+                    : styles['']
+                }`}
+              >
+                {item?.title}
+              </p>
             </li>
           )
         })}

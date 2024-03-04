@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export type ModalType =
   | null
+  | 'post'
   | 'auth'
   | 'add-hobby'
   | 'email-verify'
@@ -49,7 +50,8 @@ export type ModalType =
   | 'SupportUserModal'
   | 'UserReportModal'
   | 'ListingReportModal'
-  | 'ContactToOwner'
+  | 'ListingContactToOwner'
+  | 'UserContactToOwner'
 
 
   interface ModalState {
@@ -62,6 +64,7 @@ export type ModalType =
     onVerify?: (() => void) | null
     verified?: boolean
     imageUrl: string
+    propData?:object
   }
   
   const initialState: ModalState = {
@@ -76,7 +79,8 @@ export type ModalType =
     forgotPasswordEmail: "",
     shareUrl: '',
     onVerify: null,
-    verified: false
+    verified: false,
+    propData:{}
   }
   
   const modalSlice = createSlice({
@@ -91,6 +95,7 @@ export type ModalType =
           onModalClose?: () => void;
           onVerify?: () => void;
           imageurl?: string | undefined
+          propData?:object
         }>
       ) {
         state.activeModal = action.payload.type
@@ -99,6 +104,7 @@ export type ModalType =
         state.onVerify = action.payload.onVerify
         state.verified = false
         state.imageUrl = action.payload.imageurl || '';
+        state.propData=action.payload.propData
       },
       setVerified(state, action: PayloadAction<boolean>) {
         state.verified = action.payload

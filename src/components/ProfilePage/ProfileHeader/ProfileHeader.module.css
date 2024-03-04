@@ -61,6 +61,7 @@
   font-size: 20px;
   line-height: 30px;
   color: #000000;
+  word-break: break-all;
 }
 .center-container .tagline {
   font-weight: 400;
@@ -68,7 +69,21 @@
   line-height: 20px;
   color: #08090a;
   margin-top: var(--spacing-12);
+  word-break: break-all;
 }
+
+.text-ellipsis {
+  overflow: hidden;
+  white-space: nowrap; /* Ensure text doesn't wrap */
+  text-overflow: ellipsis; /* Apply ellipsis */
+  max-width: 650px;
+}
+.text-ellipsis-mobile {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis
+}
+
 .center-container .category {
   font-weight: 400;
   font-size: 16px;
@@ -293,7 +308,7 @@
   width: fit-content;
 }
 
-.actions-container-mobile{
+.actions-container-mobile {
   display: none;
 }
 
@@ -301,34 +316,34 @@
   .actions-container-desktop {
     display: none;
   }
-  .actions-container-mobile{
+  .actions-container-mobile {
     display: flex;
     margin: 10px 16px;
   }
 
-.action-btn-wrapper{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  height: auto;
-  margin: 0 0 10px 0;
-  padding: 8px;
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.12);
-}
+  .action-btn-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: auto;
+    margin: 0 0 10px 0;
+    padding: 8px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.12);
+  }
 
-.contactBtn {
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 600;
-  line-height:0;
-  padding: 0px 12px;
-  height: 40px;
-}
+  .contactBtn {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    line-height: 0;
+    padding: 0px 12px;
+    height: 40px;
+  }
 
   .header {
     padding: 8px 16px 8px 16px;
@@ -340,7 +355,7 @@
   .profile-img-wrapper .tagline {
     display: block;
   }
-  .center-container .name-container{
+  .center-container .name-container {
     display: none;
   }
   /* .center-container .tagline {
@@ -392,10 +407,24 @@
     display: none;
   }
 
-  .profile-left-aside{
-   
-    position: static; 
+  .profile-left-aside {
+    position: static;
     height: auto !important;
     overflow: auto;
+  }
+
+  .name-container .name {
+    word-break: break-all;
+    line-height: 25px;
+    text-overflow: ellipsis;
+    width: 240px;
+  }
+  .tagline {
+    /* word-break: break-all; */
+    line-height: 20px;
+    white-space: nowrap;
+    width: 240px;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { addPostComment, getPostComment } from '@/services/post.service'
 import { dateFormatShort, isEmptyField } from '@/utils'
@@ -10,21 +10,36 @@ import PostCommentVotes from './CommentVotes'
 import { format, render, cancel, register } from 'timeago.js'
 import TextareaAutosize from 'react-textarea-autosize'
 import CommentCheckWithUrl from './CommentCheckWithUrl'
+import { closeModal, openModal } from '@/redux/slices/modal'
+import { setActivePost } from '@/redux/slices/post'
 
 type Props = {
   styles: any
   data: any
-  // updatePost: () => void
+  onMoreComments?: () => void
+  showAllComments?: boolean
+  getInput?: (x: string) => void
 }
 
-const PostComments = ({ data, styles }: Props) => {
+const PostComments = ({
+  data,
+  styles,
+  onMoreComments,
+  showAllComments,
+  getInput,
+}: Props) => {
   const router = useRouter()
+  const dispatch = useDispatch()
   const inputRef: any = useRef<HTMLTextAreaElement>(null)
   const { activeProfile } = useSelector((state: RootState) => state.user)
   const [comments, setComments] = useState<any>([])
   const [loading, setLoading] = useState(false)
   const [inputValue, setInputValue] = useState('')
-
+  const [displayMoreComments, setDisplayMoreComments] = useState(false)
+  const [isChanged, setIsChanged] = useState(false)
+  const { activeModal, closable } = useSelector(
+    (state: RootState) => state.modal,
+  )
   const fetchComments = async () => {
     const { err, res } = await getPostComment(
       `_post=${data._id}&populate=_author`,
@@ -63,6 +78,12 @@ const PostComments = ({ data, styles }: Props) => {
   }
 
   useEffect(() => {
+    if (showAllComments !== null && showAllComments !== undefined) {
+      setDisplayMoreComments(showAllComments)
+    }
+  }, [showAllComments])
+
+  useEffect(() => {
     fetchComments()
   }, [])
 
@@ -91,7 +112,12 @@ const PostComments = ({ data, styles }: Props) => {
                 value={inputValue}
                 className={styles['input']}
                 placeholder="Write a comment..."
-                onChange={(e: any) => setInputValue(e.target.value)}
+                onChange={(e: any) => {
+                  if (getInput) {
+                    getInput(e.target.value)
+                  }
+                  setInputValue(e.target.value)
+                }}
                 ref={inputRef}
                 maxRows={5}
               />
@@ -120,7 +146,7 @@ const PostComments = ({ data, styles }: Props) => {
         {/* All Comments */}
         {comments.length > 0 && (
           <section className={styles['all-comment-container']}>
-            {router.pathname === '/post/[post_id]' ? (
+            {router.pathname === '/post/[post_id]' || displayMoreComments ? (
               comments.map((comment: any, idx: number) => {
                 return (
                   <div key={comment._id} className={styles['comment']}>
@@ -239,7 +265,7 @@ const PostComments = ({ data, styles }: Props) => {
                     {/* Content */}
                     {/* <p className={styles['content']}>{comments?.[0].content}</p> */}
                     <CommentCheckWithUrl>
-                    {comments?.[0].content}
+                      {comments?.[0].content}
                     </CommentCheckWithUrl>
 
                     {/* Footer */}
@@ -275,14 +301,36 @@ const PostComments = ({ data, styles }: Props) => {
                     </footer>
                   </section>
                 </div>
-                <Link href={`/post/${data._id}?comments=show`}>
-                  <p className={styles['see-more-comments']}>
-                    See more comments
-                  </p>
-                </Link>
+                {/* <Link href={`/post/${data._id}?comments=show`} onClick={()=>{dispatch(closeModal())}}> */}
+                <p
+                  className={styles['see-more-comments']}
+                  onClick={() => {
+                    if (activeModal === 'post') {
+                      if (onMoreComments) {
+                        onMoreComments()
+                      }
+                    } else {
+                      dispatch(setActivePost({ ...data }))
+                      dispatch(openModal({ type: 'post', closable: false }))
+                    }
+                  }}
+                >
+                  See more comments
+                </p>
+                {/* </Link> */}
               </>
             )}
           </section>
+        )}
+        {displayMoreComments && (
+          <p
+            className={styles['see-more-comments']}
+            onClick={() => {
+              if (onMoreComments) onMoreComments()
+            }}
+          >
+            See less comments
+          </p>
         )}
       </div>
     </>

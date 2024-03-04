@@ -72,9 +72,10 @@ const CommunityLayout: React.FC<Props> = ({
     'store',
     'blogs',
   ]
-  const [visibilityData, setVisibilityData] = useState(['public'])
+  const [visibilityData, setVisibilityData] = useState([{display:'All Locations',value:"All Locations"}])
   const [seeMoreHobby, setSeeMoreHobby] = useState(
-    activeProfile.data?._hobbies?.length > 3 ? true : false,
+    // activeProfile.data?._hobbies?.length > 3 ? true : false,
+    false
   )
   const [inviteBtnLoader, setInviteBtnLoader] = useState(false)
   const [trendingHobbies, setTrendingHobbies] = useState([])

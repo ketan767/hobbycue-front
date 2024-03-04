@@ -25,16 +25,22 @@
    font-family: 'Poppins';
 }
 
+.activeLink{
+   background-color: #DFD8E7;
+}
+
 .listItem {
+   border-radius: 4px;
    list-style: none;
    font-weight: 400;
    font-size: 14px;
    line-height: 18px;
    letter-spacing: 0.005em;
-   margin-bottom: 30px;
+   padding: 15px;
    color: #6D747A;
    display: block;
    cursor: pointer;
+   margin-left: -8px;
 }
 .listItem:last-child{
    margin-bottom: 20px;

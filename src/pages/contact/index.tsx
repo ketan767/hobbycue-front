@@ -63,7 +63,7 @@ const Contact: React.FC<Props> = ({}) => {
   const phoneRef = useRef<HTMLInputElement>(null)
   const YouAreRef = useRef<HTMLInputElement>(null)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
-  const { isLoggedIn, isAuthenticated, user } = useSelector(
+  const { isLoggedIn, isAuthenticated, user, activeProfile } = useSelector(
     (state: RootState) => state.user,
   )
   const YouareData: Array<{ value: string }> = [
@@ -176,7 +176,11 @@ const Contact: React.FC<Props> = ({}) => {
     const YouAre = data.YouAre.value
     const Regarding = data.Regarding.value
     const description = data.message.value
-    const user_id = !isLoggedIn ? 'Not logged In' : user._id
+    const user_id = !isLoggedIn
+      ? 'Not logged In'
+      : activeProfile.type === 'listing'
+      ? activeProfile?.data?._id
+      : user?._id
 
     setSubmitBtnLoading(true)
 
@@ -206,21 +210,33 @@ const Contact: React.FC<Props> = ({}) => {
     if (isLoggedIn) {
       setData((prev) => ({
         ...prev,
-        name: { value: user?.full_name, error: null },
-        public_email: { value: user?.public_email, error: null },
+        name: {
+          value:
+            activeProfile.type === 'user'
+              ? user?.full_name
+              : activeProfile?.data?.title,
+          error: null,
+        },
+        public_email: {
+          value:
+            activeProfile.type === 'user'
+              ? user?.public_email
+              : activeProfile?.data?.public_email,
+          error: null,
+        },
         phone: {
-          number: user.phone?.number,
-          prefix: user.phone?.prefix,
+          number: activeProfile.data?.phone?.number ?? '',
+          prefix: activeProfile.data?.phone?.prefix ?? '',
           error: null,
         },
         whatsapp_number: {
-          number: user.whatsapp_number?.number,
-          prefix: user.whatsapp_number?.prefix,
+          number: activeProfile.data?.whatsapp_number?.number ?? '',
+          prefix: activeProfile.data?.whatsapp_number?.prefix ?? '',
           error: null,
         },
       }))
     }
-  }, [user])
+  }, [user, activeProfile, isLoggedIn])
 
   return (
     <>
@@ -320,7 +336,7 @@ const Contact: React.FC<Props> = ({}) => {
                 {/* WhatsApp Number */}
                 <div className={styles['input-box']}>
                   <label className={styles['whatsapp-label']}>
-                    WhatsApp Number
+                    WhatsApp
                     <CustomTooltip title="Use same">
                       <div>
                         <Checkbox

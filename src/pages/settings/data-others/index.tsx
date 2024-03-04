@@ -3,11 +3,12 @@ import styles from './style.module.css'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import SettingsSidebar from '@/layouts/SettingsSidebar/SettingsSidebar'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
-import { Checkbox, FormControlLabel } from '@mui/material'
+import { Checkbox, FormControlLabel, useMediaQuery } from '@mui/material'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { support } from '@/services/user.service'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
+import SettingsDropdownLayout from '@/layouts/SettingsDropdownLayout'
 
 type Props = {}
 
@@ -54,10 +55,13 @@ const DataAndOthers: React.FC<Props> = ({}) => {
       })
     }
   }
+  
+  const isMobile = useMediaQuery('(max-width:1100px)');
   return (
     <>
       <PageGridLayout column={2}>
-        <SettingsSidebar active="data-and-others" />
+      <SettingsDropdownLayout>
+        {isMobile?null:<SettingsSidebar active="data-others" />}
         <div className={styles['container']}>
           <div>
             <header className={styles['header']}>Export Personal Data</header>
@@ -68,7 +72,7 @@ const DataAndOthers: React.FC<Props> = ({}) => {
               onClick={() =>
                 handleRunSupportAPI(
                   'Request for personal data export.',
-                  'Your request for personal data export has been done successfully',
+                  'Your request for personal data export has been sent successfully',
                   'Your request for personal data export is failed',
                 )
               }
@@ -89,7 +93,7 @@ const DataAndOthers: React.FC<Props> = ({}) => {
               onClick={() =>
                 handleRunSupportAPI(
                   'Account deactivation request.',
-                  'Your account deactivation request has been done successfully',
+                  'Your account deactivation request has been sent successfully',
                   'Your request for account deactivation is failed',
                 )
               }
@@ -121,14 +125,14 @@ const DataAndOthers: React.FC<Props> = ({}) => {
                     onChange={(e) => setChecked(!checked)}
                   />
                 }
-                label={'Remember Me'}
+                label={'I understand the consequences.'}
               />
             </div>
             <OutlinedButton
               onClick={() =>
                 handleRunSupportAPI(
                   'Account deletion request.',
-                  'Your account deletion request has been done successfully',
+                  'Your account deletion request has been sent successfully',
                   'Your request for account deletion is failed',
                 )
               }
@@ -138,6 +142,7 @@ const DataAndOthers: React.FC<Props> = ({}) => {
             </OutlinedButton>
           </div>
         </div>
+        </SettingsDropdownLayout>
       </PageGridLayout>
       {
         <CustomSnackbar

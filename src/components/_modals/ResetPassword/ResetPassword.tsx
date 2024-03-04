@@ -130,11 +130,11 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        if(event?.target?.tagName==="INPUT"){
-          return
-        }else{
-          handleSubmit()
-        }
+        // if(event?.target?.tagName==="INPUT"){
+        //   return
+        // }else{
+        handleSubmit()
+        // }
       }
     }
 

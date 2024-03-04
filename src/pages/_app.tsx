@@ -20,6 +20,7 @@ function App({ Component, pageProps }: AppProps) {
 
   const isAdminPage =
     router.pathname.startsWith('/server-sitemap.xml') ||
+    router.pathname.startsWith('/sitemap') ||
     router.pathname.startsWith('/admin')
   const theme = createTheme({
     palette: {

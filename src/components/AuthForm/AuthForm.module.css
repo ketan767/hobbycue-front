@@ -293,6 +293,9 @@
   .social-login-btn {
     font-size: 12px;
   }
+  .social-login-btn::before {
+    top: 7.5px;
+  }
   .modal-form-contanier .forgot-pass-btn span {
     font-size: 12px;
   }

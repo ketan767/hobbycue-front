@@ -129,6 +129,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   const addressLabelRef = useRef<HTMLInputElement>(null)
 
   const handleInputChange = (event: any) => {
+    setShowDropdown(false)
     const { name, value } = event.target
     setData((prev) => ({ ...prev, [name]: value }))
     setInputErrs((prev) => ({ ...prev, [name]: null }))
@@ -280,7 +281,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     }
     if (
       !data.city ||
-      data.city === '' 
+      data.city === ''
       // !data.state ||
       // data.state === '' ||
       // !data.country ||
@@ -675,7 +676,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
 
   const handleSelectAddress = (data: DropdownListItem) => {
     console.log({ data })
-    setShowDropdown(false);
+    setShowDropdown(false)
     const { addressObj } = data
     setData((prev: ProfileAddressPayload) => ({
       ...prev,
@@ -685,7 +686,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       state: addressObj.administrative_area_level_1 ?? '',
       society: addressObj.premise ?? '',
       street: addressObj.street_number ?? '',
-      locality: addressObj.sublocality_level_1 ?? ''
+      locality: addressObj.sublocality_level_1 ?? '',
     }))
     setIsChanged(true)
   }
@@ -754,13 +755,17 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   name="street"
                   ref={inputRef}
                   onFocus={() => setShowDropdown(true)}
+                  onBlur={() => setShowDropdown(false)}
                   onChange={handleInputChange}
                 />
                 <Image
                   src={LocationIcon}
                   alt="location"
                   className={styles.locationImg}
-                  onClick={getLocation}
+                  onClick={() => {
+                    getLocation
+                    inputRef?.current?.focus()
+                  }}
                 />
               </div>
               {ShowDropdown && dropdownList.length !== 0 && (
@@ -842,7 +847,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   inputErrs.state ? styles['input-box-error'] : ''
                 }`}
               >
-                {/* <label className={styles['label-required']}>State</label> */}
+                <label className={styles['label-required']}>State</label>
                 <input
                   type="text"
                   placeholder={`State Name`}
@@ -859,7 +864,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   inputErrs.country ? styles['input-box-error'] : ''
                 }`}
               >
-                {/* <label className={styles['label-required']}>Country</label> */}
+                <label className={styles['label-required']}>Country</label>
                 <input
                   type="text"
                   placeholder={`Country Name`}

@@ -37,7 +37,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
   const fetchAndUpdateNextLevels = async (q: string) => {
     const { err, res } = await getAllHobbies(q)
     // if (err) return router.push('/hobby')
-    setNextLevels(res.data?.hobbies)
+    setNextLevels(res?.data?.hobbies)
   }
 
   const fetchData = async () => {
@@ -56,21 +56,26 @@ const HobbyDetail: React.FC<Props> = (props) => {
     fetchData()
   }, [router.asPath])
 
-  /** Get Next Levels */
   useEffect(() => {
-    if (!data) return
-    let query
-    if (data.level === 0) query = `category=${data?._id}&level=1&level=2`
-    if (data.level === 1)
+    let query = ''
+    if (data.level === 0) {
+      query = `category=${data?._id}&level=1&level=2`
+    } else if (data.level === 1) {
       query = `category=${data?.category?._id}&sub_category=${data?._id}&level=2&level=3`
-    if (data.level === 2)
-      query = `category=${data?.category?._id}&sub_category=${data?.sub_category?._id}&level=3&show=true&tags=${data?._id}`
-    if (data.level === 3) query = `level=5&show=true&genre=${data.genre[0]}`
+    } else if (data.level === 2) {
+      if (data?.sub_category) {
+        query = `category=${data?.category?._id}&sub_category=${data?.sub_category?._id}&level=3&level=5&show=true&tags=${data?._id}`
+      } else {
+        query = `category=${data?.category?._id}&level=3&level=5&show=true&tags=${data?._id}`
+      }
+    } else if (data.level === 3 && data.genre) {
+      query = `level=5&show=true&genre=${data.genre[0]}`
+    }
 
-    if (!query) return
-
-    fetchAndUpdateNextLevels(`fields=display,slug&sort=level&${query}`)
-  }, [data])
+    if (query) {
+      fetchAndUpdateNextLevels(`fields=display,slug&sort=level&${query}`)
+    }
+  }, [data.level, data.slug, data.tags])
 
   const handleExpandAll: (value: boolean) => void = (value) => {
     setExpandAll(value)
@@ -87,12 +92,13 @@ const HobbyDetail: React.FC<Props> = (props) => {
     >
       <main className={expandAll ? '' : styles['display-none']}>
         {/* About Section */}
-        <PageContentBox showEditButton={false} setDisplayData={setShowAbout}>
+        {/* <PageContentBox showEditButton={false} setDisplayData={setShowAbout}> */}
+        <PageContentBox>
           <h4>About</h4>
           <div
-            className={`${styles['display-desktop']}${
-              showAbout ? ' ' + styles['display-mobile'] : ''
-            }`}
+            // className={`${styles['display-desktop']}${
+            //   showAbout ? ' ' + styles['display-mobile'] : ''
+            // }`}
           >
             {data?.description}
           </div>
@@ -101,15 +107,13 @@ const HobbyDetail: React.FC<Props> = (props) => {
         {/* Keywords Section */}
         {data?.keywords?.length > 0 && (
           <PageContentBox
-            showEditButton={false}
-            setDisplayData={setShowKeywords}
+            // showEditButton={false}
+            // setDisplayData={setShowKeywords}
           >
             <div className={styles['keyword-container']}>
               <h4 className={styles['keyword-text']}>Keyword :</h4>
               <ul
-                className={`${styles['keyword-list']}${
-                  showKeywords ? ' ' + styles['display-flex-mobile'] : ''
-                }`}
+                className={`${styles['keyword-list']}`}
               >
                 {data?.keywords?.map((item: any, idx: number) => (
                   <li key={idx}>
@@ -125,8 +129,8 @@ const HobbyDetail: React.FC<Props> = (props) => {
         <section style={{}} className={styles['dual-section-wrapper']}>
           {/* Next Levels */}
           <PageContentBox
-            showEditButton={false}
-            setDisplayData={setShowNextLevels}
+            // showEditButton={false}
+            // setDisplayData={setShowNextLevels}
           >
             <h4>
               {data?.level === 0
@@ -142,11 +146,11 @@ const HobbyDetail: React.FC<Props> = (props) => {
                 : 'Next Level'}
             </h4>
             <div
-              className={`${styles['display-desktop']}${
-                showNextLevels ? ' ' + styles['display-mobile'] : ''
-              }`}
+              // className={`${styles['display-desktop']}${
+              //   showNextLevels ? ' ' + styles['display-mobile'] : ''
+              // }`}
             >
-              {data.level !== 5 && nextLevels.length > 0 ? (
+              {data.level !== 5 && nextLevels?.length > 0 ? (
                 <>
                   <ul className={styles['next-level-items']}>
                     {nextLevels.map((item: any, idx: number) => {
@@ -166,14 +170,14 @@ const HobbyDetail: React.FC<Props> = (props) => {
 
           {/* Related Hobbies */}
           <PageContentBox
-            showEditButton={false}
-            setDisplayData={setShowRelatedHobbies}
+            // showEditButton={false}
+            // setDisplayData={setShowRelatedHobbies}
           >
             <h4>Related</h4>
             <div
-              className={`${styles['display-desktop']}${
-                showRelatedHobbies ? ' ' + styles['display-mobile'] : ''
-              }`}
+              // className={`${styles['display-desktop']}${
+              //   showRelatedHobbies ? ' ' + styles['display-mobile'] : ''
+              // }`}
             >
               {data?.related_hobbies?.length > 0 ? (
                 <>

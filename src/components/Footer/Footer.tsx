@@ -40,16 +40,16 @@ const icons = [
   { name: Pintrest, link: 'https://in.pinterest.com/hobbycue/',hover:HoverPinterest },
   {
     name: LinkedIn,
-    link: 'https://www.youtube.com/channel/UCEPxiQLanjReHcRe0FaHvrQ',
+    link: 'https://linkedin.com/company/hobbycue',
     hover:HoverLinkedIn
   },
   {
     name: Youtube,
-    link: 'https://www.youtube.com/channel/UCEPxiQLanjReHcRe0FaHvrQ',
+    link: 'https://www.youtube.com/@hobbycue',
     hover:HoverYoutube
   },
   { name: Telegram, link: 'https://t.me/hobbycue',hover:HoverTelegram },
-  { name: Message, link: 'https://t.me/hobbycue',hover:HoverMessage },
+  { name: Message, link: 'mailto:info@hobbycue.com',hover:HoverMessage },
 ]
 const Footer: React.FC = () => {
   const [email, setEmail] = useState('')
@@ -69,7 +69,7 @@ const Footer: React.FC = () => {
   const router = useRouter();
 
   const handleExpand = (type: string) => {
-    if (type === 'Hobbycue') {
+    if (type === 'HobbyCue') {
       return expandHobbyCue
     }
     if (type === 'How do I') {
@@ -80,7 +80,7 @@ const Footer: React.FC = () => {
     }
   }
   const handleSetExpand = (type: string) => {
-    if (type === 'Hobbycue') {
+    if (type === 'HobbyCue') {
       setExpandHobbyCue(!expandHobbyCue)
     }
     if (type === 'How do I') {
@@ -93,7 +93,7 @@ const Footer: React.FC = () => {
 
   const data = [
     {
-      title: 'Hobbycue',
+      title: 'HobbyCue',
       values: [
         { title: 'About Us', link: 'http://blog.hobbycue.com/about/' },
         { title: 'Our Services', link: 'http://blog.hobbycue.com/services/' },
@@ -150,6 +150,7 @@ const Footer: React.FC = () => {
             }
           },
         },
+        { title: 'Sitemap', link: '/sitemap' },
       ],
     },
   ]
@@ -262,7 +263,7 @@ const Footer: React.FC = () => {
               <div className={styles.iconsContainer}>
                 {icons.map((Icon: any, idx: any) => {
                   return (
-                    <Link href={Icon.link} key={idx}>
+                    <Link target="_blank" href={Icon.link} key={idx}>
                       <Image
                        onMouseEnter={(e)=>{e.currentTarget.src=Icon.hover.src}}
                        onMouseLeave={(e)=>{e.currentTarget.src=Icon.name.src}}

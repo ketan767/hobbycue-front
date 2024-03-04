@@ -29,6 +29,7 @@ import useOutsideClick from '@/hooks/useOutsideClick'
 import RepostIcon from '../../../assets/icons/RepostIcon'
 import ShareIcon from '@/assets/icons/ShareIcon'
 import { updateImageUrl } from '@/redux/slices/modal'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   data: ProfilePageData['pageData']
@@ -38,11 +39,99 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
   const router = useRouter()
   const dispatch = useDispatch()
   const [open, setOpen] = useState(false)
+  const nameRef1 = useRef<HTMLHeadingElement>(null)
+  const taglineRef1 = useRef<HTMLParagraphElement>(null)
+  const nameRef2 = useRef<HTMLHeadingElement>(null)
+  const taglineRef2 = useRef<HTMLParagraphElement>(null)
+  const [eliipsis, setEllipsis] = useState({ name: false, tagline: false })
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
 
   const handleDropdown = () => {
     setOpen(!open)
   }
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
+
+  const location = window.location.href
+
+  const showFeatureUnderDevelopment = () => {
+    setSnackbar({
+      display: true,
+      type: 'warning',
+      message: 'This feature is under development',
+    })
+  }
+  useEffect(() => {
+    const handleResize = () => {
+      if (
+        nameRef1.current &&
+        taglineRef1.current &&
+        taglineRef2.current &&
+        nameRef2.current
+      ) {
+        if (window.innerWidth > 1100) {
+          const nameLineHeight = parseFloat(
+            window.getComputedStyle(nameRef1.current).lineHeight,
+          )
+          const taglineLineHeight = parseFloat(
+            window.getComputedStyle(taglineRef1.current).lineHeight,
+          )
+          const nameHeight = nameRef1.current.clientHeight
+          const taglineHeight = taglineRef1.current.clientHeight
+          const nameLines = nameHeight / nameLineHeight
+          const taglineLines = taglineHeight / taglineLineHeight
+          if (nameLines >= 2 && taglineLines >= 2) {
+            if (nameLines === 2) {
+              setEllipsis({ name: false, tagline: true })
+            }
+          } else if (
+            (nameLines === 1 && taglineLines === 2) ||
+            (nameLines === 2 && taglineLines === 1)
+          ) {
+            setEllipsis({ name: false, tagline: false })
+          } else {
+            setEllipsis({ name: true, tagline: true })
+          }
+          console.log(nameLines, taglineLines)
+        } else {
+          const nameLineHeight = parseFloat(
+            window.getComputedStyle(nameRef2.current).lineHeight,
+          )
+          const taglineLineHeight = parseFloat(
+            window.getComputedStyle(taglineRef2.current).lineHeight,
+          )
+          const nameHeight = nameRef2.current.clientHeight
+          const taglineHeight = taglineRef2.current.clientHeight
+          const nameLines = nameHeight / nameLineHeight
+          const taglineLines = taglineHeight / taglineLineHeight
+          if (nameLines >= 2 && taglineLines >= 2) {
+            if (nameLines === 2) {
+              setEllipsis({ name: false, tagline: true })
+            }
+          } else if (
+            (nameLines === 1 && taglineLines === 2) ||
+            (nameLines === 2 && taglineLines === 1)
+          ) {
+            setEllipsis({ name: false, tagline: false })
+          } else {
+            setEllipsis({ name: true, tagline: true })
+          }
+          console.log(nameLines, taglineLines)
+        }
+      }
+    }
+
+    handleResize() // Call it initially
+
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [nameRef1.current, taglineRef1.current])
 
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
     e.preventDefault()
@@ -114,12 +203,7 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
   }
 
   const handleContact = () => {
-    console.log('data', data)
-    if (data.email) {
-      window.open(
-        `mailto:${data.email}?subject=Subject&body=Body%20goes%20here`,
-      )
-    }
+    dispatch(openModal({ type: 'UserContactToOwner', closable: false }))
   }
 
   const OpenProfileImage = () => {
@@ -185,26 +269,44 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
               )}
             </div>
             <div className={styles['name-container']}>
-              <h1 className={styles['name']}>{data.full_name}</h1>
-              {profileLayoutMode === 'edit' && (
-                <Image
-                  src={EditIcon}
-                  alt="edit"
-                  onClick={() =>
-                    dispatch(
-                      openModal({
-                        type: 'profile-general-edit',
-                        closable: true,
-                      }),
-                    )
-                  }
-                />
-              )}
-            {data?.tagline ? (
-                  <p className={styles['tagline']}>{data?.tagline}</p>
-                ) : (
-                  <p className={styles['tagline']}>&nbsp;</p>
+              <div
+                style={{ display: 'flex', gap: '8px', alignItems: 'center' }}
+              >
+                <h1
+                  className={`${styles['name']} ${
+                    eliipsis.name ? styles['text-ellipsis-mobile'] : ''
+                  }`}
+                  ref={nameRef2}
+                >
+                  {data.full_name}
+                </h1>
+                {profileLayoutMode === 'edit' && (
+                  <Image
+                    src={EditIcon}
+                    alt="edit"
+                    onClick={() =>
+                      dispatch(
+                        openModal({
+                          type: 'profile-general-edit',
+                          closable: true,
+                        }),
+                      )
+                    }
+                  />
                 )}
+              </div>
+              {data?.tagline ? (
+                <p
+                  className={`${styles['tagline']} ${
+                    eliipsis.name ? styles['text-ellipsis-mobile'] : ''
+                  }`}
+                  ref={taglineRef2}
+                >
+                  {data?.tagline}
+                </p>
+              ) : (
+                <p className={styles['tagline']}>&nbsp;</p>
+              )}
             </div>
           </div>
 
@@ -244,7 +346,14 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
             <div className={styles['name-container']}>
               <div>
                 <div className={styles['profile-name']}>
-                  <h1 className={styles['name']}>{data.full_name}</h1>
+                  <h1
+                    className={`${styles['name']} ${
+                      eliipsis.name ? styles['text-ellipsis'] : ''
+                    }`}
+                    ref={nameRef1}
+                  >
+                    {data.full_name}
+                  </h1>
                   {profileLayoutMode === 'edit' && (
                     <Image
                       src={EditIcon}
@@ -261,7 +370,14 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
                   )}
                 </div>
                 {data?.tagline ? (
-                  <p className={styles['tagline']}>{data?.tagline}</p>
+                  <p
+                    className={`${styles['tagline']} ${
+                      eliipsis.tagline ? styles['text-ellipsis'] : ''
+                    }`}
+                    ref={taglineRef1}
+                  >
+                    {data?.tagline}
+                  </p>
                 ) : (
                   <p className={styles['tagline']}>&nbsp;</p>
                 )}
@@ -293,7 +409,18 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
             )}
             <div className={styles['action-btn-wrapper']}>
               {/* Send Email Button  */}
-              <Link href={`mailto:${data.public_email || data.email}`}>
+              {/* <Link href={`mailto:${data.public_email || data.email}`}> */}
+              <div
+                onClick={() => {
+                  dispatch(
+                    openModal({
+                      type: 'create-post',
+                      closable: true,
+                      propData: { defaultValue: location },
+                    }),
+                  )
+                }}
+              >
                 <Tooltip title="Repost">
                   <div
                     onClick={(e) => console.log(e)}
@@ -302,12 +429,13 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
                     <RepostIcon />
                   </div>
                 </Tooltip>
-              </Link>
+              </div>
+              {/* </Link> */}
 
               {/* Bookmark Button */}
               <Tooltip title="Bookmark">
                 <div
-                  onClick={(e) => console.log(e)}
+                  onClick={() => showFeatureUnderDevelopment()}
                   className={styles['action-btn']}
                 >
                   <BookmarkBorderRoundedIcon color="primary" />
@@ -356,7 +484,18 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
         <div className={styles['actions-container-mobile']}>
           <div className={styles['action-btn-wrapper']}>
             {/* Send Email Button  */}
-            <Link href={`mailto:${data.public_email || data.email}`}>
+            {/* <Link href={`mailto:${data.public_email || data.email}`}> */}
+            <div
+              onClick={() => {
+                dispatch(
+                  openModal({
+                    type: 'create-post',
+                    closable: true,
+                    propData: { defaultValue: location },
+                  }),
+                )
+              }}
+            >
               <Tooltip title="Repost">
                 <div
                   onClick={(e) => console.log(e)}
@@ -365,12 +504,13 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
                   <RepostIcon />
                 </div>
               </Tooltip>
-            </Link>
+            </div>
+            {/* </Link> */}
 
             {/* Bookmark Button */}
             <Tooltip title="Bookmark">
               <div
-                onClick={(e) => console.log(e)}
+                onClick={() => showFeatureUnderDevelopment()}
                 className={styles['action-btn']}
               >
                 <BookmarkBorderRoundedIcon color="primary" />
@@ -408,15 +548,22 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
                     />
                   )}
             </div>
-            <FilledButton
-                className={styles.contactBtn}
-                onClick={handleContact}
-              >
-                Contact
-              </FilledButton>
+            <FilledButton className={styles.contactBtn} onClick={handleContact}>
+              Contact
+            </FilledButton>
           </div>
         </div>
       </div>
+      {
+        <CustomSnackbar
+          message={snackbar.message}
+          triggerOpen={snackbar.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

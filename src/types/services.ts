@@ -62,7 +62,8 @@ interface ClaimListingPayload {
    listingId?: any,
   name: string
   email: string
-  phone: string
+  phonenumber: string
+  phonePrefix: string
   pageUrl: string
   HowRelated: string
   link: string
@@ -75,6 +76,15 @@ interface InvitetoHobbycuePayload {
 interface InviteToCommunityPayload {
   to:string
   name: string
+}
+
+interface ContactToOwner {
+  to:string
+  name:string
+  senderName:string
+  sub:string
+  message:string
+  
 }
 
 interface ContactUspayload {

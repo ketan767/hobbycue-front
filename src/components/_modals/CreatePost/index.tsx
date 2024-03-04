@@ -9,6 +9,7 @@ import { getAllHobbies } from '@/services/hobby.service'
 import {
   createListingPost,
   createUserPost,
+  getMetadata,
   uploadImage,
 } from '@/services/post.service'
 import { closeModal } from '@/redux/slices/modal'
@@ -23,6 +24,7 @@ import { DropdownOption } from './Dropdown/DropdownOption'
 import InputSelect from '@/components/_formElements/Select/Select'
 import SaveModal from '../SaveModal/saveModal'
 import CloseIcon from '@/assets/icons/CloseIcon'
+import { useRouter } from 'next/router'
 
 const CustomEditor = dynamic(() => import('@/components/CustomEditor'), {
   ssr: false,
@@ -37,6 +39,7 @@ type Props = {
   handleClose?: any
   isError?: boolean
   onStatusChange?: (isChanged: boolean) => void
+  propData?: any
 }
 
 type DropdownListItem = {
@@ -63,6 +66,7 @@ export const CreatePost: React.FC<Props> = ({
   setConfirmationModal,
   handleClose,
   onStatusChange,
+  propData,
 }) => {
   const { user, activeProfile } = useSelector((state: RootState) => state.user)
   const [hobbies, setHobbies] = useState([])
@@ -71,7 +75,7 @@ export const CreatePost: React.FC<Props> = ({
     data: null,
     hobby: null,
     genre: null,
-    content: '',
+    content: propData?.defaultValue ?? '',
     contentToDisplay: '',
     visibility: 'All Locations',
     media: [],
@@ -91,9 +95,16 @@ export const CreatePost: React.FC<Props> = ({
   const [hobbyInputValue, setHobbyInputValue] = useState('')
   const [genreInputValue, setGenreInputValue] = useState('')
   const [hasLink, setHasLink] = useState(false)
+  const [url, setUrl] = useState('')
   const [isError, setIsError] = useState(false)
   const [isChanged, setIsChanged] = useState(false)
-
+  const [metaData, setMetaData] = useState({
+    title: '',
+    description: '',
+    image: '',
+    icon: '',
+    url: '',
+  })
   const hobbyRef = useRef<HTMLInputElement>(null)
   const genreRef = useRef<HTMLInputElement>(null)
 
@@ -109,6 +120,34 @@ export const CreatePost: React.FC<Props> = ({
     const isUrl = checkIfUrlExists(data.content.replace(/<img .*?>/g, ''))
     setHasLink(isUrl)
   }, [data.content])
+
+  useEffect(() => {
+    console.warn(hasLink)
+  }, [hasLink])
+
+  useEffect(() => {
+    if (hasLink) {
+      const regex =
+        /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
+      const url = data.content.match(regex)
+      if (url) {
+        setUrl(url[0])
+      }
+      if (url) {
+        getMetadata(url[0])
+          .then((res: any) => {
+            setMetaData(res.res.data.data.data)
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
+    }
+  }, [data.content, hasLink])
+
+  useEffect(() => {
+    console.log({ metaData })
+  }, [metaData])
 
   useEffect(() => {
     if (
@@ -372,7 +411,9 @@ export const CreatePost: React.FC<Props> = ({
         <div className={styles['modal-wrapper']}>
           <h3 className={styles['modal-heading']}>Create Post</h3>
           <div className={styles['create-post-modal']}>
-            <section className={styles['editor-container']+" btnOutlinePurple"}>
+            <section
+              className={styles['editor-container'] + ' btnOutlinePurple'}
+            >
               <CustomEditor
                 value=""
                 onChange={(value) => {
