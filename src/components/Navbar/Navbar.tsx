@@ -395,7 +395,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                   <KeyboardArrowDownRoundedIcon htmlColor="#939CA3" />
                 </Link>
                 {showDropdown === 'explore-list' && (
-                  <div className={styles['hobby-list-dropdown']}>
+                  <div className={styles['explore-list-dropdown']}>
                     <section className={styles['list']}>
                       <h4>
                         <Link
@@ -424,6 +424,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           onClick={(e)=>{
                             e.preventDefault();
                             dispatch(showAllPlaceTrue());
+                            router.push("/search");
                           }}
                         >
                           Places - Venues
@@ -436,7 +437,8 @@ export const Navbar: React.FC<Props> = ({}) => {
                           href={'/search'}
                           className={styles['hobbiescategory']}
                           onClick={(e)=>{e.preventDefault();
-                          dispatch(showAllEventTrue())}}
+                          dispatch(showAllEventTrue());
+                          router.push("/search");}}
                         >
                           Programs - Events
                         </Link>
@@ -450,6 +452,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           onClick={(e)=>{
                             e.preventDefault();
                             dispatch(showAllProductsTrue());
+                            router.push("/search");
                           }}
                         >
                           Products - Store
@@ -461,10 +464,11 @@ export const Navbar: React.FC<Props> = ({}) => {
                         <Link
                           href={'/search'}
                           className={styles['hobbiescategory']}
-                          // onClick={(e)=>{
-                          //   e.preventDefault();
-                          //   dispatch(showAllUsersTrue())
-                          // }}
+                          onClick={(e)=>{
+                            e.preventDefault();
+                            dispatch(showAllUsersTrue());
+                            router.push("/search");
+                          }}
                         >
                          Posts - Write-ups
                         </Link>

@@ -328,7 +328,7 @@ const PostComments = ({
                       }
                     } else {
                       dispatch(setActivePost({ ...data }))
-                      dispatch(openModal({ type: 'post', closable: false }))
+                      dispatch(openModal({ type: 'post', closable: false, propData:{showMoreComments:true} }))
                     }
                   }}
                 >
