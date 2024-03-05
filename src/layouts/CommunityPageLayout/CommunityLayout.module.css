@@ -1,5 +1,5 @@
 .community-left-aside,
-.community-right-aside{
+.community-right-aside {
   position: sticky;
   top: calc(var(--navbar-height-desktop) + var(--spacing-12));
 }
@@ -189,7 +189,7 @@
   font-weight: 600;
   line-height: 16px;
 }
-.invite-loader-btn{
+.invite-loader-btn {
   padding: 7.6px 10px !important;
 }
 .invite-wrapper > section .input-prefix {
@@ -271,7 +271,7 @@
   transition: 0.2s;
 }
 
-.profile-img{
+.profile-img {
   width: 40px;
   height: 40px;
   border-radius: 100%;
@@ -408,26 +408,34 @@
   margin-left: 8px;
 }
 .location-select {
-  
   border-radius: 8px;
   font-size: 14px;
   font-family: Poppins;
   color: #fff !important;
-  font-family: "Poppins";
+  font-family: 'Poppins';
   font-weight: 500;
   line-height: 20px;
   width: 100%;
-
+  background-color: #8064a2;
 }
-.hobby-select{
+.location-select header p {
+  color: #fff !important;
+}
+.location-select header svg g path {
+  fill: #ffffff;
+}
+.hobby-select {
+  background-color: #f7f5f9;
+  border: 1px solid #8064a280;
+  border-radius: 8px;
   max-width: 150px;
   width: 100%;
   height: 46px;
   font-size: 14px;
-  font-family: "Poppins";
+  font-family: 'Poppins';
   font-weight: 500;
   line-height: 20px;
-  color: #6d747a;
+  color: #8064a2;
 }
 .location-select > div {
   padding: 10px;
@@ -442,7 +450,7 @@
   align-items: center;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
-  
+
   display: none;
 }
 .filter-section > p {
@@ -486,6 +494,16 @@
   cursor: pointer;
   font-size: 14px;
 }
+.error-invite{
+  position: absolute;
+  bottom: 0px;
+  left: 25px;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 16px;
+  color: #c0504d;
+  min-height: 1rem;
+}
 @media screen and (max-width: 1100px) {
   .community-left-aside,
   .community-right-aside {
@@ -520,6 +538,10 @@
   .navigation-links a {
     font-size: 12px;
   }
+  .navigation-links ul{
+    justify-content: flex-start;
+    gap: 8px;
+  }
   /* .community-right-aside{
     display: none;
   } */
@@ -528,7 +550,7 @@
     transform: translateY(calc(0 * var(--navbar-height-desktop)));
     z-index: 1;
     background-color: white;
-    padding: 8px 16px ;
+    padding: 8px 16px;
   }
   .community-header .top-margin-card {
     height: 0;
@@ -554,28 +576,27 @@
     font-family: 'Poppins';
     font-style: normal;
     font-size: 14px;
-    color: var(--Grey-Darker, #6D747A);
+    color: var(--Grey-Darker, #6d747a);
     padding: 0 8px;
   }
-  .editLocation{
-    color: var(--Grey-Darker, #6D747A);
-    font: "Poppins";
+  .editLocation {
+    color: var(--Grey-Darker, #6d747a);
+    font: 'Poppins';
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
 
     letter-spacing: 0.07px;
   }
-  .editLocationResponsive{
-    margin-left: auto;
-  }
- 
-  .hobbyeditresponsive{
+  .editLocationResponsive {
     margin-left: auto;
   }
 
-  .profile-img{
+  .hobbyeditresponsive {
+    margin-left: auto;
+  }
+
+  .profile-img {
     display: block;
   }
-
 }

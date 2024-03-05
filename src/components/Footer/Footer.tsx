@@ -32,6 +32,7 @@ import { showAllProductsTrue } from '@/redux/slices/search'
 import { RootState } from '@/redux/store'
 import { openModal } from '@/redux/slices/modal'
 import { useRouter } from 'next/router'
+import { validateEmail } from '@/utils'
 
 const icons = [
   {
@@ -69,6 +70,8 @@ const Footer: React.FC = () => {
   const [expandHowDoI, setExpandHowDoI] = useState(false)
   const [expandQuickLinks, setExpandQuickLinks] = useState(false)
   const [inviteBtnLoader, setInviteBtnLoader] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -167,7 +170,17 @@ const Footer: React.FC = () => {
     },
   ]
   const to = email
+
   const sendInvite = async () => {
+    if (!to || to === '') {
+      setErrorMessage('This field is required')
+      return
+    }
+    if (!validateEmail(to)) {
+      setErrorMessage('Please enter a valid email')
+      return
+    }
+    setErrorMessage('')
     setInviteBtnLoader(true)
     const { err, res } = await InviteToHobbycue({
       to,
@@ -268,6 +281,9 @@ const Footer: React.FC = () => {
                     'Invite'
                   )}
                 </button>
+                {errorMessage !== '' && (
+                  <span className={styles['error-invite']}>{errorMessage}</span>
+                )}
               </div>
             </div>
             <div className={styles.inviteContainer}>
