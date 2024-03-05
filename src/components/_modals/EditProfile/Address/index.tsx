@@ -563,6 +563,25 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     }
   }, [dataLoaded, data])
 
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
+      // Check if the click target is outside of the dropdown container
+      if (inputRef.current && !inputRef.current.contains(event.target)) {
+        setShowDropdown(false)
+      }
+    }
+
+    // Add event listener when the dropdown is shown
+    if (ShowDropdown) {
+      window.addEventListener('click', handleClickOutside)
+    }
+
+    // Remove event listener when the component unmounts or when the dropdown is hidden
+    return () => {
+      window.removeEventListener('click', handleClickOutside)
+    }
+  }, [ShowDropdown])
+
   const handleGeocode = (lat: any, long: any) => {
     setShowDropdown(true)
     axios
@@ -755,7 +774,6 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   name="street"
                   ref={inputRef}
                   onFocus={() => setShowDropdown(true)}
-                  onBlur={() => setShowDropdown(false)}
                   onChange={handleInputChange}
                 />
                 <Image
@@ -763,7 +781,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   alt="location"
                   className={styles.locationImg}
                   onClick={() => {
-                    getLocation
+                    getLocation()
                     inputRef?.current?.focus()
                   }}
                 />
