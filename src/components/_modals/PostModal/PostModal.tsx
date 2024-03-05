@@ -36,18 +36,21 @@ type Props = {
   confirmationModal?: boolean
   setConfirmationModal?: any
   handleClose?: any
+  propData?:{
+  showMoreComments?:boolean}
 }
 
 export const PostModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClose,
+  propData
 }) => {
   const { activePost } = useSelector((state: RootState) => state.post)
   const dispatch = useDispatch()
   const [comments, setComments] = useState([])
   const [showComments, setShowComments] = useState(true)
-  const [displayMoreComments, setDisplayMoreComments] = useState(false)
+  const [displayMoreComments, setDisplayMoreComments] = useState(propData?.showMoreComments??false)
   const { activeProfile } = useSelector((state: RootState) => state.user)
   const [isChanged, setIsChanged] = useState(false)
   const [newComment, setNewComment] = useState('')

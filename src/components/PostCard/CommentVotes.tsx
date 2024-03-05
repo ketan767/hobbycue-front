@@ -1,6 +1,9 @@
 import { RootState } from '@/redux/store'
-import { upvotePostComment } from '@/services/post.service'
-import { downvotePostComment } from '@/services/post.service'
+import {
+  upvotePostComment,
+  removevotePostComment,
+  downvotePostComment,
+} from '@/services/post.service'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -53,6 +56,7 @@ const PostCommentVotes: React.FC<Props> = ({
   }
 
   const handleUpVote = async () => {
+    if(voteStatus!=="up"){
     let jsonData = {
       upvoteBy: activeProfile.type, // 'user' | 'listing'
       upvoteById: activeProfile.data._id,
@@ -70,16 +74,17 @@ const PostCommentVotes: React.FC<Props> = ({
       setLoading(false)
       updateComments?.()
     }
-  }
-
-  const handleDownVote = async () => {
+  } else {
     let jsonData = {
-      downvoteBy: activeProfile.type, // 'user' | 'listing'
-      downvoteById: activeProfile.data._id,
+      voteBy: activeProfile.type, // 'user' | 'listing'
+      userId: activeProfile.data._id,
     }
-    setVoteStatus('down')
+    setVoteStatus(null)
     setLoading(true)
-    const { err, res } = await downvotePostComment(comment._id, jsonData as any)
+    const { err, res } = await removevotePostComment(
+      comment._id,
+      jsonData as any,
+    )
     if (err) {
       console.log(err)
       setLoading(false)
@@ -90,6 +95,55 @@ const PostCommentVotes: React.FC<Props> = ({
     if (res.data.success) {
       setLoading(false)
       updateComments?.()
+    }
+  }
+}
+
+  const handleDownVote = async () => {
+    if (voteStatus !== 'down') {
+      let jsonData = {
+        downvoteBy: activeProfile.type, // 'user' | 'listing'
+        downvoteById: activeProfile.data._id,
+      }
+      setVoteStatus('down')
+      setLoading(true)
+      const { err, res } = await downvotePostComment(
+        comment._id,
+        jsonData as any,
+      )
+      if (err) {
+        console.log(err)
+        setLoading(false)
+        updateVoteStatus()
+        return
+      }
+      console.log('🚀 ~ file: Votes.tsx:67 ~ handleDownVote ~ res:', res)
+      if (res.data.success) {
+        setLoading(false)
+        updateComments?.()
+      }
+    } else {
+      let jsonData = {
+        voteBy: activeProfile.type, // 'user' | 'listing'
+        userId: activeProfile.data._id,
+      }
+      setVoteStatus(null)
+      setLoading(true)
+      const { err, res } = await removevotePostComment(
+        comment._id,
+        jsonData as any,
+      )
+      if (err) {
+        console.log(err)
+        setLoading(false)
+        updateVoteStatus()
+        return
+      }
+      console.log('🚀 ~ file: Votes.tsx:67 ~ handleDownVote ~ res:', res)
+      if (res.data.success) {
+        setLoading(false)
+        updateComments?.()
+      }
     }
   }
 

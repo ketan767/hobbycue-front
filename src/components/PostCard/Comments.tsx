@@ -12,6 +12,7 @@ import TextareaAutosize from 'react-textarea-autosize'
 import CommentCheckWithUrl from './CommentCheckWithUrl'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { setActivePost } from '@/redux/slices/post'
+import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 
 type Props = {
   styles: any
@@ -37,6 +38,11 @@ const PostComments = ({
   const [inputValue, setInputValue] = useState('')
   const [displayMoreComments, setDisplayMoreComments] = useState(false)
   const [isChanged, setIsChanged] = useState(false)
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
   const { activeModal, closable } = useSelector(
     (state: RootState) => state.modal,
   )
@@ -51,7 +57,7 @@ const PostComments = ({
   const addComment = async (event: any) => {
     event.preventDefault()
 
-    if (isEmptyField(inputValue)) return
+    if (isEmptyField(inputValue.trim())) return
     const jsonData = {
       postId: data?._id,
       commentBy:
@@ -61,7 +67,7 @@ const PostComments = ({
           ? 'Listing'
           : '',
       commentById: activeProfile?.data?._id,
-      content: inputValue,
+      content: inputValue.trim(),
       date: Date.now(),
     }
     if (!jsonData?.commentBy) return
@@ -77,6 +83,13 @@ const PostComments = ({
     setLoading(false)
   }
 
+  const showFeatureUnderDevelopment = () => {
+    setSnackbar({
+      display: true,
+      type: 'warning',
+      message: 'This feature is under development',
+    })
+  }
   useEffect(() => {
     if (showAllComments !== null && showAllComments !== undefined) {
       setDisplayMoreComments(showAllComments)
@@ -206,6 +219,8 @@ const PostComments = ({
                           viewBox="0 0 24 24"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
+                          onClick={showFeatureUnderDevelopment}
+                          cursor={"pointer"}
                         >
                           <g clip-path="url(#clip0_173_72884)">
                             <path
@@ -285,6 +300,8 @@ const PostComments = ({
                         viewBox="0 0 24 24"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
+                        onClick={showFeatureUnderDevelopment}
+                        cursor={"pointer"}
                       >
                         <g clip-path="url(#clip0_173_72884)">
                           <path
@@ -311,7 +328,7 @@ const PostComments = ({
                       }
                     } else {
                       dispatch(setActivePost({ ...data }))
-                      dispatch(openModal({ type: 'post', closable: false }))
+                      dispatch(openModal({ type: 'post', closable: false, propData:{showMoreComments:true} }))
                     }
                   }}
                 >
@@ -333,6 +350,16 @@ const PostComments = ({
           </p>
         )}
       </div>
+      {
+        <CustomSnackbar
+          message={snackbar.message}
+          triggerOpen={snackbar.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

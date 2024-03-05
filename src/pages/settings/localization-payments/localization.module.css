@@ -62,9 +62,14 @@
   align-items: flex-start;
   justify-content: space-between;
   padding-right: 4px;
+  padding: 6px 15px;
+    margin: -15px;
   margin-bottom: 24px;
 }
 
+.selectedCard{
+  background: var(--Purple-3, #F7F5F9);
+}
 
 .addIcon {
   margin-right: 4px;
