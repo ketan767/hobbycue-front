@@ -55,6 +55,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
   const [otp, setOtp] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [confirmPassword, setConfirmPassword] = useState('')
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const { forgotPasswordEmail } = useSelector((state: any) => state.modal)
@@ -270,12 +271,28 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
                 errors.confirmPassword ? styles['input-error'] : ''
               }`}
             >
-              <input
+              <TextField
+                fullWidth
+                required
+                type={showConfirmPassword ? 'text' : 'password'}
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className={styles.input}
                 placeholder="Confirm New Password"
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <IconButton
+                      onClick={() => setShowConfirmPassword(!showPassword)}
+                    >
+                      {showConfirmPassword ? (
+                        <VisibilityRoundedIcon />
+                      ) : (
+                        <VisibilityOffRoundedIcon />
+                      )}
+                    </IconButton>
+                  ),
+                }}
               />
+
               <p className={styles['helper-text']}>{errors.confirmPassword}</p>
             </div>
           </div>
