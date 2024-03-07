@@ -21,7 +21,7 @@ import {
 import PostCard from '@/components/PostCard/PostCard'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
-import { checkIfUrlExists } from '@/utils'
+import { checkIfUrlExists, validateEmail } from '@/utils'
 import Link from 'next/link'
 import { getAllHobbies, getTrendingHobbies } from '@/services/hobby.service'
 import DefaultHobbyImg from '@/assets/svg/default-images/default-hobbies.svg'
@@ -79,6 +79,8 @@ const CommunityLayout: React.FC<Props> = ({
     // activeProfile.data?._hobbies?.length > 3 ? true : false,
     false,
   )
+  const [errorMessage, setErrorMessage] = useState('')
+
   const [inviteBtnLoader, setInviteBtnLoader] = useState(false)
   const [trendingHobbies, setTrendingHobbies] = useState([])
   console.log('Number of hobbies:', activeProfile.data?._hobbies?.length)
@@ -413,6 +415,15 @@ const CommunityLayout: React.FC<Props> = ({
 
   const Invitecommunity = async () => {
     const to = email
+    if (!to || to === '') {
+      setErrorMessage('This field is required')
+      return
+    }
+    if (!validateEmail(to)) {
+      setErrorMessage('Please enter a valid email')
+      return
+    }
+    setErrorMessage('')
     const name = activeProfile?.data.full_name
     setInviteBtnLoader(true)
     const { err, res } = await InviteToCommunity({
@@ -883,6 +894,10 @@ const CommunityLayout: React.FC<Props> = ({
                   )}
                 </FilledButton>
                 {/* <CircularProgress color="inherit" size={'22px'} /> */}
+                {
+                  errorMessage!==""&&
+                  <span className={styles['error-invite']}>{errorMessage}</span>
+                }
               </section>
             </section>
 

@@ -144,6 +144,10 @@
   line-height: 18px; /* 150% */
   letter-spacing: 0.06px;
 }
+
+.list ul li {
+  font-size: 14px;
+}
 .hobby-dropdown-options {
   row-gap: 0;
 }

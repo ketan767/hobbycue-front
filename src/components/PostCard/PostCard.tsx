@@ -306,9 +306,10 @@ const PostCard: React.FC<Props> = (props) => {
               className={styles['content']}
               dangerouslySetInnerHTML={{
                 __html:
-                  has_link && props.currentSection === 'posts'
-                    ? `<a href="${url}" class="${pageUrlClass}" target="_blank">${postData.content}</a>`
-                    : postData.content.replace(/<img .*?>/g, ''),
+                postData.content.replace(
+                  /(?:\b(?:https?|ftp|file):\/\/|www\.)?([-A-Z0-9+&@#/%?=~_|!:,.;]*\.[a-zA-Z]{2,})(?:\/[-A-Z0-9+&@#/%?=~_|!:,.;]*)?/gi,
+                  '<a href="http://$1" class="${pageUrlClass}" target="_blank">$1</a>'
+                )
               }}
             ></div>
           )}
@@ -317,7 +318,7 @@ const PostCard: React.FC<Props> = (props) => {
               <source src={postData.video_url} type="video/mp4"></source>
             </video>
           )}
-          {postData.media?.length > 0 || props.currentSection === 'links' ? (
+          {postData.media?.length > 0 ? (
             <Slider
               setActiveIdx={setActiveIdx}
               activeIdx={activeIdx}
@@ -429,7 +430,7 @@ const PostCard: React.FC<Props> = (props) => {
         {/* Card Footer */}
         {props.currentSection === 'links' ? (
           <div className={styles['metadata-footer']}>
-            <Link href={metaData?.url} target="_blank">
+            <Link href={metaData?.url??""} target="_blank">
               {url}
             </Link>
             {showComments && <PostComments data={postData} styles={styles} />}

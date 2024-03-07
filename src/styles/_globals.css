@@ -337,6 +337,9 @@ select:-webkit-autofill {
 }
 
 @media screen and (max-width: 1100px) {
+  .content-box-wrapper {
+    border: none;
+  }
   .site-container {
     max-width: var(--max-width);
     margin: auto;

@@ -55,7 +55,8 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
   }
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
 
-  const location = window.location.href
+  const location = typeof window !== 'undefined' ? window.location.href : '';
+  
 
   const showFeatureUnderDevelopment = () => {
     setSnackbar({

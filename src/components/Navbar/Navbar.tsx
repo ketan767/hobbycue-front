@@ -48,7 +48,7 @@ import pages from '@/pages/community/pages'
 
 import PreLoader from '@/components/PreLoader'
 
-import hobbycueLogo from '@/assets/svg/Search/hobbycue.svg';
+import hobbycueLogo from '@/assets/svg/Search/hobbycue.svg'
 import { setShowPageLoader } from '@/redux/slices/site'
 
 type Props = {}
@@ -79,7 +79,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   })
   const [showDropdown, setShowDropdown] = useState<
     'user-menu' | 'hobby-list' | 'explore-list' | null
-  >(null);
+  >(null)
   useEffect(() => {
     if (router.asPath === '/search') {
       return
@@ -274,16 +274,33 @@ export const Navbar: React.FC<Props> = ({}) => {
     }
   }
 
-  const searchCloseIcon = (<svg onClick={toggleSearchInput} xmlns="http://www.w3.org/2000/svg" width="24" height="25" viewBox="0 0 24 25" fill="none">
-  <g clip-path="url(#clip0_10712_82787)">
-    <path d="M18.2987 5.90406C17.9087 5.51406 17.2787 5.51406 16.8887 5.90406L11.9988 10.7841L7.10875 5.89406C6.71875 5.50406 6.08875 5.50406 5.69875 5.89406C5.30875 6.28406 5.30875 6.91406 5.69875 7.30406L10.5888 12.1941L5.69875 17.0841C5.30875 17.4741 5.30875 18.1041 5.69875 18.4941C6.08875 18.8841 6.71875 18.8841 7.10875 18.4941L11.9988 13.6041L16.8887 18.4941C17.2787 18.8841 17.9087 18.8841 18.2987 18.4941C18.6887 18.1041 18.6887 17.4741 18.2987 17.0841L13.4087 12.1941L18.2987 7.30406C18.6787 6.92406 18.6787 6.28406 18.2987 5.90406Z" fill="#6D747A"/>
-  </g>
-  <defs>
-    <clipPath id="clip0_10712_82787">
-      <rect width="24" height="24" fill="white" transform="translate(0 0.195312)"/>
-    </clipPath>
-  </defs>
-</svg>)
+  const searchCloseIcon = (
+    <svg
+      onClick={toggleSearchInput}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="25"
+      viewBox="0 0 24 25"
+      fill="none"
+    >
+      <g clip-path="url(#clip0_10712_82787)">
+        <path
+          d="M18.2987 5.90406C17.9087 5.51406 17.2787 5.51406 16.8887 5.90406L11.9988 10.7841L7.10875 5.89406C6.71875 5.50406 6.08875 5.50406 5.69875 5.89406C5.30875 6.28406 5.30875 6.91406 5.69875 7.30406L10.5888 12.1941L5.69875 17.0841C5.30875 17.4741 5.30875 18.1041 5.69875 18.4941C6.08875 18.8841 6.71875 18.8841 7.10875 18.4941L11.9988 13.6041L16.8887 18.4941C17.2787 18.8841 17.9087 18.8841 18.2987 18.4941C18.6887 18.1041 18.6887 17.4741 18.2987 17.0841L13.4087 12.1941L18.2987 7.30406C18.6787 6.92406 18.6787 6.28406 18.2987 5.90406Z"
+          fill="#6D747A"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_10712_82787">
+          <rect
+            width="24"
+            height="24"
+            fill="white"
+            transform="translate(0 0.195312)"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  )
 
   return (
     <>
@@ -331,7 +348,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                   searchResult()
                 }
               }}
-              style={isLoggedIn ? { width: '400px' } : { width: '100%' }}
+              style={isLoggedIn ? { width: '400px' } : { width: '300px' }}
               sx={{
                 '& .MuiOutlinedInput-root': {
                   borderRadius: '8px',
@@ -385,9 +402,9 @@ export const Navbar: React.FC<Props> = ({}) => {
             <ul className={styles['right-listing-expanded']}>
               {/* Explore */}
               <li
-              className=''
-              onMouseOver={() => setShowDropdown('explore-list')}
-              onMouseLeave={() => setShowDropdown(null)}
+                className=""
+                onMouseOver={() => setShowDropdown('explore-list')}
+                onMouseLeave={() => setShowDropdown(null)}
               >
                 <Link href={'/explore'}>
                   <Image src={ExploreIcon} alt="" />
@@ -395,16 +412,16 @@ export const Navbar: React.FC<Props> = ({}) => {
                   <KeyboardArrowDownRoundedIcon htmlColor="#939CA3" />
                 </Link>
                 {showDropdown === 'explore-list' && (
-                  <div className={styles['hobby-list-dropdown']}>
+                  <div className={styles['explore-list-dropdown']}>
                     <section className={styles['list']}>
                       <h4>
                         <Link
                           href={'/search'}
                           className={styles['hobbiescategory']}
                           onClick={(e) => {
-                              e.preventDefault();
-                              dispatch(showAllPeopleTrue());
-                              router.push("/search");
+                            e.preventDefault()
+                            dispatch(showAllPeopleTrue())
+                            router.push('/search')
                           }}
                         >
                           People - Community
@@ -421,9 +438,10 @@ export const Navbar: React.FC<Props> = ({}) => {
                         <Link
                           href={'/search'}
                           className={styles['hobbiescategory']}
-                          onClick={(e)=>{
-                            e.preventDefault();
-                            dispatch(showAllPlaceTrue());
+                          onClick={(e) => {
+                            e.preventDefault()
+                            dispatch(showAllPlaceTrue())
+                            router.push('/search')
                           }}
                         >
                           Places - Venues
@@ -435,8 +453,11 @@ export const Navbar: React.FC<Props> = ({}) => {
                         <Link
                           href={'/search'}
                           className={styles['hobbiescategory']}
-                          onClick={(e)=>{e.preventDefault();
-                          dispatch(showAllEventTrue())}}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            dispatch(showAllEventTrue())
+                            router.push('/search')
+                          }}
                         >
                           Programs - Events
                         </Link>
@@ -447,9 +468,10 @@ export const Navbar: React.FC<Props> = ({}) => {
                         <Link
                           href={'/search'}
                           className={styles['hobbiescategory']}
-                          onClick={(e)=>{
-                            e.preventDefault();
-                            dispatch(showAllProductsTrue());
+                          onClick={(e) => {
+                            e.preventDefault()
+                            dispatch(showAllProductsTrue())
+                            router.push('/search')
                           }}
                         >
                           Products - Store
@@ -461,12 +483,13 @@ export const Navbar: React.FC<Props> = ({}) => {
                         <Link
                           href={'/search'}
                           className={styles['hobbiescategory']}
-                          // onClick={(e)=>{
-                          //   e.preventDefault();
-                          //   dispatch(showAllUsersTrue())
-                          // }}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            dispatch(showAllUsersTrue())
+                            router.push('/search')
+                          }}
                         >
-                         Posts - Write-ups
+                          Posts - Write-ups
                         </Link>
                       </h4>
                     </section>
@@ -837,7 +860,13 @@ export const Navbar: React.FC<Props> = ({}) => {
                 {isSearchInputVisible ? (
                   <form
                     onSubmit={handleSearchSubmit}
-                    className={styles['mobile-search-input']+` ${isSearchInputVisible===true&&"mobile-search-input-visible"}`}
+                    className={
+                      styles['mobile-search-input'] +
+                      ` ${
+                        isSearchInputVisible === true &&
+                        'mobile-search-input-visible'
+                      }`
+                    }
                   >
                     <header className={styles['header']}>
                       <Image
@@ -849,37 +878,37 @@ export const Navbar: React.FC<Props> = ({}) => {
                       {searchCloseIcon}
                     </header>
                     <div className={styles['mobile-search-container']}>
-                    <TextField
-                      variant="outlined"
-                      placeholder="Search here..."
-                      size="small"
-                      autoFocus
-                      onBlur={() => setIsSearchInputVisible(false)}
-                      className={styles.inputField}
-                      onChange={handleInputChange}
-                      value={data.search.value}
-                      sx={{
-                        '& .MuiOutlinedInput-root': {
-                          borderRadius: '8px',
-                          padding: 0,
-                          overflow: 'hidden',
-                          borderColor: 'red',
-                          background: '#f8f9fa',
-                          '& fieldset': {
-                            borderColor: '#EBEDF0',
-                            borderRight: 0,
+                      <TextField
+                        variant="outlined"
+                        placeholder="Search here..."
+                        size="small"
+                        autoFocus
+                        onBlur={() => setIsSearchInputVisible(false)}
+                        className={styles.inputField}
+                        onChange={handleInputChange}
+                        value={data.search.value}
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            borderRadius: '8px',
+                            padding: 0,
+                            overflow: 'hidden',
+                            borderColor: 'red',
+                            background: '#f8f9fa',
+                            '& fieldset': {
+                              borderColor: '#EBEDF0',
+                              borderRight: 0,
+                            },
                           },
-                        },
-                        '& .MuiInputBase-input': {
-                          fontSize: '15px',
-                        },
-                        '& .MuiInputBase-input::placeholder': {
-                          fontSize: '12px',
-                          color: 'black',
-                        },
-                      }}
-                      InputLabelProps={{ shrink: false }}
-                    />
+                          '& .MuiInputBase-input': {
+                            fontSize: '15px',
+                          },
+                          '& .MuiInputBase-input::placeholder': {
+                            fontSize: '12px',
+                            color: 'black',
+                          },
+                        }}
+                        InputLabelProps={{ shrink: false }}
+                      />
                     </div>
                   </form>
                 ) : (
