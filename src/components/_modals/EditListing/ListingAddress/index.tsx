@@ -167,35 +167,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
   }, [data, initialData, onStatusChange])
   const handleSubmit = async () => {
     // if (isChanged) {
-    if (listingModalData.type === listingTypes.PLACE) {
-      if (isEmptyField(data.street.value) || !data.street.value) {
-        streetRef.current?.focus()
-        return setData((prev) => {
-          return {
-            ...prev,
-            street: { ...prev.street, error: 'This field is required!' },
-          }
-        })
-      }
-      if (isEmptyField(data.society.value) || !data.society.value) {
-        societyRef.current?.focus()
-        return setData((prev) => {
-          return {
-            ...prev,
-            society: { ...prev.society, error: 'This field is required!' },
-          }
-        })
-      }
-      if (isEmptyField(data.locality.value) || !data.locality.value) {
-        localityRef.current?.focus()
-        return setData((prev) => {
-          return {
-            ...prev,
-            locality: { ...prev.locality, error: 'This field is required!' },
-          }
-        })
-      }
-    }
+
     if (isEmptyField(data.city.value) || !data.city.value) {
       cityRef.current?.focus()
       return setData((prev) => {
@@ -303,7 +275,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
-      if (inputRef.current && !inputRef.current.contains(event.target)) {
+      if (streetRef.current && !streetRef.current.contains(event.target)) {
         setShowDropdown(false)
       }
     }
