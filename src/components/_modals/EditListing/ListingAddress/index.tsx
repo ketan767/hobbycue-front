@@ -305,7 +305,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
-      if (inputRef.current && !inputRef.current.contains(event.target)) {
+      if (streetRef.current && !streetRef.current.contains(event.target)) {
         setShowDropdown(false)
       }
     }

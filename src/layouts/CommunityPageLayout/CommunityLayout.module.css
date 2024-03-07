@@ -421,6 +421,7 @@
 
 .location-select header p {
   color: #fff !important;
+  font-size: 12px;
 }
 .location-select header svg g path {
   fill: #ffffff;
@@ -430,8 +431,8 @@
   border-radius: 8px;
   max-width: 150px;
   width: 100%;
-  height: 46px;
-  font-size: 14px;
+  height: 30px;
+  font-size: 12px;
   font-family: 'Poppins';
   font-weight: 500;
   line-height: 20px;
@@ -556,6 +557,9 @@ background: var(--Purple-3, #F7F5F9);
   }
   .community-header .top-margin-card {
     height: 0;
+  }
+  .start-post-btn {
+    padding: var(--spacing-8) var(--spacing-8);
   }
 
   .start-post-btn-container {
