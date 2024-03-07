@@ -71,6 +71,7 @@ import ListingContactToOwner from './EditListing/ListingContactOwner'
 import UserContactToOwner from './EditProfile/UserContactOwner'
 
 import { PostModal } from './PostModal/PostModal'
+import { setHasChanges } from '@/redux/slices/modal'
 
 
 const CustomBackdrop: React.FC = () => {
@@ -103,10 +104,9 @@ const ModalManager: React.FC = () => {
 
   const dispatch = useDispatch()
   const [confirmationModal, setConfirmationModal] = useState(false)
-  const [hasChanges, setHasChanges] = useState(false)
-  const { activeModal, closable, propData } = useSelector(
+  const { activeModal, closable, propData, hasChanges } = useSelector(
     (state: RootState) => state.modal,
-  )  
+  )
   const specialCloseHandlers: Partial<{
     [key in Exclude<ModalType, null>]: () => void
   }> = {
@@ -126,7 +126,10 @@ const ModalManager: React.FC = () => {
 
   function handleClose() {
     console.log('haschange', hasChanges)
-    if (activeModal === 'View-Image-Modal') {
+    if (
+      activeModal === 'View-Image-Modal' ||
+      activeModal === 'add-hobby'
+    ) {
       dispatch(closeModal())
     } else if (confirmationModal) {
       setConfirmationModal(false)
@@ -152,7 +155,7 @@ const ModalManager: React.FC = () => {
   }
 
   const handleStatusChange = (isChanged: boolean) => {
-    setHasChanges(isChanged)
+    dispatch(setHasChanges(isChanged));
   }
 
   const activeCloseHandler =
@@ -199,6 +202,12 @@ const ModalManager: React.FC = () => {
   const escFunction = useCallback(
     (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
+        if (
+          activeModal === 'View-Image-Modal' ||
+          activeModal === 'add-hobby'
+        ) {
+          dispatch(closeModal())
+        }
         if (confirmationModal) {
           setConfirmationModal(false)
         } else if (hasChanges) {
@@ -225,8 +234,8 @@ const ModalManager: React.FC = () => {
       event.target === mainRef.current ||
       event.target === modalWrapperRef.current
     ) {
-      handleClose();
-      setCloseIconClicked((prev)=>!prev)
+      handleClose()
+      setCloseIconClicked((prev) => !prev)
     }
   }
   const props = {
@@ -234,7 +243,7 @@ const ModalManager: React.FC = () => {
     confirmationModal,
     handleClose,
     onStatusChange: handleStatusChange,
-    propData
+    propData,
   }
 
   const viewImageProps = {
@@ -291,9 +300,11 @@ const ModalManager: React.FC = () => {
                 <ListingOnboardingModal />
               )}
               {activeModal === 'add-hobby' && (
-                <AddHobby handleClose={handleClose} propData={propData}/>
+                <AddHobby handleClose={handleClose} propData={propData} />
               )}
-              {activeModal === 'create-post' && <CreatePost propData={propData}/>}
+              {activeModal === 'create-post' && (
+                <CreatePost propData={propData} />
+              )}
               {activeModal === 'upload-image' && <UploadImageModal />}
 
               {activeModal === 'profile-general-edit' && (
@@ -413,7 +424,6 @@ const ModalManager: React.FC = () => {
               {/* Modal Close Icon */}
               {closable && activeModal !== 'user-onboarding-welcome' && (
                 <CloseIcon
-
                   className={
                     styles['modal-close-icon'] +
                     ` ${closeIconClicked ? styles['close-icon-clicked'] : ''}`
@@ -422,7 +432,6 @@ const ModalManager: React.FC = () => {
                     activeCloseHandler()
                     setCloseIconClicked((prev) => !prev)
                   }}
-
                 />
               )}
             </main>

@@ -167,15 +167,34 @@ const ListingAddressEditModal: React.FC<Props> = ({
   }, [data, initialData, onStatusChange])
   const handleSubmit = async () => {
     // if (isChanged) {
-
-    if (isEmptyField(data.city.value) || !data.city.value) {
-      cityRef.current?.focus()
-      return setData((prev) => {
-        return {
-          ...prev,
-          city: { ...prev.city, error: 'This field is required!' },
-        }
-      })
+    if (listingModalData.type === listingTypes.PLACE) {
+      if (isEmptyField(data.street.value) || !data.street.value) {
+        streetRef.current?.focus()
+        return setData((prev) => {
+          return {
+            ...prev,
+            street: { ...prev.street, error: 'This field is required!' },
+          }
+        })
+      }
+      if (isEmptyField(data.society.value) || !data.society.value) {
+        societyRef.current?.focus()
+        return setData((prev) => {
+          return {
+            ...prev,
+            society: { ...prev.society, error: 'This field is required!' },
+          }
+        })
+      }
+      if (isEmptyField(data.locality.value) || !data.locality.value) {
+        localityRef.current?.focus()
+        return setData((prev) => {
+          return {
+            ...prev,
+            locality: { ...prev.locality, error: 'This field is required!' },
+          }
+        })
+      }
     }
     if (listingModalData.type === listingTypes.PLACE) {
       if (isEmptyField(data.pin_code.value) || !data.pin_code.value) {
@@ -188,9 +207,19 @@ const ListingAddressEditModal: React.FC<Props> = ({
         })
       }
     }
+    if(isEmptyField(data.city.value) || !data.city.value || isEmptyField(data.state.value) || !data.state.value || isEmptyField(data.country.value) || !data.country.value){
+    if (isEmptyField(data.city.value) || !data.city.value) {
+      cityRef.current?.focus()
+      setData((prev) => {
+        return {
+          ...prev,
+          city: { ...prev.city, error: 'This field is required!' },
+        }
+      })
+    }
     if (isEmptyField(data.state.value) || !data.state.value) {
       stateRef.current?.focus()
-      return setData((prev) => {
+      setData((prev) => {
         return {
           ...prev,
           state: { ...prev.state, error: 'This field is required!' },
@@ -199,14 +228,15 @@ const ListingAddressEditModal: React.FC<Props> = ({
     }
     if (isEmptyField(data.country.value) || !data.country.value) {
       countryRef.current?.focus()
-      return setData((prev) => {
+      setData((prev) => {
         return {
           ...prev,
           country: { ...prev.country, error: 'This field is required!' },
         }
       })
     }
-
+    return;
+   }
     const jsonData = {
       street: data.street.value,
       society: data.society.value,

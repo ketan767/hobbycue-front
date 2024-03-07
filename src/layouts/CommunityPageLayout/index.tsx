@@ -733,11 +733,15 @@ const CommunityLayout: React.FC<Props> = ({
                     >
                       <MenuItem value="">All Hobbies</MenuItem>
                       {activeProfile.data?._hobbies?.map(
-                        (item: any, idx: any) => (
+                        (item: any, idx: any) => {
+                          console.warn({item});
+                          
+                          return(
                           <MenuItem key={idx} value={item.hobby?._id}>
                             {item.hobby?.display}
+                            {item.genre?.display?` - ${item?.genre?.display}`:null}
                           </MenuItem>
-                        ),
+                        )}
                       )}
                       <MenuItem
                         onClick={() => {

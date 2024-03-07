@@ -171,10 +171,10 @@
   background: #f7f5f9;
   color: #8064a2;
 }
-.added-hobby-list{
+/* .added-hobby-list{
   max-height: 55vh;
   overflow: auto;
-}
+} */
 .added-hobby-list table {
   width: 100%;
 }
@@ -492,7 +492,7 @@
   }
   .added-hobby-list{
     max-height: none;
-    overflow: auto;
+    /* overflow: auto; */
   }
   .added-hobby-list table tr td:nth-child(1) {
     flex: 2;
