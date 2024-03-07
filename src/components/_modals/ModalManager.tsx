@@ -70,6 +70,7 @@ import AddHobby from './AddHobby/AddHobbyModal'
 import ListingContactToOwner from './EditListing/ListingContactOwner'
 import UserContactToOwner from './EditProfile/UserContactOwner'
 import { PostModal } from './PostModal/PostModal'
+import { setHasChanges } from '@/redux/slices/modal'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -101,10 +102,9 @@ const ModalManager: React.FC = () => {
 
   const dispatch = useDispatch()
   const [confirmationModal, setConfirmationModal] = useState(false)
-  const [hasChanges, setHasChanges] = useState(false)
-  const { activeModal, closable, propData } = useSelector(
+  const { activeModal, closable, propData, hasChanges } = useSelector(
     (state: RootState) => state.modal,
-  )  
+  )
   const specialCloseHandlers: Partial<{
     [key in Exclude<ModalType, null>]: () => void
   }> = {
@@ -150,7 +150,7 @@ const ModalManager: React.FC = () => {
   }
 
   const handleStatusChange = (isChanged: boolean) => {
-    setHasChanges(isChanged)
+    dispatch(setHasChanges(isChanged));
   }
 
   const activeCloseHandler =

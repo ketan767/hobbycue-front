@@ -418,6 +418,7 @@
   width: 100%;
   background-color: #8064a2;
 }
+
 .location-select header p {
   color: #fff !important;
 }
@@ -425,8 +426,7 @@
   fill: #ffffff;
 }
 .hobby-select {
-  background-color: #f7f5f9;
-  border: 1px solid #8064a280;
+  max-height: 32px;
   border-radius: 8px;
   max-width: 150px;
   width: 100%;
@@ -436,6 +436,8 @@
   font-weight: 500;
   line-height: 20px;
   color: #8064a2;
+border: 1px solid var(--Primary-Half, rgba(128, 100, 162, 0.50));
+background: var(--Purple-3, #F7F5F9);
 }
 .location-select > div {
   padding: 10px;
@@ -572,12 +574,16 @@
   .location-select {
     width: 150px;
   }
+  .location-select header{
+    max-height: 32px;
+  }
   .hobbyDropDownOption {
-    font-family: 'Poppins';
+    color: var(--Grey-Darker, #6D747A);
+    font-family: Poppins;
+    font-size: 10px;
     font-style: normal;
-    font-size: 14px;
-    color: var(--Grey-Darker, #6d747a);
-    padding: 0 8px;
+    font-weight: 500;
+    line-height: normal;
   }
   .editLocation {
     color: var(--Grey-Darker, #6d747a);

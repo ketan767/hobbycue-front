@@ -155,7 +155,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
         if (check !== false) {
           if (check >= 100) {
             return setInputErrs((prev) => {
-              return { ...prev, year_of_birth: 'Maximum age should be 100' }
+              return { ...prev, year_of_birth: 'Maximum age: 100' }
             })
           }
           if (check < 0) {
@@ -165,7 +165,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
           }
           if (check < 13) {
             return setInputErrs((prev) => {
-              return { ...prev, year_of_birth: 'Minimum age should be 13' }
+              return { ...prev, year_of_birth: 'Minimum age is 13' }
             })
           }
         } else {

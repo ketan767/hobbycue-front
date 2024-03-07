@@ -144,14 +144,11 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   }
 
   const Backsave = async () => {
+    console.warn("running back")
     setBackBtnLoading(true)
     if (
       !data.city ||
-      data.city === '' ||
-      !data.state ||
-      data.state === '' ||
-      !data.country ||
-      data.country === ''
+      data.city === '' 
     ) {
       if (onBackBtnClick) onBackBtnClick()
       setBackBtnLoading(false)

@@ -4,7 +4,7 @@ import {
   getMyProfileDetail,
   updateUserHobbyLevel,
 } from '@/services/user.service'
-import { CircularProgress } from '@mui/material'
+import { CircularProgress, useMediaQuery } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './styles.module.css'
 
@@ -491,18 +491,19 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         }
 
         const { err: error, res: response } = await getMyProfileDetail()
-        setAddHobbyBtnLoading(false)
-        if (error) return console.log(error)
+        if (error) return console.log(error);setAddHobbyBtnLoading(false);
 
         if (response?.data.success) {
           if (onComplete !== undefined) {
             isOnboarded = true
             onComplete()
+            setAddHobbyBtnLoading(false)
             return
           }
           dispatch(updateUser(response?.data.data.user))
           handleClose()
           window.location.reload()
+          setAddHobbyBtnLoading(false)
           return
         }
       })
@@ -653,6 +654,24 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     }
   }, [focusedGenreIndex])
 
+  const isMobile = useMediaQuery('(max-width:1100px)');
+
+  const hobbyDropDownWrapperRef = useRef<HTMLDivElement>(null);
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (hobbyDropDownWrapperRef.current && !hobbyDropDownWrapperRef.current.contains(event.target as Node)) {
+      setShowHobbyDowpdown(false)
+    }
+  }
+  useEffect(() => {
+    document.addEventListener('mousedown', handleOutsideClick)
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick)
+    }
+  }, [])
+
+  console.log({showHobbyDowpdown})
+
   if (confirmationModal) {
     return (
       <SaveModal
@@ -665,6 +684,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       />
     )
   }
+
 
   return (
     <>
@@ -789,7 +809,9 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                       <td className={styles.AddHobbyFields}>
                         {/* Hobby Input and Dropdown */}
                         <div>
-                          <div className={styles['dropdown-wrapper']}>
+                          <div 
+                          ref={hobbyDropDownWrapperRef}
+                          className={styles['dropdown-wrapper']}>
                             <div
                               className={`${styles['input-box']} ${
                                 HobbyError ? styles['input-box-error'] : ''
@@ -803,10 +825,9 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                                 value={hobbyInputValue}
                                 onFocus={() => setShowHobbyDowpdown(true)}
                                 onBlur={() =>
-                                  setTimeout(
-                                    () => setShowHobbyDowpdown(false),
-                                    300,
-                                  )
+                                  setTimeout(() => {
+                                    if(!isMobile)setShowHobbyDowpdown(false)
+                                  }, 300)
                                 }
                                 ref={searchref}
                                 onChange={handleHobbyInputChange}
@@ -852,7 +873,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                                 onFocus={() => setShowGenreDowpdown(true)}
                                 onBlur={() =>
                                   setTimeout(() => {
-                                    setShowGenreDowpdown(false)
+                                   setShowGenreDowpdown(false)
                                   }, 300)
                                 }
                                 onChange={handleGenreInputChange}
