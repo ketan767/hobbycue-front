@@ -40,6 +40,7 @@ const ProfileHobbySideList = ({ data, expandData }: Props) => {
         }
         setDisplayData={setDisplayData}
         expandData={expandData}
+        initialShowDropdown
       >
         <h4 className={styles['heading']}>Hobbies</h4>
         <ul

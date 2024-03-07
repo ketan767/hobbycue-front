@@ -126,6 +126,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
   }
 
   const Backsave = async () => {
+    console.warn("runnign back");
     setBackBtnLoading(true)
     if (
       (!data.public_email.value || data.public_email.value === '') &&

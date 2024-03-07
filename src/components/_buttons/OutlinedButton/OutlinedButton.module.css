@@ -15,7 +15,7 @@
   outline: 1px solid #ffffff;
   border: 1px solid rgba(var(--primary-100-rgb));
 }
-.button:focus::before {
+/* .button:focus::before {
   content: '';
   border: 1px solid rgba(var(--primary-100-rgb));
   width: calc(100% + 3.8px);
@@ -24,7 +24,7 @@
   top: -2.8px;
   left: -2.8px;
   border-radius: 0.5rem;
-}
+} */
 
 .button:not(:disabled):hover {
   background-color: #F7F5F9;

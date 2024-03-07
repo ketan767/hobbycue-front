@@ -66,6 +66,7 @@ export type ModalType =
     verified?: boolean
     imageUrl: string
     propData?:object
+    hasChanges?:boolean
   }
   
   const initialState: ModalState = {
@@ -81,7 +82,8 @@ export type ModalType =
     shareUrl: '',
     onVerify: null,
     verified: false,
-    propData:{}
+    propData:{},
+    hasChanges:false
   }
   
   const modalSlice = createSlice({
@@ -136,6 +138,9 @@ export type ModalType =
       updateShareUrl(state, { payload }) {
         state.shareUrl = payload
       },
+      setHasChanges(state, action:PayloadAction<boolean>){
+        state.hasChanges = action.payload;
+      }
     },
   })
   
@@ -147,7 +152,8 @@ export type ModalType =
     updateForgotPasswordEmail,
     updateShareUrl,
     setVerified,
-    updateImageUrl
+    updateImageUrl,
+    setHasChanges
   } = modalSlice.actions
   
   export default modalSlice.reducer

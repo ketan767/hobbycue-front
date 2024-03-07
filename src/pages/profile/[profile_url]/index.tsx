@@ -30,7 +30,7 @@ import PostWrapper from '@/layouts/PinnedPost/PinnedPost'
 import { updateProfileData, updateUser } from '@/redux/slices/user'
 import { withAuth } from '@/navigation/withAuth'
 import ProfileNavigationLinks from '@/components/ProfilePage/ProfileHeader/ProfileNavigationLinks'
-import { updateProfileMenuExpandAll } from '@/redux/slices/site'
+import { updateProfileLayoutMode, updateProfileMenuExpandAll } from '@/redux/slices/site'
 
 interface Props {
   data: ProfilePageData
