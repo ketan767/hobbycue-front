@@ -1,0 +1,115 @@
+.dropdown-container {
+    display: flex;
+    width: 202px;
+    padding: 12px 6.7px 12px 12px;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 0px 0px 4px 4px;
+    border-top: 1px solid var(--Grey-Lighter, #EBEDF0);
+    background: var(--White, #FFF);
+    flex-wrap: wrap;
+}
+
+.dropdown-container p {
+    max-width: 165px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.edit-container {
+    padding: 12px 9px 12px 12px;
+}
+
+.editText {
+    color: var(--Grey-Darker, #6D747A);
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px;
+    /* 128.571% */
+    letter-spacing: 0.07px;
+}
+
+.normalText {
+    color: var(--Grey-Darker, #6D747A);
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px;
+    /* 128.571% */
+    letter-spacing: 0.07px;
+}
+
+.purpleText {
+    color: var(--Purple-1, #8064A2) !important;
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px;
+    /* 128.571% */
+    letter-spacing: 0.07px;
+}
+
+.options-container {
+    width: 202px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-left: -12px;
+    margin-top: 12px;
+    margin-bottom: -12px;
+    padding: 4px 6px;
+}
+
+.options-container .option {
+    width: 202px;
+    height: 42px;
+    flex-shrink: 0;
+    background: var(--White, #FFF);
+
+    color: var(--Grey-Darker, #6D747A);
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px;
+    /* 128.571% */
+    letter-spacing: 0.07px;
+}
+
+.optionTextContainer {
+    width: 190px;
+    height: 34px;
+    flex-shrink: 0;
+    border-radius: 4px;
+    padding: 8px 6px;
+    transition: all;
+}
+
+
+
+.option:hover .optionTextContainer, .option:focus .optionTextContainer, .activeOption .optionTextContainer{
+    background: #DFD8E7;
+    color: var(--Purple-1, #8064A2);
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px;
+    /* 128.571% */
+    letter-spacing: 0.07px;
+}
+
+.activeOption p{
+    color: var(--Purple-1, #8064A2);
+font-family: Poppins;
+font-size: 14px;
+font-style: normal;
+font-weight: 400;
+line-height: 18px; /* 128.571% */
+letter-spacing: 0.07px;
+}
