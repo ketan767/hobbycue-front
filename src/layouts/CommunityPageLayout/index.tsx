@@ -3,7 +3,7 @@ import PageContentBox from '@/layouts/PageContentBox'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import { withAuth } from '@/navigation/withAuth'
 import styles from './CommunityLayout.module.css'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { useDispatch, useSelector } from 'react-redux'
 import store, { RootState } from '@/redux/store'
@@ -34,6 +34,8 @@ import { getListingPages } from '@/services/listing.service'
 import { setShowPageLoader } from '@/redux/slices/site'
 import { InviteToCommunity } from '@/services/auth.service'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import CommunityTopDropdown from '@/components/_formElements/CommunityTopDropdown/CommunityTopDropdown'
+import { CommunityDropdownOption } from '@/components/_formElements/CommunityDropdownOption/CommunityDropdownOption'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -87,6 +89,7 @@ const CommunityLayout: React.FC<Props> = ({
 
   const hideThirdColumnTabs = ['pages', 'links']
   const { showPageLoader } = useSelector((state: RootState) => state.site)
+  const router = useRouter();
 
   const toggleSeeMore = () => setSeeMoreHobby(!seeMoreHobby)
   const getPost = async () => {
@@ -127,7 +130,25 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   const EditProfileLocation = () => {
-    window.location.href = '/settings/localization-and-payments'
+    window.location.href = '/settings/localization-payments'
+  }
+
+  const editHobbiesClick = () => {
+    if (activeProfile?.type === 'user') {
+      dispatch(
+        openModal({
+          type: 'profile-hobby-edit',
+          closable: true,
+        }),
+      )
+    } else {
+      dispatch(
+        openModal({
+          type: 'listing-hobby-edit',
+          closable: true,
+        }),
+      )
+    }
   }
   console.log('l', activeProfile.data?._hobbies?.length)
   console.log('activeprofile', activeProfile)
@@ -450,6 +471,8 @@ const CommunityLayout: React.FC<Props> = ({
     }
   }
 
+  const hobbiesDropDownArr = activeProfile.data?._hobbies?.map((item:any)=>({value:item.hobby?._id,display:`${item.hobby?.display}${item?.hobby?.genre?.display?" - ":""}${item?.hobby?.genre?.display??""}`}))??[];
+
   return (
     <>
       <PageGridLayout
@@ -720,7 +743,9 @@ const CommunityLayout: React.FC<Props> = ({
                 </section>
                 <section className={styles['filter-section']}>
                   <div>
-                    <Select
+                    {/*  */}
+                    
+                    {/* <Select
                       sx={{
                         boxShadow: 'none',
                         '.MuiOutlinedInput-notchedOutline': { border: 0 },
@@ -769,52 +794,53 @@ const CommunityLayout: React.FC<Props> = ({
                           alt="edit"
                         />{' '}
                       </MenuItem>
-                    </Select>
+                    </Select> */}
+                        <CommunityTopDropdown
+                        maxWidth='139px'
+                         className={styles['hobby-select']}
+                         value={hobbiesDropDownArr.find((obj:any)=>obj?.value===selectedHobby)?.display??"All Hobbies"}
+                        variant={selectedHobby===""?"secondary":"primary"}
+                      >
+                        {[{display:"All Hobbies",value:""},...hobbiesDropDownArr,{display:"Edit Hobbies",value:"",pencil:true,onClick:editHobbiesClick,smallPencil:true}]?.map((item: any, idx) => (
+                          <CommunityDropdownOption
+                          maxWidth='139px'
+                            {...item}
+                            key={idx}
+                            currentValue={hobbiesDropDownArr.find((obj:any)=>obj?.value===selectedHobby)?.value??"All Hobbies"}
+                            onChange={(val: any) =>
+                              handleHobbyClick(val?.value)
+                            }
+                          />
+                        ))}
+                      </CommunityTopDropdown>
+
                     <div className={styles.hobbyDropDownOption}>at</div>
 
                     {visibilityData?.length > 0 && (
-                      <InputSelect
+                      <CommunityTopDropdown
                         value={selectedLocation || ''}
-                        onChange={(val: any) =>
-                          setSelectedLocation((prev) => {
-                            if (prev === val) {
-                              return 'All Locations'
-                            } else {
-                              return val
-                            }
-                          })
-                        }
-                        className={` ${styles['location-select']}`}
+                        variant={selectedLocation==="All Locations"?"secondary":"primary"}
                       >
-                        {visibilityData?.map((item: any, idx) => (
-                          <DropdownOption
+                        {[...visibilityData,{display:"Edit Location",value:"",pencil:true,onClick:EditProfileLocation}]?.map((item: any, idx) => (
+                          <CommunityDropdownOption
                             {...item}
                             key={idx}
                             currentValue={selectedLocation}
                             onChange={(val: any) =>
                               setSelectedLocation((prev) => {
-                                if (prev === val) {
+                                if (prev === val?.value) {
                                   return 'All Locations'
                                 } else {
-                                  return val
+                                  return val?.value
                                 }
                               })
                             }
                           />
                         ))}
-                        <MenuItem
-                          className={styles.editLocation}
-                          onClick={EditProfileLocation}
-                        >
-                          Edit Location
-                          <Image
-                            src={EditIcon}
-                            className={styles.editLocationResponsive}
-                            alt="edit"
-                          />
-                        </MenuItem>
-                      </InputSelect>
+                      </CommunityTopDropdown>
                     )}
+
+                    {/*  */}
                   </div>
                 </section>
                 <section
