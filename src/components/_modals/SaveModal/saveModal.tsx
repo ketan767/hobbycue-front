@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { RootState } from '@/redux/store'
 import { useSelector, useDispatch } from 'react-redux'
 import styles from './saveModal.module.css'
@@ -46,6 +46,19 @@ const SaveModal: React.FC<Props> = ({
     handleSubmit()
     onboardcheck()
   }
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handleClickOutside = (event:MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        handleClose()
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   if (reloadrouter) {
     router.reload()
@@ -53,7 +66,7 @@ const SaveModal: React.FC<Props> = ({
   }
 
   return (
-    <div className={`${styles['confirmation-modal']}`}>
+    <div ref={wrapperRef} className={`${styles['confirmation-modal']}`}>
       <div className={styles['confirmation-modal-body']}>
         <CloseIcon
           className={styles['modal-close-icon']}

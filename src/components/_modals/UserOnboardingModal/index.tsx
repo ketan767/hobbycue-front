@@ -41,6 +41,13 @@ import { sendWelcomeMail } from '@/services/auth.service'
 // }
 
 type steps = 'General' | 'About' | 'Contact' | 'Address' | 'Hobbies'
+  const totalSteps: steps[] = [
+    'General',
+    'About',
+    'Contact',
+    'Address',
+    'Hobbies',
+  ]
 
 export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
   const dispatch = useDispatch()
@@ -56,13 +63,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
 
   const { user } = useSelector((state: RootState) => state.user)
 
-  const totalSteps: steps[] = [
-    'General',
-    'About',
-    'Contact',
-    'Address',
-    'Hobbies',
-  ]
+
 
   const handleNext = () => {
     const newIndex = totalSteps.indexOf(activeStep) + 1
@@ -72,7 +73,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
       setFurthestStepIndex(newIndex)
     }
   }
-
+  
   const handleBack = () => {
     setActiveStep(
       (prevActiveStep: steps) =>
@@ -219,7 +220,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
                 className={`${styles['step']} ${
                   isClickable ? styles['active'] : ''
                 }`}
-                onClick={isClickable ? () => setActiveStep(step) : undefined}
+                onClick={isClickable ? () => setActiveStep(totalSteps[index]) : undefined}
               ></span>
             )
           })}

@@ -575,6 +575,11 @@ background: var(--Purple-3, #F7F5F9);
   .navigation-links ul li {
     padding: 8px;
   }
+
+  .hobby-select{
+    min-width: 129px;
+  }
+
   .location-select > div {
     font-size: 14px;
     padding: 0;
