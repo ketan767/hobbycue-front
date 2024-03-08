@@ -7,13 +7,14 @@
   flex-direction: column;
 }
 .modal-wrapper .footer {
+
   padding: var(--spacing-16) var(--spacing-24);
   margin-top: auto;
   display: flex;
   justify-content: space-between;
   position: sticky;
   bottom: 0;
-  z-index: 1001;
+  z-index: 0;
 }
 @media screen and (min-width: 1100px) {
   .modal-wrapper {
@@ -161,7 +162,7 @@
     height: 90%;
   }
   .modal-wrapper .body {
-    padding: var(--spacing-16) var(--spacing-16);
+    padding: 0 var(--spacing-16) var(--spacing-16) var(--spacing-16);
   }
   .modal-hr {
     display: none;

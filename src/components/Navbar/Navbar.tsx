@@ -21,6 +21,7 @@ import {
   showAllPlaceTrue,
   showAllEventTrue,
   showAllUsersTrue,
+  showAllTrue,
 } from '@/redux/slices/search'
 import LogoFull from '@/assets/image/logo-full.svg'
 import LogoSmall from '@/assets/image/logo-small.png'
@@ -50,6 +51,7 @@ import PreLoader from '@/components/PreLoader'
 
 import hobbycueLogo from '@/assets/svg/Search/hobbycue.svg'
 import { setShowPageLoader } from '@/redux/slices/site'
+import { usePathname } from 'next/navigation'
 
 type Props = {}
 
@@ -68,6 +70,8 @@ export const Navbar: React.FC<Props> = ({}) => {
   const dispatch = useDispatch()
   const router = useRouter()
   const [menuActive, setMenuActive] = useState(false)
+  const pathname = usePathname();
+console.log({pathname});
 
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
@@ -109,7 +113,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   }
 
   const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+    event.preventDefault();
     searchResult()
     setIsSearchInputVisible(false)
   }
@@ -139,7 +143,10 @@ export const Navbar: React.FC<Props> = ({}) => {
   }
 
   const searchResult = async () => {
-    router.push('/search')
+    if(router.pathname!=="/search"){
+      dispatch(showAllTrue());
+    router.push('/search');
+    }
     const searchValue = data.search.value.trim()
     const taglineValue = ''
     const cityValue = ''
