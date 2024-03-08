@@ -105,8 +105,25 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
   const today = new Date().toISOString().split('T')[0]
   const [initialData, setInitialData] = useState({})
   const [isChanged, setIsChanged] = useState(false)
-
+  const months = [
+    'jan',
+    'feb',
+    'mar',
+    'apr',
+    'may',
+    'jun',
+    'jul',
+    'aug',
+    'sep',
+    'oct',
+    'nov',
+    'dec',
+  ]
   const handleDateSelection = (selectedDate: string) => {
+    const date = selectedDate?.split('-')
+    const month = months[Number(date[1]) - 1];
+    const newDate=`${date[0]}/${month}/${date[2]}`
+
     if (isSelectingStartDate) {
       setEventData((prevData) => ({ ...prevData, from_date: selectedDate }))
       setIsSelectingStartDate(false)

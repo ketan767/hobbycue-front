@@ -210,11 +210,11 @@ const ListingContactEditModal: React.FC<Props> = ({
             ...prev,
             phone: {
               ...prev.phone,
-              error: 'At least one mode of contact is required',
+              error: 'Either phone number or email id required',
             },
             public_email: {
               ...prev.public_email,
-              error: 'At least one mode of contact is required',
+              error: 'Either phone number or email id required',
             },
           }
         })
@@ -448,7 +448,7 @@ const ListingContactEditModal: React.FC<Props> = ({
             listingModalData.type === listingTypes.PROGRAM ||
             listingModalData.type === listingTypes.PLACE ? (
               <div className={styles.useEmailContainer}>
-                <p>At least one mode of contact is required</p>
+                <p>Either phone number or email id required</p>
                 <OutlinedButton
                   className={styles['use-mine-button']}
                   onClick={() =>
