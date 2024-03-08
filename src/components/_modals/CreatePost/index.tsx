@@ -204,8 +204,8 @@ export const CreatePost: React.FC<Props> = ({
       let address = data.data?._address
       let visibilityArr: any = [
         {
-          value: 'Everyone',
-          display: 'Everyone',
+          value: 'All locations',
+          display: 'All locations',
           type: 'text',
         },
       ]

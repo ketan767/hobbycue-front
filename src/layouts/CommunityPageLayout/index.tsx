@@ -89,7 +89,7 @@ const CommunityLayout: React.FC<Props> = ({
 
   const hideThirdColumnTabs = ['pages', 'links']
   const { showPageLoader } = useSelector((state: RootState) => state.site)
-  const router = useRouter();
+  const router = useRouter()
 
   const toggleSeeMore = () => setSeeMoreHobby(!seeMoreHobby)
   const getPost = async () => {
@@ -130,6 +130,7 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   const EditProfileLocation = () => {
+    window.location.href = '/settings/localization-payments'
     window.location.href = '/settings/localization-payments'
   }
 
@@ -249,7 +250,7 @@ const CommunityLayout: React.FC<Props> = ({
         params.append('_hobby', item.hobby._id)
       })
     }
-    if (selectedLocation !== '' && selectedLocation !== 'Everyone') {
+    if (selectedLocation !== '' && selectedLocation !== 'All locations') {
       params.append('location', selectedLocation)
     }
     console.log('PARAMS ---', params.toString())
@@ -386,8 +387,8 @@ const CommunityLayout: React.FC<Props> = ({
       let address = activeProfile.data?._address
       let visibilityArr: any = [
         {
-          value: 'Everyone',
-          display: 'Everyone',
+          value: 'All locations',
+          display: 'All locations',
           type: 'text',
         },
       ]
@@ -471,7 +472,13 @@ const CommunityLayout: React.FC<Props> = ({
     }
   }
 
-  const hobbiesDropDownArr = activeProfile.data?._hobbies?.map((item:any)=>({value:item.hobby?._id,display:`${item.hobby?.display}${item?.hobby?.genre?.display?" - ":""}${item?.hobby?.genre?.display??""}`}))??[];
+  const hobbiesDropDownArr =
+    activeProfile.data?._hobbies?.map((item: any) => ({
+      value: item.hobby?._id,
+      display: `${item.hobby?.display}${
+        item?.hobby?.genre?.display ? ' - ' : ''
+      }${item?.hobby?.genre?.display ?? ''}`,
+    })) ?? []
 
   return (
     <>
@@ -744,7 +751,7 @@ const CommunityLayout: React.FC<Props> = ({
                 <section className={styles['filter-section']}>
                   <div>
                     {/*  */}
-                    
+
                     {/* <Select
                       sx={{
                         boxShadow: 'none',
@@ -759,14 +766,17 @@ const CommunityLayout: React.FC<Props> = ({
                       <MenuItem value="">All Hobbies</MenuItem>
                       {activeProfile.data?._hobbies?.map(
                         (item: any, idx: any) => {
-                          console.warn({item});
-                          
-                          return(
-                          <MenuItem key={idx} value={item.hobby?._id}>
-                            {item.hobby?.display}
-                            {item.genre?.display?` - ${item?.genre?.display}`:null}
-                          </MenuItem>
-                        )}
+                          console.warn({ item })
+
+                          return (
+                            <MenuItem key={idx} value={item.hobby?._id}>
+                              {item.hobby?.display}
+                              {item.genre?.display
+                                ? ` - ${item?.genre?.display}`
+                                : null}
+                            </MenuItem>
+                          )
+                        },
                       )}
                       <MenuItem
                         onClick={() => {
@@ -794,34 +804,62 @@ const CommunityLayout: React.FC<Props> = ({
                           alt="edit"
                         />{' '}
                       </MenuItem>
-                    </Select> */}
-                        <CommunityTopDropdown
-                        maxWidth='139px'
-                         className={styles['hobby-select']}
-                         value={hobbiesDropDownArr.find((obj:any)=>obj?.value===selectedHobby)?.display??"All Hobbies"}
-                        variant={selectedHobby===""?"secondary":"primary"}
-                      >
-                        {[{display:"All Hobbies",value:""},...hobbiesDropDownArr,{display:"Edit Hobbies",value:"",pencil:true,onClick:editHobbiesClick,smallPencil:true}]?.map((item: any, idx) => (
-                          <CommunityDropdownOption
-                          maxWidth='139px'
-                            {...item}
-                            key={idx}
-                            currentValue={hobbiesDropDownArr.find((obj:any)=>obj?.value===selectedHobby)?.value??"All Hobbies"}
-                            onChange={(val: any) =>
-                              handleHobbyClick(val?.value)
-                            }
-                          />
-                        ))}
-                      </CommunityTopDropdown>
+                      </Select> */}
+                    <CommunityTopDropdown
+                      maxWidth="139px"
+                      className={styles['hobby-select']}
+                      value={
+                        hobbiesDropDownArr.find(
+                          (obj: any) => obj?.value === selectedHobby,
+                        )?.display ?? 'All Hobbies'
+                      }
+                      variant={selectedHobby === '' ? 'secondary' : 'primary'}
+                    >
+                      {[
+                        { display: 'All Hobbies', value: '' },
+                        ...hobbiesDropDownArr,
+                        {
+                          display: 'Edit Hobbies',
+                          value: '',
+                          pencil: true,
+                          onClick: editHobbiesClick,
+                          smallPencil: true,
+                        },
+                      ]?.map((item: any, idx) => (
+                        <CommunityDropdownOption
+                          maxWidth="139px"
+                          {...item}
+                          key={idx}
+                          currentValue={
+                            hobbiesDropDownArr.find(
+                              (obj: any) => obj?.value === selectedHobby,
+                            )?.value ?? 'All Hobbies'
+                          }
+                          onChange={(val: any) => handleHobbyClick(val?.value)}
+                        />
+                      ))}
+                    </CommunityTopDropdown>
 
                     <div className={styles.hobbyDropDownOption}>at</div>
 
                     {visibilityData?.length > 0 && (
                       <CommunityTopDropdown
                         value={selectedLocation || ''}
-                        variant={selectedLocation==="All Locations"?"secondary":"primary"}
+                        variant={
+                          selectedLocation === 'All Locations'
+                            ? 'secondary'
+                            : 'primary'
+                        }
                       >
-                        {[...visibilityData,{display:"Edit Location",value:"",pencil:true,onClick:EditProfileLocation}]?.map((item: any, idx) => (
+                        {[
+                          ...visibilityData,
+                          {
+                            display: 'Edit Location',
+                            value: '',
+                            pencil: true,
+                            onClick: EditProfileLocation,
+                          },
+                        ]?.map((item: any, idx) => (
                           <CommunityDropdownOption
                             {...item}
                             key={idx}
@@ -924,10 +962,9 @@ const CommunityLayout: React.FC<Props> = ({
                   )}
                 </FilledButton>
                 {/* <CircularProgress color="inherit" size={'22px'} /> */}
-                {
-                  errorMessage!==""&&
+                {errorMessage !== '' && (
                   <span className={styles['error-invite']}>{errorMessage}</span>
-                }
+                )}
               </section>
             </section>
 

@@ -90,7 +90,7 @@ const ModalManager: React.FC = () => {
     type: 'success',
   })
   const [closeIconClicked, setCloseIconClicked] = useState<boolean>(false)
-  const { user } = useSelector((state: RootState) => state.user)
+  const { user, isLoggedIn } = useSelector((state: RootState) => state.user)
 
   const triggerSnackbar = (data: SnackbarState) => {
     setSnackbar(data)
@@ -124,16 +124,13 @@ const ModalManager: React.FC = () => {
 
   function handleClose() {
     console.log('haschange', hasChanges)
-    if (
-      activeModal === 'View-Image-Modal' ||
-      activeModal === 'add-hobby'
-    ) {
+    if (activeModal === 'View-Image-Modal' || activeModal === 'add-hobby') {
       dispatch(closeModal())
     } else if (confirmationModal) {
       setConfirmationModal(false)
     } else if (hasChanges) {
       setConfirmationModal(true)
-    } else if (!user.is_onboarded) {
+    } else if (isLoggedIn && !user.is_onboarded) {
       setConfirmationModal(true)
     } else {
       dispatch(closeModal())
@@ -153,7 +150,7 @@ const ModalManager: React.FC = () => {
   }
 
   const handleStatusChange = (isChanged: boolean) => {
-    dispatch(setHasChanges(isChanged));
+    dispatch(setHasChanges(isChanged))
   }
 
   const activeCloseHandler =
@@ -200,17 +197,14 @@ const ModalManager: React.FC = () => {
   const escFunction = useCallback(
     (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        if (
-          activeModal === 'View-Image-Modal' ||
-          activeModal === 'add-hobby'
-        ) {
+        if (activeModal === 'View-Image-Modal' || activeModal === 'add-hobby') {
           dispatch(closeModal())
         }
         if (confirmationModal) {
           setConfirmationModal(false)
         } else if (hasChanges) {
           setConfirmationModal(true)
-        } else if (!user.is_onboarded) {
+        } else if (isLoggedIn && !user.is_onboarded) {
           setConfirmationModal(true)
         } else {
           dispatch(closeModal())
