@@ -148,19 +148,19 @@ export const PostModal: React.FC<Props> = ({
   return (
     <>
       <div className={`${styles['modal-wrapper']}`}>
-        <CloseIcon
+        {!displayMoreComments&&<CloseIcon
           className={styles['modal-close-icon']}
           onClick={() =>
             isChanged ? setConfirmationModal(true) : handleClose()
           }
-        />
+        />}
         <div
           className={`${styles['header']}`}
           style={displayMoreComments ? { display: 'none' } : {}}
         >
           <div className={`${styles['header-user']}`}>
             <Image
-              src={activePost?._author?.profile_image}
+              src={activePost?._author?.profile_image??""}
               alt=""
               width={40}
               height={40}
@@ -321,8 +321,9 @@ export const PostModal: React.FC<Props> = ({
             onMoreComments={() => {
               setDisplayMoreComments((prevValue) => !prevValue)
             }}
-            showAllComments={displayMoreComments}
+            showAllComments={true}
             getInput={(input) => setNewComment(input)}
+            hideSeeMore={!displayMoreComments}
           />
         )}
       </div>

@@ -498,4 +498,7 @@ background: rgba(128, 100, 162, 0.25);
   .post-card-wrapper .body .content {
     font-size: 12px;
   }
+  .content{
+    font-size: 12px;
+  }
 }
