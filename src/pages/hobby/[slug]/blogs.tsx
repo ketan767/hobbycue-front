@@ -35,6 +35,33 @@ const HobbyBlogsPage: React.FC<Props> = (props) => {
     setExpandAll(value)
     dispatch(updateHobbyMenuExpandAll(value))
   }
+
+  const router = useRouter()
+
+  useEffect(() => {
+    // Save scroll position when navigating away from the page
+    const handleRouteChange = () => {
+      sessionStorage.setItem('scrollPositionhobby', window.scrollY.toString())
+    }
+
+    // Restore scroll position when navigating back to the page
+    const handleScrollRestoration = () => {
+      const scrollPosition = sessionStorage.getItem('scrollPositionhobby')
+      if (scrollPosition) {
+        window.scrollTo(0, parseInt(scrollPosition, 10))
+        sessionStorage.removeItem('scrollPositionhobby')
+      }
+    }
+
+    router.events.on('routeChangeStart', handleRouteChange)
+
+    router.events.on('routeChangeComplete', handleScrollRestoration)
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange)
+      router.events.off('routeChangeComplete', handleScrollRestoration)
+    }
+  }, [])
   return (
     <>
       <HobbyPageLayout
@@ -43,7 +70,9 @@ const HobbyBlogsPage: React.FC<Props> = (props) => {
         expandAll={expandAll}
         setExpandAll={handleExpandAll}
       >
-        <main className={`${styles['display-desktop']} ${styles['dual-section-wrapper']}`}>
+        <main
+          className={`${styles['display-desktop']} ${styles['dual-section-wrapper']}`}
+        >
           <div className={styles['no-posts-container']}>
             <p>
               This feature is under development. Come back soon to view this

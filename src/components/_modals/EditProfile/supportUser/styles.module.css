@@ -25,8 +25,11 @@
   line-height: 22px;
 }
 
-.long-input-box:focus-visible {
+.street-input-container textarea:focus-visible {
   outline: 1px solid #8064a2;
+}
+.input-box-error textarea:focus-visible {
+  outline: none ;
 }
 
 @media screen and (min-width: 1100px) {
@@ -62,7 +65,9 @@
 
   color: #000000;
 }
-
+.input-box-error textarea {
+  border: 1px solid #c0504d !important;
+}
 .input-box {
   display: flex;
   flex-direction: column;

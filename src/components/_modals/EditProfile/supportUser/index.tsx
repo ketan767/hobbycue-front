@@ -142,6 +142,9 @@ const SupportUserModal: React.FC<Props> = ({
   const handleSubmit = async () => {
     console.log('support', data)
     if (!data.description || data.description === '') {
+      if (textareaRef.current) {
+        textareaRef.current?.focus()
+      }
       setInputErrs((prev) => {
         return { ...prev, error: 'This field is required!' }
       })
@@ -218,7 +221,8 @@ const SupportUserModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        nextButtonRef.current?.click()
+        event.preventDefault()
+        handleSubmit()
       }
     }
 
@@ -227,7 +231,7 @@ const SupportUserModal: React.FC<Props> = ({
     return () => {
       window.removeEventListener('keydown', handleKeyPress)
     }
-  }, [])
+  }, [data?.description])
 
   if (confirmationModal) {
     return (
@@ -254,7 +258,13 @@ const SupportUserModal: React.FC<Props> = ({
         <hr className={styles['modal-hr']} />
         <section className={styles['body']}>
           <div className={styles['input-box']}>
-            <div className={styles['street-input-container']}>
+            <div
+              className={` ${
+                inputErrs.error
+                  ? styles['input-box-error']
+                  : styles['street-input-container']
+              }`}
+            >
               <textarea
                 className={styles['long-input-box']}
                 required

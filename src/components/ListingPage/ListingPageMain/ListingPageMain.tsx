@@ -1085,11 +1085,12 @@ const ListingPageMain: React.FC<Props> = ({
         {children}
 
         <aside
-          className={
-            activeTab === 'home' || activeTab === 'posts'
-              ? styles['display-desktop']
-              : styles['display-none']
-          }
+          className={`custom-scrollbar ${styles['page-right-aside']}
+            ${
+              activeTab === 'home' || activeTab === 'posts'
+                ? styles['display-desktop']
+                : styles['display-none']
+            }`}
         >
           {/* User Contact Details */}
           <PageContentBox

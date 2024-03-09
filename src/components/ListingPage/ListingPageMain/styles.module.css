@@ -218,9 +218,11 @@ ul.seller-info-wrapper li svg:last-child {
   cursor: pointer;
 }
 
-.page-left-aside {
+.page-left-aside,
+ .page-right-aside {
+
   position: -webkit-sticky;
-  top: 217px;
+  top: 226px;
   position: sticky;
   transition: 0.6s;
   height: calc(

@@ -297,6 +297,8 @@ select:-webkit-autofill {
 .about-quill-container .ql-toolbar.ql-snow + .ql-container.ql-snow {
   border-top: 1px solid #ebedf0 !important;
   border-bottom: 0;
+  max-height: 285px;
+  overflow: auto;
 }
 .about-quill-container .ql-toolbar.ql-snow {
   border: 1px solid #ebedf0;
