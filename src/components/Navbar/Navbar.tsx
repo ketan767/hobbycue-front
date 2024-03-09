@@ -70,8 +70,8 @@ export const Navbar: React.FC<Props> = ({}) => {
   const dispatch = useDispatch()
   const router = useRouter()
   const [menuActive, setMenuActive] = useState(false)
-  const pathname = usePathname();
-console.log({pathname});
+  const pathname = usePathname()
+  console.log({ pathname })
 
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
@@ -113,7 +113,7 @@ console.log({pathname});
   }
 
   const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    event.preventDefault()
     searchResult()
     setIsSearchInputVisible(false)
   }
@@ -143,9 +143,9 @@ console.log({pathname});
   }
 
   const searchResult = async () => {
-    if(router.pathname!=="/search"){
-      dispatch(showAllTrue());
-    router.push('/search');
+    if (router.pathname !== '/search') {
+      dispatch(showAllTrue())
+      router.push('/search')
     }
     const searchValue = data.search.value.trim()
     const taglineValue = ''
@@ -383,6 +383,7 @@ console.log({pathname});
                     <IconButton
                       onClick={searchResult}
                       sx={{
+                        height: '40px',
                         bgcolor: 'primary.main',
                         borderRadius: '0px 8px 8px 0px',
                         '&:hover': {
