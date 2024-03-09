@@ -107,7 +107,10 @@ const ListingReport: React.FC<Props> = ({
 
   const handleSubmit = async () => {
     console.log('report', data)
-    if (!data.description || data.description === '') {
+    if (!data.description || data.description?.trim() === '') {
+      if (textareaRef.current) {
+        textareaRef.current?.focus()
+      }
       setInputErrs((prev) => {
         return { ...prev, error: 'This field is required!' }
       })
@@ -185,7 +188,7 @@ const ListingReport: React.FC<Props> = ({
 
   useEffect(() => {
     const handleKeyPress = (event: any) => {
-      if (event.key === 'Enter') {
+      if (event.key === 'Enter' && !textareaRef.current?.matches(':focus')) {
         event.preventDefault()
         handleSubmit()
       }

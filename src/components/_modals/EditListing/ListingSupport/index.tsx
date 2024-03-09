@@ -217,7 +217,7 @@ const ListingSupportModal: React.FC<Props> = ({
 
   useEffect(() => {
     const handleKeyPress = (event: any) => {
-      if (event.key === 'Enter') {
+      if (event.key === 'Enter' && !textareaRef.current?.matches(':focus')) {
         event.preventDefault()
         handleSubmit()
       }
