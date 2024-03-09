@@ -217,7 +217,7 @@ const UserContactToOwner: React.FC<Props> = ({
             <label className={styles['label-required']}>Subject</label>
             <input
               type="text"
-              placeholder="Subject"
+              placeholder="Purpose"
               autoComplete="name"
               required
               value={data.sub}
@@ -229,10 +229,11 @@ const UserContactToOwner: React.FC<Props> = ({
           </div>
           <div className={styles['input-box']}>
             <div className={styles['street-input-container']}>
+              <label className={styles['label-required']}>Message</label>
               <textarea
                 className={styles['long-input-box']}
                 required
-                placeholder="Write your message here"
+                placeholder="Message to the user or admin"
                 name="message"
                 onChange={handleTextAreaChange}
                 value={data.message}
@@ -276,9 +277,9 @@ const UserContactToOwner: React.FC<Props> = ({
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'24px'} />
             ) : onComplete ? (
-              'Submit'
+              'Send'
             ) : (
-              'Submit'
+              'Send'
             )}
           </button>
           {/* SVG Button for Mobile */}

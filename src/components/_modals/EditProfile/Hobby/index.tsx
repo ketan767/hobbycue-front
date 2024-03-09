@@ -762,7 +762,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                               )}
                             >
                               {levels?.map((item, idx) => (
-                                <MenuItem key={idx} value={idx + 1}>
+                                <MenuItem key={idx} value={idx + 1} style={{padding:"8px 0px"}}>
                                   <div className={styles.levelwithtext}>
                                     <Image
                                       alt={`hobby${idx + 1}`}

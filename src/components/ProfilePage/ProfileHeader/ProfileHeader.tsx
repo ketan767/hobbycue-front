@@ -54,9 +54,8 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
     setOpen(!open)
   }
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
-
-  const location = typeof window !== 'undefined' ? window.location.href : '';
-  
+  const { isLoggedIn } = useSelector((state: RootState) => state.user)
+  const location = typeof window !== 'undefined' ? window.location.href : ''
 
   const showFeatureUnderDevelopment = () => {
     setSnackbar({
@@ -195,6 +194,24 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
     if (res?.data.success) {
       window.location.reload()
       // dispatch(closeModal())
+    }
+  }
+  const handleRepost = () => {
+    if (isLoggedIn) {
+      dispatch(
+        openModal({
+          type: 'create-post',
+          closable: true,
+          propData: { defaultValue: location },
+        }),
+      )
+    } else {
+      dispatch(
+        openModal({
+          type: 'auth',
+          closable: true,
+        }),
+      )
     }
   }
 
@@ -411,17 +428,7 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
             <div className={styles['action-btn-wrapper']}>
               {/* Send Email Button  */}
               {/* <Link href={`mailto:${data.public_email || data.email}`}> */}
-              <div
-                onClick={() => {
-                  dispatch(
-                    openModal({
-                      type: 'create-post',
-                      closable: true,
-                      propData: { defaultValue: location },
-                    }),
-                  )
-                }}
-              >
+              <div onClick={handleRepost}>
                 <Tooltip title="Repost">
                   <div
                     onClick={(e) => console.log(e)}

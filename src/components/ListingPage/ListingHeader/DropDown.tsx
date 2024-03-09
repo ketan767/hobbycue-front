@@ -57,7 +57,11 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType }) => {
           event.target.nodeName == supportRef.current?.nodeName &&
           event.target.textContent === supportRef.current?.textContent
         ) {
-          dispatch(openModal({ type: 'ListingSupportModal', closable: true }))
+          if (isLoggedIn) {
+            dispatch(openModal({ type: 'ListingSupportModal', closable: true }))
+          } else {
+            dispatch(openModal({ type: 'auth', closable: true }))
+          }
         }
 
         if (
@@ -85,14 +89,16 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType }) => {
           {userType === 'anonymous' && (
             <>
               <li ref={Claimref}>Claim</li>
-              <li ref={Reviewref}>Review</li>
+              <li onClick={showFeatureUnderDevelopment}>Review</li>{' '}
+              {/* Modified line */}
               <li ref={reportRef}>Report</li>
             </>
           )}
           {userType === 'page' && (
             <>
               <li ref={Claimref}>Claim</li>
-              <li>Review</li>
+              <li onClick={showFeatureUnderDevelopment}>Review</li>{' '}
+              {/* Modified line */}
               <li ref={reportRef}>Report</li>
             </>
           )}

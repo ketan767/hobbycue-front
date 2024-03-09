@@ -243,11 +243,37 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
 
     if (
       from.getMonth() === to.getMonth() &&
-      from.getFullYear() === to.getFullYear()
+      from.getFullYear() === to.getFullYear() &&
+      from.getDate() !== to.getDate()
     ) {
       return `${fromDay} - ${toDay} ${fromMonthYear}`
+    } else if (
+      from.getMonth() === to.getMonth() &&
+      from.getFullYear() === to.getFullYear() &&
+      from.getDate() === to.getDate()
+    ) {
+      return `${fromDay} ${fromMonthYear}`
     } else {
       return `${fromDay} ${fromMonthYear} - ${toDay} ${toMonthYear}`
+    }
+  }
+  const location = typeof window !== 'undefined' ? window.location.href : ''
+  const handleRepost = () => {
+    if (isLoggedIn) {
+      dispatch(
+        openModal({
+          type: 'create-post',
+          closable: true,
+          propData: { defaultValue: location },
+        }),
+      )
+    } else {
+      dispatch(
+        openModal({
+          type: 'auth',
+          closable: true,
+        }),
+      )
     }
   }
 
@@ -290,20 +316,17 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
             )}
           </div>
           <div className={styles['name-container']}>
-          <div
-              style={{display:"flex",gap:"8px", alignItems:"center"}}
-              >
-            <h1 className={styles['name']}>
-              {data?.title}{' '}
-              
-            </h1>{listingLayoutMode === 'edit' && (
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <h1 className={styles['name']}>{data?.title} </h1>
+              {listingLayoutMode === 'edit' && (
                 <Image
                   className={styles['edit-icon']}
                   src={EditIcon}
                   alt="edit"
                   onClick={openTitleEditModal}
                 />
-              )}</div>
+              )}
+            </div>
             {data?.tagline ? (
               <p className={styles['tagline']}>{data?.tagline}</p>
             ) : (
@@ -422,7 +445,7 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
           {/* Action Buttons */}
           <div className={styles['action-btn-wrapper']}>
             {/* Send Email Button  */}
-            <Link href={`mailto:${data.public_email || data.email}`}>
+            <div onClick={handleRepost}>
               <CustomTooltip title="Repost">
                 <div
                   onClick={(e) => console.log(e)}
@@ -431,7 +454,7 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
                   <RepostIcon />
                 </div>
               </CustomTooltip>
-            </Link>
+            </div>
 
             {/* Bookmark Button */}
             <CustomTooltip title="Bookmark">
