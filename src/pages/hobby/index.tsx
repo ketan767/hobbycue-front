@@ -11,6 +11,7 @@ import AddIcon from '@/assets/svg/add-circle.svg'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import { updateIsAuthenticated } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
+import { useRouter } from 'next/router'
 
 type Props = {
   data: any
@@ -41,7 +42,7 @@ type HobbyType = {
 }
 
 const ALlHobbies: React.FC<Props> = ({ data }) => {
-  console.warn({data})
+  console.warn({ data })
   const [categories, setCategories] = useState([])
   const [subCategories, setSubCategories] = useState([])
   const [hobbyData, setHobbyData] = useState<HobbyType[]>([])
@@ -69,29 +70,33 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
     if (e.target.value === '') {
       setFilterData((prev) => ({ ...prev, hobby: '' }))
     }
-    if (isEmptyField(e.target.value)) return setHobbyDropdownList([]);
+    if (isEmptyField(e.target.value)) return setHobbyDropdownList([])
 
-    let filteredHobbies = data.hobbies;
-    const normalizedSearchTerm = e.target.value.toLowerCase();
+    let filteredHobbies = data.hobbies
+    const normalizedSearchTerm = e.target.value.toLowerCase()
 
     if (filterData.category) {
-      filteredHobbies = filteredHobbies.filter((hobby:any) => hobby?.category?._id === filterData.category);
+      filteredHobbies = filteredHobbies.filter(
+        (hobby: any) => hobby?.category?._id === filterData.category,
+      )
     }
 
     if (filterData.subCategory) {
-      filteredHobbies = filteredHobbies.filter((hobby:any) => hobby?.sub_category?._id === filterData.subCategory);
+      filteredHobbies = filteredHobbies.filter(
+        (hobby: any) => hobby?.sub_category?._id === filterData.subCategory,
+      )
     }
     if (e.target.value) {
-      filteredHobbies = filteredHobbies.filter((hobby:any) =>
-      hobby.display.toLowerCase().includes(normalizedSearchTerm)
-      );
+      filteredHobbies = filteredHobbies.filter((hobby: any) =>
+        hobby.display.toLowerCase().includes(normalizedSearchTerm),
+      )
     }
 
-    filteredHobbies = filteredHobbies.sort((a:any, b:any) => {
-      const aIndex = a?.display?.toLowerCase()?.indexOf(normalizedSearchTerm);
-      const bIndex = b?.display?.toLowerCase()?.indexOf(normalizedSearchTerm);
-      return aIndex - bIndex;
-    });
+    filteredHobbies = filteredHobbies.sort((a: any, b: any) => {
+      const aIndex = a?.display?.toLowerCase()?.indexOf(normalizedSearchTerm)
+      const bIndex = b?.display?.toLowerCase()?.indexOf(normalizedSearchTerm)
+      return aIndex - bIndex
+    })
     // return filteredHobbies;
     setData((prev) => {
       return { ...prev, hobby: null }
@@ -148,6 +153,33 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
     setSubCategories(data.sub_categories)
     setFilterSubCategories(data.sub_categories)
     setHobbyData(data.hobbies)
+  }, [])
+
+  const router = useRouter()
+
+  useEffect(() => {
+    // Save scroll position when navigating away from the page
+    const handleRouteChange = () => {
+      sessionStorage.setItem('scrollPositionhobby', window.scrollY.toString())
+    }
+
+    // Restore scroll position when navigating back to the page
+    const handleScrollRestoration = () => {
+      const scrollPosition = sessionStorage.getItem('scrollPositionhobby')
+      if (scrollPosition) {
+        window.scrollTo(0, parseInt(scrollPosition, 10))
+        sessionStorage.removeItem('scrollPositionhobby')
+      }
+    }
+
+    router.events.on('routeChangeStart', handleRouteChange)
+
+    router.events.on('routeChangeComplete', handleScrollRestoration)
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange)
+      router.events.off('routeChangeComplete', handleScrollRestoration)
+    }
   }, [])
 
   useEffect(() => {

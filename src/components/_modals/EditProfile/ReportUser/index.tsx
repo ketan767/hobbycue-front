@@ -105,12 +105,18 @@ const UserReport: React.FC<Props> = ({
   }
 
   const handleSubmit = async () => {
-    console.log('report', data)
-    if (!data.description || data.description === '') {
+    console.log('next button clicked', data)
+    if (!data.description || data.description?.trim() === '') {
+      console.log('its empty')
+      if (textAreaRef.current) {
+        textAreaRef.current?.focus()
+      }
       setInputErrs((prev) => {
         return { ...prev, error: 'This field is required!' }
       })
+
       setIsError(true)
+
       return
     }
 
@@ -172,11 +178,12 @@ const UserReport: React.FC<Props> = ({
   }, [isError])
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+
   useEffect(() => {
-    textAreaRef?.current?.focus()
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        nextButtonRef.current?.click()
+        event.preventDefault()
+        handleSubmit()
       }
     }
 
@@ -185,7 +192,7 @@ const UserReport: React.FC<Props> = ({
     return () => {
       window.removeEventListener('keydown', handleKeyPress)
     }
-  }, [])
+  }, [data?.description])
 
   if (confirmationModal) {
     return (
@@ -197,6 +204,12 @@ const UserReport: React.FC<Props> = ({
       />
     )
   }
+
+  useEffect(() => {
+    if (textAreaRef.current) {
+      textAreaRef.current?.focus()
+    }
+  }, [textAreaRef.current])
 
   return (
     <>
@@ -218,7 +231,13 @@ const UserReport: React.FC<Props> = ({
         <hr className={styles['modal-hr']} />
         <section className={styles['body']}>
           <div className={styles['input-box']}>
-            <div className={styles['street-input-container']}>
+            <div
+              className={` ${
+                inputErrs.error
+                  ? styles['input-box-error']
+                  : styles['street-input-container']
+              }`}
+            >
               <textarea
                 className={styles['long-input-box']}
                 required
