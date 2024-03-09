@@ -186,7 +186,8 @@ const ListingReport: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        nextButtonRef.current?.click()
+        event.preventDefault()
+        handleSubmit()
       }
     }
 
@@ -195,7 +196,7 @@ const ListingReport: React.FC<Props> = ({
     return () => {
       window.removeEventListener('keydown', handleKeyPress)
     }
-  }, [])
+  }, [data?.description])
 
   if (confirmationModal) {
     return (
@@ -228,7 +229,13 @@ const ListingReport: React.FC<Props> = ({
         <hr className={styles['modal-hr']} />
         <section className={styles['body']}>
           <div className={styles['input-box']}>
-            <div className={styles['street-input-container']}>
+            <div
+              className={` ${
+                inputErrs.error
+                  ? styles['input-box-error']
+                  : styles['street-input-container']
+              }`}
+            >
               <textarea
                 ref={textareaRef}
                 className={styles['long-input-box']}

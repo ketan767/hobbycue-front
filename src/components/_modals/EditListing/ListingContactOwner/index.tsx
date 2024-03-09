@@ -219,7 +219,7 @@ const ListingContactToOwner: React.FC<Props> = ({
             <label className={styles['label-required']}>Subject</label>
             <input
               type="text"
-              placeholder="Subject"
+              placeholder="Purpose"
               autoComplete="name"
               required
               value={data.sub}
@@ -231,10 +231,11 @@ const ListingContactToOwner: React.FC<Props> = ({
           </div>
           <div className={styles['input-box']}>
             <div className={styles['street-input-container']}>
+              <label className={styles['label-required']}>Message</label>
               <textarea
                 className={styles['long-input-box']}
                 required
-                placeholder="Write your message here"
+                placeholder="Message to the page or admin"
                 name="message"
                 onChange={handleTextAreaChange}
                 value={data.message}
@@ -299,7 +300,7 @@ const ListingContactToOwner: React.FC<Props> = ({
               onClick={handleSubmit}
               disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
             >
-              Submit
+              Send
             </button>
           )}
         </footer>
