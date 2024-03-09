@@ -130,9 +130,13 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   const EditProfileLocation = () => {
-    window.location.href = '/settings/localization-payments'
+    if(user.activeProfile?.type==="user"){
     window.location.href = '/settings/localization-payments'
   }
+else{
+  dispatch(openModal({type:"listing-address-edit",closable:true}))
+}
+}
 
   const editHobbiesClick = () => {
     if (activeProfile?.type === 'user') {
