@@ -59,8 +59,10 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const { forgotPasswordEmail } = useSelector((state: any) => state.modal)
+
   const newPasswordRef = useRef<HTMLInputElement>(null)
   const otpRef = useRef<HTMLInputElement>(null)
+
 
   const [showValidations, setShowValidations] = useState(false)
   const [inputValidation, setInputValidation] = useState(
@@ -148,6 +150,10 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
     }
   }, [])
 
+  useEffect(()=>{
+    otpInputRef.current?.focus();
+  },[])
+
   let threeConditionsValid = 0
   if (inputValidation.uppercase) {
     threeConditionsValid += 1
@@ -182,6 +188,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
                 onChange={(e) => setOtp(e.target.value)}
                 className={styles.input}
                 placeholder="OTP"
+                ref={otpInputRef}
               />
               <p className={styles['helper-text']}>{errors.otp}</p>
             </div>

@@ -31,6 +31,7 @@ import PostVotes from '@/components/PostCard/Votes'
 import PostComments from '@/components/PostCard/Comments'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { setActivePost } from '@/redux/slices/post'
+import defaultUserImage from '@/assets/svg/default-images/default-user-icon.svg'
 
 type Props = {
   confirmationModal?: boolean
@@ -160,7 +161,7 @@ export const PostModal: React.FC<Props> = ({
         >
           <div className={`${styles['header-user']}`}>
             <Image
-              src={activePost?._author?.profile_image??""}
+              src={activePost?._author?.profile_image??defaultUserImage}
               alt=""
               width={40}
               height={40}

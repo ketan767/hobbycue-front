@@ -7,7 +7,7 @@
 }
 
 .textLight {
-  font-weight: 500;
+  font-weight: 400;
   font-size: 14px;
   line-height: 22px;
   color: #6d747a;
@@ -43,6 +43,7 @@
   line-height: 22px;
   color: #8064a2;
   margin-left: 6px;
+  font-weight: 500;
 }
 
 .line {
@@ -112,6 +113,7 @@
     padding: 16px 21px;
   }
   .textLight{
+    font-weight: 500;
     margin-bottom: 20px;
   }
   .email{

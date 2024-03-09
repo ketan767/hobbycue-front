@@ -17,6 +17,7 @@ import SaveModal from '../../SaveModal/saveModal'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import Image from 'next/image'
 import { sendMailtoOwner } from '@/services/auth.service'
 
@@ -82,6 +83,11 @@ const ListingContactToOwner: React.FC<Props> = ({
     to: listingPageData?.public_email,
   })
   const [isChanged, setIsChanged] = useState(false)
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
 
   useEffect(() => {
     setInitialData({
@@ -135,7 +141,20 @@ const ListingContactToOwner: React.FC<Props> = ({
 
     const { err, res } = await sendMailtoOwner(data)
     if (res?.data.success) {
+      setSnackbar({
+        display: true,
+        type: 'success',
+        message: 'Message sent successfully',
+      })
+      setSubmitBtnLoading(false);
       dispatch(closeModal())
+    }else if (err){
+      setSubmitBtnLoading(false);
+      setSnackbar({
+        display: true,
+        type: 'warning',
+        message: 'Message not sent',
+      })
     }
   }
 
@@ -305,6 +324,16 @@ const ListingContactToOwner: React.FC<Props> = ({
           )}
         </footer>
       </div>
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }
