@@ -171,11 +171,13 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
       <div className={styles['modal-wrapper']}>
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>Change Password</h4>
+          <h4 className={styles['heading']}>Set Password</h4>
         </header>
         <section className={styles['body']}>
           <div className={styles.inputField}>
-            {/* <label className={styles.label}>Current Password</label> */}
+            <label className={styles.label}>
+              OTP to set password has been sent to your registerd E-mail id.
+            </label>
             <div
               className={`${styles['input-box']} ${
                 errors.otp ? styles['input-error'] : ''
@@ -199,6 +201,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
               }`}
             >
               <TextField
+                className={styles['input-password']}
                 fullWidth
                 required
                 ref={newPasswordRef}
@@ -280,6 +283,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
               }`}
             >
               <TextField
+                className={styles['input-password']}
                 fullWidth
                 required
                 type={'password'}

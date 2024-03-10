@@ -418,7 +418,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           // setErrorOrmsg('Typed hobby not found!')
           // searchref.current?.focus()
           // setHobbyError(true)
-         setShowAddHobbyModal(true)
+          setShowAddHobbyModal(true)
           return
         }
       } else {
@@ -506,8 +506,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       dispatch(closeModal())
     }
   }
-
-
 
   const handleDeleteHobby = async (id: string) => {
     const { err, res } = await deleteUserHobby(id)
@@ -701,13 +699,13 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
               type: 'success',
             })
           }}
-          propData={{defaultValue:hobbyInputValue}}
+          propData={{ defaultValue: hobbyInputValue }}
         />
         <CustomSnackbar
           message={showSnackbar.message}
           type={showSnackbar.type}
           triggerOpen={showSnackbar.triggerOpen}
-          closeSnackbar={()=>{
+          closeSnackbar={() => {
             setShowSnackbar({
               message: '',
               triggerOpen: false,

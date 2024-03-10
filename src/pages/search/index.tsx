@@ -17,6 +17,11 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import User from '../../assets/svg/Search/User.svg'
+import hobbycue from '../../assets/svg/Search/hobbycue.svg'
+import People from '../../assets/svg/Search/People.svg'
+import Place from '../../assets/svg/Search/Place.svg'
+import Program from '../../assets/svg/Search/Program.svg'
+import Product from '../../assets/svg/Search/Product.svg'
 import styles from './styles.module.css'
 
 type Props = {
@@ -104,12 +109,12 @@ const MainContent: React.FC<SearchResultsProps> = ({
   )
 
   const initialViewMoreState = {
-    user:3,
-    people:3,
-    place:3,
-    event:3,
-    product:3,
-    hobby:3
+    user: 3,
+    people: 3,
+    place: 3,
+    event: 3,
+    product: 3,
+    hobby: 3,
   }
 
   const [HideUser, setHideUser] = useState(false)
@@ -118,7 +123,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const [HideEvent, setHideEvent] = useState(false)
   const [HideProduct, setHideProduct] = useState(false)
   const [HideHobbies, setHideHobbies] = useState(false)
-  const [viewMoreState,setViewMoreState] = useState(initialViewMoreState);
+  const [viewMoreState, setViewMoreState] = useState(initialViewMoreState)
 
   const router = useRouter()
 
@@ -247,46 +252,46 @@ const MainContent: React.FC<SearchResultsProps> = ({
     (peopleResults.length === 0 && showAllPeople) ||
     (placeResults.length === 0 && showAllPlace) ||
     (EventResults.length === 0 && showAllEvent) ||
-    (showAllProducts); // since no api integrations done for products
+    showAllProducts // since no api integrations done for products
 
-// console.log({HideEvent,HideHobbies,HidePeople,HidePlace,HideProduct,HideUser});
-useEffect(()=>{
-  if(showAll){
-    setViewMoreState(initialViewMoreState);
-  }
-// eslint-disable-next-line react-hooks/exhaustive-deps
-},[showAll]);
+  // console.log({HideEvent,HideHobbies,HidePeople,HidePlace,HideProduct,HideUser});
+  useEffect(() => {
+    if (showAll) {
+      setViewMoreState(initialViewMoreState)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showAll])
 
-useEffect(()=>{
-  if(showAllPeople){
-    setViewMoreState((prev)=>({...prev,people:peopleResults.length}))
-  }
-// eslint-disable-next-line react-hooks/exhaustive-deps
-},[showAllPeople]);
+  useEffect(() => {
+    if (showAllPeople) {
+      setViewMoreState((prev) => ({ ...prev, people: peopleResults.length }))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showAllPeople])
 
-useEffect(()=>{
-  if(showAllUsers){
-    setViewMoreState((prev)=>({...prev,user:searchResults.length}))
-  }
-// eslint-disable-next-line react-hooks/exhaustive-deps
-},[showAllUsers]);
-useEffect(()=>{
-  if(showAllPlace){
-    setViewMoreState((prev)=>({...prev,place:placeResults.length}))
-  }
-// eslint-disable-next-line react-hooks/exhaustive-deps
-},[showAllPlace]);
-useEffect(()=>{
-  if(showAllEvent){
-    setViewMoreState((prev)=>({...prev,event:EventResults.length}))
-  }
-// eslint-disable-next-line react-hooks/exhaustive-deps
-},[showAllEvent]);
-useEffect(()=>{
-  if(showAllProducts){
-    setViewMoreState((prev)=>({...prev,product:-1}))
-  }
-},[showAllProducts]);
+  useEffect(() => {
+    if (showAllUsers) {
+      setViewMoreState((prev) => ({ ...prev, user: searchResults.length }))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showAllUsers])
+  useEffect(() => {
+    if (showAllPlace) {
+      setViewMoreState((prev) => ({ ...prev, place: placeResults.length }))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showAllPlace])
+  useEffect(() => {
+    if (showAllEvent) {
+      setViewMoreState((prev) => ({ ...prev, event: EventResults.length }))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showAllEvent])
+  useEffect(() => {
+    if (showAllProducts) {
+      setViewMoreState((prev) => ({ ...prev, product: -1 }))
+    }
+  }, [showAllProducts])
 
   return (
     <main className={styles.searchResults}>
@@ -350,7 +355,8 @@ useEffect(()=>{
 
           {/* User  */}
 
-          {((showAllUsers && searchResults.length > 0) || (showAll && searchResults.length > 0)) && (
+          {((showAllUsers && searchResults.length > 0) ||
+            (showAll && searchResults.length > 0)) && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>User Profiles</div>
@@ -393,7 +399,12 @@ useEffect(()=>{
                     ? undefined
                     : (
                         <button
-                          onClick={()=>{setViewMoreState(prev=>({...prev,user:searchResults.length}))}}
+                          onClick={() => {
+                            setViewMoreState((prev) => ({
+                              ...prev,
+                              user: searchResults.length,
+                            }))
+                          }}
                           className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
                         >
                           View More
@@ -404,7 +415,8 @@ useEffect(()=>{
             </section>
           )}
           {/* People */}
-          {((showAllPeople && peopleResults.length > 0) || (showAll && peopleResults.length > 0)) && (
+          {((showAllPeople && peopleResults.length > 0) ||
+            (showAll && peopleResults.length > 0)) && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>People</div>
@@ -455,7 +467,12 @@ useEffect(()=>{
                     ? undefined
                     : (
                         <button
-                          onClick={()=>{setViewMoreState(prev=>({...prev,people:peopleResults.length}))}}
+                          onClick={() => {
+                            setViewMoreState((prev) => ({
+                              ...prev,
+                              people: peopleResults.length,
+                            }))
+                          }}
                           className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
                         >
                           View More
@@ -466,7 +483,8 @@ useEffect(()=>{
             </section>
           )}
           {/* Place  */}
-          {((showAllPlace && placeResults.length > 0) || (showAll && placeResults.length > 0)) && (
+          {((showAllPlace && placeResults.length > 0) ||
+            (showAll && placeResults.length > 0)) && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>Places</div>
@@ -510,7 +528,12 @@ useEffect(()=>{
                     ? undefined
                     : (
                         <button
-                          onClick={()=>{setViewMoreState((prev)=>({...prev,place:placeResults.length}))}}
+                          onClick={() => {
+                            setViewMoreState((prev) => ({
+                              ...prev,
+                              place: placeResults.length,
+                            }))
+                          }}
                           className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
                         >
                           View More
@@ -522,7 +545,8 @@ useEffect(()=>{
           )}
 
           {/* Event  */}
-          {((showAllEvent && EventResults.length > 0) || (showAll && EventResults.length > 0)) && (
+          {((showAllEvent && EventResults.length > 0) ||
+            (showAll && EventResults.length > 0)) && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>Programs</div>
@@ -566,7 +590,12 @@ useEffect(()=>{
                     ? undefined
                     : (
                         <button
-                          onClick={()=>{setViewMoreState(prev=>({...prev,event:EventResults.length}))}}
+                          onClick={() => {
+                            setViewMoreState((prev) => ({
+                              ...prev,
+                              event: EventResults.length,
+                            }))
+                          }}
                           className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
                         >
                           View More
@@ -618,23 +647,101 @@ const FilterDropdown: React.FC<Props> = () => {
 
   return (
     <Select className={styles.filterDropdown} value={activeFilter}>
-      <MenuItem onClick={() => handleFilterClick('all')} value="all">
-        All of HobbyCue
+      <MenuItem
+        className={styles.menuItem}
+        onClick={() => handleFilterClick('all')}
+        value="all"
+      >
+        <div className={styles.menuItemContent}>
+          <Image
+            width={22}
+            height={22}
+            className={styles['responsive-logo']}
+            src={hobbycue}
+            alt="hobbycue"
+          />
+          All of HobbyCue
+        </div>
       </MenuItem>
-      <MenuItem onClick={() => handleFilterClick('users')} value="users">
-        Users
+      <MenuItem
+        className={styles.menuItem}
+        onClick={() => handleFilterClick('users')}
+        value="users"
+      >
+        <div className={styles.menuItemContent}>
+          <Image
+            width={22}
+            height={22}
+            className={styles['responsive-logo']}
+            src={User}
+            alt="user"
+          />
+          Users
+        </div>
       </MenuItem>
-      <MenuItem onClick={() => handleFilterClick('people')} value="people">
-        People Pages
+      <MenuItem
+        className={styles.menuItem}
+        onClick={() => handleFilterClick('people')}
+        value="people"
+      >
+        <div className={styles.menuItemContent}>
+          <Image
+            width={22}
+            height={22}
+            className={styles['responsive-logo']}
+            src={People}
+            alt="people pages"
+          />
+          People Pages
+        </div>
       </MenuItem>
-      <MenuItem onClick={() => handleFilterClick('places')} value="places">
-        Places
+      <MenuItem
+        className={styles.menuItem}
+        onClick={() => handleFilterClick('places')}
+        value="places"
+      >
+        <div className={styles.menuItemContent}>
+          <Image
+            width={22}
+            height={22}
+            className={styles['responsive-logo']}
+            src={Place}
+            alt="Place pages"
+          />
+          Places
+        </div>
       </MenuItem>
-      <MenuItem onClick={() => handleFilterClick('events')} value="events">
-        Programs
+      <MenuItem
+        className={styles.menuItem}
+        onClick={() => handleFilterClick('events')}
+        value="events"
+      >
+        <div className={styles.menuItemContent}>
+          <Image
+            width={22}
+            height={22}
+            className={styles['responsive-logo']}
+            src={Program}
+            alt="program pages"
+          />
+          Programs
+        </div>
       </MenuItem>
-      <MenuItem onClick={() => handleFilterClick('products')} value="products">
-        Products
+      <MenuItem
+        className={styles.menuItem}
+        onClick={() => handleFilterClick('products')}
+        value="products"
+      >
+        <div className={styles.menuItemContent}>
+          <Image
+            width={22}
+            height={22}
+            className={styles['responsive-logo']}
+            src={Product}
+            alt="Product pages"
+          />
+          Products
+        </div>
       </MenuItem>
     </Select>
   )
@@ -686,7 +793,7 @@ const Search: React.FC<Props> = ({ data, children }) => {
       ) : (
         <SearchPageFilter />
       )}
-      <main>
+      <main className={styles['search-result']}>
         <MainContent
           searchResults={userSearchResults || []}
           peopleResults={PeopleSearch || []}
@@ -695,7 +802,7 @@ const Search: React.FC<Props> = ({ data, children }) => {
           hobbyResults={hobbySearchResults || []}
         />
       </main>
-      <aside>
+      <aside className={styles['aside-two']}>
         {' '}
         <ExploreSidebar />
       </aside>
