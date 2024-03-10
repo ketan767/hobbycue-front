@@ -27,6 +27,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import SaveModal from '../../SaveModal/saveModal'
 import DropdownMenu from '@/components/DropdownMenu'
 import { useRouter } from 'next/router'
+import AddHobby from '../../AddHobby/AddHobbyModal'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   onComplete?: () => void
@@ -37,6 +39,10 @@ type Props = {
   handleClose?: any
   isError?: boolean
   onStatusChange?: (isChanged: boolean) => void
+  showAddGenreModal?: boolean
+  showAddHobbyModal?: boolean
+  setShowAddGenreModal?: any
+  setShowAddHobbyModal?: any
 }
 const levels = ['Beginner', 'Intermediate', 'Advanced']
 // const levels = {
@@ -57,6 +63,13 @@ type DropdownListItem = {
   genre?: any
 }
 
+type Snackbar = {
+  triggerOpen: boolean
+  message: string
+  type: 'error' | 'success'
+  closeSnackbar?: () => void
+}
+
 const ProfileHobbyEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
@@ -65,6 +78,10 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   handleClosee,
   handleClose,
   onStatusChange,
+  showAddGenreModal,
+  showAddHobbyModal,
+  setShowAddGenreModal,
+  setShowAddHobbyModal,
 }) => {
   const dispatch = useDispatch()
   const [showModal, setShowModal] = useState(false)
@@ -82,7 +99,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     genre: null,
     level: 1,
   })
-
   const [showHobbyDowpdown, setShowHobbyDowpdown] = useState<boolean>(false)
   const [showGenreDowpdown, setShowGenreDowpdown] = useState<boolean>(false)
   const [isError, setIsError] = useState(false)
@@ -110,6 +126,11 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const [isChanged, setIsChanged] = useState(false)
   const [isChangeadded, setIsChangeadded] = useState(false)
   const router = useRouter()
+  const [showSnackbar, setShowSnackbar] = useState<Snackbar>({
+    triggerOpen: false,
+    message: '',
+    type: 'success' || 'error',
+  })
 
   const handleHobbyInputChange = async (e: any) => {
     setHobbyInputValue(e.target.value)
@@ -293,13 +314,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         selectedHobby = matchedHobby
         setErrorOrmsg('hobby added Successfully!')
       } else {
-        dispatch(
-          openModal({
-            type: 'add-hobby',
-            closable: true,
-            propData: { defaultValue: hobbyInputValue },
-          }),
-        )
+        setShowAddHobbyModal(true)
         return
       }
     } else {
@@ -367,32 +382,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     })
   }
 
-  const handleDeleteHobby = async (id: string) => {
-    const { err, res } = await deleteUserHobby(id)
-
-    if (err) {
-      return console.log(err)
-    }
-
-    const { err: error, res: response } = await getMyProfileDetail()
-
-    if (error) return console.log(error)
-    if (response?.data.success) {
-      dispatch(updateUser(response?.data.data.user))
-      setErrorOrmsg('hobby deleted Successfully!')
-    }
-  }
-
-  useEffect(() => {
-    if (!user._hobbies) {
-      // setNextDisabled(true)
-    } else if (user._hobbies.length === 0) {
-      // setNextDisabled(true)
-    } else {
-      setNextDisabled(false)
-    }
-  }, [user])
-
   const handleSubmit = async () => {
     setHobbyError(false)
     setErrorOrmsg(null)
@@ -429,13 +418,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           // setErrorOrmsg('Typed hobby not found!')
           // searchref.current?.focus()
           // setHobbyError(true)
-          dispatch(
-            openModal({
-              type: 'add-hobby',
-              closable: true,
-              propData: { defaultValue: hobbyInputValue }
-            }),
-          )
+         setShowAddHobbyModal(true)
           return
         }
       } else {
@@ -491,7 +474,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         }
 
         const { err: error, res: response } = await getMyProfileDetail()
-        if (error) return console.log(error);setAddHobbyBtnLoading(false);
+        if (error) return console.log(error)
+        setAddHobbyBtnLoading(false)
 
         if (response?.data.success) {
           if (onComplete !== undefined) {
@@ -522,6 +506,34 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       dispatch(closeModal())
     }
   }
+
+
+
+  const handleDeleteHobby = async (id: string) => {
+    const { err, res } = await deleteUserHobby(id)
+
+    if (err) {
+      return console.log(err)
+    }
+
+    const { err: error, res: response } = await getMyProfileDetail()
+
+    if (error) return console.log(error)
+    if (response?.data.success) {
+      dispatch(updateUser(response?.data.data.user))
+      setErrorOrmsg('hobby deleted Successfully!')
+    }
+  }
+
+  useEffect(() => {
+    if (!user._hobbies) {
+      // setNextDisabled(true)
+    } else if (user._hobbies.length === 0) {
+      // setNextDisabled(true)
+    } else {
+      setNextDisabled(false)
+    }
+  }, [user])
 
   useEffect(() => {
     setUserHobbies(user._hobbies)
@@ -654,11 +666,14 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     }
   }, [focusedGenreIndex])
 
-  const isMobile = useMediaQuery('(max-width:1100px)');
+  const isMobile = useMediaQuery('(max-width:1100px)')
 
-  const hobbyDropDownWrapperRef = useRef<HTMLDivElement>(null);
+  const hobbyDropDownWrapperRef = useRef<HTMLDivElement>(null)
   const handleOutsideClick = (event: MouseEvent) => {
-    if (hobbyDropDownWrapperRef.current && !hobbyDropDownWrapperRef.current.contains(event.target as Node)) {
+    if (
+      hobbyDropDownWrapperRef.current &&
+      !hobbyDropDownWrapperRef.current.contains(event.target as Node)
+    ) {
       setShowHobbyDowpdown(false)
     }
   }
@@ -670,7 +685,39 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     }
   }, [])
 
-  console.log({showHobbyDowpdown})
+  console.log({ showHobbyDowpdown })
+
+  if (showAddHobbyModal) {
+    return (
+      <>
+        <AddHobby
+          handleClose={() => {
+            setShowAddHobbyModal(false)
+          }}
+          handleSubmit={() => {
+            setShowSnackbar({
+              message: 'This feature is under development',
+              triggerOpen: true,
+              type: 'success',
+            })
+          }}
+          propData={{defaultValue:hobbyInputValue}}
+        />
+        <CustomSnackbar
+          message={showSnackbar.message}
+          type={showSnackbar.type}
+          triggerOpen={showSnackbar.triggerOpen}
+          closeSnackbar={()=>{
+            setShowSnackbar({
+              message: '',
+              triggerOpen: false,
+              type: 'success',
+            })
+          }}
+        />
+      </>
+    )
+  }
 
   if (confirmationModal) {
     return (
@@ -684,7 +731,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       />
     )
   }
-
 
   return (
     <>
@@ -762,7 +808,11 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                               )}
                             >
                               {levels?.map((item, idx) => (
-                                <MenuItem key={idx} value={idx + 1} style={{padding:"8px 0px"}}>
+                                <MenuItem
+                                  key={idx}
+                                  value={idx + 1}
+                                  style={{ padding: '8px 0px' }}
+                                >
                                   <div className={styles.levelwithtext}>
                                     <Image
                                       alt={`hobby${idx + 1}`}
@@ -809,9 +859,10 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                       <td className={styles.AddHobbyFields}>
                         {/* Hobby Input and Dropdown */}
                         <div>
-                          <div 
-                          ref={hobbyDropDownWrapperRef}
-                          className={styles['dropdown-wrapper']}>
+                          <div
+                            ref={hobbyDropDownWrapperRef}
+                            className={styles['dropdown-wrapper']}
+                          >
                             <div
                               className={`${styles['input-box']} ${
                                 HobbyError ? styles['input-box-error'] : ''
@@ -826,7 +877,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                                 onFocus={() => setShowHobbyDowpdown(true)}
                                 onBlur={() =>
                                   setTimeout(() => {
-                                    if(!isMobile)setShowHobbyDowpdown(false)
+                                    if (!isMobile) setShowHobbyDowpdown(false)
                                   }, 300)
                                 }
                                 ref={searchref}
@@ -873,7 +924,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                                 onFocus={() => setShowGenreDowpdown(true)}
                                 onBlur={() =>
                                   setTimeout(() => {
-                                   setShowGenreDowpdown(false)
+                                    setShowGenreDowpdown(false)
                                   }, 300)
                                 }
                                 onChange={handleGenreInputChange}

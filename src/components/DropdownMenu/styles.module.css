@@ -32,7 +32,6 @@
   left: auto;
   top: auto;
   min-width: 6rem;
-  border-radius: 4px;
   box-shadow: 0px 8px 12px 0px rgba(147, 156, 163, 0.12);
   box-shadow: 0px 0px 2px 0px rgba(147, 156, 163, 0.36);
   background: #fff;
@@ -60,7 +59,6 @@
   display: flex;
   flex-direction: column;
   align-items: normal;
-  padding: 4px;
 }
 .dropdown-option {
   display: flex;
@@ -76,7 +74,6 @@
 
 .selected-option {
   background-color: rgba(128, 100, 162, 0.25) !important;
-  border-radius: 4px;
 }
 .focused-option {
   background-color: rgba(206, 183, 236, 0.25);

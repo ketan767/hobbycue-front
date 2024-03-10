@@ -55,7 +55,7 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [showPassword, setShowPassword] = useState(false)
-  const [showCrmPassword, setShowCrmPassword] = useState(false)
+  // const [showCrmPassword, setShowCrmPassword] = useState(false)
   const [showcurrPassword, setShowcurrPassword] = useState(false)
   const [showValidations, setShowValidations] = useState(false)
   const [inputValidation, setInputValidation] = useState(
@@ -322,7 +322,7 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
             >
               <TextField
                 value={confirmPassword}
-                type={showCrmPassword ? 'text' : 'password'}
+                type={'password'}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm New Password"
                 inputRef={confirmPasswordRef}
@@ -331,19 +331,19 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
                     handleSubmit('confirmPassword')
                   }
                 }}
-                InputProps={{
-                  endAdornment: (
-                    <IconButton
-                      onClick={() => setShowCrmPassword(!showCrmPassword)}
-                    >
-                      {showCrmPassword ? (
-                        <VisibilityRoundedIcon />
-                      ) : (
-                        <VisibilityOffRoundedIcon />
-                      )}
-                    </IconButton>
-                  ),
-                }}
+                // InputProps={{
+                //   endAdornment: (
+                //     <IconButton
+                //       onClick={() => setShowCrmPassword(!showCrmPassword)}
+                //     >
+                //       {showCrmPassword ? (
+                //         <VisibilityRoundedIcon />
+                //       ) : (
+                //         <VisibilityOffRoundedIcon />
+                //       )}
+                //     </IconButton>
+                //   ),
+                // }}
               />
               <p className={styles['helper-text']}>{errors.confirmPassword}</p>
             </div>

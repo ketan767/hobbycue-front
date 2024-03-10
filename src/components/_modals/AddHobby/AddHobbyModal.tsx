@@ -1,13 +1,17 @@
-import React, { useEffect, useState } from 'react'
+
+import React, { useEffect, useState, useRef } from 'react'
 import { RootState } from '@/redux/store'
 import { useSelector, useDispatch } from 'react-redux'
+
 import styles from './AddHobbyModal.module.css'
 import FilledButton from '@/components/_buttons/FilledButton'
-import OutlinedButton from '@/components/_buttons/OutlinedButton'
-import { closeModal, openModal } from '@/redux/slices/modal'
 import CloseIcon from '@/assets/icons/CloseIcon'
+
+import { useDispatch } from 'react-redux'
+
 import { SnackbarState } from '../ModalManager'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+
 
 type Props = {
   handleClose?: any
@@ -17,6 +21,7 @@ type Props = {
 
 const AddHobby: React.FC<Props> = ({ handleClose, handleSubmit, propData }) => {
   const dispatch = useDispatch()
+
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -56,6 +61,7 @@ const AddHobby: React.FC<Props> = ({ handleClose, handleSubmit, propData }) => {
               Send Request
             </FilledButton>
           </div>
+
         </div>
       </div>
       {

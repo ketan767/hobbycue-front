@@ -55,7 +55,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
   const [otp, setOtp] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  // const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [confirmPassword, setConfirmPassword] = useState('')
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const { forgotPasswordEmail } = useSelector((state: any) => state.modal)
@@ -282,23 +282,23 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
               <TextField
                 fullWidth
                 required
-                type={showConfirmPassword ? 'text' : 'password'}
+                type={'password'}
                 value={confirmPassword}
                 placeholder="Confirm New Password"
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                InputProps={{
-                  endAdornment: (
-                    <IconButton
-                      onClick={() => setShowConfirmPassword(!showPassword)}
-                    >
-                      {showConfirmPassword ? (
-                        <VisibilityRoundedIcon />
-                      ) : (
-                        <VisibilityOffRoundedIcon />
-                      )}
-                    </IconButton>
-                  ),
-                }}
+                // InputProps={{
+                //   endAdornment: (
+                //     <IconButton
+                //       onClick={() => setShowConfirmPassword(!showPassword)}
+                //     >
+                //       {showConfirmPassword ? (
+                //         <VisibilityRoundedIcon />
+                //       ) : (
+                //         <VisibilityOffRoundedIcon />
+                //       )}
+                //     </IconButton>
+                //   ),
+                // }}
               />
 
               <p className={styles['helper-text']}>{errors.confirmPassword}</p>

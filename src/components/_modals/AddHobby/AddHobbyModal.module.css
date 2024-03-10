@@ -53,7 +53,12 @@
   font-size: 1rem !important;
 }
 .modal-close-icon {
-  display: none;
+  /* display: none; */
+position: absolute;
+right: -17px;
+top: 11.8px;
+border-radius: 100%;
+cursor: pointer;
 }
 .modal-close-icon:hover {
   background: #ddd;
