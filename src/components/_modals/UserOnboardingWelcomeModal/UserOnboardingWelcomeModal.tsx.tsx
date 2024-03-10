@@ -22,6 +22,7 @@ import {
 import { searchPages } from '@/services/listing.service'
 import { getAllHobbies } from '@/services/hobby.service'
 import { RootState } from '@/redux/store'
+import defaultUserImage from '@/assets/svg/default-images/default-user-icon.svg'
 
 type SearchInput = {
   search: InputData<string>
@@ -314,7 +315,7 @@ const UserOnboardingWelcomeModal = () => {
           className={styles['my-profile-wrapper']}
         >
           <div className={styles['my-profile']}>
-            {user.profile_image? <Image src={'/testPerson.png'} alt="" width={50} height={50} />:
+            {user.profile_image? <Image src={user?.user?.profile_image??defaultUserImage} alt="" width={50} height={50} />:
             <div style={{width:"50px",height:"50px"}} className='default-user-icon'></div>
             }
            
