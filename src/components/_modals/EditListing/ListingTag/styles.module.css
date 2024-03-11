@@ -19,7 +19,7 @@
   flex-wrap: wrap;
   row-gap: 12px;
   column-gap: 12px;
-  height: 80px;
+  height: 42px;
   overflow-y: auto;
 }
 .selected-value {
@@ -37,7 +37,7 @@
   font-weight: 500;
   line-height: normal;
   letter-spacing: -0.16px;
-  margin-bottom: 8px;
+  /* margin-bottom: 8px; */
 }
 
 .selected-value img {
@@ -55,6 +55,10 @@
   }
   .modal-wrapper .body {
     height: 100%;
+  }
+  .saveBtn{
+    margin-left: unset !important;
+    margin-right: auto;
   }
 }
 .modal-wrapper .header {
@@ -88,7 +92,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-4);
-  margin-bottom: var(--spacing-32);
+  /* margin-bottom: var(--spacing-32); */
+  margin-top: 16px;
 }
 .input-box label {
   /* font-family: 'Poppins'; */
@@ -198,10 +203,12 @@
 .select-container .select-input {
   position: relative;
   padding: 7.5px 12px;
-  border: 1px solid #bababa;
   display: flex;
   align-items: center;
   border-radius: 8px;
+  border-radius: 8px;
+border: 1px solid var(--Grey-Lighter, #EBEDF0);
+background: var(--Grey-Hover, #F8F9FA);
 }
 .select-container .select-input p {
   font-size: 14px;
@@ -284,6 +291,23 @@
   align-items: center;
   cursor: pointer;
   border-bottom: 1px solid #ebedf0;
+  position: relative;
+}
+
+.selected-bg{
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  bottom: 4px;
+  right: 10px;
+  border-radius: 4px;
+background: var(--Purple-3, #F7F5F9);
+}
+
+.select-container .single-option.chosen-option .tagText,
+.select-container .single-option.chosen-option .tagDesc,
+.chosen-option{
+  color: #8064a2;
 }
 
 .single-option:hover {

@@ -42,6 +42,7 @@ type UpdateProfilePayload = {
   _hobbies? : any
   social_media_urls?: any
   primary_address?: any;
+  onboarding_step?: string;
 }
 
 type ProfileAddressPayload = {
@@ -55,6 +56,7 @@ type ProfileAddressPayload = {
   latitude: string
   longitude: string
   set_as_primary?: boolean
+  onboarding_step?: string
 }
 
 interface ClaimListingPayload {

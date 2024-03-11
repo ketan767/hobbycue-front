@@ -587,3 +587,10 @@
     top: 30rem;
   }
 }
+
+@media screen and (min-width:1440px) {
+  .bigTextContainer{
+    padding: 60px calc(50vw - 720px + 101px) 0;
+    /* margin: 0 auto; */
+  }
+}
