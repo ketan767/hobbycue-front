@@ -74,7 +74,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     profile_url: '',
     gender: null,
     year_of_birth: '',
-    onboarding_step: "1",
+    onboarding_step: '1',
   })
 
   const [inputErrs, setInputErrs] = useState<{ [key: string]: string | null }>({
@@ -195,8 +195,12 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     }
 
     setSubmitBtnLoading(true)
-    const newOnboardingStep = Number(user?.onboarding_step)>0?user?.onboarding_step:"1"
-    const { err, res } = await updateMyProfileDetail({...data,onboarding_step:newOnboardingStep})
+    const newOnboardingStep =
+      Number(user?.onboarding_step) > 0 ? user?.onboarding_step : '1'
+    const { err, res } = await updateMyProfileDetail({
+      ...data,
+      onboarding_step: newOnboardingStep,
+    })
     if (err) {
       setSubmitBtnLoading(false)
       return console.log(err)
@@ -294,7 +298,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
       profile_url: user.profile_url || '',
       gender: user.gender || null,
       year_of_birth: user.year_of_birth || '',
-      onboarding_step: user.onboarding_step || '0'
+      onboarding_step: user.onboarding_step || '0',
     }
     setInitialData(initialProfileData)
     setData(initialProfileData)

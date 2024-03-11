@@ -53,7 +53,10 @@ const ProfileAboutEditModal: React.FC<Props> = ({
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
 
-  const [data, setData] = useState<ProfileAboutData>({ about: '', onboarding_step:'2' })
+  const [data, setData] = useState<ProfileAboutData>({
+    about: '',
+    onboarding_step: '2',
+  })
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backDisabled, SetBackDisabled] = useState(false)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
@@ -95,8 +98,12 @@ const ProfileAboutEditModal: React.FC<Props> = ({
       if (onBackBtnClick) onBackBtnClick()
       setBackBtnLoading(false)
     } else {
-    const newOnboardingStep = Number(user?.onboarding_step)>1?user?.onboarding_step:"2"
-      const { err, res } = await updateMyProfileDetail({...data,onboarding_step:newOnboardingStep})
+      const newOnboardingStep =
+        Number(user?.onboarding_step) > 1 ? user?.onboarding_step : '1'
+      const { err, res } = await updateMyProfileDetail({
+        ...data,
+        onboarding_step: newOnboardingStep,
+      })
 
       if (err) {
         return console.log(err)
@@ -127,8 +134,12 @@ const ProfileAboutEditModal: React.FC<Props> = ({
       if (data.about !== user.about) {
         const newData = { about: cleanString(data.about) }
         setSubmitBtnLoading(true)
-    const newOnboardingStep = Number(user?.onboarding_step)>1?user?.onboarding_step:"2"
-        const { err, res } = await updateMyProfileDetail({...newData,onboarding_step:newOnboardingStep})
+        const newOnboardingStep =
+          Number(user?.onboarding_step) > 1 ? user?.onboarding_step : '1'
+        const { err, res } = await updateMyProfileDetail({
+          ...newData,
+          onboarding_step: newOnboardingStep,
+        })
         if (err) {
           setSubmitBtnLoading(false)
           return console.log(err)
@@ -150,8 +161,12 @@ const ProfileAboutEditModal: React.FC<Props> = ({
     } else {
       const newData = { about: data.about.trim() }
       setSubmitBtnLoading(true)
-    const newOnboardingStep = Number(user?.onboarding_step)>1?user?.onboarding_step:"2"
-      const { err, res } = await updateMyProfileDetail({...newData,onboarding_step:newOnboardingStep})
+      const newOnboardingStep =
+        Number(user?.onboarding_step) > 1 ? user?.onboarding_step : '1'
+      const { err, res } = await updateMyProfileDetail({
+        ...newData,
+        onboarding_step: newOnboardingStep,
+      })
       if (err) {
         setSubmitBtnLoading(false)
         return console.log(err)
@@ -170,7 +185,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
     }
   }
   useEffect(() => {
-    setData(prev=>({
+    setData((prev) => ({
       ...prev,
       about: user.about,
     }))
