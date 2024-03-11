@@ -113,7 +113,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
             </div>
           )} */}
 
-          <section className={styles['posts-container']}>
+          <section className={styles['links-container']}>
             {loadingPosts ? (
               <PostCardSkeletonLoading />
             ) : (

@@ -38,6 +38,8 @@ const HobbyNavigationLinks: React.FC<Props> = ({ activeTab }) => {
             key={tab}
             href={
               tab === 'home' ||
+              tab === 'posts' ||
+              tab === 'links' ||
               tab === 'pages' ||
               tab === 'store' ||
               tab === 'blogs'

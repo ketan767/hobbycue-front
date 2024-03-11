@@ -160,7 +160,7 @@ const ListingSupportModal: React.FC<Props> = ({
       setSnackbar({
         display: true,
         type: 'success',
-        message: 'Support sent',
+        message: 'Support ticket rasied',
       })
       setSubmitBtnLoading(false)
       setTimeout(() => {
