@@ -196,7 +196,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
 
     setSubmitBtnLoading(true)
     const newOnboardingStep =
-      Number(user?.onboarding_step) > 0 ? user?.onboarding_step : '1'
+      Number(user?.onboarding_step) > 0 ? user?.onboarding_step : '0'
     const { err, res } = await updateMyProfileDetail({
       ...data,
       onboarding_step: newOnboardingStep,
