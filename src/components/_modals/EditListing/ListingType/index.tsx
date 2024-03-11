@@ -107,18 +107,18 @@ const ListingTypeEditModal: React.FC<Props> = ({
       name: 'Teacher',
       description: 'Trainer, Instructor - usually for an Art',
     },
-    {
-      name: 'Trainer',
-      description: '',
-    },
+    // {
+    //   name: 'Trainer',
+    //   description: '',
+    // },
     {
       name: 'Coach',
       description: 'Trainer, Instructor - usually for a Sport',
     },
-    {
-      name: 'Instructor',
-      description: '',
-    },
+    // {
+    //   name: 'Instructor',
+    //   description: '',
+    // },
     {
       name: 'Academia',
       description: 'Expert, Researcher',
@@ -139,26 +139,26 @@ const ListingTypeEditModal: React.FC<Props> = ({
       name: 'Ensemble',
       description: 'A group that performs together',
     },
-    {
-      name: 'Company',
-      description: '',
-    },
+    // {
+    //   name: 'Company',
+    //   description: '',
+    // },
     {
       name: 'Business',
       description: 'Company or Organization',
     },
-    {
-      name: 'Society',
-      description: '',
-    },
+    // {
+    //   name: 'Society',
+    //   description: '',
+    // },
     {
       name: 'Association',
       description: 'Club, Society, Trust, Sabha or other Organization',
     },
-    {
-      name: 'Organization',
-      description: 'Sabha',
-    },
+    // {
+    //   name: 'Organization',
+    //   description: 'Sabha',
+    // },
   ]
 
   const placePageTypeList: ProgramPageType = [
@@ -166,10 +166,10 @@ const ListingTypeEditModal: React.FC<Props> = ({
       name: 'Shop',
       description: 'Buy or Rent Items or Services',
     },
-    {
-      name: 'Gallery',
-      description: 'View Exhibits',
-    },
+    // {
+    //   name: 'Gallery',
+    //   description: 'View Exhibits',
+    // },
     {
       name: 'School',
       description: 'Institute or Academy',
@@ -190,10 +190,10 @@ const ListingTypeEditModal: React.FC<Props> = ({
       name: 'Play Area',
       description: 'Court, Field, or Stadium for Sports',
     },
-    {
-      name: 'Campus',
-      description: '',
-    },
+    // {
+    //   name: 'Campus',
+    //   description: '',
+    // },
     {
       name: 'Apartment',
       description: 'Flat or Condo with shared amenities',
@@ -213,10 +213,10 @@ const ListingTypeEditModal: React.FC<Props> = ({
       name: 'Performance',
       description: 'Live Show',
     },
-    {
-      name: 'Competition',
-      description: 'Contests to Rank and/or give Prizes',
-    },
+    // {
+    //   name: 'Competition',
+    //   description: 'Contests to Rank and/or give Prizes',
+    // },
     {
       name: 'Event',
       description: 'Other types of Events',
@@ -232,26 +232,26 @@ const ListingTypeEditModal: React.FC<Props> = ({
       name: 'Item Sale',
       description: 'Shippable product',
     },
-    {
-      name: 'Item Rental',
-      description: 'Equipment on rent',
-    },
-    {
-      name: 'Space Rental',
-      description: 'Book a play court or studio',
-    },
-    {
-      name: 'Consult / Service',
-      description: 'Consultation or service appointment',
-    },
-    {
-      name: 'Live Classes',
-      description: 'Recurring classes registration',
-    },
-    {
-      name: 'Online Access',
-      description: 'To view or download digital content',
-    },
+    // {
+    //   name: 'Item Rental',
+    //   description: 'Equipment on rent',
+    // },
+    // {
+    //   name: 'Space Rental',
+    //   description: 'Book a play court or studio',
+    // },
+    // {
+    //   name: 'Consult / Service',
+    //   description: 'Consultation or service appointment',
+    // },
+    // {
+    //   name: 'Live Classes',
+    //   description: 'Recurring classes registration',
+    // },
+    // {
+    //   name: 'Online Access',
+    //   description: 'To view or download digital content',
+    // },
     {
       name: 'Event Ticket',
       description: 'Scheduled programs',

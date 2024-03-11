@@ -1,8 +1,8 @@
 import React from 'react'
 
 type Props = {
-  className: any
-  onClick: any
+  className?: any
+  onClick?: any
 }
 
 const CloseIcon: React.FC<Props> = (props) => {

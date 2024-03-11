@@ -196,15 +196,6 @@ const ListingAddressEditModal: React.FC<Props> = ({
         })
       }
     }
-    if (isEmptyField(data.city.value) || !data.city.value) {
-      cityRef.current?.focus()
-      return setData((prev) => {
-        return {
-          ...prev,
-          city: { ...prev.city, error: 'This field is required!' },
-        }
-      })
-    }
     if (listingModalData.type === listingTypes.PLACE) {
       if (isEmptyField(data.pin_code.value) || !data.pin_code.value) {
         pincodeRef.current?.focus()
@@ -216,9 +207,19 @@ const ListingAddressEditModal: React.FC<Props> = ({
         })
       }
     }
+    if(isEmptyField(data.city.value) || !data.city.value || isEmptyField(data.state.value) || !data.state.value || isEmptyField(data.country.value) || !data.country.value){
+    if (isEmptyField(data.city.value) || !data.city.value) {
+      cityRef.current?.focus()
+      setData((prev) => {
+        return {
+          ...prev,
+          city: { ...prev.city, error: 'This field is required!' },
+        }
+      })
+    }
     if (isEmptyField(data.state.value) || !data.state.value) {
       stateRef.current?.focus()
-      return setData((prev) => {
+      setData((prev) => {
         return {
           ...prev,
           state: { ...prev.state, error: 'This field is required!' },
@@ -227,14 +228,15 @@ const ListingAddressEditModal: React.FC<Props> = ({
     }
     if (isEmptyField(data.country.value) || !data.country.value) {
       countryRef.current?.focus()
-      return setData((prev) => {
+      setData((prev) => {
         return {
           ...prev,
           country: { ...prev.country, error: 'This field is required!' },
         }
       })
     }
-
+    return;
+   }
     const jsonData = {
       street: data.street.value,
       society: data.society.value,
@@ -300,6 +302,21 @@ const ListingAddressEditModal: React.FC<Props> = ({
     streetRef.current?.focus()
     updateAddress()
   }, [user])
+
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
+      if (streetRef.current && !streetRef.current.contains(event.target)) {
+        setShowDropdown(false)
+      }
+    }
+    if (ShowDropdown) {
+      window.addEventListener('click', handleClickOutside)
+    }
+
+    return () => {
+      window.removeEventListener('click', handleClickOutside)
+    }
+  }, [ShowDropdown])
 
   const getLocation = () => {
     //Get latitude and longitude;
@@ -456,16 +473,37 @@ const ListingAddressEditModal: React.FC<Props> = ({
     const { addressObj } = data
     setData((prev) => ({
       ...prev,
-      pin_code: { value: addressObj.postal_code ?? '', error: null },
-      country: { value: addressObj.country ?? '', error: null },
-      city: { value: addressObj.locality ?? '', error: null },
+      pin_code: {
+        ...prev.pin_code,
+        value: addressObj.postal_code ?? '',
+        error: null,
+      },
+      country: {
+        ...prev.country,
+        value: addressObj.country ?? '',
+        error: null,
+      },
+      city: { ...prev.city, value: addressObj.locality ?? '', error: null },
       state: {
+        ...prev.state,
         value: addressObj.administrative_area_level_1 ?? '',
         error: null,
       },
-      society: { value: addressObj.premise ?? '', error: null },
-      street: { value: addressObj.street_number ?? '', error: null },
-      locality: { value: addressObj.sublocality_level_1 ?? '', error: null },
+      society: {
+        ...prev.society,
+        value: addressObj.premise ?? '',
+        error: null,
+      },
+      street: {
+        ...prev.street,
+        value: addressObj.street_number ?? '',
+        error: null,
+      },
+      locality: {
+        ...prev.locality,
+        value: addressObj.sublocality_level_1 ?? '',
+        error: null,
+      },
     }))
   }
 
@@ -512,7 +550,6 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   required={listingModalData.type === listingTypes.PLACE}
                   onChange={handleInputChange}
                   onFocus={() => setShowDropdown(true)}
-                  onBlur={() => setShowDropdown(false)}
                   ref={streetRef}
                 />
                 <Image
@@ -520,7 +557,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   alt="location"
                   className={styles.locationImg}
                   onClick={() => {
-                    getLocation
+                    getLocation()
                     streetRef?.current?.focus()
                   }}
                 />

@@ -20,6 +20,7 @@ import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import Image from 'next/image'
 import { ReportListing } from '@/services/listing.service'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   onComplete?: () => void
@@ -80,6 +81,11 @@ const ListingReport: React.FC<Props> = ({
     reported_user_id: listingPageData._id,
   })
   const [isChanged, setIsChanged] = useState(false)
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
 
   useEffect(() => {
     setInitialData({
@@ -107,7 +113,10 @@ const ListingReport: React.FC<Props> = ({
 
   const handleSubmit = async () => {
     console.log('report', data)
-    if (!data.description || data.description === '') {
+    if (!data.description || data.description?.trim() === '') {
+      if (textareaRef.current) {
+        textareaRef.current?.focus()
+      }
       setInputErrs((prev) => {
         return { ...prev, error: 'This field is required!' }
       })
@@ -117,22 +126,24 @@ const ListingReport: React.FC<Props> = ({
 
     setSubmitBtnLoading(true)
     const { err, res } = await ReportListing(data)
-
-    if (err) {
+    if (res?.data.success) {
+      setSnackbar({
+        display: true,
+        type: 'success',
+        message: 'Report sent',
+      })
       setSubmitBtnLoading(false)
-      return console.log(err)
-    }
-
-    const { err: error, res: response } = await getMyProfileDetail()
-    setSubmitBtnLoading(false)
-
-    if (error) return console.log(error)
-    if (response?.data.success) {
-      dispatch(updateUser(response.data.data.user))
-      if (onComplete) onComplete()
-      else {
+      setTimeout(() => {
         dispatch(closeModal())
-      }
+      }, 1500)
+    } else if (err) {
+      setSubmitBtnLoading(false)
+      setSnackbar({
+        display: true,
+        type: 'warning',
+        message: 'Something went wrong',
+      })
+      console.log(err)
     }
   }
 
@@ -185,8 +196,9 @@ const ListingReport: React.FC<Props> = ({
 
   useEffect(() => {
     const handleKeyPress = (event: any) => {
-      if (event.key === 'Enter') {
-        nextButtonRef.current?.click()
+      if (event.key === 'Enter' && !textareaRef.current?.matches(':focus')) {
+        event.preventDefault()
+        handleSubmit()
       }
     }
 
@@ -195,7 +207,7 @@ const ListingReport: React.FC<Props> = ({
     return () => {
       window.removeEventListener('keydown', handleKeyPress)
     }
-  }, [])
+  }, [data?.description])
 
   if (confirmationModal) {
     return (
@@ -228,7 +240,13 @@ const ListingReport: React.FC<Props> = ({
         <hr className={styles['modal-hr']} />
         <section className={styles['body']}>
           <div className={styles['input-box']}>
-            <div className={styles['street-input-container']}>
+            <div
+              className={` ${
+                inputErrs.error
+                  ? styles['input-box-error']
+                  : styles['street-input-container']
+              }`}
+            >
               <textarea
                 ref={textareaRef}
                 className={styles['long-input-box']}
@@ -239,8 +257,10 @@ const ListingReport: React.FC<Props> = ({
                 value={data.description}
               />
             </div>
-            {inputErrs.error && (
+            {inputErrs.error ? (
               <p className={styles['error-msg']}>{inputErrs.error}</p>
+            ) : (
+              <p className={styles['error-msg']}>&nbsp;</p> // Render an empty <p> element
             )}
           </div>
         </section>
@@ -303,6 +323,16 @@ const ListingReport: React.FC<Props> = ({
           )}
         </footer>
       </div>
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

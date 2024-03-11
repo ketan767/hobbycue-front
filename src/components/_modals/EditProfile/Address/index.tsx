@@ -4,6 +4,7 @@ import { Button, CircularProgress } from '@mui/material'
 import {
   addUserAddress,
   getMyProfileDetail,
+  updateMyProfileDetail,
   updateUserAddress,
 } from '@/services/user.service'
 import { checkFullname, isEmpty, isEmptyField } from '@/utils'
@@ -108,6 +109,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     latitude: '',
     longitude: '',
     set_as_primary: false,
+    onboarding_step:"4"
   })
 
   const [inputErrs, setInputErrs] = useState<{ [key: string]: string | null }>({
@@ -144,14 +146,11 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   }
 
   const Backsave = async () => {
+    console.warn("running back")
     setBackBtnLoading(true)
     if (
       !data.city ||
-      data.city === '' ||
-      !data.state ||
-      data.state === '' ||
-      !data.country ||
-      data.country === ''
+      data.city === '' 
     ) {
       if (onBackBtnClick) onBackBtnClick()
       setBackBtnLoading(false)
@@ -167,6 +166,9 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           if (!res.data.success) {
             return alert('Something went wrong!')
           }
+          
+          const newOnboardingStep = Number(user?.onboarding_step)>3?user?.onboarding_step:"4"
+          const { err:updtProfileErr, res:updtProfileRes } = await updateMyProfileDetail({onboarding_step:newOnboardingStep})
           const { err: error, res: response } = await getMyProfileDetail()
 
           if (error) return console.log(error)
@@ -189,6 +191,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           if (!res.data.success) {
             return alert('Something went wrong!')
           }
+          const newOnboardingStep = Number(user?.onboarding_step)>3?user?.onboarding_step:"4"
+          const { err:updtProfileErr, res:updtProfileRes } = await updateMyProfileDetail({onboarding_step:newOnboardingStep})
           const { err: error, res: response } = await getMyProfileDetail()
 
           if (error) return console.log(error)
@@ -213,7 +217,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
             if (!res.data.success) {
               return alert('Something went wrong!')
             }
-
+            const newOnboardingStep = Number(user?.onboarding_step)>3?user?.onboarding_step:"4"
+            const { err:updtProfileErr, res:updtProfileRes } = await updateMyProfileDetail({onboarding_step:newOnboardingStep})
             const { err: error, res: response } = await getMyProfileDetail()
 
             if (error) return console.log(error)
@@ -236,7 +241,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               if (!res.data.success) {
                 return alert('Something went wrong!')
               }
-
+              const newOnboardingStep = Number(user?.onboarding_step)>3?user?.onboarding_step:"4"
+              const { err:updtProfileErr, res:updtProfileRes } = await updateMyProfileDetail({onboarding_step:newOnboardingStep})
               const { err: error, res: response } = await getMyProfileDetail()
 
               if (error) return console.log(error)
@@ -257,6 +263,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           if (!res.data.success) {
             return alert('Something went wrong!')
           }
+          const newOnboardingStep = Number(user?.onboarding_step)>3?user?.onboarding_step:"4"
+          const { err:updtProfileErr, res:updtProfileRes } = await updateMyProfileDetail({onboarding_step:newOnboardingStep})
           const { err: error, res: response } = await getMyProfileDetail()
 
           if (error) return console.log(error)
@@ -368,6 +376,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           setSubmitBtnLoading(false)
           return alert('Something went wrong!')
         }
+        const newOnboardingStep = Number(user?.onboarding_step)>3?user?.onboarding_step:"4"
+        const { err:updtProfileErr, res:updtProfileRes } = await updateMyProfileDetail({onboarding_step:newOnboardingStep})
         const { err: error, res: response } = await getMyProfileDetail()
 
         setSubmitBtnLoading(false)
@@ -395,6 +405,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           setSubmitBtnLoading(false)
           return alert('Something went wrong!')
         }
+        const newOnboardingStep = Number(user?.onboarding_step)>3?user?.onboarding_step:"4"
+        const { err:updtProfileErr, res:updtProfileRes } = await updateMyProfileDetail({onboarding_step:newOnboardingStep})
         const { err: error, res: response } = await getMyProfileDetail()
 
         setSubmitBtnLoading(false)
@@ -424,7 +436,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
             setSubmitBtnLoading(false)
             return alert('Something went wrong!')
           }
-
+          const newOnboardingStep = Number(user?.onboarding_step)>3?user?.onboarding_step:"4"
+          const { err:updtProfileErr, res:updtProfileRes } = await updateMyProfileDetail({onboarding_step:newOnboardingStep})
           const { err: error, res: response } = await getMyProfileDetail()
 
           setSubmitBtnLoading(false)
@@ -452,7 +465,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               setSubmitBtnLoading(false)
               return alert('Something went wrong!')
             }
-
+            const newOnboardingStep = Number(user?.onboarding_step)>3?user?.onboarding_step:"4"
+            const { err:updtProfileErr, res:updtProfileRes } = await updateMyProfileDetail({onboarding_step:newOnboardingStep})
             const { err: error, res: response } = await getMyProfileDetail()
 
             setSubmitBtnLoading(false)
@@ -478,6 +492,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           setSubmitBtnLoading(false)
           return alert('Something went wrong!')
         }
+        const newOnboardingStep = Number(user?.onboarding_step)>3?user?.onboarding_step:"4"
+        const { err:updtProfileErr, res:updtProfileRes } = await updateMyProfileDetail({onboarding_step:newOnboardingStep})
         const { err: error, res: response } = await getMyProfileDetail()
 
         setSubmitBtnLoading(false)
@@ -562,6 +578,25 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       }
     }
   }, [dataLoaded, data])
+
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
+      // Check if the click target is outside of the dropdown container
+      if (inputRef.current && !inputRef.current.contains(event.target)) {
+        setShowDropdown(false)
+      }
+    }
+
+    // Add event listener when the dropdown is shown
+    if (ShowDropdown) {
+      window.addEventListener('click', handleClickOutside)
+    }
+
+    // Remove event listener when the component unmounts or when the dropdown is hidden
+    return () => {
+      window.removeEventListener('click', handleClickOutside)
+    }
+  }, [ShowDropdown])
 
   const handleGeocode = (lat: any, long: any) => {
     setShowDropdown(true)
@@ -755,7 +790,6 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   name="street"
                   ref={inputRef}
                   onFocus={() => setShowDropdown(true)}
-                  onBlur={() => setShowDropdown(false)}
                   onChange={handleInputChange}
                 />
                 <Image
@@ -763,7 +797,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   alt="location"
                   className={styles.locationImg}
                   onClick={() => {
-                    getLocation
+                    getLocation()
                     inputRef?.current?.focus()
                   }}
                 />

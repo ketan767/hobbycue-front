@@ -1,5 +1,5 @@
-'use client';
-import React, { useState } from 'react'
+'use client'
+import React, { useEffect, useState } from 'react'
 
 import { GetServerSideProps } from 'next'
 import { getAllUserDetail } from '@/services/user.service'
@@ -21,6 +21,7 @@ import ProfileAddressSide from '@/components/ProfilePage/ProfileAddressSide'
 import ProfileContactSide from '@/components/ProfilePage/ProfileContactSides'
 import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/ProfileSocialMedia'
 import { updateProfileMenuExpandAll } from '@/redux/slices/site'
+import { useRouter } from 'next/router'
 
 interface Props {
   data: ProfilePageData
@@ -35,6 +36,33 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
     setExpandAll(value)
     dispatch(updateProfileMenuExpandAll(value))
   }
+
+  const router = useRouter()
+  useEffect(() => {
+    // Save scroll position when navigating away from the page
+    const handleRouteChange = () => {
+      sessionStorage.setItem('scrollPositionProfile', window.scrollY.toString())
+    }
+
+    // Restore scroll position when navigating back to the page
+    const handleScrollRestoration = () => {
+      const scrollPosition = sessionStorage.getItem('scrollPositionProfile')
+      if (scrollPosition) {
+        window.scrollTo(0, parseInt(scrollPosition, 10))
+        sessionStorage.removeItem('scrollPositionProfile')
+      }
+    }
+
+    router.events.on('routeChangeStart', handleRouteChange)
+
+    router.events.on('routeChangeComplete', handleScrollRestoration)
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange)
+      router.events.off('routeChangeComplete', handleScrollRestoration)
+    }
+  }, [])
+
   return (
     <>
       <Head>

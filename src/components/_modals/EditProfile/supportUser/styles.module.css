@@ -25,13 +25,17 @@
   line-height: 22px;
 }
 
-.long-input-box:focus-visible {
+.street-input-container textarea:focus-visible {
   outline: 1px solid #8064a2;
+}
+.input-box-error textarea:focus-visible {
+  outline: none ;
 }
 
 @media screen and (min-width: 1100px) {
   .modal-wrapper {
     min-height: calc(100vh - 6rem);
+    max-height: calc(100vh - 6rem);
   }
   .modal-wrapper .body {
     height: 100%;
@@ -62,7 +66,9 @@
 
   color: #000000;
 }
-
+.input-box-error textarea {
+  border: 1px solid #c0504d !important;
+}
 .input-box {
   display: flex;
   flex-direction: column;
@@ -172,9 +178,10 @@
   .modal-wrapper {
     max-width: 1100px;
     width: 100%;
-    max-height: none;
+    height: 90%;
     margin: -5px 0 2rem 0;
     padding: 5px 0 0 0;
+
   }
 
   .modal-wrapper .body {

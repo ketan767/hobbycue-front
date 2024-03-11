@@ -128,6 +128,32 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
     dispatch(updateProfileMenuExpandAll(value))
   }
 
+  const router = useRouter()
+  useEffect(() => {
+    // Save scroll position when navigating away from the page
+    const handleRouteChange = () => {
+      sessionStorage.setItem('scrollPositionProfile', window.scrollY.toString())
+    }
+
+    // Restore scroll position when navigating back to the page
+    const handleScrollRestoration = () => {
+      const scrollPosition = sessionStorage.getItem('scrollPositionProfile')
+      if (scrollPosition) {
+        window.scrollTo(0, parseInt(scrollPosition, 10))
+        sessionStorage.removeItem('scrollPositionProfile')
+      }
+    }
+
+    router.events.on('routeChangeStart', handleRouteChange)
+
+    router.events.on('routeChangeComplete', handleScrollRestoration)
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange)
+      router.events.off('routeChangeComplete', handleScrollRestoration)
+    }
+  }, [])
+
   return (
     <>
       <Head>

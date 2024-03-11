@@ -20,6 +20,7 @@ import CloseIcon from '@/assets/icons/CloseIcon'
 import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import Image from 'next/image'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   onComplete?: () => void
@@ -79,7 +80,11 @@ const UserReport: React.FC<Props> = ({
     reported_user_id: currprofile?._id,
   })
   const [isChanged, setIsChanged] = useState(false)
-
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
   useEffect(() => {
     setInitialData({
       description: '',
@@ -105,33 +110,41 @@ const UserReport: React.FC<Props> = ({
   }
 
   const handleSubmit = async () => {
-    console.log('report', data)
-    if (!data.description || data.description === '') {
+    console.log('next button clicked', data)
+    if (!data.description || data.description?.trim() === '') {
+      console.log('its empty')
+      if (textAreaRef.current) {
+        textAreaRef.current?.focus()
+      }
       setInputErrs((prev) => {
         return { ...prev, error: 'This field is required!' }
       })
+
       setIsError(true)
+
       return
     }
 
     setSubmitBtnLoading(true)
     const { err, res } = await ReportUser(data)
-
-    if (err) {
+    if (res?.data.success) {
+      setSnackbar({
+        display: true,
+        type: 'success',
+        message: 'Report sent',
+      })
       setSubmitBtnLoading(false)
-      return console.log(err)
-    }
-
-    const { err: error, res: response } = await getMyProfileDetail()
-    setSubmitBtnLoading(false)
-
-    if (error) return console.log(error)
-    if (response?.data.success) {
-      dispatch(updateUser(response.data.data.user))
-      if (onComplete) onComplete()
-      else {
+      setTimeout(() => {
         dispatch(closeModal())
-      }
+      }, 1500)
+    } else if (err) {
+      setSubmitBtnLoading(false)
+      setSnackbar({
+        display: true,
+        type: 'warning',
+        message: 'Something went wrong',
+      })
+      console.log(err)
     }
   }
 
@@ -172,11 +185,12 @@ const UserReport: React.FC<Props> = ({
   }, [isError])
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+
   useEffect(() => {
-    textAreaRef?.current?.focus()
     const handleKeyPress = (event: any) => {
-      if (event.key === 'Enter') {
-        nextButtonRef.current?.click()
+      if (event.key === 'Enter' && !textAreaRef.current?.matches(':focus')) {
+        event.preventDefault()
+        handleSubmit()
       }
     }
 
@@ -185,7 +199,7 @@ const UserReport: React.FC<Props> = ({
     return () => {
       window.removeEventListener('keydown', handleKeyPress)
     }
-  }, [])
+  }, [data?.description])
 
   if (confirmationModal) {
     return (
@@ -197,6 +211,12 @@ const UserReport: React.FC<Props> = ({
       />
     )
   }
+
+  useEffect(() => {
+    if (textAreaRef.current) {
+      textAreaRef.current?.focus()
+    }
+  }, [textAreaRef.current])
 
   return (
     <>
@@ -218,7 +238,13 @@ const UserReport: React.FC<Props> = ({
         <hr className={styles['modal-hr']} />
         <section className={styles['body']}>
           <div className={styles['input-box']}>
-            <div className={styles['street-input-container']}>
+            <div
+              className={` ${
+                inputErrs.error
+                  ? styles['input-box-error']
+                  : styles['street-input-container']
+              }`}
+            >
               <textarea
                 className={styles['long-input-box']}
                 required
@@ -229,8 +255,10 @@ const UserReport: React.FC<Props> = ({
                 ref={textAreaRef}
               />
             </div>
-            {inputErrs.error && (
+            {inputErrs.error ? (
               <p className={styles['error-msg']}>{inputErrs.error}</p>
+            ) : (
+              <p className={styles['error-msg']}>&nbsp;</p> // Render an empty <p> element
             )}
           </div>
         </section>
@@ -293,6 +321,16 @@ const UserReport: React.FC<Props> = ({
           )}
         </footer>
       </div>
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

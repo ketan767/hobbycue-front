@@ -136,7 +136,7 @@ export const CreatePost: React.FC<Props> = ({
       if (url) {
         getMetadata(url[0])
           .then((res: any) => {
-            setMetaData(res.res.data.data.data)
+            setMetaData(res?.res?.data.data.data)
           })
           .catch((err) => {
             console.log(err)
@@ -204,8 +204,8 @@ export const CreatePost: React.FC<Props> = ({
       let address = data.data?._address
       let visibilityArr: any = [
         {
-          value: 'Everyone',
-          display: 'Everyone',
+          value: 'All locations',
+          display: 'All locations',
           type: 'text',
         },
       ]

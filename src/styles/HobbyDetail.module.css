@@ -264,6 +264,14 @@
   flex-direction: column;
   gap: var(--spacing-16);
 }
+
+.links-container {
+  
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-gap: var(--spacing-16);
+    gap: var(--spacing-16);
+}
 .noMembers {
   font-size: 14px;
   color: #6d747a;

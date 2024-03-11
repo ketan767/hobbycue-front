@@ -12,6 +12,7 @@ import TextareaAutosize from 'react-textarea-autosize'
 import CommentCheckWithUrl from './CommentCheckWithUrl'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { setActivePost } from '@/redux/slices/post'
+import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 
 type Props = {
   styles: any
@@ -19,6 +20,7 @@ type Props = {
   onMoreComments?: () => void
   showAllComments?: boolean
   getInput?: (x: string) => void
+  hideSeeMore?:boolean
 }
 
 const PostComments = ({
@@ -27,6 +29,7 @@ const PostComments = ({
   onMoreComments,
   showAllComments,
   getInput,
+  hideSeeMore
 }: Props) => {
   const router = useRouter()
   const dispatch = useDispatch()
@@ -37,12 +40,17 @@ const PostComments = ({
   const [inputValue, setInputValue] = useState('')
   const [displayMoreComments, setDisplayMoreComments] = useState(false)
   const [isChanged, setIsChanged] = useState(false)
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
   const { activeModal, closable } = useSelector(
     (state: RootState) => state.modal,
   )
   const fetchComments = async () => {
     const { err, res } = await getPostComment(
-      `_post=${data._id}&populate=_author`,
+      `_post=${data?._id}&populate=_author`,
     )
     if (err) return console.log(err)
     setComments(res?.data?.data?.comments)
@@ -51,20 +59,20 @@ const PostComments = ({
   const addComment = async (event: any) => {
     event.preventDefault()
 
-    if (isEmptyField(inputValue)) return
+    if (isEmptyField(inputValue.trim())) return
     const jsonData = {
-      postId: data._id,
+      postId: data?._id,
       commentBy:
-        activeProfile.type === 'user'
+        activeProfile?.type === 'user'
           ? 'User'
           : activeProfile.type === 'listing'
           ? 'Listing'
           : '',
-      commentById: activeProfile.data._id,
-      content: inputValue,
+      commentById: activeProfile?.data?._id,
+      content: inputValue.trim(),
       date: Date.now(),
     }
-    if (!jsonData.commentBy) return
+    if (!jsonData?.commentBy) return
     setLoading(true)
     const { err, res } = await addPostComment(jsonData)
     if (err) {
@@ -77,6 +85,13 @@ const PostComments = ({
     setLoading(false)
   }
 
+  const showFeatureUnderDevelopment = () => {
+    setSnackbar({
+      display: true,
+      type: 'warning',
+      message: 'This feature is under development',
+    })
+  }
   useEffect(() => {
     if (showAllComments !== null && showAllComments !== undefined) {
       setDisplayMoreComments(showAllComments)
@@ -206,6 +221,8 @@ const PostComments = ({
                           viewBox="0 0 24 24"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
+                          onClick={showFeatureUnderDevelopment}
+                          cursor={"pointer"}
                         >
                           <g clip-path="url(#clip0_173_72884)">
                             <path
@@ -285,6 +302,8 @@ const PostComments = ({
                         viewBox="0 0 24 24"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
+                        onClick={showFeatureUnderDevelopment}
+                        cursor={"pointer"}
                       >
                         <g clip-path="url(#clip0_173_72884)">
                           <path
@@ -301,8 +320,7 @@ const PostComments = ({
                     </footer>
                   </section>
                 </div>
-                {/* <Link href={`/post/${data._id}?comments=show`} onClick={()=>{dispatch(closeModal())}}> */}
-                <p
+               {comments?.length>1&& <p
                   className={styles['see-more-comments']}
                   onClick={() => {
                     if (activeModal === 'post') {
@@ -311,18 +329,17 @@ const PostComments = ({
                       }
                     } else {
                       dispatch(setActivePost({ ...data }))
-                      dispatch(openModal({ type: 'post', closable: false }))
+                      dispatch(openModal({ type: 'post', closable: false, propData:{showMoreComments:true} }))
                     }
                   }}
                 >
                   See more comments
-                </p>
-                {/* </Link> */}
+                </p>}
               </>
             )}
           </section>
         )}
-        {displayMoreComments && (
+        {(displayMoreComments && !hideSeeMore) && (
           <p
             className={styles['see-more-comments']}
             onClick={() => {
@@ -333,6 +350,16 @@ const PostComments = ({
           </p>
         )}
       </div>
+      {
+        <CustomSnackbar
+          message={snackbar.message}
+          triggerOpen={snackbar.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

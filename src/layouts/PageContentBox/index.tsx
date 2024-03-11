@@ -13,6 +13,7 @@ type Props = {
   className?: string
   setDisplayData?: any
   expandData?: boolean
+  initialShowDropdown?:boolean
 }
 
 const PageContentBox: React.FC<Props> = ({
@@ -22,8 +23,9 @@ const PageContentBox: React.FC<Props> = ({
   className,
   setDisplayData,
   expandData,
+  initialShowDropdown
 }) => {
-  const [showDropdown, setShowDropdown] = useState(false)
+  const [showDropdown, setShowDropdown] = useState(initialShowDropdown??false)
   const { listingLayoutMode } = useSelector((state: RootState) => state.site)
 
   const onDropdownClick = () => {

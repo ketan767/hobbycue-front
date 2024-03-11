@@ -218,9 +218,11 @@ ul.seller-info-wrapper li svg:last-child {
   cursor: pointer;
 }
 
-.page-left-aside {
+.page-left-aside,
+ .page-right-aside {
+
   position: -webkit-sticky;
-  top: 217px;
+  top: 226px;
   position: sticky;
   transition: 0.6s;
   height: calc(
@@ -300,5 +302,11 @@ ul.seller-info-wrapper li svg:last-child {
 
   .location-heading {
     margin-bottom: 0 !important;
+  }
+}
+
+@media screen and (min-width:1100px) {
+  .tags-list li{
+    margin: 8px 0;
   }
 }

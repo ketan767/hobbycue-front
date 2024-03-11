@@ -39,7 +39,8 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
   const { user } = useSelector((state: any) => state.user)
   const { profile } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(profile)
-  
+  const router = useRouter()
+
   const getPost = async () => {
     setLoadingPosts(true)
     const { err, res } = await getAllPosts(
@@ -64,6 +65,31 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
   useEffect(() => {
     getPost()
   }, [user.pinned_post])
+
+  useEffect(() => {
+    // Save scroll position when navigating away from the page
+    const handleRouteChange = () => {
+      sessionStorage.setItem('scrollPositionProfile', window.scrollY.toString())
+    }
+
+    // Restore scroll position when navigating back to the page
+    const handleScrollRestoration = () => {
+      const scrollPosition = sessionStorage.getItem('scrollPositionProfile')
+      if (scrollPosition) {
+        window.scrollTo(0, parseInt(scrollPosition, 10))
+        sessionStorage.removeItem('scrollPositionProfile')
+      }
+    }
+
+    router.events.on('routeChangeStart', handleRouteChange)
+
+    router.events.on('routeChangeComplete', handleScrollRestoration)
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange)
+      router.events.off('routeChangeComplete', handleScrollRestoration)
+    }
+  }, [])
 
   const onPinPost = async (postId: any) => {
     console.log(postId)
@@ -178,7 +204,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
                       postData={post}
                       fromProfile={true}
                       onPinPost={onPinPost}
-                      currentSection='posts'
+                      currentSection="posts"
                     />
                   </PostWrapper>
                 )
@@ -192,7 +218,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
                         postData={post}
                         fromProfile={true}
                         onPinPost={onPinPost}
-                        currentSection='posts'
+                        currentSection="posts"
                       />
                     )
                   })}
@@ -272,7 +298,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
                     postData={post}
                     fromProfile={true}
                     onPinPost={onPinPost}
-                    currentSection='posts'
+                    currentSection="posts"
                   />
                 </PostWrapper>
               )
@@ -286,7 +312,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
                       postData={post}
                       fromProfile={true}
                       onPinPost={onPinPost}
-                      currentSection='posts'
+                      currentSection="posts"
                     />
                   )
                 })}

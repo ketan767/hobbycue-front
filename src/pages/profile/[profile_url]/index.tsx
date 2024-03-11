@@ -30,7 +30,10 @@ import PostWrapper from '@/layouts/PinnedPost/PinnedPost'
 import { updateProfileData, updateUser } from '@/redux/slices/user'
 import { withAuth } from '@/navigation/withAuth'
 import ProfileNavigationLinks from '@/components/ProfilePage/ProfileHeader/ProfileNavigationLinks'
-import { updateProfileMenuExpandAll } from '@/redux/slices/site'
+import {
+  updateProfileLayoutMode,
+  updateProfileMenuExpandAll,
+} from '@/redux/slices/site'
 
 interface Props {
   data: ProfilePageData
@@ -73,6 +76,31 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
       setPosts(allPosts)
     }
   }
+  useEffect(() => {
+    // Save scroll position when navigating away from the page
+    const handleRouteChange = () => {
+      sessionStorage.setItem('scrollPositionProfile', window.scrollY.toString())
+    }
+
+    // Restore scroll position when navigating back to the page
+    const handleScrollRestoration = () => {
+      const scrollPosition = sessionStorage.getItem('scrollPositionProfile')
+      if (scrollPosition) {
+        window.scrollTo(0, parseInt(scrollPosition, 10))
+        sessionStorage.removeItem('scrollPositionProfile')
+      }
+    }
+
+    router.events.on('routeChangeStart', handleRouteChange)
+
+    router.events.on('routeChangeComplete', handleScrollRestoration)
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange)
+      router.events.off('routeChangeComplete', handleScrollRestoration)
+    }
+  }, [])
+
   const onPinPost = async (postId: any) => {
     console.log(postId)
     const reqBody = {

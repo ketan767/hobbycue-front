@@ -40,6 +40,7 @@ type ProfileGeneralData = {
   profile_url: string
   gender: 'male' | 'female' | null
   year_of_birth: string
+  onboarding_step: string
 }
 
 const ProfileGeneralEditModal: React.FC<Props> = ({
@@ -73,6 +74,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     profile_url: '',
     gender: null,
     year_of_birth: '',
+    onboarding_step: "1",
   })
 
   const [inputErrs, setInputErrs] = useState<{ [key: string]: string | null }>({
@@ -93,18 +95,20 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   }
 
   const handleInputChange = (event: any) => {
-    const { name, value } = event.target;
-    if(name==="year_of_birth"){
-      if(value.length>=4){
-        const currentYear = new Date().getFullYear();
-        if(isNaN(value)){
+    const { name, value } = event.target
+    if (name === 'year_of_birth') {
+      if (value.length >= 4) {
+        const currentYear = new Date().getFullYear()
+        if (isNaN(value)) {
           setInputErrs((prev) => {
-            return { ...prev, year_of_birth: "Please enter numbers only" }
+            return { ...prev, year_of_birth: 'Please enter numbers only' }
           })
-        }
-        else if((currentYear - value)>100||(currentYear - value)<13){
+        } else if (currentYear - value > 100 || currentYear - value < 13) {
           setInputErrs((prev) => {
-            return { ...prev, year_of_birth: "Your age should be between 13 to 100" }
+            return {
+              ...prev,
+              year_of_birth: 'Your age should be between 13 to 100',
+            }
           })
         }
       }
@@ -155,7 +159,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
         if (check !== false) {
           if (check >= 100) {
             return setInputErrs((prev) => {
-              return { ...prev, year_of_birth: 'Maximum age should be 100' }
+              return { ...prev, year_of_birth: 'Maximum age: 100' }
             })
           }
           if (check < 0) {
@@ -165,7 +169,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
           }
           if (check < 13) {
             return setInputErrs((prev) => {
-              return { ...prev, year_of_birth: 'Minimum age should be 13' }
+              return { ...prev, year_of_birth: 'Minimum age is 13' }
             })
           }
         } else {
@@ -191,7 +195,8 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     }
 
     setSubmitBtnLoading(true)
-    const { err, res } = await updateMyProfileDetail(data)
+    const newOnboardingStep = Number(user?.onboarding_step)>0?user?.onboarding_step:"1"
+    const { err, res } = await updateMyProfileDetail({...data,onboarding_step:newOnboardingStep})
     if (err) {
       setSubmitBtnLoading(false)
       return console.log(err)
@@ -289,6 +294,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
       profile_url: user.profile_url || '',
       gender: user.gender || null,
       year_of_birth: user.year_of_birth || '',
+      onboarding_step: user.onboarding_step || '0'
     }
     setInitialData(initialProfileData)
     setData(initialProfileData)

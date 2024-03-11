@@ -31,23 +31,27 @@ import PostVotes from '@/components/PostCard/Votes'
 import PostComments from '@/components/PostCard/Comments'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { setActivePost } from '@/redux/slices/post'
+import defaultUserImage from '@/assets/svg/default-images/default-user-icon.svg'
 
 type Props = {
   confirmationModal?: boolean
   setConfirmationModal?: any
   handleClose?: any
+  propData?:{
+  showMoreComments?:boolean}
 }
 
 export const PostModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClose,
+  propData
 }) => {
   const { activePost } = useSelector((state: RootState) => state.post)
   const dispatch = useDispatch()
   const [comments, setComments] = useState([])
   const [showComments, setShowComments] = useState(true)
-  const [displayMoreComments, setDisplayMoreComments] = useState(false)
+  const [displayMoreComments, setDisplayMoreComments] = useState(propData?.showMoreComments??false)
   const { activeProfile } = useSelector((state: RootState) => state.user)
   const [isChanged, setIsChanged] = useState(false)
   const [newComment, setNewComment] = useState('')
@@ -69,14 +73,14 @@ export const PostModal: React.FC<Props> = ({
   const addComment = async (event: any) => {
     if (isEmptyField(newComment)) return
     const jsonData = {
-      postId: activePost._id,
+      postId: activePost?._id,
       commentBy:
-        activeProfile.type === 'user'
+        activeProfile?.type === 'user'
           ? 'User'
-          : activeProfile.type === 'listing'
+          : activeProfile?.type === 'listing'
           ? 'Listing'
           : '',
-      commentById: activeProfile.data._id,
+      commentById: activeProfile?.data._id,
       content: newComment,
       date: Date.now(),
     }
@@ -145,19 +149,19 @@ export const PostModal: React.FC<Props> = ({
   return (
     <>
       <div className={`${styles['modal-wrapper']}`}>
-        <CloseIcon
+        {!displayMoreComments&&<CloseIcon
           className={styles['modal-close-icon']}
           onClick={() =>
             isChanged ? setConfirmationModal(true) : handleClose()
           }
-        />
+        />}
         <div
           className={`${styles['header']}`}
           style={displayMoreComments ? { display: 'none' } : {}}
         >
           <div className={`${styles['header-user']}`}>
             <Image
-              src={activePost?._author?.profile_image}
+              src={activePost?._author?.profile_image??defaultUserImage}
               alt=""
               width={40}
               height={40}
@@ -318,15 +322,16 @@ export const PostModal: React.FC<Props> = ({
             onMoreComments={() => {
               setDisplayMoreComments((prevValue) => !prevValue)
             }}
-            showAllComments={displayMoreComments}
+            showAllComments={true}
             getInput={(input) => setNewComment(input)}
+            hideSeeMore={!displayMoreComments}
           />
         )}
       </div>
       {
         <CustomSnackbar
-          message={snackbar.message}
-          triggerOpen={snackbar.display}
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
           type={snackbar.type === 'success' ? 'success' : 'error'}
           closeSnackbar={() => {
             setSnackbar((prevValue) => ({ ...prevValue, display: false }))

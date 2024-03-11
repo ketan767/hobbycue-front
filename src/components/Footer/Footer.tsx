@@ -13,14 +13,14 @@ import LinkedIn from '@/assets/svg/social/LinkedIn.svg'
 import Youtube from '@/assets/svg/social/youtube.svg'
 import Message from '@/assets/svg/social/Message.svg'
 
-import HoverFacebook from '@/assets/svg/hover/Facebook.svg';
-import HoverIntsa from '@/assets/svg/hover/Instagram.svg';
-import HoverPinterest from '@/assets/svg/hover/Pinterest.svg';
-import HoverTelegram from '@/assets/svg/hover/Telegram.svg';
-import HoverTwitter from '@/assets/svg/hover/X.svg';
-import HoverLinkedIn from '@/assets/svg/hover/Linkedin.svg';
-import HoverYoutube from '@/assets/svg/hover/Youtube.svg';
-import HoverMessage from '@/assets/svg/hover/Message.svg';
+import HoverFacebook from '@/assets/svg/hover/Facebook.svg'
+import HoverIntsa from '@/assets/svg/hover/Instagram.svg'
+import HoverPinterest from '@/assets/svg/hover/Pinterest.svg'
+import HoverTelegram from '@/assets/svg/hover/Telegram.svg'
+import HoverTwitter from '@/assets/svg/hover/X.svg'
+import HoverLinkedIn from '@/assets/svg/hover/Linkedin.svg'
+import HoverYoutube from '@/assets/svg/hover/Youtube.svg'
+import HoverMessage from '@/assets/svg/hover/Message.svg'
 
 import { InviteToHobbycue } from '@/services/auth.service'
 import Image from 'next/image'
@@ -32,24 +32,37 @@ import { showAllProductsTrue } from '@/redux/slices/search'
 import { RootState } from '@/redux/store'
 import { openModal } from '@/redux/slices/modal'
 import { useRouter } from 'next/router'
+import { validateEmail } from '@/utils'
 
 const icons = [
-  { name: Facebook, link: 'https://www.facebook.com/hobbycue.community',hover:HoverFacebook },
-  { name: Twitter, link: 'https://twitter.com/hobbycue',hover:HoverTwitter },
-  { name: Instagram, link: 'https://www.instagram.com/hobbycue.community',hover:HoverIntsa },
-  { name: Pintrest, link: 'https://in.pinterest.com/hobbycue/',hover:HoverPinterest },
+  {
+    name: Facebook,
+    link: 'https://www.facebook.com/hobbycue.community',
+    hover: HoverFacebook,
+  },
+  { name: Twitter, link: 'https://twitter.com/hobbycue', hover: HoverTwitter },
+  {
+    name: Instagram,
+    link: 'https://www.instagram.com/hobbycue.community',
+    hover: HoverIntsa,
+  },
+  {
+    name: Pintrest,
+    link: 'https://in.pinterest.com/hobbycue/',
+    hover: HoverPinterest,
+  },
   {
     name: LinkedIn,
     link: 'https://linkedin.com/company/hobbycue',
-    hover:HoverLinkedIn
+    hover: HoverLinkedIn,
   },
   {
     name: Youtube,
     link: 'https://www.youtube.com/@hobbycue',
-    hover:HoverYoutube
+    hover: HoverYoutube,
   },
-  { name: Telegram, link: 'https://t.me/hobbycue',hover:HoverTelegram },
-  { name: Message, link: 'mailto:info@hobbycue.com',hover:HoverMessage },
+  { name: Telegram, link: 'https://t.me/hobbycue', hover: HoverTelegram },
+  { name: Message, link: 'mailto:info@hobbycue.com', hover: HoverMessage },
 ]
 const Footer: React.FC = () => {
   const [email, setEmail] = useState('')
@@ -57,16 +70,18 @@ const Footer: React.FC = () => {
   const [expandHowDoI, setExpandHowDoI] = useState(false)
   const [expandQuickLinks, setExpandQuickLinks] = useState(false)
   const [inviteBtnLoader, setInviteBtnLoader] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
     message: '',
   })
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
-  );
-  const router = useRouter();
+  )
+  const router = useRouter()
 
   const handleExpand = (type: string) => {
     if (type === 'HobbyCue') {
@@ -135,8 +150,8 @@ const Footer: React.FC = () => {
           title: 'Shop / Store',
           link: '/search',
           func: () => {
-            dispatch(showAllProductsTrue());
-            router.push("/search");
+            dispatch(showAllProductsTrue())
+            router.push('/search')
           },
         },
         {
@@ -155,12 +170,22 @@ const Footer: React.FC = () => {
     },
   ]
   const to = email
+
   const sendInvite = async () => {
+    if (!to || to === '') {
+      setErrorMessage('This field is required')
+      return
+    }
+    if (!validateEmail(to)) {
+      setErrorMessage('Please enter a valid email')
+      return
+    }
+    setErrorMessage('')
     setInviteBtnLoader(true)
     const { err, res } = await InviteToHobbycue({
       to,
     })
-    if (res.data?.success) {
+    if (res?.data?.success) {
       setInviteBtnLoader(false)
       setSnackbar({
         display: true,
@@ -220,8 +245,8 @@ const Footer: React.FC = () => {
                           key={idx}
                           onClick={(e) => {
                             if (value.func) {
-                              e.preventDefault();
-                              value.func();
+                              e.preventDefault()
+                              value.func()
                             }
                           }}
                           href={value.link}
@@ -256,6 +281,9 @@ const Footer: React.FC = () => {
                     'Invite'
                   )}
                 </button>
+                {errorMessage !== '' && (
+                  <span className={styles['error-invite']}>{errorMessage}</span>
+                )}
               </div>
             </div>
             <div className={styles.inviteContainer}>
@@ -265,8 +293,12 @@ const Footer: React.FC = () => {
                   return (
                     <Link target="_blank" href={Icon.link} key={idx}>
                       <Image
-                       onMouseEnter={(e)=>{e.currentTarget.src=Icon.hover.src}}
-                       onMouseLeave={(e)=>{e.currentTarget.src=Icon.name.src}}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.src = Icon.hover.src
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.src = Icon.name.src
+                        }}
                         className={styles.socialIcons}
                         height={32}
                         width={32}

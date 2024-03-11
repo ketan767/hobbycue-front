@@ -2,12 +2,13 @@ import SearchPageFilter from '@/components/SearchPageFilters'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import { openModal } from '@/redux/slices/modal'
 import {
-  toggleShowAll,
+  showAllTrue,
   toggleShowAllEvent,
   toggleShowAllPeople,
   toggleShowAllPlace,
   toggleShowAllUsers,
   toggleShowAllProducts,
+  toggleShowAllHobbies,
 } from '@/redux/slices/search'
 import { RootState } from '@/redux/store'
 import { MenuItem, Select } from '@mui/material'
@@ -95,12 +96,18 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const showAllProducts = useSelector(
     (state: any) => state.search.showAllProducts,
   )
+  const showAllhobbies = useSelector(
+    (state: any) => state.search.showAllhobbies,
+  )
   const searchString = useSelector((state: any) => state.search.searchString)
 
   const dispatch = useDispatch()
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
+
+  console.log('hobby', hobbyResults)
+  console.log('place', placeResults)
 
   const [HideUser, setHideUser] = useState(false)
   const [HidePeople, setHidePeople] = useState(false)
@@ -126,19 +133,40 @@ const MainContent: React.FC<SearchResultsProps> = ({
   }
   useEffect(() => {
     if (showAllUsers) {
+      setHideHobbies(true)
       setHidePeople(true)
       setHidePlace(true)
       setHideEvent(true)
-      setHideHobbies(true)
       setHideProduct(true)
     } else {
+      setHideHobbies(false)
       setHidePeople(false)
       setHidePlace(false)
       setHideEvent(false)
-      setHideHobbies(false)
       setHideProduct(true)
     }
   }, [showAllUsers])
+
+  const toggleShowAllhobbies = () => {
+    dispatch(toggleShowAllHobbies())
+  }
+  useEffect(() => {
+    if (showAllhobbies) {
+      setHideUser(true)
+      setHidePeople(true)
+      setHidePlace(true)
+      setHideEvent(true)
+
+      setHideProduct(true)
+    } else {
+      setHideUser(false)
+      setHidePeople(false)
+      setHidePlace(false)
+      setHideEvent(false)
+
+      setHideProduct(true)
+    }
+  }, [showAllhobbies])
 
   const toggleShowAllpeople = () => {
     dispatch(toggleShowAllPeople())
@@ -147,12 +175,14 @@ const MainContent: React.FC<SearchResultsProps> = ({
   useEffect(() => {
     if (showAllPeople) {
       setHideUser(true)
+      setHideHobbies(true)
       setHidePlace(true)
       setHideEvent(true)
       setHideHobbies(true)
       setHideProduct(true)
     } else {
       setHideUser(false)
+      setHideHobbies(false)
       setHidePlace(false)
       setHideEvent(false)
       setHideHobbies(false)
@@ -167,12 +197,14 @@ const MainContent: React.FC<SearchResultsProps> = ({
   useEffect(() => {
     if (showAllPlace) {
       setHideUser(true)
+      setHideHobbies(true)
       setHidePeople(true)
       setHideEvent(true)
       setHideHobbies(true)
       setHideProduct(true)
     } else {
       setHideUser(false)
+      setHideHobbies(false)
       setHidePeople(false)
       setHideEvent(false)
       setHideHobbies(false)
@@ -193,6 +225,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHideProduct(true)
     } else {
       setHideUser(false)
+      setHideHobbies(false)
       setHidePeople(false)
       setHidePlace(false)
       setHideHobbies(false)
@@ -207,12 +240,13 @@ const MainContent: React.FC<SearchResultsProps> = ({
   useEffect(() => {
     if (showAllProducts) {
       setHideUser(true)
+      setHideHobbies(true)
       setHidePeople(true)
       setHidePlace(true)
-      setHideHobbies(true)
       setHideProduct(true)
     } else {
       setHideUser(false)
+      setHideHobbies(false)
       setHidePeople(false)
       setHidePlace(false)
       setHideHobbies(false)
@@ -232,11 +266,16 @@ const MainContent: React.FC<SearchResultsProps> = ({
   }
 
   const noResultsFound =
-    searchResults.length === 0 &&
-    peopleResults.length === 0 &&
-    placeResults.length === 0 &&
-    EventResults.length === 0 &&
-    hobbyResults.length === 0
+    (searchResults.length === 0 &&
+      peopleResults.length === 0 &&
+      placeResults.length === 0 &&
+      EventResults.length === 0 &&
+      showAll) ||
+    (searchResults.length === 0 && showAllUsers) ||
+    (peopleResults.length === 0 && showAllPeople) ||
+    (placeResults.length === 0 && showAllPlace) ||
+    (EventResults.length === 0 && showAllEvent) ||
+    showAllProducts
 
   return (
     <main className={styles.searchResults}>
@@ -254,50 +293,56 @@ const MainContent: React.FC<SearchResultsProps> = ({
         </div>
       ) : (
         <div>
-          {/* <section className={styles.userSection}>
-        <div className={styles.peopleItemsContainer}>
-          <div className={styles.resultHeading}>Hobbies</div>
-          {hobbyResults
-            .slice(0, showAllhobbies ? undefined : 3)
-            .map((hobby, index) => (
-              <div className={styles.peopleItem} key={index}>
-                <div className={styles.userAvatar}>
-                  {hobby.profile_image ? (
-                    <Image
-                      src={hobby.profile_image}
-                      alt={`${hobby.display}'s `}
-                      width={64}
-                      height={64}
-                      className={styles.avatarImage}
-                    />
-                  ) : (
+          {!HideHobbies && searchResults.length > 0 && (
+            <section className={styles.userSection}>
+              <div className={styles.peopleItemsContainer}>
+                <div className={styles.resultHeading}>Hobbies</div>
+                {hobbyResults
+                  .slice(0, showAllhobbies ? undefined : 3)
+                  .map((hobby, index) => (
                     <div
-                      className={`${styles['img']} default-people-listing-icon`}
-                    ></div>
-                  )}
-                </div>
-                <div className={styles.userDetails}>
-                  <div className={styles.userName}>{hobby.display}</div>
-                  <div className={styles.userTagline}>{'hobby'}</div>
-                  <div className={styles.userLocation}></div>
+                      className={styles.peopleItem}
+                      key={index}
+                      onClick={() => navigateToProfile(user.profile_url)}
+                    >
+                      <div className={styles.userAvatar}>
+                        {hobby.profile_image ? (
+                          <Image
+                            src={hobby.profile_image}
+                            alt={`${hobby.display}'s `}
+                            width={64}
+                            height={64}
+                            className={styles.avatarImage}
+                          />
+                        ) : (
+                          <div
+                            className={`${styles['img']} default-people-listing-icon`}
+                          ></div>
+                        )}
+                      </div>
+                      <div className={styles.userDetails}>
+                        <div className={styles.userName}>{hobby.display}</div>
+                        <div className={styles.userTagline}>{'hobby'}</div>
+                        <div className={styles.userLocation}></div>
+                      </div>
+                    </div>
+                  ))}
+
+                <div>
+                  {showAllhobbies
+                    ? undefined
+                    : (
+                        <button
+                          onClick={toggleShowAllhobbies}
+                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                        >
+                          View More
+                        </button>
+                      ) || ''}
                 </div>
               </div>
-            ))}
-        </div>
-        <div>
-          {showAllhobbies
-            ? undefined
-            : (
-                <button
-                  onClick={toggleShowAllhobbies}
-                  className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
-                >
-                  View More
-                </button>
-              ) || ''}
-        </div>
-      </section> */}
-
+            </section>
+          )}
           {/* User  */}
 
           {!HideUser && searchResults.length > 0 && (
@@ -537,16 +582,19 @@ const FilterDropdown: React.FC<Props> = () => {
   const dispatch = useDispatch()
   const handleFilterClick = (filterType: any) => {
     if (activeFilter === filterType) {
-      setActiveFilter('')
-      dispatch(toggleShowAll())
+      setActiveFilter('all')
+      dispatch(showAllTrue())
     } else {
       setActiveFilter(filterType)
       switch (filterType) {
         case 'all':
-          dispatch(toggleShowAll())
+          dispatch(showAllTrue())
           break
         case 'users':
           dispatch(toggleShowAllUsers())
+          break
+        case 'hobby':
+          dispatch(toggleShowAllHobbies())
           break
         case 'people':
           dispatch(toggleShowAllPeople())
@@ -573,6 +621,9 @@ const FilterDropdown: React.FC<Props> = () => {
       </MenuItem>
       <MenuItem onClick={() => handleFilterClick('users')} value="users">
         Users
+      </MenuItem>
+      <MenuItem onClick={() => handleFilterClick('hobby')} value="hobby">
+        Hobbies
       </MenuItem>
       <MenuItem onClick={() => handleFilterClick('people')} value="people">
         People Pages
@@ -612,9 +663,8 @@ const Search: React.FC<Props> = ({ data, children }) => {
     (state: RootState) => state.search.hobbiesSearchResults.data,
   )
 
-  useEffect(() => {
-    console.log('userresultt', userSearchResults)
-  }, [])
+  console.log('userresultt', hobbySearchResults)
+  console.log('placeee', PlaceSearch)
 
   useEffect(() => {
     const handleResize = () => {
@@ -636,7 +686,7 @@ const Search: React.FC<Props> = ({ data, children }) => {
       ) : (
         <SearchPageFilter />
       )}
-      <main>
+      <main className={styles['search-result']}>
         <MainContent
           searchResults={userSearchResults || []}
           peopleResults={PeopleSearch || []}
@@ -645,7 +695,7 @@ const Search: React.FC<Props> = ({ data, children }) => {
           hobbyResults={hobbySearchResults || []}
         />
       </main>
-      <aside>
+      <aside className={styles['aside-two']}>
         {' '}
         <ExploreSidebar />
       </aside>

@@ -227,16 +227,16 @@ const ListingPageMain: React.FC<Props> = ({
     window.open(mapsUrl, '_blank')
   }
 
-const openModalHobbiesModal = () => {
-  if(window.innerWidth<1100){
+  const openModalHobbiesModal = () => {
+    if (window.innerWidth < 1100) {
       setShowHobbies(true)
     }
   }
-  useEffect(()=>{
-    openModalHobbiesModal();
-    window.addEventListener("resize",openModalHobbiesModal);
-    return window.removeEventListener("resize",openModalHobbiesModal)
-  },[])
+  useEffect(() => {
+    openModalHobbiesModal()
+    window.addEventListener('resize', openModalHobbiesModal)
+    return window.removeEventListener('resize', openModalHobbiesModal)
+  }, [])
 
   // console.log('data', data)
 
@@ -344,7 +344,7 @@ const openModalHobbiesModal = () => {
             >
               <h4 className={styles['heading']}>Tags</h4>
               <ul
-                className={`${styles['hobby-list']} ${
+                className={`${styles['hobby-list']} ${styles['tags-list']} ${
                   styles['display-desktop']
                 }${showTags ? ' ' + styles['display-mobile'] : ''}`}
               >
@@ -385,9 +385,7 @@ const openModalHobbiesModal = () => {
                   showRelatedListing1 ? ' ' + styles['display-mobile'] : ''
                 }`}
               >
-                {!listingPagesLeft || listingPagesLeft.length === 0 ? (
-                  null
-                ) : (
+                {!listingPagesLeft || listingPagesLeft.length === 0 ? null : (
                   <ul className={styles['related-list']}>
                     {listingPagesLeft?.map((item: any) => {
                       if (typeof item === 'string') return null
@@ -497,8 +495,8 @@ const openModalHobbiesModal = () => {
                     <span className={styles.textdefault}>{data?.name} </span>
                   </Link>
                 )}
-                {data?.phone.number && (
-                  <Link href={`tel:${data?.phone.number}`}>
+                {data?.phone?.number && (
+                  <Link href={`tel:${data?.phone?.number}`}>
                     <svg
                       width="24"
                       height="24"
@@ -1087,11 +1085,12 @@ const openModalHobbiesModal = () => {
         {children}
 
         <aside
-          className={
-            activeTab === 'home' || activeTab === 'posts'
-              ? styles['display-desktop']
-              : styles['display-none']
-          }
+          className={`custom-scrollbar ${styles['page-right-aside']}
+            ${
+              activeTab === 'home' || activeTab === 'posts'
+                ? styles['display-desktop']
+                : styles['display-none']
+            }`}
         >
           {/* User Contact Details */}
           <PageContentBox
@@ -1157,8 +1156,8 @@ const openModalHobbiesModal = () => {
                   <span className={styles.textdefault}>{data?.name} </span>
                 </Link>
               )}
-              {data?.phone.number && (
-                <Link href={`tel:${data?.phone.number}`}>
+              {data?.phone?.number && (
+                <Link href={`tel:${data?.phone?.number}`}>
                   <svg
                     width="24"
                     height="24"
@@ -1594,9 +1593,7 @@ const openModalHobbiesModal = () => {
                   showRelatedListing2 ? ' ' + styles['display-mobile'] : ''
                 }`}
               >
-                {!listingPagesRight || listingPagesRight.length === 0 ? (
-                  null
-                ) : (
+                {!listingPagesRight || listingPagesRight.length === 0 ? null : (
                   <ul className={styles['related-list']}>
                     {listingPagesRight?.map((item: any) => {
                       if (typeof item === 'string') return null

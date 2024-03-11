@@ -16,6 +16,12 @@ import {
   setSearchString,
   setHobbiesSearchResult,
   Page,
+  showAllProductsTrue,
+  showAllPeopleTrue,
+  showAllPlaceTrue,
+  showAllEventTrue,
+  showAllUsersTrue,
+  showAllTrue,
 } from '@/redux/slices/search'
 import LogoFull from '@/assets/image/logo-full.svg'
 import LogoSmall from '@/assets/image/logo-small.png'
@@ -42,7 +48,11 @@ import CustomizedTooltips from './../Tooltip/ToolTip'
 import pages from '@/pages/community/pages'
 
 import PreLoader from '@/components/PreLoader'
+
+import hobbycueLogo from '@/assets/svg/Search/hobbycue.svg'
 import { setShowPageLoader } from '@/redux/slices/site'
+import { usePathname } from 'next/navigation'
+import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 
 type Props = {}
 
@@ -61,6 +71,8 @@ export const Navbar: React.FC<Props> = ({}) => {
   const dispatch = useDispatch()
   const router = useRouter()
   const [menuActive, setMenuActive] = useState(false)
+  const pathname = usePathname()
+  console.log({ pathname })
 
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
@@ -71,9 +83,8 @@ export const Navbar: React.FC<Props> = ({}) => {
     search: { value: '', error: null },
   })
   const [showDropdown, setShowDropdown] = useState<
-    'user-menu' | 'hobby-list' | null
+    'user-menu' | 'hobby-list' | 'explore-list' | null
   >(null)
-
   useEffect(() => {
     if (router.asPath === '/search') {
       return
@@ -100,6 +111,18 @@ export const Navbar: React.FC<Props> = ({}) => {
     if (!isSearchInputVisible) {
       setTimeout(() => searchInputRef.current?.focus(), 0)
     }
+  }
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
+  const showFeatureUnderDevelopment = () => {
+    setSnackbar({
+      display: true,
+      type: 'warning',
+      message: 'This feature is under development',
+    })
   }
 
   const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -133,7 +156,10 @@ export const Navbar: React.FC<Props> = ({}) => {
   }
 
   const searchResult = async () => {
-    router.push('/search')
+    if (router.pathname !== '/search') {
+      dispatch(showAllTrue())
+      router.push('/search')
+    }
     const searchValue = data.search.value.trim()
     const taglineValue = ''
     const cityValue = ''
@@ -262,11 +288,40 @@ export const Navbar: React.FC<Props> = ({}) => {
       }
       dispatch(setShowPageLoader(false))
       dispatch(setSearchString(searchValue))
+      dispatch(showAllTrue())
     } catch (error) {
       dispatch(setShowPageLoader(false))
       console.error('An error occurred during the combined search:', error)
     }
   }
+
+  const searchCloseIcon = (
+    <svg
+      onClick={toggleSearchInput}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="25"
+      viewBox="0 0 24 25"
+      fill="none"
+    >
+      <g clip-path="url(#clip0_10712_82787)">
+        <path
+          d="M18.2987 5.90406C17.9087 5.51406 17.2787 5.51406 16.8887 5.90406L11.9988 10.7841L7.10875 5.89406C6.71875 5.50406 6.08875 5.50406 5.69875 5.89406C5.30875 6.28406 5.30875 6.91406 5.69875 7.30406L10.5888 12.1941L5.69875 17.0841C5.30875 17.4741 5.30875 18.1041 5.69875 18.4941C6.08875 18.8841 6.71875 18.8841 7.10875 18.4941L11.9988 13.6041L16.8887 18.4941C17.2787 18.8841 17.9087 18.8841 18.2987 18.4941C18.6887 18.1041 18.6887 17.4741 18.2987 17.0841L13.4087 12.1941L18.2987 7.30406C18.6787 6.92406 18.6787 6.28406 18.2987 5.90406Z"
+          fill="#6D747A"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_10712_82787">
+          <rect
+            width="24"
+            height="24"
+            fill="white"
+            transform="translate(0 0.195312)"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  )
 
   return (
     <>
@@ -314,7 +369,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                   searchResult()
                 }
               }}
-              style={isLoggedIn ? { width: '400px' } : { width: '100%' }}
+              style={isLoggedIn ? { width: '400px' } : { width: '300px' }}
               sx={{
                 '& .MuiOutlinedInput-root': {
                   borderRadius: '8px',
@@ -342,6 +397,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                     <IconButton
                       onClick={searchResult}
                       sx={{
+                        height: '40px',
                         bgcolor: 'primary.main',
                         borderRadius: '0px 8px 8px 0px',
                         '&:hover': {
@@ -367,12 +423,96 @@ export const Navbar: React.FC<Props> = ({}) => {
           <section className={styles['navbar-right']}>
             <ul className={styles['right-listing-expanded']}>
               {/* Explore */}
-              <li>
+              <li
+                className=""
+                onMouseOver={() => setShowDropdown('explore-list')}
+                onMouseLeave={() => setShowDropdown(null)}
+              >
                 <Link href={'/explore'}>
                   <Image src={ExploreIcon} alt="" />
                   <span>Explore</span>
                   <KeyboardArrowDownRoundedIcon htmlColor="#939CA3" />
                 </Link>
+                {showDropdown === 'explore-list' && (
+                  <div className={styles['explore-list-dropdown']}>
+                    <section className={styles['list']}>
+                      <h4>
+                        <Link
+                          href={'/search'}
+                          className={styles['hobbiescategory']}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            dispatch(showAllPeopleTrue())
+                            router.push('/search')
+                          }}
+                        >
+                          People - Community
+                        </Link>
+                      </h4>
+                      {/* <ul>
+                        <Link href={'/hobby/music'}>
+                          <li>Community</li>
+                        </Link>
+                      </ul> */}
+                    </section>
+                    <section className={styles['list']}>
+                      <h4>
+                        <Link
+                          href={'/search'}
+                          className={styles['hobbiescategory']}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            dispatch(showAllPlaceTrue())
+                            router.push('/search')
+                          }}
+                        >
+                          Places - Venues
+                        </Link>
+                      </h4>
+                    </section>
+                    <section className={styles['list']}>
+                      <h4>
+                        <Link
+                          href={'/search'}
+                          className={styles['hobbiescategory']}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            dispatch(showAllEventTrue())
+                            router.push('/search')
+                          }}
+                        >
+                          Programs - Events
+                        </Link>
+                      </h4>
+                    </section>
+                    <section className={styles['list']}>
+                      <h4>
+                        <Link
+                          href={'/search'}
+                          className={styles['hobbiescategory']}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            dispatch(showAllProductsTrue())
+                            router.push('/search')
+                          }}
+                        >
+                          Products - Store
+                        </Link>
+                      </h4>
+                    </section>
+                    <section className={styles['list']}>
+                      <h4>
+                        <Link
+                          href={'/search'}
+                          className={styles['hobbiescategory']}
+                          onClick={showFeatureUnderDevelopment}
+                        >
+                          Posts - Write-ups
+                        </Link>
+                      </h4>
+                    </section>
+                  </div>
+                )}
               </li>
 
               {/* Hobbies */}
@@ -738,39 +878,56 @@ export const Navbar: React.FC<Props> = ({}) => {
                 {isSearchInputVisible ? (
                   <form
                     onSubmit={handleSearchSubmit}
-                    className={styles['mobile-search-input']}
+                    className={
+                      styles['mobile-search-input'] +
+                      ` ${
+                        isSearchInputVisible === true &&
+                        'mobile-search-input-visible'
+                      }`
+                    }
                   >
-                    <TextField
-                      variant="outlined"
-                      placeholder="Search here..."
-                      size="small"
-                      autoFocus
-                      onBlur={() => setIsSearchInputVisible(false)}
-                      className={styles.inputField}
-                      onChange={handleInputChange}
-                      value={data.search.value}
-                      sx={{
-                        '& .MuiOutlinedInput-root': {
-                          borderRadius: '8px',
-                          padding: 0,
-                          overflow: 'hidden',
-                          borderColor: 'red',
-                          background: '#f8f9fa',
-                          '& fieldset': {
-                            borderColor: '#EBEDF0',
-                            borderRight: 0,
+                    <header className={styles['header']}>
+                      <Image
+                        className={styles['responsive-logo']}
+                        src={hobbycueLogo}
+                        alt="hobbycue"
+                      />
+                      <h2 className={styles['modal-heading']}></h2>
+                      {searchCloseIcon}
+                    </header>
+                    <div className={styles['mobile-search-container']}>
+                      <TextField
+                        variant="outlined"
+                        placeholder="Search here..."
+                        size="small"
+                        autoFocus
+                        onBlur={() => setIsSearchInputVisible(false)}
+                        className={styles.inputField}
+                        onChange={handleInputChange}
+                        value={data.search.value}
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            borderRadius: '8px',
+                            padding: 0,
+                            overflow: 'hidden',
+                            borderColor: 'red',
+                            background: '#f8f9fa',
+                            '& fieldset': {
+                              borderColor: '#EBEDF0',
+                              borderRight: 0,
+                            },
                           },
-                        },
-                        '& .MuiInputBase-input': {
-                          fontSize: '15px',
-                        },
-                        '& .MuiInputBase-input::placeholder': {
-                          fontSize: '12px',
-                          color: 'black',
-                        },
-                      }}
-                      InputLabelProps={{ shrink: false }}
-                    />
+                          '& .MuiInputBase-input': {
+                            fontSize: '15px',
+                          },
+                          '& .MuiInputBase-input::placeholder': {
+                            fontSize: '12px',
+                            color: 'black',
+                          },
+                        }}
+                        InputLabelProps={{ shrink: false }}
+                      />
+                    </div>
                   </form>
                 ) : (
                   <li>
@@ -797,6 +954,16 @@ export const Navbar: React.FC<Props> = ({}) => {
 
       {menuActive && <SideMenu handleClose={toggleMenu} />}
       {showDropdown && <div className={styles['navbar-backdrop']}></div>}
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

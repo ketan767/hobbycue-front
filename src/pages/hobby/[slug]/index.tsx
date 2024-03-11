@@ -82,6 +82,31 @@ const HobbyDetail: React.FC<Props> = (props) => {
     dispatch(updateHobbyMenuExpandAll(value))
   }
 
+  useEffect(() => {
+    // Save scroll position when navigating away from the page
+    const handleRouteChange = () => {
+      sessionStorage.setItem('scrollPositionhobby', window.scrollY.toString())
+    }
+
+    // Restore scroll position when navigating back to the page
+    const handleScrollRestoration = () => {
+      const scrollPosition = sessionStorage.getItem('scrollPositionhobby')
+      if (scrollPosition) {
+        window.scrollTo(0, parseInt(scrollPosition, 10))
+        sessionStorage.removeItem('scrollPositionhobby')
+      }
+    }
+
+    router.events.on('routeChangeStart', handleRouteChange)
+
+    router.events.on('routeChangeComplete', handleScrollRestoration)
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange)
+      router.events.off('routeChangeComplete', handleScrollRestoration)
+    }
+  }, [])
+
   console.log('hobbydata', data)
   return (
     <HobbyPageLayout
@@ -96,9 +121,9 @@ const HobbyDetail: React.FC<Props> = (props) => {
         <PageContentBox>
           <h4>About</h4>
           <div
-            // className={`${styles['display-desktop']}${
-            //   showAbout ? ' ' + styles['display-mobile'] : ''
-            // }`}
+          // className={`${styles['display-desktop']}${
+          //   showAbout ? ' ' + styles['display-mobile'] : ''
+          // }`}
           >
             {data?.description}
           </div>
@@ -107,14 +132,12 @@ const HobbyDetail: React.FC<Props> = (props) => {
         {/* Keywords Section */}
         {data?.keywords?.length > 0 && (
           <PageContentBox
-            // showEditButton={false}
-            // setDisplayData={setShowKeywords}
+          // showEditButton={false}
+          // setDisplayData={setShowKeywords}
           >
             <div className={styles['keyword-container']}>
               <h4 className={styles['keyword-text']}>Keyword :</h4>
-              <ul
-                className={`${styles['keyword-list']}`}
-              >
+              <ul className={`${styles['keyword-list']}`}>
                 {data?.keywords?.map((item: any, idx: number) => (
                   <li key={idx}>
                     {item} {idx + 1 === data?.keywords.length ? '' : ','}{' '}
@@ -129,8 +152,8 @@ const HobbyDetail: React.FC<Props> = (props) => {
         <section style={{}} className={styles['dual-section-wrapper']}>
           {/* Next Levels */}
           <PageContentBox
-            // showEditButton={false}
-            // setDisplayData={setShowNextLevels}
+          // showEditButton={false}
+          // setDisplayData={setShowNextLevels}
           >
             <h4>
               {data?.level === 0
@@ -146,9 +169,9 @@ const HobbyDetail: React.FC<Props> = (props) => {
                 : 'Next Level'}
             </h4>
             <div
-              // className={`${styles['display-desktop']}${
-              //   showNextLevels ? ' ' + styles['display-mobile'] : ''
-              // }`}
+            // className={`${styles['display-desktop']}${
+            //   showNextLevels ? ' ' + styles['display-mobile'] : ''
+            // }`}
             >
               {data.level !== 5 && nextLevels?.length > 0 ? (
                 <>
@@ -170,14 +193,14 @@ const HobbyDetail: React.FC<Props> = (props) => {
 
           {/* Related Hobbies */}
           <PageContentBox
-            // showEditButton={false}
-            // setDisplayData={setShowRelatedHobbies}
+          // showEditButton={false}
+          // setDisplayData={setShowRelatedHobbies}
           >
             <h4>Related</h4>
             <div
-              // className={`${styles['display-desktop']}${
-              //   showRelatedHobbies ? ' ' + styles['display-mobile'] : ''
-              // }`}
+            // className={`${styles['display-desktop']}${
+            //   showRelatedHobbies ? ' ' + styles['display-mobile'] : ''
+            // }`}
             >
               {data?.related_hobbies?.length > 0 ? (
                 <>

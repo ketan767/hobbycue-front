@@ -19,6 +19,7 @@ import CloseIcon from '@/assets/icons/CloseIcon'
 import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import Image from 'next/image'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 const AboutEditor = dynamic(
   () => import('@/components/AboutEditor/AboutEditor'),
@@ -84,6 +85,11 @@ const ListingSupportModal: React.FC<Props> = ({
     type: listingPageData.type,
   })
   const [isChanged, setIsChanged] = useState(false)
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
 
   useEffect(() => {
     setInitialData({
@@ -141,28 +147,32 @@ const ListingSupportModal: React.FC<Props> = ({
       setInputErrs((prev) => {
         return { ...prev, error: 'This field is required!' }
       })
+      if (textareaRef.current) {
+        textareaRef.current?.focus()
+      }
       setIsError(true)
       return
     }
 
     setSubmitBtnLoading(true)
     const { err, res } = await support(data)
-
-    if (err) {
+    if (res?.data.success) {
+      setSnackbar({
+        display: true,
+        type: 'success',
+        message: 'Support ticket rasied',
+      })
       setSubmitBtnLoading(false)
-      return console.log(err)
-    }
-
-    const { err: error, res: response } = await getMyProfileDetail()
-    setSubmitBtnLoading(false)
-
-    if (error) return console.log(error)
-    if (response?.data.success) {
-      dispatch(updateUser(response.data.data.user))
-      if (onComplete) onComplete()
-      else {
+      setTimeout(() => {
         dispatch(closeModal())
-      }
+      }, 1500)
+    } else if (err) {
+      setSubmitBtnLoading(false)
+      setSnackbar({
+        display: true,
+        type: 'warning',
+        message: 'Something went wrong',
+      })
     }
   }
 
@@ -214,8 +224,9 @@ const ListingSupportModal: React.FC<Props> = ({
 
   useEffect(() => {
     const handleKeyPress = (event: any) => {
-      if (event.key === 'Enter') {
-        nextButtonRef.current?.click()
+      if (event.key === 'Enter' && !textareaRef.current?.matches(':focus')) {
+        event.preventDefault()
+        handleSubmit()
       }
     }
 
@@ -224,7 +235,7 @@ const ListingSupportModal: React.FC<Props> = ({
     return () => {
       window.removeEventListener('keydown', handleKeyPress)
     }
-  }, [])
+  }, [data?.description])
 
   if (confirmationModal) {
     return (
@@ -257,7 +268,13 @@ const ListingSupportModal: React.FC<Props> = ({
         <hr className={styles['modal-hr']} />
         <section className={styles['body']}>
           <div className={styles['input-box']}>
-            <div className={styles['street-input-container']}>
+            <div
+              className={` ${
+                inputErrs.error
+                  ? styles['input-box-error']
+                  : styles['street-input-container']
+              }`}
+            >
               <textarea
                 ref={textareaRef}
                 className={styles['long-input-box']}
@@ -268,8 +285,10 @@ const ListingSupportModal: React.FC<Props> = ({
                 value={data.description}
               />
             </div>
-            {inputErrs.error && (
+            {inputErrs.error ? (
               <p className={styles['error-msg']}>{inputErrs.error}</p>
+            ) : (
+              <p className={styles['error-msg']}>&nbsp;</p> // Render an empty <p> element
             )}
           </div>
         </section>
@@ -332,6 +351,16 @@ const ListingSupportModal: React.FC<Props> = ({
           )}
         </footer>
       </div>
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

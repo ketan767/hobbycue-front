@@ -223,6 +223,32 @@ export const downvotePostComment = async (
   }
 }
 
+/** Remove Vote Post Comment `PATCH: /api/post/comment/downvote/:commentId` */
+export const removevotePostComment = async (
+  commentId: string,
+  data: {
+    voteBy: 'user' | 'listing'
+    userId: string
+  },
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.patch(
+      `/post/comment/remove-vote/${commentId}`,
+      data,
+      {
+        headers,
+      },
+    )
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
 /** DownVote Post `PATCH: /api/post/remove-upvote/:postId` */
 export const removeVote = async (
   postId: string,

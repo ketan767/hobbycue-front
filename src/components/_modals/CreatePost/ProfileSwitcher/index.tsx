@@ -20,7 +20,7 @@ const ProfileSwitcher: React.FC<Props> = ({
   setHobbies,
 }) => {
   const { user, listing } = useSelector((state: RootState) => state.user)
-
+  const filteredListing = listing.filter((item: any) => item.is_published)
   const [showDropdown, setShowDropdown] = useState<boolean>(false)
   const dropdownRef = useRef(null)
 
@@ -68,10 +68,21 @@ const ProfileSwitcher: React.FC<Props> = ({
           />
         ) : (
           <div
+            className={`${styles['profile-image']}  
+            ${activeProfile.type === 'user' && 'default-user-icon'}
+            ${
+              activeProfile.type === 'listing' && activeProfile?.data?.type == 1
+                ? `default-people-listing-icon ${styles['default-img']}`
+                : activeProfile?.data?.type == 2
+                ? `${styles['default-img']} default-place-listing-icon`
+                : activeProfile?.data?.type == 3
+                ? `${styles['default-img']} default-program-listing-icon`
+                : activeProfile?.data?.type == 4
+                ? `${styles['default-img']} default-product-listing-icon`
+                : `${styles['default-img']} default-people-listing-icon`
+            }
+            `}
             data-profile-type={activeProfile.type}
-            className={`${styles['default-img']} ${getClass(
-              activeProfile.type,
-            )} `}
           ></div>
         )}
         <p className={styles['name']}>
@@ -123,7 +134,7 @@ const ProfileSwitcher: React.FC<Props> = ({
                 <p>{user.full_name}</p>
               </li>
 
-              {listing.map((page: any) => {
+              {filteredListing.map((page: any) => {
                 return (
                   <li
                     key={page._id}

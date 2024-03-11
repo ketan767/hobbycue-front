@@ -70,6 +70,7 @@ import AddHobby from './AddHobby/AddHobbyModal'
 import ListingContactToOwner from './EditListing/ListingContactOwner'
 import UserContactToOwner from './EditProfile/UserContactOwner'
 import { PostModal } from './PostModal/PostModal'
+import { setHasChanges } from '@/redux/slices/modal'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -89,8 +90,9 @@ const ModalManager: React.FC = () => {
     type: 'success',
   })
   const [closeIconClicked, setCloseIconClicked] = useState<boolean>(false)
-  const { user } = useSelector((state: RootState) => state.user)
-
+  const { user, isLoggedIn } = useSelector((state: RootState) => state.user)
+  const [showAddHobbyModal, setShowAddHobbyModal] = useState(false)
+  const [showAddGenreModal, setShowAddGenreModal] = useState(false)
   const triggerSnackbar = (data: SnackbarState) => {
     setSnackbar(data)
   }
@@ -101,10 +103,9 @@ const ModalManager: React.FC = () => {
 
   const dispatch = useDispatch()
   const [confirmationModal, setConfirmationModal] = useState(false)
-  const [hasChanges, setHasChanges] = useState(false)
-  const { activeModal, closable, propData } = useSelector(
+  const { activeModal, closable, propData, hasChanges } = useSelector(
     (state: RootState) => state.modal,
-  )  
+  )
   const specialCloseHandlers: Partial<{
     [key in Exclude<ModalType, null>]: () => void
   }> = {
@@ -130,7 +131,7 @@ const ModalManager: React.FC = () => {
       setConfirmationModal(false)
     } else if (hasChanges) {
       setConfirmationModal(true)
-    } else if (!user.is_onboarded) {
+    } else if (isLoggedIn && !user.is_onboarded) {
       setConfirmationModal(true)
     } else {
       dispatch(closeModal())
@@ -150,7 +151,7 @@ const ModalManager: React.FC = () => {
   }
 
   const handleStatusChange = (isChanged: boolean) => {
-    setHasChanges(isChanged)
+    dispatch(setHasChanges(isChanged))
   }
 
   const activeCloseHandler =
@@ -196,15 +197,20 @@ const ModalManager: React.FC = () => {
 
   const escFunction = useCallback(
     (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        if (confirmationModal) {
-          setConfirmationModal(false)
-        } else if (hasChanges) {
-          setConfirmationModal(true)
-        } else if (!user.is_onboarded) {
-          setConfirmationModal(true)
-        } else {
-          dispatch(closeModal())
+      if (!showAddGenreModal && !showAddHobbyModal) {
+        if (event.key === 'Escape') {
+          if (activeModal === 'View-Image-Modal') {
+            dispatch(closeModal())
+          }
+          if (confirmationModal) {
+            setConfirmationModal(false)
+          } else if (hasChanges) {
+            setConfirmationModal(true)
+          } else if (isLoggedIn && !user.is_onboarded) {
+            setConfirmationModal(true)
+          } else {
+            dispatch(closeModal())
+          }
         }
       }
     },
@@ -219,12 +225,14 @@ const ModalManager: React.FC = () => {
   }, [escFunction])
 
   const handleBgClick = (event: any) => {
-    if (
-      event.target === mainRef.current ||
-      event.target === modalWrapperRef.current
-    ) {
-      handleClose();
-      setCloseIconClicked((prev)=>!prev)
+    if (!showAddGenreModal && !showAddHobbyModal) {
+      if (
+        event.target === mainRef.current ||
+        event.target === modalWrapperRef.current
+      ) {
+        handleClose()
+        setCloseIconClicked((prev) => !prev)
+      }
     }
   }
   const props = {
@@ -232,7 +240,11 @@ const ModalManager: React.FC = () => {
     confirmationModal,
     handleClose,
     onStatusChange: handleStatusChange,
-    propData
+    propData,
+    showAddGenreModal,
+    showAddHobbyModal,
+    setShowAddGenreModal,
+    setShowAddHobbyModal,
   }
 
   const viewImageProps = {
@@ -288,10 +300,9 @@ const ModalManager: React.FC = () => {
               {activeModal === 'listing-onboarding' && (
                 <ListingOnboardingModal />
               )}
-              {activeModal === 'add-hobby' && (
-                <AddHobby handleClose={handleClose} propData={propData}/>
+              {activeModal === 'create-post' && (
+                <CreatePost propData={propData} />
               )}
-              {activeModal === 'create-post' && <CreatePost propData={propData}/>}
               {activeModal === 'upload-image' && <UploadImageModal />}
 
               {activeModal === 'profile-general-edit' && (
@@ -409,20 +420,21 @@ const ModalManager: React.FC = () => {
                 <ViewImageModal {...viewImageProps} />
               )}
               {/* Modal Close Icon */}
-              {closable && activeModal !== 'user-onboarding-welcome' && (
-                <CloseIcon
-
-                  className={
-                    styles['modal-close-icon'] +
-                    ` ${closeIconClicked ? styles['close-icon-clicked'] : ''}`
-                  }
-                  onClick={() => {
-                    activeCloseHandler()
-                    setCloseIconClicked((prev) => !prev)
-                  }}
-
-                />
-              )}
+              {closable &&
+                activeModal !== 'user-onboarding-welcome' &&
+                !showAddGenreModal &&
+                !showAddHobbyModal && (
+                  <CloseIcon
+                    className={
+                      styles['modal-close-icon'] +
+                      ` ${closeIconClicked ? styles['close-icon-clicked'] : ''}`
+                    }
+                    onClick={() => {
+                      activeCloseHandler()
+                      setCloseIconClicked((prev) => !prev)
+                    }}
+                  />
+                )}
             </main>
             {/* {confirmationModal && (
               <div className={`${styles['confirmation-modal']}`}>

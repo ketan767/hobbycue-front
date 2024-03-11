@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { RootState } from '@/redux/store'
 import { useSelector, useDispatch } from 'react-redux'
 import styles from './saveModal.module.css'
 import FilledButton from '@/components/_buttons/FilledButton'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
-import { closeModal, openModal } from '@/redux/slices/modal'
+import { closeModal, openModal, setHasChanges } from '@/redux/slices/modal'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import { useRouter } from 'next/router'
 
@@ -38,12 +38,15 @@ const SaveModal: React.FC<Props> = ({
     } else if (isError) {
       setConfirmationModal(false)
     }
+    // this function is onclick of Yes & No both which makes hasChange to false on pure close of any modal
+    dispatch(setHasChanges(false))
   }
 
   const handleYesClick = async () => {
     handleSubmit()
     onboardcheck()
   }
+  const wrapperRef = useRef<HTMLDivElement>(null)
 
   if (reloadrouter) {
     router.reload()
@@ -51,7 +54,7 @@ const SaveModal: React.FC<Props> = ({
   }
 
   return (
-    <div className={`${styles['confirmation-modal']}`}>
+    <div ref={wrapperRef} className={`${styles['confirmation-modal']}`}>
       <div className={styles['confirmation-modal-body']}>
         <CloseIcon
           className={styles['modal-close-icon']}

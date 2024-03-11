@@ -113,14 +113,14 @@ const PostCard: React.FC<Props> = (props) => {
     if (has_link) {
       const regex =
         /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
-      const url = postData.content.match(regex)
+      const url = postData?.content.match(regex)
       if (url) {
         setUrl(url[0])
       }
       if (url) {
         getMetadata(url[0])
           .then((res: any) => {
-            setMetaData(res.res.data.data.data)
+            setMetaData(res?.res?.data?.data.data)
           })
           .catch((err) => {
             console.log(err)
@@ -217,9 +217,7 @@ const PostCard: React.FC<Props> = (props) => {
                   {dateFormat.format(new Date(postData.createdAt))}
                   {' | '}
                 </span>
-                <span>
-                    {postData?._hobby?.display}
-                </span>
+                <span>{postData?._hobby?.display}</span>
                 <span>
                   {postData?.visibility ? ` | ${postData?.visibility}` : ''}
                 </span>
@@ -308,9 +306,10 @@ const PostCard: React.FC<Props> = (props) => {
               className={styles['content']}
               dangerouslySetInnerHTML={{
                 __html:
-                  has_link && props.currentSection === 'posts'
-                    ? `<a href="${url}" class="${pageUrlClass}" target="_blank">${postData.content}</a>`
-                    : postData.content.replace(/<img .*?>/g, ''),
+                postData.content.replace(
+                  /(?:\b(?:https?|ftp|file):\/\/|www\.)?([-A-Z0-9+&@#/%?=~_|!:,.;]*\.[a-zA-Z]{2,})(?:\/[-A-Z0-9+&@#/%?=~_|!:,.;]*)?/gi,
+                  '<a href="http://$1" class="${pageUrlClass}" target="_blank">$1</a>'
+                )
               }}
             ></div>
           )}
@@ -319,7 +318,7 @@ const PostCard: React.FC<Props> = (props) => {
               <source src={postData.video_url} type="video/mp4"></source>
             </video>
           )}
-          {postData.media?.length > 0 || props.currentSection === 'links' ? (
+          {postData.media?.length > 0 ? (
             <Slider
               setActiveIdx={setActiveIdx}
               activeIdx={activeIdx}
@@ -332,7 +331,7 @@ const PostCard: React.FC<Props> = (props) => {
             <div className={styles.postMetadata}>
               <a href={url} target="_blank" className={styles.metaImgContainer}>
                 <img
-                  src={metaData.image ? metaData.image : metaData.icon}
+                  src={metaData?.image ? metaData.image : metaData?.icon}
                   alt="link-image"
                   width={200}
                   height={130}
@@ -341,11 +340,11 @@ const PostCard: React.FC<Props> = (props) => {
               <div className={styles.metaContent}>
                 <a href={url} target="_blank" className={styles.contentHead}>
                   {' '}
-                  {metaData.title}{' '}
+                  {metaData?.title}{' '}
                 </a>
                 <a href={url} target="_blank" className={styles.contentUrl}>
                   {' '}
-                  {metaData.url}{' '}
+                  {metaData?.url}{' '}
                 </a>
                 <div className={styles['meta-author']}>
                   <p className={styles['author-name']}>
@@ -431,7 +430,7 @@ const PostCard: React.FC<Props> = (props) => {
         {/* Card Footer */}
         {props.currentSection === 'links' ? (
           <div className={styles['metadata-footer']}>
-            <Link href={metaData.url} target="_blank">
+            <Link href={metaData?.url??""} target="_blank">
               {url}
             </Link>
             {showComments && <PostComments data={postData} styles={styles} />}
@@ -452,7 +451,7 @@ const PostCard: React.FC<Props> = (props) => {
                 height="21"
                 viewBox="0 0 21 21"
                 // fill={showComments ? '#8064A2' : 'none'}
-                fill='none'
+                fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path

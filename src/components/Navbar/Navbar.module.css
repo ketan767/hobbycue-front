@@ -23,7 +23,7 @@
 .navbar-left {
   display: flex;
   align-items: center;
-  gap: var(--spacing-24);
+  gap: 34.74px;
 }
 
 .navbar-right {
@@ -106,6 +106,42 @@
   /* Grey/Darker */
 
   color: #6d747a;
+}
+
+.explore-list-dropdown {
+  z-index: 6000;
+  display: inline-flex;
+flex-direction: column;
+align-items: flex-start;
+  background-color: white;
+  position: absolute;
+  top: 100%;
+  right: -110%;
+  left: auto;
+box-shadow: 0px 8px 12px 0px rgba(147, 156, 163, 0.12), 0px 0px 2px 0px rgba(147, 156, 163, 0.36);
+}
+
+.explore-list-dropdown .list{
+  display: flex;
+padding: 12px 61px 12px 12px;
+justify-content: center;
+align-items: center;
+gap: 10px;
+background: var(--White, #FFF);
+border-bottom: 1px solid #CED4DA;
+width: 100%;
+justify-content: flex-start;
+}
+
+.navbar-right>ul .explore-list-dropdown h4 a{
+  color: var(--Grey-Darker, #6D747A) !important;
+  white-space: nowrap;
+font-family: Poppins;
+font-size: 14px;
+font-style: normal;
+font-weight: 400;
+line-height: 18px; /* 128.571% */
+letter-spacing: 0.07px;
 }
 
 .user-menu {
@@ -278,6 +314,29 @@
   align-items: center;
 }
 
+.header {
+  display: block;
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 38px;
+  z-index: 1000;
+  background: var(--Base-White, #fff);
+  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.08);
+  padding: var(--spacing-12) var(--spacing-16);
+}
+.responsive-logo {
+  display: block;
+}
+
+.modal-heading {
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 600;
+}
+
 @media screen and (max-width: 1100px) {
   .navbar-wrappper {
     position:sticky;
@@ -319,7 +378,25 @@
   
   .mobile-search-input-visible {
     opacity: 1;
-    transform: translateY(0);
+    /* transform: translateY(0); */
+  }
+  .mobile-search-input-visible{
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 10000;
+    backdrop-filter: blur(3px);
+    background: #00000099;
+  }
+  .mobile-search-container{
+    display: flex;
+padding: 24px 16px 28px 16px;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap: 16px;
+border-radius: 0px 0px 16px 16px;
+background: #FFF;
+box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.08);
   }
   
 }

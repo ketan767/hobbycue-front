@@ -23,6 +23,8 @@ import addhobby from '@/assets/svg/addhobby.svg'
 import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import Image from 'next/image'
+import AddHobby from '../../AddHobby/AddHobbyModal'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   onComplete?: () => void
@@ -33,6 +35,10 @@ type Props = {
   isError?: boolean
   onBoarding?: boolean
   onStatusChange?: (isChanged: boolean) => void
+  showAddGenreModal?: boolean
+  showAddHobbyModal?: boolean
+  setShowAddGenreModal?: any
+  setShowAddHobbyModal?: any
 }
 
 type DropdownListItem = {
@@ -46,6 +52,13 @@ type ListingHobbyData = {
   hobby: DropdownListItem | null
   genre: DropdownListItem | null
 }
+type Snackbar = {
+  triggerOpen: boolean
+  message: string
+  type: 'error' | 'success'
+  closeSnackbar?: () => void
+}
+
 
 const ListingHobbyEditModal: React.FC<Props> = ({
   onComplete,
@@ -55,6 +68,10 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   handleClose,
   onStatusChange,
   onBoarding,
+  showAddGenreModal,
+  showAddHobbyModal,
+  setShowAddGenreModal,
+  setShowAddHobbyModal,
 }) => {
   const dispatch = useDispatch()
 
@@ -78,7 +95,11 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   const [initialData, setInitialData] = useState<never[]>([])
   const [isChanged, setIsChanged] = useState(false)
   const [isChangeadded, setIsChangeadded] = useState(false)
-
+  const [showSnackbar, setShowSnackbar] = useState<Snackbar>({
+    triggerOpen: false,
+    message: '',
+    type: 'success' || 'error',
+  })
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     DropdownListItem[]
   >([])
@@ -206,7 +227,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
       } else {
         // setHobbyError(true)
         // setError('Typed hobby not found!')
-        dispatch(openModal({ type: 'add-hobby', closable: true }))
+        setShowAddHobbyModal(true)
         return
       }
     } else {
@@ -297,7 +318,8 @@ const ListingHobbyEditModal: React.FC<Props> = ({
         } else {
           // setHobbyError(true)
           // setError('Typed hobby not found!')
-          dispatch(openModal({ type: 'add-hobby', closable: true }))
+          // dispatch(openModal({ type: 'add-hobby', closable: true }))
+          setShowAddHobbyModal(true)
           return
         }
       } else {
@@ -436,6 +458,38 @@ const ListingHobbyEditModal: React.FC<Props> = ({
       return () => clearTimeout(timer)
     }
   }, [isError])
+
+  if (showAddHobbyModal) {
+    return (
+      <>
+        <AddHobby
+          handleClose={() => {
+            setShowAddHobbyModal(false)
+          }}
+          handleSubmit={() => {
+            setShowSnackbar({
+              message: 'This feature is under development',
+              triggerOpen: true,
+              type: 'success',
+            })
+          }}
+          propData={{defaultValue:hobbyInputValue}}
+        />
+        <CustomSnackbar
+          message={showSnackbar.message}
+          type={showSnackbar.type}
+          triggerOpen={showSnackbar.triggerOpen}
+          closeSnackbar={()=>{
+            setShowSnackbar({
+              message: '',
+              triggerOpen: false,
+              type: 'success',
+            })
+          }}
+        />
+      </>
+    )
+  }
 
   if (confirmationModal) {
     return (

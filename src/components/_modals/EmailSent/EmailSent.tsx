@@ -126,6 +126,7 @@ const EmailSentModal: React.FC<Props> = ({}) => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className={styles.input}
                 placeholder="Confirm New Password"
+                type='password'
               />
               <p className={styles['helper-text']}>{errors.confirmPassword}</p>
             </div>

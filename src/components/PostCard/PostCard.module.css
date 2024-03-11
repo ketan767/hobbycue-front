@@ -149,6 +149,10 @@
   height: 30px;
   border-radius: 100%;
   cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .comment-input-wrapper .submit-btn:hover {
   background-color: rgba(var(--primary-100-rgb), 0.2);
@@ -484,5 +488,17 @@ background: rgba(128, 100, 162, 0.25);
   }
   .post-card-wrapper {
     max-width: 1017px;
+  }
+  .post-card-wrapper header .post-other-info {
+    font-size: 10px;
+  }
+  .post-card-wrapper header .author-name {
+    font-size: 12px;
+  }
+  .post-card-wrapper .body .content {
+    font-size: 12px;
+  }
+  .content{
+    font-size: 12px;
   }
 }

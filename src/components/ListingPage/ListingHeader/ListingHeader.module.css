@@ -316,7 +316,7 @@
   color: #8064a2;
 }
 .navigation-tabs a.active {
-  color: #8064a2;
+  color: #8064a2 !important;
   font-weight: 600;
 }
 .navigation-tabs a.active::after {
@@ -337,9 +337,10 @@
     padding: 0 14px;
   }
   .navigation-tabs {
-    gap: 0;
+    gap: 8px;
     overflow-x: auto;
     flex-shrink: 0;
+    justify-content: flex-start;
   }
   .navigation-tabs > a {
     flex-shrink: 0;

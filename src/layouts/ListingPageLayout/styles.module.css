@@ -134,11 +134,11 @@
   }
   .nav-mobile {
     display: flex;
-    justify-content: center;
     background-color: #ffffff;
   }
   .navigation-tabs {
-    gap: 0.9rem;
+    gap: 8px;
+    justify-content: flex-start;
     overflow-x: auto;
     flex-shrink: 0;
     padding: 0 16px;
