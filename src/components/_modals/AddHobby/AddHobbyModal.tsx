@@ -40,7 +40,7 @@ const AddHobby: React.FC<Props> = ({ handleClose, handleSubmit, propData }) => {
           <CloseIcon
             className={styles['modal-close-icon']}
             onClick={() => {
-              dispatch(closeModal())
+              handleClose()
             }}
           />
         </div>

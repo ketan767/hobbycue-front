@@ -2,13 +2,12 @@ import SearchPageFilter from '@/components/SearchPageFilters'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import { openModal } from '@/redux/slices/modal'
 import {
-  // toggleShowAll,
+  showAllTrue,
   toggleShowAllEvent,
   toggleShowAllPeople,
   toggleShowAllPlace,
   toggleShowAllUsers,
   toggleShowAllProducts,
-  showAllTrue,
 } from '@/redux/slices/search'
 import { RootState } from '@/redux/store'
 import { MenuItem, Select } from '@mui/material'
@@ -17,11 +16,6 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import User from '../../assets/svg/Search/User.svg'
-import hobbycue from '../../assets/svg/Search/hobbycue.svg'
-import People from '../../assets/svg/Search/People.svg'
-import Place from '../../assets/svg/Search/Place.svg'
-import Program from '../../assets/svg/Search/Program.svg'
-import Product from '../../assets/svg/Search/Product.svg'
 import styles from './styles.module.css'
 
 type Props = {
@@ -108,22 +102,12 @@ const MainContent: React.FC<SearchResultsProps> = ({
     (state: RootState) => state.user,
   )
 
-  const initialViewMoreState = {
-    user: 3,
-    people: 3,
-    place: 3,
-    event: 3,
-    product: 3,
-    hobby: 3,
-  }
-
   const [HideUser, setHideUser] = useState(false)
   const [HidePeople, setHidePeople] = useState(false)
   const [HidePlace, setHidePlace] = useState(false)
   const [HideEvent, setHideEvent] = useState(false)
   const [HideProduct, setHideProduct] = useState(false)
   const [HideHobbies, setHideHobbies] = useState(false)
-  const [viewMoreState, setViewMoreState] = useState(initialViewMoreState)
 
   const router = useRouter()
 
@@ -152,7 +136,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHidePlace(false)
       setHideEvent(false)
       setHideHobbies(false)
-      setHideProduct(false)
+      setHideProduct(true)
     }
   }, [showAllUsers])
 
@@ -248,50 +232,16 @@ const MainContent: React.FC<SearchResultsProps> = ({
   }
 
   const noResultsFound =
+    (searchResults.length === 0 &&
+      peopleResults.length === 0 &&
+      placeResults.length === 0 &&
+      EventResults.length === 0 &&
+      showAll) ||
     (searchResults.length === 0 && showAllUsers) ||
     (peopleResults.length === 0 && showAllPeople) ||
     (placeResults.length === 0 && showAllPlace) ||
     (EventResults.length === 0 && showAllEvent) ||
-    showAllProducts // since no api integrations done for products
-
-  // console.log({HideEvent,HideHobbies,HidePeople,HidePlace,HideProduct,HideUser});
-  useEffect(() => {
-    if (showAll) {
-      setViewMoreState(initialViewMoreState)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showAll])
-
-  useEffect(() => {
-    if (showAllPeople) {
-      setViewMoreState((prev) => ({ ...prev, people: peopleResults.length }))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showAllPeople])
-
-  useEffect(() => {
-    if (showAllUsers) {
-      setViewMoreState((prev) => ({ ...prev, user: searchResults.length }))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showAllUsers])
-  useEffect(() => {
-    if (showAllPlace) {
-      setViewMoreState((prev) => ({ ...prev, place: placeResults.length }))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showAllPlace])
-  useEffect(() => {
-    if (showAllEvent) {
-      setViewMoreState((prev) => ({ ...prev, event: EventResults.length }))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showAllEvent])
-  useEffect(() => {
-    if (showAllProducts) {
-      setViewMoreState((prev) => ({ ...prev, product: -1 }))
-    }
-  }, [showAllProducts])
+    showAllProducts
 
   return (
     <main className={styles.searchResults}>
@@ -355,13 +305,12 @@ const MainContent: React.FC<SearchResultsProps> = ({
 
           {/* User  */}
 
-          {((showAllUsers && searchResults.length > 0) ||
-            (showAll && searchResults.length > 0)) && (
+          {!HideUser && searchResults.length > 0 && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>User Profiles</div>
                 {searchResults
-                  .slice(0, viewMoreState.user)
+                  .slice(0, showAllUsers ? undefined : 3)
                   .map((user, index) => (
                     <div
                       className={styles.peopleItem}
@@ -395,16 +344,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     </div>
                   ))}
                 <div>
-                  {viewMoreState.user === searchResults.length
+                  {showAllUsers
                     ? undefined
                     : (
                         <button
-                          onClick={() => {
-                            setViewMoreState((prev) => ({
-                              ...prev,
-                              user: searchResults.length,
-                            }))
-                          }}
+                          onClick={toggleShowAllusers}
                           className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
                         >
                           View More
@@ -415,13 +359,12 @@ const MainContent: React.FC<SearchResultsProps> = ({
             </section>
           )}
           {/* People */}
-          {((showAllPeople && peopleResults.length > 0) ||
-            (showAll && peopleResults.length > 0)) && (
+          {!HidePeople && peopleResults.length > 0 && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>People</div>
                 {peopleResults
-                  .slice(0, viewMoreState.people)
+                  .slice(0, showAllPeople ? undefined : 3)
                   .map((page, index) => (
                     <div
                       className={styles.peopleItem}
@@ -463,16 +406,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     </div>
                   ))}
                 <div>
-                  {viewMoreState.people === peopleResults.length
+                  {showAllPeople
                     ? undefined
                     : (
                         <button
-                          onClick={() => {
-                            setViewMoreState((prev) => ({
-                              ...prev,
-                              people: peopleResults.length,
-                            }))
-                          }}
+                          onClick={toggleShowAllpeople}
                           className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
                         >
                           View More
@@ -483,13 +421,12 @@ const MainContent: React.FC<SearchResultsProps> = ({
             </section>
           )}
           {/* Place  */}
-          {((showAllPlace && placeResults.length > 0) ||
-            (showAll && placeResults.length > 0)) && (
+          {!HidePlace && placeResults.length > 0 && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>Places</div>
                 {placeResults
-                  .slice(0, viewMoreState.place)
+                  .slice(0, showAllPlace ? undefined : 3)
                   .map((page, index) => (
                     <div
                       className={styles.peopleItem}
@@ -524,16 +461,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     </div>
                   ))}
                 <div>
-                  {viewMoreState.place === placeResults.length
+                  {showAllPlace
                     ? undefined
                     : (
                         <button
-                          onClick={() => {
-                            setViewMoreState((prev) => ({
-                              ...prev,
-                              place: placeResults.length,
-                            }))
-                          }}
+                          onClick={toggleShowAllplace}
                           className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
                         >
                           View More
@@ -545,12 +477,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
           )}
 
           {/* Event  */}
-          {((showAllEvent && EventResults.length > 0) ||
-            (showAll && EventResults.length > 0)) && (
+          {!HideEvent && EventResults.length > 0 && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>Programs</div>
-                {EventResults.slice(0, viewMoreState.event).map(
+                {EventResults.slice(0, showAllEvent ? undefined : 3).map(
                   (page, index) => (
                     <div
                       className={styles.peopleItem}
@@ -586,16 +517,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
                   ),
                 )}
                 <div>
-                  {viewMoreState.event === EventResults.length
+                  {showAllEvent
                     ? undefined
                     : (
                         <button
-                          onClick={() => {
-                            setViewMoreState((prev) => ({
-                              ...prev,
-                              event: EventResults.length,
-                            }))
-                          }}
+                          onClick={toggleShowAllevent}
                           className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
                         >
                           View More
@@ -647,101 +573,23 @@ const FilterDropdown: React.FC<Props> = () => {
 
   return (
     <Select className={styles.filterDropdown} value={activeFilter}>
-      <MenuItem
-        className={styles.menuItem}
-        onClick={() => handleFilterClick('all')}
-        value="all"
-      >
-        <div className={styles.menuItemContent}>
-          <Image
-            width={22}
-            height={22}
-            className={styles['responsive-logo']}
-            src={hobbycue}
-            alt="hobbycue"
-          />
-          All of HobbyCue
-        </div>
+      <MenuItem onClick={() => handleFilterClick('all')} value="all">
+        All of HobbyCue
       </MenuItem>
-      <MenuItem
-        className={styles.menuItem}
-        onClick={() => handleFilterClick('users')}
-        value="users"
-      >
-        <div className={styles.menuItemContent}>
-          <Image
-            width={22}
-            height={22}
-            className={styles['responsive-logo']}
-            src={User}
-            alt="user"
-          />
-          Users
-        </div>
+      <MenuItem onClick={() => handleFilterClick('users')} value="users">
+        Users
       </MenuItem>
-      <MenuItem
-        className={styles.menuItem}
-        onClick={() => handleFilterClick('people')}
-        value="people"
-      >
-        <div className={styles.menuItemContent}>
-          <Image
-            width={22}
-            height={22}
-            className={styles['responsive-logo']}
-            src={People}
-            alt="people pages"
-          />
-          People Pages
-        </div>
+      <MenuItem onClick={() => handleFilterClick('people')} value="people">
+        People Pages
       </MenuItem>
-      <MenuItem
-        className={styles.menuItem}
-        onClick={() => handleFilterClick('places')}
-        value="places"
-      >
-        <div className={styles.menuItemContent}>
-          <Image
-            width={22}
-            height={22}
-            className={styles['responsive-logo']}
-            src={Place}
-            alt="Place pages"
-          />
-          Places
-        </div>
+      <MenuItem onClick={() => handleFilterClick('places')} value="places">
+        Places
       </MenuItem>
-      <MenuItem
-        className={styles.menuItem}
-        onClick={() => handleFilterClick('events')}
-        value="events"
-      >
-        <div className={styles.menuItemContent}>
-          <Image
-            width={22}
-            height={22}
-            className={styles['responsive-logo']}
-            src={Program}
-            alt="program pages"
-          />
-          Programs
-        </div>
+      <MenuItem onClick={() => handleFilterClick('events')} value="events">
+        Programs
       </MenuItem>
-      <MenuItem
-        className={styles.menuItem}
-        onClick={() => handleFilterClick('products')}
-        value="products"
-      >
-        <div className={styles.menuItemContent}>
-          <Image
-            width={22}
-            height={22}
-            className={styles['responsive-logo']}
-            src={Product}
-            alt="Product pages"
-          />
-          Products
-        </div>
+      <MenuItem onClick={() => handleFilterClick('products')} value="products">
+        Products
       </MenuItem>
     </Select>
   )

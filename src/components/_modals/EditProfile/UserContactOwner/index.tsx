@@ -19,6 +19,7 @@ import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import Image from 'next/image'
 import { sendMailtoOwner } from '@/services/auth.service'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   onComplete?: () => void
@@ -80,6 +81,11 @@ const UserContactToOwner: React.FC<Props> = ({
     to: currprofile?.public_email,
   })
   const [isChanged, setIsChanged] = useState(false)
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
 
   useEffect(() => {
     setInitialData({
@@ -120,11 +126,11 @@ const UserContactToOwner: React.FC<Props> = ({
   }
 
   const handleSubmit = async () => {
-    console.log('ContactOwner', data)
-    if (!data.message || data.message === '') {
+    if (!data.sub || data.sub.trim() === '') {
       setInputErrs((prev) => {
         return { ...prev, error: 'This field is required!' }
       })
+      subref?.current?.focus()
       setIsError(true)
       return
     }
@@ -133,7 +139,22 @@ const UserContactToOwner: React.FC<Props> = ({
 
     const { err, res } = await sendMailtoOwner(data)
     if (res?.data.success) {
-      dispatch(closeModal())
+      setSnackbar({
+        display: true,
+        type: 'success',
+        message: 'Message sent',
+      })
+      setSubmitBtnLoading(false)
+      setTimeout(() => {
+        dispatch(closeModal())
+      }, 1500)
+    } else if (err) {
+      setSubmitBtnLoading(false)
+      setSnackbar({
+        display: true,
+        type: 'warning',
+        message: 'Something went wrong',
+      })
     }
   }
 
@@ -211,7 +232,7 @@ const UserContactToOwner: React.FC<Props> = ({
           {/* Subject */}
           <div
             className={`${styles['input-box']} ${
-              inputErrs.sub ? styles['input-box-error'] : ''
+              inputErrs.error ? styles['input-box-error'] : ''
             }`}
           >
             <label className={styles['label-required']}>Subject</label>
@@ -225,7 +246,12 @@ const UserContactToOwner: React.FC<Props> = ({
               onChange={handleInputChange}
               ref={subref}
             />
-            <p className={styles['helper-text']}>{inputErrs.full_name}</p>
+
+            {inputErrs.error ? (
+              <p className={styles['error-msg']}>{inputErrs.error}</p>
+            ) : (
+              <p className={styles['error-msg']}>&nbsp;</p> // Render an empty <p> element
+            )}
           </div>
           <div className={styles['input-box']}>
             <div className={styles['street-input-container']}>
@@ -239,9 +265,6 @@ const UserContactToOwner: React.FC<Props> = ({
                 value={data.message}
               />
             </div>
-            {inputErrs.error && (
-              <p className={styles['error-msg']}>{inputErrs.error}</p>
-            )}
           </div>
         </section>
 
@@ -303,6 +326,16 @@ const UserContactToOwner: React.FC<Props> = ({
           )}
         </footer>
       </div>
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

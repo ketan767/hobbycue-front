@@ -128,11 +128,11 @@ const ListingContactToOwner: React.FC<Props> = ({
   }
 
   const handleSubmit = async () => {
-    console.log('ContactOwner', data)
-    if (!data.message || data.message === '') {
+    if (!data.sub || data.sub.trim() === '') {
       setInputErrs((prev) => {
         return { ...prev, error: 'This field is required!' }
       })
+      subref?.current?.focus()
       setIsError(true)
       return
     }
@@ -144,16 +144,18 @@ const ListingContactToOwner: React.FC<Props> = ({
       setSnackbar({
         display: true,
         type: 'success',
-        message: 'Message sent successfully',
+        message: 'Message sent',
       })
-      setSubmitBtnLoading(false);
-      dispatch(closeModal())
-    }else if (err){
-      setSubmitBtnLoading(false);
+      setSubmitBtnLoading(false)
+      setTimeout(() => {
+        dispatch(closeModal())
+      }, 1500)
+    } else if (err) {
+      setSubmitBtnLoading(false)
       setSnackbar({
         display: true,
         type: 'warning',
-        message: 'Message not sent',
+        message: 'Something went wrong',
       })
     }
   }
@@ -188,7 +190,7 @@ const ListingContactToOwner: React.FC<Props> = ({
     subref?.current?.focus()
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        nextButtonRef.current?.click()
+        handleSubmit()
       }
     }
 
@@ -232,7 +234,7 @@ const ListingContactToOwner: React.FC<Props> = ({
           {/* Subject */}
           <div
             className={`${styles['input-box']} ${
-              inputErrs.sub ? styles['input-box-error'] : ''
+              inputErrs.error ? styles['input-box-error'] : ''
             }`}
           >
             <label className={styles['label-required']}>Subject</label>
@@ -246,7 +248,11 @@ const ListingContactToOwner: React.FC<Props> = ({
               onChange={handleInputChange}
               ref={subref}
             />
-            <p className={styles['helper-text']}>{inputErrs.full_name}</p>
+            {inputErrs.error ? (
+              <p className={styles['error-msg']}>{inputErrs.error}</p>
+            ) : (
+              <p className={styles['error-msg']}>&nbsp;</p> // Render an empty <p> element
+            )}
           </div>
           <div className={styles['input-box']}>
             <div className={styles['street-input-container']}>
@@ -260,9 +266,6 @@ const ListingContactToOwner: React.FC<Props> = ({
                 value={data.message}
               />
             </div>
-            {inputErrs.error && (
-              <p className={styles['error-msg']}>{inputErrs.error}</p>
-            )}
           </div>
         </section>
 

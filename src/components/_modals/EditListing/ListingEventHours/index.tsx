@@ -119,15 +119,19 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     'nov',
     'dec',
   ]
-  const handleDateSelection = (selectedDate: string) => {
+  const handleDateSelection = (selectedDate: string, isFromDate: boolean) => {
     const date = selectedDate?.split('-')
-    const month = months[Number(date[1]) - 1];
-    const newDate=`${date[0]}/${month}/${date[2]}`
+    const month = months[Number(date[1]) - 1]
+    const newDate = `${date[0]}/${month}/${date[2]}`
 
-    if (isSelectingStartDate) {
+    if (isFromDate) {
       setEventData((prevData) => ({ ...prevData, from_date: selectedDate }))
       setIsSelectingStartDate(false)
     } else {
+      if (new Date(selectedDate) < new Date(eventData.from_date)) {
+        alert('To Date cannot be before From Date')
+        return // Prevent updating the state
+      }
       setEventData((prevData) => ({ ...prevData, to_date: selectedDate }))
       setIsSelectingStartDate(true)
     }
@@ -247,7 +251,9 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                   className={styles.inputField}
                   type="date"
                   min={today}
-                  onChange={(e: any) => handleDateSelection(e.target.value)}
+                  onChange={(e: any) =>
+                    handleDateSelection(e.target.value, true)
+                  }
                 />
               </div>
               <div className={styles.listSubItem}>
@@ -258,7 +264,9 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                   className={styles.inputField}
                   type="date"
                   min={eventData.from_date}
-                  onChange={(e: any) => handleDateSelection(e.target.value)}
+                  onChange={(e: any) =>
+                    handleDateSelection(e.target.value, false)
+                  }
                 />
               </div>
               <div className={styles.listSubItem}>

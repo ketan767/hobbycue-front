@@ -20,6 +20,7 @@ import CloseIcon from '@/assets/icons/CloseIcon'
 import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import Image from 'next/image'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   onComplete?: () => void
@@ -79,7 +80,11 @@ const UserReport: React.FC<Props> = ({
     reported_user_id: currprofile?._id,
   })
   const [isChanged, setIsChanged] = useState(false)
-
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
   useEffect(() => {
     setInitialData({
       description: '',
@@ -122,22 +127,24 @@ const UserReport: React.FC<Props> = ({
 
     setSubmitBtnLoading(true)
     const { err, res } = await ReportUser(data)
-
-    if (err) {
+    if (res?.data.success) {
+      setSnackbar({
+        display: true,
+        type: 'success',
+        message: 'Report sent',
+      })
       setSubmitBtnLoading(false)
-      return console.log(err)
-    }
-
-    const { err: error, res: response } = await getMyProfileDetail()
-    setSubmitBtnLoading(false)
-
-    if (error) return console.log(error)
-    if (response?.data.success) {
-      dispatch(updateUser(response.data.data.user))
-      if (onComplete) onComplete()
-      else {
+      setTimeout(() => {
         dispatch(closeModal())
-      }
+      }, 1500)
+    } else if (err) {
+      setSubmitBtnLoading(false)
+      setSnackbar({
+        display: true,
+        type: 'warning',
+        message: 'Something went wrong',
+      })
+      console.log(err)
     }
   }
 
@@ -248,8 +255,10 @@ const UserReport: React.FC<Props> = ({
                 ref={textAreaRef}
               />
             </div>
-            {inputErrs.error && (
+            {inputErrs.error ? (
               <p className={styles['error-msg']}>{inputErrs.error}</p>
+            ) : (
+              <p className={styles['error-msg']}>&nbsp;</p> // Render an empty <p> element
             )}
           </div>
         </section>
@@ -312,6 +321,16 @@ const UserReport: React.FC<Props> = ({
           )}
         </footer>
       </div>
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }
