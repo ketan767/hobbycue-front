@@ -316,7 +316,7 @@
   color: #8064a2;
 }
 .navigation-tabs a.active {
-  color: #8064a2;
+  color: #8064a2 !important;
   font-weight: 600;
 }
 .navigation-tabs a.active::after {

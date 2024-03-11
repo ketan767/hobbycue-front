@@ -55,11 +55,13 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
   const [otp, setOtp] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  // const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [confirmPassword, setConfirmPassword] = useState('')
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const { forgotPasswordEmail } = useSelector((state: any) => state.modal)
+
   const newPasswordRef = useRef<HTMLInputElement>(null)
+  const otpRef = useRef<HTMLInputElement>(null)
 
   const [showValidations, setShowValidations] = useState(false)
   const [inputValidation, setInputValidation] = useState(
@@ -129,6 +131,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
   }, [newPassword, inputValidation])
 
   useEffect(() => {
+    otpRef?.current?.focus()
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
         // if(event?.target?.tagName==="INPUT"){
@@ -144,6 +147,10 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
     return () => {
       window.removeEventListener('keydown', handleKeyPress)
     }
+  }, [])
+
+  useEffect(() => {
+    otpRef.current?.focus()
   }, [])
 
   let threeConditionsValid = 0
@@ -164,17 +171,20 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
       <div className={styles['modal-wrapper']}>
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>Change Password</h4>
+          <h4 className={styles['heading']}>Set Password</h4>
         </header>
         <section className={styles['body']}>
           <div className={styles.inputField}>
-            {/* <label className={styles.label}>Current Password</label> */}
+            <label className={styles.label}>
+              OTP to set password has been sent to your registerd E-mail id.
+            </label>
             <div
               className={`${styles['input-box']} ${
                 errors.otp ? styles['input-error'] : ''
               }`}
             >
               <input
+                ref={otpRef}
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
                 className={styles.input}
@@ -191,6 +201,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
               }`}
             >
               <TextField
+                className={styles['input-password']}
                 fullWidth
                 required
                 ref={newPasswordRef}
@@ -272,25 +283,26 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
               }`}
             >
               <TextField
+                className={styles['input-password']}
                 fullWidth
                 required
-                type={showConfirmPassword ? 'text' : 'password'}
+                type={'password'}
                 value={confirmPassword}
                 placeholder="Confirm New Password"
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                InputProps={{
-                  endAdornment: (
-                    <IconButton
-                      onClick={() => setShowConfirmPassword(!showPassword)}
-                    >
-                      {showConfirmPassword ? (
-                        <VisibilityRoundedIcon />
-                      ) : (
-                        <VisibilityOffRoundedIcon />
-                      )}
-                    </IconButton>
-                  ),
-                }}
+                // InputProps={{
+                //   endAdornment: (
+                //     <IconButton
+                //       onClick={() => setShowConfirmPassword(!showPassword)}
+                //     >
+                //       {showConfirmPassword ? (
+                //         <VisibilityRoundedIcon />
+                //       ) : (
+                //         <VisibilityOffRoundedIcon />
+                //       )}
+                //     </IconButton>
+                //   ),
+                // }}
               />
 
               <p className={styles['helper-text']}>{errors.confirmPassword}</p>

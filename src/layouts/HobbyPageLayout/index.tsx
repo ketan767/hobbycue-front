@@ -35,7 +35,7 @@ const HobbyPageLayout: React.FC<Props> = ({
 }) => {
   const [showSmallHeader, setShowSmallHeader] = useState(false)
   const [members, setMembers] = useState([])
-  const hideLastColumnPages = ['pages', 'blogs']
+  const hideLastColumnPages = ['pages', 'blogs', 'links']
   const [hideLastColumn, sethideLastColumn] = useState(false)
   const router = useRouter()
   const [seeAll, setSeeAll] = useState(false)
@@ -101,21 +101,24 @@ const HobbyPageLayout: React.FC<Props> = ({
 
       <div
         onClick={() => {
-          if (setExpandAll !== undefined)
-            setExpandAll(!expandAll)
+          if (setExpandAll !== undefined) setExpandAll(!expandAll)
         }}
         className={styles['expand-all']}
       >
         {expandAll ? <p>Collapse All</p> : <p>Expand All</p>}
         <Image
           src={ChevronDown}
-          className={`${expandAll ? styles['rotate-180'] :''}`}
+          className={`${expandAll ? styles['rotate-180'] : ''}`}
           alt=""
         />
       </div>
 
       <PageGridLayout column={!hideLastColumn ? 3 : 2}>
-        <aside className={`custom-scrollbar ${styles['hobby-left-aside']} ${expandAll?"":styles['display-none']}`}>
+        <aside
+          className={`custom-scrollbar ${styles['hobby-left-aside']} ${
+            expandAll ? '' : styles['display-none']
+          }`}
+        >
           <PageContentBox
             showEditButton={false}
             setDisplayData={setShowHobbiesClassification}
@@ -149,7 +152,7 @@ const HobbyPageLayout: React.FC<Props> = ({
         <main className={styles['display-desktop']}>{children}</main>
 
         {!hideLastColumn && (
-          <aside className={expandAll?"":styles['display-none']}>
+          <aside className={expandAll ? '' : styles['display-none']}>
             <div className={styles['members']}>
               <div className={styles['heading']}>
                 <h4>Members</h4>

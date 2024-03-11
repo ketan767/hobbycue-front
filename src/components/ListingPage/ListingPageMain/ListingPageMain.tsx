@@ -344,7 +344,7 @@ const ListingPageMain: React.FC<Props> = ({
             >
               <h4 className={styles['heading']}>Tags</h4>
               <ul
-                className={`${styles['hobby-list']} ${
+                className={`${styles['hobby-list']} ${styles['tags-list']} ${
                   styles['display-desktop']
                 }${showTags ? ' ' + styles['display-mobile'] : ''}`}
               >
@@ -1085,11 +1085,12 @@ const ListingPageMain: React.FC<Props> = ({
         {children}
 
         <aside
-          className={
-            activeTab === 'home' || activeTab === 'posts'
-              ? styles['display-desktop']
-              : styles['display-none']
-          }
+          className={`custom-scrollbar ${styles['page-right-aside']}
+            ${
+              activeTab === 'home' || activeTab === 'posts'
+                ? styles['display-desktop']
+                : styles['display-none']
+            }`}
         >
           {/* User Contact Details */}
           <PageContentBox

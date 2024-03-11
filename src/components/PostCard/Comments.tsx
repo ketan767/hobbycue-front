@@ -20,6 +20,7 @@ type Props = {
   onMoreComments?: () => void
   showAllComments?: boolean
   getInput?: (x: string) => void
+  hideSeeMore?:boolean
 }
 
 const PostComments = ({
@@ -28,6 +29,7 @@ const PostComments = ({
   onMoreComments,
   showAllComments,
   getInput,
+  hideSeeMore
 }: Props) => {
   const router = useRouter()
   const dispatch = useDispatch()
@@ -318,8 +320,7 @@ const PostComments = ({
                     </footer>
                   </section>
                 </div>
-                {/* <Link href={`/post/${data._id}?comments=show`} onClick={()=>{dispatch(closeModal())}}> */}
-                <p
+               {comments?.length>1&& <p
                   className={styles['see-more-comments']}
                   onClick={() => {
                     if (activeModal === 'post') {
@@ -333,13 +334,12 @@ const PostComments = ({
                   }}
                 >
                   See more comments
-                </p>
-                {/* </Link> */}
+                </p>}
               </>
             )}
           </section>
         )}
-        {displayMoreComments && (
+        {(displayMoreComments && !hideSeeMore) && (
           <p
             className={styles['see-more-comments']}
             onClick={() => {

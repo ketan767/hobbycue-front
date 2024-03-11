@@ -21,6 +21,7 @@ import {
   showAllPlaceTrue,
   showAllEventTrue,
   showAllUsersTrue,
+  showAllTrue,
 } from '@/redux/slices/search'
 import LogoFull from '@/assets/image/logo-full.svg'
 import LogoSmall from '@/assets/image/logo-small.png'
@@ -50,6 +51,8 @@ import PreLoader from '@/components/PreLoader'
 
 import hobbycueLogo from '@/assets/svg/Search/hobbycue.svg'
 import { setShowPageLoader } from '@/redux/slices/site'
+import { usePathname } from 'next/navigation'
+import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 
 type Props = {}
 
@@ -68,6 +71,8 @@ export const Navbar: React.FC<Props> = ({}) => {
   const dispatch = useDispatch()
   const router = useRouter()
   const [menuActive, setMenuActive] = useState(false)
+  const pathname = usePathname()
+  console.log({ pathname })
 
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
@@ -107,6 +112,18 @@ export const Navbar: React.FC<Props> = ({}) => {
       setTimeout(() => searchInputRef.current?.focus(), 0)
     }
   }
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
+  const showFeatureUnderDevelopment = () => {
+    setSnackbar({
+      display: true,
+      type: 'warning',
+      message: 'This feature is under development',
+    })
+  }
 
   const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -139,7 +156,10 @@ export const Navbar: React.FC<Props> = ({}) => {
   }
 
   const searchResult = async () => {
-    router.push('/search')
+    if (router.pathname !== '/search') {
+      dispatch(showAllTrue())
+      router.push('/search')
+    }
     const searchValue = data.search.value.trim()
     const taglineValue = ''
     const cityValue = ''
@@ -268,6 +288,7 @@ export const Navbar: React.FC<Props> = ({}) => {
       }
       dispatch(setShowPageLoader(false))
       dispatch(setSearchString(searchValue))
+      dispatch(showAllTrue())
     } catch (error) {
       dispatch(setShowPageLoader(false))
       console.error('An error occurred during the combined search:', error)
@@ -376,6 +397,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                     <IconButton
                       onClick={searchResult}
                       sx={{
+                        height: '40px',
                         bgcolor: 'primary.main',
                         borderRadius: '0px 8px 8px 0px',
                         '&:hover': {
@@ -483,11 +505,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                         <Link
                           href={'/search'}
                           className={styles['hobbiescategory']}
-                          onClick={(e) => {
-                            e.preventDefault()
-                            dispatch(showAllUsersTrue())
-                            router.push('/search')
-                          }}
+                          onClick={showFeatureUnderDevelopment}
                         >
                           Posts - Write-ups
                         </Link>
@@ -936,6 +954,16 @@ export const Navbar: React.FC<Props> = ({}) => {
 
       {menuActive && <SideMenu handleClose={toggleMenu} />}
       {showDropdown && <div className={styles['navbar-backdrop']}></div>}
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

@@ -13,7 +13,7 @@ type Props = {
   propData?: any
 }
 
-const AddHobby: React.FC<Props> = ({ handleClose, handleSubmit, propData }) => {
+const AddGenre: React.FC<Props> = ({ handleClose, handleSubmit, propData }) => {
   const dispatch = useDispatch()
 
   return (
@@ -44,4 +44,4 @@ const AddHobby: React.FC<Props> = ({ handleClose, handleSubmit, propData }) => {
   )
 }
 
-export default AddHobby
+export default AddGenre

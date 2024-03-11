@@ -51,6 +51,7 @@ interface SearchState {
   showAllPlace: boolean;
   showAllEvent: boolean;
   showAllProducts:boolean;
+  showAllHobbies:boolean;
   
 }
 
@@ -89,6 +90,7 @@ const initialState: SearchState = {
   showAllPlace: false,
   showAllEvent: false,
   showAllProducts: false,
+  showAllHobbies:false
 };
 
 export const searchSlice = createSlice({
@@ -123,6 +125,7 @@ export const searchSlice = createSlice({
         state.showAllPlace = false;
         state.showAllEvent = false;
         state.showAllProducts = false;
+        state.showAllHobbies = false;
       
     },
 
@@ -134,9 +137,24 @@ export const searchSlice = createSlice({
         state.showAllProducts = false;
         state.showAll = false;
         state.showAllUsers = true;
+        state.showAllHobbies = false;
       } else {
         state.showAll = true;
         state.showAllUsers = false;
+      }
+    },
+    toggleShowAllHobbies: (state) => {
+      if (!state.showAllHobbies) {
+        state.showAllPeople = false;
+        state.showAllPlace = false;
+        state.showAllEvent = false;
+        state.showAllProducts = false;
+        state.showAll = false;
+        state.showAllUsers = false;
+        state.showAllHobbies = true
+      } else {
+        state.showAll = true;
+        state.showAllHobbies = false;
       }
     },
     toggleShowAllPeople: (state) => {
@@ -146,6 +164,7 @@ export const searchSlice = createSlice({
         state.showAllEvent = false;
         state.showAllProducts = false;
         state.showAll = false;
+        state.showAllHobbies = false;
         state.showAllPeople = true;
       } else {
         state.showAll = true;
@@ -155,6 +174,7 @@ export const searchSlice = createSlice({
     toggleShowAllPlace: (state) => {
       if (!state.showAllPlace) {
         state.showAllUsers = false;
+        state.showAllHobbies = false;
         state.showAllPeople = false;
         state.showAllEvent = false;
         state.showAllProducts = false;
@@ -168,6 +188,7 @@ export const searchSlice = createSlice({
     toggleShowAllEvent: (state) => {
       if (!state.showAllEvent) {
         state.showAllUsers = false;
+        state.showAllHobbies = false;
         state.showAllPeople = false;
         state.showAllPlace = false;
         state.showAllProducts = false;
@@ -181,6 +202,7 @@ export const searchSlice = createSlice({
     toggleShowAllProducts: (state) => {
       if (!state.showAllEvent) {
         state.showAllUsers = false;
+        state.showAllHobbies = false;
         state.showAllPeople = false;
         state.showAllPlace = false;
         state.showAllEvent = false;
@@ -194,6 +216,7 @@ export const searchSlice = createSlice({
     showAllUsersTrue: (state) => {
       state.showAllUsers = true;
       if (state.showAllUsers) {
+        state.showAllHobbies = false;
         state.showAllPeople = false;
         state.showAllPlace = false;
         state.showAllEvent = false;
@@ -203,6 +226,7 @@ export const searchSlice = createSlice({
     showAllPeopleTrue: (state) => {
       state.showAllPeople = true;
       if (state.showAllPeople) {
+        state.showAllHobbies = false;
         state.showAllUsers = false;
         state.showAllPlace = false;
         state.showAllEvent = false;
@@ -213,6 +237,7 @@ export const searchSlice = createSlice({
       state.showAllPlace = true;
       if (state.showAllPlace) {
         state.showAllUsers = false;
+        state.showAllHobbies = false;
         state.showAllPeople = false;
         state.showAllEvent = false;
         state.showAllProducts = false;
@@ -222,6 +247,7 @@ export const searchSlice = createSlice({
       state.showAllEvent = true;
       if (state.showAllEvent) {
         state.showAllUsers = false;
+        state.showAllHobbies = false;
         state.showAllPeople = false;
         state.showAllPlace = false;
         state.showAllProducts = false;
@@ -231,6 +257,7 @@ export const searchSlice = createSlice({
       state.showAllProducts = true;
       if (state.showAllEvent) {
         state.showAllUsers = false;
+        state.showAllHobbies = false;
         state.showAllPeople = false;
         state.showAllPlace = false;
         state.showAllEvent = false;
@@ -239,6 +266,7 @@ export const searchSlice = createSlice({
     showAllTrue: (state) => {
       state.showAll = true;
       state.showAllUsers = false;
+      state.showAllHobbies = false;
       state.showAllPeople = false;
       state.showAllEvent = false;
       state.showAllProducts = false;
@@ -249,7 +277,7 @@ export const searchSlice = createSlice({
 
 export const { setUserSearchResults, setTypeResultOne,setTypeResultTwo, setTypeResultThree, setSearchString,
    setHobbiesSearchResult,toggleShowAll, toggleShowAllUsers, toggleShowAllPeople, toggleShowAllPlace, toggleShowAllEvent,toggleShowAllProducts,
-  showAllEventTrue,showAllPeopleTrue,showAllPlaceTrue,showAllUsersTrue,showAllProductsTrue, showAllTrue
+  showAllEventTrue,showAllPeopleTrue,showAllPlaceTrue,showAllUsersTrue,showAllProductsTrue, showAllTrue, toggleShowAllHobbies
   } = searchSlice.actions;
 
 export default searchSlice.reducer;

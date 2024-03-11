@@ -3,7 +3,7 @@ import PageContentBox from '@/layouts/PageContentBox'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import { withAuth } from '@/navigation/withAuth'
 import styles from './CommunityLayout.module.css'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { useDispatch, useSelector } from 'react-redux'
 import store, { RootState } from '@/redux/store'
@@ -34,6 +34,8 @@ import { getListingPages } from '@/services/listing.service'
 import { setShowPageLoader } from '@/redux/slices/site'
 import { InviteToCommunity } from '@/services/auth.service'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import CommunityTopDropdown from '@/components/_formElements/CommunityTopDropdown/CommunityTopDropdown'
+import { CommunityDropdownOption } from '@/components/_formElements/CommunityDropdownOption/CommunityDropdownOption'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -87,6 +89,7 @@ const CommunityLayout: React.FC<Props> = ({
 
   const hideThirdColumnTabs = ['pages', 'links']
   const { showPageLoader } = useSelector((state: RootState) => state.site)
+  const router = useRouter()
 
   const toggleSeeMore = () => setSeeMoreHobby(!seeMoreHobby)
   const getPost = async () => {
@@ -127,7 +130,29 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   const EditProfileLocation = () => {
-    window.location.href = '/settings/localization-and-payments'
+    if (user.activeProfile?.type === 'user') {
+      window.location.href = '/settings/localization-payments'
+    } else {
+      dispatch(openModal({ type: 'listing-address-edit', closable: true }))
+    }
+  }
+
+  const editHobbiesClick = () => {
+    if (activeProfile?.type === 'user') {
+      dispatch(
+        openModal({
+          type: 'profile-hobby-edit',
+          closable: true,
+        }),
+      )
+    } else {
+      dispatch(
+        openModal({
+          type: 'listing-hobby-edit',
+          closable: true,
+        }),
+      )
+    }
   }
   console.log('l', activeProfile.data?._hobbies?.length)
   console.log('activeprofile', activeProfile)
@@ -228,7 +253,7 @@ const CommunityLayout: React.FC<Props> = ({
         params.append('_hobby', item.hobby._id)
       })
     }
-    if (selectedLocation !== '' && selectedLocation !== 'Everyone') {
+    if (selectedLocation !== '' && selectedLocation !== 'All locations') {
       params.append('location', selectedLocation)
     }
     console.log('PARAMS ---', params.toString())
@@ -365,8 +390,8 @@ const CommunityLayout: React.FC<Props> = ({
       let address = activeProfile.data?._address
       let visibilityArr: any = [
         {
-          value: 'Everyone',
-          display: 'Everyone',
+          value: 'All locations',
+          display: 'All locations',
           type: 'text',
         },
       ]
@@ -449,6 +474,14 @@ const CommunityLayout: React.FC<Props> = ({
       })
     }
   }
+
+  const hobbiesDropDownArr =
+    activeProfile.data?._hobbies?.map((item: any) => ({
+      value: item.hobby?._id,
+      display: `${item.hobby?.display}${
+        item?.hobby?.genre?.display ? ' - ' : ''
+      }${item?.hobby?.genre?.display ?? ''}`,
+    })) ?? []
 
   return (
     <>
@@ -720,7 +753,9 @@ const CommunityLayout: React.FC<Props> = ({
                 </section>
                 <section className={styles['filter-section']}>
                   <div>
-                    <Select
+                    {/*  */}
+
+                    {/* <Select
                       sx={{
                         boxShadow: 'none',
                         '.MuiOutlinedInput-notchedOutline': { border: 0 },
@@ -734,14 +769,17 @@ const CommunityLayout: React.FC<Props> = ({
                       <MenuItem value="">All Hobbies</MenuItem>
                       {activeProfile.data?._hobbies?.map(
                         (item: any, idx: any) => {
-                          console.warn({item});
-                          
-                          return(
-                          <MenuItem key={idx} value={item.hobby?._id}>
-                            {item.hobby?.display}
-                            {item.genre?.display?` - ${item?.genre?.display}`:null}
-                          </MenuItem>
-                        )}
+                          console.warn({ item })
+
+                          return (
+                            <MenuItem key={idx} value={item.hobby?._id}>
+                              {item.hobby?.display}
+                              {item.genre?.display
+                                ? ` - ${item?.genre?.display}`
+                                : null}
+                            </MenuItem>
+                          )
+                        },
                       )}
                       <MenuItem
                         onClick={() => {
@@ -769,52 +807,81 @@ const CommunityLayout: React.FC<Props> = ({
                           alt="edit"
                         />{' '}
                       </MenuItem>
-                    </Select>
+                      </Select> */}
+                    <CommunityTopDropdown
+                      maxWidth="139px"
+                      className={styles['hobby-select']}
+                      value={
+                        hobbiesDropDownArr.find(
+                          (obj: any) => obj?.value === selectedHobby,
+                        )?.display ?? 'All Hobbies'
+                      }
+                      variant={selectedHobby === '' ? 'secondary' : 'primary'}
+                    >
+                      {[
+                        { display: 'All Hobbies', value: '' },
+                        ...hobbiesDropDownArr,
+                        {
+                          display: 'Edit Hobbies',
+                          value: '',
+                          pencil: true,
+                          onClick: editHobbiesClick,
+                          smallPencil: true,
+                        },
+                      ]?.map((item: any, idx) => (
+                        <CommunityDropdownOption
+                          maxWidth="139px"
+                          {...item}
+                          key={idx}
+                          currentValue={
+                            hobbiesDropDownArr.find(
+                              (obj: any) => obj?.value === selectedHobby,
+                            )?.value ?? 'All Hobbies'
+                          }
+                          onChange={(val: any) => handleHobbyClick(val?.value)}
+                        />
+                      ))}
+                    </CommunityTopDropdown>
+
                     <div className={styles.hobbyDropDownOption}>at</div>
 
                     {visibilityData?.length > 0 && (
-                      <InputSelect
+                      <CommunityTopDropdown
                         value={selectedLocation || ''}
-                        onChange={(val: any) =>
-                          setSelectedLocation((prev) => {
-                            if (prev === val) {
-                              return 'All Locations'
-                            } else {
-                              return val
-                            }
-                          })
+                        variant={
+                          selectedLocation === 'All Locations'
+                            ? 'secondary'
+                            : 'primary'
                         }
-                        className={` ${styles['location-select']}`}
                       >
-                        {visibilityData?.map((item: any, idx) => (
-                          <DropdownOption
+                        {[
+                          ...visibilityData,
+                          {
+                            display: 'Edit Location',
+                            value: '',
+                            pencil: true,
+                            onClick: EditProfileLocation,
+                          },
+                        ]?.map((item: any, idx) => (
+                          <CommunityDropdownOption
                             {...item}
                             key={idx}
                             currentValue={selectedLocation}
                             onChange={(val: any) =>
                               setSelectedLocation((prev) => {
-                                if (prev === val) {
+                                if (prev === val?.value) {
                                   return 'All Locations'
                                 } else {
-                                  return val
+                                  return val?.value
                                 }
                               })
                             }
                           />
                         ))}
-                        <MenuItem
-                          className={styles.editLocation}
-                          onClick={EditProfileLocation}
-                        >
-                          Edit Location
-                          <Image
-                            src={EditIcon}
-                            className={styles.editLocationResponsive}
-                            alt="edit"
-                          />
-                        </MenuItem>
-                      </InputSelect>
+                      </CommunityTopDropdown>
                     )}
+
+                    {/*  */}
                   </div>
                 </section>
                 <section
@@ -898,10 +965,9 @@ const CommunityLayout: React.FC<Props> = ({
                   )}
                 </FilledButton>
                 {/* <CircularProgress color="inherit" size={'22px'} /> */}
-                {
-                  errorMessage!==""&&
+                {errorMessage !== '' && (
                   <span className={styles['error-invite']}>{errorMessage}</span>
-                }
+                )}
               </section>
             </section>
 

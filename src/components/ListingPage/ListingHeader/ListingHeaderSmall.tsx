@@ -352,7 +352,7 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
             </Tooltip>
 
             {/* Share Button */}
-            <Tooltip title="Ahare">
+            <Tooltip title="Share">
               <div
                 onClick={(e) => handleShare()}
                 className={styles['action-btn']}

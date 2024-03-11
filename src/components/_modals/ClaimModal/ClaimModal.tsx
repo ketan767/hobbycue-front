@@ -29,7 +29,7 @@ const ClaimModal = () => {
     listing_id: listingModalData._id,
     profileName: userData.full_name,
     email: userData.email,
-    phonenumber: userData.phone.number,
+    phonenumber: userData.phone?.number,
     phonePrefix: selectedCountryCode,
     pageUrl: pageURL,
     userRelation: '',
@@ -74,7 +74,7 @@ const ClaimModal = () => {
   const listingId = formData.listing_id
   const name = formData.profileName
   const email = formData.email
-  const phonenumber = formData.phonenumber
+  const phonenumber = formData?.phonenumber
   const phonePrefix = selectedCountryCode
   const pageUrl = formData.pageUrl
   const HowRelated = formData.userRelation
@@ -160,7 +160,7 @@ const ClaimModal = () => {
                   required
                   name="email"
                   onChange={handleInputChange}
-                  value={formData.email}
+                  value={formData?.email}
                 />
               </div>
             </div>
@@ -189,7 +189,7 @@ const ClaimModal = () => {
                 <input
                   type="text"
                   placeholder={`Phone number`}
-                  value={formData.phonenumber}
+                  value={formData?.phonenumber}
                   name="phone"
                   autoComplete="phone"
                   required

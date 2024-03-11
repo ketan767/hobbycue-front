@@ -25,13 +25,18 @@
   line-height: 22px;
 }
 
-.long-input-box:focus-visible {
+.street-input-container textarea:focus-visible {
   outline: 1px solid #8064a2;
+}
+.input-box-error textarea:focus-visible {
+  outline: none ;
 }
 
 @media screen and (min-width: 1100px) {
   .modal-wrapper {
     min-height: calc(100vh - 6rem);
+    max-height: calc(100vh - 6rem);
+    
   }
   .modal-wrapper .body {
     height: 100%;
@@ -47,8 +52,6 @@
   margin-top: auto;
   display: flex;
   justify-content: space-between;
-  position: sticky;
-  bottom: 0;
 }
 .modal-wrapper .footer .submit {
   margin-left: auto;
@@ -64,7 +67,9 @@
 
   color: #000000;
 }
-
+.input-box-error textarea {
+  border: 1px solid #c0504d !important;
+}
 .input-box {
   display: flex;
   flex-direction: column;
@@ -175,27 +180,25 @@
     max-width: 1100px;
     width: 100%;
     max-height: none;
-    height: 92.5%;
-    margin: -5px 0 5rem 0;
+    margin: -5px 0 3rem 0;
     padding: 5px 0 0 0;
+    height: 90%;
   }
   .modal-wrapper .body {
     padding-left: 20px;
     padding-right: 20px;
   }
-  .modal-wrapper .footer {
+  .footer {
     background: var(--Base-White, #fff);
-    padding: var(--spacing-16) var(--spacing-16);
     box-shadow: 0px -6px 15px 0px rgba(0, 0, 0, 0.06);
     position: fixed;
-    bottom: 0;
     width: 100%;
-    z-index: 1000;
+    bottom: 0;
+  }
+  .modal-hr {
+    display: none;
   }
   .modal-close-icon {
     position: fixed !important;
   }
-}
-.modal-hr {
-  display: none;
 }
