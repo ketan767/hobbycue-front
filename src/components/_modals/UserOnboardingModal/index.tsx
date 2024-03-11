@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { RootState } from '@/redux/store'
-import { updateMyProfileDetail } from '@/services/user.service'
+import { updateMyProfileDetail,getMyProfileDetail } from '@/services/user.service'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import ProfileGeneralEditModal from '../EditProfile/General'
 import ProfileAboutEditModal from '../EditProfile/About'
@@ -17,28 +17,6 @@ import Image from 'next/image'
 import styles from './styles.module.css'
 import { updateUser } from '@/redux/slices/user'
 import { sendWelcomeMail } from '@/services/auth.service'
-
-// type OnboardingData = {
-//   full_name: string
-//   tagline: string
-//   display_name: string
-//   profile_url: string
-//   gender: 'male' | 'female' | null
-//   year_of_birth: string
-//   phone: string
-//   website: string
-//   about: string
-//   street: string
-//   society: string
-//   locality: string
-//   city: string
-//   pin_code: string
-//   state: string
-//   country: string
-//   latitude: string
-//   longitude: string
-//   is_onboarded: boolean
-// }
 
 type steps = 'General' | 'About' | 'Contact' | 'Address' | 'Hobbies'
   const totalSteps: steps[] = [
@@ -138,6 +116,22 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
       document.removeEventListener('mousedown', handleOutsideClick)
     }
   }, [])
+
+
+  useEffect(()=>{
+    const updateStepsFunc = async()=>{
+    const { err: error, res: response } = await getMyProfileDetail()
+    if (error) {
+      
+      return console.log(error)
+    }
+    if (response?.data.success) {
+      setActiveStep(totalSteps[Number(response.data.data.user?.onboarding_step)]);
+      setFurthestStepIndex(Number(response.data.data.user?.onboarding_step));
+    }
+  }
+  updateStepsFunc();
+  },[])
 
   return (
     <div

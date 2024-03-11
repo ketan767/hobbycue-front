@@ -30,8 +30,8 @@
 .modal-wrapper .header,
 .modal-wrapper .body {
   padding: var(--spacing-16) var(--spacing-24);
-  padding-left: 34px;
-  padding-right: 34px;
+  /* padding-left: 34px;
+  padding-right: 34px; */
 }
 
 .modal-wrapper .footer {
@@ -178,7 +178,7 @@
   font-size: 14px;
   line-height: 22px;
   color: #6d747a;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
 }
 
 .sectionHeadRight {
@@ -201,7 +201,14 @@
 .listSubItem {
   display: flex;
   flex-direction: column;
-  padding: 0 10px;
+  padding: 0 8px;
+}
+
+.listSubItem:nth-child(2){
+  padding: 0 6px 0 8px;
+}
+.listSubItem:nth-child(3){
+  padding: 0 8px 0 6px;
 }
 
 .listSubItem:first-child {
@@ -226,9 +233,9 @@
   background: #f8f9fa;
   border: 1px solid #ebedf0;
   border-radius: 8px;
-  padding: 12px 12px;
+  padding: 8px 12px;
   color: #000;
-  width: 125px;
+  width: 137px;
   font-size: 14px;
 }
 @media screen and (max-width: 1100px) {
@@ -273,5 +280,15 @@
   }
   .modal-close-icon {
     position: fixed !important;
+  }
+}
+
+@media screen and (min-width:1100px) {
+  .listSubItem:nth-child(3) select {
+    width: 121px;
+  }
+  
+  .listSubItem:nth-child(4) select {
+    width: 121px;
   }
 }

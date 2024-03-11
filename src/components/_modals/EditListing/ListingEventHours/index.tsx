@@ -119,6 +119,10 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     'nov',
     'dec',
   ]
+  function formatDate(date:string) {
+    const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'short', year: 'numeric' };
+    return new Date(date).toLocaleDateString('en-GB', options);
+  }
   const handleDateSelection = (selectedDate: string, isFromDate: boolean) => {
     const date = selectedDate?.split('-')
     const month = months[Number(date[1]) - 1]

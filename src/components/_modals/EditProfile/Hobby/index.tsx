@@ -2,6 +2,7 @@ import {
   addUserHobby,
   deleteUserHobby,
   getMyProfileDetail,
+  updateMyProfileDetail,
   updateUserHobbyLevel,
 } from '@/services/user.service'
 import { CircularProgress, useMediaQuery } from '@mui/material'
@@ -368,13 +369,14 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         setAddHobbyBtnLoading(false)
         return console.log(err)
       }
-
+      const { err:updtProfileErr, res:updtProfileRes } = await updateMyProfileDetail({ is_onboarded: true })
       const { err: error, res: response } = await getMyProfileDetail()
       setAddHobbyBtnLoading(false)
       if (error) return console.log(error)
 
       if (response?.data.success) {
-        dispatch(updateUser(response?.data.data.user))
+        const {is_onboarded} = user;
+        dispatch(updateUser({...response?.data.data.user,is_onboarded}))
         setHobbyInputValue('')
         setGenreInputValue('')
         setData({ level: 1, hobby: null, genre: null })
