@@ -105,7 +105,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
               ) : (
                 <div className={`${styles['img']} default-user-icon`}></div>
               )}
-              {user?.full_name}
+              <p>{user?.full_name}</p>
             </div>
             <div className={styles['header-icons']}>
               <Link href={'/bookmarks'}>
@@ -188,7 +188,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
               exploreActive ? styles['dropdown-active'] : ''
             } `}
           >
-            <header onClick={() => setExploreActive(!exploreActive)}>
+            <header className={styles['dropdown-header']} onClick={() => setExploreActive(!exploreActive)}>
               <div>
                 <Image src={ExploreIcon} alt="Explore" />
                 <p> Explore </p>
@@ -196,7 +196,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
               <Image
                 src={DownIcon}
                 alt="Down"
-                className={`${styles['arrow']}`}
+                className={`${styles['arrow']} ${exploreActive&&styles.rotate180}`}
               />
             </header>
             <div className={styles['dropdown-options']}>
@@ -211,7 +211,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
               hobbiesActive ? styles['dropdown-active'] : ''
             } `}
           >
-            <header onClick={() => setHobbiesActive(!hobbiesActive)}>
+            <header className={styles['dropdown-header']} onClick={() => setHobbiesActive(!hobbiesActive)}>
               <div>
                 <Image src={HobbyIcon} alt="Hobby" />
                 <p> Hobbies </p>
@@ -219,7 +219,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
               <Image
                 src={DownIcon}
                 alt="Down"
-                className={`${styles['arrow']}`}
+                className={`${styles['arrow']} ${hobbiesActive&&styles.rotate180}`}
               />
             </header>
             <div
@@ -417,7 +417,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                     <p>Account</p>
                   </div>
                 </header>
-                <section className={styles['list']}>
+                <section className={`${styles['list']} ${styles['no-border']}`}>
                   {/* <ul>
                 <Link href={'/hobby/music'}>
                   <li>My orders</li>

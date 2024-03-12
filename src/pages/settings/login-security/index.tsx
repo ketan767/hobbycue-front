@@ -176,8 +176,7 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
                 <Image
                   className={styles['user-icon-google']}
                   src={user.google.picture}
-                  width={32}
-                  height={32}
+                  fill
                   alt="google"
                 />
                 <div className={styles['google-icon']}>
