@@ -5,15 +5,16 @@
   mix-blend-mode: normal;
   border-radius: var(--spacing-8);
 }
+.body-wrapper{
+  height: calc(100vh - 6rem);
+  overflow-y: auto;
+}
 
 @media screen and (min-width: 1100px) {
   .modal-wrapper {
-    min-height: calc(100vh - 6rem);
+    min-height: calc(100vh - 2rem);
   }
-  .modal-wrapper .body {
-    height: 100%;
-    overflow: auto;
-  }
+
 }
 .header {
   position: sticky;
@@ -209,7 +210,7 @@
   flex-direction: column;
   gap: var(--spacing-12);
   max-height: 75vh;
-  overflow: auto;
+  
 }
 .all-comment-container .comment {
   display: flex;
@@ -263,10 +264,11 @@
 
 .modal-close-icon{
   position: fixed;
-  top: 28px;
-  left: calc(50vw + 300px);
-  cursor: pointer;
-  z-index: 1000;
+    top: 25px;
+    left: calc(50vw + 318px);
+    cursor: pointer;
+    z-index: 1000;
+
 }
 
 @media screen and (max-width: 1100px) {
