@@ -7,7 +7,7 @@ type Props = {
   value?: any
 
   name?: any
-
+  optionValues?: any
 }
 
 const DropdownArrow = () => (
@@ -32,23 +32,34 @@ const DropdownArrow = () => (
   </svg>
 )
 
-const InputSelect: React.FC<Props> = ({ options, onChange, value }) => {
+const InputSelect: React.FC<Props> = ({
+  options,
+  onChange,
+  value,
+  optionValues,
+}) => {
+  console.log({value});
+  
   return (
     <div style={{ position: 'relative' }}>
       <select
         name="select"
         className={styles.select}
-
         onChange={(e: any) => {
+          console.log(e.target.value);
+          
           onChange(e.target.value)
         }}
-
         value={value}
         style={{ paddingRight: '30px' }}
       >
-        {options.map((item: any) => {
+        {options.map((item: any, idx: number) => {
           return (
-            <option key={item} className={styles.option}>
+            <option
+              key={idx}
+              className={styles.option}
+              value={optionValues ? optionValues[idx] : item}
+            >
               {item}
             </option>
           )

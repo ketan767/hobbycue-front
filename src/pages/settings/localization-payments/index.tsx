@@ -87,46 +87,46 @@ const VisibilityAndNotification: React.FC = () => {
       }
     })
   }
-  const isMobile = useMediaQuery('(max-width:1100px)');
+  const isMobile = useMediaQuery('(max-width:1100px)')
 
   return (
     <>
       <PageGridLayout column={2} customStyles={styles['settingcontainer']}>
-      <SettingsDropdownLayout>
-        {isMobile?null:<SettingsSidebar active="localization-payments" />}
-        <div className={styles.container}>
-          <div className={`${styles.flex} ${styles.addSectionContainer}`}>
-            <p className={`${styles.textLight}`}> Addresses </p>
-            <div
-              className={`${styles.flex} ${styles['clickable']} `}
-              onClick={handleAddLocation}
-            >
-              <Image
-                src={AddIcon}
-                width={16}
-                height={16}
-                alt="add"
-                className={styles.addIcon}
-              />
-              <p className={styles.textColored}> add new location</p>
+        <SettingsDropdownLayout>
+          {isMobile ? null : <SettingsSidebar active="localization-payments" />}
+          <div className={styles.container}>
+            <div className={`${styles.flex} ${styles.addSectionContainer}`}>
+              <p className={`${styles.textLight}`}> Addresses </p>
+              <div
+                className={`${styles.flex} ${styles['clickable']} `}
+                onClick={handleAddLocation}
+              >
+                <Image
+                  src={AddIcon}
+                  width={16}
+                  height={16}
+                  alt="add"
+                  className={styles.addIcon}
+                />
+                <p className={styles.textColored}> add new location</p>
+              </div>
             </div>
-          </div>
 
-          {user._addresses?.map((address: any) => {
-            return (
-              <Address
-                key={address?._id}
-                address={address}
-                handleAddressEdit={handleAddressEdit}
-                handleDeleteAddress={handleDeleteAddress}
-                isPrimary={user?.primary_address?._id === address?._id}
-              />
-            )
-          })}
+            {user._addresses?.map((address: any) => {
+              return (
+                <Address
+                  key={address?._id}
+                  address={address}
+                  handleAddressEdit={handleAddressEdit}
+                  handleDeleteAddress={handleDeleteAddress}
+                  isPrimary={user?.primary_address?._id === address?._id}
+                />
+              )
+            })}
 
-          <div className={styles.line}></div>
+            <div className={styles.line}></div>
 
-          {/* <div className={`${styles.cardContainer}`}>
+            {/* <div className={`${styles.cardContainer}`}>
             <div className={`${styles.addressLeft}`}>
               <Image
                 src={RadioUnselected}
@@ -181,109 +181,130 @@ const VisibilityAndNotification: React.FC = () => {
             />
           </div> */}
 
-          <p className={`${styles.textLight}`}> Localization </p>
+            <p className={`${styles.textLight}`}> Localization </p>
 
-          <div className={`${styles.flex} ${styles.localizationContainer}`}>
-            <p className={`${styles.textDark} ${styles.labelText}`}> Region </p>
-            <InputSelect
-              options={options['region']}
-              value={inpSelectValues.region}
-              onChange={(e: any) => {
-                setInpSelectValues((prevValue) => {
-                  let regionIndex = options.region.indexOf(e)
-                  return {
+            <div className={`${styles.flex} ${styles.localizationContainer}`}>
+              <p className={`${styles.textDark} ${styles.labelText}`}>
+                {' '}
+                Region{' '}
+              </p>
+              <InputSelect
+                options={options['region']}
+                value={inpSelectValues.region}
+                onChange={(e: any) => {
+                  setInpSelectValues((prevValue) => {
+                    let regionIndex = options.region.indexOf(e)
+                    return {
+                      ...prevValue,
+                      region: e,
+                      phonePrefix: options.phone[regionIndex],
+                    }
+                  })
+                }}
+              />
+            </div>
+
+            <div className={`${styles.flex} ${styles.localizationContainer}`}>
+              <p className={`${styles.textDark} ${styles.labelText}`}>
+                {' '}
+                Language{' '}
+              </p>
+              <InputSelect
+                options={options['language']}
+                value={inpSelectValues.language}
+                onChange={(e: any) => {
+                  setInpSelectValues((prevValue) => ({
                     ...prevValue,
-                    region: e,
-                    phonePrefix: options.phone[regionIndex],
-                  }
-                })
-              }}
-            />
-          </div>
+                    language: e,
+                  }))
+                }}
+              />
+            </div>
 
-          <div className={`${styles.flex} ${styles.localizationContainer}`}>
-            <p className={`${styles.textDark} ${styles.labelText}`}>
-              {' '}
-              Language{' '}
-            </p>
-            <InputSelect
-              options={options['language']}
-              value={inpSelectValues.language}
-              onChange={(e: any) => {
-                setInpSelectValues((prevValue) => ({
-                  ...prevValue,
-                  language: e,
-                }))
-              }}
-            />
-          </div>
+            <div className={`${styles.flex} ${styles.localizationContainer}`}>
+              <p className={`${styles.textDark} ${styles.labelText}`}>
+                {' '}
+                Currency{' '}
+              </p>
+              <InputSelect
+                options={options['currency']}
+                value={`${inpSelectValues.currency} ${
+                  countryData?.find(
+                    (country) => country.currency === inpSelectValues.currency,
+                  )?.currencySymbol
+                }`}
+                onChange={(e: any) => {
+                  console.log(
+                    `${e} ${
+                      countryData?.find((country) => `${country.currency} ${country.currencySymbol}` === e)
+                        ?.currencySymbol
+                    }`,
+                  )
+                  setInpSelectValues((prevValue) => ({
+                    ...prevValue,
+                    currency: e,
+                  }))
+                }}
+                optionValues={countryData.map(
+                  (country) => `${country.currency} ${country.currencySymbol}`,
+                )}
+              />
+            </div>
 
-          <div className={`${styles.flex} ${styles.localizationContainer}`}>
-            <p className={`${styles.textDark} ${styles.labelText}`}>
-              {' '}
-              Currency{' '}
-            </p>
-            <InputSelect
-              options={options['currency']}
-              value={inpSelectValues.currency}
-              onChange={(e: any) => {
-                setInpSelectValues((prevValue) => ({
-                  ...prevValue,
-                  currency: e,
-                }))
-              }}
-            />
-          </div>
+            <div className={`${styles.flex} ${styles.localizationContainer}`}>
+              <p className={`${styles.textDark} ${styles.labelText}`}>
+                {' '}
+                Phone Prefix{' '}
+              </p>
+              <InputSelect
+                options={options['phone']}
+                value={inpSelectValues.phonePrefix}
+                onChange={(e: any) => {
+                  setInpSelectValues((prevValue) => ({
+                    ...prevValue,
+                    phonePrefix: e,
+                  }))
+                }}
+              />
+            </div>
 
-          <div className={`${styles.flex} ${styles.localizationContainer}`}>
-            <p className={`${styles.textDark} ${styles.labelText}`}>
-              {' '}
-              Phone Prefix{' '}
+            <div className={`${styles.flex} ${styles.localizationContainer}`}>
+              <p className={`${styles.textDark} ${styles.labelText}`}>
+                {' '}
+                Distance{' '}
+              </p>
+              <InputSelect
+                options={options['distance']}
+                value={inpSelectValues.distance}
+                onChange={(e: any) => {
+                  setInpSelectValues((prevValue) => ({
+                    ...prevValue,
+                    distance: e,
+                  }))
+                }}
+              />
+            </div>
+            <div className={styles.line}></div>
+            <p className={styles.underDev}>
+              This feature is under development. Come back soon to view this.
             </p>
-            <InputSelect
-              options={options['phone']}
-              value={inpSelectValues.phonePrefix}
-              onChange={(e: any) => {
-                setInpSelectValues((prevValue) => ({
-                  ...prevValue,
-                  phonePrefix: e,
-                }))
-              }}
-            />
+            <div className={`${styles.flex} ${styles.addSectionContainer}`}>
+              <p className={`${styles.textLight}`}> Payment options </p>
+              <div className={`${styles.flex}`}>
+                <Image
+                  src={AddIcon}
+                  width={16}
+                  height={16}
+                  alt="add"
+                  className={styles.addIcon}
+                />
+                <p className={styles.textColored}>
+                  {' '}
+                  add a credit or debit card{' '}
+                </p>
+              </div>
+            </div>
           </div>
-
-          <div className={`${styles.flex} ${styles.localizationContainer}`}>
-            <p className={`${styles.textDark} ${styles.labelText}`}>
-              {' '}
-              Distance{' '}
-            </p>
-            <InputSelect
-              options={options['distance']}
-              value={inpSelectValues.distance}
-              onChange={(e: any) => {
-                setInpSelectValues((prevValue) => ({
-                  ...prevValue,
-                  distance: e,
-                }))
-              }}
-            />
-          </div>
-          <div className={styles.line}></div>
-<p className={styles.underDev}>This feature is under development. Come back soon to view this.</p>
-<div className={`${styles.flex} ${styles.addSectionContainer}`}>
-  <p className={`${styles.textLight}`}> Payment options </p>
-  <div className={`${styles.flex}`}>
-    <Image
-      src={AddIcon}
-      width={16}
-      height={16}
-      alt="add"
-      className={styles.addIcon}
-    />
-    <p className={styles.textColored}> add a credit or debit card </p>
-  </div>
-</div>
-        </div>
         </SettingsDropdownLayout>
       </PageGridLayout>
     </>
