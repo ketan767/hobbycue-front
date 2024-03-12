@@ -141,7 +141,7 @@ const SupportUserModal: React.FC<Props> = ({
 
   const handleSubmit = async () => {
     console.log('support', data)
-    if (!data.description || data.description === '') {
+    if (!data.description || data.description?.trim() === '') {
       if (textareaRef.current) {
         textareaRef.current?.focus()
       }
@@ -220,7 +220,7 @@ const SupportUserModal: React.FC<Props> = ({
   }, [textareaRef.current])
   useEffect(() => {
     const handleKeyPress = (event: any) => {
-      if (event.key === 'Enter') {
+      if (event.key === 'Enter' && !textareaRef.current?.matches(':focus')) {
         event.preventDefault()
         handleSubmit()
       }

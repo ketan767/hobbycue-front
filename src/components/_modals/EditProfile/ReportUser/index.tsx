@@ -181,7 +181,7 @@ const UserReport: React.FC<Props> = ({
 
   useEffect(() => {
     const handleKeyPress = (event: any) => {
-      if (event.key === 'Enter') {
+      if (event.key === 'Enter' && !textAreaRef.current?.matches(':focus')) {
         event.preventDefault()
         handleSubmit()
       }

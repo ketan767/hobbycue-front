@@ -124,9 +124,16 @@
 .input:active,
 .input:focus,
 .input:hover {
-  border: 1px solid #ebedf0;
+  border: 1px solid #8064a2;
   outline: none;
 }
+
+.input input:hover {
+  border: 1px solid #8064a2 !important;
+  border-radius: 8px;
+  outline: none;
+}
+
 .error-msg {
   /* font-family: 'Poppins'; */
   /* font-style: normal; */

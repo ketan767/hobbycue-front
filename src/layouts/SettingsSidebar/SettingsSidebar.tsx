@@ -39,9 +39,10 @@ const SettingsSidebar: React.FC<Props> = ({ active }) => {
               <Link
                 href={item.link}
                 key={item.text}
-                className={`${styles.listItem} ${pathname===item.link?styles.activeLink:""}`}
+                className={styles.listLink}
               >
-                {item.text}
+              <div className={`${styles.listItem} ${pathname===item.link?styles.activeLink:""}`}>
+                  {item.text}</div>
               </Link>
             )
           })}

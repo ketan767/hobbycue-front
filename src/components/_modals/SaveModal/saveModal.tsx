@@ -46,19 +46,7 @@ const SaveModal: React.FC<Props> = ({
     handleSubmit()
     onboardcheck()
   }
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const handleClickOutside = (event:MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
-        handleClose()
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+  const wrapperRef = useRef<HTMLDivElement>(null)
 
   if (reloadrouter) {
     router.reload()
