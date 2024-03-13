@@ -275,6 +275,7 @@
   letter-spacing: 0.07px;
   padding: 12px;
   transition: 0.2s;
+  cursor: pointer;
 }
 .contactBtn {
   font-size: 14px;

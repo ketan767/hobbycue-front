@@ -516,7 +516,13 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           {page?.tagline || '\u00a0'}
                         </div>
                         <div className={styles.userLocation}>
-                          {page.page_type + ' | ' + page._address?.city ||
+                          {page.page_type.map((item, idx) => {
+                            if (idx === 0) {
+                              return item
+                            } else {
+                              return ' ' + item
+                            }
+                          }) + ' | ' + page._address?.city ||
                             '\u00a0'}
                         </div>
                       </div>

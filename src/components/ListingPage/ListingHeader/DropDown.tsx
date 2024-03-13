@@ -3,14 +3,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import styles from '@/components/ProfilePage/ProfileHeader/ProfileHeader.module.css'
 import { openModal } from '@/redux/slices/modal'
 import { RootState } from '@/redux/store'
-import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   handleClose?: any
   userType: 'edit' | 'anonymous' | 'page'
+  showFeatureUnderDevelopment?: ()=>void
 }
 
-const Dropdown: React.FC<Props> = ({ handleClose, userType }) => {
+const Dropdown: React.FC<Props> = ({ handleClose, userType, showFeatureUnderDevelopment }) => {
   const dispatch = useDispatch()
   const ref = useRef<HTMLDivElement>(null)
   const Claimref = useRef<HTMLLIElement>(null)
@@ -18,19 +18,6 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType }) => {
   const supportRef = useRef<HTMLLIElement>(null)
   const reportRef = useRef<HTMLLIElement>(null)
   const { isLoggedIn } = useSelector((state: RootState) => state.user)
-  const [snackbar, setSnackbar] = useState({
-    type: 'success',
-    display: false,
-    message: '',
-  })
-
-  const showFeatureUnderDevelopment = () => {
-    setSnackbar({
-      display: true,
-      type: 'warning',
-      message: 'This feature is under development',
-    })
-  }
 
   useEffect(() => {
     function handleClickOutside(event: any) {
@@ -49,8 +36,8 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType }) => {
           event.target.nodeName == Reviewref.current?.nodeName &&
           event.target.textContent === Reviewref.current?.textContent
         ) {
-          showFeatureUnderDevelopment()
           event.stopPropagation()
+          showFeatureUnderDevelopment?.()
         }
 
         if (
@@ -89,7 +76,7 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType }) => {
           {userType === 'anonymous' && (
             <>
               <li ref={Claimref}>Claim</li>
-              <li onClick={showFeatureUnderDevelopment}>Review</li>{' '}
+              <li ref={Reviewref} onClick={showFeatureUnderDevelopment}>Review</li>{' '}
               {/* Modified line */}
               <li ref={reportRef}>Report</li>
             </>
@@ -97,24 +84,13 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType }) => {
           {userType === 'page' && (
             <>
               <li ref={Claimref}>Claim</li>
-              <li onClick={showFeatureUnderDevelopment}>Review</li>{' '}
+              <li ref={Reviewref} onClick={showFeatureUnderDevelopment}>Review</li>{' '}
               {/* Modified line */}
               <li ref={reportRef}>Report</li>
             </>
           )}
         </ul>
       </div>
-
-      {
-        <CustomSnackbar
-          message={snackbar?.message}
-          triggerOpen={snackbar?.display}
-          type={snackbar.type === 'success' ? 'success' : 'error'}
-          closeSnackbar={() => {
-            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
-          }}
-        />
-      }
     </>
   )
 }

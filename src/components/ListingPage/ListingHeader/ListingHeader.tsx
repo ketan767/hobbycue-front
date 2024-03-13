@@ -488,12 +488,13 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
               </CustomTooltip>
               {listingLayoutMode === 'edit'
                 ? open && (
-                    <Dropdown userType={'edit'} handleClose={handleDropdown} />
+                    <Dropdown userType={'edit'} handleClose={handleDropdown} showFeatureUnderDevelopment={showFeatureUnderDevelopment} />
                   )
                 : open && (
                     <Dropdown
                       userType={'anonymous'}
                       handleClose={handleDropdown}
+                      showFeatureUnderDevelopment={showFeatureUnderDevelopment}
                     />
                   )}
             </div>
@@ -557,12 +558,13 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
             </CustomTooltip>
             {listingLayoutMode === 'edit'
               ? open && (
-                  <Dropdown userType={'edit'} handleClose={handleDropdown} />
+                  <Dropdown showFeatureUnderDevelopment={showFeatureUnderDevelopment} userType={'edit'} handleClose={handleDropdown} />
                 )
               : open && (
                   <Dropdown
                     userType={'anonymous'}
                     handleClose={handleDropdown}
+                    showFeatureUnderDevelopment={showFeatureUnderDevelopment}
                   />
                 )}
           </div>

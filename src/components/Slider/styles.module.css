@@ -11,7 +11,8 @@
   height: 100%;
   object-fit: contain;
   transition: 0.2s ease-in-out;
-  position: relative;
+  /* position: relative; */
+  position: absolute;
   top: 0;
   left: 0;
 }

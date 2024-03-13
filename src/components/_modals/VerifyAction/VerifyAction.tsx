@@ -86,6 +86,19 @@ const VerifyActionModal: React.FC<Props> = ({}) => {
     } else alert('Something went wrong')
   }
 
+  useEffect(() => {
+    const handleKeyPress = (event: any) => {
+      if (event.key === 'Enter') {
+        handleSubmit()
+      }
+    }
+    window.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [])
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -127,6 +140,7 @@ const VerifyActionModal: React.FC<Props> = ({}) => {
                     </IconButton>
                   ),
                 }}
+                className={errors.currentPassword?styles.errorTextField:'textFieldClass'}
               />
 
               <p className={styles['helper-text']}>{errors.currentPassword}</p>
