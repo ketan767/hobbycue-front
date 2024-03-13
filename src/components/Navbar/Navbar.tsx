@@ -52,6 +52,7 @@ import PreLoader from '@/components/PreLoader'
 import hobbycueLogo from '@/assets/svg/Search/hobbycue.svg'
 import { setShowPageLoader } from '@/redux/slices/site'
 import { usePathname } from 'next/navigation'
+import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 
 type Props = {}
 
@@ -110,6 +111,18 @@ export const Navbar: React.FC<Props> = ({}) => {
     if (!isSearchInputVisible) {
       setTimeout(() => searchInputRef.current?.focus(), 0)
     }
+  }
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
+  const showFeatureUnderDevelopment = () => {
+    setSnackbar({
+      display: true,
+      type: 'warning',
+      message: 'This feature is under development',
+    })
   }
 
   const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -275,6 +288,7 @@ export const Navbar: React.FC<Props> = ({}) => {
       }
       dispatch(setShowPageLoader(false))
       dispatch(setSearchString(searchValue))
+      dispatch(showAllTrue())
     } catch (error) {
       dispatch(setShowPageLoader(false))
       console.error('An error occurred during the combined search:', error)
@@ -491,11 +505,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                         <Link
                           href={'/search'}
                           className={styles['hobbiescategory']}
-                          onClick={(e) => {
-                            e.preventDefault()
-                            dispatch(showAllUsersTrue())
-                            router.push('/search')
-                          }}
+                          onClick={showFeatureUnderDevelopment}
                         >
                           Posts - Write-ups
                         </Link>
@@ -944,6 +954,16 @@ export const Navbar: React.FC<Props> = ({}) => {
 
       {menuActive && <SideMenu handleClose={toggleMenu} />}
       {showDropdown && <div className={styles['navbar-backdrop']}></div>}
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

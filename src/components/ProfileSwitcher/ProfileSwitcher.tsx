@@ -6,9 +6,7 @@ import { RootState } from '@/redux/store'
 import useOutsideAlerter from '@/hooks/useOutsideAlerter'
 
 import { updateActiveProfile } from '@/redux/slices/user'
-import {
-  updateListingModalData,
-} from '@/redux/slices/site'
+import { updateListingModalData } from '@/redux/slices/site'
 
 type Props = {}
 
@@ -17,6 +15,7 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
     (state: RootState) => state.user,
   )
   const dispatch = useDispatch()
+  const filteredListing = listing.filter((item: any) => item.is_published)
 
   const [showDropdown, setShowDropdown] = useState<boolean>(false)
   const dropdownRef = useRef(null)
@@ -53,7 +52,17 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
           <div
             className={`${styles['profile-image']}  
             ${activeProfile.type === 'user' && 'default-user-icon'}
-            ${activeProfile.type === 'listing' && 'default-people-listing-icon'}
+            ${
+              activeProfile.type === 'listing' && activeProfile?.data?.type == 1
+                ? `default-people-listing-icon ${styles['img']}`
+                : activeProfile?.data?.type == 2
+                ? `${styles['img']} default-place-listing-icon`
+                : activeProfile?.data?.type == 3
+                ? `${styles['img']} default-program-listing-icon`
+                : activeProfile?.data?.type == 4
+                ? `${styles['img']} default-product-listing-icon`
+                : `${styles['img']} default-people-listing-icon`
+            }
             `}
             data-profile-type={activeProfile.type}
           ></div>
@@ -108,7 +117,7 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
                 <p>{user.full_name}</p>
               </li>
 
-              {listing.map((page: any) => {
+              {filteredListing.map((page: any) => {
                 return (
                   <li
                     key={page._id}
@@ -130,7 +139,17 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
                       />
                     ) : (
                       <div
-                        className={`default-people-listing-icon ${styles['img']}`}
+                        className={
+                          page?.type == 1
+                            ? `default-people-listing-icon ${styles['img']}`
+                            : page.type == 2
+                            ? `${styles['img']} default-place-listing-icon`
+                            : page.type == 3
+                            ? `${styles['img']} default-program-listing-icon`
+                            : page.type == 4
+                            ? `${styles['img']} default-product-listing-icon`
+                            : `${styles['contentImage']} default-people-listing-icon`
+                        }
                         data-profile-type="listing"
                       ></div>
                     )}

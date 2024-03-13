@@ -25,6 +25,7 @@ import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import Image from 'next/image'
 import FilledButton from '@/components/_buttons/FilledButton'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 const AboutEditor = dynamic(
   () => import('@/components/AboutEditor/AboutEditor'),
@@ -75,6 +76,11 @@ const SupportUserModal: React.FC<Props> = ({
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [isError, setIsError] = useState(false)
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
 
   const [inputErrs, setInputErrs] = useState<{ error: string | null }>({
     error: null,
@@ -154,22 +160,23 @@ const SupportUserModal: React.FC<Props> = ({
 
     setSubmitBtnLoading(true)
     const { err, res } = await support(data)
-
-    if (err) {
+    if (res?.data.success) {
+      setSnackbar({
+        display: true,
+        type: 'success',
+        message: 'Support ticket rasied',
+      })
       setSubmitBtnLoading(false)
-      return console.log(err)
-    }
-
-    const { err: error, res: response } = await getMyProfileDetail()
-    setSubmitBtnLoading(false)
-
-    if (error) return console.log(error)
-    if (response?.data.success) {
-      dispatch(updateUser(response.data.data.user))
-      if (onComplete) onComplete()
-      else {
+      setTimeout(() => {
         dispatch(closeModal())
-      }
+      }, 1500)
+    } else if (err) {
+      setSubmitBtnLoading(false)
+      setSnackbar({
+        display: true,
+        type: 'warning',
+        message: 'Something went wrong',
+      })
     }
   }
 
@@ -275,8 +282,10 @@ const SupportUserModal: React.FC<Props> = ({
                 ref={textareaRef}
               />
             </div>
-            {inputErrs.error && (
+            {inputErrs.error ? (
               <p className={styles['error-msg']}>{inputErrs.error}</p>
+            ) : (
+              <p className={styles['error-msg']}>&nbsp;</p> // Render an empty <p> element
             )}
           </div>
         </section>
@@ -339,6 +348,16 @@ const SupportUserModal: React.FC<Props> = ({
           )}
         </footer>
       </div>
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

@@ -159,6 +159,7 @@ const ListingTagsEditModal: React.FC<Props> = ({
     }
   }
   console.log('item', selectedTags)
+  console.log('alltags', tags)
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
     const handleKeyPress = (event: any) => {
@@ -229,17 +230,16 @@ const ListingTagsEditModal: React.FC<Props> = ({
                   {tags.map((item: any, idx) => {
                     return (
                       <div
-                        className={`${styles['single-option']}  ${
-                          selectedTags.includes(item._id)
-                            ? styles['selcted-option']
-                            : ''
-                        }`}
+                        className={`${styles['single-option']} ${selectedTags.includes(item._id)?styles['chosen-option']:""}`}
                         key={item._id}
                         onClick={() => {
                           handleTagChange(item._id)
                           setShowDropdown(false)
                         }}
                       >
+                        {selectedTags.includes(item._id)
+                            ? <div className={styles['selected-bg']}></div>
+                            : null}
                         <p className={`${styles.tagText}`}>{item.name}</p>
                         <p className={styles.tagDesc}>
                           {item.description}
@@ -287,7 +287,7 @@ const ListingTagsEditModal: React.FC<Props> = ({
         <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
             <button
-              className="modal-footer-btn cancel"
+              className={"modal-footer-btn cancel"}
               onClick={onBackBtnClick}
             >
               Back
@@ -296,7 +296,7 @@ const ListingTagsEditModal: React.FC<Props> = ({
 
           <button
             ref={nextButtonRef}
-            className="modal-footer-btn submit"
+            className={"modal-footer-btn submit"+` ${styles.saveBtn}`}
             onClick={handleSubmit}
             disabled={submitBtnLoading}
           >

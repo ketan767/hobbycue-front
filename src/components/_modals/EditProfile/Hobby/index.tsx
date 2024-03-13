@@ -2,6 +2,7 @@ import {
   addUserHobby,
   deleteUserHobby,
   getMyProfileDetail,
+  updateMyProfileDetail,
   updateUserHobbyLevel,
 } from '@/services/user.service'
 import { CircularProgress, useMediaQuery } from '@mui/material'
@@ -368,13 +369,14 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         setAddHobbyBtnLoading(false)
         return console.log(err)
       }
-
+      const { err:updtProfileErr, res:updtProfileRes } = await updateMyProfileDetail({ is_onboarded: true })
       const { err: error, res: response } = await getMyProfileDetail()
       setAddHobbyBtnLoading(false)
       if (error) return console.log(error)
 
       if (response?.data.success) {
-        dispatch(updateUser(response?.data.data.user))
+        const {is_onboarded} = user;
+        dispatch(updateUser({...response?.data.data.user,is_onboarded}))
         setHobbyInputValue('')
         setGenreInputValue('')
         setData({ level: 1, hobby: null, genre: null })
@@ -418,7 +420,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           // setErrorOrmsg('Typed hobby not found!')
           // searchref.current?.focus()
           // setHobbyError(true)
-         setShowAddHobbyModal(true)
+          setShowAddHobbyModal(true)
           return
         }
       } else {
@@ -506,8 +508,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       dispatch(closeModal())
     }
   }
-
-
 
   const handleDeleteHobby = async (id: string) => {
     const { err, res } = await deleteUserHobby(id)
@@ -701,13 +701,13 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
               type: 'success',
             })
           }}
-          propData={{defaultValue:hobbyInputValue}}
+          propData={{ defaultValue: hobbyInputValue }}
         />
         <CustomSnackbar
           message={showSnackbar.message}
           type={showSnackbar.type}
           triggerOpen={showSnackbar.triggerOpen}
-          closeSnackbar={()=>{
+          closeSnackbar={() => {
             setShowSnackbar({
               message: '',
               triggerOpen: false,

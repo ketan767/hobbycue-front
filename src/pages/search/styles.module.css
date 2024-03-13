@@ -206,7 +206,7 @@
 }
 
 .explore-sidebar button {
-  max-width: 281px !important;
+  max-width: 1100px !important;
   border: none;
   background-color: #ccc1da;
 }
@@ -225,17 +225,46 @@
   color: #6d747a;
 }
 
+.menuItemContent {
+  gap: 16px;
+  display: flex;
+  align-items: center;
+}
+
 @media screen and (max-width: 1100px) {
   .profile-left-aside {
-    height: 50px;
-    margin: 12px 0;
+    order: 0;
   }
 
+  .search-result {
+    order: 2;
+  }
+
+  .aside-two {
+    height: auto;
+    background: #FFF;
+    margin: 0 0 12px;
+    padding: 0 16px 16px;
+    order: 1;
+  }
+  .profile-left-aside {
+    height: auto;
+    background: #FFF;
+    padding: 16px;
+  }
+ 
   .filterDropdown {
     width: 100%;
     height: 44px;
     padding: 12px 0;
     border-radius: 8px;
+    background: var(--bg-rgb);
+    border: 1px solid var(--border-rgb);
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    
   }
 
   .no-results-wrapper{
@@ -252,10 +281,15 @@
   .view-more-btn {
     width: 85%;
   }
-  .explore-sidebar {
-    display: none;
-  }
+ 
   .peopleItem {
     padding: 8px 16px 8px 16px;
+  }
+  .userTagline {
+    font-size: 12px;
+  }
+  .userLocation {
+    font-size: 12px;
+
   }
 }

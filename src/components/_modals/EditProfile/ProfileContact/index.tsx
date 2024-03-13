@@ -126,7 +126,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
   }
 
   const Backsave = async () => {
-    console.warn("runnign back");
+    console.warn('runnign back')
     setBackBtnLoading(true)
     if (
       (!data.public_email.value || data.public_email.value === '') &&
@@ -143,11 +143,17 @@ const ProfileContactEditModal: React.FC<Props> = ({
           number: data.whatsapp_number.number,
           prefix: selectedWpCountryCode,
         },
+        onboarding_step: '3',
       }
 
       setBackBtnLoading(true)
 
-      const { err, res } = await updateMyProfileDetail(jsonData)
+      const newOnboardingStep =
+        Number(user?.onboarding_step) > 2 ? user?.onboarding_step : '0'
+      const { err, res } = await updateMyProfileDetail({
+        ...jsonData,
+        onboarding_step: newOnboardingStep,
+      })
 
       if (err) {
         setBackBtnLoading(false)
@@ -238,11 +244,17 @@ const ProfileContactEditModal: React.FC<Props> = ({
         number: data.whatsapp_number.number,
         prefix: selectedWpCountryCode,
       },
+      onboarding_step: '3',
     }
 
     setSubmitBtnLoading(true)
 
-    const { err, res } = await updateMyProfileDetail(jsonData)
+    const newOnboardingStep =
+      Number(user?.onboarding_step) > 2 ? user?.onboarding_step : '0'
+    const { err, res } = await updateMyProfileDetail({
+      ...jsonData,
+      onboarding_step: newOnboardingStep,
+    })
 
     if (err) {
       setSubmitBtnLoading(false)

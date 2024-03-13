@@ -5,6 +5,7 @@ import {
   showAllTrue,
   // toggleShowAll,
   toggleShowAllEvent,
+  toggleShowAllHobbies,
   toggleShowAllPeople,
   toggleShowAllPlace,
   toggleShowAllProducts,
@@ -13,6 +14,7 @@ import {
 import hobbycue from '../../assets/svg/Search/hobbycue.svg'
 import People from '../../assets/svg/Search/People.svg'
 import User from '../../assets/svg/Search/User.svg'
+import Hobby from '../../assets/svg/Search/Hobbies.svg'
 import Place from '../../assets/svg/Search/Place.svg'
 import Program from '../../assets/svg/Search/Program.svg'
 import Product from '../../assets/svg/Search/Product.svg'
@@ -23,6 +25,9 @@ const SearchPageFilter = () => {
   const [activeFilter, setActiveFilter] = useState('all')
   const showAll = useSelector((state: any) => state.search.showAll)
   const showAllUsers = useSelector((state: any) => state.search.showAllUsers)
+  const showAllhobbies = useSelector(
+    (state: any) => state.search.showAllhobbies,
+  )
   const showAllPeople = useSelector((state: any) => state.search.showAllPeople)
   const showAllPlace = useSelector((state: any) => state.search.showAllPlace)
   const showAllEvent = useSelector((state: any) => state.search.showAllEvent)
@@ -39,6 +44,11 @@ const SearchPageFilter = () => {
       setActiveFilter('users')
     }
   }, [showAllUsers])
+  useEffect(() => {
+    if (showAllhobbies) {
+      setActiveFilter('hobby')
+    }
+  }, [showAllhobbies])
   useEffect(() => {
     if (showAllPeople) {
       setActiveFilter('people')
@@ -72,6 +82,9 @@ const SearchPageFilter = () => {
           break
         case 'users':
           dispatch(toggleShowAllUsers())
+          break
+        case 'hobby':
+          dispatch(toggleShowAllHobbies())
           break
         case 'people':
           dispatch(toggleShowAllPeople())
@@ -117,12 +130,20 @@ const SearchPageFilter = () => {
             All of HobbyCue
           </div>
           <div
+            className={getFilterItemClass('hobby')}
+            onClick={() => handleFilterClick('hobby')}
+          >
+            <Image src={Hobby} alt="hobby" />
+            Hobbies
+          </div>
+          <div
             className={getFilterItemClass('users')}
             onClick={() => handleFilterClick('users')}
           >
             <Image src={User} alt="User" />
             User Profiles
           </div>
+
           <div
             className={getFilterItemClass('people')}
             onClick={() => handleFilterClick('people')}
