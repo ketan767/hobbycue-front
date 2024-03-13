@@ -265,6 +265,8 @@
   align-items: center;
 }
 
+
+
 .start-post-btn-container :hover {
   background-color: #8064a2;
   color: white;
@@ -295,6 +297,10 @@
   font-size: 12px;
   line-height: 16px;
   color: #8064a2;
+}
+
+.start-post-btn:focus-visible {
+  outline: 1px solid rgb(var(--primary-50-rgb));
 }
 
 .navigation-links {

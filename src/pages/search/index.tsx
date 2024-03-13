@@ -61,6 +61,9 @@ type hobby = {
   genre: string[]
   slug: string
   display: string
+  category: { display: string }
+  sub_category: { display: string }
+  description: string
 }
 type SearchResultsProps = {
   searchResults: User[]
@@ -105,9 +108,6 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
-
-  console.log('hobby', hobbyResults)
-  console.log('place', placeResults)
 
   const [HideUser, setHideUser] = useState(false)
   const [HidePeople, setHidePeople] = useState(false)
@@ -156,14 +156,12 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHidePeople(true)
       setHidePlace(true)
       setHideEvent(true)
-
       setHideProduct(true)
     } else {
       setHideUser(false)
       setHidePeople(false)
       setHidePlace(false)
       setHideEvent(false)
-
       setHideProduct(true)
     }
   }, [showAllhobbies])
@@ -293,7 +291,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
         </div>
       ) : (
         <div>
-          {!HideHobbies && searchResults.length > 0 && (
+          {!HideHobbies && hobbyResults.length > 0 && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>Hobbies</div>
@@ -305,7 +303,15 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       key={index}
                       onClick={() => navigateToProfile(user.profile_url)}
                     >
-                      <div className={styles.userAvatar}>
+                      <div
+                        className={styles.hobbyAvtar}
+                        style={{
+                          position: 'relative',
+                          width: '64px',
+                          height: '64px',
+                        }}
+                      >
+                        {/* Render the image */}
                         {hobby.profile_image ? (
                           <Image
                             src={hobby.profile_image}
@@ -315,15 +321,31 @@ const MainContent: React.FC<SearchResultsProps> = ({
                             className={styles.avatarImage}
                           />
                         ) : (
-                          <div
-                            className={`${styles['img']} default-people-listing-icon`}
-                          ></div>
+                          <div className={`${styles['img-polygon']} `}></div>
                         )}
+                        {/* Render the polygon overlay */}
+                        <svg
+                          className={styles.polygonOverlay}
+                          viewBox="0 0 64 64"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <polygon
+                            points="32,2 58,18 58,46 32,62 6,46 6,18"
+                            fill="none"
+                            stroke="#8064a2"
+                            strokeWidth="1"
+                          />
+                        </svg>
                       </div>
+
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{hobby.display}</div>
-                        <div className={styles.userTagline}>{'hobby'}</div>
-                        <div className={styles.userLocation}></div>
+                        <div
+                          className={styles.userTagline}
+                        >{`${hobby?.category?.display} | ${hobby?.sub_category?.display}`}</div>
+                        <div className={styles.hobbydescription}>
+                          {hobby?.description}
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -669,7 +691,7 @@ const Search: React.FC<Props> = ({ data, children }) => {
     (state: RootState) => state.search.hobbiesSearchResults.data,
   )
 
-  console.log('userresultt', hobbySearchResults)
+  console.log('hobbyyyy', hobbySearchResults)
   console.log('placeee', PlaceSearch)
 
   useEffect(() => {
