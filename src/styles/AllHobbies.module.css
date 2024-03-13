@@ -26,13 +26,15 @@
   align-items: center;
 }
 .filter-wrapper header .heading {
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 20px;
-  color: #08090a;
-  margin: 0;
+margin-bottom: 24px;
+font-weight: 600;
+line-height: 20px;
+color: var(--Purple-1, #8064a2);
+font-family: Poppins;
+font-size: 20px;
+font-style: normal;
+line-height: 16px;
+margin: 0;
 }
 
 .filter-wrapper header button {

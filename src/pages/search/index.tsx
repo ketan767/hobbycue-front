@@ -100,7 +100,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
     (state: any) => state.search.showAllProducts,
   )
   const showAllhobbies = useSelector(
-    (state: any) => state.search.showAllhobbies,
+    (state: any) => state.search.showAllHobbies,
   )
   const searchString = useSelector((state: any) => state.search.searchString)
 
@@ -281,9 +281,10 @@ const MainContent: React.FC<SearchResultsProps> = ({
         <div className={styles['no-results-wrapper']}>
           {searchString === '' ? (
             <p>
-              Use the Search box at the top to look up pages on your hobby or an
-              existing user. If you don&apos;t find any pages, you may Add
-              Listing Page from the menu at top right corner
+              The Explore functionality is under development. Use the Search box
+              at the top to look up pages on your hobby by other users. If you
+              don't find any pages, you may Add Listing Page from the menu at
+              the top right corner.
             </p>
           ) : (
             <p>No results for {searchString}</p>
@@ -324,16 +325,21 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           <div className={`${styles['img-polygon']} `}></div>
                         )}
                         {/* Render the polygon overlay */}
+
                         <svg
                           className={styles.polygonOverlay}
-                          viewBox="0 0 64 64"
+                          viewBox="0 0 160 160"
+                          fill="none"
                           xmlns="http://www.w3.org/2000/svg"
                         >
-                          <polygon
-                            points="32,2 58,18 58,46 32,62 6,46 6,18"
-                            fill="none"
-                            stroke="#8064a2"
-                            strokeWidth="1"
+                          <path
+                            d="M80 0L149.282 40V120L80 160L10.718 120V40L80 0Z"
+                            fill="#969696"
+                            fill-opacity="0.5"
+                          />
+                          <path
+                            d="M79.6206 46.1372C79.7422 45.7727 80.2578 45.7727 80.3794 46.1372L87.9122 68.7141C87.9663 68.8763 88.1176 68.9861 88.2885 68.9875L112.088 69.175C112.472 69.178 112.632 69.6684 112.323 69.8967L93.1785 84.0374C93.041 84.139 92.9833 84.3168 93.0348 84.4798L100.211 107.173C100.327 107.539 99.9097 107.842 99.5971 107.619L80.2326 93.7812C80.0935 93.6818 79.9065 93.6818 79.7674 93.7812L60.4029 107.619C60.0903 107.842 59.6731 107.539 59.789 107.173L66.9652 84.4798C67.0167 84.3168 66.959 84.139 66.8215 84.0374L47.6773 69.8967C47.3682 69.6684 47.5276 69.178 47.9118 69.175L71.7115 68.9875C71.8824 68.9861 72.0337 68.8763 72.0878 68.7141L79.6206 46.1372Z"
+                            fill="white"
                           />
                         </svg>
                       </div>
@@ -353,14 +359,16 @@ const MainContent: React.FC<SearchResultsProps> = ({
                 <div>
                   {showAllhobbies
                     ? undefined
-                    : (
+                    : (hobbyResults.length > 3 ? (
                         <button
                           onClick={toggleShowAllhobbies}
                           className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
                         >
                           View More
                         </button>
-                      ) || ''}
+                      ) : (
+                        ''
+                      )) || ''}
                 </div>
               </div>
             </section>
@@ -408,14 +416,16 @@ const MainContent: React.FC<SearchResultsProps> = ({
                 <div>
                   {showAllUsers
                     ? undefined
-                    : (
+                    : (searchResults.length > 3 ? (
                         <button
                           onClick={toggleShowAllusers}
                           className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
                         >
                           View More
                         </button>
-                      ) || ''}
+                      ) : (
+                        ''
+                      )) || ''}
                 </div>
               </div>
             </section>
@@ -470,14 +480,16 @@ const MainContent: React.FC<SearchResultsProps> = ({
                 <div>
                   {showAllPeople
                     ? undefined
-                    : (
+                    : (peopleResults.length > 3 ? (
                         <button
                           onClick={toggleShowAllpeople}
                           className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
                         >
                           View More
                         </button>
-                      ) || ''}
+                      ) : (
+                        ''
+                      )) || ''}
                 </div>
               </div>
             </section>
@@ -516,13 +528,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           {page?.tagline || '\u00a0'}
                         </div>
                         <div className={styles.userLocation}>
-                          {page.page_type.map((item, idx) => {
-                            if (idx === 0) {
-                              return item
-                            } else {
-                              return ' ' + item
-                            }
-                          }) + ' | ' + page._address?.city ||
+                          {page.page_type + ' | ' + page._address?.city ||
                             '\u00a0'}
                         </div>
                       </div>
@@ -531,14 +537,16 @@ const MainContent: React.FC<SearchResultsProps> = ({
                 <div>
                   {showAllPlace
                     ? undefined
-                    : (
+                    : (placeResults.length > 3 ? (
                         <button
                           onClick={toggleShowAllplace}
                           className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
                         >
                           View More
                         </button>
-                      ) || ''}
+                      ) : (
+                        ''
+                      )) || ''}
                 </div>
               </div>
             </section>
@@ -587,14 +595,16 @@ const MainContent: React.FC<SearchResultsProps> = ({
                 <div>
                   {showAllEvent
                     ? undefined
-                    : (
+                    : (EventResults.length > 3 ? (
                         <button
                           onClick={toggleShowAllevent}
                           className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
                         >
                           View More
                         </button>
-                      ) || ''}
+                      ) : (
+                        ''
+                      )) || ''}
                 </div>
               </div>
             </section>

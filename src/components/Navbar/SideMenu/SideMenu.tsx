@@ -188,7 +188,10 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
               exploreActive ? styles['dropdown-active'] : ''
             } `}
           >
-            <header className={styles['dropdown-header']} onClick={() => setExploreActive(!exploreActive)}>
+            <header
+              className={styles['dropdown-header']}
+              onClick={() => setExploreActive(!exploreActive)}
+            >
               <div>
                 <Image src={ExploreIcon} alt="Explore" />
                 <p> Explore </p>
@@ -196,7 +199,9 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
               <Image
                 src={DownIcon}
                 alt="Down"
-                className={`${styles['arrow']} ${exploreActive&&styles.rotate180}`}
+                className={`${styles['arrow']} ${
+                  exploreActive && styles.rotate180
+                }`}
               />
             </header>
             <div className={styles['dropdown-options']}>
@@ -211,7 +216,10 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
               hobbiesActive ? styles['dropdown-active'] : ''
             } `}
           >
-            <header className={styles['dropdown-header']} onClick={() => setHobbiesActive(!hobbiesActive)}>
+            <header
+              className={styles['dropdown-header']}
+              onClick={() => setHobbiesActive(!hobbiesActive)}
+            >
               <div>
                 <Image src={HobbyIcon} alt="Hobby" />
                 <p> Hobbies </p>
@@ -219,7 +227,9 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
               <Image
                 src={DownIcon}
                 alt="Down"
-                className={`${styles['arrow']} ${hobbiesActive&&styles.rotate180}`}
+                className={`${styles['arrow']} ${
+                  hobbiesActive && styles.rotate180
+                }`}
               />
             </header>
             <div
@@ -417,7 +427,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                     <p>Account</p>
                   </div>
                 </header>
-                <section className={`${styles['list']} ${styles['no-border']}`}>
+                <section className={styles['list']}>
                   {/* <ul>
                 <Link href={'/hobby/music'}>
                   <li>My orders</li>

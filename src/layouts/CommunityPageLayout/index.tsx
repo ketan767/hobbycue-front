@@ -111,7 +111,7 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    getPost()
+    fetchPosts()
   }, [activeProfile])
 
   const handleHobbyClick = async (hobbyId: any) => {
@@ -125,7 +125,7 @@ const CommunityLayout: React.FC<Props> = ({
       dispatch(updateLoading(false))
     } else {
       setSelectedHobby('')
-      getPost()
+      fetchPosts()
     }
   }
 
@@ -163,8 +163,13 @@ const CommunityLayout: React.FC<Props> = ({
       dispatch(setShowPageLoader(false))
     }
     let params: any = ''
-    if (!activeProfile?.data?._hobbies) return
-    if (activeProfile?.data?._hobbies.length === 0) return
+    if (activeProfile?.data?._hobbies.length === 0) {
+      dispatch(setShowPageLoader(true))
+      store.dispatch(updatePosts(''))
+      dispatch(setShowPageLoader(false))
+      return
+    }
+
     if (selectedLocation === '' && selectedHobby === '') return
     if (activeTab === 'links') {
       params = new URLSearchParams(

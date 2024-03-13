@@ -110,7 +110,8 @@ const VerifyActionModal: React.FC<Props> = ({}) => {
           <div className={styles.inputField}>
             <label className={styles.label}>
               For security purposes, please verify this action using your
-              password. If you signed up using Facebook or Google, please{' '}
+              HobbyCue password. If you signed up using Facebook or Google,
+              please{' '}
               <span className={styles.link} onClick={handleOpenCreatePassword}>
                 click here to create an account password.
               </span>{' '}
@@ -123,7 +124,7 @@ const VerifyActionModal: React.FC<Props> = ({}) => {
               <TextField
                 fullWidth
                 required
-                placeholder="Enter Current Password"
+                placeholder="Password"
                 type={showcurrPassword ? 'text' : 'password'}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 InputProps={{
@@ -140,7 +141,11 @@ const VerifyActionModal: React.FC<Props> = ({}) => {
                     </IconButton>
                   ),
                 }}
-                className={errors.currentPassword?styles.errorTextField:'textFieldClass'}
+                className={
+                  errors.currentPassword
+                    ? styles.errorTextField
+                    : 'textFieldClass'
+                }
               />
 
               <p className={styles['helper-text']}>{errors.currentPassword}</p>
