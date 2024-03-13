@@ -38,7 +38,6 @@ const InputSelect: React.FC<Props> = ({
   value,
   optionValues,
 }) => {
-  console.log({value});
   
   return (
     <div style={{ position: 'relative' }}>

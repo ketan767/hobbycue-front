@@ -427,6 +427,7 @@ export const CreatePost: React.FC<Props> = ({
                 data={data}
                 image={true}
                 error={errors.content}
+                hasLink={hasLink}
               />
               {data.video_url && (
                 <div className={styles.videoWrapper}>
@@ -462,7 +463,7 @@ export const CreatePost: React.FC<Props> = ({
               ) : (
                 <></>
               )}
-              {/* {hasLink && metaData && showMetaData && (
+              {hasLink && metaData && showMetaData && (
                 <div className={styles['show-metadata']}>
                   <svg
                     className={styles['metadata-close-icon']}
@@ -512,7 +513,7 @@ export const CreatePost: React.FC<Props> = ({
                     <div>{metaData?.title && <p>{metaData?.title}</p>}</div>
                   </div>
                 </div>
-              )} */}
+              )}
             </section>
             <aside>
               <div className={styles['posting-as-container']}>

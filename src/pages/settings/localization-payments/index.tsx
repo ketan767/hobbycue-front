@@ -227,19 +227,11 @@ const VisibilityAndNotification: React.FC = () => {
                 Currency{' '}
               </p>
               <InputSelect
-                options={options['currency']}
-                value={`${inpSelectValues.currency} ${
-                  countryData?.find(
-                    (country) => country.currency === inpSelectValues.currency,
-                  )?.currencySymbol
-                }`}
+                options={countryData.map(
+                  (country) => `${country.currency} (${country.currencySymbol})`,
+                )}
+                value={inpSelectValues.currency}
                 onChange={(e: any) => {
-                  console.log(
-                    `${e} ${
-                      countryData?.find((country) => `${country.currency} ${country.currencySymbol}` === e)
-                        ?.currencySymbol
-                    }`,
-                  )
                   setInpSelectValues((prevValue) => ({
                     ...prevValue,
                     currency: e,

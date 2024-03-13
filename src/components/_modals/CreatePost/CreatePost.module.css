@@ -206,14 +206,16 @@
   align-items: stretch;
   max-width: calc(100vw - 3rem);
 }
-/* .show-metadata {
+.show-metadata {
   position: relative;
-  width: 100%;
-  max-height: 70%;
+  max-height: 60%;
+  width: fit-content;
   background-color: #EBEDF0;
+  margin-bottom: 8px;
 }
 .metadata-image {
-  width: 100%;
+  max-width: 100%;
+  max-height: 75%;
 }
 .metadata-content {
   padding: 8px 8px 16px;
@@ -236,7 +238,7 @@
   right: 8px;
   top: 8px;
   cursor: pointer;
-} */
+}
 .visibility-dropdown > div {
   padding-top: 9px;
   padding-bottom: 9px;
