@@ -200,7 +200,7 @@ const VisibilityAndNotification: React.FC = () => {
               }}
             />
           </div>
-
+              <div className={styles['desktopHalfWidth']}>
           <div className={`${styles.flex} ${styles.localizationContainer}`}>
             <p className={`${styles.textDark} ${styles.labelText}`}>
               {' '}
@@ -217,7 +217,8 @@ const VisibilityAndNotification: React.FC = () => {
               }}
             />
           </div>
-
+              </div>
+              <div className={styles['desktopHalfWidth']+` ${styles['justifyEnd']}`}>
           <div className={`${styles.flex} ${styles.localizationContainer}`}>
             <p className={`${styles.textDark} ${styles.labelText}`}>
               {' '}
@@ -234,7 +235,8 @@ const VisibilityAndNotification: React.FC = () => {
               }}
             />
           </div>
-
+              </div>
+              <div className={styles['desktopHalfWidth']}>
           <div className={`${styles.flex} ${styles.localizationContainer}`}>
             <p className={`${styles.textDark} ${styles.labelText}`}>
               {' '}
@@ -251,7 +253,8 @@ const VisibilityAndNotification: React.FC = () => {
               }}
             />
           </div>
-
+</div>
+<div className={styles['desktopHalfWidth']+` ${styles['justifyEnd']}`}>
           <div className={`${styles.flex} ${styles.localizationContainer}`}>
             <p className={`${styles.textDark} ${styles.labelText}`}>
               {' '}
@@ -268,6 +271,7 @@ const VisibilityAndNotification: React.FC = () => {
               }}
             />
           </div>
+</div>
           <div className={styles.line}></div>
 <p className={styles.underDev}>This feature is under development. Come back soon to view this.</p>
 <div className={`${styles.flex} ${styles.addSectionContainer}`}>

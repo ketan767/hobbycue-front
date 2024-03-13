@@ -62,9 +62,10 @@
   align-items: flex-start;
   justify-content: space-between;
   padding-right: 4px;
-  padding: 6px 15px;
-    margin: -15px;
+  padding: 11px 8px 8px 8px;
+    /* margin: -15px; */
   margin-bottom: 24px;
+  border-radius: 8px;
 }
 
 .selectedCard{
@@ -161,4 +162,24 @@
   .textLight{
     margin-bottom: 14px;
   }
+}
+
+@media screen and (min-width:1100px) {
+  .desktopHalfWidth{
+    display: inline-flex;
+    width: 50%;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .desktopHalfWidth .localizationContainer{
+    gap: 50px;
+    min-width: 229px;
+  }
+  .textDark{
+    min-width: 89px;
+  }
+}
+
+.justifyEnd{
+  justify-content: flex-end;
 }

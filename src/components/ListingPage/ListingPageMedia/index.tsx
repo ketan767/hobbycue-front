@@ -17,6 +17,7 @@ import PostCard from '@/components/PostCard/PostCard'
 import EditIcon from '@/assets/svg/edit-icon.svg'
 import { uploadImage } from '@/services/post.service'
 import ReactPlayer from 'react-player'
+import { useMediaQuery } from '@mui/material'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -111,49 +112,90 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
     )
   }
 
+  const isMobile = useMediaQuery('(max-width:1100px)')
+  const plusIconSvg = (<svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
+  <g clip-path="url(#clip0_11387_36832)">
+    <path d="M13.6429 8.85763H9.35714V13.1433C9.35714 13.6148 8.97143 14.0005 8.5 14.0005C8.02857 14.0005 7.64286 13.6148 7.64286 13.1433V8.85763H3.35714C2.88571 8.85763 2.5 8.47192 2.5 8.00049C2.5 7.52906 2.88571 7.14335 3.35714 7.14335H7.64286V2.85763C7.64286 2.3862 8.02857 2.00049 8.5 2.00049C8.97143 2.00049 9.35714 2.3862 9.35714 2.85763V7.14335H13.6429C14.1143 7.14335 14.5 7.52906 14.5 8.00049C14.5 8.47192 14.1143 8.85763 13.6429 8.85763Z" fill="#8064A2"/>
+  </g>
+  <defs>
+    <clipPath id="clip0_11387_36832">
+      <rect width="16" height="16" fill="white" transform="translate(0.5)"/>
+    </clipPath>
+  </defs>
+</svg>)
   return (
     <>
       <main>
         <div className={styles.uploadContainer}>
           {data?.admin === user?.user._id && (
             <>
-              <div className={styles.uploadButton}>
-                <input
-                  type="file"
-                  accept="image/png, image/gif, image/jpeg"
-                  className={styles.hidden}
-                  onChange={(e) => handleImageChange(e)}
-                  ref={inputRef}
-                />
-                <p> image </p>
+              {isMobile ? (
+                <>
+                  <div className={styles.uploadButton}>
+                    <input
+                      type="file"
+                      accept="image/png, image/gif, image/jpeg"
+                      className={styles.hidden}
+                      onChange={(e) => handleImageChange(e)}
+                      ref={inputRef}
+                    />
+                    <p> image </p>
 
-                <Image
-                  src={EditIcon}
-                  alt="edit"
-                  className={styles.editIcon}
-                  onClick={() => {
-                    inputRef.current?.click()
-                  }}
-                />
-              </div>
+                    <Image
+                      src={EditIcon}
+                      alt="edit"
+                      className={styles.editIcon}
+                      onClick={() => {
+                        inputRef.current?.click()
+                      }}
+                    />
+                  </div>
 
-              <div className={styles.uploadButton}>
-                <p> Video </p>
+                  <div className={styles.uploadButton}>
+                    <p> Video </p>
 
-                <Image
-                  src={EditIcon}
-                  alt="edit"
-                  className={styles.editIcon}
-                  onClick={() => {
-                    dispatch(
-                      openModal({
-                        type: 'upload-video-page',
-                        closable: true,
-                      }),
-                    )
-                  }}
-                />
-              </div>
+                    <Image
+                      src={EditIcon}
+                      alt="edit"
+                      className={styles.editIcon}
+                      onClick={() => {
+                        dispatch(
+                          openModal({
+                            type: 'upload-video-page',
+                            closable: true,
+                          }),
+                        )
+                      }}
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className={styles.uploadButtonDescktop}>
+                    <input
+                      type="file"
+                      accept="image/png, image/gif, image/jpeg"
+                      className={styles.hidden}
+                      onChange={(e) => handleImageChange(e)}
+                      ref={inputRef}
+                    />
+                    {plusIconSvg}
+                    <p>Add Image </p>
+                  </div>
+
+                  <div onClick={() => {
+                        dispatch(
+                          openModal({
+                            type: 'upload-video-page',
+                            closable: true,
+                          }),
+                        )
+                      }} className={styles.uploadButtonDescktop}>
+                    {plusIconSvg}
+                    <p>Add Video </p>
+                  </div>
+                </>
+              )}
             </>
           )}
         </div>
