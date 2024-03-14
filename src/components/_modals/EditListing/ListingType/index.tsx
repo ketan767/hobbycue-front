@@ -437,11 +437,6 @@ const ListingTypeEditModal: React.FC<Props> = ({
                                 <p className={styles.tagDesc}>{item.name}</p>
                                 <p className={styles.tagDesc}>
                                   {item.description}
-                                  <Image
-                                    src={TickIcon}
-                                    alt="down"
-                                    className={styles['tick-icon']}
-                                  />
                                 </p>
                               </div>
                             )
