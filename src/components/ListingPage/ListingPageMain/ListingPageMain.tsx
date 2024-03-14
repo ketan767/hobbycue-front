@@ -300,6 +300,7 @@ const ListingPageMain: React.FC<Props> = ({
                 openModal({ type: 'listing-hobby-edit', closable: true }),
               )
             }
+            initialShowDropdown
             setDisplayData={setShowHobbies}
           >
             <h4 className={styles['heading']}>Hobbies</h4>

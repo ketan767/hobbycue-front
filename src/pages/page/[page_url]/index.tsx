@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
-
+import ErrorPage from '@/components/ErrorPage'
 import { GetServerSideProps } from 'next'
 import { getAllUserDetail } from '@/services/user.service'
 import Head from 'next/head'
@@ -137,4 +137,4 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   }
 }
 
-export default ListingHome
+export default ListingHome;
