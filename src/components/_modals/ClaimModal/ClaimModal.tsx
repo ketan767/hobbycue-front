@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, SetStateAction } from 'react'
 import { useDispatch } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
 import styles from './style.module.css'
@@ -8,11 +8,15 @@ import { CircularProgress } from '@mui/material'
 import { RootState } from '@/redux/store'
 import DropdownMenu from '@/components/DropdownMenu'
 import { countryData } from '@/utils/countrydata'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import { SnackbarState } from '../ModalManager'
 type Props = {
-  data: ListingPageData['pageData']
+  data?: ListingPageData['pageData']
+  setSnackbar?: React.Dispatch<SetStateAction<SnackbarState>>
 }
 
-const ClaimModal = () => {
+const ClaimModal = (props:Props) => {
+  const {setSnackbar} = props;
   const phoneRef = useRef<HTMLInputElement>(null)
   const [selectedCountryCode, setSelectedCountryCode] = useState('+91')
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
@@ -101,8 +105,21 @@ const ClaimModal = () => {
           link,
         })
         setSubmitBtnLoading(false)
-        dispatch(closeModal())
-        window.location.reload()
+        if(err===null||err===undefined){
+          setSnackbar?.({
+            show: true,
+            type: 'success',
+            message: 'Claim request sent successfully',
+          })
+          dispatch(closeModal())
+          window.location.reload()
+        }else{
+          setSnackbar?.({
+            show: true,
+            type: "error",
+            message: 'Claim request not sent',
+          })
+        }
       } else {
         const { err, res } = await ClaimRequest({
           name,
@@ -114,7 +131,20 @@ const ClaimModal = () => {
           link,
         })
         setSubmitBtnLoading(false)
+        if(err===null||err===undefined){
+        setSnackbar?.({
+          show: true,
+          type: 'success',
+          message: 'Claim request sent successfully',
+        })
         dispatch(closeModal())
+      }else{
+        setSnackbar?.({
+          show: true,
+          type: "error",
+          message: 'Claim request not sent',
+        })
+      }
       }
     }
   }

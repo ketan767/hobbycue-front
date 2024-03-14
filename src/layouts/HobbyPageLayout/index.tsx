@@ -144,7 +144,9 @@ const HobbyPageLayout: React.FC<Props> = ({
                       </Link>
                     )
                   })}
-                <li className={styles['active']}>{data?.display}</li>
+                <li className={styles['active']}>
+                   <p>{data?.display}</p> 
+                </li>
               </ul>
             </div>
           </PageContentBox>

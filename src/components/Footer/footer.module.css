@@ -1,11 +1,11 @@
 .container {
   padding: 40px 0px;
-  margin: 0 9.5rem;
+  margin: 0;
 }
 .wrapper {
   display: flex;
   align-items: stretch;
-  max-width: 1220px;
+  max-width: 90vw;
   margin: 0 auto;
 }
 .contentWrapper {
@@ -239,6 +239,9 @@ letter-spacing: 0.06px;
 
 
 @media screen and (min-width:1440px) {
+  .wrapper{
+    max-width: 1296px;
+  }
   .contentWrapper{
     padding-right: 190px;
     gap: 190px;

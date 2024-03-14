@@ -457,3 +457,34 @@ select:-webkit-autofill {
 .custom-scrollbar:hover::-webkit-scrollbar-thumb {
   background-color: rgba(0, 0, 0, 0.4);
 }
+
+.textFieldClass>div{
+  border-radius: 8px;
+}
+
+.textFieldClass:hover{
+  border: none;
+  outline: none;
+}
+.textFieldClass:focus-visible{
+  border: none;
+  outline: none;
+}
+.textFieldClass>div:hover{
+  outline: none;
+  outline: none;
+}
+.textFieldClass>div:focus-visible{
+  outline: none;
+  border: none;
+}
+
+.textFieldClass:hover fieldset{
+  border: 1px solid #8064a2;
+  outline: none;
+}
+
+.textFieldClass>div:hover>fieldset{
+border: 1px solid #8064a2 !important;
+  outline: none;
+}

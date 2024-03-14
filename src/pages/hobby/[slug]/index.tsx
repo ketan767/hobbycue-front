@@ -240,7 +240,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     return { notFound: true }
 
   const data = {
-    hobbyData: res.data?.hobbies?.[0],
+    hobbyData: res.data?.hobbies?.[0]??[],
   }
   return {
     props: {

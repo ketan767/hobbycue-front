@@ -147,7 +147,8 @@
 }
 
 .input-error.input-box input {
-  border: 1px solid #c0504d;
+  /* border: 1px solid #c0504d;
+  outline: 1px solid #c0504d; */
 }
 
 .footer button{
@@ -160,6 +161,9 @@
   cursor: pointer;
 }
 
+.errorTextField fieldset{
+  border: 2px solid #c0504d !important;
+}
 
 @media screen and (max-width: 1100px) {
   .modal-wrapper {

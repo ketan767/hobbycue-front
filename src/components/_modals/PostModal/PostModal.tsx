@@ -37,21 +37,24 @@ type Props = {
   confirmationModal?: boolean
   setConfirmationModal?: any
   handleClose?: any
-  propData?:{
-  showMoreComments?:boolean}
+  propData?: {
+    showMoreComments?: boolean
+  }
 }
 
 export const PostModal: React.FC<Props> = ({
   confirmationModal,
   setConfirmationModal,
   handleClose,
-  propData
+  propData,
 }) => {
   const { activePost } = useSelector((state: RootState) => state.post)
   const dispatch = useDispatch()
   const [comments, setComments] = useState([])
   const [showComments, setShowComments] = useState(true)
-  const [displayMoreComments, setDisplayMoreComments] = useState(propData?.showMoreComments??false)
+  const [displayMoreComments, setDisplayMoreComments] = useState(
+    propData?.showMoreComments ?? false,
+  )
   const { activeProfile } = useSelector((state: RootState) => state.user)
   const [isChanged, setIsChanged] = useState(false)
   const [newComment, setNewComment] = useState('')
@@ -149,19 +152,21 @@ export const PostModal: React.FC<Props> = ({
   return (
     <>
       <div className={`${styles['modal-wrapper']}`}>
-        {!displayMoreComments&&<CloseIcon
-          className={styles['modal-close-icon']}
-          onClick={() =>
-            isChanged ? setConfirmationModal(true) : handleClose()
-          }
-        />}
+        {!displayMoreComments && (
+          <CloseIcon
+            className={styles['modal-close-icon']}
+            onClick={() =>
+              isChanged ? setConfirmationModal(true) : handleClose()
+            }
+          />
+        )}
         <div
           className={`${styles['header']}`}
           style={displayMoreComments ? { display: 'none' } : {}}
         >
           <div className={`${styles['header-user']}`}>
             <Image
-              src={activePost?._author?.profile_image??defaultUserImage}
+              src={activePost?._author?.profile_image ?? defaultUserImage}
               alt=""
               width={40}
               height={40}
@@ -203,130 +208,131 @@ export const PostModal: React.FC<Props> = ({
             </svg> */}
           </div>
         </div>
-
-        <div
-          className={`${styles['body']}`}
-          style={displayMoreComments ? { display: 'none' } : {}}
-        >
+        <div className={`custom-scrollbar ${styles['body-wrapper']}`}>
           <div
-            className={styles['post-content']}
-            dangerouslySetInnerHTML={{
-              __html: `${activePost?.content}`,
-            }}
-          ></div>
-          {activePost?.media?.length > 0 && (
-            <div>
-              <img
-                src={activePost?.media[0]}
-                className={styles['post-image']}
-                alt=""
-              />
-            </div>
-          )}
-          <div className={styles['post-functions']}>
-            <div className={styles['likes-comments']}>
-              <PostVotes
-                data={activePost}
-                styles={styles}
-                className={styles['meta-votes']}
-                updatePost={updatePost}
-              />
-              <svg
-                onClick={(e: any) => {
-                  e.stopPropagation()
-                  e.preventDefault()
-                  setShowComments((prevValue) => !prevValue)
-                }}
-                cursor={'pointer'}
-                width="21"
-                height="21"
-                viewBox="0 0 21 21"
-                fill="none"
-                // fill={showComments ? '#8064A2' : 'none'}
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M4.42578 15.4746H4.01157L3.71867 15.7675L1.42578 18.0604V2.47461C1.42578 1.92689 1.87807 1.47461 2.42578 1.47461H18.4258C18.9735 1.47461 19.4258 1.92689 19.4258 2.47461V14.4746C19.4258 15.0223 18.9735 15.4746 18.4258 15.4746H4.42578Z"
-                  stroke="#8064A2"
-                  stroke-width="2"
+            className={`${styles['body']}`}
+            style={displayMoreComments ? { display: 'none' } : {}}
+          >
+            <div
+              className={styles['post-content']}
+              dangerouslySetInnerHTML={{
+                __html: `${activePost?.content}`,
+              }}
+            ></div>
+            {activePost?.media?.length > 0 && (
+              <div>
+                <img
+                  src={activePost?.media[0]}
+                  className={styles['post-image']}
+                  alt=""
                 />
-              </svg>
-            </div>
-            <div className={styles['bookmark-share']}>
-              {/* Share Icon */}
-              <svg
-                className={styles['share-icon']}
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                onClick={handleShare}
-              >
-                <circle
-                  cx="12"
-                  cy="12"
-                  r="11.25"
-                  fill="white"
-                  stroke="#8064A2"
-                  stroke-width="1.5"
+              </div>
+            )}
+            <div className={styles['post-functions']}>
+              <div className={styles['likes-comments']}>
+                <PostVotes
+                  data={activePost}
+                  styles={styles}
+                  className={styles['meta-votes']}
+                  updatePost={updatePost}
                 />
-                <g clip-path="url(#clip0_173_72895)">
+                <svg
+                  onClick={(e: any) => {
+                    e.stopPropagation()
+                    e.preventDefault()
+                    setShowComments((prevValue) => !prevValue)
+                  }}
+                  cursor={'pointer'}
+                  width="21"
+                  height="21"
+                  viewBox="0 0 21 21"
+                  fill="none"
+                  // fill={showComments ? '#8064A2' : 'none'}
+                  xmlns="http://www.w3.org/2000/svg"
+                >
                   <path
-                    d="M13.3335 10.0008V8.94083C13.3335 8.34749 14.0535 8.04749 14.4735 8.46749L17.5335 11.5275C17.7935 11.7875 17.7935 12.2075 17.5335 12.4675L14.4735 15.5275C14.0535 15.9475 13.3335 15.6542 13.3335 15.0608V13.9342C10.0002 13.9342 7.66685 15.0008 6.00018 17.3342C6.66685 14.0008 8.66685 10.6675 13.3335 10.0008Z"
-                    fill="#8064A2"
+                    d="M4.42578 15.4746H4.01157L3.71867 15.7675L1.42578 18.0604V2.47461C1.42578 1.92689 1.87807 1.47461 2.42578 1.47461H18.4258C18.9735 1.47461 19.4258 1.92689 19.4258 2.47461V14.4746C19.4258 15.0223 18.9735 15.4746 18.4258 15.4746H4.42578Z"
+                    stroke="#8064A2"
+                    stroke-width="2"
                   />
-                </g>
-                <defs>
-                  <clipPath id="clip0_173_72895">
-                    <rect
-                      width="16"
-                      height="16"
-                      fill="white"
-                      transform="matrix(-1 0 0 1 20 4)"
+                </svg>
+              </div>
+              <div className={styles['bookmark-share']}>
+                {/* Share Icon */}
+                <svg
+                  className={styles['share-icon']}
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  onClick={handleShare}
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="11.25"
+                    fill="white"
+                    stroke="#8064A2"
+                    stroke-width="1.5"
+                  />
+                  <g clip-path="url(#clip0_173_72895)">
+                    <path
+                      d="M13.3335 10.0008V8.94083C13.3335 8.34749 14.0535 8.04749 14.4735 8.46749L17.5335 11.5275C17.7935 11.7875 17.7935 12.2075 17.5335 12.4675L14.4735 15.5275C14.0535 15.9475 13.3335 15.6542 13.3335 15.0608V13.9342C10.0002 13.9342 7.66685 15.0008 6.00018 17.3342C6.66685 14.0008 8.66685 10.6675 13.3335 10.0008Z"
+                      fill="#8064A2"
                     />
-                  </clipPath>
-                </defs>
-              </svg>
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_173_72895">
+                      <rect
+                        width="16"
+                        height="16"
+                        fill="white"
+                        transform="matrix(-1 0 0 1 20 4)"
+                      />
+                    </clipPath>
+                  </defs>
+                </svg>
 
-              {/* Bookmark Icon */}
-              {/* <CustomizedTooltips title='This feature is under development'> */}
-              <svg
-                onClick={showFeatureUnderDevelopment}
-                className={styles['bookmark-icon']}
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g clip-path="url(#clip0_173_72894)">
-                  <path
-                    d="M17 3H7C5.9 3 5 3.9 5 5V21L12 18L19 21V5C19 3.9 18.1 3 17 3ZM17 18L12 15.82L7 18V6C7 5.45 7.45 5 8 5H16C16.55 5 17 5.45 17 6V18Z"
-                    fill="#8064A2"
-                  />
-                </g>
-                <defs>
-                  <clipPath id="clip0_173_72894">
-                    <rect width="24" height="24" fill="white" />
-                  </clipPath>
-                </defs>
-              </svg>
+                {/* Bookmark Icon */}
+                {/* <CustomizedTooltips title='This feature is under development'> */}
+                <svg
+                  onClick={showFeatureUnderDevelopment}
+                  className={styles['bookmark-icon']}
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g clip-path="url(#clip0_173_72894)">
+                    <path
+                      d="M17 3H7C5.9 3 5 3.9 5 5V21L12 18L19 21V5C19 3.9 18.1 3 17 3ZM17 18L12 15.82L7 18V6C7 5.45 7.45 5 8 5H16C16.55 5 17 5.45 17 6V18Z"
+                      fill="#8064A2"
+                    />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_173_72894">
+                      <rect width="24" height="24" fill="white" />
+                    </clipPath>
+                  </defs>
+                </svg>
+              </div>
             </div>
           </div>
+          {showComments && (
+            <PostComments
+              data={activePost}
+              styles={styles}
+              onMoreComments={() => {
+                setDisplayMoreComments((prevValue) => !prevValue)
+              }}
+              showAllComments={true}
+              getInput={(input) => setNewComment(input)}
+              hideSeeMore={!displayMoreComments}
+            />
+          )}
         </div>
-        {showComments && (
-          <PostComments
-            data={activePost}
-            styles={styles}
-            onMoreComments={() => {
-              setDisplayMoreComments((prevValue) => !prevValue)
-            }}
-            showAllComments={true}
-            getInput={(input) => setNewComment(input)}
-            hideSeeMore={!displayMoreComments}
-          />
-        )}
       </div>
       {
         <CustomSnackbar

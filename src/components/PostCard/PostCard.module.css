@@ -154,6 +154,10 @@
   justify-content: center;
   align-items: center;
 }
+
+.comment-input-wrapper .submit-btn:focus-visible {
+  outline: 1px solid rgb(var(--primary-50-rgb));
+}
 .comment-input-wrapper .submit-btn:hover {
   background-color: rgba(var(--primary-100-rgb), 0.2);
 }
