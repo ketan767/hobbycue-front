@@ -11,6 +11,7 @@
 }
 .uploadContainer {
   display: flex;
+  gap: 24px;
 }
 .uploadContainer > div {
   flex: 1;
@@ -32,12 +33,46 @@
 .uploadButton:nth-child(1) {
   margin-right: 8px;
 }
+
+.hidden {
+  display: none;
+}
+
+.uploadButtonDescktop{
+  border-radius: 8px;
+border: 1px dashed var(--Primary-Full, #8064A2);
+background: #FFF;
+display: flex;
+/* width: 482px; */
+height: 88px;
+justify-content: center;
+align-items: center;
+gap: 4px;
+position: relative;
+cursor: pointer;
+}
+
+.uploadButtonDescktop .hidden{
+  opacity: 0;
+  inset: 0;
+  z-index: 2;
+  position: absolute;
+  display: block;
+  cursor: pointer;
+}
+
+.uploadButtonDescktop{
+  color: var(--Purple-1, #8064A2);
+font-family: Poppins;
+font-size: 14px;
+font-style: normal;
+font-weight: 600;
+line-height: 20px; /* 142.857% */
+}
+
 .editIcon {
   padding: 2px;
   cursor: pointer;
-}
-.hidden {
-  display: none;
 }
 .video{
   width: 100%;
@@ -56,5 +91,11 @@
   }
   .image{
     width: auto;
+  }
+}
+
+@media screen and (min-width:1100px) {
+  .media-layout{
+    margin-left: -24px !important;
   }
 }

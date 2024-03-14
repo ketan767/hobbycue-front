@@ -33,7 +33,7 @@ const SettingsSidebar: React.FC<Props> = ({ active }) => {
     <>
       <div className={styles.sidebarContainer}>
         <p className={styles.sidebarTitle}> Settings </p>
-        <ul>
+        <ul className={styles.sidebarListParent}>
           {sidebarItems.map((item: any) => {
             return (
               <Link

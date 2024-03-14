@@ -53,14 +53,14 @@
   width: 100%;
   padding: var(--spacing-4);
   cursor: pointer;
-  margin: 0 0 5px 0;
+  margin: 0 0 16px 0;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .main {
-  padding: 1rem;
+  padding: 0 1rem 1rem 1rem;
 }
 .profile {
   display: flex;
@@ -74,14 +74,30 @@
   line-height: normal;
 }
 
+.profile p{
+  color: var(--Black, #000);
+font-family: Poppins;
+font-size: 14px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+display: -webkit-box; /* For iOS and Safari */
+-webkit-line-clamp: 2; /* Limit the number of lines */
+-webkit-box-orient: vertical; /* Set the orientation to vertical */
+overflow: hidden;
+}
+
 .dropdown-container {
   position: relative;
+  border-top: 1px solid var(--Grey-Lighter, #EBEDF0);
+    margin: 0 -16px;
+    padding: 0 16px;
 }
 .dropdown-container > header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 0;
+  padding: 12px 0 8px 0;
 }
 .dropdown-container > header > div {
   display: flex;
@@ -95,6 +111,11 @@
   font-weight: 500;
   line-height: normal;
 }
+
+.dropdown-container > .dropdown-header{
+  padding: 1rem 0;
+}
+
 .arrow {
   width: 24px;
   height: 24px;
@@ -132,7 +153,7 @@
 
 
 .list {
-  padding: 8px 0;
+  padding: 0 0 8px 0;
   border-bottom: 1px solid #ebedf0;
 }
 .list h4 a {
@@ -154,4 +175,12 @@
 
 .add-listing-link {
   color: #8064a2;
+}
+
+.rotate180{
+  transform: rotate(180deg);
+}
+
+.no-border{
+  border: none;
 }

@@ -99,7 +99,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
       setBackBtnLoading(false)
     } else {
       const newOnboardingStep =
-        Number(user?.onboarding_step) > 1 ? user?.onboarding_step : '0'
+        Number(user?.onboarding_step) > 1 ? user?.onboarding_step : '2'
       const { err, res } = await updateMyProfileDetail({
         ...data,
         onboarding_step: newOnboardingStep,
@@ -135,7 +135,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
         const newData = { about: cleanString(data.about) }
         setSubmitBtnLoading(true)
         const newOnboardingStep =
-          Number(user?.onboarding_step) > 1 ? user?.onboarding_step : '0'
+          Number(user?.onboarding_step) > 1 ? user?.onboarding_step : '2'
         const { err, res } = await updateMyProfileDetail({
           ...newData,
           onboarding_step: newOnboardingStep,
@@ -162,7 +162,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
       const newData = { about: data.about.trim() }
       setSubmitBtnLoading(true)
       const newOnboardingStep =
-        Number(user?.onboarding_step) > 1 ? user?.onboarding_step : '0'
+        Number(user?.onboarding_step) > 1 ? user?.onboarding_step : '2'
       const { err, res } = await updateMyProfileDetail({
         ...newData,
         onboarding_step: newOnboardingStep,

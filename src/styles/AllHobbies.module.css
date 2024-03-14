@@ -5,7 +5,7 @@
 .page-container {
   display: grid;
   grid-template-columns: 230px auto;
-  padding: 24px 0;
+  padding: 12px 0;
   gap: 24px;
 }
 
@@ -16,7 +16,7 @@
   background: #ffffff;
   border: 1px solid #ebedf0;
   border-radius: 8px;
-  top: calc(24px + var(--navbar-height-desktop));
+  top: calc(12px + var(--navbar-height-desktop));
   position: sticky;
 }
 
@@ -26,13 +26,15 @@
   align-items: center;
 }
 .filter-wrapper header .heading {
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 20px;
-  color: #08090a;
-  margin: 0;
+margin-bottom: 24px;
+font-weight: 600;
+line-height: 20px;
+color: var(--Purple-1, #8064a2);
+font-family: Poppins;
+font-size: 20px;
+font-style: normal;
+line-height: 16px;
+margin: 0;
 }
 
 .filter-wrapper header button {

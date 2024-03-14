@@ -165,7 +165,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           }
 
           const newOnboardingStep =
-            Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '0'
+            Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
           const { err: updtProfileErr, res: updtProfileRes } =
             await updateMyProfileDetail({ onboarding_step: newOnboardingStep })
           const { err: error, res: response } = await getMyProfileDetail()
@@ -191,7 +191,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
             return alert('Something went wrong!')
           }
           const newOnboardingStep =
-            Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '0'
+            Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
           const { err: updtProfileErr, res: updtProfileRes } =
             await updateMyProfileDetail({ onboarding_step: newOnboardingStep })
           const { err: error, res: response } = await getMyProfileDetail()
@@ -219,7 +219,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               return alert('Something went wrong!')
             }
             const newOnboardingStep =
-              Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '0'
+              Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
             const { err: updtProfileErr, res: updtProfileRes } =
               await updateMyProfileDetail({
                 onboarding_step: newOnboardingStep,
@@ -247,7 +247,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                 return alert('Something went wrong!')
               }
               const newOnboardingStep =
-                Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '0'
+                Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
               const { err: updtProfileErr, res: updtProfileRes } =
                 await updateMyProfileDetail({
                   onboarding_step: newOnboardingStep,
@@ -273,7 +273,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
             return alert('Something went wrong!')
           }
           const newOnboardingStep =
-            Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '0'
+            Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
           const { err: updtProfileErr, res: updtProfileRes } =
             await updateMyProfileDetail({ onboarding_step: newOnboardingStep })
           const { err: error, res: response } = await getMyProfileDetail()
@@ -388,7 +388,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           return alert('Something went wrong!')
         }
         const newOnboardingStep =
-          Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '0'
+          Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
         const { err: updtProfileErr, res: updtProfileRes } =
           await updateMyProfileDetail({ onboarding_step: newOnboardingStep })
         const { err: error, res: response } = await getMyProfileDetail()
@@ -419,7 +419,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           return alert('Something went wrong!')
         }
         const newOnboardingStep =
-          Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '0'
+          Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
         const { err: updtProfileErr, res: updtProfileRes } =
           await updateMyProfileDetail({ onboarding_step: newOnboardingStep })
         const { err: error, res: response } = await getMyProfileDetail()
@@ -452,7 +452,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
             return alert('Something went wrong!')
           }
           const newOnboardingStep =
-            Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '0'
+            Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
           const { err: updtProfileErr, res: updtProfileRes } =
             await updateMyProfileDetail({ onboarding_step: newOnboardingStep })
           const { err: error, res: response } = await getMyProfileDetail()
@@ -483,7 +483,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               return alert('Something went wrong!')
             }
             const newOnboardingStep =
-              Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '0'
+              Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
             const { err: updtProfileErr, res: updtProfileRes } =
               await updateMyProfileDetail({
                 onboarding_step: newOnboardingStep,
@@ -514,7 +514,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           return alert('Something went wrong!')
         }
         const newOnboardingStep =
-          Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '0'
+          Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
         const { err: updtProfileErr, res: updtProfileRes } =
           await updateMyProfileDetail({ onboarding_step: newOnboardingStep })
         const { err: error, res: response } = await getMyProfileDetail()

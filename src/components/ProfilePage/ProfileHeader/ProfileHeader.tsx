@@ -547,7 +547,7 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
               </Tooltip>
               {profileLayoutMode === 'edit'
                 ? open && (
-                    <Dropdown userType={'edit'} handleClose={handleDropdown} />
+                    <Dropdown userType={'edit'} handleClose={handleDropdown}/>
                   )
                 : open && (
                     <Dropdown

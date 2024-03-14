@@ -369,14 +369,15 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         setAddHobbyBtnLoading(false)
         return console.log(err)
       }
-      const { err:updtProfileErr, res:updtProfileRes } = await updateMyProfileDetail({ is_onboarded: true })
+      const { err: updtProfileErr, res: updtProfileRes } =
+        await updateMyProfileDetail({ is_onboarded: true })
       const { err: error, res: response } = await getMyProfileDetail()
       setAddHobbyBtnLoading(false)
       if (error) return console.log(error)
 
       if (response?.data.success) {
-        const {is_onboarded} = user;
-        dispatch(updateUser({...response?.data.data.user,is_onboarded}))
+        const { is_onboarded } = user
+        dispatch(updateUser({ ...response?.data.data.user, is_onboarded }))
         setHobbyInputValue('')
         setGenreInputValue('')
         setData({ level: 1, hobby: null, genre: null })

@@ -149,7 +149,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
       setBackBtnLoading(true)
 
       const newOnboardingStep =
-        Number(user?.onboarding_step) > 2 ? user?.onboarding_step : '0'
+        Number(user?.onboarding_step) > 2 ? user?.onboarding_step : '3'
       const { err, res } = await updateMyProfileDetail({
         ...jsonData,
         onboarding_step: newOnboardingStep,
@@ -250,7 +250,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
     setSubmitBtnLoading(true)
 
     const newOnboardingStep =
-      Number(user?.onboarding_step) > 2 ? user?.onboarding_step : '0'
+      Number(user?.onboarding_step) > 2 ? user?.onboarding_step : '3'
     const { err, res } = await updateMyProfileDetail({
       ...jsonData,
       onboarding_step: newOnboardingStep,

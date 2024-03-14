@@ -282,6 +282,7 @@ const ModalManager: React.FC = () => {
               ref={mainRef}
             >
               {activeModal !== 'listing-onboarding' &&
+              activeModal !== 'user-onboarding-welcome' &&
                 activeModal !== 'user-onboarding' && (
                   <>
                     <header className={styles['header']}>
@@ -386,7 +387,7 @@ const ModalManager: React.FC = () => {
                 <UserOnboardingWelcomeModal />
               )}
 
-              {activeModal === 'claim-listing' && <ClaimModal />}
+              {activeModal === 'claim-listing' && <ClaimModal setSnackbar={setSnackbar} />}
               {activeModal === 'upload-video-page' && <UploadVideoPage />}
               {activeModal === 'upload-image-page' && <UploadImagePage />}
               {activeModal === 'upload-video-user' && <UploadVideoUser />}
@@ -477,8 +478,8 @@ const ModalManager: React.FC = () => {
       /> */}
       <CustomSnackbar
         triggerOpen={snackbar.show}
-        message="Link Copied"
-        type="success"
+        message={snackbar.message??"Link Copied"}
+        type={snackbar.type}
         closeSnackbar={closeSnackbar}
       />
     </>

@@ -12,9 +12,11 @@
   line-height: 22px;
   color: #6d747a;
 }
+
 .clickable {
   cursor: pointer;
 }
+
 .title {
   margin-bottom: 24px;
 }
@@ -79,13 +81,14 @@
   line-height: 22px;
   color: #8064a2;
 }
-.logout-container{
+
+.logout-container {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
-.google-image{
+.google-image {
   position: relative;
   width: 30px;
   height: 30px;
@@ -95,15 +98,26 @@
   border-radius: 100%;
 }
 
-.google-icon{
+.google-icon {
   position: absolute;
-  width: 10px;
-  height: 10px;
-  top:14px;
-  left: 18px;
+  width: 12px;
+  height: 12px;
+  padding: 1px;
+  /* top: 14px;
+  left: 18px; */
 }
-
-.user-icon-google{
+  .google-icon {
+    bottom: 0;
+    right: -1px;
+    top: unset;
+    left: unset;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+.user-icon-google {
   border: 1px solid #8064a2;
 }
 
@@ -112,27 +126,40 @@
     width: 100%;
     padding: 16px 21px;
   }
-  .textLight{
+
+  .textLight {
     font-weight: 500;
     margin-bottom: 20px;
   }
-  .email{
+
+  .email {
     color: var(--Grey-Darkest, #08090A);
 
-/* Text md/Regular */
-font-family: Poppins;
-font-size: 16px;
-font-style: normal;
-font-weight: 400;
-line-height: 22px; /* 137.5% */
+    /* Text md/Regular */
+    font-family: Poppins;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    /* 137.5% */
   }
 
-  .socialLoginContainer img{
+  .socialLoginContainer img {
     width: 16px;
     height: 16px;
   }
 
-.settingcontainer{
-  grid-template-rows: 16rem 42rem !important;
-}
+  .settingcontainer {
+    grid-template-rows: 16rem 42rem !important;
+  }
+
+  .google-image {
+    width: 20px;
+    height: 20px;
+  }
+  .google-icon img{
+    height: 10px;
+    width: 10px;
+  }
+
 }
