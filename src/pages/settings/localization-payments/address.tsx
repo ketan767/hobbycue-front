@@ -86,7 +86,7 @@ const Address: React.FC<Props> = ({
           width={16}
           height={16}
           alt="radio"
-          className={styles.addIcon}
+          className={styles.radioIcon}
           onClick={toggleDefaultAddress}
         />
         <div className={styles.addressContent}>
