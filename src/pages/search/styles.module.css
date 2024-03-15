@@ -327,8 +327,9 @@
 
   }
   .hobbydescription {
-    max-width: 340px;
-    width: 100%;
-  
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc(100vw - 9rem);
   }
 }

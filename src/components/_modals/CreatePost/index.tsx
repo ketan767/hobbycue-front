@@ -332,7 +332,8 @@ export const CreatePost: React.FC<Props> = ({
       genreId: data.genre ? data.genre : '',
       content: DOMPurify.sanitize(data.content),
       visibility: data.visibility,
-      media: hasLink ? [...data.media, metadataImg] : data.media,
+      media:
+        hasLink && showMetaData ? [...data.media, metadataImg] : data.media,
       has_link: hasLink,
       video_url: data.video_url ? data.video_url : null,
     }
@@ -436,7 +437,7 @@ export const CreatePost: React.FC<Props> = ({
                 data={data}
                 image={true}
                 error={errors.content}
-                hasLink={hasLink}
+                hasLink={hasLink && showMetaData}
               />
               {data.video_url && (
                 <div className={styles.videoWrapper}>
@@ -472,6 +473,7 @@ export const CreatePost: React.FC<Props> = ({
               ) : (
                 <></>
               )}
+
               {hasLink && metaData && showMetaData && (
                 <div className={styles['show-metadata']}>
                   <svg
