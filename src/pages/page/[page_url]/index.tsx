@@ -19,6 +19,7 @@ import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPag
 type Props = { data: ListingPageData }
 
 const ListingHome: React.FC<Props> = (props) => {
+  console.warn({props});
   const dispatch = useDispatch()
   const [error, seterror] = useState({
     hobby: false,
@@ -82,6 +83,8 @@ const ListingHome: React.FC<Props> = (props) => {
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
   }, [])
+
+  if(!props?.data?.pageData?.is_published) (<ErrorPage restricted/>)
 
   return (
     <>

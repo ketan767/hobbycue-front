@@ -18,6 +18,7 @@ import ListingHomeTab from '@/components/ListingPage/ListingHomeTab/ListingHomeT
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
 import ListingPostsTab from '@/components/ListingPage/ListingPagePosts/ListingPagePosts'
 import ListingMediaTab from '@/components/ListingPage/ListingPageMedia'
+import ErrorPage from '@/components/ErrorPage'
 
 type Props = { data: ListingPageData }
 
@@ -62,7 +63,7 @@ const ListingMedia: React.FC<Props> = (props) => {
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
   }, [])
-
+  if(!props?.data?.pageData?.is_published) (<ErrorPage restricted/>)
   return (
     <>
       <Head>

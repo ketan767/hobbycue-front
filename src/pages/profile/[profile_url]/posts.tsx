@@ -27,6 +27,7 @@ import ProfileNavigationLinks from '@/components/ProfilePage/ProfileHeader/Profi
 import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/ProfileSocialMedia'
 import { RootState } from '@/redux/store'
 import { updateProfileMenuExpandAll } from '@/redux/slices/site'
+import ErrorPage from '@/components/ErrorPage'
 
 interface Props {
   data: ProfilePageData
@@ -119,7 +120,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
     setExpandAll(value)
     dispatch(updateProfileMenuExpandAll(value))
   }
-
+  if(!user.is_onboarded && data?.pageData?.email!==user?.email) {return(<ErrorPage/>)}
   return (
     <>
       <Head>

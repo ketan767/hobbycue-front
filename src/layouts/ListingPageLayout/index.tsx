@@ -53,6 +53,8 @@ const ListingPageLayout: React.FC<Props> = ({
   expandAll,
   setExpandAll,
 }) => {
+  console.warn({data});
+  
   const router = useRouter()
   const dispatch = useDispatch()
   const [showSmallHeader, setShowSmallHeader] = useState(false)
