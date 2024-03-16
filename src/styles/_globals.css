@@ -151,7 +151,7 @@ select:-webkit-autofill {
 .modal-footer-btn:not(:disabled):hover {
   opacity: 0.9;
 }
-.modal-footer-btn.submit:focus {
+.modal-footer-btn.submit:focus-visible {
   outline: 1px solid rgba(var(--primary-100-rgb)) !important;
   border: 1px solid !important;
 }
@@ -168,10 +168,10 @@ select:-webkit-autofill {
   border: 1px solid rgba(var(--primary-100-rgb));
   position: relative;
 }
-.modal-footer-btn.cancel:focus{
+.modal-footer-btn.cancel:focus-visible{
   outline: none;
 }
-.modal-footer-btn.cancel:focus::before{
+.modal-footer-btn.cancel:focus-visible::before{
   content: '';
   position: absolute;
   top: -3px;

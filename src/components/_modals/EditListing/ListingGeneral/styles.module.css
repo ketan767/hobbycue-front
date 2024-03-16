@@ -269,4 +269,7 @@
   .modal-close-icon {
     position: fixed !important;
   }
+  .modal-hr {
+    display: none;
+  }
 }

@@ -1086,7 +1086,7 @@ const ListingPageMain: React.FC<Props> = ({
         {children}
 
         <aside
-          className={`custom-scrollbar ${styles['page-right-aside']}
+          className={`${styles['page-right-aside']}
             ${
               activeTab === 'home' || activeTab === 'posts'
                 ? styles['display-desktop']

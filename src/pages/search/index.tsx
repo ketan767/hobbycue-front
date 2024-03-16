@@ -356,7 +356,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     </div>
                   ))}
 
-                <div>
+                <div className={styles['view-more-btn-container']}>
                   {showAllhobbies
                     ? undefined
                     : (hobbyResults.length > 3 ? (
@@ -413,7 +413,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       </div>
                     </div>
                   ))}
-                <div>
+                <div className={styles['view-more-btn-container']}>
                   {showAllUsers
                     ? undefined
                     : (searchResults.length > 3 ? (
@@ -477,7 +477,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       </div>
                     </div>
                   ))}
-                <div>
+                <div className={styles['view-more-btn-container']}>
                   {showAllPeople
                     ? undefined
                     : (peopleResults.length > 3 ? (
@@ -534,7 +534,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       </div>
                     </div>
                   ))}
-                <div>
+                <div className={styles['view-more-btn-container']}>
                   {showAllPlace
                     ? undefined
                     : (placeResults.length > 3 ? (
@@ -592,7 +592,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     </div>
                   ),
                 )}
-                <div>
+                <div className={styles['view-more-btn-container']}>
                   {showAllEvent
                     ? undefined
                     : (EventResults.length > 3 ? (
