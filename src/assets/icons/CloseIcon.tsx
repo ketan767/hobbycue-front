@@ -9,6 +9,7 @@ const CloseIcon: React.FC<Props> = (props) => {
   return (
     <>
       <svg
+      tabIndex={0}
         className={props.className}
         width="32"
         height="32"

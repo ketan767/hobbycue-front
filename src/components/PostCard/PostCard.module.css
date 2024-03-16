@@ -114,6 +114,7 @@
 
 .footer-actions-wrapper .share-icon {
   margin-left: auto;
+  margin-bottom: 1px;
 }
 
 .inputContainer {
@@ -124,7 +125,7 @@
 
 .inputAuthorImage {
   border-radius: 100%;
-  width: var(--spacing-32);
+  width: 33px;
   height: var(--spacing-32);
   min-width: var(--spacing-32);
   min-height: var(--spacing-32);
@@ -155,9 +156,17 @@
   align-items: center;
 }
 
-.comment-input-wrapper .submit-btn:focus-visible {
-  outline: 1px solid rgb(var(--primary-50-rgb));
+.submit-btn-svg{
+  margin-left: 3px;
 }
+
+.comment-input-wrapper .submit-btn:focus-visible {
+  outline:none;
+  background-color: rgba(var(--primary-100-rgb));
+}
+.comment-input-wrapper .submit-btn:focus-visible>svg>path {
+  fill: #ffffff;
+  }
 .comment-input-wrapper .submit-btn:hover {
   background-color: rgba(var(--primary-100-rgb), 0.2);
 }
