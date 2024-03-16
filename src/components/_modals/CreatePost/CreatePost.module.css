@@ -302,6 +302,16 @@
     flex-direction: column;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
+    gap: 16px;
+  }
+  .create-post-modal > aside{
+    gap: 24px;
+  }
+  .create-post-modal > aside div label{
+    background-color: white;
+  }
+  .create-post-modal > aside > div > section{
+    width: 100%;
   }
   .modal-wrapper {
     /* max-width: 350px; */

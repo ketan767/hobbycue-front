@@ -1,0 +1,121 @@
+.container {
+    background: var(--Grey-Hover, #F8F9FA);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    gap: 40px;
+    padding: 119px 0 214px 0;
+}
+
+.heroImg {
+    aspect-ratio: 1 / 1;
+}
+
+.contentContainer {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    max-width: 825px;
+}
+
+.moveUp {
+    margin-top: -54px;
+}
+
+.contentContainer h1 {
+    color: #203048;
+    font-family: Poppins;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.contentContainer p {
+    color: #263238;
+    text-align: center;
+    font-family: Poppins;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 26px;
+    /* 144.444% */
+}
+
+.contentContainer span {
+    color: var(--Primary-Full, #8064A2);
+    font-family: Poppins;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 26px;
+}
+
+.flexColContainer {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.flexRowContainer {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.btnSecondary {
+    display: flex;
+    width: 150px;
+    padding: 12px 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 8px;
+    border: 1px solid var(--Purple-1, #8064A2);
+
+    color: var(--Purple-1, #8064A2);
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 16px;
+    /* 114.286% */
+    text-align: center;
+    cursor: pointer;
+}
+
+.btnPrimary {
+    display: flex;
+    width: 150px;
+    padding: 12px 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 8px;
+    background: var(--Purple-1, #8064A2);
+    color: var(--Grey-white, #FFF);
+
+    /* Text sm/Semibold */
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 16px;
+    border: none;
+    /* 114.286% */
+    cursor: pointer;
+}
+
+@media screen and (max-width:1100px) {
+    .heroImg {
+        max-width: 96vw;
+        max-width: 96vw;
+    }
+    .container{
+        padding: 119px 0 119px 0;
+    }
+}

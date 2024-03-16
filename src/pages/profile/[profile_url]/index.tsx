@@ -34,6 +34,7 @@ import {
   updateProfileLayoutMode,
   updateProfileMenuExpandAll,
 } from '@/redux/slices/site'
+import ErrorPage from '@/components/ErrorPage'
 
 interface Props {
   data: ProfilePageData
@@ -145,7 +146,8 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
     setPageData(data?.pageData)
     dispatch(updateProfileData(data.pageData))
   }, [data?.pageData])
-
+  
+  if(!user.is_onboarded && pageData?.email!==user?.email) {return(<ErrorPage/>)}
   return (
     <>
       <Head>

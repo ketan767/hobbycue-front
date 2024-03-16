@@ -22,6 +22,7 @@ import ProfileContactSide from '@/components/ProfilePage/ProfileContactSides'
 import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/ProfileSocialMedia'
 import { updateProfileMenuExpandAll } from '@/redux/slices/site'
 import { useRouter } from 'next/router'
+import ErrorPage from '@/components/ErrorPage'
 
 interface Props {
   data: ProfilePageData
@@ -31,6 +32,7 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
   const dispatch = useDispatch()
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
   const { profile } = useSelector((state: RootState) => state?.site.expandMenu)
+  const {user} = useSelector((state:RootState)=>state.user);
   const [expandAll, setExpandAll] = useState(profile)
   const handleExpandAll: (value: boolean) => void = (value) => {
     setExpandAll(value)
@@ -62,6 +64,7 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
   }, [])
+  if(!user.is_onboarded && data?.pageData?.email!==user?.email) {return(<ErrorPage/>)}
 
   return (
     <>

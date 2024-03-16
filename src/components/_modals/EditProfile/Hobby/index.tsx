@@ -30,6 +30,7 @@ import DropdownMenu from '@/components/DropdownMenu'
 import { useRouter } from 'next/router'
 import AddHobby from '../../AddHobby/AddHobbyModal'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import AddGenre from '../../AddGenre/AddGenreModal'
 
 type Props = {
   onComplete?: () => void
@@ -340,7 +341,17 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
         return
       }
-    } else {
+    }
+    if(genreInputValue.length>0){
+      const matchedGenre = genreDropdownList.find(
+        (genre) =>
+          genre.display.toLowerCase() === genreInputValue.toLowerCase(),
+      )
+      if(!matchedGenre){
+setShowAddHobbyModal(true);
+return;}
+    }
+    else {
       selectedGenre = data.genre
     }
 
@@ -691,7 +702,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   if (showAddHobbyModal) {
     return (
       <>
-        <AddHobby
+        {genreInputValue.length===0?<AddHobby
           handleClose={() => {
             setShowAddHobbyModal(false)
           }}
@@ -703,7 +714,20 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
             })
           }}
           propData={{ defaultValue: hobbyInputValue }}
-        />
+        />:
+        <AddGenre
+        handleClose={() => {
+          setShowAddHobbyModal(false)
+        }}
+        handleSubmit={() => {
+          setShowSnackbar({
+            message: 'This feature is under development',
+            triggerOpen: true,
+            type: 'success',
+          })
+        }}
+        propData={{ defaultValue: genreInputValue }}
+        />}
         <CustomSnackbar
           message={showSnackbar.message}
           type={showSnackbar.type}

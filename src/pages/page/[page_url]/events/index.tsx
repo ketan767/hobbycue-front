@@ -16,6 +16,7 @@ import {
 
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
 import ListingEventsTab from '@/components/ListingPage/ListingPageEvents/ListingPageEvents'
+import ErrorPage from '@/components/ErrorPage'
 
 type Props = { data: ListingPageData }
 
@@ -60,7 +61,7 @@ const ListingEvents: React.FC<Props> = (props) => {
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
   }, [])
-
+  if(!props?.data?.pageData?.is_published) (<ErrorPage restricted/>)
   return (
     <>
       {props.data.pageData.type === 3 ? (

@@ -25,6 +25,7 @@ import ProfileAddressSide from '@/components/ProfilePage/ProfileAddressSide'
 import ProfileContactSide from '@/components/ProfilePage/ProfileContactSides'
 import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/ProfileSocialMedia'
 import { updateProfileMenuExpandAll } from '@/redux/slices/site'
+import ErrorPage from '@/components/ErrorPage'
 
 interface Props {
   data: ProfilePageData['pageData']
@@ -153,6 +154,7 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
   }, [])
+  if(!user.is_onboarded && data?.pageData?.email!==user?.email) {return(<ErrorPage/>)}
 
   return (
     <>

@@ -957,6 +957,7 @@ const CommunityLayout: React.FC<Props> = ({
                   onChange={(e: any) => setEmail(e.target.value)}
                   type="email"
                   id=""
+                  className={errorMessage !== ''?styles['error-input']:""}
                 />
                 <span className={styles['input-prefix']}></span>
                 <FilledButton

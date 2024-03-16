@@ -5,6 +5,11 @@
    
     max-width: 1440px;
   }
+
+  .side-margin-auto{
+    margin: 0 auto;
+  }
+
   .explore {
 
     padding: 1.2rem 1.2rem;

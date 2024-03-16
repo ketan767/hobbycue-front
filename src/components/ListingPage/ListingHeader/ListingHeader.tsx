@@ -143,7 +143,28 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
   }
 
   const handlePublish = async () => {
-    // console.log(data)
+    if(data.is_published!==true){
+    let hasError = false;
+      if (data._hobbies.length === 0) {
+        hasError = true
+      }
+      if (data.page_type.length === 0) {
+        hasError = true
+      }
+      if (!data.phone && !data.public_email) {
+        hasError = true
+      }
+      if (!data._address.city) {
+        hasError = true
+      }
+      if(!data._tags || data._tags.length===0){
+        hasError = true
+      }
+      if(hasError){
+        setSnackbar({display:true,type:"warning",message:"All mandatory fields should be filled before publishing"});
+        return;
+      }
+    }
     const { err, res } = await updateListing(data._id, {
       is_published: data.is_published === true ? false : true,
     })
