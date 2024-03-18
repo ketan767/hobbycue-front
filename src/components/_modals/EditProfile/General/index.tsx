@@ -96,25 +96,16 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
 
   const handleInputChange = (event: any) => {
     const { name, value } = event.target
-    if (name === 'year_of_birth') {
-      if (value.length >= 4) {
-        const currentYear = new Date().getFullYear()
-        if (isNaN(value)) {
-          setInputErrs((prev) => {
-            return { ...prev, year_of_birth: 'Please enter numbers only' }
-          })
-        } else if (currentYear - value > 100 || currentYear - value < 13) {
-          setInputErrs((prev) => {
-            return {
-              ...prev,
-              year_of_birth: 'Your age should be between 13 to 100',
-            }
-          })
-        }
-      }
+    if (name === 'profile_url') {
+      // Only apply this modification for the profile_url field
+      // Replace special characters with '-'
+      const modifiedValue = value.replace(/[^a-zA-Z0-9-]/g, '-')
+      setData((prev) => ({ ...prev, [name]: modifiedValue }))
+      setInputErrs((prev) => ({ ...prev, [name]: null }))
+    } else {
+      setData((prev) => ({ ...prev, [name]: value }))
+      setInputErrs((prev) => ({ ...prev, [name]: null }))
     }
-    setData((prev) => ({ ...prev, [name]: value }))
-    setInputErrs((prev) => ({ ...prev, [name]: null }))
 
     // Compare current data with initial data to check for changes
     const currentData = { ...data, [name]: value }
@@ -162,11 +153,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
               return { ...prev, year_of_birth: 'Maximum age: 100' }
             })
           }
-          if (check < 0) {
-            return setInputErrs((prev) => {
-              return { ...prev, year_of_birth: 'Enter a valid year of birth' }
-            })
-          }
+
           if (check < 13) {
             return setInputErrs((prev) => {
               return { ...prev, year_of_birth: 'Minimum age is 13' }
@@ -174,25 +161,16 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
           }
         } else {
           return setInputErrs((prev) => {
-            return { ...prev, year_of_birth: 'Enter a valid year of birth' }
+            return { ...prev, year_of_birth: 'Enter a valid number' }
           })
         }
       } else {
         return setInputErrs((prev) => {
-          return { ...prev, year_of_birth: 'Enter a valid year of birth' }
+          return { ...prev, year_of_birth: 'Enter a valid number' }
         })
       }
     }
     const onlyAlphabetsAndHyphensRegex = /^[a-zA-Z-]*$/
-
-    // Check if the profile_url value contains any characters other than alphabetic characters and hyphens
-    if (!onlyAlphabetsAndHyphensRegex.test(data.profile_url)) {
-      profileUrlRef.current?.focus()
-      return setInputErrs((prev) => ({
-        ...prev,
-        profile_url: 'Only alphabetic characters and hyphens are allowed!',
-      }))
-    }
 
     setSubmitBtnLoading(true)
     const newOnboardingStep =
@@ -273,21 +251,19 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   useEffect(() => {
     if (onComplete !== undefined && /^\d+$/.test(user.profile_url)) {
       let profileUrl = data.full_name
-      profileUrl = profileUrl?.toLowerCase()
-      profileUrl = profileUrl?.replace(/ /g, '-')
-      setData((prev) => {
-        return { ...prev, profile_url: profileUrl }
-      })
-      if (data.full_name) {
-        let display = data.full_name.split(' ')[0]
-        if (!user.display_name) {
-          setData((prev) => {
-            return { ...prev, display_name: display }
-          })
-        }
+      profileUrl = profileUrl?.toLowerCase().replace(/ /g, '-')
+      // Replace special characters with '-'
+      profileUrl = profileUrl.replace(/[^a-zA-Z0-9-]/g, '-')
+      setData((prev) => ({ ...prev, profile_url: profileUrl }))
+      if (!user.display_name) {
+        setData((prev) => ({
+          ...prev,
+          display_name: profileUrl.split('-')[0], // Use modified profileUrl for display_name
+        }))
       }
     }
   }, [data.full_name])
+
   console.log('type', typeof user.profile_url)
   useEffect(() => {
     // Set initial data with user's current profile data
@@ -470,7 +446,11 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
 
               <div className={styles['year-gender-wrapper']}>
                 {/* Year Of Birth*/}
-                <div className={styles['input-box']}>
+                <div
+                  className={`${styles['input-box']} ${
+                    inputErrs.year_of_birth ? styles['input-box-error'] : ''
+                  }`}
+                >
                   <label>Year of Birth</label>
                   <input
                     type="text"

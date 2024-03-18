@@ -30,6 +30,7 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
     setShowDropdown(false)
     // window.location.reload()
   }
+
   return (
     <>
       <section
@@ -61,7 +62,7 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
                 ? `${styles['img']} default-program-listing-icon`
                 : activeProfile?.data?.type == 4
                 ? `${styles['img']} default-product-listing-icon`
-                : `${styles['img']} default-people-listing-icon`
+                : `${styles['img']} default-user-icon`
             }
             `}
             data-profile-type={activeProfile.type}

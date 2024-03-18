@@ -89,6 +89,15 @@ const ProfileAboutEditModal: React.FC<Props> = ({
   }
 
   const Backsave = async () => {
+    const newOnboardingStep =
+      Number(user?.onboarding_step) > 1 ? user?.onboarding_step : '2'
+    const { err, res } = await updateMyProfileDetail({
+      onboarding_step: newOnboardingStep,
+    })
+
+    if (err) {
+      return console.log(err)
+    }
     setBackBtnLoading(true)
     if (
       !data.about ||
@@ -130,15 +139,22 @@ const ProfileAboutEditModal: React.FC<Props> = ({
   }
 
   const handleSubmit = async () => {
+    const newOnboardingStep =
+      Number(user?.onboarding_step) > 1 ? user?.onboarding_step : '2'
+    const { err, res } = await updateMyProfileDetail({
+      onboarding_step: newOnboardingStep,
+    })
+    if (err) {
+      setSubmitBtnLoading(false)
+      return console.log(err)
+    }
     if (!data.about || cleanString(data.about) === '') {
       if (data.about !== user.about) {
         const newData = { about: cleanString(data.about) }
         setSubmitBtnLoading(true)
-        const newOnboardingStep =
-          Number(user?.onboarding_step) > 1 ? user?.onboarding_step : '2'
+
         const { err, res } = await updateMyProfileDetail({
           ...newData,
-          onboarding_step: newOnboardingStep,
         })
         if (err) {
           setSubmitBtnLoading(false)
@@ -256,12 +272,6 @@ const ProfileAboutEditModal: React.FC<Props> = ({
       >
         {/* Modal Header */}
         <header className={styles['header']}>
-          <CloseIcon
-            className={styles['modal-close-icon']}
-            onClick={() =>
-              isChanged ? setConfirmationModal(true) : handleClose()
-            }
-          />
           <h4 className={styles['heading']}>{'About'}</h4>
         </header>
         <hr className={styles['modal-hr']} />

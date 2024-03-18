@@ -200,6 +200,7 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
               }`}
             >
               <TextField
+                className={'textFieldClass'}
                 inputRef={currentPasswordRef}
                 fullWidth
                 required
@@ -239,6 +240,7 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
               }`}
             >
               <TextField
+                className={'textFieldClass'}
                 fullWidth
                 required
                 inputRef={newPasswordRef}
@@ -321,6 +323,7 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
               }`}
             >
               <TextField
+                className={'textFieldClass'}
                 value={confirmPassword}
                 type={'password'}
                 onChange={(e) => setConfirmPassword(e.target.value)}

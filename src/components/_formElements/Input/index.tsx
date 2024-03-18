@@ -15,12 +15,21 @@ type Props = {
 }
 
 const FormInput: React.FC<Props> = (props) => {
-  const { type, value, placeholder, error, helperText, className, onChange, disabled } = props
+  const {
+    type,
+    value,
+    placeholder,
+    error,
+    helperText,
+    className,
+    onChange,
+    disabled,
+  } = props
 
   return (
     <>
       <TextField
-        className={`${styles['input-field']} ${className} `}
+        className={`${styles['input-field']} ${className} textFieldClass`}
         fullWidth
         placeholder={placeholder}
         type={type}
