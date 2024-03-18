@@ -124,7 +124,9 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
         {/* Header */}
         <header className={`site-container ${styles['header']}`}>
           {/* Profile Picture */}
-          <div className={styles['profile-img-wrapper']}>
+          <div
+            className={`${styles['profile-img-wrapper']} ${styles['profile-img-wrapper-small']}`}
+          >
             {data?.profile_image ? (
               <Image
                 className={styles['img']}

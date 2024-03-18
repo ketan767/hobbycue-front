@@ -349,7 +349,9 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       )
       if(!matchedGenre){
 setShowAddHobbyModal(true);
-return;}
+return;}else{
+  selectedGenre = data.genre
+}
     }
     else {
       selectedGenre = data.genre
@@ -362,10 +364,11 @@ return;}
       genre: selectedGenre?._id,
       level: data.level,
     }
+    console.log({userHobbies})
     const sameAsPrevious = userHobbies?.find(
       (obj: any) =>
-        obj?.hobby?._id === jsonData.hobby &&
-        obj?.genre?._id === jsonData.genre,
+        obj.hobby?._id === jsonData.hobby &&
+        jsonData.genre === obj.genre?._id,
     )
     if (sameAsPrevious) {
       setHobbyError(true)
@@ -697,7 +700,7 @@ return;}
     }
   }, [])
 
-  console.log({ showHobbyDowpdown })
+  console.log({ data })
 
   if (showAddHobbyModal) {
     return (
