@@ -53,10 +53,14 @@ const CommunityLayout: React.FC<Props> = ({}) => {
 
   return (
     <>
-      <CommunityPageLayout activeTab="posts" singlePostPage={true} >
+      <CommunityPageLayout activeTab="posts" singlePostPage={true}>
         <main>
           {!postData || isLoadingPosts ? (
-            <PostCardSkeletonLoading />
+            <>
+              <PostCardSkeletonLoading />
+              <PostCardSkeletonLoading />
+              <PostCardSkeletonLoading />
+            </>
           ) : (
             <PostCard postData={postData} />
           )}
