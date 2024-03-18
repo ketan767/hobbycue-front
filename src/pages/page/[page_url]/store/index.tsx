@@ -61,7 +61,7 @@ const ListingStore: React.FC<Props> = (props) => {
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
   }, [])
-  if(!props?.data?.pageData?.is_published) (<ErrorPage restricted/>)
+  if(props?.data?.pageData?.is_published!==true) return(<ErrorPage restricted/>)
   return (
     <>
       <Head>

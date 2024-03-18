@@ -26,8 +26,8 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
   // const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
   const dispatch = useDispatch()
   const { profile } = useSelector((state: RootState) => state?.site.expandMenu)
-  const {user} = useSelector((state:RootState)=>state.user);
-  const [expandAll, setExpandAll] = useState(profile)
+  const { user } = useSelector((state: RootState) => state.user)
+  const [expandAll, setExpandAll] = useState(profile);
   const handleExpandAll: (value: boolean) => void = (value) => {
     setExpandAll(value)
     dispatch(updateProfileMenuExpandAll(value))
@@ -59,7 +59,18 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
   }, [])
-  if(!user.is_onboarded && data?.pageData?.email!==user?.email) {return(<ErrorPage/>)}
+
+  useEffect(() => {
+    if (user.id) {
+      const userIsAuthorized =
+        data.pageData.is_published ||
+        user._id === data.pageData.admin;
+      if (!userIsAuthorized) router.push('/404')
+    }
+  }, [user._id, data.pageData, router]);
+  if (!user.is_onboarded && data?.pageData?.email !== user?.email) {
+    return <ErrorPage />
+  }
   return (
     <>
       <Head>
