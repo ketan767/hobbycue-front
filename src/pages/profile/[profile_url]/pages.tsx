@@ -64,6 +64,14 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
   }, [])
+  useEffect(() => {
+    if (user.id) {
+      const userIsAuthorized =
+        data.pageData.is_published ||
+        user._id === data.pageData.admin;
+      if (!userIsAuthorized) router.push('/404')
+    }
+  }, [user._id, data.pageData, router]);
   if(!user.is_onboarded && data?.pageData?.email!==user?.email) {return(<ErrorPage/>)}
 
   return (

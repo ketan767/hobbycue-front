@@ -10,6 +10,17 @@
     margin: 0 auto;
   }
 
+  .terms {
+    padding: 1.2rem 1.2rem;
+    border: 2px solid rgb(242, 242, 242);
+    border-radius: 10px;
+    background-color: #ffffff;
+    min-height: 80vh;
+    height: 100%;
+    max-width: 1296px;
+    margin: 0 auto;
+  }
+
   .explore {
 
     padding: 1.2rem 1.2rem;
@@ -20,6 +31,7 @@
     height: 100%;
   }
   
+  .terms p,
   .explore p {
     color: #6d747a;
     font-size: 14px;
@@ -75,7 +87,7 @@
   }
   
 @media screen and (max-width:767px) {
-  .explore{
+  .explore,.terms{
     
     margin: 1rem 1rem;
   }
