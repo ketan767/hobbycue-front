@@ -10,7 +10,14 @@
 
 .profile-img-wrapper {
   position: relative;
+  
 }
+
+.profile-img-wrapper-small{
+  position: relative;
+  height: 60px;
+}
+
 .profile-img-wrapper .img {
   width: 160px;
   height: 160px;
@@ -285,6 +292,7 @@
   line-height: 16px;
   padding: 0 50px;
   height: 32px;
+  width: 157px;
 }
 .customList li:hover {
   background-color: #e5e5e5;

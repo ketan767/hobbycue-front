@@ -53,8 +53,8 @@ const ListingPageLayout: React.FC<Props> = ({
   expandAll,
   setExpandAll,
 }) => {
-  console.warn({data});
-  
+  console.warn({ data })
+
   const router = useRouter()
   const dispatch = useDispatch()
   const [showSmallHeader, setShowSmallHeader] = useState(false)
@@ -215,6 +215,12 @@ const ListingPageLayout: React.FC<Props> = ({
               )
             }
           })}
+          {/* Add a condition to include a blank tab if 'events' tab is not present */}
+          {data.pageData.type === 3 && (
+            <a key="blank-tab" href="#" className={styles.disabledtab}>
+              {' '}
+            </a>
+          )}
         </div>
       </nav>
       <div
