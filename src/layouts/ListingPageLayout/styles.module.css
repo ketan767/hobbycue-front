@@ -1,9 +1,12 @@
 .navigation-tabs {
   display: flex;
-
+  display: flex;
+  width: 43%;
+  margin: 0 0 0 23.96%;
   gap: 38px;
   justify-content: center;
   margin-top: 14px;
+  position: -webkit-sticky;
   position: sticky;
   min-height: 40px;
 }
