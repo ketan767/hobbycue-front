@@ -219,7 +219,12 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
               ) : (
                 <Image src={GoogleIcon} width={32} height={32} alt="google" />
               )}
-              <p className={styles.socialLoginText}>Connect with Google</p>
+
+              {user.google?.id ? (
+                <p className={styles.socialLoginText}>{user.full_name}</p>
+              ) : (
+                <p className={styles.socialLoginText}>Connect with Google</p>
+              )}
               {!user.google?.id ? (
                 <GoogleLogin
                   clientId="795616019189-b0s94ri1i98355rjv1pg6ai588k0k87d.apps.googleusercontent.com"
@@ -267,11 +272,13 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
                 <Image src={FacebookIcon} width={32} height={32} alt="google" />
               )}
 
-              <p className={styles.socialLoginText}>Connect with Facebook</p>
+              {user.facebok?.id ? (
+                <p className={styles.socialLoginText}>{user.full_name}</p>
+              ) : (
+                <p className={styles.socialLoginText}>Connect with Facebook</p>
+              )}
               {!user.facebook?.id ? (
                 <FacebookLogin
-                  // App ID: 1614660215286765
-                  // App Secret: a4839f4438a6b3527ca60636cc5d76a6
                   appId="1614660215286765"
                   callback={handleFacebookAuth}
                   render={(renderProps: any) => (
