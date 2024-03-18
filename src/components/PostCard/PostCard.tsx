@@ -307,8 +307,13 @@ const PostCard: React.FC<Props> = (props) => {
               dangerouslySetInnerHTML={{
                 __html:
                 postData.content.replace(
-                  /(?:\b(?:https?|ftp|file):\/\/|www\.)?([-A-Z0-9+&@#/%?=~_|!:,.;]*\.[a-zA-Z]{2,})(?:\/[-A-Z0-9+&@#/%?=~_|!:,.;]*)?/gi,
-                  '<a href="http://$1" class="${pageUrlClass}" target="_blank">$1</a>'
+                  // /(?:\b(?:https?|ftp|file):\/\/|www\.)?([-A-Z0-9+&@#/%?=~_|!:,.;]*\.[a-zA-Z]{2,})(?:\/[-A-Z0-9+&@#/%?=~_|!:,.;]*)?/gi,
+                  // '<a href="http://$1" class="${pageUrlClass}" target="_blank">$1</a>'
+                  /<p>(?:\b(?:https?:\/\/|www\.)?[^ \n]+)<\/p>/gi,
+                  (match:any) => match.replace(
+                    /<p>([^<]+)<\/p>/i,
+                    (wholeMatch:any, link:any) => `<a href="${link}" class="${pageUrlClass}" target="_blank">${link}</a>`
+                  )
                 )
               }}
             ></div>
