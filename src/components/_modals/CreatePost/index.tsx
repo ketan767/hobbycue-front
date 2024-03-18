@@ -427,7 +427,7 @@ export const CreatePost: React.FC<Props> = ({
               className={styles['editor-container'] + ' btnOutlinePurple'}
             >
               <CustomEditor
-                value=""
+                value={data?.content}
                 onChange={(value) => {
                   setData((prev) => {
                     return { ...prev, content: value }
