@@ -464,6 +464,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           onClick={(e) => {
                             e.preventDefault()
                             dispatch(showAllPeopleTrue())
+
                             router.push('/search')
                           }}
                         >

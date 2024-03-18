@@ -36,10 +36,12 @@
 }
 
 .card p{
+    font-family: 'Poppins';
     font-size: 14px;
     line-height: 26px;
     color: #242429;
     margin: 0 0 10px;
+    font-weight: 400;
 }
 
 .card h2{
@@ -54,7 +56,7 @@
 
 .card a{
     color: #fff;
-    background-color: #0693e3;
+    background-color: rgb(var(--primary-100-rgb));
     border-radius: 9999px;
     box-shadow: none;
     text-decoration: none;

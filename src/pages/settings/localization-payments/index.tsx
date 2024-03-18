@@ -33,18 +33,16 @@ let options = {
   phone: countryData.map((item) => item.phonePrefix),
 }
 
-
-
 const defaultValues = {
   region: options.region[options.region.indexOf('India')],
   language: options.language[0],
-  currency: options.currency[0],
+  currency: options.currency[75],
   phonePrefix: options.phone[options.region.indexOf('India')],
   distance: options.distance[0],
 }
 
 const VisibilityAndNotification: React.FC = () => {
-  console.log({options});
+  console.log({ options })
   const [inpSelectValues, setInpSelectValues] = useState(defaultValues)
   const { user, activeProfile } = useSelector((state: RootState) => state.user)
   const dispatch = useDispatch()
@@ -75,7 +73,6 @@ const VisibilityAndNotification: React.FC = () => {
           isPrimaryAddress &&
           response.data.data.user._addresses?.length > 0
         ) {
-          // Set first address as the new primary address, if exists
           const newPrimaryAddress = response.data.data.user._addresses[0]
           const body = {
             primary_address: newPrimaryAddress._id,

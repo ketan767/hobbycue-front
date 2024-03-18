@@ -19,6 +19,7 @@ import {
   updateMyProfileDetail,
 } from '@/services/user.service'
 import { updateUser } from '@/redux/slices/user'
+import { useRouter } from 'next/router'
 
 type Props = {
   address: any
@@ -34,6 +35,7 @@ const Address: React.FC<Props> = ({
   const [isModalOpen, setModalOpen] = useState(false)
   const [optionsActive, setOptionsActive] = useState(false)
   const editRef: any = useRef(null)
+  const router = useRouter()
   useCheckIfClickedOutside(editRef, () => setOptionsActive(false))
   const { user, activeProfile } = useSelector((state: RootState) => state.user)
   const dispatch = useDispatch()
@@ -59,6 +61,7 @@ const Address: React.FC<Props> = ({
     } else {
       handleDeleteAddress(address?._id, false)
     }
+    router.reload()
   }
   const handleCancel = () => {
     setModalOpen(false)
@@ -75,7 +78,12 @@ const Address: React.FC<Props> = ({
   }
   console.log('address', address)
   return (
-    <div className={`${styles.cardContainer} ${user?.primary_address?._id === address?._id?styles.selectedCard:""}`} key={address?._id}>
+    <div
+      className={`${styles.cardContainer} ${
+        user?.primary_address?._id === address?._id ? styles.selectedCard : ''
+      }`}
+      key={address?._id}
+    >
       <div className={`${styles.addressLeft}`}>
         <Image
           src={
