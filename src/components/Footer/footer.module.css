@@ -93,6 +93,10 @@
   border: 1px solid #8064a2;
 }
 
+.input-box input[type='text'].errorInput{
+  border: 1px solid #c0504d;
+}
+
 .bottombar {
   background: #f7f5f9;
   padding: 30px;

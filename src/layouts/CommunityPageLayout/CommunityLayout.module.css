@@ -178,6 +178,11 @@
   color: #191919;
   font-size: 12px;
 }
+
+.invite-wrapper > section input.error-input{
+  border: 1px solid #c0504d;
+}
+
 .invite-wrapper > section button {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;

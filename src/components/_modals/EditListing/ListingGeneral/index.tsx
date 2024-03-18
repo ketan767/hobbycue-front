@@ -181,45 +181,35 @@ const ListingGeneralEditModal: React.FC<Props> = ({
         }
       })
     }
-    if (data.year.value?.length) {
+    if (data?.year.value && data.year.value !== '') {
       const currentYear = new Date().getFullYear()
       if (isNaN(Number(data.year.value))) {
-        setData((prev) => {
+        return setData((prev) => {
           return {
             ...prev,
             year: {
               ...prev.year,
-              error: 'Year of Birth/Establishment should be a number',
+              error: 'Enter a valid number',
             },
           }
         })
-      } else if (
-        currentYear - Number(data.year.value) > 100 ||
-        currentYear - Number(data.year.value) < 13
-      ) {
-        setData((prev) => {
+      } else if (currentYear - Number(data.year.value) > 100) {
+        return setData((prev) => {
           return {
             ...prev,
-            year: { ...prev.year, error: 'Age should be between 13 to 100' },
+            year: { ...prev.year, error: 'Maximum age: 100' },
+          }
+        })
+      } else if (currentYear - Number(data.year.value) < 13) {
+        return setData((prev) => {
+          return {
+            ...prev,
+            year: { ...prev.year, error: 'Minimum age is 13' },
           }
         })
       }
     }
 
-    const onlyAlphabetsAndHyphensRegex = /^[a-zA-Z-]*$/
-
-    // Check if the page_url value contains any characters other than alphabetic characters and hyphens
-    if (!onlyAlphabetsAndHyphensRegex.test(data.page_url.value)) {
-      pageUrlRef.current?.focus()
-      return setData((prev) => ({
-        ...prev,
-        page_url: {
-          ...prev.page_url,
-          error: 'Only alphabetic characters and hyphens are allowed!',
-        },
-      }))
-    }
-    console.log(data)
     // if(data.year.value && data.year.value?.trim() !== '' && !containOnlyNumbers(data.year.value)) {
     //   return setData((prev) => {
     //     return {
@@ -361,14 +351,13 @@ const ListingGeneralEditModal: React.FC<Props> = ({
     if (onComplete !== undefined) {
       let pageUrl: any = data.title.value
       console.log(pageUrl)
-      pageUrl = pageUrl?.toLowerCase()
-      pageUrl = pageUrl?.replace(/ /g, '-')
+      pageUrl = pageUrl?.toLowerCase().replace(/ /g, '-')
+      pageUrl = pageUrl?.replace(/[^\w\s]/g, '-') // Replace special characters with '-'
       setData((prev) => {
         return { ...prev, page_url: { value: pageUrl, error: null } }
       })
     }
   }, [data.title])
-
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
     const handleKeyPress = (event: any) => {
@@ -524,7 +513,11 @@ const ListingGeneralEditModal: React.FC<Props> = ({
             <div className={styles['year-gender-wrapper']}>
               {/* Year*/}
               {listingModalData.type !== listingTypes.PROGRAM && (
-                <div className={styles['input-box']}>
+                <div
+                  className={`${styles['input-box']} ${
+                    data.year.error ? styles['input-box-error'] : ''
+                  }`}
+                >
                   <label>
                     {listingModalData.type === listingTypes.PEOPLE
                       ? 'Year Of Birth/Establishment'
@@ -606,8 +599,8 @@ const ListingGeneralEditModal: React.FC<Props> = ({
 
             <div className={styles['note-box']}>
               <label>Note</label>
-              <input
-                type="text"
+              <textarea
+                className={styles['long-input-box']}
                 placeholder="This information is visible only to Admins of this Page"
                 autoComplete="nickname"
                 value={data.admin_note.value}

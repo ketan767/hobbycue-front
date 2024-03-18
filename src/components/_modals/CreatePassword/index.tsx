@@ -171,6 +171,7 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
               }`}
             >
               <TextField
+                className={'textFieldClass'}
                 fullWidth
                 required
                 ref={newPasswordRef}
@@ -256,7 +257,7 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className={styles.input}
                 placeholder="Confirm New Password"
-                type='password'
+                type="password"
               />
               <p className={styles['helper-text']}>{errors.confirmPassword}</p>
             </div>

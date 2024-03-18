@@ -300,6 +300,7 @@ const ListingPageMain: React.FC<Props> = ({
                 openModal({ type: 'listing-hobby-edit', closable: true }),
               )
             }
+            initialShowDropdown
             setDisplayData={setShowHobbies}
           >
             <h4 className={styles['heading']}>Hobbies</h4>
@@ -1085,7 +1086,7 @@ const ListingPageMain: React.FC<Props> = ({
         {children}
 
         <aside
-          className={`custom-scrollbar ${styles['page-right-aside']}
+          className={`${styles['page-right-aside']}
             ${
               activeTab === 'home' || activeTab === 'posts'
                 ? styles['display-desktop']

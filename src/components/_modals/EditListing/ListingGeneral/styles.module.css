@@ -230,6 +230,28 @@
   content: '' !important;
 }
 
+.note-box textarea:focus-visible {
+  outline: 1px solid #8064a2;
+}
+
+.long-input-box {
+  display: flex;
+  width: 100%;
+  background: #f8f9fa;
+  border: 1px solid #ebedf0;
+  border-radius: 8px;
+  height: 92px;
+  padding: 12px;
+  align-items: flex-start;
+  resize: none;
+  gap: 10px;
+  flex-shrink: 0;
+  font-weight: 400;
+  font-size: 12px;
+  min-width: 6.25rem;
+  line-height: 22px;
+}
+
 @media screen and (max-width: 1100px) {
   .modal-wrapper {
     max-width: 1100px;
@@ -268,5 +290,8 @@
   }
   .modal-close-icon {
     position: fixed !important;
+  }
+  .modal-hr {
+    display: none;
   }
 }

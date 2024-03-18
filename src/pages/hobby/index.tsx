@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 import styles from '@/styles/AllHobbies.module.css'
 import { getAllHobbies } from '@/services/hobby.service'
-import { FormControl, MenuItem, Select, TextField } from '@mui/material'
+import {
+  FormControl,
+  MenuItem,
+  Select,
+  TextField,
+  useMediaQuery,
+} from '@mui/material'
 import Link from 'next/link'
 import { GetServerSideProps } from 'next'
 import { isEmptyField } from '@/utils'
 import Image from 'next/image'
 import AddIcon from '@/assets/svg/add-circle.svg'
-import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
-import { updateIsAuthenticated } from '@/redux/slices/user'
-import { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
 
 type Props = {
@@ -42,7 +44,6 @@ type HobbyType = {
 }
 
 const ALlHobbies: React.FC<Props> = ({ data }) => {
-  console.warn({ data })
   const [categories, setCategories] = useState([])
   const [subCategories, setSubCategories] = useState([])
   const [hobbyData, setHobbyData] = useState<HobbyType[]>([])
@@ -189,105 +190,112 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
     setFilterSubCategories(tempSubCategories)
   }, [filterData.category])
 
+  const isMobile = useMediaQuery('(max-width:1100px)')
+
   return (
     <div className={styles['all-hobby-wrapper']}>
       <div className={`site-container ${styles['page-container']}`}>
-        <aside className={styles['hobby-filter']}>
-          {/* Filters */}
+        {!isMobile && (
+          <aside className={styles['hobby-filter']}>
+            {/* Filters */}
 
-          <div className={styles['filter-wrapper']}>
-            <header>
-              <h4 className={styles['heading']}>Filter</h4>
-              {/* <button onClick={handleFilter}>Apply</button> */}
-            </header>
+            <div className={styles['filter-wrapper']}>
+              <header>
+                <h4 className={styles['heading']}>Filter</h4>
+                {/* <button onClick={handleFilter}>Apply</button> */}
+              </header>
 
-            <div className={styles['select-filter']}>
-              <p>Category</p>
-              <FormControl variant="outlined" fullWidth size="small">
-                <Select
-                  value={filterData.category}
-                  onChange={(e) =>
-                    setFilterData((prev) => {
-                      return { ...prev, category: e.target.value }
-                    })
-                  }
-                  displayEmpty
-                  // inputProps={{ "aria-label": "Without label" }}
-                >
-                  <MenuItem value="">Select</MenuItem>
-                  {filtercategories.map((cat: any, idx) => {
-                    return (
-                      <MenuItem key={idx} value={cat._id}>
-                        {cat.display}
-                      </MenuItem>
-                    )
-                  })}
-                </Select>
-              </FormControl>
-            </div>
-            <div className={styles['select-filter']}>
-              <p>Sub-Category</p>
-              <FormControl variant="outlined" fullWidth size="small">
-                <Select
-                  value={filterData.subCategory}
-                  onChange={(e) =>
-                    setFilterData((prev) => {
-                      return { ...prev, subCategory: e.target.value }
-                    })
-                  }
-                  displayEmpty
-                  inputProps={{ 'aria-label': 'Without label' }}
-                >
-                  <MenuItem value="">Select</MenuItem>
-                  {filtersubCategories.map((cat: any, idx) => {
-                    return (
-                      <MenuItem key={idx} value={cat._id}>
-                        {cat.display}
-                      </MenuItem>
-                    )
-                  })}
-                </Select>
-              </FormControl>
-            </div>
-            <div className={styles['select-filter']}>
-              <p>Hobby</p>
-              <TextField
-                size="small"
-                placeholder="Text here with any keyword"
-                id="outlined-basic"
-                variant="outlined"
-                value={hobbyInputValue}
-                onFocus={() => setShowHobbyDropdown(true)}
-                onBlur={() =>
-                  setTimeout(() => {
-                    setShowHobbyDropdown(false)
-                  }, 300)
-                }
-                onChange={handleHobbyInputChange}
-              />
-            </div>
-            {showHobbyDropdown && hobbyDropdownList.length !== 0 && (
-              <div className={styles['dropdown']}>
-                {hobbyDropdownList.map((hobby) => {
-                  return (
-                    <p
-                      key={hobby._id}
-                      onClick={() => {
-                        setData((prev) => {
-                          return { ...prev, hobby: hobby }
-                        })
-                        setHobbyInputValue(hobby.display)
-                        setFilterData((prev) => ({ ...prev, hobby: hobby._id }))
-                      }}
-                    >
-                      {hobby.display}
-                    </p>
-                  )
-                })}
+              <div className={styles['select-filter']}>
+                <p>Category</p>
+                <FormControl variant="outlined" fullWidth size="small">
+                  <Select
+                    value={filterData.category}
+                    onChange={(e) =>
+                      setFilterData((prev) => {
+                        return { ...prev, category: e.target.value }
+                      })
+                    }
+                    displayEmpty
+                    // inputProps={{ "aria-label": "Without label" }}
+                  >
+                    <MenuItem value="">Select</MenuItem>
+                    {filtercategories.map((cat: any, idx) => {
+                      return (
+                        <MenuItem key={idx} value={cat._id}>
+                          {cat.display}
+                        </MenuItem>
+                      )
+                    })}
+                  </Select>
+                </FormControl>
               </div>
-            )}
-          </div>
-        </aside>
+              <div className={styles['select-filter']}>
+                <p>Sub-Category</p>
+                <FormControl variant="outlined" fullWidth size="small">
+                  <Select
+                    value={filterData.subCategory}
+                    onChange={(e) =>
+                      setFilterData((prev) => {
+                        return { ...prev, subCategory: e.target.value }
+                      })
+                    }
+                    displayEmpty
+                    inputProps={{ 'aria-label': 'Without label' }}
+                  >
+                    <MenuItem value="">Select</MenuItem>
+                    {filtersubCategories.map((cat: any, idx) => {
+                      return (
+                        <MenuItem key={idx} value={cat._id}>
+                          {cat.display}
+                        </MenuItem>
+                      )
+                    })}
+                  </Select>
+                </FormControl>
+              </div>
+              <div className={styles['select-filter']}>
+                <p>Hobby</p>
+                <TextField
+                  size="small"
+                  placeholder="Text here with any keyword"
+                  id="outlined-basic"
+                  variant="outlined"
+                  value={hobbyInputValue}
+                  onFocus={() => setShowHobbyDropdown(true)}
+                  onBlur={() =>
+                    setTimeout(() => {
+                      setShowHobbyDropdown(false)
+                    }, 300)
+                  }
+                  onChange={handleHobbyInputChange}
+                />
+              </div>
+              {showHobbyDropdown && hobbyDropdownList.length !== 0 && (
+                <div className={styles['dropdown']}>
+                  {hobbyDropdownList.map((hobby) => {
+                    return (
+                      <p
+                        key={hobby._id}
+                        onClick={() => {
+                          setData((prev) => {
+                            return { ...prev, hobby: hobby }
+                          })
+                          setHobbyInputValue(hobby.display)
+                          setFilterData((prev) => ({
+                            ...prev,
+                            hobby: hobby._id,
+                          }))
+                        }}
+                      >
+                        {hobby.display}
+                      </p>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+          </aside>
+        )}
 
         <main>
           <div className={styles['hobby-desc-container']}>
@@ -310,76 +318,194 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
               </p>
             </div>
           </div>
+          {isMobile && (
+            <aside className={styles['hobby-filter']}>
+              {/* Filters */}
+
+              <div className={styles['filter-wrapper']}>
+                <header>
+                  <h4 className={styles['heading']}>Filter</h4>
+                  {/* <button onClick={handleFilter}>Apply</button> */}
+                </header>
+
+                <div className={styles['select-filter']}>
+                  <p>Category</p>
+                  <FormControl variant="outlined" fullWidth size="small">
+                    <Select
+                      value={filterData.category}
+                      onChange={(e) =>
+                        setFilterData((prev) => {
+                          return { ...prev, category: e.target.value }
+                        })
+                      }
+                      displayEmpty
+                      // inputProps={{ "aria-label": "Without label" }}
+                    >
+                      <MenuItem value="">Select</MenuItem>
+                      {filtercategories.map((cat: any, idx) => {
+                        return (
+                          <MenuItem key={idx} value={cat._id}>
+                            {cat.display}
+                          </MenuItem>
+                        )
+                      })}
+                    </Select>
+                  </FormControl>
+                </div>
+                <div className={styles['select-filter']}>
+                  <p>Sub-Category</p>
+                  <FormControl variant="outlined" fullWidth size="small">
+                    <Select
+                      value={filterData.subCategory}
+                      onChange={(e) =>
+                        setFilterData((prev) => {
+                          return { ...prev, subCategory: e.target.value }
+                        })
+                      }
+                      displayEmpty
+                      inputProps={{ 'aria-label': 'Without label' }}
+                    >
+                      <MenuItem value="">Select</MenuItem>
+                      {filtersubCategories.map((cat: any, idx) => {
+                        return (
+                          <MenuItem key={idx} value={cat._id}>
+                            {cat.display}
+                          </MenuItem>
+                        )
+                      })}
+                    </Select>
+                  </FormControl>
+                </div>
+                <div className={styles['select-filter']}>
+                  <p>Hobby</p>
+                  <TextField
+                    size="small"
+                    placeholder="Text here with any keyword"
+                    id="outlined-basic"
+                    variant="outlined"
+                    value={hobbyInputValue}
+                    onFocus={() => setShowHobbyDropdown(true)}
+                    onBlur={() =>
+                      setTimeout(() => {
+                        setShowHobbyDropdown(false)
+                      }, 300)
+                    }
+                    onChange={handleHobbyInputChange}
+                  />
+                </div>
+                {showHobbyDropdown && hobbyDropdownList.length !== 0 && (
+                  <div className={styles['dropdown']}>
+                    {hobbyDropdownList.map((hobby) => {
+                      return (
+                        <p
+                          key={hobby._id}
+                          onClick={() => {
+                            setData((prev) => {
+                              return { ...prev, hobby: hobby }
+                            })
+                            setHobbyInputValue(hobby.display)
+                            setFilterData((prev) => ({
+                              ...prev,
+                              hobby: hobby._id,
+                            }))
+                          }}
+                        >
+                          {hobby.display}
+                        </p>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
+            </aside>
+          )}
           {categories.length > 0 && (
-            <table className={styles['hobbies-table']}>
-              <thead>
-                <tr className="">
-                  <th>Category</th>
-                  <th>Sub-Category</th>
-                  <th>Hobby</th>
-                </tr>
-              </thead>
-              <tbody>
-                {categories
-                  .filter(
-                    (cat: any) =>
-                      !filterData.hobby || // Check if hobby filter is not set
-                      cat._id ===
-                        hobbyData.find((h) => h._id === filterData.hobby)
-                          ?.category?._id,
-                  )
-                  .map((cat: any, i) => (
-                    <tr key={i}>
-                      <td className="">
-                        <Link href={`/hobby/${cat.slug}`}>{cat.display}</Link>
-                      </td>
-                      <td>
-                        {subCategories
-                          .filter(
-                            (subCat: any) =>
-                              !filterData.hobby ||
-                              subCat._id ===
-                                hobbyData.find(
-                                  (h) => h._id === filterData.hobby,
-                                )?.sub_category?._id,
-                          )
-                          .map((subCat: any) => {
-                            return (
-                              subCat.category?._id === cat._id && (
-                                <div
-                                  className={styles['table-content-container']}
-                                >
-                                  <p>
-                                    <Image src={AddIcon} alt="add" />{' '}
-                                    <Link href={`/hobby/${subCat.slug}`}>
-                                      {subCat.display}
-                                    </Link>
-                                  </p>
+            <div className={styles['table-container']}>
+              <table className={styles['hobbies-table']}>
+                <thead>
+                  <tr className="">
+                    <th>Category</th>
+                    <th>Sub-Category</th>
+                    <th>Hobby</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {categories
+                    .filter(
+                      (cat: any) =>
+                        !filterData.hobby ||
+                        cat._id ===
+                          hobbyData.find((h) => h._id === filterData.hobby)
+                            ?.category?._id,
+                    )
+                    .sort((a: any, b: any) =>
+                      a.display.localeCompare(b.display),
+                    )
+                    .map((cat: any, i) => (
+                      <tr key={i}>
+                        <td className="">
+                          <Link href={`/hobby/${cat.slug}`}>{cat.display}</Link>
+                        </td>
+                        <td>
+                          {subCategories
+                            .filter(
+                              (subCat: any) =>
+                                !filterData.hobby ||
+                                subCat._id ===
+                                  hobbyData.find(
+                                    (h) => h._id === filterData.hobby,
+                                  )?.sub_category?._id,
+                            )
+                            .sort((a: any, b: any) =>
+                              a.display.localeCompare(b.display),
+                            )
+                            .map((subCat: any) => {
+                              return (
+                                subCat.category?._id === cat._id && (
                                   <div
-                                    className={styles['vertical-line']}
-                                  ></div>
-                                  <p className={styles['table-hobby']}>
-                                    {hobbyData.map((hobby: HobbyType) => {
-                                      return (
-                                        hobby.category?._id === cat._id &&
-                                        hobby.sub_category?._id ===
-                                          subCat._id && (
-                                          <Link href={`/hobby/${hobby.slug}`}>
+                                    className={
+                                      styles['table-content-container']
+                                    }
+                                  >
+                                    <p>
+                                      <Image src={AddIcon} alt="add" />{' '}
+                                      <Link href={`/hobby/${subCat.slug}`}>
+                                        {subCat.display}
+                                      </Link>
+                                    </p>
+                                    <div
+                                      className={styles['vertical-line']}
+                                    ></div>
+                                    <p className={styles['table-hobby']}>
+                                      {hobbyData
+                                        .filter(
+                                          (hobby: HobbyType) =>
+                                            hobby.category?._id === cat._id &&
+                                            hobby.sub_category?._id ===
+                                              subCat._id,
+                                        )
+                                        .sort((a, b) =>
+                                          a.display.localeCompare(b.display),
+                                        )
+                                        .map((hobby: HobbyType) => (
+                                          <Link
+                                            key={hobby.slug}
+                                            href={`/hobby/${hobby.slug}`}
+                                          >
                                             <span>{hobby.display}, </span>
                                           </Link>
-                                        )
-                                      )
-                                    })}
-                                  </p>
-                                </div>
+                                        ))}
+                                    </p>
+                                  </div>
+                                )
                               )
-                            )
-                          })}
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+                            })}
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </main>
       </div>

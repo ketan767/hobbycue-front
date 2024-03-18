@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
-
+import ErrorPage from '@/components/ErrorPage'
 import { GetServerSideProps } from 'next'
 import { getAllUserDetail } from '@/services/user.service'
 import Head from 'next/head'
@@ -19,6 +19,7 @@ import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPag
 type Props = { data: ListingPageData }
 
 const ListingHome: React.FC<Props> = (props) => {
+  console.warn({props});
   const dispatch = useDispatch()
   const [error, seterror] = useState({
     hobby: false,
@@ -83,6 +84,8 @@ const ListingHome: React.FC<Props> = (props) => {
     }
   }, [])
 
+  if(!props?.data?.pageData?.is_published) (<ErrorPage restricted/>)
+
   return (
     <>
       <Head>
@@ -137,4 +140,4 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   }
 }
 
-export default ListingHome
+export default ListingHome;

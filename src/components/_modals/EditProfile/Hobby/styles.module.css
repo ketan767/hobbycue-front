@@ -8,9 +8,9 @@
 }
 
 .add-btn {
-  width: 100%;
+  width: 20px;
   max-width: 1.5rem;
-  height: 1.5rem;
+  height: 20px;
   border: none;
 
   color: var(--color);
@@ -24,10 +24,20 @@
   margin: 5px 3px 0 0;
 }
 
+.add-btn:focus-visible {
+  border: none;
+  outline: none;
+}
+.add-btn:focus-visible > img {
+  border: 1px solid;
+  outline: 1px solid rgba(var(--primary-100-rgb));
+  border-radius: 100%;
+}
+
 @media screen and (min-width: 1100px) {
   .modal-wrapper {
     max-height: calc(100vh - 6rem);
-    
+
     height: 100%;
     /* min-height: 30rem; */
   }
@@ -173,7 +183,7 @@
   background: #f7f5f9;
   color: #8064a2;
 }
-.added-hobby-list{
+.added-hobby-list {
   max-height: 55vh;
   overflow: auto;
 }
@@ -381,7 +391,7 @@
   font-weight: 400;
   font-size: 10px;
   line-height: 16px;
-  color: #00B879;
+  color: #00b879;
   margin-top: 4px;
   padding-left: 6px;
   min-height: 1rem;
@@ -492,7 +502,7 @@
   .add-btn {
     margin: 5px 3px 0 0;
   }
-  .added-hobby-list{
+  .added-hobby-list {
     max-height: none;
     /* overflow: auto; */
   }

@@ -221,6 +221,7 @@
   line-height: 16px;
   padding: 0 50px;
   height: 32px;
+  width: 157px !important;
 }
 .relative {
   position: relative;

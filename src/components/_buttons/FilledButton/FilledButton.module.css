@@ -17,7 +17,7 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
-.button:focus{
+.button:focus-visible{
   border: 1px solid #ffffff;
   outline: 1px solid rgb(var(--primary-100-rgb));
 }

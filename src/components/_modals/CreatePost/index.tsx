@@ -108,6 +108,7 @@ export const CreatePost: React.FC<Props> = ({
   })
   const hobbyRef = useRef<HTMLInputElement>(null)
   const genreRef = useRef<HTMLInputElement>(null)
+  const [metadataImg, setMetaDataImg] = useState('')
 
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     DropdownListItem[]
@@ -139,11 +140,19 @@ export const CreatePost: React.FC<Props> = ({
         getMetadata(url[0])
           .then((res: any) => {
             setMetaData(res?.res?.data.data.data)
+            setMetaDataImg(res?.res?.data.data.data?.image ?? '')
           })
           .catch((err) => {
             console.log(err)
           })
       }
+    } else {
+      setData((prevValue: any) => {
+        return {
+          ...prevValue,
+          media: prevValue?.media?.filter((item: any) => item !== metadataImg),
+        }
+      })
     }
   }, [data.content, hasLink])
 
@@ -323,7 +332,8 @@ export const CreatePost: React.FC<Props> = ({
       genreId: data.genre ? data.genre : '',
       content: DOMPurify.sanitize(data.content),
       visibility: data.visibility,
-      media: data.media,
+      media:
+        hasLink && showMetaData ? [...data.media, metadataImg] : data.media,
       has_link: hasLink,
       video_url: data.video_url ? data.video_url : null,
     }
@@ -427,7 +437,7 @@ export const CreatePost: React.FC<Props> = ({
                 data={data}
                 image={true}
                 error={errors.content}
-                hasLink={hasLink}
+                hasLink={hasLink && showMetaData}
               />
               {data.video_url && (
                 <div className={styles.videoWrapper}>
@@ -463,6 +473,7 @@ export const CreatePost: React.FC<Props> = ({
               ) : (
                 <></>
               )}
+
               {hasLink && metaData && showMetaData && (
                 <div className={styles['show-metadata']}>
                   <svg

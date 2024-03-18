@@ -11,11 +11,11 @@
   min-width: 120px;
 }
 
-.button:focus {
+.button:focus-visible {
   outline: 1px solid #ffffff;
   border: 1px solid rgba(var(--primary-100-rgb));
 }
-.button:focus::before {
+.button:focus-visible::before {
   content: '';
   border: 1px solid rgba(var(--primary-100-rgb));
   width: calc(100% + 3.8px);

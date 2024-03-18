@@ -1,0 +1,11 @@
+.close-svg:focus-visible {
+outline: 1px solid rgb(var(--primary-100-rgb)) !important;
+border: none;
+
+}
+.close-svg:focus {
+    outline: none;
+    border: none;
+    
+    }
+    

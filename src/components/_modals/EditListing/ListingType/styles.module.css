@@ -51,7 +51,7 @@
   position: relative;
 }
 
-.tagDesc::before {
+.tagDesc:nth-child(2):before {
   content: '';
   position: absolute;
   top: 0;
@@ -95,7 +95,7 @@
   z-index: 10;
 }
 .modal-wrapper .footer {
-  padding: var(--spacing-16) var(--spacing-24);
+  padding: 22px var(--spacing-24);
   margin-top: auto;
   display: flex;
   justify-content: space-between;
@@ -387,7 +387,7 @@
     max-width: 1100px;
     width: 100%;
     max-height: none;
-    height: 92.5%;
+    height: 100%;
     margin: -5px 0 2rem 0;
     padding: 5px 0 0 0;
   }
@@ -399,9 +399,9 @@
     padding-right: 20px;
   }
   .modal-container {
-    min-height: 20rem;
-    height: calc(100vh - 2.676rem);
-    max-height: 60rem;
+    min-height: 1;
+    height: 100%;
+    max-height: none;
     overflow: auto;
   }
   .modal-wrapper .footer {

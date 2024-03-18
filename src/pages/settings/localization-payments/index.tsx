@@ -25,7 +25,9 @@ import SettingsDropdownLayout from '@/layouts/SettingsDropdownLayout'
 
 let options = {
   region: countryData.map((item) => item.name),
-  currency: countryData.map((item) => item.currency),
+  currency: countryData.map(
+    (item, idx) => `${item.currency} ${item.currencySymbol}`,
+  ),
   distance: ['km', 'mi'],
   language: ['English', 'French', 'German'],
   phone: countryData.map((item) => item.phonePrefix),
@@ -34,12 +36,13 @@ let options = {
 const defaultValues = {
   region: options.region[options.region.indexOf('India')],
   language: options.language[0],
-  currency: options.currency[0],
+  currency: options.currency[75],
   phonePrefix: options.phone[options.region.indexOf('India')],
   distance: options.distance[0],
 }
 
 const VisibilityAndNotification: React.FC = () => {
+  console.log({ options })
   const [inpSelectValues, setInpSelectValues] = useState(defaultValues)
   const { user, activeProfile } = useSelector((state: RootState) => state.user)
   const dispatch = useDispatch()
@@ -70,7 +73,6 @@ const VisibilityAndNotification: React.FC = () => {
           isPrimaryAddress &&
           response.data.data.user._addresses?.length > 0
         ) {
-          // Set first address as the new primary address, if exists
           const newPrimaryAddress = response.data.data.user._addresses[0]
           const body = {
             primary_address: newPrimaryAddress._id,
@@ -198,84 +200,92 @@ const VisibilityAndNotification: React.FC = () => {
                       ...prevValue,
                       region: e,
                       phonePrefix: options.phone[regionIndex],
+                      currency: options.currency[regionIndex],
                     }
                   })
                 }}
               />
             </div>
 
-            <div className={`${styles.flex} ${styles.localizationContainer}`}>
-              <p className={`${styles.textDark} ${styles.labelText}`}>
-                {' '}
-                Language{' '}
-              </p>
-              <InputSelect
-                options={options['language']}
-                value={inpSelectValues.language}
-                onChange={(e: any) => {
-                  setInpSelectValues((prevValue) => ({
-                    ...prevValue,
-                    language: e,
-                  }))
-                }}
-              />
+            <div className={styles['dual-dropdown-wrapper']}>
+              <div className={`${styles.flex} ${styles.dropdownWrapper}`}>
+                <p className={`${styles.textDark} ${styles.labelText}`}>
+                  {' '}
+                  Language{' '}
+                </p>
+                <InputSelect
+                  options={options['language']}
+                  value={inpSelectValues.language}
+                  onChange={(e: any) => {
+                    setInpSelectValues((prevValue) => ({
+                      ...prevValue,
+                      language: e,
+                    }))
+                  }}
+                />
+              </div>
+
+              <div className={`${styles.flex} ${styles.dropdownWrapper}`}>
+                <p className={`${styles.textDark} ${styles.labelText}`}>
+                  {' '}
+                  Currency{' '}
+                </p>
+                <InputSelect
+                  options={countryData.map(
+                    (country) =>
+                      `${country.currency} (${country.currencySymbol})`,
+                  )}
+                  value={inpSelectValues.currency}
+                  onChange={(e: any) => {
+                    setInpSelectValues((prevValue) => ({
+                      ...prevValue,
+                      currency: e,
+                    }))
+                  }}
+                  optionValues={countryData.map(
+                    (country) =>
+                      `${country.currency} ${country.currencySymbol}`,
+                  )}
+                />
+              </div>
             </div>
 
-            <div className={`${styles.flex} ${styles.localizationContainer}`}>
-              <p className={`${styles.textDark} ${styles.labelText}`}>
-                {' '}
-                Currency{' '}
-              </p>
-              <InputSelect
-                options={countryData.map(
-                  (country) => `${country.currency} (${country.currencySymbol})`,
-                )}
-                value={inpSelectValues.currency}
-                onChange={(e: any) => {
-                  setInpSelectValues((prevValue) => ({
-                    ...prevValue,
-                    currency: e,
-                  }))
-                }}
-                optionValues={countryData.map(
-                  (country) => `${country.currency} ${country.currencySymbol}`,
-                )}
-              />
+            <div className={styles['dual-dropdown-wrapper']}>
+              <div className={`${styles.flex} ${styles.dropdownWrapper}`}>
+                <p className={`${styles.textDark} ${styles.labelText}`}>
+                  {' '}
+                  Phone Prefix{' '}
+                </p>
+                <InputSelect
+                  options={options['phone']}
+                  value={inpSelectValues.phonePrefix}
+                  onChange={(e: any) => {
+                    setInpSelectValues((prevValue) => ({
+                      ...prevValue,
+                      phonePrefix: e,
+                    }))
+                  }}
+                />
+              </div>
+
+              <div className={`${styles.flex} ${styles.dropdownWrapper}`}>
+                <p className={`${styles.textDark} ${styles.labelText}`}>
+                  {' '}
+                  Distance{' '}
+                </p>
+                <InputSelect
+                  options={options['distance']}
+                  value={inpSelectValues.distance}
+                  onChange={(e: any) => {
+                    setInpSelectValues((prevValue) => ({
+                      ...prevValue,
+                      distance: e,
+                    }))
+                  }}
+                />
+              </div>
             </div>
 
-            <div className={`${styles.flex} ${styles.localizationContainer}`}>
-              <p className={`${styles.textDark} ${styles.labelText}`}>
-                {' '}
-                Phone Prefix{' '}
-              </p>
-              <InputSelect
-                options={options['phone']}
-                value={inpSelectValues.phonePrefix}
-                onChange={(e: any) => {
-                  setInpSelectValues((prevValue) => ({
-                    ...prevValue,
-                    phonePrefix: e,
-                  }))
-                }}
-              />
-            </div>
-
-            <div className={`${styles.flex} ${styles.localizationContainer}`}>
-              <p className={`${styles.textDark} ${styles.labelText}`}>
-                {' '}
-                Distance{' '}
-              </p>
-              <InputSelect
-                options={options['distance']}
-                value={inpSelectValues.distance}
-                onChange={(e: any) => {
-                  setInpSelectValues((prevValue) => ({
-                    ...prevValue,
-                    distance: e,
-                  }))
-                }}
-              />
-            </div>
             <div className={styles.line}></div>
             <p className={styles.underDev}>
               This feature is under development. Come back soon to view this.

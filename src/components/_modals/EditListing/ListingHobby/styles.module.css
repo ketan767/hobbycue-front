@@ -130,9 +130,9 @@
 }
 
 .add-btn {
-  width: 100%;
+  width: 20px;
   max-width: 1.5rem;
-  height: 1rem;
+  height: 20px;
   border: none;
 
   color: var(--color);
@@ -143,6 +143,16 @@
   cursor: pointer;
   border-radius: 50%;
   margin: 5px auto 0 12px;
+}
+
+.add-btn:focus-visible {
+  border: none;
+  outline: none;
+}
+.add-btn:focus-visible > img {
+  border: 1px solid;
+  outline: 1px solid rgba(var(--primary-100-rgb));
+  border-radius: 100%;
 }
 
 .dropdown-wrapper {

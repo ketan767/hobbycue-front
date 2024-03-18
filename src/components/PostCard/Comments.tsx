@@ -142,6 +142,7 @@ const PostComments = ({
                 disabled={loading}
               >
                 <svg
+                className={styles['submit-btn-svg']}
                   width="14"
                   height="12"
                   viewBox="0 0 14 12"
