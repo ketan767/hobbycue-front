@@ -35,13 +35,14 @@ const index: FC<indexProps> = ({}) => {
         <div className={styles['cards-container']}>
           <h1>{data.title}</h1>
           <div className={styles['cards-parent']}>
-
-          
-  {data.cards.map((item,i)=>(<div key={i} className={styles['card']}>
-            <h2>{item.title}</h2>
-            <p>{item.desc}</p>
-            <Link href={item.href}>{item.link}</Link>
-          </div>))}</div>
+            {data.cards.map((item, i) => (
+              <div key={i} className={styles['card']}>
+                <h2>{item.title}</h2>
+                <p>{item.desc}</p>
+                <Link href={item.href}>{item.link}</Link>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
       <section className={`site-container ${styles['site-container-footer']}`}>
