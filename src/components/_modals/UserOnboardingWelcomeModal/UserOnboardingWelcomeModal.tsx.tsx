@@ -29,7 +29,7 @@ type SearchInput = {
 }
 
 const UserOnboardingWelcomeModal = () => {
-  const {user} = useSelector((state: RootState)=>state.user);
+  const { user } = useSelector((state: RootState) => state.user)
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
   })
@@ -183,7 +183,16 @@ const UserOnboardingWelcomeModal = () => {
           style={{ left: `calc(0rem + ${screenWidth}px - 5px)` }}
           className={styles['my-community-wrapper']}
         >
-          <Image src="/logo-welcome-small.svg" onClick={()=>{dispatch(closeModal())}} alt="" width={55} height={55} />
+          <Image
+            src="/logo-welcome-small.svg"
+            onClick={() => {
+              dispatch(closeModal())
+              router.push('/community')
+            }}
+            alt=""
+            width={55}
+            height={55}
+          />
           <div>
             <div className={styles['my-community']}>
               <svg
@@ -315,10 +324,19 @@ const UserOnboardingWelcomeModal = () => {
           className={styles['my-profile-wrapper']}
         >
           <div className={styles['my-profile']}>
-            {user.profile_image? <Image src={user?.user?.profile_image??defaultUserImage} alt="" width={50} height={50} />:
-            <div style={{width:"50px",height:"50px"}} className='default-user-icon'></div>
-            }
-           
+            {user.profile_image ? (
+              <Image
+                src={user?.user?.profile_image ?? defaultUserImage}
+                alt=""
+                width={50}
+                height={50}
+              />
+            ) : (
+              <div
+                style={{ width: '50px', height: '50px' }}
+                className="default-user-icon"
+              ></div>
+            )}
           </div>
           <div>
             <div className={styles['my-profile-content']}>
@@ -339,6 +357,7 @@ const UserOnboardingWelcomeModal = () => {
                   className={styles['button']}
                   onClick={() => {
                     dispatch(closeModal())
+                    router.reload()
                   }}
                 >
                   My Profile
@@ -366,7 +385,9 @@ const UserOnboardingWelcomeModal = () => {
           <div className={styles['my-community-wrapper-mobile']}>
             <Image
               src="/logo-welcome-small.svg"
-              onClick={()=>{dispatch(closeModal())}}
+              onClick={() => {
+                dispatch(closeModal())
+              }}
               alt=""
               width={40}
               height={40}
@@ -397,7 +418,13 @@ const UserOnboardingWelcomeModal = () => {
             </div>
           </div>
           <div className={styles['search-wrapper-mobile']}>
-            <Image onClick={searchResult} src={'/searchIcon.svg'} width={30} height={30} alt="" />
+            <Image
+              onClick={searchResult}
+              src={'/searchIcon.svg'}
+              width={30}
+              height={30}
+              alt=""
+            />
             <div>
               <div className={styles['search-mobile']}>
                 <svg

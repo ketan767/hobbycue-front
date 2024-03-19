@@ -57,9 +57,9 @@ const options: SocialMediaOption[] = [
   'DeviantArts',
   'Behance',
   'GoodReads',
-  'Smule',
-  'Chess',
-  'BGG',
+  // 'Smule',
+  // 'Chess',
+  // 'BGG',
   'Others',
 ]
 
@@ -76,9 +76,9 @@ type SocialMediaOption =
   | 'DeviantArts'
   | 'Behance'
   | 'GoodReads'
-  | 'Smule'
-  | 'Chess'
-  | 'BGG'
+  // | 'Smule'
+  // | 'Chess'
+  // | 'BGG'
   | 'Others'
 
 const socialMediaIcons: Record<SocialMediaOption, any> = {
@@ -94,9 +94,9 @@ const socialMediaIcons: Record<SocialMediaOption, any> = {
   DeviantArts: DeviantArtIcon,
   Behance: BehanceIcon,
   GoodReads: GoodreadsIcon,
-  Smule: SmuleIcon,
-  Chess: ChessIcon,
-  BGG: BGGIcon,
+  // Smule: SmuleIcon,
+  // Chess: ChessIcon,
+  // BGG: BGGIcon,
   Others: OthersIcon,
 }
 
@@ -113,9 +113,9 @@ const defaultSocialMediaURLs: Record<SocialMediaOption, string> = {
   DeviantArts: 'https://deviantart.com/',
   Behance: 'https://behance.net/',
   GoodReads: 'https://goodreads.com/',
-  Smule: 'https://smule.com/',
-  Chess: 'https://chess.com/member/',
-  BGG: 'https://boardgamegeek.com/user/',
+  // Smule: 'https://smule.com/',
+  // Chess: 'https://chess.com/member/',
+  // BGG: 'https://boardgamegeek.com/user/',
   Others: 'https://',
 }
 
@@ -206,24 +206,24 @@ const ListingSocialMediaEditModal = ({
         url: socialMediaUrls && socialMediaUrls.goodreads_url,
       })
     }
-    if (socialMediaUrls && socialMediaUrls.smule_url) {
-      arr.push({
-        socialMedia: 'Smule',
-        url: socialMediaUrls && socialMediaUrls.smule_url,
-      })
-    }
-    if (socialMediaUrls && socialMediaUrls.chess_url) {
-      arr.push({
-        socialMedia: 'Chess',
-        url: socialMediaUrls && socialMediaUrls.chess_url,
-      })
-    }
-    if (socialMediaUrls && socialMediaUrls.bgg_url) {
-      arr.push({
-        socialMedia: 'BGG',
-        url: socialMediaUrls && socialMediaUrls.bgg_url,
-      })
-    }
+    // if (socialMediaUrls && socialMediaUrls.smule_url) {
+    //   arr.push({
+    //     socialMedia: 'Smule',
+    //     url: socialMediaUrls && socialMediaUrls.smule_url,
+    //   })
+    // }
+    // if (socialMediaUrls && socialMediaUrls.chess_url) {
+    //   arr.push({
+    //     socialMedia: 'Chess',
+    //     url: socialMediaUrls && socialMediaUrls.chess_url,
+    //   })
+    // }
+    // if (socialMediaUrls && socialMediaUrls.bgg_url) {
+    //   arr.push({
+    //     socialMedia: 'BGG',
+    //     url: socialMediaUrls && socialMediaUrls.bgg_url,
+    //   })
+    // }
     if (socialMediaUrls && socialMediaUrls.Others_url) {
       arr.push({
         socialMedia: 'Others',

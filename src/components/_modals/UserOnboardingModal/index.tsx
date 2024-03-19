@@ -4,7 +4,10 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { RootState } from '@/redux/store'
-import { updateMyProfileDetail,getMyProfileDetail } from '@/services/user.service'
+import {
+  updateMyProfileDetail,
+  getMyProfileDetail,
+} from '@/services/user.service'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import ProfileGeneralEditModal from '../EditProfile/General'
 import ProfileAboutEditModal from '../EditProfile/About'
@@ -19,13 +22,13 @@ import { updateUser } from '@/redux/slices/user'
 import { sendWelcomeMail } from '@/services/auth.service'
 
 type steps = 'General' | 'About' | 'Contact' | 'Address' | 'Hobbies'
-  const totalSteps: steps[] = [
-    'General',
-    'About',
-    'Contact',
-    'Address',
-    'Hobbies',
-  ]
+const totalSteps: steps[] = [
+  'General',
+  'About',
+  'Contact',
+  'Address',
+  'Hobbies',
+]
 
 export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
   const dispatch = useDispatch()
@@ -41,8 +44,6 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
 
   const { user } = useSelector((state: RootState) => state.user)
 
-
-
   const handleNext = () => {
     const newIndex = totalSteps.indexOf(activeStep) + 1
     setActiveStep(totalSteps[newIndex])
@@ -51,7 +52,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
       setFurthestStepIndex(newIndex)
     }
   }
-  
+
   const handleBack = () => {
     setActiveStep(
       (prevActiveStep: steps) =>
@@ -71,6 +72,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
     if (res?.data.success) {
       dispatch(updateUser(res.data.data.user))
       dispatch(closeModal())
+
       router.push(`/profile/${user.profile_url}`)
       // window.location.href = `/profile/${user.profile_url}`; // This will force a reload
       dispatch(openModal({ type: 'user-onboarding-welcome', closable: false }))
@@ -117,21 +119,21 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
     }
   }, [])
 
-
-  useEffect(()=>{
-    const updateStepsFunc = async()=>{
-    const { err: error, res: response } = await getMyProfileDetail()
-    if (error) {
-      
-      return console.log(error)
+  useEffect(() => {
+    const updateStepsFunc = async () => {
+      const { err: error, res: response } = await getMyProfileDetail()
+      if (error) {
+        return console.log(error)
+      }
+      if (response?.data.success) {
+        setActiveStep(
+          totalSteps[Number(response.data.data.user?.onboarding_step)],
+        )
+        setFurthestStepIndex(Number(response.data.data.user?.onboarding_step))
+      }
     }
-    if (response?.data.success) {
-      setActiveStep(totalSteps[Number(response.data.data.user?.onboarding_step)]);
-      setFurthestStepIndex(Number(response.data.data.user?.onboarding_step));
-    }
-  }
-  updateStepsFunc();
-  },[])
+    updateStepsFunc()
+  }, [])
 
   return (
     <div
@@ -214,7 +216,11 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
                 className={`${styles['step']} ${
                   isClickable ? styles['active'] : ''
                 }`}
-                onClick={isClickable ? () => setActiveStep(totalSteps[index]) : undefined}
+                onClick={
+                  isClickable
+                    ? () => setActiveStep(totalSteps[index])
+                    : undefined
+                }
               ></span>
             )
           })}

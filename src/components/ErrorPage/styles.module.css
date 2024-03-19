@@ -1,4 +1,4 @@
-.container {
+.rest-container {
     background: var(--Grey-Hover, #F8F9FA);
     display: flex;
     flex-direction: column;
@@ -6,11 +6,27 @@
     align-items: center;
     width: 100%;
     gap: 40px;
-    padding: 119px 0 214px 0;
+    padding: 0 0 16px 0;
+}
+
+.notfound-container{
+    background: var(--Grey-Hover, #F8F9FA);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    gap: 40px;
+    padding: 41px 0 24px 0;
 }
 
 .heroImg {
-    aspect-ratio: 1 / 1;
+    width: 428px;
+    height: 428px;
+}
+
+.notfoundImg{
+    aspect-ratio: 1/1;
 }
 
 .contentContainer {

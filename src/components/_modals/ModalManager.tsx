@@ -71,6 +71,7 @@ import ListingContactToOwner from './EditListing/ListingContactOwner'
 import UserContactToOwner from './EditProfile/UserContactOwner'
 import { PostModal } from './PostModal/PostModal'
 import { setHasChanges } from '@/redux/slices/modal'
+import { useRouter } from 'next/router'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -100,7 +101,7 @@ const ModalManager: React.FC = () => {
   const resetSnackbar = (data: SnackbarState) => {
     setSnackbar(data)
   }
-
+  const router = useRouter()
   const dispatch = useDispatch()
   const [confirmationModal, setConfirmationModal] = useState(false)
   const { activeModal, closable, propData, hasChanges } = useSelector(
@@ -129,6 +130,8 @@ const ModalManager: React.FC = () => {
       dispatch(closeModal())
     } else if (confirmationModal) {
       setConfirmationModal(false)
+    } else if (activeModal === 'user-onboarding-welcome') {
+      router.reload()
     } else if (hasChanges) {
       setConfirmationModal(true)
     } else if (isLoggedIn && !user.is_onboarded) {
@@ -280,7 +283,7 @@ const ModalManager: React.FC = () => {
               ref={mainRef}
             >
               {activeModal !== 'listing-onboarding' &&
-              activeModal !== 'user-onboarding-welcome' &&
+                activeModal !== 'user-onboarding-welcome' &&
                 activeModal !== 'user-onboarding' && (
                   <>
                     <header className={styles['header']}>
@@ -385,7 +388,9 @@ const ModalManager: React.FC = () => {
                 <UserOnboardingWelcomeModal />
               )}
 
-              {activeModal === 'claim-listing' && <ClaimModal setSnackbar={setSnackbar} />}
+              {activeModal === 'claim-listing' && (
+                <ClaimModal setSnackbar={setSnackbar} />
+              )}
               {activeModal === 'upload-video-page' && <UploadVideoPage />}
               {activeModal === 'upload-image-page' && <UploadImagePage />}
               {activeModal === 'upload-video-user' && <UploadVideoUser />}
@@ -476,7 +481,7 @@ const ModalManager: React.FC = () => {
       /> */}
       <CustomSnackbar
         triggerOpen={snackbar.show}
-        message={snackbar.message??"Link Copied"}
+        message={snackbar.message ?? 'Link Copied'}
         type={snackbar.type}
         closeSnackbar={closeSnackbar}
       />
