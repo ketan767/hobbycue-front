@@ -252,6 +252,10 @@ const MainContent: React.FC<SearchResultsProps> = ({
     }
   }, [showAllProducts])
 
+  const navigateToHobby = (slug: string) => {
+    router.push(`hobby/${slug}`)
+  }
+
   const navigateToProfile = (profileUrl: string) => {
     if (isLoggedIn) {
       router.push(`profile/${profileUrl}`)
@@ -302,7 +306,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     <div
                       className={styles.peopleItem}
                       key={index}
-                      onClick={() => navigateToProfile(user.profile_url)}
+                      onClick={() => navigateToHobby(hobby.slug)}
                     >
                       <div
                         className={styles.hobbyAvtar}

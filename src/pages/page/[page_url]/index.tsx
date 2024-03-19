@@ -31,7 +31,7 @@ const ListingHome: React.FC<Props> = (props) => {
   const [expandAll, setExpandAll] = useState(listing)
   const { user } = useSelector((state: RootState) => state.user)
 
-  console.log('data', props.data)
+  console.warn('data', props.data)
   useEffect(() => {
     dispatch(updateListingPageData(props.data.pageData))
     dispatch(updateListingModalData(props.data.pageData))
@@ -84,7 +84,7 @@ const ListingHome: React.FC<Props> = (props) => {
     }
   }, [])
 
-  if(!props?.data?.pageData?.is_published) (<ErrorPage restricted/>)
+  if(props?.data?.pageData?.is_published!==true) return(<ErrorPage restricted/>)
 
   return (
     <>

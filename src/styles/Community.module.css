@@ -224,7 +224,7 @@
   gap: var(--spacing-12);
 }
 .pages-container {
-  margin-top: var(--spacing-16);
+
   display: grid;
   grid-template-columns: 50% 50%; /* Two equal-width columns */
   gap: var(--spacing-16); /* Gap between grid items */

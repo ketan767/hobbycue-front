@@ -81,9 +81,6 @@ const HobbyBlogsPage: React.FC<Props> = (props) => {
           <div className={styles['no-posts-container']}></div>
         </main>
       </HobbyPageLayout>
-      <main className={`${styles['display-mobile']}`}>
-        <p>No blogs available!</p>
-      </main>
     </>
   )
 }
