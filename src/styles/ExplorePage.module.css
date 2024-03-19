@@ -2,6 +2,7 @@
     background-color: #f8f9fa;
     min-height: 80vh;
     height: 100%;
+    
 
   }
 
@@ -14,6 +15,7 @@
     height: 100%;
     max-width: 1296px;
     margin: 0 auto;
+    padding-top: 12px;
   }
   .side-margin-auto{
     padding-top: 12px;

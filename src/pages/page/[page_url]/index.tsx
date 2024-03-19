@@ -19,7 +19,7 @@ import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPag
 type Props = { data: ListingPageData }
 
 const ListingHome: React.FC<Props> = (props) => {
-  console.warn({props});
+  console.warn({ props })
   const dispatch = useDispatch()
   const [error, seterror] = useState({
     hobby: false,
@@ -30,7 +30,7 @@ const ListingHome: React.FC<Props> = (props) => {
   const { listing } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(listing)
   const { user } = useSelector((state: RootState) => state.user)
-
+  const { listingLayoutMode } = useSelector((state: any) => state.site)
   console.warn('data', props.data)
   useEffect(() => {
     dispatch(updateListingPageData(props.data.pageData))
@@ -83,8 +83,12 @@ const ListingHome: React.FC<Props> = (props) => {
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
   }, [])
-
-  if(props?.data?.pageData?.is_published!==true) return(<ErrorPage restricted/>)
+  // if (
+  //   listingLayoutMode !== 'edit' &&
+  //   props?.data?.pageData?.is_published !== true
+  // ) {
+  //   return <ErrorPage restricted />
+  // }
 
   return (
     <>
@@ -140,4 +144,4 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   }
 }
 
-export default ListingHome;
+export default ListingHome

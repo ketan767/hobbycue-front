@@ -15,15 +15,11 @@ const ErrorPage: FC<ErrorPageProps> = ({ restricted = false }) => {
   const router = useRouter()
   const { user } = useSelector((state: RootState) => state.user)
   return (
-    <div
-      className={
-        restricted ? styles['rest-container'] : styles['notfound-container']
-      }
-    >
+    <div className={styles['notfound-container']}>
       <Image
-        src={restricted ? hcRestrictedImg : hc404Img}
+        src={hc404Img}
         alt="Error Page Image"
-        className={restricted ? styles['heroImg'] : styles['notfoundImg']}
+        className={styles['notfoundImg']}
       />
       <div
         className={
@@ -37,14 +33,10 @@ const ErrorPage: FC<ErrorPageProps> = ({ restricted = false }) => {
           <span>Visit Help Center</span> for more information
         </p>
       </div>
-      <div
-        className={
-          restricted ? styles['flexRowContainer'] : styles['flexColContainer']
-        }
-      >
+      <div className={styles['flexColContainer']}>
         <button
           onClick={() => router.back()}
-          className={styles['btnSecondary']}
+          className={`${styles['btnSecondary']} modal-footer-btn cancel`}
         >
           Go Back
         </button>
@@ -52,7 +44,7 @@ const ErrorPage: FC<ErrorPageProps> = ({ restricted = false }) => {
           onClick={() =>
             router.replace(user?.isAuthenticated ? '/community' : '/')
           }
-          className={styles['btnPrimary']}
+          className={`${styles['btnPrimary']} modal-footer-btn submit`}
         >
           Home Page
         </button>
