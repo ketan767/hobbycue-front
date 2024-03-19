@@ -7,7 +7,7 @@
   max-height: calc(100vh - 6rem);
   display: flex;
   flex-direction: column;
-  overflow: auto;
+  
 }
 
 .modal-close-icon {
@@ -36,6 +36,9 @@
 }
 .modal-wrapper .body {
   padding-bottom: 0;
+  
+  height: calc(100vh - 6rem);
+  overflow-y: auto;
 }
 .modal-wrapper .footer {
   padding: var(--spacing-16) var(--spacing-24);
@@ -45,6 +48,7 @@
   position: sticky;
   bottom: 0;
   background: var(--base-white,#fff);
+  border-radius: 0 0 8px 8px;
 }
 
 .heading {
@@ -192,9 +196,13 @@
   background: #f7f5f9;
   color: #8064a2;
 }
-
+.added-hobby-wrapper{
+  overflow: auto;
+  height: 600px;
+}
 .added-hobby-list table {
   width: 100%;
+  
 }
 
 .added-hobby-list table thead {

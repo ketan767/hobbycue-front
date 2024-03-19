@@ -18,7 +18,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const pagesData: any[] = pagesRes?.data?.data || []
 
   const pages: ISitemapField[] = pagesData.map((page) => ({
-    loc: `${baseUrl}/pages/${encodeURIComponent(page.page_url)}`,
+    loc: `${baseUrl}/page/${encodeURIComponent(page.page_url)}`,
     lastmod: new Date().toISOString(),
   }))
   return {
@@ -54,19 +54,24 @@ const Sitemap = ({
               <div>URL</div>
             </th>
             <th>
-              <div style={{textAlign:"right",display:"block"}}>Last Modified</div>
+              <div style={{ textAlign: 'right', display: 'block' }}>
+                Last Modified
+              </div>
             </th>
           </tr>
         </thead>
         <tbody>
           {pages?.map((obj, i) => (
-            <tr style={{background:`${i % 2 === 0 ?"#eee":"#ffffff"}`}} key={i}>
+            <tr
+              style={{ background: `${i % 2 === 0 ? '#eee' : '#ffffff'}` }}
+              key={i}
+            >
               <td>
                 <a href={obj?.loc} target="_blank">
                   {obj?.loc}
                 </a>
               </td>
-              <td style={{textAlign:"right"}}>{obj?.lastmod}</td>
+              <td style={{ textAlign: 'right' }}>{obj?.lastmod}</td>
             </tr>
           ))}
         </tbody>
