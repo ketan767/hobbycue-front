@@ -126,7 +126,7 @@
 }
 
 .hobbies-table {
-  margin-top: var(--spacing-12);
+  /* margin-top: var(--spacing-12); */
   width: 100%;
 }
 
@@ -139,12 +139,18 @@
   color: #8064a2;
 }
 
+.hobbies-table .thead-container{
+  position: sticky;
+  top: 80px;
+  z-index: 2;
+  background: #f8f9fa;
+  padding-top: 13px;
+}
+
 .hobbies-table thead {
   display: flex;
   padding: 16px 10px;
   width: 100%;
-  position: sticky;
-  top: 93px;
   background: #8064a2;
   font-family: 'Poppins';
   font-style: normal;
@@ -153,7 +159,6 @@
   line-height: 20px;
   letter-spacing: 0.04em;
   color: #ffffff;
-  z-index: 2;
   border-radius: 8px 8px 0 0;
 }
 
@@ -307,6 +312,10 @@
   .hobbies-table{
     max-width: 100vw;
     overflow-x: clip;
+  }
+
+  .hobbies-table .thead-container{
+    padding-top: 0;
   }
 
   .hobbies-table tbody{

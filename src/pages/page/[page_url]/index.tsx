@@ -83,12 +83,12 @@ const ListingHome: React.FC<Props> = (props) => {
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
   }, [])
-  // if (
-  //   listingLayoutMode !== 'edit' &&
-  //   props?.data?.pageData?.is_published !== true
-  // ) {
-  //   return <ErrorPage restricted />
-  // }
+  if (
+    props?.data?.pageData?.admin !== user?._id &&
+    props?.data?.pageData?.is_published !== true
+  ) {
+    return <ErrorPage restricted />
+  }
 
   return (
     <>

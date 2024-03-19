@@ -422,6 +422,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
           {categories.length > 0 && (
             <div className={styles['table-container']}>
               <table className={styles['hobbies-table']}>
+                <div className={styles['thead-container']}>
                 <thead>
                   <tr className="">
                     <th>Category</th>
@@ -429,6 +430,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                     <th>Hobby</th>
                   </tr>
                 </thead>
+                </div>
                 <tbody>
                   {categories
                     .filter(
