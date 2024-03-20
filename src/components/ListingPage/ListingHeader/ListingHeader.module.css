@@ -53,7 +53,6 @@
   background-position: center;
   filter: blur(10px);
   z-index: -1;
-  
 }
 .center-container .cover-img-wrapper .img {
   width: 100%;
@@ -124,7 +123,6 @@
   place-items: center;
   position: relative;
 }
-
 
 .action-btn:hover {
   background-color: #ccc1da;
@@ -285,7 +283,7 @@
   padding-top: 4px;
   gap: 38px;
   justify-content: center;
- 
+
   position: sticky;
   min-height: 40px;
 }
@@ -299,7 +297,6 @@
 .navigation-tabs {
   display: flex;
   justify-content: center;
-
 }
 .navigation-tabs a {
   font-family: 'Poppins';
@@ -330,7 +327,7 @@
   background: #8064a2;
   border-radius: 2px 2px 0px 0px;
 }
-.disabledtab{
+.disabledtab {
   cursor: default;
 }
 @media screen and (max-width: 1100px) {
@@ -352,7 +349,6 @@
     min-width: 6px;
     font-size: 12px;
   }
-  
 }
 .publishBtn {
   width: 100%;
@@ -375,46 +371,46 @@
   color: white;
 }
 
-.actions-container-mobile{
+.actions-container-mobile {
   display: none;
 }
 
 @media screen and (max-width: 1100px) {
-  .display-desktop{
+  .display-desktop {
     display: none;
   }
   .actions-container-desktop {
     display: none;
   }
-  .actions-container-mobile{
+  .actions-container-mobile {
     display: flex;
     flex-direction: column;
     margin: 10px 16px;
   }
 
-.action-btn-wrapper{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  height: auto;
-  margin: 0 0 10px 0;
-  padding: 8px;
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.12);
-}
+  .action-btn-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: auto;
+    margin: 0 0 10px 0;
+    padding: 8px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.12);
+  }
 
-.contactBtn {
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 600;
-  line-height:0;
-  padding: 0px 12px;
-  height: 40px;
-}
+  .contactBtn {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    line-height: 0;
+    padding: 0px 12px;
+    height: 40px;
+  }
 
   .header {
     padding: 8px 16px 8px 16px;
@@ -427,7 +423,7 @@
   .profile-img-wrapper .tagline {
     display: block;
   }
-  .center-container .name-container{
+  .center-container .name-container {
     display: none;
   }
   /* .center-container .tagline {
@@ -456,5 +452,11 @@
   }
   .content-container {
     margin: 0;
+  }
+  .contactBtn {
+    width: 78px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
