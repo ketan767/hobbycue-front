@@ -141,7 +141,7 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
   )
   return (
     <>
-      <main>
+      <main className={styles['main']}>
         <div className={styles.uploadContainer}>
           {data?.admin === user?.user._id && (
             <>
@@ -252,13 +252,13 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
               <div className={styles['no-posts-div']}>
                 <p className={styles['no-posts-text']}>No media available</p>
               </div>
-              <div className={styles['no-posts-div']}></div>
+              {!isMobile&&<div className={styles['no-posts-div']}></div>}
             </section>
           )
         )}
         {listingModalData.images?.map((item: any, idx) => {
           return (
-            <div className={styles.medias}>
+            <div key={idx} className={styles.medias}>
               <div
                 key={idx}
                 className={styles.image}

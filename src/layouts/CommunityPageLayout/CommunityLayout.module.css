@@ -302,6 +302,10 @@
   color: #8064a2;
 }
 
+.start-post-btn:hover path{
+  fill: white;
+}
+
 .start-post-btn:focus-visible {
   outline: 1px solid rgb(var(--primary-50-rgb));
 }

@@ -176,6 +176,10 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
         <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
           <MoreHorizRoundedIcon color="primary" />
         </div>
+        {/*  */}
+        <FilledButton className={styles['add-mine']} onClick={handleAddhobby}>
+          Add to mine
+        </FilledButton>
       </div>
 
       {/* Tabs */}
