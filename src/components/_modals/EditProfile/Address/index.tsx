@@ -600,7 +600,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         getLocation()
       }
     }
-  }, [dataLoaded, data])
+  }, [dataLoaded])
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
@@ -812,7 +812,6 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   value={data.street}
                   name="street"
                   ref={inputRef}
-                  onFocus={() => setShowDropdown(true)}
                   onChange={handleInputChange}
                 />
                 <Image

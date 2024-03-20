@@ -342,18 +342,18 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         return
       }
     }
-    if(genreInputValue.length>0){
+    if (genreInputValue.length > 0) {
       const matchedGenre = genreDropdownList.find(
         (genre) =>
           genre.display.toLowerCase() === genreInputValue.toLowerCase(),
       )
-      if(!matchedGenre){
-setShowAddHobbyModal(true);
-return;}else{
-  selectedGenre = data.genre
-}
-    }
-    else {
+      if (!matchedGenre) {
+        setShowAddHobbyModal(true)
+        return
+      } else {
+        selectedGenre = data.genre
+      }
+    } else {
       selectedGenre = data.genre
     }
 
@@ -364,11 +364,10 @@ return;}else{
       genre: selectedGenre?._id,
       level: data.level,
     }
-    console.log({userHobbies})
+    console.log({ userHobbies })
     const sameAsPrevious = userHobbies?.find(
       (obj: any) =>
-        obj.hobby?._id === jsonData.hobby &&
-        jsonData.genre === obj.genre?._id,
+        obj.hobby?._id === jsonData.hobby && jsonData.genre === obj.genre?._id,
     )
     if (sameAsPrevious) {
       setHobbyError(true)
@@ -400,6 +399,7 @@ return;}else{
   }
 
   const handleSubmit = async () => {
+    setSubmitBtnLoading(true)
     setHobbyError(false)
     setErrorOrmsg(null)
     setShowGenreDowpdown(false)
@@ -480,31 +480,38 @@ return;}else{
         setErrorOrmsg('Same hobby detected in the hobbies list')
 
         setAddHobbyBtnLoading(false)
+        setSubmitBtnLoading(false)
         return
       }
+      const { err: updtProfileErr, res: updtProfileRes } =
+        await updateMyProfileDetail({ is_onboarded: true })
 
       await addUserHobby(jsonData, async (err, res) => {
         console.log('json', jsonData)
         if (err) {
           setAddHobbyBtnLoading(false)
+          setSubmitBtnLoading(false)
           return console.log(err)
         }
 
         const { err: error, res: response } = await getMyProfileDetail()
         if (error) return console.log(error)
         setAddHobbyBtnLoading(false)
+        setSubmitBtnLoading(false)
 
         if (response?.data.success) {
           if (onComplete !== undefined) {
             isOnboarded = true
             onComplete()
             setAddHobbyBtnLoading(false)
+            setSubmitBtnLoading(false)
             return
           }
           dispatch(updateUser(response?.data.data.user))
           handleClose()
           window.location.reload()
           setAddHobbyBtnLoading(false)
+          setSubmitBtnLoading(false)
           return
         }
       })
@@ -705,32 +712,35 @@ return;}else{
   if (showAddHobbyModal) {
     return (
       <>
-        {genreInputValue.length===0?<AddHobby
-          handleClose={() => {
-            setShowAddHobbyModal(false)
-          }}
-          handleSubmit={() => {
-            setShowSnackbar({
-              message: 'This feature is under development',
-              triggerOpen: true,
-              type: 'success',
-            })
-          }}
-          propData={{ defaultValue: hobbyInputValue }}
-        />:
-        <AddGenre
-        handleClose={() => {
-          setShowAddHobbyModal(false)
-        }}
-        handleSubmit={() => {
-          setShowSnackbar({
-            message: 'This feature is under development',
-            triggerOpen: true,
-            type: 'success',
-          })
-        }}
-        propData={{ defaultValue: genreInputValue }}
-        />}
+        {genreInputValue.length === 0 ? (
+          <AddHobby
+            handleClose={() => {
+              setShowAddHobbyModal(false)
+            }}
+            handleSubmit={() => {
+              setShowSnackbar({
+                message: 'This feature is under development',
+                triggerOpen: true,
+                type: 'success',
+              })
+            }}
+            propData={{ defaultValue: hobbyInputValue }}
+          />
+        ) : (
+          <AddGenre
+            handleClose={() => {
+              setShowAddHobbyModal(false)
+            }}
+            handleSubmit={() => {
+              setShowSnackbar({
+                message: 'This feature is under development',
+                triggerOpen: true,
+                type: 'success',
+              })
+            }}
+            propData={{ defaultValue: genreInputValue }}
+          />
+        )}
         <CustomSnackbar
           message={showSnackbar.message}
           type={showSnackbar.type}

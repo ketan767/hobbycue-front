@@ -72,7 +72,7 @@ const HobbyPageLayout: React.FC<Props> = ({
   const getMembers = async () => {
     setLoading(true)
     const { err, res } = await getHobbyMembers(`${data._id}`)
-    console.log('mem', res.data)
+    console.log('mem', res?.data)
     if (err) return console.log(err)
     if (res?.data) {
       if (res?.data?.users) {
@@ -145,7 +145,7 @@ const HobbyPageLayout: React.FC<Props> = ({
                     )
                   })}
                 <li className={styles['active']}>
-                   <p>{data?.display}</p> 
+                  <p>{data?.display}</p>
                 </li>
               </ul>
             </div>
