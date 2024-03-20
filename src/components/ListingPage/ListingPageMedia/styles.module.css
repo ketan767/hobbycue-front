@@ -100,6 +100,7 @@ line-height: 20px; /* 142.857% */
   display: flex;
   gap: 24px;
   align-items: start;
+  grid-column: span 2;
 }
 
 
@@ -147,14 +148,14 @@ line-height: 20px; /* 142.857% */
   .uploadContainer{
     grid-column: span 1;
   }
+  .no-posts-div{
+    border-radius: 0;
+  }
 }
 
 @media screen and (min-width:1100px) {
   .media-layout{
     margin-left: -24px !important;
-  }
-  .no-posts-div{
-    border-radius: 0;
   }
 }
 

@@ -139,6 +139,7 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
       </defs>
     </svg>
   )
+  console.log({con:(listingModalData?.video_url || listingModalData?.images) })
   return (
     <>
       <main className={styles['main']}>
@@ -225,7 +226,7 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
           }
         > */}
 
-        {listingModalData?.video_url || listingModalData?.images ? (
+        {listingModalData?.video_url ? (
           <div className={styles.medias}>
             {listingModalData?.video_url && (
               <div className={styles['videos']}>
@@ -246,8 +247,10 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
               </div>
             )}
           </div>
-        ) : (
-          listingLayoutMode !== 'edit' && (
+        ) :null}
+        
+        {(
+          (listingLayoutMode !== 'edit' && !listingModalData?.video_url) && (!listingModalData?.images||listingModalData?.images?.length<1) &&  (
             <section className={`${styles['dual-section-wrapper']}`}>
               <div className={styles['no-posts-div']}>
                 <p className={styles['no-posts-text']}>No media available</p>
