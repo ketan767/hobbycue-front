@@ -109,6 +109,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
               <div className={styles['no-posts-container']}>
                 <p>No pages available</p>
               </div>
+              <div className={styles['no-posts-container']}></div>
             </div>
           )}
         </main>

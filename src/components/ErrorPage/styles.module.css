@@ -58,7 +58,7 @@
     /* 144.444% */
 }
 
-.contentContainer span {
+.contentContainer a {
     color: var(--Primary-Full, #8064A2);
     font-family: Poppins;
     font-size: 18px;

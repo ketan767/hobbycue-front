@@ -30,7 +30,7 @@ const ErrorPage: FC<ErrorPageProps> = ({ restricted = false }) => {
         <p>
           Oops! Please re-check the link. If it seems correct, maybe the owner
           has restricted who can view, or the content has been deleted. You may{' '}
-          <span>Visit Help Center</span> for more information
+          <a href="/help">Visit Help Center</a> for more information
         </p>
       </div>
       <div className={styles['flexColContainer']}>

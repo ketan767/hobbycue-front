@@ -18,3 +18,12 @@
   font-weight: 500;
   color: #6d747a;
 }
+
+
+@media screen and (max-width: 1100px) {
+  .data-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-16);
+  }
+}

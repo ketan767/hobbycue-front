@@ -10,6 +10,7 @@ import MailIcon from '@/assets/svg/mailicon.svg'
 import { useDispatch } from 'react-redux'
 import { openModal, updateShareUrl } from '@/redux/slices/modal'
 import HobbyNavigationLinks from './HobbyNavigationLinks'
+import FilledButton from '@/components/_buttons/FilledButton'
 
 type Props = {
   activeTab: HobbyPageTabs
@@ -23,6 +24,9 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
   const handleShare = () => {
     dispatch(updateShareUrl(window.location.href))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
+  }
+  const handleAddhobby = () => {
+    dispatch(openModal({ type: 'profile-hobby-edit', closable: true }))
   }
 
   return (
@@ -98,25 +102,35 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
             <div className={`${styles['cover-img']} default-user-cover`}></div>
           )}
           <div className={styles['name-container-desktop']}>
-            <h1 className={styles['name']}>{data?.display}</h1>
-            <p className={styles['category']}>
-              {data?.level === 0
-                ? 'Category'
-                : data?.level === 1
-                ? 'Sub-Category'
-                : data?.level === 2
-                ? 'Hobby Tag'
-                : data?.level === 3
-                ? 'Hobby'
-                : data?.level === 5
-                ? 'Genre/Style'
-                : 'Hobby'}
-            </p>
+            <div>
+              <h1 className={styles['name']}>{data?.display}</h1>
+              <p className={styles['category']}>
+                {data?.level === 0
+                  ? 'Category'
+                  : data?.level === 1
+                  ? 'Sub-Category'
+                  : data?.level === 2
+                  ? 'Hobby Tag'
+                  : data?.level === 3
+                  ? 'Hobby'
+                  : data?.level === 5
+                  ? 'Genre/Style'
+                  : 'Hobby'}
+              </p>
+            </div>
+            <FilledButton
+              className={styles['add-mine']}
+              onClick={handleAddhobby}
+            >
+              Add to mine
+            </FilledButton>
           </div>
         </section>
 
         {/* Action buttons for desktop view */}
-        <div className={`${styles['action-btn-wrapper']} ${styles['display-desktop']}`}>
+        <div
+          className={`${styles['action-btn-wrapper']} ${styles['display-desktop']}`}
+        >
           {/* Send Email Button  */}
           <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
             <Image src={MailIcon} alt="share" />
@@ -140,7 +154,9 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
       </header>
 
       {/* Action buttons for mobile view */}
-      <div className={`${styles['action-btn-wrapper']} ${styles['display-flex-mobile']}`}>
+      <div
+        className={`${styles['action-btn-wrapper']} ${styles['display-flex-mobile']}`}
+      >
         {/* Send Email Button  */}
         <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
           <Image src={MailIcon} alt="share" />

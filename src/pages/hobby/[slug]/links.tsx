@@ -119,9 +119,12 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
             ) : (
               posts.length === 0 &&
               isLoggedIn && (
-                <div className={styles['no-posts-container']}>
-                  <p>No links available</p>
-                </div>
+                <>
+                  <div className={styles['no-posts-container']}>
+                    <p>No links available</p>
+                  </div>
+                  <div className={styles['no-posts-container']}></div>
+                </>
               )
             )}
             {isLoggedIn ? (
@@ -135,9 +138,12 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
                 )
               })
             ) : (
-              <div className={styles['no-posts-container']}>
-                <p>Login to see the links</p>
-              </div>
+              <>
+                <div className={styles['no-posts-container']}>
+                  <p>Login to see the links</p>
+                </div>
+                <div className={styles['no-posts-container']}></div>
+              </>
             )}
           </section>
         </main>

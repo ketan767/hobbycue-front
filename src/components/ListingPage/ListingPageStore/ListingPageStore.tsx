@@ -12,6 +12,7 @@ const ListingStoreTab = ({}) => {
             </p>
           </div>
           <div className={styles['no-data-div']}></div>
+          <div className={styles['no-data-div']}></div>
         </section>{' '}
       </main>
     </>
