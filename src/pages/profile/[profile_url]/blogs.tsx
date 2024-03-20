@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { updateProfileMenuExpandAll } from '@/redux/slices/site'
 import ErrorPage from '@/components/ErrorPage'
+import { useMediaQuery } from '@mui/material'
 
 interface Props {
   data: ProfilePageData
@@ -34,6 +35,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
   }
 
   const router = useRouter()
+  const isMobile = useMediaQuery("(max-width:1100px)");
 
   useEffect(() => {
     // Save scroll position when navigating away from the page
@@ -107,8 +109,10 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
                 This feature is under development. Come back soon to view this
               </p>
             </div>
+            {isMobile?null:<>
             <div className={styles['no-posts-div']}></div>
             <div className={styles['no-posts-div']}></div>
+            </>}
           </section>
         </PageGridLayout>
       </ProfileLayout>

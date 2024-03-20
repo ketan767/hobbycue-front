@@ -345,7 +345,7 @@
 
 .dual-section-wrapper {
   display: flex;
-  gap: 16px;
+  gap: 24px;
   align-items: start;
 }
 
@@ -434,6 +434,9 @@ line-height: 20px;
     gap: 10px;
   }
   .members{
+    border-radius: 0;
+  }
+  .no-posts-container{
     border-radius: 0;
   }
 }
