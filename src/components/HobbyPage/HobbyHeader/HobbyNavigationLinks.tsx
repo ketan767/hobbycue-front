@@ -23,34 +23,23 @@ const HobbyNavigationLinks: React.FC<Props> = ({ activeTab }) => {
   ]
 
   const handleTabClick = (tab: string) => {
-    if (isLoggedIn) {
-      return
-    } else if (tab === 'posts' || tab === 'links') {
+    if (!isLoggedIn && (tab === 'posts' || tab === 'links')) {
       dispatch(openModal({ type: 'auth', closable: true }))
+    } else {
+      router.push(`/hobby/${router.query.slug}/${tab !== 'home' ? tab : ''}`)
     }
   }
-
   return (
     <div className={styles['navigation-links']}>
       {tabs.map((tab) => {
         return (
-          <Link
+          <a
             key={tab}
-            href={
-              tab === 'home' ||
-              tab === 'posts' ||
-              tab === 'links' ||
-              tab === 'pages' ||
-              tab === 'store' ||
-              tab === 'blogs'
-                ? `/hobby/${router.query.slug}/${tab !== 'home' ? tab : ''}`
-                : '#'
-            }
             onClick={() => handleTabClick(tab)}
             className={activeTab === tab ? styles['active'] : ''}
           >
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
-          </Link>
+          </a>
         )
       })}
     </div>

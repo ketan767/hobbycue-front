@@ -33,8 +33,8 @@ const SaveModal: React.FC<Props> = ({
   const router = useRouter()
   const onboardcheck = () => {
     console.log('isError', isError)
-    if (OnBoarding) {
-      window.location.reload()
+    if (OnBoarding || !user.is_onboarded) {
+      router.reload()
     } else if (isError) {
       setConfirmationModal(false)
     }

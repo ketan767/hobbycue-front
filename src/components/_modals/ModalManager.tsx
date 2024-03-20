@@ -72,6 +72,7 @@ import UserContactToOwner from './EditProfile/UserContactOwner'
 import { PostModal } from './PostModal/PostModal'
 import { setHasChanges } from '@/redux/slices/modal'
 import { useRouter } from 'next/router'
+import SaveModal from './SaveModal/saveModal'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -125,7 +126,7 @@ const ModalManager: React.FC = () => {
   }
 
   function handleClose() {
-    console.log('haschange', hasChanges)
+    console.log('haschange', activeModal)
     if (activeModal === 'View-Image-Modal') {
       dispatch(closeModal())
     } else if (confirmationModal) {
@@ -379,6 +380,7 @@ const ModalManager: React.FC = () => {
               {activeModal === 'UserContactToOwner' && (
                 <UserContactToOwner {...props} />
               )}
+              {activeModal === 'save-Modal' && <SaveModal {...props} />}
 
               {/* 
               On user-onboarding-welcome, UserOnboardingWelcomeModal is shown via navbar component for some functionalities

@@ -230,7 +230,15 @@
 .metadata-content > div {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0px;
+}
+.metadata-content .metadata-title{
+  font-size: 12px;
+  font-weight: 600;
+}
+.metadata-content .metadata-url{
+  font-size: 12px;
+  color: rgba(var(--gray-50-rgb));
 }
 
 .metadata-close-icon{
@@ -329,6 +337,16 @@
   }
   .create-post-modal > aside {
     width: 100%;
+  }
+  .show-metadata {
+  max-height: none;
+  width: 100%;
+  }
+  .metadata-content .metadata-url{
+    max-width: calc(100vw - 9rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 .modal-heading::before {

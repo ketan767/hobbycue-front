@@ -71,8 +71,8 @@ const HobbyStorePage: React.FC<Props> = (props) => {
         expandAll={expandAll}
         setExpandAll={handleExpandAll}
       >
-       <main
-          className={`${styles['display-desktop']} ${styles['dual-section-wrapper']}`}
+        <main
+          className={`${styles['display-desktop']}  ${styles['dual-section-wrapper']}`}
         >
           <div className={styles['no-posts-container']}>
             <p>
@@ -85,8 +85,10 @@ const HobbyStorePage: React.FC<Props> = (props) => {
       </HobbyPageLayout>
       <main className={`${styles['display-mobile']}`}>
         <div className={styles['no-posts-container']}>
-          <p>No posts available</p>
-        </div>{' '}
+          <p>This feature is under development. Come back soon to view this</p>
+        </div>
+        <div className={styles['no-posts-container']}></div>
+        <div className={styles['no-posts-container']}></div>
       </main>
     </>
   )

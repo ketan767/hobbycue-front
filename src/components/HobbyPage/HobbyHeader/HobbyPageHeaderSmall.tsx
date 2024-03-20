@@ -13,6 +13,7 @@ import Link from 'next/link'
 import DefaultProfile from '@/assets/svg/default-images/default-hobbies.svg'
 import { openModal, updateShareUrl } from '@/redux/slices/modal'
 import { useDispatch } from 'react-redux'
+import FilledButton from '@/components/_buttons/FilledButton'
 
 type Props = {
   activeTab: HobbyPageTabs
@@ -34,6 +35,10 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
   const handleShare = () => {
     dispatch(updateShareUrl(window.location.href))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
+  }
+
+  const handleAddhobby = () => {
+    dispatch(openModal({ type: 'profile-hobby-edit', closable: true }))
   }
 
   return (
@@ -80,6 +85,12 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
             </p>
           </section>
           <div className={styles['action-btn-wrapper']}>
+            <FilledButton
+              className={styles['add-mine']}
+              onClick={handleAddhobby}
+            >
+              Add to mine
+            </FilledButton>
             {/* Send Email Button  */}
             <div
               onClick={(e) => console.log(e)}

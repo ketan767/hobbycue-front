@@ -11,7 +11,7 @@ interface Props {
 
 const ListingEventsTab: React.FC<Props> = ({ data }) => {
   const [eventData, setEventData] = useState<any>(null)
-console.warn({eventData});
+  console.warn({ eventData })
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,10 +38,10 @@ console.warn({eventData});
   return (
     <>
       <main>
-        {eventData?.res?.data?.result.length === 0 ? (
+        {!eventData?.res ? (
           <section className={styles['data-container']}>
             <div className={styles['no-data-div']}>
-              <p className={styles['no-data-text']}>No events</p>
+              <p className={styles['no-data-text']}>No events available</p>
             </div>
             <div className={styles['no-data-div']}></div>
           </section>
@@ -63,18 +63,6 @@ console.warn({eventData});
               return <ListingCard key={listingId} data={listings.listings} />
             })}
           </div>
-        )}
-        {!eventData?.res &&(
-                  <main
-                  className={`${styles['display-desktop']} ${styles['dual-section-wrapper']}`}
-                >
-                  <div className={styles['no-posts-container']}>
-                    <p>
-                      This feature is under development. Come back soon to view this
-                    </p>
-                  </div>
-                  <div className={styles['no-posts-container']}></div>
-                </main>
         )}
       </main>
     </>

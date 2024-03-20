@@ -78,6 +78,10 @@ const ListingPageLayout: React.FC<Props> = ({
     else setShowSmallHeader(false)
   }
   const navigationTabs = (tab: any) => {
+    if (!isLoggedIn && tab === 'posts') {
+      dispatch(openModal({ type: 'auth', closable: true }))
+      return
+    }
     let hasError = false
     console.log('layutmode', listingLayoutMode)
 

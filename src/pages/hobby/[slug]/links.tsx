@@ -117,21 +117,34 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
             {loadingPosts ? (
               <PostCardSkeletonLoading />
             ) : (
-              posts.length === 0 && (
-                <div className={styles['no-posts-container']}>
-                  <p>No links available</p>
-                </div>
+              posts.length === 0 &&
+              isLoggedIn && (
+                <>
+                  <div className={styles['no-posts-container']}>
+                    <p>No links available</p>
+                  </div>
+                  <div className={styles['no-posts-container']}></div>
+                </>
               )
             )}
-            {posts.map((post: any) => {
-              return (
-                <PostCard
-                  key={post._id}
-                  postData={post}
-                  currentSection="links"
-                />
-              )
-            })}
+            {isLoggedIn ? (
+              posts.map((post: any) => {
+                return (
+                  <PostCard
+                    key={post._id}
+                    postData={post}
+                    currentSection="links"
+                  />
+                )
+              })
+            ) : (
+              <>
+                <div className={styles['no-posts-container']}>
+                  <p>Login to see the links</p>
+                </div>
+                <div className={styles['no-posts-container']}></div>
+              </>
+            )}
           </section>
         </main>
       </HobbyPageLayout>

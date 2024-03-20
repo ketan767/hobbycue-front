@@ -7,7 +7,7 @@
 }
 
 .sidebarTitle {
-   font-weight: 600;
+   font-weight: 500 !important;
    font-size: 16px;
    line-height: 26px;
    margin-bottom: 24px;

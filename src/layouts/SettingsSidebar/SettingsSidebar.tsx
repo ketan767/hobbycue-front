@@ -28,11 +28,11 @@ const sidebarItems = [
 ]
 
 const SettingsSidebar: React.FC<Props> = ({ active }) => {
-  const pathname = usePathname();
+  const pathname = usePathname()
   return (
     <>
       <div className={styles.sidebarContainer}>
-        <p className={styles.sidebarTitle}> Settings </p>
+        <h1 className={styles.sidebarTitle}> Settings </h1>
         <ul className={styles.sidebarListParent}>
           {sidebarItems.map((item: any) => {
             return (
@@ -41,8 +41,13 @@ const SettingsSidebar: React.FC<Props> = ({ active }) => {
                 key={item.text}
                 className={styles.listLink}
               >
-              <div className={`${styles.listItem} ${pathname===item.link?styles.activeLink:""}`}>
-                  {item.text}</div>
+                <div
+                  className={`${styles.listItem} ${
+                    pathname === item.link ? styles.activeLink : ''
+                  }`}
+                >
+                  {item.text}
+                </div>
               </Link>
             )
           })}
