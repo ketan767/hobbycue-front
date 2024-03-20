@@ -361,6 +361,7 @@ const CommunityLayout: React.FC<Props> = ({
               obj.display = `${address.city} -  ${
                 address.label ? address.label : 'Default'
               } `
+              obj.value = `${address.city ?? 'Home'}`
             }
 
             if (address.pin_code) {
