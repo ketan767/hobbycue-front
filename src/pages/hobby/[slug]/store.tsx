@@ -71,12 +71,16 @@ const HobbyStorePage: React.FC<Props> = (props) => {
         expandAll={expandAll}
         setExpandAll={handleExpandAll}
       >
-        <main className={`${styles['display-desktop']}`}>
+       <main
+          className={`${styles['display-desktop']} ${styles['dual-section-wrapper']}`}
+        >
           <div className={styles['no-posts-container']}>
             <p>
               This feature is under development. Come back soon to view this
             </p>
-          </div>{' '}
+          </div>
+          <div className={styles['no-posts-container']}></div>
+          <div className={styles['no-posts-container']}></div>
         </main>
       </HobbyPageLayout>
       <main className={`${styles['display-mobile']}`}>
