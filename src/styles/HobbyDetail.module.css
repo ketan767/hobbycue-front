@@ -436,6 +436,12 @@ line-height: 20px;
   .members{
     border-radius: 0;
   }
+  .no-posts-container{
+    border-radius: 0;
+  }
+  .links-container{
+    grid-template-columns: 100%;
+  }
 }
 
 @media screen and (min-width: 1100px) {

@@ -270,6 +270,10 @@ const ProfileAboutEditModal: React.FC<Props> = ({
           confirmationModal ? styles['ins-active'] : ''
         }  `}
       >
+        <CloseIcon
+          className={styles['modal-close-icon']}
+          onClick={handleClose}
+        />
         {/* Modal Header */}
         <header className={styles['header']}>
           <h4 className={styles['heading']}>{'About'}</h4>

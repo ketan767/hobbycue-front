@@ -123,12 +123,13 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
   useEffect(() => {
     if (user.id) {
       const userIsAuthorized =
-        data.pageData.is_published ||
-        user._id === data.pageData.admin;
+        data.pageData.is_published || user._id === data.pageData.admin
       if (!userIsAuthorized) router.push('/404')
     }
-  }, [user._id, data.pageData, router]);
-  if(!user.is_onboarded && data?.pageData?.email!==user?.email) {return(<ErrorPage/>)}
+  }, [user._id, data.pageData, router])
+  if (!user.is_onboarded && data?.pageData?.email !== user?.email) {
+    return <ErrorPage />
+  }
   return (
     <>
       <Head>
@@ -166,7 +167,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
                     dispatch(openModal({ type: 'create-post', closable: true }))
                   else
                     dispatch(
-                      openModal({ type: 'user-onboarding', closable: true }),
+                      openModal({ type: 'user-onboarding', closable: false }),
                     )
                 }}
                 className={styles['start-post-btn']}
@@ -259,7 +260,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
                   dispatch(openModal({ type: 'create-post', closable: true }))
                 else
                   dispatch(
-                    openModal({ type: 'user-onboarding', closable: true }),
+                    openModal({ type: 'user-onboarding', closable: false }),
                   )
               }}
               className={styles['start-post-btn']}

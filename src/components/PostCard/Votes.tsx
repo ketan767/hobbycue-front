@@ -1,7 +1,8 @@
+import { openModal } from '@/redux/slices/modal'
 import { RootState } from '@/redux/store'
 import { downvotePost, upvotePost, removeVote } from '@/services/post.service'
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 type Props = {
   styles: any
@@ -16,9 +17,9 @@ const PostVotes: React.FC<Props> = ({
   updatePost,
   className,
 }: Props) => {
-  const { activeProfile } = useSelector((state: RootState) => state.user)
+  const { activeProfile, user } = useSelector((state: RootState) => state.user)
   const [voteStatus, setVoteStatus] = useState<'up' | 'down' | null>(null)
-
+  const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
   /** Check and Update the Vote status */
   const updateVoteStatus = () => {
@@ -129,11 +130,13 @@ const PostVotes: React.FC<Props> = ({
         <div
           className={styles['upvote']}
           onClick={() => {
-            if (voteStatus === 'up') {
-              removeVoteFunc()
-            } else {
-              handleUpVote()
-            }
+            user.is_onboarded
+              ? voteStatus === 'up'
+                ? removeVoteFunc()
+                : handleUpVote()
+              : dispatch(
+                  openModal({ type: 'user-onboarding', closable: false }),
+                )
           }}
         >
           <svg
@@ -156,11 +159,13 @@ const PostVotes: React.FC<Props> = ({
 
         <svg
           onClick={() => {
-            if (voteStatus === 'down') {
-              removeVoteFunc()
-            } else {
-              handleDownVote()
-            }
+            user.is_onboarded
+              ? voteStatus === 'down'
+                ? removeVoteFunc()
+                : handleDownVote()
+              : dispatch(
+                  openModal({ type: 'user-onboarding', closable: false }),
+                )
           }}
           width="24"
           height="22"

@@ -132,4 +132,7 @@
   .display-mobile {
     display: initial !important;
   }
+  .no-posts-div{
+    border-radius: 0;
+  }
 }

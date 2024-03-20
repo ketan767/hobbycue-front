@@ -259,7 +259,7 @@
 
 .dual-section-wrapper {
   display: flex;
-  gap: 16px;
+  gap: 24px;
   align-items: start;
 }
 .no-posts-container {
@@ -291,7 +291,11 @@
     display: none !important;
   }
   .dual-section-wrapper {
+    margin-top: 12px;
     flex-direction: column;
     gap: 0;
+  }
+  .no-posts-container{
+    border-radius: 0;
   }
 }

@@ -10,6 +10,7 @@ import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
 import { getListingPages } from '@/services/listing.service'
 import ListingCard from '@/components/ListingCard/ListingCard'
+import { useMediaQuery } from '@mui/material'
 
 type Props = {}
 
@@ -18,21 +19,26 @@ const CommunityBlogs: React.FC<Props> = ({}) => {
   const { allPages, pagesLoading } = useSelector(
     (state: RootState) => state.post,
   )
+  const isMobile = useMediaQuery('(max-width:1100px)');
 
   return (
     <>
       <CommunityPageLayout activeTab="blogs">
         {/* <section className={styles['pages-container']}> */}
         <main
-          className={`${styles['display-desktop']} ${styles['dual-section-wrapper']}`}
+          className={`${styles['dual-section-wrapper']}`}
         >
           <div className={styles['no-posts-container']}>
             <p>
               This feature is under development. Come back soon to view this
             </p>
           </div>
-          <div className={styles['no-posts-container']}></div>
-          <div className={styles['no-posts-container']}></div>
+          {isMobile ? null : (
+            <>
+              <div className={styles['no-posts-container']}></div>
+              <div className={styles['no-posts-container']}></div>
+            </>
+          )}
         </main>
 
         {/* </section> */}

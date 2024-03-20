@@ -4,7 +4,7 @@ import styles from './VerifyEmail.module.css'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { CircularProgress, Modal } from '@mui/material'
-import { closeModal } from '@/redux/slices/modal'
+import { closeModal, openModal } from '@/redux/slices/modal'
 import AuthForm from '@/components/AuthForm/AuthForm'
 import FormInput from '@/components/_formElements/Input'
 import FilledButton from '@/components/_buttons/FilledButton'
@@ -43,8 +43,7 @@ export const VerifyEmailModal: React.FC<PropTypes> = (props) => {
       // dispatch(updateIsAuthenticated(true))
       // dispatch(updateUser(res.data.data.user))
       router.push('/community', undefined, { shallow: false })
-      // @TODO:
-      // router.push('/profile/devansh')
+      dispatch(openModal({ type: 'user-onboarding', closable: false }))
     }
   }
 

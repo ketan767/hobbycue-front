@@ -139,9 +139,10 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
       </defs>
     </svg>
   )
+  console.log({con:(listingModalData?.video_url || listingModalData?.images) })
   return (
     <>
-      <main>
+      <main className={styles['main']}>
         <div className={styles.uploadContainer}>
           {data?.admin === user?.user._id && (
             <>
@@ -225,7 +226,7 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
           }
         > */}
 
-        {listingModalData?.video_url || listingModalData?.images ? (
+        {listingModalData?.video_url ? (
           <div className={styles.medias}>
             {listingModalData?.video_url && (
               <div className={styles['videos']}>
@@ -246,19 +247,21 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
               </div>
             )}
           </div>
-        ) : (
-          listingLayoutMode !== 'edit' && (
+        ) :null}
+        
+        {(
+          (listingLayoutMode !== 'edit' && !listingModalData?.video_url) && (!listingModalData?.images||listingModalData?.images?.length<1) &&  (
             <section className={`${styles['dual-section-wrapper']}`}>
               <div className={styles['no-posts-div']}>
                 <p className={styles['no-posts-text']}>No media available</p>
               </div>
-              <div className={styles['no-posts-div']}></div>
+              {!isMobile&&<div className={styles['no-posts-div']}></div>}
             </section>
           )
         )}
         {listingModalData.images?.map((item: any, idx) => {
           return (
-            <div className={styles.medias}>
+            <div key={idx} className={styles.medias}>
               <div
                 key={idx}
                 className={styles.image}
