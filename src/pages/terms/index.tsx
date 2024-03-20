@@ -6,7 +6,7 @@ type Props = {}
 
 const Terms: React.FC<Props> = (props) => {
   return (
-    <div style={{margin:"0 auto"}} className={styles['explore-wrapper']}>
+    <div style={{margin:"0 auto"}} className={styles['explore-wrapper']+` ${styles['padding-top-12']}`}>
       <div className={styles.terms}>
         <h1 className={styles.pageheading}>Terms and Conditions</h1>
 

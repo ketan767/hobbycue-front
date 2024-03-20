@@ -87,7 +87,7 @@ const CommunityLayout: React.FC<Props> = ({
   const [trendingHobbies, setTrendingHobbies] = useState([])
   console.log('Number of hobbies:', activeProfile.data?._hobbies?.length)
 
-  const hideThirdColumnTabs = ['pages', 'links']
+  const hideThirdColumnTabs = ['pages', 'links','store','blogs']
   const { showPageLoader } = useSelector((state: RootState) => state.site)
   const router = useRouter()
 

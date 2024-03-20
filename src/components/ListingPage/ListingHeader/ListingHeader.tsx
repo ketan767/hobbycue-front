@@ -39,9 +39,14 @@ import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 type Props = {
   data: ListingPageData['pageData']
   activeTab: ListingPageTabs
+  setpageTypeErr?:React.Dispatch<React.SetStateAction<boolean>>
+  setHobbyError?:React.Dispatch<React.SetStateAction<boolean>>
+  setHAboutErr?:React.Dispatch<React.SetStateAction<boolean>>
+  setContactInfoErr?:React.Dispatch<React.SetStateAction<boolean>>
+  setLocationErr?:React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
+const ListingHeader: React.FC<Props> = ({ data, activeTab,setContactInfoErr,setHAboutErr,setHobbyError,setLocationErr,setpageTypeErr }) => {
   const dispatch = useDispatch()
   const [snackbar, setSnackbar] = useState({
     type: 'success',
@@ -146,22 +151,23 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
     if(data.is_published!==true){
     let hasError = false;
       if (data._hobbies.length === 0) {
-        hasError = true
+        hasError = true;
+        setHobbyError?.(true)
       }
       if (data.page_type.length === 0) {
-        hasError = true
+        hasError = true;
+        setpageTypeErr?.(true)
       }
       if (!data.phone && !data.public_email) {
-        hasError = true
+        hasError = true;
+        setContactInfoErr?.(true)
       }
       if (!data._address.city) {
-        hasError = true
-      }
-      if(!data._tags || data._tags.length===0){
-        hasError = true
+        hasError = true;
+        setLocationErr?.(true)
       }
       if(hasError){
-        setSnackbar({display:true,type:"warning",message:"All mandatory fields should be filled before publishing"});
+        setSnackbar({display:true,type:"warning",message:"Fill up the mandatory fields."});
         return;
       }
     }

@@ -184,7 +184,7 @@ const ListingPageLayout: React.FC<Props> = ({
   return (
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
-      <ListingHeader data={data.pageData} activeTab={activeTab} />
+      <ListingHeader setContactInfoErr={setContactInfoErr} setHAboutErr={setHAboutErr} setHobbyError={setHobbyError} setLocationErr={setLocationErr} setpageTypeErr={setpageTypeErr} data={data.pageData} activeTab={activeTab} />
       {showSmallHeader && (
         <ListingHeaderSmall data={data.pageData} activeTab={activeTab} />
       )}

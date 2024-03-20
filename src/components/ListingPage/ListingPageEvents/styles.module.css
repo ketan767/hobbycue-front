@@ -25,3 +25,33 @@
   flex-wrap: wrap;
   justify-content: space-between;
 }
+
+.dual-section-wrapper {
+  display: flex;
+  gap: 16px;
+  align-items: start;
+}
+.no-posts-container {
+  /* margin: var(--spacing-8); */
+  padding: var(--spacing-12) var(--spacing-16);
+  border-radius: 8px;
+  border: 2px solid #ebedf0;
+  height: 10rem;
+  width: 100%;
+  background-color: #ffffff;
+}
+.no-posts-container p{
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(var(--gray-100-rgb));
+}
+
+@media screen and (max-width:1100px) {
+  .display-desktop {
+    display: none !important;
+  }
+  .dual-section-wrapper {
+    flex-direction: column;
+    gap: 0;
+  }
+}

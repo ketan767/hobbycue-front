@@ -23,6 +23,7 @@ import { searchPages } from '@/services/listing.service'
 import { getAllHobbies } from '@/services/hobby.service'
 import { RootState } from '@/redux/store'
 import defaultUserImage from '@/assets/svg/default-images/default-user-icon.svg'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type SearchInput = {
   search: InputData<string>
@@ -45,6 +46,21 @@ const UserOnboardingWelcomeModal = () => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     setData((prev) => ({ ...prev, search: { value, error: null } }))
+  }
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
+  const showFeatureUnderDevelopment = () => {
+    setSnackbar({
+      display: true,
+      type: 'warning',
+      message: 'This feature is under development. Come back soon to view this.',
+    })
+    setTimeout(()=>{
+      dispatch(closeModal());
+    },2000)
   }
   const searchResult = async () => {
     dispatch(closeModal())
@@ -174,9 +190,8 @@ const UserOnboardingWelcomeModal = () => {
       window.removeEventListener('resize', updateScreenWidth)
     }
   }, [])
-  console.error(screenWidth)
-
   return (
+    <>
     <div className={styles.wrapper}>
       <div className={styles['display-desktop']}>
         <div
@@ -222,7 +237,7 @@ const UserOnboardingWelcomeModal = () => {
           </div>
         </div>
         <div
-          style={{ left: `calc(9.4rem + ${screenWidth}px)` }}
+          style={{ left: `calc(5.4rem + ${screenWidth}px)` }}
           className={styles['search-wrapper']}
         >
           {/* <div className={styles['search']}> */}
@@ -326,10 +341,14 @@ const UserOnboardingWelcomeModal = () => {
           <div className={styles['my-profile']}>
             {user.profile_image ? (
               <Image
-                src={user?.user?.profile_image ?? defaultUserImage}
+              onClick={()=>{
+                dispatch(closeModal())
+                router.push(`/profile/${user?.profile_url}`)}}
+                src={user?.profile_image ?? defaultUserImage}
                 alt=""
                 width={50}
                 height={50}
+                className={styles['my-profile-rounded']}
               />
             ) : (
               <div
@@ -376,6 +395,12 @@ const UserOnboardingWelcomeModal = () => {
               <p>Choose from one of the options to continue.</p>
               <p>You can always find them on the top navigation.</p>
             </div>
+          </div>
+          <div>
+          <svg onClick={()=>{showFeatureUnderDevelopment()}} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 17 16" fill="none">
+          <rect x="1.4043" y="0.5" width="15" height="15" rx="1.5" fill="white" stroke="#8064A2"/>
+          </svg>
+          <p>Do not show this next time</p>
           </div>
         </div>
       </div>
@@ -490,7 +515,18 @@ const UserOnboardingWelcomeModal = () => {
         </div>
       </div>
     </div>
-  )
+    {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            dispatch(closeModal());
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
+  </>)
 }
 
 export default UserOnboardingWelcomeModal
