@@ -2,6 +2,7 @@
     background-color: #f8f9fa;
     min-height: 80vh;
     height: 100%;
+    
 
   }
 
@@ -14,6 +15,7 @@
     height: 100%;
     max-width: 1296px;
     margin: 0 auto;
+    padding-top: 12px;
   }
   .side-margin-auto{
     padding-top: 12px;
@@ -50,7 +52,7 @@
     font-style: normal;
     font-weight: 500;
     line-height: 16px;
-    margin: 0 0 100px;
+    margin: 20px 0 20px;
   }
 
   .heading h1{
@@ -85,6 +87,10 @@
     margin-bottom: 24px;
   }
   
+  .padding-top-12{
+    padding-top: 12px;
+  }
+
 @media screen and (max-width:767px) {
   .explore,.terms{
     

@@ -31,6 +31,9 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
   const { listingLayoutMode } = useSelector((state: RootState) => state.site)
   const { user } = useSelector((state: RootState) => state)
   const { is_onboarded } = useSelector((state: any) => state.user.user)
+  const { isLoggedIn, isAuthenticated } = useSelector(
+    (state: RootState) => state.user,
+  )
 
   useEffect(() => {
     fetchPages()
@@ -113,24 +116,32 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
             </button>
           </section>
         )}
-        {pinnedPosts.length === 0 && unpinnnedPosts.length === 0 && (
+        {isLoggedIn &&
+          pinnedPosts.length === 0 &&
+          unpinnnedPosts.length === 0 && (
+            <div className={styles['no-posts-container']}>
+              <p>No posts available</p>
+            </div>
+          )}
+        {!isLoggedIn && (
           <div className={styles['no-posts-container']}>
-            <p>No posts available</p>
+            <p>Login to see the posts</p>
           </div>
         )}
-        {pinnedPosts.map((post: any) => {
-          return (
-            <PostWrapper title="Pinned Post" key={post._id}>
-              <PostCard
-                key={post._id}
-                postData={post}
-                fromProfile={true}
-                onPinPost={(postId: any) => onPinPost(postId)}
-              />
-            </PostWrapper>
-          )
-        })}
-        {unpinnnedPosts.length > 0 && (
+        {isLoggedIn &&
+          pinnedPosts.map((post: any) => {
+            return (
+              <PostWrapper title="Pinned Post" key={post._id}>
+                <PostCard
+                  key={post._id}
+                  postData={post}
+                  fromProfile={true}
+                  onPinPost={(postId: any) => onPinPost(postId)}
+                />
+              </PostWrapper>
+            )
+          })}
+        {isLoggedIn && unpinnnedPosts.length > 0 && (
           <PostWrapper title="Recent Post">
             {unpinnnedPosts.map((post: any) => {
               return (

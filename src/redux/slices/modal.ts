@@ -53,6 +53,7 @@ export type ModalType =
   | 'ListingContactToOwner'
   | 'UserContactToOwner'
   | 'add-genre'
+  | 'save-Modal'
 
 
   interface ModalState {

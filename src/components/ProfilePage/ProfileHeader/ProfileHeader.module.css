@@ -10,10 +10,9 @@
 
 .profile-img-wrapper {
   position: relative;
-  
 }
 
-.profile-img-wrapper-small{
+.profile-img-wrapper-small {
   position: relative;
   height: 60px;
 }
@@ -88,7 +87,7 @@
 .text-ellipsis-mobile {
   overflow: hidden;
   white-space: nowrap;
-  text-overflow: ellipsis
+  text-overflow: ellipsis;
 }
 
 .center-container .category {
@@ -352,6 +351,10 @@
     line-height: 0;
     padding: 0px 12px;
     height: 40px;
+    width: 78px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .header {
@@ -398,7 +401,8 @@
     width: 100%;
   }
   .navigation-tabs {
-    gap: 8px;
+    gap: 16px;
+    overflow-x: auto;
     width: 100%;
     margin: 0;
     justify-content: flex-start;

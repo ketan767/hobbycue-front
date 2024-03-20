@@ -11,6 +11,7 @@ interface Props {
 
 const ListingEventsTab: React.FC<Props> = ({ data }) => {
   const [eventData, setEventData] = useState<any>(null)
+  console.warn({ eventData })
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,10 +38,10 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
   return (
     <>
       <main>
-        {eventData?.res?.data?.result.length === 0 ? (
+        {!eventData?.res ? (
           <section className={styles['data-container']}>
             <div className={styles['no-data-div']}>
-              <p className={styles['no-data-text']}>No events</p>
+              <p className={styles['no-data-text']}>No events available</p>
             </div>
             <div className={styles['no-data-div']}></div>
           </section>

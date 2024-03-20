@@ -60,6 +60,9 @@
   display: none;
 }
 @media screen and (max-width: 1100px) {
+  .custom-backdrop{
+    top: 48px;
+  }
   .modal-wrapper {
     display: grid;
     place-items: stretch;

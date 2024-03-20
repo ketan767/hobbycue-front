@@ -60,7 +60,6 @@ type Snackbar = {
   closeSnackbar?: () => void
 }
 
-
 const ListingHobbyEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
@@ -252,22 +251,21 @@ const ListingHobbyEditModal: React.FC<Props> = ({
         setErrorOrmsg("This hobby doesn't contain this genre")
         return
       }
-    } 
-    if(genreInputValue.length>0){
+    }
+    if (genreInputValue.length > 0) {
       const matchedGenre = genreDropdownList.find(
         (genre) =>
           genre.display.toLowerCase() === genreInputValue.toLowerCase(),
       )
-      if(!matchedGenre){
-setShowAddHobbyModal(true);
-return;}else{
-  selectedGenre = data.genre
-}
-    }
-    else {
+      if (!matchedGenre) {
+        setShowAddHobbyModal(true)
+        return
+      } else {
+        selectedGenre = data.genre
+      }
+    } else {
       selectedGenre = data.genre
     }
-
 
     if (!data.hobby || !listingModalData._id) return
 
@@ -476,37 +474,40 @@ return;}else{
   if (showAddHobbyModal) {
     return (
       <>
-               {genreInputValue.length===0?<AddHobby
-          handleClose={() => {
-            setShowAddHobbyModal(false)
-          }}
-          handleSubmit={() => {
-            setShowSnackbar({
-              message: 'This feature is under development',
-              triggerOpen: true,
-              type: 'success',
-            })
-          }}
-          propData={{ defaultValue: hobbyInputValue }}
-        />:
-        <AddGenre
-        handleClose={() => {
-          setShowAddHobbyModal(false)
-        }}
-        handleSubmit={() => {
-          setShowSnackbar({
-            message: 'This feature is under development',
-            triggerOpen: true,
-            type: 'success',
-          })
-        }}
-        propData={{ defaultValue: genreInputValue }}
-        />}
+        {genreInputValue.length === 0 ? (
+          <AddHobby
+            handleClose={() => {
+              setShowAddHobbyModal(false)
+            }}
+            handleSubmit={() => {
+              setShowSnackbar({
+                message: 'This feature is under development',
+                triggerOpen: true,
+                type: 'success',
+              })
+            }}
+            propData={{ defaultValue: hobbyInputValue }}
+          />
+        ) : (
+          <AddGenre
+            handleClose={() => {
+              setShowAddHobbyModal(false)
+            }}
+            handleSubmit={() => {
+              setShowSnackbar({
+                message: 'This feature is under development',
+                triggerOpen: true,
+                type: 'success',
+              })
+            }}
+            propData={{ defaultValue: genreInputValue }}
+          />
+        )}
         <CustomSnackbar
           message={showSnackbar.message}
           type={showSnackbar.type}
           triggerOpen={showSnackbar.triggerOpen}
-          closeSnackbar={()=>{
+          closeSnackbar={() => {
             setShowSnackbar({
               message: '',
               triggerOpen: false,
@@ -546,7 +547,7 @@ return;}else{
 
         <hr className={styles['modal-hr']} />
 
-        <section className={styles['body']}>
+        <section className={`${styles['body']} custom-scrollbar`}>
           <>
             <section className={styles['add-hobbies-wrapper']}>
               {/* Hobbies List, that are already Added */}

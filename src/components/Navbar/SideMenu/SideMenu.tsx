@@ -278,12 +278,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                     Play
                   </Link>
                 </h4>
-
                 <ul>
-                  <Link href={'/hobby/fitness'}>
-                    <li>Fitness</li>
-                  </Link>
-
                   <Link href={'/hobby/games'}>
                     <li>Games</li>
                   </Link>
@@ -375,8 +370,6 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                   <Link href={'/hobby/record-keeping'}>
                     <li>Records</li>
                   </Link>
-
-                  <li>Spotting</li>
                 </ul>
               </section>
             </div>

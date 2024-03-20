@@ -87,7 +87,7 @@ const CommunityLayout: React.FC<Props> = ({
   const [trendingHobbies, setTrendingHobbies] = useState([])
   console.log('Number of hobbies:', activeProfile.data?._hobbies?.length)
 
-  const hideThirdColumnTabs = ['pages', 'links']
+  const hideThirdColumnTabs = ['pages', 'links','store','blogs']
   const { showPageLoader } = useSelector((state: RootState) => state.site)
   const router = useRouter()
 
@@ -130,7 +130,8 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   const EditProfileLocation = () => {
-    if (user.activeProfile?.type === 'user') {
+    console.log('activeprofile', activeProfile.type)
+    if (activeProfile?.type === 'user') {
       window.location.href = '/settings/localization-payments'
     } else {
       dispatch(openModal({ type: 'listing-address-edit', closable: true }))
@@ -957,7 +958,7 @@ const CommunityLayout: React.FC<Props> = ({
                   onChange={(e: any) => setEmail(e.target.value)}
                   type="email"
                   id=""
-                  className={errorMessage !== ''?styles['error-input']:""}
+                  className={errorMessage !== '' ? styles['error-input'] : ''}
                 />
                 <span className={styles['input-prefix']}></span>
                 <FilledButton

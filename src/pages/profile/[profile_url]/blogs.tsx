@@ -27,7 +27,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
   const dispatch = useDispatch()
   const { profile } = useSelector((state: RootState) => state?.site.expandMenu)
   const { user } = useSelector((state: RootState) => state.user)
-  const [expandAll, setExpandAll] = useState(profile);
+  const [expandAll, setExpandAll] = useState(profile)
   const handleExpandAll: (value: boolean) => void = (value) => {
     setExpandAll(value)
     dispatch(updateProfileMenuExpandAll(value))
@@ -63,11 +63,10 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
   useEffect(() => {
     if (user.id) {
       const userIsAuthorized =
-        data.pageData.is_published ||
-        user._id === data.pageData.admin;
+        data.pageData.is_published || user._id === data.pageData.admin
       if (!userIsAuthorized) router.push('/404')
     }
-  }, [user._id, data.pageData, router]);
+  }, [user._id, data.pageData, router])
   if (!user.is_onboarded && data?.pageData?.email !== user?.email) {
     return <ErrorPage />
   }
@@ -102,12 +101,13 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
           <div className={styles['nav-mobile']}>
             <ProfileNavigationLinks activeTab={'blogs'} />
           </div>
-          <section className={styles['pages-container']}>
+          <section className={`${styles['dual-section-wrapper']}`}>
             <div className={styles['no-posts-div']}>
               <p className={styles['no-posts-text']}>
                 This feature is under development. Come back soon to view this
               </p>
             </div>
+            <div className={styles['no-posts-div']}></div>
             <div className={styles['no-posts-div']}></div>
           </section>
         </PageGridLayout>

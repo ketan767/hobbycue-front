@@ -45,7 +45,7 @@ function SiteMainLayout({ children }: { children: ReactElement }) {
     }
 
     // If any error or !success, then set user as `not authenticated`
-    if (profileErr || !profileRes || !profileRes.data.success){
+    if (profileErr || !profileRes || !profileRes.data.success) {
       setShowPreLoader(false)
       return dispatch(updateIsAuthenticated(false))
     }
@@ -58,7 +58,8 @@ function SiteMainLayout({ children }: { children: ReactElement }) {
       `populate=_hobbies,_address&admin=${profileRes?.data.data.user._id}`,
     )
 
-    if (listingErr || !listingRes || !listingRes.data.success) return setShowPreLoader(false)
+    if (listingErr || !listingRes || !listingRes.data.success)
+      return setShowPreLoader(false)
 
     dispatch(updateUserListing(listingRes.data.data.listings))
 
@@ -103,12 +104,12 @@ function SiteMainLayout({ children }: { children: ReactElement }) {
     }
   }, [isLoggedIn, isAuthenticated])
 
-  /** If user is not onboarded then open the Onboarding model. */
-  useEffect(() => {
-    if (isLoggedIn && isAuthenticated && !user.is_onboarded) {
-      dispatch(openModal({ type: 'user-onboarding', closable: false }))
-    }
-  }, [isLoggedIn, isAuthenticated, user])
+  // /** If user is not onboarded then open the Onboarding model. */
+  // useEffect(() => {
+  //   if (isLoggedIn && isAuthenticated && !user.is_onboarded) {
+  //     dispatch(openModal({ type: 'user-onboarding', closable: false }))
+  //   }
+  // }, [isLoggedIn, isAuthenticated, user])
 
   /** Handles `showPageLoader` while page changes. */
   useEffect(() => {

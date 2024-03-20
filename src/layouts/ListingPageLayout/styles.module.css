@@ -142,9 +142,10 @@
     background-color: #ffffff;
   }
   .navigation-tabs {
-    gap: 8px;
+    gap: 16px;
     justify-content: flex-start;
     overflow-x: auto;
+    width: 100%;
     flex-shrink: 0;
     padding: 0 16px;
   }
@@ -207,11 +208,5 @@
   }
   .listing-page-type-wrapper > div {
     gap: 2px;
-  }
-  .navigation-tabs {
-    gap: 0.3rem;
-    overflow-x: auto;
-    flex-shrink: 0;
-    padding: 0 16px;
   }
 }

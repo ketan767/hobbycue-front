@@ -17,16 +17,13 @@
     align-items: center;
     width: 100%;
     gap: 40px;
-    padding: 41px 0 24px 0;
+    padding: 38px 0 16px 0;
 }
 
-.heroImg {
-    width: 428px;
-    height: 428px;
-}
 
 .notfoundImg{
-    aspect-ratio: 1/1;
+    height: 280px;
+    width: auto;
 }
 
 .contentContainer {
@@ -61,7 +58,7 @@
     /* 144.444% */
 }
 
-.contentContainer span {
+.contentContainer a {
     color: var(--Primary-Full, #8064A2);
     font-family: Poppins;
     font-size: 18px;
@@ -84,46 +81,15 @@
 }
 
 .btnSecondary {
-    display: flex;
-    width: 150px;
-    padding: 12px 24px;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    border-radius: 8px;
-    border: 1px solid var(--Purple-1, #8064A2);
+  width: 200% !important;
+  max-width: 150px;
 
-    color: var(--Purple-1, #8064A2);
-    font-family: Poppins;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 16px;
-    /* 114.286% */
-    text-align: center;
-    cursor: pointer;
 }
 
 .btnPrimary {
-    display: flex;
-    width: 150px;
-    padding: 12px 24px;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    border-radius: 8px;
-    background: var(--Purple-1, #8064A2);
-    color: var(--Grey-white, #FFF);
-
-    /* Text sm/Semibold */
-    font-family: Poppins;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 16px;
-    border: none;
-    /* 114.286% */
-    cursor: pointer;
+    width: 200% !important;
+    max-width: 150px;
+  
 }
 
 @media screen and (max-width:1100px) {

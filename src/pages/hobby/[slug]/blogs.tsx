@@ -79,6 +79,7 @@ const HobbyBlogsPage: React.FC<Props> = (props) => {
             </p>
           </div>
           <div className={styles['no-posts-container']}></div>
+          <div className={styles['no-posts-container']}></div>
         </main>
       </HobbyPageLayout>
     </>
