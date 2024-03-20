@@ -20,7 +20,7 @@ type Props = {
   onMoreComments?: () => void
   showAllComments?: boolean
   getInput?: (x: string) => void
-  hideSeeMore?:boolean
+  hideSeeMore?: boolean
 }
 
 const PostComments = ({
@@ -29,12 +29,12 @@ const PostComments = ({
   onMoreComments,
   showAllComments,
   getInput,
-  hideSeeMore
+  hideSeeMore,
 }: Props) => {
   const router = useRouter()
   const dispatch = useDispatch()
   const inputRef: any = useRef<HTMLTextAreaElement>(null)
-  const { activeProfile } = useSelector((state: RootState) => state.user)
+  const { activeProfile, user } = useSelector((state: RootState) => state.user)
   const [comments, setComments] = useState<any>([])
   const [loading, setLoading] = useState(false)
   const [inputValue, setInputValue] = useState('')
@@ -58,7 +58,10 @@ const PostComments = ({
 
   const addComment = async (event: any) => {
     event.preventDefault()
-
+    if (user.is_onboarded === false) {
+      dispatch(openModal({ type: 'user-onboarding', closable: false }))
+      return
+    }
     if (isEmptyField(inputValue.trim())) return
     const jsonData = {
       postId: data?._id,
@@ -142,7 +145,7 @@ const PostComments = ({
                 disabled={loading}
               >
                 <svg
-                className={styles['submit-btn-svg']}
+                  className={styles['submit-btn-svg']}
                   width="14"
                   height="12"
                   viewBox="0 0 14 12"
@@ -223,7 +226,7 @@ const PostComments = ({
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
                           onClick={showFeatureUnderDevelopment}
-                          cursor={"pointer"}
+                          cursor={'pointer'}
                         >
                           <g clip-path="url(#clip0_173_72884)">
                             <path
@@ -304,7 +307,7 @@ const PostComments = ({
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
                         onClick={showFeatureUnderDevelopment}
-                        cursor={"pointer"}
+                        cursor={'pointer'}
                       >
                         <g clip-path="url(#clip0_173_72884)">
                           <path
@@ -321,26 +324,34 @@ const PostComments = ({
                     </footer>
                   </section>
                 </div>
-               {comments?.length>1&& <p
-                  className={styles['see-more-comments']}
-                  onClick={() => {
-                    if (activeModal === 'post') {
-                      if (onMoreComments) {
-                        onMoreComments()
+                {comments?.length > 1 && (
+                  <p
+                    className={styles['see-more-comments']}
+                    onClick={() => {
+                      if (activeModal === 'post') {
+                        if (onMoreComments) {
+                          onMoreComments()
+                        }
+                      } else {
+                        dispatch(setActivePost({ ...data }))
+                        dispatch(
+                          openModal({
+                            type: 'post',
+                            closable: false,
+                            propData: { showMoreComments: true },
+                          }),
+                        )
                       }
-                    } else {
-                      dispatch(setActivePost({ ...data }))
-                      dispatch(openModal({ type: 'post', closable: false, propData:{showMoreComments:true} }))
-                    }
-                  }}
-                >
-                  See more comments
-                </p>}
+                    }}
+                  >
+                    See more comments
+                  </p>
+                )}
               </>
             )}
           </section>
         )}
-        {(displayMoreComments && !hideSeeMore) && (
+        {displayMoreComments && !hideSeeMore && (
           <p
             className={styles['see-more-comments']}
             onClick={() => {
