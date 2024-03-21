@@ -27,38 +27,40 @@ const AddGenre: React.FC<Props> = ({ handleClose, handleSubmit, propData }) => {
       type: 'warning',
       message: 'This feature is under development',
     })
-    setTimeout(()=>{
+    setTimeout(() => {
       handleClose()
-    },2000)
+    }, 2000)
   }
   return (
     <>
-    <div className={`${styles['add-hobby']}`}>
-      <div className={styles['header']}>
-        <p>Add Hobby</p>
-        <CloseIcon
-          className={styles['modal-close-icon']}
-          onClick={() => {
-            dispatch(closeModal())
-          }}
-        />
-      </div>
-      <hr className={styles['modal-hr']} />
-      <div className={styles['content']}>
-        <p>
-          Request HobbyCue Admin to add{' '}
-          <span>{propData?.defaultValue ?? 'Pickleball'}</span> as a Genre/Style
-          so that we can grow this as a community
-        </p>
-        <div className={styles['buttons']}>
-          <FilledButton className={styles['button1']}
-              onClick={showFeatureUnderDevelopment}>
-            Send Request
-          </FilledButton>
+      <div className={`${styles['add-hobby']}`}>
+        <div className={styles['header']}>
+          <p>Request Genre/Style</p>
+          <CloseIcon
+            className={styles['modal-close-icon']}
+            onClick={() => {
+              handleClose()
+            }}
+          />
+        </div>
+        <hr className={styles['modal-hr']} />
+        <div className={styles['content']}>
+          <p>
+            Request HobbyCue Admin to add{' '}
+            <span>{propData?.defaultValue ?? 'genre'}</span> as a
+            Genre/Style so that we can grow this as a community
+          </p>
+          <div className={styles['buttons']}>
+            <FilledButton
+              className={styles['button1']}
+              onClick={showFeatureUnderDevelopment}
+            >
+              Send Request
+            </FilledButton>
+          </div>
         </div>
       </div>
-    </div>
-    {
+      {
         <CustomSnackbar
           message={snackbar?.message}
           triggerOpen={snackbar?.display}
@@ -68,7 +70,8 @@ const AddGenre: React.FC<Props> = ({ handleClose, handleSubmit, propData }) => {
           }}
         />
       }
-  </>)
+    </>
+  )
 }
 
 export default AddGenre
