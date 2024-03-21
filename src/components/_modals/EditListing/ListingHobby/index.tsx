@@ -223,7 +223,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
 
       if (matchedHobby) {
         selectedHobby = matchedHobby
-        setErrorOrmsg('hobby added Successfully!')
+        // setErrorOrmsg('hobby added Successfully!')
       } else {
         // setHobbyError(true)
         // setError('Typed hobby not found!')
@@ -232,7 +232,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
       }
     } else {
       selectedHobby = data.hobby
-      setErrorOrmsg('hobby added Successfully!')
+      // setErrorOrmsg('hobby added Successfully!')
     }
 
     // Handle genre input
@@ -258,7 +258,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
           genre.display.toLowerCase() === genreInputValue.toLowerCase(),
       )
       if (!matchedGenre) {
-        setShowAddHobbyModal(true)
+        setShowAddGenreModal(true)
         return
       } else {
         selectedGenre = data.genre
@@ -287,6 +287,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
       setAddHobbyBtnLoading(false)
       return console.log(err)
     }
+    setErrorOrmsg('Hobby added successfully!')
     await updateHobbyList()
     setHobbyInputValue('')
     setGenreInputValue('')
@@ -345,12 +346,8 @@ const ListingHobbyEditModal: React.FC<Props> = ({
             genre.display.toLowerCase() === genreInputValue.toLowerCase(),
         )
 
-        if (selectedGenre !== null && selectedGenre !== matchedGenre) {
-          setErrorOrmsg('Typed Genre not found!')
-          return
-        }
-        if (selectedGenre !== null && !matchedGenre) {
-          setErrorOrmsg("This hobby doesn't contain this genre")
+        if (selectedGenre !== matchedGenre || !matchedGenre) {
+          setShowAddGenreModal(true)
           return
         }
       } else {
@@ -474,35 +471,51 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   if (showAddHobbyModal) {
     return (
       <>
-        {genreInputValue.length === 0 ? (
-          <AddHobby
-            handleClose={() => {
-              setShowAddHobbyModal(false)
-            }}
-            handleSubmit={() => {
-              setShowSnackbar({
-                message: 'This feature is under development',
-                triggerOpen: true,
-                type: 'success',
-              })
-            }}
-            propData={{ defaultValue: hobbyInputValue }}
-          />
-        ) : (
-          <AddGenre
-            handleClose={() => {
-              setShowAddHobbyModal(false)
-            }}
-            handleSubmit={() => {
-              setShowSnackbar({
-                message: 'This feature is under development',
-                triggerOpen: true,
-                type: 'success',
-              })
-            }}
-            propData={{ defaultValue: genreInputValue }}
-          />
-        )}
+        <AddHobby
+          handleClose={() => {
+            setShowAddHobbyModal(false)
+          }}
+          handleSubmit={() => {
+            setShowSnackbar({
+              message: 'This feature is under development',
+              triggerOpen: true,
+              type: 'success',
+            })
+          }}
+          propData={{ defaultValue: hobbyInputValue }}
+        />
+
+        <CustomSnackbar
+          message={showSnackbar.message}
+          type={showSnackbar.type}
+          triggerOpen={showSnackbar.triggerOpen}
+          closeSnackbar={() => {
+            setShowSnackbar({
+              message: '',
+              triggerOpen: false,
+              type: 'success',
+            })
+          }}
+        />
+      </>
+    )
+  }
+  if (showAddGenreModal) {
+    return (
+      <>
+        <AddGenre
+          handleClose={() => {
+            setShowAddGenreModal(false)
+          }}
+          handleSubmit={() => {
+            setShowSnackbar({
+              message: 'This feature is under development',
+              triggerOpen: true,
+              type: 'success',
+            })
+          }}
+          propData={{ defaultValue: genreInputValue }}
+        />
         <CustomSnackbar
           message={showSnackbar.message}
           type={showSnackbar.type}
