@@ -784,7 +784,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
         <hr className={styles['modal-hr']} />
 
-        <section className={styles['body']}>
+        <section className={`${styles['body']} custom-scrollbar`}>
           <>
             <section className={styles['add-hobbies-wrapper']}>
               <section className={styles['added-hobby-list']}>
@@ -864,12 +864,18 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                           </td>
                           <td>
                             <svg
+                              tabIndex={0}
                               width="24"
                               height="24"
                               viewBox="0 0 24 24"
                               fill="none"
                               className={styles['delete-hobby-btn']}
                               onClick={() => handleDeleteHobby(hobby._id)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  handleDeleteHobby(hobby._id)
+                                }
+                              }}
                             >
                               <g clip-path="url(#clip0_173_49175)">
                                 <path
@@ -926,7 +932,13 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                             {showHobbyDowpdown &&
                               hobbyDropdownList.length !== 0 && (
                                 <div
-                                  className={styles['dropdown']}
+                                  className={`custom-scrollbar ${
+                                    styles['dropdown']
+                                  } ${
+                                    userHobbies.length > 4
+                                      ? styles['dropdown-upwards']
+                                      : styles['dropdown-downwords']
+                                  }`}
                                   ref={hobbyDropdownRef}
                                 >
                                   {hobbyDropdownList.map((hobby, index) => (
@@ -973,7 +985,13 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                             {showGenreDowpdown &&
                               genreDropdownList.length !== 0 && (
                                 <div
-                                  className={styles['dropdown']}
+                                  className={`custom-scrollbar ${
+                                    styles['dropdown']
+                                  } ${
+                                    userHobbies.length > 4
+                                      ? styles['dropdown-upwards']
+                                      : styles['dropdown-downwords']
+                                  }`}
                                   ref={genreDropdownRef}
                                 >
                                   {genreDropdownList.map((genre, index) => {
