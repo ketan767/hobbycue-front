@@ -31,7 +31,8 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
   const router = useRouter()
   const dispatch = useDispatch()
 
-  const { profileLayoutMode } = useSelector((state: RootState) => state.site)
+  const { profileLayoutMode } = useSelector((state: RootState) => state.site);
+  const {isAuthenticated} = useSelector((state:RootState)=>state.user);
   const tabs: ProfilePageTabs[] = ['home', 'posts', 'media', 'pages', 'blogs']
 
   const [open, setOpen] = useState(false)
@@ -264,6 +265,18 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
                     tab !== 'home' ? tab : ''
                   }`}
                   className={activeTab === tab ? styles['active'] : ''}
+                  onClick={(e)=>{
+                      e.preventDefault();
+                      e.stopPropagation();
+                    if(!isAuthenticated){
+                      dispatch(openModal({type:"auth",closable:true}));
+                      return;
+                    }else{
+                      router.push(`/profile/${router.query.profile_url}/${
+                        tab !== 'home' ? tab : ''
+                      }`)
+                    }
+                  }}
                 >
                   {tab.charAt(0).toUpperCase() + tab.slice(1)}
                 </Link>

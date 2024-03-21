@@ -51,10 +51,18 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
   })
 
   const handleDropdown = () => {
-    setOpen(!open)
+    if(open){
+      if(!isAuthenticated){
+        dispatch(openModal({type:"auth",closable:true}));
+    setOpen(false);
+        
+      }
+    }else{
+      setOpen(true)
+    }
   }
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
-  const { isLoggedIn } = useSelector((state: RootState) => state.user)
+  const { isLoggedIn, isAuthenticated } = useSelector((state: RootState) => state.user)
   const location = typeof window !== 'undefined' ? window.location.href : ''
 
   const showFeatureUnderDevelopment = () => {
@@ -197,6 +205,10 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
     }
   }
   const handleRepost = () => {
+    if(!isAuthenticated){
+      dispatch(openModal({type:"auth",closable:true}));
+      return;
+    }
     if (isLoggedIn) {
       dispatch(
         openModal({
@@ -216,11 +228,19 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
   }
 
   const handleShare = () => {
+    if(!isAuthenticated){
+      dispatch(openModal({type:"auth",closable:true}));
+      return;
+    }
     dispatch(updateShareUrl(window.location.href))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
   }
 
   const handleContact = () => {
+    if(!isAuthenticated){
+      dispatch(openModal({type:"auth",closable:true}));
+      return;
+    }
     dispatch(openModal({ type: 'UserContactToOwner', closable: false }))
   }
 
@@ -494,15 +514,7 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
             {/* Send Email Button  */}
             {/* <Link href={`mailto:${data.public_email || data.email}`}> */}
             <div
-              onClick={() => {
-                dispatch(
-                  openModal({
-                    type: 'create-post',
-                    closable: true,
-                    propData: { defaultValue: location },
-                  }),
-                )
-              }}
+              onClick={handleRepost}
             >
               <Tooltip title="Repost">
                 <div

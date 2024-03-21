@@ -156,7 +156,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
     }
   }, [user._id, data.pageData, router]);
 
-  if(!user.is_onboarded && pageData?.email!==user?.email) {return(<ErrorPage/>)}
+  // if(!user.is_onboarded && pageData?.email!==user?.email) {return(<ErrorPage/>)}
   return (
     <>
       <Head>
@@ -483,4 +483,4 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   }
 }
 
-export default withAuth(ProfileHome)
+export default ProfileHome;
