@@ -576,12 +576,18 @@ const ListingHobbyEditModal: React.FC<Props> = ({
                           {/* <td>{hobby?.genre?.display || '-'}</td> */}
                           <td>
                             <svg
+                              tabIndex={0}
                               width="24"
                               height="24"
                               viewBox="0 0 24 24"
                               fill="none"
                               className={styles['delete-hobby-btn']}
                               onClick={() => handleDeleteHobby(hobby._id)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  handleDeleteHobby(hobby._id)
+                                }
+                              }}
                             >
                               <g clip-path="url(#clip0_173_49175)">
                                 <path
@@ -631,7 +637,15 @@ const ListingHobbyEditModal: React.FC<Props> = ({
                           </div>
                           {showHobbyDropdown &&
                             hobbyDropdownList.length !== 0 && (
-                              <div className={styles['dropdown']}>
+                              <div
+                                className={`custom-scrollbar ${
+                                  styles['dropdown']
+                                } ${
+                                  hobbiesList.length > 4
+                                    ? styles['dropdown-upwards']
+                                    : styles['dropdown-downwords']
+                                }`}
+                              >
                                 {hobbyDropdownList.map((hobby) => {
                                   return (
                                     <p
@@ -669,7 +683,15 @@ const ListingHobbyEditModal: React.FC<Props> = ({
                           </div>
                           {showGenreDropdown &&
                             genreDropdownList.length !== 0 && (
-                              <div className={styles['dropdown']}>
+                              <div
+                                className={`custom-scrollbar ${
+                                  styles['dropdown']
+                                } ${
+                                  hobbiesList.length > 4
+                                    ? styles['dropdown-upwards']
+                                    : styles['dropdown-downwords']
+                                }`}
+                              >
                                 {genreDropdownList.map((genre) => {
                                   return (
                                     <p

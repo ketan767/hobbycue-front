@@ -168,6 +168,7 @@ const DropdownMenu: React.FC<Props> = ({
   return (
     <div className={styles['dropdown-wrapper']} ref={dropdownRef}>
       <div
+        tabIndex={0}
         className={`${dropdownHeaderClass ? dropdownHeaderClass : ''} ${
           styles['dropdown-select']
         }`}
