@@ -127,9 +127,9 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
       if (!userIsAuthorized) router.push('/404')
     }
   }, [user._id, data.pageData, router])
-  if (!user.is_onboarded && data?.pageData?.email !== user?.email) {
-    return <ErrorPage />
-  }
+  // if (!user.is_onboarded && data?.pageData?.email !== user?.email) {
+  //   return <ErrorPage />
+  // }
   return (
     <>
       <Head>

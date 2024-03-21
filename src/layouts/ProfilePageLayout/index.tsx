@@ -10,6 +10,7 @@ import ProfileHeaderSmall from '@/components/ProfilePage/ProfileHeader/ProfileHe
 import ProfileNavigationLinks from '@/components/ProfilePage/ProfileHeader/ProfileNavigationLinks'
 import styles from './styles.module.css'
 import Image from 'next/image'
+import { closeModal, openModal } from '@/redux/slices/modal'
 type Props = {
   activeTab: ProfilePageTabs
   data: ProfilePageData
@@ -52,6 +53,14 @@ const ProfileLayout: React.FC<Props> = ({
     user,
     activeProfile,
   ])
+
+  useEffect(()=>{
+    if(!isAuthenticated){
+      dispatch(openModal({type:"auth",closable:true}));
+    }else{
+      dispatch(closeModal());
+    }
+  },[isAuthenticated])
 
   function checkScroll() {
     const scrollValue = window.scrollY || document.documentElement.scrollTop

@@ -1,6 +1,19 @@
+.main{
+  display: grid;
+  grid-template-columns: auto auto;
+  row-gap: 12px;
+  column-gap: 24px;
+}
+
+.uploadContainer{
+  grid-column: span 2;
+  width: 100%;
+  gap: 24px;
+}
+
 .image {
   height: 100%;
-  width: 450px;
+  width: 100%;
   overflow: hidden;
   cursor: pointer;
 }
@@ -113,6 +126,8 @@
   .medias {
     display: flex;
     flex-direction: column;
+    width: 100%;
+    grid-column: span 2;
   }
   .image {
     width: auto;

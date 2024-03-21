@@ -59,9 +59,9 @@ const CommunityLayout: React.FC<Props> = ({
   })
   const [locations, setLocations] = useState([])
   const [email, setEmail] = useState('')
-  const [selectedHobby, setSelectedHobby] = useState('')
+  const [selectedHobby, setSelectedHobby] = useState(sessionStorage.getItem("communityFilterHobby")??'')
   const [selectedGenre, setSelectedGenre] = useState('')
-  const [selectedLocation, setSelectedLocation] = useState('All Locations')
+  const [selectedLocation, setSelectedLocation] = useState(sessionStorage.getItem("communityFilterLocation")??'All Locations')
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -116,6 +116,7 @@ const CommunityLayout: React.FC<Props> = ({
 
   const handleHobbyClick = async (hobbyId: any) => {
     if (selectedHobby !== hobbyId) {
+      sessionStorage.setItem("communityFilterHobby",hobbyId);
       setSelectedHobby(hobbyId)
       // Fetch posts for the newly selected hobby
       const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
@@ -124,6 +125,7 @@ const CommunityLayout: React.FC<Props> = ({
 
       dispatch(updateLoading(false))
     } else {
+      sessionStorage.setItem("communityFilterHobby","");
       setSelectedHobby('')
       fetchPosts()
     }
@@ -280,15 +282,7 @@ const CommunityLayout: React.FC<Props> = ({
     if (activeTab === 'posts' || activeTab === 'links') {
       fetchPosts()
     }
-  }, [selectedHobby, selectedLocation, activeProfile])
-
-  const handleLocationClick = async (item: any) => {
-    if (item === selectedLocation) {
-      setSelectedLocation('')
-    } else {
-      setSelectedLocation(item)
-    }
-  }
+  }, [selectedHobby, selectedLocation, activeProfile]);
 
   useEffect(() => {
     if (selectedHobby !== '' && selectedLocation !== '') {
@@ -384,6 +378,7 @@ const CommunityLayout: React.FC<Props> = ({
           })
           if (visibilityArr[1]) {
             if (visibilityArr[1].display) {
+              sessionStorage.setItem("communityFilterLocation",visibilityArr[1]?.display?.split(' ')[0] || 'All locations')
               setSelectedLocation(
                 visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
               )
@@ -436,7 +431,18 @@ const CommunityLayout: React.FC<Props> = ({
       }
       setVisibilityData(visibilityArr)
     }
-  }, [activeProfile])
+  }, [activeProfile]);
+
+  const updateFilterLocation = (val: any) => {
+    sessionStorage.setItem("communityFilterLocation",selectedLocation===val?'All Locations':val);
+    setSelectedLocation((prev) => {
+      if (prev === val) {
+        return 'All Locations'
+      } else {
+        return val
+      }
+    });
+  }
 
   // useEffect(()=>{
   //   console.warn({selectedLocation})
@@ -519,7 +525,7 @@ const CommunityLayout: React.FC<Props> = ({
               />
               {/* <Image src={EditIcon} alt="Edit" /> */}
             </header>
-            <span className={styles['divider']}></span>
+            {/* <span className={styles['divider']}></span> */}
             <section>
               <ul>
                 {activeProfile.data?._hobbies
@@ -567,19 +573,10 @@ const CommunityLayout: React.FC<Props> = ({
               <Image src={EditIcon} onClick={EditProfileLocation} alt="edit" />
               {/* <Image src={EditIcon} alt="Edit" /> */}
             </header>
-            <span className={styles['divider']}></span>
+            {/* <span className={styles['divider']}></span> */}
             {visibilityData?.length > 0 && (
               <InputSelect
-                onChange={(e: any) => {
-                  let val = e.target.value
-                  setSelectedLocation((prev) => {
-                    if (prev === val) {
-                      return 'All Locations'
-                    } else {
-                      return val
-                    }
-                  })
-                }}
+                onChange={(e:any)=>updateFilterLocation(e.target.value)}
                 value={selectedLocation}
                 // inputProps={{ 'aria-label': 'Without label' }}
                 className={` ${styles['location-dropdown']}`}
@@ -591,15 +588,7 @@ const CommunityLayout: React.FC<Props> = ({
                         {...item}
                         key={idx}
                         currentValue={selectedLocation}
-                        onChange={(val: any) =>
-                          setSelectedLocation((prev) => {
-                            if (prev === val) {
-                              return 'All Locations'
-                            } else {
-                              return val
-                            }
-                          })
-                        }
+                        onChange={(val:any)=>updateFilterLocation(val)}
                       />
                     </>
                   )
@@ -873,15 +862,7 @@ const CommunityLayout: React.FC<Props> = ({
                             {...item}
                             key={idx}
                             currentValue={selectedLocation}
-                            onChange={(val: any) =>
-                              setSelectedLocation((prev) => {
-                                if (prev === val?.value) {
-                                  return 'All Locations'
-                                } else {
-                                  return val?.value
-                                }
-                              })
-                            }
+                            onChange={(val:any)=>updateFilterLocation(val)}
                           />
                         ))}
                       </CommunityTopDropdown>
@@ -920,7 +901,7 @@ const CommunityLayout: React.FC<Props> = ({
                     <header>
                       <h3>Invite to Community</h3>
                     </header>
-                    <span className={styles['divider']}></span>
+                    {/* <span className={styles['divider']}></span> */}
                     <section>
                       <input type="text" name="" id="" />
                       <FilledButton>Invite</FilledButton>
@@ -950,7 +931,7 @@ const CommunityLayout: React.FC<Props> = ({
               <header>
                 <h3>Invite to Community</h3>
               </header>
-              <span className={styles['divider']}></span>
+              {/* <span className={styles['divider']}></span> */}
               <section>
                 <input
                   value={email}
@@ -984,7 +965,7 @@ const CommunityLayout: React.FC<Props> = ({
               <header>
                 <h3>Trending hobbies</h3>
               </header>
-              <span className={styles['divider']}></span>
+              {/* <span className={styles['divider']}></span> */}
               <section>
                 <ul>
                   {trendingHobbies?.map((hobby: any) => {
