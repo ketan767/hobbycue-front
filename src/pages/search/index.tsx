@@ -287,7 +287,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
             <p>
               The Explore functionality is under development. Use the Search box
               at the top to look up pages on your hobby by other users. If you
-              don't find any pages, you may Add Listing Page from the menu at
+              don&apos;t find any pages, you may Add Listing Page from the menu at
               the top right corner.
             </p>
           ) : (

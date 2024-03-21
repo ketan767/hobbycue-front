@@ -414,7 +414,7 @@
   .navigation-tabs a {
     font-size: 12px;
     padding: 10px 0;
-    min-width: 56px;
+    min-width: 50px;
   }
   .container:has(.header).small {
     display: none;
