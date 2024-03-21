@@ -17,6 +17,7 @@ import PostCard from '@/components/PostCard/PostCard'
 import EditIcon from '@/assets/svg/edit-icon.svg'
 import { uploadImage } from '@/services/post.service'
 import ReactPlayer from 'react-player'
+import { useMediaQuery } from '@mui/material'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -111,49 +112,110 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
     )
   }
 
+  const isMobile = useMediaQuery('(max-width:1100px)')
+  const plusIconSvg = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="17"
+      height="16"
+      viewBox="0 0 17 16"
+      fill="none"
+    >
+      <g clip-path="url(#clip0_11387_36832)">
+        <path
+          d="M13.6429 8.85763H9.35714V13.1433C9.35714 13.6148 8.97143 14.0005 8.5 14.0005C8.02857 14.0005 7.64286 13.6148 7.64286 13.1433V8.85763H3.35714C2.88571 8.85763 2.5 8.47192 2.5 8.00049C2.5 7.52906 2.88571 7.14335 3.35714 7.14335H7.64286V2.85763C7.64286 2.3862 8.02857 2.00049 8.5 2.00049C8.97143 2.00049 9.35714 2.3862 9.35714 2.85763V7.14335H13.6429C14.1143 7.14335 14.5 7.52906 14.5 8.00049C14.5 8.47192 14.1143 8.85763 13.6429 8.85763Z"
+          fill="#8064A2"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_11387_36832">
+          <rect
+            width="16"
+            height="16"
+            fill="white"
+            transform="translate(0.5)"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+  console.log({con:(listingModalData?.video_url || listingModalData?.images) })
   return (
     <>
-      <main>
+      <main className={styles['main']}>
         <div className={styles.uploadContainer}>
           {data?.admin === user?.user._id && (
             <>
-              <div className={styles.uploadButton}>
-                <input
-                  type="file"
-                  accept="image/png, image/gif, image/jpeg"
-                  className={styles.hidden}
-                  onChange={(e) => handleImageChange(e)}
-                  ref={inputRef}
-                />
-                <p> image </p>
+              {isMobile ? (
+                <>
+                  <div className={styles.uploadButton}>
+                    <input
+                      type="file"
+                      accept="image/png, image/gif, image/jpeg"
+                      className={styles.hidden}
+                      onChange={(e) => handleImageChange(e)}
+                      ref={inputRef}
+                    />
+                    <p> image </p>
 
-                <Image
-                  src={EditIcon}
-                  alt="edit"
-                  className={styles.editIcon}
-                  onClick={() => {
-                    inputRef.current?.click()
-                  }}
-                />
-              </div>
+                    <Image
+                      src={EditIcon}
+                      alt="edit"
+                      className={styles.editIcon}
+                      onClick={() => {
+                        inputRef.current?.click()
+                      }}
+                    />
+                  </div>
 
-              <div className={styles.uploadButton}>
-                <p> Video </p>
+                  <div className={styles.uploadButton}>
+                    <p> Video </p>
 
-                <Image
-                  src={EditIcon}
-                  alt="edit"
-                  className={styles.editIcon}
-                  onClick={() => {
-                    dispatch(
-                      openModal({
-                        type: 'upload-video-page',
-                        closable: true,
-                      }),
-                    )
-                  }}
-                />
-              </div>
+                    <Image
+                      src={EditIcon}
+                      alt="edit"
+                      className={styles.editIcon}
+                      onClick={() => {
+                        dispatch(
+                          openModal({
+                            type: 'upload-video-page',
+                            closable: true,
+                          }),
+                        )
+                      }}
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className={styles.uploadButtonDescktop}>
+                    <input
+                      type="file"
+                      accept="image/png, image/gif, image/jpeg"
+                      className={styles.hidden}
+                      onChange={(e) => handleImageChange(e)}
+                      ref={inputRef}
+                    />
+                    {plusIconSvg}
+                    <p>Add Image </p>
+                  </div>
+
+                  <div
+                    onClick={() => {
+                      dispatch(
+                        openModal({
+                          type: 'upload-video-page',
+                          closable: true,
+                        }),
+                      )
+                    }}
+                    className={styles.uploadButtonDescktop}
+                  >
+                    {plusIconSvg}
+                    <p>Add Video </p>
+                  </div>
+                </>
+              )}
             </>
           )}
         </div>
@@ -163,10 +225,12 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
             dispatch(openModal({ type: 'listing-about-edit', closable: true }))
           }
         > */}
-        <PageGridLayout column={2} customStyles={styles['media-layout']}>
-          {listingModalData?.video_url && (
-            <div className={styles['videos']}>
-              {/* <video
+
+        {listingModalData?.video_url ? (
+          <div className={styles.medias}>
+            {listingModalData?.video_url && (
+              <div className={styles['videos']}>
+                {/* <video
                 width="250"
                 height="240"
                 controls={true}
@@ -174,16 +238,30 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
               >
                 <source src={listingModalData?.video_url} type="video/mp4" />
               </video> */}
-              <ReactPlayer
-                width="100%"
-                height="100%"
-                url={listingModalData?.video_url}
-                controls={true}
-              />
-            </div>
-          )}
-          {listingModalData.images?.map((item: any, idx) => {
-            return (
+                <ReactPlayer
+                  width="100%"
+                  height="100%"
+                  url={listingModalData?.video_url}
+                  controls={true}
+                />
+              </div>
+            )}
+          </div>
+        ) :null}
+        
+        {(
+          (listingLayoutMode !== 'edit' && !listingModalData?.video_url) && (!listingModalData?.images||listingModalData?.images?.length<1) &&  (
+            <section className={`${styles['dual-section-wrapper']}`}>
+              <div className={styles['no-posts-div']}>
+                <p className={styles['no-posts-text']}>No media available</p>
+              </div>
+              {!isMobile&&<div className={styles['no-posts-div']}></div>}
+            </section>
+          )
+        )}
+        {listingModalData.images?.map((item: any, idx) => {
+          return (
+            <div key={idx} className={styles.medias}>
               <div
                 key={idx}
                 className={styles.image}
@@ -191,10 +269,10 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
               >
                 <img src={item} />
               </div>
-            )
-          })}
-          <div></div>
-        </PageGridLayout>
+            </div>
+          )
+        })}
+
         {/* </PageContentBox> */}
 
         {/* User Information */}

@@ -277,14 +277,35 @@ export const Navbar: React.FC<Props> = ({}) => {
           success: true,
         }),
       )
-      const query = `fields=display,genre,slug,profile_image&level=3&level=2&level=1&level=0&show=true&search=${searchValue}`
+      const query = `fields=display,genre,description,slug,profile_image&level=3&level=2&level=1&level=0&show=true&search=${searchValue}`
       dispatch(setShowPageLoader(true))
       const { res: hobbyRes, err: hobbyErr } = await getAllHobbies(query)
       if (hobbyErr) {
         console.error('An error occurred during the page search:', hobbyErr)
       } else {
+        const sortedHobbies = hobbyRes.data.hobbies.sort((a: any, b: any) => {
+          const indexA = a.display
+            .toLowerCase()
+            .indexOf(searchValue.toLowerCase())
+          const indexB = b.display
+            .toLowerCase()
+            .indexOf(searchValue.toLowerCase())
+
+          if (indexA === 0 && indexB !== 0) {
+            return -1
+          } else if (indexB === 0 && indexA !== 0) {
+            return 1
+          }
+          return 0
+        })
         console.log('hobbies search results:', hobbyRes.data.hobbies)
-        dispatch(setHobbiesSearchResult(hobbyRes.data.hobbies))
+        dispatch(
+          setHobbiesSearchResult({
+            data: sortedHobbies,
+            message: 'Search completed successfully.',
+            success: true,
+          }),
+        )
       }
       dispatch(setShowPageLoader(false))
       dispatch(setSearchString(searchValue))
@@ -443,6 +464,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           onClick={(e) => {
                             e.preventDefault()
                             dispatch(showAllPeopleTrue())
+
                             router.push('/search')
                           }}
                         >

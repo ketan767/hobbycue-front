@@ -18,6 +18,7 @@ import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import PostCard from '@/components/PostCard/PostCard'
 import { openModal } from '@/redux/slices/modal'
 import { updateHobbyMenuExpandAll } from '@/redux/slices/site'
+import { useMediaQuery } from '@mui/material'
 
 type Props = { data: { hobbyData: any } }
 
@@ -82,7 +83,8 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
       router.events.off('routeChangeStart', handleRouteChange)
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
-  }, [])
+  }, []);
+  const isMobile = useMediaQuery("(max-width:1100px)");
 
   return (
     <>
@@ -92,7 +94,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
         expandAll={expandAll}
         setExpandAll={handleExpandAll}
       >
-        <main className={`${styles['display-desktop']}`}>
+        <main className={``}>
           {/* {isLoggedIn && (
             <div className={styles['start-post-btn']}>
               <button
@@ -117,21 +119,34 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
             {loadingPosts ? (
               <PostCardSkeletonLoading />
             ) : (
-              posts.length === 0 && (
-                <div className={styles['no-posts-container']}>
-                  <p>No links available</p>
-                </div>
+              posts.length === 0 &&
+              isLoggedIn && (
+                <>
+                  <div className={styles['no-posts-container']}>
+                    <p>No links available</p>
+                  </div>
+{         !isMobile&&         <div className={styles['no-posts-container']}></div>}
+                </>
               )
             )}
-            {posts.map((post: any) => {
-              return (
-                <PostCard
-                  key={post._id}
-                  postData={post}
-                  currentSection="links"
-                />
-              )
-            })}
+            {isLoggedIn ? (
+              posts.map((post: any) => {
+                return (
+                  <PostCard
+                    key={post._id}
+                    postData={post}
+                    currentSection="links"
+                  />
+                )
+              })
+            ) : (
+              <>
+                <div className={styles['no-posts-container']}>
+                  <p>Login to see the links</p>
+                </div>
+                <div className={styles['no-posts-container']}></div>
+              </>
+            )}
           </section>
         </main>
       </HobbyPageLayout>

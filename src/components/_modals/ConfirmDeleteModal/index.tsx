@@ -3,6 +3,7 @@ import { Modal, Fade } from '@mui/material'
 import styles from './confirmation.module.css'
 import FilledButton from '@/components/_buttons/FilledButton'
 import OutlinedButton from '@/components/_buttons//OutlinedButton'
+import CloseIcon from '@/assets/icons/CloseIcon'
 interface Props {
   isOpen: boolean
   onConfirm: () => void
@@ -35,6 +36,10 @@ const ConfirmationModal: React.FC<Props> = ({
         >
           <div className={`${styles['confirmation-modal']}`}>
             <div className={styles['confirmation-modal-body']}>
+              <CloseIcon
+                className={styles['modal-close-icon']}
+                onClick={handleClose}
+              />
               <p> Are you sure you want to delete? </p>
               <div className={styles['buttons']}>
                 <FilledButton className={styles['button1']} onClick={onConfirm}>

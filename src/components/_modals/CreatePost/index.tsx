@@ -81,6 +81,7 @@ export const CreatePost: React.FC<Props> = ({
     media: [],
     video_url: '',
   })
+  const [showMetaData, setShowMetaData] = useState(true)
 
   useEffect(() => {
     setHobbies(activeProfile.data?._hobbies)
@@ -107,6 +108,7 @@ export const CreatePost: React.FC<Props> = ({
   })
   const hobbyRef = useRef<HTMLInputElement>(null)
   const genreRef = useRef<HTMLInputElement>(null)
+  const [metadataImg, setMetaDataImg] = useState('')
 
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     DropdownListItem[]
@@ -122,6 +124,7 @@ export const CreatePost: React.FC<Props> = ({
   }, [data.content])
 
   useEffect(() => {
+    setShowMetaData(true)
     console.warn(hasLink)
   }, [hasLink])
 
@@ -137,11 +140,19 @@ export const CreatePost: React.FC<Props> = ({
         getMetadata(url[0])
           .then((res: any) => {
             setMetaData(res?.res?.data.data.data)
+            setMetaDataImg(res?.res?.data.data.data?.image ?? '')
           })
           .catch((err) => {
             console.log(err)
           })
       }
+    } else {
+      setData((prevValue: any) => {
+        return {
+          ...prevValue,
+          media: prevValue?.media?.filter((item: any) => item !== metadataImg),
+        }
+      })
     }
   }, [data.content, hasLink])
 
@@ -321,7 +332,8 @@ export const CreatePost: React.FC<Props> = ({
       genreId: data.genre ? data.genre : '',
       content: DOMPurify.sanitize(data.content),
       visibility: data.visibility,
-      media: data.media,
+      media:
+        hasLink && showMetaData ? [...data.media, metadataImg] : data.media,
       has_link: hasLink,
       video_url: data.video_url ? data.video_url : null,
     }
@@ -415,7 +427,7 @@ export const CreatePost: React.FC<Props> = ({
               className={styles['editor-container'] + ' btnOutlinePurple'}
             >
               <CustomEditor
-                value=""
+                value={data?.content}
                 onChange={(value) => {
                   setData((prev) => {
                     return { ...prev, content: value }
@@ -425,6 +437,7 @@ export const CreatePost: React.FC<Props> = ({
                 data={data}
                 image={true}
                 error={errors.content}
+                hasLink={hasLink && showMetaData}
               />
               {data.video_url && (
                 <div className={styles.videoWrapper}>
@@ -459,6 +472,61 @@ export const CreatePost: React.FC<Props> = ({
                 </div>
               ) : (
                 <></>
+              )}
+
+              {hasLink && metaData && showMetaData && (
+                <div className={styles['show-metadata']}>
+                  <svg
+                    className={styles['metadata-close-icon']}
+                    onClick={() => {
+                      setShowMetaData(false)
+                    }}
+                    width="30"
+                    height="30"
+                    viewBox="0 0 25 25"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle cx="12.3242" cy="12.8281" r="12" fill="white" />
+                    <g clip-path="url(#clip0_11249_41681)">
+                      <path
+                        d="M16.5247 8.63526C16.2647 8.37526 15.8447 8.37526 15.5847 8.63526L12.3247 11.8886L9.06469 8.62859C8.80469 8.36859 8.38469 8.36859 8.12469 8.62859C7.86469 8.88859 7.86469 9.30859 8.12469 9.56859L11.3847 12.8286L8.12469 16.0886C7.86469 16.3486 7.86469 16.7686 8.12469 17.0286C8.38469 17.2886 8.80469 17.2886 9.06469 17.0286L12.3247 13.7686L15.5847 17.0286C15.8447 17.2886 16.2647 17.2886 16.5247 17.0286C16.7847 16.7686 16.7847 16.3486 16.5247 16.0886L13.2647 12.8286L16.5247 9.56859C16.778 9.31526 16.778 8.88859 16.5247 8.63526Z"
+                        fill="#08090A"
+                      />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_11249_41681">
+                        <rect
+                          width="16"
+                          height="16"
+                          fill="white"
+                          transform="translate(4.32422 4.82812)"
+                        />
+                      </clipPath>
+                    </defs>
+                  </svg>
+
+                  {metaData?.image && (
+                    <img
+                      className={styles['metadata-image']}
+                      src={metaData?.image}
+                      alt=""
+                    />
+                  )}
+                  <div className={styles['metadata-content']}>
+                    {metaData?.icon && (
+                      <img
+                        className={styles['metadata']}
+                        src={metaData?.icon}
+                        alt=""
+                      />
+                    )}
+                    <div>
+                      {metaData?.title && <p className={styles['metadata-title']}>{metaData?.title}</p>}
+                      {metaData?.url && <p className={styles['metadata-url']}>{metaData?.url}</p>}
+                    </div>
+                  </div>
+                </div>
               )}
             </section>
             <aside>

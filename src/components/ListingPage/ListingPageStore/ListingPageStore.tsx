@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import styles from './styles.module.css'
+import { useMediaQuery } from '@mui/material';
 
 const ListingStoreTab = ({}) => {
+  const isMobile = useMediaQuery("(max-width:1100px)");
+
   return (
     <>
       <main>
@@ -11,7 +14,13 @@ const ListingStoreTab = ({}) => {
               This feature is under development. Come back soon to view this
             </p>
           </div>
-          <div className={styles['no-data-div']}></div>
+                    {isMobile ? null : (
+            <>
+              {' '}
+              <div className={styles['no-data-div']}></div>
+              <div className={styles['no-data-div']}></div>
+            </>
+          )}
         </section>{' '}
       </main>
     </>

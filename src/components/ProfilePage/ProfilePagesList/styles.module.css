@@ -37,6 +37,7 @@
   height: 32px;
   object-fit: contain;
   border-radius: 8px;
+  border: 1px solid rgb(var(--primary-50-rgb));
 }
 .pages-list .color-light{
   color: #939CA3 ;

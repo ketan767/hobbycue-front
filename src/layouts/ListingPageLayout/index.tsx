@@ -53,6 +53,8 @@ const ListingPageLayout: React.FC<Props> = ({
   expandAll,
   setExpandAll,
 }) => {
+  console.warn({ data })
+
   const router = useRouter()
   const dispatch = useDispatch()
   const [showSmallHeader, setShowSmallHeader] = useState(false)
@@ -76,6 +78,10 @@ const ListingPageLayout: React.FC<Props> = ({
     else setShowSmallHeader(false)
   }
   const navigationTabs = (tab: any) => {
+    if (!isLoggedIn && tab === 'posts') {
+      dispatch(openModal({ type: 'auth', closable: true }))
+      return
+    }
     let hasError = false
     console.log('layutmode', listingLayoutMode)
 
@@ -182,7 +188,7 @@ const ListingPageLayout: React.FC<Props> = ({
   return (
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
-      <ListingHeader data={data.pageData} activeTab={activeTab} />
+      <ListingHeader setContactInfoErr={setContactInfoErr} setHAboutErr={setHAboutErr} setHobbyError={setHobbyError} setLocationErr={setLocationErr} setpageTypeErr={setpageTypeErr} data={data.pageData} activeTab={activeTab} />
       {showSmallHeader && (
         <ListingHeaderSmall data={data.pageData} activeTab={activeTab} />
       )}
@@ -213,6 +219,12 @@ const ListingPageLayout: React.FC<Props> = ({
               )
             }
           })}
+          {/* Add a condition to include a blank tab if 'events' tab is not present */}
+          {data.pageData.type === 3 && (
+            <a key="blank-tab" href="#" className={styles.disabledtab}>
+              {' '}
+            </a>
+          )}
         </div>
       </nav>
       <div

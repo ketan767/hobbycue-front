@@ -10,6 +10,7 @@ import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
 import { getListingPages } from '@/services/listing.service'
 import ListingCard from '@/components/ListingCard/ListingCard'
+import { useMediaQuery } from '@mui/material'
 
 type Props = {}
 
@@ -19,15 +20,25 @@ const CommunityBlogs: React.FC<Props> = ({}) => {
     (state: RootState) => state.post,
   )
 
+  const isMobile = useMediaQuery('(max-width:1100px)');
+
   return (
     <>
       <CommunityPageLayout activeTab="store">
         {/* <section className={styles['pages-container']}> */}
-          <div className={styles['no-store-div']}>
-            <p className={styles['no-posts-text']}>
-              This feature is under development. Come back soon to view this 
+        <main className={`${styles['dual-section-wrapper']}`}>
+          <div className={styles['no-posts-container']}>
+            <p>
+              This feature is under development. Come back soon to view this
             </p>
           </div>
+          {isMobile ? null : (
+            <>
+              <div className={styles['no-posts-container']}></div>
+              <div className={styles['no-posts-container']}></div>
+            </>
+          )}
+        </main>
         {/* </section> */}
       </CommunityPageLayout>
     </>

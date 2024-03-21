@@ -1,5 +1,5 @@
 import React from 'react'
-
+import styles from './styles.module.css'
 type Props = {
   className?: any
   onClick?: any
@@ -9,12 +9,19 @@ const CloseIcon: React.FC<Props> = (props) => {
   return (
     <>
       <svg
-        className={props.className}
+        tabIndex={0}
+        role="button"
+        className={`${styles['close-svg']} ${props.className}`}
         width="32"
         height="32"
         viewBox="0 0 32 32"
         fill="none"
         onClick={props.onClick}
+        onKeyPress={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            props.onClick && props.onClick()
+          }
+        }}
       >
         <g clipPath="url(#clip0_173_37496)">
           <path

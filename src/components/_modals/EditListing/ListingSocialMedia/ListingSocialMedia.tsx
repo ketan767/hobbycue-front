@@ -13,22 +13,22 @@ import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import { updateListing } from '@/services/listing.service'
-import FacebookIcon from '@/assets/svg/Facebook.svg'
-import TwitterIcon from '@/assets/svg/Twitter.svg'
-import InstagramIcon from '@/assets/svg/Instagram.svg'
-import BehanceIcon from '@/assets/svg/Behance.svg'
-import BGGIcon from '@/assets/svg/BGG.svg'
-import ChessIcon from '@/assets/svg/Chess.com.svg'
-import DeviantArtIcon from '@/assets/svg/DeviantArt.svg'
-import GoodreadsIcon from '@/assets/svg/GoodReads.svg'
-import PinterestIcon from '@/assets/svg/Pinterest.svg'
-import SmuleIcon from '@/assets/svg/Smule.svg'
-import SoundCloudIcon from '@/assets/svg/Soundcloud.svg'
-import StravaIcon from '@/assets/svg/Strava.svg'
-import TripAdvisorIcon from '@/assets/svg/Tripadvisor.svg'
-import UltimateGuitarIcon from '@/assets/svg/Ultimate-Guitar.svg'
-import YouTubeIcon from '@/assets/svg/Youtube.svg'
-import OthersIcon from '@/assets/svg/other.svg'
+import FacebookIcon from '@/assets/svg/social-media/facebook.svg'
+import TwitterIcon from '@/assets/svg/social-media/twitter.svg'
+import InstagramIcon from '@/assets/svg/social-media/instagram.svg'
+import BehanceIcon from '@/assets/svg/social-media/behance.svg'
+import BGGIcon from '@/assets/svg/social-media/bgg.svg'
+import ChessIcon from '@/assets/svg/social-media/chess.com.svg'
+import DeviantArtIcon from '@/assets/svg/social-media/DeviantArt.svg'
+import GoodreadsIcon from '@/assets/svg/social-media/GoodReads.svg'
+import PinterestIcon from '@/assets/svg/social-media/pinterest.svg'
+import SmuleIcon from '@/assets/svg/social-media/smule.svg'
+import SoundCloudIcon from '@/assets/svg/social-media/soundcloud.svg'
+import StravaIcon from '@/assets/svg/social-media/strava.svg'
+import TripAdvisorIcon from '@/assets/svg/social-media/tripadvisor.svg'
+import UltimateGuitarIcon from '@/assets/svg/social-media/Ultimate-Guitar.svg'
+import YouTubeIcon from '@/assets/svg/social-media/youtube.svg'
+import OthersIcon from '@/assets/svg/social-media/other.svg'
 import SaveModal from '../../SaveModal/saveModal'
 
 type Props = {
@@ -57,9 +57,9 @@ const options: SocialMediaOption[] = [
   'DeviantArts',
   'Behance',
   'GoodReads',
-  'Smule',
-  'Chess',
-  'BGG',
+  // 'Smule',
+  // 'Chess',
+  // 'BGG',
   'Others',
 ]
 
@@ -76,9 +76,9 @@ type SocialMediaOption =
   | 'DeviantArts'
   | 'Behance'
   | 'GoodReads'
-  | 'Smule'
-  | 'Chess'
-  | 'BGG'
+  // | 'Smule'
+  // | 'Chess'
+  // | 'BGG'
   | 'Others'
 
 const socialMediaIcons: Record<SocialMediaOption, any> = {
@@ -94,9 +94,9 @@ const socialMediaIcons: Record<SocialMediaOption, any> = {
   DeviantArts: DeviantArtIcon,
   Behance: BehanceIcon,
   GoodReads: GoodreadsIcon,
-  Smule: SmuleIcon,
-  Chess: ChessIcon,
-  BGG: BGGIcon,
+  // Smule: SmuleIcon,
+  // Chess: ChessIcon,
+  // BGG: BGGIcon,
   Others: OthersIcon,
 }
 
@@ -113,9 +113,9 @@ const defaultSocialMediaURLs: Record<SocialMediaOption, string> = {
   DeviantArts: 'https://deviantart.com/',
   Behance: 'https://behance.net/',
   GoodReads: 'https://goodreads.com/',
-  Smule: 'https://smule.com/',
-  Chess: 'https://chess.com/member/',
-  BGG: 'https://boardgamegeek.com/user/',
+  // Smule: 'https://smule.com/',
+  // Chess: 'https://chess.com/member/',
+  // BGG: 'https://boardgamegeek.com/user/',
   Others: 'https://',
 }
 
@@ -206,24 +206,24 @@ const ListingSocialMediaEditModal = ({
         url: socialMediaUrls && socialMediaUrls.goodreads_url,
       })
     }
-    if (socialMediaUrls && socialMediaUrls.smule_url) {
-      arr.push({
-        socialMedia: 'Smule',
-        url: socialMediaUrls && socialMediaUrls.smule_url,
-      })
-    }
-    if (socialMediaUrls && socialMediaUrls.chess_url) {
-      arr.push({
-        socialMedia: 'Chess',
-        url: socialMediaUrls && socialMediaUrls.chess_url,
-      })
-    }
-    if (socialMediaUrls && socialMediaUrls.bgg_url) {
-      arr.push({
-        socialMedia: 'BGG',
-        url: socialMediaUrls && socialMediaUrls.bgg_url,
-      })
-    }
+    // if (socialMediaUrls && socialMediaUrls.smule_url) {
+    //   arr.push({
+    //     socialMedia: 'Smule',
+    //     url: socialMediaUrls && socialMediaUrls.smule_url,
+    //   })
+    // }
+    // if (socialMediaUrls && socialMediaUrls.chess_url) {
+    //   arr.push({
+    //     socialMedia: 'Chess',
+    //     url: socialMediaUrls && socialMediaUrls.chess_url,
+    //   })
+    // }
+    // if (socialMediaUrls && socialMediaUrls.bgg_url) {
+    //   arr.push({
+    //     socialMedia: 'BGG',
+    //     url: socialMediaUrls && socialMediaUrls.bgg_url,
+    //   })
+    // }
     if (socialMediaUrls && socialMediaUrls.Others_url) {
       arr.push({
         socialMedia: 'Others',

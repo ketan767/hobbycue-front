@@ -19,6 +19,7 @@ import PostCard from '@/components/PostCard/PostCard'
 import { openModal } from '@/redux/slices/modal'
 import ListingCard from '@/components/ListingCard/ListingCard'
 import { updateHobbyMenuExpandAll } from '@/redux/slices/site'
+import { useMediaQuery } from '@mui/material'
 
 type Props = { data: { hobbyData: any } }
 
@@ -87,6 +88,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
   }
   console.log('hobby', data)
   console.log('pages', pages)
+  const isMobile = useMediaQuery("(max-width:1100px)")
   return (
     <>
       {' '}
@@ -96,7 +98,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
         expandAll={expandAll}
         setExpandAll={handleExpandAll}
       >
-        <main className={`${styles['display-desktop']}`}>
+        <main className={``}>
           <section className={styles['pages-container']}>
             {loadingPosts && <PostCardSkeletonLoading />}
             {pages.length !== 0 &&
@@ -109,6 +111,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
               <div className={styles['no-posts-container']}>
                 <p>No pages available</p>
               </div>
+              {         !isMobile&&         <div className={styles['no-posts-container']}></div>}
             </div>
           )}
         </main>

@@ -39,9 +39,14 @@ import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 type Props = {
   data: ListingPageData['pageData']
   activeTab: ListingPageTabs
+  setpageTypeErr?:React.Dispatch<React.SetStateAction<boolean>>
+  setHobbyError?:React.Dispatch<React.SetStateAction<boolean>>
+  setHAboutErr?:React.Dispatch<React.SetStateAction<boolean>>
+  setContactInfoErr?:React.Dispatch<React.SetStateAction<boolean>>
+  setLocationErr?:React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
+const ListingHeader: React.FC<Props> = ({ data, activeTab,setContactInfoErr,setHAboutErr,setHobbyError,setLocationErr,setpageTypeErr }) => {
   const dispatch = useDispatch()
   const [snackbar, setSnackbar] = useState({
     type: 'success',
@@ -143,7 +148,29 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
   }
 
   const handlePublish = async () => {
-    // console.log(data)
+    if(data.is_published!==true){
+    let hasError = false;
+      if (data._hobbies.length === 0) {
+        hasError = true;
+        setHobbyError?.(true)
+      }
+      if (data.page_type.length === 0) {
+        hasError = true;
+        setpageTypeErr?.(true)
+      }
+      if (!data.phone && !data.public_email) {
+        hasError = true;
+        setContactInfoErr?.(true)
+      }
+      if (!data._address.city) {
+        hasError = true;
+        setLocationErr?.(true)
+      }
+      if(hasError){
+        setSnackbar({display:true,type:"warning",message:"Fill up the mandatory fields."});
+        return;
+      }
+    }
     const { err, res } = await updateListing(data._id, {
       is_published: data.is_published === true ? false : true,
     })
@@ -488,12 +515,13 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
               </CustomTooltip>
               {listingLayoutMode === 'edit'
                 ? open && (
-                    <Dropdown userType={'edit'} handleClose={handleDropdown} />
+                    <Dropdown userType={'edit'} handleClose={handleDropdown} showFeatureUnderDevelopment={showFeatureUnderDevelopment} />
                   )
                 : open && (
                     <Dropdown
                       userType={'anonymous'}
                       handleClose={handleDropdown}
+                      showFeatureUnderDevelopment={showFeatureUnderDevelopment}
                     />
                   )}
             </div>
@@ -557,12 +585,13 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab }) => {
             </CustomTooltip>
             {listingLayoutMode === 'edit'
               ? open && (
-                  <Dropdown userType={'edit'} handleClose={handleDropdown} />
+                  <Dropdown showFeatureUnderDevelopment={showFeatureUnderDevelopment} userType={'edit'} handleClose={handleDropdown} />
                 )
               : open && (
                   <Dropdown
                     userType={'anonymous'}
                     handleClose={handleDropdown}
+                    showFeatureUnderDevelopment={showFeatureUnderDevelopment}
                   />
                 )}
           </div>

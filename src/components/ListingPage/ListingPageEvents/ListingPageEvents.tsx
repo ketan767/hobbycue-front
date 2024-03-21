@@ -4,6 +4,7 @@ import { GetListingEvents } from '@/services/listing.service'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import ListingCard from '@/components/ListingCard/ListingCard'
+import { useMediaQuery } from '@mui/material'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -11,6 +12,7 @@ interface Props {
 
 const ListingEventsTab: React.FC<Props> = ({ data }) => {
   const [eventData, setEventData] = useState<any>(null)
+  console.warn({ eventData })
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,16 +35,17 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
     fetchData()
   }, [data])
   console.log('eventdata', eventData?.res?.data)
+  const isMobile = useMediaQuery("(max-width:1100px)");
 
   return (
     <>
       <main>
-        {eventData?.res?.data?.result.length === 0 ? (
+        {!eventData?.res ? (
           <section className={styles['data-container']}>
             <div className={styles['no-data-div']}>
-              <p className={styles['no-data-text']}>No events</p>
+              <p className={styles['no-data-text']}>No events available</p>
             </div>
-            <div className={styles['no-data-div']}></div>
+            {!isMobile&&<div className={styles['no-data-div']}></div>}
           </section>
         ) : (
           <div className={styles['card-container']}>

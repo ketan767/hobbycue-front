@@ -6,8 +6,10 @@ type Props = {}
 
 const Privacy: React.FC<Props> = (props) => {
   return (
-    <div className={styles['explore-wrapper']}>
-      <div className={styles.explore}>
+    <div
+      className={styles['explore-wrapper'] + ` ${styles['side-margin-auto']} ${styles['padding-top-12']}`}
+    >
+      <div className={styles.terms}>
         <h1 className={styles.pageheading}>Privacy Policy</h1>
 
         <p>[Updated: 27-Nov-2018]</p>

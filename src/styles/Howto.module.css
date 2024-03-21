@@ -1,0 +1,122 @@
+.main{
+ background: #f4f4f4;
+ width: 100%;
+}
+
+.container{
+    width: 79.166vw;
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.container h2{
+    color: #242429;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 1.25;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.card{
+display: flex;
+flex-direction: column;
+width: 100%;
+}
+
+.card a:hover{
+    color: #8064a2;
+}
+
+.card li{
+    color: rgb(36, 36, 41);
+    font-size: 14px;
+    line-height: 1.7em;
+    list-style: none;
+    list-style-type: none;
+    font-family: 'Rubik', sans-serif;
+    margin-bottom: 10px;
+}
+
+.card li.white-para{
+    box-sizing: border-box;
+    margin: 0px 0px 10px;
+    font-size: 14px;
+    line-height: inherit;
+    color: #565d62;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-variant-ligatures: normal;
+    font-variant-caps: normal;
+    letter-spacing: normal;
+    orphans: 2;
+    text-align: start;
+    text-indent: 0px;
+    text-transform: none;
+    white-space: normal;
+    widows: 2;
+    word-spacing: 0px;
+    -webkit-text-stroke-width: 0px;
+    background-color: #ffffff;
+    text-decoration-style: initial;
+    text-decoration-color: initial;
+}
+
+.card:first-of-type li{
+margin-bottom: 0;
+}
+
+.card li p{
+    display: inline;
+}
+
+.card li p.icon-container{
+    display: inline-flex;
+    align-items: center;
+}
+
+.bottom-section,.links-section{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    color: rgb(36, 36, 41);
+    font-size: 14px;
+    line-height: 1.7em;
+    list-style: none;
+    list-style-type: none;
+    font-family: 'Rubik', sans-serif;
+}
+
+.bottom-section{
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.bottom-section strong{
+    color: #8064a2;
+}
+
+.links-section a:hover{
+    color: #8064a2;
+}
+
+.links-section{
+    gap: 3px;
+}
+.vertical-breaker{
+    margin-left: 6px;
+}
+
+@media screen and (max-width:1100px) {
+    .bottom-section{
+        display: inline;
+    }
+    .bottom-section *{
+        display: inline;
+    }
+    .links-section{
+        display: inline;
+    }
+}

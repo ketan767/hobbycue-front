@@ -22,6 +22,7 @@ import ProfileContactSide from '@/components/ProfilePage/ProfileContactSides'
 import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/ProfileSocialMedia'
 import { updateProfileMenuExpandAll } from '@/redux/slices/site'
 import { useRouter } from 'next/router'
+import ErrorPage from '@/components/ErrorPage'
 
 interface Props {
   data: ProfilePageData
@@ -31,6 +32,7 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
   const dispatch = useDispatch()
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
   const { profile } = useSelector((state: RootState) => state?.site.expandMenu)
+  const { user } = useSelector((state: RootState) => state.user)
   const [expandAll, setExpandAll] = useState(profile)
   const handleExpandAll: (value: boolean) => void = (value) => {
     setExpandAll(value)
@@ -62,6 +64,16 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
   }, [])
+  useEffect(() => {
+    if (user.id) {
+      const userIsAuthorized =
+        data.pageData.is_published || user._id === data.pageData.admin
+      if (!userIsAuthorized) router.push('/404')
+    }
+  }, [user._id, data.pageData, router])
+  if (!user.is_onboarded && data?.pageData?.email !== user?.email) {
+    return <ErrorPage />
+  }
 
   return (
     <>
@@ -94,20 +106,42 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
             </aside>
 
             <main>
-              <div className={styles['card-container']}>
+              {data.listingsData.length !== 0 ? (
+                <div className={styles['card-container']}>
+                  {data.listingsData.map((listing: any) => {
+                    return <ListingCard key={listing._id} data={listing} />
+                  })}
+                </div>
+              ) : (
+                <section
+                  className={`${styles['dual-section-wrapper-desktop']}`}
+                >
+                  <div className={styles['no-posts-div']}>
+                    <p className={styles['no-posts-text']}>
+                      No pages available
+                    </p>
+                  </div>
+                  <div className={styles['no-posts-div']}></div>
+                </section>
+              )}
+            </main>
+
+            <div className={styles['nav-mobile']}>
+              <ProfileNavigationLinks activeTab={'pages'} />
+            </div>
+            {data.listingsData.length !== 0 ? (
+              <div className={styles['card-container-mobile']}>
                 {data.listingsData.map((listing: any) => {
                   return <ListingCard key={listing._id} data={listing} />
                 })}
               </div>
-            </main>
-            <div className={styles['nav-mobile']}>
-              <ProfileNavigationLinks activeTab={'pages'} />
-            </div>
-            <div className={styles['card-container-mobile']}>
-              {data.listingsData.map((listing: any) => {
-                return <ListingCard key={listing._id} data={listing} />
-              })}
-            </div>
+            ) : (
+              <section className={`${styles['dual-section-wrapper-mobile']}`}>
+                <div className={styles['no-posts-div']}>
+                  <p className={styles['no-posts-text']}>No pages available</p>
+                </div>
+              </section>
+            )}
           </PageGridLayout>
         )}
       </ProfileLayout>

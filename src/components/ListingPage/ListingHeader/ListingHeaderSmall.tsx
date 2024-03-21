@@ -412,6 +412,12 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                 )
               }
             })}
+            {/* Add a condition to include a blank tab if 'events' tab is not present */}
+            {data.type === 3 && (
+              <Link key="blank-tab" href="#" className={styles.disabledtab}>
+                {' '}
+              </Link>
+            )}
           </div>
         </nav>
       </div>

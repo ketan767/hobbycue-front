@@ -2,9 +2,26 @@
     background-color: #f8f9fa;
     min-height: 80vh;
     height: 100%;
-   
-    max-width: 1440px;
+    
+
   }
+
+  .terms {
+    padding: 1.2rem 1.2rem;
+    border: 2px solid rgb(242, 242, 242);
+    border-radius: 10px;
+    background-color: #ffffff;
+    min-height: 80vh;
+    height: 100%;
+    max-width: 1296px;
+    margin: 0 auto;
+    padding-top: 12px;
+  }
+  .side-margin-auto{
+    padding-top: 12px;
+  }
+
+
   .explore {
 
     padding: 1.2rem 1.2rem;
@@ -15,6 +32,7 @@
     height: 100%;
   }
   
+  .terms p,
   .explore p {
     color: #6d747a;
     font-size: 14px;
@@ -34,7 +52,7 @@
     font-style: normal;
     font-weight: 500;
     line-height: 16px;
-    margin: 0 0 100px;
+    margin: 20px 0 20px;
   }
 
   .heading h1{
@@ -69,8 +87,12 @@
     margin-bottom: 24px;
   }
   
+  .padding-top-12{
+    padding-top: 12px;
+  }
+
 @media screen and (max-width:767px) {
-  .explore{
+  .explore,.terms{
     
     margin: 1rem 1rem;
   }

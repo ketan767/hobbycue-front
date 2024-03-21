@@ -24,11 +24,14 @@ export interface Page {
 }
 
 interface hobbies {
-  _id: string;
-  profile_image: string | null;
-  genre: string[];
-  slug: string;
-  display: string;
+  _id: string
+  profile_image: string | null
+  genre: string[]
+  slug: string
+  display: string
+  category: { display: string }
+  sub_category: { display: string }
+  description: string
 }
 
 export interface SearchResults<T> {

@@ -97,6 +97,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
     }
   }, [listingModalData?._id])
 
+  console.log('relatedlisting', listingModalData)
   useEffect(() => {
     if (
       listingModalData.related_listings_left?.relation &&
@@ -105,8 +106,6 @@ const RelatedListingEditModal: React.FC<Props> = ({
       setRelation(listingModalData.related_listings_left.relation)
     }
     setRelatedListingsLeft(listingModalData.related_listings_left?.listings)
-
-    setInitialData(listingModalData.related_listings_left?.listings)
   }, [listingModalData])
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
@@ -134,15 +133,6 @@ const RelatedListingEditModal: React.FC<Props> = ({
       }
     }
   }
-  useEffect(() => {
-    const hasChanges =
-      JSON.stringify(relatedListingsLeft) !== JSON.stringify(initialData)
-    setIsChanged(hasChanges)
-
-    if (onStatusChange) {
-      onStatusChange(hasChanges)
-    }
-  }, [relatedListingsLeft, initialData, onStatusChange])
 
   const handleSearchPages = async (e: any) => {
     setShowDropdown(true)
@@ -218,6 +208,19 @@ const RelatedListingEditModal: React.FC<Props> = ({
     }
   }
 
+  const [loading, setLoading] = useState(true)
+
+  const fetchListings = async () => {
+    setLoading(true)
+    const { res, err } = await searchPages('')
+    setAllListingPages(res?.data)
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    fetchListings()
+  }, [])
+
   useEffect(() => {
     const matchedListings = allListingPages?.filter((item: any) =>
       relatedListingsLeft?.includes(item._id),
@@ -230,7 +233,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
 
     setTableData(matchedTitles)
     console.log('idsss', tableData)
-  }, [relatedListingsLeft, allListingPages])
+  }, [allListingPages, relatedListingsLeft])
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
@@ -408,57 +411,63 @@ const RelatedListingEditModal: React.FC<Props> = ({
             </FormControl>
           </div> */}
           <section className={styles['added-hobby-list']}>
-            <table>
-              <thead>
-                <tr>
-                  <td>Listing Page</td>
-                  <td></td>
-                  <td></td>
-                  <td>Action</td>
-                </tr>
-              </thead>
-              <tbody>
-                {tableData?.map((item: any) => {
-                  return (
-                    <tr key={item.id}>
-                      <td>{item.title}</td>
-
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              tableData && (
+                <table>
+                  <thead>
+                    <tr>
+                      <td>Listing Page</td>
                       <td></td>
                       <td></td>
-                      <td>
-                        <svg
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          className={styles['delete-hobby-btn']}
-                          onClick={() => {
-                            handleRemovePage(item.id)
-                          }}
-                        >
-                          <g clip-path="url(#clip0_173_49175)">
-                            <path
-                              d="M6.137 19C6.137 20.1 7.00002 21 8.05481 21H15.726C16.7808 21 17.6439 20.1 17.6439 19V7H6.137V19ZM18.6028 4H15.2466L14.2877 3H9.49317L8.53427 4H5.1781V6H18.6028V4Z"
-                              fill="#8064A2"
-                            />
-                          </g>
-                          <defs>
-                            <clipPath id="clip0_173_49175">
-                              <rect
-                                width="23.0137"
-                                height="24"
-                                fill="white"
-                                transform="translate(0.383545)"
-                              />
-                            </clipPath>
-                          </defs>
-                        </svg>
-                      </td>
+                      <td>Action</td>
                     </tr>
-                  )
-                })}
-              </tbody>
-            </table>
+                  </thead>
+                  <tbody>
+                    {tableData?.map((item: any) => {
+                      return (
+                        <tr key={item.id}>
+                          <td>{item.title}</td>
+
+                          <td></td>
+                          <td></td>
+                          <td>
+                            <svg
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              className={styles['delete-hobby-btn']}
+                              onClick={() => {
+                                handleRemovePage(item.id)
+                              }}
+                            >
+                              <g clip-path="url(#clip0_173_49175)">
+                                <path
+                                  d="M6.137 19C6.137 20.1 7.00002 21 8.05481 21H15.726C16.7808 21 17.6439 20.1 17.6439 19V7H6.137V19ZM18.6028 4H15.2466L14.2877 3H9.49317L8.53427 4H5.1781V6H18.6028V4Z"
+                                  fill="#8064A2"
+                                />
+                              </g>
+                              <defs>
+                                <clipPath id="clip0_173_49175">
+                                  <rect
+                                    width="23.0137"
+                                    height="24"
+                                    fill="white"
+                                    transform="translate(0.383545)"
+                                  />
+                                </clipPath>
+                              </defs>
+                            </svg>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              )
+            )}
           </section>
         </section>
 

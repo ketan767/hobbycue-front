@@ -1,9 +1,11 @@
 .navigation-tabs {
   display: flex;
+  display: flex;
 
   gap: 38px;
   justify-content: center;
   margin-top: 14px;
+  position: -webkit-sticky;
   position: sticky;
   min-height: 40px;
 }
@@ -14,7 +16,7 @@
   font-size: 14px;
   line-height: 16px;
   color: #939ca3;
-  padding: 8px 5px;
+  padding: 10px 5px;
   position: relative;
   min-width: 90px;
   text-align: center;
@@ -121,6 +123,9 @@
   color: #939ca3;
   margin: 8px 0;
 }
+.disabledtab{
+  cursor: default;
+}
 
 @media screen and (max-width: 1100px) {
   .other-data-wrapper-mobile {
@@ -137,9 +142,10 @@
     background-color: #ffffff;
   }
   .navigation-tabs {
-    gap: 8px;
+    gap: 16px;
     justify-content: flex-start;
     overflow-x: auto;
+    width: 100%;
     flex-shrink: 0;
     padding: 0 16px;
   }
@@ -202,11 +208,5 @@
   }
   .listing-page-type-wrapper > div {
     gap: 2px;
-  }
-  .navigation-tabs {
-    gap: 0.3rem;
-    overflow-x: auto;
-    flex-shrink: 0;
-    padding: 0 16px;
   }
 }

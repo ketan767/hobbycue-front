@@ -40,8 +40,20 @@
   .confirmation-modal {
     background-color: white;
     border-radius: 8px;
-    padding: 30px 30px;
+    padding: 50px 85px 30px 85px;
+    position: relative;
   }
+
+  .modal-close-icon {
+    position: absolute;
+    top: var(--spacing-12);
+    right: var(--spacing-12);
+    cursor: pointer;
+    border-radius: 100%;
+    padding: var(--spacing-2);
+    z-index: 10;
+  }
+  
   .confirmation-modal .buttons {
     display: flex;
     align-items: center;

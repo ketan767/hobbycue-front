@@ -19,8 +19,9 @@
   flex-wrap: wrap;
   row-gap: 12px;
   column-gap: 12px;
-  height: 42px;
-  overflow-y: auto;
+  margin-top: 16px;
+  /* height: 42px;
+  overflow-y: auto; */
 }
 .selected-value {
   display: flex;
@@ -51,15 +52,12 @@
 @media screen and (min-width: 1100px) {
   .modal-wrapper {
     max-height: calc(100vh - 6rem);
-    height: 100%;
+    height: calc(100vh - 6rem);
   }
   .modal-wrapper .body {
     height: 100%;
   }
-  .saveBtn{
-    margin-left: unset !important;
-    margin-right: auto;
-  }
+  
 }
 .modal-wrapper .header {
   padding: var(--spacing-16) var(--spacing-24);
@@ -191,8 +189,8 @@
   font-size: 12px;
 }
 .tagText {
-  width: 100px;
-  margin-right: 10px;
+  width: 141px;
+
 }
 
 .select-container {
@@ -247,10 +245,10 @@ background: var(--Grey-Hover, #F8F9FA);
   font-size: 12px;
   font-family: Poppins;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 18px;
   color: #6d747a;
-  padding: 8px;
+  padding: 8px 12px;
   display: flex;
   justify-content: space-between;
 }

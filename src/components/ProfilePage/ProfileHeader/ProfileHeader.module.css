@@ -11,6 +11,12 @@
 .profile-img-wrapper {
   position: relative;
 }
+
+.profile-img-wrapper-small {
+  position: relative;
+  height: 60px;
+}
+
 .profile-img-wrapper .img {
   width: 160px;
   height: 160px;
@@ -81,7 +87,7 @@
 .text-ellipsis-mobile {
   overflow: hidden;
   white-space: nowrap;
-  text-overflow: ellipsis
+  text-overflow: ellipsis;
 }
 
 .center-container .category {
@@ -136,7 +142,7 @@
 .navigation-tabs {
   display: flex;
   width: 43%;
-  margin: 0 0 0 24.5%;
+  margin: 0 0 0 23.96%;
   gap: 38px;
   justify-content: center;
   margin-top: 14px;
@@ -275,6 +281,7 @@
   letter-spacing: 0.07px;
   padding: 12px;
   transition: 0.2s;
+  cursor: pointer;
 }
 .contactBtn {
   font-size: 14px;
@@ -284,6 +291,7 @@
   line-height: 16px;
   padding: 0 50px;
   height: 32px;
+  width: 157px;
 }
 .customList li:hover {
   background-color: #e5e5e5;
@@ -343,6 +351,10 @@
     line-height: 0;
     padding: 0px 12px;
     height: 40px;
+    width: 78px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .header {
@@ -389,7 +401,8 @@
     width: 100%;
   }
   .navigation-tabs {
-    gap: 8px;
+    gap: 16px;
+    overflow-x: auto;
     width: 100%;
     margin: 0;
     justify-content: flex-start;

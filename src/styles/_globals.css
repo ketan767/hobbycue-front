@@ -36,6 +36,8 @@
   /* Heights */
   --navbar-height-desktop: 5rem;
 }
+
+
 @media screen and (max-width: 1100px) {
   :root {
     --navbar-height-desktop: 3rem;
@@ -151,7 +153,7 @@ select:-webkit-autofill {
 .modal-footer-btn:not(:disabled):hover {
   opacity: 0.9;
 }
-.modal-footer-btn.submit:focus {
+.modal-footer-btn.submit:focus-visible {
   outline: 1px solid rgba(var(--primary-100-rgb)) !important;
   border: 1px solid !important;
 }
@@ -168,10 +170,10 @@ select:-webkit-autofill {
   border: 1px solid rgba(var(--primary-100-rgb));
   position: relative;
 }
-.modal-footer-btn.cancel:focus{
+.modal-footer-btn.cancel:focus-visible{
   outline: none;
 }
-.modal-footer-btn.cancel:focus::before{
+.modal-footer-btn.cancel:focus-visible::before{
   content: '';
   position: absolute;
   top: -3px;
@@ -456,4 +458,35 @@ select:-webkit-autofill {
 
 .custom-scrollbar:hover::-webkit-scrollbar-thumb {
   background-color: rgba(0, 0, 0, 0.4);
+}
+
+.textFieldClass>div{
+  border-radius: 8px;
+}
+
+.textFieldClass:hover{
+  border: none;
+  outline: none;
+}
+.textFieldClass:focus-visible{
+  border: none;
+  outline: none;
+}
+.textFieldClass>div:hover{
+  outline: none;
+  outline: none;
+}
+.textFieldClass>div:focus-visible{
+  outline: none;
+  border: none;
+}
+
+.textFieldClass:hover fieldset{
+  border: 1px solid #8064a2;
+  outline: none;
+}
+
+.textFieldClass>div:hover>fieldset{
+border: 1px solid #8064a2 !important;
+  outline: none;
 }

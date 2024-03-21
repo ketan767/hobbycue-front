@@ -17,6 +17,7 @@ import {
 import ListingHomeTab from '@/components/ListingPage/ListingHomeTab/ListingHomeTab'
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
 import ListingPostsTab from '@/components/ListingPage/ListingPagePosts/ListingPagePosts'
+import ErrorPage from '@/components/ErrorPage'
 
 type Props = { data: ListingPageData }
 
@@ -25,7 +26,7 @@ const ListingHome: React.FC<Props> = (props) => {
   const { listing } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(listing)
 
-  // const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
+  const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
   // const { listingPageData } = useSelector((state: RootState) => state.site)
   // console.log('posts data', props.data)
   useEffect(() => {
@@ -62,7 +63,12 @@ const ListingHome: React.FC<Props> = (props) => {
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
   }, [])
-
+  if (
+    props?.data?.pageData?.admin !== user?._id &&
+    props?.data?.pageData?.is_published !== true
+  ) {
+    return <ErrorPage restricted />
+  }
   return (
     <>
       <Head>

@@ -2,7 +2,7 @@
   background: #ffffff;
   border: 1px solid #ebedf0;
   border-radius: 8px;
-  padding: 11px 15px;
+  padding: 24px;
   width: 726px;
 }
 
@@ -25,7 +25,7 @@
 }
 
 .addSectionContainer {
-  margin-bottom: 14px;
+  margin-bottom: 24px;
 }
 
 .title {
@@ -43,12 +43,14 @@
   font-weight: 500;
   font-size: 14px;
   line-height: 22px;
-  color: var(--Red, #C0504D);
+  color: var(--Red, #c0504d);
   margin-bottom: 12px;
 }
 
 .clickable {
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 .flex {
@@ -57,22 +59,43 @@
   justify-content: space-between;
 }
 
+.dual-dropdown-wrapper{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.dropdownWrapper {
+  width: 50%;
+  padding: 4px 0;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+  justify-content: flex-start;
+}
+
 .cardContainer {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   padding-right: 4px;
-  padding: 6px 15px;
-    margin: -15px;
+  padding: 12px 12px;
   margin-bottom: 24px;
+  border-radius: 8px;
 }
 
-.selectedCard{
-  background: var(--Purple-3, #F7F5F9);
+.selectedCard {
+  background: var(--Purple-3, #f7f5f9);
 }
 
 .addIcon {
-  margin-right: 4px;
+  margin-right: 3px;
+  margin-top: -1px;
+  cursor: pointer;
+}
+.radioIcon {
+  margin-right: 0px;
+  margin-top: 3px;
   cursor: pointer;
 }
 
@@ -90,6 +113,7 @@
 
 .labelText {
   margin-bottom: 4px;
+  width: 30%;
 }
 
 .addressContent {
@@ -103,8 +127,22 @@
 }
 
 .localizationContainer {
+  width: 59%;
   padding: 4px 0;
   margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+  justify-content: flex-start;
+}
+.dropdownWrapper {
+  width: 50%;
+  padding: 4px 0;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+  justify-content: flex-start;
 }
 
 .edit-icon-container {
@@ -141,7 +179,7 @@
   grid-template-columns: 16rem 42rem !important;
 } */
 
-@media screen and (max-width:1100px) {
+@media screen and (max-width: 1100px) {
   .container {
     width: auto;
     border-radius: none;
@@ -151,14 +189,49 @@
 
   .selectedCard {
     border-radius: 8px;
-    background: var(--Purple-3, #F7F5F9);
+    background: var(--Purple-3, #f7f5f9);
   }
 
   .cardContainer {
     padding: 8px 3.9px;
   }
 
-  .textLight{
+  .textLight {
     margin-bottom: 14px;
   }
+
+  .localizationContainer {
+    width:100%;
+  }
+  .dropdownWrapper {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .dual-dropdown-wrapper{
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+}
+
+
+@media screen and (min-width:1100px) {
+  .desktopHalfWidth{
+    display: inline-flex;
+    width: 50%;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .desktopHalfWidth .localizationContainer{
+    gap: 50px;
+    min-width: 229px;
+  }
+  .textDark{
+    min-width: 89px;
+  }
+}
+
+.justifyEnd{
+  justify-content: flex-end;
 }

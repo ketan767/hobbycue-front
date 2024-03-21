@@ -16,6 +16,8 @@ import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { updateProfileMenuExpandAll } from '@/redux/slices/site'
+import ErrorPage from '@/components/ErrorPage'
+import { useMediaQuery } from '@mui/material'
 
 interface Props {
   data: ProfilePageData
@@ -25,6 +27,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
   // const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
   const dispatch = useDispatch()
   const { profile } = useSelector((state: RootState) => state?.site.expandMenu)
+  const { user } = useSelector((state: RootState) => state.user)
   const [expandAll, setExpandAll] = useState(profile)
   const handleExpandAll: (value: boolean) => void = (value) => {
     setExpandAll(value)
@@ -32,6 +35,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
   }
 
   const router = useRouter()
+  const isMobile = useMediaQuery("(max-width:1100px)");
 
   useEffect(() => {
     // Save scroll position when navigating away from the page
@@ -57,6 +61,17 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
   }, [])
+
+  useEffect(() => {
+    if (user.id) {
+      const userIsAuthorized =
+        data.pageData.is_published || user._id === data.pageData.admin
+      if (!userIsAuthorized) router.push('/404')
+    }
+  }, [user._id, data.pageData, router])
+  if (!user.is_onboarded && data?.pageData?.email !== user?.email) {
+    return <ErrorPage />
+  }
   return (
     <>
       <Head>
@@ -88,13 +103,16 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
           <div className={styles['nav-mobile']}>
             <ProfileNavigationLinks activeTab={'blogs'} />
           </div>
-          <section className={styles['pages-container']}>
+          <section className={`${styles['dual-section-wrapper']}`}>
             <div className={styles['no-posts-div']}>
               <p className={styles['no-posts-text']}>
                 This feature is under development. Come back soon to view this
               </p>
             </div>
+            {isMobile?null:<>
             <div className={styles['no-posts-div']}></div>
+            <div className={styles['no-posts-div']}></div>
+            </>}
           </section>
         </PageGridLayout>
       </ProfileLayout>

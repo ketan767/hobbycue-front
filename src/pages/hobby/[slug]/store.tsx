@@ -18,6 +18,7 @@ import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import PostCard from '@/components/PostCard/PostCard'
 import { openModal } from '@/redux/slices/modal'
 import { updateHobbyMenuExpandAll } from '@/redux/slices/site'
+import { useMediaQuery } from '@mui/material'
 
 type Props = { data: { hobbyData: any } }
 
@@ -63,6 +64,8 @@ const HobbyStorePage: React.FC<Props> = (props) => {
     dispatch(updateHobbyMenuExpandAll(value))
   }
 
+  const isMobile = useMediaQuery("(max-width:1100px)");
+
   return (
     <>
       <HobbyPageLayout
@@ -71,19 +74,30 @@ const HobbyStorePage: React.FC<Props> = (props) => {
         expandAll={expandAll}
         setExpandAll={handleExpandAll}
       >
-        <main className={`${styles['display-desktop']}`}>
+        <main
+          className={`${styles['dual-section-wrapper']}`}
+        >
           <div className={styles['no-posts-container']}>
             <p>
               This feature is under development. Come back soon to view this
             </p>
-          </div>{' '}
+          </div>
+          {isMobile ? null : (
+            <>
+              {' '}
+              <div className={styles['no-posts-container']}></div>
+              <div className={styles['no-posts-container']}></div>
+            </>
+          )}
         </main>
       </HobbyPageLayout>
-      <main className={`${styles['display-mobile']}`}>
+      {/* <main className={`${styles['display-mobile']}`}>
         <div className={styles['no-posts-container']}>
-          <p>No posts available</p>
-        </div>{' '}
-      </main>
+          <p>This feature is under development. Come back soon to view this</p>
+        </div>
+        <div className={styles['no-posts-container']}></div>
+        <div className={styles['no-posts-container']}></div>
+      </main> */}
     </>
   )
 }

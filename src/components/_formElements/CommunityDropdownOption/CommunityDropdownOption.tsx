@@ -15,7 +15,7 @@ type Props = {
   pencil?: boolean
   onClick?: () => void
   smallPencil?: boolean
-  maxWidth?:string
+  maxWidth?: string
 }
 
 export const CommunityDropdownOption: React.FC<Props> = (props) => {
@@ -29,7 +29,7 @@ export const CommunityDropdownOption: React.FC<Props> = (props) => {
     pencil,
     onClick,
     smallPencil,
-    maxWidth
+    maxWidth,
   } = props
 
   const { activeProfile, user } = useSelector((state: any) => state.user)
@@ -52,12 +52,16 @@ export const CommunityDropdownOption: React.FC<Props> = (props) => {
               onClick?.()
             }
           : options?.length > 0
-          ? toggle
+          ? (e) => {
+              if ((e.target as HTMLElement).textContent === display) {
+                onChange(props)
+              }
+            }
           : () => {
               onChange(props)
             }
       }
-      style={{maxWidth}}
+      style={{ maxWidth }}
       className={
         styles['dropdown-container'] +
         ` ${pencil && styles['pencil-container']}`
@@ -122,6 +126,7 @@ export const CommunityDropdownOption: React.FC<Props> = (props) => {
       ) : null}
       {options?.length > 0 && (
         <svg
+          onClick={toggle}
           xmlns="http://www.w3.org/2000/svg"
           width="17"
           height="16"
@@ -147,13 +152,14 @@ export const CommunityDropdownOption: React.FC<Props> = (props) => {
         </svg>
       )}
       {active && options?.length > 0 && (
-        <div style={{maxWidth}} className={styles['options-container']}>
+        <div style={{ maxWidth }} className={styles['options-container']}>
           {options?.map(
             (item: { value: string; display: string }, i: number) => (
               <div
-              style={{maxWidth}}
+                style={{ maxWidth }}
                 onClick={(e) => {
-                  onChange(item);
+                  console.log({ item })
+                  onChange(item)
                   document.documentElement.click()
                 }}
                 className={

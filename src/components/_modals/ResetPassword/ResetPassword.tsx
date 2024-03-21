@@ -201,7 +201,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
               }`}
             >
               <TextField
-                className={styles['input-password']}
+                className={styles['input-password'] + ' textFieldClass'}
                 fullWidth
                 required
                 ref={newPasswordRef}
@@ -283,7 +283,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
               }`}
             >
               <TextField
-                className={styles['input-password']}
+                className={styles['input-password'] + ' textFieldClass'}
                 fullWidth
                 required
                 type={'password'}

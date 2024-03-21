@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
-
+import ErrorPage from '@/components/ErrorPage'
 import { GetServerSideProps } from 'next'
 import { getAllUserDetail } from '@/services/user.service'
 import Head from 'next/head'
@@ -19,6 +19,7 @@ import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPag
 type Props = { data: ListingPageData }
 
 const ListingHome: React.FC<Props> = (props) => {
+  console.warn({ props })
   const dispatch = useDispatch()
   const [error, seterror] = useState({
     hobby: false,
@@ -29,8 +30,8 @@ const ListingHome: React.FC<Props> = (props) => {
   const { listing } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(listing)
   const { user } = useSelector((state: RootState) => state.user)
-
-  console.log('data', props.data)
+  const { listingLayoutMode } = useSelector((state: any) => state.site)
+  console.warn('data', props.data)
   useEffect(() => {
     dispatch(updateListingPageData(props.data.pageData))
     dispatch(updateListingModalData(props.data.pageData))
@@ -82,6 +83,12 @@ const ListingHome: React.FC<Props> = (props) => {
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
   }, [])
+  if (
+    props?.data?.pageData?.admin !== user?._id &&
+    props?.data?.pageData?.is_published !== true
+  ) {
+    return <ErrorPage restricted />
+  }
 
   return (
     <>

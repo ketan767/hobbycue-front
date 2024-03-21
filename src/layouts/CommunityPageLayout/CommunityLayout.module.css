@@ -11,9 +11,7 @@
   overflow: auto;
 }
 
-.community-header {
-  background-color: white;
-}
+
 .community-header-small {
   display: flex;
   column-gap: 24px;
@@ -146,7 +144,7 @@
   margin-bottom: var(--spacing-12);
 }
 .invite-wrapper header {
-  padding: var(--spacing-16);
+  padding: var(--spacing-16) var(--spacing-16) var(--spacing-12) var(--spacing-16);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -178,6 +176,11 @@
   color: #191919;
   font-size: 12px;
 }
+
+.invite-wrapper > section input.error-input{
+  border: 1px solid #c0504d;
+}
+
 .invite-wrapper > section button {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
@@ -256,7 +259,7 @@
 
 /*  */
 .start-post-btn-container {
-  padding: var(--spacing-12) var(--spacing-16);
+  padding: 20px var(--spacing-16) var(--spacing-12) var(--spacing-16);
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   display: flex;
@@ -264,6 +267,8 @@
   justify-content: space-between;
   align-items: center;
 }
+
+
 
 .start-post-btn-container :hover {
   background-color: #8064a2;
@@ -297,6 +302,14 @@
   color: #8064a2;
 }
 
+.start-post-btn:hover path{
+  fill: white;
+}
+
+.start-post-btn:focus-visible {
+  outline: 1px solid rgb(var(--primary-50-rgb));
+}
+
 .navigation-links {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
@@ -307,9 +320,9 @@
 .navigation-links ul {
   list-style: none;
   display: flex;
-  justify-content: space-between;
+ 
   align-items: center;
-  padding: 0 4px;
+  padding: 0 0px;
 }
 .navigation-links a {
   color: #6d747a;
@@ -322,9 +335,9 @@
   color: #6d747a;
   cursor: pointer;
   text-align: center;
-  padding: var(--spacing-16);
+  padding: var(--spacing-16) 25px;
   position: relative;
-  max-width: 90px;
+  max-width: 122px;
 }
 .navigation-links ul li.active a {
   color: #8064a2;
@@ -353,12 +366,13 @@
 .navigation-links ul li.active::after {
   content: '';
   bottom: 0;
-  left: 0;
-  width: 100%;
+  left: 15px;
+  width: 75%;
   height: 2px;
   position: absolute;
   background: #8064a2;
   border-radius: 2px 2px 0px 0px;
+  display: flex;
 }
 
 .posts-container {

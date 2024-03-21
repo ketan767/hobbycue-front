@@ -25,6 +25,7 @@ import ProfileAddressSide from '@/components/ProfilePage/ProfileAddressSide'
 import ProfileContactSide from '@/components/ProfilePage/ProfileContactSides'
 import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/ProfileSocialMedia'
 import { updateProfileMenuExpandAll } from '@/redux/slices/site'
+import ErrorPage from '@/components/ErrorPage'
 
 interface Props {
   data: ProfilePageData['pageData']
@@ -153,6 +154,16 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
   }, [])
+  useEffect(() => {
+    if (user.id) {
+      const userIsAuthorized =
+        data.pageData.is_published || user._id === data.pageData.admin
+      if (!userIsAuthorized) router.push('/404')
+    }
+  }, [user._id, data.pageData, router])
+  if (!user.is_onboarded && data?.pageData?.email !== user?.email) {
+    return <ErrorPage />
+  }
 
   return (
     <>
@@ -224,10 +235,11 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
                 </div>
               </div>
             )}
-            <div className={styles.medias}>
-              {data?.pageData.video_url && (
-                <div className={styles.image}>
-                  {/* <video
+            {data.pageData.video_url || data.pageData.images ? (
+              <div className={styles.medias}>
+                {data?.pageData.video_url && (
+                  <div className={styles.image}>
+                    {/* <video
                     width="250"
                     height="240"
                     controls={true}
@@ -235,27 +247,39 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
                   >
                     <source src={user?.video_url} type="video/mp4" />
                   </video> */}
-                  <ReactPlayer
-                    width="100%"
-                    height="250px"
-                    url={data?.pageData?.video_url}
-                    controls={true}
-                  />
-                </div>
-              )}
-              {data.pageData.images?.map((item: any, idx: number) => {
-                return (
-                  <div
-                    key={idx}
-                    className={styles.image}
-                    onClick={() => OpenMediaImage(item)}
-                  >
-                    <img src={item} alt={`Media ${idx}`} />
+                    <ReactPlayer
+                      width="100%"
+                      height="250px"
+                      url={data?.pageData?.video_url}
+                      controls={true}
+                    />
                   </div>
-                )
-              })}
-              <div></div>
-            </div>
+                )}
+                {data.pageData.images?.map((item: any, idx: number) => {
+                  return (
+                    <div
+                      key={idx}
+                      className={styles.image}
+                      onClick={() => OpenMediaImage(item)}
+                    >
+                      <img src={item} alt={`Media ${idx}`} />
+                    </div>
+                  )
+                })}
+                <div></div>
+              </div>
+            ) : (
+              profileLayoutMode !== 'edit' && (
+                <section className={`${styles['dual-section-wrapper']}`}>
+                  <div className={styles['no-posts-div']}>
+                    <p className={styles['no-posts-text']}>
+                      No media available
+                    </p>
+                  </div>
+                  <div className={styles['no-posts-div']}></div>
+                </section>
+              )
+            )}
           </div>
         </PageGridLayout>
       </ProfileLayout>

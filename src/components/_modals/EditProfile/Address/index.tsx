@@ -109,7 +109,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     latitude: '',
     longitude: '',
     set_as_primary: false,
-    onboarding_step:"4"
+    onboarding_step: '4',
   })
 
   const [inputErrs, setInputErrs] = useState<{ [key: string]: string | null }>({
@@ -146,12 +146,9 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   }
 
   const Backsave = async () => {
-    console.warn("running back")
+    console.warn('running back')
     setBackBtnLoading(true)
-    if (
-      !data.city ||
-      data.city === '' 
-    ) {
+    if (!data.city || data.city === '') {
       if (onBackBtnClick) onBackBtnClick()
       setBackBtnLoading(false)
     } else {
@@ -166,9 +163,11 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           if (!res.data.success) {
             return alert('Something went wrong!')
           }
-          
-          const newOnboardingStep = Number(user?.onboarding_step)>3?user?.onboarding_step:"4"
-          const { err:updtProfileErr, res:updtProfileRes } = await updateMyProfileDetail({onboarding_step:newOnboardingStep})
+
+          const newOnboardingStep =
+            Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
+          const { err: updtProfileErr, res: updtProfileRes } =
+            await updateMyProfileDetail({ onboarding_step: newOnboardingStep })
           const { err: error, res: response } = await getMyProfileDetail()
 
           if (error) return console.log(error)
@@ -191,8 +190,10 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           if (!res.data.success) {
             return alert('Something went wrong!')
           }
-          const newOnboardingStep = Number(user?.onboarding_step)>3?user?.onboarding_step:"4"
-          const { err:updtProfileErr, res:updtProfileRes } = await updateMyProfileDetail({onboarding_step:newOnboardingStep})
+          const newOnboardingStep =
+            Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
+          const { err: updtProfileErr, res: updtProfileRes } =
+            await updateMyProfileDetail({ onboarding_step: newOnboardingStep })
           const { err: error, res: response } = await getMyProfileDetail()
 
           if (error) return console.log(error)
@@ -217,8 +218,12 @@ const ProfileAddressEditModal: React.FC<Props> = ({
             if (!res.data.success) {
               return alert('Something went wrong!')
             }
-            const newOnboardingStep = Number(user?.onboarding_step)>3?user?.onboarding_step:"4"
-            const { err:updtProfileErr, res:updtProfileRes } = await updateMyProfileDetail({onboarding_step:newOnboardingStep})
+            const newOnboardingStep =
+              Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
+            const { err: updtProfileErr, res: updtProfileRes } =
+              await updateMyProfileDetail({
+                onboarding_step: newOnboardingStep,
+              })
             const { err: error, res: response } = await getMyProfileDetail()
 
             if (error) return console.log(error)
@@ -241,8 +246,12 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               if (!res.data.success) {
                 return alert('Something went wrong!')
               }
-              const newOnboardingStep = Number(user?.onboarding_step)>3?user?.onboarding_step:"4"
-              const { err:updtProfileErr, res:updtProfileRes } = await updateMyProfileDetail({onboarding_step:newOnboardingStep})
+              const newOnboardingStep =
+                Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
+              const { err: updtProfileErr, res: updtProfileRes } =
+                await updateMyProfileDetail({
+                  onboarding_step: newOnboardingStep,
+                })
               const { err: error, res: response } = await getMyProfileDetail()
 
               if (error) return console.log(error)
@@ -263,8 +272,10 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           if (!res.data.success) {
             return alert('Something went wrong!')
           }
-          const newOnboardingStep = Number(user?.onboarding_step)>3?user?.onboarding_step:"4"
-          const { err:updtProfileErr, res:updtProfileRes } = await updateMyProfileDetail({onboarding_step:newOnboardingStep})
+          const newOnboardingStep =
+            Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
+          const { err: updtProfileErr, res: updtProfileRes } =
+            await updateMyProfileDetail({ onboarding_step: newOnboardingStep })
           const { err: error, res: response } = await getMyProfileDetail()
 
           if (error) return console.log(error)
@@ -376,8 +387,10 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           setSubmitBtnLoading(false)
           return alert('Something went wrong!')
         }
-        const newOnboardingStep = Number(user?.onboarding_step)>3?user?.onboarding_step:"4"
-        const { err:updtProfileErr, res:updtProfileRes } = await updateMyProfileDetail({onboarding_step:newOnboardingStep})
+        const newOnboardingStep =
+          Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
+        const { err: updtProfileErr, res: updtProfileRes } =
+          await updateMyProfileDetail({ onboarding_step: newOnboardingStep })
         const { err: error, res: response } = await getMyProfileDetail()
 
         setSubmitBtnLoading(false)
@@ -405,8 +418,10 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           setSubmitBtnLoading(false)
           return alert('Something went wrong!')
         }
-        const newOnboardingStep = Number(user?.onboarding_step)>3?user?.onboarding_step:"4"
-        const { err:updtProfileErr, res:updtProfileRes } = await updateMyProfileDetail({onboarding_step:newOnboardingStep})
+        const newOnboardingStep =
+          Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
+        const { err: updtProfileErr, res: updtProfileRes } =
+          await updateMyProfileDetail({ onboarding_step: newOnboardingStep })
         const { err: error, res: response } = await getMyProfileDetail()
 
         setSubmitBtnLoading(false)
@@ -436,8 +451,10 @@ const ProfileAddressEditModal: React.FC<Props> = ({
             setSubmitBtnLoading(false)
             return alert('Something went wrong!')
           }
-          const newOnboardingStep = Number(user?.onboarding_step)>3?user?.onboarding_step:"4"
-          const { err:updtProfileErr, res:updtProfileRes } = await updateMyProfileDetail({onboarding_step:newOnboardingStep})
+          const newOnboardingStep =
+            Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
+          const { err: updtProfileErr, res: updtProfileRes } =
+            await updateMyProfileDetail({ onboarding_step: newOnboardingStep })
           const { err: error, res: response } = await getMyProfileDetail()
 
           setSubmitBtnLoading(false)
@@ -465,8 +482,12 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               setSubmitBtnLoading(false)
               return alert('Something went wrong!')
             }
-            const newOnboardingStep = Number(user?.onboarding_step)>3?user?.onboarding_step:"4"
-            const { err:updtProfileErr, res:updtProfileRes } = await updateMyProfileDetail({onboarding_step:newOnboardingStep})
+            const newOnboardingStep =
+              Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
+            const { err: updtProfileErr, res: updtProfileRes } =
+              await updateMyProfileDetail({
+                onboarding_step: newOnboardingStep,
+              })
             const { err: error, res: response } = await getMyProfileDetail()
 
             setSubmitBtnLoading(false)
@@ -492,8 +513,10 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           setSubmitBtnLoading(false)
           return alert('Something went wrong!')
         }
-        const newOnboardingStep = Number(user?.onboarding_step)>3?user?.onboarding_step:"4"
-        const { err:updtProfileErr, res:updtProfileRes } = await updateMyProfileDetail({onboarding_step:newOnboardingStep})
+        const newOnboardingStep =
+          Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
+        const { err: updtProfileErr, res: updtProfileRes } =
+          await updateMyProfileDetail({ onboarding_step: newOnboardingStep })
         const { err: error, res: response } = await getMyProfileDetail()
 
         setSubmitBtnLoading(false)
@@ -577,7 +600,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         getLocation()
       }
     }
-  }, [dataLoaded, data])
+  }, [dataLoaded])
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
@@ -789,7 +812,6 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   value={data.street}
                   name="street"
                   ref={inputRef}
-                  onFocus={() => setShowDropdown(true)}
                   onChange={handleInputChange}
                 />
                 <Image

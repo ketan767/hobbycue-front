@@ -105,6 +105,7 @@
   border-bottom: 1px solid var(--grey-light, #ced4da);
   align-items: center;
   cursor: pointer;
+
 }
 
 .userAvatar {
@@ -114,6 +115,30 @@
   color: white;
   overflow: hidden;
 }
+
+.hobbyAvtar {
+  width: 64px;
+  height: 64px;
+  position: relative; /* Ensure relative positioning for the overlay */
+}
+
+.img-polygon {
+  width: 100%;
+  height: 100%;
+}
+
+.polygonOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  
+}
+.view-more-btn-container {
+  padding: var(--spacing-16) var(--spacing-24);
+}
+
 .img {
   width: 64px;
   height: 64px;
@@ -164,6 +189,17 @@
 .userLocation {
   font-size: 14px;
   color: #666;
+  
+}
+
+.hobbydescription {
+  font-size: 14px;
+  color: #666;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 590px;
+  
 }
 
 .view-more-btn {
@@ -174,9 +210,9 @@
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
-  margin: 16px 24px;
+ 
   display: block;
-  width: 650px;
+  width: 100%;
   text-align: center;
   font-size: 14px;
   font-family: 'Poppins';
@@ -277,9 +313,12 @@
   .userSection {
     width: 100%;
   }
+  .view-more-btn-container {
+    padding: var(--spacing-16) var(--spacing-16);
+  }
 
   .view-more-btn {
-    width: 85%;
+    width: 100%;
   }
  
   .peopleItem {
@@ -291,5 +330,11 @@
   .userLocation {
     font-size: 12px;
 
+  }
+  .hobbydescription {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc(100vw - 9rem);
   }
 }

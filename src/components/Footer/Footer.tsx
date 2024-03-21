@@ -273,6 +273,7 @@ const Footer: React.FC = () => {
                   value={email}
                   name="society"
                   onChange={(e: any) => setEmail(e.target.value)}
+                  className={errorMessage !== ''?styles['errorInput']:""}
                 />
                 <button onClick={sendInvite} className={styles.button}>
                   {inviteBtnLoader ? (
