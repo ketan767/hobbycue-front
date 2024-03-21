@@ -38,6 +38,7 @@
   z-index: 1000;
   max-height: 20rem;
   overflow: auto;
+  border: 1px solid #ced4da;
 }
 .dropdown-options-wrapper > input {
   margin: 6px 4px 2px;
