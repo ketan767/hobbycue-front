@@ -59,9 +59,9 @@ const CommunityLayout: React.FC<Props> = ({
   })
   const [locations, setLocations] = useState([])
   const [email, setEmail] = useState('')
-  const [selectedHobby, setSelectedHobby] = useState(sessionStorage.getItem("communityFilterHobby")??'')
+  const [selectedHobby, setSelectedHobby] = useState('')
   const [selectedGenre, setSelectedGenre] = useState('')
-  const [selectedLocation, setSelectedLocation] = useState(sessionStorage.getItem("communityFilterLocation")??'All Locations')
+  const [selectedLocation, setSelectedLocation] = useState('All Locations')
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -307,6 +307,11 @@ const CommunityLayout: React.FC<Props> = ({
       }
     }
   }
+
+  useEffect(()=>{
+    setSelectedHobby(sessionStorage.getItem("communityFilterHobby")??"");
+    setSelectedLocation(sessionStorage.getItem("communityFilterLocation")??'All Locations');
+  },[])
 
   // useEffect(() => {
   //   let tempLocations: any = []
