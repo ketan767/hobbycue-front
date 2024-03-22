@@ -54,11 +54,11 @@ const PostCard: React.FC<Props> = (props) => {
       : false,
   )
   const pageUrlClass = styles.postUrl
-  useEffect(() => {
-    if (postData?.media?.length > 0 || postData?.video_url) {
-      setHas_link(false)
-    }
-  }, [postData])
+  // useEffect(() => {
+  //   if (postData?.media?.length > 0 || postData?.video_url) {
+  //     setHas_link(false)
+  //   }
+  // }, [postData])
   const dispatch = useDispatch()
   const [url, setUrl] = useState('')
   const [optionsActive, setOptionsActive] = useState(false)
@@ -323,7 +323,7 @@ const PostCard: React.FC<Props> = (props) => {
               <source src={postData.video_url} type="video/mp4"></source>
             </video>
           )}
-          {postData.media?.length > 0 ? (
+          {postData.media?.length > 0 && props.currentSection !== 'links' ? (
             <Slider
               setActiveIdx={setActiveIdx}
               activeIdx={activeIdx}

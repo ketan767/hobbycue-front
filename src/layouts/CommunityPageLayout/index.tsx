@@ -61,7 +61,7 @@ const CommunityLayout: React.FC<Props> = ({
   const [email, setEmail] = useState('')
   const [selectedHobby, setSelectedHobby] = useState('')
   const [selectedGenre, setSelectedGenre] = useState('')
-  const [selectedLocation, setSelectedLocation] = useState('All Locations')
+  const [selectedLocation, setSelectedLocation] = useState('')
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -92,27 +92,27 @@ const CommunityLayout: React.FC<Props> = ({
   const router = useRouter()
 
   const toggleSeeMore = () => setSeeMoreHobby(!seeMoreHobby)
-  const getPost = async () => {
-    const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
-    activeProfile?.data?._hobbies.forEach((item: any) => {
-      params.append('_hobby', item.hobby?._id)
-    })
-    if (!activeProfile?.data?._hobbies) return
+  // const getPost = async () => {
+  //   const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
+  //   activeProfile?.data?._hobbies.forEach((item: any) => {
+  //     params.append('_hobby', item.hobby?._id)
+  //   })
+  //   if (!activeProfile?.data?._hobbies) return
 
-    if (activeProfile?.data?._hobbies.length === 0) return
-    console.log('active', activeProfile.data._hobbies)
-    dispatch(updateLoading(true))
-    const { err, res } = await getAllPosts(params.toString())
-    if (err) return console.log(err)
-    if (res.data.success) {
-      store.dispatch(updatePosts(res.data.data.posts))
-    }
-    dispatch(updateLoading(false))
-  }
+  //   if (activeProfile?.data?._hobbies.length === 0) return
+  //   console.log('active', activeProfile.data._hobbies)
+  //   dispatch(updateLoading(true))
+  //   const { err, res } = await getAllPosts(params.toString())
+  //   if (err) return console.log(err)
+  //   if (res.data.success) {
+  //     store.dispatch(updatePosts(res.data.data.posts))
+  //   }
+  //   dispatch(updateLoading(false))
+  // }
 
-  useEffect(() => {
-    fetchPosts()
-  }, [activeProfile])
+  // useEffect(() => {
+  //   fetchPosts()
+  // }, [activeProfile])
 
   const handleHobbyClick = async (hobbyId: any) => {
     if (selectedHobby !== hobbyId) {
@@ -127,7 +127,7 @@ const CommunityLayout: React.FC<Props> = ({
     } else {
       sessionStorage.setItem("communityFilterHobby","");
       setSelectedHobby('')
-      fetchPosts()
+      // fetchPosts()
     }
   }
 
@@ -192,13 +192,20 @@ const CommunityLayout: React.FC<Props> = ({
     let selectedLocality = ''
     let selectedSociety = ''
 
-    const matchingAddress = activeProfile.data?._addresses?.find(
-      (address: any) =>
-        address.city === selectedLocation ||
-        address.pin_code === selectedLocation ||
-        address.locality === selectedLocation ||
-        address.society === selectedLocation,
-    )
+    const localSelectedLocation = sessionStorage.getItem("communityFilterLocation")
+
+    const addresses = activeProfile.data?._addresses || [];
+    const matchingAddress = [
+      ...addresses,
+      activeProfile.data?.primary_address ?? {},
+    ]
+      .find(
+        (address: any) =>
+          address.city === (selectedLocation||localSelectedLocation) ||
+          address.pin_code === (selectedLocation||localSelectedLocation) ||
+          address.locality === (selectedLocation||localSelectedLocation) ||
+          address.society === (selectedLocation||localSelectedLocation),
+      );
 
     if (matchingAddress) {
       if (matchingAddress.city === selectedLocation) {
@@ -227,6 +234,7 @@ const CommunityLayout: React.FC<Props> = ({
     const { err, res } = await getAllPosts(params.toString())
     if (err) return console.log(err)
     if (res?.data?.success) {
+      console.warn({res});
       let posts = res.data.data.posts.map((post: any) => {
         let content = post.content.replace(/<img .*?>/g, '')
         return { ...post, content }
@@ -248,39 +256,41 @@ const CommunityLayout: React.FC<Props> = ({
     fetchTrendingHobbies()
   }, [])
 
-  const fetchPages = async () => {
-    let params: any = ''
-    if (!activeProfile?.data?._hobbies) return
-    if (activeProfile?.data?._hobbies.length === 0) return
-    if (selectedLocation === '' && selectedHobby === '') return
-    params = new URLSearchParams(`populate=_author,_genre,_hobby`)
-    if (selectedHobby !== '') {
-      params.append('_hobby', selectedHobby)
-    } else {
-      activeProfile?.data?._hobbies.forEach((item: any) => {
-        params.append('_hobby', item.hobby._id)
-      })
-    }
-    if (selectedLocation !== '' && selectedLocation !== 'All locations') {
-      params.append('location', selectedLocation)
-    }
-    console.log('PARAMS ---', params.toString())
-    dispatch(updatePagesLoading(true))
+  // const fetchPages = async () => {
+  //   let params: any = ''
+  //   if (!activeProfile?.data?._hobbies) return
+  //   if (activeProfile?.data?._hobbies.length === 0) return
+  //   if (selectedLocation === '' && selectedHobby === '') return
+  //   params = new URLSearchParams(`populate=_author,_genre,_hobby`)
+  //   if (selectedHobby !== '') {
+  //     params.append('_hobby', selectedHobby)
+  //   } else {
+  //     activeProfile?.data?._hobbies.forEach((item: any) => {
+  //       params.append('_hobby', item.hobby._id)
+  //     })
+  //   }
+  //   if (selectedLocation !== '' && selectedLocation !== 'All locations') {
+  //     params.append('location', selectedLocation)
+  //   }
+  //   console.log('PARAMS ---', params.toString())
+  //   dispatch(updatePagesLoading(true))
 
-    const { err, res } = await getListingPages(params.toString())
-    if (err) return console.log(err)
-    if (res?.data.success) {
-      if (err) return console.log(err)
-      if (res?.data.success) {
-        store.dispatch(updatePages(res.data.data.listings))
-      }
-    }
-    dispatch(updatePagesLoading(false))
-  }
+  //   const { err, res } = await getListingPages(params.toString())
+  //   if (err) return console.log(err)
+  //   if (res?.data.success) {
+  //     if (err) return console.log(err)
+  //     if (res?.data.success) {
+  //       store.dispatch(updatePages(res.data.data.listings))
+  //     }
+  //   }
+  //   dispatch(updatePagesLoading(false))
+  // }
 
   useEffect(() => {
     if (activeTab === 'posts' || activeTab === 'links') {
+      if (selectedLocation !== '') {
       fetchPosts()
+    }
     }
   }, [selectedHobby, selectedLocation, activeProfile]);
 
@@ -383,10 +393,12 @@ const CommunityLayout: React.FC<Props> = ({
           })
           if (visibilityArr[1]) {
             if (visibilityArr[1].display) {
+              if(sessionStorage.getItem("communityFilterLocation")===null){
               sessionStorage.setItem("communityFilterLocation",visibilityArr[1]?.display?.split(' ')[0] || 'All locations')
               setSelectedLocation(
                 visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
               )
+            }
             }
           }
           setVisibilityData(visibilityArr)
@@ -867,7 +879,7 @@ const CommunityLayout: React.FC<Props> = ({
                             {...item}
                             key={idx}
                             currentValue={selectedLocation}
-                            onChange={(val:any)=>updateFilterLocation(val)}
+                            onChange={(val:any)=>updateFilterLocation(val?.display?.split("-")[0]?.trim())}
                           />
                         ))}
                       </CommunityTopDropdown>
