@@ -98,16 +98,17 @@
 
   }
   .close-icon-clicked {
-    left: calc(50vw + 152px) !important;
+    /* left: calc(50vw + 152x) !important; */
+    left: calc(50vw + 136px) !important;
     top: calc(50vh - 30px) !important;
   }
 }
 
-@media screen and (max-width:390px) {
+/* @media screen and (max-width:390px) {
   .close-icon-clicked{
     left: calc(50vw + 136px) !important;
   }
-}
+} */
 
 .button1 {
   font-size: 1rem !important;
