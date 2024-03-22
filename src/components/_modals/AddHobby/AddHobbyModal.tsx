@@ -47,7 +47,7 @@ const AddHobby: React.FC<Props> = ({ handleClose, handleSubmit, propData }) => {
         <hr className={styles['modal-hr']} />
         <div className={styles['content']}>
           <p>
-            Add <span>{propData?.defaultValue ?? 'Pickleball'}</span> as a hobby
+            Add <span>{propData?.defaultValue ?? 'Typed Hobby'}</span> as a hobby
             so that we can grow this as a community
           </p>
           <div className={styles['buttons']}>

@@ -56,10 +56,10 @@ const SaveModal: React.FC<Props> = ({
   return (
     <div ref={wrapperRef} className={`${styles['confirmation-modal']}`}>
       <div className={styles['confirmation-modal-body']}>
-        <CloseIcon
+        {/* <CloseIcon
           className={styles['modal-close-icon']}
           onClick={handleClose}
-        />
+        /> */}
         <p> Would you like to save before exit ? </p>
         <div className={styles['buttons']}>
           <FilledButton className={styles['button1']} onClick={handleYesClick}>

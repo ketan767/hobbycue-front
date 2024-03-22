@@ -5,8 +5,8 @@
 .wrapper {
   display: flex;
   align-items: stretch;
-  max-width: 90vw;
-  margin: 0 auto;
+  max-width: 84.51vw;
+  margin: 0 8.402vw 0 7.083vw;
 }
 .contentWrapper {
   display: flex;
@@ -141,6 +141,13 @@
   min-height: 1rem;
 }
 
+@media screen and (max-width:1300px) {
+  .contentWrapper{
+    padding-right: 11.19vw;
+    gap: 11.19vw;
+  }
+}
+
 @media screen and (max-width: 1100px) {
   .rightSection .listHeading {
     font-size: 14px;
@@ -243,11 +250,16 @@ letter-spacing: 0.06px;
 
 
 @media screen and (min-width:1440px) {
+  .container{
+    max-width: 1440px;
+    margin: 0 auto;
+  }
   .wrapper{
-    max-width: 1296px;
+    max-width: 1217px;
+  margin: 0 121px 0 75px;
   }
   .contentWrapper{
-    padding-right: 190px;
-    gap: 190px;
+    padding-right: 215px;
+    gap: 215px;
   }
 }

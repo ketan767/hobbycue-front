@@ -321,7 +321,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       }
     } else {
       selectedHobby = data.hobby
-      setErrorOrmsg('hobby added Successfully!')
     }
 
     // Handle genre input
@@ -348,7 +347,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           genre.display.toLowerCase() === genreInputValue.toLowerCase(),
       )
       if (!matchedGenre) {
-        setShowAddHobbyModal(true)
+        setShowAddGenreModal(true)
         return
       } else {
         selectedGenre = data.genre
@@ -381,6 +380,9 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       if (err) {
         setAddHobbyBtnLoading(false)
         return console.log(err)
+      }
+      else{
+        setErrorOrmsg('Hobby added successfully!')
       }
       const { err: updtProfileErr, res: updtProfileRes } =
         await updateMyProfileDetail({ is_onboarded: true })
@@ -450,13 +452,15 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         )
 
         if (selectedGenre !== null && selectedGenre !== matchedGenre) {
-          setErrorOrmsg('Typed Genre not found!')
-          setHobbyError(true)
+          // setErrorOrmsg('Typed Genre not found!')
+          // setHobbyError(true)
+          setShowAddGenreModal(true)
           return
         }
         if (selectedGenre !== null && !matchedGenre) {
-          setErrorOrmsg("This hobby doesn't contain this genre")
-          setHobbyError(true)
+          // setErrorOrmsg("This hobby doesn't contain this genre")
+          // setHobbyError(true)
+          setShowAddGenreModal(true)
           return
         }
       } else {
@@ -712,35 +716,54 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   if (showAddHobbyModal) {
     return (
       <>
-        {genreInputValue.length === 0 ? (
-          <AddHobby
-            handleClose={() => {
-              setShowAddHobbyModal(false)
-            }}
-            handleSubmit={() => {
-              setShowSnackbar({
-                message: 'This feature is under development',
-                triggerOpen: true,
-                type: 'success',
-              })
-            }}
-            propData={{ defaultValue: hobbyInputValue }}
-          />
-        ) : (
-          <AddGenre
-            handleClose={() => {
-              setShowAddHobbyModal(false)
-            }}
-            handleSubmit={() => {
-              setShowSnackbar({
-                message: 'This feature is under development',
-                triggerOpen: true,
-                type: 'success',
-              })
-            }}
-            propData={{ defaultValue: genreInputValue }}
-          />
-        )}
+        {/* {genreInputValue.length === 0 ? ( */}
+        <AddHobby
+          handleClose={() => {
+            setShowAddHobbyModal(false)
+          }}
+          handleSubmit={() => {
+            setShowSnackbar({
+              message: 'This feature is under development',
+              triggerOpen: true,
+              type: 'success',
+            })
+          }}
+          propData={{ defaultValue: hobbyInputValue }}
+        />
+        {/* ) : ( */}
+        {/* )} */}
+        <CustomSnackbar
+          message={showSnackbar.message}
+          type={showSnackbar.type}
+          triggerOpen={showSnackbar.triggerOpen}
+          closeSnackbar={() => {
+            setShowSnackbar({
+              message: '',
+              triggerOpen: false,
+              type: 'success',
+            })
+          }}
+        />
+      </>
+    )
+  }
+
+  if (showAddGenreModal) {
+    return (
+      <>
+        <AddGenre
+          handleClose={() => {
+            setShowAddGenreModal(false)
+          }}
+          handleSubmit={() => {
+            setShowSnackbar({
+              message: 'This feature is under development',
+              triggerOpen: true,
+              type: 'success',
+            })
+          }}
+          propData={{ defaultValue: genreInputValue }}
+        />
         <CustomSnackbar
           message={showSnackbar.message}
           type={showSnackbar.type}
