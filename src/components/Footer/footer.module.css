@@ -256,10 +256,10 @@ letter-spacing: 0.06px;
   }
   .wrapper{
     max-width: 1217px;
-  margin: 0 121px 0 102px;
+  margin: 0 121px 0 75px;
   }
   .contentWrapper{
-    padding-right: 190px;
-    gap: 190px;
+    padding-right: 215px;
+    gap: 215px;
   }
 }
