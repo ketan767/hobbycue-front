@@ -269,11 +269,13 @@ const MainContent: React.FC<SearchResultsProps> = ({
 
   const noResultsFound =
     (searchResults.length === 0 &&
+      hobbyResults.length === 0 &&
       peopleResults.length === 0 &&
       placeResults.length === 0 &&
       EventResults.length === 0 &&
       showAll) ||
     (searchResults.length === 0 && showAllUsers) ||
+    (hobbyResults.length === 0 && showAllhobbies) ||
     (peopleResults.length === 0 && showAllPeople) ||
     (placeResults.length === 0 && showAllPlace) ||
     (EventResults.length === 0 && showAllEvent) ||
@@ -287,8 +289,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
             <p>
               The Explore functionality is under development. Use the Search box
               at the top to look up pages on your hobby by other users. If you
-              don&apos;t find any pages, you may Add Listing Page from the menu at
-              the top right corner.
+              don&apos;t find any pages, you may Add Listing Page from the menu
+              at the top right corner.
             </p>
           ) : (
             <p>No results for {searchString}</p>
