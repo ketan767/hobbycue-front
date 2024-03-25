@@ -146,7 +146,7 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
         <section className={styles['body']}>
           <div className={styles.inputField}>
             <label className={styles.label}>
-              OTP to set password has been sent to your registerd E-mail id.
+              OTP to set password has been sent to your registered E-mail id.
             </label>
             {/* <label className={styles.label}>Current Password</label> */}
             <div

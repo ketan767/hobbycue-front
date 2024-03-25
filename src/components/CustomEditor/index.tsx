@@ -94,10 +94,8 @@ const CustomEditor: React.FC<Props> = ({
       const img = res.data.data.url
       if (isVideo) {
         setData((prev: any) => ({ ...prev, video_url: img }))
-        alert('video uploaded')
       } else {
         setData((prev: any) => ({ ...prev, media: [...prev.media, img] }))
-        alert('image uploaded')
       }
       // window.location.reload()
       // dispatch(closeModal())

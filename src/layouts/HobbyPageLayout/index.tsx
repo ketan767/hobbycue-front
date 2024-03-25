@@ -18,6 +18,7 @@ import ChevronDown from '@/assets/svg/chevron-down.svg'
 import Image from 'next/image'
 import HobbyNavigationLinks from '@/components/HobbyPage/HobbyHeader/HobbyNavigationLinks'
 import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
+import { openModal } from '@/redux/slices/modal'
 type Props = {
   activeTab: HobbyPageTabs
   data: any
@@ -33,6 +34,7 @@ const HobbyPageLayout: React.FC<Props> = ({
   expandAll,
   setExpandAll,
 }) => {
+  const dispatch = useDispatch()
   const [showSmallHeader, setShowSmallHeader] = useState(false)
   const [members, setMembers] = useState([])
   const hideLastColumnPages = ['pages', 'blogs', 'links', 'store']
@@ -90,6 +92,12 @@ const HobbyPageLayout: React.FC<Props> = ({
 
   const toggleMembers = () => {
     setSeeAll(!seeAll)
+  }
+
+  const handleMemberClick = (user: any) => {
+    if (isLoggedIn) {
+      router.push(`/profile/${user.profile_url}`)
+    } else dispatch(openModal({ type: 'auth', closable: true }))
   }
   return (
     <>
@@ -185,7 +193,11 @@ const HobbyPageLayout: React.FC<Props> = ({
                       .slice(0, seeAll ? members.length : 5)
                       .map((user: any, idx: number) => (
                         <p key={idx}>
-                          <Link href={`/profile/${user.profile_url}`}>
+                          <div
+                            onClick={() => {
+                              handleMemberClick(user)
+                            }}
+                          >
                             <div className={styles['hobbies-members']}>
                               <Image
                                 className={styles['member-img']}
@@ -196,7 +208,7 @@ const HobbyPageLayout: React.FC<Props> = ({
                               />
                               <div>{user.full_name}</div>
                             </div>
-                          </Link>
+                          </div>
                         </p>
                       ))}
                     {members.length > 5 && !seeAll && (

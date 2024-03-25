@@ -339,7 +339,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                     <li>Observe</li>
                   </Link>
 
-                  <Link href={'/hobby/outdoor'}>
+                  <Link href={'/hobby/outdoors'}>
                     <li>Outdoors</li>
                   </Link>
 

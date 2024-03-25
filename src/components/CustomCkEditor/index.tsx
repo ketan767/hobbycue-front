@@ -17,7 +17,7 @@ interface Props {
   onChange: (value: string) => void
   image?: boolean
   setData?: any
-  placeholder? : string
+  placeholder?: string
 }
 
 const CustomCKEditor: React.FC<Props> = ({
@@ -25,7 +25,7 @@ const CustomCKEditor: React.FC<Props> = ({
   onChange,
   image,
   setData,
-  placeholder
+  placeholder,
 }) => {
   const editorRef = useRef(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -75,7 +75,7 @@ const CustomCKEditor: React.FC<Props> = ({
       console.log(res.data)
       const img = res.data.data.url
       setData((prev: any) => ({ ...prev, media: [...prev.media, img] }))
-      alert('image uploaded')
+
       // window.location.reload()
       // dispatch(closeModal())
     }
@@ -87,7 +87,7 @@ const CustomCKEditor: React.FC<Props> = ({
     <>
       <CKEditor
         ref={editorRef}
-        editor={ClassicEditor}        // @ts-ignore 
+        editor={ClassicEditor} // @ts-ignore
         data={value}
         onReady={(editor) => onReady(editor)}
         onChange={handleEditorChange}

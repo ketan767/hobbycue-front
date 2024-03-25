@@ -522,8 +522,16 @@ export const CreatePost: React.FC<Props> = ({
                       />
                     )}
                     <div>
-                      {metaData?.title && <p className={styles['metadata-title']}>{metaData?.title}</p>}
-                      {metaData?.url && <p className={styles['metadata-url']}>{metaData?.url}</p>}
+                      {metaData?.title && (
+                        <p className={styles['metadata-title']}>
+                          {metaData?.title}
+                        </p>
+                      )}
+                      {metaData?.url && (
+                        <p className={styles['metadata-url']}>
+                          {metaData?.url}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
