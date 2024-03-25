@@ -131,8 +131,6 @@ const ModalManager: React.FC = () => {
       dispatch(closeModal())
     } else if (confirmationModal) {
       setConfirmationModal(false)
-    } else if (activeModal === 'user-onboarding-welcome') {
-      router.reload()
     } else if (hasChanges) {
       setConfirmationModal(true)
     } else if (isLoggedIn && !user.is_onboarded) {

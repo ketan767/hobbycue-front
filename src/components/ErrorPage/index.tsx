@@ -21,11 +21,7 @@ const ErrorPage: FC<ErrorPageProps> = ({ restricted = false }) => {
         alt="Error Page Image"
         className={styles['notfoundImg']}
       />
-      <div
-        className={
-          styles['contentContainer'] + ` ${restricted ? styles['moveUp'] : ''}`
-        }
-      >
+      <div className={styles['contentContainer']}>
         <h1>Content unavailable</h1>
         <p>
           Oops! Please re-check the link. If it seems correct, maybe the owner

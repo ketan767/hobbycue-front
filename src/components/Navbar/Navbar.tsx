@@ -652,7 +652,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           <li>Observe</li>
                         </Link>
 
-                        <Link href={'/hobby/outdoor'}>
+                        <Link href={'/hobby/outdoors'}>
                           <li>Outdoors</li>
                         </Link>
 

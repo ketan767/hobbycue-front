@@ -54,7 +54,7 @@
 }
 .search-wrapper .inputField {
   display: flex;
-  flex-direction: row;
+ 
 }
 .inputField {
   width: 400px;

@@ -79,7 +79,7 @@ const ProfileSwitcher: React.FC<Props> = ({
                 ? `${styles['default-img']} default-program-listing-icon`
                 : activeProfile?.data?.type == 4
                 ? `${styles['default-img']} default-product-listing-icon`
-                : `${styles['default-img']} default-people-listing-icon`
+                : `${styles['default-img']} default-user-icon`
             }
             `}
             data-profile-type={activeProfile.type}

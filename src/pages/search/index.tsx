@@ -352,9 +352,13 @@ const MainContent: React.FC<SearchResultsProps> = ({
 
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{hobby.display}</div>
-                        <div
-                          className={styles.userTagline}
-                        >{`${hobby?.category?.display} | ${hobby?.sub_category?.display}`}</div>
+                        <div className={styles.userTagline}>{`${
+                          hobby?.category?.display ? hobby.category.display : ''
+                        }${
+                          hobby?.sub_category?.display
+                            ? ' | ' + hobby.sub_category.display
+                            : ''
+                        }`}</div>
                         <div className={styles.hobbydescription}>
                           {hobby?.description}
                         </div>

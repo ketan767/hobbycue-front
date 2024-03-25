@@ -9,7 +9,11 @@ import { closeModal } from '@/redux/slices/modal'
 import { IconButton, InputAdornment, TextField } from '@mui/material'
 import SearchIcon from '@/assets/svg/search-small.svg'
 import { setShowPageLoader } from '@/redux/slices/site'
-import { searchUsers } from '@/services/user.service'
+import {
+  getMyProfileDetail,
+  searchUsers,
+  updateMyProfileDetail,
+} from '@/services/user.service'
 import {
   Page,
   setHobbiesSearchResult,
@@ -24,6 +28,9 @@ import { getAllHobbies } from '@/services/hobby.service'
 import { RootState } from '@/redux/store'
 import defaultUserImage from '@/assets/svg/default-images/default-user-icon.svg'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import checkedboxChecked from '@/assets/svg/checkbox-checked.svg'
+import checkedboxUnChecked from '@/assets/svg/Checkbox-unchecked.svg'
+import { updateProfileData } from '@/redux/slices/user'
 
 type SearchInput = {
   search: InputData<string>
@@ -34,6 +41,7 @@ const UserOnboardingWelcomeModal = () => {
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
   })
+  const [showWelcome, setShowWelcome] = useState<boolean>(true)
   const dispatch = useDispatch()
   const router = useRouter()
   const initialInnerWidth = () => {
@@ -42,6 +50,7 @@ const UserOnboardingWelcomeModal = () => {
       return (width - 1300) / 2
     } else return 0
   }
+
   const [screenWidth, setScreenWidth] = useState(initialInnerWidth)
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
@@ -52,16 +61,7 @@ const UserOnboardingWelcomeModal = () => {
     display: false,
     message: '',
   })
-  const showFeatureUnderDevelopment = () => {
-    setSnackbar({
-      display: true,
-      type: 'warning',
-      message: 'This feature is under development. Come back soon to view this.',
-    })
-    setTimeout(()=>{
-      dispatch(closeModal());
-    },2000)
-  }
+  console.log('wel', user.show_welcome)
   const searchResult = async () => {
     dispatch(closeModal())
     router.push('/search')
@@ -178,7 +178,13 @@ const UserOnboardingWelcomeModal = () => {
       console.error('An error occurred during the combined search:', error)
     }
   }
+  const updateWelcomeStatus = async () => {
+    const { err: error, res: response } = await getMyProfileDetail()
+    console.log('userdataaa', response)
+    setShowWelcome(response?.data.data?.user?.show_welcome)
+  }
   useEffect(() => {
+    updateWelcomeStatus()
     const updateScreenWidth = () => {
       let width = window.innerWidth
       if (width - 1300 >= 0) {
@@ -190,317 +196,221 @@ const UserOnboardingWelcomeModal = () => {
       window.removeEventListener('resize', updateScreenWidth)
     }
   }, [])
+
+  const ShowWelcome = async () => {
+    if (showWelcome) {
+      const { err, res } = await updateMyProfileDetail({
+        show_welcome: false,
+      })
+      console.log('welcome false')
+      setShowWelcome(false)
+    } else {
+      const { err, res } = await updateMyProfileDetail({
+        show_welcome: true,
+      })
+      setShowWelcome(true)
+    }
+  }
+
   return (
     <>
-    <div className={styles.wrapper}>
-      <div className={styles['display-desktop']}>
-        <div
-          style={{ left: `calc(0rem + ${screenWidth}px - 5px)` }}
-          className={styles['my-community-wrapper']}
-        >
-          <Image
-            src="/logo-welcome-small.svg"
-            onClick={() => {
-              dispatch(closeModal())
-              router.push('/community')
-            }}
-            alt=""
-            width={55}
-            height={55}
-          />
-          <div>
-            <div className={styles['my-community']}>
-              <svg
-                width="22"
-                height="19"
-                viewBox="0 0 22 19"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M0 0V19H22L0 0Z" fill="white" />
-              </svg>
-              <div>
-                <p>My community</p>
-                <p>Communities specific to your Hobbies + Location.</p>
-
-                <FilledButton
-                  className={styles['button']}
-                  onClick={() => {
-                    router.push('/community')
-                    dispatch(closeModal())
-                  }}
-                >
-                  My Community
-                </FilledButton>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          style={{ left: `calc(5.4rem + ${screenWidth}px)` }}
-          className={styles['search-wrapper']}
-        >
-          {/* <div className={styles['search']}> */}
-          <TextField
-            variant="outlined"
-            placeholder="Search for anything on your hobbies..."
-            size="small"
-            className={styles.inputField}
-            onChange={handleInputChange}
-            value={data.search.value}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                searchResult()
-              }
-            }}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                borderRadius: '8px',
-                padding: 0,
-                overflow: 'hidden',
-                borderColor: 'red',
-                background: '#f8f9fa',
-                '& fieldset': {
-                  borderColor: '#EBEDF0',
-                  borderRight: 0,
-                },
-              },
-              '& .MuiInputBase-input': {
-                fontSize: '15px',
-              },
-              '& .MuiInputBase-input::placeholder': {
-                fontSize: '12px',
-                color: 'black',
-              },
-            }}
-            InputLabelProps={{ shrink: false }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    sx={{
-                      bgcolor: 'primary.main',
-                      borderRadius: '0px 8px 8px 0px',
-                      '&:hover': {
-                        bgcolor: 'primary.dark',
-                      },
-                    }}
-                  >
-                    <div
-                      className={styles['search-icon-container']}
-                      onClick={searchResult}
-                    >
-                      <Image
-                        src={SearchIcon}
-                        alt="search"
-                        width={16}
-                        height={16}
-                      />
-                    </div>
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-          {/* <div>
-              <p>Search here...</p>
-            </div> */}
-
-          {/* </div> */}
-          <div>
-            <div className={styles['search-content']}>
-              <svg
-                width="22"
-                height="19"
-                viewBox="0 0 22 19"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M0 0V19H22L0 0Z" fill="white" />
-              </svg>
-              <div>
-                <p>Search</p>
-                <p>Search the site and you may find your next cue.</p>
-                <FilledButton
-                  className={styles['button']}
-                  onClick={() => {
-                    router.push('/search')
-                    dispatch(closeModal())
-                  }}
-                >
-                  Search
-                </FilledButton>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          style={{ right: `calc(1.5rem + ${screenWidth}px)` }}
-          className={styles['my-profile-wrapper']}
-        >
-          <div className={styles['my-profile']}>
-            {user.profile_image ? (
-              <Image
-              onClick={()=>{
-                dispatch(closeModal())
-                router.push(`/profile/${user?.profile_url}`)}}
-                src={user?.profile_image ?? defaultUserImage}
-                alt=""
-                width={50}
-                height={50}
-                className={styles['my-profile-rounded']}
-              />
-            ) : (
-              <div
-                style={{ width: '50px', height: '50px' }}
-                className="default-user-icon"
-              ></div>
-            )}
-          </div>
-          <div>
-            <div className={styles['my-profile-content']}>
-              <svg
-                width="22"
-                height="19"
-                viewBox="0 0 22 19"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M22 0V19H0L22 0Z" fill="white" />
-              </svg>
-
-              <div>
-                <p>My Profile</p>
-                <p>View your Profile, Add Pics, Social and more.</p>
-                <FilledButton
-                  className={styles['button']}
-                  onClick={() => {
-                    dispatch(closeModal())
-                    router.reload()
-                  }}
-                >
-                  My Profile
-                </FilledButton>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className={styles['welcome-wrapper']}>
-          <div>
-            <Image src={'/celebration.png'} alt="" width={60} height={60} />
-          </div>
-          <div>
-            <p>Welcome to HobbyCue</p>
-            <div>
-              <p>Choose from one of the options to continue.</p>
-              <p>You can always find them on the top navigation.</p>
-            </div>
-          </div>
-          <div>
-          <svg onClick={()=>{showFeatureUnderDevelopment()}} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 17 16" fill="none">
-          <rect x="1.4043" y="0.5" width="15" height="15" rx="1.5" fill="white" stroke="#8064A2"/>
-          </svg>
-          <p>Do not show this next time</p>
-          </div>
-        </div>
-      </div>
-
-      <div className={`${styles['mobile']} ${styles['display-mobile']}`}>
-        <div>
-          <div className={styles['my-community-wrapper-mobile']}>
+      <div className={styles.wrapper}>
+        <div className={styles['display-desktop']}>
+          <div
+            style={{ left: `calc(0rem + ${screenWidth}px - 5px)` }}
+            className={styles['my-community-wrapper']}
+          >
             <Image
               src="/logo-welcome-small.svg"
               onClick={() => {
                 dispatch(closeModal())
+                router.push('/community')
               }}
               alt=""
-              width={40}
-              height={40}
+              width={55}
+              height={55}
             />
             <div>
-              <div className={styles['my-community-mobile']}>
+              <div className={styles['my-community']}>
                 <svg
-                  width="44"
-                  height="314"
-                  viewBox="0 0 44 314"
+                  width="22"
+                  height="19"
+                  viewBox="0 0 22 19"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path
-                    d="M1.78125 0.742188V308.418C1.78125 310.627 3.57211 312.418 5.78125 312.418H43.127"
-                    stroke="#1CB7EB"
-                    stroke-width="2"
-                  />
+                  <path d="M0 0V19H22L0 0Z" fill="white" />
+                </svg>
+                <div>
+                  <p>My community</p>
+                  <p>Communities specific to your Hobbies + Location.</p>
+
+                  <FilledButton
+                    className={styles['button']}
+                    onClick={() => {
+                      router.push('/community')
+                      dispatch(closeModal())
+                    }}
+                  >
+                    My Community
+                  </FilledButton>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style={{ left: `calc(5.4rem + ${screenWidth}px)` }}
+            className={styles['search-wrapper']}
+          >
+            {/* <div className={styles['search']}> */}
+            <TextField
+              variant="outlined"
+              placeholder="Search for anything on your hobbies..."
+              size="small"
+              className={styles.inputField}
+              onChange={handleInputChange}
+              value={data.search.value}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  searchResult()
+                }
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '8px',
+                  padding: 0,
+                  overflow: 'hidden',
+                  borderColor: 'red',
+                  background: '#f8f9fa',
+                  '& fieldset': {
+                    borderColor: '#EBEDF0',
+                    borderRight: 0,
+                  },
+                },
+                '& .MuiInputBase-input': {
+                  fontSize: '15px',
+                },
+                '& .MuiInputBase-input::placeholder': {
+                  fontSize: '12px',
+                  color: 'black',
+                },
+              }}
+              InputLabelProps={{ shrink: false }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      sx={{
+                        bgcolor: 'primary.main',
+                        borderRadius: '0px 8px 8px 0px',
+                        '&:hover': {
+                          bgcolor: 'primary.dark',
+                        },
+                      }}
+                    >
+                      <div
+                        className={styles['search-icon-container']}
+                        onClick={searchResult}
+                      >
+                        <Image
+                          src={SearchIcon}
+                          alt="search"
+                          width={16}
+                          height={16}
+                        />
+                      </div>
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            {/* <div>
+              <p>Search here...</p>
+            </div> */}
+
+            {/* </div> */}
+            <div>
+              <div className={styles['search-content']}>
+                <svg
+                  width="22"
+                  height="19"
+                  viewBox="0 0 22 19"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M0 0V19H22L0 0Z" fill="white" />
+                </svg>
+                <div>
+                  <p>Search</p>
+                  <p>Search the site and you may find your next cue.</p>
+                  <FilledButton
+                    className={styles['button']}
+                    onClick={() => {
+                      router.push('/search')
+                      dispatch(closeModal())
+                    }}
+                  >
+                    Search
+                  </FilledButton>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style={{ right: `calc(1.5rem + ${screenWidth}px)` }}
+            className={styles['my-profile-wrapper']}
+          >
+            <div className={styles['my-profile']}>
+              {user.profile_image ? (
+                <Image
+                  onClick={() => {
+                    dispatch(closeModal())
+                    router.push(`/profile/${user?.profile_url}`)
+                  }}
+                  src={
+                    user?.profile_image ? user?.profile_image : defaultUserImage
+                  }
+                  alt=""
+                  width={50}
+                  height={50}
+                  className={styles['my-profile-rounded']}
+                />
+              ) : (
+                <div
+                  style={{ width: '50px', height: '50px' }}
+                  className="default-user-icon"
+                ></div>
+              )}
+            </div>
+            <div>
+              <div className={styles['my-profile-content']}>
+                <svg
+                  width="22"
+                  height="19"
+                  viewBox="0 0 22 19"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M22 0V19H0L22 0Z" fill="white" />
                 </svg>
 
-                <div className={styles['my-community-mobile-content']}>
-                  <div>
-                    <p>My community</p>
-                    <p>Communities specific to your Hobbies + Location.</p>
-                  </div>
+                <div>
+                  <p>My Profile</p>
+                  <p>View your Profile, Add Pics, Social and more.</p>
+                  <FilledButton
+                    className={styles['button']}
+                    onClick={() => {
+                      dispatch(closeModal())
+                      router.reload()
+                    }}
+                  >
+                    My Profile
+                  </FilledButton>
                 </div>
               </div>
             </div>
           </div>
-          <div className={styles['search-wrapper-mobile']}>
-            <Image
-              onClick={searchResult}
-              src={'/searchIcon.svg'}
-              width={30}
-              height={30}
-              alt=""
-            />
-            <div>
-              <div className={styles['search-mobile']}>
-                <svg
-                  width="76"
-                  height="112"
-                  viewBox="0 0 76 112"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M74.3128 0.0234375V106.738C74.3128 108.947 72.5219 110.738 70.3128 110.738H0.9375"
-                    stroke="#1CB7EB"
-                    stroke-width="2"
-                  />
-                </svg>
-                <div className={styles['search-mobile-content']}>
-                  <div>
-                    <p>Search</p>
-                    <p>Search the site and you may find your next cue.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className={styles['my-profile-wrapper-mobile']}>
-            <Image src={'/hamburger-menu.svg'} width={30} height={30} alt="" />
-            <div>
-              <div className={styles['my-profile-mobile']}>
-                <svg
-                  width="68"
-                  height="215"
-                  viewBox="0 0 68 215"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M66.3993 0.0859375V209.441C66.3993 211.651 64.6085 213.441 62.3993 213.441H0.429688"
-                    stroke="#1CB7EB"
-                    stroke-width="2"
-                  />
-                </svg>
-                <div className={styles['my-profile-mobile-content']}>
-                  <div>
-                    <p>My Profile</p>
-                    <p>Search the site and you may find your next cue.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className={styles['welcome-wrapper-mobile']}>
+          <div className={styles['welcome-wrapper']}>
             <div>
               <Image src={'/celebration.png'} alt="" width={60} height={60} />
             </div>
@@ -511,22 +421,145 @@ const UserOnboardingWelcomeModal = () => {
                 <p>You can always find them on the top navigation.</p>
               </div>
             </div>
+            <div>
+              <Image
+                alt={'dont show checkbox'}
+                onClick={ShowWelcome}
+                src={showWelcome ? checkedboxUnChecked : checkedboxChecked}
+              />
+              <p>Do not show this next time</p>
+            </div>
+          </div>
+        </div>
+
+        <div className={`${styles['mobile']} ${styles['display-mobile']}`}>
+          <div>
+            <div className={styles['my-community-wrapper-mobile']}>
+              <Image
+                src="/logo-welcome-small.svg"
+                onClick={() => {
+                  dispatch(closeModal())
+                }}
+                alt=""
+                width={40}
+                height={40}
+              />
+              <div>
+                <div className={styles['my-community-mobile']}>
+                  <svg
+                    width="44"
+                    height="314"
+                    viewBox="0 0 44 314"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M1.78125 0.742188V308.418C1.78125 310.627 3.57211 312.418 5.78125 312.418H43.127"
+                      stroke="#1CB7EB"
+                      stroke-width="2"
+                    />
+                  </svg>
+
+                  <div className={styles['my-community-mobile-content']}>
+                    <div>
+                      <p>My community</p>
+                      <p>Communities specific to your Hobbies + Location.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className={styles['search-wrapper-mobile']}>
+              <Image
+                onClick={searchResult}
+                src={'/searchIcon.svg'}
+                width={30}
+                height={30}
+                alt=""
+              />
+              <div>
+                <div className={styles['search-mobile']}>
+                  <svg
+                    width="76"
+                    height="112"
+                    viewBox="0 0 76 112"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M74.3128 0.0234375V106.738C74.3128 108.947 72.5219 110.738 70.3128 110.738H0.9375"
+                      stroke="#1CB7EB"
+                      stroke-width="2"
+                    />
+                  </svg>
+                  <div className={styles['search-mobile-content']}>
+                    <div>
+                      <p>Search</p>
+                      <p>Search the site and you may find your next cue.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className={styles['my-profile-wrapper-mobile']}>
+              <Image
+                src={'/hamburger-menu.svg'}
+                width={30}
+                height={30}
+                alt=""
+              />
+              <div>
+                <div className={styles['my-profile-mobile']}>
+                  <svg
+                    width="68"
+                    height="215"
+                    viewBox="0 0 68 215"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M66.3993 0.0859375V209.441C66.3993 211.651 64.6085 213.441 62.3993 213.441H0.429688"
+                      stroke="#1CB7EB"
+                      stroke-width="2"
+                    />
+                  </svg>
+                  <div className={styles['my-profile-mobile-content']}>
+                    <div>
+                      <p>My Profile</p>
+                      <p>Search the site and you may find your next cue.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className={styles['welcome-wrapper-mobile']}>
+              <div>
+                <Image src={'/celebration.png'} alt="" width={60} height={60} />
+              </div>
+              <div>
+                <p>Welcome to HobbyCue</p>
+                <div>
+                  <p>Choose from one of the options to continue.</p>
+                  <p>You can always find them on the top navigation.</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    {
+      {
         <CustomSnackbar
           message={snackbar?.message}
           triggerOpen={snackbar?.display}
           type={snackbar.type === 'success' ? 'success' : 'error'}
           closeSnackbar={() => {
-            dispatch(closeModal());
+            dispatch(closeModal())
             setSnackbar((prevValue) => ({ ...prevValue, display: false }))
           }}
         />
       }
-  </>)
+    </>
+  )
 }
 
 export default UserOnboardingWelcomeModal

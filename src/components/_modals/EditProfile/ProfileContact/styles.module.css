@@ -61,6 +61,15 @@
 .modal-close-icon:hover {
   background: #ddd;
 }
+
+.skipIcon:focus-visible{
+  border-radius: 12px;
+  outline: 1px solid rgb(var(--primary-100-rgb)) !important;
+}
+
+.skipIcon:focus{
+  outline: none;
+}
 @media screen and (min-width: 1100px) {
   .modal-wrapper {
     max-height: calc(100vh - 6rem);

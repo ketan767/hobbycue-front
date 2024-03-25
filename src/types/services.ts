@@ -43,6 +43,7 @@ type UpdateProfilePayload = {
   social_media_urls?: any
   primary_address?: any;
   onboarding_step?: string;
+  show_welcome?: any
 }
 
 type ProfileAddressPayload = {
