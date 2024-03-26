@@ -157,7 +157,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
   }, [])
 
   const router = useRouter()
-
+  
   useEffect(() => {
     // Save scroll position when navigating away from the page
     const handleRouteChange = () => {

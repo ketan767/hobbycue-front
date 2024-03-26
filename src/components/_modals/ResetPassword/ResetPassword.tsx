@@ -61,6 +61,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
   const { forgotPasswordEmail } = useSelector((state: any) => state.modal)
 
   const newPasswordRef = useRef<HTMLInputElement>(null)
+  const confirmPasswordRef = useRef<HTMLInputElement>(null)
   const otpRef = useRef<HTMLInputElement>(null)
 
   const [showValidations, setShowValidations] = useState(false)
@@ -76,7 +77,8 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
   })
   const handleSubmit = async () => {
     if (confirmPassword !== newPassword) {
-      setErrors({ ...errors, confirmPassword: 'Passwords does not match!' })
+      setErrors({ ...errors, confirmPassword: 'Passwords does not match!' });
+      confirmPasswordRef?.current?.focus();
       return
     }
     setSubmitBtnLoading(true)
@@ -291,6 +293,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
                 value={confirmPassword}
                 placeholder="Confirm New Password"
                 onChange={(e) => setConfirmPassword(e.target.value)}
+                inputRef={confirmPasswordRef}
                 // InputProps={{
                 //   endAdornment: (
                 //     <IconButton
