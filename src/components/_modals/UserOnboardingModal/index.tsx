@@ -73,7 +73,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
       dispatch(updateUser(res.data.data.user))
       dispatch(closeModal())
 
-      router.push(`/profile/${user.profile_url}`)
+      window.location.href = `/profile/${user.profile_url}`
     }
   }
   function handleClose() {
@@ -212,7 +212,8 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
 
             return (
               <span
-                tabIndex={isClickable?0:-1}
+                tabIndex={isClickable ? 0 : -1}
+                tabIndex={isClickable ? 0 : -1}
                 key={step}
                 className={`${styles['step']} ${
                   isClickable ? styles['active'] : ''
@@ -222,10 +223,12 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
                     ? () => setActiveStep(totalSteps[index])
                     : undefined
                 }
-                onKeyDown={(e)=>{
-                  if(e.key==="Enter"){
-                    e.stopPropagation();
-                    if(isClickable){setActiveStep(totalSteps[index])}    
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.stopPropagation()
+                    if (isClickable) {
+                      setActiveStep(totalSteps[index])
+                    }
                   }
                 }}
               ></span>

@@ -34,11 +34,11 @@ const SaveModal: React.FC<Props> = ({
   const onboardcheck = () => {
     console.log('isError', isError)
     if (OnBoarding || !user.is_onboarded) {
-      router.reload()
+      router.push(`/profile/${user.profile_url}`)
     } else if (isError) {
       setConfirmationModal(false)
     }
-    // this function is onclick of Yes & No both which makes hasChange to false on pure close of any modal
+
     dispatch(setHasChanges(false))
   }
 
