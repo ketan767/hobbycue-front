@@ -7,9 +7,13 @@
   display: flex;
   flex-direction: column;
 }
+
+.all-available label {
+  font-weight: 600 !important;
+}
 @media screen and (min-width: 1100px) {
   .modal-wrapper {
-    max-height: calc(100vh - 6rem);
+    max-height: calc(100vh - 2rem);
   }
   .modal-wrapper .body {
     height: calc(100vh - 6rem);
@@ -30,10 +34,11 @@ text-align: left;
 }
 .modal-wrapper .body {
   margin-top: auto;
-  padding: var(--spacing-16) var(--spacing-24);
+  padding: var(--spacing-8) var(--spacing-24);
+  padding-bottom: 0;
 }
 .modal-wrapper .footer {
-  padding: var(--spacing-16) var(--spacing-24);
+  padding: 12px 24px 22px 24px;
   margin-top: auto;
   display: flex;
   justify-content: space-between;
@@ -82,6 +87,9 @@ text-align: left;
 .input-box:has(input[required]) label::after {
   content: '*';
   color: rgba(192, 80, 77, 1);
+}
+.hr-line-temp{
+  margin: 1rem 0 12px 0;
 }
 
 
@@ -142,7 +150,7 @@ line-height: 22px; /* 157.143% */
 
 .heading{
   padding-left: 24px;
-  padding-top: 25px;
+  padding-top: 16px;
 }
 
 .checkbox-row {

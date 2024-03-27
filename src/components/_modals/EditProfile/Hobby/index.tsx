@@ -797,7 +797,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       <div className={styles['modal-wrapper']}>
         <CloseIcon
           className={styles['modal-close-icon']}
-          onClick={handleClosee}
+          onClick={handleClose}
         />
         {/* Modal Header */}
         <header className={styles['header']}>
