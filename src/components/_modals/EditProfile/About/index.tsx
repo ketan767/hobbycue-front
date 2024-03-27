@@ -35,6 +35,7 @@ type Props = {
   handleClose?: any
   isError?: boolean
   onStatusChange?: (isChanged: boolean) => void
+  showSkip?:boolean
 }
 
 type ProfileAboutData = {
@@ -49,6 +50,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
   setConfirmationModal,
   handleClose,
   onStatusChange,
+  showSkip
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -315,7 +317,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
         {/* Modal Header */}
         <header className={styles['header']}>
           <h4 className={styles['heading']}>{'About'}</h4>
-          {user.is_onboarded ? null : skipSvg}
+          {(!user.is_onboarded && showSkip) ? skipSvg : null}
         </header>
         <hr className={styles['modal-hr']} />
         <section className={styles['body']}>

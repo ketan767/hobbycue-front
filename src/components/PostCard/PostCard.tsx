@@ -160,7 +160,9 @@ const PostCard: React.FC<Props> = (props) => {
     if (props.currentSection === 'links') {
       fetchComments()
     }
-  }, [])
+  }, []);
+  console.warn({postData});
+  
   return (
     <>
       <div className={styles['post-card-wrapper']} onClick={handleCardClick}>

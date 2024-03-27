@@ -490,3 +490,7 @@ select:-webkit-autofill {
 border: 1px solid #8064a2 !important;
   outline: none;
 }
+
+.static-position{
+  position: static;
+}

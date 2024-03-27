@@ -170,6 +170,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
           confirmationModal={confirmationModal}
           handleClose={handleClose}
           onStatusChange={handleStatusChange}
+          showSkip
         />
       )}
       {activeStep === 'Contact' && (
@@ -180,6 +181,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
           confirmationModal={confirmationModal}
           handleClose={handleClose}
           onStatusChange={handleStatusChange}
+          showSkip
         />
       )}
       {activeStep === 'Address' && (

@@ -162,6 +162,20 @@ const ListingContactEditModal: React.FC<Props> = ({
     }
   }
 
+  const handleBlur = (e: any) => {
+    const {name,value} = e.target;
+      setWpSelectedCountryCode(selectedCountryCode)
+    if(name==="phone"){
+      setData((prev) => ({
+        ...prev,
+        "whatsapp_number": {
+          ...prev["whatsapp_number"],
+          number: value || '',
+          error: null,
+        },
+      }))
+    }
+  }
   const handleBack = async () => {
     setBackBtnLoading(true)
     const { phone, public_email, website, whatsapp_number } = data
@@ -342,20 +356,21 @@ const ListingContactEditModal: React.FC<Props> = ({
       )
   }, [user])
 
-  useEffect(() => {
-    if (tick) {
-      setData((prev) => {
-        return {
-          ...prev,
-          whatsapp_number: {
-            number: data.phone.number,
-            prefix: selectedCountryCode,
-          },
-        }
-      })
-      setWpSelectedCountryCode(selectedCountryCode)
-    }
-  }, [tick, data.phone.number, selectedCountryCode])
+  // client said to remove this checkbox function
+  // useEffect(() => {
+  //   if (tick) {
+  //     setData((prev) => {
+  //       return {
+  //         ...prev,
+  //         whatsapp_number: {
+  //           number: data.phone.number,
+  //           prefix: selectedCountryCode,
+  //         },
+  //       }
+  //     })
+  //     setWpSelectedCountryCode(selectedCountryCode)
+  //   }
+  // }, [data.phone.number, selectedCountryCode, tick])
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
@@ -543,6 +558,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                     ref={phoneRef}
                     onChange={handleInputChange}
                     className={styles['phone-input']}
+                    onBlur={handleBlur}
                   />
                 </div>
 
@@ -551,7 +567,7 @@ const ListingContactEditModal: React.FC<Props> = ({
               <div className={styles['input-box']}>
                 <label className={styles['whatsapp-label']}>
                   WhatsApp
-                  <CustomTooltip title="Use same">
+                  {/* <CustomTooltip title="Use same">
                     <div>
                       <Checkbox
                         size="small"
@@ -577,7 +593,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                         }}
                       />
                     </div>
-                  </CustomTooltip>
+                  </CustomTooltip> */}
                 </label>
                 <div className={styles['phone-prefix-input']}>
                   <DropdownMenu
