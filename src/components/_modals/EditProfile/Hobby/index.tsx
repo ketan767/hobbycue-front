@@ -1185,6 +1185,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           <button
             ref={nextButtonRef}
             className="modal-footer-btn submit"
+            tabIndex={0}
             onClick={handleSubmit}
             disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
           >

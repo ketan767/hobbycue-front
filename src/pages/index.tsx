@@ -24,10 +24,12 @@ import {
   showAllProductsTrue,
 } from '@/redux/slices/search'
 import DownloadInMobile from '@/components/DownloadInMobile'
+import InstallPopup from '@/components/InstallPopup/InstallPopup'
 
 const Home: React.FC<PropTypes> = function () {
   const [isPlaying, setIsPlaying] = useState(false)
   const [duration, setDuration] = useState(0)
+  const [showAddToHome,setShowAddToHome] = useState<boolean|"loading">("loading")
 
   const dispatch = useDispatch()
   const openLogin = () => {
@@ -98,6 +100,15 @@ const Home: React.FC<PropTypes> = function () {
       }
     }
   }, [])
+
+  useEffect(()=>{
+    const localShowAddtoHome = localStorage.getItem("addToHomePopup");
+    if(localShowAddtoHome==="false"){
+      setShowAddToHome(false);
+    }else{
+      setShowAddToHome(true)
+    }
+  },[])
 
   const audioRef = useRef<HTMLAudioElement>(null)
 
@@ -442,6 +453,7 @@ const Home: React.FC<PropTypes> = function () {
       <section className={`site-container ${styles['site-container-footer']}`}>
         <Footer />
       </section>
+       {showAddToHome===true&&<InstallPopup showAddToHome={showAddToHome} setShowAddToHome={setShowAddToHome}/>}
     </>
   )
 }
