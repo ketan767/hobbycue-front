@@ -211,7 +211,6 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
             return (
               <span
                 tabIndex={isClickable ? 0 : -1}
-                tabIndex={isClickable ? 0 : -1}
                 key={step}
                 className={`${styles['step']} ${
                   isClickable ? styles['active'] : ''
