@@ -33,6 +33,7 @@ type Props = {
   handleClose?: any
   isError?: boolean
   onStatusChange?: (isChanged: boolean) => void
+  showSkip?: boolean
 }
 type ProfileContactData = {
   public_email: InputData<string>
@@ -56,6 +57,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
   setConfirmationModal,
   handleClose,
   onStatusChange,
+  showSkip,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -125,8 +127,22 @@ const ProfileContactEditModal: React.FC<Props> = ({
     }
   }
 
+  const handleBlur = (e: any) => {
+    const { name, value } = e.target
+    setWpSelectedCountryCode(selectedCountryCode)
+    if (name === 'phone') {
+      setData((prev) => ({
+        ...prev,
+        whatsapp_number: {
+          ...prev['whatsapp_number'],
+          number: value || '',
+          error: null,
+        },
+      }))
+    }
+  }
+
   const Backsave = async () => {
-    console.warn('runnign back')
     setBackBtnLoading(true)
     if (
       (!data.public_email.value || data.public_email.value === '') &&
@@ -274,20 +290,21 @@ const ProfileContactEditModal: React.FC<Props> = ({
       }
     }
   }
-  useEffect(() => {
-    if (tick) {
-      setData((prev) => {
-        return {
-          ...prev,
-          whatsapp_number: {
-            number: data.phone.number,
-            prefix: selectedCountryCode,
-          },
-        }
-      })
-      setWpSelectedCountryCode(selectedCountryCode)
-    }
-  }, [data.phone.number, selectedCountryCode, tick])
+  // client said to remove this checkbox function
+  // useEffect(() => {
+  //   if (tick) {
+  //     setData((prev) => {
+  //       return {
+  //         ...prev,
+  //         whatsapp_number: {
+  //           number: data.phone.number,
+  //           prefix: selectedCountryCode,
+  //         },
+  //       }
+  //     })
+  //     setWpSelectedCountryCode(selectedCountryCode)
+  //   }
+  // }, [data.phone.number, selectedCountryCode, tick])
 
   useEffect(() => {
     setData((prev) => {
@@ -358,7 +375,11 @@ const ProfileContactEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        nextButtonRef.current?.focus()
+        if (event.target.tagName.toLowerCase() === 'svg') {
+          onComplete
+        } else {
+          nextButtonRef.current?.focus()
+        }
       }
     }
 
@@ -447,7 +468,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
         {/* Modal Header */}
         <header className={styles['header']}>
           <h4 className={styles['heading']}>{'Contact Information'}</h4>
-          {user.is_onboarded ? null : skipSvg}
+          {!user.is_onboarded && showSkip ? skipSvg : null}
         </header>
 
         <hr className={styles['modal-hr']} />
@@ -508,6 +529,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
                     onChange={handleInputChange}
                     ref={phoneRef}
                     className={styles['phone-input']}
+                    onBlur={handleBlur}
                   />
                 </div>
                 <p className={styles['helper-text']}>{data.phone.error}</p>
@@ -517,7 +539,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
               <div className={styles['input-box']}>
                 <label className={styles['whatsapp-label']}>
                   WhatsApp
-                  <CustomTooltip title="Use same">
+                  {/* <CustomTooltip title="Use same">
                     <div>
                       <Checkbox
                         size="small"
@@ -545,7 +567,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
                         }}
                       />{' '}
                     </div>
-                  </CustomTooltip>
+                  </CustomTooltip> */}
                 </label>
                 <div className={styles['phone-prefix-input']}>
                   <DropdownMenu

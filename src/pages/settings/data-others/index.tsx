@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import styles from './style.module.css'
+import exploreStyles from '@/styles/ExplorePage.module.css'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import SettingsSidebar from '@/layouts/SettingsSidebar/SettingsSidebar'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
@@ -59,6 +60,15 @@ const DataAndOthers: React.FC<Props> = ({}) => {
   const isMobile = useMediaQuery('(max-width:1100px)');
   return (
     <>
+          {isMobile&&<aside className={`${exploreStyles['community-left-aside']} custom-scrollbar static-position`}>
+        <section className="content-box-wrapper">
+          <header>
+            <div className={exploreStyles['heading']}>
+              <h1>Settings</h1>
+            </div>
+          </header>
+        </section>
+      </aside>}
       <PageGridLayout column={2}>
       <SettingsDropdownLayout>
         {isMobile?null:<SettingsSidebar active="data-others" />}

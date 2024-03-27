@@ -320,7 +320,8 @@
 .navigation-links ul {
   list-style: none;
   display: flex;
- 
+  justify-content: center;
+  gap: 38px;
   align-items: center;
   padding: 0 0px;
 }
