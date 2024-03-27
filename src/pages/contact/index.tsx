@@ -115,6 +115,21 @@ const Contact: React.FC<Props> = ({}) => {
     }
   }
 
+  const handleBlur = (e: any) => {
+    const {name,value} = e.target;
+      setWpSelectedCountryCode(selectedCountryCode)
+    if(name==="phone"){
+      setData((prev) => ({
+        ...prev,
+        "whatsapp_number": {
+          ...prev["whatsapp_number"],
+          number: value || '',
+          error: null,
+        },
+      }))
+    }
+  }
+
   const handleSubmit = async () => {
     if (
       (!data.public_email.value || data.public_email.value === '') &&
@@ -328,6 +343,7 @@ const Contact: React.FC<Props> = ({}) => {
                       onChange={handleInputChange}
                       ref={phoneRef}
                       className={styles['phone-input']}
+                      onBlur={handleBlur}
                     />
                   </div>
                   <p className={styles['helper-text']}>{data.phone.error}</p>
@@ -337,7 +353,7 @@ const Contact: React.FC<Props> = ({}) => {
                 <div className={styles['input-box']}>
                   <label className={styles['whatsapp-label']}>
                     WhatsApp
-                    <CustomTooltip title="Use same">
+                    {/* <CustomTooltip title="Use same">
                       <div>
                         <Checkbox
                           size="small"
@@ -365,7 +381,7 @@ const Contact: React.FC<Props> = ({}) => {
                           }}
                         />{' '}
                       </div>
-                    </CustomTooltip>
+                    </CustomTooltip> */}
                   </label>
                   <div className={styles['phone-prefix-input']}>
                     <DropdownMenu
