@@ -22,6 +22,7 @@ import {
   showAllEventTrue,
   showAllUsersTrue,
   showAllTrue,
+  resetSearch,
 } from '@/redux/slices/search'
 import LogoFull from '@/assets/image/logo-full.svg'
 import LogoSmall from '@/assets/image/logo-small.png'
@@ -463,6 +464,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={(e) => {
                             e.preventDefault()
+                            dispatch(resetSearch())
                             dispatch(showAllPeopleTrue())
 
                             router.push('/search')
@@ -484,6 +486,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={(e) => {
                             e.preventDefault()
+                            dispatch(resetSearch())
                             dispatch(showAllPlaceTrue())
                             router.push('/search')
                           }}
@@ -499,6 +502,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={(e) => {
                             e.preventDefault()
+                            dispatch(resetSearch())
                             dispatch(showAllEventTrue())
                             router.push('/search')
                           }}
@@ -514,6 +518,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={(e) => {
                             e.preventDefault()
+                            dispatch(resetSearch())
                             dispatch(showAllProductsTrue())
                             router.push('/search')
                           }}

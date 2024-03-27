@@ -63,9 +63,8 @@
     max-height: calc(100vh - 6rem);
   }
   .modal-wrapper .body {
-    height: 100%;
+    height: calc(100vh - 6rem);
     overflow: auto;
-    max-height: max-content;
   }
 }
 .modal-wrapper .header,

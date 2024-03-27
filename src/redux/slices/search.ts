@@ -274,13 +274,16 @@ export const searchSlice = createSlice({
       state.showAllEvent = false;
       state.showAllProducts = false;
       state.showAllPlace = false;
+    },
+    resetSearch:()=>{
+      return initialState
     }
   },
 });
 
 export const { setUserSearchResults, setTypeResultOne,setTypeResultTwo, setTypeResultThree, setSearchString,
    setHobbiesSearchResult,toggleShowAll, toggleShowAllUsers, toggleShowAllPeople, toggleShowAllPlace, toggleShowAllEvent,toggleShowAllProducts,
-  showAllEventTrue,showAllPeopleTrue,showAllPlaceTrue,showAllUsersTrue,showAllProductsTrue, showAllTrue, toggleShowAllHobbies
+  showAllEventTrue,showAllPeopleTrue,showAllPlaceTrue,showAllUsersTrue,showAllProductsTrue, showAllTrue, toggleShowAllHobbies, resetSearch
   } = searchSlice.actions;
 
 export default searchSlice.reducer;

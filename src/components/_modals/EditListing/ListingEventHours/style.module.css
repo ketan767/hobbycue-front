@@ -22,11 +22,15 @@
 }
 
 @media screen and (min-width: 1100px) {
+  .modal-wrapper {
+    max-height: calc(100vh - 6rem);
+  }
   .modal-wrapper .body {
-    height: 100%;
+    height: calc(100vh - 6rem);
     overflow: auto;
   }
 }
+
 .modal-wrapper .header,
 .modal-wrapper .body {
   padding: var(--spacing-16) var(--spacing-24);
@@ -196,6 +200,11 @@
   display: flex;
   align-items: center;
   font-size: 14px;
+}
+
+.listItem input:focus-visible, .listItem select:focus-visible{
+  outline: none;
+  border: 1px solid #8064a2;
 }
 
 .listSubItem {

@@ -721,9 +721,11 @@ const CommunityLayout: React.FC<Props> = ({
                   className={`content-box-wrapper ${styles['start-post-btn-container']}`}
                 >
                   <Image
-                    src={user?.user?.profile_image ?? defaultUserIcon}
+                    src={user?.profile_image ?? defaultUserIcon}
                     alt=""
                     className={styles['profile-img']}
+                    height={40}
+                    width={40}
                   />
                   <button
                     onClick={() => {

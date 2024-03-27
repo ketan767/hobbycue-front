@@ -68,15 +68,9 @@
 @media screen and (min-width: 1100px) {
   .modal-container {
     min-height: 20rem;
-    height: calc(100vh - 2rem);
+    /* height: calc(100vh - 2rem); */
     max-height: 60rem;
     min-width: 600px;
-  }
-  .modal-wrapper {
-    height: 100%;
-  }
-  .modal-wrapper .body {
-    height: 100%;
   }
   .input-box {
     display: flex;
@@ -86,6 +80,18 @@
     width: 100%;
   }
 }
+
+@media screen and (min-width: 1100px) {
+  .modal-wrapper {
+    max-height: calc(100vh - 6rem);
+    min-height: calc(100vh - 6rem);
+  }
+  .modal-wrapper .body {
+    height: calc(100vh - 6rem);
+    overflow: auto;
+  }
+}
+
 .modal-wrapper .header,
 .modal-wrapper .body {
   padding: var(--spacing-16) var(--spacing-24);
