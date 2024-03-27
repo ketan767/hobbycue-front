@@ -8,9 +8,12 @@ import useOutsideAlerter from '@/hooks/useOutsideAlerter'
 import { updateActiveProfile } from '@/redux/slices/user'
 import { updateListingModalData } from '@/redux/slices/site'
 
-type Props = {}
+type Props = {
+  className?:string
+}
 
 const ProfileSwitcher: React.FC<Props> = (props) => {
+  const {className} = props;
   const { user, listing, activeProfile } = useSelector(
     (state: RootState) => state.user,
   )
@@ -36,7 +39,9 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
       <section
         className={`content-box-wrapper ${styles['profile-switcher']} ${
           showDropdown ? styles['show-dropdown'] : ''
-        }`}
+        }
+        ${className}
+        `}
         ref={dropdownRef}
         onClick={() => setShowDropdown((prev) => !prev)}
       >

@@ -160,7 +160,7 @@ outline: none;
     max-height: calc(100vh - 6rem);
   }
   .modal-wrapper .body {
-    height: 485px;
+    height: calc(100vh - 6rem);
     overflow: auto;
   }
 }

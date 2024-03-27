@@ -52,12 +52,11 @@
 @media screen and (min-width: 1100px) {
   .modal-wrapper {
     max-height: calc(100vh - 6rem);
-    height: calc(100vh - 6rem);
   }
   .modal-wrapper .body {
-    height: 100%;
+    height: calc(100vh - 6rem);
+    overflow: auto;
   }
-  
 }
 .modal-wrapper .header {
   padding: var(--spacing-16) var(--spacing-24);

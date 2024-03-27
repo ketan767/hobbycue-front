@@ -14,7 +14,7 @@ import { countryData } from '@/utils/countrydata'
 import DropdownMenu from '@/components/DropdownMenu'
 import DownArrow from '@/assets/svg/chevron-down.svg'
 import Image from 'next/image'
-import { CircularProgress } from '@mui/material'
+import { CircularProgress, useMediaQuery } from '@mui/material'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import { addContactUs } from '@/services/user.service'
 import { containOnlyNumbers } from '@/utils'
@@ -116,13 +116,13 @@ const Contact: React.FC<Props> = ({}) => {
   }
 
   const handleBlur = (e: any) => {
-    const {name,value} = e.target;
-      setWpSelectedCountryCode(selectedCountryCode)
-    if(name==="phone"){
+    const { name, value } = e.target
+    setWpSelectedCountryCode(selectedCountryCode)
+    if (name === 'phone') {
       setData((prev) => ({
         ...prev,
-        "whatsapp_number": {
-          ...prev["whatsapp_number"],
+        whatsapp_number: {
+          ...prev['whatsapp_number'],
           number: value || '',
           error: null,
         },
@@ -252,11 +252,35 @@ const Contact: React.FC<Props> = ({}) => {
       }))
     }
   }, [user, activeProfile, isLoggedIn])
-
+  const isMobile = useMediaQuery('(max-width:1100px)')
+  const questionSvg = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+    >
+      <path
+        d="M7.965 12.2C8.21 12.2 8.4172 12.1153 8.5866 11.9459C8.756 11.7765 8.84047 11.5695 8.84 11.325C8.84 11.08 8.75553 10.8728 8.5866 10.7034C8.41767 10.534 8.21047 10.4495 7.965 10.45C7.72 10.45 7.51303 10.5347 7.3441 10.7041C7.17517 10.8735 7.09047 11.0805 7.09 11.325C7.09 11.57 7.1747 11.7772 7.3441 11.9466C7.5135 12.116 7.72047 12.2005 7.965 12.2ZM7.335 9.505H8.63C8.63 9.12 8.67387 8.81667 8.7616 8.595C8.84933 8.37333 9.09713 8.07 9.505 7.685C9.80833 7.38167 10.0475 7.0928 10.2225 6.8184C10.3975 6.544 10.485 6.21453 10.485 5.83C10.485 5.17667 10.2458 4.675 9.7675 4.325C9.28917 3.975 8.72333 3.8 8.07 3.8C7.405 3.8 6.86553 3.975 6.4516 4.325C6.03767 4.675 5.7488 5.095 5.585 5.585L6.74 6.04C6.79833 5.83 6.9297 5.6025 7.1341 5.3575C7.3385 5.1125 7.65047 4.99 8.07 4.99C8.44333 4.99 8.72333 5.0922 8.91 5.2966C9.09667 5.501 9.19 5.72547 9.19 5.97C9.19 6.20333 9.12 6.4222 8.98 6.6266C8.84 6.831 8.665 7.02047 8.455 7.195C7.94167 7.65 7.62667 7.99417 7.51 8.2275C7.39333 8.46083 7.335 8.88667 7.335 9.505ZM8 15C7.03167 15 6.12167 14.8164 5.27 14.4491C4.41833 14.0818 3.6775 13.583 3.0475 12.9525C2.4175 12.3225 1.91887 11.5817 1.5516 10.73C1.18433 9.87833 1.00047 8.96833 1 8C1 7.03167 1.18387 6.12167 1.5516 5.27C1.91933 4.41833 2.41797 3.6775 3.0475 3.0475C3.6775 2.4175 4.41833 1.91887 5.27 1.5516C6.12167 1.18433 7.03167 1.00047 8 1C8.96833 1 9.87833 1.18387 10.73 1.5516C11.5817 1.91933 12.3225 2.41797 12.9525 3.0475C13.5825 3.6775 14.0814 4.41833 14.4491 5.27C14.8168 6.12167 15.0005 7.03167 15 8C15 8.96833 14.8161 9.87833 14.4484 10.73C14.0807 11.5817 13.582 12.3225 12.9525 12.9525C12.3225 13.5825 11.5817 14.0814 10.73 14.4491C9.87833 14.8168 8.96833 15.0005 8 15ZM8 13.6C9.56333 13.6 10.8875 13.0575 11.9725 11.9725C13.0575 10.8875 13.6 9.56333 13.6 8C13.6 6.43667 13.0575 5.1125 11.9725 4.0275C10.8875 2.9425 9.56333 2.4 8 2.4C6.43667 2.4 5.1125 2.9425 4.0275 4.0275C2.9425 5.1125 2.4 6.43667 2.4 8C2.4 9.56333 2.9425 10.8875 4.0275 11.9725C5.1125 13.0575 6.43667 13.6 8 13.6Z"
+        fill="#8064A2"
+      />
+    </svg>
+  )
   return (
     <>
       <PageGridLayout column={3}>
-        {isLoggedIn ? <ProfileSwitcher /> : <div></div>}
+        {isLoggedIn ? (
+          <div className={styles['switcher-help-centre']}>
+          <ProfileSwitcher className={styles['contact-profile-switcher']} />
+          {isMobile&&<button className={styles['help-centre-btn']}>
+            {questionSvg}
+            <p>Help Centre</p>
+          </button>}
+          </div>
+        ) : (
+          <div></div>
+        )}
         <div className={styles['modal-wrapper']}>
           <header className={styles['header']}>
             <h4 className={styles['heading']}>{'Contact Us'}</h4>
@@ -551,6 +575,12 @@ const Contact: React.FC<Props> = ({}) => {
             </>
           </section>
         </div>
+        {isMobile ? null : (
+          <button className={styles['help-centre-btn']}>
+            {questionSvg}
+            <p>Help Centre</p>
+          </button>
+        )}
       </PageGridLayout>
     </>
   )
