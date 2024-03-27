@@ -33,7 +33,7 @@ type Props = {
   handleClose?: any
   isError?: boolean
   onStatusChange?: (isChanged: boolean) => void
-  showSkip?:boolean
+  showSkip?: boolean
 }
 type ProfileContactData = {
   public_email: InputData<string>
@@ -57,7 +57,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
   setConfirmationModal,
   handleClose,
   onStatusChange,
-  showSkip
+  showSkip,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -128,13 +128,13 @@ const ProfileContactEditModal: React.FC<Props> = ({
   }
 
   const handleBlur = (e: any) => {
-    const {name,value} = e.target;
-      setWpSelectedCountryCode(selectedCountryCode)
-    if(name==="phone"){
+    const { name, value } = e.target
+    setWpSelectedCountryCode(selectedCountryCode)
+    if (name === 'phone') {
       setData((prev) => ({
         ...prev,
-        "whatsapp_number": {
-          ...prev["whatsapp_number"],
+        whatsapp_number: {
+          ...prev['whatsapp_number'],
           number: value || '',
           error: null,
         },
@@ -375,7 +375,11 @@ const ProfileContactEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        nextButtonRef.current?.focus()
+        if (event.target.tagName.toLowerCase() === 'svg') {
+          onComplete
+        } else {
+          nextButtonRef.current?.focus()
+        }
       }
     }
 
@@ -464,7 +468,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
         {/* Modal Header */}
         <header className={styles['header']}>
           <h4 className={styles['heading']}>{'Contact Information'}</h4>
-          {(!user.is_onboarded && showSkip) ? skipSvg : null}
+          {!user.is_onboarded && showSkip ? skipSvg : null}
         </header>
 
         <hr className={styles['modal-hr']} />

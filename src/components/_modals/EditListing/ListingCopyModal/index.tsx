@@ -172,7 +172,9 @@ const ListingAboutEditModal: React.FC<Props> = ({
           <h2>What section you would like to copy</h2>
 
           <hr className={styles['hr-line']} />
-          <div className={styles['checkbox-row']}>
+          <div
+            className={`${styles['checkbox-row']} ${styles['all-available']}`}
+          >
             <label>All available Sections</label>
 
             <Image
@@ -271,6 +273,24 @@ const ListingAboutEditModal: React.FC<Props> = ({
           </div>
 
           <hr className={styles['hr-line']} />
+
+          <div className={styles['checkbox-row']}>
+            <label>Social Media </label>
+
+            <Image
+              src={
+                // checkboxes.hobbies ? checkedboxChecked : checkedboxUnChecked
+                chechboxDisabled
+              }
+              width={16}
+              height={16}
+              alt="radio"
+              className={styles.addIcon}
+              onClick={() => handleCheckboxToggle('hobbies')}
+            />
+          </div>
+
+          <hr className={styles['hr-line-temp']} />
           <p className={styles.tempmsg}>
             The copy feature is under development, but you can create a listing
             Page by entering information

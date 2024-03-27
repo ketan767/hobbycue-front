@@ -5,11 +5,13 @@
     justify-content: space-between;
     align-items: center;
     border-radius: 0px 0px 4px 4px;
-    border-top: 1px solid var(--Grey-Lighter, #EBEDF0);
+    
     background: var(--White, #FFF);
     flex-wrap: wrap;
 }
-
+.pencil-container{
+    border-top: 1px solid var(--Grey-Lighter, #EBEDF0);
+}
 .dropdown-container p {
     max-width: 165px !important;
     overflow: hidden;
