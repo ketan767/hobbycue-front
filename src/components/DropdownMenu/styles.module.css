@@ -82,3 +82,13 @@
 .display-none {
   display: none !important;
 }
+
+.dropdown-select:focus-visible {
+  
+  border: 1px solid rgb(var(--primary-100-rgb)) !important;
+ 
+  outline: none;
+}
+.dropdown-select:focus {
+outline: none;
+}

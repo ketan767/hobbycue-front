@@ -63,6 +63,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   const [initialData, setInitialData] = useState({})
   const [isChanged, setIsChanged] = useState(false)
   const [urlSpanLength, setUrlSpanLength] = useState<number>(0)
+  const [labelText, setLabelText] = useState('')
   const urlSpanRef = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
@@ -189,22 +190,22 @@ const ListingGeneralEditModal: React.FC<Props> = ({
             ...prev,
             year: {
               ...prev.year,
-              error: 'Enter a valid number',
+              error: 'Enter a valid year',
             },
           }
         })
-      } else if (currentYear - Number(data.year.value) > 100) {
+      } else if (currentYear - Number(data.year.value) < 0) {
         return setData((prev) => {
           return {
             ...prev,
-            year: { ...prev.year, error: 'Maximum age: 100' },
+            year: { ...prev.year, error: 'Enter a valid year' },
           }
         })
-      } else if (currentYear - Number(data.year.value) < 13) {
+      } else if (Number(data.year.value) <= 999) {
         return setData((prev) => {
           return {
             ...prev,
-            year: { ...prev.year, error: 'Minimum age is 13' },
+            year: { ...prev.year, error: 'Enter a valid year' },
           }
         })
       }
@@ -431,6 +432,24 @@ const ListingGeneralEditModal: React.FC<Props> = ({
     )
   }
 
+  useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth > 1100) {
+        setLabelText('Year Of Establishment')
+      } else {
+        setLabelText('Estd.')
+      }
+    }
+
+    handleResize()
+
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -520,7 +539,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
                 >
                   <label>
                     {listingModalData.type === listingTypes.PEOPLE
-                      ? 'Year Of Birth/Establishment'
+                      ? `Year Of Birth/${labelText}`
                       : 'Year Of Establishment'}
                   </label>
                   <input

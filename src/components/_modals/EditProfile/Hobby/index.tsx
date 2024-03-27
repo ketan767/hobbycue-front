@@ -380,8 +380,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       if (err) {
         setAddHobbyBtnLoading(false)
         return console.log(err)
-      }
-      else{
+      } else {
         setErrorOrmsg('Hobby added successfully!')
       }
       const { err: updtProfileErr, res: updtProfileRes } =
@@ -807,7 +806,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
         <hr className={styles['modal-hr']} />
 
-        <section className={`${styles['body']} custom-scrollbar`}>
+        <section className={`${styles['body']}`}>
           <>
             <section className={styles['add-hobbies-wrapper']}>
               <section className={styles['added-hobby-list']}>
@@ -955,9 +954,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                             {showHobbyDowpdown &&
                               hobbyDropdownList.length !== 0 && (
                                 <div
-                                  className={`custom-scrollbar ${
-                                    styles['dropdown']
-                                  } ${
+                                  className={`${styles['dropdown']} ${
                                     userHobbies.length > 4
                                       ? styles['dropdown-upwards']
                                       : styles['dropdown-downwords']
@@ -1008,9 +1005,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                             {showGenreDowpdown &&
                               genreDropdownList.length !== 0 && (
                                 <div
-                                  className={`custom-scrollbar ${
-                                    styles['dropdown']
-                                  } ${
+                                  className={` ${styles['dropdown']} ${
                                     userHobbies.length > 4
                                       ? styles['dropdown-upwards']
                                       : styles['dropdown-downwords']
@@ -1185,6 +1180,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           <button
             ref={nextButtonRef}
             className="modal-footer-btn submit"
+            tabIndex={0}
             onClick={handleSubmit}
             disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
           >

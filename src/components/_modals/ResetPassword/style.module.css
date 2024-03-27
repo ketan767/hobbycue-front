@@ -157,7 +157,7 @@
 }
 .input-box .helper-text {
   position: absolute;
-  top: calc(100% + var(--spacing-4));
+  top: calc(100%);
   left: 0;
 
   /* font-family: 'Poppins'; */
@@ -168,9 +168,14 @@
   color: #c0504d;
 }
 
-.input-error.input-box input {
-  border: 1px solid #c0504d !important;
+.input-error * {
   outline: none;
+  border: none;
+}
+
+.input-error.input-box input {
+  outline: 1px solid #c0504d !important;
+  border: none;
 }
 
 

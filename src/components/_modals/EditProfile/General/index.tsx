@@ -161,12 +161,12 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
           }
         } else {
           return setInputErrs((prev) => {
-            return { ...prev, year_of_birth: 'Enter a valid number' }
+            return { ...prev, year_of_birth: 'Enter a valid year' }
           })
         }
       } else {
         return setInputErrs((prev) => {
-          return { ...prev, year_of_birth: 'Enter a valid number' }
+          return { ...prev, year_of_birth: 'Enter a valid year' }
         })
       }
     }
@@ -481,7 +481,13 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
                     })
                   }}
                 >
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <svg
+                    tabIndex={0}
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                  >
                     <circle cx="8" cy="8" r="7.5" stroke="#8064A2" />
                     {data.gender === 'male' && (
                       <circle cx="8" cy="8" r="4" fill="#8064A2" />
@@ -501,7 +507,13 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
                     })
                   }}
                 >
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <svg
+                    tabIndex={0}
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                  >
                     <circle cx="8" cy="8" r="7.5" stroke="#8064A2" />
                     {data.gender === 'female' && (
                       <circle cx="8" cy="8" r="4" fill="#8064A2" />
