@@ -10,6 +10,11 @@
   
 }
 
+.dropdown-option-focus {
+  background: #f7f5f9;
+  color: #8064a2 !important;
+}
+
 .modal-close-icon {
   position: absolute;
   top: var(--spacing-12);
