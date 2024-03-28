@@ -114,7 +114,11 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
 
           <section className={`${styles['posts-container']}`}>
             {loadingPosts ? (
-              <PostCardSkeletonLoading />
+              <>
+                <PostCardSkeletonLoading />
+                <PostCardSkeletonLoading />
+                <PostCardSkeletonLoading />
+              </>
             ) : (
               posts.length === 0 &&
               isLoggedIn && (
@@ -144,7 +148,11 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
       <main className={`${styles['display-mobile']}`}>
         <section className={`${styles['posts-container']}}`}>
           {loadingPosts ? (
-            <PostCardSkeletonLoading />
+            <>
+              <PostCardSkeletonLoading />
+              <PostCardSkeletonLoading />
+              <PostCardSkeletonLoading />
+            </>
           ) : (
             posts.length === 0 && 'No Posts'
           )}
