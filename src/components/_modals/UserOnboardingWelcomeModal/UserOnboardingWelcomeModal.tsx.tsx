@@ -61,8 +61,10 @@ const UserOnboardingWelcomeModal = () => {
     display: false,
     message: '',
   })
-  console.log('wel', user.show_welcome)
   const searchResult = async () => {
+    if(localStorage){
+      localStorage.setItem("modal-shown-after-login","true");
+    }
     dispatch(closeModal())
     router.push('/search')
     const searchValue = data.search.value.trim()
@@ -223,6 +225,7 @@ const UserOnboardingWelcomeModal = () => {
             <Image
               src="/logo-welcome-small.svg"
               onClick={() => {
+                localStorage.setItem("modal-shown-after-login","true");
                 dispatch(closeModal())
                 router.push('/community')
               }}
@@ -249,6 +252,7 @@ const UserOnboardingWelcomeModal = () => {
                     className={styles['button']}
                     onClick={() => {
                       router.push('/community')
+                      localStorage.setItem("modal-shown-after-login","true");
                       dispatch(closeModal())
                     }}
                   >
@@ -347,6 +351,7 @@ const UserOnboardingWelcomeModal = () => {
                     className={styles['button']}
                     onClick={() => {
                       router.push('/search')
+                      localStorage.setItem("modal-shown-after-login","true");
                       dispatch(closeModal())
                     }}
                   >
@@ -364,6 +369,7 @@ const UserOnboardingWelcomeModal = () => {
               {user.profile_image ? (
                 <Image
                   onClick={() => {
+                    localStorage.setItem("modal-shown-after-login","true");
                     dispatch(closeModal())
                     router.push(`/profile/${user?.profile_url}`)
                   }}
@@ -400,6 +406,7 @@ const UserOnboardingWelcomeModal = () => {
                   <FilledButton
                     className={styles['button']}
                     onClick={() => {
+                      localStorage.setItem("modal-shown-after-login","true");
                       dispatch(closeModal())
                       router.reload()
                     }}
@@ -438,6 +445,7 @@ const UserOnboardingWelcomeModal = () => {
               <Image
                 src="/logo-welcome-small.svg"
                 onClick={() => {
+                  localStorage.setItem("modal-shown-after-login","true");
                   dispatch(closeModal())
                 }}
                 alt=""
@@ -553,6 +561,7 @@ const UserOnboardingWelcomeModal = () => {
           triggerOpen={snackbar?.display}
           type={snackbar.type === 'success' ? 'success' : 'error'}
           closeSnackbar={() => {
+            localStorage.setItem("modal-shown-after-login","true");
             dispatch(closeModal())
             setSnackbar((prevValue) => ({ ...prevValue, display: false }))
           }}

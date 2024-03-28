@@ -46,6 +46,17 @@
   display: none;
 }
 
+.profile-left-aside {
+  position: -webkit-sticky;
+  top: 222px;
+  position: sticky;
+  transition: 0.6s;
+  height: calc(
+    100vh - calc(var(--navbar-height-desktop) + var(--spacing-24)) + 3rem
+  );
+  overflow: auto;
+}
+
 .display-mobile {
   display: none !important;
 }
@@ -97,5 +108,9 @@
   }
   .display-desktop {
     display: none !important;
+  }
+  .profile-left-aside{
+    position: static;
+    height: auto;
   }
 }

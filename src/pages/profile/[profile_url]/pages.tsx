@@ -89,7 +89,9 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
       >
         {data.pageData && (
           <PageGridLayout column={2}>
-            <aside className={expandAll ? '' : styles['display-none']}>
+            <aside className={`custom-scrollbar ${styles['profile-left-aside']} ${
+                expandAll ? '' : styles['display-none']
+              }`}>
               {/* User Hobbies */}
               <ProfileHobbySideList data={data.pageData} />
               <ProfilePagesList data={data} />
