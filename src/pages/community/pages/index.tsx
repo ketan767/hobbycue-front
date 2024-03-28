@@ -72,6 +72,8 @@ const CommunityPages: React.FC<Props> = ({}) => {
           {pagesLoading ? (
             <>
               <PostCardSkeletonLoading />
+              <PostCardSkeletonLoading />
+              <PostCardSkeletonLoading />
             </>
           ) : allPages?.length === 0 ? (
             <p>No pages found</p>

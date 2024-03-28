@@ -197,7 +197,11 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
             </section>
             <section className={styles['posts-container']}>
               {loadingPosts ? (
-                <PostCardSkeletonLoading />
+                <>
+                  <PostCardSkeletonLoading />
+                  <PostCardSkeletonLoading />
+                  <PostCardSkeletonLoading />
+                </>
               ) : (
                 posts.length === 0 && (
                   <div className={styles['no-posts-container']}>
