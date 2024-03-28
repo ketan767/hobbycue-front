@@ -29,6 +29,16 @@
   color: #6d747a;
 }
 
+.profile-left-aside {
+  position: -webkit-sticky;
+  top: 222px;
+  position: sticky;
+  transition: 0.6s;
+  height: calc(
+    100vh - calc(var(--navbar-height-desktop) + var(--spacing-24)) + 3rem
+  );
+  overflow: auto;
+}
 
 .hobby-list li {
   padding: var(--spacing-4) calc(var(--spacing-8) + var(--spacing-4));
@@ -131,5 +141,9 @@ ul.contact-wrapper svg {
   }
   .no-posts-div {
     border-radius: 0;
+  }
+  .profile-left-aside{
+    height: auto;
+    position: static;
   }
 }

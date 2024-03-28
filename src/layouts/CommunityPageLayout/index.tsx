@@ -686,7 +686,7 @@ const CommunityLayout: React.FC<Props> = ({
               }`}
             >
               <div className={styles['community-header-left']}>
-                {selectedHobby !== '' &&
+                {/* {selectedHobby !== '' &&
                   selectedLocation !== '' &&
                   Object.keys(hobbyGroup).length > 5 && (
                     <div className={styles['community-group-container']}>
@@ -716,7 +716,7 @@ const CommunityLayout: React.FC<Props> = ({
                         {hobbyGroup?.display} in {selectedLocation}
                       </p>
                     </div>
-                  )}
+                  )} */}
                 <section
                   className={`content-box-wrapper ${styles['start-post-btn-container']}`}
                 >
@@ -919,8 +919,12 @@ const CommunityLayout: React.FC<Props> = ({
                     className={`content-box-wrapper ${styles['invite-wrapper']}`}
                   >
                     <header>
-                      <h3>Invite to Community</h3>
-                    </header>
+                <h3>
+                  <span>{activeProfile.data?._hobbies?.find((obj:any)=>obj.hobby?._id===selectedHobby)?.hobby?.display??"All hobbies"}{activeProfile.data?._hobbies?.find((obj:any)=>obj.hobby?._id===selectedHobby)?.genre && ` - ${activeProfile.data?._hobbies?.find((obj:any)=>obj.hobby?._id===selectedHobby)?.genre?.display} `}</span>
+                  {" "}in{" "}
+                  <span>{selectedLocation}</span>
+                  </h3>
+              </header>
                     {/* <span className={styles['divider']}></span> */}
                     <section>
                       <input type="text" name="" id="" />
@@ -949,7 +953,11 @@ const CommunityLayout: React.FC<Props> = ({
               className={`content-box-wrapper ${styles['invite-wrapper']}`}
             >
               <header>
-                <h3>Invite to Community</h3>
+                <h3>
+                  <span>{activeProfile.data?._hobbies?.find((obj:any)=>obj.hobby?._id===selectedHobby)?.hobby?.display??"All hobbies"}{activeProfile.data?._hobbies?.find((obj:any)=>obj.hobby?._id===selectedHobby)?.genre && ` - ${activeProfile.data?._hobbies?.find((obj:any)=>obj.hobby?._id===selectedHobby)?.genre?.display} `}</span>
+                  {" "}in{" "}
+                  <span>{selectedLocation}</span>
+                  </h3>
               </header>
               {/* <span className={styles['divider']}></span> */}
               <section>

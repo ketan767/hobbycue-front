@@ -127,6 +127,10 @@ const ModalManager: React.FC = () => {
 
   function handleClose() {
     console.log('haschange', activeModal)
+    if(activeModal==="user-onboarding-welcome"){
+      localStorage.setItem("modal-shown-after-login","true");
+      dispatch(closeModal())
+    }
     if (['View-Image-Modal','CopyProfileDataModal'].includes(String(activeModal))) {
       dispatch(closeModal())
     } else if (confirmationModal) {
@@ -204,6 +208,10 @@ const ModalManager: React.FC = () => {
     (event: KeyboardEvent) => {
       if (!showAddGenreModal && !showAddHobbyModal) {
         if (event.key === 'Escape') {
+          if(activeModal==="user-onboarding-welcome"){
+            localStorage.setItem("modal-shown-after-login","true");
+            dispatch(closeModal())
+          }
           if ((['View-Image-Modal','CopyProfileDataModal'].includes(String(activeModal)))) {
             dispatch(closeModal())
           }

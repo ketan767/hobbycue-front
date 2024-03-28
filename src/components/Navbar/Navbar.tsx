@@ -350,7 +350,17 @@ export const Navbar: React.FC<Props> = ({}) => {
       <header className={`${styles['navbar-wrappper']}`}>
         <nav className={`site-container `}>
           <section className={styles['navbar-left']}>
-            <Link href={isLoggedIn ? '/community' : '/'}>
+            <Link
+             onClick={(e)=>{
+              e.stopPropagation();
+              e.preventDefault();
+              if(isLoggedIn){
+                window.location.href = "/community"
+              }else{
+                router.push("/")
+              }
+             }}
+             href={isLoggedIn ? '/community' : '/'}>
               {isLoggedIn ? (
                 <Image
                   src={LogoSmall}

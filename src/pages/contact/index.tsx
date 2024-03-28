@@ -18,6 +18,8 @@ import { CircularProgress, useMediaQuery } from '@mui/material'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import { addContactUs } from '@/services/user.service'
 import { containOnlyNumbers } from '@/utils'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+
 
 type ContactUsData = {
   name: InputData<string>
@@ -63,6 +65,11 @@ const Contact: React.FC<Props> = ({}) => {
   const phoneRef = useRef<HTMLInputElement>(null)
   const YouAreRef = useRef<HTMLInputElement>(null)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
   const { isLoggedIn, isAuthenticated, user, activeProfile } = useSelector(
     (state: RootState) => state.user,
   )
@@ -132,8 +139,7 @@ const Contact: React.FC<Props> = ({}) => {
 
   const handleSubmit = async () => {
     if (
-      (!data.public_email.value || data.public_email.value === '') &&
-      (!data.phone.number || data.phone.number === '')
+      (!data.public_email.value || data.public_email.value.length === 0)
     ) {
       inputRef.current?.focus()
       return setData((prev) => {
@@ -177,7 +183,30 @@ const Contact: React.FC<Props> = ({}) => {
         })
       }
     }
-
+    if(!data.YouAre.value || data.YouAre.value.length ===0){
+      console.log('first')
+      return setData((prev)=>({...prev,
+      YouAre:{
+        ...prev.YouAre,
+        error:"This field is mandatory"
+      }
+      }))
+    }
+    if(!data.Regarding.value || data.Regarding.value.length === 0){
+    console.log({'reg':data.Regarding.value})
+      return setData((prev)=>({...prev,
+      Regarding:{
+        ...prev.Regarding,
+        error:"This field is mandatory"
+      }
+      }));
+    }
+    if(data.message.value.length<1){
+      return setData((prev)=>({...prev,message:{
+        ...prev.message,
+        error:"Message can't be empty"
+      }}))
+    }
     const name = data.name.value
     const email = data.public_email.value
     const phone = {
@@ -210,9 +239,20 @@ const Contact: React.FC<Props> = ({}) => {
         description,
         user_id,
       })
-
+    
       if (err) {
-        console.error('Error:', err)
+        console.error('Error:', err);
+        setSnackbar({
+          display: true,
+          type: 'warning',
+          message: 'Something went wrong',
+        })
+      }else{
+        setSnackbar({
+          display: true,
+          type: 'success',
+          message: 'Message sent',
+        })
       }
     } catch (error) {
       console.error('Internal Server Error:', error)
@@ -306,7 +346,7 @@ const Contact: React.FC<Props> = ({}) => {
                       onChange={handleInputChange}
                     />
                     <p className={styles['helper-text']}>
-                      {data.public_email.error}
+                      {data.name.error}
                     </p>
                   </div>
                 </div>
@@ -454,8 +494,10 @@ const Contact: React.FC<Props> = ({}) => {
                       ref={YoudropdownRef}
                     >
                       <div
-                        className={styles['select-input']}
-                        onClick={() => setShowYouDropdown(true)}
+                        className={`${styles['select-input']}  ${
+                          data.YouAre.error ? styles['div-error'] : ''
+                        }`}
+                        onClick={() => setShowYouDropdown(prev=>!prev)}
                       >
                         <p>{data.YouAre.value || 'Select You Are...'}</p>
                         <Image src={DownArrow} alt="down" />
@@ -505,7 +547,9 @@ const Contact: React.FC<Props> = ({}) => {
                       ref={RegdropdownRef}
                     >
                       <div
-                        className={styles['select-input']}
+                        className={`${styles['select-input']}  ${
+                          data.Regarding.error ? styles['div-error'] : ''
+                        }`}
                         onClick={() => setShowRegDropdown(true)}
                       >
                         <p>{data.Regarding.value || 'Select Regarding...'}</p>
@@ -538,20 +582,20 @@ const Contact: React.FC<Props> = ({}) => {
                         </div>
                       )}
                     </div>
-                    <p className={styles['helper-text']}>{data.YouAre.error}</p>
+                    <p className={styles['helper-text']}>{data.Regarding.error}</p>
                   </div>
                 </div>
               </section>
               {/* Message */}
               <div
-                className={`${styles['input-box']} ${
-                  data.Regarding.error ? styles['input-box-error'] : ''
-                }`}
+                className={`${styles['input-box']}`}
               >
                 <label>Message</label>
                 <div className={styles['street-input-container']}>
                   <textarea
-                    className={styles['long-input-box']}
+                    className={`${styles['long-input-box']} ${
+                      data.message.error ? styles['div-error'] : ''
+                    }`}
                     required
                     name="message"
                     onChange={handleInputChange}
@@ -582,6 +626,16 @@ const Contact: React.FC<Props> = ({}) => {
           </button>
         )}
       </PageGridLayout>
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }
