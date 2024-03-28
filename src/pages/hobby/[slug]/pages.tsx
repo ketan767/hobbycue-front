@@ -88,7 +88,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
   }
   console.log('hobby', data)
   console.log('pages', pages)
-  const isMobile = useMediaQuery("(max-width:1100px)")
+  const isMobile = useMediaQuery('(max-width:1100px)')
   return (
     <>
       {' '}
@@ -100,7 +100,12 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
       >
         <main className={``}>
           <section className={styles['pages-container']}>
-            {loadingPosts && <PostCardSkeletonLoading />}
+            {loadingPosts && (
+              <>
+                <PostCardSkeletonLoading /> <PostCardSkeletonLoading />{' '}
+                <PostCardSkeletonLoading />{' '}
+              </>
+            )}
             {pages.length !== 0 &&
               pages.map((post: any, idx: number) => {
                 return <ListingCard key={idx} data={post} />
@@ -111,7 +116,9 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
               <div className={styles['no-posts-container']}>
                 <p>No pages available</p>
               </div>
-              {         !isMobile&&         <div className={styles['no-posts-container']}></div>}
+              {!isMobile && (
+                <div className={styles['no-posts-container']}></div>
+              )}
             </div>
           )}
         </main>

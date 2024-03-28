@@ -22,21 +22,22 @@ const CommunityLinks: React.FC<Props> = ({}) => {
     activeProfile?.data?._hobbies.forEach((item: any) => {
       params.append('_hobby', item.hobby._id)
     })
-    const localSelectedLocation = sessionStorage.getItem("communityFilterLocation")
+    const localSelectedLocation = sessionStorage.getItem(
+      'communityFilterLocation',
+    )
 
-    const addresses = activeProfile.data?._addresses || [];
+    const addresses = activeProfile.data?._addresses || []
     const matchingAddress = [
       ...addresses,
       activeProfile.data?.primary_address ?? {},
-    ]
-      .find(
-        (address: any) =>
-          address.city === (localSelectedLocation) ||
-          address.pin_code === (localSelectedLocation) ||
-          address.locality === (localSelectedLocation) ||
-          address.society === (localSelectedLocation),
-      );
-      
+    ].find(
+      (address: any) =>
+        address.city === localSelectedLocation ||
+        address.pin_code === localSelectedLocation ||
+        address.locality === localSelectedLocation ||
+        address.society === localSelectedLocation,
+    )
+
     if (matchingAddress) {
       if (matchingAddress.city === localSelectedLocation) {
         params.append('visibility', matchingAddress.city)
@@ -86,6 +87,8 @@ const CommunityLinks: React.FC<Props> = ({}) => {
         <section className={styles['pages-container']}>
           {loading ? (
             <>
+              <PostCardSkeletonLoading />
+              <PostCardSkeletonLoading />
               <PostCardSkeletonLoading />
             </>
           ) : posts?.length > 0 ? (

@@ -83,8 +83,8 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
       router.events.off('routeChangeStart', handleRouteChange)
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
-  }, []);
-  const isMobile = useMediaQuery("(max-width:1100px)");
+  }, [])
+  const isMobile = useMediaQuery('(max-width:1100px)')
 
   return (
     <>
@@ -117,7 +117,11 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
 
           <section className={styles['links-container']}>
             {loadingPosts ? (
-              <PostCardSkeletonLoading />
+              <>
+                <PostCardSkeletonLoading />
+                <PostCardSkeletonLoading />
+                <PostCardSkeletonLoading />
+              </>
             ) : (
               posts.length === 0 &&
               isLoggedIn && (
@@ -125,7 +129,9 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
                   <div className={styles['no-posts-container']}>
                     <p>No links available</p>
                   </div>
-{         !isMobile&&         <div className={styles['no-posts-container']}></div>}
+                  {!isMobile && (
+                    <div className={styles['no-posts-container']}></div>
+                  )}
                 </>
               )
             )}
