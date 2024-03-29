@@ -192,6 +192,9 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   }
 
   const handleHobbyKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      AddButtonRef.current?.click()
+    }
     if (hobbyDropdownList.length === 0) return
 
     switch (e.key) {
@@ -217,7 +220,9 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   }
 
   const handleGenreKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (genreDropdownList.length === 0) return
+    if (e.key === 'Enter') {
+      AddButtonRef.current?.click()
+    }
 
     switch (e.key) {
       case 'ArrowDown':
@@ -497,6 +502,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   }, [])
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  const AddButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
@@ -867,6 +873,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
                       </td>
                       <td>
                         <button
+                          ref={AddButtonRef}
                           disabled={addHobbyBtnLoading}
                           className={styles['add-btn']}
                           onClick={handleAddHobby}

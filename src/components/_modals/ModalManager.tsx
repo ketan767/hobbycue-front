@@ -294,7 +294,9 @@ const ModalManager: React.FC = () => {
             <main
               className={
                 !(activeModal === 'user-onboarding-welcome')
-                  ? styles['pos-relative']
+                  ? activeModal === 'create-post'
+                    ? styles['create-post-postion']
+                    : styles['pos-relative']
                   : ''
               }
               ref={mainRef}
