@@ -21,7 +21,7 @@
 .post-card-wrapper header .default-profile-icon {
   width: 40px;
   height: 40px;
-  border-radius: var(--spacing-40);
+  border-radius: 50%;
   border: 1px solid #8064a2;
 }
 .post-card-wrapper header .author-listing,

@@ -182,10 +182,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   }
 
   const handleHobbyKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if(e.key==="Enter"){
-      if(hobbyDropdownList.length === 0){
-        nextButtonRef.current?.click()
-      }
+    if (e.key === 'Enter') {
+      AddButtonRef.current?.click()
     }
     if (hobbyDropdownList.length === 0) return
 
@@ -223,25 +221,28 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
 
+    // Step 1: Filter the data based on the search query
+    const filteredGenres = res.data.hobbies.filter((item: any) => {
+      return item.display.toLowerCase().includes(e.target.value.toLowerCase())
+    })
 
-// Step 1: Filter the data based on the search query
-const filteredGenres = res.data.hobbies.filter((item: any) => {
-  return item.display.toLowerCase().includes(e.target.value.toLowerCase());
-});
+    // Step 2: Sort the filtered data
+    const sortedGenres = filteredGenres.sort((a: any, b: any) => {
+      const indexA = a.display
+        .toLowerCase()
+        .indexOf(e.target.value.toLowerCase())
+      const indexB = b.display
+        .toLowerCase()
+        .indexOf(e.target.value.toLowerCase())
 
-// Step 2: Sort the filtered data
-const sortedGenres = filteredGenres.sort((a: any, b: any) => {
-  const indexA = a.display.toLowerCase().indexOf(e.target.value.toLowerCase());
-  const indexB = b.display.toLowerCase().indexOf(e.target.value.toLowerCase());
+      if (indexA === 0 && indexB !== 0) {
+        return -1
+      } else if (indexB === 0 && indexA !== 0) {
+        return 1
+      }
 
-  if (indexA === 0 && indexB !== 0) {
-    return -1;
-  } else if (indexB === 0 && indexA !== 0) {
-    return 1;
-  }
-
-  return 0;
-});
+      return 0
+    })
 
     setGenreDropdownList(sortedGenres)
 
@@ -249,11 +250,10 @@ const sortedGenres = filteredGenres.sort((a: any, b: any) => {
   }
 
   const handleGenreKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if(e.key==="Enter"){
-        console.log("first")
-      if(genreDropdownList.length === 0 || data.genre!==null){
-        nextButtonRef.current?.click()
-      }
+    if (e.key === 'Enter') {
+      console.log('first')
+
+      AddButtonRef.current?.click()
     }
     if (genreDropdownList.length === 0) return
 
@@ -411,7 +411,7 @@ const sortedGenres = filteredGenres.sort((a: any, b: any) => {
         setHobbyInputValue('')
         setGenreInputValue('')
         setData({ level: 1, hobby: null, genre: null })
-        
+
         setAddHobbyBtnLoading(false)
       }
       setAddHobbyBtnLoading(false)
@@ -445,7 +445,7 @@ const sortedGenres = filteredGenres.sort((a: any, b: any) => {
             setHobbyError(true)
             searchref.current?.focus()
             setHobbyInputValue('')
-        setSubmitBtnLoading(false)
+            setSubmitBtnLoading(false)
             return
           }
         }
@@ -471,7 +471,7 @@ const sortedGenres = filteredGenres.sort((a: any, b: any) => {
             genre.display.toLowerCase() === genreInputValue.toLowerCase(),
         )
 
-        if (!matchedGenre && genreInputValue.trim().length!==0) {
+        if (!matchedGenre && genreInputValue.trim().length !== 0) {
           // setErrorOrmsg('Typed Genre not found!')
           // setHobbyError(true)
           setShowAddGenreModal(true)
@@ -654,6 +654,7 @@ const sortedGenres = filteredGenres.sort((a: any, b: any) => {
   }, [isError])
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  const AddButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       // if (event.key === 'Enter') {
@@ -1157,6 +1158,7 @@ const sortedGenres = filteredGenres.sort((a: any, b: any) => {
 
                       <td>
                         <button
+                          ref={AddButtonRef}
                           disabled={addHobbyBtnLoading}
                           className={styles['add-btn']}
                           onClick={handleAddHobby}
