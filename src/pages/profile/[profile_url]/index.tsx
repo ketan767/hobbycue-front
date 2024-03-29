@@ -157,7 +157,10 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
     }
   }
   useEffect(() => {
+    const modalShown = localStorage.getItem("modal-shown-after-login");
+    if(modalShown!=="true"){
     ShowWelcomeModal()
+    }
   }, [user.profile_url])
 
   useEffect(() => {

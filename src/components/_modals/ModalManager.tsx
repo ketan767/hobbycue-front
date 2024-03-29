@@ -129,18 +129,23 @@ const ModalManager: React.FC = () => {
 
   function handleClose() {
     console.log('haschange', activeModal)
-    if (['View-Image-Modal','CopyProfileDataModal'].includes(String(activeModal))) {
+    if (activeModal === 'user-onboarding-welcome') {
+      localStorage.setItem('modal-shown-after-login', 'true')
+      dispatch(closeModal())
+    }
+    if (
+      ['View-Image-Modal', 'CopyProfileDataModal'].includes(String(activeModal))
+    ) {
       dispatch(closeModal())
     } else if (confirmationModal) {
       setConfirmationModal(false)
     } else if (hasChanges) {
       setConfirmationModal(true)
-    } 
+    }
     // ugly behaviour of this code, automatically not closing, but working on esc click with same function
     else if (isLoggedIn && !user.is_onboarded) {
       setConfirmationModal(true)
-    } 
-    else {
+    } else {
       dispatch(closeModal())
     }
   }
@@ -206,7 +211,15 @@ const ModalManager: React.FC = () => {
     (event: KeyboardEvent) => {
       if (!showAddGenreModal && !showAddHobbyModal) {
         if (event.key === 'Escape') {
-          if ((['View-Image-Modal','CopyProfileDataModal'].includes(String(activeModal)))) {
+          if (activeModal === 'user-onboarding-welcome') {
+            localStorage.setItem('modal-shown-after-login', 'true')
+            dispatch(closeModal())
+          }
+          if (
+            ['View-Image-Modal', 'CopyProfileDataModal'].includes(
+              String(activeModal),
+            )
+          ) {
             dispatch(closeModal())
           }
           if (confirmationModal) {

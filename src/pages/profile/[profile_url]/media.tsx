@@ -180,7 +180,9 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
         setExpandAll={handleExpandAll}
       >
         <PageGridLayout column={2}>
-          <aside className={expandAll ? '' : styles['display-none']}>
+          <aside className={`custom-scrollbar ${styles['profile-left-aside']} ${
+                expandAll ? '' : styles['display-none']
+              }`}>
             {/* User Hobbies */}
             <ProfileHobbySideList data={data.pageData} />
             <ProfilePagesList data={data} />

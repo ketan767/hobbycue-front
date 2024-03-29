@@ -182,6 +182,11 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   }
 
   const handleHobbyKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if(e.key==="Enter"){
+      if(hobbyDropdownList.length === 0){
+        nextButtonRef.current?.click()
+      }
+    }
     if (hobbyDropdownList.length === 0) return
 
     switch (e.key) {
@@ -218,27 +223,38 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
 
-    const sortedGenres = res.data.hobbies.sort((a: any, b: any) => {
-      const indexA = a.display
-        .toLowerCase()
-        .indexOf(e.target.value.toLowerCase())
-      const indexB = b.display
-        .toLowerCase()
-        .indexOf(e.target.value.toLowerCase())
 
-      if (indexA === 0 && indexB !== 0) {
-        return -1
-      } else if (indexB === 0 && indexA !== 0) {
-        return 1
-      }
+// Step 1: Filter the data based on the search query
+const filteredGenres = res.data.hobbies.filter((item: any) => {
+  return item.display.toLowerCase().includes(e.target.value.toLowerCase());
+});
 
-      return 0
-    })
+// Step 2: Sort the filtered data
+const sortedGenres = filteredGenres.sort((a: any, b: any) => {
+  const indexA = a.display.toLowerCase().indexOf(e.target.value.toLowerCase());
+  const indexB = b.display.toLowerCase().indexOf(e.target.value.toLowerCase());
+
+  if (indexA === 0 && indexB !== 0) {
+    return -1;
+  } else if (indexB === 0 && indexA !== 0) {
+    return 1;
+  }
+
+  return 0;
+});
 
     setGenreDropdownList(sortedGenres)
+
+    setFocusedGenreIndex(-1)
   }
 
   const handleGenreKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if(e.key==="Enter"){
+        console.log("first")
+      if(genreDropdownList.length === 0 || data.genre!==null){
+        nextButtonRef.current?.click()
+      }
+    }
     if (genreDropdownList.length === 0) return
 
     switch (e.key) {
@@ -395,7 +411,10 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         setHobbyInputValue('')
         setGenreInputValue('')
         setData({ level: 1, hobby: null, genre: null })
+        
+        setAddHobbyBtnLoading(false)
       }
+      setAddHobbyBtnLoading(false)
     })
   }
 
@@ -426,6 +445,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
             setHobbyError(true)
             searchref.current?.focus()
             setHobbyInputValue('')
+        setSubmitBtnLoading(false)
             return
           }
         }
@@ -436,6 +456,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           // setErrorOrmsg('Typed hobby not found!')
           // searchref.current?.focus()
           // setHobbyError(true)
+          setSubmitBtnLoading(false)
           setShowAddHobbyModal(true)
           return
         }
@@ -445,21 +466,23 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
       // Handle genre input
       if (!data.genre) {
-        const matchedGenre = genreDropdownList.find(
+        const matchedGenre = genreDropdownList.some(
           (genre) =>
             genre.display.toLowerCase() === genreInputValue.toLowerCase(),
         )
 
-        if (selectedGenre !== null && selectedGenre !== matchedGenre) {
+        if (!matchedGenre && genreInputValue.trim().length!==0) {
           // setErrorOrmsg('Typed Genre not found!')
           // setHobbyError(true)
           setShowAddGenreModal(true)
+          setSubmitBtnLoading(false)
           return
         }
         if (selectedGenre !== null && !matchedGenre) {
           // setErrorOrmsg("This hobby doesn't contain this genre")
           // setHobbyError(true)
           setShowAddGenreModal(true)
+          setSubmitBtnLoading(false)
           return
         }
       } else {
@@ -633,9 +656,14 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
     const handleKeyPress = (event: any) => {
-      if (event.key === 'Enter') {
-        nextButtonRef.current?.focus()
-      }
+      // if (event.key === 'Enter') {
+      //   console.log({showHobbyDowpdown,showGenreDowpdown})
+      //   if(showHobbyDowpdown===false&&showGenreDowpdown===false){
+      //     nextButtonRef.current?.click()
+      //   }else{
+      //     nextButtonRef.current?.focus()
+      //   }
+      // }
     }
     searchref.current?.focus()
     window.addEventListener('keydown', handleKeyPress)

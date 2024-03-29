@@ -420,18 +420,6 @@ const ListingGeneralEditModal: React.FC<Props> = ({
     })
   }, [data.page_url.value])
 
-  if (confirmationModal) {
-    return (
-      <SaveModal
-        handleClose={handleClose}
-        handleSubmit={handleSubmit}
-        setConfirmationModal={setConfirmationModal}
-        isError={isError}
-        OnBoarding={onBoarding}
-      />
-    )
-  }
-
   useEffect(() => {
     function handleResize() {
       if (window.innerWidth > 1100) {
@@ -449,6 +437,18 @@ const ListingGeneralEditModal: React.FC<Props> = ({
       window.removeEventListener('resize', handleResize)
     }
   }, [])
+
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        setConfirmationModal={setConfirmationModal}
+        isError={isError}
+        OnBoarding={onBoarding}
+      />
+    )
+  }
 
   return (
     <>

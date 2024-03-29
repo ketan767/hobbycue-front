@@ -143,7 +143,9 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
         setExpandAll={handleExpandAll}
       >
         <PageGridLayout column={3}>
-          <aside className={expandAll ? '' : styles['display-none']}>
+          <aside className={`custom-scrollbar ${styles['profile-left-aside']} ${
+                expandAll ? '' : styles['display-none']
+              }`}>
             <ProfileHobbySideList data={data.pageData} />
             <ProfilePagesList data={data} />
             <div className={styles['display-mobile']}>

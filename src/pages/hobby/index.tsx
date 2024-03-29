@@ -91,7 +91,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
     }
     if (e.target.value) {
       filteredHobbies = filteredHobbies.filter((hobby: any) =>
-        hobby.display.toLowerCase().includes(normalizedSearchTerm),
+        hobby?.display?.toLowerCase()?.includes(normalizedSearchTerm),
       )
     }
 

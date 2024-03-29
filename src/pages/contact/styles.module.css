@@ -116,8 +116,24 @@ line-height: 16px; /* 114.286% */
       width: 100%;
     }
     .modal-wrapper .body {
-      height: 100%;
-      overflow: auto;
+      /* height: 100%;
+      overflow: auto; */
+      background: white;
+    }
+
+    .switcher-help-centre{
+      display: flex;
+padding: 8px 12px 16px 12px;
+flex-direction: column;
+align-items: flex-start;
+gap: 12px;
+    }
+
+    .contact-profile-switcher{
+      padding: 12px;
+      border-radius: 8px;
+border: 1px solid var(--Grey-Lighter, #EBEDF0);
+background: #FFF;
     }
 
     .switcher-help-centre{
@@ -283,6 +299,10 @@ background: #FFF;
     border: 1px solid #c0504d !important;
   }
   
+  .div-error{
+    border: 1px solid #c0504d !important;
+  }
+
   .select-container {
     display: block;
     position: relative;
@@ -295,6 +315,7 @@ background: #FFF;
     display: flex;
     align-items: center;
     border-radius: 8px;
+    cursor: pointer;
   }
   .select-container .select-input p {
     font-size: 14px;
@@ -315,6 +336,7 @@ background: #FFF;
     display: flex;
     align-items: center;
     padding: 4px;
+    cursor: pointer;
   }
   
   .select-container .single-option .tagText {
@@ -394,4 +416,8 @@ background: #FFF;
     line-height: 22px;
   }
   
+  .long-input-box:focus{
+    outline: none;
+    border: 1px solid #8064A2;
+  }
  

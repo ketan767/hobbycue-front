@@ -24,6 +24,10 @@ const Slider: React.FC<Props> = ({ images }) => {
     e.stopPropagation()
     e.preventDefault()
   }
+  
+  if(images.length<1||(images as any[]).every(str=>str?.length===0)){
+    return null
+  }
 
   return (
     <div className={styles.container}>
@@ -38,7 +42,9 @@ const Slider: React.FC<Props> = ({ images }) => {
                 : idx < activeIdx
                 ? styles.prev
                 : styles.next
-            }`}
+            }
+            ${images.length > 1&&styles['absolute']}
+            `}
             key={idx}
             onClick={() => setActiveIdx(idx)}
           />

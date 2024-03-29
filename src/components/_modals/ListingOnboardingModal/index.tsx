@@ -142,7 +142,7 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
   const handleOutsideClick = (event: MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       setConfirmationModal(true)
-      console.log(confirmationModal)
+      // console.log(confirmationModal)
     }
   }
 
