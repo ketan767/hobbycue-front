@@ -590,6 +590,14 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   addressParts.push(component.long_name)
                   addressObj.street_number = component.long_name
                 }
+                if (component.types.includes('neighbourhood')) {
+                  addressParts.push(component.long_name)
+                  addressObj.street_number = component.long_name
+                }
+                if (component.types.includes('route')) {
+                  addressParts.push(component.long_name)
+                  addressObj.street_number = component.long_name
+                }
                 if (component.types.includes('premise')) {
                   addressParts.push(component.long_name)
                   if (addressObj.premise) {

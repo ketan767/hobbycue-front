@@ -9,7 +9,7 @@
 .container .image {
   height: 100%;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 4 / 2.5;
   object-fit: contain;
   transition: 0.2s ease-in-out;
   position: relative; 

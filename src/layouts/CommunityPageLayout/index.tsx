@@ -116,7 +116,7 @@ const CommunityLayout: React.FC<Props> = ({
 
   const handleHobbyClick = async (hobbyId: any) => {
     if (selectedHobby !== hobbyId) {
-      sessionStorage.setItem("communityFilterHobby",hobbyId);
+      sessionStorage.setItem('communityFilterHobby', hobbyId)
       setSelectedHobby(hobbyId)
       // Fetch posts for the newly selected hobby
       const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
@@ -125,7 +125,7 @@ const CommunityLayout: React.FC<Props> = ({
 
       dispatch(updateLoading(false))
     } else {
-      sessionStorage.setItem("communityFilterHobby","");
+      sessionStorage.setItem('communityFilterHobby', '')
       setSelectedHobby('')
       // fetchPosts()
     }
@@ -192,20 +192,21 @@ const CommunityLayout: React.FC<Props> = ({
     let selectedLocality = ''
     let selectedSociety = ''
 
-    const localSelectedLocation = sessionStorage.getItem("communityFilterLocation")
+    const localSelectedLocation = sessionStorage.getItem(
+      'communityFilterLocation',
+    )
 
-    const addresses = activeProfile.data?._addresses || [];
+    const addresses = activeProfile.data?._addresses || []
     const matchingAddress = [
       ...addresses,
       activeProfile.data?.primary_address ?? {},
-    ]
-      .find(
-        (address: any) =>
-          address.city === (selectedLocation||localSelectedLocation) ||
-          address.pin_code === (selectedLocation||localSelectedLocation) ||
-          address.locality === (selectedLocation||localSelectedLocation) ||
-          address.society === (selectedLocation||localSelectedLocation),
-      );
+    ].find(
+      (address: any) =>
+        address.city === (selectedLocation || localSelectedLocation) ||
+        address.pin_code === (selectedLocation || localSelectedLocation) ||
+        address.locality === (selectedLocation || localSelectedLocation) ||
+        address.society === (selectedLocation || localSelectedLocation),
+    )
 
     if (matchingAddress) {
       if (matchingAddress.city === selectedLocation) {
@@ -234,7 +235,7 @@ const CommunityLayout: React.FC<Props> = ({
     const { err, res } = await getAllPosts(params.toString())
     if (err) return console.log(err)
     if (res?.data?.success) {
-      console.warn({res});
+      console.warn({ res })
       let posts = res.data.data.posts.map((post: any) => {
         let content = post.content.replace(/<img .*?>/g, '')
         return { ...post, content }
@@ -289,10 +290,10 @@ const CommunityLayout: React.FC<Props> = ({
   useEffect(() => {
     if (activeTab === 'posts' || activeTab === 'links') {
       if (selectedLocation !== '') {
-      fetchPosts()
+        fetchPosts()
+      }
     }
-    }
-  }, [selectedHobby, selectedLocation, activeProfile]);
+  }, [selectedHobby, selectedLocation, activeProfile])
 
   useEffect(() => {
     if (selectedHobby !== '' && selectedLocation !== '') {
@@ -318,10 +319,12 @@ const CommunityLayout: React.FC<Props> = ({
     }
   }
 
-  useEffect(()=>{
-    setSelectedHobby(sessionStorage.getItem("communityFilterHobby")??"");
-    setSelectedLocation(sessionStorage.getItem("communityFilterLocation")??'All Locations');
-  },[])
+  useEffect(() => {
+    setSelectedHobby(sessionStorage.getItem('communityFilterHobby') ?? '')
+    setSelectedLocation(
+      sessionStorage.getItem('communityFilterLocation') ?? 'All Locations',
+    )
+  }, [])
 
   // useEffect(() => {
   //   let tempLocations: any = []
@@ -394,12 +397,15 @@ const CommunityLayout: React.FC<Props> = ({
           })
           if (visibilityArr[1]) {
             if (visibilityArr[1].display) {
-              if(sessionStorage.getItem("communityFilterLocation")===null){
-              sessionStorage.setItem("communityFilterLocation",visibilityArr[1]?.display?.split(' ')[0] || 'All locations')
-              setSelectedLocation(
-                visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
-              )
-            }
+              if (sessionStorage.getItem('communityFilterLocation') === null) {
+                sessionStorage.setItem(
+                  'communityFilterLocation',
+                  visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
+                )
+                setSelectedLocation(
+                  visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
+                )
+              }
             }
           }
           setVisibilityData(visibilityArr)
@@ -449,17 +455,20 @@ const CommunityLayout: React.FC<Props> = ({
       }
       setVisibilityData(visibilityArr)
     }
-  }, [activeProfile]);
+  }, [activeProfile])
 
   const updateFilterLocation = (val: any) => {
-    sessionStorage.setItem("communityFilterLocation",selectedLocation===val?'All Locations':val);
+    sessionStorage.setItem(
+      'communityFilterLocation',
+      selectedLocation === val ? 'All Locations' : val,
+    )
     setSelectedLocation((prev) => {
       if (prev === val) {
         return 'All Locations'
       } else {
         return val
       }
-    });
+    })
   }
 
   // useEffect(()=>{
@@ -508,9 +517,9 @@ const CommunityLayout: React.FC<Props> = ({
   const hobbiesDropDownArr =
     activeProfile.data?._hobbies?.map((item: any) => ({
       value: item.hobby?._id,
-      display: `${item.hobby?.display}${
-        item?.hobby?.genre?.display ? ' - ' : ''
-      }${item?.hobby?.genre?.display ?? ''}`,
+      display: `${item.hobby?.display}${item?.genre?.display ? ' - ' : ''}${
+        item?.genre?.display ?? ''
+      }`,
     })) ?? []
 
   return (
@@ -594,7 +603,7 @@ const CommunityLayout: React.FC<Props> = ({
             {/* <span className={styles['divider']}></span> */}
             {visibilityData?.length > 0 && (
               <InputSelect
-                onChange={(e:any)=>updateFilterLocation(e.target.value)}
+                onChange={(e: any) => updateFilterLocation(e.target.value)}
                 value={selectedLocation}
                 // inputProps={{ 'aria-label': 'Without label' }}
                 className={` ${styles['location-dropdown']}`}
@@ -606,7 +615,7 @@ const CommunityLayout: React.FC<Props> = ({
                         {...item}
                         key={idx}
                         currentValue={selectedLocation}
-                        onChange={(val:any)=>updateFilterLocation(val)}
+                        onChange={(val: any) => updateFilterLocation(val)}
                       />
                     </>
                   )
@@ -882,7 +891,11 @@ const CommunityLayout: React.FC<Props> = ({
                             {...item}
                             key={idx}
                             currentValue={selectedLocation}
-                            onChange={(val:any)=>updateFilterLocation(val?.display?.split("-")[0]?.trim())}
+                            onChange={(val: any) =>
+                              updateFilterLocation(
+                                val?.display?.split('-')[0]?.trim(),
+                              )
+                            }
                           />
                         ))}
                       </CommunityTopDropdown>
@@ -919,12 +932,23 @@ const CommunityLayout: React.FC<Props> = ({
                     className={`content-box-wrapper ${styles['invite-wrapper']}`}
                   >
                     <header>
-                <h3>
-                  <span>{activeProfile.data?._hobbies?.find((obj:any)=>obj.hobby?._id===selectedHobby)?.hobby?.display??"All hobbies"}{activeProfile.data?._hobbies?.find((obj:any)=>obj.hobby?._id===selectedHobby)?.genre && ` - ${activeProfile.data?._hobbies?.find((obj:any)=>obj.hobby?._id===selectedHobby)?.genre?.display} `}</span>
-                  {" "}in{" "}
-                  <span>{selectedLocation}</span>
-                  </h3>
-              </header>
+                      <h3>
+                        <span>
+                          {activeProfile.data?._hobbies?.find(
+                            (obj: any) => obj.hobby?._id === selectedHobby,
+                          )?.hobby?.display ?? 'All hobbies'}
+                          {activeProfile.data?._hobbies?.find(
+                            (obj: any) => obj.hobby?._id === selectedHobby,
+                          )?.genre &&
+                            ` - ${
+                              activeProfile.data?._hobbies?.find(
+                                (obj: any) => obj.hobby?._id === selectedHobby,
+                              )?.genre?.display
+                            } `}
+                        </span>{' '}
+                        in <span>{selectedLocation}</span>
+                      </h3>
+                    </header>
                     {/* <span className={styles['divider']}></span> */}
                     <section>
                       <input type="text" name="" id="" />
@@ -954,10 +978,21 @@ const CommunityLayout: React.FC<Props> = ({
             >
               <header>
                 <h3>
-                  <span>{activeProfile.data?._hobbies?.find((obj:any)=>obj.hobby?._id===selectedHobby)?.hobby?.display??"All hobbies"}{activeProfile.data?._hobbies?.find((obj:any)=>obj.hobby?._id===selectedHobby)?.genre && ` - ${activeProfile.data?._hobbies?.find((obj:any)=>obj.hobby?._id===selectedHobby)?.genre?.display} `}</span>
-                  {" "}in{" "}
-                  <span>{selectedLocation}</span>
-                  </h3>
+                  <span>
+                    {activeProfile.data?._hobbies?.find(
+                      (obj: any) => obj.hobby?._id === selectedHobby,
+                    )?.hobby?.display ?? 'All hobbies'}
+                    {activeProfile.data?._hobbies?.find(
+                      (obj: any) => obj.hobby?._id === selectedHobby,
+                    )?.genre &&
+                      ` - ${
+                        activeProfile.data?._hobbies?.find(
+                          (obj: any) => obj.hobby?._id === selectedHobby,
+                        )?.genre?.display
+                      } `}
+                  </span>{' '}
+                  in <span>{selectedLocation}</span>
+                </h3>
               </header>
               {/* <span className={styles['divider']}></span> */}
               <section>

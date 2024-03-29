@@ -460,12 +460,14 @@ export const CreatePost: React.FC<Props> = ({
                     return (
                       <div className={styles.imgContainer} key={idx}>
                         <img src={item} alt="" />
-                        <Image
-                          onClick={() => removeMedia(idx, 'media')}
-                          src={CancelBtn}
-                          className={styles['img-cancel-icon']}
-                          alt="cancel"
-                        />
+                        <div>
+                          <Image
+                            onClick={() => removeMedia(idx, 'media')}
+                            src={CancelBtn}
+                            className={styles['img-cancel-icon']}
+                            alt="cancel"
+                          />
+                        </div>
                       </div>
                     )
                   })}

@@ -221,7 +221,7 @@ ul.seller-info-wrapper li svg:last-child {
 .page-left-aside {
 
   position: -webkit-sticky;
-  top: 226px;
+  top: 215px;
   position: sticky;
   transition: 0.6s;
   height: calc(

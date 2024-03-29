@@ -9,7 +9,7 @@
   padding: var(--spacing-12) var(--spacing-16);
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-12);
   /* border: 0; */
   border: 2px solid #ebedf0;
 }
@@ -48,7 +48,7 @@
 
 .profile-left-aside {
   position: -webkit-sticky;
-  top: 222px;
+  top: 215px;
   position: sticky;
   transition: 0.6s;
   height: calc(
