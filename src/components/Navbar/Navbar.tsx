@@ -22,6 +22,7 @@ import {
   showAllEventTrue,
   showAllUsersTrue,
   showAllTrue,
+  resetSearch,
 } from '@/redux/slices/search'
 import LogoFull from '@/assets/image/logo-full.svg'
 import LogoSmall from '@/assets/image/logo-small.png'
@@ -349,7 +350,17 @@ export const Navbar: React.FC<Props> = ({}) => {
       <header className={`${styles['navbar-wrappper']}`}>
         <nav className={`site-container `}>
           <section className={styles['navbar-left']}>
-            <Link href={isLoggedIn ? '/community' : '/'}>
+            <Link
+             onClick={(e)=>{
+              e.stopPropagation();
+              e.preventDefault();
+              if(isLoggedIn){
+                window.location.href = "/community"
+              }else{
+                router.push("/")
+              }
+             }}
+             href={isLoggedIn ? '/community' : '/'}>
               {isLoggedIn ? (
                 <Image
                   src={LogoSmall}
@@ -463,6 +474,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={(e) => {
                             e.preventDefault()
+                            dispatch(resetSearch())
                             dispatch(showAllPeopleTrue())
 
                             router.push('/search')
@@ -484,6 +496,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={(e) => {
                             e.preventDefault()
+                            dispatch(resetSearch())
                             dispatch(showAllPlaceTrue())
                             router.push('/search')
                           }}
@@ -499,6 +512,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={(e) => {
                             e.preventDefault()
+                            dispatch(resetSearch())
                             dispatch(showAllEventTrue())
                             router.push('/search')
                           }}
@@ -514,6 +528,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={(e) => {
                             e.preventDefault()
+                            dispatch(resetSearch())
                             dispatch(showAllProductsTrue())
                             router.push('/search')
                           }}
@@ -652,7 +667,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           <li>Observe</li>
                         </Link>
 
-                        <Link href={'/hobby/outdoor'}>
+                        <Link href={'/hobby/outdoors'}>
                           <li>Outdoors</li>
                         </Link>
 

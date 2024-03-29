@@ -377,7 +377,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
 
         if (results && results.length > 0) {
           setShowDropdownList(
-            results.map((result: any) => {
+            results.slice(0, 6).map((result: any) => {
               const { address_components } = result
               console.log({ address_components })
               let addressParts: string[] = []
@@ -389,7 +389,12 @@ const ListingAddressEditModal: React.FC<Props> = ({
                 }
                 if (component.types.includes('premise')) {
                   addressParts.push(component.long_name)
-                  addressObj.premise = component.long_name
+                  if (addressObj.premise) {
+                    addressObj.street_number = addressObj.premise
+                    addressObj.premise = component.long_name
+                  } else {
+                    addressObj.premise = component.long_name
+                  }
                 }
                 if (component.types.includes('locality')) {
                   addressParts.push(component.long_name)

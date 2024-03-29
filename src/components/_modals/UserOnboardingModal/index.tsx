@@ -73,9 +73,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
       dispatch(updateUser(res.data.data.user))
       dispatch(closeModal())
 
-      router.push(`/profile/${user.profile_url}`)
-      // window.location.href = `/profile/${user.profile_url}`; // This will force a reload
-      dispatch(openModal({ type: 'user-onboarding-welcome', closable: false }))
+      window.location.href = `/profile/${user.profile_url}`
     }
   }
   function handleClose() {
@@ -172,6 +170,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
           confirmationModal={confirmationModal}
           handleClose={handleClose}
           onStatusChange={handleStatusChange}
+          showSkip
         />
       )}
       {activeStep === 'Contact' && (
@@ -182,6 +181,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
           confirmationModal={confirmationModal}
           handleClose={handleClose}
           onStatusChange={handleStatusChange}
+          showSkip
         />
       )}
       {activeStep === 'Address' && (
@@ -200,7 +200,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
           onBackBtnClick={handleBack}
           setConfirmationModal={setConfirmationModal}
           confirmationModal={confirmationModal}
-          handleClosee={handleClose}
+          handleClose={handleClose}
           onStatusChange={handleStatusChange}
         />
       )}
@@ -212,6 +212,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
 
             return (
               <span
+                tabIndex={isClickable ? 0 : -1}
                 key={step}
                 className={`${styles['step']} ${
                   isClickable ? styles['active'] : ''
@@ -221,6 +222,14 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
                     ? () => setActiveStep(totalSteps[index])
                     : undefined
                 }
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.stopPropagation()
+                    if (isClickable) {
+                      setActiveStep(totalSteps[index])
+                    }
+                  }
+                }}
               ></span>
             )
           })}

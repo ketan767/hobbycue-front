@@ -190,13 +190,13 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
           >
             <header
               className={styles['dropdown-header']}
-              onClick={() => setExploreActive(!exploreActive)}
             >
-              <div>
+              <div onClick={()=>{router.push("/explore");handleClose()}}>
                 <Image src={ExploreIcon} alt="Explore" />
                 <p> Explore </p>
               </div>
               <Image
+              onClick={() => setExploreActive(!exploreActive)}
                 src={DownIcon}
                 alt="Down"
                 className={`${styles['arrow']} ${
@@ -218,13 +218,13 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
           >
             <header
               className={styles['dropdown-header']}
-              onClick={() => setHobbiesActive(!hobbiesActive)}
             >
-              <div>
+              <div onClick={()=>{router.push("/hobby");handleClose()}}>
                 <Image src={HobbyIcon} alt="Hobby" />
                 <p> Hobbies </p>
               </div>
               <Image
+              onClick={() => setHobbiesActive(!hobbiesActive)}
                 src={DownIcon}
                 alt="Down"
                 className={`${styles['arrow']} ${
@@ -339,7 +339,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                     <li>Observe</li>
                   </Link>
 
-                  <Link href={'/hobby/outdoor'}>
+                  <Link href={'/hobby/outdoors'}>
                     <li>Outdoors</li>
                   </Link>
 

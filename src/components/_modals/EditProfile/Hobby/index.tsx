@@ -182,6 +182,11 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   }
 
   const handleHobbyKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if(e.key==="Enter"){
+      if(hobbyDropdownList.length === 0){
+        nextButtonRef.current?.click()
+      }
+    }
     if (hobbyDropdownList.length === 0) return
 
     switch (e.key) {
@@ -218,27 +223,38 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
 
-    const sortedGenres = res.data.hobbies.sort((a: any, b: any) => {
-      const indexA = a.display
-        .toLowerCase()
-        .indexOf(e.target.value.toLowerCase())
-      const indexB = b.display
-        .toLowerCase()
-        .indexOf(e.target.value.toLowerCase())
 
-      if (indexA === 0 && indexB !== 0) {
-        return -1
-      } else if (indexB === 0 && indexA !== 0) {
-        return 1
-      }
+// Step 1: Filter the data based on the search query
+const filteredGenres = res.data.hobbies.filter((item: any) => {
+  return item.display.toLowerCase().includes(e.target.value.toLowerCase());
+});
 
-      return 0
-    })
+// Step 2: Sort the filtered data
+const sortedGenres = filteredGenres.sort((a: any, b: any) => {
+  const indexA = a.display.toLowerCase().indexOf(e.target.value.toLowerCase());
+  const indexB = b.display.toLowerCase().indexOf(e.target.value.toLowerCase());
+
+  if (indexA === 0 && indexB !== 0) {
+    return -1;
+  } else if (indexB === 0 && indexA !== 0) {
+    return 1;
+  }
+
+  return 0;
+});
 
     setGenreDropdownList(sortedGenres)
+
+    setFocusedGenreIndex(-1)
   }
 
   const handleGenreKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if(e.key==="Enter"){
+        console.log("first")
+      if(genreDropdownList.length === 0 || data.genre!==null){
+        nextButtonRef.current?.click()
+      }
+    }
     if (genreDropdownList.length === 0) return
 
     switch (e.key) {
@@ -321,7 +337,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       }
     } else {
       selectedHobby = data.hobby
-      setErrorOrmsg('hobby added Successfully!')
     }
 
     // Handle genre input
@@ -348,7 +363,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           genre.display.toLowerCase() === genreInputValue.toLowerCase(),
       )
       if (!matchedGenre) {
-        setShowAddHobbyModal(true)
+        setShowAddGenreModal(true)
         return
       } else {
         selectedGenre = data.genre
@@ -381,6 +396,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       if (err) {
         setAddHobbyBtnLoading(false)
         return console.log(err)
+      } else {
+        setErrorOrmsg('Hobby added successfully!')
       }
       const { err: updtProfileErr, res: updtProfileRes } =
         await updateMyProfileDetail({ is_onboarded: true })
@@ -394,7 +411,10 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         setHobbyInputValue('')
         setGenreInputValue('')
         setData({ level: 1, hobby: null, genre: null })
+        
+        setAddHobbyBtnLoading(false)
       }
+      setAddHobbyBtnLoading(false)
     })
   }
 
@@ -425,6 +445,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
             setHobbyError(true)
             searchref.current?.focus()
             setHobbyInputValue('')
+        setSubmitBtnLoading(false)
             return
           }
         }
@@ -435,6 +456,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           // setErrorOrmsg('Typed hobby not found!')
           // searchref.current?.focus()
           // setHobbyError(true)
+          setSubmitBtnLoading(false)
           setShowAddHobbyModal(true)
           return
         }
@@ -444,19 +466,23 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
       // Handle genre input
       if (!data.genre) {
-        const matchedGenre = genreDropdownList.find(
+        const matchedGenre = genreDropdownList.some(
           (genre) =>
             genre.display.toLowerCase() === genreInputValue.toLowerCase(),
         )
 
-        if (selectedGenre !== null && selectedGenre !== matchedGenre) {
-          setErrorOrmsg('Typed Genre not found!')
-          setHobbyError(true)
+        if (!matchedGenre && genreInputValue.trim().length!==0) {
+          // setErrorOrmsg('Typed Genre not found!')
+          // setHobbyError(true)
+          setShowAddGenreModal(true)
+          setSubmitBtnLoading(false)
           return
         }
         if (selectedGenre !== null && !matchedGenre) {
-          setErrorOrmsg("This hobby doesn't contain this genre")
-          setHobbyError(true)
+          // setErrorOrmsg("This hobby doesn't contain this genre")
+          // setHobbyError(true)
+          setShowAddGenreModal(true)
+          setSubmitBtnLoading(false)
           return
         }
       } else {
@@ -630,9 +656,14 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
     const handleKeyPress = (event: any) => {
-      if (event.key === 'Enter') {
-        nextButtonRef.current?.focus()
-      }
+      // if (event.key === 'Enter') {
+      //   console.log({showHobbyDowpdown,showGenreDowpdown})
+      //   if(showHobbyDowpdown===false&&showGenreDowpdown===false){
+      //     nextButtonRef.current?.click()
+      //   }else{
+      //     nextButtonRef.current?.focus()
+      //   }
+      // }
     }
     searchref.current?.focus()
     window.addEventListener('keydown', handleKeyPress)
@@ -712,35 +743,54 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   if (showAddHobbyModal) {
     return (
       <>
-        {genreInputValue.length === 0 ? (
-          <AddHobby
-            handleClose={() => {
-              setShowAddHobbyModal(false)
-            }}
-            handleSubmit={() => {
-              setShowSnackbar({
-                message: 'This feature is under development',
-                triggerOpen: true,
-                type: 'success',
-              })
-            }}
-            propData={{ defaultValue: hobbyInputValue }}
-          />
-        ) : (
-          <AddGenre
-            handleClose={() => {
-              setShowAddHobbyModal(false)
-            }}
-            handleSubmit={() => {
-              setShowSnackbar({
-                message: 'This feature is under development',
-                triggerOpen: true,
-                type: 'success',
-              })
-            }}
-            propData={{ defaultValue: genreInputValue }}
-          />
-        )}
+        {/* {genreInputValue.length === 0 ? ( */}
+        <AddHobby
+          handleClose={() => {
+            setShowAddHobbyModal(false)
+          }}
+          handleSubmit={() => {
+            setShowSnackbar({
+              message: 'This feature is under development',
+              triggerOpen: true,
+              type: 'success',
+            })
+          }}
+          propData={{ defaultValue: hobbyInputValue }}
+        />
+        {/* ) : ( */}
+        {/* )} */}
+        <CustomSnackbar
+          message={showSnackbar.message}
+          type={showSnackbar.type}
+          triggerOpen={showSnackbar.triggerOpen}
+          closeSnackbar={() => {
+            setShowSnackbar({
+              message: '',
+              triggerOpen: false,
+              type: 'success',
+            })
+          }}
+        />
+      </>
+    )
+  }
+
+  if (showAddGenreModal) {
+    return (
+      <>
+        <AddGenre
+          handleClose={() => {
+            setShowAddGenreModal(false)
+          }}
+          handleSubmit={() => {
+            setShowSnackbar({
+              message: 'This feature is under development',
+              triggerOpen: true,
+              type: 'success',
+            })
+          }}
+          propData={{ defaultValue: genreInputValue }}
+        />
         <CustomSnackbar
           message={showSnackbar.message}
           type={showSnackbar.type}
@@ -775,7 +825,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       <div className={styles['modal-wrapper']}>
         <CloseIcon
           className={styles['modal-close-icon']}
-          onClick={handleClosee}
+          onClick={handleClose}
         />
         {/* Modal Header */}
         <header className={styles['header']}>
@@ -784,7 +834,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
         <hr className={styles['modal-hr']} />
 
-        <section className={`${styles['body']} custom-scrollbar`}>
+        <section className={`${styles['body']}`}>
           <>
             <section className={styles['add-hobbies-wrapper']}>
               <section className={styles['added-hobby-list']}>
@@ -932,9 +982,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                             {showHobbyDowpdown &&
                               hobbyDropdownList.length !== 0 && (
                                 <div
-                                  className={`custom-scrollbar ${
-                                    styles['dropdown']
-                                  } ${
+                                  className={`${styles['dropdown']} ${
                                     userHobbies.length > 4
                                       ? styles['dropdown-upwards']
                                       : styles['dropdown-downwords']
@@ -985,9 +1033,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                             {showGenreDowpdown &&
                               genreDropdownList.length !== 0 && (
                                 <div
-                                  className={`custom-scrollbar ${
-                                    styles['dropdown']
-                                  } ${
+                                  className={` ${styles['dropdown']} ${
                                     userHobbies.length > 4
                                       ? styles['dropdown-upwards']
                                       : styles['dropdown-downwords']
@@ -1162,6 +1208,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           <button
             ref={nextButtonRef}
             className="modal-footer-btn submit"
+            tabIndex={0}
             onClick={handleSubmit}
             disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
           >

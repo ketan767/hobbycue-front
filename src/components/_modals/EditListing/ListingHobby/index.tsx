@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import styles from './styles.module.css'
-import { Button, CircularProgress } from '@mui/material'
+import { Button, CircularProgress, useMediaQuery } from '@mui/material'
 import {
   addUserHobby,
   deleteUserHobby,
@@ -84,7 +84,9 @@ const ListingHobbyEditModal: React.FC<Props> = ({
     genre: null,
   })
   const [errorOrmsg, setErrorOrmsg] = useState<string | null>(null)
-  const hobbyRef = useRef<any>(null)
+  const hobbyRef = useRef<HTMLInputElement>(null)
+  const hobbyDropdownRef = useRef<HTMLDivElement>(null)
+  const genreDropdownRef = useRef<HTMLDivElement>(null)
   const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
   const [showGenreDropdown, setShowGenreDropdown] = useState<boolean>(false)
   const [genreid, setGenreId] = useState('')
@@ -92,6 +94,8 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   const [genreInputValue, setGenreInputValue] = useState('')
   const [isError, setIsError] = useState(false)
   const [HobbyError, setHobbyError] = useState(false)
+  const [focusedHobbyIndex, setFocusedHobbyIndex] = useState<number>(-1)
+  const [focusedGenreIndex, setFocusedGenreIndex] = useState<number>(-1)
   const [initialData, setInitialData] = useState<never[]>([])
   const [isChanged, setIsChanged] = useState(false)
   const [isChangeadded, setIsChangeadded] = useState(false)
@@ -121,7 +125,11 @@ const ListingHobbyEditModal: React.FC<Props> = ({
     setData((prev) => {
       return { ...prev, hobby: null }
     })
-    if (isEmptyField(e.target.value)) return setHobbyDropdownList([])
+    if (isEmptyField(e.target.value)) {
+      setFocusedHobbyIndex(-1)
+      setHobbyDropdownList([])
+      return
+    }
     const query = `fields=display,genre&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
     const { err, res } = await getAllHobbies(query)
 
@@ -144,6 +152,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
 
       return 0
     })
+    setFocusedHobbyIndex(-1)
 
     setHobbyDropdownList(sortedHobbies)
   }
@@ -180,6 +189,60 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   }
   const printgenreid = () => {
     console.log('genreid', genreid)
+  }
+
+  const handleHobbyKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (hobbyDropdownList.length === 0) return
+
+    switch (e.key) {
+      case 'ArrowDown':
+        setFocusedHobbyIndex((prevIndex) =>
+          prevIndex < hobbyDropdownList.length - 1 ? prevIndex + 1 : prevIndex,
+        )
+        break
+      case 'ArrowUp':
+        setFocusedHobbyIndex((prevIndex) =>
+          prevIndex > 0 ? prevIndex - 1 : prevIndex,
+        )
+        break
+      case 'Enter':
+        if (focusedHobbyIndex !== -1) {
+          handleHobbySelection(hobbyDropdownList[focusedHobbyIndex])
+          setShowHobbyDropdown(false)
+        }
+        break
+      default:
+        break
+    }
+  }
+
+  const handleGenreKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (genreDropdownList.length === 0) return
+
+    switch (e.key) {
+      case 'ArrowDown':
+        setFocusedGenreIndex((prevIndex) =>
+          prevIndex < genreDropdownList.length - 1 ? prevIndex + 1 : prevIndex,
+        )
+        break
+      case 'ArrowUp':
+        setFocusedGenreIndex((prevIndex) =>
+          prevIndex > 0 ? prevIndex - 1 : prevIndex,
+        )
+        break
+      case 'Enter':
+        if (focusedGenreIndex !== -1) {
+          setData((prevValue) => ({
+            ...prevValue,
+            genre: genreDropdownList[focusedGenreIndex],
+          }))
+          setShowGenreDropdown(false)
+          setGenreInputValue(genreDropdownList[focusedGenreIndex]?.display)
+        }
+        break
+      default:
+        break
+    }
   }
   const handleHobbySelection = async (selectedHobby: DropdownListItem) => {
     setShowGenreDropdown(false)
@@ -223,7 +286,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
 
       if (matchedHobby) {
         selectedHobby = matchedHobby
-        setErrorOrmsg('hobby added Successfully!')
+        // setErrorOrmsg('hobby added Successfully!')
       } else {
         // setHobbyError(true)
         // setError('Typed hobby not found!')
@@ -232,7 +295,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
       }
     } else {
       selectedHobby = data.hobby
-      setErrorOrmsg('hobby added Successfully!')
+      // setErrorOrmsg('hobby added Successfully!')
     }
 
     // Handle genre input
@@ -258,7 +321,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
           genre.display.toLowerCase() === genreInputValue.toLowerCase(),
       )
       if (!matchedGenre) {
-        setShowAddHobbyModal(true)
+        setShowAddGenreModal(true)
         return
       } else {
         selectedGenre = data.genre
@@ -287,6 +350,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
       setAddHobbyBtnLoading(false)
       return console.log(err)
     }
+    setErrorOrmsg('Hobby added successfully!')
     await updateHobbyList()
     setHobbyInputValue('')
     setGenreInputValue('')
@@ -345,12 +409,8 @@ const ListingHobbyEditModal: React.FC<Props> = ({
             genre.display.toLowerCase() === genreInputValue.toLowerCase(),
         )
 
-        if (selectedGenre !== null && selectedGenre !== matchedGenre) {
-          setErrorOrmsg('Typed Genre not found!')
-          return
-        }
-        if (selectedGenre !== null && !matchedGenre) {
-          setErrorOrmsg("This hobby doesn't contain this genre")
+        if (selectedGenre !== matchedGenre || !matchedGenre) {
+          setShowAddGenreModal(true)
           return
         }
       } else {
@@ -471,38 +531,119 @@ const ListingHobbyEditModal: React.FC<Props> = ({
     }
   }, [isError])
 
+  useEffect(() => {
+    // Update the scroll position of the dropdown when the selected option changes
+    const dropdown = hobbyDropdownRef.current
+    const selectedOption = document.getElementById(
+      `option-h-${focusedHobbyIndex}`,
+    )
+
+    if (dropdown && selectedOption) {
+      const dropdownRect = dropdown.getBoundingClientRect()
+      const selectedOptionRect = selectedOption.getBoundingClientRect()
+
+      // Check if the selected option is below the visible area
+      if (selectedOptionRect.bottom > dropdownRect.bottom) {
+        dropdown.scrollTop += selectedOptionRect.bottom - dropdownRect.bottom
+      }
+
+      // Check if the selected option is above the visible area
+      if (selectedOptionRect.top < dropdownRect.top) {
+        dropdown.scrollTop -= dropdownRect.top - selectedOptionRect.top
+      }
+    }
+  }, [focusedHobbyIndex])
+
+  useEffect(() => {
+    // Update the scroll position of the dropdown when the selected option changes
+    const dropdown = genreDropdownRef.current
+    const selectedOption = document.getElementById(
+      `option-g-${focusedGenreIndex}`,
+    )
+
+    if (dropdown && selectedOption) {
+      const dropdownRect = dropdown.getBoundingClientRect()
+      const selectedOptionRect = selectedOption.getBoundingClientRect()
+
+      // Check if the selected option is below the visible area
+      if (selectedOptionRect.bottom > dropdownRect.bottom) {
+        dropdown.scrollTop += selectedOptionRect.bottom - dropdownRect.bottom
+      }
+
+      // Check if the selected option is above the visible area
+      if (selectedOptionRect.top < dropdownRect.top) {
+        dropdown.scrollTop -= dropdownRect.top - selectedOptionRect.top
+      }
+    }
+  }, [focusedGenreIndex])
+
+  const isMobile = useMediaQuery('(max-width:1100px)')
+
+  const hobbyDropDownWrapperRef = useRef<HTMLDivElement>(null)
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (
+      hobbyDropDownWrapperRef.current &&
+      !hobbyDropDownWrapperRef.current.contains(event.target as Node)
+    ) {
+      setShowHobbyDropdown(false)
+    }
+  }
+  useEffect(() => {
+    document.addEventListener('mousedown', handleOutsideClick)
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick)
+    }
+  }, [])
+
   if (showAddHobbyModal) {
     return (
       <>
-        {genreInputValue.length === 0 ? (
-          <AddHobby
-            handleClose={() => {
-              setShowAddHobbyModal(false)
-            }}
-            handleSubmit={() => {
-              setShowSnackbar({
-                message: 'This feature is under development',
-                triggerOpen: true,
-                type: 'success',
-              })
-            }}
-            propData={{ defaultValue: hobbyInputValue }}
-          />
-        ) : (
-          <AddGenre
-            handleClose={() => {
-              setShowAddHobbyModal(false)
-            }}
-            handleSubmit={() => {
-              setShowSnackbar({
-                message: 'This feature is under development',
-                triggerOpen: true,
-                type: 'success',
-              })
-            }}
-            propData={{ defaultValue: genreInputValue }}
-          />
-        )}
+        <AddHobby
+          handleClose={() => {
+            setShowAddHobbyModal(false)
+          }}
+          handleSubmit={() => {
+            setShowSnackbar({
+              message: 'This feature is under development',
+              triggerOpen: true,
+              type: 'success',
+            })
+          }}
+          propData={{ defaultValue: hobbyInputValue }}
+        />
+
+        <CustomSnackbar
+          message={showSnackbar.message}
+          type={showSnackbar.type}
+          triggerOpen={showSnackbar.triggerOpen}
+          closeSnackbar={() => {
+            setShowSnackbar({
+              message: '',
+              triggerOpen: false,
+              type: 'success',
+            })
+          }}
+        />
+      </>
+    )
+  }
+  if (showAddGenreModal) {
+    return (
+      <>
+        <AddGenre
+          handleClose={() => {
+            setShowAddGenreModal(false)
+          }}
+          handleSubmit={() => {
+            setShowSnackbar({
+              message: 'This feature is under development',
+              triggerOpen: true,
+              type: 'success',
+            })
+          }}
+          propData={{ defaultValue: genreInputValue }}
+        />
         <CustomSnackbar
           message={showSnackbar.message}
           type={showSnackbar.type}
@@ -547,7 +688,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
 
         <hr className={styles['modal-hr']} />
 
-        <section className={`${styles['body']} custom-scrollbar`}>
+        <section className={`${styles['body']}`}>
           <>
             <section className={styles['add-hobbies-wrapper']}>
               {/* Hobbies List, that are already Added */}
@@ -629,31 +770,37 @@ const ListingHobbyEditModal: React.FC<Props> = ({
                               onFocus={() => setShowHobbyDropdown(true)}
                               onBlur={() =>
                                 setTimeout(() => {
-                                  setShowHobbyDropdown(false)
+                                  if (!isMobile) setShowHobbyDropdown(false)
                                 }, 300)
                               }
                               onChange={handleHobbyInputChange}
+                              onKeyDown={handleHobbyKeyDown}
                             />
                           </div>
                           {showHobbyDropdown &&
                             hobbyDropdownList.length !== 0 && (
                               <div
-                                className={`custom-scrollbar ${
-                                  styles['dropdown']
-                                } ${
+                                className={` ${styles['dropdown']} ${
                                   hobbiesList.length > 4
                                     ? styles['dropdown-upwards']
                                     : styles['dropdown-downwords']
                                 }`}
+                                ref={hobbyDropdownRef}
                               >
-                                {hobbyDropdownList.map((hobby) => {
+                                {hobbyDropdownList.map((hobby, index) => {
                                   return (
                                     <p
+                                      id={`option-h-${index}`}
                                       key={hobby._id}
                                       onClick={() => {
                                         handleHobbySelection(hobby)
                                         setShowHobbyDropdown(false)
                                       }}
+                                      className={
+                                        index === focusedHobbyIndex
+                                          ? styles['dropdown-option-focus']
+                                          : ''
+                                      }
                                     >
                                       {hobby.display}
                                     </p>
@@ -678,23 +825,24 @@ const ListingHobbyEditModal: React.FC<Props> = ({
                                 }, 300)
                               }
                               onChange={handleGenreInputChange}
+                              onKeyDown={handleGenreKeyDown}
                             />
                             {/* <p className={styles['helper-text']}>{inputErrs.full_name}</p> */}
                           </div>
                           {showGenreDropdown &&
                             genreDropdownList.length !== 0 && (
                               <div
-                                className={`custom-scrollbar ${
-                                  styles['dropdown']
-                                } ${
+                                className={`${styles['dropdown']} ${
                                   hobbiesList.length > 4
                                     ? styles['dropdown-upwards']
                                     : styles['dropdown-downwords']
                                 }`}
+                                ref={genreDropdownRef}
                               >
-                                {genreDropdownList.map((genre) => {
+                                {genreDropdownList.map((genre, index) => {
                                   return (
                                     <p
+                                      id={`option-g-${index}`}
                                       key={genre?._id}
                                       onClick={() => {
                                         setData((prev) => {
@@ -703,6 +851,11 @@ const ListingHobbyEditModal: React.FC<Props> = ({
                                         setGenreInputValue(genre?.display)
                                         setShowGenreDropdown(false)
                                       }}
+                                      className={
+                                        index === focusedGenreIndex
+                                          ? styles['dropdown-option-focus']
+                                          : ''
+                                      }
                                     >
                                       {genre?.display}
                                     </p>

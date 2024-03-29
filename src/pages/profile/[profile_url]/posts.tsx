@@ -127,9 +127,9 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
       if (!userIsAuthorized) router.push('/404')
     }
   }, [user._id, data.pageData, router])
-  if (!user.is_onboarded && data?.pageData?.email !== user?.email) {
-    return <ErrorPage />
-  }
+  // if (!user.is_onboarded && data?.pageData?.email !== user?.email) {
+  //   return <ErrorPage />
+  // }
   return (
     <>
       <Head>
@@ -143,7 +143,9 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
         setExpandAll={handleExpandAll}
       >
         <PageGridLayout column={3}>
-          <aside className={expandAll ? '' : styles['display-none']}>
+          <aside className={`custom-scrollbar ${styles['profile-left-aside']} ${
+                expandAll ? '' : styles['display-none']
+              }`}>
             <ProfileHobbySideList data={data.pageData} />
             <ProfilePagesList data={data} />
             <div className={styles['display-mobile']}>
@@ -197,7 +199,11 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
             </section>
             <section className={styles['posts-container']}>
               {loadingPosts ? (
-                <PostCardSkeletonLoading />
+                <>
+                  <PostCardSkeletonLoading />
+                  <PostCardSkeletonLoading />
+                  <PostCardSkeletonLoading />
+                </>
               ) : (
                 posts.length === 0 && (
                   <div className={styles['no-posts-container']}>

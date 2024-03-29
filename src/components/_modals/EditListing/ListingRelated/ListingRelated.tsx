@@ -239,7 +239,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        nextButtonRef.current?.focus()
+        nextButtonRef.current?.click()
       }
     }
 
@@ -279,7 +279,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
       <div className={styles['modal-wrapper']}>
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>{'Related Listingss'}</h4>
+          <h4 className={styles['heading']}>{'Related Listings'}</h4>
         </header>
         <hr className={styles['modal-hr']} />
         <section className={styles['body']}>

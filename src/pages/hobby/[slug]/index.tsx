@@ -68,7 +68,12 @@ const HobbyDetail: React.FC<Props> = (props) => {
       } else {
         query = `category=${data?.category?._id}&level=3&level=5&show=true&tags=${data?._id}`
       }
-    } else if (data.level === 3 && data.genre) {
+    }
+
+    if (data.level === 3 && data.genre.length === 0) {
+      console.log('expceted condition')
+      setNextLevels([])
+    } else if (data.level === 3 && data.genre.length !== 0) {
       query = `level=5&show=true&genre=${data.genre[0]}`
     }
 
@@ -240,7 +245,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     return { notFound: true }
 
   const data = {
-    hobbyData: res.data?.hobbies?.[0]??[],
+    hobbyData: res.data?.hobbies?.[0] ?? [],
   }
   return {
     props: {

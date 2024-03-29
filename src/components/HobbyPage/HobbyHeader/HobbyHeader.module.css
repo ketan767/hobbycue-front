@@ -337,8 +337,9 @@
   }
 
   .navigation-links a {
-    min-width: fit-content;
+    min-width: 50px;
     font-size: 12px;
+    padding: 10px 0;
   }
   .profile-img {
     width: 3.75rem;

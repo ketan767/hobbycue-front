@@ -10,6 +10,8 @@ import ProfileHeaderSmall from '@/components/ProfilePage/ProfileHeader/ProfileHe
 import ProfileNavigationLinks from '@/components/ProfilePage/ProfileHeader/ProfileNavigationLinks'
 import styles from './styles.module.css'
 import Image from 'next/image'
+import { closeModal, openModal } from '@/redux/slices/modal'
+import { getMyProfileDetail } from '@/services/user.service'
 type Props = {
   activeTab: ProfilePageTabs
   data: ProfilePageData
@@ -53,6 +55,12 @@ const ProfileLayout: React.FC<Props> = ({
     activeProfile,
   ])
 
+  useEffect(() => {
+    if (!isLoggedIn) {
+      dispatch(openModal({ type: 'auth', closable: true }))
+    } else dispatch(closeModal())
+  }, [user])
+
   function checkScroll() {
     const scrollValue = window.scrollY || document.documentElement.scrollTop
 
@@ -79,8 +87,7 @@ const ProfileLayout: React.FC<Props> = ({
 
       <div
         onClick={() => {
-          if (setExpandAll !== undefined)
-            setExpandAll(!expandAll)
+          if (setExpandAll !== undefined) setExpandAll(!expandAll)
         }}
         className={styles['expand-all']}
       >

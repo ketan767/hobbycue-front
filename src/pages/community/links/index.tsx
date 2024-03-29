@@ -22,6 +22,42 @@ const CommunityLinks: React.FC<Props> = ({}) => {
     activeProfile?.data?._hobbies.forEach((item: any) => {
       params.append('_hobby', item.hobby._id)
     })
+    const localSelectedLocation = sessionStorage.getItem(
+      'communityFilterLocation',
+    )
+
+    const addresses = activeProfile.data?._addresses || []
+    const matchingAddress = [
+      ...addresses,
+      activeProfile.data?.primary_address ?? {},
+    ].find(
+      (address: any) =>
+        address.city === localSelectedLocation ||
+        address.pin_code === localSelectedLocation ||
+        address.locality === localSelectedLocation ||
+        address.society === localSelectedLocation,
+    )
+
+    if (matchingAddress) {
+      if (matchingAddress.city === localSelectedLocation) {
+        params.append('visibility', matchingAddress.city)
+        params.append('visibility', matchingAddress.pin_code)
+        params.append('visibility', matchingAddress.locality)
+        params.append('visibility', matchingAddress.society)
+      }
+      if (matchingAddress.pin_code === localSelectedLocation) {
+        params.append('visibility', matchingAddress.pin_code)
+        params.append('visibility', matchingAddress.locality)
+        params.append('visibility', matchingAddress.society)
+      }
+      if (matchingAddress.locality === localSelectedLocation) {
+        params.append('visibility', matchingAddress.locality)
+        params.append('visibility', matchingAddress.society)
+      }
+      if (matchingAddress.society === localSelectedLocation) {
+        params.append('visibility', matchingAddress.society)
+      }
+    }
     if (!activeProfile?.data?._hobbies) return
     if (activeProfile?.data?._hobbies.length === 0) return
 
@@ -51,6 +87,8 @@ const CommunityLinks: React.FC<Props> = ({}) => {
         <section className={styles['pages-container']}>
           {loading ? (
             <>
+              <PostCardSkeletonLoading />
+              <PostCardSkeletonLoading />
               <PostCardSkeletonLoading />
             </>
           ) : posts?.length > 0 ? (

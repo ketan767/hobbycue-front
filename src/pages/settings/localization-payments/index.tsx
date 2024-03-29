@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import styles from './localization.module.css'
+import exploreStyles from '@/styles/ExplorePage.module.css'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import SettingsSidebar from '@/layouts/SettingsSidebar/SettingsSidebar'
 import AddIcon from '../../../assets/svg/add.svg'
@@ -93,6 +94,15 @@ const VisibilityAndNotification: React.FC = () => {
 
   return (
     <>
+          {isMobile&&<aside className={`${exploreStyles['community-left-aside']} custom-scrollbar static-position`}>
+        <section className="content-box-wrapper">
+          <header>
+            <div className={exploreStyles['heading']}>
+              <h1>Settings</h1>
+            </div>
+          </header>
+        </section>
+      </aside>}
       <PageGridLayout column={2} customStyles={styles['settingcontainer']}>
         <SettingsDropdownLayout>
           {isMobile ? null : <SettingsSidebar active="localization-payments" />}

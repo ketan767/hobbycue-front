@@ -3,8 +3,8 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://hobbycue.com
+Host: https://localhost:8000
 
 # Sitemaps
-
-Sitemap: https://hobbycue.com/server-sitemap.xml
+Sitemap: https://localhost:8000/sitemap.xml
+Sitemap: https://localhost:8000/server-sitemap.xml

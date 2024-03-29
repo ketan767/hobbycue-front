@@ -146,17 +146,32 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
     setPageData(data?.pageData)
     dispatch(updateProfileData(data.pageData))
   }, [data?.pageData])
-  
+
+  const ShowWelcomeModal = async () => {
+    const { err: error, res: response } = await getMyProfileDetail()
+    if (
+      response?.data?.data?.user?.show_welcome &&
+      response?.data?.data.user.is_onboarded
+    ) {
+      dispatch(openModal({ type: 'user-onboarding-welcome', closable: false }))
+    }
+  }
+  useEffect(() => {
+    const modalShown = localStorage.getItem("modal-shown-after-login");
+    if(modalShown!=="true"){
+    ShowWelcomeModal()
+    }
+  }, [user.profile_url])
+
   useEffect(() => {
     if (user.id) {
       const userIsAuthorized =
-        data.pageData.is_published ||
-        user._id === data.pageData.admin;
+        data.pageData.is_published || user._id === data.pageData.admin
       if (!userIsAuthorized) router.push('/404')
     }
-  }, [user._id, data.pageData, router]);
+  }, [user._id, data.pageData, router])
 
-  if(!user.is_onboarded && pageData?.email!==user?.email) {return(<ErrorPage/>)}
+  // if(!user.is_onboarded && pageData?.email!==user?.email) {return(<ErrorPage/>)}
   return (
     <>
       <Head>
@@ -483,4 +498,4 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   }
 }
 
-export default withAuth(ProfileHome)
+export default ProfileHome

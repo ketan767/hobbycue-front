@@ -153,8 +153,9 @@
     flex-shrink: 0;
   }
   .navigation-tabs a {
-    min-width: 6px;
+    min-width: 50px;
     font-size: 12px;
+    padding: 10px 0;
   }
 
   .display-mobile {

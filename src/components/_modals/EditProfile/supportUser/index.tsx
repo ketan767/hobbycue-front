@@ -169,7 +169,7 @@ const SupportUserModal: React.FC<Props> = ({
       setSubmitBtnLoading(false)
       setTimeout(() => {
         dispatch(closeModal())
-      }, 1500)
+      }, 2000)
     } else if (err) {
       setSubmitBtnLoading(false)
       setSnackbar({

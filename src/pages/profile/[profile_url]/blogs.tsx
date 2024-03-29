@@ -69,9 +69,9 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
       if (!userIsAuthorized) router.push('/404')
     }
   }, [user._id, data.pageData, router])
-  if (!user.is_onboarded && data?.pageData?.email !== user?.email) {
-    return <ErrorPage />
-  }
+  // if (!user.is_onboarded && data?.pageData?.email !== user?.email) {
+  //   return <ErrorPage />
+  // }
   return (
     <>
       <Head>
@@ -85,7 +85,10 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
         setExpandAll={handleExpandAll}
       >
         <PageGridLayout column={2}>
-          <aside className={expandAll ? '' : styles['display-none']}>
+          <aside 
+          className={`custom-scrollbar ${styles['profile-left-aside']} ${
+            expandAll ? '' : styles['display-none']
+          }`}>
             {/* User Hobbies */}
             <ProfileHobbySideList data={data.pageData} />
             <ProfilePagesList data={data} />

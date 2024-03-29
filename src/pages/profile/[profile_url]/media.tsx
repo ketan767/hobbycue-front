@@ -26,6 +26,7 @@ import ProfileContactSide from '@/components/ProfilePage/ProfileContactSides'
 import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/ProfileSocialMedia'
 import { updateProfileMenuExpandAll } from '@/redux/slices/site'
 import ErrorPage from '@/components/ErrorPage'
+import { useMediaQuery } from '@mui/material'
 
 interface Props {
   data: ProfilePageData['pageData']
@@ -160,10 +161,11 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
         data.pageData.is_published || user._id === data.pageData.admin
       if (!userIsAuthorized) router.push('/404')
     }
-  }, [user._id, data.pageData, router])
-  if (!user.is_onboarded && data?.pageData?.email !== user?.email) {
-    return <ErrorPage />
-  }
+  }, [user._id, data.pageData, router]);
+  const isMobile = useMediaQuery("(max-width:1100px)");
+  // if (!user.is_onboarded && data?.pageData?.email !== user?.email) {
+  //   return <ErrorPage />
+  // }
 
   return (
     <>
@@ -178,7 +180,9 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
         setExpandAll={handleExpandAll}
       >
         <PageGridLayout column={2}>
-          <aside className={expandAll ? '' : styles['display-none']}>
+          <aside className={`custom-scrollbar ${styles['profile-left-aside']} ${
+                expandAll ? '' : styles['display-none']
+              }`}>
             {/* User Hobbies */}
             <ProfileHobbySideList data={data.pageData} />
             <ProfilePagesList data={data} />
@@ -196,7 +200,7 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
           <div className={styles['nav-mobile']}>
             <ProfileNavigationLinks activeTab={'media'} />
           </div>
-          <div>
+          <div className={styles['main']}>
             {profileLayoutMode === 'edit' && (
               <div className={styles.uploadContainer}>
                 <div className={styles.uploadButton}>
@@ -235,51 +239,51 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
                 </div>
               </div>
             )}
-            {data.pageData.video_url || data.pageData.images ? (
-              <div className={styles.medias}>
-                {data?.pageData.video_url && (
-                  <div className={styles.image}>
-                    {/* <video
-                    width="250"
-                    height="240"
-                    controls={true}
-                    className={styles.video}
-                  >
-                    <source src={user?.video_url} type="video/mp4" />
-                  </video> */}
-                    <ReactPlayer
-                      width="100%"
-                      height="250px"
-                      url={data?.pageData?.video_url}
-                      controls={true}
-                    />
-                  </div>
-                )}
-                {data.pageData.images?.map((item: any, idx: number) => {
-                  return (
-                    <div
-                      key={idx}
-                      className={styles.image}
-                      onClick={() => OpenMediaImage(item)}
-                    >
-                      <img src={item} alt={`Media ${idx}`} />
-                    </div>
-                  )
-                })}
-                <div></div>
+        {data.pageData?.video_url ? (
+          <div className={styles.medias}>
+            {data.pageData?.video_url && (
+              <div className={styles['videos']}>
+                {/* <video
+                width="250"
+                height="240"
+                controls={true}
+                className={styles.video}
+              >
+                <source src={listingModalData?.video_url} type="video/mp4" />
+              </video> */}
+                <ReactPlayer
+                  width="100%"
+                  height="100%"
+                  url={data.pageData?.video_url}
+                  controls={true}
+                />
               </div>
-            ) : (
-              profileLayoutMode !== 'edit' && (
-                <section className={`${styles['dual-section-wrapper']}`}>
-                  <div className={styles['no-posts-div']}>
-                    <p className={styles['no-posts-text']}>
-                      No media available
-                    </p>
-                  </div>
-                  <div className={styles['no-posts-div']}></div>
-                </section>
-              )
             )}
+          </div>
+        ) :null}
+            {(
+          (profileLayoutMode !== 'edit' && !data.pageData?.video_url) && (!data.pageData?.images||data.pageData?.images?.length<1) &&  (
+            <section className={`${styles['dual-section-wrapper']}`}>
+              <div className={styles['no-posts-div']}>
+                <p className={styles['no-posts-text']}>No media available</p>
+              </div>
+              {!isMobile&&<div className={styles['no-posts-div']}></div>}
+            </section>
+          )
+        )}
+        {data.pageData?.images?.map((item: any, idx:number) => {
+          return (
+            <div key={idx} className={styles.medias}>
+              <div
+                key={idx}
+                className={styles.image}
+                onClick={() => OpenMediaImage(item)}
+              >
+                <img src={item} />
+              </div>
+            </div>
+          )
+        })}
           </div>
         </PageGridLayout>
       </ProfileLayout>

@@ -61,7 +61,7 @@ const CommunityLayout: React.FC<Props> = ({
   const [email, setEmail] = useState('')
   const [selectedHobby, setSelectedHobby] = useState('')
   const [selectedGenre, setSelectedGenre] = useState('')
-  const [selectedLocation, setSelectedLocation] = useState('All Locations')
+  const [selectedLocation, setSelectedLocation] = useState('')
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -87,35 +87,36 @@ const CommunityLayout: React.FC<Props> = ({
   const [trendingHobbies, setTrendingHobbies] = useState([])
   console.log('Number of hobbies:', activeProfile.data?._hobbies?.length)
 
-  const hideThirdColumnTabs = ['pages', 'links','store','blogs']
+  const hideThirdColumnTabs = ['pages', 'links', 'store', 'blogs']
   const { showPageLoader } = useSelector((state: RootState) => state.site)
   const router = useRouter()
 
   const toggleSeeMore = () => setSeeMoreHobby(!seeMoreHobby)
-  const getPost = async () => {
-    const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
-    activeProfile?.data?._hobbies.forEach((item: any) => {
-      params.append('_hobby', item.hobby?._id)
-    })
-    if (!activeProfile?.data?._hobbies) return
+  // const getPost = async () => {
+  //   const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
+  //   activeProfile?.data?._hobbies.forEach((item: any) => {
+  //     params.append('_hobby', item.hobby?._id)
+  //   })
+  //   if (!activeProfile?.data?._hobbies) return
 
-    if (activeProfile?.data?._hobbies.length === 0) return
-    console.log('active', activeProfile.data._hobbies)
-    dispatch(updateLoading(true))
-    const { err, res } = await getAllPosts(params.toString())
-    if (err) return console.log(err)
-    if (res.data.success) {
-      store.dispatch(updatePosts(res.data.data.posts))
-    }
-    dispatch(updateLoading(false))
-  }
+  //   if (activeProfile?.data?._hobbies.length === 0) return
+  //   console.log('active', activeProfile.data._hobbies)
+  //   dispatch(updateLoading(true))
+  //   const { err, res } = await getAllPosts(params.toString())
+  //   if (err) return console.log(err)
+  //   if (res.data.success) {
+  //     store.dispatch(updatePosts(res.data.data.posts))
+  //   }
+  //   dispatch(updateLoading(false))
+  // }
 
-  useEffect(() => {
-    fetchPosts()
-  }, [activeProfile])
+  // useEffect(() => {
+  //   fetchPosts()
+  // }, [activeProfile])
 
   const handleHobbyClick = async (hobbyId: any) => {
     if (selectedHobby !== hobbyId) {
+      sessionStorage.setItem("communityFilterHobby",hobbyId);
       setSelectedHobby(hobbyId)
       // Fetch posts for the newly selected hobby
       const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
@@ -124,8 +125,9 @@ const CommunityLayout: React.FC<Props> = ({
 
       dispatch(updateLoading(false))
     } else {
+      sessionStorage.setItem("communityFilterHobby","");
       setSelectedHobby('')
-      fetchPosts()
+      // fetchPosts()
     }
   }
 
@@ -190,13 +192,20 @@ const CommunityLayout: React.FC<Props> = ({
     let selectedLocality = ''
     let selectedSociety = ''
 
-    const matchingAddress = activeProfile.data?._addresses?.find(
-      (address: any) =>
-        address.city === selectedLocation ||
-        address.pin_code === selectedLocation ||
-        address.locality === selectedLocation ||
-        address.society === selectedLocation,
-    )
+    const localSelectedLocation = sessionStorage.getItem("communityFilterLocation")
+
+    const addresses = activeProfile.data?._addresses || [];
+    const matchingAddress = [
+      ...addresses,
+      activeProfile.data?.primary_address ?? {},
+    ]
+      .find(
+        (address: any) =>
+          address.city === (selectedLocation||localSelectedLocation) ||
+          address.pin_code === (selectedLocation||localSelectedLocation) ||
+          address.locality === (selectedLocation||localSelectedLocation) ||
+          address.society === (selectedLocation||localSelectedLocation),
+      );
 
     if (matchingAddress) {
       if (matchingAddress.city === selectedLocation) {
@@ -225,6 +234,7 @@ const CommunityLayout: React.FC<Props> = ({
     const { err, res } = await getAllPosts(params.toString())
     if (err) return console.log(err)
     if (res?.data?.success) {
+      console.warn({res});
       let posts = res.data.data.posts.map((post: any) => {
         let content = post.content.replace(/<img .*?>/g, '')
         return { ...post, content }
@@ -246,49 +256,43 @@ const CommunityLayout: React.FC<Props> = ({
     fetchTrendingHobbies()
   }, [])
 
-  const fetchPages = async () => {
-    let params: any = ''
-    if (!activeProfile?.data?._hobbies) return
-    if (activeProfile?.data?._hobbies.length === 0) return
-    if (selectedLocation === '' && selectedHobby === '') return
-    params = new URLSearchParams(`populate=_author,_genre,_hobby`)
-    if (selectedHobby !== '') {
-      params.append('_hobby', selectedHobby)
-    } else {
-      activeProfile?.data?._hobbies.forEach((item: any) => {
-        params.append('_hobby', item.hobby._id)
-      })
-    }
-    if (selectedLocation !== '' && selectedLocation !== 'All locations') {
-      params.append('location', selectedLocation)
-    }
-    console.log('PARAMS ---', params.toString())
-    dispatch(updatePagesLoading(true))
+  // const fetchPages = async () => {
+  //   let params: any = ''
+  //   if (!activeProfile?.data?._hobbies) return
+  //   if (activeProfile?.data?._hobbies.length === 0) return
+  //   if (selectedLocation === '' && selectedHobby === '') return
+  //   params = new URLSearchParams(`populate=_author,_genre,_hobby`)
+  //   if (selectedHobby !== '') {
+  //     params.append('_hobby', selectedHobby)
+  //   } else {
+  //     activeProfile?.data?._hobbies.forEach((item: any) => {
+  //       params.append('_hobby', item.hobby._id)
+  //     })
+  //   }
+  //   if (selectedLocation !== '' && selectedLocation !== 'All locations') {
+  //     params.append('location', selectedLocation)
+  //   }
+  //   console.log('PARAMS ---', params.toString())
+  //   dispatch(updatePagesLoading(true))
 
-    const { err, res } = await getListingPages(params.toString())
-    if (err) return console.log(err)
-    if (res?.data.success) {
-      if (err) return console.log(err)
-      if (res?.data.success) {
-        store.dispatch(updatePages(res.data.data.listings))
-      }
-    }
-    dispatch(updatePagesLoading(false))
-  }
+  //   const { err, res } = await getListingPages(params.toString())
+  //   if (err) return console.log(err)
+  //   if (res?.data.success) {
+  //     if (err) return console.log(err)
+  //     if (res?.data.success) {
+  //       store.dispatch(updatePages(res.data.data.listings))
+  //     }
+  //   }
+  //   dispatch(updatePagesLoading(false))
+  // }
 
   useEffect(() => {
     if (activeTab === 'posts' || activeTab === 'links') {
+      if (selectedLocation !== '') {
       fetchPosts()
     }
-  }, [selectedHobby, selectedLocation, activeProfile])
-
-  const handleLocationClick = async (item: any) => {
-    if (item === selectedLocation) {
-      setSelectedLocation('')
-    } else {
-      setSelectedLocation(item)
     }
-  }
+  }, [selectedHobby, selectedLocation, activeProfile]);
 
   useEffect(() => {
     if (selectedHobby !== '' && selectedLocation !== '') {
@@ -313,6 +317,11 @@ const CommunityLayout: React.FC<Props> = ({
       }
     }
   }
+
+  useEffect(()=>{
+    setSelectedHobby(sessionStorage.getItem("communityFilterHobby")??"");
+    setSelectedLocation(sessionStorage.getItem("communityFilterLocation")??'All Locations');
+  },[])
 
   // useEffect(() => {
   //   let tempLocations: any = []
@@ -361,6 +370,7 @@ const CommunityLayout: React.FC<Props> = ({
               obj.display = `${address.city} -  ${
                 address.label ? address.label : 'Default'
               } `
+              obj.value = `${address.city ?? 'Home'}`
             }
 
             if (address.pin_code) {
@@ -384,9 +394,12 @@ const CommunityLayout: React.FC<Props> = ({
           })
           if (visibilityArr[1]) {
             if (visibilityArr[1].display) {
+              if(sessionStorage.getItem("communityFilterLocation")===null){
+              sessionStorage.setItem("communityFilterLocation",visibilityArr[1]?.display?.split(' ')[0] || 'All locations')
               setSelectedLocation(
                 visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
               )
+            }
             }
           }
           setVisibilityData(visibilityArr)
@@ -436,7 +449,18 @@ const CommunityLayout: React.FC<Props> = ({
       }
       setVisibilityData(visibilityArr)
     }
-  }, [activeProfile])
+  }, [activeProfile]);
+
+  const updateFilterLocation = (val: any) => {
+    sessionStorage.setItem("communityFilterLocation",selectedLocation===val?'All Locations':val);
+    setSelectedLocation((prev) => {
+      if (prev === val) {
+        return 'All Locations'
+      } else {
+        return val
+      }
+    });
+  }
 
   // useEffect(()=>{
   //   console.warn({selectedLocation})
@@ -519,7 +543,7 @@ const CommunityLayout: React.FC<Props> = ({
               />
               {/* <Image src={EditIcon} alt="Edit" /> */}
             </header>
-            <span className={styles['divider']}></span>
+            {/* <span className={styles['divider']}></span> */}
             <section>
               <ul>
                 {activeProfile.data?._hobbies
@@ -567,19 +591,10 @@ const CommunityLayout: React.FC<Props> = ({
               <Image src={EditIcon} onClick={EditProfileLocation} alt="edit" />
               {/* <Image src={EditIcon} alt="Edit" /> */}
             </header>
-            <span className={styles['divider']}></span>
+            {/* <span className={styles['divider']}></span> */}
             {visibilityData?.length > 0 && (
               <InputSelect
-                onChange={(e: any) => {
-                  let val = e.target.value
-                  setSelectedLocation((prev) => {
-                    if (prev === val) {
-                      return 'All Locations'
-                    } else {
-                      return val
-                    }
-                  })
-                }}
+                onChange={(e:any)=>updateFilterLocation(e.target.value)}
                 value={selectedLocation}
                 // inputProps={{ 'aria-label': 'Without label' }}
                 className={` ${styles['location-dropdown']}`}
@@ -591,15 +606,7 @@ const CommunityLayout: React.FC<Props> = ({
                         {...item}
                         key={idx}
                         currentValue={selectedLocation}
-                        onChange={(val: any) =>
-                          setSelectedLocation((prev) => {
-                            if (prev === val) {
-                              return 'All Locations'
-                            } else {
-                              return val
-                            }
-                          })
-                        }
+                        onChange={(val:any)=>updateFilterLocation(val)}
                       />
                     </>
                   )
@@ -679,7 +686,7 @@ const CommunityLayout: React.FC<Props> = ({
               }`}
             >
               <div className={styles['community-header-left']}>
-                {selectedHobby !== '' &&
+                {/* {selectedHobby !== '' &&
                   selectedLocation !== '' &&
                   Object.keys(hobbyGroup).length > 5 && (
                     <div className={styles['community-group-container']}>
@@ -709,14 +716,16 @@ const CommunityLayout: React.FC<Props> = ({
                         {hobbyGroup?.display} in {selectedLocation}
                       </p>
                     </div>
-                  )}
+                  )} */}
                 <section
                   className={`content-box-wrapper ${styles['start-post-btn-container']}`}
                 >
                   <Image
-                    src={user?.user?.profile_image ?? defaultUserIcon}
+                    src={user?.profile_image ?? defaultUserIcon}
                     alt=""
                     className={styles['profile-img']}
+                    height={40}
+                    width={40}
                   />
                   <button
                     onClick={() => {
@@ -873,15 +882,7 @@ const CommunityLayout: React.FC<Props> = ({
                             {...item}
                             key={idx}
                             currentValue={selectedLocation}
-                            onChange={(val: any) =>
-                              setSelectedLocation((prev) => {
-                                if (prev === val?.value) {
-                                  return 'All Locations'
-                                } else {
-                                  return val?.value
-                                }
-                              })
-                            }
+                            onChange={(val:any)=>updateFilterLocation(val?.display?.split("-")[0]?.trim())}
                           />
                         ))}
                       </CommunityTopDropdown>
@@ -918,9 +919,13 @@ const CommunityLayout: React.FC<Props> = ({
                     className={`content-box-wrapper ${styles['invite-wrapper']}`}
                   >
                     <header>
-                      <h3>Invite to Community</h3>
-                    </header>
-                    <span className={styles['divider']}></span>
+                <h3>
+                  <span>{activeProfile.data?._hobbies?.find((obj:any)=>obj.hobby?._id===selectedHobby)?.hobby?.display??"All hobbies"}{activeProfile.data?._hobbies?.find((obj:any)=>obj.hobby?._id===selectedHobby)?.genre && ` - ${activeProfile.data?._hobbies?.find((obj:any)=>obj.hobby?._id===selectedHobby)?.genre?.display} `}</span>
+                  {" "}in{" "}
+                  <span>{selectedLocation}</span>
+                  </h3>
+              </header>
+                    {/* <span className={styles['divider']}></span> */}
                     <section>
                       <input type="text" name="" id="" />
                       <FilledButton>Invite</FilledButton>
@@ -948,9 +953,13 @@ const CommunityLayout: React.FC<Props> = ({
               className={`content-box-wrapper ${styles['invite-wrapper']}`}
             >
               <header>
-                <h3>Invite to Community</h3>
+                <h3>
+                  <span>{activeProfile.data?._hobbies?.find((obj:any)=>obj.hobby?._id===selectedHobby)?.hobby?.display??"All hobbies"}{activeProfile.data?._hobbies?.find((obj:any)=>obj.hobby?._id===selectedHobby)?.genre && ` - ${activeProfile.data?._hobbies?.find((obj:any)=>obj.hobby?._id===selectedHobby)?.genre?.display} `}</span>
+                  {" "}in{" "}
+                  <span>{selectedLocation}</span>
+                  </h3>
               </header>
-              <span className={styles['divider']}></span>
+              {/* <span className={styles['divider']}></span> */}
               <section>
                 <input
                   value={email}
@@ -984,7 +993,7 @@ const CommunityLayout: React.FC<Props> = ({
               <header>
                 <h3>Trending hobbies</h3>
               </header>
-              <span className={styles['divider']}></span>
+              {/* <span className={styles['divider']}></span> */}
               <section>
                 <ul>
                   {trendingHobbies?.map((hobby: any) => {
@@ -994,7 +1003,24 @@ const CommunityLayout: React.FC<Props> = ({
                     return (
                       <li key={hobby._id}>
                         <Link href={`/hobby/${hobby.slug}`}>
-                          <div className={styles['default-img']}></div>
+                          {/* <div className={styles['default-img']}></div> */}
+                          <svg
+                            className={styles.polygonOverlay}
+                            width={40}
+                            viewBox="0 0 160 160"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M80 0L149.282 40V120L80 160L10.718 120V40L80 0Z"
+                              fill="#969696"
+                              fill-opacity="0.5"
+                            />
+                            <path
+                              d="M79.6206 46.1372C79.7422 45.7727 80.2578 45.7727 80.3794 46.1372L87.9122 68.7141C87.9663 68.8763 88.1176 68.9861 88.2885 68.9875L112.088 69.175C112.472 69.178 112.632 69.6684 112.323 69.8967L93.1785 84.0374C93.041 84.139 92.9833 84.3168 93.0348 84.4798L100.211 107.173C100.327 107.539 99.9097 107.842 99.5971 107.619L80.2326 93.7812C80.0935 93.6818 79.9065 93.6818 79.7674 93.7812L60.4029 107.619C60.0903 107.842 59.6731 107.539 59.789 107.173L66.9652 84.4798C67.0167 84.3168 66.959 84.139 66.8215 84.0374L47.6773 69.8967C47.3682 69.6684 47.5276 69.178 47.9118 69.175L71.7115 68.9875C71.8824 68.9861 72.0337 68.8763 72.0878 68.7141L79.6206 46.1372Z"
+                              fill="white"
+                            />
+                          </svg>
                           <span>{`${hobby.display}`}</span>
                         </Link>
                       </li>

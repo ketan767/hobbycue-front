@@ -1,6 +1,19 @@
+.main{
+  display: grid;
+  grid-template-columns: auto auto;
+  row-gap: 12px;
+  column-gap: 24px;
+}
+
+.uploadContainer{
+  grid-column: span 2;
+  width: 100%;
+  gap: 24px;
+}
+
 .image {
   height: 100%;
-  width: 450px;
+  width: 100%;
   overflow: hidden;
   cursor: pointer;
 }
@@ -32,6 +45,18 @@
 .uploadContainer > div {
   flex: 1;
 }
+
+.profile-left-aside {
+  position: -webkit-sticky;
+  top: 222px;
+  position: sticky;
+  transition: 0.6s;
+  height: calc(
+    100vh - calc(var(--navbar-height-desktop) + var(--spacing-24)) + 3rem
+  );
+  overflow: auto;
+}
+
 .uploadButton {
   padding: 16px;
   height: 88px;
@@ -113,6 +138,8 @@
   .medias {
     display: flex;
     flex-direction: column;
+    width: 100%;
+    grid-column: span 2;
   }
   .image {
     width: auto;
@@ -134,5 +161,9 @@
   }
   .no-posts-div{
     border-radius: 0;
+  }
+  .profile-left-aside{
+    position: static;
+    height: auto;
   }
 }
