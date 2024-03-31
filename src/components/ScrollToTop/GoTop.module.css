@@ -35,7 +35,6 @@ box-shadow: 0 5px 33px rgba(0,0,0,.2);
   .container {
     width: 40px;
     height: 40px;
-    background-color: #ede6f5;
     border-radius: 50%;
     border: none;
     cursor: pointer;

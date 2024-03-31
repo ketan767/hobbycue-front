@@ -114,10 +114,14 @@ const CommunityLayout: React.FC<Props> = ({
   //   fetchPosts()
   // }, [activeProfile])
 
-  const handleHobbyClick = async (hobbyId: any) => {
+  const handleHobbyClick = async (hobbyId: any, genreId: any) => {
     if (selectedHobby !== hobbyId) {
       sessionStorage.setItem('communityFilterHobby', hobbyId)
       setSelectedHobby(hobbyId)
+      if (genreId !== '') {
+        setSelectedGenre(genreId)
+      }
+
       // Fetch posts for the newly selected hobby
       const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
       params.append('_hobby', hobbyId)
@@ -127,6 +131,7 @@ const CommunityLayout: React.FC<Props> = ({
     } else {
       sessionStorage.setItem('communityFilterHobby', '')
       setSelectedHobby('')
+      setSelectedGenre('')
       // fetchPosts()
     }
   }
@@ -161,6 +166,8 @@ const CommunityLayout: React.FC<Props> = ({
   console.log('activeprofile', activeProfile)
   console.log('selected', selectedLocation)
 
+  console.log('selectedhobbyy', selectedHobby)
+
   const fetchPosts = async () => {
     if (showPageLoader) {
       dispatch(setShowPageLoader(false))
@@ -183,6 +190,9 @@ const CommunityLayout: React.FC<Props> = ({
     }
     if (selectedHobby !== '') {
       params.append('_hobby', selectedHobby)
+    }
+    if (selectedGenre !== '') {
+      params.append('_genre', selectedGenre)
     } else {
       activeProfile?.data?._hobbies.forEach((item: any) => {
         params.append('_hobby', item.hobby._id)
@@ -519,7 +529,7 @@ const CommunityLayout: React.FC<Props> = ({
       value: item.hobby?._id,
       display: `${item.hobby?.display}${item?.genre?.display ? ' - ' : ''}${
         item?.genre?.display ?? ''
-      }`,
+      }${item.genre?._id}`,
     })) ?? []
 
   return (
@@ -564,9 +574,14 @@ const CommunityLayout: React.FC<Props> = ({
                     return (
                       <li
                         key={hobby._id}
-                        onClick={() => handleHobbyClick(hobby.hobby?._id)}
+                        onClick={() =>
+                          handleHobbyClick(hobby.hobby?._id, hobby.genre?._id)
+                        }
                         className={
-                          selectedHobby === hobby.hobby?._id
+                          selectedHobby === hobby.hobby?._id &&
+                          (selectedGenre !== ''
+                            ? selectedGenre === hobby.genre?._id
+                            : '')
                             ? styles.selectedItem
                             : ''
                         }
@@ -862,7 +877,9 @@ const CommunityLayout: React.FC<Props> = ({
                               (obj: any) => obj?.value === selectedHobby,
                             )?.value ?? 'All Hobbies'
                           }
-                          onChange={(val: any) => handleHobbyClick(val?.value)}
+                          onChange={(val: any) =>
+                            handleHobbyClick(val?.value, '')
+                          }
                         />
                       ))}
                     </CommunityTopDropdown>
@@ -936,7 +953,7 @@ const CommunityLayout: React.FC<Props> = ({
                         <span>
                           {activeProfile.data?._hobbies?.find(
                             (obj: any) => obj.hobby?._id === selectedHobby,
-                          )?.hobby?.display ?? 'All hobbies'}
+                          )?.hobby?.display ?? 'All Hobbies'}
                           {activeProfile.data?._hobbies?.find(
                             (obj: any) => obj.hobby?._id === selectedHobby,
                           )?.genre &&
@@ -981,7 +998,7 @@ const CommunityLayout: React.FC<Props> = ({
                   <span>
                     {activeProfile.data?._hobbies?.find(
                       (obj: any) => obj.hobby?._id === selectedHobby,
-                    )?.hobby?.display ?? 'All hobbies'}
+                    )?.hobby?.display ?? 'All Hobbies'}
                     {activeProfile.data?._hobbies?.find(
                       (obj: any) => obj.hobby?._id === selectedHobby,
                     )?.genre &&

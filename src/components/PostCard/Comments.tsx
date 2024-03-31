@@ -59,7 +59,7 @@ const PostComments = ({
   const addComment = async (event: any) => {
     event.preventDefault()
     if (user.is_onboarded === false) {
-      dispatch(openModal({ type: 'user-onboarding', closable: false }))
+      dispatch(openModal({ type: 'user-onboarding', closable: true }))
       return
     }
     if (isEmptyField(inputValue.trim())) return

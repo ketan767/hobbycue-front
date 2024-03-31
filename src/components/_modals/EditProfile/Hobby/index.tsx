@@ -251,8 +251,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
   const handleGenreKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      console.log('first')
-
       AddButtonRef.current?.click()
     }
     if (genreDropdownList.length === 0) return

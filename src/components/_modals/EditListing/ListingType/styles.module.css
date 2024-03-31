@@ -272,6 +272,10 @@
   align-items: center;
   border-radius: 8px;
 }
+.select-input-error {
+  border:1px solid #c0504d !important;
+}
+
 .select-container .select-input p {
   font-size: 14px;
   font-family: Poppins;
