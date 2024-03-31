@@ -193,8 +193,11 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     if (error) return console.log(error)
     if (response?.data.success) {
       dispatch(updateUser(response?.data.data.user))
-      if (onComplete) onComplete()
-      else {
+      if (onComplete) {
+        onComplete()
+        console.log('General Oncomplete')
+      } else {
+        console.log('General Oncomplete closed')
         const newUrl = `/profile/${data.profile_url}`
         window.location.href = newUrl
         dispatch(closeModal())

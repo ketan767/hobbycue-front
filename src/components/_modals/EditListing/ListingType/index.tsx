@@ -79,7 +79,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
       dispatch(
         updateListingModalData({ ...listingModalData, page_type: value }),
       )
-      dispatch(openModal({ type: 'listing-onboarding', closable: false }))
+      dispatch(openModal({ type: 'listing-onboarding', closable: true }))
     }
   }
   const handleEdit = async () => {
@@ -88,7 +88,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
       dispatch(
         updateListingModalData({ ...listingModalData, page_type: value }),
       )
-      dispatch(openModal({ type: 'listing-onboarding', closable: false }))
+      dispatch(openModal({ type: 'listing-onboarding', closable: true }))
     } else {
       const { err, res } = await updateListing(listingModalData._id, {
         page_type: value,
@@ -401,7 +401,9 @@ const ListingTypeEditModal: React.FC<Props> = ({
               <FormControl variant="outlined" size="small">
                 <div className={styles['select-container']} ref={dropdownRef}>
                   <div
-                    className={styles['select-input']}
+                    className={`${styles['select-input']} ${
+                      error ? styles['select-input-error'] : ' '
+                    }`}
                     onClick={() => setShowDropdown(true)}
                   >
                     <p> Select Category </p>

@@ -160,9 +160,9 @@ const PostCard: React.FC<Props> = (props) => {
     if (props.currentSection === 'links') {
       fetchComments()
     }
-  }, []);
-  console.warn({postData});
-  
+  }, [])
+  console.warn({ postData })
+
   return (
     <>
       <div className={styles['post-card-wrapper']} onClick={handleCardClick}>
@@ -219,7 +219,9 @@ const PostCard: React.FC<Props> = (props) => {
                   {dateFormat.format(new Date(postData.createdAt))}
                   {' | '}
                 </span>
-                <span>{postData?._hobby?.display}</span>
+                <span>{`${postData?._hobby?.display}${
+                  postData._genre ? ' - ' + postData?._genre?.display : ''
+                }`}</span>
                 <span>
                   {postData?.visibility ? ` | ${postData?.visibility}` : ''}
                 </span>
@@ -307,17 +309,19 @@ const PostCard: React.FC<Props> = (props) => {
             <div
               className={styles['content']}
               dangerouslySetInnerHTML={{
-                __html:
-                postData.content
-                .replace(/<img\b[^>]*>/g, '') // deleted all images from here then did the link formatting
-                .replace(
-                  /(?:\b(?:https?:\/\/|ftp|file):\/\/|www\.)?([-A-Z0-9+&@#/%?=~_|!:,.;]*\.[a-zA-Z]{2,}(?:[-A-Z0-9+&@#/%?=~_|])*(?:\?[^\s]*)?)/gi,
-                  (match:any, url:string) => {
-                    const href = url.startsWith("http://") || url.startsWith("https://") ? url : `http://${url}`;
-                    return `<a href="${href}" class="${pageUrlClass}" target="_blank">${url}</a>`;
-                  }
-                )
-                }}
+                __html: postData.content
+                  .replace(/<img\b[^>]*>/g, '') // deleted all images from here then did the link formatting
+                  .replace(
+                    /(?:\b(?:https?:\/\/|ftp|file):\/\/|www\.)?([-A-Z0-9+&@#/%?=~_|!:,.;]*\.[a-zA-Z]{2,}(?:[-A-Z0-9+&@#/%?=~_|])*(?:\?[^\s]*)?)/gi,
+                    (match: any, url: string) => {
+                      const href =
+                        url.startsWith('http://') || url.startsWith('https://')
+                          ? url
+                          : `http://${url}`
+                      return `<a href="${href}" class="${pageUrlClass}" target="_blank">${url}</a>`
+                    },
+                  ),
+              }}
             ></div>
           )}
           {postData.video_url && (
@@ -437,7 +441,7 @@ const PostCard: React.FC<Props> = (props) => {
         {/* Card Footer */}
         {props.currentSection === 'links' ? (
           <div className={styles['metadata-footer']}>
-            <Link href={metaData?.url??""} target="_blank">
+            <Link href={metaData?.url ?? ''} target="_blank">
               {url}
             </Link>
             {showComments && <PostComments data={postData} styles={styles} />}

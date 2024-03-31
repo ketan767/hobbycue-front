@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { AuthModal } from './AuthModal'
 import { Dialog, Modal, Grow, Fade } from '@mui/material'
-import { closeModal } from '@/redux/slices/modal'
+import { closeModal, openModal } from '@/redux/slices/modal'
 import { VerifyEmailModal } from './VerifyEmail'
 import styles from './ModalManager.module.css'
 import { UserOnboardingModal } from './UserOnboardingModal'
@@ -126,7 +126,7 @@ const ModalManager: React.FC = () => {
   }
 
   function handleClose() {
-    console.log('haschange', activeModal)
+    console.log('haschange', hasChanges)
     if (activeModal === 'user-onboarding-welcome') {
       localStorage.setItem('modal-shown-after-login', 'true')
       dispatch(closeModal())
@@ -137,11 +137,7 @@ const ModalManager: React.FC = () => {
       dispatch(closeModal())
     } else if (confirmationModal) {
       setConfirmationModal(false)
-    } else if (hasChanges) {
-      setConfirmationModal(true)
-    }
-    // ugly behaviour of this code, automatically not closing, but working on esc click with same function
-    else if (isLoggedIn && !user.is_onboarded) {
+    } else if (hasChanges && !confirmationModal) {
       setConfirmationModal(true)
     } else {
       dispatch(closeModal())
@@ -161,6 +157,7 @@ const ModalManager: React.FC = () => {
   }
 
   const handleStatusChange = (isChanged: boolean) => {
+    console.log('Manager isChange', isChanged)
     dispatch(setHasChanges(isChanged))
   }
 
@@ -221,10 +218,13 @@ const ModalManager: React.FC = () => {
             dispatch(closeModal())
           }
           if (confirmationModal) {
+            console.log('click 4')
             setConfirmationModal(false)
           } else if (hasChanges) {
+            console.log('click 5')
             setConfirmationModal(true)
           } else if (isLoggedIn && !user.is_onboarded) {
+            console.log('click 6')
             setConfirmationModal(true)
           } else {
             dispatch(closeModal())
@@ -317,9 +317,11 @@ const ModalManager: React.FC = () => {
               {activeModal === 'auth' && <AuthModal />}
               {activeModal === 'email-verify' && <VerifyEmailModal />}
               {activeModal === 'post' && <PostModal {...props} />}
-              {activeModal === 'user-onboarding' && <UserOnboardingModal />}
+              {activeModal === 'user-onboarding' && (
+                <UserOnboardingModal {...props} />
+              )}
               {activeModal === 'listing-onboarding' && (
-                <ListingOnboardingModal />
+                <ListingOnboardingModal {...props} />
               )}
               {activeModal === 'create-post' && (
                 <CreatePost propData={propData} />

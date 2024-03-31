@@ -87,7 +87,7 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
                   dispatch(openModal({ type: 'create-post', closable: true }))
                 else
                   dispatch(
-                    openModal({ type: 'user-onboarding', closable: false }),
+                    openModal({ type: 'user-onboarding', closable: true }),
                   )
               }}
               className={styles['start-post-btn']}

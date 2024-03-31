@@ -99,7 +99,7 @@ function SiteAdminLayout({ children }: { children: ReactElement }) {
 
   useEffect(() => {
     if (isLoggedIn && isAuthenticated && !user.is_onboarded) {
-      dispatch(openModal({ type: 'user-onboarding', closable: false }))
+      dispatch(openModal({ type: 'user-onboarding', closable: true }))
     }
   }, [isLoggedIn, isAuthenticated, user])
 
