@@ -161,7 +161,6 @@ const PostCard: React.FC<Props> = (props) => {
       fetchComments()
     }
   }, [])
-  console.warn({ postData })
 
   return (
     <>
