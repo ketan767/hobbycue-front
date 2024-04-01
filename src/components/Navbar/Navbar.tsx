@@ -351,16 +351,17 @@ export const Navbar: React.FC<Props> = ({}) => {
         <nav className={`site-container `}>
           <section className={styles['navbar-left']}>
             <Link
-             onClick={(e)=>{
-              e.stopPropagation();
-              e.preventDefault();
-              if(isLoggedIn){
-                window.location.href = "/community"
-              }else{
-                router.push("/")
-              }
-             }}
-             href={isLoggedIn ? '/community' : '/'}>
+              onClick={(e) => {
+                e.stopPropagation()
+                e.preventDefault()
+                if (isLoggedIn) {
+                  window.location.href = '/community'
+                } else {
+                  router.push('/')
+                }
+              }}
+              href={isLoggedIn ? '/community' : '/'}
+            >
               {isLoggedIn ? (
                 <Image
                   src={LogoSmall}
@@ -475,6 +476,13 @@ export const Navbar: React.FC<Props> = ({}) => {
                           onClick={(e) => {
                             e.preventDefault()
                             dispatch(resetSearch())
+                            setData((prevData) => ({
+                              ...prevData,
+                              search: {
+                                ...prevData.search,
+                                value: '',
+                              },
+                            }))
                             dispatch(showAllPeopleTrue())
 
                             router.push('/search')
@@ -497,6 +505,13 @@ export const Navbar: React.FC<Props> = ({}) => {
                           onClick={(e) => {
                             e.preventDefault()
                             dispatch(resetSearch())
+                            setData((prevData) => ({
+                              ...prevData,
+                              search: {
+                                ...prevData.search,
+                                value: '',
+                              },
+                            }))
                             dispatch(showAllPlaceTrue())
                             router.push('/search')
                           }}
@@ -513,6 +528,13 @@ export const Navbar: React.FC<Props> = ({}) => {
                           onClick={(e) => {
                             e.preventDefault()
                             dispatch(resetSearch())
+                            setData((prevData) => ({
+                              ...prevData,
+                              search: {
+                                ...prevData.search,
+                                value: '',
+                              },
+                            }))
                             dispatch(showAllEventTrue())
                             router.push('/search')
                           }}
@@ -529,6 +551,13 @@ export const Navbar: React.FC<Props> = ({}) => {
                           onClick={(e) => {
                             e.preventDefault()
                             dispatch(resetSearch())
+                            setData((prevData) => ({
+                              ...prevData,
+                              search: {
+                                ...prevData.search,
+                                value: '',
+                              },
+                            }))
                             dispatch(showAllProductsTrue())
                             router.push('/search')
                           }}

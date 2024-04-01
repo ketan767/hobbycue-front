@@ -220,13 +220,10 @@ const ModalManager: React.FC = () => {
             dispatch(closeModal())
           }
           if (confirmationModal) {
-            console.log('click 4')
             setConfirmationModal(false)
           } else if (hasChanges) {
-            console.log('click 5')
             setConfirmationModal(true)
           } else if (isLoggedIn && !user.is_onboarded) {
-            console.log('click 6')
             setConfirmationModal(true)
           } else {
             dispatch(closeModal())

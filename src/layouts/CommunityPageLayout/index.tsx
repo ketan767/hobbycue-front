@@ -115,6 +115,7 @@ const CommunityLayout: React.FC<Props> = ({
   // }, [activeProfile])
 
   const handleHobbyClick = async (hobbyId: any, genreId: any) => {
+    console.log('hobbyIDDDD', hobbyId, genreId)
     if (selectedHobby !== hobbyId) {
       sessionStorage.setItem('communityFilterHobby', hobbyId)
       setSelectedHobby(hobbyId)
@@ -527,9 +528,10 @@ const CommunityLayout: React.FC<Props> = ({
   const hobbiesDropDownArr =
     activeProfile.data?._hobbies?.map((item: any) => ({
       value: item.hobby?._id,
+      genreId: item.genre?._id, // Add genre id to the object
       display: `${item.hobby?.display}${item?.genre?.display ? ' - ' : ''}${
         item?.genre?.display ?? ''
-      }${item.genre?._id}`,
+      }`,
     })) ?? []
 
   return (
@@ -878,7 +880,7 @@ const CommunityLayout: React.FC<Props> = ({
                             )?.value ?? 'All Hobbies'
                           }
                           onChange={(val: any) =>
-                            handleHobbyClick(val?.value, '')
+                            handleHobbyClick(val?.value, item.genreId ?? '')
                           }
                         />
                       ))}
@@ -1015,6 +1017,7 @@ const CommunityLayout: React.FC<Props> = ({
               <section>
                 <input
                   value={email}
+                  placeholder="Email"
                   name="society"
                   onChange={(e: any) => setEmail(e.target.value)}
                   type="email"
