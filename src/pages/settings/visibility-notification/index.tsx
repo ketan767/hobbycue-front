@@ -31,15 +31,19 @@ const VisibilityAndNotification: React.FC<Props> = ({}) => {
   const isMobile = useMediaQuery('(max-width:1100px)')
   return (
     <>
-          {isMobile&&<aside className={`${exploreStyles['community-left-aside']} custom-scrollbar static-position`}>
-        <section className="content-box-wrapper">
-          <header>
-            <div className={exploreStyles['heading']}>
-              <h1>Settings</h1>
-            </div>
-          </header>
-        </section>
-      </aside>}
+      {isMobile && (
+        <aside
+          className={`${exploreStyles['community-left-aside']} custom-scrollbar static-position`}
+        >
+          <section className="content-box-wrapper">
+            <header>
+              <div className={exploreStyles['heading']}>
+                <h1>Settings</h1>
+              </div>
+            </header>
+          </section>
+        </aside>
+      )}
       <PageGridLayout column={2} customStyles={styles['settingcontainer']}>
         <SettingsDropdownLayout>
           {isMobile ? null : (

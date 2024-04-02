@@ -14,10 +14,11 @@ const PostCardSkeletonLoading: React.FC<Props> = () => {
           {!isMobile?<ContentLoader
             speed={2}
             width="100%"
-            height={320}
+            height={313}
             viewBox="0 7 800 313"
             backgroundColor="#f3f3f3"
             foregroundColor="#ecebeb"
+            className={styles['content-loader']}
           >
             <rect x="47" y="7" rx="3" ry="3" width="133" height="13" />
             <rect x="48" y="26" rx="3" ry="3" width="87" height="8" />

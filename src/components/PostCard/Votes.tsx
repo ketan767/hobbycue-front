@@ -134,9 +134,7 @@ const PostVotes: React.FC<Props> = ({
               ? voteStatus === 'up'
                 ? removeVoteFunc()
                 : handleUpVote()
-              : dispatch(
-                  openModal({ type: 'user-onboarding', closable: false }),
-                )
+              : dispatch(openModal({ type: 'user-onboarding', closable: true }))
           }}
         >
           <svg
@@ -163,9 +161,7 @@ const PostVotes: React.FC<Props> = ({
               ? voteStatus === 'down'
                 ? removeVoteFunc()
                 : handleDownVote()
-              : dispatch(
-                  openModal({ type: 'user-onboarding', closable: false }),
-                )
+              : dispatch(openModal({ type: 'user-onboarding', closable: true }))
           }}
           width="24"
           height="22"

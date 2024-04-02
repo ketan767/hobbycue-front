@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { RootState } from '@/redux/store'
 import { useSelector, useDispatch } from 'react-redux'
 import styles from './saveModal.module.css'
@@ -7,6 +7,7 @@ import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import { closeModal, openModal, setHasChanges } from '@/redux/slices/modal'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import { useRouter } from 'next/router'
+import { CircularProgress } from '@mui/material'
 
 type Props = {
   setConfirmationModal?: any
@@ -27,6 +28,7 @@ const SaveModal: React.FC<Props> = ({
   hasChange,
   reloadrouter,
 }) => {
+  const [YesBtnLoading, setYesBtnLoading] = useState<boolean>(false)
   const { user } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
   const dispatch = useDispatch()
@@ -43,7 +45,9 @@ const SaveModal: React.FC<Props> = ({
   }
 
   const handleYesClick = async () => {
-    handleSubmit()
+    setYesBtnLoading(true)
+    await handleSubmit()
+    setYesBtnLoading(false)
     onboardcheck()
   }
   const wrapperRef = useRef<HTMLDivElement>(null)
@@ -63,7 +67,11 @@ const SaveModal: React.FC<Props> = ({
         <p> Would you like to save before exit ? </p>
         <div className={styles['buttons']}>
           <FilledButton className={styles['button1']} onClick={handleYesClick}>
-            Yes
+            {YesBtnLoading ? (
+              <CircularProgress color="inherit" size={'24px'} />
+            ) : (
+              'Yes'
+            )}
           </FilledButton>
           <OutlinedButton
             onClick={() => {

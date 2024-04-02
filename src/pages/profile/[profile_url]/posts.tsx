@@ -143,9 +143,11 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
         setExpandAll={handleExpandAll}
       >
         <PageGridLayout column={3}>
-          <aside className={`custom-scrollbar ${styles['profile-left-aside']} ${
-                expandAll ? '' : styles['display-none']
-              }`}>
+          <aside
+            className={`custom-scrollbar ${styles['profile-left-aside']} ${
+              expandAll ? '' : styles['display-none']
+            }`}
+          >
             <ProfileHobbySideList data={data.pageData} />
             <ProfilePagesList data={data} />
             <div className={styles['display-mobile']}>
@@ -169,7 +171,10 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
                     dispatch(openModal({ type: 'create-post', closable: true }))
                   else
                     dispatch(
-                      openModal({ type: 'user-onboarding', closable: false }),
+                      openModal({
+                        type: 'user-onboarding',
+                        closable: true,
+                      }),
                     )
                 }}
                 className={styles['start-post-btn']}
@@ -266,7 +271,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
                   dispatch(openModal({ type: 'create-post', closable: true }))
                 else
                   dispatch(
-                    openModal({ type: 'user-onboarding', closable: false }),
+                    openModal({ type: 'user-onboarding', closable: true }),
                   )
               }}
               className={styles['start-post-btn']}

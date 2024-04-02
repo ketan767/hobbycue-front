@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { AuthModal } from './AuthModal'
 import { Dialog, Modal, Grow, Fade } from '@mui/material'
-import { closeModal } from '@/redux/slices/modal'
+import { closeModal, openModal } from '@/redux/slices/modal'
 import { VerifyEmailModal } from './VerifyEmail'
 import styles from './ModalManager.module.css'
 import { UserOnboardingModal } from './UserOnboardingModal'
@@ -73,6 +73,12 @@ import { PostModal } from './PostModal/PostModal'
 import { setHasChanges } from '@/redux/slices/modal'
 import { useRouter } from 'next/router'
 import SaveModal from './SaveModal/saveModal'
+import {
+  getMyProfileDetail,
+  updateMyProfileDetail,
+} from '@/services/user.service'
+import { sendWelcomeMail } from '@/services/auth.service'
+import { updateUser } from '@/redux/slices/user'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -126,7 +132,7 @@ const ModalManager: React.FC = () => {
   }
 
   function handleClose() {
-    console.log('haschange', activeModal)
+    console.log('haschange', hasChanges)
     if (activeModal === 'user-onboarding-welcome') {
       localStorage.setItem('modal-shown-after-login', 'true')
       dispatch(closeModal())
@@ -135,13 +141,16 @@ const ModalManager: React.FC = () => {
       ['View-Image-Modal', 'CopyProfileDataModal'].includes(String(activeModal))
     ) {
       dispatch(closeModal())
+    } else if (
+      activeModal === 'user-onboarding' &&
+      !user?.is_onboarded &&
+      !hasChanges
+    ) {
+      router.push(`/profile/${user?.profile_url}`)
+      dispatch(closeModal())
     } else if (confirmationModal) {
       setConfirmationModal(false)
-    } else if (hasChanges) {
-      setConfirmationModal(true)
-    }
-    // ugly behaviour of this code, automatically not closing, but working on esc click with same function
-    else if (isLoggedIn && !user.is_onboarded) {
+    } else if (hasChanges && !confirmationModal) {
       setConfirmationModal(true)
     } else {
       dispatch(closeModal())
@@ -161,6 +170,7 @@ const ModalManager: React.FC = () => {
   }
 
   const handleStatusChange = (isChanged: boolean) => {
+    console.log('Manager isChange', isChanged)
     dispatch(setHasChanges(isChanged))
   }
 
@@ -168,6 +178,38 @@ const ModalManager: React.FC = () => {
     activeModal !== null
       ? specialCloseHandlers[activeModal] ?? handleClose
       : handleClose
+
+  const IsOnboardingCompete = async () => {
+    console.log('isOnboardingComplete clicked')
+    if (user.is_onboarded) {
+      return
+    }
+    const payload: InviteToCommunityPayload = {
+      to: user?.public_email,
+      name: user.full_name,
+    }
+    console.log('activeprofileeeeeeeeeeee', user)
+    const { err: error, res: response } = await getMyProfileDetail()
+
+    if (response?.data?.data?.user?.completed_onboarding_steps.length === 5) {
+      await sendWelcomeMail(payload)
+
+      const data = { is_onboarded: true }
+      const { err, res } = await updateMyProfileDetail(data)
+
+      if (err) return console.log(err)
+      if (res?.data.success) {
+        dispatch(updateUser(res.data.data.user))
+        dispatch(closeModal())
+      }
+
+      window.location.href = `/community`
+    } else {
+      if (activeModal !== 'profile-general-edit') {
+        window.location.href = `/profile/${user.profile_url}`
+      }
+    }
+  }
 
   useEffect(() => {
     const scrollbarWidth =
@@ -214,6 +256,15 @@ const ModalManager: React.FC = () => {
             dispatch(closeModal())
           }
           if (
+            activeModal === 'user-onboarding' &&
+            !user?.is_onboarded &&
+            !hasChanges
+          ) {
+            window.location.href = `/profile/${user?.profile_url}`
+            dispatch(closeModal())
+          }
+
+          if (
             ['View-Image-Modal', 'CopyProfileDataModal'].includes(
               String(activeModal),
             )
@@ -232,7 +283,7 @@ const ModalManager: React.FC = () => {
         }
       }
     },
-    [hasChanges, confirmationModal, dispatch],
+    [hasChanges, confirmationModal, dispatch, activeModal],
   )
 
   useEffect(() => {
@@ -263,6 +314,7 @@ const ModalManager: React.FC = () => {
     showAddHobbyModal,
     setShowAddGenreModal,
     setShowAddHobbyModal,
+    CheckIsOnboarded: IsOnboardingCompete,
   }
 
   const viewImageProps = {
@@ -292,7 +344,9 @@ const ModalManager: React.FC = () => {
             <main
               className={
                 !(activeModal === 'user-onboarding-welcome')
-                  ? styles['pos-relative']
+                  ? activeModal === 'create-post'
+                    ? styles['create-post-postion']
+                    : styles['pos-relative']
                   : ''
               }
               ref={mainRef}
@@ -315,9 +369,11 @@ const ModalManager: React.FC = () => {
               {activeModal === 'auth' && <AuthModal />}
               {activeModal === 'email-verify' && <VerifyEmailModal />}
               {activeModal === 'post' && <PostModal {...props} />}
-              {activeModal === 'user-onboarding' && <UserOnboardingModal />}
+              {activeModal === 'user-onboarding' && (
+                <UserOnboardingModal {...props} />
+              )}
               {activeModal === 'listing-onboarding' && (
-                <ListingOnboardingModal />
+                <ListingOnboardingModal {...props} />
               )}
               {activeModal === 'create-post' && (
                 <CreatePost propData={propData} />

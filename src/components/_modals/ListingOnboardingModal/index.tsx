@@ -58,11 +58,16 @@ type Step =
   | 'EventHours'
   | 'CopyProfileDataModal'
 
-export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
+export const ListingOnboardingModal: React.FC<PropTypes> = ({
+  confirmationModal,
+  setConfirmationModal,
+  handleClose,
+  onStatusChange,
+}) => {
   const dispatch = useDispatch()
   const [activeStep, setActiveStep] = useState<Step>('General')
   const [furthestStepIndex, setFurthestStepIndex] = useState<number>(0)
-  const [confirmationModal, setConfirmationModal] = useState(false)
+
   const modalRef = useRef<HTMLDivElement>(null)
 
   const router = useRouter()
@@ -112,13 +117,7 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
       setFurthestStepIndex(newIndex)
     }
   }
-  function handleClose() {
-    if (confirmationModal) {
-      setConfirmationModal(false)
-    } else {
-      setConfirmationModal(true)
-    }
-  }
+
   const handleBack = () => {
     setActiveStep(
       (prevActiveStep: Step) =>
@@ -146,24 +145,6 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
     }
   }
 
-  useEffect(() => {
-    const handleKeyDown = (event: any) => {
-      if (event.key === 'Escape') {
-        setConfirmationModal((prev) => !prev)
-      }
-    }
-    window.addEventListener('keydown', handleKeyDown)
-
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [confirmationModal])
-
-  useEffect(() => {
-    document.addEventListener('mousedown', handleOutsideClick)
-
-    return () => {
-      document.removeEventListener('mousedown', handleOutsideClick)
-    }
-  }, [])
   // if (confirmationModal) {
   //   return <SaveModal OnBoarding={true} />
   // }
@@ -293,4 +274,10 @@ export const ListingOnboardingModal: React.FC<PropTypes> = (props) => {
 
 type PropTypes = {
   closeModal?: () => void
+  onBackBtnClick?: () => void
+  confirmationModal?: boolean
+  setConfirmationModal?: any
+  handleClose?: any
+  isError?: boolean
+  onStatusChange?: (isChanged: boolean) => void
 }

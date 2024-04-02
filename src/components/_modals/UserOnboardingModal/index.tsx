@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { closeModal, openModal } from '@/redux/slices/modal'
+import { closeModal, openModal, setHasChanges } from '@/redux/slices/modal'
 import { RootState } from '@/redux/store'
 import {
   updateMyProfileDetail,
@@ -30,21 +30,37 @@ const totalSteps: steps[] = [
   'Hobbies',
 ]
 
-export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
+type PropTypes = {
+  closeModal?: () => void
+
+  onBackBtnClick?: () => void
+  confirmationModal?: boolean
+  setConfirmationModal?: any
+  handleClose?: any
+  isError?: boolean
+  onStatusChange?: (isChanged: boolean) => void
+}
+
+export const UserOnboardingModal: React.FC<PropTypes> = ({
+  confirmationModal,
+  setConfirmationModal,
+  handleClose,
+  onStatusChange,
+}) => {
   const dispatch = useDispatch()
   const [activeStep, setActiveStep] = useState<steps>('General')
   const [furthestStepIndex, setFurthestStepIndex] = useState<number>(0)
-  const [confirmationModal, setConfirmationModal] = useState(false)
-  const [hasChanges, setHasChanges] = useState(false)
+
   const router = useRouter()
   const modalRef = useRef<HTMLDivElement>(null)
-  const { activeModal, closable } = useSelector(
+  const { activeModal, closable, hasChanges } = useSelector(
     (state: RootState) => state.modal,
   )
 
-  const { user } = useSelector((state: RootState) => state.user)
+  const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
 
   const handleNext = () => {
+    console.log('handleNextClicked')
     const newIndex = totalSteps.indexOf(activeStep) + 1
     setActiveStep(totalSteps[newIndex])
 
@@ -60,62 +76,29 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
     )
   }
 
-  const handleCompleteOnboarding = async () => {
+  const IsOnboardingCompete = async () => {
     const payload: InviteToCommunityPayload = {
       to: user?.public_email,
       name: user.full_name,
     }
-    await sendWelcomeMail(payload)
-    const data = { is_onboarded: true }
-    const { err, res } = await updateMyProfileDetail(data)
-    if (err) return console.log(err)
-    if (res?.data.success) {
-      dispatch(updateUser(res.data.data.user))
-      dispatch(closeModal())
+    console.log('activeprofileeeeeeeeeeee', user)
+    const { err: error, res: response } = await getMyProfileDetail()
 
-      window.location.href = `/profile/${user.profile_url}`
-    }
-  }
-  function handleClose() {
-    if (confirmationModal) {
-      setConfirmationModal(false)
-    } else if (hasChanges) {
-      setConfirmationModal(true)
-    } else if (!user.is_onboarded) {
-      setConfirmationModal(true)
-    } else {
-      dispatch(closeModal())
-    }
-  }
-  const handleStatusChange = (isChanged: boolean) => {
-    setHasChanges(isChanged)
-  }
+    if (response?.data?.data?.user?.completed_onboarding_steps.length === 5) {
+      await sendWelcomeMail(payload)
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        console.log('Escape key pressed')
-        setConfirmationModal((prevState) => !prevState)
+      const data = { is_onboarded: true }
+      const { err, res } = await updateMyProfileDetail(data)
+
+      if (err) return console.log(err)
+      if (res?.data.success) {
+        dispatch(updateUser(res.data.data.user))
+        dispatch(closeModal())
       }
-    }
 
-    const handleOutsideClick = (event: MouseEvent) => {
-      if (
-        modalRef.current &&
-        !modalRef.current.contains(event.target as Node)
-      ) {
-        setConfirmationModal(true)
-      }
+      window.location.href = `/community`
     }
-
-    window.addEventListener('keydown', handleKeyDown, { capture: true })
-    document.addEventListener('mousedown', handleOutsideClick)
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown, { capture: true })
-      document.removeEventListener('mousedown', handleOutsideClick)
-    }
-  }, [])
+  }
 
   useEffect(() => {
     const updateStepsFunc = async () => {
@@ -155,53 +138,65 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
 
       {activeStep === 'General' && (
         <ProfileGeneralEditModal
-          onComplete={handleNext}
+          onComplete={() => {
+            handleNext()
+            IsOnboardingCompete()
+          }}
           setConfirmationModal={setConfirmationModal}
           confirmationModal={confirmationModal}
           handleClose={handleClose}
-          onStatusChange={handleStatusChange}
+          onStatusChange={onStatusChange}
         />
       )}
       {activeStep === 'About' && (
         <ProfileAboutEditModal
-          onComplete={handleNext}
+          onComplete={() => {
+            handleNext()
+            IsOnboardingCompete()
+          }}
           onBackBtnClick={handleBack}
           setConfirmationModal={setConfirmationModal}
           confirmationModal={confirmationModal}
           handleClose={handleClose}
-          onStatusChange={handleStatusChange}
+          onStatusChange={onStatusChange}
           showSkip
         />
       )}
       {activeStep === 'Contact' && (
         <ProfileContactEditModal
-          onComplete={handleNext}
+          onComplete={() => {
+            handleNext()
+            IsOnboardingCompete()
+          }}
           onBackBtnClick={handleBack}
           setConfirmationModal={setConfirmationModal}
           confirmationModal={confirmationModal}
           handleClose={handleClose}
-          onStatusChange={handleStatusChange}
+          onStatusChange={onStatusChange}
           showSkip
         />
       )}
       {activeStep === 'Address' && (
         <ProfileAddressEditModal
-          onComplete={handleNext}
+          onComplete={() => {
+            handleNext()
+            IsOnboardingCompete()
+          }}
           onBackBtnClick={handleBack}
           setConfirmationModal={setConfirmationModal}
           confirmationModal={confirmationModal}
           handleClose={handleClose}
-          onStatusChange={handleStatusChange}
+          onStatusChange={onStatusChange}
         />
       )}
       {activeStep === 'Hobbies' && (
         <ProfileHobbyEditModal
-          onComplete={handleCompleteOnboarding}
+          onComplete={IsOnboardingCompete}
           onBackBtnClick={handleBack}
           setConfirmationModal={setConfirmationModal}
           confirmationModal={confirmationModal}
           handleClose={handleClose}
-          onStatusChange={handleStatusChange}
+          onStatusChange={onStatusChange}
         />
       )}
 
@@ -237,8 +232,4 @@ export const UserOnboardingModal: React.FC<PropTypes> = (props) => {
       )}
     </div>
   )
-}
-
-type PropTypes = {
-  closeModal?: () => void
 }

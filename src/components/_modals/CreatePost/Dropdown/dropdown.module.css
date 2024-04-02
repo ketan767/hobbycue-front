@@ -1,6 +1,6 @@
 .dropdown-container {
   position: relative;
-  padding: 0 4px;
+  padding: 0 8px;
   border-bottom: 1px solid #ced4da;
 }
 .dropdown-container:last-child {
@@ -61,8 +61,8 @@
   max-height: 1200px;
 }
 .value-container {
-  padding-left: 4px;
-  padding-right: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
   border-bottom: 1px solid #ced4da;
 }
 p.dropdown-value {
@@ -74,18 +74,19 @@ p.dropdown-value {
 }
 
 p.dropdown-value-active {
-  background-color: #f7f5f9;
+  background-color: #DFD8E7;
   color: #8064a2 !important;
-  border-radius: 4px;
-  width: 218px;
+  border-radius: 8px;
+  /* width: 218px; */
 }
 .dropdown-options p.option-active {
-  background-color: #f7f5f9;
+  background-color: #DFD8E7;
   color: #8064a2;
   border-radius: 4px;
 }
 .city-select {
-  background-color: #f7f5f9;
+  background-color: #DFD8E7;
+  border-radius: 8px;
 }
 .city-select > p {
   color: #8064a2 !important;

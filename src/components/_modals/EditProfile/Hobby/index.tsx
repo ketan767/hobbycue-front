@@ -45,6 +45,7 @@ type Props = {
   showAddHobbyModal?: boolean
   setShowAddGenreModal?: any
   setShowAddHobbyModal?: any
+  CheckIsOnboarded?: any
 }
 const levels = ['Beginner', 'Intermediate', 'Advanced']
 // const levels = {
@@ -84,6 +85,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   showAddHobbyModal,
   setShowAddGenreModal,
   setShowAddHobbyModal,
+  CheckIsOnboarded,
 }) => {
   const dispatch = useDispatch()
   const [showModal, setShowModal] = useState(false)
@@ -182,10 +184,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   }
 
   const handleHobbyKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if(e.key==="Enter"){
-      if(hobbyDropdownList.length === 0){
-        nextButtonRef.current?.click()
-      }
+    if (e.key === 'Enter') {
+      AddButtonRef.current?.click()
     }
     if (hobbyDropdownList.length === 0) return
 
@@ -223,25 +223,28 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
 
+    // Step 1: Filter the data based on the search query
+    const filteredGenres = res.data.hobbies.filter((item: any) => {
+      return item.display.toLowerCase().includes(e.target.value.toLowerCase())
+    })
 
-// Step 1: Filter the data based on the search query
-const filteredGenres = res.data.hobbies.filter((item: any) => {
-  return item.display.toLowerCase().includes(e.target.value.toLowerCase());
-});
+    // Step 2: Sort the filtered data
+    const sortedGenres = filteredGenres.sort((a: any, b: any) => {
+      const indexA = a.display
+        .toLowerCase()
+        .indexOf(e.target.value.toLowerCase())
+      const indexB = b.display
+        .toLowerCase()
+        .indexOf(e.target.value.toLowerCase())
 
-// Step 2: Sort the filtered data
-const sortedGenres = filteredGenres.sort((a: any, b: any) => {
-  const indexA = a.display.toLowerCase().indexOf(e.target.value.toLowerCase());
-  const indexB = b.display.toLowerCase().indexOf(e.target.value.toLowerCase());
+      if (indexA === 0 && indexB !== 0) {
+        return -1
+      } else if (indexB === 0 && indexA !== 0) {
+        return 1
+      }
 
-  if (indexA === 0 && indexB !== 0) {
-    return -1;
-  } else if (indexB === 0 && indexA !== 0) {
-    return 1;
-  }
-
-  return 0;
-});
+      return 0
+    })
 
     setGenreDropdownList(sortedGenres)
 
@@ -249,11 +252,8 @@ const sortedGenres = filteredGenres.sort((a: any, b: any) => {
   }
 
   const handleGenreKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if(e.key==="Enter"){
-        console.log("first")
-      if(genreDropdownList.length === 0 || data.genre!==null){
-        nextButtonRef.current?.click()
-      }
+    if (e.key === 'Enter') {
+      AddButtonRef.current?.click()
     }
     if (genreDropdownList.length === 0) return
 
@@ -392,15 +392,27 @@ const sortedGenres = filteredGenres.sort((a: any, b: any) => {
     }
     addUserHobby(jsonData, async (err, res) => {
       console.log('json', jsonData)
-      console.log('Button clicked!')
+
       if (err) {
         setAddHobbyBtnLoading(false)
         return console.log(err)
       } else {
         setErrorOrmsg('Hobby added successfully!')
       }
+      let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+      if (!updatedCompletedSteps.includes('Hobby')) {
+        updatedCompletedSteps.push('Hobby')
+      }
+      let onboarded = false
+      if (user.completed_onboarding_steps.length === 5) {
+        onboarded = true
+      }
       const { err: updtProfileErr, res: updtProfileRes } =
-        await updateMyProfileDetail({ is_onboarded: true })
+        await updateMyProfileDetail({
+          is_onboarded: onboarded,
+          completed_onboarding_steps: updatedCompletedSteps,
+        })
       const { err: error, res: response } = await getMyProfileDetail()
       setAddHobbyBtnLoading(false)
       if (error) return console.log(error)
@@ -411,7 +423,7 @@ const sortedGenres = filteredGenres.sort((a: any, b: any) => {
         setHobbyInputValue('')
         setGenreInputValue('')
         setData({ level: 1, hobby: null, genre: null })
-        
+
         setAddHobbyBtnLoading(false)
       }
       setAddHobbyBtnLoading(false)
@@ -445,7 +457,7 @@ const sortedGenres = filteredGenres.sort((a: any, b: any) => {
             setHobbyError(true)
             searchref.current?.focus()
             setHobbyInputValue('')
-        setSubmitBtnLoading(false)
+            setSubmitBtnLoading(false)
             return
           }
         }
@@ -471,7 +483,7 @@ const sortedGenres = filteredGenres.sort((a: any, b: any) => {
             genre.display.toLowerCase() === genreInputValue.toLowerCase(),
         )
 
-        if (!matchedGenre && genreInputValue.trim().length!==0) {
+        if (!matchedGenre && genreInputValue.trim().length !== 0) {
           // setErrorOrmsg('Typed Genre not found!')
           // setHobbyError(true)
           setShowAddGenreModal(true)
@@ -509,8 +521,20 @@ const sortedGenres = filteredGenres.sort((a: any, b: any) => {
         setSubmitBtnLoading(false)
         return
       }
+      let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+      if (!updatedCompletedSteps.includes('Hobby')) {
+        updatedCompletedSteps.push('Hobby')
+      }
+      let onboarded = false
+      if (user.completed_onboarding_steps.length === 5) {
+        onboarded = true
+      }
       const { err: updtProfileErr, res: updtProfileRes } =
-        await updateMyProfileDetail({ is_onboarded: true })
+        await updateMyProfileDetail({
+          is_onboarded: onboarded,
+          completed_onboarding_steps: updatedCompletedSteps,
+        })
 
       await addUserHobby(jsonData, async (err, res) => {
         console.log('json', jsonData)
@@ -654,6 +678,7 @@ const sortedGenres = filteredGenres.sort((a: any, b: any) => {
   }, [isError])
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  const AddButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       // if (event.key === 'Enter') {
@@ -1157,6 +1182,7 @@ const sortedGenres = filteredGenres.sort((a: any, b: any) => {
 
                       <td>
                         <button
+                          ref={AddButtonRef}
                           disabled={addHobbyBtnLoading}
                           className={styles['add-btn']}
                           onClick={handleAddHobby}

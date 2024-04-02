@@ -114,19 +114,30 @@ const CommunityLayout: React.FC<Props> = ({
   //   fetchPosts()
   // }, [activeProfile])
 
-  const handleHobbyClick = async (hobbyId: any) => {
-    if (selectedHobby !== hobbyId) {
-      sessionStorage.setItem("communityFilterHobby",hobbyId);
+  const handleHobbyClick = async (hobbyId: any, genreId: any) => {
+    console.log('hobbyIDDDD', hobbyId, genreId)
+    if (selectedHobby !== hobbyId || selectedGenre !== genreId) {
+      sessionStorage.setItem('communityFilterHobby', hobbyId)
       setSelectedHobby(hobbyId)
+      if (genreId !== '') {
+        setSelectedGenre(genreId)
+        sessionStorage.setItem('communityFilterGenre', genreId)
+      }
+
       // Fetch posts for the newly selected hobby
       const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
       params.append('_hobby', hobbyId)
+      if (genreId !== 'undefined' && genreId !== '') {
+        params.append('_genre', genreId)
+      }
       dispatch(updateLoading(true))
 
       dispatch(updateLoading(false))
     } else {
-      sessionStorage.setItem("communityFilterHobby","");
+      sessionStorage.setItem('communityFilterHobby', '')
+      sessionStorage.setItem('communityFilterGenre', '')
       setSelectedHobby('')
+      setSelectedGenre('')
       // fetchPosts()
     }
   }
@@ -161,6 +172,8 @@ const CommunityLayout: React.FC<Props> = ({
   console.log('activeprofile', activeProfile)
   console.log('selected', selectedLocation)
 
+  console.log('selectedhobbyy', selectedHobby)
+
   const fetchPosts = async () => {
     if (showPageLoader) {
       dispatch(setShowPageLoader(false))
@@ -183,7 +196,18 @@ const CommunityLayout: React.FC<Props> = ({
     }
     if (selectedHobby !== '') {
       params.append('_hobby', selectedHobby)
-    } else {
+    }
+    if (
+      selectedGenre &&
+      selectedGenre !== 'undefined' &&
+      selectedGenre !== ''
+    ) {
+      params.append('_genre', selectedGenre)
+    } 
+    if(selectedGenre!==""){
+      // don't remove it, somehow it is helping in fetching correct things according to hobby and genre
+    }
+    else {
       activeProfile?.data?._hobbies.forEach((item: any) => {
         params.append('_hobby', item.hobby._id)
       })
@@ -192,20 +216,21 @@ const CommunityLayout: React.FC<Props> = ({
     let selectedLocality = ''
     let selectedSociety = ''
 
-    const localSelectedLocation = sessionStorage.getItem("communityFilterLocation")
+    const localSelectedLocation = sessionStorage.getItem(
+      'communityFilterLocation',
+    )
 
-    const addresses = activeProfile.data?._addresses || [];
+    const addresses = activeProfile.data?._addresses || []
     const matchingAddress = [
       ...addresses,
       activeProfile.data?.primary_address ?? {},
-    ]
-      .find(
-        (address: any) =>
-          address.city === (selectedLocation||localSelectedLocation) ||
-          address.pin_code === (selectedLocation||localSelectedLocation) ||
-          address.locality === (selectedLocation||localSelectedLocation) ||
-          address.society === (selectedLocation||localSelectedLocation),
-      );
+    ].find(
+      (address: any) =>
+        address.city === (selectedLocation || localSelectedLocation) ||
+        address.pin_code === (selectedLocation || localSelectedLocation) ||
+        address.locality === (selectedLocation || localSelectedLocation) ||
+        address.society === (selectedLocation || localSelectedLocation),
+    )
 
     if (matchingAddress) {
       if (matchingAddress.city === selectedLocation) {
@@ -234,7 +259,7 @@ const CommunityLayout: React.FC<Props> = ({
     const { err, res } = await getAllPosts(params.toString())
     if (err) return console.log(err)
     if (res?.data?.success) {
-      console.warn({res});
+      console.warn({ res })
       let posts = res.data.data.posts.map((post: any) => {
         let content = post.content.replace(/<img .*?>/g, '')
         return { ...post, content }
@@ -289,10 +314,10 @@ const CommunityLayout: React.FC<Props> = ({
   useEffect(() => {
     if (activeTab === 'posts' || activeTab === 'links') {
       if (selectedLocation !== '') {
-      fetchPosts()
+        fetchPosts()
+      }
     }
-    }
-  }, [selectedHobby, selectedLocation, activeProfile]);
+  }, [selectedHobby, selectedLocation, activeProfile, selectedGenre])
 
   useEffect(() => {
     if (selectedHobby !== '' && selectedLocation !== '') {
@@ -318,10 +343,13 @@ const CommunityLayout: React.FC<Props> = ({
     }
   }
 
-  useEffect(()=>{
-    setSelectedHobby(sessionStorage.getItem("communityFilterHobby")??"");
-    setSelectedLocation(sessionStorage.getItem("communityFilterLocation")??'All Locations');
-  },[])
+  useEffect(() => {
+    setSelectedHobby(sessionStorage.getItem('communityFilterHobby') ?? '')
+    setSelectedLocation(
+      sessionStorage.getItem('communityFilterLocation') ?? 'All Locations',
+    )
+    setSelectedGenre(sessionStorage.getItem('communityFilterGenre') ?? '')
+  }, [])
 
   // useEffect(() => {
   //   let tempLocations: any = []
@@ -394,12 +422,15 @@ const CommunityLayout: React.FC<Props> = ({
           })
           if (visibilityArr[1]) {
             if (visibilityArr[1].display) {
-              if(sessionStorage.getItem("communityFilterLocation")===null){
-              sessionStorage.setItem("communityFilterLocation",visibilityArr[1]?.display?.split(' ')[0] || 'All locations')
-              setSelectedLocation(
-                visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
-              )
-            }
+              if (sessionStorage.getItem('communityFilterLocation') === null) {
+                sessionStorage.setItem(
+                  'communityFilterLocation',
+                  visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
+                )
+                setSelectedLocation(
+                  visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
+                )
+              }
             }
           }
           setVisibilityData(visibilityArr)
@@ -449,17 +480,20 @@ const CommunityLayout: React.FC<Props> = ({
       }
       setVisibilityData(visibilityArr)
     }
-  }, [activeProfile]);
+  }, [activeProfile])
 
   const updateFilterLocation = (val: any) => {
-    sessionStorage.setItem("communityFilterLocation",selectedLocation===val?'All Locations':val);
+    sessionStorage.setItem(
+      'communityFilterLocation',
+      selectedLocation === val ? 'All Locations' : val,
+    )
     setSelectedLocation((prev) => {
       if (prev === val) {
         return 'All Locations'
       } else {
         return val
       }
-    });
+    })
   }
 
   // useEffect(()=>{
@@ -508,9 +542,10 @@ const CommunityLayout: React.FC<Props> = ({
   const hobbiesDropDownArr =
     activeProfile.data?._hobbies?.map((item: any) => ({
       value: item.hobby?._id,
-      display: `${item.hobby?.display}${
-        item?.hobby?.genre?.display ? ' - ' : ''
-      }${item?.hobby?.genre?.display ?? ''}`,
+      genreId: item.genre?._id, // Add genre id to the object
+      display: `${item.hobby?.display}${item?.genre?.display ? ' - ' : ''}${
+        item?.genre?.display ?? ''
+      }`,
     })) ?? []
 
   return (
@@ -555,9 +590,14 @@ const CommunityLayout: React.FC<Props> = ({
                     return (
                       <li
                         key={hobby._id}
-                        onClick={() => handleHobbyClick(hobby.hobby?._id)}
+                        onClick={() =>
+                          handleHobbyClick(hobby.hobby?._id, hobby.genre?._id)
+                        }
                         className={
-                          selectedHobby === hobby.hobby?._id
+                          selectedHobby === hobby.hobby?._id &&
+                          (selectedGenre !== ''
+                            ? selectedGenre === hobby.genre?._id
+                            : '')
                             ? styles.selectedItem
                             : ''
                         }
@@ -594,7 +634,7 @@ const CommunityLayout: React.FC<Props> = ({
             {/* <span className={styles['divider']}></span> */}
             {visibilityData?.length > 0 && (
               <InputSelect
-                onChange={(e:any)=>updateFilterLocation(e.target.value)}
+                onChange={(e: any) => updateFilterLocation(e.target.value)}
                 value={selectedLocation}
                 // inputProps={{ 'aria-label': 'Without label' }}
                 className={` ${styles['location-dropdown']}`}
@@ -606,7 +646,7 @@ const CommunityLayout: React.FC<Props> = ({
                         {...item}
                         key={idx}
                         currentValue={selectedLocation}
-                        onChange={(val:any)=>updateFilterLocation(val)}
+                        onChange={(val: any) => updateFilterLocation(val)}
                       />
                     </>
                   )
@@ -853,7 +893,9 @@ const CommunityLayout: React.FC<Props> = ({
                               (obj: any) => obj?.value === selectedHobby,
                             )?.value ?? 'All Hobbies'
                           }
-                          onChange={(val: any) => handleHobbyClick(val?.value)}
+                          onChange={(val: any) =>
+                            handleHobbyClick(val?.value, item.genreId ?? '')
+                          }
                         />
                       ))}
                     </CommunityTopDropdown>
@@ -882,7 +924,11 @@ const CommunityLayout: React.FC<Props> = ({
                             {...item}
                             key={idx}
                             currentValue={selectedLocation}
-                            onChange={(val:any)=>updateFilterLocation(val?.display?.split("-")[0]?.trim())}
+                            onChange={(val: any) =>
+                              updateFilterLocation(
+                                val?.display?.split('-')[0]?.trim(),
+                              )
+                            }
                           />
                         ))}
                       </CommunityTopDropdown>
@@ -919,12 +965,30 @@ const CommunityLayout: React.FC<Props> = ({
                     className={`content-box-wrapper ${styles['invite-wrapper']}`}
                   >
                     <header>
-                <h3>
-                  <span>{activeProfile.data?._hobbies?.find((obj:any)=>obj.hobby?._id===selectedHobby)?.hobby?.display??"All hobbies"}{activeProfile.data?._hobbies?.find((obj:any)=>obj.hobby?._id===selectedHobby)?.genre && ` - ${activeProfile.data?._hobbies?.find((obj:any)=>obj.hobby?._id===selectedHobby)?.genre?.display} `}</span>
-                  {" "}in{" "}
-                  <span>{selectedLocation}</span>
-                  </h3>
-              </header>
+                      <h3>
+                        <span>
+                          {activeProfile.data?._hobbies?.find(
+                            (obj: any) =>
+                              obj.hobby._id === selectedHobby &&
+                              obj?.genre?._id === selectedGenre,
+                          )?.hobby?.display ?? 'All Hobbies'}
+                          
+                          {activeProfile.data?._hobbies?.find(
+                            (obj: any) =>
+                              obj.hobby._id === selectedHobby &&
+                              obj?.genre?._id === selectedGenre,
+                          )?.genre &&
+                            ` - ${
+                              activeProfile.data?._hobbies?.find(
+                                (obj: any) =>
+                                  obj.hobby._id === selectedHobby &&
+                                  selectedGenre === obj?.genre?._id,
+                              )?.genre?.display
+                            } `}
+                        </span>{' '}
+                        in <span>{selectedLocation}</span>
+                      </h3>
+                    </header>
                     {/* <span className={styles['divider']}></span> */}
                     <section>
                       <input type="text" name="" id="" />
@@ -954,15 +1018,34 @@ const CommunityLayout: React.FC<Props> = ({
             >
               <header>
                 <h3>
-                  <span>{activeProfile.data?._hobbies?.find((obj:any)=>obj.hobby?._id===selectedHobby)?.hobby?.display??"All hobbies"}{activeProfile.data?._hobbies?.find((obj:any)=>obj.hobby?._id===selectedHobby)?.genre && ` - ${activeProfile.data?._hobbies?.find((obj:any)=>obj.hobby?._id===selectedHobby)?.genre?.display} `}</span>
-                  {" "}in{" "}
-                  <span>{selectedLocation}</span>
-                  </h3>
+                  <span>
+                    {activeProfile.data?._hobbies?.find(
+                            (obj: any) =>
+                              obj.hobby._id === selectedHobby &&
+                              obj?.genre?._id === selectedGenre,
+                          )?.hobby?.display ?? 'All Hobbies'}
+                          
+                          {activeProfile.data?._hobbies?.find(
+                            (obj: any) =>
+                              obj.hobby._id === selectedHobby &&
+                              obj?.genre?._id === selectedGenre,
+                          )?.genre &&
+                            ` - ${
+                              activeProfile.data?._hobbies?.find(
+                                (obj: any) =>
+                                  obj.hobby._id === selectedHobby &&
+                                  selectedGenre === obj?.genre?._id,
+                              )?.genre?.display
+                            } `}
+                  </span>{' '}
+                  in <span>{selectedLocation}</span>
+                </h3>
               </header>
               {/* <span className={styles['divider']}></span> */}
               <section>
                 <input
                   value={email}
+                  placeholder="Email"
                   name="society"
                   onChange={(e: any) => setEmail(e.target.value)}
                   type="email"

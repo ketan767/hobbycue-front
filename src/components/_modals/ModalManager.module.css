@@ -20,6 +20,10 @@
 .pos-relative {
   position: relative;
 }
+.create-post-postion{
+  position: relative;
+  left: 102px;
+}
 .modal-wrapper main .modal-close-icon {
   position: absolute;
   top: var(--spacing-12);

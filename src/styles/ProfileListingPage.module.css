@@ -31,7 +31,7 @@
 
 .profile-left-aside {
   position: -webkit-sticky;
-  top: 222px;
+  top: 215px;
   position: sticky;
   transition: 0.6s;
   height: calc(
