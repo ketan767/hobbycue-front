@@ -76,20 +76,27 @@ export const UserOnboardingModal: React.FC<PropTypes> = ({
     )
   }
 
-  const handleCompleteOnboarding = async () => {
+  const IsOnboardingCompete = async () => {
     const payload: InviteToCommunityPayload = {
       to: user?.public_email,
       name: user.full_name,
     }
-    await sendWelcomeMail(payload)
-    const data = { is_onboarded: true }
-    const { err, res } = await updateMyProfileDetail(data)
-    if (err) return console.log(err)
-    if (res?.data.success) {
-      dispatch(updateUser(res.data.data.user))
-      dispatch(closeModal())
+    console.log('activeprofileeeeeeeeeeee', user)
+    const { err: error, res: response } = await getMyProfileDetail()
 
-      window.location.href = `/profile/${user.profile_url}`
+    if (response?.data?.data?.user?.completed_onboarding_steps.length === 5) {
+      await sendWelcomeMail(payload)
+
+      const data = { is_onboarded: true }
+      const { err, res } = await updateMyProfileDetail(data)
+
+      if (err) return console.log(err)
+      if (res?.data.success) {
+        dispatch(updateUser(res.data.data.user))
+        dispatch(closeModal())
+      }
+
+      window.location.href = `/community`
     }
   }
 
@@ -131,7 +138,10 @@ export const UserOnboardingModal: React.FC<PropTypes> = ({
 
       {activeStep === 'General' && (
         <ProfileGeneralEditModal
-          onComplete={handleNext}
+          onComplete={() => {
+            handleNext()
+            IsOnboardingCompete()
+          }}
           setConfirmationModal={setConfirmationModal}
           confirmationModal={confirmationModal}
           handleClose={handleClose}
@@ -140,7 +150,10 @@ export const UserOnboardingModal: React.FC<PropTypes> = ({
       )}
       {activeStep === 'About' && (
         <ProfileAboutEditModal
-          onComplete={handleNext}
+          onComplete={() => {
+            handleNext()
+            IsOnboardingCompete()
+          }}
           onBackBtnClick={handleBack}
           setConfirmationModal={setConfirmationModal}
           confirmationModal={confirmationModal}
@@ -151,7 +164,10 @@ export const UserOnboardingModal: React.FC<PropTypes> = ({
       )}
       {activeStep === 'Contact' && (
         <ProfileContactEditModal
-          onComplete={handleNext}
+          onComplete={() => {
+            handleNext()
+            IsOnboardingCompete()
+          }}
           onBackBtnClick={handleBack}
           setConfirmationModal={setConfirmationModal}
           confirmationModal={confirmationModal}
@@ -162,7 +178,10 @@ export const UserOnboardingModal: React.FC<PropTypes> = ({
       )}
       {activeStep === 'Address' && (
         <ProfileAddressEditModal
-          onComplete={handleNext}
+          onComplete={() => {
+            handleNext()
+            IsOnboardingCompete()
+          }}
           onBackBtnClick={handleBack}
           setConfirmationModal={setConfirmationModal}
           confirmationModal={confirmationModal}
@@ -172,7 +191,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = ({
       )}
       {activeStep === 'Hobbies' && (
         <ProfileHobbyEditModal
-          onComplete={handleCompleteOnboarding}
+          onComplete={IsOnboardingCompete}
           onBackBtnClick={handleBack}
           setConfirmationModal={setConfirmationModal}
           confirmationModal={confirmationModal}

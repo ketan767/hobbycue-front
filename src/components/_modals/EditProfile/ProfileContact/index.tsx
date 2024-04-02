@@ -48,6 +48,7 @@ type ProfileContactData = {
     prefix: string
     error?: string | null
   }
+  completed_onboarding_steps?: any
 }
 
 const ProfileContactEditModal: React.FC<Props> = ({
@@ -84,6 +85,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
     public_email: { value: '', error: null },
     website: { value: '', error: null },
     whatsapp_number: { number: '', prefix: '', error: null },
+    completed_onboarding_steps: 'Contact',
   })
 
   const [initialData, setInitialData] = useState<ProfileContactData>()
@@ -163,12 +165,18 @@ const ProfileContactEditModal: React.FC<Props> = ({
       }
 
       setBackBtnLoading(true)
+      let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+      if (!updatedCompletedSteps.includes('Contact')) {
+        updatedCompletedSteps.push('Contact')
+      }
 
       const newOnboardingStep =
         Number(user?.onboarding_step) > 2 ? user?.onboarding_step : '3'
       const { err, res } = await updateMyProfileDetail({
         ...jsonData,
         onboarding_step: newOnboardingStep,
+        completed_onboarding_steps: updatedCompletedSteps,
       })
 
       if (err) {
@@ -265,11 +273,18 @@ const ProfileContactEditModal: React.FC<Props> = ({
 
     setSubmitBtnLoading(true)
 
+    let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+    if (!updatedCompletedSteps.includes('Contact')) {
+      updatedCompletedSteps.push('Contact')
+    }
+
     const newOnboardingStep =
       Number(user?.onboarding_step) > 2 ? user?.onboarding_step : '3'
     const { err, res } = await updateMyProfileDetail({
       ...jsonData,
       onboarding_step: newOnboardingStep,
+      completed_onboarding_steps: updatedCompletedSteps,
     })
 
     if (err) {
@@ -305,6 +320,24 @@ const ProfileContactEditModal: React.FC<Props> = ({
   //     setWpSelectedCountryCode(selectedCountryCode)
   //   }
   // }, [data.phone.number, selectedCountryCode, tick])
+  const handleSkip = async () => {
+    let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+    if (!updatedCompletedSteps.includes('Contact')) {
+      updatedCompletedSteps.push('Contact')
+    }
+
+    const newOnboardingStep =
+      Number(user?.onboarding_step) > 2 ? user?.onboarding_step : '3'
+    const { err, res } = await updateMyProfileDetail({
+      onboarding_step: newOnboardingStep,
+      completed_onboarding_steps: updatedCompletedSteps,
+    })
+
+    if (err) {
+      return console.log(err)
+    }
+  }
 
   useEffect(() => {
     setData((prev) => {
@@ -375,7 +408,11 @@ const ProfileContactEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        if (event.target.tagName.toLowerCase() === 'svg') {
+        if(event?.srcElement?.id==='skipSvg'){
+          onComplete?.();
+          return
+        }
+        else if (event.target.tagName.toLowerCase() === 'svg') {
           onComplete
         } else {
           nextButtonRef.current?.focus()
@@ -413,12 +450,16 @@ const ProfileContactEditModal: React.FC<Props> = ({
     <svg
       tabIndex={0}
       className={styles.skipIcon}
-      onClick={onComplete}
+      onClick={() => {
+        onComplete?.()
+        handleSkip()
+      }}
       xmlns="http://www.w3.org/2000/svg"
       width="66"
       height="25"
       viewBox="0 0 66 25"
       fill="none"
+      id='skipSvg'
     >
       <g clip-path="url(#clip0_10384_147186)">
         <rect

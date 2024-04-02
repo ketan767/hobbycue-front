@@ -116,21 +116,26 @@ const CommunityLayout: React.FC<Props> = ({
 
   const handleHobbyClick = async (hobbyId: any, genreId: any) => {
     console.log('hobbyIDDDD', hobbyId, genreId)
-    if (selectedHobby !== hobbyId) {
+    if (selectedHobby !== hobbyId || selectedGenre !== genreId) {
       sessionStorage.setItem('communityFilterHobby', hobbyId)
       setSelectedHobby(hobbyId)
       if (genreId !== '') {
         setSelectedGenre(genreId)
+        sessionStorage.setItem('communityFilterGenre', genreId)
       }
 
       // Fetch posts for the newly selected hobby
       const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
       params.append('_hobby', hobbyId)
+      if (genreId !== 'undefined' && genreId !== '') {
+        params.append('_genre', genreId)
+      }
       dispatch(updateLoading(true))
 
       dispatch(updateLoading(false))
     } else {
       sessionStorage.setItem('communityFilterHobby', '')
+      sessionStorage.setItem('communityFilterGenre', '')
       setSelectedHobby('')
       setSelectedGenre('')
       // fetchPosts()
@@ -192,9 +197,17 @@ const CommunityLayout: React.FC<Props> = ({
     if (selectedHobby !== '') {
       params.append('_hobby', selectedHobby)
     }
-    if (selectedGenre !== '') {
+    if (
+      selectedGenre &&
+      selectedGenre !== 'undefined' &&
+      selectedGenre !== ''
+    ) {
       params.append('_genre', selectedGenre)
-    } else {
+    } 
+    if(selectedGenre!==""){
+      // don't remove it, somehow it is helping in fetching correct things according to hobby and genre
+    }
+    else {
       activeProfile?.data?._hobbies.forEach((item: any) => {
         params.append('_hobby', item.hobby._id)
       })
@@ -304,7 +317,7 @@ const CommunityLayout: React.FC<Props> = ({
         fetchPosts()
       }
     }
-  }, [selectedHobby, selectedLocation, activeProfile])
+  }, [selectedHobby, selectedLocation, activeProfile, selectedGenre])
 
   useEffect(() => {
     if (selectedHobby !== '' && selectedLocation !== '') {
@@ -335,6 +348,7 @@ const CommunityLayout: React.FC<Props> = ({
     setSelectedLocation(
       sessionStorage.getItem('communityFilterLocation') ?? 'All Locations',
     )
+    setSelectedGenre(sessionStorage.getItem('communityFilterGenre') ?? '')
   }, [])
 
   // useEffect(() => {
@@ -954,14 +968,21 @@ const CommunityLayout: React.FC<Props> = ({
                       <h3>
                         <span>
                           {activeProfile.data?._hobbies?.find(
-                            (obj: any) => obj.hobby?._id === selectedHobby,
+                            (obj: any) =>
+                              obj.hobby._id === selectedHobby &&
+                              obj?.genre?._id === selectedGenre,
                           )?.hobby?.display ?? 'All Hobbies'}
+                          
                           {activeProfile.data?._hobbies?.find(
-                            (obj: any) => obj.hobby?._id === selectedHobby,
+                            (obj: any) =>
+                              obj.hobby._id === selectedHobby &&
+                              obj?.genre?._id === selectedGenre,
                           )?.genre &&
                             ` - ${
                               activeProfile.data?._hobbies?.find(
-                                (obj: any) => obj.hobby?._id === selectedHobby,
+                                (obj: any) =>
+                                  obj.hobby._id === selectedHobby &&
+                                  selectedGenre === obj?.genre?._id,
                               )?.genre?.display
                             } `}
                         </span>{' '}
@@ -999,16 +1020,23 @@ const CommunityLayout: React.FC<Props> = ({
                 <h3>
                   <span>
                     {activeProfile.data?._hobbies?.find(
-                      (obj: any) => obj.hobby?._id === selectedHobby,
-                    )?.hobby?.display ?? 'All Hobbies'}
-                    {activeProfile.data?._hobbies?.find(
-                      (obj: any) => obj.hobby?._id === selectedHobby,
-                    )?.genre &&
-                      ` - ${
-                        activeProfile.data?._hobbies?.find(
-                          (obj: any) => obj.hobby?._id === selectedHobby,
-                        )?.genre?.display
-                      } `}
+                            (obj: any) =>
+                              obj.hobby._id === selectedHobby &&
+                              obj?.genre?._id === selectedGenre,
+                          )?.hobby?.display ?? 'All Hobbies'}
+                          
+                          {activeProfile.data?._hobbies?.find(
+                            (obj: any) =>
+                              obj.hobby._id === selectedHobby &&
+                              obj?.genre?._id === selectedGenre,
+                          )?.genre &&
+                            ` - ${
+                              activeProfile.data?._hobbies?.find(
+                                (obj: any) =>
+                                  obj.hobby._id === selectedHobby &&
+                                  selectedGenre === obj?.genre?._id,
+                              )?.genre?.display
+                            } `}
                   </span>{' '}
                   in <span>{selectedLocation}</span>
                 </h3>

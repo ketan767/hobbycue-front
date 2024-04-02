@@ -651,16 +651,17 @@ export const CreatePost: React.FC<Props> = ({
               >
                 <label>Select Hobby</label>
                 <Select
-                  value={data.hobby}
+                  value={`${data.hobby}${data.genre&&"-"}${data.genre??""}`}
                   onChange={(e) => {
-                    let val = e.target.value
-                    const selected = user._hobbies.find(
-                      (item: any) => item.hobby?._id === val,
-                    )
+                    console.warn({e})
+                    let val = e.target.value 
+                    // const selected = user._hobbies.find(
+                    //   (item: any) => item.hobby?._id === val,
+                    // )
                     setData((prev: any) => ({
                       ...prev,
-                      hobby: val,
-                      genre: selected?.genre?._id,
+                      hobby: val.split("-")[0]??null,
+                      genre: val.split("-")[1]??null
                     }))
                   }}
                   displayEmpty
@@ -671,8 +672,8 @@ export const CreatePost: React.FC<Props> = ({
                     return (
                       <MenuItem
                         key={idx}
-                        value={item.hobby?._id}
-                        selected={item.hobby?._id === data.hobby}
+                        value={item.hobby?._id+"-"+item?.genre?._id}
+                        selected={item.hobby?._id === data.hobby && item?.genre?._id===data.genre}
                       >
                         <p>
                           {item.hobby?.display

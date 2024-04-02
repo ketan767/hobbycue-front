@@ -166,8 +166,18 @@ const ProfileAddressEditModal: React.FC<Props> = ({
 
           const newOnboardingStep =
             Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
+
+          let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+          if (!updatedCompletedSteps.includes('Address')) {
+            updatedCompletedSteps.push('Address')
+          }
+
           const { err: updtProfileErr, res: updtProfileRes } =
-            await updateMyProfileDetail({ onboarding_step: newOnboardingStep })
+            await updateMyProfileDetail({
+              onboarding_step: newOnboardingStep,
+              completed_onboarding_steps: updatedCompletedSteps,
+            })
           const { err: error, res: response } = await getMyProfileDetail()
 
           if (error) return console.log(error)
@@ -192,8 +202,17 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           }
           const newOnboardingStep =
             Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
+          let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+          if (!updatedCompletedSteps.includes('Address')) {
+            updatedCompletedSteps.push('Address')
+          }
+
           const { err: updtProfileErr, res: updtProfileRes } =
-            await updateMyProfileDetail({ onboarding_step: newOnboardingStep })
+            await updateMyProfileDetail({
+              onboarding_step: newOnboardingStep,
+              completed_onboarding_steps: updatedCompletedSteps,
+            })
           const { err: error, res: response } = await getMyProfileDetail()
 
           if (error) return console.log(error)
@@ -220,9 +239,16 @@ const ProfileAddressEditModal: React.FC<Props> = ({
             }
             const newOnboardingStep =
               Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
+            let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+            if (!updatedCompletedSteps.includes('Address')) {
+              updatedCompletedSteps.push('Address')
+            }
+
             const { err: updtProfileErr, res: updtProfileRes } =
               await updateMyProfileDetail({
                 onboarding_step: newOnboardingStep,
+                completed_onboarding_steps: updatedCompletedSteps,
               })
             const { err: error, res: response } = await getMyProfileDetail()
 
@@ -248,9 +274,16 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               }
               const newOnboardingStep =
                 Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
+              let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+              if (!updatedCompletedSteps.includes('Address')) {
+                updatedCompletedSteps.push('Address')
+              }
+
               const { err: updtProfileErr, res: updtProfileRes } =
                 await updateMyProfileDetail({
                   onboarding_step: newOnboardingStep,
+                  completed_onboarding_steps: updatedCompletedSteps,
                 })
               const { err: error, res: response } = await getMyProfileDetail()
 
@@ -274,8 +307,17 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           }
           const newOnboardingStep =
             Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
+          let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+          if (!updatedCompletedSteps.includes('Address')) {
+            updatedCompletedSteps.push('Address')
+          }
+
           const { err: updtProfileErr, res: updtProfileRes } =
-            await updateMyProfileDetail({ onboarding_step: newOnboardingStep })
+            await updateMyProfileDetail({
+              onboarding_step: newOnboardingStep,
+              completed_onboarding_steps: updatedCompletedSteps,
+            })
           const { err: error, res: response } = await getMyProfileDetail()
 
           if (error) return console.log(error)
@@ -334,10 +376,19 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           setSubmitBtnLoading(false)
           return alert('Something went wrong!')
         }
+
+        let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+        if (!updatedCompletedSteps.includes('Address')) {
+          updatedCompletedSteps.push('Address')
+        }
         const newOnboardingStep =
           Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
         const { err: updtProfileErr, res: updtProfileRes } =
-          await updateMyProfileDetail({ onboarding_step: newOnboardingStep })
+          await updateMyProfileDetail({
+            onboarding_step: newOnboardingStep,
+            completed_onboarding_steps: updatedCompletedSteps,
+          })
         const { err: error, res: response } = await getMyProfileDetail()
 
         setSubmitBtnLoading(false)
@@ -367,8 +418,17 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         }
         const newOnboardingStep =
           Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
+        let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+        if (!updatedCompletedSteps.includes('Address')) {
+          updatedCompletedSteps.push('Address')
+        }
+
         const { err: updtProfileErr, res: updtProfileRes } =
-          await updateMyProfileDetail({ onboarding_step: newOnboardingStep })
+          await updateMyProfileDetail({
+            onboarding_step: newOnboardingStep,
+            completed_onboarding_steps: updatedCompletedSteps,
+          })
         const { err: error, res: response } = await getMyProfileDetail()
 
         setSubmitBtnLoading(false)
@@ -400,8 +460,17 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           }
           const newOnboardingStep =
             Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
+          let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+          if (!updatedCompletedSteps.includes('Address')) {
+            updatedCompletedSteps.push('Address')
+          }
+
           const { err: updtProfileErr, res: updtProfileRes } =
-            await updateMyProfileDetail({ onboarding_step: newOnboardingStep })
+            await updateMyProfileDetail({
+              onboarding_step: newOnboardingStep,
+              completed_onboarding_steps: updatedCompletedSteps,
+            })
           const { err: error, res: response } = await getMyProfileDetail()
 
           setSubmitBtnLoading(false)
@@ -431,9 +500,16 @@ const ProfileAddressEditModal: React.FC<Props> = ({
             }
             const newOnboardingStep =
               Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
+            let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+            if (!updatedCompletedSteps.includes('Address')) {
+              updatedCompletedSteps.push('Address')
+            }
+
             const { err: updtProfileErr, res: updtProfileRes } =
               await updateMyProfileDetail({
                 onboarding_step: newOnboardingStep,
+                completed_onboarding_steps: updatedCompletedSteps,
               })
             const { err: error, res: response } = await getMyProfileDetail()
 
@@ -462,8 +538,17 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         }
         const newOnboardingStep =
           Number(user?.onboarding_step) > 3 ? user?.onboarding_step : '4'
+        let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+        if (!updatedCompletedSteps.includes('Address')) {
+          updatedCompletedSteps.push('Address')
+        }
+
         const { err: updtProfileErr, res: updtProfileRes } =
-          await updateMyProfileDetail({ onboarding_step: newOnboardingStep })
+          await updateMyProfileDetail({
+            onboarding_step: newOnboardingStep,
+            completed_onboarding_steps: updatedCompletedSteps,
+          })
         const { err: error, res: response } = await getMyProfileDetail()
 
         setSubmitBtnLoading(false)
