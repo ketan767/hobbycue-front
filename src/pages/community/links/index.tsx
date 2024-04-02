@@ -13,18 +13,20 @@ type Props = {}
 
 const CommunityLinks: React.FC<Props> = ({}) => {
   const { activeProfile } = useSelector((state: RootState) => state.user)
-  const { allPosts, loading } = useSelector((state: RootState) => state.post)
+  const { allPosts, loading, filters } = useSelector((state: RootState) => state.post)
   const dispatch = useDispatch()
   const getPost = async () => {
     const params = new URLSearchParams(
       `has_link=true&populate=_author,_genre,_hobby`,
     )
+    if(filters.hobby!==""){
+      params.append('_hobby',filters.hobby);
+    }else{
     activeProfile?.data?._hobbies.forEach((item: any) => {
       params.append('_hobby', item.hobby._id)
     })
-    const localSelectedLocation = sessionStorage.getItem(
-      'communityFilterLocation',
-    )
+    }
+    const localSelectedLocation = filters.location;
 
     const addresses = activeProfile.data?._addresses || []
     const matchingAddress = [

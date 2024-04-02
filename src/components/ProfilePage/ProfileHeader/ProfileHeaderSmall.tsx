@@ -24,10 +24,12 @@ import Dropdown from './DropDown'
 type Props = {
   activeTab: ProfilePageTabs
   data: ProfilePageData['pageData']
+  navigationTabs?: (tab: string) => void
+
 }
 
 /** // #fix: There are many things to update and improve code in this file. // */
-const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
+const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data, navigationTabs }) => {
   const router = useRouter()
   const dispatch = useDispatch()
 
@@ -266,15 +268,20 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
                   }`}
                   className={activeTab === tab ? styles['active'] : ''}
                   onClick={(e)=>{
-                      e.preventDefault();
-                      e.stopPropagation();
-                    if(!isAuthenticated){
-                      dispatch(openModal({type:"auth",closable:true}));
-                      return;
-                    }else{
+                    e.preventDefault()
+                    e.stopPropagation()
+                    if (!isAuthenticated) {
+                      dispatch(openModal({ type: 'auth', closable: true }))
+                      return
+                    } else {
+                     if(navigationTabs){
+                      console.log('running nav')
+                      navigationTabs(tab)
+                     }else{
                       router.push(`/profile/${router.query.profile_url}/${
                         tab !== 'home' ? tab : ''
                       }`)
+                     }
                     }
                   }}
                 >

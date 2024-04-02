@@ -68,7 +68,7 @@
   overflow-y: hidden;
 }
 .hobbies-side-wrapper section ul li {
-  border-radius: var(--spacing-8);
+  border-radius: 4px;
   padding: var(--spacing-8) var(--spacing-8);
 
   font-weight: 500;
@@ -99,7 +99,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-
+  padding-bottom: 8px;
   font-weight: 600;
   font-size: 14px;
   line-height: 20px;
@@ -523,6 +523,7 @@ background: var(--Purple-3, #F7F5F9);
   box-shadow: none;
   border: 1px solid #ebedf0;
   border-top: none;
+  padding-bottom: 12px;
 }
 .location-dropdown > div > div {
   border-bottom: 0;

@@ -33,9 +33,11 @@ import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   data: ProfilePageData['pageData']
+  titleError?:boolean
+  noDataChecker?: ()=> boolean
 }
 
-const ProfileHeader: React.FC<Props> = ({ data }) => {
+const ProfileHeader: React.FC<Props> = ({ data, titleError, noDataChecker }) => {
   const router = useRouter()
   const dispatch = useDispatch()
   const [open, setOpen] = useState(false)
@@ -210,6 +212,9 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
       dispatch(openModal({ type: 'auth', closable: true }))
       return
     }
+    if(noDataChecker?.()===true){
+      return;
+    }
     if (isLoggedIn) {
       dispatch(
         openModal({
@@ -232,6 +237,9 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
     if (!isAuthenticated) {
       dispatch(openModal({ type: 'auth', closable: true }))
       return
+    }
+    if(noDataChecker?.()===true){
+      return;
     }
     dispatch(updateShareUrl(window.location.href))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
@@ -314,10 +322,13 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
                 <h1
                   className={`${styles['name']} ${
                     eliipsis.name ? styles['text-ellipsis-mobile'] : ''
-                  }`}
+                  }
+                  ${titleError===true?styles['error-name']:''}
+                  `}
                   ref={nameRef2}
                 >
                   {data.full_name}
+                  {titleError===true?"Title of the Listing Page*":""}
                 </h1>
                 {profileLayoutMode === 'edit' && (
                   <Image
@@ -384,14 +395,17 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
             </div>
             <div className={styles['name-container']}>
               <div>
-                <div className={styles['profile-name']}>
+                <div className={styles['profile-name']}> 
                   <h1
                     className={`${styles['name']} ${
                       eliipsis.name ? styles['text-ellipsis'] : ''
-                    }`}
+                    }
+                    ${titleError===true?styles['error-name']:''}
+                    `}
                     ref={nameRef1}
                   >
                     {data.full_name}
+                    {titleError===true?"Title of the Listing Page*":""}
                   </h1>
                   {profileLayoutMode === 'edit' && (
                     <Image
