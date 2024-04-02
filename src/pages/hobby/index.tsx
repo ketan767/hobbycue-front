@@ -194,6 +194,8 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
 
   const isMobile = useMediaQuery('(max-width:1100px)')
 
+  console.log({categories,subCategories,hobbyData});
+
   return (
     <div className={styles['all-hobby-wrapper']}>
       <div className={`site-container ${styles['page-container']}`}>
@@ -215,6 +217,21 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                     value={filterData.category}
                     onChange={(e) =>
                       setFilterData((prev) => {
+                        if(e.target.value!==prev.category){
+                          setHobbyInputValue('');
+                          return {
+                            category: e.target.value,
+                            subCategory: '',
+                            hobby:''
+                          }
+                        }
+                        if (e.target.value === '') {
+                          return {
+                            ...prev,
+                            category: e.target.value,
+                            subCategory: '',
+                          }
+                        }
                         return { ...prev, category: e.target.value }
                       })
                     }
@@ -239,6 +256,10 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                     value={filterData.subCategory}
                     onChange={(e) =>
                       setFilterData((prev) => {
+                        if(e.target.value!==prev.subCategory){
+                          setHobbyInputValue('');
+                          return { ...prev, subCategory: e.target.value, hobby:'' }
+                        }
                         return { ...prev, subCategory: e.target.value }
                       })
                     }
@@ -338,6 +359,21 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                       value={filterData.category}
                       onChange={(e) =>
                         setFilterData((prev) => {
+                          if(e.target.value!==prev.category){
+                            setHobbyInputValue('');
+                            return {
+                              category: e.target.value,
+                              subCategory: '',
+                              hobby:''
+                            }
+                          }
+                          if (e.target.value === '') {
+                            return {
+                              category: e.target.value,
+                              subCategory: '',
+                              hobby:''
+                            }
+                          }
                           return { ...prev, category: e.target.value }
                         })
                       }
@@ -362,6 +398,10 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                       value={filterData.subCategory}
                       onChange={(e) =>
                         setFilterData((prev) => {
+                          if(e.target.value!==prev.subCategory){
+                            setHobbyInputValue('');
+                            return { ...prev, subCategory: e.target.value, hobby:'' }
+                          }
                           return { ...prev, subCategory: e.target.value }
                         })
                       }
@@ -427,23 +467,29 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
             <div className={styles['table-container']}>
               <table className={styles['hobbies-table']}>
                 <div className={styles['thead-container']}>
-                <thead>
-                  <tr className="">
-                    <th>Category</th>
-                    <th>Sub-Category</th>
-                    <th>Hobby</th>
-                  </tr>
-                </thead>
+                  <thead>
+                    <tr className="">
+                      <th>Category</th>
+                      <th>Sub-Category</th>
+                      <th>Hobby</th>
+                    </tr>
+                  </thead>
                 </div>
                 <tbody>
                   {categories
-                    .filter(
-                      (cat: any) =>
-                        !filterData.hobby ||
-                        cat._id ===
+                    .filter((cat: any) => {
+                      if (filterData.hobby) {
+                        return (
+                          cat._id ===
                           hobbyData.find((h) => h._id === filterData.hobby)
-                            ?.category?._id,
-                    )
+                            ?.category?._id
+                        )
+                      } else if (!filterData.category) {
+                        return true // No filtering if filterData.category is empty
+                      } else {
+                        return cat._id === filterData.category
+                      }
+                    })
                     .sort((a: any, b: any) =>
                       a.display.localeCompare(b.display),
                     )
@@ -454,14 +500,23 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                         </td>
                         <td>
                           {subCategories
-                            .filter(
-                              (subCat: any) =>
-                                !filterData.hobby ||
-                                subCat._id ===
+                            .filter((subCat: any) => {
+                              if (filterData.hobby) {
+                                return (
+                                  subCat._id ===
                                   hobbyData.find(
                                     (h) => h._id === filterData.hobby,
-                                  )?.sub_category?._id,
-                            )
+                                  )?.sub_category?._id
+                                )
+                              } else if (!filterData.subCategory) {
+                                return true // No filtering if filterData.subCategory is empty
+                              } else {
+                                return (
+                                  subCat._id === filterData.subCategory
+                                  // !filterData.hobby ||
+                                )
+                              }
+                            })
                             .sort((a: any, b: any) =>
                               a.display.localeCompare(b.display),
                             )
@@ -497,6 +552,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                           <Link
                                             key={hobby.slug}
                                             href={`/hobby/${hobby.slug}`}
+                                            className={`${filterData.hobby===hobby?._id&&styles['searched-hobby-id']}`}
                                           >
                                             <span>{hobby.display}, </span>
                                           </Link>
