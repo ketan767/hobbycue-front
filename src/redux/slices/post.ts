@@ -6,6 +6,11 @@ interface PostState {
   loading: boolean
   pagesLoading: boolean
   activePost: any
+  filters:{
+    location:string|null,
+    hobby:string,
+    genre:string,
+  }
 }
 
 const initialState: PostState = {
@@ -14,6 +19,11 @@ const initialState: PostState = {
   loading: false,
   pagesLoading: true,
   activePost: {} ,
+  filters:{
+    location:null,
+    hobby:"",
+    genre:"",
+  },
 }
 
 const postSlice = createSlice({
@@ -35,6 +45,9 @@ const postSlice = createSlice({
     setActivePost: (state, { payload }) => {
       state.activePost = payload
     },
+    setFilters: (state, {payload}) => {
+      state.filters = {...state.filters,...payload}
+    }
     // updateBlogCategories: (state, { payload }) => {
     //   state.allCategories = payload
     // },
@@ -59,5 +72,6 @@ export const {
   updateLoading,
   updatePagesLoading,
   setActivePost,
+  setFilters,
 } = postSlice.actions
 export default postSlice.reducer
