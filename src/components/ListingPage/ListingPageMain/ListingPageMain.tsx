@@ -1158,7 +1158,7 @@ const ListingPageMain: React.FC<Props> = ({
                 </Link>
               )}
               {data?.phone?.number && (
-                <Link href={`tel:${data?.phone?.number}`}>
+                <Link href={`tel:${data.phone.prefix + data?.phone?.number}`}>
                   <svg
                     width="24"
                     height="24"
