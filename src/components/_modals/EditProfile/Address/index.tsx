@@ -37,8 +37,11 @@ type Props = {
 
 type AddressObj = {
   street_number?: string
+  primise2?:string
   premise?: string
   locality?: string
+  neighbour?:string
+  route?: string
   administrative_area_level_1?: string
   country?: string
   postal_code?: string
@@ -586,24 +589,25 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               let addressParts: string[] = []
               let addressObj: AddressObj = {}
               address_components.forEach((component: any) => {
+                // console.log(component);
+
                 if (component.types.includes('street_number')) {
                   addressParts.push(component.long_name)
                   addressObj.street_number = component.long_name
                 }
-                if (component.types.includes('neighbourhood')) {
+                if (component.types.includes('neighborhood')) {                  
                   addressParts.push(component.long_name)
-                  addressObj.street_number = component.long_name
+                  addressObj.neighbour = component.long_name
                 }
                 if (component.types.includes('route')) {
                   addressParts.push(component.long_name)
-                  addressObj.street_number = component.long_name
+                  addressObj.route = component.long_name
                 }
                 if (component.types.includes('premise')) {
                   addressParts.push(component.long_name)
                   if (addressObj.premise) {
-                    addressObj.street_number = addressObj.premise
-                    addressObj.premise = component.long_name
-                  } else {
+                    addressObj.primise2 = component.long_name
+                   } else {
                     addressObj.premise = component.long_name
                   }
                 }
@@ -696,6 +700,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     console.log({ data })
     setShowDropdown(false)
     const { addressObj } = data
+    console.log(data,'selected');
+    
     setData((prev: ProfileAddressPayload) => ({
       ...prev,
       pin_code: addressObj.postal_code ?? '',
@@ -703,8 +709,10 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       city: addressObj.locality ?? '',
       state: addressObj.administrative_area_level_1 ?? '',
       society: addressObj.premise ?? '',
-      street: addressObj.street_number ?? '',
-      locality: addressObj.sublocality_level_1 ?? '',
+      street: ((addressObj.street_number || '') +
+      (addressObj.neighbour ? (addressObj.street_number ? ', ' + addressObj.neighbour : addressObj.neighbour) : '') +
+      (addressObj.route ? (addressObj.neighbour || addressObj.street_number ? ', ' : '') + addressObj.route : '')+(addressObj.primise2?(addressObj.route||addressObj.neighbour || addressObj.street_number ? ', ' : '')+ addressObj.premise:'')) ?? '',
+   locality: addressObj.sublocality_level_1 ?? '',
     }))
     setIsChanged(true)
   }
