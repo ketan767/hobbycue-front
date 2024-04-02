@@ -39,7 +39,7 @@ box-shadow: 0 5px 33px rgba(0,0,0,.2);
     border: none;
     cursor: pointer;
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    bottom: 10px;
+    right: 10px;
   }
 }

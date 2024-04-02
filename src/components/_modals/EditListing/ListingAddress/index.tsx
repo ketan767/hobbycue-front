@@ -50,12 +50,17 @@ type ListingAddressData = {
 
 type AddressObj = {
   street_number?: string
+  subpremise?: string
+  primise2?: string
   premise?: string
   locality?: string
+  neighbour?: string
+  route?: string
   administrative_area_level_1?: string
   country?: string
   postal_code?: string
   sublocality_level_1?: string
+  sublocality_level_2?: string
   sublocality_level_3?: string
 }
 
@@ -387,19 +392,22 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   addressParts.push(component.long_name)
                   addressObj.street_number = component.long_name
                 }
-                if (component.types.includes('neighbourhood')) {
+                if (component.types.includes('neighborhood')) {
                   addressParts.push(component.long_name)
-                  addressObj.street_number = component.long_name
+                  addressObj.neighbour = component.long_name
                 }
                 if (component.types.includes('route')) {
                   addressParts.push(component.long_name)
-                  addressObj.street_number = component.long_name
+                  addressObj.route = component.long_name
+                }
+                if (component.types.includes('subpremise')) {
+                  addressParts.push(component.long_name)
+                  addressObj.subpremise = component.long_name
                 }
                 if (component.types.includes('premise')) {
                   addressParts.push(component.long_name)
                   if (addressObj.premise) {
-                    addressObj.street_number = addressObj.premise
-                    addressObj.premise = component.long_name
+                    addressObj.primise2 = component.long_name
                   } else {
                     addressObj.premise = component.long_name
                   }
@@ -423,6 +431,10 @@ const ListingAddressEditModal: React.FC<Props> = ({
                 if (component.types.includes('sublocality_level_1')) {
                   addressParts.push(component.long_name)
                   addressObj.sublocality_level_1 = component.long_name
+                }
+                if (component.types.includes('sublocality_level_2')) {
+                  addressParts.push(component.long_name)
+                  addressObj.sublocality_level_2 = component.long_name
                 }
                 if (component.types.includes('sublocality_level_3')) {
                   addressParts.push(component.long_name)
@@ -491,6 +503,21 @@ const ListingAddressEditModal: React.FC<Props> = ({
   const handleSelectAddress = (data: DropdownListItem) => {
     setShowDropdown(false)
     const { addressObj } = data
+
+    const streetComponents = [
+      addressObj.street_number,
+      addressObj.subpremise,
+      addressObj.premise,
+      addressObj.primise2,
+      addressObj.neighbour,
+      addressObj.sublocality_level_3,
+      addressObj.route,
+    ].filter(Boolean)
+
+    // Check if there are any street components to include
+    const streetValue =
+      streetComponents.length > 0 ? streetComponents.join(', ') : ''
+
     setData((prev) => ({
       ...prev,
       pin_code: {
@@ -503,7 +530,11 @@ const ListingAddressEditModal: React.FC<Props> = ({
         value: addressObj.country ?? '',
         error: null,
       },
-      city: { ...prev.city, value: addressObj.locality ?? '', error: null },
+      city: {
+        ...prev.city,
+        value: addressObj.locality ?? '',
+        error: null,
+      },
       state: {
         ...prev.state,
         value: addressObj.administrative_area_level_1 ?? '',
@@ -511,12 +542,12 @@ const ListingAddressEditModal: React.FC<Props> = ({
       },
       society: {
         ...prev.society,
-        value: addressObj.premise ?? '',
+        value: addressObj.sublocality_level_2 ?? '',
         error: null,
       },
       street: {
         ...prev.street,
-        value: addressObj.street_number ?? '',
+        value: streetValue,
         error: null,
       },
       locality: {

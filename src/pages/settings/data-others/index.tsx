@@ -60,10 +60,10 @@ const DataAndOthers: React.FC<Props> = ({}) => {
   const isMobile = useMediaQuery('(max-width:1100px)');
   return (
     <>
-          {isMobile&&<aside className={`${exploreStyles['community-left-aside']} custom-scrollbar static-position`}>
-        <section className="content-box-wrapper">
+         {isMobile&&<aside className={`custom-scrollbar static-position settings-container`}>
+        <section className={`content-box-wrapper`}>
           <header>
-            <div className={exploreStyles['heading']}>
+            <div className={'settings-title'}>
               <h1>Settings</h1>
             </div>
           </header>

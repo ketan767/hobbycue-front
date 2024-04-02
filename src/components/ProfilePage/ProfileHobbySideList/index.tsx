@@ -9,9 +9,10 @@ import Link from 'next/link'
 type Props = {
   data: ProfilePageData['pageData']
   expandData?: boolean
+  hobbyError?:boolean
 }
 
-const ProfileHobbySideList = ({ data, expandData }: Props) => {
+const ProfileHobbySideList = ({ data, expandData, hobbyError }: Props) => {
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
   const [displayData, setDisplayData] = useState(false)
   console.log('data', data)
@@ -41,6 +42,7 @@ const ProfileHobbySideList = ({ data, expandData }: Props) => {
         setDisplayData={setDisplayData}
         expandData={expandData}
         initialShowDropdown
+        className={hobbyError===true?styles['error']:''}
       >
         <h4 className={styles['heading']}>Hobbies</h4>
         <ul

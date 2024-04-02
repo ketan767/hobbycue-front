@@ -134,6 +134,10 @@
   display: none !important;
 }
 
+.error{
+  border: 1px solid #C0504D !important;
+}
+
 @media screen and (max-width: 1100px) {
   .medias {
     display: flex;

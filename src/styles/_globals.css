@@ -419,6 +419,25 @@ select:-webkit-autofill {
   .modal-mob-btn-save {
     display: block;
   }
+
+  .settings-title{
+    padding: var(--spacing-16);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--Purple-1, #8064a2);
+    font-family: Poppins;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 16px;
+  }
+  .settings-container{
+    margin-top: var(--spacing-12);
+  }
 }
 @media screen and (max-width: 500px) {
   .ql-toolbar.ql-snow .ql-formats button {

@@ -53,6 +53,10 @@ ul.contact-wrapper svg {
   color: #08090A;
 }
 
+.error{
+  border: 1px solid #C0504D !important;
+}
+
 @media screen and (max-width: 1100px) {
   .contact-wrapper{
     display: none !important;

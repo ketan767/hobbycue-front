@@ -35,6 +35,7 @@ import {
   updateProfileMenuExpandAll,
 } from '@/redux/slices/site'
 import ErrorPage from '@/components/ErrorPage'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 interface Props {
   data: ProfilePageData
@@ -51,6 +52,16 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
   const [loadingPosts, setLoadingPosts] = useState(false)
   const [displayAbout, setDisplayAbout] = useState(false)
   const [displayOther, setDisplayOther] = useState(false)
+
+  const [hobbyError,setHobbyError] = useState(false);
+  const [titleError,setTitleError] = useState(false);
+  const [locationError,setLocationError] = useState(false);
+  const [contactError,setContactError] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
 
   const [posts, setPosts] = useState([])
   const router = useRouter()
@@ -171,6 +182,87 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
     }
   }, [user._id, data.pageData, router])
 
+  const navigationTabs = (tab: string) => {
+    let hasError = false;
+      console.log({hobbies:data.pageData._hobbies})
+
+    if (profileLayoutMode === 'edit') {
+      setHobbyError(false)
+      setLocationError(false)
+      setTitleError(false)
+      if (data.pageData._hobbies.length === 0) {
+        setHobbyError(true)
+        hasError = true
+      }
+      if (!data.pageData.primary_address || !data.pageData.primary_address.city) {
+        setLocationError(true)
+        hasError = true
+      }
+      if(!data.pageData.full_name||data.pageData.full_name===''){
+        setTitleError(true)
+        hasError = true
+      }
+      if(!data.pageData.website &&
+        !data.pageData.public_email &&
+        !data.pageData.whatsapp_number.number &&
+        !data.pageData.phone.number)
+        {
+          setContactError(true)
+          hasError = true
+        }
+      if (!hasError) {
+        router.push(
+          `/page/${router.query.profile_url}/${tab !== 'home' ? tab : ''}`,
+        )
+      } else {
+        setSnackbar({
+          display: true,
+          type: 'warning',
+          message: 'Fill up the mandatory fields.',
+        })
+      }
+    } else {
+      router.push(`/page/${router.query.profile_url}/${tab !== 'home' ? tab : ''}`)
+    }
+  }
+  const noDataChecker = () => {
+    let hasError = false;
+    console.log({hobbies:data.pageData._hobbies})
+
+  if (profileLayoutMode === 'edit') {
+    setHobbyError(false)
+    setLocationError(false)
+    setTitleError(false)
+    if (data.pageData._hobbies.length === 0) {
+      setHobbyError(true)
+      hasError = true
+    }
+    if (!data.pageData.primary_address || !data.pageData.primary_address.city) {
+      setLocationError(true)
+      hasError = true
+    }
+    if(!data.pageData.full_name||data.pageData.full_name===''){
+      setTitleError(true)
+      hasError = true
+    }
+    if(!data.pageData.website &&
+      !data.pageData.public_email &&
+      !data.pageData.whatsapp_number.number &&
+      !data.pageData.phone.number)
+      {
+        setContactError(true)
+        hasError = true
+      }
+    if (hasError) {
+      setSnackbar({
+        display: true,
+        type: 'warning',
+        message: 'Fill up the mandatory fields.',
+      })
+    }
+  }
+    return hasError}
+console.log({pageData:data.pageData})
   // if(!user.is_onboarded && pageData?.email!==user?.email) {return(<ErrorPage/>)}
   return (
     <>
@@ -179,10 +271,13 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
       </Head>
 
       <ProfileLayout
+        navigationTabs={navigationTabs}
         activeTab={'home'}
         data={data}
         expandAll={expandAll}
         setExpandAll={handleExpandAll}
+        titleError={titleError}
+        noDataChecker={noDataChecker}
       >
         {data.pageData && (
           <PageGridLayout column={3}>
@@ -192,15 +287,15 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
               }`}
             >
               {/* User Hobbies */}
-              <ProfileHobbySideList data={pageData} />
+              <ProfileHobbySideList hobbyError={hobbyError} data={pageData} />
               <ProfilePagesList data={data} />
 
               <div className={styles['display-mobile']}>
                 {/* User Locations */}
-                <ProfileAddressSide data={pageData} />
+                <ProfileAddressSide addressError={locationError} data={pageData} />
 
                 {/* User Contact Details */}
-                <ProfileContactSide data={pageData} />
+                <ProfileContactSide contactError={contactError} data={pageData} />
                 <ProfileSocialMediaSide data={pageData} />
               </div>
             </aside>
@@ -327,15 +422,15 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
 
             <aside className={styles['display-desktop']}>
               {/* User Locations */}
-              <ProfileAddressSide data={pageData} />
+              <ProfileAddressSide addressError={locationError} data={pageData} />
 
               {/* User Contact Details */}
-              <ProfileContactSide data={pageData} />
+              <ProfileContactSide contactError={contactError} data={pageData} />
               <ProfileSocialMediaSide data={pageData} />
             </aside>
 
             <div className={styles['nav-mobile']}>
-              <ProfileNavigationLinks activeTab={'home'} />
+              <ProfileNavigationLinks navigationTabs={navigationTabs} activeTab={'home'} />
             </div>
             {/* About for mobile view */}
             <div className={styles['display-mobile']}>
@@ -445,6 +540,16 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
           </PageGridLayout>
         )}
       </ProfileLayout>
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

@@ -250,6 +250,16 @@
   align-items: center;
   column-gap: 12px;
 }
+
+.name-container .error-name{
+  color: var(--mandatory, #C0504D) !important;
+  font-family: 'poppins';
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
 .name-container img {
   cursor: pointer;
 }
@@ -373,6 +383,9 @@
   /* .center-container .tagline {
     display: none;
   } */
+  .name-container .error-name{
+    font-size: 16px;
+  }
   .header .center-container {
     order: 1;
     margin-bottom: -10px;

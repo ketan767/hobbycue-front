@@ -58,7 +58,8 @@
 
 @media screen and (min-width: 1100px) {
   .modal-wrapper {
-    max-height: calc(100vh - 6rem);
+    max-height: 50rem;
+    height: calc(100vh - 6rem);
   }
   .modal-wrapper .body {
     height: calc(100vh - 6rem);
@@ -213,6 +214,7 @@
 @media screen and (max-width: 1100px) {
   .modal-wrapper {
     width: auto;
+    height: 93%;
     max-height: none;
     margin: -5px 0 4rem 0;
     padding: 5px 0 0 0;
