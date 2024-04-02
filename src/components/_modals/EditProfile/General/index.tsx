@@ -41,7 +41,7 @@ type ProfileGeneralData = {
   profile_url: string
   gender: 'male' | 'female' | null
   year_of_birth: string
-  onboarding_step: string
+  onboarding_step?: string
   completed_onboarding_steps?: any
 }
 
@@ -77,7 +77,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     profile_url: '',
     gender: null,
     year_of_birth: '',
-    onboarding_step: '1',
+
     completed_onboarding_steps: 'General',
   })
 
