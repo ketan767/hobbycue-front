@@ -397,8 +397,20 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       } else {
         setErrorOrmsg('Hobby added successfully!')
       }
+      let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+      if (!updatedCompletedSteps.includes('Hobby')) {
+        updatedCompletedSteps.push('Hobby')
+      }
+      let onboarded = false
+      if (user.completed_onboarding_steps.length === 5) {
+        onboarded = true
+      }
       const { err: updtProfileErr, res: updtProfileRes } =
-        await updateMyProfileDetail({ is_onboarded: true })
+        await updateMyProfileDetail({
+          is_onboarded: onboarded,
+          completed_onboarding_steps: updatedCompletedSteps,
+        })
       const { err: error, res: response } = await getMyProfileDetail()
       setAddHobbyBtnLoading(false)
       if (error) return console.log(error)
@@ -507,8 +519,20 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         setSubmitBtnLoading(false)
         return
       }
+      let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+      if (!updatedCompletedSteps.includes('Hobby')) {
+        updatedCompletedSteps.push('Hobby')
+      }
+      let onboarded = false
+      if (user.completed_onboarding_steps.length === 5) {
+        onboarded = true
+      }
       const { err: updtProfileErr, res: updtProfileRes } =
-        await updateMyProfileDetail({ is_onboarded: true })
+        await updateMyProfileDetail({
+          is_onboarded: onboarded,
+          completed_onboarding_steps: updatedCompletedSteps,
+        })
 
       await addUserHobby(jsonData, async (err, res) => {
         console.log('json', jsonData)

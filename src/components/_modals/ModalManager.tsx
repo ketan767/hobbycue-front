@@ -135,6 +135,13 @@ const ModalManager: React.FC = () => {
       ['View-Image-Modal', 'CopyProfileDataModal'].includes(String(activeModal))
     ) {
       dispatch(closeModal())
+    } else if (
+      activeModal === 'user-onboarding' &&
+      !user?.is_onboarded &&
+      !hasChanges
+    ) {
+      router.push(`/profile/${user?.profile_url}`)
+      dispatch(closeModal())
     } else if (confirmationModal) {
       setConfirmationModal(false)
     } else if (hasChanges && !confirmationModal) {
@@ -211,6 +218,15 @@ const ModalManager: React.FC = () => {
             dispatch(closeModal())
           }
           if (
+            activeModal === 'user-onboarding' &&
+            !user?.is_onboarded &&
+            !hasChanges
+          ) {
+            router.push(`/profile/${user?.profile_url}`)
+            dispatch(closeModal())
+          }
+
+          if (
             ['View-Image-Modal', 'CopyProfileDataModal'].includes(
               String(activeModal),
             )
@@ -229,7 +245,7 @@ const ModalManager: React.FC = () => {
         }
       }
     },
-    [hasChanges, confirmationModal, dispatch],
+    [hasChanges, confirmationModal, dispatch, activeModal],
   )
 
   useEffect(() => {

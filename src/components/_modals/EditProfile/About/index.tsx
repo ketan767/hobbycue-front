@@ -41,6 +41,7 @@ type Props = {
 type ProfileAboutData = {
   about: string
   onboarding_step?: string
+  completed_onboarding_steps?: any
 }
 
 const ProfileAboutEditModal: React.FC<Props> = ({
@@ -58,6 +59,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
   const [data, setData] = useState<ProfileAboutData>({
     about: '',
     onboarding_step: '2',
+    completed_onboarding_steps: 'About',
   })
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backDisabled, SetBackDisabled] = useState(false)
@@ -91,15 +93,6 @@ const ProfileAboutEditModal: React.FC<Props> = ({
   }
 
   const Backsave = async () => {
-    const newOnboardingStep =
-      Number(user?.onboarding_step) > 1 ? user?.onboarding_step : '2'
-    const { err, res } = await updateMyProfileDetail({
-      onboarding_step: newOnboardingStep,
-    })
-
-    if (err) {
-      return console.log(err)
-    }
     setBackBtnLoading(true)
     if (
       !data.about ||
@@ -109,16 +102,23 @@ const ProfileAboutEditModal: React.FC<Props> = ({
       if (onBackBtnClick) onBackBtnClick()
       setBackBtnLoading(false)
     } else {
+      let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+      if (!updatedCompletedSteps.includes('About')) {
+        updatedCompletedSteps.push('About')
+      }
+
       const newOnboardingStep =
         Number(user?.onboarding_step) > 1 ? user?.onboarding_step : '2'
       const { err, res } = await updateMyProfileDetail({
-        ...data,
         onboarding_step: newOnboardingStep,
+        completed_onboarding_steps: updatedCompletedSteps,
       })
 
       if (err) {
         return console.log(err)
       }
+
       setBackBtnLoading(true)
       const { err: error, res: response } = await getMyProfileDetail()
 
@@ -141,15 +141,18 @@ const ProfileAboutEditModal: React.FC<Props> = ({
   }
 
   const handleSubmit = async () => {
+    let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+    if (!updatedCompletedSteps.includes('About')) {
+      updatedCompletedSteps.push('About')
+    }
     const newOnboardingStep =
       Number(user?.onboarding_step) > 1 ? user?.onboarding_step : '2'
     const { err, res } = await updateMyProfileDetail({
       onboarding_step: newOnboardingStep,
+      completed_onboarding_steps: updatedCompletedSteps,
     })
-    if (err) {
-      setSubmitBtnLoading(false)
-      return console.log(err)
-    }
+
     if (!data.about || cleanString(data.about) === '') {
       if (data.about !== user.about) {
         const newData = { about: cleanString(data.about) }
@@ -179,11 +182,16 @@ const ProfileAboutEditModal: React.FC<Props> = ({
     } else {
       const newData = { about: data.about.trim() }
       setSubmitBtnLoading(true)
+      let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+      if (!updatedCompletedSteps.includes('About')) {
+        updatedCompletedSteps.push('About')
+      }
       const newOnboardingStep =
         Number(user?.onboarding_step) > 1 ? user?.onboarding_step : '2'
       const { err, res } = await updateMyProfileDetail({
-        ...newData,
         onboarding_step: newOnboardingStep,
+        completed_onboarding_steps: updatedCompletedSteps,
       })
       if (err) {
         setSubmitBtnLoading(false)
@@ -200,6 +208,25 @@ const ProfileAboutEditModal: React.FC<Props> = ({
           dispatch(closeModal())
         }
       }
+    }
+  }
+
+  const handleSkip = async () => {
+    let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+    if (!updatedCompletedSteps.includes('About')) {
+      updatedCompletedSteps.push('About')
+    }
+
+    const newOnboardingStep =
+      Number(user?.onboarding_step) > 1 ? user?.onboarding_step : '2'
+    const { err, res } = await updateMyProfileDetail({
+      onboarding_step: newOnboardingStep,
+      completed_onboarding_steps: updatedCompletedSteps,
+    })
+
+    if (err) {
+      return console.log(err)
     }
   }
   useEffect(() => {
@@ -262,7 +289,10 @@ const ProfileAboutEditModal: React.FC<Props> = ({
     <svg
       tabIndex={0}
       className={styles.skipIcon}
-      onClick={onComplete}
+      onClick={() => {
+        handleSkip()
+        onComplete?.()
+      }}
       xmlns="http://www.w3.org/2000/svg"
       width="66"
       height="25"
