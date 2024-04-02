@@ -31,6 +31,7 @@ type Props = {
   handleClose?: any
   isError?: boolean
   onStatusChange?: (isChanged: boolean) => void
+  CheckIsOnboarded?: any
 }
 
 type ProfileGeneralData = {
@@ -51,6 +52,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   setConfirmationModal,
   handleClose,
   onStatusChange,
+  CheckIsOnboarded,
 }) => {
   const dispatch = useDispatch()
 
@@ -172,7 +174,6 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
         })
       }
     }
-    const onlyAlphabetsAndHyphensRegex = /^[a-zA-Z-]*$/
 
     setSubmitBtnLoading(true)
     const newOnboardingStep =
@@ -204,12 +205,17 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
       dispatch(updateUser(response?.data.data.user))
       if (onComplete) {
         onComplete()
-        console.log('General Oncomplete')
       } else {
-        console.log('General Oncomplete closed')
-        const newUrl = `/profile/${data.profile_url}`
-        window.location.href = newUrl
-        dispatch(closeModal())
+        if (!user.is_onboarded) {
+          await CheckIsOnboarded()
+          const newUrl = `/profile/${data.profile_url}`
+          window.location.href = newUrl
+          return
+        } else {
+          const newUrl = `/profile/${data.profile_url}`
+          window.location.href = newUrl
+          dispatch(closeModal())
+        }
       }
     }
   }

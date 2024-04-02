@@ -36,6 +36,7 @@ type Props = {
   isError?: boolean
   onStatusChange?: (isChanged: boolean) => void
   showSkip?: boolean
+  CheckIsOnboarded?: any
 }
 
 type ProfileAboutData = {
@@ -51,6 +52,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
   setConfirmationModal,
   handleClose,
   onStatusChange,
+  CheckIsOnboarded,
   showSkip,
 }) => {
   const dispatch = useDispatch()
@@ -172,9 +174,14 @@ const ProfileAboutEditModal: React.FC<Props> = ({
           dispatch(updateUser(response.data.data.user))
           if (onComplete) onComplete()
           else {
-            window.location.reload()
-            dispatch(closeModal())
-            return
+            if (!user.is_onboarded) {
+              await CheckIsOnboarded()
+              return
+            } else {
+              window.location.reload()
+              dispatch(closeModal())
+              return
+            }
           }
         }
       } else if (user.isOnboarded) dispatch(closeModal())
@@ -190,6 +197,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
       const newOnboardingStep =
         Number(user?.onboarding_step) > 1 ? user?.onboarding_step : '2'
       const { err, res } = await updateMyProfileDetail({
+        ...newData,
         onboarding_step: newOnboardingStep,
         completed_onboarding_steps: updatedCompletedSteps,
       })
@@ -204,8 +212,14 @@ const ProfileAboutEditModal: React.FC<Props> = ({
         dispatch(updateUser(response.data.data.user))
         if (onComplete) onComplete()
         else {
-          window.location.reload()
-          dispatch(closeModal())
+          if (!user.is_onboarded) {
+            await CheckIsOnboarded()
+            return
+          } else {
+            window.location.reload()
+            dispatch(closeModal())
+            return
+          }
         }
       }
     }
@@ -265,11 +279,10 @@ const ProfileAboutEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        if(event?.srcElement?.id==='skipSvg'){
-          onComplete?.();
+        if (event?.srcElement?.id === 'skipSvg') {
+          onComplete?.()
           return
-        }
-        else if (event?.srcElement?.className?.includes('ql-editor')) {
+        } else if (event?.srcElement?.className?.includes('ql-editor')) {
           return
         } else {
           nextButtonRef.current?.click()
@@ -298,7 +311,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
       height="25"
       viewBox="0 0 66 25"
       fill="none"
-      id='skipSvg'
+      id="skipSvg"
     >
       {/* <g clip-path="url(#clip0_10384_147186)"> */}
       <rect x="0.796875" width="65.2063" height="25" rx="12.5" fill="#8064A2" />

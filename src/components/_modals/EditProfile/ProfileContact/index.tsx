@@ -34,6 +34,7 @@ type Props = {
   isError?: boolean
   onStatusChange?: (isChanged: boolean) => void
   showSkip?: boolean
+  CheckIsOnboarded?: any
 }
 type ProfileContactData = {
   public_email: InputData<string>
@@ -59,6 +60,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
   handleClose,
   onStatusChange,
   showSkip,
+  CheckIsOnboarded,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -300,8 +302,12 @@ const ProfileContactEditModal: React.FC<Props> = ({
       dispatch(updateUser(response.data.data.user))
       if (onComplete) onComplete()
       else {
-        window.location.reload()
-        dispatch(closeModal())
+        if (!user.is_onboarded) {
+          await CheckIsOnboarded()
+        } else {
+          window.location.reload()
+          dispatch(closeModal())
+        }
       }
     }
   }
@@ -408,11 +414,10 @@ const ProfileContactEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        if(event?.srcElement?.id==='skipSvg'){
-          onComplete?.();
+        if (event?.srcElement?.id === 'skipSvg') {
+          onComplete?.()
           return
-        }
-        else if (event.target.tagName.toLowerCase() === 'svg') {
+        } else if (event.target.tagName.toLowerCase() === 'svg') {
           onComplete
         } else {
           nextButtonRef.current?.focus()
@@ -459,7 +464,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
       height="25"
       viewBox="0 0 66 25"
       fill="none"
-      id='skipSvg'
+      id="skipSvg"
     >
       <g clip-path="url(#clip0_10384_147186)">
         <rect

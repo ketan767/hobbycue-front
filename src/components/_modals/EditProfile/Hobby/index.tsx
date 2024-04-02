@@ -45,6 +45,7 @@ type Props = {
   showAddHobbyModal?: boolean
   setShowAddGenreModal?: any
   setShowAddHobbyModal?: any
+  CheckIsOnboarded?: any
 }
 const levels = ['Beginner', 'Intermediate', 'Advanced']
 // const levels = {
@@ -84,6 +85,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   showAddHobbyModal,
   setShowAddGenreModal,
   setShowAddHobbyModal,
+  CheckIsOnboarded,
 }) => {
   const dispatch = useDispatch()
   const [showModal, setShowModal] = useState(false)
@@ -390,7 +392,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     }
     addUserHobby(jsonData, async (err, res) => {
       console.log('json', jsonData)
-      console.log('Button clicked!')
+
       if (err) {
         setAddHobbyBtnLoading(false)
         return console.log(err)

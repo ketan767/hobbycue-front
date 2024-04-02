@@ -33,6 +33,7 @@ type Props = {
   isError?: boolean
   onStatusChange?: (isChanged: boolean) => void
   [key: string]: any
+  CheckIsOnboarded?: any
 }
 
 type AddressObj = {
@@ -63,6 +64,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   setConfirmationModal,
   handleClose,
   onStatusChange,
+  CheckIsOnboarded,
 }) => {
   const dispatch = useDispatch()
   const { user, addressToEdit } = useSelector((state: RootState) => state.user)
@@ -397,8 +399,12 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           dispatch(updateUser(response.data.data.user))
           if (onComplete) onComplete()
           else {
-            window.location.reload()
-            dispatch(closeModal())
+            if (!user.is_onboarded) {
+              await CheckIsOnboarded()
+            } else {
+              window.location.reload()
+              dispatch(closeModal())
+            }
           }
         }
       })
@@ -480,8 +486,12 @@ const ProfileAddressEditModal: React.FC<Props> = ({
 
             if (onComplete) onComplete()
             else {
-              window.location.reload()
-              dispatch(closeModal())
+              if (!user.is_onboarded) {
+                await CheckIsOnboarded()
+              } else {
+                window.location.reload()
+                dispatch(closeModal())
+              }
             }
           }
         })
@@ -519,8 +529,12 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               dispatch(updateUser(response.data.data.user))
               if (onComplete) onComplete()
               else {
-                window.location.reload()
-                dispatch(closeModal())
+                if (!user.is_onboarded) {
+                  await CheckIsOnboarded()
+                } else {
+                  window.location.reload()
+                  dispatch(closeModal())
+                }
               }
             }
           },
@@ -557,8 +571,12 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           dispatch(updateUser(response?.data.data.user))
           if (onComplete) onComplete()
           else {
-            window.location.reload()
-            dispatch(closeModal())
+            if (!user.is_onboarded) {
+              await CheckIsOnboarded()
+            } else {
+              window.location.reload()
+              dispatch(closeModal())
+            }
           }
         }
       })
