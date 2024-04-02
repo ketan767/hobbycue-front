@@ -60,7 +60,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
 
   const [data, setData] = useState<ProfileAboutData>({
     about: '',
-    onboarding_step: '2',
+
     completed_onboarding_steps: 'About',
   })
   const [nextDisabled, setNextDisabled] = useState(false)

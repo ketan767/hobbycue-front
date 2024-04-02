@@ -57,7 +57,7 @@
  
 }
 .inputField {
-  width: 400px;
+  /* width: 400px; */
 }
 .inputField::placeholder {
   font-family: 'Poppins';
@@ -295,7 +295,7 @@ line-height: 24px; /* 171.429% */
 
 .my-community-wrapper-mobile {
   position: absolute;
-  top: 0.5rem;
+  top: 0.25rem;
   left: 1rem;
 }
 .my-community-wrapper-mobile > div {
@@ -426,5 +426,11 @@ line-height: 24px; /* 171.429% */
   }
   .display-mobile {
     display: initial !important;
+  }
+}
+
+@media screen and (max-height:680px) {
+  .welcome-wrapper{
+    top: 65vh;
   }
 }

@@ -111,7 +111,6 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     latitude: '',
     longitude: '',
     set_as_primary: false,
-    onboarding_step: '4',
   })
 
   const [inputErrs, setInputErrs] = useState<{ [key: string]: string | null }>({
