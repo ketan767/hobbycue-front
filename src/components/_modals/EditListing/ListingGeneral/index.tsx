@@ -352,8 +352,11 @@ const ListingGeneralEditModal: React.FC<Props> = ({
     if (onComplete !== undefined) {
       let pageUrl: any = data.title.value
       console.log(pageUrl)
-      pageUrl = pageUrl?.toLowerCase().replace(/ /g, '-')
-      pageUrl = pageUrl?.replace(/[^\w\s]/g, '-') // Replace special characters with '-'
+      pageUrl = pageUrl
+        ?.toLowerCase()
+        .replace(/\s+/g, '-') // Replace consecutive spaces with a single hyphen
+        .replace(/[^\w\s-]/g, '-') // Replace special characters with a single hyphen
+        .replace(/-+/g, '-'); // Replace consecutive hyphens with a single hyphen
       setData((prev) => {
         return { ...prev, page_url: { value: pageUrl, error: null } }
       })
