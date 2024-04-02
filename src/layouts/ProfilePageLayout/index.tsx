@@ -59,7 +59,7 @@ const ProfileLayout: React.FC<Props> = ({
     if (!isLoggedIn) {
       dispatch(openModal({ type: 'auth', closable: true }))
     } else dispatch(closeModal())
-  }, [user])
+  }, [isLoggedIn])
 
   function checkScroll() {
     const scrollValue = window.scrollY || document.documentElement.scrollTop
