@@ -31,6 +31,7 @@ type Props = {
   handleClose?: any
   isError?: boolean
   onStatusChange?: (isChanged: boolean) => void
+  CheckIsOnboarded?: any
 }
 
 type ProfileGeneralData = {
@@ -41,6 +42,7 @@ type ProfileGeneralData = {
   gender: 'male' | 'female' | null
   year_of_birth: string
   onboarding_step: string
+  completed_onboarding_steps?: any
 }
 
 const ProfileGeneralEditModal: React.FC<Props> = ({
@@ -50,6 +52,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   setConfirmationModal,
   handleClose,
   onStatusChange,
+  CheckIsOnboarded,
 }) => {
   const dispatch = useDispatch()
 
@@ -75,6 +78,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     gender: null,
     year_of_birth: '',
     onboarding_step: '1',
+    completed_onboarding_steps: 'General',
   })
 
   const [inputErrs, setInputErrs] = useState<{ [key: string]: string | null }>({
@@ -170,14 +174,20 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
         })
       }
     }
-    const onlyAlphabetsAndHyphensRegex = /^[a-zA-Z-]*$/
 
     setSubmitBtnLoading(true)
     const newOnboardingStep =
       Number(user?.onboarding_step) > 0 ? user?.onboarding_step : '1'
+
+    let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+    if (!updatedCompletedSteps.includes('General')) {
+      updatedCompletedSteps.push('General')
+    }
     const { err, res } = await updateMyProfileDetail({
       ...data,
       onboarding_step: newOnboardingStep,
+      completed_onboarding_steps: updatedCompletedSteps,
     })
     if (err) {
       setSubmitBtnLoading(false)
@@ -195,12 +205,17 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
       dispatch(updateUser(response?.data.data.user))
       if (onComplete) {
         onComplete()
-        console.log('General Oncomplete')
       } else {
-        console.log('General Oncomplete closed')
-        const newUrl = `/profile/${data.profile_url}`
-        window.location.href = newUrl
-        dispatch(closeModal())
+        if (!user.is_onboarded) {
+          await CheckIsOnboarded()
+          const newUrl = `/profile/${data.profile_url}`
+          window.location.href = newUrl
+          return
+        } else {
+          const newUrl = `/profile/${data.profile_url}`
+          window.location.href = newUrl
+          dispatch(closeModal())
+        }
       }
     }
   }

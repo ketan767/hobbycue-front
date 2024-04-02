@@ -45,6 +45,7 @@ type Props = {
   showAddHobbyModal?: boolean
   setShowAddGenreModal?: any
   setShowAddHobbyModal?: any
+  CheckIsOnboarded?: any
 }
 const levels = ['Beginner', 'Intermediate', 'Advanced']
 // const levels = {
@@ -84,6 +85,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   showAddHobbyModal,
   setShowAddGenreModal,
   setShowAddHobbyModal,
+  CheckIsOnboarded,
 }) => {
   const dispatch = useDispatch()
   const [showModal, setShowModal] = useState(false)
@@ -390,15 +392,27 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     }
     addUserHobby(jsonData, async (err, res) => {
       console.log('json', jsonData)
-      console.log('Button clicked!')
+
       if (err) {
         setAddHobbyBtnLoading(false)
         return console.log(err)
       } else {
         setErrorOrmsg('Hobby added successfully!')
       }
+      let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+      if (!updatedCompletedSteps.includes('Hobby')) {
+        updatedCompletedSteps.push('Hobby')
+      }
+      let onboarded = false
+      if (user.completed_onboarding_steps.length === 5) {
+        onboarded = true
+      }
       const { err: updtProfileErr, res: updtProfileRes } =
-        await updateMyProfileDetail({ is_onboarded: true })
+        await updateMyProfileDetail({
+          is_onboarded: onboarded,
+          completed_onboarding_steps: updatedCompletedSteps,
+        })
       const { err: error, res: response } = await getMyProfileDetail()
       setAddHobbyBtnLoading(false)
       if (error) return console.log(error)
@@ -507,8 +521,20 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         setSubmitBtnLoading(false)
         return
       }
+      let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+      if (!updatedCompletedSteps.includes('Hobby')) {
+        updatedCompletedSteps.push('Hobby')
+      }
+      let onboarded = false
+      if (user.completed_onboarding_steps.length === 5) {
+        onboarded = true
+      }
       const { err: updtProfileErr, res: updtProfileRes } =
-        await updateMyProfileDetail({ is_onboarded: true })
+        await updateMyProfileDetail({
+          is_onboarded: onboarded,
+          completed_onboarding_steps: updatedCompletedSteps,
+        })
 
       await addUserHobby(jsonData, async (err, res) => {
         console.log('json', jsonData)
