@@ -10,7 +10,7 @@ import Link from 'next/link'
 type Props = {
   data: ProfilePageData['pageData']
   expandData?: boolean
-  contactError?:boolean
+  contactError?: boolean
 }
 
 const ProfileContactSide = ({ data, expandData, contactError }: Props) => {
@@ -46,7 +46,7 @@ const ProfileContactSide = ({ data, expandData, contactError }: Props) => {
         }
         setDisplayData={setDisplayData}
         expandData={expandData}
-        className={contactError?styles['error']:''}
+        className={contactError ? styles['error'] : ''}
       >
         <h4 className={styles['heading']}>Contact Information</h4>
         <ul
@@ -56,7 +56,7 @@ const ProfileContactSide = ({ data, expandData, contactError }: Props) => {
         >
           {/* Phone */}
           {data.phone.number && (
-            <Link href={`tel:${data?.phone.number}`}>
+            <Link href={`tel:${data.phone.prefix + data?.phone.number}`}>
               <li className={styles['list-item']}>
                 <svg
                   width="24"

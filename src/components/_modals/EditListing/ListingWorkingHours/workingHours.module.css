@@ -4,7 +4,7 @@
   max-width: 668px;
   width: 38rem;
   height: 93.5%;
-  max-height: calc(100vh - 6rem);
+
   display: flex;
   flex-direction: column;
 }
@@ -23,7 +23,8 @@
 
 @media screen and (min-width: 1100px) {
   .modal-wrapper {
-    max-height: calc(100vh - 6rem);
+    max-height: 50rem;
+    height: calc(100vh - 6rem);
   }
   .modal-wrapper .body {
     height: calc(100vh - 6rem);
