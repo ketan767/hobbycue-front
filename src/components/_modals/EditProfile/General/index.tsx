@@ -269,9 +269,10 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   useEffect(() => {
     if (onComplete !== undefined && /^\d+$/.test(user.profile_url)) {
       let profileUrl = data.full_name
-      profileUrl = profileUrl?.toLowerCase().replace(/ /g, '-')
-      // Replace special characters with '-'
-      profileUrl = profileUrl.replace(/[^a-zA-Z0-9-]/g, '-')
+      profileUrl = profileUrl?.toLowerCase()
+      .replace(/\s+/g, '-') // Replace consecutive spaces with a single hyphen
+      .replace(/[^\w\s-]/g, '-') // Replace special characters with a single hyphen
+      .replace(/-+/g, '-'); // Replace consecutive hyphens with a single hyphen
       setData((prev) => ({ ...prev, profile_url: profileUrl }))
       if (!user.display_name) {
         setData((prev) => ({

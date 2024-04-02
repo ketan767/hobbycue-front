@@ -18,6 +18,9 @@ type Props = {
   children: React.ReactElement
   setExpandAll?: (value: boolean) => void
   expandAll?: boolean
+  navigationTabs?: (tab: string) => void
+  titleError?: boolean
+  noDataChecker?: () => boolean
 }
 
 const ProfileLayout: React.FC<Props> = ({
@@ -26,6 +29,9 @@ const ProfileLayout: React.FC<Props> = ({
   data,
   setExpandAll,
   expandAll,
+  navigationTabs,
+  titleError,
+  noDataChecker
 }) => {
   const router = useRouter()
   const dispatch = useDispatch()
@@ -76,13 +82,13 @@ const ProfileLayout: React.FC<Props> = ({
   return (
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
-      <ProfileHeader data={data.pageData} />
+      <ProfileHeader noDataChecker={noDataChecker} titleError={titleError} data={data.pageData} />
       <div className={styles['nav']}>
-        <ProfileNavigationLinks activeTab={activeTab} />
+        <ProfileNavigationLinks navigationTabs={navigationTabs} activeTab={activeTab} />
       </div>
 
       {showSmallHeader && (
-        <ProfileHeaderSmall data={data.pageData} activeTab={activeTab} />
+        <ProfileHeaderSmall navigationTabs={navigationTabs} data={data.pageData} activeTab={activeTab} />
       )}
 
       <div

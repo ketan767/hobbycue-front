@@ -94,10 +94,10 @@ const VisibilityAndNotification: React.FC = () => {
 
   return (
     <>
-          {isMobile&&<aside className={`${exploreStyles['community-left-aside']} custom-scrollbar static-position`}>
-        <section className="content-box-wrapper">
+          {isMobile&&<aside className={`custom-scrollbar static-position settings-container`}>
+        <section className={`content-box-wrapper`}>
           <header>
-            <div className={exploreStyles['heading']}>
+            <div className={'settings-title'}>
               <h1>Settings</h1>
             </div>
           </header>

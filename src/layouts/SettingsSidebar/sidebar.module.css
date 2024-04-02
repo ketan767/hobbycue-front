@@ -47,6 +47,10 @@
    width: 100%;
 }
 
+.listItem:hover{
+   background: #f7f5f9;
+}
+
 .listLink{
    display: flex;
 padding: 4px 8px 4px 0px;

@@ -8,9 +8,10 @@ import { openModal } from '@/redux/slices/modal'
 type Props = {
   data: ProfilePageData['pageData']
   expandData?:boolean
+  addressError?:boolean
 }
 
-const ProfileAddressSide = ({ data, expandData }: Props) => {
+const ProfileAddressSide = ({ data, expandData, addressError }: Props) => {
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
   const dispatch = useDispatch()
   const [displayData, setDisplayData] = useState(false)
@@ -44,6 +45,7 @@ const ProfileAddressSide = ({ data, expandData }: Props) => {
         }
         setDisplayData={setDisplayData}
         expandData={expandData}
+        className={addressError===true?styles['error']:''}
       >
         <h4 className={styles['heading']}>Location</h4>
         <ul
