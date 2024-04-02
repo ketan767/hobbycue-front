@@ -238,7 +238,11 @@ const ProfileAboutEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        if (event?.srcElement?.className?.includes('ql-editor')) {
+        if(event?.srcElement?.id==='skipSvg'){
+          onComplete?.();
+          return
+        }
+        else if (event?.srcElement?.className?.includes('ql-editor')) {
           return
         } else {
           nextButtonRef.current?.click()
@@ -264,6 +268,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
       height="25"
       viewBox="0 0 66 25"
       fill="none"
+      id='skipSvg'
     >
       {/* <g clip-path="url(#clip0_10384_147186)"> */}
       <rect x="0.796875" width="65.2063" height="25" rx="12.5" fill="#8064A2" />

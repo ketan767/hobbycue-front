@@ -383,7 +383,7 @@ line-height: 20px; /* 142.857% */
 .navigation-links ul li.active::after {
   content: '';
   bottom: 0;
-  left: 15px;
+  left: 12.5%;
   width: 75%;
   height: 2px;
   position: absolute;
@@ -580,6 +580,10 @@ background: var(--Purple-3, #F7F5F9);
   .navigation-links ul{
     justify-content: flex-start;
     gap: 8px;
+  }
+  .navigation-links ul li{
+    
+  min-width: unset;
   }
   /* .community-right-aside{
     display: none;

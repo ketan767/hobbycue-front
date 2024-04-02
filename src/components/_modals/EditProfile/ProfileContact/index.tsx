@@ -375,7 +375,11 @@ const ProfileContactEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        if (event.target.tagName.toLowerCase() === 'svg') {
+        if(event?.srcElement?.id==='skipSvg'){
+          onComplete?.();
+          return
+        }
+        else if (event.target.tagName.toLowerCase() === 'svg') {
           onComplete
         } else {
           nextButtonRef.current?.focus()
@@ -419,6 +423,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
       height="25"
       viewBox="0 0 66 25"
       fill="none"
+      id='skipSvg'
     >
       <g clip-path="url(#clip0_10384_147186)">
         <rect

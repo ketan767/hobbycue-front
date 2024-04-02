@@ -54,6 +54,7 @@ import hobbycueLogo from '@/assets/svg/Search/hobbycue.svg'
 import { setShowPageLoader } from '@/redux/slices/site'
 import { usePathname } from 'next/navigation'
 import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
+import { useMediaQuery } from '@mui/material'
 
 type Props = {}
 
@@ -316,6 +317,8 @@ export const Navbar: React.FC<Props> = ({}) => {
       console.error('An error occurred during the combined search:', error)
     }
   }
+
+  const isMobile = useMediaQuery('(max-width:1100px)')
 
   const searchCloseIcon = (
     <svg
@@ -955,7 +958,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                     <header className={styles['header']}>
                       <Image
                         className={styles['responsive-logo']}
-                        src={hobbycueLogo}
+                        src={LogoSmall}
                         alt="hobbycue"
                       />
                       <h2 className={styles['modal-heading']}></h2>
@@ -967,7 +970,11 @@ export const Navbar: React.FC<Props> = ({}) => {
                         placeholder="Search here..."
                         size="small"
                         autoFocus
-                        onBlur={() => setIsSearchInputVisible(false)}
+                        onBlur={() => {if(!isMobile)setIsSearchInputVisible(false)
+                        else{setTimeout(() => {
+                          setIsSearchInputVisible(false)
+                        }, 100);}
+                        }}
                         className={styles.inputField}
                         onChange={handleInputChange}
                         value={data.search.value}
@@ -993,10 +1000,26 @@ export const Navbar: React.FC<Props> = ({}) => {
                         }}
                         InputLabelProps={{ shrink: false }}
                       />
+                      <button type="submit" className={styles['search-icon-container']}>
+                        {/* Search Icon */}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="17"
+                          viewBox="0 0 16 17"
+                          fill="none"
+                        >
+                          <path
+                            d="M6.83333 2.19531C4.17185 2.19531 2 4.36717 2 7.02865C2 9.69013 4.17185 11.862 6.83333 11.862C7.92439 11.862 8.92964 11.493 9.74023 10.8789L12.862 14C12.9234 14.064 12.997 14.1151 13.0784 14.1503C13.1598 14.1854 13.2474 14.204 13.3361 14.2049C13.4248 14.2058 13.5128 14.189 13.5949 14.1555C13.6771 14.122 13.7517 14.0724 13.8144 14.0097C13.8771 13.947 13.9267 13.8724 13.9602 13.7903C13.9937 13.7081 14.0105 13.6202 14.0096 13.5315C14.0087 13.4428 13.9901 13.3551 13.9549 13.2737C13.9198 13.1923 13.8687 13.1187 13.8047 13.0573L10.6836 9.93555C11.2977 9.12495 11.6667 8.1197 11.6667 7.02865C11.6667 4.36717 9.49481 2.19531 6.83333 2.19531ZM6.83333 3.52865C8.77423 3.52865 10.3333 5.08775 10.3333 7.02865C10.3333 7.96055 9.97135 8.80218 9.38281 9.42773C9.32552 9.46921 9.2752 9.51953 9.23372 9.57682C8.60803 10.1661 7.7659 10.5286 6.83333 10.5286C4.89244 10.5286 3.33333 8.96954 3.33333 7.02865C3.33333 5.08775 4.89244 3.52865 6.83333 3.52865Z"
+                            fill="white"
+                          />
+                        </svg>
+                      </button>
                     </div>
                   </form>
                 ) : (
-                  <li>
+                  <li className={data.search.value.length>0?styles['topbar-search-box']:''}>
+                    {data.search.value.length>0&& <input type="text" value={data.search.value} onChange={handleInputChange} />}
                     <Image
                       src={Search}
                       alt="search"
