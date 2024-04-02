@@ -38,15 +38,17 @@ type Props = {
 
 type AddressObj = {
   street_number?: string
-  primise2?:string
+  subpremise?: string
+  primise2?: string
   premise?: string
   locality?: string
-  neighbour?:string
+  neighbour?: string
   route?: string
   administrative_area_level_1?: string
   country?: string
   postal_code?: string
   sublocality_level_1?: string
+  sublocality_level_2?: string
   sublocality_level_3?: string
 }
 
@@ -691,13 +693,11 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               let addressParts: string[] = []
               let addressObj: AddressObj = {}
               address_components.forEach((component: any) => {
-                // console.log(component);
-
                 if (component.types.includes('street_number')) {
                   addressParts.push(component.long_name)
                   addressObj.street_number = component.long_name
                 }
-                if (component.types.includes('neighborhood')) {                  
+                if (component.types.includes('neighborhood')) {
                   addressParts.push(component.long_name)
                   addressObj.neighbour = component.long_name
                 }
@@ -705,11 +705,15 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   addressParts.push(component.long_name)
                   addressObj.route = component.long_name
                 }
+                if (component.types.includes('subpremise')) {
+                  addressParts.push(component.long_name)
+                  addressObj.subpremise = component.long_name
+                }
                 if (component.types.includes('premise')) {
                   addressParts.push(component.long_name)
                   if (addressObj.premise) {
                     addressObj.primise2 = component.long_name
-                   } else {
+                  } else {
                     addressObj.premise = component.long_name
                   }
                 }
@@ -733,11 +737,16 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   addressParts.push(component.long_name)
                   addressObj.sublocality_level_1 = component.long_name
                 }
+                if (component.types.includes('sublocality_level_2')) {
+                  addressParts.push(component.long_name)
+                  addressObj.sublocality_level_2 = component.long_name
+                }
                 if (component.types.includes('sublocality_level_3')) {
                   addressParts.push(component.long_name)
                   addressObj.sublocality_level_3 = component.long_name
                 }
               })
+
               console.log('addpart', addressParts)
 
               return {
@@ -802,20 +811,50 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     console.log({ data })
     setShowDropdown(false)
     const { addressObj } = data
-    console.log(data,'selected');
-    
-    setData((prev: ProfileAddressPayload) => ({
-      ...prev,
-      pin_code: addressObj.postal_code ?? '',
-      country: addressObj.country ?? '',
-      city: addressObj.locality ?? '',
-      state: addressObj.administrative_area_level_1 ?? '',
-      society: addressObj.premise ?? '',
-      street: ((addressObj.street_number || '') +
-      (addressObj.neighbour ? (addressObj.street_number ? ', ' + addressObj.neighbour : addressObj.neighbour) : '') +
-      (addressObj.route ? (addressObj.neighbour || addressObj.street_number ? ', ' : '') + addressObj.route : '')+(addressObj.primise2?(addressObj.route||addressObj.neighbour || addressObj.street_number ? ', ' : '')+ addressObj.premise:'')) ?? '',
-   locality: addressObj.sublocality_level_1 ?? '',
-    }))
+    console.log(data, 'selected')
+
+    if (
+      addressObj.street_number &&
+      addressObj.neighbour &&
+      addressObj.route &&
+      addressObj.sublocality_level_3
+    ) {
+      setData((prev: ProfileAddressPayload) => ({
+        ...prev,
+        pin_code: addressObj.postal_code ?? '',
+        country: addressObj.country ?? '',
+        city: addressObj.locality ?? '',
+        state: addressObj.administrative_area_level_1 ?? '',
+        society: addressObj.sublocality_level_2 ?? '',
+        street: `${addressObj.street_number}, ${addressObj.neighbour}, ${
+          addressObj.route
+        }, ${[addressObj.premise, addressObj.primise2]
+          .filter(Boolean)
+          .join(', ')}, ${addressObj.sublocality_level_3}`,
+        locality: addressObj.sublocality_level_1 ?? '',
+      }))
+    } else {
+      setData((prev: ProfileAddressPayload) => ({
+        ...prev,
+        pin_code: addressObj.postal_code ?? '',
+        country: addressObj.country ?? '',
+        city: addressObj.locality ?? '',
+        state: addressObj.administrative_area_level_1 ?? '',
+        society: addressObj.sublocality_level_2 ?? '',
+        street: [
+          addressObj.street_number,
+          addressObj.subpremise,
+          addressObj.premise,
+          addressObj.primise2,
+          addressObj.neighbour,
+          addressObj.sublocality_level_3,
+          addressObj.route,
+        ]
+          .filter(Boolean)
+          .join(', '),
+        locality: addressObj.sublocality_level_1 ?? '',
+      }))
+    }
     setIsChanged(true)
   }
 
