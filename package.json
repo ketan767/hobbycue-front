@@ -22,6 +22,7 @@
     "@mui/styles": "^5.11.16",
     "@react-google-maps/api": "^2.19.2",
     "@reduxjs/toolkit": "^1.9.3",
+    "@swc/helpers": "^0.5.8",
     "@types/axios": "^0.14.0",
     "@types/dompurify": "^3.0.2",
     "@types/node": "18.15.11",
