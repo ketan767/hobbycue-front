@@ -37,7 +37,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
   const [loadingPosts, setLoadingPosts] = useState(false)
   const [posts, setPosts] = useState([])
   const dispatch = useDispatch()
-  const { user } = useSelector((state: any) => state.user)
+  const { user, isLoggedIn } = useSelector((state: RootState) => state.user)
   const { profile } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(profile)
   const router = useRouter()
@@ -202,7 +202,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
                 <span>Start a post</span>
               </button>
             </section>
-            <section className={styles['posts-container']}>
+            {isLoggedIn?(<section className={styles['posts-container']}>
               {loadingPosts ? (
                 <>
                   <PostCardSkeletonLoading />
@@ -245,7 +245,11 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
                   })}
                 </PostWrapper>
               )}
-            </section>
+            </section>):(
+              <div className={styles['no-posts-container']}>
+                <p className='cursor-pointer' onClick={()=>{dispatch(openModal({type:"auth",closable:true}))}}>Login to see the posts</p>
+              </div>
+            )}
           </main>
           <aside className={styles['display-desktop']}>
             {/* User Locations */}

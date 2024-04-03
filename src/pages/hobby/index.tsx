@@ -238,7 +238,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                     displayEmpty
                     // inputProps={{ "aria-label": "Without label" }}
                   >
-                    <MenuItem value="">Select</MenuItem>
+                    <MenuItem value="">All Categories</MenuItem>
                     {filtercategories.map((cat: any, idx) => {
                       return (
                         <MenuItem key={idx} value={cat._id}>
@@ -266,7 +266,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                     displayEmpty
                     inputProps={{ 'aria-label': 'Without label' }}
                   >
-                    <MenuItem value="">Select</MenuItem>
+                    <MenuItem value="">All Sub-Categories</MenuItem>
                     {filtersubCategories.map((cat: any, idx) => {
                       return (
                         <MenuItem key={idx} value={cat._id}>
@@ -380,7 +380,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                       displayEmpty
                       // inputProps={{ "aria-label": "Without label" }}
                     >
-                      <MenuItem value="">Select</MenuItem>
+                      <MenuItem value="">All Categories</MenuItem>
                       {filtercategories.map((cat: any, idx) => {
                         return (
                           <MenuItem key={idx} value={cat._id}>
@@ -408,7 +408,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                       displayEmpty
                       inputProps={{ 'aria-label': 'Without label' }}
                     >
-                      <MenuItem value="">Select</MenuItem>
+                      <MenuItem value="">All Sub-Categories</MenuItem>
                       {filtersubCategories.map((cat: any, idx) => {
                         return (
                           <MenuItem key={idx} value={cat._id}>

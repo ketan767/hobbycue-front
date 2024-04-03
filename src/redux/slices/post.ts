@@ -10,6 +10,7 @@ interface PostState {
     location:string|null,
     hobby:string,
     genre:string,
+    seeMoreHobbies:boolean
   }
 }
 
@@ -23,6 +24,7 @@ const initialState: PostState = {
     location:null,
     hobby:"",
     genre:"",
+    seeMoreHobbies:false
   },
 }
 

@@ -26,6 +26,7 @@ import Image from 'next/image'
 import AddHobby from '../../AddHobby/AddHobbyModal'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import AddGenre from '../../AddGenre/AddGenreModal'
+import { usePathname } from 'next/navigation'
 
 type Props = {
   onComplete?: () => void
@@ -73,9 +74,10 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   setShowAddGenreModal,
   setShowAddHobbyModal,
 }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const pathname = usePathname();
 
-  const { user } = useSelector((state: RootState) => state.user)
+  const { user,activeProfile } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
 
   const [hobbiesList, setHobbiesList] = useState([])
@@ -296,6 +298,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
         // setHobbyError(true)
         // setError('Typed hobby not found!')
         setShowAddHobbyModal(true)
+        setIsChanged(false);
         return
       }
     } else {
@@ -326,6 +329,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
           genre.display.toLowerCase() === genreInputValue.toLowerCase(),
       )
       if (!matchedGenre) {
+        setIsChanged(false);
         setShowAddGenreModal(true)
         return
       } else {
@@ -401,6 +405,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
           // setError('Typed hobby not found!')
           // dispatch(openModal({ type: 'add-hobby', closable: true }))
           setShowAddHobbyModal(true)
+          setIsChanged(false);
           return
         }
       } else {
@@ -415,6 +420,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
         )
 
         if (selectedGenre !== matchedGenre || !matchedGenre) {
+          setIsChanged(false);
           setShowAddGenreModal(true)
           return
         }
@@ -601,6 +607,11 @@ const ListingHobbyEditModal: React.FC<Props> = ({
       document.removeEventListener('mousedown', handleOutsideClick)
     }
   }, [])
+  useEffect(()=>{
+    if(activeProfile.type==="listing"&&pathname.startsWith("/community")){
+      setHobbiesList(activeProfile.data?._hobbies)
+    }
+  },[activeProfile])
 
   if (showAddHobbyModal) {
     return (
