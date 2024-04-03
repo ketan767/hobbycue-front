@@ -579,7 +579,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           href={'/search'}
                           className={styles['hobbiescategory']}
                           onClick={() => {
-                            showFeatureUnderDevelopment
+                            showFeatureUnderDevelopment()
                             setShowDropdown(null)
                           }}
                         >

@@ -31,6 +31,10 @@ type Props = {
   handleClose: any
 }
 
+type SearchInput = {
+  search: InputData<string>
+}
+
 const exploreOptions = [
   {
     text: 'People - Community',
@@ -55,7 +59,9 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
   const parentRef = useRef<HTMLDivElement>(null)
   const [exploreActive, setExploreActive] = useState(false)
   const [hobbiesActive, setHobbiesActive] = useState(false)
-
+  const [data, setData] = useState<SearchInput>({
+    search: { value: '', error: null },
+  })
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
@@ -244,38 +250,43 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
               <div className={styles['explore-list-dropdown']}>
                 {exploreOptions.map((option: any) => (
                   <section className={styles['list']} key={option.text}>
-                    <h4>
-                      <Link
-                        href={'/search'}
-                        className={styles['hobbiescategory']}
-                        onClick={(e) => {
-                          e.preventDefault()
-                          dispatch(resetSearch())
+                    <h4
+                      className={styles['hobbiescategory']}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        dispatch(resetSearch())
 
-                          switch (option.text) {
-                            case 'People - Community':
-                              dispatch(showAllPeopleTrue())
-                              break
-                            case 'Places - Venues':
-                              dispatch(showAllPlaceTrue())
-                              break
-                            case 'Programs - Events':
-                              dispatch(showAllEventTrue())
-                              break
-                            case 'Products - Store':
-                              dispatch(showAllProductsTrue())
-                              break
-                            case 'Posts - Write-ups':
-                              showFeatureUnderDevelopment()
-                              break
-                            default:
-                              break
-                          }
-                          router.push('/search')
-                        }}
-                      >
-                        {option.text}
-                      </Link>
+                        switch (option.text) {
+                          case 'People - Community':
+                            dispatch(showAllPeopleTrue())
+                            handleClose()
+                            router.push('/search')
+                            break
+                          case 'Places - Venues':
+                            dispatch(showAllPlaceTrue())
+                            handleClose()
+                            router.push('/search')
+                            break
+                          case 'Programs - Events':
+                            dispatch(showAllEventTrue())
+                            handleClose()
+                            router.push('/search')
+                            break
+                          case 'Products - Store':
+                            dispatch(showAllProductsTrue())
+                            handleClose()
+                            router.push('/search')
+                            break
+                          case 'Posts - Write-ups':
+                            showFeatureUnderDevelopment()
+                            handleClose()
+                            break
+                          default:
+                            break
+                        }
+                      }}
+                    >
+                      {option.text}
                     </h4>
                   </section>
                 ))}
