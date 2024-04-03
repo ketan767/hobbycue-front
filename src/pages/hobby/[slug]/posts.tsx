@@ -139,7 +139,13 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
               })
             ) : (
               <div className={styles['no-posts-container']}>
-                <p>Login to see the posts</p>
+                <p
+                  onClick={() => {
+                    dispatch(openModal({ type: 'auth', closable: true }))
+                  }}
+                >
+                  Login to see the posts
+                </p>
               </div>
             )}
           </section>
