@@ -27,7 +27,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     },
     {
       lastmod: new Date().toISOString(),
-      loc: '/sitemap/all-urls',
+      loc: '/sitemap/others',
       name: 'Others',
     },
   ]
