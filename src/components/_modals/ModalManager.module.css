@@ -84,10 +84,13 @@
     z-index: 1000;
     background: var(--Base-White, #fff);
     box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.08);
-    padding: var(--spacing-12) var(--spacing-16);
+    padding: 0 var(--spacing-16);
+    height: 48px;
   }
   .responsive-logo {
     display: block;
+    height: 35px; /*technically it should be 32px but 35px is working better than 32px*/
+    width: 35px; /*technically it should be 32px but 35px is working better than 32px*/
   }
 
   .modal-heading {
@@ -100,6 +103,9 @@
     position: fixed !important;
     z-index: 1001 !important;
 
+  }
+  .modal-wrapper main .modal-close-icon{
+    top: 10px;
   }
   .close-icon-clicked {
     /* left: calc(50vw + 152x) !important; */

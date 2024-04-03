@@ -158,22 +158,6 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
     dispatch(updateProfileData(data.pageData))
   }, [data?.pageData])
 
-  const ShowWelcomeModal = async () => {
-    const { err: error, res: response } = await getMyProfileDetail()
-    if (
-      response?.data?.data?.user?.show_welcome &&
-      response?.data?.data.user.is_onboarded
-    ) {
-      dispatch(openModal({ type: 'user-onboarding-welcome', closable: false }))
-    }
-  }
-  useEffect(() => {
-    const modalShown = localStorage.getItem('modal-shown-after-login')
-    if (modalShown !== 'true') {
-      ShowWelcomeModal()
-    }
-  }, [user.profile_url])
-
   useEffect(() => {
     if (user.id) {
       const userIsAuthorized =

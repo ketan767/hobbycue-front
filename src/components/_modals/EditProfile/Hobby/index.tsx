@@ -332,7 +332,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         selectedHobby = matchedHobby
         setErrorOrmsg('hobby added Successfully!')
       } else {
-        setShowAddHobbyModal(true)
+        setShowAddHobbyModal(true);
+        setIsChanged(false);
         return
       }
     } else {
@@ -364,6 +365,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       )
       if (!matchedGenre) {
         setShowAddGenreModal(true)
+        setIsChanged(false);
         return
       } else {
         selectedGenre = data.genre
@@ -470,6 +472,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           // setHobbyError(true)
           setSubmitBtnLoading(false)
           setShowAddHobbyModal(true)
+          setIsChanged(false);
           return
         }
       } else {
@@ -487,6 +490,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           // setErrorOrmsg('Typed Genre not found!')
           // setHobbyError(true)
           setShowAddGenreModal(true)
+          setIsChanged(false);
           setSubmitBtnLoading(false)
           return
         }
@@ -494,6 +498,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           // setErrorOrmsg("This hobby doesn't contain this genre")
           // setHobbyError(true)
           setShowAddGenreModal(true)
+          setIsChanged(false);
           setSubmitBtnLoading(false)
           return
         }
@@ -763,7 +768,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     }
   }, [])
 
-  console.log({ data })
+  console.log({ data,isChanged })
 
   if (showAddHobbyModal) {
     return (

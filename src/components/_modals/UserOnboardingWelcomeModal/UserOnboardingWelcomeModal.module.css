@@ -57,7 +57,7 @@
  
 }
 .inputField {
-  /* width: 400px; */
+  width: 400px;
 }
 .inputField::placeholder {
   font-family: 'Poppins';
@@ -101,7 +101,7 @@
 .search-wrapper > div:last-child > .search-content {
   position: absolute;
   top: 0.5rem;
-  left: 13rem;
+  left: 23rem;
   width: 17rem;
 }
 .search-content > svg {

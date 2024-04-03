@@ -124,10 +124,10 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
             </div>
           )}
         {!isLoggedIn && (
-          <div className={styles['no-posts-container']}>
-            <p>Login to see the posts</p>
-          </div>
-        )}
+              <div className={styles['no-posts-container']}>
+                <p className='cursor-pointer' onClick={()=>{dispatch(openModal({type:"auth",closable:true}))}}>Login to see the posts</p>
+              </div>
+            )}
         {isLoggedIn &&
           pinnedPosts.map((post: any) => {
             return (
