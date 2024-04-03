@@ -487,6 +487,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                               },
                             }))
                             dispatch(showAllPeopleTrue())
+                            setShowDropdown(null)
 
                             router.push('/search')
                           }}
@@ -515,6 +516,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                                 value: '',
                               },
                             }))
+                            setShowDropdown(null)
                             dispatch(showAllPlaceTrue())
                             router.push('/search')
                           }}
@@ -531,6 +533,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           onClick={(e) => {
                             e.preventDefault()
                             dispatch(resetSearch())
+                            setShowDropdown(null)
                             setData((prevData) => ({
                               ...prevData,
                               search: {
@@ -554,6 +557,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           onClick={(e) => {
                             e.preventDefault()
                             dispatch(resetSearch())
+                            setShowDropdown(null)
                             setData((prevData) => ({
                               ...prevData,
                               search: {
@@ -574,7 +578,10 @@ export const Navbar: React.FC<Props> = ({}) => {
                         <Link
                           href={'/search'}
                           className={styles['hobbiescategory']}
-                          onClick={showFeatureUnderDevelopment}
+                          onClick={() => {
+                            showFeatureUnderDevelopment
+                            setShowDropdown(null)
+                          }}
                         >
                           Posts - Write-ups
                         </Link>
@@ -970,10 +977,13 @@ export const Navbar: React.FC<Props> = ({}) => {
                         placeholder="Search here..."
                         size="small"
                         autoFocus
-                        onBlur={() => {if(!isMobile)setIsSearchInputVisible(false)
-                        else{setTimeout(() => {
-                          setIsSearchInputVisible(false)
-                        }, 100);}
+                        onBlur={() => {
+                          if (!isMobile) setIsSearchInputVisible(false)
+                          else {
+                            setTimeout(() => {
+                              setIsSearchInputVisible(false)
+                            }, 100)
+                          }
                         }}
                         className={styles.inputField}
                         onChange={handleInputChange}
@@ -1000,7 +1010,10 @@ export const Navbar: React.FC<Props> = ({}) => {
                         }}
                         InputLabelProps={{ shrink: false }}
                       />
-                      <button type="submit" className={styles['search-icon-container']}>
+                      <button
+                        type="submit"
+                        className={styles['search-icon-container']}
+                      >
                         {/* Search Icon */}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -1018,8 +1031,20 @@ export const Navbar: React.FC<Props> = ({}) => {
                     </div>
                   </form>
                 ) : (
-                  <li className={data.search.value.length>0?styles['topbar-search-box']:''}>
-                    {data.search.value.length>0&& <input type="text" value={data.search.value} onChange={handleInputChange} />}
+                  <li
+                    className={
+                      data.search.value.length > 0
+                        ? styles['topbar-search-box']
+                        : ''
+                    }
+                  >
+                    {data.search.value.length > 0 && (
+                      <input
+                        type="text"
+                        value={data.search.value}
+                        onChange={handleInputChange}
+                      />
+                    )}
                     <Image
                       src={Search}
                       alt="search"
