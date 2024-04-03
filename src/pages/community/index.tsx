@@ -2,8 +2,10 @@ import PostCard from '@/components/PostCard/PostCard'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
 import { withAuth } from '@/navigation/withAuth'
+import { openModal } from '@/redux/slices/modal'
 import { updateLoading, updatePosts } from '@/redux/slices/post'
 import { RootState } from '@/redux/store'
+import { getMyProfileDetail } from '@/services/user.service'
 import styles from '@/styles/Community.module.css'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
@@ -12,10 +14,26 @@ import { useDispatch, useSelector } from 'react-redux'
 type Props = {}
 
 const CommunityHome: React.FC<Props> = ({}) => {
-  const { activeProfile } = useSelector((state: RootState) => state.user)
+  const { activeProfile, user } = useSelector((state: RootState) => state.user)
   const { allPosts, loading } = useSelector((state: RootState) => state.post)
   const router = useRouter()
   const dispatch = useDispatch()
+
+  const ShowWelcomeModal = async () => {
+    const { err: error, res: response } = await getMyProfileDetail()
+    if (
+      response?.data?.data?.user?.show_welcome &&
+      response?.data?.data.user.is_onboarded
+    ) {
+      dispatch(openModal({ type: 'user-onboarding-welcome', closable: false }))
+    }
+  }
+  useEffect(() => {
+    const modalShown = localStorage.getItem('modal-shown-after-login')
+    if (modalShown !== 'true') {
+      ShowWelcomeModal()
+    }
+  }, [user.profile_url])
 
   return (
     <>

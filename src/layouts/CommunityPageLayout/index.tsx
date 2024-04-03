@@ -92,7 +92,7 @@ const CommunityLayout: React.FC<Props> = ({
   const { showPageLoader } = useSelector((state: RootState) => state.site)
   const router = useRouter()
 
-  const toggleSeeMore = () => setSeeMoreHobby(!seeMoreHobby)
+  const toggleSeeMore = () => {setSeeMoreHobby(!seeMoreHobby);dispatch(setFilters({seeMoreHobbies:!seeMoreHobby}))}
   // const getPost = async () => {
   //   const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
   //   activeProfile?.data?._hobbies.forEach((item: any) => {
@@ -356,6 +356,10 @@ const CommunityLayout: React.FC<Props> = ({
     setSelectedHobby(filters.hobby);
     setSelectedLocation(filters.location??'');
   },[filters.genre, filters.hobby, filters.location])
+
+  useEffect(()=>{
+    setSeeMoreHobby(filters.seeMoreHobbies)
+  },[filters.seeMoreHobbies])
 
   // useEffect(() => {
   //   let tempLocations: any = []
