@@ -227,7 +227,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
       }
     } else {
       router.push(
-        `/page/${router.query.profile_url}/${tab !== 'home' ? tab : ''}`,
+        `/profile/${router.query.profile_url}/${tab !== 'home' ? tab : ''}`,
       )
     }
   }
