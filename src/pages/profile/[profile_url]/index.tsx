@@ -53,10 +53,10 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
   const [displayAbout, setDisplayAbout] = useState(false)
   const [displayOther, setDisplayOther] = useState(false)
 
-  const [hobbyError,setHobbyError] = useState(false);
-  const [titleError,setTitleError] = useState(false);
-  const [locationError,setLocationError] = useState(false);
-  const [contactError,setContactError] = useState(false);
+  const [hobbyError, setHobbyError] = useState(false)
+  const [titleError, setTitleError] = useState(false)
+  const [locationError, setLocationError] = useState(false)
+  const [contactError, setContactError] = useState(false)
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -183,8 +183,8 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
   }, [user._id, data.pageData, router])
 
   const navigationTabs = (tab: string) => {
-    let hasError = false;
-      console.log({hobbies:data.pageData._hobbies})
+    let hasError = false
+    console.log({ hobbies: data.pageData._hobbies })
 
     if (profileLayoutMode === 'edit') {
       setHobbyError(false)
@@ -194,25 +194,29 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
         setHobbyError(true)
         hasError = true
       }
-      if (!data.pageData.primary_address || !data.pageData.primary_address.city) {
+      if (
+        !data.pageData.primary_address ||
+        !data.pageData.primary_address.city
+      ) {
         setLocationError(true)
         hasError = true
       }
-      if(!data.pageData.full_name||data.pageData.full_name===''){
+      if (!data.pageData.full_name || data.pageData.full_name === '') {
         setTitleError(true)
         hasError = true
       }
-      if(!data.pageData.website &&
+      if (
+        !data.pageData.website &&
         !data.pageData.public_email &&
         !data.pageData.whatsapp_number.number &&
-        !data.pageData.phone.number)
-        {
-          setContactError(true)
-          hasError = true
-        }
+        !data.pageData.phone.number
+      ) {
+        setContactError(true)
+        hasError = true
+      }
       if (!hasError) {
         router.push(
-          `/page/${router.query.profile_url}/${tab !== 'home' ? tab : ''}`,
+          `/profile/${router.query.profile_url}/${tab !== 'home' ? tab : ''}`,
         )
       } else {
         setSnackbar({
@@ -222,47 +226,54 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
         })
       }
     } else {
-      router.push(`/page/${router.query.profile_url}/${tab !== 'home' ? tab : ''}`)
+      router.push(
+        `/page/${router.query.profile_url}/${tab !== 'home' ? tab : ''}`,
+      )
     }
   }
   const noDataChecker = () => {
-    let hasError = false;
-    console.log({hobbies:data.pageData._hobbies})
+    let hasError = false
+    console.log({ hobbies: data.pageData._hobbies })
 
-  if (profileLayoutMode === 'edit') {
-    setHobbyError(false)
-    setLocationError(false)
-    setTitleError(false)
-    if (data.pageData._hobbies.length === 0) {
-      setHobbyError(true)
-      hasError = true
-    }
-    if (!data.pageData.primary_address || !data.pageData.primary_address.city) {
-      setLocationError(true)
-      hasError = true
-    }
-    if(!data.pageData.full_name||data.pageData.full_name===''){
-      setTitleError(true)
-      hasError = true
-    }
-    if(!data.pageData.website &&
-      !data.pageData.public_email &&
-      !data.pageData.whatsapp_number.number &&
-      !data.pageData.phone.number)
-      {
+    if (profileLayoutMode === 'edit') {
+      setHobbyError(false)
+      setLocationError(false)
+      setTitleError(false)
+      if (data.pageData._hobbies.length === 0) {
+        setHobbyError(true)
+        hasError = true
+      }
+      if (
+        !data.pageData.primary_address ||
+        !data.pageData.primary_address.city
+      ) {
+        setLocationError(true)
+        hasError = true
+      }
+      if (!data.pageData.full_name || data.pageData.full_name === '') {
+        setTitleError(true)
+        hasError = true
+      }
+      if (
+        !data.pageData.website &&
+        !data.pageData.public_email &&
+        !data.pageData.whatsapp_number.number &&
+        !data.pageData.phone.number
+      ) {
         setContactError(true)
         hasError = true
       }
-    if (hasError) {
-      setSnackbar({
-        display: true,
-        type: 'warning',
-        message: 'Fill up the mandatory fields.',
-      })
+      if (hasError) {
+        setSnackbar({
+          display: true,
+          type: 'warning',
+          message: 'Fill up the mandatory fields.',
+        })
+      }
     }
+    return hasError
   }
-    return hasError}
-console.log({pageData:data.pageData})
+  console.log({ pageData: data.pageData })
   // if(!user.is_onboarded && pageData?.email!==user?.email) {return(<ErrorPage/>)}
   return (
     <>
@@ -292,10 +303,16 @@ console.log({pageData:data.pageData})
 
               <div className={styles['display-mobile']}>
                 {/* User Locations */}
-                <ProfileAddressSide addressError={locationError} data={pageData} />
+                <ProfileAddressSide
+                  addressError={locationError}
+                  data={pageData}
+                />
 
                 {/* User Contact Details */}
-                <ProfileContactSide contactError={contactError} data={pageData} />
+                <ProfileContactSide
+                  contactError={contactError}
+                  data={pageData}
+                />
                 <ProfileSocialMediaSide data={pageData} />
               </div>
             </aside>
@@ -422,7 +439,10 @@ console.log({pageData:data.pageData})
 
             <aside className={styles['display-desktop']}>
               {/* User Locations */}
-              <ProfileAddressSide addressError={locationError} data={pageData} />
+              <ProfileAddressSide
+                addressError={locationError}
+                data={pageData}
+              />
 
               {/* User Contact Details */}
               <ProfileContactSide contactError={contactError} data={pageData} />
@@ -430,7 +450,10 @@ console.log({pageData:data.pageData})
             </aside>
 
             <div className={styles['nav-mobile']}>
-              <ProfileNavigationLinks navigationTabs={navigationTabs} activeTab={'home'} />
+              <ProfileNavigationLinks
+                navigationTabs={navigationTabs}
+                activeTab={'home'}
+              />
             </div>
             {/* About for mobile view */}
             <div className={styles['display-mobile']}>
