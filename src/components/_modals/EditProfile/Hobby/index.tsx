@@ -332,8 +332,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         selectedHobby = matchedHobby
         setErrorOrmsg('hobby added Successfully!')
       } else {
-        setShowAddHobbyModal(true);
-        setIsChanged(false);
+        setShowAddHobbyModal(true)
+        setIsChanged(false)
         return
       }
     } else {
@@ -365,7 +365,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       )
       if (!matchedGenre) {
         setShowAddGenreModal(true)
-        setIsChanged(false);
+        setIsChanged(false)
         return
       } else {
         selectedGenre = data.genre
@@ -472,7 +472,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           // setHobbyError(true)
           setSubmitBtnLoading(false)
           setShowAddHobbyModal(true)
-          setIsChanged(false);
+          setIsChanged(false)
           return
         }
       } else {
@@ -490,7 +490,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           // setErrorOrmsg('Typed Genre not found!')
           // setHobbyError(true)
           setShowAddGenreModal(true)
-          setIsChanged(false);
+          setIsChanged(false)
           setSubmitBtnLoading(false)
           return
         }
@@ -498,7 +498,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           // setErrorOrmsg("This hobby doesn't contain this genre")
           // setHobbyError(true)
           setShowAddGenreModal(true)
-          setIsChanged(false);
+          setIsChanged(false)
           setSubmitBtnLoading(false)
           return
         }
@@ -553,7 +553,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         if (error) return console.log(error)
         setAddHobbyBtnLoading(false)
         setSubmitBtnLoading(false)
-
+        dispatch(updateUser(response?.data.data.user))
         if (response?.data.success) {
           if (onComplete !== undefined) {
             isOnboarded = true
@@ -562,12 +562,15 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
             setSubmitBtnLoading(false)
             return
           }
-          dispatch(updateUser(response?.data.data.user))
-          handleClose()
-          window.location.reload()
-          setAddHobbyBtnLoading(false)
-          setSubmitBtnLoading(false)
-          return
+          if (!user.is_onboarded) {
+            dispatch(closeModal())
+            await CheckIsOnboarded()
+            return
+          } else {
+            window.location.reload()
+            dispatch(closeModal())
+            return
+          }
         }
       })
     }
@@ -578,11 +581,14 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       searchref.current?.focus()
       return
     }
-    if (onComplete !== undefined) {
-      onComplete()
+    if (!user.is_onboarded) {
+      dispatch(closeModal())
+      await CheckIsOnboarded()
+      return
     } else {
       window.location.reload()
       dispatch(closeModal())
+      return
     }
   }
 
@@ -768,7 +774,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     }
   }, [])
 
-  console.log({ data,isChanged })
+  console.log({ data, isChanged })
 
   if (showAddHobbyModal) {
     return (

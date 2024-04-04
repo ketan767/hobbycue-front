@@ -33,11 +33,15 @@ import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   data: ProfilePageData['pageData']
-  titleError?:boolean
-  noDataChecker?: ()=> boolean
+  titleError?: boolean
+  noDataChecker?: () => boolean
 }
 
-const ProfileHeader: React.FC<Props> = ({ data, titleError, noDataChecker }) => {
+const ProfileHeader: React.FC<Props> = ({
+  data,
+  titleError,
+  noDataChecker,
+}) => {
   const router = useRouter()
   const dispatch = useDispatch()
   const [open, setOpen] = useState(false)
@@ -212,8 +216,8 @@ const ProfileHeader: React.FC<Props> = ({ data, titleError, noDataChecker }) => 
       dispatch(openModal({ type: 'auth', closable: true }))
       return
     }
-    if(noDataChecker?.()===true){
-      return;
+    if (noDataChecker?.() === true) {
+      return
     }
     if (isLoggedIn) {
       dispatch(
@@ -238,8 +242,8 @@ const ProfileHeader: React.FC<Props> = ({ data, titleError, noDataChecker }) => 
       dispatch(openModal({ type: 'auth', closable: true }))
       return
     }
-    if(noDataChecker?.()===true){
-      return;
+    if (noDataChecker?.() === true) {
+      return
     }
     dispatch(updateShareUrl(window.location.href))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
@@ -323,12 +327,12 @@ const ProfileHeader: React.FC<Props> = ({ data, titleError, noDataChecker }) => 
                   className={`${styles['name']} ${
                     eliipsis.name ? styles['text-ellipsis-mobile'] : ''
                   }
-                  ${titleError===true?styles['error-name']:''}
+                  ${titleError === true ? styles['error-name'] : ''}
                   `}
                   ref={nameRef2}
                 >
                   {data.full_name}
-                  {titleError===true?"Title of the Listing Page*":""}
+                  {titleError === true ? 'Full Name of Profile*' : ''}
                 </h1>
                 {profileLayoutMode === 'edit' && (
                   <Image
@@ -395,17 +399,17 @@ const ProfileHeader: React.FC<Props> = ({ data, titleError, noDataChecker }) => 
             </div>
             <div className={styles['name-container']}>
               <div>
-                <div className={styles['profile-name']}> 
+                <div className={styles['profile-name']}>
                   <h1
                     className={`${styles['name']} ${
                       eliipsis.name ? styles['text-ellipsis'] : ''
                     }
-                    ${titleError===true?styles['error-name']:''}
+                    ${titleError === true ? styles['error-name'] : ''}
                     `}
                     ref={nameRef1}
                   >
                     {data.full_name}
-                    {titleError===true?"Title of the Listing Page*":""}
+                    {titleError === true ? 'Full Name of Profile*' : ''}
                   </h1>
                   {profileLayoutMode === 'edit' && (
                     <Image
