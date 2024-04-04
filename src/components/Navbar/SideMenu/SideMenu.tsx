@@ -279,7 +279,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                             break
                           case 'Posts - Write-ups':
                             showFeatureUnderDevelopment()
-                            handleClose()
+                            handleClose() // Move handleClose() outside the switch case to ensure it's always called
                             break
                           default:
                             break

@@ -575,8 +575,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                     </section>
                     <section className={styles['list']}>
                       <h4>
-                        <Link
-                          href={'/search'}
+                        <a
                           className={styles['hobbiescategory']}
                           onClick={() => {
                             showFeatureUnderDevelopment()
@@ -584,7 +583,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           }}
                         >
                           Posts - Write-ups
-                        </Link>
+                        </a>
                       </h4>
                     </section>
                   </div>
