@@ -283,14 +283,24 @@ const ModalManager: React.FC = () => {
             dispatch(closeModal())
           }
         }
-      }else{
-        if(activeModal==='listing-hobby-edit'||activeModal==='profile-hobby-edit'){
-          setShowAddHobbyModal(false);
-          setShowAddGenreModal(false);
+      } else {
+        if (
+          activeModal === 'listing-hobby-edit' ||
+          activeModal === 'profile-hobby-edit'
+        ) {
+          setShowAddHobbyModal(false)
+          setShowAddGenreModal(false)
         }
       }
     },
-    [hasChanges, confirmationModal, dispatch, activeModal, showAddGenreModal, showAddHobbyModal],
+    [
+      hasChanges,
+      confirmationModal,
+      dispatch,
+      activeModal,
+      showAddGenreModal,
+      showAddHobbyModal,
+    ],
   )
 
   useEffect(() => {
@@ -309,16 +319,16 @@ const ModalManager: React.FC = () => {
         handleClose()
         setCloseIconClicked((prev) => !prev)
       }
-    }else{
-      if(
-        mainRef.current &&
-        !mainRef.current.contains(event.target as Node)
-        ){
-          if(activeModal==='listing-hobby-edit'||activeModal==='profile-hobby-edit'){
-            setShowAddGenreModal(false);
-            setShowAddHobbyModal(false);
-          }
+    } else {
+      if (mainRef.current && !mainRef.current.contains(event.target as Node)) {
+        if (
+          activeModal === 'listing-hobby-edit' ||
+          activeModal === 'profile-hobby-edit'
+        ) {
+          setShowAddGenreModal(false)
+          setShowAddHobbyModal(false)
         }
+      }
     }
   }
   const props = {
