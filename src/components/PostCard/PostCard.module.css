@@ -261,9 +261,7 @@
   align-items: center;
   position: relative;
 }
-.postMetadata a{
-  display: block;
-}
+
 .metaImgContainer {
   display: flex;
   align-self: stretch;
@@ -271,7 +269,8 @@
   max-height: 178px;
 }
 .metaImgContainer img {
-  width: 100%;
+  width: 195px;
+  
   height: 100%;
   object-fit: cover;
 }
@@ -297,9 +296,12 @@
   -webkit-line-clamp: 2; /* Limit the number of lines */
   -webkit-box-orient: vertical; /* Set the orientation to vertical */
   overflow: hidden;
+  max-width: 225px;
 }
 .contentUrl {
+  display: flex;
   font-size: 12px;
+  
   font-family: Poppins;
   font-weight: 500;
   line-height: normal;
@@ -310,7 +312,7 @@
   white-space: nowrap; /* Prevent text from wrapping */
   overflow: hidden; /* Hide any overflow */
   text-overflow: ellipsis;
-  max-width: 254px;
+  max-width: 200px;
 }
 .meta-author {
   font-size: 12px;

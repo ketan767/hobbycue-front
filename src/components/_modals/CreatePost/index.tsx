@@ -329,7 +329,7 @@ export const CreatePost: React.FC<Props> = ({
     }
     const jsonData: any = {
       hobbyId: data.hobby,
-      genreId: data.genre ? data.genre : '',
+
       content: DOMPurify.sanitize(data.content),
       visibility: data.visibility,
       media:
@@ -337,6 +337,10 @@ export const CreatePost: React.FC<Props> = ({
       has_link: hasLink,
       video_url: data.video_url ? data.video_url : null,
     }
+    if (typeof data.genre === 'string' && data.genre !== 'undefined') {
+      jsonData.genreId = data.genre
+    }
+
     console.log('jsonData', jsonData.hobbyId)
     console.log('jsonData genreId', jsonData.genreId)
     setSubmitBtnLoading(true)
@@ -651,17 +655,17 @@ export const CreatePost: React.FC<Props> = ({
               >
                 <label>Select Hobby</label>
                 <Select
-                  value={`${data.hobby}${data.genre&&"-"}${data.genre??""}`}
+                  value={`${data.hobby}${data.genre && '-'}${data.genre ?? ''}`}
                   onChange={(e) => {
-                    console.warn({e})
-                    let val = e.target.value 
+                    console.warn({ e })
+                    let val = e.target.value
                     // const selected = user._hobbies.find(
                     //   (item: any) => item.hobby?._id === val,
                     // )
                     setData((prev: any) => ({
                       ...prev,
-                      hobby: val.split("-")[0]??null,
-                      genre: val.split("-")[1]??null
+                      hobby: val.split('-')[0] ?? null,
+                      genre: val.split('-')[1] ?? null,
                     }))
                   }}
                   displayEmpty
@@ -672,8 +676,11 @@ export const CreatePost: React.FC<Props> = ({
                     return (
                       <MenuItem
                         key={idx}
-                        value={item.hobby?._id+"-"+item?.genre?._id}
-                        selected={item.hobby?._id === data.hobby && item?.genre?._id===data.genre}
+                        value={item.hobby?._id + '-' + item?.genre?._id ?? ''}
+                        selected={
+                          item.hobby?._id === data.hobby &&
+                          (item.genre ? item.genre?._id === data.genre : false)
+                        }
                       >
                         <p>
                           {item.hobby?.display
