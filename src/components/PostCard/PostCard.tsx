@@ -20,7 +20,7 @@ import CustomizedTooltips from '../Tooltip/ToolTip'
 import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import { RootState } from '@/redux/store'
 import { setActivePost } from '@/redux/slices/post'
-
+import defaultImg from '@/assets/svg/default-images/default-user-icon.svg'
 type Props = {
   postData: any
   fromProfile?: boolean
@@ -70,6 +70,11 @@ const PostCard: React.FC<Props> = (props) => {
     icon: '',
     url: '',
   })
+
+  const domain = metaData?.url
+    ? new URL(metaData.url).hostname.replace('www.', '')
+    : ''
+  const displayDomain = domain ? domain.split('.').slice(-2).join('.') : ''
   useCheckIfClickedOutside(optionRef, () => setOptionsActive(false))
 
   const modalRef = useRef(null)
@@ -341,7 +346,11 @@ const PostCard: React.FC<Props> = (props) => {
             <div className={styles.postMetadata}>
               <a href={url} target="_blank" className={styles.metaImgContainer}>
                 <img
-                  src={metaData?.image ? metaData.image : metaData?.icon}
+                  src={
+                    (typeof metaData?.image === 'string' && metaData.image) ||
+                    (typeof metaData?.icon === 'string' && metaData.icon) ||
+                    defaultImg
+                  }
                   alt="link-image"
                   width={200}
                   height={130}
@@ -354,7 +363,7 @@ const PostCard: React.FC<Props> = (props) => {
                 </a>
                 <a href={url} target="_blank" className={styles.contentUrl}>
                   {' '}
-                  {metaData?.url}{' '}
+                  {displayDomain}{' '}
                 </a>
                 <div className={styles['meta-author']}>
                   <p className={styles['author-name']}>
@@ -387,7 +396,12 @@ const PostCard: React.FC<Props> = (props) => {
                   {props?.currentSection === 'links' && (
                     <div className={styles['comment-and-count']}>
                       <svg
-                        onClick={() => setShowComments(!showComments)}
+                        onClick={() => {
+                          dispatch(
+                            setActivePost({ ...postData, comments: comments }),
+                          )
+                          dispatch(openModal({ type: 'post', closable: false }))
+                        }}
                         xmlns="http://www.w3.org/2000/svg"
                         width="18"
                         height="18"
@@ -440,7 +454,7 @@ const PostCard: React.FC<Props> = (props) => {
         {/* Card Footer */}
         {props.currentSection === 'links' ? (
           <div className={styles['metadata-footer']}>
-            <Link href={metaData?.url ?? ''} target="_blank">
+            <Link href={url} target="_blank">
               {url}
             </Link>
             {showComments && <PostComments data={postData} styles={styles} />}
