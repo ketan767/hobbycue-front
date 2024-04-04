@@ -9,15 +9,17 @@ import { useSelector } from 'react-redux'
 type Props = {
   type: String
   value: String
-  currentValue: String
+  currentValue?: String
+  selected?:boolean
   display: String
   options: any
   onChange: any
   _id: any
+  item?:any
 }
 
 export const DropdownOption: React.FC<Props> = (props) => {
-  const { value, type, display, options, onChange, currentValue, _id } = props
+  const { value, type, display, options, onChange, currentValue, _id, selected, item } = props
   const { activeProfile, user } = useSelector((state: any) => state.user)
 
   const [active, setActive] = useState(
@@ -27,6 +29,21 @@ export const DropdownOption: React.FC<Props> = (props) => {
   const toggle = (e: any) => {
     e.stopPropagation()
     setActive(!active)
+  }
+
+  if(type==='hobby'){
+    return (
+      <div className={styles['value-container']+" "+styles['no-border']}>
+        <p
+          className={`${styles['dropdown-value']} ${
+            selected ? styles['dropdown-value-active'] : ''
+          }`}
+          onClick={() => onChange(item)}
+        >
+          {display}
+        </p>
+      </div>
+    )
   }
 
   if (type === 'text') {

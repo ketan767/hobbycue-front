@@ -948,7 +948,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                 className={`${styles['mobile-search-input']} ${
                   isSearchInputVisible
                     ? styles['mobile-search-input-visible']
-                    : ''
+                    : styles['left-0']
                 }`}
               >
                 {isSearchInputVisible ? (
@@ -1032,6 +1032,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                   </form>
                 ) : (
                   <li
+                      onClick={toggleSearchInput}
                     className={
                       data.search.value.length > 0
                         ? styles['topbar-search-box']
@@ -1042,13 +1043,11 @@ export const Navbar: React.FC<Props> = ({}) => {
                       <input
                         type="text"
                         value={data.search.value}
-                        onChange={handleInputChange}
                       />
                     )}
                     <Image
                       src={Search}
                       alt="search"
-                      onClick={toggleSearchInput}
                     />
                   </li>
                 )}

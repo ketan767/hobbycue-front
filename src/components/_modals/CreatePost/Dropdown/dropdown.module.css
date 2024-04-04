@@ -123,3 +123,7 @@ p.dropdown-value-active {
     width: auto;
   }
 }
+
+.no-border{
+  border: none !important;
+}
