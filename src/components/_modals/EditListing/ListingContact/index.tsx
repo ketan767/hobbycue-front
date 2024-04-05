@@ -215,11 +215,13 @@ const ListingContactEditModal: React.FC<Props> = ({
     setSelectedCountryCode(countryData[id]?.phonePrefix)
   }
   const handleSubmit = async () => {
+    let hasError = false;
     console.log(data.website)
     if (!data.whatsapp_number.number) {
       if (!data.phone.number && !data.public_email.value) {
         emailRef.current?.focus()
-        return setData((prev) => {
+        hasError = true;
+        setData((prev) => {
           return {
             ...prev,
             phone: {
@@ -237,10 +239,12 @@ const ListingContactEditModal: React.FC<Props> = ({
     if (data.phone.number) {
       if (
         !containOnlyNumbers(data.phone.number.toString().trim()) ||
-        data.phone.number.toString().trim().length !== 10
+        data.phone.number.toString().replace(/\s/g, "").length>11 ||
+        data.phone.number.toString().replace(/\s/g, "").length<7
       ) {
         phoneRef.current?.focus()
-        return setData((prev) => {
+        hasError = true;
+        setData((prev) => {
           return {
             ...prev,
             phone: { ...prev.phone, error: 'Enter a valid phone number' },
@@ -251,10 +255,12 @@ const ListingContactEditModal: React.FC<Props> = ({
     if (data.whatsapp_number.number) {
       if (
         !containOnlyNumbers(data.whatsapp_number.number.toString().trim()) ||
-        data.whatsapp_number.number.toString().trim().length !== 10
+        data.whatsapp_number.number.toString().replace(/\s/g, "").length>11 ||
+        data.whatsapp_number.number.toString().replace(/\s/g, "").length<7
       ) {
         WhtphoneRef.current?.focus()
-        return setData((prev) => {
+        hasError = true;
+        setData((prev) => {
           return {
             ...prev,
             whatsapp_number: {
@@ -271,7 +277,8 @@ const ListingContactEditModal: React.FC<Props> = ({
         !emailRegex.test(data.public_email.value.trim())
       ) {
         emailRef.current?.focus()
-        return setData((prev) => ({
+        hasError = true;
+        setData((prev) => ({
           ...prev,
           public_email: {
             ...prev.public_email,
@@ -283,7 +290,8 @@ const ListingContactEditModal: React.FC<Props> = ({
     if (data.website.value && data.website.value !== '') {
       websiteRef.current?.focus()
       if (!validateUrl(data.website.value)) {
-        return setData((prev) => {
+        hasError = true;
+        setData((prev) => {
           return {
             ...prev,
             website: {
@@ -294,15 +302,18 @@ const ListingContactEditModal: React.FC<Props> = ({
         })
       }
     }
+    if(hasError===true){
+      return;
+    }
     const jsonData = {
       phone: {
-        number: data.phone.number,
+        number: data.phone.number.replace(/\s/g, ""),
         prefix: selectedCountryCode,
       },
       public_email: data.public_email.value,
       website: data.website.value,
       whatsapp_number: {
-        number: data.whatsapp_number.number,
+        number: data.whatsapp_number.number.replace(/\s/g, ""),
         prefix: selectedWpCountryCode,
       },
     }
@@ -564,7 +575,11 @@ const ListingContactEditModal: React.FC<Props> = ({
 
                 <p className={styles['helper-text']}>{data.phone.error}</p>
               </div>
-              <div className={styles['input-box']}>
+              <div 
+                className={`${styles['input-box']} ${
+                  data.whatsapp_number.error ? styles['input-box-error'] : ''
+                }`}
+              >
                 <label className={styles['whatsapp-label']}>
                   WhatsApp
                   {/* <CustomTooltip title="Use same">

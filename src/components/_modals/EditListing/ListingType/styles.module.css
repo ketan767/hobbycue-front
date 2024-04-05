@@ -272,6 +272,11 @@
   align-items: center;
   border-radius: 8px;
 }
+
+.select-input:focus-visible{
+  outline: 1px solid #8064a2;
+}
+
 .select-input-error {
   border:1px solid #c0504d !important;
 }

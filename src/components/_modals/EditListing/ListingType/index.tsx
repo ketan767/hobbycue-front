@@ -24,6 +24,7 @@ import { updateListingModalData } from '@/redux/slices/site'
 import { updateListing } from '@/services/listing.service'
 
 import DownArrow from '@/assets/svg/chevron-down.svg'
+import UpArrow from '@/assets/svg/chevron-up.svg'
 import TickIcon from '@/assets/svg/tick.svg'
 import CrossIcon from '@/assets/svg/cross.svg'
 import useOutsideAlerter from '@/hooks/useOutsideAlerter'
@@ -401,13 +402,19 @@ const ListingTypeEditModal: React.FC<Props> = ({
               <FormControl variant="outlined" size="small">
                 <div className={styles['select-container']} ref={dropdownRef}>
                   <div
+                    tabIndex={0}
                     className={`${styles['select-input']} ${
                       error ? styles['select-input-error'] : ' '
                     }`}
-                    onClick={() => setShowDropdown(true)}
+                    onClick={() => setShowDropdown((prev)=>!prev)}
+                    onKeyDown={(e)=>{
+                      if(["Enter","ArrowUp","ArrowDown"].includes(e.key)||e.key===" "){
+                        setShowDropdown(true)
+                      }
+                    }}
                   >
                     <p> Select Category </p>
-                    <Image src={DownArrow} alt="down" />
+                    <Image src={showDropdown?UpArrow:DownArrow} alt="down" />
                   </div>
                   {showDropdown && (
                     <div className={styles['options-container']}>
