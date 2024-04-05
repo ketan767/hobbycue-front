@@ -90,6 +90,7 @@ const CommunityLayout: React.FC<Props> = ({
 
   const hideThirdColumnTabs = ['pages', 'links', 'store', 'blogs']
   const { showPageLoader } = useSelector((state: RootState) => state.site)
+  const {refreshNum} = useSelector((state:RootState)=>state.post)
   const router = useRouter()
 
   const toggleSeeMore = () => {setSeeMoreHobby(!seeMoreHobby);dispatch(setFilters({seeMoreHobbies:!seeMoreHobby}))}
@@ -317,7 +318,7 @@ const CommunityLayout: React.FC<Props> = ({
         fetchPosts()
       }
     }
-  }, [selectedHobby, selectedLocation, activeProfile, selectedGenre])
+  }, [selectedHobby, selectedLocation, activeProfile, selectedGenre, refreshNum])
 
   useEffect(() => {
     if (selectedHobby !== '' && selectedLocation !== '') {

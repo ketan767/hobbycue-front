@@ -25,6 +25,7 @@ import InputSelect from '@/components/_formElements/Select/Select'
 import SaveModal from '../SaveModal/saveModal'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import { useRouter } from 'next/router'
+import { increaseRefreshNum } from '@/redux/slices/post'
 
 const CustomEditor = dynamic(() => import('@/components/CustomEditor'), {
   ssr: false,
@@ -354,7 +355,8 @@ export const CreatePost: React.FC<Props> = ({
       }
       if (res.data.success) {
         store.dispatch(closeModal())
-        window.location.reload()
+        // window.location.reload()
+        store.dispatch(increaseRefreshNum())
       }
       return
     }
@@ -367,7 +369,8 @@ export const CreatePost: React.FC<Props> = ({
     if (res.data.success) {
       console.log('res', res)
       store.dispatch(closeModal())
-      window.location.reload()
+      // window.location.reload()
+      store.dispatch(increaseRefreshNum())
     }
   }
 
@@ -563,6 +566,7 @@ export const CreatePost: React.FC<Props> = ({
                   value={`${data.hobby?.display ?? ''}${data.genre?.display ? '-' : ''}${
                     data.genre?.display ?? ''
                   }`}
+                  selectText='All Hobbies'
                   onChange={(e: any) => {
                     
                   }}

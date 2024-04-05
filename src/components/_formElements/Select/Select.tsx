@@ -11,6 +11,7 @@ type Props = {
   value: any
   children: any
   className?: any
+  selectText?:string
 }
 
 const InputSelect: React.FC<Props> = ({
@@ -19,6 +20,7 @@ const InputSelect: React.FC<Props> = ({
   value,
   children,
   className,
+  selectText
 }) => {
   const [active, setactive] = useState(false)
   const toggle = () => setactive(!active)
@@ -52,7 +54,7 @@ const InputSelect: React.FC<Props> = ({
   return (
     <div className={`${styles.container} ${className ? className : ''}`}>
       <header className={styles.header} onClick={handleHeaderClick}>
-        <p>{value ? value : 'Select...'}</p>
+        <p>{value ? value : selectText??'Select...'}</p>
         {/* <Image src={ChevronDown} alt="arrow" /> */}
         <svg
           width="16"

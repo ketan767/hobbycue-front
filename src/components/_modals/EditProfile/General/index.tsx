@@ -128,24 +128,28 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     (window.location.port ? ':' + window.location.port : '')
 
   const handleSubmit = async () => {
+    let hasErrors = false;
     if (isEmptyField(data.full_name) || !data.full_name) {
       fullNameRef.current?.focus()
-      return setInputErrs((prev) => {
+      setInputErrs((prev) => {
         return { ...prev, full_name: 'This field is required!' }
       })
+      hasErrors = true;
     }
 
     if (!data.display_name || data.display_name === '') {
       displayNameRef.current?.focus()
-      return setInputErrs((prev) => {
+      setInputErrs((prev) => {
         return { ...prev, display_name: 'This field is required!' }
       })
+      hasErrors = true;
     }
     if (isEmptyField(data.profile_url) || !data.profile_url) {
       profileUrlRef.current?.focus()
-      return setInputErrs((prev) => {
+      setInputErrs((prev) => {
         return { ...prev, profile_url: 'This field is required!' }
       })
+      hasErrors = true;
     }
     if (data.year_of_birth && data.year_of_birth !== '') {
       if (containOnlyNumbers(data?.year_of_birth)) {
@@ -153,28 +157,35 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
         dobRef.current?.focus()
         if (check !== false) {
           if (check >= 100) {
-            return setInputErrs((prev) => {
+            setInputErrs((prev) => {
               return { ...prev, year_of_birth: 'Maximum age: 100' }
             })
+            hasErrors = true;
           }
 
           if (check < 13) {
-            return setInputErrs((prev) => {
+            setInputErrs((prev) => {
               return { ...prev, year_of_birth: 'Minimum age is 13' }
             })
+            return;
           }
         } else {
-          return setInputErrs((prev) => {
+          setInputErrs((prev) => {
             return { ...prev, year_of_birth: 'Enter a valid year' }
           })
+          hasErrors = true;
         }
       } else {
-        return setInputErrs((prev) => {
+        setInputErrs((prev) => {
           return { ...prev, year_of_birth: 'Enter a valid year' }
         })
+        hasErrors = true;
       }
     }
 
+    if(hasErrors===true){
+      return;
+    }
     setSubmitBtnLoading(true)
     const newOnboardingStep =
       Number(user?.onboarding_step) > 0 ? user?.onboarding_step : '1'

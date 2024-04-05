@@ -29,7 +29,7 @@ import TripAdvisorIcon from '@/assets/svg/social-media/tripadvisor.svg'
 import UltimateGuitarIcon from '@/assets/svg/social-media/Ultimate-Guitar.svg'
 import YouTubeIcon from '@/assets/svg/social-media/youtube.svg'
 import OthersIcon from '@/assets/svg/social-media/other.svg'
-import MediumIcon from "@/assets/svg/social-media/MediumWeb.svg"
+import MediumIcon from '@/assets/svg/social-media/MediumWeb.svg'
 import TelegramIcon from '@/assets/svg/social-media/Telegram.svg'
 import SaveModal from '../../SaveModal/saveModal'
 
@@ -74,8 +74,8 @@ type SocialMediaOption =
   | 'Youtube'
   | 'SoundCloud'
   | 'Pinterest'
-  |  'Medium'
-  |  'Telegram'
+  | 'Medium'
+  | 'Telegram'
   | 'TripAdvisor'
   | 'Ultimate Guitar'
   | 'Strava'
@@ -115,8 +115,8 @@ const defaultSocialMediaURLs: Record<SocialMediaOption, string> = {
   Youtube: 'https://youtube.com/',
   SoundCloud: 'https://soundcloud.com/',
   Pinterest: 'https://pinterest.com/',
-  Medium:'https://medium.com/',
-  Telegram:'https://telegram.com/',
+  Medium: 'https://medium.com/',
+  Telegram: 'https://telegram.com/',
   TripAdvisor: 'https://tripadvisor.com/profile/',
   'Ultimate Guitar': 'https://ultimate-guitar.com/u/',
   Strava: 'https://strava.com/athletes/',
@@ -145,113 +145,125 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
     if (!user.social_media_urls) return
 
     let arr = []
-    if (user.social_media_urls?.facebook_url) {
-      arr.push({
-        socialMedia: 'Facebook',
-        url: user.social_media_urls?.facebook_url,
-      })
-    }
-    if (user.social_media_urls?.instagram_url) {
-      arr.push({
-        socialMedia: 'Instagram',
-        url: user.instagram_url,
-      })
-    }
-    if (user.social_media_urls?.twitter_url) {
-      arr.push({
-        socialMedia: 'Twitter',
-        url: user.social_media_urls?.twitter_url,
-      })
-    }
-    if (user.social_media_urls?.youtube_url) {
-      arr.push({
-        socialMedia: 'Youtube',
-        url: user.social_media_urls?.youtube_url,
-      })
-    }
-    if (user.social_media_urls?.soundcloud_url) {
-      arr.push({
-        socialMedia: 'SoundCloud',
-        url: user.social_media_urls?.soundcloud_url,
-      })
-    }
-    if (user.social_media_urls?.pinterest_url) {
-      arr.push({
-        socialMedia: 'Pinterest',
-        url: user.social_media_urls?.pinterest_url,
-      })
-    }
-    if (user.social_media_urls?.medium_url) {
-      arr.push({
-        socialMedia: 'Medium',
-        url: user.social_media_urls?.medium_url,
-      })
-    }
-    if (user.social_media_urls?.telegram_url) {
-      arr.push({
-        socialMedia: 'Telegram',
-        url: user.social_media_urls?.telegram_url,
-      })
-    }
-    if (user.social_media_urls?.tripadvisor_url) {
-      arr.push({
-        socialMedia: 'TripAdvisor',
-        url: user.social_media_urls?.tripadvisor_url,
-      })
-    }
-    if (user.social_media_urls?.ultimate_guitar_url) {
-      arr.push({
-        socialMedia: 'Ultimate Guitar',
-        url: user.social_media_urls?.ultimate_guitar_url,
-      })
-    }
-    if (user.social_media_urls?.strava_url) {
-      arr.push({
-        socialMedia: 'Strava',
-        url: user.social_media_urls?.strava_url,
-      })
-    }
-    if (user.social_media_urls?.deviantarts_url) {
-      arr.push({
-        socialMedia: 'DeviantArts',
-        url: user.social_media_urls?.deviantarts_url,
-      })
-    }
-    if (user.social_media_urls?.behance_url) {
-      arr.push({
-        socialMedia: 'Behance',
-        url: user.social_media_urls?.behance_url,
-      })
-    }
-    if (user.social_media_urls?.goodreads_url) {
-      arr.push({
-        socialMedia: 'GoodReads',
-        url: user.social_media_urls?.goodreads_url,
-      })
-    }
-    if (user.social_media_urls?.smule_url) {
-      arr.push({
-        socialMedia: 'Smule',
-        url: user.social_media_urls?.smule_url,
-      })
-    }
-    if (user.social_media_urls?.chess_url) {
-      arr.push({
-        socialMedia: 'Chess.com',
-        url: user.social_media_urls?.chess_url,
-      })
-    }
-    if (user.social_media_urls?.bgg_url) {
-      arr.push({
-        socialMedia: 'BGG',
-        url: user.social_media_urls?.bgg_url,
-      })
-    }
-    if (user.social_media_urls?.Others_url) {
-      arr.push({
-        socialMedia: 'Others',
-        url: user.social_media_urls?.Others_url,
-      })
+    const userSocialMediaUrls = user.social_media_urls
+    console.log({userSocialMediaUrls})
+    for (const key in userSocialMediaUrls) {
+      const value = userSocialMediaUrls[key]
+      if (typeof value === 'string' && value !== '') {
+        switch (true) {
+          case key.startsWith('facebook_url'):
+            arr.push({
+              socialMedia: 'Facebook',
+              url: userSocialMediaUrls[key],
+            })
+            break
+          case key.startsWith('instagram_url'):
+            arr.push({
+              socialMedia: 'Instagram',
+              url: userSocialMediaUrls[key],
+            })
+            break
+          case key.startsWith('twitter_url'):
+            arr.push({
+              socialMedia: 'Twitter',
+              url: userSocialMediaUrls[key],
+            })
+            break
+          case key.startsWith('youtube_url'):
+            arr.push({
+              socialMedia: 'Youtube',
+              url: userSocialMediaUrls[key],
+            })
+            break
+          case key.startsWith('soundcloud_url'):
+            arr.push({
+              socialMedia: 'SoundCloud',
+              url: userSocialMediaUrls[key],
+            })
+            break
+          case key.startsWith('pinterest_url'):
+            arr.push({
+              socialMedia: 'Pinterest',
+              url: userSocialMediaUrls[key],
+            })
+            break
+          case key.startsWith('medium_url'):
+            arr.push({
+              socialMedia: 'Medium',
+              url: userSocialMediaUrls[key],
+            })
+            break
+          case key.startsWith('telegram_url'):
+            arr.push({
+              socialMedia: 'Telegram',
+              url: userSocialMediaUrls[key],
+            })
+            break
+          case key.startsWith('tripadvisor_url'):
+            arr.push({
+              socialMedia: 'TripAdvisor',
+              url: userSocialMediaUrls[key],
+            })
+            break
+          case key.startsWith('ultimate_guitar_url'):
+            arr.push({
+              socialMedia: 'Ultimate Guitar',
+              url: userSocialMediaUrls[key],
+            })
+            break
+          case key.startsWith('strava_url'):
+            arr.push({
+              socialMedia: 'Strava',
+              url: userSocialMediaUrls[key],
+            })
+            break
+          case key.startsWith('deviantarts_url'):
+            arr.push({
+              socialMedia: 'DeviantArts',
+              url: userSocialMediaUrls[key],
+            })
+            break
+          case key.startsWith('behance_url'):
+            arr.push({
+              socialMedia: 'Behance',
+              url: userSocialMediaUrls[key],
+            })
+            break
+          case key.startsWith('goodreads_url'):
+            arr.push({
+              socialMedia: 'GoodReads',
+              url: userSocialMediaUrls[key],
+            })
+            break
+          case key.startsWith('smule_url'):
+            arr.push({
+              socialMedia: 'Smule',
+              url: userSocialMediaUrls[key],
+            })
+            break
+          case key.startsWith('chess_url'):
+            arr.push({
+              socialMedia: 'Chess.com',
+              url: userSocialMediaUrls[key],
+            })
+            break
+          case key.startsWith('bgg_url'):
+            arr.push({
+              socialMedia: 'BGG',
+              url: userSocialMediaUrls[key],
+            })
+            break
+          case key.startsWith('Others_url'):
+            arr.push({
+              socialMedia: 'Others',
+              url: userSocialMediaUrls[key],
+            })
+            break
+          // Add more cases for other social media URLs if needed
+          default:
+            break
+        }
+      }
     }
     if (arr.length > 0) {
       setMediaData(arr)
@@ -265,6 +277,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
       url: '',
     },
   ])
+  console.log({mediaData})
 
   const dispatch = useDispatch()
 
@@ -301,28 +314,81 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
 
   const handleSubmit = async () => {
     setSubmitBtnLoading(true)
-    let reqBody = {
-      social_media_urls: {
-        facebook_url: getValue('Facebook'),
-        instagram_url: getValue('Instagram'),
-        twitter_url: getValue('Twitter'),
-        youtube_url: getValue('Youtube'),
-        soundcloud_url: getValue('SoundCloud'),
-        pinterest_url: getValue('Pinterest'),
-        tripadvisor_url: getValue('TripAdvisor'),
-        ultimate_guitar_url: getValue('Ultimate Guitar'),
-        strava_url: getValue('Strava'),
-        deviantarts_url: getValue('DeviantArts'),
-        behance_url: getValue('Behance'),
-        goodreads_url: getValue('GoodReads'),
-        smule_url: getValue('Smule'),
-        chess_url: getValue('Chess.com'),
-        bgg_url: getValue('BGG'),
-        Others_url: getValue('Others'),
-      },
+    let reqBody: any = {};
+    let socialMediaCounts: { [key: string]: number } = {};
+    for (let i = 0; i < mediaData.length; i++) {
+      const socialMediaItem = mediaData[i];
+      const socialMedia = socialMediaItem.socialMedia;
+      const url = socialMediaItem.url;
+    
+      // Increment the count for the current social media
+      socialMediaCounts[socialMedia] = (socialMediaCounts[socialMedia] || 0) + 1;
+    
+      let key;
+      switch (socialMedia) {
+        case 'Facebook':
+          key = socialMediaCounts[socialMedia] === 1 ? 'facebook_url' : `facebook_url${socialMediaCounts[socialMedia]}`;
+          break;
+        case 'Instagram':
+          key = socialMediaCounts[socialMedia] === 1 ? 'instagram_url' : `instagram_url${socialMediaCounts[socialMedia]}`;
+          break;
+        case 'Twitter':
+          key = socialMediaCounts[socialMedia] === 1 ? 'twitter_url' : `twitter_url${socialMediaCounts[socialMedia]}`;
+          break;
+        case 'Youtube':
+          key = socialMediaCounts[socialMedia] === 1 ? 'youtube_url' : `youtube_url${socialMediaCounts[socialMedia]}`;
+          break;
+        case 'SoundCloud':
+          key = socialMediaCounts[socialMedia] === 1 ? 'soundcloud_url' : `soundcloud_url${socialMediaCounts[socialMedia]}`;
+          break;
+        case 'Pinterest':
+          key = socialMediaCounts[socialMedia] === 1 ? 'pinterest_url' : `pinterest_url${socialMediaCounts[socialMedia]}`;
+          break;
+        case 'Medium':
+          key = socialMediaCounts[socialMedia] === 1 ? 'medium_url' : `medium_url${socialMediaCounts[socialMedia]}`;
+          break;
+        case 'Telegram':
+          key = socialMediaCounts[socialMedia] === 1 ? 'telegram_url' : `telegram_url${socialMediaCounts[socialMedia]}`;
+          break;
+        case 'TripAdvisor':
+          key = socialMediaCounts[socialMedia] === 1 ? 'tripadvisor_url' : `tripadvisor_url${socialMediaCounts[socialMedia]}`;
+          break;
+        case 'Ultimate Guitar':
+          key = socialMediaCounts[socialMedia] === 1 ? 'ultimate_guitar_url' : `ultimate_guitar_url${socialMediaCounts[socialMedia]}`;
+          break;
+        case 'Strava':
+          key = socialMediaCounts[socialMedia] === 1 ? 'strava_url' : `strava_url${socialMediaCounts[socialMedia]}`;
+          break;
+        case 'DeviantArts':
+          key = socialMediaCounts[socialMedia] === 1 ? 'deviantarts_url' : `deviantarts_url${socialMediaCounts[socialMedia]}`;
+          break;
+        case 'Behance':
+          key = socialMediaCounts[socialMedia] === 1 ? 'behance_url' : `behance_url${socialMediaCounts[socialMedia]}`;
+          break;
+        case 'GoodReads':
+          key = socialMediaCounts[socialMedia] === 1 ? 'goodreads_url' : `goodreads_url${socialMediaCounts[socialMedia]}`;
+          break;
+        case 'Smule':
+          key = socialMediaCounts[socialMedia] === 1 ? 'smule_url' : `smule_url${socialMediaCounts[socialMedia]}`;
+          break;
+        case 'Chess.com':
+          key = socialMediaCounts[socialMedia] === 1 ? 'chess_url' : `chess_url${socialMediaCounts[socialMedia]}`;
+          break;
+        case 'BGG':
+          key = socialMediaCounts[socialMedia] === 1 ? 'bgg_url' : `bgg_url${socialMediaCounts[socialMedia]}`;
+          break;
+        case 'Others':
+          key = socialMediaCounts[socialMedia] === 1 ? 'Others_url' : `Others_url${socialMediaCounts[socialMedia]}`;
+          break;
+        default:
+          break;
+      }
+      
+      if(key){
+      reqBody[key] = url;
     }
-    // console.log('re', reqBody)
-    const { err, res } = await updateMyProfileDetail(reqBody)
+  }
+    const { err, res } = await updateMyProfileDetail({social_media_urls:reqBody})
 
     if (err) {
       setSubmitBtnLoading(false)
@@ -360,9 +426,6 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
       onStatusChange(changesMade)
     }
   }, [mediaData, initialData])
-
-  console.log('i', initialData)
-  console.log('m', mediaData)
   if (confirmationModal) {
     return (
       <SaveModal
