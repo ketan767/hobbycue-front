@@ -563,11 +563,21 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
             return
           }
           if (!user.is_onboarded) {
-            dispatch(closeModal())
-            await CheckIsOnboarded()
+            const { err: error, res: response } = await getMyProfileDetail()
+            if (
+              response?.data?.data?.user?.completed_onboarding_steps.length == 5
+            ) {
+              const data = { is_onboarded: true }
+              const { err, res } = await updateMyProfileDetail(data)
+              window.location.href = `/community`
+            } else {
+              dispatch(closeModal())
+              window.location.href = `/profile/${response?.data?.data?.user?.profile_url}`
+            }
             return
           } else {
             window.location.reload()
+
             dispatch(closeModal())
             return
           }
@@ -578,12 +588,20 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     if (userHobbies.length === 0 && !isOnboarded) {
       setErrorOrmsg('Add atleast one hobby!')
       setHobbyError(true)
+      setSubmitBtnLoading(false)
       searchref.current?.focus()
       return
     }
     if (!user.is_onboarded) {
-      dispatch(closeModal())
-      await CheckIsOnboarded()
+      const { err: error, res: response } = await getMyProfileDetail()
+      if (response?.data?.data?.user?.completed_onboarding_steps.length == 5) {
+        const data = { is_onboarded: true }
+        const { err, res } = await updateMyProfileDetail(data)
+        window.location.href = `/community`
+      } else {
+        dispatch(closeModal())
+        window.location.href = `/profile/${response?.data?.data?.user?.profile_url}`
+      }
       return
     } else {
       window.location.reload()
@@ -904,7 +922,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                               : hobby.level === 3
                               ? 'Advanced'
                               : ''} */}
-                            <Select 
+                            <Select
                               value={hobby?.level}
                               className={styles['hobby-dropdown']}
                               onChange={(e) => {
@@ -1104,52 +1122,52 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                         </div>
                       </td>
                       <td>
-                         <Select
-                              value={levels[data.level - 1]?.name}
-                              className={styles['hobby-dropdown']}
-                              onChange={(e) => {
-                                console.log({e})
-                                let val: any = e?.target?.value
-                                setData((prev: any) => {
-                                  return { ...prev, level: parseInt(val) }
-                                })
-                              }}
-                              sx={{
-                                boxShadow: 'none',
-                                '.MuiOutlinedInput-notchedOutline': {
-                                  border: 0,
-                                  outline: 'none',
-                                },
-                              }}
-                              displayEmpty
-                              renderValue={(selected:any) => (
-                                <div className={styles?.levelwithtext}>
-                                  <Image
-                                    alt={`hobby${selected}`}
-                                    src={levels[data.level - 1]?.src}
-                                  />
-                                  <p className={styles['render-p']}>
-                                    {levels[data.level - 1]?.name}
-                                  </p>
-                                </div>
-                              )}
+                        <Select
+                          value={levels[data.level - 1]?.name}
+                          className={styles['hobby-dropdown']}
+                          onChange={(e) => {
+                            console.log({ e })
+                            let val: any = e?.target?.value
+                            setData((prev: any) => {
+                              return { ...prev, level: parseInt(val) }
+                            })
+                          }}
+                          sx={{
+                            boxShadow: 'none',
+                            '.MuiOutlinedInput-notchedOutline': {
+                              border: 0,
+                              outline: 'none',
+                            },
+                          }}
+                          displayEmpty
+                          renderValue={(selected: any) => (
+                            <div className={styles?.levelwithtext}>
+                              <Image
+                                alt={`hobby${selected}`}
+                                src={levels[data.level - 1]?.src}
+                              />
+                              <p className={styles['render-p']}>
+                                {levels[data.level - 1]?.name}
+                              </p>
+                            </div>
+                          )}
+                        >
+                          {levels?.map((item, idx) => (
+                            <MenuItem
+                              key={idx}
+                              value={idx + 1}
+                              style={{ padding: '8px 0px' }}
                             >
-                              {levels?.map((item, idx) => (
-                                <MenuItem
-                                  key={idx}
-                                  value={idx + 1}
-                                  style={{ padding: '8px 0px' }}
-                                >
-                                  <div className={styles.levelwithtext}>
-                                    <Image
-                                      alt={`hobby${idx + 1}`}
-                                      src={item?.src}
-                                    />
-                                    <p>{item?.name}</p>
-                                  </div>
-                                </MenuItem>
-                              ))}
-                            </Select>
+                              <div className={styles.levelwithtext}>
+                                <Image
+                                  alt={`hobby${idx + 1}`}
+                                  src={item?.src}
+                                />
+                                <p>{item?.name}</p>
+                              </div>
+                            </MenuItem>
+                          ))}
+                        </Select>
                       </td>
 
                       <td>

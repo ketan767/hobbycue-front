@@ -195,7 +195,6 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     }
     if (!res?.data.success) {
       setSubmitBtnLoading(false)
-      return alert('Something went wrong!')
     }
 
     const { err: error, res: response } = await getMyProfileDetail()
