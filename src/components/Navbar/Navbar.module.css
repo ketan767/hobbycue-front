@@ -446,6 +446,11 @@
     /* transform: translateY(0); */
   }
 
+  .left-0{
+    left: 0;
+    position: absolute;
+  }
+
   .mobile-search-input-visible {
     position: fixed !important;
     inset: 0 !important;
@@ -470,6 +475,7 @@
   .topbar-search-box {
     display: flex;
     width: 202px;
+    max-width: 202px;
     padding: 6px 12px;
     justify-content: space-between;
     align-items: center;
@@ -484,6 +490,9 @@
     font-weight: 300;
     line-height: 16px;
     /* 133.333% */
+
+    position: absolute;
+    left: 63px;
   }
 
   .topbar-search-box input {

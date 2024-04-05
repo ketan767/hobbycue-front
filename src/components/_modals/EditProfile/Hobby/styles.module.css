@@ -382,6 +382,12 @@
   height: 1.875rem;
   border-radius: 8px;
 }
+.hobby-dropdown [aria-expanded="true"] ~ fieldset,
+.hobby-dropdown:focus-within fieldset{
+  border-color: rgb(127, 99, 161) !important;
+  border-width: 2px !important;
+  border-style: solid !important;
+}
 .levelwithtext {
   padding: 0px;
   color: rgba(109, 116, 122, 1);
@@ -546,7 +552,7 @@
     padding-left: var(--spacing-24);
   }
   .hobby-dropdown {
-    width: 4rem;
+    width: 4rem !important;
     background-color: #f7f5f9;
     height: 1.875rem;
   }
@@ -557,7 +563,7 @@
     display: none;
   }
   .render-p {
-    display: none;
+    display: none !important;
   }
 
   .hideActionMobile {

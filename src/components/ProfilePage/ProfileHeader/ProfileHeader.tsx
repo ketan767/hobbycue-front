@@ -453,6 +453,9 @@ const ProfileHeader: React.FC<Props> = ({
             {profileLayoutMode === 'edit' && (
               <FilledButton
                 onClick={() => {
+                  if(noDataChecker?.()===true){
+                    return;
+                  }
                   dispatch(updateListingModalData({ type: 1 }))
                   dispatch(
                     openModal({ type: 'CopyProfileDataModal', closable: true }),
