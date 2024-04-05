@@ -563,11 +563,21 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
             return
           }
           if (!user.is_onboarded) {
-            dispatch(closeModal())
-            await CheckIsOnboarded()
+            const { err: error, res: response } = await getMyProfileDetail()
+            if (
+              response?.data?.data?.user?.completed_onboarding_steps.length == 5
+            ) {
+              const data = { is_onboarded: true }
+              const { err, res } = await updateMyProfileDetail(data)
+              window.location.href = `/community`
+            } else {
+              dispatch(closeModal())
+              window.location.href = `/profile/${response?.data?.data?.user?.profile_url}`
+            }
             return
           } else {
             window.location.reload()
+
             dispatch(closeModal())
             return
           }
@@ -578,12 +588,20 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     if (userHobbies.length === 0 && !isOnboarded) {
       setErrorOrmsg('Add atleast one hobby!')
       setHobbyError(true)
+      setSubmitBtnLoading(false)
       searchref.current?.focus()
       return
     }
     if (!user.is_onboarded) {
-      dispatch(closeModal())
-      await CheckIsOnboarded()
+      const { err: error, res: response } = await getMyProfileDetail()
+      if (response?.data?.data?.user?.completed_onboarding_steps.length == 5) {
+        const data = { is_onboarded: true }
+        const { err, res } = await updateMyProfileDetail(data)
+        window.location.href = `/community`
+      } else {
+        dispatch(closeModal())
+        window.location.href = `/profile/${response?.data?.data?.user?.profile_url}`
+      }
       return
     } else {
       window.location.reload()
@@ -1104,91 +1122,52 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                         </div>
                       </td>
                       <td>
-                        {/* <FormControl
-                          variant="outlined"
-                          size="small"
-                          sx={{ width: '150px' }}
-                        >
-                          <Select
-                            className={styles['select-level-main']}
-                            value={data.level}
-                            onChange={(e) => {
-                              setData((prev: any) => {
-                                return { ...prev, level: e?.target?.value }
-                              })
-                            }}
-                            displayEmpty
-                            inputProps={{ 'aria-label': ' label' }}
-                          >
-                            <MenuItem
-                              className={styles['levelwithtext-add']}
-                              value={1}
-                            >
-                              <Image alt="hobbyOne" src={hobbyLvlOne}></Image>
-                              <span className={styles.lvltext}>Beginner</span>
-                            </MenuItem>
-                            <MenuItem
-                              value={2}
-                              className={styles['levelwithtext-add']}
-                            >
-                              <Image alt="hobbyTwo" src={hobbyLvlTwo}></Image>
-                              <span className={styles.lvltext}>
-                                Intermediate
-                              </span>
-                            </MenuItem>
-                            <MenuItem
-                              value={3}
-                              className={styles['levelwithtext-add']}
-                            >
+                        <Select
+                          value={levels[data.level - 1]?.name}
+                          className={styles['hobby-dropdown']}
+                          onChange={(e) => {
+                            console.log({ e })
+                            let val: any = e?.target?.value
+                            setData((prev: any) => {
+                              return { ...prev, level: parseInt(val) }
+                            })
+                          }}
+                          sx={{
+                            boxShadow: 'none',
+                            '.MuiOutlinedInput-notchedOutline': {
+                              border: 0,
+                              outline: 'none',
+                            },
+                          }}
+                          displayEmpty
+                          renderValue={(selected: any) => (
+                            <div className={styles?.levelwithtext}>
                               <Image
-                                alt="hobbyThree"
-                                src={hobbyLvlThree}
-                              ></Image>
-                              <span className={styles.lvltext}>Advanced</span>
-                            </MenuItem>
-                          </Select>
-                        </FormControl> */}
-                        <DropdownMenu
-                          value={
-                            <div
-                              style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                gap: '8px',
-                              }}
-                            >
-                              <Image
-                                src={levels[data.level - 1]?.src.src}
-                                width={17}
-                                height={17}
-                                alt=""
+                                alt={`hobby${selected}`}
+                                src={levels[data.level - 1]?.src}
                               />
-                              <p
-                                style={{
-                                  fontWeight: '600',
-                                  color: '#6d747a',
-                                  fontSize: '14px',
-                                }}
-                                className={`${styles['display-desktop']} ${styles['new-hobby-level-dropdown']}`}
-                              >
+                              <p className={styles['render-p']}>
                                 {levels[data.level - 1]?.name}
                               </p>
                             </div>
-                          }
-                          options={levels.map((item) => item.name)}
-                          iconOptions={levels.map((item) => item.src?.src)}
-                          onOptionClick={(e: any) => {
-                            setData((prev: any) => {
-                              return { ...prev, level: parseInt(e?.id) + 1 }
-                            })
-                          }}
-                          dropdownHeaderClass={
-                            styles['new-hobby-level-dropdown-header']
-                          }
-                          valueIndex={data?.level - 1}
-                          dropdownIcon
-                        />
+                          )}
+                        >
+                          {levels?.map((item, idx) => (
+                            <MenuItem
+                              key={idx}
+                              value={idx + 1}
+                              style={{ padding: '8px 0px' }}
+                            >
+                              <div className={styles.levelwithtext}>
+                                <Image
+                                  alt={`hobby${idx + 1}`}
+                                  src={item?.src}
+                                />
+                                <p>{item?.name}</p>
+                              </div>
+                            </MenuItem>
+                          ))}
+                        </Select>
                       </td>
 
                       <td>

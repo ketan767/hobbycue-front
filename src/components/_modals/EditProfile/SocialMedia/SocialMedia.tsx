@@ -29,6 +29,8 @@ import TripAdvisorIcon from '@/assets/svg/social-media/tripadvisor.svg'
 import UltimateGuitarIcon from '@/assets/svg/social-media/Ultimate-Guitar.svg'
 import YouTubeIcon from '@/assets/svg/social-media/youtube.svg'
 import OthersIcon from '@/assets/svg/social-media/other.svg'
+import MediumIcon from "@/assets/svg/social-media/MediumWeb.svg"
+import TelegramIcon from '@/assets/svg/social-media/Telegram.svg'
 import SaveModal from '../../SaveModal/saveModal'
 
 type Props = {
@@ -51,6 +53,8 @@ const options: SocialMediaOption[] = [
   'Youtube',
   'SoundCloud',
   'Pinterest',
+  'Medium',
+  'Telegram',
   'TripAdvisor',
   'Ultimate Guitar',
   'Strava',
@@ -58,7 +62,7 @@ const options: SocialMediaOption[] = [
   'Behance',
   'GoodReads',
   'Smule',
-  'Chess',
+  'Chess.com',
   'BGG',
   'Others',
 ]
@@ -70,6 +74,8 @@ type SocialMediaOption =
   | 'Youtube'
   | 'SoundCloud'
   | 'Pinterest'
+  |  'Medium'
+  |  'Telegram'
   | 'TripAdvisor'
   | 'Ultimate Guitar'
   | 'Strava'
@@ -77,7 +83,7 @@ type SocialMediaOption =
   | 'Behance'
   | 'GoodReads'
   | 'Smule'
-  | 'Chess'
+  | 'Chess.com'
   | 'BGG'
   | 'Others'
 
@@ -88,6 +94,8 @@ const socialMediaIcons: Record<SocialMediaOption, any> = {
   Youtube: YouTubeIcon,
   SoundCloud: SoundCloudIcon,
   Pinterest: PinterestIcon,
+  Medium: MediumIcon,
+  Telegram: TelegramIcon,
   TripAdvisor: TripAdvisorIcon,
   'Ultimate Guitar': UltimateGuitarIcon,
   Strava: StravaIcon,
@@ -95,7 +103,7 @@ const socialMediaIcons: Record<SocialMediaOption, any> = {
   Behance: BehanceIcon,
   GoodReads: GoodreadsIcon,
   Smule: SmuleIcon,
-  Chess: ChessIcon,
+  'Chess.com': ChessIcon,
   BGG: BGGIcon,
   Others: OthersIcon,
 }
@@ -107,6 +115,8 @@ const defaultSocialMediaURLs: Record<SocialMediaOption, string> = {
   Youtube: 'https://youtube.com/',
   SoundCloud: 'https://soundcloud.com/',
   Pinterest: 'https://pinterest.com/',
+  Medium:'https://medium.com/',
+  Telegram:'https://telegram.com/',
   TripAdvisor: 'https://tripadvisor.com/profile/',
   'Ultimate Guitar': 'https://ultimate-guitar.com/u/',
   Strava: 'https://strava.com/athletes/',
@@ -114,7 +124,7 @@ const defaultSocialMediaURLs: Record<SocialMediaOption, string> = {
   Behance: 'https://behance.net/',
   GoodReads: 'https://goodreads.com/',
   Smule: 'https://smule.com/',
-  Chess: 'https://chess.com/member/',
+  'Chess.com': 'https://chess.com/member/',
   BGG: 'https://boardgamegeek.com/user/',
   Others: 'https://',
 }
@@ -171,6 +181,18 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
         url: user.social_media_urls?.pinterest_url,
       })
     }
+    if (user.social_media_urls?.medium_url) {
+      arr.push({
+        socialMedia: 'Medium',
+        url: user.social_media_urls?.medium_url,
+      })
+    }
+    if (user.social_media_urls?.telegram_url) {
+      arr.push({
+        socialMedia: 'Telegram',
+        url: user.social_media_urls?.telegram_url,
+      })
+    }
     if (user.social_media_urls?.tripadvisor_url) {
       arr.push({
         socialMedia: 'TripAdvisor',
@@ -215,7 +237,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
     }
     if (user.social_media_urls?.chess_url) {
       arr.push({
-        socialMedia: 'Chess',
+        socialMedia: 'Chess.com',
         url: user.social_media_urls?.chess_url,
       })
     }
@@ -294,7 +316,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
         behance_url: getValue('Behance'),
         goodreads_url: getValue('GoodReads'),
         smule_url: getValue('Smule'),
-        chess_url: getValue('Chess'),
+        chess_url: getValue('Chess.com'),
         bgg_url: getValue('BGG'),
         Others_url: getValue('Others'),
       },

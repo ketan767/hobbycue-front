@@ -34,7 +34,7 @@ import {
 import { setShowPageLoader } from '@/redux/slices/site'
 import { updateIsLoggedIn } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
-import { updateUserProfile } from '@/services/user.service'
+import { getMyProfileDetail, updateUserProfile } from '@/services/user.service'
 
 import { validateEmail } from '@/utils'
 import { CircularProgress } from '@mui/material'
@@ -185,6 +185,9 @@ const AuthForm: React.FC<Props> = (props) => {
         dispatch(updateIsLoggedIn(true))
         dispatch(closeModal())
         router.push('/community', undefined, { shallow: false })
+        const { err: error, res: response } = await getMyProfileDetail()
+        if (!response?.data?.data?.user.is_onboarded)
+          dispatch(openModal({ type: 'user-onboarding', closable: true }))
       }
     }
 
@@ -266,6 +269,9 @@ const AuthForm: React.FC<Props> = (props) => {
         console.log('else', e.profileObj.imageUrl)
       }
       router.push('/community', undefined, { shallow: false })
+      const { err: error, res: response } = await getMyProfileDetail()
+      if (!response?.data?.data?.user.is_onboarded)
+        dispatch(openModal({ type: 'user-onboarding', closable: true }))
     }
   }
 
@@ -300,6 +306,7 @@ const AuthForm: React.FC<Props> = (props) => {
         }
       }
       router.push('/community', undefined, { shallow: false })
+      dispatch(openModal({ type: 'user-onboarding', closable: true }))
 
       console.log('user', user)
     }

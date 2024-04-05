@@ -74,6 +74,9 @@
     overflow: auto;
     padding: 0;
   }
+  .create-post-postion{
+    left: 0;
+  }
   .header {
     display: block;
     position: sticky;

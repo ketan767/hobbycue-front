@@ -11,6 +11,9 @@
   position: absolute;
   top: 0.7rem;
 }
+.hobbycue-logo {
+  cursor: pointer;
+}
 .my-community-wrapper > div {
   position: relative;
 }
@@ -140,6 +143,7 @@
   right: 1.5rem;
 }
 .my-profile-wrapper .my-profile {
+  cursor: pointer;
   display: flex;
   flex-direction: row;
 }
@@ -376,6 +380,7 @@ line-height: 24px; /* 171.429% */
 
 .my-profile-rounded{
   border-radius: 50%;
+  
 }
 
 .my-profile-wrapper-mobile {

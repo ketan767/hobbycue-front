@@ -245,36 +245,50 @@ export const Navbar: React.FC<Props> = ({}) => {
           combinedResults = combinedResults.add(taglineRes.data.slice(0, 10))
         }
       }
+      const uniquePageUrls = new Set()
 
-      const typeResultOne = Array.from(combinedResults).filter(
+      // Filter out repeated results and store unique page URLs
+      const uniqueCombinedResults = Array.from(combinedResults).filter(
+        (page: any) => {
+          if (!uniquePageUrls.has(page.url)) {
+            uniquePageUrls.add(page.url)
+            return true
+          }
+          return false
+        },
+      )
+      const uniqueTypeResultOne = uniqueCombinedResults.filter(
         (page: any) => page.type === 1 && page.is_published === true,
       )
 
+      console.warn('typeresul1,', uniqueTypeResultOne)
       dispatch(
         setTypeResultOne({
-          data: typeResultOne as Page[],
+          data: uniqueTypeResultOne as Page[],
           message: 'Search completed successfully.',
           success: true,
         }),
       )
-      const typeResultTwo = Array.from(combinedResults).filter(
+
+      const uniqueTypeResultTwo = uniqueCombinedResults.filter(
         (page: any) => page.type === 2 && page.is_published === true,
       )
 
       dispatch(
         setTypeResultTwo({
-          data: typeResultTwo as Page[],
+          data: uniqueTypeResultTwo as Page[],
           message: 'Search completed successfully.',
           success: true,
         }),
       )
-      const typeResultThree = Array.from(combinedResults).filter(
+
+      const uniqueTypeResultThree = uniqueCombinedResults.filter(
         (page: any) => page.type === 3 && page.is_published === true,
       )
 
       dispatch(
         setTypeResultThree({
-          data: typeResultThree as Page[],
+          data: uniqueTypeResultThree as Page[],
           message: 'Search completed successfully.',
           success: true,
         }),
@@ -947,7 +961,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                 className={`${styles['mobile-search-input']} ${
                   isSearchInputVisible
                     ? styles['mobile-search-input-visible']
-                    : ''
+                    : styles['left-0']
                 }`}
               >
                 {isSearchInputVisible ? (
@@ -1031,6 +1045,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                   </form>
                 ) : (
                   <li
+                    onClick={toggleSearchInput}
                     className={
                       data.search.value.length > 0
                         ? styles['topbar-search-box']
@@ -1038,17 +1053,9 @@ export const Navbar: React.FC<Props> = ({}) => {
                     }
                   >
                     {data.search.value.length > 0 && (
-                      <input
-                        type="text"
-                        value={data.search.value}
-                        onChange={handleInputChange}
-                      />
+                      <input type="text" value={data.search.value} />
                     )}
-                    <Image
-                      src={Search}
-                      alt="search"
-                      onClick={toggleSearchInput}
-                    />
+                    <Image src={Search} alt="search" />
                   </li>
                 )}
               </div>

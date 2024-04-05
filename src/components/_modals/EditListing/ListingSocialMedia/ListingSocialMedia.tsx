@@ -29,6 +29,8 @@ import TripAdvisorIcon from '@/assets/svg/social-media/tripadvisor.svg'
 import UltimateGuitarIcon from '@/assets/svg/social-media/Ultimate-Guitar.svg'
 import YouTubeIcon from '@/assets/svg/social-media/youtube.svg'
 import OthersIcon from '@/assets/svg/social-media/other.svg'
+import MediumIcon from "@/assets/svg/social-media/MediumWeb.svg"
+import TelegramIcon from '@/assets/svg/social-media/Telegram.svg'
 import SaveModal from '../../SaveModal/saveModal'
 
 type Props = {
@@ -51,15 +53,17 @@ const options: SocialMediaOption[] = [
   'Youtube',
   'SoundCloud',
   'Pinterest',
+  'Medium',
+  'Telegram',
   'TripAdvisor',
   'Ultimate Guitar',
   'Strava',
   'DeviantArts',
   'Behance',
   'GoodReads',
-  // 'Smule',
-  // 'Chess',
-  // 'BGG',
+  'Smule',
+  'Chess.com',
+  'BGG',
   'Others',
 ]
 
@@ -70,15 +74,17 @@ type SocialMediaOption =
   | 'Youtube'
   | 'SoundCloud'
   | 'Pinterest'
+  |  'Medium'
+  |  'Telegram'
   | 'TripAdvisor'
   | 'Ultimate Guitar'
   | 'Strava'
   | 'DeviantArts'
   | 'Behance'
   | 'GoodReads'
-  // | 'Smule'
-  // | 'Chess'
-  // | 'BGG'
+  | 'Smule'
+  | 'Chess.com'
+  | 'BGG'
   | 'Others'
 
 const socialMediaIcons: Record<SocialMediaOption, any> = {
@@ -88,15 +94,17 @@ const socialMediaIcons: Record<SocialMediaOption, any> = {
   Youtube: YouTubeIcon,
   SoundCloud: SoundCloudIcon,
   Pinterest: PinterestIcon,
+  Medium: MediumIcon,
+  Telegram: TelegramIcon,
   TripAdvisor: TripAdvisorIcon,
   'Ultimate Guitar': UltimateGuitarIcon,
   Strava: StravaIcon,
   DeviantArts: DeviantArtIcon,
   Behance: BehanceIcon,
   GoodReads: GoodreadsIcon,
-  // Smule: SmuleIcon,
-  // Chess: ChessIcon,
-  // BGG: BGGIcon,
+  Smule: SmuleIcon,
+  'Chess.com': ChessIcon,
+  BGG: BGGIcon,
   Others: OthersIcon,
 }
 
@@ -107,15 +115,17 @@ const defaultSocialMediaURLs: Record<SocialMediaOption, string> = {
   Youtube: 'https://youtube.com/',
   SoundCloud: 'https://soundcloud.com/',
   Pinterest: 'https://pinterest.com/',
+  Medium:'https://medium.com/',
+  Telegram:'https://telegram.com/',
   TripAdvisor: 'https://tripadvisor.com/profile/',
-  'Ultimate Guitar': 'ultimate-guitar.com/u/',
+  'Ultimate Guitar': 'https://ultimate-guitar.com/u/',
   Strava: 'https://strava.com/athletes/',
   DeviantArts: 'https://deviantart.com/',
   Behance: 'https://behance.net/',
   GoodReads: 'https://goodreads.com/',
-  // Smule: 'https://smule.com/',
-  // Chess: 'https://chess.com/member/',
-  // BGG: 'https://boardgamegeek.com/user/',
+  Smule: 'https://smule.com/',
+  'Chess.com': 'https://chess.com/member/',
+  BGG: 'https://boardgamegeek.com/user/',
   Others: 'https://',
 }
 
@@ -170,6 +180,18 @@ const ListingSocialMediaEditModal = ({
         url: socialMediaUrls && socialMediaUrls.pinterest_url,
       })
     }
+    if (socialMediaUrls && socialMediaUrls.medium_url) {
+      arr.push({
+        socialMedia: 'Medium',
+        url: socialMediaUrls && socialMediaUrls.medium_url,
+      })
+    }
+    if (socialMediaUrls && socialMediaUrls.telegram_url) {
+      arr.push({
+        socialMedia: 'Telegram',
+        url: socialMediaUrls?.telegram_url,
+      })
+    }
     if (socialMediaUrls && socialMediaUrls.tripadvisor_url) {
       arr.push({
         socialMedia: 'TripAdvisor',
@@ -206,24 +228,24 @@ const ListingSocialMediaEditModal = ({
         url: socialMediaUrls && socialMediaUrls.goodreads_url,
       })
     }
-    // if (socialMediaUrls && socialMediaUrls.smule_url) {
-    //   arr.push({
-    //     socialMedia: 'Smule',
-    //     url: socialMediaUrls && socialMediaUrls.smule_url,
-    //   })
-    // }
-    // if (socialMediaUrls && socialMediaUrls.chess_url) {
-    //   arr.push({
-    //     socialMedia: 'Chess',
-    //     url: socialMediaUrls && socialMediaUrls.chess_url,
-    //   })
-    // }
-    // if (socialMediaUrls && socialMediaUrls.bgg_url) {
-    //   arr.push({
-    //     socialMedia: 'BGG',
-    //     url: socialMediaUrls && socialMediaUrls.bgg_url,
-    //   })
-    // }
+    if (socialMediaUrls && socialMediaUrls.smule_url) {
+      arr.push({
+        socialMedia: 'Smule',
+        url: socialMediaUrls && socialMediaUrls.smule_url,
+      })
+    }
+    if (socialMediaUrls && socialMediaUrls.chess_url) {
+      arr.push({
+        socialMedia: 'Chess.com',
+        url: socialMediaUrls && socialMediaUrls.chess_url,
+      })
+    }
+    if (socialMediaUrls && socialMediaUrls.bgg_url) {
+      arr.push({
+        socialMedia: 'BGG',
+        url: socialMediaUrls && socialMediaUrls.bgg_url,
+      })
+    }
     if (socialMediaUrls && socialMediaUrls.Others_url) {
       arr.push({
         socialMedia: 'Others',
@@ -292,7 +314,7 @@ const ListingSocialMediaEditModal = ({
         behance_url: getValue('Behance'),
         goodreads_url: getValue('GoodReads'),
         smule_url: getValue('Smule'),
-        chess_url: getValue('Chess'),
+        chess_url: getValue('Chess.com'),
         bgg_url: getValue('BGG'),
         Others_url: getValue('Others'),
       },

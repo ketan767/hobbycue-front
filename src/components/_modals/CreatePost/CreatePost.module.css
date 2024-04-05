@@ -42,7 +42,7 @@
   display: grid;
   flex-direction: column;
   gap: var(--spacing-4);
-  background-color: #ffffff;
+  /* background-color: #ffffff; */
   border-radius: 8px;
 }
 

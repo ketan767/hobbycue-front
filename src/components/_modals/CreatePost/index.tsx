@@ -16,7 +16,7 @@ import { closeModal } from '@/redux/slices/modal'
 
 import DOMPurify from 'dompurify'
 import CreatePostProfileSwitcher from './ProfileSwitcher'
-import { MenuItem, Select } from '@mui/material'
+import { Input, MenuItem, Select } from '@mui/material'
 // import CancelBtn from '@/assets/svg/trash-icon.svg'
 import CancelBtn from '@/assets/icons/x-icon.svg'
 import FilledButton from '@/components/_buttons/FilledButton'
@@ -328,7 +328,7 @@ export const CreatePost: React.FC<Props> = ({
       })
     }
     const jsonData: any = {
-      hobbyId: data.hobby,
+      hobbyId: data.hobby?._id,
 
       content: DOMPurify.sanitize(data.content),
       visibility: data.visibility,
@@ -337,8 +337,8 @@ export const CreatePost: React.FC<Props> = ({
       has_link: hasLink,
       video_url: data.video_url ? data.video_url : null,
     }
-    if (typeof data.genre === 'string' && data.genre !== 'undefined') {
-      jsonData.genreId = data.genre
+    if (typeof data.genre === 'object' && typeof data.genre?._id === 'string') {
+      jsonData.genreId = data.genre._id
     }
 
     console.log('jsonData', jsonData.hobbyId)
@@ -403,7 +403,7 @@ export const CreatePost: React.FC<Props> = ({
   const handleAddressChange = (value: string) => {
     setData((prev: any) => ({ ...prev, visibility: value }))
   }
-
+  console.log({ hobbies })
   if (confirmationModal) {
     return (
       <SaveModal
@@ -553,186 +553,61 @@ export const CreatePost: React.FC<Props> = ({
                 />
               </div>
 
-              {/* Hobby Input and Dropdown */}
-              {/* <section className={styles['dropdown-wrapper']}>
-            <div
-              className={`${styles['input-box']} ${
-                errors.hobby ? styles['error-input-box'] : ''
-              } `}
-            >
-              <label>Hobby</label>
-              <input
-                type="text"
-                placeholder="Search hobby..."
-                autoComplete="name"
-                required
-                value={hobbyInputValue}
-                ref={hobbyRef}
-                onFocus={() => setShowHobbyDropdown(true)}
-                onBlur={() =>
-                  setTimeout(() => {
-                    setShowHobbyDropdown(false)
-                  }, 300)
-                }
-                onChange={handleHobbyInputChange}
-              />
-              {errors.hobby && (
-                <p className={styles['error-text']}>{errors.hobby}</p>
-              )}
-            </div>
-            {showHobbyDropdown && hobbyDropdownList.length !== 0 && (
-              <div className={styles['dropdown']}>
-                {hobbyDropdownList.map((hobby) => {
-                  return (
-                    <p
-                      key={hobby._id}
-                      onClick={() => {
-                        setData((prev) => {
-                          return { ...prev, hobby: hobby }
-                        })
-                        setHobbyInputValue(hobby.display)
-                      }}
-                    >
-                      {hobby.display}
-                    </p>
-                  )
-                })}
-              </div>
-            )}
-          </section> */}
-              {/* 
-          <section className={styles['dropdown-wrapper']}>
-            <div
-              className={`${styles['input-box']}  ${
-                errors.genre ? styles['error-input-box'] : ''
-              } `}
-            >
-              <label>Genre/Style</label>
-
-              <input
-                type="text"
-                placeholder="Search genre/style..."
-                autoComplete="name"
-                ref={genreRef}
-                value={genreInputValue}
-                onFocus={() => setShowGenreDropdown(true)}
-                onBlur={() =>
-                  setTimeout(() => {
-                    setShowGenreDropdown(false)
-                  }, 300)
-                }
-                onChange={handleGenreInputChange}
-              />
-              {errors.genre && (
-                <p className={styles['error-text']}>{errors.genre}</p>
-              )}
-            </div>
-            {showGenreDropdown && genreDropdownList.length !== 0 && (
-              <div className={styles['dropdown']}>
-                {genreDropdownList.map((genre) => {
-                  return (
-                    <p
-                      key={genre?._id}
-                      onClick={() => {
-                        setData((prev) => {
-                          return { ...prev, genre: genre }
-                        })
-                        setGenreInputValue(genre?.display)
-                      }}
-                    >
-                      {genre?.display}
-                    </p>
-                  )
-                })}
-              </div>
-            )}
-          </section> */}
-
               <div
                 className={`${styles['input-box']}  ${
                   errors.hobby ? styles['error-input-box'] : ''
                 } `}
               >
                 <label>Select Hobby</label>
-                <Select
-                  value={`${data.hobby}${data.genre && '-'}${data.genre ?? ''}`}
-                  onChange={(e) => {
-                    console.warn({ e })
-                    let val = e.target.value
-                    // const selected = user._hobbies.find(
-                    //   (item: any) => item.hobby?._id === val,
-                    // )
-                    setData((prev: any) => ({
-                      ...prev,
-                      hobby: val.split('-')[0] ?? null,
-                      genre: val.split('-')[1] ?? null,
-                    }))
-                  }}
-                  displayEmpty
-                  inputProps={{ 'aria-label': 'Without label' }}
-                  className={` ${styles['visibility-dropdown']}`}
+                <InputSelect
+                  value={`${data.hobby?.display ?? ''}${
+                    data.genre?.display ? '-' : ''
+                  }${data.genre?.display ?? ''}`}
+                  onChange={(e: any) => {}}
                 >
-                  {hobbies?.map((item: any, idx: any) => {
+                  {hobbies?.map((item: any, idx) => {
                     return (
-                      <MenuItem
-                        key={idx}
-                        value={item.hobby?._id + '-' + item?.genre?._id ?? ''}
-                        selected={
-                          item.hobby?._id === data.hobby &&
-                          (item.genre ? item.genre?._id === data.genre : false)
-                        }
-                      >
-                        <p>
-                          {item.hobby?.display
-                            ? item.hobby?.display
-                            : item.hobby?.slug}{' '}
-                          {item?.genre && ` - ${item?.genre?.display} `}
-                        </p>
-                      </MenuItem>
+                      <>
+                        <DropdownOption
+                          _id={undefined}
+                          type={'hobby'}
+                          display={
+                            (item.hobby?.display
+                              ? item.hobby?.display
+                              : item.hobby?.slug) +
+                            (item?.genre ? ` - ${item?.genre?.display} ` : '')
+                          }
+                          value={item.hobby?._id + '-' + item?.genre?._id ?? ''}
+                          options={null}
+                          key={idx}
+                          selected={
+                            item.hobby?._id === data.hobby?._id &&
+                            (data.genre
+                              ? item.genre?._id === data.genre?._id
+                              : item.genre
+                              ? false
+                              : true)
+                          }
+                          item={item}
+                          onChange={(e: any) => {
+                            // const selected = user._hobbies.find(
+                            //   (item: any) => item.hobby?._id === val,
+                            // )
+                            setData((prev: any) => ({
+                              ...prev,
+                              hobby: e?.hobby ?? null,
+                              genre: e?.genre ?? null,
+                            }))
+                          }}
+                        />
+                      </>
                     )
                   })}
-                </Select>
+                </InputSelect>
                 {errors.hobby && (
                   <p className={styles['error-text']}>{errors.hobby}</p>
                 )}
               </div>
-
-              {/* <div
-            className={`${styles['input-box']}  ${
-              errors.genre ? styles['error-input-box'] : ''
-            } `}
-          >
-            <label>Genre/Style</label>
-            <Select
-              value={data.genre}
-              onChange={(e) => {
-                let val = e.target.value
-                setData((prev: any) => ({ ...prev, genre: val }))
-              }}
-              displayEmpty
-              inputProps={{ 'aria-label': 'Without label' }}
-              className={` ${styles['visibility-dropdown']}`}
-            >
-              {user._hobbies?.map((item: any, idx: any) => {
-                return (
-                  <MenuItem
-                    key={idx}
-                    value={item.genre?._id}
-                    selected={item.genre?._id === data.genre}
-                  >
-                    <p>
-                      {item.genre?.display
-                        ? item.genre?.display
-                        : item.genre?.slug}
-                    </p>
-                  </MenuItem>
-                )
-              })}
-            </Select>
-            {errors.genre && (
-              <p className={styles['error-text']}>{errors.genre}</p>
-            )}
-          </div> */}
 
               <div>
                 <label>Who Can View</label>
