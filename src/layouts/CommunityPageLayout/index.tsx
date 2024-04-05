@@ -61,7 +61,7 @@ const CommunityLayout: React.FC<Props> = ({
   const [locations, setLocations] = useState([])
   const [email, setEmail] = useState('')
   const [selectedHobby, setSelectedHobby] = useState('')
-  const [selectedGenre, setSelectedGenre] = useState('')
+  const [selectedGenre, setSelectedGenre] = useState<string|undefined>('')
   const [selectedLocation, setSelectedLocation] = useState('')
   const [snackbar, setSnackbar] = useState({
     type: 'success',
@@ -344,16 +344,8 @@ const CommunityLayout: React.FC<Props> = ({
     }
   }
 
-  useEffect(() => {
-    setSelectedHobby(filters.hobby ?? '')
-    setSelectedLocation(
-      filters.location ?? 'All Locations',
-    )
-    setSelectedGenre(filters.genre ?? '')
-  }, [])
-
   useEffect(()=>{
-    setSelectedGenre(filters.genre);
+    setSelectedGenre(filters.genre!==""?filters.genre:undefined);
     setSelectedHobby(filters.hobby);
     setSelectedLocation(filters.location??'');
   },[filters.genre, filters.hobby, filters.location])
@@ -362,6 +354,7 @@ const CommunityLayout: React.FC<Props> = ({
     setSeeMoreHobby(filters.seeMoreHobbies)
   },[filters.seeMoreHobbies])
 
+  console.log({selectedGenre,selectedHobby})
   // useEffect(() => {
   //   let tempLocations: any = []
   //   activeProfile.data?._addresses?.forEach((address: any) => {
