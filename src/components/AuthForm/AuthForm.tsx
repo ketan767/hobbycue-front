@@ -185,6 +185,7 @@ const AuthForm: React.FC<Props> = (props) => {
         dispatch(updateIsLoggedIn(true))
         dispatch(closeModal())
         router.push('/community', undefined, { shallow: false })
+        dispatch(openModal({ type: 'user-onboarding', closable: true }))
       }
     }
 
@@ -266,6 +267,7 @@ const AuthForm: React.FC<Props> = (props) => {
         console.log('else', e.profileObj.imageUrl)
       }
       router.push('/community', undefined, { shallow: false })
+      dispatch(openModal({ type: 'user-onboarding', closable: true }))
     }
   }
 
@@ -300,6 +302,7 @@ const AuthForm: React.FC<Props> = (props) => {
         }
       }
       router.push('/community', undefined, { shallow: false })
+      dispatch(openModal({ type: 'user-onboarding', closable: true }))
 
       console.log('user', user)
     }
