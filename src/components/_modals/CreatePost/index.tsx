@@ -338,7 +338,7 @@ export const CreatePost: React.FC<Props> = ({
       has_link: hasLink,
       video_url: data.video_url ? data.video_url : null,
     }
-    if (typeof data.genre === 'object' && typeof data.genre?._id==='string') {
+    if (typeof data.genre === 'object' && typeof data.genre?._id === 'string') {
       jsonData.genreId = data.genre._id
     }
 
@@ -563,13 +563,10 @@ export const CreatePost: React.FC<Props> = ({
               >
                 <label>Select Hobby</label>
                 <InputSelect
-                  value={`${data.hobby?.display ?? ''}${data.genre?.display ? '-' : ''}${
-                    data.genre?.display ?? ''
-                  }`}
-                  selectText='All Hobbies'
-                  onChange={(e: any) => {
-                    
-                  }}
+                  value={`${data.hobby?.display ?? ''}${
+                    data.genre?.display ? '-' : ''
+                  }${data.genre?.display ?? ''}`}
+                  onChange={(e: any) => {}}
                 >
                   {hobbies?.map((item: any, idx) => {
                     return (
@@ -580,15 +577,19 @@ export const CreatePost: React.FC<Props> = ({
                           display={
                             (item.hobby?.display
                               ? item.hobby?.display
-                              : item.hobby?.slug) + (item?.genre ?
-                                ` - ${item?.genre?.display} `:'')
+                              : item.hobby?.slug) +
+                            (item?.genre ? ` - ${item?.genre?.display} ` : '')
                           }
                           value={item.hobby?._id + '-' + item?.genre?._id ?? ''}
                           options={null}
                           key={idx}
                           selected={
                             item.hobby?._id === data.hobby?._id &&
-                            (data.genre ? (item.genre?._id === data.genre?._id) : item.genre?false:true)
+                            (data.genre
+                              ? item.genre?._id === data.genre?._id
+                              : item.genre
+                              ? false
+                              : true)
                           }
                           item={item}
                           onChange={(e: any) => {

@@ -206,7 +206,6 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     }
     if (!res?.data.success) {
       setSubmitBtnLoading(false)
-      return alert('Something went wrong!')
     }
 
     const { err: error, res: response } = await getMyProfileDetail()
@@ -280,10 +279,11 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   useEffect(() => {
     if (onComplete !== undefined && /^\d+$/.test(user.profile_url)) {
       let profileUrl = data.full_name
-      profileUrl = profileUrl?.toLowerCase()
-      .replace(/\s+/g, '-') // Replace consecutive spaces with a single hyphen
-      .replace(/[^\w\s-]/g, '-') // Replace special characters with a single hyphen
-      .replace(/-+/g, '-'); // Replace consecutive hyphens with a single hyphen
+      profileUrl = profileUrl
+        ?.toLowerCase()
+        .replace(/\s+/g, '-') // Replace consecutive spaces with a single hyphen
+        .replace(/[^\w\s-]/g, '-') // Replace special characters with a single hyphen
+        .replace(/-+/g, '-') // Replace consecutive hyphens with a single hyphen
       setData((prev) => ({ ...prev, profile_url: profileUrl }))
       if (!user.display_name) {
         setData((prev) => ({
