@@ -64,6 +64,11 @@ export const getServerSideProps: GetServerSideProps = async () => {
     },
     {
       lastmod: new Date().toISOString(),
+      loc: '/hobbies',
+      name: `${baseUrl}/hobbies`,
+    },
+    {
+      lastmod: new Date().toISOString(),
       loc: '/notifications',
       name: `${baseUrl}/notifications`,
     },
@@ -113,6 +118,11 @@ export const getServerSideProps: GetServerSideProps = async () => {
       lastmod: new Date().toISOString(),
       loc: '/terms',
       name: `${baseUrl}/terms`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://blog.hobbycue.com/faq',
+      name: `https://blog.hobbycue.com/faq`,
     },
   ]
   return {

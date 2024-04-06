@@ -26,7 +26,6 @@ import { FormControl, MenuItem, Select } from '@mui/material'
 import Image from 'next/image'
 import { useDispatch, useSelector } from 'react-redux'
 import SaveModal from '../../SaveModal/saveModal'
-import DropdownMenu from '@/components/DropdownMenu'
 import { useRouter } from 'next/router'
 import AddHobby from '../../AddHobby/AddHobbyModal'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
@@ -184,10 +183,12 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   }
 
   const handleHobbyKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      AddButtonRef.current?.click()
+    if (!showHobbyDowpdown){
+      if (e.key === 'Enter') {
+        AddButtonRef.current?.click()
+      } 
+      return;
     }
-    if (hobbyDropdownList.length === 0) return
 
     switch (e.key) {
       case 'ArrowDown':
@@ -252,10 +253,12 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   }
 
   const handleGenreKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      AddButtonRef.current?.click()
+    if (!showGenreDowpdown){
+      if (e.key === 'Enter') {
+        AddButtonRef.current?.click()
+      } 
+      return
     }
-    if (genreDropdownList.length === 0) return
 
     switch (e.key) {
       case 'ArrowDown':

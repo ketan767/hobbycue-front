@@ -32,6 +32,7 @@ const DropdownMenu: React.FC<Props> = ({
   const optionWrapperRef = useRef<HTMLDivElement>(null)
   const optionRef = useRef<HTMLDivElement>(null)
   const [showDropdown, setShowDropdown] = useState(false)
+  const [refPostion,setRefPosition] = useState<{top:undefined|number,bottom:undefined|number}>({top:undefined,bottom:undefined})
   const [optionIndex, setOptionIndex] = useState(-1)
   const [inputValue, setInputValue] = useState('')
   const [displayOptions, setDisplayOptions] = useState(
@@ -54,29 +55,39 @@ const DropdownMenu: React.FC<Props> = ({
 
   useEffect(() => {
     if (optionsPosition === 'top') {
-      if (optionWrapperRef.current) {
-        const rect = optionWrapperRef.current.getBoundingClientRect()
-        if (rect.top > 0) {
-          let newTopValue
-          if (dropdownRef.current?.getBoundingClientRect) {
-            newTopValue =
-              rect.top -
-              rect.height -
-              dropdownRef.current?.getBoundingClientRect()?.height -
-              5
+      if (refPostion.top === undefined) {
+        if (optionWrapperRef.current) {
+          const rect = optionWrapperRef.current.getBoundingClientRect()
+          if (rect.top > 0) {
+            let newTopValue: any
+            if (dropdownRef.current?.getBoundingClientRect) {
+              newTopValue =
+                rect.top -
+                rect.height -
+                dropdownRef.current?.getBoundingClientRect()?.height -
+                5
+            }
+            if (!isNaN(Number(newTopValue))) {
+              setRefPosition((prev) => ({ ...prev, top: newTopValue }))
+            }
+            optionWrapperRef.current.style.top = `${newTopValue}px`
           }
-          optionWrapperRef.current.style.top = `${newTopValue}px`
         }
       }
     } else if (optionsPosition === 'bottom') {
-      if (optionWrapperRef.current) {
-        const rect = optionWrapperRef.current.getBoundingClientRect()
-        if (rect.top > 0) {
-          let newTopValue
-          if (dropdownRef.current?.getBoundingClientRect) {
-            newTopValue = rect.top + 5
+      if (refPostion.bottom === undefined) {
+        if (optionWrapperRef.current) {
+          const rect = optionWrapperRef.current.getBoundingClientRect()
+          if (rect.top > 0) {
+            let newTopValue: any
+            if (dropdownRef.current?.getBoundingClientRect) {
+              newTopValue = rect.top + 5
+            }
+            if (!isNaN(Number(newTopValue))) {
+              setRefPosition((prev) => ({ ...prev, bottom: newTopValue }))
+            }
+            optionWrapperRef.current.style.top = `${newTopValue}px`
           }
-          optionWrapperRef.current.style.top = `${newTopValue}px`
         }
       }
     }

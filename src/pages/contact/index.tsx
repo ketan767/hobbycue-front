@@ -19,6 +19,7 @@ import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import { addContactUs } from '@/services/user.service'
 import { containOnlyNumbers } from '@/utils'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import { useRouter } from 'next/router'
 
 
 type ContactUsData = {
@@ -42,6 +43,7 @@ type ContactUsData = {
 type Props = {}
 
 const Contact: React.FC<Props> = ({}) => {
+  const router = useRouter();
   const [data, setData] = useState<ContactUsData>({
     name: { value: '', error: null },
     phone: { number: '', prefix: '', error: null },
@@ -138,11 +140,13 @@ const Contact: React.FC<Props> = ({}) => {
   }
 
   const handleSubmit = async () => {
+    let hasError = false;
     if (
       (!data.public_email.value || data.public_email.value.length === 0)
     ) {
+      hasError = true;
       inputRef.current?.focus()
-      return setData((prev) => {
+      setData((prev) => {
         return {
           ...prev,
           public_email: {
@@ -157,8 +161,9 @@ const Contact: React.FC<Props> = ({}) => {
         !containOnlyNumbers(data.phone.number.toString().trim()) ||
         data.phone.number.toString().trim().length !== 10
       ) {
+        hasError = true;
         phoneRef.current?.focus()
-        return setData((prev) => {
+        setData((prev) => {
           return {
             ...prev,
             phone: { ...prev.phone, error: 'Enter a valid phone number' },
@@ -171,8 +176,9 @@ const Contact: React.FC<Props> = ({}) => {
         !containOnlyNumbers(data.whatsapp_number.number.toString().trim()) ||
         data.whatsapp_number.number.toString().trim().length !== 10
       ) {
+        hasError = true;
         WhtphoneRef.current?.focus()
-        return setData((prev) => {
+        setData((prev) => {
           return {
             ...prev,
             whatsapp_number: {
@@ -184,8 +190,8 @@ const Contact: React.FC<Props> = ({}) => {
       }
     }
     if(!data.YouAre.value || data.YouAre.value.length ===0){
-      console.log('first')
-      return setData((prev)=>({...prev,
+      hasError = true;
+      setData((prev)=>({...prev,
       YouAre:{
         ...prev.YouAre,
         error:"This field is mandatory"
@@ -193,8 +199,8 @@ const Contact: React.FC<Props> = ({}) => {
       }))
     }
     if(!data.Regarding.value || data.Regarding.value.length === 0){
-    console.log({'reg':data.Regarding.value})
-      return setData((prev)=>({...prev,
+      hasError = true;
+      setData((prev)=>({...prev,
       Regarding:{
         ...prev.Regarding,
         error:"This field is mandatory"
@@ -202,10 +208,14 @@ const Contact: React.FC<Props> = ({}) => {
       }));
     }
     if(data.message.value.length<1){
-      return setData((prev)=>({...prev,message:{
+      hasError = true;
+      setData((prev)=>({...prev,message:{
         ...prev.message,
         error:"Message can't be empty"
       }}))
+    }
+    if(hasError===true){
+      return;
     }
     const name = data.name.value
     const email = data.public_email.value
@@ -313,7 +323,7 @@ const Contact: React.FC<Props> = ({}) => {
         {isLoggedIn ? (
           <div className={styles['switcher-help-centre']}>
           <ProfileSwitcher className={styles['contact-profile-switcher']} />
-          {isMobile&&<button className={styles['help-centre-btn']}>
+          {isMobile&&<button onClick={()=>{router.push('/help')}} className={styles['help-centre-btn']}>
             {questionSvg}
             <p>Help Centre</p>
           </button>}
@@ -414,7 +424,9 @@ const Contact: React.FC<Props> = ({}) => {
                 </div>
 
                 {/* WhatsApp Number */}
-                <div className={styles['input-box']}>
+                <div className={`${styles['input-box']} ${
+                      data.whatsapp_number.error ? styles['input-box-error'] : ''
+                    }`}>
                   <label className={styles['whatsapp-label']}>
                     WhatsApp
                     {/* <CustomTooltip title="Use same">
@@ -620,7 +632,7 @@ const Contact: React.FC<Props> = ({}) => {
           </section>
         </div>
         {isMobile ? null : (
-          <button className={styles['help-centre-btn']}>
+          <button onClick={()=>{router.push('/help')}} className={styles['help-centre-btn']}>
             {questionSvg}
             <p>Help Centre</p>
           </button>

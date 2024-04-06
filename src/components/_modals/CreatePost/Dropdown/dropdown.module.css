@@ -23,8 +23,9 @@
   column-gap: 12px;
   flex-direction: row !important;
   align-items: center;
-  padding: 8px 8px;
+  padding: 7px 8px;
   width: 180px;
+  height: 32px;
 }
 
 .heading:hover {
@@ -51,12 +52,16 @@
 .dropdown-container p.dropdown-value {
   color: var(--grey-dark, #939ca3);
   padding-left: 16px;
+  height: 32px;
 }
 
 .dropdown-options {
   max-height: 0;
   transition: 0.1s;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 .dropdown-options.active {
   max-height: 1200px;
@@ -69,9 +74,10 @@
 p.dropdown-value {
   padding-left: 8px;
   padding-right: 8px;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 7px;
+  padding-bottom: 7px;
   cursor: pointer;
+  line-height: 18px;
 }
 
 p.dropdown-value-active {

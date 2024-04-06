@@ -194,7 +194,7 @@ const ListingPageLayout: React.FC<Props> = ({
       )}
       {/* Navigation Links */}
       <nav className={styles['nav']}>
-        <div className={styles['navigation-tabs']}>
+        <div className={`${styles['navigation-tabs']}`}>
           {tabs.map((tab) => {
             if (tab === 'events') {
               if (data.pageData.type !== 3)
@@ -297,7 +297,7 @@ const ListingPageLayout: React.FC<Props> = ({
       </main>
       <div style={{ backgroundColor: '#f8f9fa' }}>
         <nav className={styles['nav-mobile']}>
-          <div className={styles['navigation-tabs']}>
+          <div className={`${styles['navigation-tabs']} ${!expandAll?styles['mobile-mt-0']:''}`}>
             {tabs.map((tab) => {
               if (tab === 'events') {
                 if (data.pageData.type !== 3)
