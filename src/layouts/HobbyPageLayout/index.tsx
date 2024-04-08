@@ -93,7 +93,7 @@ const HobbyPageLayout: React.FC<Props> = ({
   const toggleMembers = () => {
     setSeeAll(!seeAll)
   }
-
+  console.log('dataonhobbbypage', data)
   const handleMemberClick = (user: any) => {
     if (isLoggedIn) {
       router.push(`/profile/${user.profile_url}`)

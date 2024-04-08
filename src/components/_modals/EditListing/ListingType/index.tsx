@@ -406,15 +406,18 @@ const ListingTypeEditModal: React.FC<Props> = ({
                     className={`${styles['select-input']} ${
                       error ? styles['select-input-error'] : ' '
                     }`}
-                    onClick={() => setShowDropdown((prev)=>!prev)}
-                    onKeyDown={(e)=>{
-                      if(["Enter","ArrowUp","ArrowDown"].includes(e.key)||e.key===" "){
+                    onClick={() => setShowDropdown((prev) => !prev)}
+                    onKeyDown={(e) => {
+                      if (['Enter'].includes(e.key) || e.key === ' ') {
                         setShowDropdown(true)
                       }
                     }}
                   >
                     <p> Select Category </p>
-                    <Image src={showDropdown?UpArrow:DownArrow} alt="down" />
+                    <Image
+                      src={showDropdown ? UpArrow : DownArrow}
+                      alt="down"
+                    />
                   </div>
                   {showDropdown && (
                     <div className={styles['options-container']}>

@@ -363,7 +363,7 @@ const UserOnboardingWelcomeModal = () => {
             </div>
           </div>
           <div
-            style={{ right: `calc(1.5rem + ${screenWidth}px)` }}
+            style={{ right: `calc(1.5rem + ${screenWidth}px + 12px)` }}
             className={styles['my-profile-wrapper']}
           >
             <div className={styles['my-profile']}>
