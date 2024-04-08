@@ -183,11 +183,11 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   }
 
   const handleHobbyKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!showHobbyDowpdown){
+    if (showHobbyDowpdown) {
       if (e.key === 'Enter') {
-        AddButtonRef.current?.click()
-      } 
-      return;
+        genreInputRef.current?.focus()
+      }
+      return
     }
 
     switch (e.key) {
@@ -253,10 +253,10 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   }
 
   const handleGenreKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!showGenreDowpdown){
+    if (!showGenreDowpdown) {
       if (e.key === 'Enter') {
         AddButtonRef.current?.click()
-      } 
+      }
       return
     }
 

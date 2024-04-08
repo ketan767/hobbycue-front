@@ -39,14 +39,22 @@ import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 type Props = {
   data: ListingPageData['pageData']
   activeTab: ListingPageTabs
-  setpageTypeErr?:React.Dispatch<React.SetStateAction<boolean>>
-  setHobbyError?:React.Dispatch<React.SetStateAction<boolean>>
-  setHAboutErr?:React.Dispatch<React.SetStateAction<boolean>>
-  setContactInfoErr?:React.Dispatch<React.SetStateAction<boolean>>
-  setLocationErr?:React.Dispatch<React.SetStateAction<boolean>>
+  setpageTypeErr?: React.Dispatch<React.SetStateAction<boolean>>
+  setHobbyError?: React.Dispatch<React.SetStateAction<boolean>>
+  setHAboutErr?: React.Dispatch<React.SetStateAction<boolean>>
+  setContactInfoErr?: React.Dispatch<React.SetStateAction<boolean>>
+  setLocationErr?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const ListingHeader: React.FC<Props> = ({ data, activeTab,setContactInfoErr,setHAboutErr,setHobbyError,setLocationErr,setpageTypeErr }) => {
+const ListingHeader: React.FC<Props> = ({
+  data,
+  activeTab,
+  setContactInfoErr,
+  setHAboutErr,
+  setHobbyError,
+  setLocationErr,
+  setpageTypeErr,
+}) => {
   const dispatch = useDispatch()
   const [snackbar, setSnackbar] = useState({
     type: 'success',
@@ -148,27 +156,31 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab,setContactInfoErr,setH
   }
 
   const handlePublish = async () => {
-    if(data.is_published!==true){
-    let hasError = false;
+    if (data.is_published !== true) {
+      let hasError = false
       if (data._hobbies.length === 0) {
-        hasError = true;
+        hasError = true
         setHobbyError?.(true)
       }
       if (data.page_type.length === 0) {
-        hasError = true;
+        hasError = true
         setpageTypeErr?.(true)
       }
       if (!data.phone && !data.public_email) {
-        hasError = true;
+        hasError = true
         setContactInfoErr?.(true)
       }
       if (!data._address.city) {
-        hasError = true;
+        hasError = true
         setLocationErr?.(true)
       }
-      if(hasError){
-        setSnackbar({display:true,type:"warning",message:"Fill up the mandatory fields."});
-        return;
+      if (hasError) {
+        setSnackbar({
+          display: true,
+          type: 'warning',
+          message: 'Fill up the mandatory fields.',
+        })
+        return
       }
     }
     const { err, res } = await updateListing(data._id, {
@@ -515,7 +527,11 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab,setContactInfoErr,setH
               </CustomTooltip>
               {listingLayoutMode === 'edit'
                 ? open && (
-                    <Dropdown userType={'edit'} handleClose={handleDropdown} showFeatureUnderDevelopment={showFeatureUnderDevelopment} />
+                    <Dropdown
+                      userType={'edit'}
+                      handleClose={handleDropdown}
+                      showFeatureUnderDevelopment={showFeatureUnderDevelopment}
+                    />
                   )
                 : open && (
                     <Dropdown
@@ -585,7 +601,11 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab,setContactInfoErr,setH
             </CustomTooltip>
             {listingLayoutMode === 'edit'
               ? open && (
-                  <Dropdown showFeatureUnderDevelopment={showFeatureUnderDevelopment} userType={'edit'} handleClose={handleDropdown} />
+                  <Dropdown
+                    showFeatureUnderDevelopment={showFeatureUnderDevelopment}
+                    userType={'edit'}
+                    handleClose={handleDropdown}
+                  />
                 )
               : open && (
                   <Dropdown
