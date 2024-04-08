@@ -87,6 +87,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   })
   const [errorOrmsg, setErrorOrmsg] = useState<string | null>(null)
   const hobbyRef = useRef<HTMLInputElement>(null)
+  const genreInputRef = useRef<HTMLInputElement>(null)
   const hobbyDropdownRef = useRef<HTMLDivElement>(null)
   const genreDropdownRef = useRef<HTMLDivElement>(null)
   const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
@@ -188,14 +189,40 @@ const ListingHobbyEditModal: React.FC<Props> = ({
     })
 
     setGenreDropdownList(sortedGenres)
+    setFocusedGenreIndex(-1)
   }
   const printgenreid = () => {
     console.log('genreid', genreid)
   }
 
   const handleHobbyKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      AddButtonRef.current?.click()
+    if (showHobbyDropdown) {
+      if (e.key === 'Enter') {
+        genreInputRef.current?.focus()
+        const query = `fields=display,genre&level=3&level=2&level=1&level=0&show=true&search=${hobbyInputValue}`
+        getAllHobbies(query).then((result)=>{
+          const sortedHobbies = result.res.data.hobbies.sort((a: any, b: any) => {
+            const indexA = a.display
+              .toLowerCase()
+              .indexOf(hobbyInputValue.toLowerCase())
+            const indexB = b.display
+              .toLowerCase()
+              .indexOf(hobbyInputValue.toLowerCase())
+      
+            if (indexA === 0 && indexB !== 0) {
+              return -1
+            } else if (indexB === 0 && indexA !== 0) {
+              return 1
+            }
+      
+            // Otherwise, use default sorting behavior
+            return 0
+          })
+          const selectedHobby = sortedHobbies[0];
+          handleHobbySelection(selectedHobby)
+        });
+      }
+      return
     }
     if (hobbyDropdownList.length === 0) return
 
@@ -222,8 +249,11 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   }
 
   const handleGenreKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      AddButtonRef.current?.click()
+    if (!showGenreDropdown) {
+      if (e.key === 'Enter') {
+        AddButtonRef.current?.click()
+      }
+      return
     }
 
     switch (e.key) {
@@ -255,9 +285,9 @@ const ListingHobbyEditModal: React.FC<Props> = ({
     setShowGenreDropdown(false)
     setGenreId('')
     setData((prev) => ({ ...prev, hobby: selectedHobby }))
-    setHobbyInputValue(selectedHobby.display)
+    setHobbyInputValue(selectedHobby?.display??hobbyInputValue)
 
-    if (selectedHobby.genre && selectedHobby.genre.length > 0) {
+    if (selectedHobby && selectedHobby.genre && selectedHobby.genre.length > 0) {
       setGenreId(selectedHobby.genre[0])
 
       const query = `fields=display&show=true&genre=${selectedHobby.genre[0]}&level=5`
@@ -266,6 +296,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
       if (!err) {
         setGenreDropdownList(res.data.hobbies)
         setShowGenreDropdown(true)
+        genreInputRef?.current?.focus();
       } else {
       }
     }
@@ -834,6 +865,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
                               placeholder="Genre/Style"
                               autoComplete="name"
                               required
+                              ref={genreInputRef}
                               value={genreInputValue}
                               onFocus={() => setShowGenreDropdown(true)}
                               onBlur={() =>
