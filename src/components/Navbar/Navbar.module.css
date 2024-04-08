@@ -509,3 +509,7 @@
     height: 16px;
   }
 }
+
+.d-none{
+  display: none !important;
+}

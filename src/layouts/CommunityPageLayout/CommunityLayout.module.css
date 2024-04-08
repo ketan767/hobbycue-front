@@ -143,6 +143,11 @@
 .invite-wrapper {
   margin-bottom: var(--spacing-12);
 }
+.invite-wrapper header h3{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
 .invite-wrapper header {
   padding: var(--spacing-16) var(--spacing-16) 5px var(--spacing-16);
   display: flex;

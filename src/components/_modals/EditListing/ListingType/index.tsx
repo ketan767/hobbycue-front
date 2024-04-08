@@ -59,13 +59,14 @@ const ListingTypeEditModal: React.FC<Props> = ({
   const [list, setList] = useState<{ name: string; description: string }[]>([])
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [value, setValue] = useState<any>([])
+  const [hoveredValue,setHoveredValue] = useState<number|null>(null);
   const [error, setError] = useState<string | null>(null)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [isError, setIsError] = useState(false)
 
   const [showDropdown, setShowDropdown] = useState(false)
   const dropdownRef: any = useRef()
-  useOutsideAlerter(dropdownRef, () => setShowDropdown(false))
+  useOutsideAlerter(dropdownRef, () => {setShowDropdown(false);setHoveredValue(null)})
   const [initialData, setInitialData] = useState<any>([])
   const [isChanged, setIsChanged] = useState(false)
 
@@ -334,8 +335,27 @@ const ListingTypeEditModal: React.FC<Props> = ({
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
-    const handleKeyPress = (event: any) => {
-      if (event.key === 'Enter') {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      console.log({event})
+      // if(event.key==="ArrowUp" && showDropdown && hoveredValue!==null){
+      //   setHoveredValue(prev=>{
+      //     if(prev===0){
+      //       return list.length-1;
+      //     }else{
+      //       return (prev as number) - 1
+      //     }
+      //   })
+      // }
+      // else if(event.key==="ArrowDown" && showDropdown && hoveredValue!==null){
+      //   setHoveredValue(prev=>{
+      //     if(prev===list.length-1){
+      //       return 0;
+      //     }else{
+      //       return (prev as number) + 1
+      //     }
+      //   })
+      // }
+       if(event.key === 'Enter'){
         nextButtonRef.current?.focus()
       }
     }
@@ -406,15 +426,51 @@ const ListingTypeEditModal: React.FC<Props> = ({
                     className={`${styles['select-input']} ${
                       error ? styles['select-input-error'] : ' '
                     }`}
-                    onClick={() => setShowDropdown((prev)=>!prev)}
-                    onKeyDown={(e)=>{
-                      if(["Enter","ArrowUp","ArrowDown"].includes(e.key)||e.key===" "){
-                        setShowDropdown(true)
+                    onClick={() =>
+                      setShowDropdown((prev) => {
+                        if (prev === true) {
+                          setHoveredValue(null)
+                        }
+                        return !prev
+                      })
+                    }
+                    onKeyDown={(e) => {
+                      if (['Enter'].includes(e.key) || e.key === ' ') {
+                        if (e.key === "Enter" && showDropdown && hoveredValue!==null) {
+                          handleChange(list[hoveredValue].name);
+                          setShowDropdown(false);
+                          setHoveredValue(null);
+                        }
+                       else if (!showDropdown) {
+                          setShowDropdown(true)
+                          setHoveredValue(0)
+                        }
+                      }
+                     else if(e.key==="ArrowUp" && showDropdown && hoveredValue!==null){
+                        setHoveredValue(prev=>{
+                          if(prev===0){
+                            return list.length-1;
+                          }else{
+                            return (prev as number) - 1
+                          }
+                        })
+                      }
+                      else if(e.key==="ArrowDown" && showDropdown && hoveredValue!==null){
+                        setHoveredValue(prev=>{
+                          if(prev===list.length-1){
+                            return 0;
+                          }else{
+                            return (prev as number) + 1
+                          }
+                        })
                       }
                     }}
                   >
                     <p> Select Category </p>
-                    <Image src={showDropdown?UpArrow:DownArrow} alt="down" />
+                    <Image
+                      src={showDropdown ? UpArrow : DownArrow}
+                      alt="down"
+                    />
                   </div>
                   {showDropdown && (
                     <div className={styles['options-container']}>
@@ -436,11 +492,17 @@ const ListingTypeEditModal: React.FC<Props> = ({
                                   value?.includes(item.name)
                                     ? styles['selcted-option']
                                     : ''
-                                }`}
+                                }
+                                ${
+                                  hoveredValue === idx &&
+                                  styles['hovered-single-option']
+                                }
+                                `}
                                 key={item.name}
                                 onClick={() => {
                                   handleChange(item.name)
                                   setShowDropdown(false)
+                                  setHoveredValue(null)
                                 }}
                               >
                                 <p className={styles.tagDesc}>{item.name}</p>

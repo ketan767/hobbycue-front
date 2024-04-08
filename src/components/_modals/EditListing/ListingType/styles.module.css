@@ -274,7 +274,20 @@
 }
 
 .select-input:focus-visible{
+  outline: none;
+  border: 1px solid #8064a2;
+}
+
+.select-input:focus-visible::before{
+  content: " ";
+  display: block;
+  position: absolute;
   outline: 1px solid #8064a2;
+  left: -1.5px;
+  right: -1.5px;
+  top: -1.5px;
+  bottom: -1.5px;
+  border-radius: 8px;
 }
 
 .select-input-error {
@@ -350,6 +363,7 @@
   border-bottom: 1px solid #ebedf0;
 }
 
+.hovered-single-option,
 .single-option:hover {
   background-color: #ebedf0;
 }
