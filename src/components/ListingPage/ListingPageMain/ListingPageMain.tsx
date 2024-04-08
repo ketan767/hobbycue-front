@@ -1663,7 +1663,7 @@ const ListingPageMain: React.FC<Props> = ({
                   styles['display-desktop']
                 }${showSocialMedia ? ' ' + styles['display-mobile'] : ''}`}
               >
-                {data && (
+                {data.social_media_urls && (
                   <>
                     {Object.entries(data.social_media_urls).map(
                       ([key, url]) => {

@@ -51,6 +51,7 @@ ul.contact-wrapper svg {
   max-width: 100%;
   overflow: hidden;
   color: #08090A;
+  text-overflow: ellipsis;
 }
 
 .error{
