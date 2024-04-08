@@ -59,6 +59,7 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const { forgotPasswordEmail } = useSelector((state: any) => state.modal)
   const newPasswordRef = useRef<HTMLInputElement>(null)
+  const otpRef = useRef<HTMLInputElement>(null)
 
   const [showValidations, setShowValidations] = useState(false)
   const [inputValidation, setInputValidation] = useState(
@@ -123,6 +124,10 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
     setStrength(strengthNum)
   }, [newPassword, inputValidation])
 
+  useEffect(()=>{
+    otpRef.current?.focus()
+  },[])
+
   let threeConditionsValid = 0
   if (inputValidation.uppercase) {
     threeConditionsValid += 1
@@ -159,6 +164,7 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
                 onChange={(e) => setOtp(e.target.value)}
                 className={styles.input}
                 placeholder="OTP"
+                ref={otpRef}
               />
               <p className={styles['helper-text']}>{errors.otp}</p>
             </div>
