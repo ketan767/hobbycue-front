@@ -543,7 +543,7 @@ const CommunityLayout: React.FC<Props> = ({
       setSnackbar({
         display: true,
         type: 'success',
-        message: 'Invitation sent sucessfully!',
+        message: 'Invitation sent',
       })
       setEmail('')
     }

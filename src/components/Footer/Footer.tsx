@@ -190,7 +190,7 @@ const Footer: React.FC = () => {
       setSnackbar({
         display: true,
         type: 'success',
-        message: 'Invitation sent sucessfully!',
+        message: 'Invitation sent',
       })
       setEmail('')
     }

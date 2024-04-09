@@ -138,13 +138,7 @@
 
   color: #c0504d;
 }
-.footer button {
-  margin-right: 16px;
-  width: 99px;
-  font-size: 14px;
-  padding-left: 8px;
-  padding-right: 8px;
-}
+
 .input-box .helper-text {
   position: absolute;
   top: calc(100% + var(--spacing-4));
@@ -194,7 +188,9 @@
 .validation-messages p.valid::before {
   content: url('../../../assets/svg/green-check-icon.svg');
 }
-
+.save-btn{
+  margin-left: 64% !important;
+}
 @media screen and (max-width:1100px) {
 
   .modal-wrapper {
