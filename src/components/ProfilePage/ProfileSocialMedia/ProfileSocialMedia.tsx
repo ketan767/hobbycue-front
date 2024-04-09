@@ -32,6 +32,7 @@ type Props = {
 
 const ProfileSocialMediaSide = ({ data, expandData }: Props) => {
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
+  const { isLoggedIn } = useSelector((state: RootState) => state.user)
   const [displayData, setDisplayData] = useState(false)
   const dispatch = useDispatch()
   function renderSocialLink(url: any, iconSrc: any, altText: any) {
@@ -85,82 +86,82 @@ const ProfileSocialMediaSide = ({ data, expandData }: Props) => {
             displayData && styles['display-mobile-flex']
           }`}
         >
-          {data?.social_media_urls && (
+          {(data?.social_media_urls && isLoggedIn) &&  (
             <>
               {Object.entries(data.social_media_urls).map(([key, url]) => {
                 let socialMediaName = ''
                 let socialMediaIcon = null
 
                 switch (true) {
-                  case key.startsWith('facebook_url'):
+                  case key.startsWith('facebook'):
                     socialMediaName = 'Facebook'
                     socialMediaIcon = FacebookIcon
                     break
-                  case key.startsWith('twitter_url'):
+                  case key.startsWith('twitter'):
                     socialMediaName = 'Twitter'
                     socialMediaIcon = TwitterIcon
                     break
-                  case key.startsWith('instagram_url'):
+                  case key.startsWith('instagram'):
                     socialMediaName = 'Instagram'
                     socialMediaIcon = InstagramIcon
                     break
-                  case key.startsWith('behance_url'):
+                  case key.startsWith('behance'):
                     socialMediaName = 'Behance'
                     socialMediaIcon = BehanceIcon
                     break
-                  case key.startsWith('bgg_url'):
+                  case key.startsWith('bgg'):
                     socialMediaName = 'BoardGameGeek'
                     socialMediaIcon = BGGIcon
                     break
-                  case key.startsWith('chess_url'):
+                  case key.startsWith('chess'):
                     socialMediaName = 'Chess'
                     socialMediaIcon = ChessIcon
                     break
-                  case key.startsWith('deviantarts_url'):
+                  case key.startsWith('deviantarts'):
                     socialMediaName = 'DeviantArt'
                     socialMediaIcon = DeviantArtIcon
                     break
-                  case key.startsWith('goodreads_url'):
+                  case key.startsWith('goodreads'):
                     socialMediaName = 'Goodreads'
                     socialMediaIcon = GoodreadsIcon
                     break
-                  case key.startsWith('pinterest_url'):
+                  case key.startsWith('pinterest'):
                     socialMediaName = 'Pinterest'
                     socialMediaIcon = PinterestIcon
                     break
-                  case key.startsWith('smule_url'):
+                  case key.startsWith('smule'):
                     socialMediaName = 'Smule'
                     socialMediaIcon = SmuleIcon
                     break
-                  case key.startsWith('soundcloud_url'):
+                  case key.startsWith('soundcloud'):
                     socialMediaName = 'SoundCloud'
                     socialMediaIcon = SoundCloudIcon
                     break
-                  case key.startsWith('strava_url'):
+                  case key.startsWith('strava'):
                     socialMediaName = 'Strava'
                     socialMediaIcon = StravaIcon
                     break
-                  case key.startsWith('tripadvisor_url'):
+                  case key.startsWith('tripadvisor'):
                     socialMediaName = 'TripAdvisor'
                     socialMediaIcon = TripAdvisorIcon
                     break
-                  case key.startsWith('telegram_url'):
+                  case key.startsWith('telegram'):
                     socialMediaName = 'Telegram'
                     socialMediaIcon = TelegramIcon
                     break
-                  case key.startsWith('medium_url'):
+                  case key.startsWith('medium'):
                     socialMediaName = 'Medium'
                     socialMediaIcon = MediumIcon
                     break
-                  case key.startsWith('ultimate_guitar_url'):
+                  case key.startsWith('ultimate_guitar'):
                     socialMediaName = 'Ultimate Guitar'
                     socialMediaIcon = UltimateGuitarIcon
                     break
-                  case key.startsWith('youtube_url'):
+                  case key.startsWith('youtube'):
                     socialMediaName = 'YouTube'
                     socialMediaIcon = YouTubeIcon
                     break
-                  case key.startsWith('Others_url'):
+                  case key.startsWith('others'):
                     socialMediaName = extractDomainName(url)
                     socialMediaIcon = OthersIcon
                     break
