@@ -31,6 +31,7 @@ const SaveModal: React.FC<Props> = ({
   const [YesBtnLoading, setYesBtnLoading] = useState<boolean>(false)
   const { user } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
+  const { activeModal } = useSelector((state: RootState) => state.modal)
   const dispatch = useDispatch()
   const router = useRouter()
   const onboardcheck = () => {
@@ -42,6 +43,11 @@ const SaveModal: React.FC<Props> = ({
     }
 
     dispatch(setHasChanges(false))
+  }
+  const handleListingOnboarding = async () => {
+    if (activeModal === 'listing-onboarding') {
+      window.location.reload()
+    }
   }
 
   const handleYesClick = async () => {
@@ -75,6 +81,7 @@ const SaveModal: React.FC<Props> = ({
           </FilledButton>
           <OutlinedButton
             onClick={() => {
+              handleListingOnboarding()
               handleClose
               onboardcheck()
               setConfirmationModal(false)
