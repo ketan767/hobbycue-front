@@ -13,20 +13,22 @@ type Props = {}
 
 const CommunityLinks: React.FC<Props> = ({}) => {
   const { activeProfile } = useSelector((state: RootState) => state.user)
-  const { allPosts, loading, filters } = useSelector((state: RootState) => state.post)
+  const { allPosts, loading, filters } = useSelector(
+    (state: RootState) => state.post,
+  )
   const dispatch = useDispatch()
   const getPost = async () => {
     const params = new URLSearchParams(
       `has_link=true&populate=_author,_genre,_hobby`,
     )
-    if(filters.hobby!==""){
-      params.append('_hobby',filters.hobby);
-    }else{
-    activeProfile?.data?._hobbies.forEach((item: any) => {
-      params.append('_hobby', item.hobby._id)
-    })
+    if (filters.hobby !== '') {
+      params.append('_hobby', filters.hobby)
+    } else {
+      activeProfile?.data?._hobbies.forEach((item: any) => {
+        params.append('_hobby', item.hobby._id)
+      })
     }
-    const localSelectedLocation = filters.location;
+    const localSelectedLocation = filters.location
 
     const addresses = activeProfile.data?._addresses || []
     const matchingAddress = [
@@ -104,7 +106,28 @@ const CommunityLinks: React.FC<Props> = ({}) => {
               )
             })
           ) : posts.length === 0 ? (
-            <>No posts found</>
+            <>
+              <div className={styles['no-posts-div']}>
+                <p className={styles['no-posts-text']}>No links posts found</p>
+                <div
+                  style={{
+                    display: 'flex',
+                    flex: 1,
+                    justifyContent: 'center',
+                  }}
+                ></div>
+              </div>
+              <div className={styles['no-posts-div']}>
+                <p className={styles['no-posts-text']}></p>
+                <div
+                  style={{
+                    display: 'flex',
+                    flex: 1,
+                    justifyContent: 'center',
+                  }}
+                ></div>
+              </div>
+            </>
           ) : (
             <></>
           )}

@@ -69,8 +69,8 @@
 }
 .hobbies-side-wrapper section ul li {
   border-radius: 4px;
-  padding: 7px 8px;
-
+  padding: 8px;
+  min-height: 32px;
   font-weight: 500;
   font-size: 14px;
   line-height: 18px;
@@ -79,10 +79,10 @@
   cursor: pointer;
 }
 .hobbies-side-wrapper section ul li:hover {
-  background: #f7f5f9;
+  background: #ccc1da;
 }
 .hobbies-side-wrapper section ul li.selectedItem:hover {
-  background: #f7f5f9;
+  background: #ccc1da;
 }
 
 .hobbies-side-wrapper section ul li.selectedItem {

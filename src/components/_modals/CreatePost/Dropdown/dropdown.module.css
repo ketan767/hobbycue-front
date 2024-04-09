@@ -29,7 +29,7 @@
 }
 
 .heading:hover {
-  background-color: #f7f5f9;
+  background-color: #ccc1da;
   border-radius: 4px;
 }
 
@@ -43,7 +43,7 @@
 }
 .drop-down:hover {
   border-radius: 4px;
-  background-color: #f7f5f9;
+  background-color: #ccc1da;
 }
 .icon-active {
   transition: 0.2s;
@@ -78,6 +78,11 @@ p.dropdown-value {
   padding-bottom: 7px;
   cursor: pointer;
   line-height: 18px;
+  border-radius: 4px;
+}
+
+p.dropdown-value:hover{
+  background: #ccc1da !important;
 }
 
 p.dropdown-value-active {

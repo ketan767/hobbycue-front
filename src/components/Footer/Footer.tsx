@@ -123,7 +123,7 @@ const Footer: React.FC = () => {
         { title: 'Sign Up', link: 'http://blog.hobbycue.com/how-to/' },
         {
           title: 'Add a Listing',
-          link: 'http://blog.hobbycue.com/how-to/#add-listing/',
+          link: '/add-listing',
         },
         {
           title: 'Claim Listing',
