@@ -176,6 +176,11 @@ const ListingContactEditModal: React.FC<Props> = ({
       }))
     }
   }
+  const handlePhoneBlur = (e:any) => {
+    if(tick){
+      handleBlur(e);
+    }
+  }
   const handleBack = async () => {
     setBackBtnLoading(true)
     const { phone, public_email, website, whatsapp_number } = data
@@ -213,6 +218,9 @@ const ListingContactEditModal: React.FC<Props> = ({
   const handlePrefixChange = (element: any) => {
     const id = element?.id
     setSelectedCountryCode(countryData[id]?.phonePrefix)
+    if(tick){
+      handleWpPrefixChange(element);
+    }
   }
   const handleSubmit = async () => {
     let hasError = false;
@@ -368,20 +376,20 @@ const ListingContactEditModal: React.FC<Props> = ({
   }, [user])
 
   // client said to remove this checkbox function and add it again
-  useEffect(() => {
-    if (tick) {
-      setData((prev) => {
-        return {
-          ...prev,
-          whatsapp_number: {
-            number: data.phone.number,
-            prefix: selectedCountryCode,
-          },
-        }
-      })
-      setWpSelectedCountryCode(selectedCountryCode)
-    }
-  }, [data.phone.number, selectedCountryCode, tick])
+  // useEffect(() => {
+  //   if (tick) {
+  //     setData((prev) => {
+  //       return {
+  //         ...prev,
+  //         whatsapp_number: {
+  //           number: data.phone.number,
+  //           prefix: selectedCountryCode,
+  //         },
+  //       }
+  //     })
+  //     setWpSelectedCountryCode(selectedCountryCode)
+  //   }
+  // }, [data.phone.number, selectedCountryCode, tick])
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
@@ -569,7 +577,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                     ref={phoneRef}
                     onChange={handleInputChange}
                     className={styles['phone-input']}
-                    // onBlur={handleBlur}
+                    onBlur={handlePhoneBlur}
                   />
                 </div>
 
@@ -603,6 +611,17 @@ const ListingContactEditModal: React.FC<Props> = ({
                               }
                             })
                             setWpSelectedCountryCode('+91')
+                          }else{
+                            setData((prev) => {
+                              return {
+                                ...prev,
+                                whatsapp_number: {
+                                  number: prev['phone'].number,
+                                  prefix: selectedCountryCode,
+                                },
+                              }
+                            })
+                            setWpSelectedCountryCode(selectedCountryCode)
                           }
                           setTick(!tick)
                         }}

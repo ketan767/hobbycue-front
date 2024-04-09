@@ -320,7 +320,7 @@ const ListingPageMain: React.FC<Props> = ({
                     if (typeof item === 'string') return
                     return (
                       <Link
-                        href={`/hobby/${item?.hobby?.slug}`}
+                        href={`/hobby/${item?.genre?.slug??item?.hobby?.slug}`}
                         className={styles.textGray}
                         key={item._id}
                       >

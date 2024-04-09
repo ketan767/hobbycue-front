@@ -146,6 +146,12 @@ const ProfileContactEditModal: React.FC<Props> = ({
     }
   }
 
+  const handlePhoneBlur = (e:any) => {
+    if(tick){
+      handleBlur(e);
+    }
+  }
+
   const Backsave = async () => {
     setBackBtnLoading(true)
     if (
@@ -314,20 +320,20 @@ const ProfileContactEditModal: React.FC<Props> = ({
     }
   }
   // client said to remove this checkbox function and add it again
-  useEffect(() => {
-    if (tick) {
-      setData((prev) => {
-        return {
-          ...prev,
-          whatsapp_number: {
-            number: data.phone.number,
-            prefix: selectedCountryCode,
-          },
-        }
-      })
-      setWpSelectedCountryCode(selectedCountryCode)
-    }
-  }, [data.phone.number, selectedCountryCode, tick])
+  // useEffect(() => {
+  //   if (tick) {
+  //     setData((prev) => {
+  //       return {
+  //         ...prev,
+  //         whatsapp_number: {
+  //           number: data.phone.number,
+  //           prefix: selectedCountryCode,
+  //         },
+  //       }
+  //     })
+  //     setWpSelectedCountryCode(selectedCountryCode)
+  //   }
+  // }, [data.phone.number, selectedCountryCode, tick])
   const handleSkip = async () => {
     let updatedCompletedSteps = [...user.completed_onboarding_steps]
 
@@ -389,6 +395,9 @@ const ProfileContactEditModal: React.FC<Props> = ({
   const handlePrefixChange = (element: any) => {
     const id = element?.id
     setSelectedCountryCode(countryData[id]?.phonePrefix)
+    if(tick){
+      handleWpPrefixChange(element)
+    }
   }
 
   const checkEmpty = (data: any) => {
@@ -577,7 +586,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
                     onChange={handleInputChange}
                     ref={phoneRef}
                     className={styles['phone-input']}
-                    // onBlur={handleBlur}
+                    onBlur={handlePhoneBlur}
                   />
                 </div>
                 <p className={styles['helper-text']}>{data.phone.error}</p>
@@ -597,7 +606,6 @@ const ProfileContactEditModal: React.FC<Props> = ({
                         value={!tick}
                         checked={tick}
                         onChange={(e) => {
-                          if (tick === true) {
                             if (tick === true) {
                               setData((prev) => {
                                 return {
@@ -609,8 +617,18 @@ const ProfileContactEditModal: React.FC<Props> = ({
                                 }
                               })
                               setWpSelectedCountryCode('+91')
+                            }else{
+                              setData((prev) => {
+                                return {
+                                  ...prev,
+                                  whatsapp_number: {
+                                    number: prev['phone'].number,
+                                    prefix: selectedCountryCode,
+                                  },
+                                }
+                              })
+                              setWpSelectedCountryCode(selectedCountryCode)
                             }
-                          }
                           setTick(!tick)
                         }}
                       />{' '}
