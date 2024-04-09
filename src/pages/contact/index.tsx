@@ -19,6 +19,7 @@ import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import { addContactUs } from '@/services/user.service'
 import { containOnlyNumbers } from '@/utils'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import { useRouter } from 'next/router'
 
 
 type ContactUsData = {
@@ -42,12 +43,13 @@ type ContactUsData = {
 type Props = {}
 
 const Contact: React.FC<Props> = ({}) => {
+  const router = useRouter();
   const [data, setData] = useState<ContactUsData>({
     name: { value: '', error: null },
     phone: { number: '', prefix: '', error: null },
     public_email: { value: '', error: null },
-    YouAre: { value: '', error: null },
-    Regarding: { value: '', error: null },
+    YouAre: { value: 'Site / App user', error: null },
+    Regarding: { value: 'My Account', error: null },
     message: { value: '', error: null },
     whatsapp_number: { number: '', prefix: '', error: null },
   })
@@ -58,8 +60,8 @@ const Contact: React.FC<Props> = ({}) => {
   const [isError, setIsError] = useState(false)
   const [showYouDropdown, setShowYouDropdown] = useState(false)
   const [showRegDropdown, setShowRegDropdown] = useState(false)
-  const YoudropdownRef: any = useRef()
-  const RegdropdownRef: any = useRef()
+  const YoudropdownRef = useRef<HTMLDivElement>(null);
+  const RegdropdownRef = useRef<HTMLDivElement>(null);
   const [tick, setTick] = useState(false)
   const WhtphoneRef = useRef<HTMLInputElement>(null)
   const phoneRef = useRef<HTMLInputElement>(null)
@@ -100,7 +102,22 @@ const Contact: React.FC<Props> = ({}) => {
   const handleInputChange = (event: any) => {
     const { name, value } = event.target
 
-    if (name === 'phone' || name === 'whatsapp_number') {
+     if (name === 'phone' || name === 'whatsapp_number') {
+      if(tick===true){
+        setData((prev) => ({
+          ...prev,
+          phone: {
+            ...prev['phone'],
+            number: value || '',
+            error: null,
+          },
+          whatsapp_number: {
+            ...prev['whatsapp_number'],
+            number: value || '',
+            error: null,
+          },
+        }))
+      }else{
       setData((prev) => ({
         ...prev,
         [name]: {
@@ -109,7 +126,7 @@ const Contact: React.FC<Props> = ({}) => {
           error: null,
         },
       }))
-    } else if (name === 'message') {
+    }} else if (name === 'message') {
       setData((prev) => ({
         ...prev,
         [name]: { value, error: null },
@@ -138,11 +155,13 @@ const Contact: React.FC<Props> = ({}) => {
   }
 
   const handleSubmit = async () => {
+    let hasError = false;
     if (
       (!data.public_email.value || data.public_email.value.length === 0)
     ) {
+      hasError = true;
       inputRef.current?.focus()
-      return setData((prev) => {
+      setData((prev) => {
         return {
           ...prev,
           public_email: {
@@ -157,8 +176,9 @@ const Contact: React.FC<Props> = ({}) => {
         !containOnlyNumbers(data.phone.number.toString().trim()) ||
         data.phone.number.toString().trim().length !== 10
       ) {
+        hasError = true;
         phoneRef.current?.focus()
-        return setData((prev) => {
+        setData((prev) => {
           return {
             ...prev,
             phone: { ...prev.phone, error: 'Enter a valid phone number' },
@@ -171,8 +191,9 @@ const Contact: React.FC<Props> = ({}) => {
         !containOnlyNumbers(data.whatsapp_number.number.toString().trim()) ||
         data.whatsapp_number.number.toString().trim().length !== 10
       ) {
+        hasError = true;
         WhtphoneRef.current?.focus()
-        return setData((prev) => {
+        setData((prev) => {
           return {
             ...prev,
             whatsapp_number: {
@@ -184,8 +205,8 @@ const Contact: React.FC<Props> = ({}) => {
       }
     }
     if(!data.YouAre.value || data.YouAre.value.length ===0){
-      console.log('first')
-      return setData((prev)=>({...prev,
+      hasError = true;
+      setData((prev)=>({...prev,
       YouAre:{
         ...prev.YouAre,
         error:"This field is mandatory"
@@ -193,8 +214,8 @@ const Contact: React.FC<Props> = ({}) => {
       }))
     }
     if(!data.Regarding.value || data.Regarding.value.length === 0){
-    console.log({'reg':data.Regarding.value})
-      return setData((prev)=>({...prev,
+      hasError = true;
+      setData((prev)=>({...prev,
       Regarding:{
         ...prev.Regarding,
         error:"This field is mandatory"
@@ -202,10 +223,14 @@ const Contact: React.FC<Props> = ({}) => {
       }));
     }
     if(data.message.value.length<1){
-      return setData((prev)=>({...prev,message:{
+      hasError = true;
+      setData((prev)=>({...prev,message:{
         ...prev.message,
         error:"Message can't be empty"
       }}))
+    }
+    if(hasError===true){
+      return;
     }
     const name = data.name.value
     const email = data.public_email.value
@@ -292,6 +317,28 @@ const Contact: React.FC<Props> = ({}) => {
       }))
     }
   }, [user, activeProfile, isLoggedIn])
+
+  useEffect(()=>{
+    const onOutsideClickHandler = (e:MouseEvent) => {
+      if (
+        YoudropdownRef.current &&
+        !YoudropdownRef.current.contains(e.target as Node)
+      ) {
+        setShowYouDropdown(false)
+      }
+      if (
+        RegdropdownRef.current &&
+        !RegdropdownRef.current.contains(e.target as Node)
+      ) {
+        setShowRegDropdown(false)
+      }
+    }
+    document.addEventListener("mousedown",onOutsideClickHandler);
+    return () => {
+      document.removeEventListener("mousedown",onOutsideClickHandler);
+    }
+  },[])
+
   const isMobile = useMediaQuery('(max-width:1100px)')
   const questionSvg = (
     <svg
@@ -313,7 +360,7 @@ const Contact: React.FC<Props> = ({}) => {
         {isLoggedIn ? (
           <div className={styles['switcher-help-centre']}>
           <ProfileSwitcher className={styles['contact-profile-switcher']} />
-          {isMobile&&<button className={styles['help-centre-btn']}>
+          {isMobile&&<button onClick={()=>{router.push('/help')}} className={styles['help-centre-btn']}>
             {questionSvg}
             <p>Help Centre</p>
           </button>}
@@ -385,6 +432,7 @@ const Contact: React.FC<Props> = ({}) => {
                   <label>Phone Number</label>
                   <div className={styles['phone-prefix-input']}>
                     <DropdownMenu
+                      positionClass={styles['dropdown-abs']}
                       value={selectedCountryCode}
                       valueIndex={countryData.findIndex(
                         (country, idx) =>
@@ -407,17 +455,19 @@ const Contact: React.FC<Props> = ({}) => {
                       onChange={handleInputChange}
                       ref={phoneRef}
                       className={styles['phone-input']}
-                      onBlur={handleBlur}
+                      // onBlur={handleBlur}
                     />
                   </div>
                   <p className={styles['helper-text']}>{data.phone.error}</p>
                 </div>
 
                 {/* WhatsApp Number */}
-                <div className={styles['input-box']}>
+                <div className={`${styles['input-box']} ${
+                      data.whatsapp_number.error ? styles['input-box-error'] : ''
+                    }`}>
                   <label className={styles['whatsapp-label']}>
                     WhatsApp
-                    {/* <CustomTooltip title="Use same">
+                    <CustomTooltip title="Use same">
                       <div>
                         <Checkbox
                           size="small"
@@ -428,7 +478,6 @@ const Contact: React.FC<Props> = ({}) => {
                           checked={tick}
                           onChange={(e) => {
                             if (tick === true) {
-                              if (tick === true) {
                                 setData((prev) => {
                                   return {
                                     ...prev,
@@ -439,16 +488,27 @@ const Contact: React.FC<Props> = ({}) => {
                                   }
                                 })
                                 setWpSelectedCountryCode('+91')
-                              }
+                            }else{
+                              setData((prev) => {
+                                return {
+                                  ...prev,
+                                  whatsapp_number: {
+                                    number: prev['phone'].number,
+                                    prefix: prev['phone'].prefix,
+                                  },
+                                }
+                              })
+                              setWpSelectedCountryCode(data.phone.prefix)
                             }
                             setTick(!tick)
                           }}
                         />{' '}
                       </div>
-                    </CustomTooltip> */}
+                    </CustomTooltip>
                   </label>
                   <div className={styles['phone-prefix-input']}>
                     <DropdownMenu
+                      positionClass={styles['dropdown-abs']}
                       value={selectedWpCountryCode}
                       valueIndex={countryData.findIndex(
                         (country, idx) =>
@@ -491,7 +551,6 @@ const Contact: React.FC<Props> = ({}) => {
                     <input hidden required />
                     <div
                       className={styles['select-container']}
-                      ref={YoudropdownRef}
                     >
                       <div
                         className={`${styles['select-input']}  ${
@@ -503,7 +562,7 @@ const Contact: React.FC<Props> = ({}) => {
                         <Image src={DownArrow} alt="down" />
                       </div>
                       {showYouDropdown && (
-                        <div className={styles['options-container']}>
+                        <div ref={YoudropdownRef} className={styles['options-container']}>
                           <div className={styles['vertical-line']}></div>
                           {YouareData.map((item: any, idx) => (
                             <div
@@ -544,7 +603,6 @@ const Contact: React.FC<Props> = ({}) => {
                     <input hidden required />
                     <div
                       className={styles['select-container']}
-                      ref={RegdropdownRef}
                     >
                       <div
                         className={`${styles['select-input']}  ${
@@ -556,7 +614,7 @@ const Contact: React.FC<Props> = ({}) => {
                         <Image src={DownArrow} alt="down" />
                       </div>
                       {showRegDropdown && (
-                        <div className={styles['options-container']}>
+                        <div ref={RegdropdownRef} className={styles['options-container']}>
                           <div className={styles['vertical-line']}></div>
                           {Regarding.map((item: any, idx) => (
                             <div
@@ -620,7 +678,7 @@ const Contact: React.FC<Props> = ({}) => {
           </section>
         </div>
         {isMobile ? null : (
-          <button className={styles['help-centre-btn']}>
+          <button onClick={()=>{router.push('/help')}} className={styles['help-centre-btn']}>
             {questionSvg}
             <p>Help Centre</p>
           </button>

@@ -320,7 +320,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       >
                         {/* Render the image */}
                         {hobby.profile_image ? (
-                          <Image
+                          <img
                             src={hobby.profile_image}
                             alt={`${hobby.display}'s `}
                             width={64}
@@ -358,7 +358,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           hobby?.sub_category?.display
                             ? ' | ' + hobby.sub_category.display
                             : ''
-                        }`}</div>
+                        }`}&nbsp;</div>
                         <div className={styles.hobbydescription}>
                           {hobby?.description}
                         </div>
@@ -399,7 +399,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     >
                       <div className={styles.userAvatar}>
                         {user?.profile_image ? (
-                          <Image
+                          <img
                             src={user?.profile_image}
                             alt={`${user.full_name}'s profile`}
                             width={64}
@@ -455,7 +455,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     >
                       <div className={styles.peopleAvatar}>
                         {page.profile_image ? (
-                          <Image
+                          <img
                             src={page.profile_image}
                             alt={`${page.title}'s `}
                             width={64}
@@ -480,9 +480,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
                             } else {
                               return ' ' + item
                             }
-                          }) +
-                            ' | ' +
-                            page._address?.city || '\u00a0'}
+                          }) + (page._address?.city?` | ${page._address?.city}`:'') ||
+                            '\u00a0'}
                         </div>
                       </div>
                     </div>
@@ -519,7 +518,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     >
                       <div className={styles.peopleAvatar}>
                         {page.profile_image ? (
-                          <Image
+                          <img
                             src={page.profile_image}
                             alt={`${page.title}'s `}
                             width={64}
@@ -538,7 +537,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           {page?.tagline || '\u00a0'}
                         </div>
                         <div className={styles.userLocation}>
-                          {page.page_type + ' | ' + page._address?.city ||
+                          {page.page_type + (page._address?.city?` | ${page._address?.city}`:'') ||
                             '\u00a0'}
                         </div>
                       </div>
@@ -576,7 +575,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     >
                       <div className={styles.peopleAvatar}>
                         {page.profile_image ? (
-                          <Image
+                          <img
                             src={page.profile_image}
                             alt={`${page.title}'s `}
                             width={64}
@@ -595,7 +594,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           {page?.tagline || '\u00a0'}
                         </div>
                         <div className={styles.userLocation}>
-                          {page.page_type + ' | ' + page._address?.city ||
+                          {page.page_type + (page._address?.city?` | ${page._address?.city}`:'') ||
                             '\u00a0'}
                         </div>
                       </div>

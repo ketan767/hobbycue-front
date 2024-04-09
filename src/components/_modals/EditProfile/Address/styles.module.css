@@ -215,7 +215,7 @@
   border: 1px solid #c0504d !important;
 }
 .modal-wrapper {
-  height: 93.5%;
+
   display: flex;
   flex-direction: column;
 }

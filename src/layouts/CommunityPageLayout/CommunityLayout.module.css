@@ -69,11 +69,11 @@
 }
 .hobbies-side-wrapper section ul li {
   border-radius: 4px;
-  padding: var(--spacing-8) var(--spacing-8);
+  padding: 7px 8px;
 
   font-weight: 500;
   font-size: 14px;
-  line-height: 20px;
+  line-height: 18px;
 
   color: var(--grey-dark, #939ca3);
   cursor: pointer;
@@ -142,6 +142,11 @@
 /* Invite to Community Wrapper */
 .invite-wrapper {
   margin-bottom: var(--spacing-12);
+}
+.invite-wrapper header h3{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .invite-wrapper header {
   padding: var(--spacing-16) var(--spacing-16) 5px var(--spacing-16);
@@ -292,6 +297,8 @@ line-height: 20px; /* 142.857% */
   width: 40px;
   height: 40px;
   border-radius: 100%;
+  border: 1px solid rgb(var(--primary-100-rgb));
+  
   display: none;
 }
 

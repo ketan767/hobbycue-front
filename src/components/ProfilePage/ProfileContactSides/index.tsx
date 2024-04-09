@@ -37,6 +37,9 @@ const ProfileContactSide = ({ data, expandData, contactError }: Props) => {
 
   const itsMe = data?.public_email === user?.email
 
+  console.warn({data});
+  
+
   return (
     <>
       <PageContentBox
@@ -103,7 +106,7 @@ const ProfileContactSide = ({ data, expandData, contactError }: Props) => {
           )}
 
           {/* Email */}
-          {data.public_email && itsMe && (
+          {data.public_email && (
             <Link href={`mailto:${data?.public_email}`}>
               <li className={styles['list-item']}>
                 <svg

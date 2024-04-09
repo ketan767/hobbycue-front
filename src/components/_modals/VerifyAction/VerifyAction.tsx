@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { Button, CircularProgress } from '@mui/material'
 
@@ -32,6 +32,8 @@ type Props = {
 
 const VerifyActionModal: React.FC<Props> = ({}) => {
   const dispatch = useDispatch()
+  const passwordRef = useRef<HTMLDivElement>(null)
+
   const { user } = useSelector((state: RootState) => state.user)
   const [nextDisabled, setNextDisabled] = useState(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
@@ -99,6 +101,13 @@ const VerifyActionModal: React.FC<Props> = ({}) => {
     }
   }, [])
 
+  useEffect(()=>{
+    const inputElem = passwordRef.current?.children.item(0)?.children.item(0);
+    if(inputElem && "focus" in inputElem && typeof inputElem.focus === "function"){
+      inputElem.focus()
+    }
+  },[])
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -122,6 +131,7 @@ const VerifyActionModal: React.FC<Props> = ({}) => {
               }`}
             >
               <TextField
+                ref={passwordRef}
                 fullWidth
                 required
                 placeholder="Password"

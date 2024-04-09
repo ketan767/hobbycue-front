@@ -26,7 +26,6 @@ import { FormControl, MenuItem, Select } from '@mui/material'
 import Image from 'next/image'
 import { useDispatch, useSelector } from 'react-redux'
 import SaveModal from '../../SaveModal/saveModal'
-import DropdownMenu from '@/components/DropdownMenu'
 import { useRouter } from 'next/router'
 import AddHobby from '../../AddHobby/AddHobbyModal'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
@@ -91,6 +90,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const [showModal, setShowModal] = useState(false)
   const hobbyDropdownRef = useRef<HTMLDivElement>(null)
   const genreDropdownRef = useRef<HTMLDivElement>(null)
+  const selectLevelRef = useRef<HTMLSelectElement>(null)
   const { user } = useSelector((state: RootState) => state.user)
   const searchref = useRef<HTMLInputElement>(null)
   const [addHobbyBtnLoading, setAddHobbyBtnLoading] = useState<boolean>(false)
@@ -105,6 +105,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   })
   const [showHobbyDowpdown, setShowHobbyDowpdown] = useState<boolean>(false)
   const [showGenreDowpdown, setShowGenreDowpdown] = useState<boolean>(false)
+  console.warn({showGenreDowpdown});
+  
   const [isError, setIsError] = useState(false)
   const [HobbyError, setHobbyError] = useState(false)
   const [focusedHobbyIndex, setFocusedHobbyIndex] = useState<number>(-1)
@@ -184,10 +186,34 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   }
 
   const handleHobbyKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      AddButtonRef.current?.click()
+    if (showHobbyDowpdown) {
+      if (e.key === 'Enter') {
+        genreInputRef.current?.focus()
+        const query = `fields=display,genre&level=3&level=2&level=1&level=0&show=true&search=${hobbyInputValue}`
+        getAllHobbies(query).then((result)=>{
+          const sortedHobbies = result.res.data.hobbies.sort((a: any, b: any) => {
+            const indexA = a.display
+              .toLowerCase()
+              .indexOf(hobbyInputValue.toLowerCase())
+            const indexB = b.display
+              .toLowerCase()
+              .indexOf(hobbyInputValue.toLowerCase())
+      
+            if (indexA === 0 && indexB !== 0) {
+              return -1
+            } else if (indexB === 0 && indexA !== 0) {
+              return 1
+            }
+      
+            // Otherwise, use default sorting behavior
+            return 0
+          })
+          const selectedHobby = sortedHobbies[0];
+          handleHobbySelection(selectedHobby)
+        });
+      }
+      return
     }
-    if (hobbyDropdownList.length === 0) return
 
     switch (e.key) {
       case 'ArrowDown':
@@ -252,10 +278,13 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   }
 
   const handleGenreKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      AddButtonRef.current?.click()
+    if (!showGenreDowpdown) {
+      if (e.key === 'Enter') {
+        // AddButtonRef.current?.click()
+        selectLevelRef.current?.click()
+      }
+      return
     }
-    if (genreDropdownList.length === 0) return
 
     switch (e.key) {
       case 'ArrowDown':
@@ -289,9 +318,9 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     console.log(selectedHobby)
 
     setData((prev) => ({ ...prev, hobby: selectedHobby }))
-    setHobbyInputValue(selectedHobby.display)
+    setHobbyInputValue(selectedHobby?.display??hobbyInputValue)
 
-    if (selectedHobby.genre && selectedHobby.genre.length > 0) {
+    if (selectedHobby && selectedHobby.genre && selectedHobby.genre.length > 0) {
       setGenreId(selectedHobby.genre[0])
 
       const query = `fields=display&show=true&genre=${selectedHobby.genre[0]}&level=5`
@@ -1123,6 +1152,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                       </td>
                       <td>
                         <Select
+                          ref={selectLevelRef}
                           value={levels[data.level - 1]?.name}
                           className={styles['hobby-dropdown']}
                           onChange={(e) => {

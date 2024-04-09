@@ -176,7 +176,7 @@ const PostCard: React.FC<Props> = (props) => {
             <Link href={`/profile/${postData?._author?.profile_url}`}>
               {postData?.author_type === 'Listing' ? (
                 postData?._author?.profile_image ? (
-                  <Image
+                  <img
                     className={styles['author-listing']}
                     src={postData?._author?.profile_image}
                     alt="Author Profile"
@@ -189,7 +189,7 @@ const PostCard: React.FC<Props> = (props) => {
                   ></div>
                 )
               ) : postData?._author?.profile_image ? (
-                <Image
+                <img
                   className={styles['author-profile']}
                   src={postData?._author?.profile_image}
                   alt="Author Profile"

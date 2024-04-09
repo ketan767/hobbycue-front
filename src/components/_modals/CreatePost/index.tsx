@@ -25,6 +25,7 @@ import InputSelect from '@/components/_formElements/Select/Select'
 import SaveModal from '../SaveModal/saveModal'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import { useRouter } from 'next/router'
+import { increaseRefreshNum, setFilters } from '@/redux/slices/post'
 
 const CustomEditor = dynamic(() => import('@/components/CustomEditor'), {
   ssr: false,
@@ -69,6 +70,7 @@ export const CreatePost: React.FC<Props> = ({
   propData,
 }) => {
   const { user, activeProfile } = useSelector((state: RootState) => state.user)
+  const { filters } = useSelector((state: RootState) => state.post)
   const [hobbies, setHobbies] = useState([])
   const [data, setData] = useState<NewPostData>({
     type: 'user',
@@ -82,6 +84,41 @@ export const CreatePost: React.FC<Props> = ({
     video_url: '',
   })
   const [showMetaData, setShowMetaData] = useState(true)
+
+  useEffect(() => {
+    const hobbiesDropDownArr =
+      activeProfile.data?._hobbies?.map((item: any) => ({
+        hobbyId: item.hobby?._id,
+        genreId: item.genre?._id ?? '', // Add genre id to the object
+        hobbyDisplay: `${item.hobby?.display}`,
+        genreDisplay: `${item?.genre?.display ?? ''}`,
+      })) ?? []
+    const selectedHobby = hobbiesDropDownArr.find((obj: any) => {
+      if (filters.genre && filters.genre !== '') {
+        return obj.hobbyId === filters.hobby && obj.genreId === filters.genre
+      } else {
+        return obj.hobbyId === filters.hobby
+      }
+    })
+    setData((prev) => {
+      if (selectedHobby) {
+        return {
+          ...prev,
+          hobby: {
+            _id: selectedHobby.hobbyId,
+            display: selectedHobby.hobbyDisplay,
+          },
+          genre: {
+            _id: selectedHobby.genreId,
+            display: selectedHobby.genreDisplay,
+          },
+          visibility:filters.location??''
+        }
+      } else {
+        return ({...prev,visibility:filters.location??''})
+      }
+    })
+  }, [filters])
 
   useEffect(() => {
     setHobbies(activeProfile.data?._hobbies)
@@ -353,8 +390,11 @@ export const CreatePost: React.FC<Props> = ({
         return console.log(err)
       }
       if (res.data.success) {
+        store.dispatch(setFilters({location:data.visibility!==""?data.visibility:null,hobby:data.hobby?._id??"",
+        genre:data.genre?._id??"",}))
         store.dispatch(closeModal())
-        window.location.reload()
+        // window.location.reload()
+        store.dispatch(increaseRefreshNum())
       }
       return
     }
@@ -366,8 +406,11 @@ export const CreatePost: React.FC<Props> = ({
     }
     if (res.data.success) {
       console.log('res', res)
+      store.dispatch(setFilters({location:data.visibility!==""?data.visibility:null,hobby:data.hobby?._id??"",
+      genre:data.genre?._id??"",}))
       store.dispatch(closeModal())
-      window.location.reload()
+      // window.location.reload()
+      store.dispatch(increaseRefreshNum())
     }
   }
 
@@ -564,6 +607,7 @@ export const CreatePost: React.FC<Props> = ({
                     data.genre?.display ? '-' : ''
                   }${data.genre?.display ?? ''}`}
                   onChange={(e: any) => {}}
+                  selectText="All Hobbies"
                 >
                   {hobbies?.map((item: any, idx) => {
                     return (

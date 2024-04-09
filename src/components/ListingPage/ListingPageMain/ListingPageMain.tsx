@@ -23,6 +23,8 @@ import SoundCloudIcon from '@/assets/svg/Soundcloud.svg'
 import StravaIcon from '@/assets/svg/Strava.svg'
 import TripAdvisorIcon from '@/assets/svg/Tripadvisor.svg'
 import UltimateGuitarIcon from '@/assets/svg/Ultimate-Guitar.svg'
+import TelegramIcon from '@/assets/svg/Telegram.svg'
+import MediumIcon from '@/assets/svg/MediumWeb.svg'
 import YouTubeIcon from '@/assets/svg/Youtube.svg'
 import ListingPageLayout from '../../../layouts/ListingPageLayout'
 import { getListingPages, getListingTags } from '@/services/listing.service'
@@ -397,16 +399,21 @@ const ListingPageMain: React.FC<Props> = ({
                             href={`/page/${item.page_url}`}
                           >
                             <div className={styles['related']}>
-                              <Image
-                                src={
-                                  item.profile_image
-                                    ? item.profile_image
-                                    : DefaultPageImage
-                                }
-                                alt={item?.title}
-                                width="32"
-                                height="32"
-                              />
+                              {item.profile_image ? (
+                                <img
+                                  src={item.profile_image}
+                                  alt={item?.title}
+                                  width="32"
+                                  height="32"
+                                />
+                              ) : (
+                                <Image
+                                  src={DefaultPageImage}
+                                  alt={item?.title}
+                                  width="32"
+                                  height="32"
+                                />
+                              )}
                               <span className={styles['item-title']}>
                                 {item?.title}
                               </span>
@@ -941,16 +948,21 @@ const ListingPageMain: React.FC<Props> = ({
                               href={`/page/${item.page_url}`}
                             >
                               <div className={styles['related']}>
-                                <Image
-                                  src={
-                                    item.profile_image
-                                      ? item.profile_image
-                                      : DefaultPageImage
-                                  }
-                                  alt={item?.title}
-                                  width="32"
-                                  height="32"
-                                />
+                                {item.profile_image ? (
+                                  <img
+                                    src={item.profile_image}
+                                    alt={item?.title}
+                                    width="32"
+                                    height="32"
+                                  />
+                                ) : (
+                                  <Image
+                                    src={DefaultPageImage}
+                                    alt={item?.title}
+                                    width="32"
+                                    height="32"
+                                  />
+                                )}
                                 <span className={styles['item-title']}>
                                   {item?.title}
                                 </span>
@@ -993,85 +1005,91 @@ const ListingPageMain: React.FC<Props> = ({
                 >
                   {data?.social_media_urls && (
                     <>
-                      {renderSocialLink(
-                        data.social_media_urls.facebook_url,
-                        FacebookIcon,
-                        'Facebook',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.twitter_url,
-                        TwitterIcon,
-                        'Twitter',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.instagram_url,
-                        InstagramIcon,
-                        'Instagram',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.behance_url,
-                        BehanceIcon,
-                        'Behance',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.bgg_url,
-                        BGGIcon,
-                        'BoardGameGeek',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.chess_url,
-                        ChessIcon,
-                        'Chess',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.deviantarts_url,
-                        DeviantArtIcon,
-                        'DeviantArt',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.goodreads_url,
-                        GoodreadsIcon,
-                        'Goodreads',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.pinterest_url,
-                        PinterestIcon,
-                        'Pinterest',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.smule_url,
-                        SmuleIcon,
-                        'Smule',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.soundcloud_url,
-                        SoundCloudIcon,
-                        'SoundCloud',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.strava_url,
-                        StravaIcon,
-                        'Strava',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.tripadvisor_url,
-                        TripAdvisorIcon,
-                        'TripAdvisor',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.ultimate_guitar_url,
-                        UltimateGuitarIcon,
-                        'Ultimate Guitar',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.youtube_url,
-                        YouTubeIcon,
-                        'YouTube',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.Others_url,
-                        OthersIcon,
-                        extractDomainName(data.social_media_urls.Others_url),
+                      {Object.entries(data.social_media_urls).map(
+                        ([key, url]) => {
+                          let socialMediaName = ''
+                          let socialMediaIcon = null
+
+                          switch (true) {
+                            case key.startsWith('facebook_url'):
+                              socialMediaName = 'Facebook'
+                              socialMediaIcon = FacebookIcon
+                              break
+                            case key.startsWith('twitter_url'):
+                              socialMediaName = 'Twitter'
+                              socialMediaIcon = TwitterIcon
+                              break
+                            case key.startsWith('instagram_url'):
+                              socialMediaName = 'Instagram'
+                              socialMediaIcon = InstagramIcon
+                              break
+                            case key.startsWith('behance_url'):
+                              socialMediaName = 'Behance'
+                              socialMediaIcon = BehanceIcon
+                              break
+                            case key.startsWith('bgg_url'):
+                              socialMediaName = 'BoardGameGeek'
+                              socialMediaIcon = BGGIcon
+                              break
+                            case key.startsWith('chess_url'):
+                              socialMediaName = 'Chess'
+                              socialMediaIcon = ChessIcon
+                              break
+                            case key.startsWith('deviantarts_url'):
+                              socialMediaName = 'DeviantArt'
+                              socialMediaIcon = DeviantArtIcon
+                              break
+                            case key.startsWith('goodreads_url'):
+                              socialMediaName = 'Goodreads'
+                              socialMediaIcon = GoodreadsIcon
+                              break
+                            case key.startsWith('pinterest_url'):
+                              socialMediaName = 'Pinterest'
+                              socialMediaIcon = PinterestIcon
+                              break
+                            case key.startsWith('smule_url'):
+                              socialMediaName = 'Smule'
+                              socialMediaIcon = SmuleIcon
+                              break
+                            case key.startsWith('soundcloud_url'):
+                              socialMediaName = 'SoundCloud'
+                              socialMediaIcon = SoundCloudIcon
+                              break
+                            case key.startsWith('strava_url'):
+                              socialMediaName = 'Strava'
+                              socialMediaIcon = StravaIcon
+                              break
+                            case key.startsWith('tripadvisor_url'):
+                              socialMediaName = 'TripAdvisor'
+                              socialMediaIcon = TripAdvisorIcon
+                              break
+                            case key.startsWith('ultimate_guitar_url'):
+                              socialMediaName = 'Ultimate Guitar'
+                              socialMediaIcon = UltimateGuitarIcon
+                              break
+                            case key.startsWith('youtube_url'):
+                              socialMediaName = 'YouTube'
+                              socialMediaIcon = YouTubeIcon
+                              break
+                            case key.startsWith('Others_url'):
+                              socialMediaName = extractDomainName(url)
+                              socialMediaIcon = OthersIcon
+                              break
+                            // Add cases for other social media URLs as needed
+                            default:
+                              break
+                          }
+
+                          if (socialMediaIcon && socialMediaName) {
+                            return renderSocialLink(
+                              url,
+                              socialMediaIcon,
+                              socialMediaName,
+                            )
+                          }
+
+                          return null // If no matching social media key is found, return null
+                        },
                       )}
                     </>
                   )}
@@ -1605,16 +1623,21 @@ const ListingPageMain: React.FC<Props> = ({
                             href={`/page/${item.page_url}`}
                           >
                             <div className={styles['related']}>
-                              <Image
-                                src={
-                                  item.profile_image
-                                    ? item.profile_image
-                                    : DefaultPageImage
-                                }
-                                alt={item?.title}
-                                width="32"
-                                height="32"
-                              />
+                              {item.profile_image ? (
+                                <img
+                                  src={item.profile_image}
+                                  alt={item?.title}
+                                  width="32"
+                                  height="32"
+                                />
+                              ) : (
+                                <Image
+                                  src={DefaultPageImage}
+                                  alt={item?.title}
+                                  width="32"
+                                  height="32"
+                                />
+                              )}
                               <span className={styles['item-title']}>
                                 {item?.title}
                               </span>
@@ -1655,87 +1678,101 @@ const ListingPageMain: React.FC<Props> = ({
                   styles['display-desktop']
                 }${showSocialMedia ? ' ' + styles['display-mobile'] : ''}`}
               >
-                {data && (
+                {data.social_media_urls && (
                   <>
-                    {renderSocialLink(
-                      data.social_media_urls?.facebook_url,
-                      FacebookIcon,
-                      'Facebook',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.twitter_url,
-                      TwitterIcon,
-                      'Twitter',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.instagram_url,
-                      InstagramIcon,
-                      'Instagram',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.behance_url,
-                      BehanceIcon,
-                      'Behance',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.bgg_url,
-                      BGGIcon,
-                      'BoardGameGeek',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.chess_url,
-                      ChessIcon,
-                      'Chess',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.deviantarts_url,
-                      DeviantArtIcon,
-                      'DeviantArt',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.goodreads_url,
-                      GoodreadsIcon,
-                      'Goodreads',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.pinterest_url,
-                      PinterestIcon,
-                      'Pinterest',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.smule_url,
-                      SmuleIcon,
-                      'Smule',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.soundcloud_url,
-                      SoundCloudIcon,
-                      'SoundCloud',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.strava_url,
-                      StravaIcon,
-                      'Strava',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.tripadvisor_url,
-                      TripAdvisorIcon,
-                      'TripAdvisor',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.ultimate_guitar_url,
-                      UltimateGuitarIcon,
-                      'Ultimate Guitar',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.youtube_url,
-                      YouTubeIcon,
-                      'YouTube',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.Others_url,
-                      OthersIcon,
-                      extractDomainName(data.social_media_urls?.Others_url),
+                    {Object.entries(data.social_media_urls).map(
+                      ([key, url]) => {
+                        let socialMediaName = ''
+                        let socialMediaIcon = null
+
+                        switch (true) {
+                          case key.startsWith('facebook_url'):
+                            socialMediaName = 'Facebook'
+                            socialMediaIcon = FacebookIcon
+                            break
+                          case key.startsWith('twitter_url'):
+                            socialMediaName = 'Twitter'
+                            socialMediaIcon = TwitterIcon
+                            break
+                          case key.startsWith('instagram_url'):
+                            socialMediaName = 'Instagram'
+                            socialMediaIcon = InstagramIcon
+                            break
+                          case key.startsWith('behance_url'):
+                            socialMediaName = 'Behance'
+                            socialMediaIcon = BehanceIcon
+                            break
+                          case key.startsWith('bgg_url'):
+                            socialMediaName = 'BoardGameGeek'
+                            socialMediaIcon = BGGIcon
+                            break
+                          case key.startsWith('chess_url'):
+                            socialMediaName = 'Chess'
+                            socialMediaIcon = ChessIcon
+                            break
+                          case key.startsWith('deviantarts_url'):
+                            socialMediaName = 'DeviantArt'
+                            socialMediaIcon = DeviantArtIcon
+                            break
+                          case key.startsWith('goodreads_url'):
+                            socialMediaName = 'Goodreads'
+                            socialMediaIcon = GoodreadsIcon
+                            break
+                          case key.startsWith('pinterest_url'):
+                            socialMediaName = 'Pinterest'
+                            socialMediaIcon = PinterestIcon
+                            break
+                          case key.startsWith('smule_url'):
+                            socialMediaName = 'Smule'
+                            socialMediaIcon = SmuleIcon
+                            break
+                          case key.startsWith('soundcloud_url'):
+                            socialMediaName = 'SoundCloud'
+                            socialMediaIcon = SoundCloudIcon
+                            break
+                          case key.startsWith('strava_url'):
+                            socialMediaName = 'Strava'
+                            socialMediaIcon = StravaIcon
+                            break
+                          case key.startsWith('tripadvisor_url'):
+                            socialMediaName = 'TripAdvisor'
+                            socialMediaIcon = TripAdvisorIcon
+                            break
+                          case key.startsWith('telegram_url'):
+                            socialMediaName = 'Telegram'
+                            socialMediaIcon = TelegramIcon
+                            break
+                          case key.startsWith('medium_url'):
+                            socialMediaName = 'Medium'
+                            socialMediaIcon = MediumIcon
+                            break
+                          case key.startsWith('ultimate_guitar_url'):
+                            socialMediaName = 'Ultimate Guitar'
+                            socialMediaIcon = UltimateGuitarIcon
+                            break
+                          case key.startsWith('youtube_url'):
+                            socialMediaName = 'YouTube'
+                            socialMediaIcon = YouTubeIcon
+                            break
+                          case key.startsWith('Others_url'):
+                            socialMediaName = extractDomainName(url)
+                            socialMediaIcon = OthersIcon
+                            break
+                          // Add cases for other socialmedia URLs as needed
+                          default:
+                            break
+                        }
+
+                        if (socialMediaIcon && socialMediaName) {
+                          return renderSocialLink(
+                            url,
+                            socialMediaIcon,
+                            socialMediaName,
+                          )
+                        }
+
+                        return null // If no matching socialmedia key is found, return null
+                      },
                     )}
                   </>
                 )}

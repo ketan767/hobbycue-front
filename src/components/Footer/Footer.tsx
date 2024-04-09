@@ -190,7 +190,7 @@ const Footer: React.FC = () => {
       setSnackbar({
         display: true,
         type: 'success',
-        message: 'Invitation sent sucessfully!',
+        message: 'Invitation sent',
       })
       setEmail('')
     }
@@ -273,7 +273,7 @@ const Footer: React.FC = () => {
                   value={email}
                   name="society"
                   onChange={(e: any) => setEmail(e.target.value)}
-                  className={errorMessage !== ''?styles['errorInput']:""}
+                  className={errorMessage !== '' ? styles['errorInput'] : ''}
                 />
                 <button onClick={sendInvite} className={styles.button}>
                   {inviteBtnLoader ? (

@@ -12,6 +12,7 @@ interface PostState {
     genre:string,
     seeMoreHobbies:boolean
   }
+  refreshNum:number
 }
 
 const initialState: PostState = {
@@ -26,6 +27,7 @@ const initialState: PostState = {
     genre:"",
     seeMoreHobbies:false
   },
+  refreshNum:0
 }
 
 const postSlice = createSlice({
@@ -49,6 +51,9 @@ const postSlice = createSlice({
     },
     setFilters: (state, {payload}) => {
       state.filters = {...state.filters,...payload}
+    },
+    increaseRefreshNum:(state)=>{
+      state.refreshNum = state.refreshNum + 1
     }
     // updateBlogCategories: (state, { payload }) => {
     //   state.allCategories = payload
@@ -75,5 +80,6 @@ export const {
   updatePagesLoading,
   setActivePost,
   setFilters,
+  increaseRefreshNum
 } = postSlice.actions
 export default postSlice.reducer
