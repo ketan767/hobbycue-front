@@ -204,96 +204,78 @@ export const Navbar: React.FC<Props> = ({}) => {
       const { res: titleRes, err: titleErr } = await searchPages({
         title: searchValue,
       })
+
       if (titleErr) {
         console.error('An error occurred during the title search:', titleErr)
         return
       }
 
-      let combinedResults = new Set(titleRes.data.slice(0, 100))
-      let remainingSlots = 50 - combinedResults.size
+      const titlePages = titleRes.data.slice(0, 100) // Get title search results
 
-      if (combinedResults.size < 10) {
-        dispatch(setShowPageLoader(true))
-        const { res: taglineRes, err: taglineErr } = await searchPages({
-          tagline: searchValue,
-        })
-        if (!taglineErr) {
-          taglineRes.data.slice(0, remainingSlots).forEach((item: any) => {
-            combinedResults.add(item)
-          })
-        }
-      }
-      if (combinedResults.size < 10) {
-        dispatch(setShowPageLoader(true))
-        const { res: taglineRes, err: taglineErr } = await searchPages({
-          tagline: searchValue,
-        })
-        if (!taglineErr) {
-          combinedResults = combinedResults.add(
-            taglineRes.data.slice(0, remainingSlots),
-          )
-        }
-      }
-      // If title search results are exactly 50, prioritize the first 40 and get 10 by tagline
-      else if (combinedResults.size >= 100) {
-        dispatch(setShowPageLoader(true))
-        combinedResults = new Set(Array.from(combinedResults).slice(0, 70))
-        const { res: taglineRes, err: taglineErr } = await searchPages({
-          tagline: searchValue,
-        })
-        if (!taglineErr) {
-          combinedResults = combinedResults.add(taglineRes.data.slice(0, 10))
-        }
-      }
-      const uniquePageUrls = new Set()
+      // Function to fetch tagline search results and process unique pages
 
-      // Filter out repeated results and store unique page URLs
-      const uniqueCombinedResults = Array.from(combinedResults).filter(
-        (page: any) => {
-          if (!uniquePageUrls.has(page.url)) {
-            uniquePageUrls.add(page.url)
-            return true
+      dispatch(setShowPageLoader(true))
+      const { res: taglineRes, err: taglineErr } = await searchPages({
+        tagline: searchValue,
+      })
+
+      if (!taglineErr) {
+        const taglinePages = taglineRes.data.slice(0, 50) // Get tagline search results
+
+        // Combine titlePages and taglinePages and filter out duplicate URLs
+        const uniqueUrls = new Set<string>()
+        const uniquePages: any[] = [] // Use 'any[]' if you prefer not to define a specific type
+
+        ;[...titlePages, ...taglinePages].forEach((page) => {
+          if (
+            page &&
+            page.page_url &&
+            typeof page.page_url === 'string' &&
+            !uniqueUrls.has(page.page_url)
+          ) {
+            uniqueUrls.add(page.page_url)
+            uniquePages.push(page)
           }
-          return false
-        },
-      )
-      const uniqueTypeResultOne = uniqueCombinedResults.filter(
-        (page: any) => page.type === 1 && page.is_published === true,
-      )
+        })
 
-      console.warn('typeresul1,', uniqueTypeResultOne)
-      dispatch(
-        setTypeResultOne({
-          data: uniqueTypeResultOne as Page[],
-          message: 'Search completed successfully.',
-          success: true,
-        }),
-      )
+        // Filter uniquePages by type and is_published
+        const typeResultOne = uniquePages.filter(
+          (page) => page.type === 1 && page.is_published,
+        )
+        const typeResultTwo = uniquePages.filter(
+          (page) => page.type === 2 && page.is_published,
+        )
+        const typeResultThree = uniquePages.filter(
+          (page) => page.type === 3 && page.is_published,
+        )
 
-      const uniqueTypeResultTwo = uniqueCombinedResults.filter(
-        (page: any) => page.type === 2 && page.is_published === true,
-      )
+        // Dispatch the unique results to the appropriate actions
+        dispatch(
+          setTypeResultOne({
+            data: typeResultOne,
+            message: 'Search completed successfully.',
+            success: true,
+          }),
+        )
+        dispatch(
+          setTypeResultTwo({
+            data: typeResultTwo,
+            message: 'Search completed successfully.',
+            success: true,
+          }),
+        )
+        dispatch(
+          setTypeResultThree({
+            data: typeResultThree,
+            message: 'Search completed successfully.',
+            success: true,
+          }),
+        )
+      }
 
-      dispatch(
-        setTypeResultTwo({
-          data: uniqueTypeResultTwo as Page[],
-          message: 'Search completed successfully.',
-          success: true,
-        }),
-      )
+      dispatch(setShowPageLoader(false))
 
-      const uniqueTypeResultThree = uniqueCombinedResults.filter(
-        (page: any) => page.type === 3 && page.is_published === true,
-      )
-
-      dispatch(
-        setTypeResultThree({
-          data: uniqueTypeResultThree as Page[],
-          message: 'Search completed successfully.',
-          success: true,
-        }),
-      )
-      const query = `fields=display,genre,description,slug,profile_image&level=3&level=2&level=1&level=0&show=true&search=${searchValue}`
+      const query = `level=1&level=2&level=3&level=4&level=5&search=${searchValue}`
       dispatch(setShowPageLoader(true))
       const { res: hobbyRes, err: hobbyErr } = await getAllHobbies(query)
       if (hobbyErr) {
@@ -1049,7 +1031,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                     className={
                       data.search.value.length > 0
                         ? styles['topbar-search-box']
-                        : styles['d-none']
+                        : ''
                     }
                   >
                     {data.search.value.length > 0 && (
@@ -1059,19 +1041,6 @@ export const Navbar: React.FC<Props> = ({}) => {
                   </li>
                 )}
               </div>
-              {isSearchInputVisible===false&&<li
-                    onClick={toggleSearchInput}
-                    className={
-                      data.search.value.length > 0
-                        ? styles['d-none']
-                        : ''
-                    }
-                  >
-                    {data.search.value.length > 0 && (
-                      <input type="text" value={data.search.value} />
-                    )}
-                    <Image src={Search} alt="search" />
-                  </li>}
               <li>
                 <Link href={'/notifications'}>
                   <Image src={BellIcon} alt="Bell" />

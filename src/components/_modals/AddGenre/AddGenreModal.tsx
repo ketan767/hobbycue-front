@@ -29,7 +29,7 @@ const AddGenre: React.FC<Props> = ({ handleClose, handleSubmit, propData }) => {
     })
     setTimeout(() => {
       handleClose()
-    }, 2000)
+    }, 2500)
   }
   return (
     <>
@@ -47,8 +47,8 @@ const AddGenre: React.FC<Props> = ({ handleClose, handleSubmit, propData }) => {
         <div className={styles['content']}>
           <p>
             Request HobbyCue Admin to add{' '}
-            <span>{propData?.defaultValue ?? 'genre'}</span> as a
-            Genre/Style so that we can grow this as a community
+            <span>{propData?.defaultValue ?? 'genre'}</span> as a Genre/Style so
+            that we can grow this as a community
           </p>
           <div className={styles['buttons']}>
             <FilledButton

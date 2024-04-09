@@ -21,6 +21,7 @@ import { changePassword, resetPassword } from '@/services/auth.service'
 import IconButton from '@mui/material/IconButton'
 import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded'
 import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -68,6 +69,11 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
   const [inputValidation, setInputValidation] = useState(
     validatePasswordConditions(newPassword),
   )
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
   const [strength, setStrength] = useState(0)
 
   const [errors, setErrors] = useState({
@@ -77,8 +83,8 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
   })
   const handleSubmit = async () => {
     if (confirmPassword !== newPassword) {
-      setErrors({ ...errors, confirmPassword: 'Passwords does not match!' });
-      confirmPasswordRef?.current?.focus();
+      setErrors({ ...errors, confirmPassword: 'Passwords does not match!' })
+      confirmPasswordRef?.current?.focus()
       return
     }
     setSubmitBtnLoading(true)
@@ -87,8 +93,9 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
       otp: otp,
       newPassword: newPassword,
     })
-    setSubmitBtnLoading(false)
+
     if (err) {
+      setSubmitBtnLoading(false)
       if (err?.response?.data?.message) {
         setErrors({
           ...errors,
@@ -99,9 +106,18 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
       return
     }
     if (res?.data.success) {
+      setSnackbar({
+        display: true,
+        type: 'success',
+        message: 'Password Changed',
+      })
+
+      setTimeout(() => {
+        dispatch(closeModal())
+        setSubmitBtnLoading(false)
+      }, 2500)
+
       console.log(res.data)
-      dispatch(closeModal())
-      window.location.reload()
     }
   }
   //   console.log('user', user)
@@ -335,6 +351,16 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
           </button>
         </footer>
       </div>
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }
