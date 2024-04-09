@@ -174,7 +174,8 @@ const Contact: React.FC<Props> = ({}) => {
     if (data.phone.number) {
       if (
         !containOnlyNumbers(data.phone.number.toString().trim()) ||
-        data.phone.number.toString().trim().length !== 10
+        data.phone.number.toString().replace(/\s/g, "").length>11 ||
+        data.phone.number.toString().replace(/\s/g, "").length<7
       ) {
         hasError = true;
         phoneRef.current?.focus()
@@ -189,7 +190,8 @@ const Contact: React.FC<Props> = ({}) => {
     if (data.whatsapp_number.number) {
       if (
         !containOnlyNumbers(data.whatsapp_number.number.toString().trim()) ||
-        data.whatsapp_number.number.toString().trim().length !== 10
+        data.whatsapp_number.number.toString().replace(/\s/g, "").length>11 ||
+        data.whatsapp_number.number.toString().replace(/\s/g, "").length<7
       ) {
         hasError = true;
         WhtphoneRef.current?.focus()
@@ -235,11 +237,11 @@ const Contact: React.FC<Props> = ({}) => {
     const name = data.name.value
     const email = data.public_email.value
     const phone = {
-      number: data.phone.number,
+      number: data.phone.number?.replace(/\s/g, ""),
       prefix: selectedCountryCode,
     }
     const whatsapp_number = {
-      number: data.whatsapp_number.number,
+      number: data.whatsapp_number.number?.replace(/\s/g, ""),
       prefix: selectedWpCountryCode,
     }
     const YouAre = data.YouAre.value

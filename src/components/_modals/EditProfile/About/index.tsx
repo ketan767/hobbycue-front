@@ -156,6 +156,13 @@ const ProfileAboutEditModal: React.FC<Props> = ({
       onboarding_step: newOnboardingStep,
       completed_onboarding_steps: updatedCompletedSteps,
     })
+    const { err: error, res: userDataRes } = await getMyProfileDetail();
+      if('data' in userDataRes?.data){
+        if('user' in userDataRes?.data.data){
+          dispatch(updateUser(userDataRes?.data.data.user))
+        }
+      }
+    
     if (err) {
       setSubmitBtnLoading(false)
       return console.log(err)
@@ -163,7 +170,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
     if (!res?.data.success) {
       setSubmitBtnLoading(false)
     }
-
+    
     if (!data.about || cleanString(data.about) === '') {
       if (data.about !== user.about) {
         const newData = { about: cleanString(data.about) }
@@ -171,6 +178,8 @@ const ProfileAboutEditModal: React.FC<Props> = ({
 
         const { err, res } = await updateMyProfileDetail({
           ...newData,
+          onboarding_step: newOnboardingStep,
+          completed_onboarding_steps: updatedCompletedSteps,
         })
         if (err) {
           setSubmitBtnLoading(false)

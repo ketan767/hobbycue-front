@@ -552,12 +552,20 @@ const UserOnboardingWelcomeModal = () => {
                 <img src="/celebration.png" alt="" width={60} height={60} />
               </div>
               <div>
-                <p>Welcome to HobbyCue</p>
+                <p className={styles['mobile-welcome-txt']}>Welcome to HobbyCue</p>
                 <div>
                   <p>Choose from one of the options to continue.</p>
                   <p>You can always find them on the top navigation.</p>
                 </div>
               </div>
+              <div className={styles['do-not-show-next-time']}>
+              <Image
+                alt={'dont show checkbox'}
+                onClick={ShowWelcome}
+                src={showWelcome ? checkedboxUnChecked : checkedboxChecked}
+              />
+              <p>Do not show this next time</p>
+            </div>
             </div>
           </div>
         </div>
