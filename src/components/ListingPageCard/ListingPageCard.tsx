@@ -42,7 +42,7 @@ const ListingPageCard: React.FC<Props> = (props) => {
         {/* Card Header */}
         <header>
           {postData?._author?.profile_image ? (
-            <Image
+            <img
               className={styles['author-profile']}
               src={postData?._author?.profile_image}
               alt="Author Profile"

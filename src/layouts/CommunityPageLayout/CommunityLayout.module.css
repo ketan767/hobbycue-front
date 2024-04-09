@@ -297,6 +297,8 @@ line-height: 20px; /* 142.857% */
   width: 40px;
   height: 40px;
   border-radius: 100%;
+  border: 1px solid rgb(var(--primary-100-rgb));
+  
   display: none;
 }
 

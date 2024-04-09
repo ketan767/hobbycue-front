@@ -129,7 +129,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                 onClick={navigateToUserProfile}
               >
                 {user?.profile_image ? (
-                  <Image
+                  <img
                     className={styles['img']}
                     src={user.profile_image}
                     alt=""

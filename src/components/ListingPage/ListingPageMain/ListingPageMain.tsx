@@ -399,16 +399,21 @@ const ListingPageMain: React.FC<Props> = ({
                             href={`/page/${item.page_url}`}
                           >
                             <div className={styles['related']}>
-                              <Image
-                                src={
-                                  item.profile_image
-                                    ? item.profile_image
-                                    : DefaultPageImage
-                                }
-                                alt={item?.title}
-                                width="32"
-                                height="32"
-                              />
+                              {item.profile_image ? (
+                                <img
+                                  src={item.profile_image}
+                                  alt={item?.title}
+                                  width="32"
+                                  height="32"
+                                />
+                              ) : (
+                                <Image
+                                  src={DefaultPageImage}
+                                  alt={item?.title}
+                                  width="32"
+                                  height="32"
+                                />
+                              )}
                               <span className={styles['item-title']}>
                                 {item?.title}
                               </span>
@@ -943,16 +948,21 @@ const ListingPageMain: React.FC<Props> = ({
                               href={`/page/${item.page_url}`}
                             >
                               <div className={styles['related']}>
-                                <Image
-                                  src={
-                                    item.profile_image
-                                      ? item.profile_image
-                                      : DefaultPageImage
-                                  }
-                                  alt={item?.title}
-                                  width="32"
-                                  height="32"
-                                />
+                                {item.profile_image ? (
+                                  <img
+                                    src={item.profile_image}
+                                    alt={item?.title}
+                                    width="32"
+                                    height="32"
+                                  />
+                                ) : (
+                                  <Image
+                                    src={DefaultPageImage}
+                                    alt={item?.title}
+                                    width="32"
+                                    height="32"
+                                  />
+                                )}
                                 <span className={styles['item-title']}>
                                   {item?.title}
                                 </span>
@@ -1613,16 +1623,21 @@ const ListingPageMain: React.FC<Props> = ({
                             href={`/page/${item.page_url}`}
                           >
                             <div className={styles['related']}>
-                              <Image
-                                src={
-                                  item.profile_image
-                                    ? item.profile_image
-                                    : DefaultPageImage
-                                }
-                                alt={item?.title}
-                                width="32"
-                                height="32"
-                              />
+                              {item.profile_image ? (
+                                <img
+                                  src={item.profile_image}
+                                  alt={item?.title}
+                                  width="32"
+                                  height="32"
+                                />
+                              ) : (
+                                <Image
+                                  src={DefaultPageImage}
+                                  alt={item?.title}
+                                  width="32"
+                                  height="32"
+                                />
+                              )}
                               <span className={styles['item-title']}>
                                 {item?.title}
                               </span>

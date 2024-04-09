@@ -270,6 +270,10 @@
     z-index: 1000;
 
 }
+.profile-img {
+  border-radius: 100%;
+  border: 1px solid rgba(var(--primary-100-rgb));
+}
 
 @media screen and (max-width: 1100px) {
   .modal-wrapper {

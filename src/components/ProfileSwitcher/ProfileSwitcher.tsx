@@ -9,11 +9,11 @@ import { updateActiveProfile } from '@/redux/slices/user'
 import { updateListingModalData } from '@/redux/slices/site'
 
 type Props = {
-  className?:string
+  className?: string
 }
 
 const ProfileSwitcher: React.FC<Props> = (props) => {
-  const {className} = props;
+  const { className } = props
   const { user, listing, activeProfile } = useSelector(
     (state: RootState) => state.user,
   )
@@ -46,7 +46,7 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
         onClick={() => setShowDropdown((prev) => !prev)}
       >
         {activeProfile?.data?.profile_image ? (
-          <Image
+          <img
             className={styles['profile-image']}
             data-profile-type={activeProfile.type}
             src={activeProfile.data?.profile_image}
@@ -106,7 +106,7 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
                 }`}
               >
                 {user?.profile_image ? (
-                  <Image
+                  <img
                     className={styles['img']}
                     src={user?.profile_image}
                     alt=""
@@ -135,7 +135,7 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
                     }`}
                   >
                     {page?.profile_image ? (
-                      <Image
+                      <img
                         className={styles['img']}
                         src={page?.profile_image}
                         alt=""

@@ -165,12 +165,24 @@ export const PostModal: React.FC<Props> = ({
           style={displayMoreComments ? { display: 'none' } : {}}
         >
           <div className={`${styles['header-user']}`}>
-            <Image
-              src={activePost?._author?.profile_image ?? defaultUserImage}
-              alt=""
-              width={40}
-              height={40}
-            ></Image>
+            {activePost?._author?.profile_image ? (
+              <img
+                className={styles['profile-img']}
+                src={activePost._author.profile_image}
+                alt=""
+                width={40}
+                height={40}
+              />
+            ) : (
+              <Image
+                className={styles['profile-img']}
+                src={defaultUserImage}
+                alt=""
+                width={40}
+                height={40}
+              />
+            )}
+
             <div className={styles['title']}>
               <p>{activePost?._author?.full_name}</p>
               <p>
