@@ -367,21 +367,21 @@ const ListingContactEditModal: React.FC<Props> = ({
       )
   }, [user])
 
-  // client said to remove this checkbox function
-  // useEffect(() => {
-  //   if (tick) {
-  //     setData((prev) => {
-  //       return {
-  //         ...prev,
-  //         whatsapp_number: {
-  //           number: data.phone.number,
-  //           prefix: selectedCountryCode,
-  //         },
-  //       }
-  //     })
-  //     setWpSelectedCountryCode(selectedCountryCode)
-  //   }
-  // }, [data.phone.number, selectedCountryCode, tick])
+  // client said to remove this checkbox function and add it again
+  useEffect(() => {
+    if (tick) {
+      setData((prev) => {
+        return {
+          ...prev,
+          whatsapp_number: {
+            number: data.phone.number,
+            prefix: selectedCountryCode,
+          },
+        }
+      })
+      setWpSelectedCountryCode(selectedCountryCode)
+    }
+  }, [data.phone.number, selectedCountryCode, tick])
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
@@ -569,7 +569,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                     ref={phoneRef}
                     onChange={handleInputChange}
                     className={styles['phone-input']}
-                    onBlur={handleBlur}
+                    // onBlur={handleBlur}
                   />
                 </div>
 
@@ -582,7 +582,7 @@ const ListingContactEditModal: React.FC<Props> = ({
               >
                 <label className={styles['whatsapp-label']}>
                   WhatsApp
-                  {/* <CustomTooltip title="Use same">
+                  <CustomTooltip title="Use same">
                     <div>
                       <Checkbox
                         size="small"
@@ -608,7 +608,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                         }}
                       />
                     </div>
-                  </CustomTooltip> */}
+                  </CustomTooltip>
                 </label>
                 <div className={styles['phone-prefix-input']}>
                   <DropdownMenu

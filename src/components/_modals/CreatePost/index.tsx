@@ -115,7 +115,20 @@ export const CreatePost: React.FC<Props> = ({
           visibility:filters.location??''
         }
       } else {
-        return ({...prev,visibility:filters.location??''})
+        if(hobbiesDropDownArr && hobbiesDropDownArr?.length>0){
+        return ({...prev,visibility:filters.location??'All Locations',
+          hobby:{
+            _id:hobbiesDropDownArr[0]?.hobbyId,
+            display:hobbiesDropDownArr[0]?.hobbyDisplay
+          },
+          genre:hobbiesDropDownArr[0]?.genreId?{
+            _id:hobbiesDropDownArr[0]?.genreId,
+            display:hobbiesDropDownArr[0]?.genreDisplay
+          }:null
+        })}
+        else{
+          return {...prev,visibility:filters.location??'All Locations',}
+        }
       }
     })
   }, [filters])
@@ -607,7 +620,7 @@ export const CreatePost: React.FC<Props> = ({
                     data.genre?.display ? '-' : ''
                   }${data.genre?.display ?? ''}`}
                   onChange={(e: any) => {}}
-                  selectText="All Hobbies"
+                  selectText=""
                 >
                   {hobbies?.map((item: any, idx) => {
                     return (
