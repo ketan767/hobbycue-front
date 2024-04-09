@@ -35,7 +35,7 @@ const ProfileContactSide = ({ data, expandData, contactError }: Props) => {
     if (expandData !== undefined) setDisplayData(expandData)
   }, [expandData])
 
-  const itsMe = data?.public_email === user?.email
+  const itsMe = data?.public_email === user?.public_email
 
   console.warn({data});
   
@@ -106,7 +106,7 @@ const ProfileContactSide = ({ data, expandData, contactError }: Props) => {
           )}
 
           {/* Email */}
-          {data.public_email && (
+          {data.public_email && itsMe && (
             <Link href={`mailto:${data?.public_email}`}>
               <li className={styles['list-item']}>
                 <svg
