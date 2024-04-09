@@ -324,6 +324,11 @@ background: #FFF;
     transform: translateY(-50%);
   }
   
+  .select-input:focus{
+    outline: none;
+    border: 1px solid #8064A2;
+  }
+
   .select-container .single-option {
     display: flex;
     align-items: center;
@@ -338,9 +343,10 @@ background: #FFF;
     font-weight: 500;
     line-height: 18px;
     color: #6d747a;
-    border-radius: 1px solid #ebedf0;
+    border-radius: 4px;
     min-width: 100px;
     padding: 8px;
+    width: 100%;
   }
   .select-container .single-option .tagDesc {
     flex: 1;
@@ -368,10 +374,15 @@ background: #FFF;
   .select-container .single-option.selcted-option .tagDesc {
     background-color: #f7f5f9;
     color: #8064a2;
-    width: 100% -10px;
+    width: 100%;
     height: 100% - 8px;
     border-radius: 4px;
   }
+
+  .focused-option p{
+    background: #ccc1da !important;
+  }
+
   .tick-icon{
     display: none;
   }

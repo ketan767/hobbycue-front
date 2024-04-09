@@ -58,8 +58,10 @@ const Contact: React.FC<Props> = ({}) => {
   const [selectedCountryCode, setSelectedCountryCode] = useState('+91')
   const [selectedWpCountryCode, setWpSelectedCountryCode] = useState('+91')
   const [isError, setIsError] = useState(false)
-  const [showYouDropdown, setShowYouDropdown] = useState(false)
-  const [showRegDropdown, setShowRegDropdown] = useState(false)
+  const [showYouDropdown, setShowYouDropdown] = useState(false);
+  const [showRegDropdown, setShowRegDropdown] = useState(false);
+  const [focusedYou,setFocusedYou] = useState<number>(-1);
+  const [focusedReg,setFocusedReg] = useState<number>(-1);
   const YoudropdownRef = useRef<HTMLDivElement>(null);
   const RegdropdownRef = useRef<HTMLDivElement>(null);
   const [tick, setTick] = useState(false)
@@ -93,6 +95,9 @@ const Contact: React.FC<Props> = ({}) => {
   const handlePrefixChange = (element: any) => {
     const id = element?.id
     setSelectedCountryCode(countryData[id]?.phonePrefix)
+    if(tick){
+      handleWpPrefixChange(element)
+    }
   }
   const handleWpPrefixChange = (element: any) => {
     const id = element?.id
@@ -103,21 +108,21 @@ const Contact: React.FC<Props> = ({}) => {
     const { name, value } = event.target
 
      if (name === 'phone' || name === 'whatsapp_number') {
-      if(tick===true){
-        setData((prev) => ({
-          ...prev,
-          phone: {
-            ...prev['phone'],
-            number: value || '',
-            error: null,
-          },
-          whatsapp_number: {
-            ...prev['whatsapp_number'],
-            number: value || '',
-            error: null,
-          },
-        }))
-      }else{
+      // if(tick===true){
+      //   setData((prev) => ({
+      //     ...prev,
+      //     phone: {
+      //       ...prev['phone'],
+      //       number: value || '',
+      //       error: null,
+      //     },
+      //     whatsapp_number: {
+      //       ...prev['whatsapp_number'],
+      //       number: value || '',
+      //       error: null,
+      //     },
+      //   }))
+      // }else{
       setData((prev) => ({
         ...prev,
         [name]: {
@@ -126,7 +131,8 @@ const Contact: React.FC<Props> = ({}) => {
           error: null,
         },
       }))
-    }} else if (name === 'message') {
+    // }
+  } else if (name === 'message') {
       setData((prev) => ({
         ...prev,
         [name]: { value, error: null },
@@ -151,6 +157,12 @@ const Contact: React.FC<Props> = ({}) => {
           error: null,
         },
       }))
+    }
+  }
+
+  const handlePhoneBlur = (e:any) => {
+    if(tick){
+      handleBlur(e);
     }
   }
 
@@ -457,7 +469,7 @@ const Contact: React.FC<Props> = ({}) => {
                       onChange={handleInputChange}
                       ref={phoneRef}
                       className={styles['phone-input']}
-                      // onBlur={handleBlur}
+                      onBlur={handlePhoneBlur}
                     />
                   </div>
                   <p className={styles['helper-text']}>{data.phone.error}</p>
@@ -496,11 +508,11 @@ const Contact: React.FC<Props> = ({}) => {
                                   ...prev,
                                   whatsapp_number: {
                                     number: prev['phone'].number,
-                                    prefix: prev['phone'].prefix,
+                                    prefix: selectedCountryCode,
                                   },
                                 }
                               })
-                              setWpSelectedCountryCode(data.phone.prefix)
+                              setWpSelectedCountryCode(selectedCountryCode)
                             }
                             setTick(!tick)
                           }}
@@ -558,6 +570,50 @@ const Contact: React.FC<Props> = ({}) => {
                         className={`${styles['select-input']}  ${
                           data.YouAre.error ? styles['div-error'] : ''
                         }`}
+                        tabIndex={0}
+                        onKeyDown={(e)=>{
+                          switch (e.key) {
+                            case " ":
+                              setShowYouDropdown(true)
+                              break;
+                            case "Enter":
+                              if(showYouDropdown){
+                                if(focusedYou!==-1)
+                                setData((prev: any) => ({
+                                  ...prev,
+                                  YouAre: { value: YouareData[focusedYou].value, error: null },
+                                }))
+                                setShowYouDropdown(false)
+                              }else{
+                                setShowYouDropdown(true)
+                              }
+                              break;
+                            case "ArrowDown":
+                              if(focusedYou===YouareData.length-1||focusedYou===-1){
+                                setFocusedYou(0)
+                              }else{
+                                setFocusedYou((prev)=>prev+1)
+                              }
+                              break;
+                            case "ArrowUp":
+                              if(focusedYou===0){
+                                setFocusedYou(YouareData.length-1)
+                              }
+                              else if(focusedYou===-1){
+                                setFocusedYou(0)
+                              }
+                              else{
+                                setFocusedYou((prev)=>prev-1)
+                              }
+                              break;
+                            default:
+                              break;
+                          }
+                        }}
+                        onBlur={()=>setTimeout(() => {
+                          setShowYouDropdown(false);
+                          setFocusedYou(-1);
+                        }, 300)}
                         onClick={() => setShowYouDropdown(prev=>!prev)}
                       >
                         <p>{data.YouAre.value || 'Select You Are...'}</p>
@@ -572,7 +628,9 @@ const Contact: React.FC<Props> = ({}) => {
                                 data.YouAre.value === item.value
                                   ? styles['selcted-option']
                                   : ''
-                              }`}
+                              }
+                              ${focusedYou===idx&&styles['focused-option']}
+                              `}
                               key={idx}
                               onClick={() => {
                                 setData((prev: any) => ({
@@ -610,6 +668,50 @@ const Contact: React.FC<Props> = ({}) => {
                         className={`${styles['select-input']}  ${
                           data.Regarding.error ? styles['div-error'] : ''
                         }`}
+                        tabIndex={0}
+                        onKeyDown={(e)=>{
+                          switch (e.key) {
+                            case " ":
+                              setShowRegDropdown(true)
+                              break;
+                            case "Enter":
+                              if(showRegDropdown){
+                                if(focusedReg!==-1)
+                                setData((prev: any) => ({
+                                  ...prev,
+                                  Regarding: { value: Regarding[focusedReg].value, error: null },
+                                }))
+                                setShowRegDropdown(false)
+                              }else{
+                                setShowRegDropdown(true)
+                              }
+                              break;
+                            case "ArrowDown":
+                              if(focusedReg===Regarding.length-1||focusedReg===-1){
+                                setFocusedReg(0)
+                              }else{
+                                setFocusedReg((prev)=>prev+1)
+                              }
+                              break;
+                            case "ArrowUp":
+                              if(focusedReg===0){
+                                setFocusedReg(Regarding.length-1)
+                              }
+                              else if(focusedReg===-1){
+                                setFocusedReg(0)
+                              }
+                              else{
+                                setFocusedReg((prev)=>prev-1)
+                              }
+                              break;
+                            default:
+                              break;
+                          }
+                        }}
+                        onBlur={()=>setTimeout(() => {
+                          setShowRegDropdown(false);
+                          setFocusedReg(-1);
+                        }, 300)}
                         onClick={() => setShowRegDropdown(true)}
                       >
                         <p>{data.Regarding.value || 'Select Regarding...'}</p>
@@ -624,7 +726,9 @@ const Contact: React.FC<Props> = ({}) => {
                                 data.Regarding.value === item.value
                                   ? styles['selcted-option']
                                   : ''
-                              }`}
+                              }
+                              ${focusedReg===idx&&styles['focused-option']}
+                              `}
                               key={idx}
                               onClick={() => {
                                 setData((prev: any) => ({
