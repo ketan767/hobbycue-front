@@ -61,7 +61,7 @@ const ExpiredPassword: React.FC<Props> = ({}) => {
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const { forgotPasswordEmail } = useSelector((state: any) => state.modal)
   const newPasswordRef = useRef<HTMLInputElement>(null)
-
+  const otpRef = useRef<HTMLInputElement>(null)
   const [showValidations, setShowValidations] = useState(false)
   const [inputValidation, setInputValidation] = useState(
     validatePasswordConditions(newPassword),
@@ -128,6 +128,10 @@ const ExpiredPassword: React.FC<Props> = ({}) => {
   }
 
   useEffect(() => {
+    otpRef?.current?.focus()
+  })
+
+  useEffect(() => {
     setErrors({
       otp: '',
       newPassword: '',
@@ -173,6 +177,7 @@ const ExpiredPassword: React.FC<Props> = ({}) => {
               }`}
             >
               <input
+                ref={otpRef}
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
                 className={styles.input}

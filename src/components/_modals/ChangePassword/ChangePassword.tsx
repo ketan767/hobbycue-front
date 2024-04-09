@@ -355,7 +355,15 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
 
         <footer className={styles['footer']}>
           <button
-            className="modal-footer-btn submit"
+            className="modal-footer-btn cancel"
+            onClick={() => {
+              handleClose()
+            }}
+          >
+            Cancel
+          </button>
+          <button
+            className={`modal-footer-btn submit ${styles['save-btn']}`}
             onClick={() => {
               handleSubmit('confirmPassword')
             }}
@@ -379,14 +387,6 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
               'Save'
             )}
           </button>
-
-          <OutlinedButton
-            onClick={() => {
-              handleClose()
-            }}
-          >
-            Cancel
-          </OutlinedButton>
         </footer>
       </div>
     </>
