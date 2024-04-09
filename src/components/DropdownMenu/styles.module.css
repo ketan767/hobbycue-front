@@ -28,7 +28,7 @@
 .dropdown-options-wrapper {
   display: flex;
   flex-direction: column;
-  position: fixed !important;
+  position: fixed;
   left: auto;
   top: auto;
   min-width: 6rem;

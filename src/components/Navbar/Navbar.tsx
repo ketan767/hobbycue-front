@@ -1049,7 +1049,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                     className={
                       data.search.value.length > 0
                         ? styles['topbar-search-box']
-                        : ''
+                        : styles['d-none']
                     }
                   >
                     {data.search.value.length > 0 && (
@@ -1059,6 +1059,19 @@ export const Navbar: React.FC<Props> = ({}) => {
                   </li>
                 )}
               </div>
+              {isSearchInputVisible===false&&<li
+                    onClick={toggleSearchInput}
+                    className={
+                      data.search.value.length > 0
+                        ? styles['d-none']
+                        : ''
+                    }
+                  >
+                    {data.search.value.length > 0 && (
+                      <input type="text" value={data.search.value} />
+                    )}
+                    <Image src={Search} alt="search" />
+                  </li>}
               <li>
                 <Link href={'/notifications'}>
                   <Image src={BellIcon} alt="Bell" />

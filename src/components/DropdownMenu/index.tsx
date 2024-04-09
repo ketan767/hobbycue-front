@@ -15,6 +15,7 @@ type Props = {
   optionsPosition?: 'top' | 'bottom'
   dropdownIcon?: boolean
   dropdownHeaderClass?: string
+  positionClass?: string
 }
 
 const DropdownMenu: React.FC<Props> = ({
@@ -27,6 +28,7 @@ const DropdownMenu: React.FC<Props> = ({
   optionsPosition,
   dropdownIcon,
   dropdownHeaderClass,
+  positionClass,
 }) => {
   const dropdownRef = useRef<HTMLDivElement>(null)
   const optionWrapperRef = useRef<HTMLDivElement>(null)
@@ -194,7 +196,7 @@ const DropdownMenu: React.FC<Props> = ({
         )}
       </div>
       <div
-        className={`${styles['dropdown-options-wrapper']}${
+        className={`${positionClass??""} ${styles['dropdown-options-wrapper']}${
           showDropdown ? '' : ' ' + styles['display-none']
         }`}
         ref={optionWrapperRef}

@@ -307,13 +307,13 @@ const ListingContactEditModal: React.FC<Props> = ({
     }
     const jsonData = {
       phone: {
-        number: data.phone.number.replace(/\s/g, ""),
+        number: data.phone.number?.replace(/\s/g, ""),
         prefix: selectedCountryCode,
       },
       public_email: data.public_email.value,
       website: data.website.value,
       whatsapp_number: {
-        number: data.whatsapp_number.number.replace(/\s/g, ""),
+        number: data.whatsapp_number.number?.replace(/\s/g, ""),
         prefix: selectedWpCountryCode,
       },
     }

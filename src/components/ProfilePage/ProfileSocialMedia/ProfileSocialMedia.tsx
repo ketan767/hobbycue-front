@@ -18,11 +18,12 @@ import SmuleIcon from '@/assets/svg/Smule.svg'
 import SoundCloudIcon from '@/assets/svg/Soundcloud.svg'
 import StravaIcon from '@/assets/svg/Strava.svg'
 import TripAdvisorIcon from '@/assets/svg/Tripadvisor.svg'
+import TelegramIcon from '@/assets/svg/Telegram.svg'
+import MediumIcon from '@/assets/svg/MediumWeb.svg'
 import UltimateGuitarIcon from '@/assets/svg/Ultimate-Guitar.svg'
 import YouTubeIcon from '@/assets/svg/Youtube.svg'
 import OthersIcon from '@/assets/svg/other.svg'
 import Image from 'next/image'
-import Link from 'next/link'
 
 type Props = {
   data: ProfilePageData['pageData']
@@ -142,6 +143,14 @@ const ProfileSocialMediaSide = ({ data, expandData }: Props) => {
                   case key.startsWith('tripadvisor_url'):
                     socialMediaName = 'TripAdvisor'
                     socialMediaIcon = TripAdvisorIcon
+                    break
+                  case key.startsWith('telegram_url'):
+                    socialMediaName = 'Telegram'
+                    socialMediaIcon = TelegramIcon
+                    break
+                  case key.startsWith('medium_url'):
+                    socialMediaName = 'Medium'
+                    socialMediaIcon = MediumIcon
                     break
                   case key.startsWith('ultimate_guitar_url'):
                     socialMediaName = 'Ultimate Guitar'

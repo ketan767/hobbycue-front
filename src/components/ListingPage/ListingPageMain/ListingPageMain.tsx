@@ -23,6 +23,8 @@ import SoundCloudIcon from '@/assets/svg/Soundcloud.svg'
 import StravaIcon from '@/assets/svg/Strava.svg'
 import TripAdvisorIcon from '@/assets/svg/Tripadvisor.svg'
 import UltimateGuitarIcon from '@/assets/svg/Ultimate-Guitar.svg'
+import TelegramIcon from '@/assets/svg/Telegram.svg'
+import MediumIcon from '@/assets/svg/MediumWeb.svg'
 import YouTubeIcon from '@/assets/svg/Youtube.svg'
 import ListingPageLayout from '../../../layouts/ListingPageLayout'
 import { getListingPages, getListingTags } from '@/services/listing.service'
@@ -1661,7 +1663,7 @@ const ListingPageMain: React.FC<Props> = ({
                   styles['display-desktop']
                 }${showSocialMedia ? ' ' + styles['display-mobile'] : ''}`}
               >
-                {data && (
+                {data.social_media_urls && (
                   <>
                     {Object.entries(data.social_media_urls).map(
                       ([key, url]) => {
@@ -1720,6 +1722,14 @@ const ListingPageMain: React.FC<Props> = ({
                           case key.startsWith('tripadvisor_url'):
                             socialMediaName = 'TripAdvisor'
                             socialMediaIcon = TripAdvisorIcon
+                            break
+                          case key.startsWith('telegram_url'):
+                            socialMediaName = 'Telegram'
+                            socialMediaIcon = TelegramIcon
+                            break
+                          case key.startsWith('medium_url'):
+                            socialMediaName = 'Medium'
+                            socialMediaIcon = MediumIcon
                             break
                           case key.startsWith('ultimate_guitar_url'):
                             socialMediaName = 'Ultimate Guitar'

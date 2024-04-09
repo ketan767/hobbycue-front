@@ -111,7 +111,7 @@
 }
 .input {
   background: #f8f9fa;
-  border: 1px solid #ebedf0;
+  border: 1px solid rgba(0, 0, 0, 0.23);
   border-radius: 8px;
   outline: none;
   padding: 12px 12px;
@@ -123,7 +123,7 @@
 .input:active,
 .input:focus,
 .input:hover {
-  border: 1px solid #ebedf0;
+  border: 1px solid #8064a2;
   outline: none;
 }
 .error-msg {

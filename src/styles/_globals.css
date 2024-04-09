@@ -498,6 +498,10 @@ select:-webkit-autofill {
   border-radius: 8px;
 }
 
+.textFieldClass>div>input{
+  padding: 12px 16px;
+}
+
 .textFieldClass:hover{
   border: none;
   outline: none;

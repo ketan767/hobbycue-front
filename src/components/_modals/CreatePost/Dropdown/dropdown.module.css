@@ -52,7 +52,7 @@
 .dropdown-container p.dropdown-value {
   color: var(--grey-dark, #939ca3);
   padding-left: 16px;
-  height: 32px;
+  min-height: 32px;
 }
 
 .dropdown-options {

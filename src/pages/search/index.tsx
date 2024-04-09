@@ -358,7 +358,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           hobby?.sub_category?.display
                             ? ' | ' + hobby.sub_category.display
                             : ''
-                        }`}</div>
+                        }`}&nbsp;</div>
                         <div className={styles.hobbydescription}>
                           {hobby?.description}
                         </div>
@@ -480,9 +480,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
                             } else {
                               return ' ' + item
                             }
-                          }) +
-                            ' | ' +
-                            page._address?.city || '\u00a0'}
+                          }) + (page._address?.city?` | ${page._address?.city}`:'') ||
+                            '\u00a0'}
                         </div>
                       </div>
                     </div>
@@ -538,7 +537,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           {page?.tagline || '\u00a0'}
                         </div>
                         <div className={styles.userLocation}>
-                          {page.page_type + ' | ' + page._address?.city ||
+                          {page.page_type + (page._address?.city?` | ${page._address?.city}`:'') ||
                             '\u00a0'}
                         </div>
                       </div>
@@ -595,7 +594,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           {page?.tagline || '\u00a0'}
                         </div>
                         <div className={styles.userLocation}>
-                          {page.page_type + ' | ' + page._address?.city ||
+                          {page.page_type + (page._address?.city?` | ${page._address?.city}`:'') ||
                             '\u00a0'}
                         </div>
                       </div>
