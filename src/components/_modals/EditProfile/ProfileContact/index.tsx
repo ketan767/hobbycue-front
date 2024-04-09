@@ -217,7 +217,8 @@ const ProfileContactEditModal: React.FC<Props> = ({
     if (data.phone.number) {
       if (
         !containOnlyNumbers(data.phone.number.toString().trim()) ||
-        data.phone.number.toString().trim().length !== 10
+        data.phone.number.toString().replace(/\s/g, "").length>11 ||
+        data.phone.number.toString().replace(/\s/g, "").length<7
       ) {
         phoneRef.current?.focus()
         return setData((prev) => {
@@ -231,7 +232,8 @@ const ProfileContactEditModal: React.FC<Props> = ({
     if (data.whatsapp_number.number) {
       if (
         !containOnlyNumbers(data.whatsapp_number.number.toString().trim()) ||
-        data.whatsapp_number.number.toString().trim().length !== 10
+        data.whatsapp_number.number.toString().replace(/\s/g, "").length>11 ||
+        data.whatsapp_number.number.toString().replace(/\s/g, "").length<7
       ) {
         WhtphoneRef.current?.focus()
         return setData((prev) => {
@@ -261,13 +263,13 @@ const ProfileContactEditModal: React.FC<Props> = ({
     }
     const jsonData = {
       phone: {
-        number: data.phone.number,
+        number: data.phone.number?.replace(/\s/g, ""),
         prefix: selectedCountryCode,
       },
       public_email: data.public_email.value,
       website: data.website.value,
       whatsapp_number: {
-        number: data.whatsapp_number.number,
+        number: data.whatsapp_number.number?.replace(/\s/g, ""),
         prefix: selectedWpCountryCode,
       },
       onboarding_step: '3',
@@ -311,21 +313,21 @@ const ProfileContactEditModal: React.FC<Props> = ({
       }
     }
   }
-  // client said to remove this checkbox function
-  // useEffect(() => {
-  //   if (tick) {
-  //     setData((prev) => {
-  //       return {
-  //         ...prev,
-  //         whatsapp_number: {
-  //           number: data.phone.number,
-  //           prefix: selectedCountryCode,
-  //         },
-  //       }
-  //     })
-  //     setWpSelectedCountryCode(selectedCountryCode)
-  //   }
-  // }, [data.phone.number, selectedCountryCode, tick])
+  // client said to remove this checkbox function and add it again
+  useEffect(() => {
+    if (tick) {
+      setData((prev) => {
+        return {
+          ...prev,
+          whatsapp_number: {
+            number: data.phone.number,
+            prefix: selectedCountryCode,
+          },
+        }
+      })
+      setWpSelectedCountryCode(selectedCountryCode)
+    }
+  }, [data.phone.number, selectedCountryCode, tick])
   const handleSkip = async () => {
     let updatedCompletedSteps = [...user.completed_onboarding_steps]
 
@@ -575,7 +577,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
                     onChange={handleInputChange}
                     ref={phoneRef}
                     className={styles['phone-input']}
-                    onBlur={handleBlur}
+                    // onBlur={handleBlur}
                   />
                 </div>
                 <p className={styles['helper-text']}>{data.phone.error}</p>
@@ -585,7 +587,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
               <div className={styles['input-box']}>
                 <label className={styles['whatsapp-label']}>
                   WhatsApp
-                  {/* <CustomTooltip title="Use same">
+                  <CustomTooltip title="Use same">
                     <div>
                       <Checkbox
                         size="small"
@@ -613,7 +615,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
                         }}
                       />{' '}
                     </div>
-                  </CustomTooltip> */}
+                  </CustomTooltip>
                 </label>
                 <div className={styles['phone-prefix-input']}>
                   <DropdownMenu
