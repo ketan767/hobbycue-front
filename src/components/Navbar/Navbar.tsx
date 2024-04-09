@@ -864,7 +864,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                     onBlur={() => setShowDropdown(null)}
                   >
                     {user?.profile_image ? (
-                      <Image
+                      <img
                         className={styles['img']}
                         src={user.profile_image}
                         alt=""
@@ -884,7 +884,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                       <section className={styles['general-info']}>
                         <div className={styles['profile-name']}>
                           {user?.profile_image ? (
-                            <Image
+                            <img
                               className={styles['img']}
                               src={user.profile_image}
                               alt=""

@@ -59,7 +59,7 @@ const ProfileSwitcher: React.FC<Props> = ({
         onClick={() => setShowDropdown((prev) => !prev)}
       >
         {activeProfile?.data?.profile_image ? (
-          <Image
+          <img
             data-profile-type={activeProfile.type}
             src={activeProfile.data?.profile_image}
             alt=""
@@ -118,7 +118,7 @@ const ProfileSwitcher: React.FC<Props> = ({
                 }`}
               >
                 {user?.profile_image ? (
-                  <Image
+                  <img
                     src={user?.profile_image}
                     alt=""
                     width={24}
@@ -148,7 +148,7 @@ const ProfileSwitcher: React.FC<Props> = ({
                     }`}
                   >
                     {page?.profile_image ? (
-                      <Image
+                      <img
                         src={page?.profile_image}
                         alt=""
                         width={24}

@@ -199,13 +199,23 @@ const HobbyPageLayout: React.FC<Props> = ({
                             }}
                           >
                             <div className={styles['hobbies-members']}>
-                              <Image
-                                className={styles['member-img']}
-                                width="24"
-                                height="24"
-                                src={user.profile_image || defaultUserIcon}
-                                alt=""
-                              />
+                              {user.profile_image ? (
+                                <img
+                                  className={styles['member-img']}
+                                  width="24"
+                                  height="24"
+                                  src={user.profile_image}
+                                  alt=""
+                                />
+                              ) : (
+                                <Image
+                                  className={styles['member-img']}
+                                  width="24"
+                                  height="24"
+                                  src={defaultUserIcon}
+                                  alt=""
+                                />
+                              )}
                               <div>{user.full_name}</div>
                             </div>
                           </div>

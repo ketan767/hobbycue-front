@@ -30,13 +30,23 @@ const ViewImageModal: React.FC<Props> = ({ isOpen, onClose, handleClose }) => {
         />
       </header>
       <div className={styles.imageModalContent}>
-        <Image
-          className={styles['img']}
-          src={imageUrl || ''}
-          alt=""
-          height={296}
-          width={1000}
-        />
+        {imageUrl ? (
+          <img
+            className={styles['img']}
+            src={imageUrl || ''}
+            alt=""
+            height={296}
+            width={1000}
+          />
+        ) : (
+          <Image
+            className={styles['img']}
+            src={''}
+            alt=""
+            height={296}
+            width={1000}
+          />
+        )}
       </div>
     </>
   )

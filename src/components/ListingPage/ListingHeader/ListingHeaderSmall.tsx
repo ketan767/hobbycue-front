@@ -223,7 +223,7 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
           {/* Profile Picture */}
           <div className={styles['profile-img-wrapper']}>
             {data?.profile_image ? (
-              <Image
+              <img
                 className={styles['img']}
                 src={data.profile_image}
                 alt=""

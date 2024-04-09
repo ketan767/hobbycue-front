@@ -59,7 +59,7 @@ const ProfilePagesList = ({ data, expandData }: Props) => {
             >
               {item.profile_image ? (
                 <div className={styles.listingIcon}>
-                  <Image
+                  <img
                     alt="PageIcon"
                     height={32}
                     width={32}

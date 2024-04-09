@@ -779,13 +779,23 @@ const CommunityLayout: React.FC<Props> = ({
                 <section
                   className={`content-box-wrapper ${styles['start-post-btn-container']}`}
                 >
-                  <Image
-                    src={user?.profile_image ?? defaultUserIcon}
-                    alt=""
-                    className={styles['profile-img']}
-                    height={40}
-                    width={40}
-                  />
+                  {user?.profile_image ? (
+                    <img
+                      src={user?.profile_image}
+                      alt=""
+                      className={styles['profile-img']}
+                      height={40}
+                      width={40}
+                    />
+                  ) : (
+                    <Image
+                      src={defaultUserIcon}
+                      alt=""
+                      className={styles['profile-img']}
+                      height={40}
+                      width={40}
+                    />
+                  )}
                   <button
                     onClick={() => {
                       if (user.is_onboarded)

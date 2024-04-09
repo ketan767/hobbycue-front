@@ -323,7 +323,7 @@ const ListingHeader: React.FC<Props> = ({
         <div className={styles['profile-img-wrapper']}>
           <div className={styles['relative']}>
             {data?.profile_image ? (
-              <Image
+              <img
                 onClick={OpenProfileImage}
                 className={`${styles['img']} imageclick`}
                 src={data?.profile_image}
@@ -382,7 +382,7 @@ const ListingHeader: React.FC<Props> = ({
               style={{ backgroundImage: `url(${data?.cover_image})` }}
             ></div>
             {data?.cover_image ? (
-              <Image
+              <img
                 onClick={OpenCoverImage}
                 className={`${styles['img']} imageclick`}
                 src={data?.cover_image}

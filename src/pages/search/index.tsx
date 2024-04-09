@@ -320,7 +320,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       >
                         {/* Render the image */}
                         {hobby.profile_image ? (
-                          <Image
+                          <img
                             src={hobby.profile_image}
                             alt={`${hobby.display}'s `}
                             width={64}
@@ -399,7 +399,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     >
                       <div className={styles.userAvatar}>
                         {user?.profile_image ? (
-                          <Image
+                          <img
                             src={user?.profile_image}
                             alt={`${user.full_name}'s profile`}
                             width={64}
@@ -455,7 +455,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     >
                       <div className={styles.peopleAvatar}>
                         {page.profile_image ? (
-                          <Image
+                          <img
                             src={page.profile_image}
                             alt={`${page.title}'s `}
                             width={64}
@@ -518,7 +518,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     >
                       <div className={styles.peopleAvatar}>
                         {page.profile_image ? (
-                          <Image
+                          <img
                             src={page.profile_image}
                             alt={`${page.title}'s `}
                             width={64}
@@ -575,7 +575,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     >
                       <div className={styles.peopleAvatar}>
                         {page.profile_image ? (
-                          <Image
+                          <img
                             src={page.profile_image}
                             alt={`${page.title}'s `}
                             width={64}

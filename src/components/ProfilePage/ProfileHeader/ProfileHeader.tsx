@@ -289,7 +289,7 @@ const ProfileHeader: React.FC<Props> = ({
           <div className={styles['profile-img-wrapper']}>
             <div className={styles['relative']}>
               {data?.profile_image ? (
-                <Image
+                <img
                   onClick={OpenProfileImage}
                   className={`${styles['img']} imageclick`}
                   src={data?.profile_image}
@@ -368,7 +368,7 @@ const ProfileHeader: React.FC<Props> = ({
           <section className={styles['center-container']}>
             <div className={styles['cover-img-wrapper']}>
               {data?.cover_image ? (
-                <Image
+                <img
                   onClick={OpenCoverImage}
                   className={`${styles['img']} imageclick`}
                   src={data.cover_image}
@@ -453,8 +453,8 @@ const ProfileHeader: React.FC<Props> = ({
             {profileLayoutMode === 'edit' && (
               <FilledButton
                 onClick={() => {
-                  if(noDataChecker?.()===true){
-                    return;
+                  if (noDataChecker?.() === true) {
+                    return
                   }
                   dispatch(updateListingModalData({ type: 1 }))
                   dispatch(

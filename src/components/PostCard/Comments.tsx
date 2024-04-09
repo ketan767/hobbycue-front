@@ -111,7 +111,7 @@ const PostComments = ({
         {/* Comment Input */}
         <section className={styles['inputContainer']}>
           {activeProfile?.data?.profile_image ? (
-            <Image
+            <img
               className={styles['inputAuthorImage']}
               src={activeProfile?.data?.profile_image}
               alt="Author Profile"
@@ -172,7 +172,7 @@ const PostComments = ({
                     {/* Profile Image */}
                     <>
                       {comment?._author?.profile_image ? (
-                        <Image
+                        <img
                           className={styles['inputAuthorImage']}
                           src={comment?._author?.profile_image}
                           alt="Author Profile"
@@ -251,7 +251,7 @@ const PostComments = ({
                   {/* Profile Image */}
                   <>
                     {comments?.[0]?._author?.profile_image ? (
-                      <Image
+                      <img
                         className={styles['inputAuthorImage']}
                         src={comments?.[0]?._author?.profile_image}
                         alt="Author Profile"

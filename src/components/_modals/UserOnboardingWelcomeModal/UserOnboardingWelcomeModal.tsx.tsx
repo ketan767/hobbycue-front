@@ -222,7 +222,7 @@ const UserOnboardingWelcomeModal = () => {
             style={{ left: `calc(0rem + ${screenWidth}px - 5px)` }}
             className={styles['my-community-wrapper']}
           >
-            <Image
+            <img
               className={styles['hobbycue-logo']}
               src="/logo-welcome-small.svg"
               onClick={() => {
@@ -368,25 +368,31 @@ const UserOnboardingWelcomeModal = () => {
           >
             <div className={styles['my-profile']}>
               {user.profile_image ? (
-                <Image
+                <img
                   onClick={() => {
                     localStorage.setItem('modal-shown-after-login', 'true')
                     dispatch(closeModal())
                     router.push(`/profile/${user?.profile_url}`)
                   }}
-                  src={
-                    user?.profile_image ? user?.profile_image : defaultUserImage
-                  }
+                  src={user?.profile_image}
                   alt=""
                   width={50}
                   height={50}
                   className={styles['my-profile-rounded']}
                 />
               ) : (
-                <div
-                  style={{ width: '50px', height: '50px', cursor: 'pointer' }}
-                  className="default-user-icon"
-                ></div>
+                <Image
+                  onClick={() => {
+                    localStorage.setItem('modal-shown-after-login', 'true')
+                    dispatch(closeModal())
+                    router.push(`/profile/${user?.profile_url}`)
+                  }}
+                  src={defaultUserImage}
+                  alt=""
+                  width={50}
+                  height={50}
+                  className={styles['my-profile-rounded']}
+                />
               )}
             </div>
             <div>
@@ -420,7 +426,7 @@ const UserOnboardingWelcomeModal = () => {
           </div>
           <div className={styles['welcome-wrapper']}>
             <div>
-              <Image src={'/celebration.png'} alt="" width={60} height={60} />
+              <img src={'/celebration.png'} alt="" width={60} height={60} />
             </div>
             <div>
               <p>Welcome to HobbyCue</p>
@@ -479,9 +485,9 @@ const UserOnboardingWelcomeModal = () => {
               </div>
             </div>
             <div className={styles['search-wrapper-mobile']}>
-              <Image
+              <img
                 onClick={searchResult}
-                src={'/searchIcon.svg'}
+                src="/searchIcon.svg"
                 width={30}
                 height={30}
                 alt=""
@@ -543,7 +549,7 @@ const UserOnboardingWelcomeModal = () => {
             </div>
             <div className={styles['welcome-wrapper-mobile']}>
               <div>
-                <Image src={'/celebration.png'} alt="" width={60} height={60} />
+                <img src="/celebration.png" alt="" width={60} height={60} />
               </div>
               <div>
                 <p>Welcome to HobbyCue</p>

@@ -26,7 +26,7 @@ const ListingCard: React.FC<Props> = ({ data }) => {
       >
         <div className={styles.imgContainer}>
           {data?.cover_image ? (
-            <Image
+            <img
               src={data?.cover_image}
               width={300}
               height={100}
@@ -53,7 +53,7 @@ const ListingCard: React.FC<Props> = ({ data }) => {
           <div className={styles.contentHead}>
             {data?.profile_image ? (
               <div className={styles.contentImageContainer}>
-                <Image
+                <img
                   src={data?.profile_image}
                   width={48}
                   height={48}

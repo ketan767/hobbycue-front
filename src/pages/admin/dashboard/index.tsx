@@ -82,7 +82,7 @@ const AdminDashboard: React.FC = () => {
           <div className={styles.resultItem} key={index}>
             <div className={styles.avatarContainer}>
               {user.profile_image ? (
-                <Image
+                <img
                   src={user.profile_image}
                   alt={`${user.full_name}'s `}
                   width={64}

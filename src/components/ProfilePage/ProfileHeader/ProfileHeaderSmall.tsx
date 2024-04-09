@@ -25,16 +25,19 @@ type Props = {
   activeTab: ProfilePageTabs
   data: ProfilePageData['pageData']
   navigationTabs?: (tab: string) => void
-
 }
 
 /** // #fix: There are many things to update and improve code in this file. // */
-const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data, navigationTabs }) => {
+const ProfileHeaderSmall: React.FC<Props> = ({
+  activeTab,
+  data,
+  navigationTabs,
+}) => {
   const router = useRouter()
   const dispatch = useDispatch()
 
-  const { profileLayoutMode } = useSelector((state: RootState) => state.site);
-  const {isAuthenticated} = useSelector((state:RootState)=>state.user);
+  const { profileLayoutMode } = useSelector((state: RootState) => state.site)
+  const { isAuthenticated } = useSelector((state: RootState) => state.user)
   const tabs: ProfilePageTabs[] = ['home', 'posts', 'media', 'pages', 'blogs']
 
   const [open, setOpen] = useState(false)
@@ -131,7 +134,7 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data, navigationTabs }
             className={`${styles['profile-img-wrapper']} ${styles['profile-img-wrapper-small']}`}
           >
             {data?.profile_image ? (
-              <Image
+              <img
                 className={styles['img']}
                 src={data.profile_image}
                 alt=""
@@ -159,7 +162,7 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data, navigationTabs }
           <section className={styles['center-container']}>
             <div className={styles['cover-img-wrapper']}>
               {data?.cover_image ? (
-                <Image
+                <img
                   className={styles['img']}
                   src={data.cover_image}
                   alt=""
@@ -267,21 +270,23 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data, navigationTabs }
                     tab !== 'home' ? tab : ''
                   }`}
                   className={activeTab === tab ? styles['active'] : ''}
-                  onClick={(e)=>{
+                  onClick={(e) => {
                     e.preventDefault()
                     e.stopPropagation()
                     if (!isAuthenticated) {
                       dispatch(openModal({ type: 'auth', closable: true }))
                       return
                     } else {
-                     if(navigationTabs){
-                      console.log('running nav')
-                      navigationTabs(tab)
-                     }else{
-                      router.push(`/profile/${router.query.profile_url}/${
-                        tab !== 'home' ? tab : ''
-                      }`)
-                     }
+                      if (navigationTabs) {
+                        console.log('running nav')
+                        navigationTabs(tab)
+                      } else {
+                        router.push(
+                          `/profile/${router.query.profile_url}/${
+                            tab !== 'home' ? tab : ''
+                          }`,
+                        )
+                      }
                     }
                   }}
                 >

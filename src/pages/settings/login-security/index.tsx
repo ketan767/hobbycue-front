@@ -165,15 +165,19 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
 
   return (
     <>
-      {isMobile&&<aside className={`custom-scrollbar static-position settings-container`}>
-        <section className={`content-box-wrapper`}>
-          <header>
-            <div className={'settings-title'}>
-              <h1>Settings</h1>
-            </div>
-          </header>
-        </section>
-      </aside>}
+      {isMobile && (
+        <aside
+          className={`custom-scrollbar static-position settings-container`}
+        >
+          <section className={`content-box-wrapper`}>
+            <header>
+              <div className={'settings-title'}>
+                <h1>Settings</h1>
+              </div>
+            </header>
+          </section>
+        </aside>
+      )}
       <PageGridLayout column={2} customStyles={styles['settingcontainer']}>
         <SettingsDropdownLayout>
           {isMobile ? null : <SettingsSidebar active="login-security" />}
@@ -211,10 +215,9 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
             <div className={styles.socialLoginContainer}>
               {user.google?.picture ? (
                 <div className={styles['google-image']}>
-                  <Image
+                  <img
                     className={styles['user-icon-google']}
                     src={user.google.picture}
-                    fill
                     alt="google"
                   />
                   <div className={styles['google-icon']}>
@@ -262,7 +265,7 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
             <div className={styles.socialLoginContainer}>
               {user.facebook?.picture ? (
                 <div className={styles['google-image']}>
-                  <Image
+                  <img
                     className={styles['user-icon-google']}
                     src={user.facebook.picture}
                     width={32}

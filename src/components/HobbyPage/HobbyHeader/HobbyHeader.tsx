@@ -37,7 +37,7 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
       >
         {data?.profile_image ? (
           <div className={styles['title-mobile']}>
-            <Image
+            <img
               className={styles['profile-img']}
               src={data.profile_image}
               alt=""
@@ -91,7 +91,7 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
 
         <section className={styles['center-container']}>
           {data?.cover_image ? (
-            <Image
+            <img
               className={styles['cover-img']}
               src={data.cover_image}
               alt=""

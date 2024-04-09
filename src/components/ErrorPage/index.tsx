@@ -12,12 +12,13 @@ interface ErrorPageProps {
 }
 
 const ErrorPage: FC<ErrorPageProps> = ({ restricted = false }) => {
+  const imageUrl = hc404Img.src
   const router = useRouter()
   const { user } = useSelector((state: RootState) => state.user)
   return (
     <div className={styles['notfound-container']}>
-      <Image
-        src={hc404Img}
+      <img
+        src={imageUrl}
         alt="Error Page Image"
         className={styles['notfoundImg']}
       />
