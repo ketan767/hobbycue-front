@@ -215,6 +215,17 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
       )
     }
   }
+  const { CurrentUrl, showProfileError } = useSelector(
+    (state: RootState) => state.user,
+  )
+
+  useEffect(() => {
+    if (showProfileError) {
+      console.log('its working')
+      noDataChecker()
+    }
+  }, [CurrentUrl, showProfileError])
+
   const noDataChecker = () => {
     let hasError = false
     console.log({ hobbies: data.pageData._hobbies })

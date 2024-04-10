@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import {
   AuthState,
+  CurrentUrl,
   updateActiveProfile,
   updateIsAuthenticated,
   updateIsLoggedIn,
@@ -135,6 +136,25 @@ function SiteMainLayout({ children }: { children: ReactElement }) {
     //   router.events.off('routeChangeError', handleComplete)
     // }
   }, [router.pathname])
+
+  useEffect(() => {
+    const updateUrlWithDelay = () => {
+      const url = window.location.href
+      setTimeout(() => {
+        dispatch(CurrentUrl(url))
+      }, 1000)
+    }
+
+    const handleRouteChange = (url: any) => {
+      updateUrlWithDelay()
+    }
+
+    router.events.on('routeChangeComplete', handleRouteChange)
+
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange)
+    }
+  }, [router.events, dispatch])
 
   return (
     <>

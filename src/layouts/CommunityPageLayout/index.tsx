@@ -37,6 +37,7 @@ import { InviteToCommunity } from '@/services/auth.service'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import CommunityTopDropdown from '@/components/_formElements/CommunityTopDropdown/CommunityTopDropdown'
 import { CommunityDropdownOption } from '@/components/_formElements/CommunityDropdownOption/CommunityDropdownOption'
+import { showProfileError } from '@/redux/slices/user'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -63,6 +64,7 @@ const CommunityLayout: React.FC<Props> = ({
   const [selectedHobby, setSelectedHobby] = useState('')
   const [selectedGenre, setSelectedGenre] = useState<string | undefined>('')
   const [selectedLocation, setSelectedLocation] = useState('')
+
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -515,6 +517,15 @@ const CommunityLayout: React.FC<Props> = ({
     })
   }
 
+  const handleStartPost = () => {
+    if (!user.is_onboarded) {
+      router.push(`/profile/${user.profile_url}`)
+      dispatch(showProfileError(true))
+    } else {
+      dispatch(openModal({ type: 'create-post', closable: true }))
+    }
+  }
+
   // useEffect(()=>{
   //   console.warn({selectedLocation})
   //   console.warn({visibilityData})
@@ -797,19 +808,7 @@ const CommunityLayout: React.FC<Props> = ({
                     />
                   )}
                   <button
-                    onClick={() => {
-                      if (user.is_onboarded)
-                        dispatch(
-                          openModal({ type: 'create-post', closable: true }),
-                        )
-                      else
-                        dispatch(
-                          openModal({
-                            type: 'user-onboarding',
-                            closable: true,
-                          }),
-                        )
-                    }}
+                    onClick={handleStartPost}
                     className={styles['start-post-btn']}
                   >
                     <svg
