@@ -27,7 +27,7 @@ import Link from 'next/link'
 import { getAllHobbies, getTrendingHobbies } from '@/services/hobby.service'
 import DefaultHobbyImg from '@/assets/svg/default-images/default-hobbies.svg'
 import DefaultHobbyImgcover from '@/assets/svg/default-images/default-hobby-cover.svg'
-import { CircularProgress, MenuItem, Select, Snackbar } from '@mui/material'
+import { CircularProgress, MenuItem, Select, Snackbar, useMediaQuery } from '@mui/material'
 import FilledButton from '@/components/_buttons/FilledButton'
 import InputSelect from '@/components/_formElements/Select/Select'
 import { DropdownOption } from '@/components/_modals/CreatePost/Dropdown/DropdownOption'
@@ -569,6 +569,8 @@ const CommunityLayout: React.FC<Props> = ({
   </svg>)
   }
 
+  const isMobile = useMediaQuery('(max-width:1100px)')
+
   const hobbiesDropDownArr =
     activeProfile.data?._hobbies?.map((item: any) => ({
       value: item.hobby?._id,
@@ -584,7 +586,7 @@ const CommunityLayout: React.FC<Props> = ({
         column={hideThirdColumnTabs.includes(activeTab) ? 2 : 3}
         responsive={true}
       >
-        <aside className={`${styles['community-left-aside']} custom-scrollbar`}>
+       {!isMobile&&<aside className={`${styles['community-left-aside']} custom-scrollbar`}>
           <ProfileSwitcher />
           <section
             className={`content-box-wrapper ${styles['hobbies-side-wrapper']}`}
@@ -744,7 +746,7 @@ const CommunityLayout: React.FC<Props> = ({
               </ul>
             </section> */}
           </section>
-        </aside>
+        </aside>}
 
         <main>
           {!singlePostPage && (
