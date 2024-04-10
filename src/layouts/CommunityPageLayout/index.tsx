@@ -37,6 +37,7 @@ import { InviteToCommunity } from '@/services/auth.service'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import CommunityTopDropdown from '@/components/_formElements/CommunityTopDropdown/CommunityTopDropdown'
 import { CommunityDropdownOption } from '@/components/_formElements/CommunityDropdownOption/CommunityDropdownOption'
+import PanelDropdownList from './PanelDropdownList'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -52,7 +53,7 @@ const CommunityLayout: React.FC<Props> = ({
   const dispatch = useDispatch()
   const { activeProfile, user } = useSelector((state: RootState) => state.user)
   const { allPosts, filters } = useSelector((state: RootState) => state.post)
-  const [isLoadingPosts, setIsLoadingPosts] = useState(false)
+  const [showPanel, setShowPanel] = useState(false)
   const [hobbyGroup, setHobbyGroup] = useState({
     profile_image: null,
     cover_image: null,
@@ -86,6 +87,10 @@ const CommunityLayout: React.FC<Props> = ({
 
   const [inviteBtnLoader, setInviteBtnLoader] = useState(false)
   const [trendingHobbies, setTrendingHobbies] = useState([])
+  const panelListData = [{
+    name:"Trending Hobbies",
+    options:trendingHobbies,
+  }];
   console.log('Number of hobbies:', activeProfile.data?._hobbies?.length)
 
   const hideThirdColumnTabs = ['pages', 'links', 'store', 'blogs']
@@ -558,6 +563,12 @@ const CommunityLayout: React.FC<Props> = ({
     }
   }
 
+  const DoubleArrowSvg = ({rotate}:{rotate?:boolean}) => {
+    return (<svg style={{rotate:rotate===true?"180deg":"0deg"}} xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+    <path d="M13.75 10.9375L10 14.6875L6.25 10.9375M13.75 5.3125L10 9.0625L6.25 5.3125" stroke="#8064A2" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>)
+  }
+
   const hobbiesDropDownArr =
     activeProfile.data?._hobbies?.map((item: any) => ({
       value: item.hobby?._id,
@@ -837,61 +848,6 @@ const CommunityLayout: React.FC<Props> = ({
                 </section>
                 <section className={styles['filter-section']}>
                   <div>
-                    {/*  */}
-
-                    {/* <Select
-                      sx={{
-                        boxShadow: 'none',
-                        '.MuiOutlinedInput-notchedOutline': { border: 0 },
-                        fieldset: { border: 0 },
-                      }}
-                      className={styles['hobby-select']}
-                      value={selectedHobby || ''}
-                      onChange={(e) => handleHobbyClick(e.target.value)}
-                      displayEmpty
-                    >
-                      <MenuItem value="">All Hobbies</MenuItem>
-                      {activeProfile.data?._hobbies?.map(
-                        (item: any, idx: any) => {
-                          console.warn({ item })
-
-                          return (
-                            <MenuItem key={idx} value={item.hobby?._id}>
-                              {item.hobby?.display}
-                              {item.genre?.display
-                                ? ` - ${item?.genre?.display}`
-                                : null}
-                            </MenuItem>
-                          )
-                        },
-                      )}
-                      <MenuItem
-                        onClick={() => {
-                          if (activeProfile?.type === 'user') {
-                            dispatch(
-                              openModal({
-                                type: 'profile-hobby-edit',
-                                closable: true,
-                              }),
-                            )
-                          } else {
-                            dispatch(
-                              openModal({
-                                type: 'listing-hobby-edit',
-                                closable: true,
-                              }),
-                            )
-                          }
-                        }}
-                      >
-                        Edit Hobbies
-                        <Image
-                          src={EditIcon}
-                          className={styles.hobbyeditresponsive}
-                          alt="edit"
-                        />{' '}
-                      </MenuItem>
-                      </Select> */}
                     <CommunityTopDropdown
                       maxWidth="139px"
                       className={styles['hobby-select']}
@@ -963,9 +919,18 @@ const CommunityLayout: React.FC<Props> = ({
                       </CommunityTopDropdown>
                     )}
 
-                    {/*  */}
+                    <button onClick={()=>setShowPanel(prev=>!prev)} className={styles['panel-dropdown-btn']}>
+                      <DoubleArrowSvg rotate={showPanel}/>
+                    </button>
                   </div>
                 </section>
+                {showPanel&&
+                <section className={styles['dropdowns-panel']}>
+                  {panelListData.map((obj:{name:string,options:any[]},idx:number)=>(
+                   <PanelDropdownList name={obj.name} options={obj.options} key={idx}/>
+                  ))}
+                </section>
+                }
                 <section
                   className={`content-box-wrapper ${styles['navigation-links']}`}
                 >

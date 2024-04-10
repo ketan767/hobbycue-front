@@ -13,6 +13,7 @@ import { withAuth } from '@/navigation/withAuth'
 import { countryData } from '@/utils/countrydata'
 import DropdownMenu from '@/components/DropdownMenu'
 import DownArrow from '@/assets/svg/chevron-down.svg'
+import UpArrow from '@/assets/svg/chevron-up.svg'
 import Image from 'next/image'
 import { CircularProgress, useMediaQuery } from '@mui/material'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
@@ -617,7 +618,7 @@ const Contact: React.FC<Props> = ({}) => {
                         onClick={() => setShowYouDropdown(prev=>!prev)}
                       >
                         <p>{data.YouAre.value || 'Select You Are...'}</p>
-                        <Image src={DownArrow} alt="down" />
+                        <Image src={showYouDropdown?UpArrow:DownArrow} alt="down" />
                       </div>
                       {showYouDropdown && (
                         <div ref={YoudropdownRef} className={styles['options-container']}>
@@ -715,7 +716,7 @@ const Contact: React.FC<Props> = ({}) => {
                         onClick={() => setShowRegDropdown(true)}
                       >
                         <p>{data.Regarding.value || 'Select Regarding...'}</p>
-                        <Image src={DownArrow} alt="down" />
+                        <Image src={showRegDropdown?UpArrow:DownArrow} alt="down" />
                       </div>
                       {showRegDropdown && (
                         <div ref={RegdropdownRef} className={styles['options-container']}>

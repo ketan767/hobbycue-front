@@ -398,6 +398,11 @@
     display: none;
   }
 
+  .navbar-left .pos-relative-z-2{
+    position: relative;
+    z-index: 2;
+  }
+
   .logo-full {
     display: none;
   }

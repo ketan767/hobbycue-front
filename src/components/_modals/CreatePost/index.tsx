@@ -606,6 +606,8 @@ export const CreatePost: React.FC<Props> = ({
                   data={data}
                   setData={setData}
                   setHobbies={setHobbies}
+                  classForShowDropdown={styles['full-width-all']}
+                  className={styles['profile-switcher-parent']}
                 />
               </div>
 
@@ -621,6 +623,7 @@ export const CreatePost: React.FC<Props> = ({
                   }${data.genre?.display ?? ''}`}
                   onChange={(e: any) => {}}
                   selectText=""
+                  className={styles['input-select']}
                 >
                   {hobbies?.map((item: any, idx) => {
                     return (
@@ -675,6 +678,7 @@ export const CreatePost: React.FC<Props> = ({
                     setData((prev: any) => ({ ...prev, visibility: val }))
                   }}
                   value={data.visibility}
+                  className={styles['input-select']}
                   // inputProps={{ 'aria-label': 'Without label' }}
                   // className={` ${styles['visibility-dropdown']}`}
                 >
