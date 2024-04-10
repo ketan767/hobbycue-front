@@ -33,8 +33,8 @@ const SettingsDropdownLayout: FC<SettingsDropdownLayoutProps> = ({
     },
     {
       text: 'Account & Data',
-      link: '/settings/data-others',
-      open: pathname === '/settings/data-others',
+      link: '/settings/account-data',
+      open: pathname === '/settings/account-data',
     },
   ]
   const [layoutArr, setLayoutArr] = useState(dropdownArr)
@@ -53,19 +53,21 @@ const SettingsDropdownLayout: FC<SettingsDropdownLayoutProps> = ({
   if (isMobile) {
     return (
       <div className={styles.container}>
-        {layoutArr.map((item, i) => (<>
-          <div
-            onClick={() => {
-              openCloseFunc(i)
-            }}
-            key={i}
-            className={styles.singleDropdown}
-          >
-            <p>{item.text}</p>
-            <Image src={item.open ? upArrow : downArrow} alt="" />
-          </div>
-        {item.open&&children}
-        </>))}
+        {layoutArr.map((item, i) => (
+          <>
+            <div
+              onClick={() => {
+                openCloseFunc(i)
+              }}
+              key={i}
+              className={styles.singleDropdown}
+            >
+              <p>{item.text}</p>
+              <Image src={item.open ? upArrow : downArrow} alt="" />
+            </div>
+            {item.open && children}
+          </>
+        ))}
       </div>
     )
   } else {

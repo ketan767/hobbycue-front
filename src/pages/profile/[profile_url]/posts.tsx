@@ -162,7 +162,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
               <ProfileSocialMediaSide data={data.pageData} />
             </div>
           </aside>
-          <main>
+          <main className={styles['middle-section']}>
             {profileLayoutMode === 'edit' && (
               <section
                 className={`content-box-wrapper ${styles['start-post-btn-container']}`}
