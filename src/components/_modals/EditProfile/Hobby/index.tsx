@@ -387,7 +387,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         setErrorOrmsg('hobby added Successfully!')
       } else {
         setShowAddHobbyModal(true)
-        setIsChanged(false)
+        setIsChanged(true)
         return
       }
     } else {
