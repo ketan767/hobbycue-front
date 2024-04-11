@@ -19,6 +19,8 @@ import ListingCard from '@/components/ListingCard/ListingCard'
 import ListingPageCard from '@/components/ListingPageCard/ListingPageCard'
 import PostCard from '@/components/PostCard/PostCard'
 import PostWrapper from '@/layouts/PinnedPost/PinnedPost'
+import { useRouter } from 'next/router'
+import { showProfileError } from '@/redux/slices/user'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -29,8 +31,8 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
   const dispatch = useDispatch()
   const [pagesData, setPagesData] = useState([])
   const { listingLayoutMode } = useSelector((state: RootState) => state.site)
-  const { user } = useSelector((state: RootState) => state)
-  const { is_onboarded } = useSelector((state: any) => state.user.user)
+
+  const { user, is_onboarded } = useSelector((state: any) => state.user)
   const { isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
   )
@@ -70,6 +72,12 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
     }
   }
 
+  const router = useRouter()
+  const HandleNotOnboard = () => {
+    router.push(`/profile/${user.profile_url}`)
+    dispatch(showProfileError(true))
+  }
+
   let pinnedPosts = pagesData.filter((item: any) => item.isPinned === true)
   let unpinnnedPosts = pagesData.filter((item: any) => item.isPinned !== true)
 
@@ -85,10 +93,7 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
               onClick={() => {
                 if (is_onboarded)
                   dispatch(openModal({ type: 'create-post', closable: true }))
-                else
-                  dispatch(
-                    openModal({ type: 'user-onboarding', closable: true }),
-                  )
+                else HandleNotOnboard()
               }}
               className={styles['start-post-btn']}
             >
@@ -124,10 +129,17 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
             </div>
           )}
         {!isLoggedIn && (
-              <div className={styles['no-posts-container']}>
-                <p className='cursor-pointer' onClick={()=>{dispatch(openModal({type:"auth",closable:true}))}}>Login to see the posts</p>
-              </div>
-            )}
+          <div className={styles['no-posts-container']}>
+            <p
+              className="cursor-pointer"
+              onClick={() => {
+                dispatch(openModal({ type: 'auth', closable: true }))
+              }}
+            >
+              Login to see the posts
+            </p>
+          </div>
+        )}
         {isLoggedIn &&
           pinnedPosts.map((post: any) => {
             return (

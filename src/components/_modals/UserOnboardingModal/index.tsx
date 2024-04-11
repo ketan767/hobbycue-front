@@ -84,7 +84,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = ({
     console.log('activeprofileeeeeeeeeeee', user)
     const { err: error, res: response } = await getMyProfileDetail()
 
-    if (response?.data?.data?.user?.completed_onboarding_steps.length === 5) {
+    if (response?.data?.data?.user?.completed_onboarding_steps.length === 3) {
       await sendWelcomeMail(payload)
 
       const data = { is_onboarded: true }

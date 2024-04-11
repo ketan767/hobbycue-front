@@ -68,7 +68,7 @@ const authSlice = createSlice({
     showProfileError(state, action: PayloadAction<boolean>) {
       state.showProfileError = action.payload;
     },
-    CurrentUrl(state, action: PayloadAction<string>) {
+    UpdateCurrentUrl(state, action: PayloadAction<string>) {
       state.CurrentUrl = action.payload;
     },
   },
@@ -83,7 +83,7 @@ export const {
   updateAddressToEdit,
   updateProfileData,
   showProfileError,
-  CurrentUrl,
+  UpdateCurrentUrl,
 } = authSlice.actions
 
 export default authSlice.reducer

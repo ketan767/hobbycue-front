@@ -60,8 +60,6 @@ const ProfileAboutEditModal: React.FC<Props> = ({
 
   const [data, setData] = useState<ProfileAboutData>({
     about: '',
-
-    completed_onboarding_steps: 'About',
   })
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backDisabled, SetBackDisabled] = useState(false)
@@ -106,15 +104,10 @@ const ProfileAboutEditModal: React.FC<Props> = ({
     } else {
       let updatedCompletedSteps = [...user.completed_onboarding_steps]
 
-      if (!updatedCompletedSteps.includes('About')) {
-        updatedCompletedSteps.push('About')
-      }
-
       const newOnboardingStep =
         Number(user?.onboarding_step) > 1 ? user?.onboarding_step : '2'
       const { err, res } = await updateMyProfileDetail({
         onboarding_step: newOnboardingStep,
-        completed_onboarding_steps: updatedCompletedSteps,
       })
 
       if (err) {
@@ -146,23 +139,19 @@ const ProfileAboutEditModal: React.FC<Props> = ({
     setSubmitBtnLoading(true)
     let updatedCompletedSteps = [...user.completed_onboarding_steps]
 
-    if (!updatedCompletedSteps.includes('About')) {
-      updatedCompletedSteps.push('About')
-    }
     const newOnboardingStep =
       Number(user?.onboarding_step) > 1 ? user?.onboarding_step : '2'
     const { err, res } = await updateMyProfileDetail({
       ...data,
       onboarding_step: newOnboardingStep,
-      completed_onboarding_steps: updatedCompletedSteps,
     })
-    const { err: error, res: userDataRes } = await getMyProfileDetail();
-      if('data' in userDataRes?.data){
-        if('user' in userDataRes?.data.data){
-          dispatch(updateUser(userDataRes?.data.data.user))
-        }
+    const { err: error, res: userDataRes } = await getMyProfileDetail()
+    if ('data' in userDataRes?.data) {
+      if ('user' in userDataRes?.data.data) {
+        dispatch(updateUser(userDataRes?.data.data.user))
       }
-    
+    }
+
     if (err) {
       setSubmitBtnLoading(false)
       return console.log(err)
@@ -170,7 +159,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
     if (!res?.data.success) {
       setSubmitBtnLoading(false)
     }
-    
+
     if (!data.about || cleanString(data.about) === '') {
       if (data.about !== user.about) {
         const newData = { about: cleanString(data.about) }
@@ -209,15 +198,11 @@ const ProfileAboutEditModal: React.FC<Props> = ({
       setSubmitBtnLoading(true)
       let updatedCompletedSteps = [...user.completed_onboarding_steps]
 
-      if (!updatedCompletedSteps.includes('About')) {
-        updatedCompletedSteps.push('About')
-      }
       const newOnboardingStep =
         Number(user?.onboarding_step) > 1 ? user?.onboarding_step : '2'
       const { err, res } = await updateMyProfileDetail({
         ...newData,
         onboarding_step: newOnboardingStep,
-        completed_onboarding_steps: updatedCompletedSteps,
       })
       if (err) {
         setSubmitBtnLoading(false)
@@ -246,15 +231,10 @@ const ProfileAboutEditModal: React.FC<Props> = ({
   const handleSkip = async () => {
     let updatedCompletedSteps = [...user.completed_onboarding_steps]
 
-    if (!updatedCompletedSteps.includes('About')) {
-      updatedCompletedSteps.push('About')
-    }
-
     const newOnboardingStep =
       Number(user?.onboarding_step) > 1 ? user?.onboarding_step : '2'
     const { err, res } = await updateMyProfileDetail({
       onboarding_step: newOnboardingStep,
-      completed_onboarding_steps: updatedCompletedSteps,
     })
 
     if (err) {
