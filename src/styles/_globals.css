@@ -252,6 +252,10 @@ select:-webkit-autofill {
   border-color: 1px solid #ebedf0 !important;
   height: 48px;
 }
+.ql-toolbar.ql-snow .ql-formats button:hover {
+  border-radius: 4px;
+  background: var(--Grey-Hover, #F8F9FA);
+}
 .ql-toolbar.ql-snow .ql-formats button {
   opacity: 0.8;
   padding: 0 12px !important;
@@ -352,16 +356,28 @@ select:-webkit-autofill {
 }
 
 .btnOutlinePurple button:hover svg path,
+.btnOutlinePurple button:focus svg path,
+.btnOutlinePurple button:active svg path,
+.btnOutlinePurple button:target svg path,
+.btnOutlinePurple button:visited svg path,
 .btnOutlinePurple button:focus-visible svg path {
   stroke: #8064a2 !important;
 }
 
 .btnOutlinePurple button:hover svg line,
+.btnOutlinePurple button:focus svg line,
+.btnOutlinePurple button:active svg line,
+.btnOutlinePurple button:target svg line,
+.btnOutlinePurple button:visited svg line,
 .btnOutlinePurple button:focus-visible svg line {
   stroke: #8064a2 !important;
 }
 
 .btnOutlinePurple button:hover svg rect,
+.btnOutlinePurple button:focus svg rect,
+.btnOutlinePurple button:active svg rect,
+.btnOutlinePurple button:target svg rect,
+.btnOutlinePurple button:visited svg rect,
 .btnOutlinePurple button:focus-visible svg rect{
   fill: #8064a2 !important;
 }

@@ -344,6 +344,16 @@
   z-index: 1000;
 }
 
+.optionsContainerUnactiveClass{
+  max-height: 0 !important;
+}
+
+.options-container-class{
+  max-height: 250px !important;
+  overflow-y: auto !important;
+  z-index: 1005 !important;
+}
+
 @media screen and (max-width: 1100px) {
   .create-post-modal {
     flex-direction: column;
@@ -427,6 +437,10 @@
     font-weight: 500 !important;
     line-height: 24px !important;
     /* 171.429% */
+  }
+  .optionsContainerUnactiveClass{
+  bottom: calc(100% - 14px) !important;
+  top: unset !important;
   }
 }
 

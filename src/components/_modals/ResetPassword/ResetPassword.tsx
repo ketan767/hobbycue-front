@@ -82,12 +82,47 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
     confirmPassword: '',
   })
   const handleSubmit = async () => {
-    if (confirmPassword !== newPassword) {
-      setErrors({ ...errors, confirmPassword: 'Passwords does not match!' })
-      confirmPasswordRef?.current?.focus()
-      return
-    }
     setSubmitBtnLoading(true)
+    let hasErrors = false;
+    if (confirmPassword !== newPassword) {
+      hasErrors = true
+      setErrors({ ...errors, confirmPassword: 'Passwords does not match!' });
+      confirmPasswordRef?.current?.focus();
+    };
+        if(inputValidation.length===false){
+          hasErrors = true;
+          setErrors((prev)=>({...prev,newPassword:"New password should be valid!"}))
+          newPasswordRef.current?.focus();
+        }
+        if(inputValidation.lowercase===false){
+          hasErrors = true;
+          setErrors((prev)=>({...prev,newPassword:"New password should be valid!"}))
+          newPasswordRef.current?.focus();
+        }
+        if(inputValidation.number===false){
+          hasErrors = true;
+          setErrors((prev)=>({...prev,newPassword:"New password should be valid!"}))
+          newPasswordRef.current?.focus();
+        }
+        if(inputValidation.specialChar===false){
+          hasErrors = true;
+          setErrors((prev)=>({...prev,newPassword:"New password should be valid!"}))
+          newPasswordRef.current?.focus();
+        }
+        if(inputValidation.uppercase===false){
+          hasErrors = true;
+          setErrors((prev)=>({...prev,newPassword:"New password should be valid!"}))
+          newPasswordRef.current?.focus();
+        }
+        if(otp.toString().length===0){
+          hasErrors = true;
+          setErrors((prev)=>({...prev,otp:"Please enter OTP!"}))
+          otpRef.current?.focus();
+        }
+    if(hasErrors===true){
+      setSubmitBtnLoading(false);
+      return;
+    }
     const { err, res } = await resetPassword({
       email: forgotPasswordEmail,
       otp: otp,
@@ -216,7 +251,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
             {/* <label className={styles.label}>New Password</label> */}
             <div
               className={`${styles['input-box']} ${
-                errors.newPassword ? styles['input-error'] : ''
+                errors.newPassword ? styles['child-div-error'] : ''
               }`}
             >
               <TextField
@@ -228,7 +263,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
                 type={showPassword ? 'text' : 'password'}
                 onFocus={() => setShowValidations(true)}
                 onBlur={() => setShowValidations(false)}
-                onChange={(e) => setNewPassword(e.target.value)}
+                onChange={(e) => {setNewPassword(e.target.value);setErrors(prev=>({...prev,newPassword:''}))}}
                 InputProps={{
                   endAdornment: (
                     <IconButton onClick={() => setShowPassword(!showPassword)}>
