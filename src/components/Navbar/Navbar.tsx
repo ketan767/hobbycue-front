@@ -294,7 +294,7 @@ export const Navbar: React.FC<Props> = ({}) => {
           } else if (indexB === 0 && indexA !== 0) {
             return 1
           }
-          return 0
+          return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
         })
         console.log('hobbies search results:', hobbyRes.data.hobbies)
         dispatch(
@@ -1026,8 +1026,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                       </button>
                     </div>
                   </form>
-                ) :
-                data.search.value.length > 0? (
+                ) : data.search.value.length > 0 ? (
                   <li
                     onClick={toggleSearchInput}
                     className={
@@ -1041,14 +1040,13 @@ export const Navbar: React.FC<Props> = ({}) => {
                     )}
                     <Image src={Search} alt="search" />
                   </li>
-                ):null}
+                ) : null}
               </div>
-              {data.search.value.length ===0&&<li
-                    onClick={toggleSearchInput}
-                    className={''}
-                  >
-                    <Image src={Search} alt="search" />
-                  </li>}
+              {data.search.value.length === 0 && (
+                <li onClick={toggleSearchInput} className={''}>
+                  <Image src={Search} alt="search" />
+                </li>
+              )}
               <li>
                 <Link href={'/notifications'}>
                   <Image src={BellIcon} alt="Bell" />

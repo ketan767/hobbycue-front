@@ -7,9 +7,10 @@ import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import { Checkbox, FormControlLabel, useMediaQuery } from '@mui/material'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { support } from '@/services/user.service'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import SettingsDropdownLayout from '@/layouts/SettingsDropdownLayout'
+import { openModal } from '@/redux/slices/modal'
 
 type Props = {}
 
@@ -28,6 +29,7 @@ const DataAndOthers: React.FC<Props> = ({}) => {
     display: false,
     message: '',
   })
+  const dispatch = useDispatch()
   const user = useSelector((state: RootState) => state.user.user)
   const handleRunSupportAPI = async (
     description: string,
@@ -57,6 +59,23 @@ const DataAndOthers: React.FC<Props> = ({}) => {
     }
   }
 
+  const handleRequestWithPassword = (
+    description: string,
+    successMessage: string,
+    errorMessage: string,
+  ) => {
+    dispatch(
+      openModal({
+        type: 'Verify-ActionModal',
+        closable: true,
+        onVerify: () => {
+          // Call the API with the entered password
+          handleRunSupportAPI(description, successMessage, errorMessage)
+        },
+      }),
+    )
+  }
+
   const isMobile = useMediaQuery('(max-width:1100px)')
   return (
     <>
@@ -84,7 +103,7 @@ const DataAndOthers: React.FC<Props> = ({}) => {
               </p>
               <OutlinedButton
                 onClick={() =>
-                  handleRunSupportAPI(
+                  handleRequestWithPassword(
                     'Request for personal data export.',
                     'Your request for personal data export has been sent successfully',
                     'Your request for personal data export is failed',
@@ -105,7 +124,7 @@ const DataAndOthers: React.FC<Props> = ({}) => {
               </p>
               <OutlinedButton
                 onClick={() =>
-                  handleRunSupportAPI(
+                  handleRequestWithPassword(
                     'Account deactivation request.',
                     'Your account deactivation request has been sent successfully',
                     'Your request for account deactivation is failed',
@@ -144,7 +163,7 @@ const DataAndOthers: React.FC<Props> = ({}) => {
               </div>
               <OutlinedButton
                 onClick={() =>
-                  handleRunSupportAPI(
+                  handleRequestWithPassword(
                     'Account deletion request.',
                     'Your account deletion request has been sent successfully',
                     'Your request for account deletion is failed',
