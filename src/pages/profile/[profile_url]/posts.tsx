@@ -21,7 +21,7 @@ import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import ProfilePagesList from '@/components/ProfilePage/ProfilePagesList/ProfilePagesList'
 import { useDispatch, useSelector } from 'react-redux'
 import { openModal } from '@/redux/slices/modal'
-import { updateUser } from '@/redux/slices/user'
+import { showProfileError, updateUser } from '@/redux/slices/user'
 import PostWrapper from '@/layouts/PinnedPost/PinnedPost'
 import ProfileNavigationLinks from '@/components/ProfilePage/ProfileHeader/ProfileNavigationLinks'
 import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/ProfileSocialMedia'
@@ -121,6 +121,12 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
     setExpandAll(value)
     dispatch(updateProfileMenuExpandAll(value))
   }
+
+  const HandleNotOnboard = () => {
+    router.push(`/profile/${user.profile_url}`)
+    dispatch(showProfileError(true))
+  }
+
   useEffect(() => {
     if (user.id) {
       const userIsAuthorized =
@@ -173,13 +179,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
                       dispatch(
                         openModal({ type: 'create-post', closable: true }),
                       )
-                    else
-                      dispatch(
-                        openModal({
-                          type: 'user-onboarding',
-                          closable: true,
-                        }),
-                      )
+                    else HandleNotOnboard()
                   }}
                   className={styles['start-post-btn']}
                 >
@@ -287,10 +287,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
               onClick={() => {
                 if (user.is_onboarded)
                   dispatch(openModal({ type: 'create-post', closable: true }))
-                else
-                  dispatch(
-                    openModal({ type: 'user-onboarding', closable: true }),
-                  )
+                else HandleNotOnboard()
               }}
               className={styles['start-post-btn']}
             >

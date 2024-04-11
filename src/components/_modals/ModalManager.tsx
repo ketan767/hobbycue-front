@@ -78,7 +78,7 @@ import {
   updateMyProfileDetail,
 } from '@/services/user.service'
 import { sendWelcomeMail } from '@/services/auth.service'
-import { updateUser } from '@/redux/slices/user'
+import { showProfileError, updateUser } from '@/redux/slices/user'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -147,6 +147,7 @@ const ModalManager: React.FC = () => {
       !hasChanges
     ) {
       router.push(`/profile/${user?.profile_url}`)
+      dispatch(showProfileError(true))
       dispatch(closeModal())
     } else if (confirmationModal) {
       setConfirmationModal(false)
@@ -191,7 +192,7 @@ const ModalManager: React.FC = () => {
     console.log('activeprofileeeeeeeeeeee', user)
     const { err: error, res: response } = await getMyProfileDetail()
 
-    if (response?.data?.data?.user?.completed_onboarding_steps.length === 5) {
+    if (response?.data?.data?.user?.completed_onboarding_steps.length === 3) {
       await sendWelcomeMail(payload)
 
       const data = { is_onboarded: true }
@@ -207,6 +208,7 @@ const ModalManager: React.FC = () => {
     } else {
       if (activeModal !== 'profile-general-edit') {
         window.location.href = `/profile/${user.profile_url}`
+        dispatch(showProfileError(true))
       }
     }
   }
@@ -261,6 +263,7 @@ const ModalManager: React.FC = () => {
             !hasChanges
           ) {
             window.location.href = `/profile/${user?.profile_url}`
+            dispatch(showProfileError(true))
             dispatch(closeModal())
           }
 

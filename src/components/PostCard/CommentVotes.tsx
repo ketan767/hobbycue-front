@@ -1,11 +1,13 @@
+import { showProfileError } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import {
   upvotePostComment,
   removevotePostComment,
   downvotePostComment,
 } from '@/services/post.service'
+import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 type Props = {
   styles: any
@@ -20,7 +22,7 @@ const PostCommentVotes: React.FC<Props> = ({
   postData,
   updateComments,
 }: Props) => {
-  const { activeProfile } = useSelector((state: RootState) => state.user)
+  const { activeProfile, user } = useSelector((state: RootState) => state.user)
   const [voteStatus, setVoteStatus] = useState<'up' | 'down' | null>(null)
 
   const [loading, setLoading] = useState(false)
@@ -56,48 +58,48 @@ const PostCommentVotes: React.FC<Props> = ({
   }
 
   const handleUpVote = async () => {
-    if(voteStatus!=="up"){
-    let jsonData = {
-      upvoteBy: activeProfile.type, // 'user' | 'listing'
-      upvoteById: activeProfile.data._id,
-    }
-    setVoteStatus('up')
-    setLoading(true)
-    const { err, res } = await upvotePostComment(comment._id, jsonData as any)
-    if (err) {
-      console.log(err)
-      setLoading(false)
-      updateVoteStatus()
-      return
-    }
-    if (res.data.success) {
-      setLoading(false)
-      updateComments?.()
-    }
-  } else {
-    let jsonData = {
-      voteBy: activeProfile.type, // 'user' | 'listing'
-      userId: activeProfile.data._id,
-    }
-    setVoteStatus(null)
-    setLoading(true)
-    const { err, res } = await removevotePostComment(
-      comment._id,
-      jsonData as any,
-    )
-    if (err) {
-      console.log(err)
-      setLoading(false)
-      updateVoteStatus()
-      return
-    }
-    console.log('🚀 ~ file: Votes.tsx:67 ~ handleDownVote ~ res:', res)
-    if (res.data.success) {
-      setLoading(false)
-      updateComments?.()
+    if (voteStatus !== 'up') {
+      let jsonData = {
+        upvoteBy: activeProfile.type, // 'user' | 'listing'
+        upvoteById: activeProfile.data._id,
+      }
+      setVoteStatus('up')
+      setLoading(true)
+      const { err, res } = await upvotePostComment(comment._id, jsonData as any)
+      if (err) {
+        console.log(err)
+        setLoading(false)
+        updateVoteStatus()
+        return
+      }
+      if (res.data.success) {
+        setLoading(false)
+        updateComments?.()
+      }
+    } else {
+      let jsonData = {
+        voteBy: activeProfile.type, // 'user' | 'listing'
+        userId: activeProfile.data._id,
+      }
+      setVoteStatus(null)
+      setLoading(true)
+      const { err, res } = await removevotePostComment(
+        comment._id,
+        jsonData as any,
+      )
+      if (err) {
+        console.log(err)
+        setLoading(false)
+        updateVoteStatus()
+        return
+      }
+      console.log('🚀 ~ file: Votes.tsx:67 ~ handleDownVote ~ res:', res)
+      if (res.data.success) {
+        setLoading(false)
+        updateComments?.()
+      }
     }
   }
-}
 
   const handleDownVote = async () => {
     if (voteStatus !== 'down') {
@@ -146,6 +148,12 @@ const PostCommentVotes: React.FC<Props> = ({
       }
     }
   }
+  const router = useRouter()
+  const dispatch = useDispatch()
+  const HandleNotOnboard = () => {
+    router.push(`/profile/${user.profile_url}`)
+    dispatch(showProfileError(true))
+  }
 
   useEffect(() => {
     updateVoteStatus()
@@ -154,7 +162,14 @@ const PostCommentVotes: React.FC<Props> = ({
   return (
     <>
       <div className={styles['upvote-downvote']}>
-        <div onClick={handleUpVote} className={styles['upvote']}>
+        <div
+          onClick={() => {
+            if (user.is_onboarded) {
+              handleUpVote
+            } else HandleNotOnboard()
+          }}
+          className={styles['upvote']}
+        >
           <svg
             width="24"
             height="21"
@@ -173,7 +188,11 @@ const PostCommentVotes: React.FC<Props> = ({
         </div>
         <span className={styles['divider']}></span>
         <svg
-          onClick={handleDownVote}
+          onClick={() => {
+            if (user.is_onboarded) {
+              handleDownVote
+            } else HandleNotOnboard()
+          }}
           cursor={'pointer'}
           width="24"
           height="22"

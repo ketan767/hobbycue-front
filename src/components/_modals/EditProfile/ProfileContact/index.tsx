@@ -87,7 +87,6 @@ const ProfileContactEditModal: React.FC<Props> = ({
     public_email: { value: '', error: null },
     website: { value: '', error: null },
     whatsapp_number: { number: '', prefix: '', error: null },
-    completed_onboarding_steps: 'Contact',
   })
 
   const [initialData, setInitialData] = useState<ProfileContactData>()
@@ -146,9 +145,9 @@ const ProfileContactEditModal: React.FC<Props> = ({
     }
   }
 
-  const handlePhoneBlur = (e:any) => {
-    if(tick){
-      handleBlur(e);
+  const handlePhoneBlur = (e: any) => {
+    if (tick) {
+      handleBlur(e)
     }
   }
 
@@ -175,16 +174,11 @@ const ProfileContactEditModal: React.FC<Props> = ({
       setBackBtnLoading(true)
       let updatedCompletedSteps = [...user.completed_onboarding_steps]
 
-      if (!updatedCompletedSteps.includes('Contact')) {
-        updatedCompletedSteps.push('Contact')
-      }
-
       const newOnboardingStep =
         Number(user?.onboarding_step) > 2 ? user?.onboarding_step : '3'
       const { err, res } = await updateMyProfileDetail({
         ...jsonData,
         onboarding_step: newOnboardingStep,
-        completed_onboarding_steps: updatedCompletedSteps,
       })
 
       if (err) {
@@ -223,8 +217,8 @@ const ProfileContactEditModal: React.FC<Props> = ({
     if (data.phone.number) {
       if (
         !containOnlyNumbers(data.phone.number.toString().trim()) ||
-        data.phone.number.toString().replace(/\s/g, "").length>11 ||
-        data.phone.number.toString().replace(/\s/g, "").length<7
+        data.phone.number.toString().replace(/\s/g, '').length > 11 ||
+        data.phone.number.toString().replace(/\s/g, '').length < 7
       ) {
         phoneRef.current?.focus()
         return setData((prev) => {
@@ -238,8 +232,8 @@ const ProfileContactEditModal: React.FC<Props> = ({
     if (data.whatsapp_number.number) {
       if (
         !containOnlyNumbers(data.whatsapp_number.number.toString().trim()) ||
-        data.whatsapp_number.number.toString().replace(/\s/g, "").length>11 ||
-        data.whatsapp_number.number.toString().replace(/\s/g, "").length<7
+        data.whatsapp_number.number.toString().replace(/\s/g, '').length > 11 ||
+        data.whatsapp_number.number.toString().replace(/\s/g, '').length < 7
       ) {
         WhtphoneRef.current?.focus()
         return setData((prev) => {
@@ -269,13 +263,13 @@ const ProfileContactEditModal: React.FC<Props> = ({
     }
     const jsonData = {
       phone: {
-        number: data.phone.number?.replace(/\s/g, ""),
+        number: data.phone.number?.replace(/\s/g, ''),
         prefix: selectedCountryCode,
       },
       public_email: data.public_email.value,
       website: data.website.value,
       whatsapp_number: {
-        number: data.whatsapp_number.number?.replace(/\s/g, ""),
+        number: data.whatsapp_number.number?.replace(/\s/g, ''),
         prefix: selectedWpCountryCode,
       },
       onboarding_step: '3',
@@ -285,16 +279,11 @@ const ProfileContactEditModal: React.FC<Props> = ({
 
     let updatedCompletedSteps = [...user.completed_onboarding_steps]
 
-    if (!updatedCompletedSteps.includes('Contact')) {
-      updatedCompletedSteps.push('Contact')
-    }
-
     const newOnboardingStep =
       Number(user?.onboarding_step) > 2 ? user?.onboarding_step : '3'
     const { err, res } = await updateMyProfileDetail({
       ...jsonData,
       onboarding_step: newOnboardingStep,
-      completed_onboarding_steps: updatedCompletedSteps,
     })
 
     if (err) {
@@ -337,15 +326,10 @@ const ProfileContactEditModal: React.FC<Props> = ({
   const handleSkip = async () => {
     let updatedCompletedSteps = [...user.completed_onboarding_steps]
 
-    if (!updatedCompletedSteps.includes('Contact')) {
-      updatedCompletedSteps.push('Contact')
-    }
-
     const newOnboardingStep =
       Number(user?.onboarding_step) > 2 ? user?.onboarding_step : '3'
     const { err, res } = await updateMyProfileDetail({
       onboarding_step: newOnboardingStep,
-      completed_onboarding_steps: updatedCompletedSteps,
     })
 
     if (err) {
@@ -395,7 +379,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
   const handlePrefixChange = (element: any) => {
     const id = element?.id
     setSelectedCountryCode(countryData[id]?.phonePrefix)
-    if(tick){
+    if (tick) {
       handleWpPrefixChange(element)
     }
   }
@@ -606,29 +590,29 @@ const ProfileContactEditModal: React.FC<Props> = ({
                         value={!tick}
                         checked={tick}
                         onChange={(e) => {
-                            if (tick === true) {
-                              setData((prev) => {
-                                return {
-                                  ...prev,
-                                  whatsapp_number: {
-                                    number: '',
-                                    prefix: '+91',
-                                  },
-                                }
-                              })
-                              setWpSelectedCountryCode('+91')
-                            }else{
-                              setData((prev) => {
-                                return {
-                                  ...prev,
-                                  whatsapp_number: {
-                                    number: prev['phone'].number,
-                                    prefix: selectedCountryCode,
-                                  },
-                                }
-                              })
-                              setWpSelectedCountryCode(selectedCountryCode)
-                            }
+                          if (tick === true) {
+                            setData((prev) => {
+                              return {
+                                ...prev,
+                                whatsapp_number: {
+                                  number: '',
+                                  prefix: '+91',
+                                },
+                              }
+                            })
+                            setWpSelectedCountryCode('+91')
+                          } else {
+                            setData((prev) => {
+                              return {
+                                ...prev,
+                                whatsapp_number: {
+                                  number: prev['phone'].number,
+                                  prefix: selectedCountryCode,
+                                },
+                              }
+                            })
+                            setWpSelectedCountryCode(selectedCountryCode)
+                          }
                           setTick(!tick)
                         }}
                       />{' '}
