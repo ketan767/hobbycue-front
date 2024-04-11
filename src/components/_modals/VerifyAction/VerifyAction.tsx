@@ -53,9 +53,11 @@ const VerifyActionModal: React.FC<Props> = ({}) => {
   }
 
   const handleSubmit = async () => {
+    const { err: error, res: response } = await getMyProfileDetail()
     setSubmitBtnLoading(true)
+    console.warn('ispass', user?.is_password)
     const { err, res } = await signIn(data)
-    if (user.isPassword) {
+    if (user.is_password) {
       if (err?.response.data.message === 'Invalid email or password')
         setErrors({
           ...errors,
@@ -63,6 +65,10 @@ const VerifyActionModal: React.FC<Props> = ({}) => {
         })
       else if (res.status === 200 && res.data.success) {
         dispatch(setVerified(true))
+
+        setTimeout(() => {
+          dispatch(closeModal())
+        }, 2500)
       }
 
       setSubmitBtnLoading(false)
@@ -101,12 +107,16 @@ const VerifyActionModal: React.FC<Props> = ({}) => {
     }
   }, [])
 
-  useEffect(()=>{
-    const inputElem = passwordRef.current?.children.item(0)?.children.item(0);
-    if(inputElem && "focus" in inputElem && typeof inputElem.focus === "function"){
+  useEffect(() => {
+    const inputElem = passwordRef.current?.children.item(0)?.children.item(0)
+    if (
+      inputElem &&
+      'focus' in inputElem &&
+      typeof inputElem.focus === 'function'
+    ) {
       inputElem.focus()
     }
-  },[])
+  }, [])
 
   return (
     <>

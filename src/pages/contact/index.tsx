@@ -13,6 +13,7 @@ import { withAuth } from '@/navigation/withAuth'
 import { countryData } from '@/utils/countrydata'
 import DropdownMenu from '@/components/DropdownMenu'
 import DownArrow from '@/assets/svg/chevron-down.svg'
+import UpArrow from '@/assets/svg/chevron-up.svg'
 import Image from 'next/image'
 import { CircularProgress, useMediaQuery } from '@mui/material'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
@@ -55,6 +56,7 @@ const Contact: React.FC<Props> = ({}) => {
   })
 
   const inputRef = useRef<HTMLInputElement>(null)
+  const inputEmailRef = useRef<HTMLInputElement>(null)
   const [selectedCountryCode, setSelectedCountryCode] = useState('+91')
   const [selectedWpCountryCode, setWpSelectedCountryCode] = useState('+91')
   const [isError, setIsError] = useState(false)
@@ -168,21 +170,6 @@ const Contact: React.FC<Props> = ({}) => {
 
   const handleSubmit = async () => {
     let hasError = false;
-    if (
-      (!data.public_email.value || data.public_email.value.length === 0)
-    ) {
-      hasError = true;
-      inputRef.current?.focus()
-      setData((prev) => {
-        return {
-          ...prev,
-          public_email: {
-            ...prev.public_email,
-            error: 'This field is required!',
-          },
-        }
-      })
-    }
     if (data.phone.number) {
       if (
         !containOnlyNumbers(data.phone.number.toString().trim()) ||
@@ -242,6 +229,35 @@ const Contact: React.FC<Props> = ({}) => {
         ...prev.message,
         error:"Message can't be empty"
       }}))
+    }
+    if (
+      (!data.public_email.value || data.public_email.value.length === 0) &&
+      (!data.phone.number ||
+        data.phone.number?.toString()?.replace(/\s/g, '').length === 0)
+    ) {
+      hasError = true
+      inputEmailRef.current?.focus()
+      setData((prev) => {
+        return {
+          ...prev,
+          public_email: {
+            ...prev.public_email,
+            error: 'At least one mode of contact is required!',
+          },
+          phone:{
+            ...prev.phone,
+            error: 'At least one mode of contact is required!'
+          }
+        }
+      })
+    }
+    if (data.name.value.length === 0) {
+      hasError = true;
+      setData((prev) => ({
+        ...prev,
+        name: { ...prev.name, error: 'This field is required!' },
+      }))
+    inputRef.current?.focus();
     }
     if(hasError===true){
       return;
@@ -398,6 +414,7 @@ const Contact: React.FC<Props> = ({}) => {
                     }`}
                   >
                     <label>Your Name</label>
+                    <input hidden required />
                     <input
                       type="text"
                       placeholder={`Name`}
@@ -424,7 +441,7 @@ const Contact: React.FC<Props> = ({}) => {
                       type="text"
                       placeholder={`Email ID`}
                       value={data.public_email.value}
-                      ref={inputRef}
+                      ref={inputEmailRef}
                       name="public_email"
                       autoComplete="email"
                       onChange={handleInputChange}
@@ -617,7 +634,7 @@ const Contact: React.FC<Props> = ({}) => {
                         onClick={() => setShowYouDropdown(prev=>!prev)}
                       >
                         <p>{data.YouAre.value || 'Select You Are...'}</p>
-                        <Image src={DownArrow} alt="down" />
+                        <Image src={showYouDropdown?UpArrow:DownArrow} alt="down" />
                       </div>
                       {showYouDropdown && (
                         <div ref={YoudropdownRef} className={styles['options-container']}>
@@ -715,7 +732,7 @@ const Contact: React.FC<Props> = ({}) => {
                         onClick={() => setShowRegDropdown(true)}
                       >
                         <p>{data.Regarding.value || 'Select Regarding...'}</p>
-                        <Image src={DownArrow} alt="down" />
+                        <Image src={showRegDropdown?UpArrow:DownArrow} alt="down" />
                       </div>
                       {showRegDropdown && (
                         <div ref={RegdropdownRef} className={styles['options-container']}>

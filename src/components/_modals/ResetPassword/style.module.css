@@ -178,6 +178,16 @@
   border: none;
 }
 
+.child-div-error *{
+  outline: none;
+  border: none;
+}
+
+.child-div-error>div{
+  outline: 1px solid #c0504d !important;
+  border: none;
+  border-radius: 8px;
+}
 
 
 .footer button {

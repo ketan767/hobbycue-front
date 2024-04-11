@@ -27,6 +27,7 @@ import {
   showAllProductsTrue,
 } from '@/redux/slices/search'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import { useMediaQuery } from '@mui/material'
 type Props = {
   handleClose: any
 }
@@ -98,6 +99,8 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
     router.push(`/profile/${user.profile_url}`)
     handleClose()
   }
+
+  const isMobile = useMediaQuery("(max-width:1100px)");
 
   useEffect(() => {
     const handleLinkClick = (event: any) => {
@@ -512,7 +515,19 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                 </Link>
               </ul> */}
                     <ul>
-                      <Link href={`/settings/login-security`}>
+                      <Link
+                      href={`${
+                        isMobile ? '/settings' : '/settings/login-security'
+                      }`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        if (isMobile) {
+                          router.push('/settings')
+                        } else {
+                          router.push('/settings/login-security')
+                        }
+                      }}>
                         <li>Settings</li>
                       </Link>
                     </ul>
