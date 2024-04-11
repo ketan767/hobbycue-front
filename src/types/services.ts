@@ -25,7 +25,7 @@ type UpdateProfilePayload = {
   phone?: {number: string, prefix: string}
   website?: string
   about?: string
-
+  public_email?: string
   street?: string
   society?: string
   locality?: string

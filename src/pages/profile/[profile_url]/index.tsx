@@ -189,15 +189,15 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
         setTitleError(true)
         hasError = true
       }
-      if (
-        !data.pageData.website &&
-        !data.pageData.public_email &&
-        !data.pageData.whatsapp_number.number &&
-        !data.pageData.phone.number
-      ) {
-        setContactError(true)
-        hasError = true
-      }
+      // if (
+      //   !data.pageData.website &&
+      //   !data.pageData.public_email &&
+      //   !data.pageData.whatsapp_number.number &&
+      //   !data.pageData.phone.number
+      // ) {
+      //   setContactError(true)
+      //   hasError = true
+      // }
       if (!hasError) {
         router.push(
           `/profile/${router.query.profile_url}/${tab !== 'home' ? tab : ''}`,
@@ -215,6 +215,16 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
       )
     }
   }
+  const { CurrentUrl, showProfileError } = useSelector(
+    (state: RootState) => state.user,
+  )
+
+  useEffect(() => {
+    if (showProfileError) {
+      noDataChecker()
+    }
+  }, [CurrentUrl, showProfileError])
+
   const noDataChecker = () => {
     let hasError = false
     console.log({ hobbies: data.pageData._hobbies })
@@ -238,15 +248,15 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
         setTitleError(true)
         hasError = true
       }
-      if (
-        !data.pageData.website &&
-        !data.pageData.public_email &&
-        !data.pageData.whatsapp_number.number &&
-        !data.pageData.phone.number
-      ) {
-        setContactError(true)
-        hasError = true
-      }
+      // if (
+      //   !data.pageData.website &&
+      //   !data.pageData.public_email &&
+      //   !data.pageData.whatsapp_number.number &&
+      //   !data.pageData.phone.number
+      // ) {
+      //   setContactError(true)
+      //   hasError = true
+      // }
       if (hasError) {
         setSnackbar({
           display: true,

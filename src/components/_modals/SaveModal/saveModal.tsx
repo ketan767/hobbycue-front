@@ -8,6 +8,7 @@ import { closeModal, openModal, setHasChanges } from '@/redux/slices/modal'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import { useRouter } from 'next/router'
 import { CircularProgress } from '@mui/material'
+import { showProfileError } from '@/redux/slices/user'
 
 type Props = {
   setConfirmationModal?: any
@@ -38,6 +39,7 @@ const SaveModal: React.FC<Props> = ({
     console.log('isError', isError)
     if (OnBoarding || !user.is_onboarded) {
       router.push(`/profile/${user.profile_url}`)
+      dispatch(showProfileError(true))
     } else if (isError) {
       setConfirmationModal(false)
     }
@@ -59,8 +61,13 @@ const SaveModal: React.FC<Props> = ({
   const wrapperRef = useRef<HTMLDivElement>(null)
 
   if (reloadrouter) {
-    router.reload()
-    return <div></div>
+    if (user.is_onboarded) {
+      router.reload()
+    } else {
+      dispatch(showProfileError(true))
+      router.push(`/profile/${user.profile_url}`)
+    }
+    dispatch(closeModal())
   }
 
   return (

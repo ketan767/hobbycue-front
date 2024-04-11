@@ -1,6 +1,8 @@
 import { openModal } from '@/redux/slices/modal'
+import { showProfileError } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import { downvotePost, upvotePost, removeVote } from '@/services/post.service'
+import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -121,6 +123,11 @@ const PostVotes: React.FC<Props> = ({
   useEffect(() => {
     updateVoteStatus()
   }, [data, activeProfile.data, activeProfile.type])
+  const router = useRouter()
+  const HandleNotOnboard = () => {
+    router.push(`/profile/${user.profile_url}`)
+    dispatch(showProfileError(true))
+  }
 
   return (
     <>
@@ -134,7 +141,7 @@ const PostVotes: React.FC<Props> = ({
               ? voteStatus === 'up'
                 ? removeVoteFunc()
                 : handleUpVote()
-              : dispatch(openModal({ type: 'user-onboarding', closable: true }))
+              : HandleNotOnboard()
           }}
         >
           <svg
@@ -161,7 +168,7 @@ const PostVotes: React.FC<Props> = ({
               ? voteStatus === 'down'
                 ? removeVoteFunc()
                 : handleDownVote()
-              : dispatch(openModal({ type: 'user-onboarding', closable: true }))
+              : HandleNotOnboard()
           }}
           width="24"
           height="22"

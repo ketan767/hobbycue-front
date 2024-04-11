@@ -13,6 +13,7 @@ import CommentCheckWithUrl from './CommentCheckWithUrl'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { setActivePost } from '@/redux/slices/post'
 import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
+import { showProfileError } from '@/redux/slices/user'
 
 type Props = {
   styles: any
@@ -59,7 +60,9 @@ const PostComments = ({
   const addComment = async (event: any) => {
     event.preventDefault()
     if (user.is_onboarded === false) {
-      dispatch(openModal({ type: 'user-onboarding', closable: true }))
+      router.push(`/profile/${user.profile_url}`)
+      dispatch(showProfileError(true))
+      dispatch(closeModal())
       return
     }
     if (isEmptyField(inputValue.trim())) return

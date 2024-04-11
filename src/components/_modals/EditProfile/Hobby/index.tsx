@@ -18,7 +18,7 @@ import hobbyLvlThree from '@/assets/svg/hobby_level_Three.svg'
 import hobbyLvlTwo from '@/assets/svg/hobby_level_Two.svg'
 import addhobby from '@/assets/svg/addhobby.svg'
 import { closeModal, openModal } from '@/redux/slices/modal'
-import { updateUser } from '@/redux/slices/user'
+import { showProfileError, updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import { getAllHobbies } from '@/services/hobby.service'
 import { isEmptyField } from '@/utils'
@@ -461,7 +461,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         updatedCompletedSteps.push('Hobby')
       }
       let onboarded = false
-      if (user.completed_onboarding_steps.length === 5) {
+      if (user.completed_onboarding_steps.length === 3) {
         onboarded = true
       }
       const { err: updtProfileErr, res: updtProfileRes } =
@@ -590,7 +590,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         updatedCompletedSteps.push('Hobby')
       }
       let onboarded = false
-      if (user.completed_onboarding_steps.length === 5) {
+      if (user.completed_onboarding_steps.length === 3) {
         onboarded = true
       }
       const { err: updtProfileErr, res: updtProfileRes } =
@@ -623,7 +623,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           if (!user.is_onboarded) {
             const { err: error, res: response } = await getMyProfileDetail()
             if (
-              response?.data?.data?.user?.completed_onboarding_steps.length == 5
+              response?.data?.data?.user?.completed_onboarding_steps.length == 3
             ) {
               const data = { is_onboarded: true }
               const { err, res } = await updateMyProfileDetail(data)
@@ -631,9 +631,14 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
             } else {
               dispatch(closeModal())
               window.location.href = `/profile/${response?.data?.data?.user?.profile_url}`
+              dispatch(showProfileError(true))
             }
             return
           } else {
+            if (!user.is_onboarded) {
+              window.location.href = `/profile/${response?.data?.data?.user?.profile_url}`
+              dispatch(showProfileError(true))
+            }
             window.location.reload()
 
             dispatch(closeModal())
@@ -652,18 +657,24 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     }
     if (!user.is_onboarded) {
       const { err: error, res: response } = await getMyProfileDetail()
-      if (response?.data?.data?.user?.completed_onboarding_steps.length == 5) {
+      if (response?.data?.data?.user?.completed_onboarding_steps.length == 3) {
         const data = { is_onboarded: true }
         const { err, res } = await updateMyProfileDetail(data)
         window.location.href = `/community`
       } else {
         dispatch(closeModal())
         window.location.href = `/profile/${response?.data?.data?.user?.profile_url}`
+        dispatch(showProfileError(true))
       }
       return
     } else {
-      window.location.reload()
-      dispatch(closeModal())
+      if (!user.is_onboarded) {
+        window.location.href = `/profile/${user?.profile_url}`
+        dispatch(showProfileError(true))
+      } else {
+        window.location.reload()
+        dispatch(closeModal())
+      }
       return
     }
   }

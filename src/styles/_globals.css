@@ -36,6 +36,12 @@
   /* Heights */
   --navbar-height-desktop: 5rem;
 }
+@media screen and (min-width: 1100px) {
+  .scrollable-section {
+    height: calc(100vh - var(--navbar-height-desktop) - var(--spacing-24));
+    overflow-y: auto;
+  }
+}
 
 
 @media screen and (max-width: 1100px) {

@@ -1,28 +1,50 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from '@/styles/AddListing.module.css'
 import { openModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateListingModalData, updateListingTypeModalMode } from '@/redux/slices/site'
+import {
+  updateListingModalData,
+  updateListingTypeModalMode,
+} from '@/redux/slices/site'
 import store, { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
+import { showProfileError } from '@/redux/slices/user'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {}
 
 const AddListing: React.FC<Props> = (props) => {
+  const { user, isLoggedIn } = useSelector((state: RootState) => state.user)
   const dispatch = useDispatch()
   const router = useRouter()
-  const {isLoggedIn}=useSelector((store:RootState)=>store.user)
-
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
   const handleClick = (type: ListingPages) => {
-    if(isLoggedIn){
+    if (isLoggedIn && user.isOnboarded) {
       dispatch(updateListingModalData({ type }))
       dispatch(openModal({ type: 'listing-type-edit', closable: true }))
-      dispatch(updateListingTypeModalMode({ mode: 'create'}))
+      dispatch(updateListingTypeModalMode({ mode: 'create' }))
+    } else if (isLoggedIn && !user.isOnboarded) {
+      HandleNotOnboard()
+    } else {
+      dispatch(openModal({ type: 'auth', closable: true }))
     }
-    else{
-      dispatch(openModal({type: 'auth', closable: true}))
-    }
-    
+  }
+
+  const showFeatureUnderDevelopment = () => {
+    setSnackbar({
+      display: true,
+      type: 'warning',
+      message: 'This feature is under development',
+    })
+  }
+
+  const HandleNotOnboard = () => {
+    router.push(`/profile/${user.profile_url}`)
+    dispatch(showProfileError(true))
   }
   return (
     <>
@@ -99,7 +121,7 @@ const AddListing: React.FC<Props> = (props) => {
             </p>
           </section>
           <section
-            onClick={() => handleClick(4)}
+            onClick={showFeatureUnderDevelopment}
             className={`${styles['card']} ${styles['product']}`}
           >
             <h3>
@@ -160,6 +182,16 @@ const AddListing: React.FC<Props> = (props) => {
           </section>
         </div>
       </section>
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

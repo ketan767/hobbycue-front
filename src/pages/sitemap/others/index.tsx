@@ -96,8 +96,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
     },
     {
       lastmod: new Date().toISOString(),
-      loc: '/settings/data-others',
-      name: `${baseUrl}/settings/data-others`,
+      loc: '/settings/account-data',
+      name: `${baseUrl}/settings/account-data`,
     },
     {
       lastmod: new Date().toISOString(),
