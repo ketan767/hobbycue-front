@@ -16,7 +16,7 @@ import { closeModal } from '@/redux/slices/modal'
 
 import DOMPurify from 'dompurify'
 import CreatePostProfileSwitcher from './ProfileSwitcher'
-import { Input, MenuItem, Select } from '@mui/material'
+import { Input, MenuItem, Select, useMediaQuery } from '@mui/material'
 // import CancelBtn from '@/assets/svg/trash-icon.svg'
 import CancelBtn from '@/assets/icons/x-icon.svg'
 import FilledButton from '@/components/_buttons/FilledButton'
@@ -26,6 +26,7 @@ import SaveModal from '../SaveModal/saveModal'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import { useRouter } from 'next/router'
 import { increaseRefreshNum, setFilters } from '@/redux/slices/post'
+import MobileLocationDropdown from './MobileLocationDropdown'
 
 const CustomEditor = dynamic(() => import('@/components/CustomEditor'), {
   ssr: false,
@@ -460,6 +461,7 @@ export const CreatePost: React.FC<Props> = ({
     setData((prev: any) => ({ ...prev, visibility: value }))
   }
   console.log({ hobbies })
+  const isMobile = useMediaQuery("(max-width:1100px)");
   if (confirmationModal) {
     return (
       <SaveModal
@@ -606,6 +608,8 @@ export const CreatePost: React.FC<Props> = ({
                   data={data}
                   setData={setData}
                   setHobbies={setHobbies}
+                  classForShowDropdown={styles['full-width-all']}
+                  className={styles['profile-switcher-parent']}
                 />
               </div>
 
@@ -621,6 +625,7 @@ export const CreatePost: React.FC<Props> = ({
                   }${data.genre?.display ?? ''}`}
                   onChange={(e: any) => {}}
                   selectText=""
+                  className={styles['input-select']}
                 >
                   {hobbies?.map((item: any, idx) => {
                     return (
@@ -669,28 +674,57 @@ export const CreatePost: React.FC<Props> = ({
               <div>
                 <label>Who Can View</label>
 
-                <InputSelect
-                  onChange={(e: any) => {
-                    let val = e.target.value
-                    setData((prev: any) => ({ ...prev, visibility: val }))
-                  }}
-                  value={data.visibility}
-                  // inputProps={{ 'aria-label': 'Without label' }}
-                  // className={` ${styles['visibility-dropdown']}`}
-                >
-                  {visibilityData?.map((item: any, idx) => {
-                    return (
-                      <>
-                        <DropdownOption
-                          {...item}
-                          key={idx}
-                          currentValue={data.visibility}
-                          onChange={handleAddressChange}
-                        />
-                      </>
-                    )
-                  })}
-                </InputSelect>
+                {!isMobile && (
+                  <InputSelect
+                    onChange={(e: any) => {
+                      let val = e.target.value
+                      setData((prev: any) => ({ ...prev, visibility: val }))
+                    }}
+                    value={data.visibility}
+                    className={styles['input-select']}
+                    // inputProps={{ 'aria-label': 'Without label' }}
+                    // className={` ${styles['visibility-dropdown']}`}
+                  >
+                    {visibilityData?.map((item: any, idx) => {
+                      return (
+                        <>
+                          <DropdownOption
+                            {...item}
+                            key={idx}
+                            currentValue={data.visibility}
+                            onChange={handleAddressChange}
+                          />
+                        </>
+                      )
+                    })}
+                  </InputSelect>
+                )}
+
+                {isMobile && (
+                  <InputSelect
+                    onChange={(e: any) => {
+                      let val = e.target.value
+                      setData((prev: any) => ({ ...prev, visibility: val }))
+                    }}
+                    value={data.visibility}
+                    className={styles['input-select']}
+                    // inputProps={{ 'aria-label': 'Without label' }}
+                    // className={` ${styles['visibility-dropdown']}`}
+                  >
+                    {visibilityData?.map((item: any, idx: number) => {
+                      return (
+                        <>
+                          <MobileLocationDropdown
+                            key={idx}
+                            {...item}
+                            currentValue={data.visibility}
+                            onChange={handleAddressChange}
+                          />
+                        </>
+                      )
+                    })}
+                  </InputSelect>
+                )}
               </div>
 
               <FilledButton

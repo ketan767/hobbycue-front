@@ -462,12 +462,12 @@ select:-webkit-autofill {
 }
 @media screen and (max-width: 500px) {
   .ql-toolbar.ql-snow .ql-formats button {
-    padding: 0 4px !important;
+    padding: 0 12px !important;
   }
 }
 @media screen and (max-width: 380px) {
   .ql-toolbar.ql-snow .ql-formats button {
-    padding: 0 1px !important;
+    padding: 0 6px !important;
   }
 }
 

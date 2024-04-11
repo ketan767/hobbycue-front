@@ -551,6 +551,15 @@ background: var(--Purple-3, #F7F5F9);
   color: #c0504d;
   min-height: 1rem;
 }
+
+.panel-dropdown-btn{
+  display: none;
+}
+
+.dropdowns-panel{
+  display: none;
+}
+
 @media screen and (max-width: 1100px) {
   .community-left-aside,
   .community-right-aside {
@@ -573,7 +582,80 @@ background: var(--Purple-3, #F7F5F9);
     display: flex;
     gap: 12px;
   }
-  .community-left-aside,
+  .panel-dropdown-btn{
+    display: flex;
+    padding: 6px;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #8064a2;
+    border-radius: 50%;
+    background: var(--Purple-3, #F7F5F9);
+  }
+    .dropdowns-panel {
+      display: flex;
+      padding: 12px 0px;
+      flex-direction: column;
+      align-items: flex-start;
+      margin: 0 -16px; /* Added this to override parent's padding of 16px and adding full length border */
+    }
+
+    .dropdowns-panel .parent-list{
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      border-bottom: 1px solid var(--Grey-Light, #CED4DA);
+    }
+
+    .dropdowns-panel .parent-list .list {
+      display: flex;
+      width: 100%;
+      padding: 15px 14px 15px 16px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dropdowns-panel .parent-list .list p {
+      color: var(--Grey-Darkest, #08090A);
+
+      /* Text sm/Semibold */
+      font-family: Poppins;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 16px;
+      /* 114.286% */
+    }
+        .dropdowns-panel .parent-list .options-parent {
+          display: flex;
+          padding: 0px 14px 0px 16px;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 16px;
+          align-self: stretch;
+        }
+    
+        .dropdowns-panel .parent-list .options-parent .option {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          align-self: stretch;
+        }
+    
+        .options-parent .option .hobby-option {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+    
+        .options-parent .option .hobby-option p {
+          color: var(--Grey-Darkest, #08090A);
+          font-family: Poppins;
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: normal;
+        }
+  .comnity-left-aside,
   .community-right-aside {
     position: static;
     overflow: visible;
