@@ -625,6 +625,8 @@ export const CreatePost: React.FC<Props> = ({
                   }${data.genre?.display ?? ''}`}
                   onChange={(e: any) => {}}
                   selectText=""
+                  optionsContainerClass={styles['options-container-class']}
+                  optionsContainerUnactiveClass={styles['optionsContainerUnactiveClass']}
                   className={styles['input-select']}
                 >
                   {hobbies?.map((item: any, idx) => {
@@ -682,6 +684,9 @@ export const CreatePost: React.FC<Props> = ({
                     }}
                     value={data.visibility}
                     className={styles['input-select']}
+                    
+                  optionsContainerClass={styles['options-container-class']}
+                  optionsContainerUnactiveClass={styles['optionsContainerUnactiveClass']}
                     // inputProps={{ 'aria-label': 'Without label' }}
                     // className={` ${styles['visibility-dropdown']}`}
                   >
@@ -708,6 +713,9 @@ export const CreatePost: React.FC<Props> = ({
                     }}
                     value={data.visibility}
                     className={styles['input-select']}
+                    
+                  optionsContainerClass={styles['options-container-class']}
+                  optionsContainerUnactiveClass={styles['optionsContainerUnactiveClass']}
                     // inputProps={{ 'aria-label': 'Without label' }}
                     // className={` ${styles['visibility-dropdown']}`}
                   >

@@ -199,6 +199,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         let reqBody: any = { ...data }
         reqBody.label = addressLabel
         addUserAddress(reqBody, async (err, res) => {
+          console.warn({res})
           setBackBtnLoading(true)
           if (err) {
             return console.log(err)
@@ -236,7 +237,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         if (!user.primary_address?._id) {
           setBackBtnLoading(true)
           addUserAddress(reqBody, async (err, res) => {
-            console.log(res)
+            console.warn({res})
             if (err) {
               return console.log(err)
             }
@@ -255,6 +256,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               await updateMyProfileDetail({
                 onboarding_step: newOnboardingStep,
                 completed_onboarding_steps: updatedCompletedSteps,
+                primary_address:res?.data?._id
               })
             const { err: error, res: response } = await getMyProfileDetail()
 
@@ -418,6 +420,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       let reqBody: any = { ...data }
       reqBody.label = addressLabel
       addUserAddress(reqBody, async (err, res) => {
+        console.warn({res})
+        // res.data.data.newAddress._id
         if (err) {
           setSubmitBtnLoading(false)
           return console.log(err)
@@ -433,12 +437,22 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         if (!updatedCompletedSteps.includes('Address')) {
           updatedCompletedSteps.push('Address')
         }
-
+        
+      if(user?.primary_address?._id){
+        const { err: updtProfileErr, res: updtProfileRes } =
+          await updateMyProfileDetail({
+            onboarding_step: newOnboardingStep,
+            completed_onboarding_steps: updatedCompletedSteps
+          })
+      }else{
         const { err: updtProfileErr, res: updtProfileRes } =
           await updateMyProfileDetail({
             onboarding_step: newOnboardingStep,
             completed_onboarding_steps: updatedCompletedSteps,
+            primary_address:res?.data?.data?.newAddress?._id
           })
+      }
+
         const { err: error, res: response } = await getMyProfileDetail()
 
         setSubmitBtnLoading(false)
@@ -858,6 +872,14 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     setIsChanged(true)
   }
 
+  useEffect(()=>{
+    if(JSON.stringify(initialData)!==JSON.stringify(data)){
+      setIsChanged(true)
+    }else{
+      setIsChanged(false);
+    }
+  },[data])
+
   if (confirmationModal) {
     return (
       <SaveModal
@@ -874,7 +896,13 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       <div className={styles['modal-wrapper']}>
         <CloseIcon
           className={styles['modal-close-icon']}
-          onClick={handleClose}
+          onClick={()=>{
+            if(isChanged){
+              setConfirmationModal(true)
+            }else{
+              handleClose();
+            }
+          }}
         />
         {/* Modal Header */}
         <header className={styles['header']}>

@@ -40,8 +40,18 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
   })
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  function isValidEmail(email: string): boolean {
+    const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
   const handleSubmit = async () => {
-    setSubmitBtnLoading(true)
+    setSubmitBtnLoading(true);
+    if(isValidEmail(email)===false){
+      setSubmitBtnLoading(false);
+      setErrors({email:'Email is invalid!'});
+      elementRef.current?.focus();
+      return;
+    }
     const { err, res } = await forgotPassword({
       email,
     })
@@ -52,7 +62,8 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
         setErrors({
           ...errors,
           email: err?.response?.data?.message,
-        })
+        });
+        elementRef.current?.focus();
       }
       return
     }
