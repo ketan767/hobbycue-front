@@ -12,7 +12,7 @@ import { isEmpty, isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import TextField from '@mui/material/TextField'
-import { closeModal } from '@/redux/slices/modal'
+import { closeModal, openModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
@@ -112,6 +112,7 @@ const ExpiredPassword: React.FC<Props> = ({}) => {
         dispatch(updateIsLoggedIn(true))
         dispatch(closeModal())
         router.push('/community', undefined, { shallow: false })
+        dispatch(openModal({ type: 'user-onboarding', closable: true }))
       }
     }
   }
