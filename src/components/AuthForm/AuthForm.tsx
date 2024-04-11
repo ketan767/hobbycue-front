@@ -186,8 +186,6 @@ const AuthForm: React.FC<Props> = (props) => {
         dispatch(closeModal())
         router.push('/community', undefined, { shallow: false })
         const { err: error, res: response } = await getMyProfileDetail()
-        if (!response?.data?.data?.user.is_onboarded)
-          dispatch(openModal({ type: 'user-onboarding', closable: true }))
       }
     }
 
@@ -270,7 +268,7 @@ const AuthForm: React.FC<Props> = (props) => {
       }
       router.push('/community', undefined, { shallow: false })
       const { err: error, res: response } = await getMyProfileDetail()
-      if (!response?.data?.data?.user.is_onboarded)
+      if (res?.message === 'User registered successfully')
         dispatch(openModal({ type: 'user-onboarding', closable: true }))
     }
   }
@@ -306,7 +304,8 @@ const AuthForm: React.FC<Props> = (props) => {
         }
       }
       router.push('/community', undefined, { shallow: false })
-      dispatch(openModal({ type: 'user-onboarding', closable: true }))
+      if (res?.message === 'User registered successfully')
+        dispatch(openModal({ type: 'user-onboarding', closable: true }))
 
       console.log('user', user)
     }
