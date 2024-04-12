@@ -339,7 +339,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     }
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (
       !data.city ||
       data.city === '' ||
@@ -350,6 +350,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         setInputErrs((prev) => {
           return { ...prev, city: 'This field is required!' }
         })
+        setConfirmationModal(false);
       }
 
       if (addLocation && addressLabel === '') {
@@ -357,10 +358,12 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         setInputErrs((prev) => {
           return { ...prev, addressLabel: 'This field is required!' }
         })
+        setConfirmationModal(false);
       }
 
       if (checkFullname(data.city)) {
         cityRef.current?.focus()
+        setConfirmationModal(false);
         return setInputErrs((prev) => {
           return {
             ...prev,
@@ -370,12 +373,11 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       }
       return
     }
-
     setSubmitBtnLoading(true)
     if (editLocation) {
       let reqBody: any = { ...data }
       reqBody.label = addressLabel
-      updateUserAddress(addressToEdit, reqBody, async (err, res) => {
+      await updateUserAddress(addressToEdit, reqBody, async (err, res) => {
         if (err) {
           setSubmitBtnLoading(false)
           return console.log(err)
@@ -419,15 +421,17 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     if (addLocation) {
       let reqBody: any = { ...data }
       reqBody.label = addressLabel
-      addUserAddress(reqBody, async (err, res) => {
+    await addUserAddress(reqBody, async (err, res) => {
         console.warn({res})
         // res.data.data.newAddress._id
         if (err) {
           setSubmitBtnLoading(false)
+          setConfirmationModal(false);
           return console.log(err)
         }
         if (!res.data.success) {
           setSubmitBtnLoading(false)
+        setConfirmationModal(false);
           return alert('Something went wrong!')
         }
         const newOnboardingStep =
@@ -456,7 +460,9 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         const { err: error, res: response } = await getMyProfileDetail()
 
         setSubmitBtnLoading(false)
-        if (error) return console.log(error)
+        if (error) {
+          setConfirmationModal(false);
+          return console.log(error)}
         if (response?.data.success) {
           dispatch(updateUser(response.data.data.user))
           if (onComplete) onComplete()
@@ -613,6 +619,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         setDataLoaded(true)
       }
     } else if (addLocation) {
+      setDataLoaded(true); // just to fetch geolocation
     } else {
       setDataLoaded(true)
       setData({
@@ -657,7 +664,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       })
     }
   }
-
+  
   useEffect(() => {
     if (dataLoaded) {
       if (
@@ -810,7 +817,10 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        nextButtonRef.current?.focus()
+        if(event?.srcElement?.tagName === "svg"){
+          return;
+        }
+        nextButtonRef.current?.click()
       }
     }
 

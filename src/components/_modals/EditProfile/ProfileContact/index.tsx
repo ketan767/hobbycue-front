@@ -415,7 +415,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
         } else if (event.target.tagName.toLowerCase() === 'svg') {
           onComplete
         } else {
-          nextButtonRef.current?.focus()
+          nextButtonRef.current?.click()
         }
       }
     }
