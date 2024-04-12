@@ -83,45 +83,60 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
   })
   const handleSubmit = async () => {
     setSubmitBtnLoading(true)
-    let hasErrors = false;
+    let hasErrors = false
     if (confirmPassword !== newPassword) {
       hasErrors = true
-      setErrors({ ...errors, confirmPassword: 'Passwords does not match!' });
-      confirmPasswordRef?.current?.focus();
-    };
-        if(inputValidation.length===false){
-          hasErrors = true;
-          setErrors((prev)=>({...prev,newPassword:"New password should be valid!"}))
-          newPasswordRef.current?.focus();
-        }
-        if(inputValidation.lowercase===false){
-          hasErrors = true;
-          setErrors((prev)=>({...prev,newPassword:"New password should be valid!"}))
-          newPasswordRef.current?.focus();
-        }
-        if(inputValidation.number===false){
-          hasErrors = true;
-          setErrors((prev)=>({...prev,newPassword:"New password should be valid!"}))
-          newPasswordRef.current?.focus();
-        }
-        if(inputValidation.specialChar===false){
-          hasErrors = true;
-          setErrors((prev)=>({...prev,newPassword:"New password should be valid!"}))
-          newPasswordRef.current?.focus();
-        }
-        if(inputValidation.uppercase===false){
-          hasErrors = true;
-          setErrors((prev)=>({...prev,newPassword:"New password should be valid!"}))
-          newPasswordRef.current?.focus();
-        }
-        if(otp.toString().length===0){
-          hasErrors = true;
-          setErrors((prev)=>({...prev,otp:"Please enter OTP!"}))
-          otpRef.current?.focus();
-        }
-    if(hasErrors===true){
-      setSubmitBtnLoading(false);
-      return;
+      setErrors({ ...errors, confirmPassword: 'Passwords does not match!' })
+      confirmPasswordRef?.current?.focus()
+    }
+    if (inputValidation.length === false) {
+      hasErrors = true
+      setErrors((prev) => ({
+        ...prev,
+        newPassword: 'New password should be valid!',
+      }))
+      newPasswordRef?.current?.focus()
+    }
+    if (inputValidation.lowercase === false) {
+      hasErrors = true
+      setErrors((prev) => ({
+        ...prev,
+        newPassword: 'New password should be valid!',
+      }))
+      newPasswordRef?.current?.focus()
+    }
+    if (inputValidation.number === false) {
+      hasErrors = true
+      setErrors((prev) => ({
+        ...prev,
+        newPassword: 'New password should be valid!',
+      }))
+      newPasswordRef.current?.focus()
+    }
+    if (inputValidation.specialChar === false) {
+      hasErrors = true
+      setErrors((prev) => ({
+        ...prev,
+        newPassword: 'New password should be valid!',
+      }))
+      newPasswordRef.current?.focus()
+    }
+    if (inputValidation.uppercase === false) {
+      hasErrors = true
+      setErrors((prev) => ({
+        ...prev,
+        newPassword: 'New password should be valid!',
+      }))
+      newPasswordRef.current?.focus()
+    }
+    if (otp.length === 0) {
+      hasErrors = true
+      setErrors((prev) => ({ ...prev, otp: 'Please enter OTP!' }))
+      otpRef.current?.focus()
+    }
+    if (hasErrors === true) {
+      setSubmitBtnLoading(false)
+      return
     }
     const { err, res } = await resetPassword({
       email: forgotPasswordEmail,
@@ -258,12 +273,15 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
                 className={styles['input-password'] + ' textFieldClass'}
                 fullWidth
                 required
-                ref={newPasswordRef}
+                inputRef={newPasswordRef}
                 placeholder="New Password"
                 type={showPassword ? 'text' : 'password'}
                 onFocus={() => setShowValidations(true)}
                 onBlur={() => setShowValidations(false)}
-                onChange={(e) => {setNewPassword(e.target.value);setErrors(prev=>({...prev,newPassword:''}))}}
+                onChange={(e) => {
+                  setNewPassword(e.target.value)
+                  setErrors((prev) => ({ ...prev, newPassword: '' }))
+                }}
                 InputProps={{
                   endAdornment: (
                     <IconButton onClick={() => setShowPassword(!showPassword)}>
