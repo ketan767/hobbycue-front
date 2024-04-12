@@ -133,7 +133,18 @@ const ListingContactEditModal: React.FC<Props> = ({
   }, [])
   const handleInputChange = (event: any) => {
     const { name, value } = event.target
-
+    if((data.phone.error==='At least one mode of contact is required'||data.public_email.error==='At least one mode of contact is required')&&(name==='phone'||name==='public_email')){
+      setData((prev) => ({
+        ...prev,
+        phone:{...prev.phone,error:null},
+        public_email:{...prev.public_email,error:null},
+        [name]: {
+          ...prev[name as keyof ListingContactData],
+          number: value || '',
+          error: null,
+        },
+      }))
+    }
     // Check if the input is for phone or whatsapp number
     if (name === 'phone' || name === 'whatsapp_number') {
       setData((prev) => ({
@@ -395,7 +406,7 @@ const ListingContactEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        nextButtonRef.current?.focus()
+        nextButtonRef.current?.click()
       }
     }
 
@@ -573,7 +584,6 @@ const ListingContactEditModal: React.FC<Props> = ({
                     value={data.phone.number}
                     name="phone"
                     autoComplete="phone"
-                    required
                     ref={phoneRef}
                     onChange={handleInputChange}
                     className={styles['phone-input']}

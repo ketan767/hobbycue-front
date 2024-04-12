@@ -462,7 +462,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        nextButtonRef.current?.focus()
+        nextButtonRef.current?.click()
       }
     }
 
