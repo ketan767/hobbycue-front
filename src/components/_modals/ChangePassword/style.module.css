@@ -63,6 +63,10 @@
   border-radius: 8px;
 }
 
+.input-box-error>div>div>fieldset{
+  border-color: transparent !important;
+}
+
 .input-box{
   background: #f8f9fa;
   
@@ -152,9 +156,6 @@
   color: #c0504d;
 }
 
-.input-error.input-box input {
-  border: 1px solid #c0504d;
-}
 
 .validation-messages {
   position: absolute;

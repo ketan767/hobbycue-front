@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 
 import { openModal } from '@/redux/slices/modal'
-import { updateIsLoggedIn } from '@/redux/slices/user'
+import { updateActiveProfile, updateIsLoggedIn } from '@/redux/slices/user'
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
 import store, { RootState } from '@/redux/store'
 import BookmarkIcon from '@/assets/svg/bookmark.svg'
@@ -28,6 +28,8 @@ import {
 } from '@/redux/slices/search'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { useMediaQuery } from '@mui/material'
+import { updateListingModalData } from '@/redux/slices/site'
+import addIcon from '@/assets/svg/add.svg'
 type Props = {
   handleClose: any
 }
@@ -60,12 +62,14 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
   const parentRef = useRef<HTMLDivElement>(null)
   const [exploreActive, setExploreActive] = useState(false)
   const [hobbiesActive, setHobbiesActive] = useState(false)
+  const [showDropdown, setShowDropdown] = useState<boolean>(false)
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
   })
-  const { isLoggedIn, isAuthenticated, user } = useSelector(
-    (state: RootState) => state.user,
-  )
+  const { isLoggedIn, isAuthenticated, user, listing, activeProfile } =
+    useSelector((state: RootState) => state.user)
+  const filteredListing = listing.filter((item: any) => item.is_published)
+
   const handleLogout = () => {
     logout()
   }
@@ -80,6 +84,14 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
       type: 'warning',
       message: 'This feature is under development',
     })
+  }
+
+  const handleUpdateActiveProfile = (type: 'user' | 'listing', data: any) => {
+    dispatch(updateActiveProfile({ type, data }))
+    if (type === 'listing') {
+      dispatch(updateListingModalData(data))
+    }
+    setShowDropdown(false)
   }
 
   useEffect(() => {
@@ -100,7 +112,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
     handleClose()
   }
 
-  const isMobile = useMediaQuery("(max-width:1100px)");
+  const isMobile = useMediaQuery('(max-width:1100px)')
 
   useEffect(() => {
     const handleLinkClick = (event: any) => {
@@ -127,22 +139,141 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         <div className={styles['wrapper']}>
           {isLoggedIn ? (
             <header className={styles.header}>
-              <div
-                className={styles['profile']}
-                onClick={navigateToUserProfile}
-              >
-                {user?.profile_image ? (
-                  <img
-                    className={styles['img']}
-                    src={user.profile_image}
-                    alt=""
-                    width={48}
-                    height={48}
-                  />
-                ) : (
-                  <div className={`${styles['img']} default-user-icon`}></div>
+              <div className={styles['profile-switcher-wrapper']}>
+                <div
+                  className={styles['profile']}
+                  onClick={() => {
+                    setShowDropdown((prevValue) => !prevValue)
+                  }}
+                >
+                  <div className={styles['profile-switcher-img']}>
+                    {user?.profile_image ? (
+                      <img
+                        className={styles['img']}
+                        src={user.profile_image}
+                        alt=""
+                        width={48}
+                        height={48}
+                      />
+                    ) : (
+                      <div
+                        className={`${styles['img']} default-user-icon`}
+                      ></div>
+                    )}
+                    <svg
+                      className={styles['profile-switcher-downarrow']}
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g clip-path="url(#clip0_9395_172053)">
+                        <rect width="16" height="16" rx="8" fill="white" />
+                        <path
+                          d="M10.5896 6.195L8.00292 8.78167L5.41625 6.195C5.15625 5.935 4.73625 5.935 4.47625 6.195C4.21625 6.455 4.21625 6.875 4.47625 7.135L7.53625 10.195C7.79625 10.455 8.21625 10.455 8.47625 10.195L11.5363 7.135C11.7963 6.875 11.7963 6.455 11.5363 6.195C11.2763 5.94167 10.8496 5.935 10.5896 6.195Z"
+                          fill="#8064A2"
+                        />
+                      </g>
+                      <rect
+                        x="0.5"
+                        y="0.5"
+                        width="15"
+                        height="15"
+                        rx="7.5"
+                        stroke="#8064A2"
+                      />
+                      <defs>
+                        <clipPath id="clip0_9395_172053">
+                          <rect width="16" height="16" rx="8" fill="white" />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  </div>
+                  <p>{user?.full_name}</p>
+                </div>
+                {showDropdown && (
+                  <div className={styles['profile-switcher-dropdown']}>
+                    <ul>
+                      <li
+                        onClick={() => handleUpdateActiveProfile('user', user)}
+                        className={`${styles['dd-item']} ${
+                          activeProfile.type === 'user' && styles['active']
+                        }`}
+                      >
+                        {user?.profile_image ? (
+                          <img
+                            className={styles['img']}
+                            src={user?.profile_image}
+                            alt=""
+                            width={24}
+                            height={24}
+                            data-profile-type="user"
+                          />
+                        ) : (
+                          <div
+                            className={`default-user-icon ${styles['img']}`}
+                            data-profile-type="user"
+                          ></div>
+                        )}
+                        <p>{user.full_name}</p>
+                      </li>
+
+                      {filteredListing.map((page: any) => {
+                        return (
+                          <li
+                            key={page._id}
+                            onClick={() =>
+                              handleUpdateActiveProfile('listing', page)
+                            }
+                            className={`${styles['dd-item']} ${
+                              activeProfile.type === 'listing' &&
+                              activeProfile.data._id === page._id &&
+                              styles['active']
+                            }`}
+                          >
+                            {page?.profile_image ? (
+                              <img
+                                className={styles['img']}
+                                src={page?.profile_image}
+                                alt=""
+                                width={24}
+                                height={24}
+                                data-profile-type="listing"
+                              />
+                            ) : (
+                              <div
+                                className={
+                                  page?.type == 1
+                                    ? `default-people-listing-icon ${styles['img']}`
+                                    : page.type == 2
+                                    ? `${styles['img']} default-place-listing-icon`
+                                    : page.type == 3
+                                    ? `${styles['img']} default-program-listing-icon`
+                                    : page.type == 4
+                                    ? `${styles['img']} default-product-listing-icon`
+                                    : `${styles['contentImage']} default-people-listing-icon`
+                                }
+                                data-profile-type="listing"
+                              ></div>
+                            )}
+
+                            <p>{page.title}</p>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                    <button
+                      onClick={() => {
+                        handleClose()
+                        router.push('/add-listing')
+                      }}
+                    >
+                      <Image src={addIcon} alt="" />
+                      Add Listing Page
+                    </button>
+                  </div>
                 )}
-                <p>{user?.full_name}</p>
               </div>
               <div className={styles['header-icons']}>
                 <Link href={'/bookmarks'}>
@@ -516,18 +647,19 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
               </ul> */}
                     <ul>
                       <Link
-                      href={`${
-                        isMobile ? '/settings' : '/settings/login-security'
-                      }`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        if (isMobile) {
-                          router.push('/settings')
-                        } else {
-                          router.push('/settings/login-security')
-                        }
-                      }}>
+                        href={`${
+                          isMobile ? '/settings' : '/settings/login-security'
+                        }`}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          e.preventDefault()
+                          if (isMobile) {
+                            router.push('/settings')
+                          } else {
+                            router.push('/settings/login-security')
+                          }
+                        }}
+                      >
                         <li>Settings</li>
                       </Link>
                     </ul>
