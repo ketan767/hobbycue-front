@@ -64,6 +64,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
   const newPasswordRef = useRef<HTMLInputElement>(null)
   const confirmPasswordRef = useRef<HTMLInputElement>(null)
   const otpRef = useRef<HTMLInputElement>(null)
+  const desktopSubmitBtnRef = useRef<HTMLButtonElement>(null)
 
   const [showValidations, setShowValidations] = useState(false)
   const [inputValidation, setInputValidation] = useState(
@@ -200,13 +201,12 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
   }, [newPassword, inputValidation])
 
   useEffect(() => {
-    otpRef?.current?.focus()
-    const handleKeyPress = (event: any) => {
+    const handleKeyPress = (event: KeyboardEvent) => {
       if (event.key === 'Enter') {
         // if(event?.target?.tagName==="INPUT"){
         //   return
         // }else{
-        handleSubmit()
+          desktopSubmitBtnRef.current?.click();
         // }
       }
     }
@@ -217,6 +217,9 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
       window.removeEventListener('keydown', handleKeyPress)
     }
   }, [])
+
+  console.warn({inputValidation});
+  
 
   useEffect(() => {
     otpRef.current?.focus()
@@ -386,6 +389,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
         <footer className={styles['footer']}>
           <button
             className="modal-footer-btn submit"
+            ref={desktopSubmitBtnRef}
             onClick={handleSubmit}
             disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
           >
