@@ -217,7 +217,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
     if (data.phone.number) {
       if (
         !containOnlyNumbers(data.phone.number.toString().trim()) ||
-        data.phone.number.toString().replace(/\s/g, '').length > 15 ||
+        data.phone.number.toString().replace(/\s/g, '').length > 12 ||
         data.phone.number.toString().replace(/\s/g, '').length < 7
       ) {
         phoneRef.current?.focus()
@@ -232,7 +232,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
     if (data.whatsapp_number.number) {
       if (
         !containOnlyNumbers(data.whatsapp_number.number.toString().trim()) ||
-        data.whatsapp_number.number.toString().replace(/\s/g, '').length > 15 ||
+        data.whatsapp_number.number.toString().replace(/\s/g, '').length > 12 ||
         data.whatsapp_number.number.toString().replace(/\s/g, '').length < 7
       ) {
         WhtphoneRef.current?.focus()
