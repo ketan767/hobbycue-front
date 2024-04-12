@@ -23,11 +23,11 @@ const AddListing: React.FC<Props> = (props) => {
     message: '',
   })
   const handleClick = (type: ListingPages) => {
-    if (isLoggedIn && user.isOnboarded) {
+    if (isLoggedIn && user.is_onboarded) {
       dispatch(updateListingModalData({ type }))
       dispatch(openModal({ type: 'listing-type-edit', closable: true }))
       dispatch(updateListingTypeModalMode({ mode: 'create' }))
-    } else if (isLoggedIn && !user.isOnboarded) {
+    } else if (isLoggedIn && !user.is_onboarded) {
       HandleNotOnboard()
     } else {
       dispatch(openModal({ type: 'auth', closable: true }))
