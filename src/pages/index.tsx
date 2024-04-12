@@ -25,6 +25,7 @@ import {
 } from '@/redux/slices/search'
 import DownloadInMobile from '@/components/DownloadInMobile'
 import InstallPopup from '@/components/InstallPopup/InstallPopup'
+import { getMyProfileDetail } from '@/services/user.service'
 
 const Home: React.FC<PropTypes> = function () {
   const [isPlaying, setIsPlaying] = useState(false)
@@ -39,6 +40,22 @@ const Home: React.FC<PropTypes> = function () {
   }
   const user = useSelector((state: RootState) => state.user)
   const router = useRouter()
+
+  useEffect(() => {
+    if (user.isLoggedIn) {
+      checkIfLoggin()
+    }
+  }, [user.isLoggedIn])
+
+  const checkIfLoggin = async () => {
+    const { err, res } = await getMyProfileDetail()
+    if (!res?.data?.data?.user?.is_onboarded) {
+      console.warn('profileurl', res?.data?.data?.user)
+      router.push(`/profile/${res?.data?.data?.user?.profile_url}`)
+    } else {
+      router.push(`/community`)
+    }
+  }
 
   useEffect(() => {
     // Save the scroll position before navigating to another page
