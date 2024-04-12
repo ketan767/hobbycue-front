@@ -357,6 +357,9 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
+        if(event?.srcElement?.tagName === "svg"){
+          return;
+        }
         nextButtonRef.current?.click()
       }
     }

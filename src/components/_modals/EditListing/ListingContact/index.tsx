@@ -406,6 +406,9 @@ const ListingContactEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
+        if(event?.srcElement?.tagName === "svg"){
+          return;
+        }
         nextButtonRef.current?.click()
       }
     }
@@ -496,6 +499,24 @@ const ListingContactEditModal: React.FC<Props> = ({
                 <p>At least one mode of contact is required</p>
                 <OutlinedButton
                   className={styles['use-mine-button']}
+                  onKeyDown={(e)=>{
+                    if(e.key==="Enter"){
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setData((prev) => {
+                        return {
+                          ...prev,
+                          public_email: { value: user.email, error: null },
+                          phone: {
+                            number: data.phone.number,
+                            prefix: selectedCountryCode,
+                            error: null,
+                          },
+                          website: { value: user.website, error: null },
+                        }
+                      })
+                    }
+                  }}
                   onClick={() =>
                     setData((prev) => {
                       return {
