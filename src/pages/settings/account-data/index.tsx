@@ -59,6 +59,14 @@ const DataAndOthers: React.FC<Props> = ({}) => {
     }
   }
 
+  const SnackbarforCheckbox = () => {
+    setSnackbar({
+      display: true,
+      type: 'error',
+      message: 'Please acknowledge before deleting your account',
+    })
+  }
+
   const handleRequestWithPassword = (
     description: string,
     successMessage: string,
@@ -162,13 +170,17 @@ const DataAndOthers: React.FC<Props> = ({}) => {
                 />
               </div>
               <OutlinedButton
-                onClick={() =>
-                  handleRequestWithPassword(
-                    'Account deletion request.',
-                    'Your account deletion request has been sent successfully',
-                    'Your request for account deletion is failed',
-                  )
-                }
+                onClick={() => {
+                  if (checked) {
+                    handleRequestWithPassword(
+                      'Account deletion request.',
+                      'Your account deletion request has been sent successfully',
+                      'Your request for account deletion is failed',
+                    )
+                  } else {
+                    SnackbarforCheckbox()
+                  }
+                }}
                 className={styles.button}
               >
                 Delete account
