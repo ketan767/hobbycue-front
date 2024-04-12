@@ -7,7 +7,9 @@ type ComponentWithInitialProps<P = {}> = React.ComponentType<P> & {
   getInitialProps?: (ctx: any) => Promise<any>
 }
 
-export const withAuth = <P extends object>(WrappedComponent: ComponentWithInitialProps<P>) => {
+export const withAuth = <P extends object>(
+  WrappedComponent: ComponentWithInitialProps<P>,
+) => {
   const Wrapper = (props: P) => {
     const { isLoggedIn } = useSelector((state: RootState) => state.user)
     const router = useRouter()

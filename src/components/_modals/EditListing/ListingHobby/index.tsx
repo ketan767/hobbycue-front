@@ -144,6 +144,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   }
 
   const handleHobbyInputChange = async (e: any) => {
+    setShowHobbyDropdown(true)
     setHobbyInputValue(e.target.value)
     setGenreInputValue('')
     setGenreDropdownList([])
@@ -181,9 +182,9 @@ const ListingHobbyEditModal: React.FC<Props> = ({
 
       return 0
     })
-    setFocusedHobbyIndex(-1)
 
     setHobbyDropdownList(sortedHobbies)
+    setFocusedHobbyIndex(-1)
   }
 
   const handleGenreInputChange = async (e: any) => {
@@ -198,7 +199,11 @@ const ListingHobbyEditModal: React.FC<Props> = ({
     const { err, res } = await getAllHobbies(query)
     if (err) return console.log(err)
 
-    const sortedGenres = res.data.hobbies.sort((a: any, b: any) => {
+    const filteredGenres = res.data.hobbies.filter((item: any) => {
+      return item.display.toLowerCase().includes(e.target.value.toLowerCase())
+    })
+
+    const sortedGenres = filteredGenres.sort((a: any, b: any) => {
       const indexA = a.display
         .toLowerCase()
         .indexOf(e.target.value.toLowerCase())
@@ -340,24 +345,21 @@ const ListingHobbyEditModal: React.FC<Props> = ({
 
       if (!hobbyInputValue.trim()) {
         setErrorOrmsg('Please enter a hobby')
-        hobbyRef.current?.focus()
         setHobbyError(true)
+        hobbyRef.current?.focus()
         return
       }
 
       if (matchedHobby) {
         selectedHobby = matchedHobby
-        // setErrorOrmsg('hobby added Successfully!')
+        setErrorOrmsg('hobby added Successfully!')
       } else {
-        // setHobbyError(true)
-        // setError('Typed hobby not found!')
         setShowAddHobbyModal(true)
-        setIsChanged(false)
+        setIsChanged(true)
         return
       }
     } else {
       selectedHobby = data.hobby
-      // setErrorOrmsg('hobby added Successfully!')
     }
 
     // Handle genre input
@@ -383,8 +385,8 @@ const ListingHobbyEditModal: React.FC<Props> = ({
           genre.display.toLowerCase() === genreInputValue.toLowerCase(),
       )
       if (!matchedGenre) {
-        setIsChanged(false)
         setShowAddGenreModal(true)
+        setIsChanged(false)
         return
       } else {
         selectedGenre = data.genre
@@ -416,8 +418,10 @@ const ListingHobbyEditModal: React.FC<Props> = ({
     if (err) {
       setAddHobbyBtnLoading(false)
       return console.log(err)
+    } else {
+      setErrorOrmsg('Hobby added successfully!')
     }
-    setErrorOrmsg('Hobby added successfully!')
+
     await updateHobbyList()
     setHobbyInputValue('')
     setGenreInputValue('')
@@ -572,11 +576,11 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   const AddButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
     const handleKeyPress = (event: any) => {
-      if (event.key === 'Enter') {
-        nextButtonRef.current?.focus()
-      }
+      // if (event.key === 'Enter') {
+      //   nextButtonRef.current?.focus()
+      // }
     }
-
+    hobbyRef.current?.focus()
     window.addEventListener('keydown', handleKeyPress)
 
     return () => {

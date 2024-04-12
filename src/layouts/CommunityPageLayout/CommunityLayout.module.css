@@ -694,7 +694,7 @@ background: var(--Purple-3, #F7F5F9);
   }
 
   .start-post-btn-container {
-    padding: 6px 8px;
+    padding: 6px 0px;
   }
 
   .navigation-links ul li {
@@ -720,7 +720,7 @@ background: var(--Purple-3, #F7F5F9);
   .hobbyDropDownOption {
     color: var(--Grey-Darker, #6D747A);
     font-family: Poppins;
-    font-size: 10px;
+    font-size: 12px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;

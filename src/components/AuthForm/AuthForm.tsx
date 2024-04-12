@@ -184,8 +184,12 @@ const AuthForm: React.FC<Props> = (props) => {
 
         dispatch(updateIsLoggedIn(true))
         dispatch(closeModal())
-        router.push('/community', undefined, { shallow: false })
         const { err: error, res: response } = await getMyProfileDetail()
+        if (response?.data?.data?.user?.is_onboarded) {
+          router.push('/community', undefined, { shallow: false })
+        } else {
+          router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
+        }
       }
     }
 
@@ -266,10 +270,16 @@ const AuthForm: React.FC<Props> = (props) => {
       } else {
         console.log('else', e.profileObj.imageUrl)
       }
-      router.push('/community', undefined, { shallow: false })
-      const { err: error, res: response } = await getMyProfileDetail()
-      if (res?.message === 'User registered successfully')
+      console.warn('its workingggg', res.data.message)
+      if (res?.data?.message === 'User registered successfully') {
         dispatch(openModal({ type: 'user-onboarding', closable: true }))
+      }
+      const { err: error, res: response } = await getMyProfileDetail()
+      if (response?.data?.data?.user?.is_onboarded) {
+        router.push('/community')
+      } else {
+        router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
+      }
     }
   }
 
@@ -303,9 +313,16 @@ const AuthForm: React.FC<Props> = (props) => {
           console.error('Error uploading profile image:', uploadError)
         }
       }
-      router.push('/community', undefined, { shallow: false })
-      if (res?.message === 'User registered successfully')
+      const { err: error, res: response } = await getMyProfileDetail()
+      if (response?.data?.data?.user?.is_onboarded) {
+        router.push('/community', undefined, { shallow: false })
+      } else {
+        router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
+      }
+
+      if (res?.data?.message === 'User registered successfully') {
         dispatch(openModal({ type: 'user-onboarding', closable: true }))
+      }
 
       console.log('user', user)
     }
