@@ -12,7 +12,7 @@ import store, { RootState } from '@/redux/store'
 import BookmarkIcon from '@/assets/svg/bookmark.svg'
 import ShoppingIcon from '@/assets/svg/shopping.svg'
 import ExploreIcon from '@/assets/svg/navbar-explore-icon.svg'
-import HobbyIcon from '@/assets/svg/hobby-colored.svg'
+import HobbyIcon from '@/assets/svg/navbar-hobby-icon.svg'
 import CloseIcon from '@/assets/svg/cross.svg'
 import DownIcon from '@/assets/svg/chevron-down.svg'
 
@@ -439,7 +439,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                     handleClose()
                   }}
                 >
-                  <Image src={HobbyIcon} alt="Hobby" />
+                  <Image src={HobbyIcon} width={25} height={25} alt="Hobby" />
                   <p> Hobbies </p>
                 </div>
                 <Image
@@ -588,6 +588,20 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
 
                     <Link href={'/hobby/record-keeping'}>
                       <li>Records</li>
+                    </Link>
+                  </ul>
+                </section>
+                <section className={styles['list']}>
+                  <h4>
+                    <Link href={'/hobby'} className={styles['hobbiescategory']}>
+                      {' '}
+                      All hobbies{' '}
+                    </Link>
+                  </h4>
+
+                  <ul>
+                    <Link href={'#'}>
+                      <li>Hobby challenges</li>
                     </Link>
                   </ul>
                 </section>

@@ -128,13 +128,13 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     (window.location.port ? ':' + window.location.port : '')
 
   const handleSubmit = async () => {
-    let hasErrors = false;
+    let hasErrors = false
     if (isEmptyField(data.full_name) || !data.full_name) {
       fullNameRef.current?.focus()
       setInputErrs((prev) => {
         return { ...prev, full_name: 'This field is required!' }
       })
-      hasErrors = true;
+      hasErrors = true
     }
 
     if (!data.display_name || data.display_name === '') {
@@ -142,15 +142,23 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
       setInputErrs((prev) => {
         return { ...prev, display_name: 'This field is required!' }
       })
-      hasErrors = true;
+      hasErrors = true
     }
     if (isEmptyField(data.profile_url) || !data.profile_url) {
       profileUrlRef.current?.focus()
       setInputErrs((prev) => {
         return { ...prev, profile_url: 'This field is required!' }
       })
-      hasErrors = true;
+      hasErrors = true
     }
+
+    if (
+      (isEmptyField(data.full_name) || !data.full_name) &&
+      (!data.display_name || data.display_name === '')
+    ) {
+      fullNameRef.current?.focus()
+    }
+
     if (data.year_of_birth && data.year_of_birth !== '') {
       if (containOnlyNumbers(data?.year_of_birth)) {
         var check = yearOfBirthCheck(data.year_of_birth)
@@ -160,31 +168,31 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
             setInputErrs((prev) => {
               return { ...prev, year_of_birth: 'Maximum age: 100' }
             })
-            hasErrors = true;
+            hasErrors = true
           }
 
           if (check < 13) {
             setInputErrs((prev) => {
               return { ...prev, year_of_birth: 'Minimum age is 13' }
             })
-            return;
+            return
           }
         } else {
           setInputErrs((prev) => {
             return { ...prev, year_of_birth: 'Enter a valid year' }
           })
-          hasErrors = true;
+          hasErrors = true
         }
       } else {
         setInputErrs((prev) => {
           return { ...prev, year_of_birth: 'Enter a valid year' }
         })
-        hasErrors = true;
+        hasErrors = true
       }
     }
 
-    if(hasErrors===true){
-      return;
+    if (hasErrors === true) {
+      return
     }
     setSubmitBtnLoading(true)
     const newOnboardingStep =
@@ -349,7 +357,10 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        nextButtonRef.current?.focus()
+        if(event?.srcElement?.tagName === "svg"){
+          return;
+        }
+        nextButtonRef.current?.click()
       }
     }
 

@@ -60,6 +60,7 @@ const UserContactToOwner: React.FC<Props> = ({
     to: currprofile?.public_email,
   })
   const subref = useRef<HTMLInputElement>(null)
+  const [isTextAreaActive, setTextAreaActive] = useState(false)
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backDisabled, SetBackDisabled] = useState(false)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
@@ -123,6 +124,14 @@ const UserContactToOwner: React.FC<Props> = ({
     if (onStatusChange) {
       onStatusChange(hasChanged)
     }
+  }
+
+  const handleTextAreaFocus = () => {
+    setTextAreaActive(true)
+  }
+
+  const handleTextAreaBlur = () => {
+    setTextAreaActive(false)
   }
 
   const handleSubmit = async () => {
@@ -263,6 +272,8 @@ const UserContactToOwner: React.FC<Props> = ({
                 name="message"
                 onChange={handleTextAreaChange}
                 value={data.message}
+                onFocus={handleTextAreaFocus}
+                onBlur={handleTextAreaBlur}
               />
             </div>
           </div>

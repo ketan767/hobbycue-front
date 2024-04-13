@@ -173,9 +173,14 @@
   border: none;
 }
 
+.input-error>div>div:hover>fieldset{
+  border: none !important;
+  outline: none !important;
+}
+
 .input-error.input-box input {
   outline: 1px solid #c0504d !important;
-  border: none;
+  border: none !important;
 }
 
 .child-div-error *{
@@ -183,9 +188,14 @@
   border: none;
 }
 
+.child-div-error>div>div:hover>fieldset{
+  outline: none !important;
+  border: none !important;
+}
+
 .child-div-error>div{
   outline: 1px solid #c0504d !important;
-  border: none;
+  border: none !important;
   border-radius: 8px;
 }
 
@@ -197,7 +207,7 @@
 
 .validation-messages {
   position: absolute;
-  top: 50px;
+  top: 56px;
   left: 0;
   background-color: white;
   border-radius: 8px;

@@ -156,8 +156,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           return 1
         }
 
-        // Otherwise, use default sorting behavior
-        return 0
+        return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
       })
       const selectedHobby = sortedHobbies[0]
       handleHobbySelection(selectedHobby)
@@ -203,8 +202,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         return 1
       }
 
-      // Otherwise, use default sorting behavior
-      return 0
+      return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
     })
 
     setHobbyDropdownList(sortedHobbies)

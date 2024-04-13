@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { HTMLInputTypeAttribute, useEffect, useRef, useState } from 'react'
 import styles from './VerifyEmail.module.css'
 
 import { useDispatch, useSelector } from 'react-redux'
@@ -23,6 +23,7 @@ export const VerifyEmailModal: React.FC<PropTypes> = (props) => {
 
   const { email } = useSelector((state: RootState) => state.modal.authFormData)
   const otpref = useRef<HTMLInputElement>(null)
+  const desktopSubmitBtnRef = useRef<HTMLButtonElement>(null)
   const [otp, setOtp] = useState('')
   const [errMsg, setErrMsg] = useState('')
   const [submitBtnLoading, setSubmitBtnLoading] = useState(false)
@@ -51,6 +52,20 @@ export const VerifyEmailModal: React.FC<PropTypes> = (props) => {
     otpref?.current?.focus()
   })
 
+  useEffect(()=>{
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === 'Enter') {
+          desktopSubmitBtnRef.current?.click();
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress)
+    }
+  },[])
+
   return (
     <div className={styles['modal-wrapper']}>
       <h3>Verify your email</h3>
@@ -78,6 +93,7 @@ export const VerifyEmailModal: React.FC<PropTypes> = (props) => {
         <button
           disabled={submitBtnLoading}
           onClick={handleRegister}
+          ref={desktopSubmitBtnRef}
           className={`modal-footer-btn submit ${styles['verify-btn']}`}
         >
           {submitBtnLoading ? (

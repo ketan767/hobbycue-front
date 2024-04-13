@@ -59,7 +59,9 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const { forgotPasswordEmail } = useSelector((state: any) => state.modal)
   const newPasswordRef = useRef<HTMLInputElement>(null)
+  const confirmPasswordRef = useRef<HTMLInputElement>(null)
   const otpRef = useRef<HTMLInputElement>(null)
+  const desktopSubmitBtnRef = useRef<HTMLButtonElement>(null)
 
   const [showValidations, setShowValidations] = useState(false)
   const [inputValidation, setInputValidation] = useState(
@@ -73,6 +75,62 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
     confirmPassword: '',
   })
   const handleSubmit = async () => {
+    setSubmitBtnLoading(true)
+    let hasErrors = false
+    if (confirmPassword !== newPassword) {
+      hasErrors = true
+      setErrors({ ...errors, confirmPassword: 'Passwords does not match!' })
+      confirmPasswordRef?.current?.focus()
+    }
+    if (inputValidation.length === false) {
+      hasErrors = true
+      setErrors((prev) => ({
+        ...prev,
+        newPassword: 'New password should be valid!',
+      }))
+      newPasswordRef?.current?.focus()
+    }
+    if (inputValidation.lowercase === false) {
+      hasErrors = true
+      setErrors((prev) => ({
+        ...prev,
+        newPassword: 'New password should be valid!',
+      }))
+      newPasswordRef?.current?.focus()
+    }
+    if (inputValidation.number === false) {
+      hasErrors = true
+      setErrors((prev) => ({
+        ...prev,
+        newPassword: 'New password should be valid!',
+      }))
+      newPasswordRef.current?.focus()
+    }
+    if (inputValidation.specialChar === false) {
+      hasErrors = true
+      setErrors((prev) => ({
+        ...prev,
+        newPassword: 'New password should be valid!',
+      }))
+      newPasswordRef.current?.focus()
+    }
+    if (inputValidation.uppercase === false) {
+      hasErrors = true
+      setErrors((prev) => ({
+        ...prev,
+        newPassword: 'New password should be valid!',
+      }))
+      newPasswordRef.current?.focus()
+    }
+    if (otp.length === 0) {
+      hasErrors = true
+      setErrors((prev) => ({ ...prev, otp: 'Please enter OTP!' }))
+      otpRef.current?.focus()
+    }
+    if (hasErrors === true) {
+      setSubmitBtnLoading(false)
+      return
+    }
     if (confirmPassword !== newPassword) {
       setErrors({ ...errors, confirmPassword: 'Passwords does not match!' })
       return
@@ -96,7 +154,6 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
     if (res?.data.success) {
       console.log(res.data)
       dispatch(closeModal())
-      window.location.reload()
     }
   }
   //   console.log('user', user)
@@ -120,13 +177,35 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
   }, [otp, newPassword, confirmPassword])
 
   useEffect(() => {
+    setInputValidation(validatePasswordConditions(newPassword))
+  }, [newPassword])
+
+  useEffect(() => {
     const strengthNum = getStrengthNum(inputValidation)
     setStrength(strengthNum)
   }, [newPassword, inputValidation])
 
-  useEffect(()=>{
+  useEffect(() => {
     otpRef.current?.focus()
-  },[])
+  }, [])
+
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        // if(event?.target?.tagName==="INPUT"){
+        //   return
+        // }else{
+        desktopSubmitBtnRef.current?.click()
+        // }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [])
 
   let threeConditionsValid = 0
   if (inputValidation.uppercase) {
@@ -173,7 +252,7 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
             {/* <label className={styles.label}>New Password</label> */}
             <div
               className={`${styles['input-box']} ${
-                errors.newPassword ? styles['input-error'] : ''
+                errors.newPassword ? styles['child-div-error'] : ''
               }`}
             >
               <TextField
@@ -260,6 +339,7 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
             >
               <input
                 value={confirmPassword}
+                ref={confirmPasswordRef}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className={styles.input}
                 placeholder="Confirm New Password"
@@ -273,6 +353,7 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
         <footer className={styles['footer']}>
           <button
             className="modal-footer-btn submit"
+            ref={desktopSubmitBtnRef}
             onClick={handleSubmit}
             disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
           >

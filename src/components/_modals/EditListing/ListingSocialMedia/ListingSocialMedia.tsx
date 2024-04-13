@@ -29,7 +29,7 @@ import TripAdvisorIcon from '@/assets/svg/social-media/tripadvisor.svg'
 import UltimateGuitarIcon from '@/assets/svg/social-media/Ultimate-Guitar.svg'
 import YouTubeIcon from '@/assets/svg/social-media/youtube.svg'
 import OthersIcon from '@/assets/svg/social-media/other.svg'
-import MediumIcon from "@/assets/svg/social-media/MediumWeb.svg"
+import MediumIcon from '@/assets/svg/social-media/MediumWeb.svg'
 import TelegramIcon from '@/assets/svg/social-media/Telegram.svg'
 import SaveModal from '../../SaveModal/saveModal'
 
@@ -74,8 +74,8 @@ type SocialMediaOption =
   | 'Youtube'
   | 'SoundCloud'
   | 'Pinterest'
-  |  'Medium'
-  |  'Telegram'
+  | 'Medium'
+  | 'Telegram'
   | 'TripAdvisor'
   | 'Ultimate Guitar'
   | 'Strava'
@@ -115,8 +115,8 @@ const defaultSocialMediaURLs: Record<SocialMediaOption, string> = {
   Youtube: 'https://youtube.com/',
   SoundCloud: 'https://soundcloud.com/',
   Pinterest: 'https://pinterest.com/',
-  Medium:'https://medium.com/',
-  Telegram:'https://telegram.com/',
+  Medium: 'https://medium.com/',
+  Telegram: 'https://telegram.com/',
   TripAdvisor: 'https://tripadvisor.com/profile/',
   'Ultimate Guitar': 'https://ultimate-guitar.com/u/',
   Strava: 'https://strava.com/athletes/',
@@ -138,13 +138,13 @@ const ListingSocialMediaEditModal = ({
 }: Props) => {
   const [submitBtnLoading, setSubmitBtnLoading] = useState(false)
   const { listingModalData } = useSelector((state: RootState) => state.site)
-  const [initialData, setInitialData] = useState<SocialMediaData[]>([])
+
   const [isChanged, setIsChanged] = useState(false)
 
   useEffect(() => {
     let arr = []
     const listingSocialMediaUrls = listingModalData.social_media_urls
-    console.log({listingSocialMediaUrls})
+    console.log({ listingSocialMediaUrls })
     for (const key in listingSocialMediaUrls) {
       const value = listingSocialMediaUrls[key]
       if (typeof value === 'string' && value !== '') {
@@ -275,6 +275,12 @@ const ListingSocialMediaEditModal = ({
       url: '',
     },
   ])
+  const [initialData, setInitialData] = useState([
+    {
+      socialMedia: '',
+      url: '',
+    },
+  ])
 
   const dispatch = useDispatch()
 
@@ -301,90 +307,153 @@ const ListingSocialMediaEditModal = ({
     const socialMediaItem = mediaData.find((item) => item.socialMedia === key)
     return socialMediaItem ? socialMediaItem.url : ''
   }
-  const handleDelete = (item: any) => {
-    let updated = mediaData.filter(
-      (media: any) => item.socialMedia !== media.socialMedia,
+  const handleDelete = (itemToDelete: SocialMediaData) => {
+    const indexToDelete = mediaData.findIndex(
+      (item) =>
+        item.socialMedia === itemToDelete.socialMedia &&
+        item.url === itemToDelete.url,
     )
-    setMediaData(updated)
+
+    if (indexToDelete !== -1) {
+      const updatedMediaData = [...mediaData]
+      updatedMediaData.splice(indexToDelete, 1)
+      setMediaData(updatedMediaData)
+    }
   }
 
   const handleSubmit = async () => {
     setSubmitBtnLoading(true)
-    let reqBody: any = {};
-    let socialMediaCounts: { [key: string]: number } = {};
+    let reqBody: any = {}
+    let socialMediaCounts: { [key: string]: number } = {}
     for (let i = 0; i < mediaData.length; i++) {
-      const socialMediaItem = mediaData[i];
-      const socialMedia = socialMediaItem.socialMedia;
-      const url = socialMediaItem.url;
-    
+      const socialMediaItem = mediaData[i]
+      const socialMedia = socialMediaItem.socialMedia
+      const url = socialMediaItem.url
+
       // Increment the count for the current social media
-      socialMediaCounts[socialMedia] = (socialMediaCounts[socialMedia] || 0) + 1;
-    
-      let key;
+      socialMediaCounts[socialMedia] = (socialMediaCounts[socialMedia] || 0) + 1
+
+      let key
       switch (socialMedia) {
         case 'Facebook':
-          key = socialMediaCounts[socialMedia] === 1 ? 'facebook' : `facebook${socialMediaCounts[socialMedia]}`;
-          break;
+          key =
+            socialMediaCounts[socialMedia] === 1
+              ? 'facebook'
+              : `facebook${socialMediaCounts[socialMedia]}`
+          break
         case 'Instagram':
-          key = socialMediaCounts[socialMedia] === 1 ? 'instagram' : `instagram${socialMediaCounts[socialMedia]}`;
-          break;
+          key =
+            socialMediaCounts[socialMedia] === 1
+              ? 'instagram'
+              : `instagram${socialMediaCounts[socialMedia]}`
+          break
         case 'Twitter':
-          key = socialMediaCounts[socialMedia] === 1 ? 'twitter' : `twitter${socialMediaCounts[socialMedia]}`;
-          break;
+          key =
+            socialMediaCounts[socialMedia] === 1
+              ? 'twitter'
+              : `twitter${socialMediaCounts[socialMedia]}`
+          break
         case 'Youtube':
-          key = socialMediaCounts[socialMedia] === 1 ? 'youtube' : `youtube${socialMediaCounts[socialMedia]}`;
-          break;
+          key =
+            socialMediaCounts[socialMedia] === 1
+              ? 'youtube'
+              : `youtube${socialMediaCounts[socialMedia]}`
+          break
         case 'SoundCloud':
-          key = socialMediaCounts[socialMedia] === 1 ? 'soundcloud' : `soundcloud${socialMediaCounts[socialMedia]}`;
-          break;
+          key =
+            socialMediaCounts[socialMedia] === 1
+              ? 'soundcloud'
+              : `soundcloud${socialMediaCounts[socialMedia]}`
+          break
         case 'Pinterest':
-          key = socialMediaCounts[socialMedia] === 1 ? 'pinterest' : `pinterest${socialMediaCounts[socialMedia]}`;
-          break;
+          key =
+            socialMediaCounts[socialMedia] === 1
+              ? 'pinterest'
+              : `pinterest${socialMediaCounts[socialMedia]}`
+          break
         case 'Medium':
-          key = socialMediaCounts[socialMedia] === 1 ? 'medium' : `medium${socialMediaCounts[socialMedia]}`;
-          break;
+          key =
+            socialMediaCounts[socialMedia] === 1
+              ? 'medium'
+              : `medium${socialMediaCounts[socialMedia]}`
+          break
         case 'Telegram':
-          key = socialMediaCounts[socialMedia] === 1 ? 'telegram' : `telegram${socialMediaCounts[socialMedia]}`;
-          break;
+          key =
+            socialMediaCounts[socialMedia] === 1
+              ? 'telegram'
+              : `telegram${socialMediaCounts[socialMedia]}`
+          break
         case 'TripAdvisor':
-          key = socialMediaCounts[socialMedia] === 1 ? 'tripadvisor' : `tripadvisor${socialMediaCounts[socialMedia]}`;
-          break;
+          key =
+            socialMediaCounts[socialMedia] === 1
+              ? 'tripadvisor'
+              : `tripadvisor${socialMediaCounts[socialMedia]}`
+          break
         case 'Ultimate Guitar':
-          key = socialMediaCounts[socialMedia] === 1 ? 'ultimate_guitar' : `ultimate_guitar${socialMediaCounts[socialMedia]}`;
-          break;
+          key =
+            socialMediaCounts[socialMedia] === 1
+              ? 'ultimate_guitar'
+              : `ultimate_guitar${socialMediaCounts[socialMedia]}`
+          break
         case 'Strava':
-          key = socialMediaCounts[socialMedia] === 1 ? 'strava' : `strava${socialMediaCounts[socialMedia]}`;
-          break;
+          key =
+            socialMediaCounts[socialMedia] === 1
+              ? 'strava'
+              : `strava${socialMediaCounts[socialMedia]}`
+          break
         case 'DeviantArts':
-          key = socialMediaCounts[socialMedia] === 1 ? 'deviantarts' : `deviantarts${socialMediaCounts[socialMedia]}`;
-          break;
+          key =
+            socialMediaCounts[socialMedia] === 1
+              ? 'deviantarts'
+              : `deviantarts${socialMediaCounts[socialMedia]}`
+          break
         case 'Behance':
-          key = socialMediaCounts[socialMedia] === 1 ? 'behance' : `behance${socialMediaCounts[socialMedia]}`;
-          break;
+          key =
+            socialMediaCounts[socialMedia] === 1
+              ? 'behance'
+              : `behance${socialMediaCounts[socialMedia]}`
+          break
         case 'GoodReads':
-          key = socialMediaCounts[socialMedia] === 1 ? 'goodreads' : `goodreads${socialMediaCounts[socialMedia]}`;
-          break;
+          key =
+            socialMediaCounts[socialMedia] === 1
+              ? 'goodreads'
+              : `goodreads${socialMediaCounts[socialMedia]}`
+          break
         case 'Smule':
-          key = socialMediaCounts[socialMedia] === 1 ? 'smule' : `smule${socialMediaCounts[socialMedia]}`;
-          break;
+          key =
+            socialMediaCounts[socialMedia] === 1
+              ? 'smule'
+              : `smule${socialMediaCounts[socialMedia]}`
+          break
         case 'Chess.com':
-          key = socialMediaCounts[socialMedia] === 1 ? 'chess' : `chess${socialMediaCounts[socialMedia]}`;
-          break;
+          key =
+            socialMediaCounts[socialMedia] === 1
+              ? 'chess'
+              : `chess${socialMediaCounts[socialMedia]}`
+          break
         case 'BGG':
-          key = socialMediaCounts[socialMedia] === 1 ? 'bgg' : `bgg${socialMediaCounts[socialMedia]}`;
-          break;
+          key =
+            socialMediaCounts[socialMedia] === 1
+              ? 'bgg'
+              : `bgg${socialMediaCounts[socialMedia]}`
+          break
         case 'Others':
-          key = socialMediaCounts[socialMedia] === 1 ? 'others' : `others${socialMediaCounts[socialMedia]}`;
-          break;
+          key =
+            socialMediaCounts[socialMedia] === 1
+              ? 'others'
+              : `others${socialMediaCounts[socialMedia]}`
+          break
         default:
-          break;
+          break
       }
-      
-      if(key){
-      reqBody[key] = url;
+
+      if (key) {
+        reqBody[key] = url
+      }
     }
-  }
-    const { err, res } = await updateListing(listingModalData._id, {social_media_urls:reqBody})
+    const { err, res } = await updateListing(listingModalData._id, {
+      social_media_urls: reqBody,
+    })
 
     if (err) {
       setSubmitBtnLoading(false)

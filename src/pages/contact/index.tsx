@@ -22,7 +22,6 @@ import { containOnlyNumbers } from '@/utils'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { useRouter } from 'next/router'
 
-
 type ContactUsData = {
   name: InputData<string>
   public_email: InputData<string>
@@ -44,7 +43,7 @@ type ContactUsData = {
 type Props = {}
 
 const Contact: React.FC<Props> = ({}) => {
-  const router = useRouter();
+  const router = useRouter()
   const [data, setData] = useState<ContactUsData>({
     name: { value: '', error: null },
     phone: { number: '', prefix: '', error: null },
@@ -60,15 +59,17 @@ const Contact: React.FC<Props> = ({}) => {
   const [selectedCountryCode, setSelectedCountryCode] = useState('+91')
   const [selectedWpCountryCode, setWpSelectedCountryCode] = useState('+91')
   const [isError, setIsError] = useState(false)
-  const [showYouDropdown, setShowYouDropdown] = useState(false);
-  const [showRegDropdown, setShowRegDropdown] = useState(false);
-  const [focusedYou,setFocusedYou] = useState<number>(-1);
-  const [focusedReg,setFocusedReg] = useState<number>(-1);
-  const YoudropdownRef = useRef<HTMLDivElement>(null);
-  const RegdropdownRef = useRef<HTMLDivElement>(null);
+  const [showYouDropdown, setShowYouDropdown] = useState(false)
+  const [showRegDropdown, setShowRegDropdown] = useState(false)
+  const [focusedYou, setFocusedYou] = useState<number>(-1)
+  const [focusedReg, setFocusedReg] = useState<number>(-1)
+  const YoudropdownRef = useRef<HTMLDivElement>(null)
+  const RegdropdownRef = useRef<HTMLDivElement>(null)
+  const submitBtnRef = useRef<HTMLButtonElement>(null)
   const [tick, setTick] = useState(false)
   const WhtphoneRef = useRef<HTMLInputElement>(null)
   const phoneRef = useRef<HTMLInputElement>(null)
+  const messageRef = useRef<HTMLTextAreaElement>(null)
   const YouAreRef = useRef<HTMLInputElement>(null)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [snackbar, setSnackbar] = useState({
@@ -97,7 +98,7 @@ const Contact: React.FC<Props> = ({}) => {
   const handlePrefixChange = (element: any) => {
     const id = element?.id
     setSelectedCountryCode(countryData[id]?.phonePrefix)
-    if(tick){
+    if (tick) {
       handleWpPrefixChange(element)
     }
   }
@@ -109,7 +110,20 @@ const Contact: React.FC<Props> = ({}) => {
   const handleInputChange = (event: any) => {
     const { name, value } = event.target
 
-     if (name === 'phone' || name === 'whatsapp_number') {
+    if((data.phone.error==='At least one mode of contact is required!'||data.public_email.error==='At least one mode of contact is required!')&&(name==='phone'||name==='public_email')){
+      setData((prev) => ({
+        ...prev,
+        phone:{...prev.phone,error:null},
+        public_email:{...prev.public_email,error:null},
+        [name]: {
+          ...prev[name as keyof ContactUsData],
+          number: value || '',
+          error: null,
+        },
+      }))
+    }
+
+    if (name === 'phone' || name === 'whatsapp_number') {
       // if(tick===true){
       //   setData((prev) => ({
       //     ...prev,
@@ -133,8 +147,8 @@ const Contact: React.FC<Props> = ({}) => {
           error: null,
         },
       }))
-    // }
-  } else if (name === 'message') {
+      // }
+    } else if (name === 'message') {
       setData((prev) => ({
         ...prev,
         [name]: { value, error: null },
@@ -162,73 +176,47 @@ const Contact: React.FC<Props> = ({}) => {
     }
   }
 
-  const handlePhoneBlur = (e:any) => {
-    if(tick){
-      handleBlur(e);
+  const handlePhoneBlur = (e: any) => {
+    if (tick) {
+      handleBlur(e)
     }
   }
 
   const handleSubmit = async () => {
-    let hasError = false;
-    if (data.phone.number) {
-      if (
-        !containOnlyNumbers(data.phone.number.toString().trim()) ||
-        data.phone.number.toString().replace(/\s/g, "").length>11 ||
-        data.phone.number.toString().replace(/\s/g, "").length<7
-      ) {
-        hasError = true;
-        phoneRef.current?.focus()
-        setData((prev) => {
-          return {
-            ...prev,
-            phone: { ...prev.phone, error: 'Enter a valid phone number' },
-          }
-        })
-      }
-    }
-    if (data.whatsapp_number.number) {
-      if (
-        !containOnlyNumbers(data.whatsapp_number.number.toString().trim()) ||
-        data.whatsapp_number.number.toString().replace(/\s/g, "").length>11 ||
-        data.whatsapp_number.number.toString().replace(/\s/g, "").length<7
-      ) {
-        hasError = true;
-        WhtphoneRef.current?.focus()
-        setData((prev) => {
-          return {
-            ...prev,
-            whatsapp_number: {
-              ...prev.whatsapp_number,
-              error: 'Enter a valid phone number',
-            },
-          }
-        })
-      }
-    }
-    if(!data.YouAre.value || data.YouAre.value.length ===0){
-      hasError = true;
-      setData((prev)=>({...prev,
-      YouAre:{
-        ...prev.YouAre,
-        error:"This field is mandatory"
-      }
+    let hasError = false
+    if (!data.YouAre.value || data.YouAre.value.length === 0) {
+      hasError = true
+      setData((prev) => ({
+        ...prev,
+        YouAre: {
+          ...prev.YouAre,
+          error: 'This field is mandatory',
+        },
       }))
     }
-    if(!data.Regarding.value || data.Regarding.value.length === 0){
-      hasError = true;
-      setData((prev)=>({...prev,
-      Regarding:{
-        ...prev.Regarding,
-        error:"This field is mandatory"
-      }
-      }));
+    if (!data.Regarding.value || data.Regarding.value.length === 0) {
+      hasError = true
+      setData((prev) => ({
+        ...prev,
+        Regarding: {
+          ...prev.Regarding,
+          error: 'This field is mandatory',
+        },
+      }))
     }
-    if(data.message.value.length<1){
-      hasError = true;
-      setData((prev)=>({...prev,message:{
-        ...prev.message,
-        error:"Message can't be empty"
-      }}))
+    if (data.message.value.trim().length < 1) {
+      hasError = true
+      setData((prev) => ({
+        ...prev,
+        message: {
+          ...prev.message,
+          error: "Message can't be empty",
+        },
+      }))
+      // added this timeout because, on enter clicked this error is not showing, because enter makes a new line and changes textarea
+      setTimeout(() => {
+      messageRef.current?.focus();
+      }, 100);
     }
     if (
       (!data.public_email.value || data.public_email.value.length === 0) &&
@@ -244,32 +232,67 @@ const Contact: React.FC<Props> = ({}) => {
             ...prev.public_email,
             error: 'At least one mode of contact is required!',
           },
-          phone:{
+          phone: {
             ...prev.phone,
-            error: 'At least one mode of contact is required!'
-          }
+            error: 'At least one mode of contact is required!',
+          },
         }
       })
     }
+    if (data.phone.number) {
+      if (
+        !containOnlyNumbers(data.phone.number.toString().trim()) ||
+        data.phone.number.toString().replace(/\s/g, '').length > 12 ||
+        data.phone.number.toString().replace(/\s/g, '').length < 7
+      ) {
+        hasError = true
+        phoneRef.current?.focus()
+        setData((prev) => {
+          return {
+            ...prev,
+            phone: { ...prev.phone, error: 'Enter a valid phone number' },
+          }
+        })
+      }
+    }
+    if (data.whatsapp_number.number) {
+      if (
+        !containOnlyNumbers(data.whatsapp_number.number.toString().trim()) ||
+        data.whatsapp_number.number.toString().replace(/\s/g, '').length > 12 ||
+        data.whatsapp_number.number.toString().replace(/\s/g, '').length < 7
+      ) {
+        hasError = true
+        WhtphoneRef.current?.focus()
+        setData((prev) => {
+          return {
+            ...prev,
+            whatsapp_number: {
+              ...prev.whatsapp_number,
+              error: 'Enter a valid phone number',
+            },
+          }
+        })
+      }
+    }
     if (data.name.value.length === 0) {
-      hasError = true;
+      hasError = true
       setData((prev) => ({
         ...prev,
         name: { ...prev.name, error: 'This field is required!' },
       }))
-    inputRef.current?.focus();
+      inputRef.current?.focus()
     }
-    if(hasError===true){
-      return;
+    if (hasError === true) {
+      return
     }
     const name = data.name.value
     const email = data.public_email.value
     const phone = {
-      number: data.phone.number?.replace(/\s/g, ""),
+      number: data.phone.number?.replace(/\s/g, ''),
       prefix: selectedCountryCode,
     }
     const whatsapp_number = {
-      number: data.whatsapp_number.number?.replace(/\s/g, ""),
+      number: data.whatsapp_number.number?.replace(/\s/g, ''),
       prefix: selectedWpCountryCode,
     }
     const YouAre = data.YouAre.value
@@ -294,15 +317,15 @@ const Contact: React.FC<Props> = ({}) => {
         description,
         user_id,
       })
-    
+
       if (err) {
-        console.error('Error:', err);
+        console.error('Error:', err)
         setSnackbar({
           display: true,
           type: 'warning',
           message: 'Something went wrong',
         })
-      }else{
+      } else {
         setSnackbar({
           display: true,
           type: 'success',
@@ -348,8 +371,8 @@ const Contact: React.FC<Props> = ({}) => {
     }
   }, [user, activeProfile, isLoggedIn])
 
-  useEffect(()=>{
-    const onOutsideClickHandler = (e:MouseEvent) => {
+  useEffect(() => {
+    const onOutsideClickHandler = (e: MouseEvent) => {
       if (
         YoudropdownRef.current &&
         !YoudropdownRef.current.contains(e.target as Node)
@@ -363,11 +386,25 @@ const Contact: React.FC<Props> = ({}) => {
         setShowRegDropdown(false)
       }
     }
-    document.addEventListener("mousedown",onOutsideClickHandler);
+    document.addEventListener('mousedown', onOutsideClickHandler)
     return () => {
-      document.removeEventListener("mousedown",onOutsideClickHandler);
+      document.removeEventListener('mousedown', onOutsideClickHandler)
     }
-  },[])
+  }, [])
+
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        submitBtnRef.current?.click()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [])
 
   const isMobile = useMediaQuery('(max-width:1100px)')
   const questionSvg = (
@@ -389,11 +426,18 @@ const Contact: React.FC<Props> = ({}) => {
       <PageGridLayout column={3}>
         {isLoggedIn ? (
           <div className={styles['switcher-help-centre']}>
-          <ProfileSwitcher className={styles['contact-profile-switcher']} />
-          {isMobile&&<button onClick={()=>{router.push('/help')}} className={styles['help-centre-btn']}>
-            {questionSvg}
-            <p>Help Centre</p>
-          </button>}
+            <ProfileSwitcher className={styles['contact-profile-switcher']} />
+            {isMobile && (
+              <button
+                onClick={() => {
+                  router.push('/help')
+                }}
+                className={styles['help-centre-btn']}
+              >
+                {questionSvg}
+                <p>Help Centre</p>
+              </button>
+            )}
           </div>
         ) : (
           <div></div>
@@ -423,9 +467,7 @@ const Contact: React.FC<Props> = ({}) => {
                       name="name"
                       onChange={handleInputChange}
                     />
-                    <p className={styles['helper-text']}>
-                      {data.name.error}
-                    </p>
+                    <p className={styles['helper-text']}>{data.name.error}</p>
                   </div>
                 </div>
 
@@ -493,9 +535,11 @@ const Contact: React.FC<Props> = ({}) => {
                 </div>
 
                 {/* WhatsApp Number */}
-                <div className={`${styles['input-box']} ${
-                      data.whatsapp_number.error ? styles['input-box-error'] : ''
-                    }`}>
+                <div
+                  className={`${styles['input-box']} ${
+                    data.whatsapp_number.error ? styles['input-box-error'] : ''
+                  }`}
+                >
                   <label className={styles['whatsapp-label']}>
                     WhatsApp
                     <CustomTooltip title="Use same">
@@ -509,17 +553,17 @@ const Contact: React.FC<Props> = ({}) => {
                           checked={tick}
                           onChange={(e) => {
                             if (tick === true) {
-                                setData((prev) => {
-                                  return {
-                                    ...prev,
-                                    whatsapp_number: {
-                                      number: '',
-                                      prefix: '+91',
-                                    },
-                                  }
-                                })
-                                setWpSelectedCountryCode('+91')
-                            }else{
+                              setData((prev) => {
+                                return {
+                                  ...prev,
+                                  whatsapp_number: {
+                                    number: '',
+                                    prefix: '+91',
+                                  },
+                                }
+                              })
+                              setWpSelectedCountryCode('+91')
+                            } else {
                               setData((prev) => {
                                 return {
                                   ...prev,
@@ -580,64 +624,76 @@ const Contact: React.FC<Props> = ({}) => {
                   <label>You are</label>
                   <div className={styles['input-box']}>
                     <input hidden required />
-                    <div
-                      className={styles['select-container']}
-                    >
+                    <div className={styles['select-container']}>
                       <div
                         className={`${styles['select-input']}  ${
                           data.YouAre.error ? styles['div-error'] : ''
                         }`}
                         tabIndex={0}
-                        onKeyDown={(e)=>{
+                        onKeyDown={(e) => {
                           switch (e.key) {
-                            case " ":
+                            case ' ':
                               setShowYouDropdown(true)
-                              break;
-                            case "Enter":
-                              if(showYouDropdown){
-                                if(focusedYou!==-1)
-                                setData((prev: any) => ({
-                                  ...prev,
-                                  YouAre: { value: YouareData[focusedYou].value, error: null },
-                                }))
+                              break
+                            case 'Enter':
+                              e.preventDefault();
+                              e.stopPropagation();
+                              if (showYouDropdown) {
+                                if (focusedYou !== -1)
+                                  setData((prev: any) => ({
+                                    ...prev,
+                                    YouAre: {
+                                      value: YouareData[focusedYou].value,
+                                      error: null,
+                                    },
+                                  }))
                                 setShowYouDropdown(false)
-                              }else{
+                              } else {
                                 setShowYouDropdown(true)
                               }
-                              break;
-                            case "ArrowDown":
-                              if(focusedYou===YouareData.length-1||focusedYou===-1){
+                              break
+                            case 'ArrowDown':
+                              if (
+                                focusedYou === YouareData.length - 1 ||
+                                focusedYou === -1
+                              ) {
                                 setFocusedYou(0)
-                              }else{
-                                setFocusedYou((prev)=>prev+1)
+                              } else {
+                                setFocusedYou((prev) => prev + 1)
                               }
-                              break;
-                            case "ArrowUp":
-                              if(focusedYou===0){
-                                setFocusedYou(YouareData.length-1)
-                              }
-                              else if(focusedYou===-1){
+                              break
+                            case 'ArrowUp':
+                              if (focusedYou === 0) {
+                                setFocusedYou(YouareData.length - 1)
+                              } else if (focusedYou === -1) {
                                 setFocusedYou(0)
+                              } else {
+                                setFocusedYou((prev) => prev - 1)
                               }
-                              else{
-                                setFocusedYou((prev)=>prev-1)
-                              }
-                              break;
+                              break
                             default:
-                              break;
+                              break
                           }
                         }}
-                        onBlur={()=>setTimeout(() => {
-                          setShowYouDropdown(false);
-                          setFocusedYou(-1);
-                        }, 300)}
-                        onClick={() => setShowYouDropdown(prev=>!prev)}
+                        onBlur={() =>
+                          setTimeout(() => {
+                            setShowYouDropdown(false)
+                            setFocusedYou(-1)
+                          }, 300)
+                        }
+                        onClick={() => setShowYouDropdown((prev) => !prev)}
                       >
                         <p>{data.YouAre.value || 'Select You Are...'}</p>
-                        <Image src={showYouDropdown?UpArrow:DownArrow} alt="down" />
+                        <Image
+                          src={showYouDropdown ? UpArrow : DownArrow}
+                          alt="down"
+                        />
                       </div>
                       {showYouDropdown && (
-                        <div ref={YoudropdownRef} className={styles['options-container']}>
+                        <div
+                          ref={YoudropdownRef}
+                          className={styles['options-container']}
+                        >
                           <div className={styles['vertical-line']}></div>
                           {YouareData.map((item: any, idx) => (
                             <div
@@ -646,7 +702,7 @@ const Contact: React.FC<Props> = ({}) => {
                                   ? styles['selcted-option']
                                   : ''
                               }
-                              ${focusedYou===idx&&styles['focused-option']}
+                              ${focusedYou === idx && styles['focused-option']}
                               `}
                               key={idx}
                               onClick={() => {
@@ -678,64 +734,76 @@ const Contact: React.FC<Props> = ({}) => {
                   <label>Regarding</label>
                   <div className={styles['input-box']}>
                     <input hidden required />
-                    <div
-                      className={styles['select-container']}
-                    >
+                    <div className={styles['select-container']}>
                       <div
                         className={`${styles['select-input']}  ${
                           data.Regarding.error ? styles['div-error'] : ''
                         }`}
                         tabIndex={0}
-                        onKeyDown={(e)=>{
+                        onKeyDown={(e) => {
                           switch (e.key) {
-                            case " ":
+                            case ' ':
                               setShowRegDropdown(true)
-                              break;
-                            case "Enter":
-                              if(showRegDropdown){
-                                if(focusedReg!==-1)
-                                setData((prev: any) => ({
-                                  ...prev,
-                                  Regarding: { value: Regarding[focusedReg].value, error: null },
-                                }))
+                              break
+                            case 'Enter':
+                              e.preventDefault();
+                              e.stopPropagation();
+                              if (showRegDropdown) {
+                                if (focusedReg !== -1)
+                                  setData((prev: any) => ({
+                                    ...prev,
+                                    Regarding: {
+                                      value: Regarding[focusedReg].value,
+                                      error: null,
+                                    },
+                                  }))
                                 setShowRegDropdown(false)
-                              }else{
+                              } else {
                                 setShowRegDropdown(true)
                               }
-                              break;
-                            case "ArrowDown":
-                              if(focusedReg===Regarding.length-1||focusedReg===-1){
+                              break
+                            case 'ArrowDown':
+                              if (
+                                focusedReg === Regarding.length - 1 ||
+                                focusedReg === -1
+                              ) {
                                 setFocusedReg(0)
-                              }else{
-                                setFocusedReg((prev)=>prev+1)
+                              } else {
+                                setFocusedReg((prev) => prev + 1)
                               }
-                              break;
-                            case "ArrowUp":
-                              if(focusedReg===0){
-                                setFocusedReg(Regarding.length-1)
-                              }
-                              else if(focusedReg===-1){
+                              break
+                            case 'ArrowUp':
+                              if (focusedReg === 0) {
+                                setFocusedReg(Regarding.length - 1)
+                              } else if (focusedReg === -1) {
                                 setFocusedReg(0)
+                              } else {
+                                setFocusedReg((prev) => prev - 1)
                               }
-                              else{
-                                setFocusedReg((prev)=>prev-1)
-                              }
-                              break;
+                              break
                             default:
-                              break;
+                              break
                           }
                         }}
-                        onBlur={()=>setTimeout(() => {
-                          setShowRegDropdown(false);
-                          setFocusedReg(-1);
-                        }, 300)}
+                        onBlur={() =>
+                          setTimeout(() => {
+                            setShowRegDropdown(false)
+                            setFocusedReg(-1)
+                          }, 300)
+                        }
                         onClick={() => setShowRegDropdown(true)}
                       >
                         <p>{data.Regarding.value || 'Select Regarding...'}</p>
-                        <Image src={showRegDropdown?UpArrow:DownArrow} alt="down" />
+                        <Image
+                          src={showRegDropdown ? UpArrow : DownArrow}
+                          alt="down"
+                        />
                       </div>
                       {showRegDropdown && (
-                        <div ref={RegdropdownRef} className={styles['options-container']}>
+                        <div
+                          ref={RegdropdownRef}
+                          className={styles['options-container']}
+                        >
                           <div className={styles['vertical-line']}></div>
                           {Regarding.map((item: any, idx) => (
                             <div
@@ -744,7 +812,7 @@ const Contact: React.FC<Props> = ({}) => {
                                   ? styles['selcted-option']
                                   : ''
                               }
-                              ${focusedReg===idx&&styles['focused-option']}
+                              ${focusedReg === idx && styles['focused-option']}
                               `}
                               key={idx}
                               onClick={() => {
@@ -763,17 +831,18 @@ const Contact: React.FC<Props> = ({}) => {
                         </div>
                       )}
                     </div>
-                    <p className={styles['helper-text']}>{data.Regarding.error}</p>
+                    <p className={styles['helper-text']}>
+                      {data.Regarding.error}
+                    </p>
                   </div>
                 </div>
               </section>
               {/* Message */}
-              <div
-                className={`${styles['input-box']}`}
-              >
+              <div className={`${styles['input-box']}`}>
                 <label>Message</label>
                 <div className={styles['street-input-container']}>
                   <textarea
+                    ref={messageRef}
                     className={`${styles['long-input-box']} ${
                       data.message.error ? styles['div-error'] : ''
                     }`}
@@ -787,6 +856,7 @@ const Contact: React.FC<Props> = ({}) => {
               </div>
               <div className={styles['footer']}>
                 <button
+                  ref={submitBtnRef}
                   onClick={handleSubmit}
                   className={`modal-footer-btn submit ${styles['submit-btn']}`}
                 >
@@ -801,7 +871,12 @@ const Contact: React.FC<Props> = ({}) => {
           </section>
         </div>
         {isMobile ? null : (
-          <button onClick={()=>{router.push('/help')}} className={styles['help-centre-btn']}>
+          <button
+            onClick={() => {
+              router.push('/help')
+            }}
+            className={styles['help-centre-btn']}
+          >
             {questionSvg}
             <p>Help Centre</p>
           </button>

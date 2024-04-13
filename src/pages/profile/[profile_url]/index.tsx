@@ -272,6 +272,19 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
   return (
     <>
       <Head>
+        <meta
+          property="og:image"
+          content={`${data?.pageData?.profile_image}`}
+        />
+        <meta
+          property="og:image:secure_url"
+          content={`${data?.pageData?.profile_image}`}
+        />
+        <meta
+          property="og:description"
+          content={`${data?.pageData?.description}`}
+        />
+        <meta property="og:image:alt" content="Profile picture" />
         <title>{`${data.pageData.full_name} | HobbyCue`}</title>
       </Head>
 

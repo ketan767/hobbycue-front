@@ -1,13 +1,32 @@
 import { FC, useState } from 'react'
 import styles from './CommunityLayout.module.css'
+import { useRouter } from 'next/router'
+import FilledButton from '@/components/_buttons/FilledButton'
+import Link from 'next/link'
 
 interface PanelDropdownListProps {
   name: string
   options: any[]
+  type?: string
+  inviteFunction?: () => Promise<void>
+  inviteError?: string
+  inviteTextChangeFunc?: (arg0: any) => void
+  inviteText?: string
 }
 
-const PanelDropdownList: FC<PanelDropdownListProps> = ({ name, options }) => {
+const PanelDropdownList: FC<PanelDropdownListProps> = ({
+  name,
+  options,
+  type,
+  inviteFunction,
+  inviteError,
+  inviteText,
+  inviteTextChangeFunc,
+}) => {
   const [open, setOpen] = useState(false)
+  const router = useRouter()
+  const [seeMore, setSeeMore] = useState(true)
+
   const ArrowSvg = ({ rotate }: { rotate?: boolean }) => {
     return (
       <svg
@@ -60,20 +79,88 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({ name, options }) => {
         <ArrowSvg rotate={open} />
       </div>
       {open && (
-        <div className={styles['options-parent']}>
-          {options.map((obj: any, idx: number) => (
-            <div key={idx} className={styles['option']}>
-              {/* For Hobbies */}
-              {obj?.display ? (
-                <div className={styles['hobby-option']}>
-                  {hobbyIcon}
-                  <p>{obj?.display}</p>
-                </div>
-              ) : null}
-              {/* For Members (to be added soon) */}
+        <>
+          {type === 'members' && (
+            <div
+              className={
+                styles['member-invite'] +
+                ` ${styles['invite-wrapper']} ${styles['pos-relative']}`
+              }
+            >
+              <section>
+                <input
+                  placeholder=""
+                  type="text"
+                  name=""
+                  id=""
+                  className={inviteError !== '' ? styles['error-input'] : ''}
+                  onChange={inviteTextChangeFunc}
+                  value={inviteText}
+                />
+                <FilledButton onClick={inviteFunction}>Invite</FilledButton>
+              </section>
+              {inviteError !== '' && (
+                <span className={styles['error-invite']}>{inviteError}</span>
+              )}
             </div>
-          ))}
-        </div>
+          )}
+          <div
+            className={
+              styles['options-parent'] +
+              `
+            ${type === 'members' && styles['no-gap']}
+            ${type === 'members' && styles['no-padding']}
+          `
+            }
+          >
+            {type !== 'members' &&
+              options.map((obj: any, idx: number) => (
+                <div key={idx} className={styles['option']}>
+                  {/* For Hobbies */}
+                  {obj?.display ? (
+                    <div
+                      onClick={() => {
+                        router.push(`/hobby/${obj?.slug}`)
+                      }}
+                      className={styles['hobby-option']}
+                    >
+                      {hobbyIcon}
+                      <p>{obj?.display}</p>
+                    </div>
+                  ) : null}
+                </div>
+              ))}
+            {type === 'members' &&
+              options
+                .slice(0, seeMore ? 3 : options.length)
+                .map((obj: any, idx: number) => (
+                  <div key={idx} className={styles['option']}>
+                    <div className={styles['member-container']}>
+                      <Link href={`/profile/` + obj?.slug}>{obj?.name}</Link>
+                      {obj?.admin === true && (
+                        <button className={styles['admin-btn']}>
+                          Location Admin
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+            {type === 'members' && options.length > 3 && (
+              <div className={styles['option'] + ` ${styles['mb-15']}`}>
+                <div className={styles['member-container']}>
+                  <p
+                    onClick={() => {
+                      setSeeMore((prev) => !prev)
+                    }}
+                    className={styles['see-more']}
+                  >
+                    {seeMore ? 'See all' : 'See less'}
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        </>
       )}
     </div>
   )

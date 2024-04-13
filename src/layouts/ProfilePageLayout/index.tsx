@@ -31,7 +31,7 @@ const ProfileLayout: React.FC<Props> = ({
   expandAll,
   navigationTabs,
   titleError,
-  noDataChecker
+  noDataChecker,
 }) => {
   const router = useRouter()
   const dispatch = useDispatch()
@@ -40,7 +40,7 @@ const ProfileLayout: React.FC<Props> = ({
     (state: RootState) => state.user,
   )
   const [showSmallHeader, setShowSmallHeader] = useState(false)
-
+  const { activeModal } = useSelector((state: RootState) => state.modal)
   useEffect(() => {
     if (
       isLoggedIn &&
@@ -64,7 +64,9 @@ const ProfileLayout: React.FC<Props> = ({
   useEffect(() => {
     if (!isLoggedIn) {
       dispatch(openModal({ type: 'auth', closable: true }))
-    } else dispatch(closeModal())
+    } else if (activeModal !== 'user-onboarding') {
+      dispatch(closeModal())
+    }
   }, [isLoggedIn])
 
   function checkScroll() {
@@ -82,13 +84,24 @@ const ProfileLayout: React.FC<Props> = ({
   return (
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
-      <ProfileHeader noDataChecker={noDataChecker} titleError={titleError} data={data.pageData} />
+      <ProfileHeader
+        noDataChecker={noDataChecker}
+        titleError={titleError}
+        data={data.pageData}
+      />
       <div className={styles['nav']}>
-        <ProfileNavigationLinks navigationTabs={navigationTabs} activeTab={activeTab} />
+        <ProfileNavigationLinks
+          navigationTabs={navigationTabs}
+          activeTab={activeTab}
+        />
       </div>
 
       {showSmallHeader && (
-        <ProfileHeaderSmall navigationTabs={navigationTabs} data={data.pageData} activeTab={activeTab} />
+        <ProfileHeaderSmall
+          navigationTabs={navigationTabs}
+          data={data.pageData}
+          activeTab={activeTab}
+        />
       )}
 
       <div

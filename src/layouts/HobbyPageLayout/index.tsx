@@ -19,6 +19,7 @@ import Image from 'next/image'
 import HobbyNavigationLinks from '@/components/HobbyPage/HobbyHeader/HobbyNavigationLinks'
 import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
 import { openModal } from '@/redux/slices/modal'
+import { SetLinkviaAuth } from '@/redux/slices/user'
 type Props = {
   activeTab: HobbyPageTabs
   data: any
@@ -97,7 +98,10 @@ const HobbyPageLayout: React.FC<Props> = ({
   const handleMemberClick = (user: any) => {
     if (isLoggedIn) {
       router.push(`/profile/${user.profile_url}`)
-    } else dispatch(openModal({ type: 'auth', closable: true }))
+    } else {
+      dispatch(SetLinkviaAuth(`/profile/${user.profile_url}`))
+      dispatch(openModal({ type: 'auth', closable: true }))
+    }
   }
   return (
     <>
