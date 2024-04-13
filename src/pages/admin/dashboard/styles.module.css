@@ -33,7 +33,7 @@
 
 .resultItem {
   display: flex;
-  justify-content: space-between;
+
   align-items: center;
   padding: 10px;
   border-bottom: 1px solid #eee;
@@ -42,7 +42,8 @@
 
 
 .middlebutton {
-
+  position: relative;;
+  width: 200px;
   flex-grow: 0;
   flex-shrink: 0;
 }
