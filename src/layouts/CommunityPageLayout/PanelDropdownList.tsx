@@ -10,8 +10,8 @@ interface PanelDropdownListProps {
   type?: string
   inviteFunction?: () => Promise<void>
   inviteError?: string
-  inviteTextChangeFunc?:(arg0:any)=>void
-  inviteText?:string
+  inviteTextChangeFunc?: (arg0: any) => void
+  inviteText?: string
 }
 
 const PanelDropdownList: FC<PanelDropdownListProps> = ({
@@ -21,7 +21,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
   inviteFunction,
   inviteError,
   inviteText,
-  inviteTextChangeFunc
+  inviteTextChangeFunc,
 }) => {
   const [open, setOpen] = useState(false)
   const router = useRouter()
@@ -83,12 +83,13 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
           {type === 'members' && (
             <div
               className={
-                styles['member-invite'] + ` ${styles['invite-wrapper']} ${styles['pos-relative']}`
+                styles['member-invite'] +
+                ` ${styles['invite-wrapper']} ${styles['pos-relative']}`
               }
             >
               <section>
                 <input
-                  placeholder="@"
+                  placeholder=""
                   type="text"
                   name=""
                   id=""
@@ -98,9 +99,9 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                 />
                 <FilledButton onClick={inviteFunction}>Invite</FilledButton>
               </section>
-                {inviteError !== '' && (
-                  <span className={styles['error-invite']}>{inviteError}</span>
-                )}
+              {inviteError !== '' && (
+                <span className={styles['error-invite']}>{inviteError}</span>
+              )}
             </div>
           )}
           <div
@@ -144,7 +145,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                     </div>
                   </div>
                 ))}
-            {type === 'members' && options.length>3 && (
+            {type === 'members' && options.length > 3 && (
               <div className={styles['option'] + ` ${styles['mb-15']}`}>
                 <div className={styles['member-container']}>
                   <p
@@ -153,7 +154,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                     }}
                     className={styles['see-more']}
                   >
-                    {seeMore?"See all":"See less"}
+                    {seeMore ? 'See all' : 'See less'}
                   </p>
                 </div>
               </div>

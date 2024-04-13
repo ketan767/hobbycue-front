@@ -154,7 +154,6 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
     if (res?.data.success) {
       console.log(res.data)
       dispatch(closeModal())
-      window.location.reload()
     }
   }
   //   console.log('user', user)
@@ -186,9 +185,9 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
     setStrength(strengthNum)
   }, [newPassword, inputValidation])
 
-  useEffect(()=>{
+  useEffect(() => {
     otpRef.current?.focus()
-  },[])
+  }, [])
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
