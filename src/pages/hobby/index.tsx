@@ -44,8 +44,8 @@ type HobbyType = {
 }
 
 const ALlHobbies: React.FC<Props> = ({ data }) => {
-  console.warn({data});
-  
+  console.warn({ data })
+
   const [categories, setCategories] = useState([])
   const [subCategories, setSubCategories] = useState([])
   const [hobbyData, setHobbyData] = useState<HobbyType[]>([])
@@ -75,7 +75,14 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
     }
     if (isEmptyField(e.target.value)) return setHobbyDropdownList([])
 
-    let filteredHobbies = [...data.hobbies,...data.genre.map((obj:any)=>({...obj?.genre[0],category:obj?.category,sub_category:obj?.sub_category}))];
+    let filteredHobbies = [
+      ...data.hobbies,
+      ...data.genre.map((obj: any) => ({
+        ...obj?.genre[0],
+        category: obj?.category,
+        sub_category: obj?.sub_category,
+      })),
+    ]
     const normalizedSearchTerm = e.target.value.toLowerCase()
 
     if (filterData.category) {
@@ -146,7 +153,14 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
     setFilterCategories(data.categories)
     setSubCategories(data.sub_categories)
     setFilterSubCategories(data.sub_categories)
-    setHobbyData([...data.hobbies,...data.genre.map((obj:any)=>({...obj?.genre[0],category:obj?.category,sub_category:obj?.sub_category}))])
+    setHobbyData([
+      ...data.hobbies,
+      ...data.genre.map((obj: any) => ({
+        ...obj?.genre[0],
+        category: obj?.category,
+        sub_category: obj?.sub_category,
+      })),
+    ])
   }
 
   useEffect(() => {
@@ -155,11 +169,18 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
     setFilterCategories(data.categories)
     setSubCategories(data.sub_categories)
     setFilterSubCategories(data.sub_categories)
-    setHobbyData([...data.hobbies,...data.genre.map((obj:any)=>({...obj?.genre[0],category:obj?.category,sub_category:obj?.sub_category}))])
+    setHobbyData([
+      ...data.hobbies,
+      ...data.genre.map((obj: any) => ({
+        ...obj?.genre[0],
+        category: obj?.category,
+        sub_category: obj?.sub_category,
+      })),
+    ])
   }, [])
 
   const router = useRouter()
-  
+
   useEffect(() => {
     // Save scroll position when navigating away from the page
     const handleRouteChange = () => {
@@ -194,7 +215,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
 
   const isMobile = useMediaQuery('(max-width:1100px)')
 
-  console.log({categories,subCategories,hobbyData});
+  console.log({ categories, subCategories, hobbyData })
 
   return (
     <div className={styles['all-hobby-wrapper']}>
@@ -217,12 +238,12 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                     value={filterData.category}
                     onChange={(e) =>
                       setFilterData((prev) => {
-                        if(e.target.value!==prev.category){
-                          setHobbyInputValue('');
+                        if (e.target.value !== prev.category) {
+                          setHobbyInputValue('')
                           return {
                             category: e.target.value,
                             subCategory: '',
-                            hobby:''
+                            hobby: '',
                           }
                         }
                         if (e.target.value === '') {
@@ -256,9 +277,13 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                     value={filterData.subCategory}
                     onChange={(e) =>
                       setFilterData((prev) => {
-                        if(e.target.value!==prev.subCategory){
-                          setHobbyInputValue('');
-                          return { ...prev, subCategory: e.target.value, hobby:'' }
+                        if (e.target.value !== prev.subCategory) {
+                          setHobbyInputValue('')
+                          return {
+                            ...prev,
+                            subCategory: e.target.value,
+                            hobby: '',
+                          }
                         }
                         return { ...prev, subCategory: e.target.value }
                       })
@@ -359,19 +384,19 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                       value={filterData.category}
                       onChange={(e) =>
                         setFilterData((prev) => {
-                          if(e.target.value!==prev.category){
-                            setHobbyInputValue('');
+                          if (e.target.value !== prev.category) {
+                            setHobbyInputValue('')
                             return {
                               category: e.target.value,
                               subCategory: '',
-                              hobby:''
+                              hobby: '',
                             }
                           }
                           if (e.target.value === '') {
                             return {
                               category: e.target.value,
                               subCategory: '',
-                              hobby:''
+                              hobby: '',
                             }
                           }
                           return { ...prev, category: e.target.value }
@@ -398,9 +423,13 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                       value={filterData.subCategory}
                       onChange={(e) =>
                         setFilterData((prev) => {
-                          if(e.target.value!==prev.subCategory){
-                            setHobbyInputValue('');
-                            return { ...prev, subCategory: e.target.value, hobby:'' }
+                          if (e.target.value !== prev.subCategory) {
+                            setHobbyInputValue('')
+                            return {
+                              ...prev,
+                              subCategory: e.target.value,
+                              hobby: '',
+                            }
                           }
                           return { ...prev, subCategory: e.target.value }
                         })
@@ -552,7 +581,10 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                           <Link
                                             key={hobby.slug}
                                             href={`/hobby/${hobby.slug}`}
-                                            className={`${filterData.hobby===hobby?._id&&styles['searched-hobby-id']}`}
+                                            className={`${
+                                              filterData.hobby === hobby?._id &&
+                                              styles['searched-hobby-id']
+                                            }`}
                                           >
                                             <span>{hobby.display}, </span>
                                           </Link>
@@ -590,9 +622,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     `level=3&populate=category,sub_category,tags&limit=500`,
   )
 
-  const l2hobbies = await getAllHobbies(`level=2&populate=category,sub_category,tags`);
+  const l2hobbies = await getAllHobbies(
+    `level=2&populate=category,sub_category,tags`,
+  )
   // const l4hobbies = await getAllHobbies(`level=4&populate=category,sub_category,tags`);
-  const l5hobbies = await getAllHobbies(`level=5&populate=genre`);
+  const l5hobbies = await getAllHobbies(`level=5&populate=genre`)
 
   return {
     props: {
@@ -600,9 +634,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
         categories: category.res?.data.hobbies,
         sub_categories: subCategory.res?.data.hobbies,
         hobbies: hobby.res?.data.hobbies,
-        l2hobbies:l2hobbies.res?.data?.hobbies,
+        l2hobbies: l2hobbies.res?.data?.hobbies,
         // l4hobbies:l4hobbies.res?.data,
-        genre:l5hobbies.res?.data?.hobbies
+        genre: l5hobbies.res?.data?.hobbies,
       },
     },
   }

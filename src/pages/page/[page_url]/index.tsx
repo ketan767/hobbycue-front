@@ -93,6 +93,19 @@ const ListingHome: React.FC<Props> = (props) => {
   return (
     <>
       <Head>
+        <meta
+          property="og:image"
+          content={`${props?.data?.pageData?.profile_image}`}
+        />
+        <meta
+          property="og:image:secure_url"
+          content={`${props?.data?.pageData?.profile_image}`}
+        />
+        <meta
+          property="og:description"
+          content={`${props?.data?.pageData?.description}`}
+        />
+        <meta property="og:image:alt" content="Profile picture" />
         <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
       </Head>
 

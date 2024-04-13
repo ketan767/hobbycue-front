@@ -7,10 +7,11 @@ import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded'
 import ShareIcon from '@/assets/svg/share-outlined.svg'
 import DefaultProfile from '@/assets/svg/default-images/default-hobbies.svg'
 import MailIcon from '@/assets/svg/mailicon.svg'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { openModal, updateShareUrl } from '@/redux/slices/modal'
 import HobbyNavigationLinks from './HobbyNavigationLinks'
 import FilledButton from '@/components/_buttons/FilledButton'
+import { RootState } from '@/redux/store'
 
 type Props = {
   activeTab: HobbyPageTabs
@@ -20,13 +21,18 @@ type Props = {
 const HobbyPageHeader = ({ activeTab, data }: Props) => {
   // console.log('🚀 ~ file: HobbyHeader.tsx:22 ~ HobbyPageHeader ~ data:', data)
   const dispatch = useDispatch()
+  const { user, isLoggedIn } = useSelector((state: RootState) => state.user)
 
   const handleShare = () => {
     dispatch(updateShareUrl(window.location.href))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
   }
   const handleAddhobby = () => {
-    dispatch(openModal({ type: 'profile-hobby-edit', closable: true }))
+    if (isLoggedIn) {
+      dispatch(openModal({ type: 'profile-hobby-edit', closable: true }))
+    } else {
+      dispatch(openModal({ type: 'auth', closable: true }))
+    }
   }
 
   return (

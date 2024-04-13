@@ -330,6 +330,7 @@
 
 .hobbies-members div {
   padding-top: 2px;
+  cursor: pointer;
 }
 
 .hobbies-members div:hover {

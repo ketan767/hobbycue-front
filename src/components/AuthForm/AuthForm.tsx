@@ -70,7 +70,7 @@ const AuthForm: React.FC<Props> = (props) => {
   const passwordRef = useRef<HTMLInputElement>(null)
 
   const { authFormData } = useSelector((state: RootState) => state.modal)
-  const { user } = useSelector((state: RootState) => state.user)
+  const { user, linkviaAuth } = useSelector((state: RootState) => state.user)
   const [selectedTab, setSelectedTab] = useState<tabs>('sign-in')
   const [showValidationConditions, setShowValidationConditions] =
     useState(false)
@@ -275,10 +275,19 @@ const AuthForm: React.FC<Props> = (props) => {
         dispatch(openModal({ type: 'user-onboarding', closable: true }))
       }
       const { err: error, res: response } = await getMyProfileDetail()
-      if (response?.data?.data?.user?.is_onboarded) {
-        router.push('/community')
+      if (router.pathname === '/') {
+        if (response?.data?.data?.user?.is_onboarded) {
+          console.warn('push to community')
+          router.push('/community')
+        } else {
+          router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
+        }
       } else {
-        router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
+        if (linkviaAuth) {
+          router.push(linkviaAuth)
+        } else {
+          router.reload()
+        }
       }
     }
   }

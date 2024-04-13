@@ -280,7 +280,11 @@ const ProfileAboutEditModal: React.FC<Props> = ({
         if (event?.srcElement?.id === 'skipSvg') {
           onComplete?.()
           return
-        } else if (event?.srcElement?.className?.includes('ql-editor')) {
+        } else if (
+          typeof event?.srcElement?.className?.includes === 'function' &&
+          event?.srcElement?.className?.includes('ql-editor') ||
+          event?.srcElement?.tagName === "svg"
+        ) {
           return
         } else {
           nextButtonRef.current?.click()

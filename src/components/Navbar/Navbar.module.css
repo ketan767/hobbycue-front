@@ -454,6 +454,7 @@
   .left-0{
     left: 0;
     position: absolute;
+    width: calc(100% - 176px);
   }
 
   .mobile-search-input-visible {

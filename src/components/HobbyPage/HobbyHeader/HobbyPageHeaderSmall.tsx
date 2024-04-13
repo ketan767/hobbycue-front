@@ -12,8 +12,9 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import DefaultProfile from '@/assets/svg/default-images/default-hobbies.svg'
 import { openModal, updateShareUrl } from '@/redux/slices/modal'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import FilledButton from '@/components/_buttons/FilledButton'
+import { RootState } from '@/redux/store'
 
 type Props = {
   activeTab: HobbyPageTabs
@@ -32,15 +33,19 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
     'blogs',
   ]
   const dispatch = useDispatch()
+  const { user, isLoggedIn } = useSelector((state: RootState) => state.user)
   const handleShare = () => {
     dispatch(updateShareUrl(window.location.href))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
   }
 
   const handleAddhobby = () => {
-    dispatch(openModal({ type: 'profile-hobby-edit', closable: true }))
+    if (isLoggedIn) {
+      dispatch(openModal({ type: 'profile-hobby-edit', closable: true }))
+    } else {
+      dispatch(openModal({ type: 'auth', closable: true }))
+    }
   }
-
   return (
     <>
       {/* Page Header  */}

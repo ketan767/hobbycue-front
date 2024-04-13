@@ -164,7 +164,10 @@ const ListingAboutEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        if (event?.srcElement?.className?.includes('ql-editor')) {
+        if(event?.srcElement?.tagName === "svg"){
+          return;
+        }
+        else if (typeof event?.srcElement?.className?.includes === "function" && event?.srcElement?.className?.includes('ql-editor')) {
           return
         } else {
           nextButtonRef.current?.click()

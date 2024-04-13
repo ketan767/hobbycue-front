@@ -95,7 +95,23 @@ const CommunityLayout: React.FC<Props> = ({
 
   const [inviteBtnLoader, setInviteBtnLoader] = useState(false)
   const [trendingHobbies, setTrendingHobbies] = useState([])
+  const [seeMoreMembers, setSeeMoreMembers] = useState(true)
+  const sampleMembersData = [
+    { name: 'Aditya', slug: '/ad', admin: true },
+    { name: 'Sam', slug: '/ad' },
+    { name: 'Joe', slug: '/ad' },
+    { name: 'Biden', slug: '/ad' },
+    { name: 'Donald', slug: '/ad' },
+    { name: 'Trump', slug: '/ad' },
+    { name: 'Vivek', slug: '/ad' },
+    { name: 'Ramaswamy', slug: '/ad' },
+  ]
   const panelListData = [
+    {
+      name: 'Members',
+      options: sampleMembersData,
+      type: 'members',
+    },
     {
       name: 'Trending Hobbies',
       options: trendingHobbies,
@@ -452,18 +468,17 @@ const CommunityLayout: React.FC<Props> = ({
           if (visibilityArr[1]) {
             console.log({ visibilityArr })
             if (visibilityArr[1].display) {
-              if (filters.location === null) {
-                dispatch(
-                  setFilters({
-                    location:
-                      visibilityArr[1]?.display?.split(' ')[0] ||
-                      'All locations',
-                  }),
-                )
-                setSelectedLocation(
-                  visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
-                )
-              }
+              // if (filters.location === null) {
+              dispatch(
+                setFilters({
+                  location:
+                    visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
+                }),
+              )
+              setSelectedLocation(
+                visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
+              )
+              // }
             }
           }
           setVisibilityData(visibilityArr)
@@ -512,7 +527,26 @@ const CommunityLayout: React.FC<Props> = ({
         })
       }
       setVisibilityData(visibilityArr)
+      if (visibilityArr[1]) {
+        console.log({ visibilityArr })
+        if (visibilityArr[1].display) {
+          // if (filters.location === null) {
+          dispatch(
+            setFilters({
+              location:
+                visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
+            }),
+          )
+          setSelectedLocation(
+            visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
+          )
+          // }
+        }
+      }
     }
+    setSelectedHobby('')
+    setSelectedGenre('')
+    dispatch(setFilters({ hobby: '', genre: '' }))
   }, [activeProfile])
 
   const updateFilterLocation = (val: any) => {
@@ -968,11 +1002,22 @@ const CommunityLayout: React.FC<Props> = ({
                 {showPanel && (
                   <section className={styles['dropdowns-panel']}>
                     {panelListData.map(
-                      (obj: { name: string; options: any[] }, idx: number) => (
+                      (
+                        obj: { name: string; options: any[]; type?: string },
+                        idx: number,
+                      ) => (
                         <PanelDropdownList
                           name={obj.name}
                           options={obj.options}
                           key={idx}
+                          type={obj?.type}
+                          inviteFunction={Invitecommunity}
+                          inviteError={errorMessage}
+                          inviteTextChangeFunc={(e: any) => {
+                            setEmail(e.target.value)
+                            setErrorMessage('')
+                          }}
+                          inviteText={email}
                         />
                       ),
                     )}
@@ -1084,7 +1129,10 @@ const CommunityLayout: React.FC<Props> = ({
                   value={email}
                   placeholder="Email"
                   name="society"
-                  onChange={(e: any) => setEmail(e.target.value)}
+                  onChange={(e: any) => {
+                    setEmail(e.target.value)
+                    setErrorMessage('')
+                  }}
                   type="email"
                   id=""
                   className={errorMessage !== '' ? styles['error-input'] : ''}
@@ -1105,6 +1153,35 @@ const CommunityLayout: React.FC<Props> = ({
                   <span className={styles['error-invite']}>{errorMessage}</span>
                 )}
               </section>
+            </section>
+
+            <section className={styles['desktop-members-conatiner']}>
+              <header>Members</header>
+              {sampleMembersData
+                .slice(0, seeMoreMembers ? 3 : sampleMembersData.length)
+                .map((obj, idx) => (
+                  <div key={idx} className={styles['member']}>
+                    <div className={styles['img-name']}>
+                      <Image src={defaultUserIcon} alt="" />
+                      <p>{obj.name}</p>
+                    </div>
+                    {obj.admin && (
+                      <button className={styles['admin-btn']}>
+                        Location Admin
+                      </button>
+                    )}
+                  </div>
+                ))}
+              {sampleMembersData.length > 3 && (
+                <div
+                  onClick={() => {
+                    setSeeMoreMembers((prev) => !prev)
+                  }}
+                  className={styles['see-all']}
+                >
+                  <p>{seeMoreMembers ? 'See all' : 'See less'}</p>
+                </div>
+              )}
             </section>
 
             <section

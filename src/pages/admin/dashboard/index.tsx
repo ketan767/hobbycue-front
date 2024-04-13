@@ -78,41 +78,49 @@ const AdminDashboard: React.FC = () => {
       </form>
 
       <div className={styles.resultsContainer}>
-        {searchResults.map((user, index) => (
-          <div className={styles.resultItem} key={index}>
-            <div className={styles.avatarContainer}>
-              {user.profile_image ? (
-                <img
-                  src={user.profile_image}
-                  alt={`${user.full_name}'s `}
-                  width={64}
-                  height={64}
-                  className={styles.avatarImage}
-                />
-              ) : (
-                <div
-                  className={`${styles['img']} default-people-listing-icon`}
-                ></div>
-              )}
-            </div>
-            <div className={styles.detailsContainer}>
-              <div className={styles.userName}>{user?.full_name}</div>
-            </div>
-            <div className={styles.middlebutton}>
-              {user.facebook.id ? 'Facebook' : user.google.id ? 'Google' : ''}
-            </div>
-            <button
-              type="submit"
-              className={styles.searchButton}
-              onClick={() => {
-                setEmail(user.email)
-                resetbtn()
-              }}
-            >
-              Reset password
-            </button>
-          </div>
-        ))}
+        <table className={styles.resultsTable}>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Login Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            {searchResults.map((user, index) => (
+              <tr key={index}>
+                <td>
+                  <div className={styles.resultItem}>
+                    <div className={styles.avatarContainer}>
+                      {user.profile_image ? (
+                        <img
+                          src={user.profile_image}
+                          alt={`${user.full_name}'s profile`}
+                          width={64}
+                          height={64}
+                          className={styles.avatarImage}
+                        />
+                      ) : (
+                        <div
+                          className={`${styles['img']} default-people-listing-icon`}
+                        ></div>
+                      )}
+                    </div>
+                    <div className={styles.detailsContainer}>
+                      <div className={styles.userName}>{user?.full_name}</div>
+                    </div>
+                  </div>
+                </td>
+                <td className={styles.middlebutton}>
+                  {user.facebook.id
+                    ? 'Facebook'
+                    : user.google.id
+                    ? 'Google'
+                    : ''}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   )

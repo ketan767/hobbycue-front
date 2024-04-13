@@ -14,6 +14,7 @@ export interface AuthState {
   addressToEdit: any
   showProfileError: Boolean,
   CurrentUrl: String
+  linkviaAuth: string
 }
 
 const initialState: AuthState = {
@@ -29,6 +30,7 @@ const initialState: AuthState = {
   addressToEdit: null,
   showProfileError: false,
   CurrentUrl: '',
+  linkviaAuth:''
 }
 
 const authSlice = createSlice({
@@ -71,6 +73,9 @@ const authSlice = createSlice({
     UpdateCurrentUrl(state, action: PayloadAction<string>) {
       state.CurrentUrl = action.payload;
     },
+    SetLinkviaAuth(state, action: PayloadAction<string>) {
+      state.linkviaAuth = action.payload;
+    },
   },
 })
 
@@ -84,6 +89,7 @@ export const {
   updateProfileData,
   showProfileError,
   UpdateCurrentUrl,
+  SetLinkviaAuth,
 } = authSlice.actions
 
 export default authSlice.reducer

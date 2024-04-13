@@ -62,6 +62,7 @@ const ListingContactToOwner: React.FC<Props> = ({
     to: listingPageData?.public_email,
   })
   const subref = useRef<HTMLInputElement>(null)
+  const [isTextAreaActive, setTextAreaActive] = useState(false)
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backDisabled, SetBackDisabled] = useState(false)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
@@ -127,6 +128,14 @@ const ListingContactToOwner: React.FC<Props> = ({
     }
   }
 
+  const handleTextAreaFocus = () => {
+    setTextAreaActive(true)
+  }
+
+  const handleTextAreaBlur = () => {
+    setTextAreaActive(false)
+  }
+
   const handleSubmit = async () => {
     if (!data.sub || data.sub.trim() === '') {
       setInputErrs((prev) => {
@@ -190,7 +199,11 @@ const ListingContactToOwner: React.FC<Props> = ({
     subref?.current?.focus()
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        handleSubmit()
+        if (isTextAreaActive) {
+          return
+        } else {
+          nextButtonRef.current?.click()
+        }
       }
     }
 
@@ -264,6 +277,8 @@ const ListingContactToOwner: React.FC<Props> = ({
                 name="message"
                 onChange={handleTextAreaChange}
                 value={data.message}
+                onFocus={handleTextAreaFocus}
+                onBlur={handleTextAreaBlur}
               />
             </div>
           </div>
