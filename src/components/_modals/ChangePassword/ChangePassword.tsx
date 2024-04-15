@@ -196,13 +196,18 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
             <label className={styles.label}>Current Password</label>
             <div
               className={`${styles['input-box']} ${
-                errors.currentPassword ? styles['input-error'] : ''
+                errors.currentPassword ? styles['input-box-error'] : ''
               }`}
             >
               <TextField
-                className={'textFieldClass'}
+                className={`textFieldClass`}
                 inputRef={currentPasswordRef}
                 fullWidth
+                style={
+                  !(errors.currentPassword === '')
+                    ? { border: '1px solid red', borderRadius: '8px' }
+                    : {}
+                }
                 required
                 placeholder="Current Password"
                 type={showcurrPassword ? 'text' : 'password'}
@@ -236,13 +241,18 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
 
             <div
               className={`${styles['input-box']} ${
-                errors.newPassword ? styles['input-error'] : ''
+                errors.newPassword ? styles['input-box-error'] : ''
               }`}
             >
               <TextField
-                className={'textFieldClass'}
+                className={`textFieldClass`}
                 fullWidth
                 required
+                style={
+                  !(errors.newPassword === '')
+                    ? { border: '1px solid red', borderRadius: '8px' }
+                    : {}
+                }
                 inputRef={newPasswordRef}
                 placeholder="New Password"
                 type={showPassword ? 'text' : 'password'}
@@ -319,13 +329,18 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
             <label className={styles.label}>Confirm New Password</label>
             <div
               className={`${styles['input-box']} ${
-                errors.confirmPassword ? styles['input-error'] : ''
+                errors.confirmPassword ? styles['input-box-error'] : ''
               }`}
             >
               <TextField
-                className={'textFieldClass'}
+                className={`textFieldClass`}
                 value={confirmPassword}
                 type={'password'}
+                style={
+                  !(errors.confirmPassword === '')
+                    ? { border: '1px solid red', borderRadius: '8px' }
+                    : {}
+                }
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm New Password"
                 inputRef={confirmPasswordRef}
