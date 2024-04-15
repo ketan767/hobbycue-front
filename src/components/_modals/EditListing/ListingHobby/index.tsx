@@ -576,17 +576,34 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   const AddButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
     const handleKeyPress = (event: any) => {
-      // if (event.key === 'Enter') {
-      //   nextButtonRef.current?.focus()
-      // }
+      if (event.key === 'Enter') {
+        if (
+          event?.srcElement?.tagName?.toLowerCase() === 'svg' ||
+          event?.srcElement?.tagName?.toLowerCase() === 'img' ||
+          event?.srcElement?.tagName?.toLowerCase() === 'input' 
+        ) {
+          return;
+        }
+        if (
+          event?.srcElement?.classList &&
+          (event?.srcElement?.classList?.contains('MuiSelect-select') ||
+            event?.srcElement?.classList?.contains('Mui-selected')||
+            event?.srcElement?.classList?.contains('MuiMenuItem-root'))
+        ) {
+          return;
+        }
+        // console.warn({ event })
+        // return
+        nextButtonRef.current?.click()
+      }
     }
-    hobbyRef.current?.focus()
+
     window.addEventListener('keydown', handleKeyPress)
 
     return () => {
       window.removeEventListener('keydown', handleKeyPress)
     }
-  }, [])
+  }, []);
   const HandleSaveError = async () => {
     if (hobbiesList.length === 0) {
       setIsError(true)

@@ -25,6 +25,7 @@
   display: flex;
   justify-content: center;
   gap: 27px;
+  z-index: 20;
 }
 
 .step-indicators .step {
@@ -37,6 +38,25 @@
   background-color: rgb(var(--primary-100-rgb));
   cursor: pointer;
 }
+
+.step:focus-visible{
+  border: none;
+  outline: none;
+  position: relative;
+}
+.step:focus-visible::before{
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    background-color: transparent;
+    border: 1px solid rgb(var(--primary-100-rgb));
+    border-radius: 50%;
+
+}
+
 .modal-heading-hr {
   display: none;
 }
