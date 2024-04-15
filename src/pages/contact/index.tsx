@@ -326,6 +326,7 @@ const Contact: React.FC<Props> = ({}) => {
           message: 'Something went wrong',
         })
       } else {
+        setData((prev)=>({...prev,message:{value:"",error:null}}))
         setSnackbar({
           display: true,
           type: 'success',
@@ -395,6 +396,9 @@ const Contact: React.FC<Props> = ({}) => {
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       if (event.key === 'Enter') {
+        if(event?.srcElement && (event?.srcElement as Element)?.tagName.toLowerCase() === "textarea"){
+          return
+        }
         submitBtnRef.current?.click()
       }
     }
@@ -576,6 +580,36 @@ const Contact: React.FC<Props> = ({}) => {
                               setWpSelectedCountryCode(selectedCountryCode)
                             }
                             setTick(!tick)
+                          }}
+                          onKeyDown={(e)=>{
+                            if(e.key==="Enter"){
+                              e.preventDefault();
+                              e.stopPropagation();
+                              if (tick === true) {
+                                setData((prev) => {
+                                  return {
+                                    ...prev,
+                                    whatsapp_number: {
+                                      number: '',
+                                      prefix: '+91',
+                                    },
+                                  }
+                                })
+                                setWpSelectedCountryCode('+91')
+                              } else {
+                                setData((prev) => {
+                                  return {
+                                    ...prev,
+                                    whatsapp_number: {
+                                      number: prev['phone'].number,
+                                      prefix: selectedCountryCode,
+                                    },
+                                  }
+                                })
+                                setWpSelectedCountryCode(selectedCountryCode)
+                              }
+                              setTick(!tick)
+                            }
                           }}
                         />{' '}
                       </div>
