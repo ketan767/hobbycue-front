@@ -170,4 +170,7 @@
     position: static;
     height: auto;
   }
+  .dual-section-wrapper {
+    height: 90vh;
+  }
 }
