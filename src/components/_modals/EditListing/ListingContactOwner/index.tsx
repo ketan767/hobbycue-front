@@ -201,7 +201,14 @@ const ListingContactToOwner: React.FC<Props> = ({
       if (event.key === 'Enter') {
         if (isTextAreaActive) {
           return
-        } else {
+        } 
+        else if(event?.srcElement?.tagName && 
+          event?.srcElement?.tagName?.toLowerCase()==="textarea" ||
+          event?.srcElement?.tagName?.toLowerCase()==="svg"
+        ){
+          return
+        }
+        else {
           nextButtonRef.current?.click()
         }
       }

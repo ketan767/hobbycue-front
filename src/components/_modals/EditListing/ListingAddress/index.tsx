@@ -271,7 +271,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
     if (onComplete) onComplete()
     else {
       window.location.reload()
-      dispatch(closeModal())
+      // dispatch(closeModal())
     }
     // }
   }

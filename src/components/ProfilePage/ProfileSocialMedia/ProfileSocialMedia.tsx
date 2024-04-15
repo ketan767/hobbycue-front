@@ -72,7 +72,7 @@ const ProfileSocialMediaSide = ({ data, expandData }: Props) => {
 
   return (
     <>
-      {isLoggedIn?<PageContentBox
+      <PageContentBox
         showEditButton={profileLayoutMode === 'edit'}
         onEditBtnClick={() =>
           dispatch(openModal({ type: 'social-media-edit', closable: true }))
@@ -86,7 +86,7 @@ const ProfileSocialMediaSide = ({ data, expandData }: Props) => {
             displayData && styles['display-mobile-flex']
           }`}
         >
-          {data?.social_media_urls && isLoggedIn && (
+          {data?.social_media_urls && (
             <>
               {Object.entries(data.social_media_urls).map(([key, url]) => {
                 let socialMediaName = ''
@@ -179,7 +179,7 @@ const ProfileSocialMediaSide = ({ data, expandData }: Props) => {
             </>
           )}
         </ul>
-      </PageContentBox>:null}
+      </PageContentBox>
     </>
   )
 }

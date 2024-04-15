@@ -1004,7 +1004,7 @@ const ListingPageMain: React.FC<Props> = ({
                     styles['display-desktop']
                   }${showSocialMedia ? ' ' + styles['display-mobile'] : ''}`}
                 >
-                  {data?.social_media_urls && isLoggedIn && (
+                  {data?.social_media_urls && (
                     <>
                       {Object.entries(data.social_media_urls).map(
                         ([key, url]) => {
@@ -1678,7 +1678,7 @@ const ListingPageMain: React.FC<Props> = ({
                   styles['display-desktop']
                 }${showSocialMedia ? ' ' + styles['display-mobile'] : ''}`}
               >
-                {data.social_media_urls && isLoggedIn && (
+                {data.social_media_urls && (
                   <>
                     {Object.entries(data.social_media_urls).map(
                       ([key, url]) => {
