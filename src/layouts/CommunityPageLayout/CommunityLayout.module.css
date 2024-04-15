@@ -6,7 +6,7 @@
 .community-left-aside,
 .community-right-aside {
   height: calc(
-    100vh - calc(var(--navbar-height-desktop) + var(--spacing-24)) - 1rem
+    100vh - calc(var(--navbar-height-desktop) + var(--spacing-24))
   );
   overflow: auto;
 }

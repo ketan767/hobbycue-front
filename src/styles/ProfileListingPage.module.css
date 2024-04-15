@@ -120,6 +120,7 @@ ul.contact-wrapper svg {
     column-gap: 25px;
     flex-wrap: wrap;
     justify-content: space-between;
+    min-height: 90vh;
   }
   .nav-mobile {
     display: initial;

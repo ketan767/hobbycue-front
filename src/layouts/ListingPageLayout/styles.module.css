@@ -168,6 +168,9 @@
   .display-flex-mobile {
     display: flex !important;
   }
+  .display-mobile-main {
+    height: 90vh;
+  }
 
   .expand-all {
     display: flex;
