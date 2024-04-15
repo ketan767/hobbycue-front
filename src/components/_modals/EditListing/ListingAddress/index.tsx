@@ -613,6 +613,17 @@ const ListingAddressEditModal: React.FC<Props> = ({
                     getLocation()
                     streetRef?.current?.focus()
                   }}
+                  tabIndex={0}
+                  onKeyDown={(e)=>{
+                    if(e.key==='Enter'){
+                      e.preventDefault();
+                      e.stopPropagation();
+                      getLocation();
+                      setTimeout(() => {
+                      streetRef?.current?.focus();
+                      }, 50);
+                    }
+                  }}
                 />
               </div>
               {ShowDropdown && dropdownList.length !== 0 && (

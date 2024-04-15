@@ -72,7 +72,7 @@ const ProfileSocialMediaSide = ({ data, expandData }: Props) => {
 
   return (
     <>
-      <PageContentBox
+      {isLoggedIn?<PageContentBox
         showEditButton={profileLayoutMode === 'edit'}
         onEditBtnClick={() =>
           dispatch(openModal({ type: 'social-media-edit', closable: true }))
@@ -179,7 +179,7 @@ const ProfileSocialMediaSide = ({ data, expandData }: Props) => {
             </>
           )}
         </ul>
-      </PageContentBox>
+      </PageContentBox>:null}
     </>
   )
 }

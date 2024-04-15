@@ -243,9 +243,11 @@ const CommunityLayout: React.FC<Props> = ({
     ) {
       params.append('_genre', selectedGenre)
     }
-    if (selectedGenre !== '') {
-      // don't remove it, somehow it is helping in fetching correct things according to hobby and genre
-    } else {
+    // if (selectedGenre !== '') {
+    //   // don't remove it, somehow it is helping in fetching correct things according to hobby and genre
+    // } 
+    else {
+      console.warn({selectedGenre,selectedHobby})
       activeProfile?.data?._hobbies.forEach((item: any) => {
         params.append('_hobby', item.hobby._id)
       })
@@ -465,22 +467,30 @@ const CommunityLayout: React.FC<Props> = ({
               })
             }
           })
-          if (visibilityArr[1]) {
-            console.log({ visibilityArr })
-            if (visibilityArr[1].display) {
-              // if (filters.location === null) {
+          // if (visibilityArr[1]) {
+          //   console.log({ visibilityArr })
+          //   if (visibilityArr[1].display) {
+          //     // if (filters.location === null) {
+          //     dispatch(
+          //       setFilters({
+          //         location:
+          //           visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
+          //       }),
+          //     )
+          //     setSelectedLocation(
+          //       visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
+          //     )
+          //     // }
+          //   }
+          // }
+
+          // added as for go live
               dispatch(
                 setFilters({
-                  location:
-                    visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
+                  location:'All Locations',
                 }),
               )
-              setSelectedLocation(
-                visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
-              )
-              // }
-            }
-          }
+              setSelectedLocation('All Locations',)
           setVisibilityData(visibilityArr)
         }
       }
@@ -527,22 +537,29 @@ const CommunityLayout: React.FC<Props> = ({
         })
       }
       setVisibilityData(visibilityArr)
-      if (visibilityArr[1]) {
-        console.log({ visibilityArr })
-        if (visibilityArr[1].display) {
-          // if (filters.location === null) {
-          dispatch(
-            setFilters({
-              location:
-                visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
-            }),
-          )
-          setSelectedLocation(
-            visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
-          )
-          // }
-        }
-      }
+      // if (visibilityArr[1]) {
+      //   console.log({ visibilityArr })
+      //   if (visibilityArr[1].display) {
+      //     // if (filters.location === null) {
+      //     dispatch(
+      //       setFilters({
+      //         location:
+      //           visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
+      //       }),
+      //     )
+      //     setSelectedLocation(
+      //       visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
+      //     )
+      //     // }
+      //   }
+      // }
+      //added as for go live
+        dispatch(
+          setFilters({
+            location: 'All Locations',
+          }),
+        )
+        setSelectedLocation('All Locations')
     }
     setSelectedHobby('')
     setSelectedGenre('')

@@ -337,8 +337,7 @@ const ListingPageMain: React.FC<Props> = ({
             </div>
           </PageContentBox>
           {/* Tags */}
-          {listingLayoutMode !== 'edit' &&
-          (!listingPagesRight || listingPagesRight.length === 0) ? null : (
+          {(
             <PageContentBox
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
@@ -980,9 +979,8 @@ const ListingPageMain: React.FC<Props> = ({
               </PageContentBox>
             )}
 
-            {listingLayoutMode !== 'edit' &&
-            (!listingPagesRight ||
-              listingPagesRight.length === 0) ? null : data?.type ===
+            {
+               data?.type ===
                 listingTypes.PROGRAM ||
               data?.type === listingTypes.PRODUCT ||
               data?.type === listingTypes.PLACE ||
@@ -1655,9 +1653,8 @@ const ListingPageMain: React.FC<Props> = ({
             </PageContentBox>
           )}
 
-          {listingLayoutMode !== 'edit' &&
-          (!listingPagesRight ||
-            listingPagesRight.length === 0) ? null : data?.type ===
+          {
+              data?.type ===
               listingTypes.PROGRAM ||
             data?.type === listingTypes.PRODUCT ||
             data?.type === listingTypes.PLACE ||

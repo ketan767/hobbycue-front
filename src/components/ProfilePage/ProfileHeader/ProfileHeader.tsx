@@ -67,7 +67,7 @@ const ProfileHeader: React.FC<Props> = ({
     }
   }
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
-  const { isLoggedIn, isAuthenticated } = useSelector(
+  const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
   const location = typeof window !== 'undefined' ? window.location.href : ''
@@ -280,6 +280,8 @@ const ProfileHeader: React.FC<Props> = ({
     )
   }
 
+  const itsMe = data?._id === user?._id;
+
   return (
     <>
       <div className={`${styles['container']}`}>
@@ -442,6 +444,7 @@ const ProfileHeader: React.FC<Props> = ({
               <FilledButton
                 className={styles.contactBtn}
                 onClick={handleContact}
+                disabled={itsMe}
               >
                 Contact
               </FilledButton>
@@ -588,7 +591,9 @@ const ProfileHeader: React.FC<Props> = ({
                     />
                   )}
             </div>
-            <FilledButton className={styles.contactBtn} onClick={handleContact}>
+            <FilledButton
+            disabled={itsMe}
+            className={styles.contactBtn} onClick={handleContact}>
               Contact
             </FilledButton>
           </div>
