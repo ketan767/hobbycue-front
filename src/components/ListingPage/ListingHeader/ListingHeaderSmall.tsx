@@ -221,7 +221,9 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
       <div className={`${styles['container']} ${styles['small']} `}>
         <header className={`site-container ${styles['header']}`}>
           {/* Profile Picture */}
-          <div className={styles['profile-img-wrapper']}>
+          <div
+            className={`${styles['profile-img-wrapper']} ${styles['profile-img-wrapper-small']}`}
+          >
             {data?.profile_image ? (
               <img
                 className={styles['img']}

@@ -53,6 +53,8 @@ cursor: pointer;
 .desktop-members-conatiner .member .img-name img{
   width: 24px;
   height: 24px;
+  border-radius: 50%;
+  border: 1px solid #8064A2;
 }
 
 .desktop-members-conatiner .member .img-name p{
