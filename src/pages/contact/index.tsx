@@ -106,15 +106,25 @@ const Contact: React.FC<Props> = ({}) => {
     const id = element?.id
     setWpSelectedCountryCode(countryData[id]?.phonePrefix)
   }
+  const isEmailValid = (email: string): boolean => {
+    // Regular expression for email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
 
   const handleInputChange = (event: any) => {
     const { name, value } = event.target
 
-    if((data.phone.error==='At least one mode of contact is required!'||data.public_email.error==='At least one mode of contact is required!')&&(name==='phone'||name==='public_email')){
+    if (
+      (data.phone.error === 'At least one mode of contact is required!' ||
+        data.public_email.error ===
+          'At least one mode of contact is required!') &&
+      (name === 'phone' || name === 'public_email')
+    ) {
       setData((prev) => ({
         ...prev,
-        phone:{...prev.phone,error:null},
-        public_email:{...prev.public_email,error:null},
+        phone: { ...prev.phone, error: null },
+        public_email: { ...prev.public_email, error: null },
         [name]: {
           ...prev[name as keyof ContactUsData],
           number: value || '',
@@ -215,8 +225,8 @@ const Contact: React.FC<Props> = ({}) => {
       }))
       // added this timeout because, on enter clicked this error is not showing, because enter makes a new line and changes textarea
       setTimeout(() => {
-      messageRef.current?.focus();
-      }, 100);
+        messageRef.current?.focus()
+      }, 100)
     }
     if (
       (!data.public_email.value || data.public_email.value.length === 0) &&
@@ -238,6 +248,17 @@ const Contact: React.FC<Props> = ({}) => {
           },
         }
       })
+    }
+    if (!isEmailValid(data.public_email.value)) {
+      setData((prev) => ({
+        ...prev,
+        public_email: {
+          ...prev.public_email,
+          error: 'Enter a valid email',
+        },
+      }))
+      inputEmailRef.current?.focus()
+      return
     }
     if (data.phone.number) {
       if (
@@ -326,7 +347,7 @@ const Contact: React.FC<Props> = ({}) => {
           message: 'Something went wrong',
         })
       } else {
-        setData((prev)=>({...prev,message:{value:"",error:null}}))
+        setData((prev) => ({ ...prev, message: { value: '', error: null } }))
         setSnackbar({
           display: true,
           type: 'success',
@@ -396,7 +417,10 @@ const Contact: React.FC<Props> = ({}) => {
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       if (event.key === 'Enter') {
-        if(event?.srcElement && (event?.srcElement as Element)?.tagName.toLowerCase() === "textarea"){
+        if (
+          event?.srcElement &&
+          (event?.srcElement as Element)?.tagName.toLowerCase() === 'textarea'
+        ) {
           return
         }
         submitBtnRef.current?.click()
@@ -581,10 +605,10 @@ const Contact: React.FC<Props> = ({}) => {
                             }
                             setTick(!tick)
                           }}
-                          onKeyDown={(e)=>{
-                            if(e.key==="Enter"){
-                              e.preventDefault();
-                              e.stopPropagation();
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault()
+                              e.stopPropagation()
                               if (tick === true) {
                                 setData((prev) => {
                                   return {
@@ -670,8 +694,8 @@ const Contact: React.FC<Props> = ({}) => {
                               setShowYouDropdown(true)
                               break
                             case 'Enter':
-                              e.preventDefault();
-                              e.stopPropagation();
+                              e.preventDefault()
+                              e.stopPropagation()
                               if (showYouDropdown) {
                                 if (focusedYou !== -1)
                                   setData((prev: any) => ({
@@ -780,8 +804,8 @@ const Contact: React.FC<Props> = ({}) => {
                               setShowRegDropdown(true)
                               break
                             case 'Enter':
-                              e.preventDefault();
-                              e.stopPropagation();
+                              e.preventDefault()
+                              e.stopPropagation()
                               if (showRegDropdown) {
                                 if (focusedReg !== -1)
                                   setData((prev: any) => ({

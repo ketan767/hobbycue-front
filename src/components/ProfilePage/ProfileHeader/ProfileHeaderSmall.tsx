@@ -20,6 +20,7 @@ import Tooltip from '@/components/Tooltip/ToolTip'
 import { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
 import Dropdown from './DropDown'
+import { SetLinkviaAuth } from '@/redux/slices/user'
 
 type Props = {
   activeTab: ProfilePageTabs
@@ -274,7 +275,15 @@ const ProfileHeaderSmall: React.FC<Props> = ({
                     e.preventDefault()
                     e.stopPropagation()
                     if (!isAuthenticated) {
+                      dispatch(
+                        SetLinkviaAuth(
+                          `/profile/${router.query.profile_url}/${
+                            tab !== 'home' ? tab : ''
+                          }`,
+                        ),
+                      )
                       dispatch(openModal({ type: 'auth', closable: true }))
+
                       return
                     } else {
                       if (navigationTabs) {

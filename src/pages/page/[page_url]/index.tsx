@@ -58,31 +58,43 @@ const ListingHome: React.FC<Props> = (props) => {
     setExpandAll(value)
     dispatch(updateListingMenuExpandAll(value))
   }
+  console.warn('warnnnnnnnnnnn', router)
 
   useEffect(() => {
-    // Save scroll position when navigating away from the page
     const handleRouteChange = () => {
       sessionStorage.setItem('scrollPositionlisting', window.scrollY.toString())
     }
 
-    // Restore scroll position when navigating back to the page
     const handleScrollRestoration = () => {
       const scrollPosition = sessionStorage.getItem('scrollPositionlisting')
       if (scrollPosition) {
-        window.scrollTo(0, parseInt(scrollPosition, 10))
+        const parsedScrollPosition = parseInt(scrollPosition, 10)
+        let adjustedScrollPosition = parsedScrollPosition
+
+        // Check screen width
+        if (window.innerWidth < 1100) {
+          adjustedScrollPosition -= 44 // Subtract 44 units if screen width is less than 1100px
+        }
+
+        // Scroll to adjusted position (ensure it's not negative)
+        window.scrollTo(
+          0,
+          adjustedScrollPosition >= 0 ? adjustedScrollPosition : 0,
+        )
+
         sessionStorage.removeItem('scrollPositionlisting')
       }
     }
 
     router.events.on('routeChangeStart', handleRouteChange)
-
     router.events.on('routeChangeComplete', handleScrollRestoration)
 
     return () => {
       router.events.off('routeChangeStart', handleRouteChange)
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
-  }, [])
+  }, [router.events])
+
   if (
     props?.data?.pageData?.admin !== user?._id &&
     props?.data?.pageData?.is_published !== true
@@ -104,6 +116,10 @@ const ListingHome: React.FC<Props> = (props) => {
         <meta
           property="og:description"
           content={`${props?.data?.pageData?.description}`}
+        />
+        <meta
+          property="og:url"
+          content={`${process.env.NEXT_PUBLIC_VERCEL_URL}/page/${props?.data?.pageData?.slug}`}
         />
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${props.data.pageData?.title} | HobbyCue`}</title>

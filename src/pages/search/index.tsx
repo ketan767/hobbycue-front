@@ -18,6 +18,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import User from '../../assets/svg/Search/User.svg'
 import styles from './styles.module.css'
+import { SetLinkviaAuth } from '@/redux/slices/user'
 
 type Props = {
   data?: any
@@ -260,6 +261,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
     if (isLoggedIn) {
       router.push(`profile/${profileUrl}`)
     } else {
+      dispatch(SetLinkviaAuth(`profile/${profileUrl}`))
       dispatch(openModal({ type: 'auth', closable: true }))
     }
   }
@@ -352,13 +354,18 @@ const MainContent: React.FC<SearchResultsProps> = ({
 
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{hobby.display}</div>
-                        <div className={styles.userTagline}>{`${
-                          hobby?.category?.display ? hobby.category.display : ''
-                        }${
-                          hobby?.sub_category?.display
-                            ? ' | ' + hobby.sub_category.display
-                            : ''
-                        }`}&nbsp;</div>
+                        <div className={styles.userTagline}>
+                          {`${
+                            hobby?.category?.display
+                              ? hobby.category.display
+                              : ''
+                          }${
+                            hobby?.sub_category?.display
+                              ? ' | ' + hobby.sub_category.display
+                              : ''
+                          }`}
+                          &nbsp;
+                        </div>
                         <div className={styles.hobbydescription}>
                           {hobby?.description}
                         </div>
@@ -480,8 +487,10 @@ const MainContent: React.FC<SearchResultsProps> = ({
                             } else {
                               return ' ' + item
                             }
-                          }) + (page._address?.city?` | ${page._address?.city}`:'') ||
-                            '\u00a0'}
+                          }) +
+                            (page._address?.city
+                              ? ` | ${page._address?.city}`
+                              : '') || '\u00a0'}
                         </div>
                       </div>
                     </div>
@@ -537,8 +546,10 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           {page?.tagline || '\u00a0'}
                         </div>
                         <div className={styles.userLocation}>
-                          {page.page_type + (page._address?.city?` | ${page._address?.city}`:'') ||
-                            '\u00a0'}
+                          {page.page_type +
+                            (page._address?.city
+                              ? ` | ${page._address?.city}`
+                              : '') || '\u00a0'}
                         </div>
                       </div>
                     </div>
@@ -594,8 +605,10 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           {page?.tagline || '\u00a0'}
                         </div>
                         <div className={styles.userLocation}>
-                          {page.page_type + (page._address?.city?` | ${page._address?.city}`:'') ||
-                            '\u00a0'}
+                          {page.page_type +
+                            (page._address?.city
+                              ? ` | ${page._address?.city}`
+                              : '') || '\u00a0'}
                         </div>
                       </div>
                     </div>

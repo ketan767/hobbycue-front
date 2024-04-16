@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { openModal } from '@/redux/slices/modal'
+import { SetLinkviaAuth } from '@/redux/slices/user'
 
 type Props = {
   activeTab: HobbyPageTabs
@@ -22,9 +23,14 @@ const HobbyNavigationLinks: React.FC<Props> = ({ activeTab }) => {
     'blogs',
   ]
 
-  const handleTabClick = (tab: string) => {
+  const handleTabClick = (tab: any) => {
     if (!isLoggedIn && (tab === 'posts' || tab === 'links')) {
       dispatch(openModal({ type: 'auth', closable: true }))
+      dispatch(
+        SetLinkviaAuth(
+          `/hobby/${router.query.slug}/${tab !== 'home' ? tab : ''}`,
+        ),
+      )
     } else {
       router.push(`/hobby/${router.query.slug}/${tab !== 'home' ? tab : ''}`)
     }
