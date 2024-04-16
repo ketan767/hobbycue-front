@@ -688,7 +688,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
             <div onClick={handleSubmit}>
               <Image
                 src={NextIcon}
-                alt="next"
+                alt="back"
                 className="modal-mob-btn cancel"
               />
             </div>
@@ -699,7 +699,11 @@ const ListingGeneralEditModal: React.FC<Props> = ({
               onClick={handleSubmit}
               disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
             >
-              Save
+              {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'14px'} />
+              ) : (
+                'Save'
+              )}
             </button>
           )}
         </footer>
