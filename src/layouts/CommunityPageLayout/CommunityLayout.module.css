@@ -6,7 +6,7 @@
 .community-left-aside,
 .community-right-aside {
   height: calc(
-    100vh - calc(var(--navbar-height-desktop) + var(--spacing-24)) - 1rem
+    100vh - calc(var(--navbar-height-desktop) + var(--spacing-24))
   );
   overflow: auto;
 }
@@ -429,28 +429,30 @@ line-height: 20px; /* 142.857% */
 .navigation-links ul {
   list-style: none;
   display: flex;
-  justify-content: center;
-  gap: 38px;
-  align-items: center;
   padding: 0 0px;
 }
 .navigation-links a {
-  color: #6d747a;
+  color: #939CA3;
 }
 .navigation-links ul li {
-  flex: 1;
-  font-weight: 600;
-  font-size: 14px;
-  /* line-height: 16px; */
-  color: #6d747a;
-  cursor: pointer;
-  text-align: center;
-  /* padding: var(--spacing-16) 25px; */
-  position: relative;
-  max-width: 122px;  
-  line-height: 22px;
-    padding: 8px 5px;
+  display: flex;
+  width: 100%;
+  height: 40px;
+  padding: 8px 10px 0px 10px;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-width: 111px;  
   min-width: 90px;
+
+  color: var(--Grey-Dark, #939CA3);
+font-family: Poppins;
+font-size: 14px;
+font-style: normal;
+font-weight: 600;
+line-height: 22px; /* 157.143% */
+
+position: relative;
 }
 
 .navigation-links ul li.active a {
@@ -477,11 +479,17 @@ line-height: 20px; /* 142.857% */
   transition: transform 0.2s ease-in-out;
   width: 100%;
 }
+
+.navigation-links ul li:first-of-type{
+  margin-left: -10px;
+}
+
 .navigation-links ul li.active::after {
   content: '';
   bottom: 0;
-  left: 12.5%;
-  width: 75%;
+  left: 9.01%;
+  width: 81.98%;
+  max-width: 91px;
   height: 2px;
   position: absolute;
   background: #8064a2;
@@ -601,6 +609,7 @@ background: var(--Purple-3, #F7F5F9);
   display: flex;
   column-gap: 8px;
   align-items: center;
+  width: 100%;
 }
 
 .location-dropdown {
@@ -846,6 +855,9 @@ letter-spacing: 0.06px;
     
   min-width: unset;
   }
+  .navigation-links ul li:first-of-type{
+    margin-left: 0;
+  }
   /* .community-right-aside{
     display: none;
   } */
@@ -874,7 +886,7 @@ letter-spacing: 0.06px;
   }
 
   .hobby-select{
-    min-width: 129px;
+    min-width: calc(100vw - 32px - 68%);
   }
 
   .location-select > div {

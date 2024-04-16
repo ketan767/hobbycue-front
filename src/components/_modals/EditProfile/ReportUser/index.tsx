@@ -188,9 +188,14 @@ const UserReport: React.FC<Props> = ({
 
   useEffect(() => {
     const handleKeyPress = (event: any) => {
-      if (event.key === 'Enter' && !textAreaRef.current?.matches(':focus')) {
-        event.preventDefault()
-        handleSubmit()
+      if (event.key === 'Enter') {
+        if(event?.srcElement?.tagName && 
+          event?.srcElement?.tagName?.toLowerCase()==="textarea" ||
+          event?.srcElement?.tagName?.toLowerCase()==="svg"
+        ){
+          return
+        }
+        nextButtonRef.current?.click();
       }
     }
 
@@ -200,6 +205,12 @@ const UserReport: React.FC<Props> = ({
       window.removeEventListener('keydown', handleKeyPress)
     }
   }, [data?.description])
+
+  useEffect(() => {
+    if (textAreaRef.current) {
+      textAreaRef.current?.focus()
+    }
+  }, [textAreaRef.current])
 
   if (confirmationModal) {
     return (
@@ -211,12 +222,6 @@ const UserReport: React.FC<Props> = ({
       />
     )
   }
-
-  useEffect(() => {
-    if (textAreaRef.current) {
-      textAreaRef.current?.focus()
-    }
-  }, [textAreaRef.current])
 
   return (
     <>

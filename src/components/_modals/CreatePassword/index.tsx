@@ -12,7 +12,7 @@ import { isEmpty, isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import TextField from '@mui/material/TextField'
-import { closeModal } from '@/redux/slices/modal'
+import { closeModal, openModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
@@ -21,6 +21,7 @@ import { changePassword, resetPassword } from '@/services/auth.service'
 import IconButton from '@mui/material/IconButton'
 import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded'
 import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded'
+import { usePathname } from 'next/navigation'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -50,6 +51,7 @@ function validatePasswordConditions(password: string) {
 const SetPasswordModal: React.FC<Props> = ({}) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
+  const { onVerify } = useSelector((state: RootState) => state.modal)
   const [url, setUrl] = useState('')
   const [nextDisabled, setNextDisabled] = useState(false)
   const [otp, setOtp] = useState('')
@@ -62,7 +64,7 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
   const confirmPasswordRef = useRef<HTMLInputElement>(null)
   const otpRef = useRef<HTMLInputElement>(null)
   const desktopSubmitBtnRef = useRef<HTMLButtonElement>(null)
-
+  const pathname = usePathname();
   const [showValidations, setShowValidations] = useState(false)
   const [inputValidation, setInputValidation] = useState(
     validatePasswordConditions(newPassword),
@@ -82,6 +84,7 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
       setErrors({ ...errors, confirmPassword: 'Passwords does not match!' })
       confirmPasswordRef?.current?.focus()
     }
+    if(threeConditionsValid<3){
     if (inputValidation.length === false) {
       hasErrors = true
       setErrors((prev) => ({
@@ -121,7 +124,7 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
         newPassword: 'New password should be valid!',
       }))
       newPasswordRef.current?.focus()
-    }
+    }}
     if (otp.length === 0) {
       hasErrors = true
       setErrors((prev) => ({ ...prev, otp: 'Please enter OTP!' }))
@@ -140,7 +143,12 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
       email: forgotPasswordEmail,
       otp: otp,
       newPassword: newPassword,
-    })
+    });
+    const {err:userErr,res:userRes} = await getMyProfileDetail();
+    if(userRes?.data){
+      dispatch(updateUser(userRes?.data.data.user))
+    }
+
     setSubmitBtnLoading(false)
     if (err) {
       if (err?.response?.data?.message) {
@@ -153,7 +161,17 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
     }
     if (res?.data.success) {
       console.log(res.data)
-      dispatch(closeModal())
+      if(pathname==="/settings/account-data"){
+        dispatch(
+          openModal({
+            type: 'Verify-ActionModal',
+            closable: true,
+            onVerify:onVerify?onVerify:undefined
+          }),
+        )
+      }else{
+        dispatch(closeModal())
+      }
     }
   }
   //   console.log('user', user)

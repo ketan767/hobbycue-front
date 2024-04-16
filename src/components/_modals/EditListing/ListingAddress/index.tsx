@@ -271,7 +271,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
     if (onComplete) onComplete()
     else {
       window.location.reload()
-      dispatch(closeModal())
+      // dispatch(closeModal())
     }
     // }
   }
@@ -612,6 +612,17 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   onClick={() => {
                     getLocation()
                     streetRef?.current?.focus()
+                  }}
+                  tabIndex={0}
+                  onKeyDown={(e)=>{
+                    if(e.key==='Enter'){
+                      e.preventDefault();
+                      e.stopPropagation();
+                      getLocation();
+                      setTimeout(() => {
+                      streetRef?.current?.focus();
+                      }, 50);
+                    }
                   }}
                 />
               </div>

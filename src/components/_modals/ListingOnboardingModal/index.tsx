@@ -263,6 +263,15 @@ export const ListingOnboardingModal: React.FC<PropTypes> = ({
                   isClickable ? styles['active'] : ''
                 }`}
                 onClick={isClickable ? () => setActiveStep(step) : undefined}
+                tabIndex={isClickable?0:-1}
+                onKeyDown={(e)=>{
+                  if(e.key==="Enter"){
+                    e.stopPropagation()
+                    if(isClickable){
+                    setActiveStep(step)
+                    }
+                  }
+                }}
               ></span>
             )
           })}

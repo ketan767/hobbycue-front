@@ -142,6 +142,7 @@
   }
 
   .posts-container-mobile {
-    display: initial;
+    display: block;
+    height: 90vh;
   }
 }

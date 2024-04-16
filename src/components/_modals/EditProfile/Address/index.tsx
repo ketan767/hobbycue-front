@@ -969,6 +969,17 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                     getLocation()
                     inputRef?.current?.focus()
                   }}
+                  tabIndex={0}
+                  onKeyDown={(e)=>{
+                    if(e.key==="Enter"){
+                      e.preventDefault();
+                      e.stopPropagation();
+                      getLocation();
+                      setTimeout(() => {
+                      inputRef?.current?.focus();
+                      }, 50);
+                    }
+                  }}
                 />
               </div>
               {ShowDropdown && dropdownList.length !== 0 && (

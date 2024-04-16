@@ -90,6 +90,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
       setErrors({ ...errors, confirmPassword: 'Passwords does not match!' })
       confirmPasswordRef?.current?.focus()
     }
+    if(threeConditionsValid<3){
     if (inputValidation.length === false) {
       hasErrors = true
       setErrors((prev) => ({
@@ -129,7 +130,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
         newPassword: 'New password should be valid!',
       }))
       newPasswordRef.current?.focus()
-    }
+    }}
     if (otp.length === 0) {
       hasErrors = true
       setErrors((prev) => ({ ...prev, otp: 'Please enter OTP!' }))
