@@ -51,9 +51,7 @@
   top: 215px;
   position: sticky;
   transition: 0.6s;
-  height: calc(
-    100vh - calc(var(--navbar-height-desktop) + var(--spacing-24)) + 3rem
-  );
+  height:fit-content;
   overflow: auto;
 }
 
