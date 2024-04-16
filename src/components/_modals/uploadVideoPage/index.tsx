@@ -99,7 +99,7 @@ const UploadVideoPage: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
           </button>
           <button className="modal-mob-btn-save" onClick={handleSubmit}>
             {submitBtnLoading ? (
-              <CircularProgress color="inherit" size={'24px'} />
+              <CircularProgress color="inherit" size={'14px'} />
             ) : (
               'Add Link'
             )}

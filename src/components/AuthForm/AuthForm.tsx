@@ -618,7 +618,7 @@ const AuthForm: React.FC<Props> = (props) => {
             type="submit"
           >
             {submitBtnLoading ? (
-              <CircularProgress className={styles['loader']} size={'16px'} />
+              <CircularProgress className={styles['loader']} size={'14px'} />
             ) : (
               getButtonText()
             )}

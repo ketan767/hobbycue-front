@@ -593,7 +593,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
                 onClick={handleSubmit}
               >
                 {submitBtnLoading ? (
-                  <CircularProgress color="inherit" size={'16px'} />
+                  <CircularProgress color="inherit" size={'14px'} />
                 ) : listingTypeModalMode === 'edit' ? (
                   'Save'
                 ) : (

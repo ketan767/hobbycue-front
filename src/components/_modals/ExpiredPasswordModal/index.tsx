@@ -362,7 +362,7 @@ const ExpiredPassword: React.FC<Props> = ({}) => {
           </button>
           <button className="modal-mob-btn-save" onClick={handleSubmit}>
             {submitBtnLoading ? (
-              <CircularProgress color="inherit" size={'16px'} />
+              <CircularProgress color="inherit" size={'14px'} />
             ) : (
               'Verify Action'
             )}

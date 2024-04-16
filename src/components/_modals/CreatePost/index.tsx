@@ -16,7 +16,7 @@ import { closeModal } from '@/redux/slices/modal'
 
 import DOMPurify from 'dompurify'
 import CreatePostProfileSwitcher from './ProfileSwitcher'
-import { Input, MenuItem, Select, useMediaQuery } from '@mui/material'
+import { CircularProgress, Input, MenuItem, Select, useMediaQuery } from '@mui/material'
 // import CancelBtn from '@/assets/svg/trash-icon.svg'
 import CancelBtn from '@/assets/icons/x-icon.svg'
 import FilledButton from '@/components/_buttons/FilledButton'
@@ -741,7 +741,11 @@ export const CreatePost: React.FC<Props> = ({
                 className={styles['create-post-btn']}
                 loading={submitBtnLoading}
               >
-                Post
+                {submitBtnLoading ? (
+              <CircularProgress color="inherit" size={'16px'} />
+            ) : (
+              'Post'
+            )}
               </FilledButton>
             </aside>
             <div className={styles['background']}></div>

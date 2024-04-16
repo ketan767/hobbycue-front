@@ -397,7 +397,7 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
             }}
           >
             {submitBtnLoading ? (
-              <CircularProgress color="inherit" size={'24px'} />
+              <CircularProgress color="inherit" size={'14px'} />
             ) : (
               'Save'
             )}
