@@ -31,6 +31,7 @@ import ListingEventsTab from '@/components/ListingPage/ListingPageEvents/Listing
 import PageContentBox from '../PageContentBox'
 import { openModal } from '@/redux/slices/modal'
 import EditIcon from '@/assets/svg/edit-colored.svg'
+import { SetLinkviaAuth } from '@/redux/slices/user'
 
 interface Props {
   activeTab: ListingPageTabs
@@ -79,6 +80,11 @@ const ListingPageLayout: React.FC<Props> = ({
   }
   const navigationTabs = (tab: any) => {
     if (!isLoggedIn && tab === 'posts') {
+      dispatch(
+        SetLinkviaAuth(
+          `/page/${router.query.page_url}/${tab !== 'home' ? tab : ''}`,
+        ),
+      )
       dispatch(openModal({ type: 'auth', closable: true }))
       return
     }

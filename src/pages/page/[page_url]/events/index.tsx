@@ -24,7 +24,9 @@ const ListingEvents: React.FC<Props> = (props) => {
   const dispatch = useDispatch()
   const { listing } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(listing)
-  const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
+  const { isLoggedIn, isAuthenticated, user } = useSelector(
+    (state: RootState) => state.user,
+  )
   // const { listingPageData } = useSelector((state: RootState) => state.site)
   console.log('posts data', props.data)
   useEffect(() => {
@@ -38,29 +40,39 @@ const ListingEvents: React.FC<Props> = (props) => {
   }
   const router = useRouter()
   useEffect(() => {
-    // Save scroll position when navigating away from the page
     const handleRouteChange = () => {
       sessionStorage.setItem('scrollPositionlisting', window.scrollY.toString())
     }
 
-    // Restore scroll position when navigating back to the page
     const handleScrollRestoration = () => {
       const scrollPosition = sessionStorage.getItem('scrollPositionlisting')
       if (scrollPosition) {
-        window.scrollTo(0, parseInt(scrollPosition, 10))
+        const parsedScrollPosition = parseInt(scrollPosition, 10)
+        let adjustedScrollPosition = parsedScrollPosition
+
+        // Check screen width
+        if (window.innerWidth < 1100) {
+          adjustedScrollPosition -= 44 // Subtract 44 units if screen width is less than 1100px
+        }
+
+        // Scroll to adjusted position (ensure it's not negative)
+        window.scrollTo(
+          0,
+          adjustedScrollPosition >= 0 ? adjustedScrollPosition : 0,
+        )
+
         sessionStorage.removeItem('scrollPositionlisting')
       }
     }
 
     router.events.on('routeChangeStart', handleRouteChange)
-
     router.events.on('routeChangeComplete', handleScrollRestoration)
 
     return () => {
       router.events.off('routeChangeStart', handleRouteChange)
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
-  }, [])
+  }, [router.events])
   if (
     props?.data?.pageData?.admin !== user?._id &&
     props?.data?.pageData?.is_published !== true

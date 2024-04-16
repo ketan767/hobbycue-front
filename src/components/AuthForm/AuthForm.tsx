@@ -32,7 +32,11 @@ import {
   updateAuthFormData,
 } from '@/redux/slices/modal'
 import { setShowPageLoader } from '@/redux/slices/site'
-import { updateIsLoggedIn } from '@/redux/slices/user'
+import {
+  SetLinkviaAuth,
+  showProfileError,
+  updateIsLoggedIn,
+} from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import { getMyProfileDetail, updateUserProfile } from '@/services/user.service'
 
@@ -280,14 +284,17 @@ const AuthForm: React.FC<Props> = (props) => {
           console.warn('push to community')
           router.push('/community')
         } else {
+        }
+      } else if (router.pathname !== '/') {
+        if (linkviaAuth && response?.data?.data?.user?.is_onboarded) {
+          router.push(linkviaAuth)
+          dispatch(SetLinkviaAuth(''))
+        } else if (!response?.data?.data?.user?.is_onboarded) {
           router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
+          dispatch(showProfileError(true))
         }
       } else {
-        if (linkviaAuth) {
-          router.push(linkviaAuth)
-        } else {
-          router.reload()
-        }
+        router.reload()
       }
     }
   }

@@ -41,6 +41,7 @@ import DefaultPageImage from '@/assets/svg/default-images/default-people-listing
 import dynamic from 'next/dynamic'
 import MapComponent from '@/components/Gmap'
 import { RootState } from '@/redux/store'
+import { SetLinkviaAuth } from '@/redux/slices/user'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -337,7 +338,7 @@ const ListingPageMain: React.FC<Props> = ({
             </div>
           </PageContentBox>
           {/* Tags */}
-          {(
+          {
             <PageContentBox
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
@@ -363,7 +364,7 @@ const ListingPageMain: React.FC<Props> = ({
                 })}
               </ul>
             </PageContentBox>
-          )}
+          }
           {/* Related Listing */}
           {listingLayoutMode !== 'edit' &&
           (!listingPagesLeft || listingPagesLeft.length === 0) ? null : (
@@ -464,9 +465,14 @@ const ListingPageMain: React.FC<Props> = ({
                 )}
                 {(PageAdmin as any)?.full_name && !isLoggedIn && (
                   <a
-                    onClick={(e) =>
+                    onClick={(e) => {
+                      dispatch(
+                        SetLinkviaAuth(
+                          `/profile/${(PageAdmin as any)?.profile_url}`,
+                        ),
+                      )
                       dispatch(openModal({ type: 'auth', closable: true }))
-                    }
+                    }}
                   >
                     <Image
                       src={AdminSvg}
@@ -979,12 +985,10 @@ const ListingPageMain: React.FC<Props> = ({
               </PageContentBox>
             )}
 
-            {
-               data?.type ===
-                listingTypes.PROGRAM ||
-              data?.type === listingTypes.PRODUCT ||
-              data?.type === listingTypes.PLACE ||
-              data?.type === listingTypes.PEOPLE ? (
+            {data?.type === listingTypes.PROGRAM ||
+            data?.type === listingTypes.PRODUCT ||
+            data?.type === listingTypes.PLACE ||
+            data?.type === listingTypes.PEOPLE ? (
               <PageContentBox
                 showEditButton={listingLayoutMode === 'edit'}
                 onEditBtnClick={() =>
@@ -1140,9 +1144,14 @@ const ListingPageMain: React.FC<Props> = ({
               )}
               {(PageAdmin as any)?.full_name && !isLoggedIn && (
                 <a
-                  onClick={(e) =>
+                  onClick={(e) => {
+                    dispatch(
+                      SetLinkviaAuth(
+                        `/profile/${(PageAdmin as any)?.profile_url}`,
+                      ),
+                    )
                     dispatch(openModal({ type: 'auth', closable: true }))
-                  }
+                  }}
                 >
                   <Image src={AdminSvg} alt="whatsapp" width={24} height={24} />
                   <span className={styles.textdefault}>
@@ -1653,12 +1662,10 @@ const ListingPageMain: React.FC<Props> = ({
             </PageContentBox>
           )}
 
-          {
-              data?.type ===
-              listingTypes.PROGRAM ||
-            data?.type === listingTypes.PRODUCT ||
-            data?.type === listingTypes.PLACE ||
-            data?.type === listingTypes.PEOPLE ? (
+          {data?.type === listingTypes.PROGRAM ||
+          data?.type === listingTypes.PRODUCT ||
+          data?.type === listingTypes.PLACE ||
+          data?.type === listingTypes.PEOPLE ? (
             <PageContentBox
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>

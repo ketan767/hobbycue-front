@@ -6,7 +6,11 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 
 import { openModal } from '@/redux/slices/modal'
-import { updateActiveProfile, updateIsLoggedIn } from '@/redux/slices/user'
+import {
+  SetLinkviaAuth,
+  updateActiveProfile,
+  updateIsLoggedIn,
+} from '@/redux/slices/user'
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
 import store, { RootState } from '@/redux/store'
 import BookmarkIcon from '@/assets/svg/bookmark.svg'
@@ -344,6 +348,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
               <button
                 className={styles['view-profile-btn']}
                 onClick={() => {
+                  dispatch(SetLinkviaAuth(`/profile/${user.profile_url}`))
                   dispatch(openModal({ type: 'auth', closable: true }))
                   handleClose()
                 }}

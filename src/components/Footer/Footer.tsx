@@ -33,6 +33,7 @@ import { RootState } from '@/redux/store'
 import { openModal } from '@/redux/slices/modal'
 import { useRouter } from 'next/router'
 import { validateEmail } from '@/utils'
+import { showProfileError } from '@/redux/slices/user'
 
 const icons = [
   {
@@ -162,6 +163,9 @@ const Footer: React.FC = () => {
               return
             } else {
               dispatch(openModal({ type: 'auth', closable: true }))
+              if (!user?.is_onboarded) {
+                dispatch(showProfileError(true))
+              }
             }
           },
         },
