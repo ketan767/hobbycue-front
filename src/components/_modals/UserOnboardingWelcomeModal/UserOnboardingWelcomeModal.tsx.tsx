@@ -463,7 +463,7 @@ const UserOnboardingWelcomeModal = () => {
                 <div className={styles['my-community-mobile']}>
                   <svg
                     width="44"
-                    height="314"
+                    height="220"
                     viewBox="0 0 44 314"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -471,7 +471,7 @@ const UserOnboardingWelcomeModal = () => {
                     <path
                       d="M1.78125 0.742188V308.418C1.78125 310.627 3.57211 312.418 5.78125 312.418H43.127"
                       stroke="#1CB7EB"
-                      stroke-width="2"
+                      stroke-width="3"
                     />
                   </svg>
 
@@ -496,7 +496,7 @@ const UserOnboardingWelcomeModal = () => {
                 <div className={styles['search-mobile']}>
                   <svg
                     width="76"
-                    height="112"
+                    height="70"
                     viewBox="0 0 76 112"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -504,7 +504,7 @@ const UserOnboardingWelcomeModal = () => {
                     <path
                       d="M74.3128 0.0234375V106.738C74.3128 108.947 72.5219 110.738 70.3128 110.738H0.9375"
                       stroke="#1CB7EB"
-                      stroke-width="2"
+                      stroke-width="3"
                     />
                   </svg>
                   <div className={styles['search-mobile-content']}>
@@ -527,7 +527,7 @@ const UserOnboardingWelcomeModal = () => {
                 <div className={styles['my-profile-mobile']}>
                   <svg
                     width="68"
-                    height="215"
+                    height="150"
                     viewBox="0 0 68 215"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -535,7 +535,7 @@ const UserOnboardingWelcomeModal = () => {
                     <path
                       d="M66.3993 0.0859375V209.441C66.3993 211.651 64.6085 213.441 62.3993 213.441H0.429688"
                       stroke="#1CB7EB"
-                      stroke-width="2"
+                      stroke-width="3"
                     />
                   </svg>
                   <div className={styles['my-profile-mobile-content']}>
@@ -552,20 +552,22 @@ const UserOnboardingWelcomeModal = () => {
                 <img src="/celebration.png" alt="" width={60} height={60} />
               </div>
               <div>
-                <p className={styles['mobile-welcome-txt']}>Welcome to HobbyCue</p>
+                <p className={styles['mobile-welcome-txt']}>
+                  Welcome to HobbyCue
+                </p>
                 <div>
                   <p>Choose from one of the options to continue.</p>
                   <p>You can always find them on the top navigation.</p>
                 </div>
               </div>
               <div className={styles['do-not-show-next-time']}>
-              <Image
-                alt={'dont show checkbox'}
-                onClick={ShowWelcome}
-                src={showWelcome ? checkedboxUnChecked : checkedboxChecked}
-              />
-              <p>Do not show this next time</p>
-            </div>
+                <Image
+                  alt={'dont show checkbox'}
+                  onClick={ShowWelcome}
+                  src={showWelcome ? checkedboxUnChecked : checkedboxChecked}
+                />
+                <p>Do not show this next time</p>
+              </div>
             </div>
           </div>
         </div>
