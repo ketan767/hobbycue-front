@@ -58,6 +58,7 @@ const ListingHome: React.FC<Props> = (props) => {
     setExpandAll(value)
     dispatch(updateListingMenuExpandAll(value))
   }
+  console.warn('warnnnnnnnnnnn', router)
 
   useEffect(() => {
     const handleRouteChange = () => {
@@ -115,6 +116,10 @@ const ListingHome: React.FC<Props> = (props) => {
         <meta
           property="og:description"
           content={`${props?.data?.pageData?.description}`}
+        />
+        <meta
+          property="og:url"
+          content={`${process.env.NEXT_PUBLIC_VERCEL_URL}/page/${props?.data?.pageData?.slug}`}
         />
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
