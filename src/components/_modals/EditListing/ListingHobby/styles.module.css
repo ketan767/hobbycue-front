@@ -416,7 +416,13 @@
   }
   .add-btn {
     margin: auto;
+    margin-right: -9px;
   }
+  
+  .added-hobby-list .delete-hobby-btn{
+    margin-right: -9px;
+  }
+
   .added-hobby-list table tbody {
     max-height: 15rem;
     padding: 0;
@@ -455,7 +461,7 @@
     display: none;
   }
   .modal-wrapper .body {
-    padding-top: 0 !important;
+    padding-top: 12px !important;
     padding: var(--spacing-16) var(--spacing-16);
   }
   .modal-close-icon {

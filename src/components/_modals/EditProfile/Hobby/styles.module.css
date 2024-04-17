@@ -412,6 +412,11 @@
 .levelwithtext-add > img {
   margin: 0 0 0 10px;
 }
+
+.menu-item-class{
+  padding:8px 0;
+}
+
 .helper-text {
   font-weight: 400;
   font-size: 10px;
@@ -477,9 +482,17 @@
     margin: -5px 0 6rem 0;
     padding: 5px 0 0 0;
   }
+
+  .modal-wrapper .header{
+    padding: 16px;
+  }
+
   .modal-wrapper .body {
-    padding-left: 5px;
-    padding-right: 5px;
+    /* padding-left: 5px;
+    padding-right: 5px; */
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 0;
   }
   .add-hobbies-wrapper .add-new-hobby {
     flex-wrap: wrap;
@@ -497,11 +510,27 @@
   .hobby-dropdown .MuiMenuItem-root p {
     display: none;
   }
+
+  .dropdown-wrapper:first-of-type>.input-box>input{
+    min-width: 100px;
+  }
+
   .input-box {
     padding-right: 0;
   }
   .input-box > input {
     padding: var(--spacing-8) !important;
+  }
+
+  .input-box > input::placeholder{
+    color: var(--Grey-Dark, #939CA3);
+
+/* Text xs/Regular */
+font-family: Poppins;
+font-size: 12px;
+font-style: normal;
+font-weight: 400;
+line-height: 16px; /* 133.333% */
   }
 
   .added-hobby-list table thead tr td:nth-child(1) {
@@ -518,15 +547,35 @@
 
   .added-hobby-list table tbody tr td:nth-child(1) {
     flex: 1.8;
+    padding-right: 10px;
   }
   .added-hobby-list table tr td:nth-child(2) {
     flex: 1;
+  }
+  .AddHobbyFields>div{
+    width: 100%;
   }
   .hobby-dropdown {
     width: 4.5rem;
     background-color: #f7f5f9;
     height: 1.875rem;
   }
+  
+  .levelwithtext>p{
+    color: var(--Grey-Darker, #6D747A);
+  font-family: Poppins;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px; /* 133.333% */
+  }
+
+  .menu-item-class{
+    padding: 0;
+    min-height: 33px;
+    min-width: 137px;
+  }
+
   .select-level-main {
     width: 4rem;
   }
@@ -546,11 +595,19 @@
   }
   .added-hobby-list table tr td:nth-child(2) {
     flex: 1 0;
+    margin-right: -14px;
   }
   .added-hobby-list table tr td:nth-child(3) {
     text-align: right;
     padding-left: var(--spacing-24);
   }
+
+  .added-hobby-list table tbody tr td:last-child {
+    position: absolute;
+    right: 8px;
+    top: 10px;
+  }
+
   .hobby-dropdown {
     width: 4rem !important;
     background-color: #f7f5f9;

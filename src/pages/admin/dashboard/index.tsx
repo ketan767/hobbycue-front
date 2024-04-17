@@ -11,6 +11,7 @@ import {
   openModal,
   updateForgotPasswordEmail,
 } from '@/redux/slices/modal'
+import { RootState } from '@/redux/store'
 
 type UserProps = {
   profile_image: string
@@ -29,7 +30,9 @@ type SearchInput = {
 }
 
 const AdminDashboard: React.FC = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const {user} = useSelector((state:RootState)=>state.user);
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
   })
@@ -63,6 +66,12 @@ const AdminDashboard: React.FC = () => {
     dispatch(openModal({ type: 'reset-password', closable: true }))
     dispatch(updateForgotPasswordEmail(email))
   }
+
+  useEffect(()=>{
+    if(!user.is_admin){
+      router.replace("/admin")
+    }
+  },[user,router])
 
   return (
     <div className={styles.searchContainer}>
