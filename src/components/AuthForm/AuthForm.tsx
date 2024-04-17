@@ -359,7 +359,7 @@ const AuthForm: React.FC<Props> = (props) => {
   }, [authFormData.password])
 
   const openForgotPasswordEmail = () => {
-    dispatch(openModal({ type: 'confirm-email', closable: true }))
+    dispatch(openModal({ type: 'email-forget-password', closable: true }))
   }
 
   let threeConditionsValid = 0

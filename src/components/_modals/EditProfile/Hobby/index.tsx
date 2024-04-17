@@ -781,17 +781,17 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         if (
           event?.srcElement?.tagName?.toLowerCase() === 'svg' ||
           event?.srcElement?.tagName?.toLowerCase() === 'img' ||
-          event?.srcElement?.tagName?.toLowerCase() === 'input' 
+          event?.srcElement?.tagName?.toLowerCase() === 'input'
         ) {
-          return;
+          return
         }
         if (
           event?.srcElement?.classList &&
           (event?.srcElement?.classList?.contains('MuiSelect-select') ||
-            event?.srcElement?.classList?.contains('Mui-selected')||
+            event?.srcElement?.classList?.contains('Mui-selected') ||
             event?.srcElement?.classList?.contains('MuiMenuItem-root'))
         ) {
-          return;
+          return
         }
         // console.warn({ event })
         // return

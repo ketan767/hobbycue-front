@@ -22,6 +22,7 @@ import { updateListingModalData } from '@/redux/slices/site'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import { changePassword } from '@/services/auth.service'
 import PasswordAnalyzer from '@/components/PasswordAnalyzer/PasswordAnalyzer'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -65,7 +66,11 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
   const newPasswordRef = useRef<HTMLInputElement>(null)
   const confirmPasswordRef = useRef<HTMLInputElement>(null)
   const [strength, setStrength] = useState(0)
-
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
   useEffect(() => {
     currentPasswordRef.current?.focus()
   }, [])
@@ -126,7 +131,7 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
       currentPassword,
       newPassword,
     })
-    setSubmitBtnLoading(false)
+
     if (err) {
       if (err?.response?.data?.message) {
         setErrors({
@@ -134,12 +139,19 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
           currentPassword: err?.response?.data?.message,
         })
       }
+      setSubmitBtnLoading(false)
       return
     }
     if (res?.data.success) {
-      console.log(res.data)
-      dispatch(closeModal())
-      window.location.reload()
+      setSnackbar({
+        display: true,
+        type: 'success',
+        message: 'Password Changed',
+      })
+      setTimeout(() => {
+        dispatch(closeModal())
+        setSubmitBtnLoading(false)
+      }, 2500)
     }
   }
 
@@ -404,6 +416,16 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
           </button>
         </footer>
       </div>
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }
