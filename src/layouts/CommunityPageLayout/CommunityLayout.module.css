@@ -426,6 +426,7 @@ line-height: 20px; /* 142.857% */
   border-top-right-radius: 0;
   padding-left: 0;
   padding-right: 0;
+  right: 8px
 }
 
 .navigation-links ul {
@@ -852,11 +853,14 @@ letter-spacing: 0.06px;
   }
   .navigation-links ul{
     justify-content: flex-start;
-    gap: 8px;
+    gap: 0px;
   }
   .navigation-links ul li{
-    
-  min-width: unset;
+    padding: 8px 0px !important;
+  min-width: 60px !important;
+  max-width: 30px !important;
+  width: 100%;
+
   }
   .navigation-links ul li:first-of-type{
     margin-left: 0;
