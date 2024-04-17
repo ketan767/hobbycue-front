@@ -426,7 +426,7 @@ line-height: 20px; /* 142.857% */
   border-top-right-radius: 0;
   padding-left: 0;
   padding-right: 0;
-  right: 8px
+
 }
 
 .navigation-links ul {
@@ -886,6 +886,9 @@ letter-spacing: 0.06px;
 
   .start-post-btn-container {
     padding: 6px 0px;
+  }
+  .navigation-links {
+    right: 8px
   }
 
   .navigation-links ul li {
