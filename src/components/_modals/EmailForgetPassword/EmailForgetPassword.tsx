@@ -27,7 +27,7 @@ type Props = {
   onBackBtnClick?: () => void
 }
 
-const ConfirmEmail: React.FC<Props> = ({}) => {
+const EmailForgetPassword: React.FC<Props> = ({}) => {
   const elementRef = useRef<HTMLInputElement>(null)
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -101,13 +101,13 @@ const ConfirmEmail: React.FC<Props> = ({}) => {
       <div className={styles['modal-wrapper']}>
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>Confirm E-mail</h4>
+          <h4 className={styles['heading']}>Forgot Password</h4>
         </header>
         <section className={styles['body']}>
           <div className={styles.inputField}>
             <label className={styles.label}>
               Enter the email address of the account, and we will send you a
-              verification code to set a password.
+              verification code to reset password.
             </label>
             <div
               className={`${styles['input-box']} ${
@@ -156,4 +156,4 @@ const ConfirmEmail: React.FC<Props> = ({}) => {
   )
 }
 
-export default ConfirmEmail
+export default EmailForgetPassword

@@ -75,7 +75,7 @@ export const UploadImageModal: React.FC<Props> = (props) => {
             onClick={handleUpload}
           >
             {loading ? (
-              <CircularProgress color="inherit" size={'20px'} />
+              <CircularProgress color="inherit" size={'14px'} />
             ) : (
               'Save Photo'
             )}

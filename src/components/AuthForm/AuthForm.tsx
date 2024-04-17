@@ -359,7 +359,7 @@ const AuthForm: React.FC<Props> = (props) => {
   }, [authFormData.password])
 
   const openForgotPasswordEmail = () => {
-    dispatch(openModal({ type: 'confirm-email', closable: true }))
+    dispatch(openModal({ type: 'email-forget-password', closable: true }))
   }
 
   let threeConditionsValid = 0
@@ -618,7 +618,7 @@ const AuthForm: React.FC<Props> = (props) => {
             type="submit"
           >
             {submitBtnLoading ? (
-              <CircularProgress className={styles['loader']} size={'16px'} />
+              <CircularProgress className={styles['loader']} size={'14px'} />
             ) : (
               getButtonText()
             )}

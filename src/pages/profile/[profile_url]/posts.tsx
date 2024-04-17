@@ -39,6 +39,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
   const dispatch = useDispatch()
   const { user, isLoggedIn } = useSelector((state: RootState) => state.user)
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
+  const { refreshNum } = useSelector((state: RootState) => state.post)
   const { profile } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(profile)
   const router = useRouter()
@@ -66,7 +67,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
 
   useEffect(() => {
     getPost()
-  }, [user.pinned_post])
+  }, [user.pinned_post,refreshNum])
 
   useEffect(() => {
     // Save scroll position when navigating away from the page

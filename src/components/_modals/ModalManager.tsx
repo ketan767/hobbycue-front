@@ -43,7 +43,7 @@ import UploadVideoUser from './UploadVideoUser'
 import SocialMediaEditModal from './EditProfile/SocialMedia/SocialMedia'
 import ListingSocialMediaEditModal from './EditListing/ListingSocialMedia/ListingSocialMedia'
 import ChangePasswordModal from './ChangePassword/ChangePassword'
-import ConfirmEmailModal from './ConfirmEmail/ConfirmEmail'
+import EmailForgetPassword from './EmailForgetPassword/EmailForgetPassword'
 import EmailSentModal from './EmailSent/EmailSent'
 import ResetPasswordModal from './ResetPassword/ResetPassword'
 import ShareModal from './ShareModal/ShareModal'
@@ -64,6 +64,7 @@ import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import UserReport from './EditProfile/ReportUser'
 import ListingReport from './EditListing/ListingReport'
 import ContactToOwner from './EditListing/ListingContactOwner'
+import ConfirmEmail from './ConfirmEmail/ConfirmEmail'
 import ListingSupportModal from './EditListing/ListingSupport'
 import SupportUserModal from './EditProfile/supportUser'
 import AddHobby from './AddHobby/AddHobbyModal'
@@ -126,7 +127,7 @@ const ModalManager: React.FC = () => {
     'upload-image-page': closewithoutCfrm,
     'upload-video-user': closewithoutCfrm,
     'change-password': closewithoutCfrm,
-    'confirm-email': closewithoutCfrm,
+    'email-forget-password': closewithoutCfrm,
     'email-sent': closewithoutCfrm,
     'social-media-share': closewithoutCfrm,
     'Verify-ActionModal': closewithoutCfrm,
@@ -504,7 +505,10 @@ const ModalManager: React.FC = () => {
               )}
               {activeModal === 'change-password' && <ChangePasswordModal />}
 
-              {activeModal === 'confirm-email' && <ConfirmEmailModal />}
+              {activeModal === 'email-forget-password' && (
+                <EmailForgetPassword />
+              )}
+              {activeModal === 'confirm-email' && <ConfirmEmail />}
               {activeModal === 'email-sent' && <EmailSentModal />}
               {activeModal === 'reset-password' && <ResetPasswordModal />}
               {activeModal === 'social-media-share' && (

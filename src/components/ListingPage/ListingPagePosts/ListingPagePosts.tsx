@@ -31,15 +31,12 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
   const dispatch = useDispatch()
   const [pagesData, setPagesData] = useState([])
   const { listingLayoutMode } = useSelector((state: RootState) => state.site)
-
+  const { refreshNum } = useSelector((state:RootState)=>state.post);
   const { user, is_onboarded } = useSelector((state: any) => state.user)
   const { isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
   )
 
-  useEffect(() => {
-    fetchPages()
-  }, [data])
 
   const fetchPages = () => {
     const id = data?._id
@@ -71,6 +68,9 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
       fetchPages()
     }
   }
+  useEffect(() => {
+    fetchPages()
+  }, [refreshNum])
 
   const router = useRouter()
   const HandleNotOnboard = () => {
@@ -78,8 +78,8 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
     dispatch(showProfileError(true))
   }
 
-  let pinnedPosts = pagesData.filter((item: any) => item.isPinned === true)
-  let unpinnnedPosts = pagesData.filter((item: any) => item.isPinned !== true)
+  const pinnedPosts = pagesData.filter((item: any) => item.isPinned === true)
+  const unpinnnedPosts = pagesData.filter((item: any) => item.isPinned !== true)
 
   return (
     <>

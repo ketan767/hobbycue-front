@@ -294,7 +294,7 @@ const ClaimModal = (props:Props) => {
             onClick={HandleClaim}
           >
             {submitBtnLoading ? (
-              <CircularProgress color="inherit" size={'24px'} />
+              <CircularProgress color="inherit" size={'14px'} />
             ) : (
               'Claim'
             )}

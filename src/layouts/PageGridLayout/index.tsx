@@ -18,7 +18,7 @@ const PageGridLayout: React.FC<Props> = ({
     <section className={` ${styles['container']}`}>
       <div
         data-column={column}
-        className={`site-container ${styles['grid-container']} ${
+        className={`site-container ${styles['grid-container']} ${styles['minheight100vh']}  ${
           responsive ? 'responsive' : ''
         } ${customStyles || ''}`}
       >

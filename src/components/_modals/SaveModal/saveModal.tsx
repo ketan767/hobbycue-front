@@ -7,7 +7,7 @@ import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import { closeModal, openModal, setHasChanges } from '@/redux/slices/modal'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import { useRouter } from 'next/router'
-import { CircularProgress } from '@mui/material'
+import { CircularProgress, useMediaQuery } from '@mui/material'
 import { showProfileError, updateUser } from '@/redux/slices/user'
 import {
   getMyProfileDetail,
@@ -99,6 +99,8 @@ const SaveModal: React.FC<Props> = ({
     }
   }
 
+  const isMobile = useMediaQuery("(max-width:1100px)");
+
   if (reloadrouter) {
     IsOnboardingCompete()
   }
@@ -114,7 +116,7 @@ const SaveModal: React.FC<Props> = ({
         <div className={styles['buttons']}>
           <FilledButton className={styles['button1']} onClick={handleYesClick}>
             {YesBtnLoading ? (
-              <CircularProgress color="inherit" size={'24px'} />
+              <CircularProgress color="inherit" size={isMobile?'14px':'24px'} />
             ) : (
               'Yes'
             )}

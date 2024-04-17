@@ -344,7 +344,11 @@ const ListingContactToOwner: React.FC<Props> = ({
               onClick={handleSubmit}
               disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
             >
-              Send
+              {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'14px'} />
+              ) : (
+                'Send'
+              )}
             </button>
           )}
         </footer>

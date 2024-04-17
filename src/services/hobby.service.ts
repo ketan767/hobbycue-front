@@ -20,6 +20,18 @@ export const getTrendingHobbies = async (query: string | null): Promise<ApiRetur
   }
 }
 
+
+
+export const getHobbyMembersCommunity = async (id: string | null): Promise<ApiReturnObject> => {
+  try {
+    const res = await axiosInstance.get(`/hobby/members/community/${id}`)
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
 export const getHobbyMembers = async (id: string | null): Promise<ApiReturnObject> => {
   try {
     const res = await axiosInstance.get(`/hobby/members/${id}`)

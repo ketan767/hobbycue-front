@@ -24,7 +24,11 @@ import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import { checkIfUrlExists, validateEmail } from '@/utils'
 import Link from 'next/link'
-import { getAllHobbies, getTrendingHobbies } from '@/services/hobby.service'
+import {
+  getAllHobbies,
+  getHobbyMembersCommunity,
+  getTrendingHobbies,
+} from '@/services/hobby.service'
 import DefaultHobbyImg from '@/assets/svg/default-images/default-hobbies.svg'
 import DefaultHobbyImgcover from '@/assets/svg/default-images/default-hobby-cover.svg'
 import {
@@ -50,6 +54,28 @@ type Props = {
   activeTab: CommunityPageTabs
   children: React.ReactNode
   singlePostPage?: boolean
+}
+
+interface Hobby {
+  _id: string
+  display: string
+  slug: string
+}
+
+interface Genre {
+  _id: string
+  display: string
+  slug: string
+}
+
+interface HobbyEntry {
+  createdAt: string
+  genre: Genre | null
+  hobby: Hobby
+  listing_id: string
+  updatedAt: string
+  __v: number
+  _id: string
 }
 
 const CommunityLayout: React.FC<Props> = ({
@@ -96,27 +122,8 @@ const CommunityLayout: React.FC<Props> = ({
   const [inviteBtnLoader, setInviteBtnLoader] = useState(false)
   const [trendingHobbies, setTrendingHobbies] = useState([])
   const [seeMoreMembers, setSeeMoreMembers] = useState(true)
-  const sampleMembersData = [
-    { name: 'Aditya', slug: '/ad', admin: true },
-    { name: 'Sam', slug: '/ad' },
-    { name: 'Joe', slug: '/ad' },
-    { name: 'Biden', slug: '/ad' },
-    { name: 'Donald', slug: '/ad' },
-    { name: 'Trump', slug: '/ad' },
-    { name: 'Vivek', slug: '/ad' },
-    { name: 'Ramaswamy', slug: '/ad' },
-  ]
-  const panelListData = [
-    {
-      name: 'Members',
-      options: sampleMembersData,
-      type: 'members',
-    },
-    {
-      name: 'Trending Hobbies',
-      options: trendingHobbies,
-    },
-  ]
+  const [hobbyMembers, setHobbymembers] = useState([])
+
   console.log('Number of hobbies:', activeProfile.data?._hobbies?.length)
 
   const hideThirdColumnTabs = ['pages', 'links', 'store', 'blogs']
@@ -245,9 +252,9 @@ const CommunityLayout: React.FC<Props> = ({
     }
     // if (selectedGenre !== '') {
     //   // don't remove it, somehow it is helping in fetching correct things according to hobby and genre
-    // } 
+    // }
     else {
-      console.warn({selectedGenre,selectedHobby})
+      console.warn({ selectedGenre, selectedHobby })
       activeProfile?.data?._hobbies.forEach((item: any) => {
         params.append('_hobby', item.hobby._id)
       })
@@ -307,8 +314,53 @@ const CommunityLayout: React.FC<Props> = ({
     dispatch(updateLoading(false))
   }
 
+  const fetchHobbyMembers = async (hobbies?: HobbyEntry[]) => {
+    try {
+      if (!hobbies || hobbies.length === 0) {
+        console.error('No hobbies provided')
+        return
+      }
+
+      const hobbyIdsSet = new Set<string>()
+      let genreId: string | null = null
+
+      hobbies.forEach((entry) => {
+        if (entry.hobby?._id) {
+          hobbyIdsSet.add(entry.hobby._id)
+        }
+        if (entry.genre?._id) {
+          genreId = entry.genre._id // Assume there's only one genre ID
+        }
+      })
+
+      const hobbyIds = Array.from(hobbyIdsSet)
+
+      let url = `${hobbyIds.join(',')}`
+
+      // Append genreId as query parameter if it exists
+      if (genreId) {
+        url += `?genreId=${genreId}`
+      }
+
+      const { res, err } = await getHobbyMembersCommunity(url)
+      if (res.data) {
+        console.warn('setHobbymembersrrr', res.data.users)
+        setHobbymembers(res.data.users)
+      }
+    } catch (error) {
+      console.error('Fetch error:', error)
+      return
+    }
+  }
+
+  useEffect(() => {
+    if (user?._hobbies) {
+      fetchHobbyMembers(user._hobbies)
+    }
+  }, [user._hobbies])
   const fetchTrendingHobbies = async () => {
     const { err, res } = await getTrendingHobbies(``)
+
     if (err) {
       return console.log('err', err)
     }
@@ -319,9 +371,9 @@ const CommunityLayout: React.FC<Props> = ({
     fetchTrendingHobbies()
   }, [])
 
-  useEffect(()=>{
-    dispatch(updateListingModalData(activeProfile.data));
-  },[activeProfile.type])
+  useEffect(() => {
+    dispatch(updateListingModalData(activeProfile.data))
+  }, [activeProfile.type])
 
   // const fetchPages = async () => {
   //   let params: any = ''
@@ -560,7 +612,7 @@ const CommunityLayout: React.FC<Props> = ({
       //   }
       // }
       //added as for go live
-        if(filters.location===null){
+      if (filters.location === null) {
         dispatch(
           setFilters({
             location: 'All Locations',
@@ -569,9 +621,9 @@ const CommunityLayout: React.FC<Props> = ({
         setSelectedLocation('All Locations')
       }
     }
-    if(filters.hobby===''&&filters.genre===''){
-    setSelectedHobby('')
-    setSelectedGenre('')
+    if (filters.hobby === '' && filters.genre === '') {
+      setSelectedHobby('')
+      setSelectedGenre('')
     }
   }, [activeProfile])
 
@@ -589,6 +641,7 @@ const CommunityLayout: React.FC<Props> = ({
       }
     })
   }
+  console.warn('hobbyMembersssssssssss', hobbyMembers)
 
   const handleStartPost = () => {
     if (!user.is_onboarded) {
@@ -947,7 +1000,6 @@ const CommunityLayout: React.FC<Props> = ({
                 <section className={styles['filter-section']}>
                   <div>
                     <CommunityTopDropdown
-
                       maxWidth="139px"
                       className={styles['hobby-select']}
                       value={
@@ -1017,24 +1069,27 @@ const CommunityLayout: React.FC<Props> = ({
                         ))}
                       </CommunityTopDropdown>
                     )}
-
                   </div>
-                    <button
-                      onClick={() => setShowPanel((prev) => !prev)}
-                      className={styles['panel-dropdown-btn']}
-                    >
-                      <DoubleArrowSvg rotate={showPanel} />
-                    </button>
+                  <button
+                    onClick={() => setShowPanel((prev) => !prev)}
+                    className={styles['panel-dropdown-btn']}
+                  >
+                    <DoubleArrowSvg rotate={showPanel} />
+                  </button>
                 </section>
-                {showPanel && (
+                {/* {showPanel && (
                   <section className={styles['dropdowns-panel']}>
-                    {panelListData.map(
+                    {hobbyMembers.map(
                       (
-                        obj: { name: string; options: any[]; type?: string },
+                        obj: {
+                          full_name: string
+                          options: any[]
+                          type?: string
+                        },
                         idx: number,
                       ) => (
                         <PanelDropdownList
-                          name={obj.name}
+                          name={obj.full_name}
                           options={obj.options}
                           key={idx}
                           type={obj?.type}
@@ -1049,7 +1104,7 @@ const CommunityLayout: React.FC<Props> = ({
                       ),
                     )}
                   </section>
-                )}
+                )} */}
                 <section
                   className={`content-box-wrapper ${styles['navigation-links']}`}
                 >
@@ -1183,23 +1238,26 @@ const CommunityLayout: React.FC<Props> = ({
             </section>
 
             <section className={styles['desktop-members-conatiner']}>
-              <header>Members</header>
-              {sampleMembersData
-                .slice(0, seeMoreMembers ? 3 : sampleMembersData.length)
-                .map((obj, idx) => (
+              <header>Hobby Members</header>
+              {hobbyMembers
+                ?.slice(0, seeMoreMembers ? 3 : hobbyMembers.length)
+                .map((obj: any, idx) => (
                   <div key={idx} className={styles['member']}>
-                    <div className={styles['img-name']}>
-                      <Image src={defaultUserIcon} alt="" />
-                      <p>{obj.name}</p>
-                    </div>
-                    {obj.admin && (
-                      <button className={styles['admin-btn']}>
-                        Location Admin
-                      </button>
-                    )}
+                    <Link
+                      href={`/profile/${obj.profile_url}`}
+                      className={styles['img-name']}
+                    >
+                      {obj?.profile_image ? (
+                        <img src={obj.profile_image} />
+                      ) : (
+                        <Image src={defaultUserIcon} alt="" />
+                      )}
+
+                      <p>{obj?.full_name}</p>
+                    </Link>
                   </div>
                 ))}
-              {sampleMembersData.length > 3 && (
+              {hobbyMembers.length > 3 && (
                 <div
                   onClick={() => {
                     setSeeMoreMembers((prev) => !prev)

@@ -1136,7 +1136,12 @@ const ListingPageMain: React.FC<Props> = ({
               {/* Page Admin */}
               {(PageAdmin as any)?.full_name && isLoggedIn && (
                 <Link href={`/profile/${(PageAdmin as any)?.profile_url}`}>
-                  <Image src={AdminSvg} alt="whatsapp" width={24} height={24} />
+                  <Image
+                    src={AdminSvg}
+                    alt="page admin"
+                    width={24}
+                    height={24}
+                  />
                   <span className={styles.textdefault}>
                     {(PageAdmin as any)?.full_name}
                   </span>
