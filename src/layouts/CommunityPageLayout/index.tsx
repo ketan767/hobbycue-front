@@ -375,6 +375,22 @@ const CommunityLayout: React.FC<Props> = ({
     dispatch(updateListingModalData(activeProfile.data))
   }, [activeProfile.type])
 
+  // useEffect(()=>{
+  //   let activeProf_IDs:string[] = [];
+  //   const {length:arrLength} = activeProf_IDs;
+  //   if(arrLength>1){
+  //     if(activeProf_IDs[arrLength-1]!==activeProf_IDs[arrLength-2]){
+  //       setSelectedGenre("");
+  //       setSelectedHobby("");
+  //       setSelectedLocation("All Locations");
+  //       dispatch(setFilters({hobby:"",genre:"",location:'All Locations'}))
+  //     }
+  //   }
+  //   if(typeof activeProfile.data?._id==="string"){
+  //   activeProf_IDs.push(activeProfile.data?._id);
+  //   }
+  // },[activeProfile.data, dispatch])
+
   // const fetchPages = async () => {
   //   let params: any = ''
   //   if (!activeProfile?.data?._hobbies) return
@@ -1077,19 +1093,30 @@ const CommunityLayout: React.FC<Props> = ({
                     <DoubleArrowSvg rotate={showPanel} />
                   </button>
                 </section>
-                {/* {showPanel && (
+                 {showPanel && (
                   <section className={styles['dropdowns-panel']}>
-                    {hobbyMembers.map(
+                    {
+                    [ {
+                      name: 'Members',
+                      options: hobbyMembers,
+                      type: 'members',
+                    },
+                    {
+                      name: 'Trending Hobbies',
+                      options: trendingHobbies,
+                    },
+                  ]
+                    .map(
                       (
                         obj: {
-                          full_name: string
+                          name: string
                           options: any[]
                           type?: string
                         },
                         idx: number,
                       ) => (
                         <PanelDropdownList
-                          name={obj.full_name}
+                          name={obj.name}
                           options={obj.options}
                           key={idx}
                           type={obj?.type}
@@ -1104,7 +1131,7 @@ const CommunityLayout: React.FC<Props> = ({
                       ),
                     )}
                   </section>
-                )} */}
+                )} 
                 <section
                   className={`content-box-wrapper ${styles['navigation-links']}`}
                 >
