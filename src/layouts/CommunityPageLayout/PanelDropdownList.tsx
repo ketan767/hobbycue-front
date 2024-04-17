@@ -2,8 +2,9 @@ import { FC, useState } from 'react'
 import styles from './CommunityLayout.module.css'
 import { useRouter } from 'next/router'
 import FilledButton from '@/components/_buttons/FilledButton'
+import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
 import Link from 'next/link'
-
+import Image from 'next/image'
 interface PanelDropdownListProps {
   name: string
   options: any[]
@@ -136,7 +137,23 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                 .map((obj: any, idx: number) => (
                   <div key={idx} className={styles['option']}>
                     <div className={styles['member-container']}>
-                      <Link href={`/profile/` + obj?.profile_url}>{obj?.full_name}</Link>
+                      <Link
+                        href={`/profile/${obj.profile_url}`}
+                        className={styles['img-name']}
+                      >
+                        {obj?.profile_image ? (
+                          <img width={24} height={24} src={obj.profile_image} />
+                        ) : (
+                          <Image
+                            width={24}
+                            height={24}
+                            src={defaultUserIcon}
+                            alt=""
+                          />
+                        )}
+
+                        <p>{obj?.full_name}</p>
+                      </Link>
                       {obj?.admin === true && (
                         <button className={styles['admin-btn']}>
                           Location Admin
