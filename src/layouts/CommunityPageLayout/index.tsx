@@ -324,6 +324,10 @@ const CommunityLayout: React.FC<Props> = ({
       const hobbyIdsSet = new Set<string>()
       let genreId: string | null = null
 
+      if(filters.genre!==''||filters.hobby!==''){
+        hobbyIdsSet.add(filters.hobby);
+        genreId = filters.genre;
+      }else{
       hobbies.forEach((entry) => {
         if (entry.hobby?._id) {
           hobbyIdsSet.add(entry.hobby._id)
@@ -331,7 +335,7 @@ const CommunityLayout: React.FC<Props> = ({
         if (entry.genre?._id) {
           genreId = entry.genre._id // Assume there's only one genre ID
         }
-      })
+      })}
 
       const hobbyIds = Array.from(hobbyIdsSet)
 
@@ -354,10 +358,10 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    if (user?._hobbies) {
-      fetchHobbyMembers(user._hobbies)
+    if (activeProfile?.data?._hobbies) {
+      fetchHobbyMembers(activeProfile?.data?._hobbies)
     }
-  }, [user._hobbies])
+  }, [filters.genre,filters.hobby,activeProfile])
   const fetchTrendingHobbies = async () => {
     const { err, res } = await getTrendingHobbies(``)
 

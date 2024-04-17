@@ -1032,7 +1032,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                                 <MenuItem
                                   key={idx}
                                   value={idx + 1}
-                                  style={{ padding: '8px 0px' }}
+                                  className={styles['menu-item-class']}
                                 >
                                   <div className={styles.levelwithtext}>
                                     <Image
@@ -1246,7 +1246,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                             <MenuItem
                               key={idx}
                               value={idx + 1}
-                              style={{ padding: '8px 0px' }}
+                              className={styles['menu-item-class']}
                             >
                               <div className={styles.levelwithtext}>
                                 <Image
