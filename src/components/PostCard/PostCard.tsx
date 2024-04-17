@@ -21,6 +21,9 @@ import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import { RootState } from '@/redux/store'
 import { setActivePost } from '@/redux/slices/post'
 import defaultImg from '@/assets/svg/default-images/default-user-icon.svg'
+
+import 'react-quill/dist/quill.snow.css'
+import 'quill-emoji/dist/quill-emoji.css'
 type Props = {
   postData: any
   fromProfile?: boolean
@@ -311,7 +314,7 @@ const PostCard: React.FC<Props> = (props) => {
         <section className={styles['body']}>
           {(!has_link || props.currentSection === 'posts') && (
             <div
-              className={styles['content']}
+              className={styles['content']+" ql-editor"}
               dangerouslySetInnerHTML={{
                 __html: postData.content
                   .replace(/<img\b[^>]*>/g, '') // deleted all images from here then did the link formatting

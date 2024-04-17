@@ -124,10 +124,10 @@ const ListingHobbyEditModal: React.FC<Props> = ({
     getAllHobbies(query).then((result) => {
       const sortedHobbies = result.res.data.hobbies.sort((a: any, b: any) => {
         const indexA = a.display
-          .toLowerCase()
+          ?.toLowerCase()
           .indexOf(hobbyInputValue.toLowerCase())
         const indexB = b.display
-          .toLowerCase()
+          ?.toLowerCase()
           .indexOf(hobbyInputValue.toLowerCase())
 
         if (indexA === 0 && indexB !== 0) {
@@ -136,8 +136,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
           return 1
         }
 
-        // Otherwise, use default sorting behavior
-        return 0
+        return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
       })
       const selectedHobby = sortedHobbies[0]
       handleHobbySelection(selectedHobby)
@@ -350,7 +349,8 @@ const ListingHobbyEditModal: React.FC<Props> = ({
         hobbyRef.current?.focus()
         return
       }
-
+      console.warn({matchedHobby});
+      
       if (matchedHobby) {
         selectedHobby = matchedHobby
         setErrorOrmsg('hobby added Successfully!')
@@ -396,12 +396,12 @@ const ListingHobbyEditModal: React.FC<Props> = ({
       selectedGenre = data.genre
     }
 
-    if (!data.hobby || !listingModalData._id) return
+    if ((!data.hobby&&!selectedHobby) || !listingModalData._id) return
 
     setAddHobbyBtnLoading(true)
     let jsonData = {
-      hobbyId: data.hobby?._id,
-      genreId: data.genre?._id,
+      hobbyId: selectedHobby?._id,
+      genreId: selectedGenre?._id,
     }
     const sameAsPrevious = hobbiesList?.find(
       (obj: any) =>

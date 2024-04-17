@@ -324,6 +324,10 @@ const CommunityLayout: React.FC<Props> = ({
       const hobbyIdsSet = new Set<string>()
       let genreId: string | null = null
 
+      if(filters.genre!==''||filters.hobby!==''){
+        hobbyIdsSet.add(filters.hobby);
+        genreId = filters.genre;
+      }else{
       hobbies.forEach((entry) => {
         if (entry.hobby?._id) {
           hobbyIdsSet.add(entry.hobby._id)
@@ -331,7 +335,7 @@ const CommunityLayout: React.FC<Props> = ({
         if (entry.genre?._id) {
           genreId = entry.genre._id // Assume there's only one genre ID
         }
-      })
+      })}
 
       const hobbyIds = Array.from(hobbyIdsSet)
 
@@ -354,10 +358,10 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    if (user?._hobbies) {
-      fetchHobbyMembers(user._hobbies)
+    if (activeProfile?.data?._hobbies) {
+      fetchHobbyMembers(activeProfile?.data?._hobbies)
     }
-  }, [user._hobbies])
+  }, [filters.genre,filters.hobby,activeProfile])
   const fetchTrendingHobbies = async () => {
     const { err, res } = await getTrendingHobbies(``)
 
@@ -374,6 +378,22 @@ const CommunityLayout: React.FC<Props> = ({
   useEffect(() => {
     dispatch(updateListingModalData(activeProfile.data))
   }, [activeProfile.type])
+
+  // useEffect(()=>{
+  //   let activeProf_IDs:string[] = [];
+  //   const {length:arrLength} = activeProf_IDs;
+  //   if(arrLength>1){
+  //     if(activeProf_IDs[arrLength-1]!==activeProf_IDs[arrLength-2]){
+  //       setSelectedGenre("");
+  //       setSelectedHobby("");
+  //       setSelectedLocation("All Locations");
+  //       dispatch(setFilters({hobby:"",genre:"",location:'All Locations'}))
+  //     }
+  //   }
+  //   if(typeof activeProfile.data?._id==="string"){
+  //   activeProf_IDs.push(activeProfile.data?._id);
+  //   }
+  // },[activeProfile.data, dispatch])
 
   // const fetchPages = async () => {
   //   let params: any = ''
@@ -1077,19 +1097,30 @@ const CommunityLayout: React.FC<Props> = ({
                     <DoubleArrowSvg rotate={showPanel} />
                   </button>
                 </section>
-                {/* {showPanel && (
+                 {showPanel && (
                   <section className={styles['dropdowns-panel']}>
-                    {hobbyMembers.map(
+                    {
+                    [ {
+                      name: 'Members',
+                      options: hobbyMembers,
+                      type: 'members',
+                    },
+                    {
+                      name: 'Trending Hobbies',
+                      options: trendingHobbies,
+                    },
+                  ]
+                    .map(
                       (
                         obj: {
-                          full_name: string
+                          name: string
                           options: any[]
                           type?: string
                         },
                         idx: number,
                       ) => (
                         <PanelDropdownList
-                          name={obj.full_name}
+                          name={obj.name}
                           options={obj.options}
                           key={idx}
                           type={obj?.type}
@@ -1104,7 +1135,7 @@ const CommunityLayout: React.FC<Props> = ({
                       ),
                     )}
                   </section>
-                )} */}
+                )} 
                 <section
                   className={`content-box-wrapper ${styles['navigation-links']}`}
                 >
