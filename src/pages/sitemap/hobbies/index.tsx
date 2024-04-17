@@ -18,7 +18,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const hobby: ISitemapField[] = hobyData.map((page) => ({
     loc: `${baseUrl}/hobby/${encodeURIComponent(page.page_url)}`,
-    lastmod: new Date().toISOString(),
+    lastmod: page?.updatedAt
   }))
   return {
     props: {

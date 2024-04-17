@@ -19,7 +19,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const pages: ISitemapField[] = pagesData.map((page) => ({
     loc: `${baseUrl}/page/${encodeURIComponent(page.page_url)}`,
-    lastmod: new Date().toISOString(),
+    lastmod: page?.updatedAt,
   }))
   return {
     props: {

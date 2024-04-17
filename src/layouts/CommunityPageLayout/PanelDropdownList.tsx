@@ -136,7 +136,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                 .map((obj: any, idx: number) => (
                   <div key={idx} className={styles['option']}>
                     <div className={styles['member-container']}>
-                      <Link href={`/profile/` + obj?.slug}>{obj?.name}</Link>
+                      <Link href={`/profile/` + obj?.profile_url}>{obj?.full_name}</Link>
                       {obj?.admin === true && (
                         <button className={styles['admin-btn']}>
                           Location Admin

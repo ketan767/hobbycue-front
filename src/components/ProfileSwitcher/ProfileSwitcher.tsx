@@ -7,6 +7,7 @@ import useOutsideAlerter from '@/hooks/useOutsideAlerter'
 
 import { updateActiveProfile } from '@/redux/slices/user'
 import { updateListingModalData } from '@/redux/slices/site'
+import { setFilters } from '@/redux/slices/post'
 
 type Props = {
   className?: string
@@ -26,7 +27,13 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
   useOutsideAlerter(dropdownRef, () => setShowDropdown(false))
 
   const handleUpdateActiveProfile = (type: 'user' | 'listing', data: any) => {
-    dispatch(updateActiveProfile({ type, data }))
+    dispatch(updateActiveProfile({ type, data }));
+    dispatch(setFilters({
+      location:null,
+      hobby:"",
+      genre:"",
+      seeMoreHobbies:false
+    }))
     if (type === 'listing') {
       dispatch(updateListingModalData(data))
     }

@@ -20,7 +20,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const users: ISitemapField[] = usersData.map((user) => ({
     loc: `${baseUrl}/profile/${encodeURIComponent(user.profile_url)}`,
-    lastmod: new Date().toISOString(),
+    lastmod: user?.updatedAt,
   }))
 
   return {

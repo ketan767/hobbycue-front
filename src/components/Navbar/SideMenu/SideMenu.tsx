@@ -34,6 +34,7 @@ import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { useMediaQuery } from '@mui/material'
 import { updateListingModalData } from '@/redux/slices/site'
 import addIcon from '@/assets/svg/add.svg'
+import { setFilters } from '@/redux/slices/post'
 type Props = {
   handleClose: any
 }
@@ -91,7 +92,13 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
   }
 
   const handleUpdateActiveProfile = (type: 'user' | 'listing', data: any) => {
-    dispatch(updateActiveProfile({ type, data }))
+    dispatch(updateActiveProfile({ type, data }));
+    dispatch(setFilters({
+      location:null,
+      hobby:"",
+      genre:"",
+      seeMoreHobbies:false
+    }))
     if (type === 'listing') {
       dispatch(updateListingModalData(data))
     }
@@ -151,10 +158,10 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                   }}
                 >
                   <div className={styles['profile-switcher-img']}>
-                    {user?.profile_image ? (
+                    {activeProfile?.data?.profile_image ? (
                       <img
                         className={styles['img']}
-                        src={user.profile_image}
+                        src={activeProfile?.data?.profile_image}
                         alt=""
                         width={48}
                         height={48}
