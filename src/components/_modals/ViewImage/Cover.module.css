@@ -47,7 +47,7 @@
   .modal-close-icon {
     position: absolute;
     top: 0;
-    right: var(--spacing-12);
+    right: 0px;
     cursor: pointer;
     border-radius: 100%;
 
