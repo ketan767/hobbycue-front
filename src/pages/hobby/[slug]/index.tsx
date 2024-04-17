@@ -121,7 +121,10 @@ const HobbyDetail: React.FC<Props> = (props) => {
           property="og:image:secure_url"
           content={`${data?.profile_image}`}
         />
-        <meta property="og:description" content={`${data?.description}`} />
+        <meta
+          property="og:description"
+          content={`${data?.about ?? data?.about}`}
+        />
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${data?.display} | HobbyCue`}</title>
       </Head>

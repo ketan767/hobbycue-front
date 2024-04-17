@@ -236,6 +236,7 @@ ul.seller-info-wrapper li svg:last-child {
 
 .related img {
   border-radius: 4px;
+  object-fit: cover;
 }
 .item-title {
   margin-left: 10px;
