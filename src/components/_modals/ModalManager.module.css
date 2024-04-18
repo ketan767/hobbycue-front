@@ -112,8 +112,8 @@
   }
   .close-icon-clicked {
     /* left: calc(50vw + 152x) !important; */
-    left: calc(50vw + 136px) !important;
-    top: calc(50vh - 30px) !important;
+    left: calc(50vw + 133px) !important;
+    top: calc(50vh - 44px) !important;
   }
 }
 
