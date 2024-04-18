@@ -290,11 +290,10 @@
 }
 
 .welcome-wrapper-mobile {
-  position: absolute;
-  top: 100vh;
+  position: fixed;
+  bottom: 0;
   width: 100%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
@@ -532,7 +531,7 @@
     margin-bottom: 10px;
   }
   .welcome-wrapper-mobile{
-    padding: 24px 16px 40rem;
+    padding: 24px 16px 1rem;
   }
 }
 
