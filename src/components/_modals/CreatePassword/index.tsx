@@ -64,7 +64,7 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
   const confirmPasswordRef = useRef<HTMLInputElement>(null)
   const otpRef = useRef<HTMLInputElement>(null)
   const desktopSubmitBtnRef = useRef<HTMLButtonElement>(null)
-  const pathname = usePathname();
+  const pathname = usePathname()
   const [showValidations, setShowValidations] = useState(false)
   const [inputValidation, setInputValidation] = useState(
     validatePasswordConditions(newPassword),
@@ -84,47 +84,48 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
       setErrors({ ...errors, confirmPassword: 'Passwords does not match!' })
       confirmPasswordRef?.current?.focus()
     }
-    if(threeConditionsValid<3){
-    if (inputValidation.length === false) {
-      hasErrors = true
-      setErrors((prev) => ({
-        ...prev,
-        newPassword: 'New password should be valid!',
-      }))
-      newPasswordRef?.current?.focus()
+    if (threeConditionsValid < 3) {
+      if (inputValidation.length === false) {
+        hasErrors = true
+        setErrors((prev) => ({
+          ...prev,
+          newPassword: 'New password should be valid!',
+        }))
+        newPasswordRef?.current?.focus()
+      }
+      if (inputValidation.lowercase === false) {
+        hasErrors = true
+        setErrors((prev) => ({
+          ...prev,
+          newPassword: 'New password should be valid!',
+        }))
+        newPasswordRef?.current?.focus()
+      }
+      if (inputValidation.number === false) {
+        hasErrors = true
+        setErrors((prev) => ({
+          ...prev,
+          newPassword: 'New password should be valid!',
+        }))
+        newPasswordRef.current?.focus()
+      }
+      if (inputValidation.specialChar === false) {
+        hasErrors = true
+        setErrors((prev) => ({
+          ...prev,
+          newPassword: 'New password should be valid!',
+        }))
+        newPasswordRef.current?.focus()
+      }
+      if (inputValidation.uppercase === false) {
+        hasErrors = true
+        setErrors((prev) => ({
+          ...prev,
+          newPassword: 'New password should be valid!',
+        }))
+        newPasswordRef.current?.focus()
+      }
     }
-    if (inputValidation.lowercase === false) {
-      hasErrors = true
-      setErrors((prev) => ({
-        ...prev,
-        newPassword: 'New password should be valid!',
-      }))
-      newPasswordRef?.current?.focus()
-    }
-    if (inputValidation.number === false) {
-      hasErrors = true
-      setErrors((prev) => ({
-        ...prev,
-        newPassword: 'New password should be valid!',
-      }))
-      newPasswordRef.current?.focus()
-    }
-    if (inputValidation.specialChar === false) {
-      hasErrors = true
-      setErrors((prev) => ({
-        ...prev,
-        newPassword: 'New password should be valid!',
-      }))
-      newPasswordRef.current?.focus()
-    }
-    if (inputValidation.uppercase === false) {
-      hasErrors = true
-      setErrors((prev) => ({
-        ...prev,
-        newPassword: 'New password should be valid!',
-      }))
-      newPasswordRef.current?.focus()
-    }}
     if (otp.length === 0) {
       hasErrors = true
       setErrors((prev) => ({ ...prev, otp: 'Please enter OTP!' }))
@@ -143,9 +144,9 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
       email: forgotPasswordEmail,
       otp: otp,
       newPassword: newPassword,
-    });
-    const {err:userErr,res:userRes} = await getMyProfileDetail();
-    if(userRes?.data){
+    })
+    const { err: userErr, res: userRes } = await getMyProfileDetail()
+    if (userRes?.data) {
       dispatch(updateUser(userRes?.data.data.user))
     }
 
@@ -161,15 +162,15 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
     }
     if (res?.data.success) {
       console.log(res.data)
-      if(pathname==="/settings/account-data"){
+      if (pathname === '/settings/account-data') {
         dispatch(
           openModal({
             type: 'Verify-ActionModal',
             closable: true,
-            onVerify:onVerify?onVerify:undefined
+            onVerify: onVerify ? onVerify : undefined,
           }),
         )
-      }else{
+      } else {
         dispatch(closeModal())
       }
     }
@@ -248,7 +249,7 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
         <section className={styles['body']}>
           <div className={styles.inputField}>
             <label className={styles.label}>
-              OTP to set password has been sent to your registered E-mail id.
+              OTP to set password has been sent to your registered E-mail ID.
             </label>
             {/* <label className={styles.label}>Current Password</label> */}
             <div

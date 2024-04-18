@@ -194,6 +194,7 @@ const Contact: React.FC<Props> = ({}) => {
 
   const handleSubmit = async () => {
     let hasError = false
+
     if (!data.YouAre.value || data.YouAre.value.length === 0) {
       hasError = true
       setData((prev) => ({
@@ -224,9 +225,12 @@ const Contact: React.FC<Props> = ({}) => {
         },
       }))
       // added this timeout because, on enter clicked this error is not showing, because enter makes a new line and changes textarea
-      setTimeout(() => {
+      if (
+        data.name.value.length === 0 ||
+        !data.public_email.value ||
+        !data.phone.number
+      )
         messageRef.current?.focus()
-      }, 100)
     }
     if (
       (!data.public_email.value || data.public_email.value.length === 0) &&
@@ -249,7 +253,15 @@ const Contact: React.FC<Props> = ({}) => {
         }
       })
     }
-    if (!isEmailValid(data.public_email.value)) {
+    if (data.name.value.length === 0) {
+      hasError = true
+      setData((prev) => ({
+        ...prev,
+        name: { ...prev.name, error: 'This field is required!' },
+      }))
+      inputRef.current?.focus()
+    }
+    if (data.public_email.value && !isEmailValid(data.public_email.value)) {
       setData((prev) => ({
         ...prev,
         public_email: {
@@ -258,7 +270,6 @@ const Contact: React.FC<Props> = ({}) => {
         },
       }))
       inputEmailRef.current?.focus()
-      return
     }
     if (data.phone.number) {
       if (
@@ -295,14 +306,7 @@ const Contact: React.FC<Props> = ({}) => {
         })
       }
     }
-    if (data.name.value.length === 0) {
-      hasError = true
-      setData((prev) => ({
-        ...prev,
-        name: { ...prev.name, error: 'This field is required!' },
-      }))
-      inputRef.current?.focus()
-    }
+
     if (hasError === true) {
       return
     }
