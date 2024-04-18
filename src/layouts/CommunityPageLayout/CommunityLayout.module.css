@@ -816,6 +816,14 @@ letter-spacing: 0.06px;
           font-weight: 500;
           line-height: 18px; /* 128.571% */
           letter-spacing: 0.07px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .dropdowns-panel .parent-list .options-parent .member-container a img{
+          border-radius: 50%;
+          border: 1px solid #8064A2;
         }
 
         .dropdowns-panel .parent-list .options-parent .option {
