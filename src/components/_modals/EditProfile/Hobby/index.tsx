@@ -777,28 +777,16 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const AddButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
     const handleKeyPress = (event: any) => {
-      if (event.key === 'Enter') {
-        if (
-          event?.srcElement?.tagName?.toLowerCase() === 'svg' ||
-          event?.srcElement?.tagName?.toLowerCase() === 'img' ||
-          event?.srcElement?.tagName?.toLowerCase() === 'input'
-        ) {
-          return
-        }
-        if (
-          event?.srcElement?.classList &&
-          (event?.srcElement?.classList?.contains('MuiSelect-select') ||
-            event?.srcElement?.classList?.contains('Mui-selected') ||
-            event?.srcElement?.classList?.contains('MuiMenuItem-root'))
-        ) {
-          return
-        }
-        // console.warn({ event })
-        // return
-        nextButtonRef.current?.click()
-      }
+      // if (event.key === 'Enter') {
+      //   console.log({showHobbyDowpdown,showGenreDowpdown})
+      //   if(showHobbyDowpdown===false&&showGenreDowpdown===false){
+      //     nextButtonRef.current?.click()
+      //   }else{
+      //     nextButtonRef.current?.focus()
+      //   }
+      // }
     }
-
+    searchref.current?.focus()
     window.addEventListener('keydown', handleKeyPress)
 
     return () => {
@@ -1032,7 +1020,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                                 <MenuItem
                                   key={idx}
                                   value={idx + 1}
-                                  className={styles['menu-item-class']}
+                                  style={{ padding: '8px 0px' }}
                                 >
                                   <div className={styles.levelwithtext}>
                                     <Image
@@ -1246,7 +1234,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                             <MenuItem
                               key={idx}
                               value={idx + 1}
-                              className={styles['menu-item-class']}
+                              style={{ padding: '8px 0px' }}
                             >
                               <div className={styles.levelwithtext}>
                                 <Image
@@ -1342,11 +1330,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
               onClick={handleSubmit}
               disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
             >
-              {submitBtnLoading ? (
-                <CircularProgress color="inherit" size={'14px'} />
-              ) : (
-                'Save'
-              )}
+              Save
             </button>
           )}
         </footer>

@@ -92,7 +92,6 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   const genreDropdownRef = useRef<HTMLDivElement>(null)
   const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
   const [showGenreDropdown, setShowGenreDropdown] = useState<boolean>(false)
-  const [submitBtnLoading,setSubmitBtnLoading] = useState(false);
   const [genreid, setGenreId] = useState('')
   const [hobbyInputValue, setHobbyInputValue] = useState('')
   const [genreInputValue, setGenreInputValue] = useState('')
@@ -124,10 +123,10 @@ const ListingHobbyEditModal: React.FC<Props> = ({
     getAllHobbies(query).then((result) => {
       const sortedHobbies = result.res.data.hobbies.sort((a: any, b: any) => {
         const indexA = a.display
-          ?.toLowerCase()
+          .toLowerCase()
           .indexOf(hobbyInputValue.toLowerCase())
         const indexB = b.display
-          ?.toLowerCase()
+          .toLowerCase()
           .indexOf(hobbyInputValue.toLowerCase())
 
         if (indexA === 0 && indexB !== 0) {
@@ -136,7 +135,8 @@ const ListingHobbyEditModal: React.FC<Props> = ({
           return 1
         }
 
-        return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
+        // Otherwise, use default sorting behavior
+        return 0
       })
       const selectedHobby = sortedHobbies[0]
       handleHobbySelection(selectedHobby)
@@ -349,8 +349,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
         hobbyRef.current?.focus()
         return
       }
-      console.warn({matchedHobby});
-      
+
       if (matchedHobby) {
         selectedHobby = matchedHobby
         setErrorOrmsg('hobby added Successfully!')
@@ -396,12 +395,12 @@ const ListingHobbyEditModal: React.FC<Props> = ({
       selectedGenre = data.genre
     }
 
-    if ((!data.hobby&&!selectedHobby) || !listingModalData._id) return
+    if (!data.hobby || !listingModalData._id) return
 
     setAddHobbyBtnLoading(true)
     let jsonData = {
-      hobbyId: selectedHobby?._id,
-      genreId: selectedGenre?._id,
+      hobbyId: data.hobby?._id,
+      genreId: data.genre?._id,
     }
     const sameAsPrevious = hobbiesList?.find(
       (obj: any) =>
@@ -445,7 +444,6 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   }
 
   const handleSubmit = async () => {
-    setSubmitBtnLoading(true);
     setHobbyError(false)
     setErrorOrmsg(null)
     setShowGenreDropdown(false)
@@ -460,7 +458,6 @@ const ListingHobbyEditModal: React.FC<Props> = ({
         )
 
         if (!hobbyInputValue.trim()) {
-          setSubmitBtnLoading(false)
           window.location.reload()
           handleClose()
           return
@@ -474,7 +471,6 @@ const ListingHobbyEditModal: React.FC<Props> = ({
           // dispatch(openModal({ type: 'add-hobby', closable: true }))
           setShowAddHobbyModal(true)
           setIsChanged(false)
-          setSubmitBtnLoading(false)
           return
         }
       } else {
@@ -491,14 +487,13 @@ const ListingHobbyEditModal: React.FC<Props> = ({
         if (selectedGenre !== matchedGenre || !matchedGenre) {
           setIsChanged(false)
           setShowAddGenreModal(true)
-          setSubmitBtnLoading(false)
           return
         }
       } else {
         selectedGenre = data.genre
       }
 
-      if (!data.hobby || !listingModalData._id) return setSubmitBtnLoading(false);
+      if (!data.hobby || !listingModalData._id) return
 
       setAddHobbyBtnLoading(true)
       let jsonData = { hobbyId: data.hobby?._id, genreId: data.genre?._id }
@@ -511,13 +506,11 @@ const ListingHobbyEditModal: React.FC<Props> = ({
         setHobbyError(true)
         setErrorOrmsg('Same hobby detected in the hobbies list')
         setAddHobbyBtnLoading(false)
-        setSubmitBtnLoading(false);
         return
       }
       const { err, res } = await addListingHobby(listingModalData._id, jsonData)
       if (err) {
         setAddHobbyBtnLoading(false)
-        setSubmitBtnLoading(false)
         return console.log(err)
       }
       await updateHobbyList()
@@ -530,17 +523,14 @@ const ListingHobbyEditModal: React.FC<Props> = ({
     if (hobbiesList.length === 0) {
       setErrorOrmsg('Add atleast one hobby!')
       setHobbyError(true)
-      setSubmitBtnLoading(false)
       hobbyRef.current?.focus()
       return
     }
-    if (onComplete) {onComplete();setSubmitBtnLoading(false)}
+    if (onComplete) onComplete()
     else {
-      setSubmitBtnLoading(false);
       window.location.reload()
       dispatch(closeModal())
     }
-    setSubmitBtnLoading(false)
   }
 
   useEffect(() => {
@@ -586,34 +576,17 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   const AddButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
     const handleKeyPress = (event: any) => {
-      if (event.key === 'Enter') {
-        if (
-          event?.srcElement?.tagName?.toLowerCase() === 'svg' ||
-          event?.srcElement?.tagName?.toLowerCase() === 'img' ||
-          event?.srcElement?.tagName?.toLowerCase() === 'input' 
-        ) {
-          return;
-        }
-        if (
-          event?.srcElement?.classList &&
-          (event?.srcElement?.classList?.contains('MuiSelect-select') ||
-            event?.srcElement?.classList?.contains('Mui-selected')||
-            event?.srcElement?.classList?.contains('MuiMenuItem-root'))
-        ) {
-          return;
-        }
-        // console.warn({ event })
-        // return
-        nextButtonRef.current?.click()
-      }
+      // if (event.key === 'Enter') {
+      //   nextButtonRef.current?.focus()
+      // }
     }
-
+    hobbyRef.current?.focus()
     window.addEventListener('keydown', handleKeyPress)
 
     return () => {
       window.removeEventListener('keydown', handleKeyPress)
     }
-  }, []);
+  }, [])
   const HandleSaveError = async () => {
     if (hobbiesList.length === 0) {
       setIsError(true)
@@ -1041,13 +1014,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
             className="modal-footer-btn submit"
             onClick={handleSubmit}
           >
-            {submitBtnLoading ? (
-              <CircularProgress color="inherit" size={'24px'} />
-            ) : onComplete ? (
-              'Finish'
-            ) : (
-              'Save'
-            )}
+            {onComplete ? 'Finish' : 'Save'}
           </button>
           {/* SVG Button for Mobile */}
           {onComplete ? (
@@ -1064,11 +1031,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
               className="modal-mob-btn-save"
               onClick={handleSubmit}
             >
-              {submitBtnLoading ? (
-                <CircularProgress color="inherit" size={'14px'} />
-              ) : (
-                'Save'
-              )}
+              Save
             </button>
           )}
         </footer>
