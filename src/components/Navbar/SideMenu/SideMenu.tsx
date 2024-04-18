@@ -90,15 +90,48 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
       message: 'This feature is under development',
     })
   }
+  const handleOptionClick = (option: any) => {
+    dispatch(resetSearch())
 
+    switch (option.text) {
+      case 'People - Community':
+        dispatch(showAllPeopleTrue())
+        router.push('/search')
+        handleClose()
+        break
+      case 'Places - Venues':
+        dispatch(showAllPlaceTrue())
+        router.push('/search')
+        handleClose()
+        break
+      case 'Programs - Events':
+        dispatch(showAllEventTrue())
+        router.push('/search')
+        handleClose()
+        break
+      case 'Products - Store':
+        dispatch(showAllProductsTrue())
+        router.push('/search')
+        handleClose()
+        break
+      case 'Posts - Write-ups':
+        showFeatureUnderDevelopment()
+        handleClose()
+        break
+      default:
+        break
+    }
+  }
   const handleUpdateActiveProfile = (type: 'user' | 'listing', data: any) => {
-    dispatch(updateActiveProfile({ type, data }));
-    dispatch(setFilters({
-      location:null,
-      hobby:"",
-      genre:"",
-      seeMoreHobbies:false
-    }))
+    dispatch(updateActiveProfile({ type, data }))
+    dispatch(
+      setFilters({
+        location: null,
+        hobby: '',
+        genre: '',
+        seeMoreHobbies: false,
+      }),
+    )
     if (type === 'listing') {
       dispatch(updateListingModalData(data))
     }
@@ -388,53 +421,13 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                 />
               </header>
               <div className={styles['dropdown-options']}>
-                {exploreOptions.map((option: any) => {
-                  return <p key={option.text}>{option.text}</p>
-                })}
-              </div>
-
-              <div className={styles['explore-list-dropdown']}>
-                {exploreOptions.map((option: any) => (
-                  <section className={styles['list']} key={option.text}>
-                    <h4
-                      className={styles['hobbiescategory']}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        dispatch(resetSearch())
-
-                        switch (option.text) {
-                          case 'People - Community':
-                            dispatch(showAllPeopleTrue())
-                            handleClose()
-                            router.push('/search')
-                            break
-                          case 'Places - Venues':
-                            dispatch(showAllPlaceTrue())
-                            handleClose()
-                            router.push('/search')
-                            break
-                          case 'Programs - Events':
-                            dispatch(showAllEventTrue())
-                            handleClose()
-                            router.push('/search')
-                            break
-                          case 'Products - Store':
-                            dispatch(showAllProductsTrue())
-                            handleClose()
-                            router.push('/search')
-                            break
-                          case 'Posts - Write-ups':
-                            showFeatureUnderDevelopment()
-                            handleClose() // Move handleClose() outside the switch case to ensure it's always called
-                            break
-                          default:
-                            break
-                        }
-                      }}
-                    >
-                      {option.text}
-                    </h4>
-                  </section>
+                {exploreOptions.map((option) => (
+                  <p
+                    key={option.text}
+                    onClick={() => handleOptionClick(option)}
+                  >
+                    {option.text}
+                  </p>
                 ))}
               </div>
             </div>

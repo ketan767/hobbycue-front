@@ -36,4 +36,7 @@
   .grid-container {
     gap: 0;
   }
+  .minheight100vh{
+    min-height: 0 !important;
+  }
 }
