@@ -27,6 +27,7 @@ import CloseIcon from '@/assets/icons/CloseIcon'
 import { useRouter } from 'next/router'
 import { increaseRefreshNum, setFilters } from '@/redux/slices/post'
 import MobileLocationDropdown from './MobileLocationDropdown'
+import { updateActiveProfile } from '@/redux/slices/user'
 
 const CustomEditor = dynamic(() => import('@/components/CustomEditor'), {
   ssr: false,
@@ -70,6 +71,7 @@ export const CreatePost: React.FC<Props> = ({
   onStatusChange,
   propData,
 }) => {
+  const router = useRouter();
   const { user, activeProfile } = useSelector((state: RootState) => state.user)
   const { filters } = useSelector((state: RootState) => state.post)
   const [hobbies, setHobbies] = useState([])
@@ -133,6 +135,57 @@ export const CreatePost: React.FC<Props> = ({
       }
     })
   }, [filters])
+
+
+  // automatically hobby will take user's hobby[0] when profile switches
+
+  useEffect(()=>{
+    const hobbiesDropDownArr =
+      data.data?._hobbies?.map((item: any) => ({
+        hobbyId: item.hobby?._id,
+        genreId: item.genre?._id ?? '', // Add genre id to the object
+        hobbyDisplay: `${item.hobby?.display}`,
+        genreDisplay: `${item?.genre?.display ?? ''}`,
+      })) ?? []
+    const selectedHobby = hobbiesDropDownArr.find((obj: any) => {
+      if (filters.genre && filters.genre !== '') {
+        return obj.hobbyId === filters.hobby && obj.genreId === filters.genre
+      } else {
+        return obj.hobbyId === filters.hobby
+      }
+    })
+    setData((prev) => {
+      if (selectedHobby) {
+        return {
+          ...prev,
+          hobby: {
+            _id: selectedHobby.hobbyId,
+            display: selectedHobby.hobbyDisplay,
+          },
+          genre: {
+            _id: selectedHobby.genreId,
+            display: selectedHobby.genreDisplay,
+          },
+          visibility:filters.location??''
+        }
+      } else {
+        if(hobbiesDropDownArr && hobbiesDropDownArr?.length>0){
+        return ({...prev,visibility:filters.location??'All Locations',
+          hobby:{
+            _id:hobbiesDropDownArr[0]?.hobbyId,
+            display:hobbiesDropDownArr[0]?.hobbyDisplay
+          },
+          genre:hobbiesDropDownArr[0]?.genreId?{
+            _id:hobbiesDropDownArr[0]?.genreId,
+            display:hobbiesDropDownArr[0]?.genreDisplay
+          }:null
+        })}
+        else{
+          return {...prev,visibility:filters.location??'All Locations',}
+        }
+      }
+    })
+  },[data.data])
 
   useEffect(() => {
     setHobbies(activeProfile.data?._hobbies)
@@ -406,9 +459,11 @@ export const CreatePost: React.FC<Props> = ({
       if (res.data.success) {
         store.dispatch(setFilters({location:data.visibility!==""?data.visibility:null,hobby:data.hobby?._id??"",
         genre:data.genre?._id??"",}))
+        store.dispatch(updateActiveProfile({ type:data.type, data:data.data }));
         store.dispatch(closeModal())
         // window.location.reload()
         store.dispatch(increaseRefreshNum())
+        router.push("/community")
       }
       return
     }
@@ -422,9 +477,11 @@ export const CreatePost: React.FC<Props> = ({
       console.log('res', res)
       store.dispatch(setFilters({location:data.visibility!==""?data.visibility:null,hobby:data.hobby?._id??"",
       genre:data.genre?._id??"",}))
+      store.dispatch(updateActiveProfile({ type:data.type, data:data.data }));
       store.dispatch(closeModal())
       // window.location.reload()
       store.dispatch(increaseRefreshNum())
+      router.push("/community")
     }
   }
 

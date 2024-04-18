@@ -235,6 +235,20 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
         return [];
       }
     });
+    const tagsFromL3 = data.hobbies?.flatMap((obj:any) => {
+      // Check if tags exist, if not, return an empty array
+      if (obj.tags) {
+
+        // Map over each tag, and add category and subcategory
+        return obj.tags.map((tag:any) => ({
+          ...tag,
+          category: obj?.category,
+          sub_category: obj?.sub_category,
+        }));
+      } else {
+        return [];
+      }
+    });
     const tagsFromL2 = data.l2hobbies?.flatMap((obj:any) => {
       // Check if tags exist, if not, return an empty array
       if (obj.tags) {
@@ -264,6 +278,20 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
         return [];
       }
     });
+    const genresFromL3 = data.hobbies?.flatMap((obj:any) => {
+      // Check if tags exist, if not, return an empty array
+      if (obj.genre && typeof obj.genre !== 'string') {
+
+        // Map over each tag, and add category and subcategory
+        return obj.genre.map((genre:any) => ({
+          ...genre,
+          category: obj?.category,
+          sub_category: obj?.sub_category,
+        }));
+      } else {
+        return [];
+      }
+    });
     const genresFromL2 = data.l2hobbies?.flatMap((obj:any) => {
       // Check if tags exist, if not, return an empty array
       if (obj.genre) {
@@ -282,7 +310,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
     setFilterCategories(data.categories)
     setSubCategories(data.sub_categories)
     setFilterSubCategories(data.sub_categories)
-    const combinedArray = [...data.hobbies, ...genresFromL5, ...tagsFromL5, ...tagsFromL2,...genresFromL2];
+    const combinedArray = [...data.hobbies, ...genresFromL5, ...genresFromL3, ...genresFromL2, ...tagsFromL5, ...tagsFromL3, ...tagsFromL2,];
 
     const uniqueCombinedArray = combinedArray.filter((item:any, index:number, self) =>
       index === self.findIndex((i) =>
@@ -695,7 +723,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                           a.display?.localeCompare(b.display),
                                         )
                                         .map((hobby: HobbyType) => (<>
-                                          <Link
+                                        {hobby?.slug?<Link
                                             key={hobby.slug}
                                             href={`/hobby/${hobby.slug}`}
                                             className={`${
@@ -704,7 +732,8 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                             }`}
                                           >
                                             <span>{hobby.display}, </span>
-                                          </Link>{" "}
+                                          </Link>:null}
+                                          
                                         </>))}
                                     </p>
                                   </div>
@@ -736,7 +765,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     `level=1&populate=category,sub_category,tags`,
   )
   const hobby = await getAllHobbies(
-    `level=3&populate=category,sub_category,tags&limit=500`,
+    `level=3&populate=category,sub_category,tags`,
   )
 
   const l2hobbies = await getAllHobbies(

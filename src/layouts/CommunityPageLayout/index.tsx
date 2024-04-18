@@ -974,9 +974,9 @@ const CommunityLayout: React.FC<Props> = ({
                 <section
                   className={`content-box-wrapper ${styles['start-post-btn-container']}`}
                 >
-                  {user?.profile_image ? (
+                  {activeProfile?.data?.profile_image ? (
                     <img
-                      src={user?.profile_image}
+                      src={activeProfile?.data?.profile_image}
                       alt=""
                       className={styles['profile-img']}
                       height={40}
@@ -1021,7 +1021,7 @@ const CommunityLayout: React.FC<Props> = ({
                 <section className={styles['filter-section']}>
                   <div>
                     <CommunityTopDropdown
-                      maxWidth="139px"
+                      // maxWidth="139px"
                       className={styles['hobby-select']}
                       value={
                         hobbiesDropDownArr.find(
@@ -1042,7 +1042,7 @@ const CommunityLayout: React.FC<Props> = ({
                         },
                       ]?.map((item: any, idx) => (
                         <CommunityDropdownOption
-                          maxWidth="139px"
+                          // maxWidth="139px"
                           {...item}
                           key={idx}
                           currentValue={
