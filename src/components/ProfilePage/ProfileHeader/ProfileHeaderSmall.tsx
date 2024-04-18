@@ -38,7 +38,7 @@ const ProfileHeaderSmall: React.FC<Props> = ({
   const dispatch = useDispatch()
 
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
-  const { isAuthenticated } = useSelector((state: RootState) => state.user)
+  const { isAuthenticated, user } = useSelector((state: RootState) => state.user)
   const tabs: ProfilePageTabs[] = ['home', 'posts', 'media', 'pages', 'blogs']
 
   const [open, setOpen] = useState(false)
@@ -119,7 +119,7 @@ const ProfileHeaderSmall: React.FC<Props> = ({
       // dispatch(closeModal())
     }
   }
-
+  const itsMe = data?._id === user?._id;
   const handleShare = () => {
     dispatch(updateShareUrl(window.location.href))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
@@ -193,7 +193,7 @@ const ProfileHeaderSmall: React.FC<Props> = ({
 
           {/* Action Buttons */}
           <div className={styles['action-btn-wrapper']}>
-            <FilledButton className={styles.contactBtn} onClick={handleContact}>
+            <FilledButton disabled={itsMe} className={styles.contactBtn} onClick={handleContact}>
               Contact
             </FilledButton>
             {/* Send Email Button  */}
