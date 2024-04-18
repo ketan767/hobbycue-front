@@ -127,6 +127,11 @@
   color: rgba(192, 80, 77, 1);
 }
 
+.options-container-class >div{
+  padding-right: 4px;
+  padding-left: 4px;
+}
+
 .dropdown-wrapper {
   position: relative;
 }
@@ -352,6 +357,9 @@
   max-height: 250px !important;
   overflow-y: auto !important;
   z-index: 1005 !important;
+  
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 
 @media screen and (max-width: 1100px) {

@@ -939,7 +939,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   value={addressLabel}
                   name="label"
                   ref={addressLabelRef}
-                  onChange={(e: any) => setAddressLabel(e.target.value)}
+                  onChange={(e: any) => {setAddressLabel(e.target.value);setInputErrs((prev)=>({...prev,addressLabel:null}))}}
                 />
               </div>
               <p className={styles['helper-text']}>{inputErrs.addressLabel}</p>
