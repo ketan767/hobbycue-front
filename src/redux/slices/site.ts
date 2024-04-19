@@ -83,7 +83,9 @@ interface AuthState {
     hobby: boolean
     listing: boolean
     profile: boolean
-  }
+  },
+  sidemenuRefresh: number // added to add nav click feature on welcome mobile screen
+  searchToggleRefresh: number // added to show search popup from welcome search click
 }
 
 const initialState: AuthState = {
@@ -112,6 +114,8 @@ const initialState: AuthState = {
     listing: true,
     profile: true
   },
+  sidemenuRefresh: 0,
+  searchToggleRefresh: 0
 }
 
 /** Template Listing Data 
@@ -204,6 +208,12 @@ const siteSlice = createSlice({
     updateProfileMenuExpandAll: (state, { payload }) => {
       state.expandMenu.profile = payload
     },
+    increaseSidemenuRefresh: (state)=> {
+      state.sidemenuRefresh = state.sidemenuRefresh+1
+    },
+    increaseSearchRefresh: (state)=> {
+      state.searchToggleRefresh = state.searchToggleRefresh+1
+    },
   },
 })
 
@@ -220,6 +230,8 @@ export const {
   updateHobbyMenuExpandAll,
   updateListingMenuExpandAll,
   updateProfileMenuExpandAll,
+  increaseSidemenuRefresh,
+  increaseSearchRefresh
 } = siteSlice.actions
 
 export default siteSlice.reducer

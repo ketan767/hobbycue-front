@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import styles from './UserOnboardingWelcomeModal.module.css'
+import LogoSmall from '@/assets/image/logo-small.png'
 import Image from 'next/image'
 import FilledButton from '@/components/_buttons/FilledButton'
 import { useRouter } from 'next/router'
@@ -8,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
 import { IconButton, InputAdornment, TextField } from '@mui/material'
 import SearchIcon from '@/assets/svg/search-small.svg'
-import { setShowPageLoader } from '@/redux/slices/site'
+import { increaseSearchRefresh, setShowPageLoader } from '@/redux/slices/site'
 import {
   getMyProfileDetail,
   searchUsers,
@@ -23,6 +24,7 @@ import {
   setTypeResultTwo,
   setUserSearchResults,
 } from '@/redux/slices/search'
+import { increaseSidemenuRefresh } from '@/redux/slices/site'
 import { searchPages } from '@/services/listing.service'
 import { getAllHobbies } from '@/services/hobby.service'
 import { RootState } from '@/redux/store'
@@ -65,8 +67,8 @@ const UserOnboardingWelcomeModal = () => {
     if (localStorage) {
       localStorage.setItem('modal-shown-after-login', 'true')
     }
-    dispatch(closeModal())
     router.push('/search')
+    dispatch(closeModal())
     const searchValue = data.search.value.trim()
     const taglineValue = ''
     const cityValue = ''
@@ -180,6 +182,23 @@ const UserOnboardingWelcomeModal = () => {
       console.error('An error occurred during the combined search:', error)
     }
   }
+
+  const openSidebar = () => {
+    if (localStorage) {
+      localStorage.setItem('modal-shown-after-login', 'true')
+    }
+    dispatch(increaseSidemenuRefresh())
+    dispatch(closeModal())
+  }
+
+  const openSearchToggle = () => {
+    if (localStorage) {
+      localStorage.setItem('modal-shown-after-login', 'true')
+    }
+    dispatch(increaseSearchRefresh())
+    dispatch(closeModal())
+  }
+
   const updateWelcomeStatus = async () => {
     const { err: error, res: response } = await getMyProfileDetail()
     console.log('userdataaa', response)
@@ -450,7 +469,7 @@ const UserOnboardingWelcomeModal = () => {
           <div>
             <div className={styles['my-community-wrapper-mobile']}>
               <Image
-                src="/logo-welcome-small.svg"
+                src={LogoSmall}
                 onClick={() => {
                   localStorage.setItem('modal-shown-after-login', 'true')
                   dispatch(closeModal())
@@ -486,7 +505,7 @@ const UserOnboardingWelcomeModal = () => {
             </div>
             <div className={styles['search-wrapper-mobile']}>
               <img
-                onClick={searchResult}
+                onClick={openSearchToggle}
                 src="/searchIcon.svg"
                 width={30}
                 height={30}
@@ -522,6 +541,7 @@ const UserOnboardingWelcomeModal = () => {
                 width={30}
                 height={30}
                 alt=""
+                onClick={()=>{openSidebar()}}
               />
               <div>
                 <div className={styles['my-profile-mobile']}>
