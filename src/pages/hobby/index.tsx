@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styles from '@/styles/AllHobbies.module.css'
+import hobbyStyles from './HobbyPage.module.css'
 import { getAllHobbies } from '@/services/hobby.service'
 import {
   FormControl,
@@ -30,6 +31,7 @@ type ListingHobbyData = {
 }
 
 type HobbyType = {
+  level: any
   _id: string
   display: string
   slug: any
@@ -79,8 +81,8 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
     }
     if (isEmptyField(e.target.value)) return setHobbyDropdownList([])
 
-    let filteredHobbies = [...hobbyData]
-    const normalizedSearchTerm = e.target.value.toLowerCase()
+    // let filteredHobbies = [...hobbyData]
+    // const normalizedSearchTerm = e.target.value.toLowerCase()
 
     // if (filterData.category) {
     //   filteredHobbies = filteredHobbies.filter(
@@ -93,23 +95,52 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
     //     (hobby: any) => hobby?.sub_category?._id === filterData.subCategory,
     //   )
     // }
-    if (e.target.value) {
-      filteredHobbies = filteredHobbies.filter((hobby: any) =>
-        hobby?.display?.toLowerCase()?.includes(normalizedSearchTerm),
-      )
-    }
 
-    filteredHobbies = filteredHobbies.sort((a: any, b: any) => {
-      const aIndex = a?.display?.toLowerCase()?.indexOf(normalizedSearchTerm)
-      const bIndex = b?.display?.toLowerCase()?.indexOf(normalizedSearchTerm)
-      return aIndex - bIndex
+    // if (e.target.value) {
+    //   filteredHobbies = filteredHobbies.filter((hobby: any) =>
+    //     hobby?.display?.toLowerCase()?.includes(normalizedSearchTerm),
+    //   )
+    // }
+
+
+    // filteredHobbies = filteredHobbies.sort((a: any, b: any) => {
+    //   const aIndex = a?.display?.toLowerCase()?.indexOf(normalizedSearchTerm)
+    //   const bIndex = b?.display?.toLowerCase()?.indexOf(normalizedSearchTerm)
+    //   return aIndex - bIndex
+    // })
+    // // return filteredHobbies;
+    // setData((prev) => {
+    //   return { ...prev, hobby: null }
+    // })
+
+    // setHobbyDropdownList(filteredHobbies)
+    
+    const query = `fields=display,genre&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
+    const { err, res } = await getAllHobbies(query)
+
+    if (err) return console.log(err)
+
+    // Modify the sorting logic to prioritize items where the search keyword appears at the beginning
+    const sortedHobbies = res.data.hobbies.sort((a: any, b: any) => {
+      const indexA = a.display
+        .toLowerCase()
+        .indexOf(e.target.value.toLowerCase())
+      const indexB = b.display
+        .toLowerCase()
+        .indexOf(e.target.value.toLowerCase())
+
+      if (indexA === 0 && indexB !== 0) {
+        return -1
+      } else if (indexB === 0 && indexA !== 0) {
+        return 1
+      }
+
+      return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
     })
-    // return filteredHobbies;
-    setData((prev) => {
+      setData((prev) => {
       return { ...prev, hobby: null }
     })
-
-    setHobbyDropdownList(filteredHobbies)
+    setHobbyDropdownList(sortedHobbies)
 
     // const query = `fields=display,sub_category&show=true&search=${e.target.value}`
     // const { err, res } = await getAllHobbies(query)
@@ -150,175 +181,216 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
     setFilterCategories(data.categories)
     setSubCategories(data.sub_categories)
     setFilterSubCategories(data.sub_categories)
-    
-    const tagsFromL5 = data.genre?.flatMap((obj:any) => {
-      // Check if tags exist, if not, return an empty array
-      if (obj.tags) {
-
-        // Map over each tag, and add category and subcategory
-        return obj.tags.map((tag:any) => ({
-          ...tag,
-          category: obj?.category,
-          sub_category: obj?.sub_category,
-        }));
-      } else {
-        return [];
-      }
-    });
-    const tagsFromL2 = data.l2hobbies?.flatMap((obj:any) => {
-      // Check if tags exist, if not, return an empty array
-      if (obj.tags) {
-
-        // Map over each tag, and add category and subcategory
-        return obj.tags.map((tag:any) => ({
-          ...tag,
-          category: obj?.category,
-          sub_category: obj?.sub_category,
-        }));
-      } else {
-        return [];
-      }
-    });
-
-    const genresFromL5 = data.genre?.flatMap((obj:any) => {
-      // Check if tags exist, if not, return an empty array
-      if (obj.genre) {
-
-        // Map over each tag, and add category and subcategory
-        return obj.genre.map((genre:any) => ({
-          ...genre,
-          category: obj?.category,
-          sub_category: obj?.sub_category,
-        }));
-      } else {
-        return [];
-      }
-    });
-    const genresFromL2 = data.l2hobbies?.flatMap((obj:any) => {
-      // Check if tags exist, if not, return an empty array
-      if (obj.genre) {
-
-        // Map over each tag, and add category and subcategory
-        return obj.genre.map((genre:any) => ({
-          ...genre,
-          category: obj?.category,
-          sub_category: obj?.sub_category,
-        }));
-      } else {
-        return [];
-      }
-    });
-    const combinedArray = [...data.hobbies, ...genresFromL5, ...tagsFromL5, ...tagsFromL2,...genresFromL2];
-
-    const uniqueCombinedArray = combinedArray.filter((item:any, index:number, self) =>
-      index === self.findIndex((i) =>
-        i._id === item._id 
+    if (data.allTagsAndGenres) {
+      const uniqueCombinedArray = data.allTagsAndGenres.filter(
+        (item: any, index: number, self: any[]) =>
+          index === self.findIndex((i) => i._id === item._id),
       )
-    );
-    
-    setHobbyData(uniqueCombinedArray);
+      setHobbyData(uniqueCombinedArray)
+    } else {
+      const tagsFromL5 = data.genre?.flatMap((obj: any) => {
+        // Check if tags exist, if not, return an empty array
+        if (obj.tags) {
+          // Map over each tag, and add category and subcategory
+          return obj.tags.map((tag: any) => ({
+            ...tag,
+            category: obj?.category,
+            sub_category: obj?.sub_category,
+          }))
+        } else {
+          return []
+        }
+      })
+      const tagsFromL3 = data.hobbies?.flatMap((obj: any) => {
+        // Check if tags exist, if not, return an empty array
+        if (obj.tags) {
+          // Map over each tag, and add category and subcategory
+          return obj.tags.map((tag: any) => ({
+            ...tag,
+            category: obj?.category,
+            sub_category: obj?.sub_category,
+          }))
+        } else {
+          return []
+        }
+      })
+      const tagsFromL2 = data.l2hobbies?.flatMap((obj: any) => {
+        // Check if tags exist, if not, return an empty array
+        if (obj.tags) {
+          // Map over each tag, and add category and subcategory
+          return obj.tags.map((tag: any) => ({
+            ...tag,
+            category: obj?.category,
+            sub_category: obj?.sub_category,
+          }))
+        } else {
+          return []
+        }
+      })
+
+      const genresFromL5 = data.genre?.flatMap((obj: any) => {
+        // Check if tags exist, if not, return an empty array
+        if (obj.genre) {
+          // Map over each tag, and add category and subcategory
+          return obj.genre.map((genre: any) => ({
+            ...genre,
+            category: obj?.category,
+            sub_category: obj?.sub_category,
+          }))
+        } else {
+          return []
+        }
+      })
+      const genresFromL3 = data.hobbies?.flatMap((obj: any) => {
+        // Check if tags exist, if not, return an empty array
+        if (obj.genre && typeof obj.genre !== 'string') {
+          // Map over each tag, and add category and subcategory
+          return obj.genre.map((genre: any) => ({
+            ...genre,
+            category: obj?.category,
+            sub_category: obj?.sub_category,
+          }))
+        } else {
+          return []
+        }
+      })
+      const genresFromL2 = data.l2hobbies?.flatMap((obj: any) => {
+        // Check if tags exist, if not, return an empty array
+        if (obj.genre) {
+          // Map over each tag, and add category and subcategory
+          return obj.genre.map((genre: any) => ({
+            ...genre,
+            category: obj?.category,
+            sub_category: obj?.sub_category,
+          }))
+        } else {
+          return []
+        }
+      })
+      const combinedArray = [
+        ...data.hobbies,
+        ...genresFromL5,
+        ...genresFromL3,
+        ...genresFromL2,
+        ...tagsFromL5,
+        ...tagsFromL3,
+        ...tagsFromL2,
+      ]
+      const uniqueCombinedArray = combinedArray.filter(
+        (item: any, index: number, self) =>
+          index === self.findIndex((i) => i._id === item._id),
+      )
+      setHobbyData(uniqueCombinedArray)
+    }
   }
 
   useEffect(() => {
     // resetHobbiesData()
-    const tagsFromL5 = data.genre?.flatMap((obj:any) => {
-      // Check if tags exist, if not, return an empty array
-      if (obj.tags) {
-
-        // Map over each tag, and add category and subcategory
-        return obj.tags.map((tag:any) => ({
-          ...tag,
-          category: obj?.category,
-          sub_category: obj?.sub_category,
-        }));
-      } else {
-        return [];
-      }
-    });
-    const tagsFromL3 = data.hobbies?.flatMap((obj:any) => {
-      // Check if tags exist, if not, return an empty array
-      if (obj.tags) {
-
-        // Map over each tag, and add category and subcategory
-        return obj.tags.map((tag:any) => ({
-          ...tag,
-          category: obj?.category,
-          sub_category: obj?.sub_category,
-        }));
-      } else {
-        return [];
-      }
-    });
-    const tagsFromL2 = data.l2hobbies?.flatMap((obj:any) => {
-      // Check if tags exist, if not, return an empty array
-      if (obj.tags) {
-
-        // Map over each tag, and add category and subcategory
-        return obj.tags.map((tag:any) => ({
-          ...tag,
-          category: obj?.category,
-          sub_category: obj?.sub_category,
-        }));
-      } else {
-        return [];
-      }
-    });
-
-    const genresFromL5 = data.genre?.flatMap((obj:any) => {
-      // Check if tags exist, if not, return an empty array
-      if (obj.genre) {
-
-        // Map over each tag, and add category and subcategory
-        return obj.genre.map((genre:any) => ({
-          ...genre,
-          category: obj?.category,
-          sub_category: obj?.sub_category,
-        }));
-      } else {
-        return [];
-      }
-    });
-    const genresFromL3 = data.hobbies?.flatMap((obj:any) => {
-      // Check if tags exist, if not, return an empty array
-      if (obj.genre && typeof obj.genre !== 'string') {
-
-        // Map over each tag, and add category and subcategory
-        return obj.genre.map((genre:any) => ({
-          ...genre,
-          category: obj?.category,
-          sub_category: obj?.sub_category,
-        }));
-      } else {
-        return [];
-      }
-    });
-    const genresFromL2 = data.l2hobbies?.flatMap((obj:any) => {
-      // Check if tags exist, if not, return an empty array
-      if (obj.genre) {
-
-        // Map over each tag, and add category and subcategory
-        return obj.genre.map((genre:any) => ({
-          ...genre,
-          category: obj?.category,
-          sub_category: obj?.sub_category,
-        }));
-      } else {
-        return [];
-      }
-    });
     setCategories(data.categories)
     setFilterCategories(data.categories)
     setSubCategories(data.sub_categories)
     setFilterSubCategories(data.sub_categories)
-    const combinedArray = [...data.hobbies, ...genresFromL5, ...genresFromL3, ...genresFromL2, ...tagsFromL5, ...tagsFromL3, ...tagsFromL2,];
-
-    const uniqueCombinedArray = combinedArray.filter((item:any, index:number, self) =>
-      index === self.findIndex((i) =>
-        i._id === item._id 
+    if (data.allTagsAndGenres) {
+      const uniqueCombinedArray = data.allTagsAndGenres.filter(
+        (item: any, index: number, self: any[]) =>
+          index === self.findIndex((i) => i._id === item._id),
       )
-    );
-    
-    setHobbyData(uniqueCombinedArray);
+      setHobbyData(uniqueCombinedArray)
+    } else {
+      const tagsFromL5 = data.genre?.flatMap((obj: any) => {
+        // Check if tags exist, if not, return an empty array
+        if (obj.tags) {
+          // Map over each tag, and add category and subcategory
+          return obj.tags.map((tag: any) => ({
+            ...tag,
+            category: obj?.category,
+            sub_category: obj?.sub_category,
+          }))
+        } else {
+          return []
+        }
+      })
+      const tagsFromL3 = data.hobbies?.flatMap((obj: any) => {
+        // Check if tags exist, if not, return an empty array
+        if (obj.tags) {
+          // Map over each tag, and add category and subcategory
+          return obj.tags.map((tag: any) => ({
+            ...tag,
+            category: obj?.category,
+            sub_category: obj?.sub_category,
+          }))
+        } else {
+          return []
+        }
+      })
+      const tagsFromL2 = data.l2hobbies?.flatMap((obj: any) => {
+        // Check if tags exist, if not, return an empty array
+        if (obj.tags) {
+          // Map over each tag, and add category and subcategory
+          return obj.tags.map((tag: any) => ({
+            ...tag,
+            category: obj?.category,
+            sub_category: obj?.sub_category,
+          }))
+        } else {
+          return []
+        }
+      })
+
+      const genresFromL5 = data.genre?.flatMap((obj: any) => {
+        // Check if tags exist, if not, return an empty array
+        if (obj.genre) {
+          // Map over each tag, and add category and subcategory
+          return obj.genre.map((genre: any) => ({
+            ...genre,
+            category: obj?.category,
+            sub_category: obj?.sub_category,
+          }))
+        } else {
+          return []
+        }
+      })
+      const genresFromL3 = data.hobbies?.flatMap((obj: any) => {
+        // Check if tags exist, if not, return an empty array
+        if (obj.genre && typeof obj.genre !== 'string') {
+          // Map over each tag, and add category and subcategory
+          return obj.genre.map((genre: any) => ({
+            ...genre,
+            category: obj?.category,
+            sub_category: obj?.sub_category,
+          }))
+        } else {
+          return []
+        }
+      })
+      const genresFromL2 = data.l2hobbies?.flatMap((obj: any) => {
+        // Check if tags exist, if not, return an empty array
+        if (obj.genre) {
+          // Map over each tag, and add category and subcategory
+          return obj.genre.map((genre: any) => ({
+            ...genre,
+            category: obj?.category,
+            sub_category: obj?.sub_category,
+          }))
+        } else {
+          return []
+        }
+      })
+      const combinedArray = [
+        ...data.hobbies,
+        ...genresFromL5,
+        ...genresFromL3,
+        ...genresFromL2,
+        ...tagsFromL5,
+        ...tagsFromL3,
+        ...tagsFromL2,
+      ]
+      const uniqueCombinedArray = combinedArray.filter(
+        (item: any, index: number, self) =>
+          index === self.findIndex((i) => i._id === item._id),
+      )
+      setHobbyData(uniqueCombinedArray)
+    }
   }, [])
 
   const router = useRouter()
@@ -711,7 +783,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                     <div
                                       className={styles['vertical-line']}
                                     ></div>
-                                    <p className={styles['table-hobby']}>
+                                    <section className={styles['table-hobby']+` ${hobbyStyles['tags-genres-sect']}`}>
                                       {hobbyData
                                         .filter(
                                           (hobby: HobbyType) =>
@@ -719,10 +791,17 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                             hobby.sub_category?._id ===
                                               subCat._id,
                                         )
-                                        .sort((a, b) =>
-                                          a.display?.localeCompare(b.display),
-                                        )
-                                        .map((hobby: HobbyType) => (<>
+                                        .sort((a, b) => {
+                                          // Compare by level first
+                                          if (a?.level !== b?.level) {
+                                            return a?.level - b?.level;
+                                          } else {
+                                            // If levels are equal, compare alphabetically
+                                            return a?.display?.localeCompare(b?.display);
+                                          }
+                                        })
+                                        
+                                        .map((hobby: HobbyType,index:number,filteredSortedArr) => (<>
                                         {hobby?.slug?<Link
                                             key={hobby.slug}
                                             href={`/hobby/${hobby.slug}`}
@@ -731,11 +810,12 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                               styles['searched-hobby-id']
                                             }`}
                                           >
-                                            <span>{hobby.display}, </span>
+                                            <span>{hobby.display}{index===filteredSortedArr.length-1?null:", "}
+                                            </span>
                                           </Link>:null}
                                           
                                         </>))}
-                                    </p>
+                                    </section>
                                   </div>
                                 )
                               )
@@ -764,6 +844,25 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   const subCategory = await getAllHobbies(
     `level=1&populate=category,sub_category,tags`,
   )
+
+  const allTagsAndGenres:any[] =  [];
+
+  const executeAPI = async(object:any) => {
+    const categoryID = object.category._id;
+    const subCategoryID = object.sub_category ? object.sub_category._id : null;
+
+    const {res} = await getAllHobbies(`category=${categoryID}${subCategoryID ? `&sub_category=${subCategoryID}` : ''}&populate=category,sub_category,tags`);
+      if(res?.data?.hobbies){
+        allTagsAndGenres.push(...res?.data?.hobbies)
+      }
+    }
+
+  if (subCategory.res?.data.hobbies) {
+    subCategory.res?.data.hobbies.forEach(async (object: any) => {
+      await executeAPI(object)
+    })
+  }
+
   const hobby = await getAllHobbies(
     `level=3&populate=category,sub_category,tags`,
   )
@@ -774,6 +873,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   // const l4hobbies = await getAllHobbies(`level=4&populate=category,sub_category,tags`);
   const l5hobbies = await getAllHobbies(`level=5&populate=category,sub_category,genre,tags`)
 
+  
   return {
     props: {
       data: {
@@ -783,6 +883,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
         l2hobbies: l2hobbies.res?.data?.hobbies,
         // l4hobbies:l4hobbies.res?.data,
         genre: l5hobbies.res?.data?.hobbies,
+        allTagsAndGenres: allTagsAndGenres
       },
     },
   }
