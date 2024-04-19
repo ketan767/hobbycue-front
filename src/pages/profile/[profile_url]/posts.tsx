@@ -67,7 +67,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
 
   useEffect(() => {
     getPost()
-  }, [user.pinned_post,refreshNum])
+  }, [user.pinned_post, refreshNum])
 
   useEffect(() => {
     // Save scroll position when navigating away from the page

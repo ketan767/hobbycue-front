@@ -172,6 +172,8 @@ cursor: pointer;
 }
 .hobbies-side-wrapper section ul li:hover {
   background: #ccc1da;
+  color: #8064A2;
+  transition: 0.3s;
 }
 .hobbies-side-wrapper section ul li.selectedItem:hover {
   background: #ccc1da;
