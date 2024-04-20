@@ -21,6 +21,7 @@ import { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
 import Dropdown from './DropDown'
 import { SetLinkviaAuth } from '@/redux/slices/user'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   activeTab: ProfilePageTabs
@@ -38,23 +39,36 @@ const ProfileHeaderSmall: React.FC<Props> = ({
   const dispatch = useDispatch()
 
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
-  const { isAuthenticated, user } = useSelector((state: RootState) => state.user)
+  const { isAuthenticated, user } = useSelector(
+    (state: RootState) => state.user,
+  )
   const tabs: ProfilePageTabs[] = ['home', 'posts', 'media', 'pages', 'blogs']
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
 
   const [open, setOpen] = useState(false)
   const location = window.location.href
 
   const handleDropdown = () => {
-    setOpen(!open)
+    if (open) {
+      if (!isAuthenticated) {
+        dispatch(openModal({ type: 'auth', closable: true }))
+        setOpen(false)
+      }
+    } else {
+      setOpen(true)
+    }
   }
 
   const handleContact = () => {
-    console.log('data', data)
-    if (data.public_email) {
-      window.open(
-        `mailto:${data.public_email}?subject=Subject&body=Body%20goes%20here`,
-      )
+    if (!isAuthenticated) {
+      dispatch(openModal({ type: 'auth', closable: true }))
+      return
     }
+    dispatch(openModal({ type: 'UserContactToOwner', closable: true }))
   }
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
     e.preventDefault()
@@ -119,10 +133,17 @@ const ProfileHeaderSmall: React.FC<Props> = ({
       // dispatch(closeModal())
     }
   }
-  const itsMe = data?._id === user?._id;
+  const itsMe = data?._id === user?._id
   const handleShare = () => {
     dispatch(updateShareUrl(window.location.href))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
+  }
+  const showFeatureUnderDevelopment = () => {
+    setSnackbar({
+      display: true,
+      type: 'warning',
+      message: 'This feature is under development',
+    })
   }
 
   return (
@@ -193,7 +214,11 @@ const ProfileHeaderSmall: React.FC<Props> = ({
 
           {/* Action Buttons */}
           <div className={styles['action-btn-wrapper']}>
-            <FilledButton disabled={itsMe} className={styles.contactBtn} onClick={handleContact}>
+            <FilledButton
+              disabled={itsMe}
+              className={styles.contactBtn}
+              onClick={handleContact}
+            >
               Contact
             </FilledButton>
             {/* Send Email Button  */}
@@ -221,7 +246,7 @@ const ProfileHeaderSmall: React.FC<Props> = ({
             {/* Bookmark Button */}
             <Tooltip title="Bookmark">
               <div
-                onClick={(e) => console.log(e)}
+                onClick={(e) => showFeatureUnderDevelopment()}
                 className={styles['action-btn']}
               >
                 <BookmarkBorderRoundedIcon color="primary" />
@@ -229,7 +254,7 @@ const ProfileHeaderSmall: React.FC<Props> = ({
             </Tooltip>
 
             {/* Share Button */}
-            <Tooltip title="Ahare">
+            <Tooltip title="Share">
               <div
                 onClick={(e) => handleShare()}
                 className={styles['action-btn']}
@@ -306,6 +331,16 @@ const ProfileHeaderSmall: React.FC<Props> = ({
           </div>
         </nav>
       </div>
+      {
+        <CustomSnackbar
+          message={snackbar.message}
+          triggerOpen={snackbar.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }
