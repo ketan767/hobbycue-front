@@ -172,6 +172,8 @@ cursor: pointer;
 }
 .hobbies-side-wrapper section ul li:hover {
   background: #ccc1da;
+  color: #8064A2;
+  transition: 0.3s;
 }
 .hobbies-side-wrapper section ul li.selectedItem:hover {
   background: #ccc1da;
@@ -638,6 +640,14 @@ background: var(--Purple-3, #F7F5F9);
 .location-dropdown > div > div {
   border-bottom: 0;
 }
+
+.location-dropdown-container p{
+  line-height: 18px;
+}
+.location-dropdown-container aside{
+  height: min-content;
+}
+
 .see-more {
   text-align: center;
   color: #8064a2;

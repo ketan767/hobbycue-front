@@ -31,6 +31,7 @@ import ProfileImageLayout from '@/layouts/ProfileImageLayout/ProfileImageLayout'
 import { useRouter } from 'next/router'
 import { listingTypes } from '@/constants/constant'
 import Dropdown from './DropDown'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   data: ListingPageData['pageData']
@@ -50,11 +51,23 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
   const router = useRouter()
 
   const { listingLayoutMode } = useSelector((state: any) => state.site)
+  const { isLoggedIn } = useSelector((state: RootState) => state.user)
 
   const [open, setOpen] = useState(false)
-
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
   const handleDropdown = () => {
     setOpen(!open)
+  }
+  const showFeatureUnderDevelopment = () => {
+    setSnackbar({
+      display: true,
+      type: 'warning',
+      message: 'This feature is under development',
+    })
   }
   console.log('head', data)
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
@@ -215,6 +228,25 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
       return `${fromDay} ${fromMonthYear} - ${toDay} ${toMonthYear}`
     }
   }
+   const location = typeof window !== 'undefined' ? window.location.href : ''
+  const handleRepost = () => {
+    if (isLoggedIn) {
+      dispatch(
+        openModal({
+          type: 'create-post',
+          closable: true,
+          propData: { defaultValue: location },
+        }),
+      )
+    } else {
+      dispatch(
+        openModal({
+          type: 'auth',
+          closable: true,
+        }),
+      )
+    }
+  }
 
   return (
     <>
@@ -333,20 +365,18 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
 
             {/* Send Email Button  */}
             <Tooltip title="Repost">
-              <Link href={`mailto:${data.public_email || data.email}`}>
                 <div
-                  onClick={(e) => console.log(e)}
+                  onClick={handleRepost}
                   className={styles['action-btn']}
                 >
                   <Image src={MailIcon} alt="share" />
                 </div>
-              </Link>
             </Tooltip>
 
             {/* Bookmark Button */}
             <Tooltip title="Bookmark">
               <div
-                onClick={(e) => console.log(e)}
+                onClick={showFeatureUnderDevelopment}
                 className={styles['action-btn']}
               >
                 <BookmarkBorderRoundedIcon color="primary" />
@@ -423,6 +453,16 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
           </div>
         </nav>
       </div>
+      {
+        <CustomSnackbar
+          message={snackbar.message}
+          triggerOpen={snackbar.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

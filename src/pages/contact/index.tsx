@@ -902,6 +902,7 @@ const Contact: React.FC<Props> = ({}) => {
               {/* Message */}
               <div className={`${styles['input-box']}`}>
                 <label>Message</label>
+                    <input hidden required />
                 <div className={styles['street-input-container']}>
                   <textarea
                     ref={messageRef}
