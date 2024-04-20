@@ -856,6 +856,7 @@ const CommunityLayout: React.FC<Props> = ({
                     return (
                       <>
                         <DropdownOption
+                          className={styles['location-dropdown-container']}
                           {...item}
                           key={idx}
                           currentValue={selectedLocation}

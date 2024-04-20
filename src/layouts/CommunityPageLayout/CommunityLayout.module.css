@@ -638,6 +638,14 @@ background: var(--Purple-3, #F7F5F9);
 .location-dropdown > div > div {
   border-bottom: 0;
 }
+
+.location-dropdown-container p{
+  line-height: 18px;
+}
+.location-dropdown-container aside{
+  height: min-content;
+}
+
 .see-more {
   text-align: center;
   color: #8064a2;

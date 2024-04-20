@@ -23,6 +23,7 @@ import {
   showAllUsersTrue,
   showAllTrue,
   resetSearch,
+  setExplore,
 } from '@/redux/slices/search'
 import LogoFull from '@/assets/image/logo-full.svg'
 import LogoSmall from '@/assets/image/logo-small.png'
@@ -159,6 +160,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   }
 
   const searchResult = async () => {
+      dispatch(setExplore(false))
     if (router.pathname !== '/search') {
       dispatch(showAllTrue())
       router.push('/search')
@@ -496,6 +498,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                               },
                             }))
                             dispatch(showAllPeopleTrue())
+                            dispatch(setExplore(true))
                             setShowDropdown(null)
 
                             router.push('/search')
@@ -527,6 +530,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                             }))
                             setShowDropdown(null)
                             dispatch(showAllPlaceTrue())
+                            dispatch(setExplore(true))
                             router.push('/search')
                           }}
                         >
@@ -551,6 +555,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                               },
                             }))
                             dispatch(showAllEventTrue())
+                            dispatch(setExplore(true))
                             router.push('/search')
                           }}
                         >
@@ -575,6 +580,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                               },
                             }))
                             dispatch(showAllProductsTrue())
+                            dispatch(setExplore(true))
                             router.push('/search')
                           }}
                         >

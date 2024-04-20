@@ -25,6 +25,7 @@ import { Data } from '@react-google-maps/api'
 import CustomizedTooltips from '@/components/Tooltip/ToolTip'
 import {
   resetSearch,
+  setExplore,
   showAllEventTrue,
   showAllPeopleTrue,
   showAllPlaceTrue,
@@ -92,7 +93,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
   }
   const handleOptionClick = (option: any) => {
     dispatch(resetSearch())
-
+    dispatch(setExplore(true))
     switch (option.text) {
       case 'People - Community':
         dispatch(showAllPeopleTrue())

@@ -16,10 +16,11 @@ type Props = {
   onChange: any
   _id: any
   item?:any
+  className?:string
 }
 
 export const DropdownOption: React.FC<Props> = (props) => {
-  const { value, type, display, options, onChange, currentValue, _id, selected, item } = props
+  const { value, type, display, options, onChange, currentValue, _id, selected, item, className } = props
   const { activeProfile, user } = useSelector((state: any) => state.user)
 
   const [active, setActive] = useState(
@@ -48,7 +49,7 @@ export const DropdownOption: React.FC<Props> = (props) => {
 
   if (type === 'text') {
     return (
-      <div className={styles['value-container']}>
+      <div className={styles['value-container']+` ${className}`}>
         <p
           className={`${styles['dropdown-value']} ${
             currentValue === value ? styles['dropdown-value-active'] : ''
@@ -61,7 +62,7 @@ export const DropdownOption: React.FC<Props> = (props) => {
     )
   }
   return (
-    <div data-column="2" className={styles['dropdown-container']}>
+    <div data-column="2" className={styles['dropdown-container']+` ${className}`}>
       <aside
         className={`
     ${styles['heading']} 

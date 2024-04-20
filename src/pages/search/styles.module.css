@@ -261,6 +261,15 @@
   color: #6d747a;
 }
 
+.no-results-wrapper p a{
+  color: #8064a2;
+  opacity: 0.85;
+}
+
+.no-results-wrapper p a:hover{
+  opacity: 1;
+}
+
 .menuItemContent {
   gap: 16px;
   display: flex;
