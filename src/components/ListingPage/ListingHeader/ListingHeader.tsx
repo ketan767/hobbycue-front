@@ -35,6 +35,8 @@ import ListingPageLayout from '@/layouts/ListingPageLayout'
 import RepostIcon from '@/assets/icons/RepostIcon'
 import { ClaimListing } from '@/services/auth.service'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import { showProfileError } from '@/redux/slices/user'
+import { useRouter } from 'next/router'
 
 type Props = {
   data: ListingPageData['pageData']
@@ -56,6 +58,7 @@ const ListingHeader: React.FC<Props> = ({
   setpageTypeErr,
 }) => {
   const dispatch = useDispatch()
+  const router = useRouter();
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -298,14 +301,24 @@ const ListingHeader: React.FC<Props> = ({
   }
   const location = typeof window !== 'undefined' ? window.location.href : ''
   const handleRepost = () => {
+    if (!isAuthenticated) {
+      dispatch(openModal({ type: 'auth', closable: true }))
+      return
+    }
+
     if (isLoggedIn) {
-      dispatch(
-        openModal({
-          type: 'create-post',
-          closable: true,
-          propData: { defaultValue: location },
-        }),
-      )
+      if (!user.is_onboarded) {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      } else {
+        dispatch(
+          openModal({
+            type: 'create-post',
+            closable: true,
+            propData: { defaultValue: location },
+          }),
+        )
+      }
     } else {
       dispatch(
         openModal({
@@ -315,6 +328,7 @@ const ListingHeader: React.FC<Props> = ({
       )
     }
   }
+
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useState, useRef, useEffect } from 'react'
 import styles from './CommunityLayout.module.css'
 import { useRouter } from 'next/router'
 import FilledButton from '@/components/_buttons/FilledButton'
@@ -27,6 +27,22 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
   const [open, setOpen] = useState(false)
   const router = useRouter()
   const [seeMore, setSeeMore] = useState(true)
+  const membersContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (type === 'members') {
+      if (membersContainerRef.current) {
+        const requiredHeight = options.length * 38 + 47
+        if (options.length <= 2) {
+          membersContainerRef.current.style.height = 'auto'
+        } else if (seeMore) {
+          membersContainerRef.current.style.height = '161px'
+        } else {
+          membersContainerRef.current.style.height = requiredHeight + 'px'
+        }
+      }
+    }
+  }, [seeMore, options])
 
   const ArrowSvg = ({ rotate }: { rotate?: boolean }) => {
     return (
@@ -106,6 +122,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
             </div>
           )}
           <div
+            ref={membersContainerRef}
             className={
               styles['options-parent'] +
               `

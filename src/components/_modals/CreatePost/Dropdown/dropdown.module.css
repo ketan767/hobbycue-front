@@ -31,6 +31,7 @@
 .heading:hover {
   background-color: #ccc1da;
   border-radius: 4px;
+  transition: 0.3s;
 }
 
 .heading::selection {
@@ -44,6 +45,7 @@
 .drop-down:hover {
   border-radius: 4px;
   background-color: #ccc1da;
+  transition: 0.3s;
 }
 .icon-active {
   transition: 0.2s;
