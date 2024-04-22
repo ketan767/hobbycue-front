@@ -18,22 +18,27 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType }) => {
   const { isLoggedIn } = useSelector((state: RootState) => state.user)
   useEffect(() => {
     function handleClickOutside(event: any) {
-      if (ref.current && !ref.current.contains(event.target)) {
-        if (
-          event.target.nodeName == supportRef.current?.nodeName &&
-          event.target.textContent === supportRef.current?.textContent
-        ) {
-          dispatch(openModal({ type: 'SupportUserModal', closable: true }))
-        }
-
-        if (
-          event.target.nodeName == reportRef.current?.nodeName &&
-          event.target.textContent === reportRef.current?.textContent
-        ) {
-          if (isLoggedIn)
-            dispatch(openModal({ type: 'UserReportModal', closable: true }))
-        }
+      console.log({ targ: event.target })
+      if (ref.current && ref.current.contains(event.target) !== true) {
         handleClose()
+        return
+      }
+      else if (
+        event.target.nodeName == supportRef.current?.nodeName &&
+        event.target.textContent === supportRef.current?.textContent
+      ) {
+        dispatch(openModal({ type: 'SupportUserModal', closable: true }))
+      }
+
+      else if (
+        event.target.nodeName == reportRef.current?.nodeName &&
+        event.target.textContent === reportRef.current?.textContent
+      ) {
+        if (isLoggedIn) {
+          dispatch(openModal({ type: 'UserReportModal', closable: true }))
+        } else {
+          dispatch(openModal({ type: 'auth', closable: true }))
+        }
       }
     }
     document.addEventListener('mousedown', handleClickOutside)

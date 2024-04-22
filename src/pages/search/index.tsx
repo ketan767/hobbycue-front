@@ -93,18 +93,18 @@ const MainContent: React.FC<SearchResultsProps> = ({
   EventResults,
   hobbyResults,
 }) => {
-  const showAll = useSelector((state: any) => state.search.showAll)
-  const showAllUsers = useSelector((state: any) => state.search.showAllUsers)
-  const showAllPeople = useSelector((state: any) => state.search.showAllPeople)
-  const showAllPlace = useSelector((state: any) => state.search.showAllPlace)
-  const showAllEvent = useSelector((state: any) => state.search.showAllEvent)
+  const showAll = useSelector((state: RootState) => state.search.showAll)
+  const showAllUsers = useSelector((state: RootState) => state.search.showAllUsers)
+  const showAllPeople = useSelector((state: RootState) => state.search.showAllPeople)
+  const showAllPlace = useSelector((state: RootState) => state.search.showAllPlace)
+  const showAllEvent = useSelector((state: RootState) => state.search.showAllEvent)
   const showAllProducts = useSelector(
-    (state: any) => state.search.showAllProducts,
+    (state: RootState) => state.search.showAllProducts,
   )
   const showAllhobbies = useSelector(
-    (state: any) => state.search.showAllHobbies,
+    (state: RootState) => state.search.showAllHobbies,
   )
-  const searchString = useSelector((state: any) => state.search.searchString)
+  const searchString = useSelector((state: RootState) => state.search.searchString)
   const isExplore = useSelector((state:RootState)=>state.search.explore)
   const dispatch = useDispatch()
   const { isLoggedIn, isAuthenticated, user } = useSelector(
@@ -121,138 +121,87 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const router = useRouter()
 
   useEffect(() => {
-    if (showAll) {
+    if (showAll===true) {
       setHideUser(false)
       setHidePeople(false)
       setHidePlace(false)
       setHideEvent(false)
       setHideHobbies(false)
+      setHideProduct(true)
     }
-  }, [showAll])
-
-  const toggleShowAllusers = () => {
-    dispatch(toggleShowAllUsers())
-  }
-  useEffect(() => {
-    if (showAllUsers) {
+    else if (showAllUsers===true) {
       setHideHobbies(true)
       setHidePeople(true)
       setHidePlace(true)
       setHideEvent(true)
       setHideProduct(true)
-    } else {
-      setHideHobbies(false)
-      setHidePeople(false)
-      setHidePlace(false)
-      setHideEvent(false)
-      setHideProduct(true)
+      setHideUser(false)
     }
-  }, [showAllUsers])
-
-  const toggleShowAllhobbies = () => {
-    dispatch(toggleShowAllHobbies())
-  }
-  useEffect(() => {
-    if (showAllhobbies) {
+    else if (showAllhobbies===true) {
       setHideUser(true)
       setHidePeople(true)
       setHidePlace(true)
       setHideEvent(true)
       setHideProduct(true)
-    } else {
-      setHideUser(false)
-      setHidePeople(false)
-      setHidePlace(false)
-      setHideEvent(false)
-      setHideProduct(true)
+      setHideHobbies(false)
     }
-  }, [showAllhobbies])
+    else  if (showAllPeople===true) {
+      setHideUser(true)
+      setHideHobbies(true)
+      setHidePlace(true)
+      setHideEvent(true)
+      setHideProduct(true)
+      setHidePeople(false)
+    }
+    else if (showAllPlace===true) {
+      setHideUser(true)
+      setHideHobbies(true)
+      setHidePeople(true)
+      setHideEvent(true)
+      setHideProduct(true)
+      setHidePlace(false)
+    }
+    else if (showAllEvent===true) {
+      setHideUser(true)
+      setHidePeople(true)
+      setHidePlace(true)
+      setHideHobbies(true)
+      setHideProduct(true)
+      setHideEvent(false)
+    }
+    else if (showAllProducts===true) {
+      setHideUser(true)
+      setHideHobbies(true)
+      setHidePeople(true)
+      setHidePlace(true)
+      setHideEvent(true)
+      setHideProduct(false)
+    }
+  }, [showAll, showAllEvent, showAllPeople, showAllPlace, showAllProducts, showAllUsers, showAllhobbies])
+
+  const toggleShowAllusers = () => {
+    dispatch(toggleShowAllUsers())
+  }
+
+  const toggleShowAllhobbies = () => {
+    dispatch(toggleShowAllHobbies())
+  }
 
   const toggleShowAllpeople = () => {
     dispatch(toggleShowAllPeople())
   }
 
-  useEffect(() => {
-    if (showAllPeople) {
-      setHideUser(true)
-      setHideHobbies(true)
-      setHidePlace(true)
-      setHideEvent(true)
-      setHideHobbies(true)
-      setHideProduct(true)
-    } else {
-      setHideUser(false)
-      setHideHobbies(false)
-      setHidePlace(false)
-      setHideEvent(false)
-      setHideHobbies(false)
-      setHideProduct(false)
-    }
-  }, [showAllPeople])
-
   const toggleShowAllplace = () => {
     dispatch(toggleShowAllPlace())
   }
-
-  useEffect(() => {
-    if (showAllPlace) {
-      setHideUser(true)
-      setHideHobbies(true)
-      setHidePeople(true)
-      setHideEvent(true)
-      setHideHobbies(true)
-      setHideProduct(true)
-    } else {
-      setHideUser(false)
-      setHideHobbies(false)
-      setHidePeople(false)
-      setHideEvent(false)
-      setHideHobbies(false)
-      setHideProduct(false)
-    }
-  }, [showAllPlace])
 
   const toggleShowAllevent = () => {
     dispatch(toggleShowAllEvent())
   }
 
-  useEffect(() => {
-    if (showAllEvent) {
-      setHideUser(true)
-      setHidePeople(true)
-      setHidePlace(true)
-      setHideHobbies(true)
-      setHideProduct(true)
-    } else {
-      setHideUser(false)
-      setHideHobbies(false)
-      setHidePeople(false)
-      setHidePlace(false)
-      setHideHobbies(false)
-      setHideProduct(false)
-    }
-  }, [showAllEvent])
-
   const toggleShowAllproducts = () => {
     dispatch(toggleShowAllProducts())
   }
-
-  useEffect(() => {
-    if (showAllProducts) {
-      setHideUser(true)
-      setHideHobbies(true)
-      setHidePeople(true)
-      setHidePlace(true)
-      setHideProduct(true)
-    } else {
-      setHideUser(false)
-      setHideHobbies(false)
-      setHidePeople(false)
-      setHidePlace(false)
-      setHideHobbies(false)
-      setHideProduct(false)
-    }
-  }, [showAllProducts])
 
   const navigateToHobby = (slug: string) => {
     router.push(`hobby/${slug}`)

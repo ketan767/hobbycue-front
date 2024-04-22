@@ -32,6 +32,8 @@ import { useRouter } from 'next/router'
 import { listingTypes } from '@/constants/constant'
 import Dropdown from './DropDown'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import CustomizedTooltips from '@/components/Tooltip/ToolTip'
+import { showProfileError } from '@/redux/slices/user'
 
 type Props = {
   data: ListingPageData['pageData']
@@ -51,7 +53,7 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
   const router = useRouter()
 
   const { listingLayoutMode } = useSelector((state: any) => state.site)
-  const { isLoggedIn } = useSelector((state: RootState) => state.user)
+  const { isLoggedIn,user,isAuthenticated } = useSelector((state: RootState) => state.user)
 
   const [open, setOpen] = useState(false)
   const [snackbar, setSnackbar] = useState({
@@ -69,7 +71,7 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
       message: 'This feature is under development',
     })
   }
-  console.log('head', data)
+  // console.log('head', data)
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
     e.preventDefault()
     let files = e.target.files
@@ -229,15 +231,25 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
     }
   }
    const location = typeof window !== 'undefined' ? window.location.href : ''
-  const handleRepost = () => {
+   const handleRepost = () => {
+    if (!isAuthenticated) {
+      dispatch(openModal({ type: 'auth', closable: true }))
+      return
+    }
+
     if (isLoggedIn) {
-      dispatch(
-        openModal({
-          type: 'create-post',
-          closable: true,
-          propData: { defaultValue: location },
-        }),
-      )
+      if (!user.is_onboarded) {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      } else {
+        dispatch(
+          openModal({
+            type: 'create-post',
+            closable: true,
+            propData: { defaultValue: location },
+          }),
+        )
+      }
     } else {
       dispatch(
         openModal({
@@ -365,12 +377,9 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
 
             {/* Send Email Button  */}
             <Tooltip title="Repost">
-                <div
-                  onClick={handleRepost}
-                  className={styles['action-btn']}
-                >
-                  <Image src={MailIcon} alt="share" />
-                </div>
+              <div onClick={handleRepost} className={styles['action-btn']}>
+                <Image src={MailIcon} alt="share" />
+              </div>
             </Tooltip>
 
             {/* Bookmark Button */}
@@ -394,22 +403,28 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
             </Tooltip>
 
             {/* More Options Button */}
-
-            <div
-              onClick={(e) => handleDropdown()}
-              className={styles['action-btn']}
-            >
-              <Tooltip title="More options">
-                <MoreHorizRoundedIcon color="primary" />
-              </Tooltip>
+            <div className={styles['action-btn-dropdown-wrapper']}>
+              <CustomizedTooltips title="Click to view options">
+                <div
+                  onClick={(e) => handleDropdown()}
+                  className={styles['action-btn']}
+                >
+                  <MoreHorizRoundedIcon color="primary" />
+                </div>
+              </CustomizedTooltips>
               {listingLayoutMode === 'edit'
                 ? open && (
-                    <Dropdown userType={'edit'} handleClose={handleDropdown} />
+                    <Dropdown
+                      userType={'edit'}
+                      handleClose={handleDropdown}
+                      showFeatureUnderDevelopment={showFeatureUnderDevelopment}
+                    />
                   )
                 : open && (
                     <Dropdown
                       userType={'anonymous'}
                       handleClose={handleDropdown}
+                      showFeatureUnderDevelopment={showFeatureUnderDevelopment}
                     />
                   )}
             </div>
