@@ -23,7 +23,7 @@ type Props = {
 type DropdownListItem = {
   _id: string
   display: string
-  sub_category?: {_id:string,display:string}
+  sub_category?: { _id: string; display: string }
 }
 
 type ListingHobbyData = {
@@ -46,7 +46,7 @@ type HobbyType = {
 }
 
 type ExtendedDropdownListItem = DropdownListItem & {
-  category?: {_id:string,display:string}
+  category?: { _id: string; display: string }
 }
 
 const ALlHobbies: React.FC<Props> = ({ data }) => {
@@ -60,7 +60,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
   const [filtersubCategories, setFilterSubCategories] = useState([])
   const [filterhobbyData, setFilterHobbyData] = useState([])
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
-  ExtendedDropdownListItem[]
+    ExtendedDropdownListItem[]
   >([])
   const [dataa, setData] = useState<ListingHobbyData>({ hobby: null })
   const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
@@ -102,7 +102,6 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
     //   )
     // }
 
-
     // filteredHobbies = filteredHobbies.sort((a: any, b: any) => {
     //   const aIndex = a?.display?.toLowerCase()?.indexOf(normalizedSearchTerm)
     //   const bIndex = b?.display?.toLowerCase()?.indexOf(normalizedSearchTerm)
@@ -114,7 +113,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
     // })
 
     // setHobbyDropdownList(filteredHobbies)
-    
+
     const query = `fields=display,genre&level=3&level=2&level=1&level=0&show=true&search=${e.target.value}`
     const { err, res } = await getAllHobbies(query)
 
@@ -137,7 +136,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
 
       return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
     })
-      setData((prev) => {
+    setData((prev) => {
       return { ...prev, hobby: null }
     })
     setHobbyDropdownList(sortedHobbies)
@@ -520,7 +519,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                 <p>Hobby</p>
                 <TextField
                   size="small"
-                  placeholder="Text here with any keyword"
+                  placeholder="Select Hobby"
                   id="outlined-basic"
                   variant="outlined"
                   value={hobbyInputValue}
@@ -543,11 +542,12 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                           setData((prev) => {
                             return { ...prev, hobby: hobby }
                           })
-                          console.warn({hobby})
+                          console.warn({ hobby })
                           setHobbyInputValue(hobby.display)
                           setFilterData((prev) => ({
-                            category:hobby.category?._id??prev.category,
-                            subCategory:hobby.sub_category?._id??prev.subCategory,
+                            category: hobby.category?._id ?? prev.category,
+                            subCategory:
+                              hobby.sub_category?._id ?? prev.subCategory,
                             hobby: hobby._id,
                           }))
                         }}
@@ -668,7 +668,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                   <p>Hobby</p>
                   <TextField
                     size="small"
-                    placeholder="Text here with any keyword"
+                    placeholder="Select Hobby"
                     id="outlined-basic"
                     variant="outlined"
                     value={hobbyInputValue}
@@ -694,9 +694,10 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                             })
                             setHobbyInputValue(hobby.display)
                             setFilterData((prev) => ({
-                              category:hobby.category?._id??prev.category,
-                              subCategory:hobby.sub_category?._id??prev.subCategory,
-                            hobby: hobby._id,
+                              category: hobby.category?._id ?? prev.category,
+                              subCategory:
+                                hobby.sub_category?._id ?? prev.subCategory,
+                              hobby: hobby._id,
                             }))
                           }}
                         >
@@ -783,7 +784,12 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                     <div
                                       className={styles['vertical-line']}
                                     ></div>
-                                    <section className={styles['table-hobby']+` ${hobbyStyles['tags-genres-sect']}`}>
+                                    <section
+                                      className={
+                                        styles['table-hobby'] +
+                                        ` ${hobbyStyles['tags-genres-sect']}`
+                                      }
+                                    >
                                       {hobbyData
                                         .filter(
                                           (hobby: HobbyType) =>
@@ -794,27 +800,44 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                                         .sort((a, b) => {
                                           // Compare by level first
                                           if (a?.level !== b?.level) {
-                                            return a?.level - b?.level;
+                                            return a?.level - b?.level
                                           } else {
                                             // If levels are equal, compare alphabetically
-                                            return a?.display?.localeCompare(b?.display);
+                                            return a?.display?.localeCompare(
+                                              b?.display,
+                                            )
                                           }
                                         })
-                                        
-                                        .map((hobby: HobbyType,index:number,filteredSortedArr) => (<>
-                                        {hobby?.slug?<Link
-                                            key={hobby.slug}
-                                            href={`/hobby/${hobby.slug}`}
-                                            className={`${
-                                              filterData.hobby === hobby?._id &&
-                                              styles['searched-hobby-id']
-                                            }`}
-                                          >
-                                            <span>{hobby.display}{index===filteredSortedArr.length-1?null:", "}
-                                            </span>
-                                          </Link>:null}
-                                          
-                                        </>))}
+
+                                        .map(
+                                          (
+                                            hobby: HobbyType,
+                                            index: number,
+                                            filteredSortedArr,
+                                          ) => (
+                                            <>
+                                              {hobby?.slug ? (
+                                                <Link
+                                                  key={hobby.slug}
+                                                  href={`/hobby/${hobby.slug}`}
+                                                  className={`${
+                                                    filterData.hobby ===
+                                                      hobby?._id &&
+                                                    styles['searched-hobby-id']
+                                                  }`}
+                                                >
+                                                  <span>
+                                                    {hobby.display}
+                                                    {index ===
+                                                    filteredSortedArr.length - 1
+                                                      ? null
+                                                      : ', '}
+                                                  </span>
+                                                </Link>
+                                              ) : null}
+                                            </>
+                                          ),
+                                        )}
                                     </section>
                                   </div>
                                 )
@@ -845,17 +868,21 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     `level=1&populate=category,sub_category,tags`,
   )
 
-  const allTagsAndGenres:any[] =  [];
+  const allTagsAndGenres: any[] = []
 
-  const executeAPI = async(object:any) => {
-    const categoryID = object.category._id;
-    const subCategoryID = object.sub_category ? object.sub_category._id : null;
+  const executeAPI = async (object: any) => {
+    const categoryID = object.category._id
+    const subCategoryID = object.sub_category ? object.sub_category._id : null
 
-    const {res} = await getAllHobbies(`category=${categoryID}${subCategoryID ? `&sub_category=${subCategoryID}` : ''}&populate=category,sub_category,tags`);
-      if(res?.data?.hobbies){
-        allTagsAndGenres.push(...res?.data?.hobbies)
-      }
+    const { res } = await getAllHobbies(
+      `category=${categoryID}${
+        subCategoryID ? `&sub_category=${subCategoryID}` : ''
+      }&populate=category,sub_category,tags`,
+    )
+    if (res?.data?.hobbies) {
+      allTagsAndGenres.push(...res?.data?.hobbies)
     }
+  }
 
   if (subCategory.res?.data.hobbies) {
     subCategory.res?.data.hobbies.forEach(async (object: any) => {
@@ -871,9 +898,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     `level=2&populate=category,sub_category,tags`,
   )
   // const l4hobbies = await getAllHobbies(`level=4&populate=category,sub_category,tags`);
-  const l5hobbies = await getAllHobbies(`level=5&populate=category,sub_category,genre,tags`)
+  const l5hobbies = await getAllHobbies(
+    `level=5&populate=category,sub_category,genre,tags`,
+  )
 
-  
   return {
     props: {
       data: {
@@ -883,7 +911,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
         l2hobbies: l2hobbies.res?.data?.hobbies,
         // l4hobbies:l4hobbies.res?.data,
         genre: l5hobbies.res?.data?.hobbies,
-        allTagsAndGenres: allTagsAndGenres
+        allTagsAndGenres: allTagsAndGenres,
       },
     },
   }

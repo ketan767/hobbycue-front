@@ -168,7 +168,7 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
 
             {/* More Options Button */}
             <div
-              onClick={(e) => console.log(e)}
+              onClick={(e) => showFeatureUnderDevelopment()}
               className={styles['action-btn']}
             >
               <MoreHorizRoundedIcon color="primary" />

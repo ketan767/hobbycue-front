@@ -216,7 +216,7 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
           </Tooltip>
 
           {/* More Options Button */}
-          <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
+          <div onClick={(e) => showFeatureUnderDevelopment()} className={styles['action-btn']}>
             <MoreHorizRoundedIcon color="primary" />
           </div>
         </div>
@@ -245,7 +245,7 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
         </div>
 
         {/* More Options Button */}
-        <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
+        <div onClick={(e) => showFeatureUnderDevelopment()} className={styles['action-btn']}>
           <MoreHorizRoundedIcon color="primary" />
         </div>
         {/*  */}

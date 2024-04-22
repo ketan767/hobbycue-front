@@ -21,45 +21,42 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType, showFeatureUnderDeve
 
   useEffect(() => {
     function handleClickOutside(event: any) {
-      if (ref.current && !ref.current.contains(event.target)) {
-        if (
-          event.target.nodeName == Claimref.current?.nodeName &&
-          event.target.textContent === Claimref.current?.textContent
-        ) {
-          if (isLoggedIn) {
-            dispatch(openModal({ type: 'claim-listing', closable: true }))
-          } else {
-            dispatch(openModal({ type: 'auth', closable: true }))
-          }
-        }
-        if (
-          event.target.nodeName == Reviewref.current?.nodeName &&
-          event.target.textContent === Reviewref.current?.textContent
-        ) {
-          event.stopPropagation()
-          showFeatureUnderDevelopment?.()
-        }
-
-        if (
-          event.target.nodeName == supportRef.current?.nodeName &&
-          event.target.textContent === supportRef.current?.textContent
-        ) {
-          if (isLoggedIn) {
-            dispatch(openModal({ type: 'ListingSupportModal', closable: true }))
-          } else {
-            dispatch(openModal({ type: 'auth', closable: true }))
-          }
-        }
-
-        if (
-          event.target.nodeName == reportRef.current?.nodeName &&
-          event.target.textContent === reportRef.current?.textContent
-        ) {
-          if (isLoggedIn)
-            dispatch(openModal({ type: 'ListingReportModal', closable: true }))
-          else dispatch(openModal({ type: 'auth', closable: true }))
-        }
+      if (ref.current && ref.current.contains(event.target) !== true) {
         handleClose()
+        return
+      } else if (
+        event.target.nodeName == Claimref.current?.nodeName &&
+        event.target.textContent === Claimref.current?.textContent
+      ) {
+        if (isLoggedIn) {
+          dispatch(openModal({ type: 'claim-listing', closable: true }))
+        } else {
+          dispatch(openModal({ type: 'auth', closable: true }))
+        }
+      } else if (
+        event.target.nodeName == Reviewref.current?.nodeName &&
+        event.target.textContent === Reviewref.current?.textContent
+      ) {
+        // added timeout because DOM was detecting a click outside snackbar which hides the snackbar which looks like blinking
+        setTimeout(() => {
+          showFeatureUnderDevelopment?.();
+        }, 100);
+      } else if (
+        event.target.nodeName == supportRef.current?.nodeName &&
+        event.target.textContent === supportRef.current?.textContent
+      ) {
+        if (isLoggedIn) {
+          dispatch(openModal({ type: 'ListingSupportModal', closable: true }))
+        } else {
+          dispatch(openModal({ type: 'auth', closable: true }))
+        }
+      } else if (
+        event.target.nodeName == reportRef.current?.nodeName &&
+        event.target.textContent === reportRef.current?.textContent
+      ) {
+        if (isLoggedIn)
+          dispatch(openModal({ type: 'ListingReportModal', closable: true }))
+        else dispatch(openModal({ type: 'auth', closable: true }))
       }
     }
     document.addEventListener('mousedown', handleClickOutside)

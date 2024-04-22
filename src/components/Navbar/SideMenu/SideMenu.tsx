@@ -192,18 +192,43 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                   }}
                 >
                   <div className={styles['profile-switcher-img']}>
-                    {activeProfile?.data?.profile_image ? (
-                      <img
-                        className={styles['img']}
-                        src={activeProfile?.data?.profile_image}
-                        alt=""
-                        width={48}
-                        height={48}
-                      />
+                    {activeProfile.type === 'user' ? (
+                      <>
+                        {activeProfile.data.profile_image ? (
+                          <img
+                            className={styles['img']}
+                            src={activeProfile?.data?.profile_image}
+                            alt=""
+                            width={48}
+                            height={48}
+                          />
+                        ) : (
+                          <div className={`default-user-icon`}></div>
+                        )}
+                      </>
                     ) : (
-                      <div
-                        className={`${styles['img']} default-user-icon`}
-                      ></div>
+                      <>
+                        {activeProfile?.data?.profile_image ? (
+                          <img
+                            className={`${styles['img-listing']}`}
+                            src={activeProfile?.data?.profile_image}
+                          ></img>
+                        ) : (
+                          <div
+                            className={
+                              activeProfile.data.type == 1
+                                ? `default-people-listing-icon ${styles['img-listing']}`
+                                : activeProfile.data.type == 2
+                                ? `${styles['img-listing']} default-place-listing-icon`
+                                : activeProfile.data.type == 3
+                                ? `${styles['img-listingimg-listing']} default-program-listing-icon`
+                                : activeProfile.data.type == 4
+                                ? `${styles['img-listing']} default-product-listing-icon`
+                                : `${styles['contentImage']} default-people-listing-icon`
+                            }
+                          ></div>
+                        )}
+                      </>
                     )}
                     <svg
                       className={styles['profile-switcher-downarrow']}
@@ -235,7 +260,11 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                       </defs>
                     </svg>
                   </div>
-                  <p>{activeProfile?.data?.full_name??activeProfile?.data?.title??''}</p>
+                  <p>
+                    {activeProfile?.data?.full_name ??
+                      activeProfile?.data?.title ??
+                      ''}
+                  </p>
                 </div>
                 {showDropdown && (
                   <div className={styles['profile-switcher-dropdown']}>
@@ -279,7 +308,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                           >
                             {page?.profile_image ? (
                               <img
-                                className={styles['img']}
+                                className={styles['img-listing']}
                                 src={page?.profile_image}
                                 alt=""
                                 width={24}
@@ -290,13 +319,13 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                               <div
                                 className={
                                   page?.type == 1
-                                    ? `default-people-listing-icon ${styles['img']}`
+                                    ? `default-people-listing-icon ${styles['img-listing']}`
                                     : page.type == 2
-                                    ? `${styles['img']} default-place-listing-icon`
+                                    ? `${styles['img-listing']} default-place-listing-icon`
                                     : page.type == 3
-                                    ? `${styles['img']} default-program-listing-icon`
+                                    ? `${styles['img-listing']} default-program-listing-icon`
                                     : page.type == 4
-                                    ? `${styles['img']} default-product-listing-icon`
+                                    ? `${styles['img-listing']} default-product-listing-icon`
                                     : `${styles['contentImage']} default-people-listing-icon`
                                 }
                                 data-profile-type="listing"

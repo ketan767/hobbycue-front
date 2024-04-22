@@ -204,7 +204,7 @@ export const searchSlice = createSlice({
       }
     },
     toggleShowAllProducts: (state) => {
-      if (!state.showAllEvent) {
+      if (!state.showAllProducts) {
         state.showAllUsers = false;
         state.showAllHobbies = false;
         state.showAllPeople = false;

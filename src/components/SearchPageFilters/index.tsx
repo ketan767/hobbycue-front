@@ -35,40 +35,28 @@ const SearchPageFilter = () => {
     (state: any) => state.search.showAllProducts,
   )
   useEffect(() => {
-    if (showAll) {
+    if (showAll===true) {
       setActiveFilter('all')
     }
-  }, [showAll])
-  useEffect(() => {
-    if (showAllUsers) {
+    else if (showAllUsers===true) {
       setActiveFilter('users')
     }
-  }, [showAllUsers])
-  useEffect(() => {
-    if (showAllhobbies) {
+    else if (showAllhobbies===true) {
       setActiveFilter('hobby')
     }
-  }, [showAllhobbies])
-  useEffect(() => {
-    if (showAllPeople) {
+    else if (showAllPeople===true) {
       setActiveFilter('people')
     }
-  }, [showAllPeople])
-  useEffect(() => {
-    if (showAllPlace) {
+    else if (showAllPlace===true) {
       setActiveFilter('places')
     }
-  }, [showAllPlace])
-  useEffect(() => {
-    if (showAllEvent) {
+    else if (showAllEvent===true) {
       setActiveFilter('events')
     }
-  }, [showAllEvent])
-  useEffect(() => {
-    if (showAllProducts) {
+    else if (showAllProducts===true) {
       setActiveFilter('products')
     }
-  }, [showAllProducts])
+  }, [showAll, showAllEvent, showAllPeople, showAllPlace, showAllProducts, showAllUsers, showAllhobbies])
 
   const handleFilterClick = (filterType: any) => {
     if (activeFilter === filterType) {

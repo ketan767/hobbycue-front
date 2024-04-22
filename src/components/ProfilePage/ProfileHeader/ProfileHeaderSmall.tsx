@@ -27,6 +27,7 @@ type Props = {
   activeTab: ProfilePageTabs
   data: ProfilePageData['pageData']
   navigationTabs?: (tab: string) => void
+  noDataChecker?:()=>boolean
 }
 
 /** // #fix: There are many things to update and improve code in this file. // */
@@ -34,12 +35,13 @@ const ProfileHeaderSmall: React.FC<Props> = ({
   activeTab,
   data,
   navigationTabs,
+  noDataChecker
 }) => {
   const router = useRouter()
   const dispatch = useDispatch()
 
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
-  const { isAuthenticated, user } = useSelector(
+  const { isAuthenticated, user, isLoggedIn } = useSelector(
     (state: RootState) => state.user,
   )
   const tabs: ProfilePageTabs[] = ['home', 'posts', 'media', 'pages', 'blogs']
@@ -137,6 +139,31 @@ const ProfileHeaderSmall: React.FC<Props> = ({
   const handleShare = () => {
     dispatch(updateShareUrl(window.location.href))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
+  }
+  const handleRepost = () => {
+    if (!isAuthenticated) {
+      dispatch(openModal({ type: 'auth', closable: true }))
+      return
+    }
+    if (noDataChecker?.() === true) {
+      return
+    }
+    if (isLoggedIn) {
+      dispatch(
+        openModal({
+          type: 'create-post',
+          closable: true,
+          propData: { defaultValue: location },
+        }),
+      )
+    } else {
+      dispatch(
+        openModal({
+          type: 'auth',
+          closable: true,
+        }),
+      )
+    }
   }
   const showFeatureUnderDevelopment = () => {
     setSnackbar({
@@ -264,13 +291,14 @@ const ProfileHeaderSmall: React.FC<Props> = ({
             </Tooltip>
 
             {/* More Options Button */}
-
-            <div
-              onClick={(e) => handleDropdown()}
-              className={styles['action-btn']}
-            >
-              <Tooltip title="More options">
-                <MoreHorizRoundedIcon color="primary" />
+            <div className={styles['action-btn-dropdown-wrapper']}>
+              <Tooltip title="Click to view options">
+                <div
+                  onClick={(e) => handleDropdown()}
+                  className={styles['action-btn']}
+                >
+                  <MoreHorizRoundedIcon color="primary" />
+                </div>
               </Tooltip>
               {profileLayoutMode === 'edit'
                 ? open && (
