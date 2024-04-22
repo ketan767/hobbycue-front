@@ -33,6 +33,9 @@ import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { setActivePost } from '@/redux/slices/post'
 import defaultUserImage from '@/assets/svg/default-images/default-user-icon.svg'
 
+import 'react-quill/dist/quill.snow.css'
+import 'quill-emoji/dist/quill-emoji.css'
+
 type Props = {
   confirmationModal?: boolean
   setConfirmationModal?: any
@@ -226,7 +229,7 @@ export const PostModal: React.FC<Props> = ({
             style={displayMoreComments ? { display: 'none' } : {}}
           >
             <div
-              className={styles['post-content']}
+              className={styles['post-content']+" ql-editor"}
               dangerouslySetInnerHTML={{
                 __html: `${activePost?.content}`,
               }}

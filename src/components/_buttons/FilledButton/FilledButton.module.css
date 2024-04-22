@@ -14,9 +14,14 @@
 }
 
 .button:disabled {
-  opacity: 0.5;
+  background: var(--Purple-2, #CCC1DA);
   cursor: not-allowed;
 }
+
+.button:disabled:hover{
+  background: var(--Purple-2, #CCC1DA) !important;
+}
+
 .button:focus-visible{
   border: 1px solid #ffffff;
   outline: 1px solid rgb(var(--primary-100-rgb));

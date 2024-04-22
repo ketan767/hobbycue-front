@@ -24,7 +24,11 @@ import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import { checkIfUrlExists, validateEmail } from '@/utils'
 import Link from 'next/link'
-import { getAllHobbies, getTrendingHobbies } from '@/services/hobby.service'
+import {
+  getAllHobbies,
+  getHobbyMembersCommunity,
+  getTrendingHobbies,
+} from '@/services/hobby.service'
 import DefaultHobbyImg from '@/assets/svg/default-images/default-hobbies.svg'
 import DefaultHobbyImgcover from '@/assets/svg/default-images/default-hobby-cover.svg'
 import {
@@ -38,7 +42,7 @@ import FilledButton from '@/components/_buttons/FilledButton'
 import InputSelect from '@/components/_formElements/Select/Select'
 import { DropdownOption } from '@/components/_modals/CreatePost/Dropdown/DropdownOption'
 import { getListingPages } from '@/services/listing.service'
-import { setShowPageLoader } from '@/redux/slices/site'
+import { setShowPageLoader, updateListingModalData } from '@/redux/slices/site'
 import { InviteToCommunity } from '@/services/auth.service'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import CommunityTopDropdown from '@/components/_formElements/CommunityTopDropdown/CommunityTopDropdown'
@@ -50,6 +54,28 @@ type Props = {
   activeTab: CommunityPageTabs
   children: React.ReactNode
   singlePostPage?: boolean
+}
+
+interface Hobby {
+  _id: string
+  display: string
+  slug: string
+}
+
+interface Genre {
+  _id: string
+  display: string
+  slug: string
+}
+
+interface HobbyEntry {
+  createdAt: string
+  genre: Genre | null
+  hobby: Hobby
+  listing_id: string
+  updatedAt: string
+  __v: number
+  _id: string
 }
 
 const CommunityLayout: React.FC<Props> = ({
@@ -96,27 +122,8 @@ const CommunityLayout: React.FC<Props> = ({
   const [inviteBtnLoader, setInviteBtnLoader] = useState(false)
   const [trendingHobbies, setTrendingHobbies] = useState([])
   const [seeMoreMembers, setSeeMoreMembers] = useState(true)
-  const sampleMembersData = [
-    { name: 'Aditya', slug: '/ad', admin: true },
-    { name: 'Sam', slug: '/ad' },
-    { name: 'Joe', slug: '/ad' },
-    { name: 'Biden', slug: '/ad' },
-    { name: 'Donald', slug: '/ad' },
-    { name: 'Trump', slug: '/ad' },
-    { name: 'Vivek', slug: '/ad' },
-    { name: 'Ramaswamy', slug: '/ad' },
-  ]
-  const panelListData = [
-    {
-      name: 'Members',
-      options: sampleMembersData,
-      type: 'members',
-    },
-    {
-      name: 'Trending Hobbies',
-      options: trendingHobbies,
-    },
-  ]
+  const [hobbyMembers, setHobbymembers] = useState([])
+
   console.log('Number of hobbies:', activeProfile.data?._hobbies?.length)
 
   const hideThirdColumnTabs = ['pages', 'links', 'store', 'blogs']
@@ -233,9 +240,6 @@ const CommunityLayout: React.FC<Props> = ({
     } else {
       params = new URLSearchParams(`populate=_author,_genre,_hobby`)
     }
-    if (selectedHobby !== '') {
-      params.append('_hobby', selectedHobby)
-    }
     if (
       selectedGenre &&
       selectedGenre !== 'undefined' &&
@@ -243,9 +247,14 @@ const CommunityLayout: React.FC<Props> = ({
     ) {
       params.append('_genre', selectedGenre)
     }
-    if (selectedGenre !== '') {
-      // don't remove it, somehow it is helping in fetching correct things according to hobby and genre
-    } else {
+    if (selectedHobby !== '') {
+      params.append('_hobby', selectedHobby)
+    }
+    // if (selectedGenre !== '') {
+    //   // don't remove it, somehow it is helping in fetching correct things according to hobby and genre
+    // }
+    else {
+      console.warn({ selectedGenre, selectedHobby })
       activeProfile?.data?._hobbies.forEach((item: any) => {
         params.append('_hobby', item.hobby._id)
       })
@@ -305,8 +314,58 @@ const CommunityLayout: React.FC<Props> = ({
     dispatch(updateLoading(false))
   }
 
+  const fetchHobbyMembers = async (hobbies?: HobbyEntry[]) => {
+    try {
+      if (!hobbies || hobbies.length === 0) {
+        console.error('No hobbies provided')
+        return
+      }
+
+      const hobbyIdsSet = new Set<string>()
+      let genreId: string | null = null
+
+      if (filters.genre !== '' || filters.hobby !== '') {
+        hobbyIdsSet.add(filters.hobby)
+        genreId = filters.genre
+      } else {
+        hobbies.forEach((entry) => {
+          if (entry.hobby?._id) {
+            hobbyIdsSet.add(entry.hobby._id)
+          }
+          if (entry.genre?._id) {
+            genreId = entry.genre._id // Assume there's only one genre ID
+          }
+        })
+      }
+
+      const hobbyIds = Array.from(hobbyIdsSet)
+
+      let url = `${hobbyIds.join(',')}`
+
+      // Append genreId as query parameter if it exists
+      if (genreId) {
+        url += `?genreId=${genreId}`
+      }
+
+      const { res, err } = await getHobbyMembersCommunity(url)
+      if (res.data) {
+        console.warn('setHobbymembersrrr', res.data.users)
+        setHobbymembers(res.data.users)
+      }
+    } catch (error) {
+      console.error('Fetch error:', error)
+      return
+    }
+  }
+
+  useEffect(() => {
+    if (activeProfile?.data?._hobbies) {
+      fetchHobbyMembers(activeProfile?.data?._hobbies)
+    }
+  }, [filters.genre, filters.hobby, activeProfile])
   const fetchTrendingHobbies = async () => {
     const { err, res } = await getTrendingHobbies(``)
+
     if (err) {
       return console.log('err', err)
     }
@@ -316,6 +375,26 @@ const CommunityLayout: React.FC<Props> = ({
   useEffect(() => {
     fetchTrendingHobbies()
   }, [])
+
+  useEffect(() => {
+    dispatch(updateListingModalData(activeProfile.data))
+  }, [activeProfile.type])
+
+  // useEffect(()=>{
+  //   let activeProf_IDs:string[] = [];
+  //   const {length:arrLength} = activeProf_IDs;
+  //   if(arrLength>1){
+  //     if(activeProf_IDs[arrLength-1]!==activeProf_IDs[arrLength-2]){
+  //       setSelectedGenre("");
+  //       setSelectedHobby("");
+  //       setSelectedLocation("All Locations");
+  //       dispatch(setFilters({hobby:"",genre:"",location:'All Locations'}))
+  //     }
+  //   }
+  //   if(typeof activeProfile.data?._id==="string"){
+  //   activeProf_IDs.push(activeProfile.data?._id);
+  //   }
+  // },[activeProfile.data, dispatch])
 
   // const fetchPages = async () => {
   //   let params: any = ''
@@ -330,7 +409,7 @@ const CommunityLayout: React.FC<Props> = ({
   //       params.append('_hobby', item.hobby._id)
   //     })
   //   }
-  //   if (selectedLocation !== '' && selectedLocation !== 'All locations') {
+  //   if (selectedLocation !== '' && selectedLocation !== 'All Locations') {
   //     params.append('location', selectedLocation)
   //   }
   //   console.log('PARAMS ---', params.toString())
@@ -465,21 +544,31 @@ const CommunityLayout: React.FC<Props> = ({
               })
             }
           })
-          if (visibilityArr[1]) {
-            console.log({ visibilityArr })
-            if (visibilityArr[1].display) {
-              // if (filters.location === null) {
-              dispatch(
-                setFilters({
-                  location:
-                    visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
-                }),
-              )
-              setSelectedLocation(
-                visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
-              )
-              // }
-            }
+          // if (visibilityArr[1]) {
+          //   console.log({ visibilityArr })
+          //   if (visibilityArr[1].display) {
+          //     // if (filters.location === null) {
+          //     dispatch(
+          //       setFilters({
+          //         location:
+          //           visibilityArr[1]?.display?.split(' ')[0] || 'All Locations',
+          //       }),
+          //     )
+          //     setSelectedLocation(
+          //       visibilityArr[1]?.display?.split(' ')[0] || 'All Locations',
+          //     )
+          //     // }
+          //   }
+          // }
+
+          // added as for go live
+          if (filters.location === null) {
+            dispatch(
+              setFilters({
+                location: 'All Locations',
+              }),
+            )
+            setSelectedLocation('All Locations')
           }
           setVisibilityData(visibilityArr)
         }
@@ -488,8 +577,8 @@ const CommunityLayout: React.FC<Props> = ({
       let address = activeProfile.data?._address
       let visibilityArr: any = [
         {
-          value: 'All locations',
-          display: 'All locations',
+          value: 'All Locations',
+          display: 'All Locations',
           type: 'text',
         },
       ]
@@ -527,26 +616,36 @@ const CommunityLayout: React.FC<Props> = ({
         })
       }
       setVisibilityData(visibilityArr)
-      if (visibilityArr[1]) {
-        console.log({ visibilityArr })
-        if (visibilityArr[1].display) {
-          // if (filters.location === null) {
-          dispatch(
-            setFilters({
-              location:
-                visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
-            }),
-          )
-          setSelectedLocation(
-            visibilityArr[1]?.display?.split(' ')[0] || 'All locations',
-          )
-          // }
-        }
+      // if (visibilityArr[1]) {
+      //   console.log({ visibilityArr })
+      //   if (visibilityArr[1].display) {
+      //     // if (filters.location === null) {
+      //     dispatch(
+      //       setFilters({
+      //         location:
+      //           visibilityArr[1]?.display?.split(' ')[0] || 'All Locations',
+      //       }),
+      //     )
+      //     setSelectedLocation(
+      //       visibilityArr[1]?.display?.split(' ')[0] || 'All Locations',
+      //     )
+      //     // }
+      //   }
+      // }
+      //added as for go live
+      if (filters.location === null) {
+        dispatch(
+          setFilters({
+            location: 'All Locations',
+          }),
+        )
+        setSelectedLocation('All Locations')
       }
     }
-    setSelectedHobby('')
-    setSelectedGenre('')
-    dispatch(setFilters({ hobby: '', genre: '' }))
+    if (filters.hobby === '' && filters.genre === '') {
+      setSelectedHobby('')
+      setSelectedGenre('')
+    }
   }, [activeProfile])
 
   const updateFilterLocation = (val: any) => {
@@ -563,6 +662,7 @@ const CommunityLayout: React.FC<Props> = ({
       }
     })
   }
+  console.warn('hobbyMembersssssssssss', hobbyMembers)
 
   const handleStartPost = () => {
     if (!user.is_onboarded) {
@@ -756,6 +856,7 @@ const CommunityLayout: React.FC<Props> = ({
                     return (
                       <>
                         <DropdownOption
+                          className={styles['location-dropdown-container']}
                           {...item}
                           key={idx}
                           currentValue={selectedLocation}
@@ -874,9 +975,9 @@ const CommunityLayout: React.FC<Props> = ({
                 <section
                   className={`content-box-wrapper ${styles['start-post-btn-container']}`}
                 >
-                  {user?.profile_image ? (
+                  {activeProfile?.data?.profile_image ? (
                     <img
-                      src={user?.profile_image}
+                      src={activeProfile?.data?.profile_image}
                       alt=""
                       className={styles['profile-img']}
                       height={40}
@@ -921,7 +1022,7 @@ const CommunityLayout: React.FC<Props> = ({
                 <section className={styles['filter-section']}>
                   <div>
                     <CommunityTopDropdown
-                      maxWidth="139px"
+                      // maxWidth="139px"
                       className={styles['hobby-select']}
                       value={
                         hobbiesDropDownArr.find(
@@ -942,7 +1043,7 @@ const CommunityLayout: React.FC<Props> = ({
                         },
                       ]?.map((item: any, idx) => (
                         <CommunityDropdownOption
-                          maxWidth="139px"
+                          // maxWidth="139px"
                           {...item}
                           key={idx}
                           currentValue={
@@ -990,20 +1091,33 @@ const CommunityLayout: React.FC<Props> = ({
                         ))}
                       </CommunityTopDropdown>
                     )}
-
-                    <button
-                      onClick={() => setShowPanel((prev) => !prev)}
-                      className={styles['panel-dropdown-btn']}
-                    >
-                      <DoubleArrowSvg rotate={showPanel} />
-                    </button>
                   </div>
+                  <button
+                    onClick={() => setShowPanel((prev) => !prev)}
+                    className={styles['panel-dropdown-btn']}
+                  >
+                    <DoubleArrowSvg rotate={showPanel} />
+                  </button>
                 </section>
                 {showPanel && (
                   <section className={styles['dropdowns-panel']}>
-                    {panelListData.map(
+                    {[
+                      {
+                        name: 'Hobby Members',
+                        options: hobbyMembers,
+                        type: 'members',
+                      },
+                      {
+                        name: 'Trending Hobbies',
+                        options: trendingHobbies,
+                      },
+                    ].map(
                       (
-                        obj: { name: string; options: any[]; type?: string },
+                        obj: {
+                          name: string
+                          options: any[]
+                          type?: string
+                        },
                         idx: number,
                       ) => (
                         <PanelDropdownList
@@ -1156,23 +1270,26 @@ const CommunityLayout: React.FC<Props> = ({
             </section>
 
             <section className={styles['desktop-members-conatiner']}>
-              <header>Members</header>
-              {sampleMembersData
-                .slice(0, seeMoreMembers ? 3 : sampleMembersData.length)
-                .map((obj, idx) => (
+              <header>Hobby Members</header>
+              {hobbyMembers
+                ?.slice(0, seeMoreMembers ? 3 : hobbyMembers.length)
+                .map((obj: any, idx) => (
                   <div key={idx} className={styles['member']}>
-                    <div className={styles['img-name']}>
-                      <Image src={defaultUserIcon} alt="" />
-                      <p>{obj.name}</p>
-                    </div>
-                    {obj.admin && (
-                      <button className={styles['admin-btn']}>
-                        Location Admin
-                      </button>
-                    )}
+                    <Link
+                      href={`/profile/${obj.profile_url}`}
+                      className={styles['img-name']}
+                    >
+                      {obj?.profile_image ? (
+                        <img src={obj.profile_image} />
+                      ) : (
+                        <Image src={defaultUserIcon} alt="" />
+                      )}
+
+                      <p>{obj?.full_name}</p>
+                    </Link>
                   </div>
                 ))}
-              {sampleMembersData.length > 3 && (
+              {hobbyMembers.length > 3 && (
                 <div
                   onClick={() => {
                     setSeeMoreMembers((prev) => !prev)

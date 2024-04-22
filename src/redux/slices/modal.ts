@@ -33,6 +33,7 @@ export type ModalType =
   | 'upload-image-user'
   | 'social-media-edit'
   | 'change-password'
+  | 'email-forget-password'
   | 'confirm-email'
   | 'email-sent'
   | 'reset-password'

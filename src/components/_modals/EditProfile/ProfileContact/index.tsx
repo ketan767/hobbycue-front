@@ -615,6 +615,36 @@ const ProfileContactEditModal: React.FC<Props> = ({
                           }
                           setTick(!tick)
                         }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (tick === true) {
+                              setData((prev) => {
+                                return {
+                                  ...prev,
+                                  whatsapp_number: {
+                                    number: '',
+                                    prefix: '+91',
+                                  },
+                                }
+                              })
+                              setWpSelectedCountryCode('+91')
+                            } else {
+                              setData((prev) => {
+                                return {
+                                  ...prev,
+                                  whatsapp_number: {
+                                    number: prev['phone'].number,
+                                    prefix: selectedCountryCode,
+                                  },
+                                }
+                              })
+                              setWpSelectedCountryCode(selectedCountryCode)
+                            }
+                            setTick(!tick)
+                          }
+                        }}
                       />{' '}
                     </div>
                   </CustomTooltip>
@@ -723,7 +753,11 @@ const ProfileContactEditModal: React.FC<Props> = ({
               className="modal-mob-btn-save"
               onClick={handleSubmit}
             >
-              Save
+              {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'14px'} />
+              ) : (
+                'Save'
+              )}
             </button>
           )}
         </footer>

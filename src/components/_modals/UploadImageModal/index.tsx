@@ -36,6 +36,7 @@ export const UploadImageModal: React.FC<Props> = (props) => {
         <h3 className={styles['modal-heading']}>Crop Image</h3>
         <div className={styles['cropper-wrapper']}>
           <Cropper
+            style={{width:isMobile?"":"100%"}}
             ref={cropperRef}
             zoomTo={0.2}
             className={styles['cropper']}
@@ -74,7 +75,7 @@ export const UploadImageModal: React.FC<Props> = (props) => {
             onClick={handleUpload}
           >
             {loading ? (
-              <CircularProgress color="inherit" size={'20px'} />
+              <CircularProgress color="inherit" size={'14px'} />
             ) : (
               'Save Photo'
             )}

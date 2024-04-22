@@ -34,7 +34,10 @@ const DropdownMenu: React.FC<Props> = ({
   const optionWrapperRef = useRef<HTMLDivElement>(null)
   const optionRef = useRef<HTMLDivElement>(null)
   const [showDropdown, setShowDropdown] = useState(false)
-  const [refPostion,setRefPosition] = useState<{top:undefined|number,bottom:undefined|number}>({top:undefined,bottom:undefined})
+  const [refPostion, setRefPosition] = useState<{
+    top: undefined | number
+    bottom: undefined | number
+  }>({ top: undefined, bottom: undefined })
   const [optionIndex, setOptionIndex] = useState(-1)
   const [inputValue, setInputValue] = useState('')
   const [displayOptions, setDisplayOptions] = useState(
@@ -186,6 +189,21 @@ const DropdownMenu: React.FC<Props> = ({
           styles['dropdown-select']
         }`}
         onClick={handleShowDropdown}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault()
+            e.stopPropagation()
+            if (showDropdown && optionIndex !== -1) {
+              setTimeout(() => {
+                onOptionClick({ id: optionIndex })
+                setOptionIndex(-1)
+                handleShowDropdown()
+              }, 50)
+            } else {
+              handleShowDropdown()
+            }
+          }
+        }}
       >
         <p>{value}</p>
         {dropdownIcon && (
@@ -196,9 +214,9 @@ const DropdownMenu: React.FC<Props> = ({
         )}
       </div>
       <div
-        className={`${positionClass??""} ${styles['dropdown-options-wrapper']}${
-          showDropdown ? '' : ' ' + styles['display-none']
-        }`}
+        className={`${positionClass ?? ''} ${
+          styles['dropdown-options-wrapper']
+        }${showDropdown ? '' : ' ' + styles['display-none']}`}
         ref={optionWrapperRef}
       >
         {search === true && (

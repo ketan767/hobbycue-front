@@ -33,8 +33,10 @@ type Props = {
 const VerifyActionModal: React.FC<Props> = ({}) => {
   const dispatch = useDispatch()
   const passwordRef = useRef<HTMLDivElement>(null)
+  const submitRef = useRef<HTMLButtonElement>(null)
 
-  const { user } = useSelector((state: RootState) => state.user)
+  const { user } = useSelector((state: RootState) => state.user);
+  const { onVerify } = useSelector((state: RootState) => state.modal);
   const [nextDisabled, setNextDisabled] = useState(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [email, setEmail] = useState('')
@@ -53,8 +55,16 @@ const VerifyActionModal: React.FC<Props> = ({}) => {
   }
 
   const handleSubmit = async () => {
+    setSubmitBtnLoading(true);
+    if(currentPassword.length===0){
+      setErrors({
+        ...errors,
+        currentPassword: 'This field should not be empty!',
+      })
+      setSubmitBtnLoading(false);
+      return;
+    }
     const { err: error, res: response } = await getMyProfileDetail()
-    setSubmitBtnLoading(true)
     console.warn('ispass', user?.is_password)
     const { err, res } = await signIn(data)
     if (user.is_password) {
@@ -83,7 +93,7 @@ const VerifyActionModal: React.FC<Props> = ({}) => {
 
   const handleOpenCreatePassword = async () => {
     const email = user.email
-    dispatch(openModal({ type: 'Set-PasswordModal', closable: true }))
+    dispatch(openModal({ type: 'Set-PasswordModal', closable: true, onVerify:onVerify?onVerify:undefined }))
     const { err, res } = await passwordRequest({
       email,
     })
@@ -97,7 +107,7 @@ const VerifyActionModal: React.FC<Props> = ({}) => {
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        handleSubmit()
+        submitRef.current?.click();
       }
     }
     window.addEventListener('keydown', handleKeyPress)
@@ -177,6 +187,7 @@ const VerifyActionModal: React.FC<Props> = ({}) => {
           <button
             className="modal-footer-btn submit"
             onClick={handleSubmit}
+            ref={submitRef}
             disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
           >
             {submitBtnLoading ? (
@@ -187,7 +198,7 @@ const VerifyActionModal: React.FC<Props> = ({}) => {
           </button>
           <button className="modal-mob-btn-save" onClick={handleSubmit}>
             {submitBtnLoading ? (
-              <CircularProgress color="inherit" size={'24px'} />
+              <CircularProgress color="inherit" size={'14px'} />
             ) : (
               'Verify Action'
             )}

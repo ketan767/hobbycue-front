@@ -37,8 +37,7 @@ const ProfileContactSide = ({ data, expandData, contactError }: Props) => {
 
   const itsMe = data?.public_email === user?.public_email
 
-  console.warn({data});
-  
+  console.warn({ data })
 
   return (
     <>
@@ -58,7 +57,7 @@ const ProfileContactSide = ({ data, expandData, contactError }: Props) => {
           }`}
         >
           {/* Phone */}
-          {data.phone.number && (
+          {data.phone.number && itsMe && (
             <Link href={`tel:${data.phone.prefix + data?.phone.number}`}>
               <li className={styles['list-item']}>
                 <svg
@@ -87,7 +86,7 @@ const ProfileContactSide = ({ data, expandData, contactError }: Props) => {
           )}
 
           {/* WhatsApp Number */}
-          {data.whatsapp_number.number && (
+          {data.whatsapp_number.number && itsMe && (
             <a
               href={`https://wa.me/${
                 data?.whatsapp_number?.prefix + data?.whatsapp_number?.number

@@ -90,45 +90,47 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
       setErrors({ ...errors, confirmPassword: 'Passwords does not match!' })
       confirmPasswordRef?.current?.focus()
     }
-    if (inputValidation.length === false) {
-      hasErrors = true
-      setErrors((prev) => ({
-        ...prev,
-        newPassword: 'New password should be valid!',
-      }))
-      newPasswordRef?.current?.focus()
-    }
-    if (inputValidation.lowercase === false) {
-      hasErrors = true
-      setErrors((prev) => ({
-        ...prev,
-        newPassword: 'New password should be valid!',
-      }))
-      newPasswordRef?.current?.focus()
-    }
-    if (inputValidation.number === false) {
-      hasErrors = true
-      setErrors((prev) => ({
-        ...prev,
-        newPassword: 'New password should be valid!',
-      }))
-      newPasswordRef.current?.focus()
-    }
-    if (inputValidation.specialChar === false) {
-      hasErrors = true
-      setErrors((prev) => ({
-        ...prev,
-        newPassword: 'New password should be valid!',
-      }))
-      newPasswordRef.current?.focus()
-    }
-    if (inputValidation.uppercase === false) {
-      hasErrors = true
-      setErrors((prev) => ({
-        ...prev,
-        newPassword: 'New password should be valid!',
-      }))
-      newPasswordRef.current?.focus()
+    if (threeConditionsValid < 3) {
+      if (inputValidation.length === false) {
+        hasErrors = true
+        setErrors((prev) => ({
+          ...prev,
+          newPassword: 'New password should be valid!',
+        }))
+        newPasswordRef?.current?.focus()
+      }
+      if (inputValidation.lowercase === false) {
+        hasErrors = true
+        setErrors((prev) => ({
+          ...prev,
+          newPassword: 'New password should be valid!',
+        }))
+        newPasswordRef?.current?.focus()
+      }
+      if (inputValidation.number === false) {
+        hasErrors = true
+        setErrors((prev) => ({
+          ...prev,
+          newPassword: 'New password should be valid!',
+        }))
+        newPasswordRef.current?.focus()
+      }
+      if (inputValidation.specialChar === false) {
+        hasErrors = true
+        setErrors((prev) => ({
+          ...prev,
+          newPassword: 'New password should be valid!',
+        }))
+        newPasswordRef.current?.focus()
+      }
+      if (inputValidation.uppercase === false) {
+        hasErrors = true
+        setErrors((prev) => ({
+          ...prev,
+          newPassword: 'New password should be valid!',
+        }))
+        newPasswordRef.current?.focus()
+      }
     }
     if (otp.length === 0) {
       hasErrors = true
@@ -206,7 +208,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
         // if(event?.target?.tagName==="INPUT"){
         //   return
         // }else{
-          desktopSubmitBtnRef.current?.click();
+        desktopSubmitBtnRef.current?.click()
         // }
       }
     }
@@ -218,8 +220,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
     }
   }, [])
 
-  console.warn({inputValidation});
-  
+  console.warn({ inputValidation })
 
   useEffect(() => {
     otpRef.current?.focus()
@@ -248,7 +249,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
         <section className={styles['body']}>
           <div className={styles.inputField}>
             <label className={styles.label}>
-              OTP to set password has been sent to your registered E-mail id.
+              OTP to set password has been sent to your registered E-mail ID.
             </label>
             <div
               className={`${styles['input-box']} ${
@@ -401,7 +402,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
           </button>
           <button className="modal-mob-btn-save" onClick={handleSubmit}>
             {submitBtnLoading ? (
-              <CircularProgress color="inherit" size={'16px'} />
+              <CircularProgress color="inherit" size={'14px'} />
             ) : (
               'Verify Action'
             )}

@@ -4,13 +4,17 @@ import { useRouter } from 'next/router'
 import { openModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
+import { SetLinkviaAuth } from '@/redux/slices/user'
 
 type Props = {
   activeTab: ProfilePageTabs
   navigationTabs?: (tab: string) => void
 }
 
-const ProfileNavigationLinks: React.FC<Props> = ({ activeTab, navigationTabs }) => {
+const ProfileNavigationLinks: React.FC<Props> = ({
+  activeTab,
+  navigationTabs,
+}) => {
   const { isAuthenticated } = useSelector((state: RootState) => state.user)
   const dispatch = useDispatch()
   const router = useRouter()
@@ -30,17 +34,26 @@ const ProfileNavigationLinks: React.FC<Props> = ({ activeTab, navigationTabs }) 
                 e.preventDefault()
                 e.stopPropagation()
                 if (!isAuthenticated) {
+                  dispatch(
+                    SetLinkviaAuth(
+                      `/profile/${router.query.profile_url}/${
+                        tab !== 'home' ? tab : ''
+                      }`,
+                    ),
+                  )
                   dispatch(openModal({ type: 'auth', closable: true }))
                   return
                 } else {
-                 if(navigationTabs){
-                  console.log('running nav')
-                  navigationTabs(tab)
-                 }else{
-                  router.push(`/profile/${router.query.profile_url}/${
-                    tab !== 'home' ? tab : ''
-                  }`)
-                 }
+                  if (navigationTabs) {
+                    console.log('running nav')
+                    navigationTabs(tab)
+                  } else {
+                    router.push(
+                      `/profile/${router.query.profile_url}/${
+                        tab !== 'home' ? tab : ''
+                      }`,
+                    )
+                  }
                 }
               }}
             >

@@ -102,7 +102,7 @@ const DataAndOthers: React.FC<Props> = ({}) => {
       )}
       <PageGridLayout column={2}>
         <SettingsDropdownLayout>
-          {isMobile ? null : <SettingsSidebar active="/account-data" />}
+          {isMobile ? null : <SettingsSidebar active="account-data" />}
           <div className={styles['container']}>
             <div>
               <header className={styles['header']}>Export Personal Data</header>

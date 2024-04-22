@@ -1,12 +1,17 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import styles from './dashboard/styles.module.css'
 import { signIn } from '../../services/auth.service'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
+import { updateUser } from '@/redux/slices/user'
 
 const Admin = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const router = useRouter()
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const {user} = useSelector((state:RootState)=>state.user);
 
   const handleLogin = async (e: any) => {
     e.preventDefault()
@@ -18,13 +23,20 @@ const Admin = () => {
     const { err, res } = await signIn(data)
 
     if (res) {
+      dispatch(updateUser({...user,is_admin:true}));
       console.log('Login successful:', res)
 
-      router.push('/admin/dashboard')
+      // router.push('/admin/dashboard')
     } else if (err) {
       console.error('Login failed:', err)
     }
   }
+
+  useEffect(()=>{
+    if(user.is_admin){
+      router.push('/admin/dashboard');
+    }
+  },[router, user])
 
   return (
     <div className={styles['Admin-login']}>

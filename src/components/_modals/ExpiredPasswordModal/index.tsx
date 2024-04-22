@@ -73,8 +73,28 @@ const ExpiredPassword: React.FC<Props> = ({}) => {
     newPassword: '',
     confirmPassword: '',
   })
+
+  useEffect(() => {
+    const result = validatePasswordConditions(newPassword)
+    setInputValidation(result)
+  }, [newPassword])
+
   const handleSubmit = async () => {
     console.log('email', forgotPasswordEmail)
+    if (!otp) {
+      setErrors({ ...errors, otp: 'Please enter the otp!' })
+      return
+    }
+    if (!newPassword) {
+      setErrors({ ...errors, newPassword: 'Please enter a password!' })
+      return
+    }
+    const strengthNum = getStrengthNum(inputValidation)
+    if (strengthNum < 3) {
+      newPasswordRef.current?.focus()
+      setErrors({ ...errors, newPassword: 'Please enter a strong password!' })
+      return
+    }
     if (confirmPassword !== newPassword) {
       setErrors({ ...errors, confirmPassword: 'Passwords does not match!' })
       return
@@ -174,15 +194,28 @@ const ExpiredPassword: React.FC<Props> = ({}) => {
             {/* <label className={styles.label}>Current Password</label> */}
             <div
               className={`${styles['input-box']} ${
-                errors.otp ? styles['input-error'] : ''
+                errors.otp ? styles['input-box-error'] : ''
               }`}
             >
-              <input
+              {/* <input
                 ref={otpRef}
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
                 className={styles.input}
                 placeholder="OTP"
+              /> */}
+              <TextField
+                className={'textFieldClass'}
+                required
+                ref={otpRef}
+                style={
+                  !(errors.otp === '')
+                    ? { border: '1px solid red', borderRadius: '8px' }
+                    : {}
+                }
+                placeholder="OTP"
+                type={'text'}
+                onChange={(e) => setOtp(e.target.value)}
               />
               <p className={styles['helper-text']}>{errors.otp}</p>
             </div>
@@ -191,7 +224,7 @@ const ExpiredPassword: React.FC<Props> = ({}) => {
             {/* <label className={styles.label}>New Password</label> */}
             <div
               className={`${styles['input-box']} ${
-                errors.newPassword ? styles['input-error'] : ''
+                errors.newPassword ? styles['input-box-error'] : ''
               }`}
             >
               <TextField
@@ -199,6 +232,11 @@ const ExpiredPassword: React.FC<Props> = ({}) => {
                 required
                 ref={newPasswordRef}
                 placeholder="New Password"
+                style={
+                  !(errors.newPassword === '')
+                    ? { border: '1px solid red', borderRadius: '8px' }
+                    : {}
+                }
                 type={showPassword ? 'text' : 'password'}
                 onFocus={() => setShowValidations(true)}
                 onBlur={() => setShowValidations(false)}
@@ -272,16 +310,39 @@ const ExpiredPassword: React.FC<Props> = ({}) => {
             {/* <label className={styles.label}>Confirm New Password</label> */}
             <div
               className={`${styles['input-box']} ${
-                errors.confirmPassword ? styles['input-error'] : ''
+                errors.confirmPassword ? styles['input-box-error'] : ''
               }`}
             >
-              <input
+              <TextField
+                className={'textFieldClass'}
+                required
+                placeholder="Confirm Password"
+                type={showPassword ? 'text' : 'password'}
+                style={
+                  !(errors.confirmPassword === '')
+                    ? { border: '1px solid red', borderRadius: '8px' }
+                    : {}
+                }
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <IconButton onClick={() => setShowPassword(!showPassword)}>
+                      {showPassword ? (
+                        <VisibilityRoundedIcon />
+                      ) : (
+                        <VisibilityOffRoundedIcon />
+                      )}
+                    </IconButton>
+                  ),
+                }}
+              />
+              {/* <input
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className={styles.input}
                 placeholder="Confirm New Password"
                 type="password"
-              />
+              /> */}
               <p className={styles['helper-text']}>{errors.confirmPassword}</p>
             </div>
           </div>
@@ -301,7 +362,7 @@ const ExpiredPassword: React.FC<Props> = ({}) => {
           </button>
           <button className="modal-mob-btn-save" onClick={handleSubmit}>
             {submitBtnLoading ? (
-              <CircularProgress color="inherit" size={'16px'} />
+              <CircularProgress color="inherit" size={'14px'} />
             ) : (
               'Verify Action'
             )}

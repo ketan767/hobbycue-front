@@ -193,7 +193,7 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
                 onClick={openChangePasswordModal}
               >
                 <Image src={EditIcon} width={16} height={16} alt="edit" />
-                <p className={styles.editText}> Change Password </p>
+                <p className={styles.editText}> Change HobbyCue Password </p>
               </div>
               <div className={styles.editContainer}>
                 <Image src={EditIcon} width={16} height={16} alt="edit" />
@@ -201,7 +201,7 @@ const LoginAndSecurity: React.FC<Props> = ({}) => {
                   className={styles.editText}
                   onClick={openForgotPasswordEmail}
                 >
-                  Used Social Media Login or Forgot Password?{' '}
+                  Set HobbyCue Password with OTP{' '}
                 </p>
               </div>
             </section>

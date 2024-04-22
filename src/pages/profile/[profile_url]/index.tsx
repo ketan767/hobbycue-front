@@ -282,7 +282,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
         />
         <meta
           property="og:description"
-          content={`${data?.pageData?.description}`}
+          content={`${data?.pageData?.tagline ?? data?.pageData?.tagline}`}
         />
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${data.pageData.full_name} | HobbyCue`}</title>

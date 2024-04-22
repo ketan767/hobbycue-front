@@ -22,6 +22,7 @@ import { updateListingModalData } from '@/redux/slices/site'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import { changePassword } from '@/services/auth.service'
 import PasswordAnalyzer from '@/components/PasswordAnalyzer/PasswordAnalyzer'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -65,7 +66,11 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
   const newPasswordRef = useRef<HTMLInputElement>(null)
   const confirmPasswordRef = useRef<HTMLInputElement>(null)
   const [strength, setStrength] = useState(0)
-
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
   useEffect(() => {
     currentPasswordRef.current?.focus()
   }, [])
@@ -126,7 +131,7 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
       currentPassword,
       newPassword,
     })
-    setSubmitBtnLoading(false)
+
     if (err) {
       if (err?.response?.data?.message) {
         setErrors({
@@ -134,12 +139,19 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
           currentPassword: err?.response?.data?.message,
         })
       }
+      setSubmitBtnLoading(false)
       return
     }
     if (res?.data.success) {
-      console.log(res.data)
-      dispatch(closeModal())
-      window.location.reload()
+      setSnackbar({
+        display: true,
+        type: 'success',
+        message: 'Password Changed',
+      })
+      setTimeout(() => {
+        dispatch(closeModal())
+        setSubmitBtnLoading(false)
+      }, 2500)
     }
   }
 
@@ -196,13 +208,18 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
             <label className={styles.label}>Current Password</label>
             <div
               className={`${styles['input-box']} ${
-                errors.currentPassword ? styles['input-error'] : ''
+                errors.currentPassword ? styles['input-box-error'] : ''
               }`}
             >
               <TextField
-                className={'textFieldClass'}
+                className={`textFieldClass`}
                 inputRef={currentPasswordRef}
                 fullWidth
+                style={
+                  !(errors.currentPassword === '')
+                    ? { border: '1px solid red', borderRadius: '8px' }
+                    : {}
+                }
                 required
                 placeholder="Current Password"
                 type={showcurrPassword ? 'text' : 'password'}
@@ -236,13 +253,18 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
 
             <div
               className={`${styles['input-box']} ${
-                errors.newPassword ? styles['input-error'] : ''
+                errors.newPassword ? styles['input-box-error'] : ''
               }`}
             >
               <TextField
-                className={'textFieldClass'}
+                className={`textFieldClass`}
                 fullWidth
                 required
+                style={
+                  !(errors.newPassword === '')
+                    ? { border: '1px solid red', borderRadius: '8px' }
+                    : {}
+                }
                 inputRef={newPasswordRef}
                 placeholder="New Password"
                 type={showPassword ? 'text' : 'password'}
@@ -319,13 +341,18 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
             <label className={styles.label}>Confirm New Password</label>
             <div
               className={`${styles['input-box']} ${
-                errors.confirmPassword ? styles['input-error'] : ''
+                errors.confirmPassword ? styles['input-box-error'] : ''
               }`}
             >
               <TextField
-                className={'textFieldClass'}
+                className={`textFieldClass`}
                 value={confirmPassword}
                 type={'password'}
+                style={
+                  !(errors.confirmPassword === '')
+                    ? { border: '1px solid red', borderRadius: '8px' }
+                    : {}
+                }
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm New Password"
                 inputRef={confirmPasswordRef}
@@ -382,13 +409,23 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
             }}
           >
             {submitBtnLoading ? (
-              <CircularProgress color="inherit" size={'24px'} />
+              <CircularProgress color="inherit" size={'14px'} />
             ) : (
               'Save'
             )}
           </button>
         </footer>
       </div>
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

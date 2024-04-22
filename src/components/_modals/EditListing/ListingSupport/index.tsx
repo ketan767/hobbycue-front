@@ -224,9 +224,14 @@ const ListingSupportModal: React.FC<Props> = ({
 
   useEffect(() => {
     const handleKeyPress = (event: any) => {
-      if (event.key === 'Enter' && !textareaRef.current?.matches(':focus')) {
-        event.preventDefault()
-        handleSubmit()
+      if (event.key === 'Enter') {
+        if(event?.srcElement?.tagName && 
+          event?.srcElement?.tagName?.toLowerCase()==="textarea" ||
+          event?.srcElement?.tagName?.toLowerCase()==="svg"
+        ){
+          return
+        }
+        nextButtonRef.current?.click();
       }
     }
 
@@ -346,7 +351,11 @@ const ListingSupportModal: React.FC<Props> = ({
               onClick={handleSubmit}
               disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
             >
-              Submit
+              {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'14px'} />
+              ) : (
+                'Submit'
+              )}
             </button>
           )}
         </footer>

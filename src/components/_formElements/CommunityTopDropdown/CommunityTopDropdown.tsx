@@ -19,6 +19,7 @@ const CommunityTopDropdown: React.FC<Props> = ({
   const [active, setactive] = useState(false)
   const toggle = () => setactive(!active)
   const dropdownRef = useRef(null)
+  const containerRef = useRef<HTMLDivElement>(null)
 console.log({variant})
   useEffect(() => {
     const closeDropdown = () => {
@@ -44,11 +45,26 @@ console.log({variant})
   const handleChildClick = () => {
     setactive(false)
   }
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (
+      containerRef.current &&
+      !containerRef.current.contains(event.target as Node)
+    ) {
+      setactive(false)
+    }
+  }
+  useEffect(() => {
+    document.addEventListener('mousedown', handleOutsideClick)
 
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick)
+    }
+  }, [])
   console.log({ value })
 
   return (
     <div
+    ref={containerRef}
       className={`${variant === 'primary' && styles.primary} ${
         variant === 'secondary' && styles.secondary
       } ${className ? className : ''} ${styles.container}`}

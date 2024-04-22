@@ -108,7 +108,10 @@ const CommunityLinks: React.FC<Props> = ({}) => {
           ) : posts.length === 0 ? (
             <>
               <div className={styles['no-posts-div']}>
-                <p className={styles['no-posts-text']}>No links posts found</p>
+                <p className={styles['no-posts-text']}>
+                  There were no links for the hobby and the location you have
+                  chosen.
+                </p>
                 <div
                   style={{
                     display: 'flex',

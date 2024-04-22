@@ -146,7 +146,11 @@ const EmailSentModal: React.FC<Props> = ({}) => {
             )}
           </button>
           <button className="modal-mob-btn-save" onClick={handleSubmit}>
-            Save
+          {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'14px'} />
+              ) : (
+                'Save'
+              )}
           </button>
           <OutlinedButton>Cancel</OutlinedButton>
         </footer>

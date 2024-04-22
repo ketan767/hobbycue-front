@@ -26,6 +26,15 @@
   border: none;
 }
 
+.select:focus-visible {
+  
+  outline: none
+}
+
+.select:focus {
+  border: 1px solid #8064a2 !important;
+}
+
 .option {
   background-color: white;
 }

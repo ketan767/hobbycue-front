@@ -281,7 +281,16 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
 
         <section className={styles['body']}>
           <div className={styles.sectionHead}>
-            <div className={styles.sectionHeadRight} onClick={addWorkingHour}>
+            <div
+              tabIndex={0}
+              className={styles.sectionHeadRight}
+              onClick={addWorkingHour}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  addWorkingHour()
+                }
+              }}
+            >
               <Image src={AddIcon} width={14} height={14} alt="add" />
               {workingHoursData.length === 0 ? (
                 <p> Add </p>
@@ -291,11 +300,26 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
             </div>
           </div>
           <div className={styles.listContainer}>
+            <div className={styles.listItem}>
+              <div className={styles.listSubItem}>
+                <label> From Day </label>
+              </div>
+              <div className={styles.listSubItem}>
+                <label> To Day </label>
+              </div>
+              <div className={styles.listSubItem}>
+                <label> From Time </label>
+              </div>
+              <div className={styles.listSubItem}>
+                <label> To Time </label>
+              </div>
+            </div>
+          </div>
+          <div className={styles.listContainer}>
             {workingHoursData.map((item: any, idx) => {
               return (
                 <div key={idx} className={styles.listItem}>
                   <div className={styles.listSubItem}>
-                    <label> From Day </label>
                     <InputSelect
                       options={days}
                       value={item.fromDay}
@@ -305,7 +329,6 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
                     />
                   </div>
                   <div className={styles.listSubItem}>
-                    <label> To Day </label>
                     <InputSelect
                       options={getAvailableDays(item.fromDay)}
                       value={item.toDay}
@@ -315,7 +338,6 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
                     />
                   </div>
                   <div className={styles.listSubItem}>
-                    <label> From Time </label>
                     <InputSelect
                       options={timings}
                       value={item.fromTime}
@@ -325,7 +347,6 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
                     />
                   </div>
                   <div className={styles.listSubItem}>
-                    <label> To Time </label>
                     <InputSelect
                       value={item.toTime}
                       options={getAvailableTimings(item.fromTime)}
@@ -336,10 +357,16 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
                   </div>
                   <div>
                     <Image
+                      tabIndex={0}
                       src={DeleteIcon}
                       alt="delete"
                       className={styles['delete-icon']}
                       onClick={() => handleDelete(idx)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          handleDelete(idx)
+                        }
+                      }}
                     />
                   </div>
                 </div>
@@ -396,7 +423,11 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
               className="modal-mob-btn-save"
               onClick={handleSubmit}
             >
-              Save
+              {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'14px'} />
+              ) : (
+                'Save'
+              )}
             </button>
           )}
         </footer>

@@ -51,8 +51,8 @@ type ListingAddressData = {
 }
 
 const initialEventHour = {
-  from_date: '02/02/2002',
-  to_date: '02/02/2002',
+  from_date: '02-02-2002',
+  to_date: '02-02-2002',
   from_time: '8:00 am',
   to_time: '9:00 pm',
 }
@@ -217,6 +217,16 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     }
   }, [])
 
+  const formatDateFunc = (inputDate: string): string => {
+    const parts = inputDate.split('-');
+    const formattedDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+  
+    const day = formattedDate.getDate();
+    const month = formattedDate.toLocaleString('default', { month: 'short' });
+    const year = formattedDate.getFullYear();
+    return `${day}-${month}-${year}`;
+  }
+
   if (confirmationModal) {
     return (
       <SaveModal
@@ -259,6 +269,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                     handleDateSelection(e.target.value, true)
                   }
                 />
+                <p className={styles['formatted-date']}>{formatDateFunc(eventData.from_date)}</p>
               </div>
               <div className={styles.listSubItem}>
                 <label> To Date </label>
@@ -272,6 +283,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                     handleDateSelection(e.target.value, false)
                   }
                 />
+                <p className={styles['formatted-date']+` ${styles['left-more']}`}>{formatDateFunc(eventData.to_date)}</p>
               </div>
               <div className={styles.listSubItem}>
                 <label> From Time </label>
@@ -343,7 +355,11 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
               className="modal-mob-btn-save"
               onClick={handleSubmit}
             >
-              Save
+              {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'14px'} />
+              ) : (
+                'Save'
+              )}
             </button>
           )}
         </footer>

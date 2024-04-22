@@ -395,12 +395,14 @@ const ListingTypeEditModal: React.FC<Props> = ({
           />
           {/* Modal Header */}
           <header className={styles['header']}>
-            <h4 className={styles['heading']}>{'Category'}</h4>
+            <h4 className={styles['heading']}>{'Listing Category'}
+            {listingTypeModalMode==="create"&&<span className={styles['red-error-mobile']}>*</span>}
+            </h4>
           </header>
 
           <hr className={styles['modal-hr']} />
 
-          <section className={styles['body']}>
+          <section className={styles['body']+" custom-scrollbar"}>
             <p className={styles['info']}>
               Please select two of the most appropriate categories. One type is
               recommended. Use another type only if it is significantly
@@ -443,6 +445,8 @@ const ListingTypeEditModal: React.FC<Props> = ({
                     }
                     onKeyDown={(e) => {
                       if (['Enter'].includes(e.key) || e.key === ' ') {
+                          e.preventDefault();
+                          e.stopPropagation();
                         if (
                           e.key === 'Enter' &&
                           showDropdown &&
@@ -489,7 +493,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
                     />
                   </div>
                   {showDropdown && (
-                    <div className={styles['options-container']}>
+                    <div className={styles['options-container']+" custom-scrollbar"}>
                       {list.map(
                         (
                           item: { name: string; description: string },
@@ -578,7 +582,10 @@ const ListingTypeEditModal: React.FC<Props> = ({
               )}
             </button>
             {/* SVG Button for Mobile */}
-            {onComplete ? (
+            {onComplete||listingTypeModalMode==="create"?
+            <div className={styles['desktop-hidden']}></div>
+            :null}
+            {onComplete || listingTypeModalMode==="create" ? (
               <div onClick={handleSubmit}>
                 <Image
                   src={NextIcon}
@@ -593,7 +600,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
                 onClick={handleSubmit}
               >
                 {submitBtnLoading ? (
-                  <CircularProgress color="inherit" size={'16px'} />
+                  <CircularProgress color="inherit" size={'14px'} />
                 ) : listingTypeModalMode === 'edit' ? (
                   'Save'
                 ) : (

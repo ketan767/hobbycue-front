@@ -6,7 +6,11 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 
 import { openModal } from '@/redux/slices/modal'
-import { updateIsLoggedIn } from '@/redux/slices/user'
+import {
+  SetLinkviaAuth,
+  updateActiveProfile,
+  updateIsLoggedIn,
+} from '@/redux/slices/user'
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
 import store, { RootState } from '@/redux/store'
 import BookmarkIcon from '@/assets/svg/bookmark.svg'
@@ -21,6 +25,7 @@ import { Data } from '@react-google-maps/api'
 import CustomizedTooltips from '@/components/Tooltip/ToolTip'
 import {
   resetSearch,
+  setExplore,
   showAllEventTrue,
   showAllPeopleTrue,
   showAllPlaceTrue,
@@ -28,6 +33,9 @@ import {
 } from '@/redux/slices/search'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { useMediaQuery } from '@mui/material'
+import { updateListingModalData } from '@/redux/slices/site'
+import addIcon from '@/assets/svg/add.svg'
+import { setFilters } from '@/redux/slices/post'
 type Props = {
   handleClose: any
 }
@@ -60,12 +68,14 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
   const parentRef = useRef<HTMLDivElement>(null)
   const [exploreActive, setExploreActive] = useState(false)
   const [hobbiesActive, setHobbiesActive] = useState(false)
+  const [showDropdown, setShowDropdown] = useState<boolean>(false)
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
   })
-  const { isLoggedIn, isAuthenticated, user } = useSelector(
-    (state: RootState) => state.user,
-  )
+  const { isLoggedIn, isAuthenticated, user, listing, activeProfile } =
+    useSelector((state: RootState) => state.user)
+  const filteredListing = listing.filter((item: any) => item.is_published)
+
   const handleLogout = () => {
     logout()
   }
@@ -80,6 +90,53 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
       type: 'warning',
       message: 'This feature is under development',
     })
+  }
+  const handleOptionClick = (option: any) => {
+    dispatch(resetSearch())
+    dispatch(setExplore(true))
+    switch (option.text) {
+      case 'People - Community':
+        dispatch(showAllPeopleTrue())
+        router.push('/search')
+        handleClose()
+        break
+      case 'Places - Venues':
+        dispatch(showAllPlaceTrue())
+        router.push('/search')
+        handleClose()
+        break
+      case 'Programs - Events':
+        dispatch(showAllEventTrue())
+        router.push('/search')
+        handleClose()
+        break
+      case 'Products - Store':
+        dispatch(showAllProductsTrue())
+        router.push('/search')
+        handleClose()
+        break
+      case 'Posts - Write-ups':
+        showFeatureUnderDevelopment()
+        handleClose()
+        break
+      default:
+        break
+    }
+  }
+  const handleUpdateActiveProfile = (type: 'user' | 'listing', data: any) => {
+    dispatch(updateActiveProfile({ type, data }))
+    dispatch(
+      setFilters({
+        location: null,
+        hobby: '',
+        genre: '',
+        seeMoreHobbies: false,
+      }),
+    )
+    if (type === 'listing') {
+      dispatch(updateListingModalData(data))
+    }
+    setShowDropdown(false)
   }
 
   useEffect(() => {
@@ -127,22 +184,141 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         <div className={styles['wrapper']}>
           {isLoggedIn ? (
             <header className={styles.header}>
-              <div
-                className={styles['profile']}
-                onClick={navigateToUserProfile}
-              >
-                {user?.profile_image ? (
-                  <img
-                    className={styles['img']}
-                    src={user.profile_image}
-                    alt=""
-                    width={48}
-                    height={48}
-                  />
-                ) : (
-                  <div className={`${styles['img']} default-user-icon`}></div>
+              <div className={styles['profile-switcher-wrapper']}>
+                <div
+                  className={styles['profile']}
+                  onClick={() => {
+                    setShowDropdown((prevValue) => !prevValue)
+                  }}
+                >
+                  <div className={styles['profile-switcher-img']}>
+                    {activeProfile?.data?.profile_image ? (
+                      <img
+                        className={styles['img']}
+                        src={activeProfile?.data?.profile_image}
+                        alt=""
+                        width={48}
+                        height={48}
+                      />
+                    ) : (
+                      <div
+                        className={`${styles['img']} default-user-icon`}
+                      ></div>
+                    )}
+                    <svg
+                      className={styles['profile-switcher-downarrow']}
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g clip-path="url(#clip0_9395_172053)">
+                        <rect width="16" height="16" rx="8" fill="white" />
+                        <path
+                          d="M10.5896 6.195L8.00292 8.78167L5.41625 6.195C5.15625 5.935 4.73625 5.935 4.47625 6.195C4.21625 6.455 4.21625 6.875 4.47625 7.135L7.53625 10.195C7.79625 10.455 8.21625 10.455 8.47625 10.195L11.5363 7.135C11.7963 6.875 11.7963 6.455 11.5363 6.195C11.2763 5.94167 10.8496 5.935 10.5896 6.195Z"
+                          fill="#8064A2"
+                        />
+                      </g>
+                      <rect
+                        x="0.5"
+                        y="0.5"
+                        width="15"
+                        height="15"
+                        rx="7.5"
+                        stroke="#8064A2"
+                      />
+                      <defs>
+                        <clipPath id="clip0_9395_172053">
+                          <rect width="16" height="16" rx="8" fill="white" />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  </div>
+                  <p>{activeProfile?.data?.full_name??activeProfile?.data?.title??''}</p>
+                </div>
+                {showDropdown && (
+                  <div className={styles['profile-switcher-dropdown']}>
+                    <ul>
+                      <li
+                        onClick={() => handleUpdateActiveProfile('user', user)}
+                        className={`${styles['dd-item']} ${
+                          activeProfile.type === 'user' && styles['active']
+                        }`}
+                      >
+                        {user?.profile_image ? (
+                          <img
+                            className={styles['img']}
+                            src={user?.profile_image}
+                            alt=""
+                            width={24}
+                            height={24}
+                            data-profile-type="user"
+                          />
+                        ) : (
+                          <div
+                            className={`default-user-icon ${styles['img']}`}
+                            data-profile-type="user"
+                          ></div>
+                        )}
+                        <p>{user.full_name}</p>
+                      </li>
+
+                      {filteredListing.map((page: any) => {
+                        return (
+                          <li
+                            key={page._id}
+                            onClick={() =>
+                              handleUpdateActiveProfile('listing', page)
+                            }
+                            className={`${styles['dd-item']} ${
+                              activeProfile.type === 'listing' &&
+                              activeProfile.data._id === page._id &&
+                              styles['active']
+                            }`}
+                          >
+                            {page?.profile_image ? (
+                              <img
+                                className={styles['img']}
+                                src={page?.profile_image}
+                                alt=""
+                                width={24}
+                                height={24}
+                                data-profile-type="listing"
+                              />
+                            ) : (
+                              <div
+                                className={
+                                  page?.type == 1
+                                    ? `default-people-listing-icon ${styles['img']}`
+                                    : page.type == 2
+                                    ? `${styles['img']} default-place-listing-icon`
+                                    : page.type == 3
+                                    ? `${styles['img']} default-program-listing-icon`
+                                    : page.type == 4
+                                    ? `${styles['img']} default-product-listing-icon`
+                                    : `${styles['contentImage']} default-people-listing-icon`
+                                }
+                                data-profile-type="listing"
+                              ></div>
+                            )}
+
+                            <p>{page.title}</p>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                    <button
+                      onClick={() => {
+                        handleClose()
+                        router.push('/add-listing')
+                      }}
+                    >
+                      <Image src={addIcon} alt="" />
+                      Add Listing Page
+                    </button>
+                  </div>
                 )}
-                <p>{user?.full_name}</p>
               </div>
               <div className={styles['header-icons']}>
                 <Link href={'/bookmarks'}>
@@ -213,6 +389,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
               <button
                 className={styles['view-profile-btn']}
                 onClick={() => {
+                  dispatch(SetLinkviaAuth(`/profile/${user.profile_url}`))
                   dispatch(openModal({ type: 'auth', closable: true }))
                   handleClose()
                 }}
@@ -245,53 +422,13 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                 />
               </header>
               <div className={styles['dropdown-options']}>
-                {exploreOptions.map((option: any) => {
-                  return <p key={option.text}>{option.text}</p>
-                })}
-              </div>
-
-              <div className={styles['explore-list-dropdown']}>
-                {exploreOptions.map((option: any) => (
-                  <section className={styles['list']} key={option.text}>
-                    <h4
-                      className={styles['hobbiescategory']}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        dispatch(resetSearch())
-
-                        switch (option.text) {
-                          case 'People - Community':
-                            dispatch(showAllPeopleTrue())
-                            handleClose()
-                            router.push('/search')
-                            break
-                          case 'Places - Venues':
-                            dispatch(showAllPlaceTrue())
-                            handleClose()
-                            router.push('/search')
-                            break
-                          case 'Programs - Events':
-                            dispatch(showAllEventTrue())
-                            handleClose()
-                            router.push('/search')
-                            break
-                          case 'Products - Store':
-                            dispatch(showAllProductsTrue())
-                            handleClose()
-                            router.push('/search')
-                            break
-                          case 'Posts - Write-ups':
-                            showFeatureUnderDevelopment()
-                            handleClose() // Move handleClose() outside the switch case to ensure it's always called
-                            break
-                          default:
-                            break
-                        }
-                      }}
-                    >
-                      {option.text}
-                    </h4>
-                  </section>
+                {exploreOptions.map((option) => (
+                  <p
+                    key={option.text}
+                    onClick={() => handleOptionClick(option)}
+                  >
+                    {option.text}
+                  </p>
                 ))}
               </div>
             </div>

@@ -146,6 +146,7 @@ line-height: 20px; /* 142.857% */
   grid-template-columns: auto;
   }
   .uploadContainer{
+    padding-top: 8px;
     grid-column: span 1;
   }
   .no-posts-div{

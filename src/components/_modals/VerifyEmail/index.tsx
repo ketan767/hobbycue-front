@@ -110,7 +110,7 @@ export const VerifyEmailModal: React.FC<PropTypes> = (props) => {
         >
           {' '}
           {submitBtnLoading ? (
-            <CircularProgress color="inherit" size={'20px'} />
+            <CircularProgress color="inherit" size={'14px'} />
           ) : (
             'Verify Email'
           )}

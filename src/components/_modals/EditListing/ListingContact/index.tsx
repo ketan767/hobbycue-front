@@ -499,10 +499,10 @@ const ListingContactEditModal: React.FC<Props> = ({
                 <p>At least one mode of contact is required</p>
                 <OutlinedButton
                   className={styles['use-mine-button']}
-                  onKeyDown={(e)=>{
-                    if(e.key==="Enter"){
-                      e.preventDefault();
-                      e.stopPropagation();
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      e.stopPropagation()
                       setData((prev) => {
                         return {
                           ...prev,
@@ -656,6 +656,36 @@ const ListingContactEditModal: React.FC<Props> = ({
                           }
                           setTick(!tick)
                         }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            if (tick === true) {
+                              setData((prev) => {
+                                return {
+                                  ...prev,
+                                  whatsapp_number: {
+                                    number: '',
+                                    prefix: '+91',
+                                  },
+                                }
+                              })
+                              setWpSelectedCountryCode('+91')
+                            } else {
+                              setData((prev) => {
+                                return {
+                                  ...prev,
+                                  whatsapp_number: {
+                                    number: prev['phone'].number,
+                                    prefix: selectedCountryCode,
+                                  },
+                                }
+                              })
+                              setWpSelectedCountryCode(selectedCountryCode)
+                            }
+                            setTick(!tick)
+                          }
+                        }}
                       />
                     </div>
                   </CustomTooltip>
@@ -772,7 +802,11 @@ const ListingContactEditModal: React.FC<Props> = ({
               onClick={handleSubmit}
               disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
             >
-              Save
+              {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'14px'} />
+              ) : (
+                'Save'
+              )}
             </button>
           )}
         </footer>

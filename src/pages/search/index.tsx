@@ -18,6 +18,8 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import User from '../../assets/svg/Search/User.svg'
 import styles from './styles.module.css'
+import { SetLinkviaAuth } from '@/redux/slices/user'
+import Link from 'next/link'
 
 type Props = {
   data?: any
@@ -103,7 +105,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
     (state: any) => state.search.showAllHobbies,
   )
   const searchString = useSelector((state: any) => state.search.searchString)
-
+  const isExplore = useSelector((state:RootState)=>state.search.explore)
   const dispatch = useDispatch()
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
@@ -260,6 +262,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
     if (isLoggedIn) {
       router.push(`profile/${profileUrl}`)
     } else {
+      dispatch(SetLinkviaAuth(`profile/${profileUrl}`))
       dispatch(openModal({ type: 'auth', closable: true }))
     }
   }
@@ -286,14 +289,22 @@ const MainContent: React.FC<SearchResultsProps> = ({
       {noResultsFound ? (
         <div className={styles['no-results-wrapper']}>
           {searchString === '' ? (
-            <p>
-              The Explore functionality is under development. Use the Search box
-              at the top to look up pages on your hobby by other users. If you
-              don&apos;t find any pages, you may Add Listing Page from the menu
-              at the top right corner.
-            </p>
+            isExplore ? (
+              <p>
+                The Explore functionality is under development. Use the Search
+                box at the top to look up pages on your hobby by other users. If
+                you don&apos;t find any pages, you may Add Listing Page from the
+                menu at the top right corner.
+              </p>
+            ) : (
+              <p>
+                Use the Search box at the top to look up pages on your hobby by
+                other users. If you don&apos;t find any pages, you may Add
+                Listing Page from the menu at the top right corner.
+              </p>
+            )
           ) : (
-            <p>No results for {searchString}</p>
+            <p>{`No results for "${searchString}". `}Try shorter or alternate keywords.  Or <Link href={'/contact'}>contact us</Link> if you feel we are missing something.  For further help, <Link href={'/help'}>click here</Link>.</p>
           )}
         </div>
       ) : (
@@ -352,13 +363,18 @@ const MainContent: React.FC<SearchResultsProps> = ({
 
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{hobby.display}</div>
-                        <div className={styles.userTagline}>{`${
-                          hobby?.category?.display ? hobby.category.display : ''
-                        }${
-                          hobby?.sub_category?.display
-                            ? ' | ' + hobby.sub_category.display
-                            : ''
-                        }`}&nbsp;</div>
+                        <div className={styles.userTagline}>
+                          {`${
+                            hobby?.category?.display
+                              ? hobby.category.display
+                              : ''
+                          }${
+                            hobby?.sub_category?.display
+                              ? ' | ' + hobby.sub_category.display
+                              : ''
+                          }`}
+                          &nbsp;
+                        </div>
                         <div className={styles.hobbydescription}>
                           {hobby?.description}
                         </div>
@@ -480,8 +496,10 @@ const MainContent: React.FC<SearchResultsProps> = ({
                             } else {
                               return ' ' + item
                             }
-                          }) + (page._address?.city?` | ${page._address?.city}`:'') ||
-                            '\u00a0'}
+                          }) +
+                            (page._address?.city
+                              ? ` | ${page._address?.city}`
+                              : '') || '\u00a0'}
                         </div>
                       </div>
                     </div>
@@ -537,8 +555,10 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           {page?.tagline || '\u00a0'}
                         </div>
                         <div className={styles.userLocation}>
-                          {page.page_type + (page._address?.city?` | ${page._address?.city}`:'') ||
-                            '\u00a0'}
+                          {page.page_type +
+                            (page._address?.city
+                              ? ` | ${page._address?.city}`
+                              : '') || '\u00a0'}
                         </div>
                       </div>
                     </div>
@@ -594,8 +614,10 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           {page?.tagline || '\u00a0'}
                         </div>
                         <div className={styles.userLocation}>
-                          {page.page_type + (page._address?.city?` | ${page._address?.city}`:'') ||
-                            '\u00a0'}
+                          {page.page_type +
+                            (page._address?.city
+                              ? ` | ${page._address?.city}`
+                              : '') || '\u00a0'}
                         </div>
                       </div>
                     </div>

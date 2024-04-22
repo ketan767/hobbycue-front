@@ -23,6 +23,7 @@ import {
   showAllUsersTrue,
   showAllTrue,
   resetSearch,
+  setExplore,
 } from '@/redux/slices/search'
 import LogoFull from '@/assets/image/logo-full.svg'
 import LogoSmall from '@/assets/image/logo-small.png'
@@ -80,6 +81,9 @@ export const Navbar: React.FC<Props> = ({}) => {
     (state: RootState) => state.user,
   )
   const { activeModal } = useSelector((state: RootState) => state.modal)
+  const { sidemenuRefresh, searchToggleRefresh } = useSelector(
+    (state: RootState) => state.site,
+  )
 
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
@@ -158,6 +162,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   }
 
   const searchResult = async () => {
+      dispatch(setExplore(false))
     if (router.pathname !== '/search') {
       dispatch(showAllTrue())
       router.push('/search')
@@ -313,6 +318,17 @@ export const Navbar: React.FC<Props> = ({}) => {
       console.error('An error occurred during the combined search:', error)
     }
   }
+
+  useEffect(() => {
+    if (sidemenuRefresh !== 0) {
+      toggleMenu()
+    }
+  }, [sidemenuRefresh])
+  useEffect(() => {
+    if (searchToggleRefresh !== 0) {
+      toggleSearchInput()
+    }
+  }, [searchToggleRefresh])
 
   const isMobile = useMediaQuery('(max-width:1100px)')
 
@@ -484,6 +500,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                               },
                             }))
                             dispatch(showAllPeopleTrue())
+                            dispatch(setExplore(true))
                             setShowDropdown(null)
 
                             router.push('/search')
@@ -515,6 +532,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                             }))
                             setShowDropdown(null)
                             dispatch(showAllPlaceTrue())
+                            dispatch(setExplore(true))
                             router.push('/search')
                           }}
                         >
@@ -539,6 +557,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                               },
                             }))
                             dispatch(showAllEventTrue())
+                            dispatch(setExplore(true))
                             router.push('/search')
                           }}
                         >
@@ -563,6 +582,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                               },
                             }))
                             dispatch(showAllProductsTrue())
+                            dispatch(setExplore(true))
                             router.push('/search')
                           }}
                         >
