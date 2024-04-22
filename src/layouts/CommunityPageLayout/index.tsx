@@ -84,6 +84,7 @@ const CommunityLayout: React.FC<Props> = ({
   singlePostPage,
 }) => {
   const dispatch = useDispatch()
+  const membersContainerRef = useRef<HTMLElement>(null)
   const { activeProfile, user } = useSelector((state: RootState) => state.user)
   const { allPosts, filters } = useSelector((state: RootState) => state.post)
   const [showPanel, setShowPanel] = useState(false)
@@ -716,6 +717,20 @@ const CommunityLayout: React.FC<Props> = ({
     }
   }
 
+  useEffect(()=>{
+    if(membersContainerRef.current){
+      const requiredHeight = ((hobbyMembers.length * 38) + 84);
+      if(hobbyMembers.length<=2){
+        membersContainerRef.current.style.height = 'auto'
+      }
+      else if(seeMoreMembers){
+        membersContainerRef.current.style.height = '198px'
+      }else{
+        membersContainerRef.current.style.height = requiredHeight+"px"
+      }
+    }
+  },[seeMoreMembers,hobbyMembers])
+
   const DoubleArrowSvg = ({ rotate }: { rotate?: boolean }) => {
     return (
       <svg
@@ -758,7 +773,7 @@ const CommunityLayout: React.FC<Props> = ({
           <aside
             className={`${styles['community-left-aside']} custom-scrollbar`}
           >
-            <ProfileSwitcher />
+            <ProfileSwitcher dropdownClass={styles['desktop-profile-switcher-class']} />
             <section
               className={`content-box-wrapper ${styles['hobbies-side-wrapper']}`}
             >
@@ -1269,7 +1284,7 @@ const CommunityLayout: React.FC<Props> = ({
               </section>
             </section>
 
-            <section className={styles['desktop-members-conatiner']}>
+            <section ref={membersContainerRef} className={styles['desktop-members-conatiner']}>
               <header>Hobby Members</header>
               {hobbyMembers
                 ?.slice(0, seeMoreMembers ? 3 : hobbyMembers.length)
