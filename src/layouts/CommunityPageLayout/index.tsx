@@ -717,19 +717,18 @@ const CommunityLayout: React.FC<Props> = ({
     }
   }
 
-  useEffect(()=>{
-    if(membersContainerRef.current){
-      const requiredHeight = ((hobbyMembers.length * 38) + 84);
-      if(hobbyMembers.length<=2){
+  useEffect(() => {
+    if (membersContainerRef.current) {
+      const requiredHeight = hobbyMembers.length * 38 + 84
+      if (hobbyMembers.length <= 2) {
         membersContainerRef.current.style.height = 'auto'
-      }
-      else if(seeMoreMembers){
+      } else if (seeMoreMembers) {
         membersContainerRef.current.style.height = '198px'
-      }else{
-        membersContainerRef.current.style.height = requiredHeight+"px"
+      } else {
+        membersContainerRef.current.style.height = requiredHeight + 'px'
       }
     }
-  },[seeMoreMembers,hobbyMembers])
+  }, [seeMoreMembers, hobbyMembers])
 
   const DoubleArrowSvg = ({ rotate }: { rotate?: boolean }) => {
     return (
@@ -773,7 +772,9 @@ const CommunityLayout: React.FC<Props> = ({
           <aside
             className={`${styles['community-left-aside']} custom-scrollbar`}
           >
-            <ProfileSwitcher dropdownClass={styles['desktop-profile-switcher-class']} />
+            <ProfileSwitcher
+              dropdownClass={styles['desktop-profile-switcher-class']}
+            />
             <section
               className={`content-box-wrapper ${styles['hobbies-side-wrapper']}`}
             >
@@ -990,22 +991,43 @@ const CommunityLayout: React.FC<Props> = ({
                 <section
                   className={`content-box-wrapper ${styles['start-post-btn-container']}`}
                 >
-                  {activeProfile?.data?.profile_image ? (
-                    <img
-                      src={activeProfile?.data?.profile_image}
-                      alt=""
-                      className={styles['profile-img']}
-                      height={40}
-                      width={40}
-                    />
+                  {activeProfile.type === 'user' ? (
+                    <>
+                      {activeProfile.data.profile_image ? (
+                        <img
+                          className={styles['profile-img']}
+                          src={activeProfile?.data?.profile_image}
+                          alt=""
+                          width={48}
+                          height={48}
+                        />
+                      ) : (
+                        <div className={`default-user-icon`}></div>
+                      )}
+                    </>
                   ) : (
-                    <Image
-                      src={defaultUserIcon}
-                      alt=""
-                      className={styles['profile-img']}
-                      height={40}
-                      width={40}
-                    />
+                    <>
+                      {activeProfile?.data?.profile_image ? (
+                        <img
+                          className={`${styles['img-listing']}`}
+                          src={activeProfile?.data?.profile_image}
+                        ></img>
+                      ) : (
+                        <div
+                          className={
+                            activeProfile.data.type == 1
+                              ? `default-people-listing-icon ${styles['img-listing']}`
+                              : activeProfile.data.type == 2
+                              ? `${styles['img-listing']} default-place-listing-icon`
+                              : activeProfile.data.type == 3
+                              ? `${styles['img-listingimg-listing']} default-program-listing-icon`
+                              : activeProfile.data.type == 4
+                              ? `${styles['img-listing']} default-product-listing-icon`
+                              : `${styles['contentImage']} default-people-listing-icon`
+                          }
+                        ></div>
+                      )}
+                    </>
                   )}
                   <button
                     onClick={handleStartPost}
@@ -1284,7 +1306,10 @@ const CommunityLayout: React.FC<Props> = ({
               </section>
             </section>
 
-            <section ref={membersContainerRef} className={styles['desktop-members-conatiner']}>
+            <section
+              ref={membersContainerRef}
+              className={styles['desktop-members-conatiner']}
+            >
               <header>Hobby Members</header>
               {hobbyMembers
                 ?.slice(0, seeMoreMembers ? 3 : hobbyMembers.length)

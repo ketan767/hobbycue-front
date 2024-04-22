@@ -987,6 +987,13 @@ letter-spacing: 0.06px;
   .profile-img {
     display: block;
   }
+  .img-listing {
+    width: 45px;
+    height: 40px;
+    border-radius: 4px;
+    border: 1px solid rgb(var(--primary-100-rgb));
+  
+  }
 }
 
 @media screen and (min-width: 1100px) {
