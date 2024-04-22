@@ -78,6 +78,8 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
     const handleScrollRestoration = () => {
       const scrollPosition = sessionStorage.getItem('scrollPositionProfile')
       if (scrollPosition) {
+        console.log(scrollPosition,'sadasd');
+        
         window.scrollTo(0, parseInt(scrollPosition, 10))
         sessionStorage.removeItem('scrollPositionProfile')
       }

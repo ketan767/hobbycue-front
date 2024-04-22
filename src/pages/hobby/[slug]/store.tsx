@@ -37,14 +37,21 @@ const HobbyStorePage: React.FC<Props> = (props) => {
   useEffect(() => {
     // Save scroll position when navigating away from the page
     const handleRouteChange = () => {
-      sessionStorage.setItem('scrollPositionhobby', window.scrollY.toString())
+      let x : any=document.querySelector('.hobbyheaderid')?.getBoundingClientRect()?.y?.toString()
+      sessionStorage.setItem('scrollPositionhobby', x)
+       
     }
 
     // Restore scroll position when navigating back to the page
     const handleScrollRestoration = () => {
+      let x : any=document.querySelector('.hobbyheaderid')?.getBoundingClientRect()?.y?.toString()
       const scrollPosition = sessionStorage.getItem('scrollPositionhobby')
+      
       if (scrollPosition) {
-        window.scrollTo(0, parseInt(scrollPosition, 10))
+        window.scrollTo({ 
+          top:440-parseInt(scrollPosition, 10) +54 ,
+          behavior: 'smooth' // Optional: Add smooth scrolling effect
+        }  )
         sessionStorage.removeItem('scrollPositionhobby')
       }
     }
