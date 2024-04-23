@@ -150,7 +150,6 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
             )}
           </section>
         </main>
-      </HobbyPageLayout>
       <main className={`${styles['display-mobile']}`}>
         <section className={`${styles['posts-container']}}`}>
           {loadingPosts ? (
@@ -171,6 +170,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
           })}
         </section>
       </main>
+      </HobbyPageLayout>
     </div>
   )
 }
