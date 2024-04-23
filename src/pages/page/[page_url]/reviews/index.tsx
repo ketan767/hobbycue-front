@@ -40,14 +40,22 @@ const ListingReviews: React.FC<Props> = (props) => {
   useEffect(() => {
     // Save scroll position when navigating away from the page
     const handleRouteChange = () => {
-      sessionStorage.setItem('scrollPositionlisting', window.scrollY.toString())
+      let x : any=document.querySelector('.hobbyheaderid')?.getBoundingClientRect()?.y?.toString()
+      sessionStorage.setItem('scrollPositionlisting', x)
+      console.log(x,'asd');
+      
     }
 
     // Restore scroll position when navigating back to the page
     const handleScrollRestoration = () => {
+      let x : any=document.querySelector('.hobbyheaderid')?.getBoundingClientRect()?.y?.toString()
       const scrollPosition = sessionStorage.getItem('scrollPositionlisting')
+      
       if (scrollPosition) {
-        window.scrollTo(0, parseInt(scrollPosition, 10))
+        window.scrollTo({ 
+          top:x-parseInt(scrollPosition, 10)  ,
+          behavior: 'smooth' // Optional: Add smooth scrolling effect
+        }  )
         sessionStorage.removeItem('scrollPositionlisting')
       }
     }

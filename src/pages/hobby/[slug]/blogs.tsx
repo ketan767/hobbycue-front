@@ -49,7 +49,7 @@ const HobbyBlogsPage: React.FC<Props> = (props) => {
     const handleScrollRestoration = () => {
       const scrollPosition = sessionStorage.getItem('scrollPositionhobby')
       if (scrollPosition) {
-        window.scrollTo(0, parseInt(scrollPosition, 10))
+        window.scrollTo(0, 412-parseInt(scrollPosition, 10)+8)
         sessionStorage.removeItem('scrollPositionhobby')
       }
     }

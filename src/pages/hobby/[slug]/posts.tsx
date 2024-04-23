@@ -68,10 +68,10 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
       const scrollPosition = sessionStorage.getItem('scrollPositionhobby')
        
       if (scrollPosition) {
-        console.log(440-parseInt(scrollPosition, 10) +54,'asda');
+        console.log(412-parseInt(scrollPosition, 10),'asda');
 
         window.scrollTo({ 
-          top:440-parseInt(scrollPosition, 10) +54 ,
+          top:412-parseInt(scrollPosition, 10)+62 ,
           behavior: 'smooth' // Optional: Add smooth scrolling effect
         }  )
         sessionStorage.removeItem('scrollPositionhobby')
@@ -170,7 +170,10 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
               <PostCardSkeletonLoading />
             </>
           ) : (
-            posts.length === 0 && 'No Posts'
+            posts.length === 0 &&
+            <div className={styles['no-posts-container']}>
+            <p>No pages available</p>
+          </div>
           )}
           {posts.map((post: any) => {
             return <PostCard key={post._id} postData={post} />

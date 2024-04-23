@@ -103,7 +103,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
       
       if (scrollPosition) {
         window.scrollTo({ 
-          top:440-parseInt(scrollPosition, 10)  ,
+          top:412-parseInt(scrollPosition, 10)+62 ,
           behavior: 'smooth' // Optional: Add smooth scrolling effect
         }  )
         sessionStorage.removeItem('scrollPositionhobby')

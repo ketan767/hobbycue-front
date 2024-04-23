@@ -314,7 +314,7 @@ const ListingPageLayout: React.FC<Props> = ({
           <div
             className={`${styles['navigation-tabs']} ${
               !expandAll ? styles['mobile-mt-0'] : ''
-            }`}
+            } ${ ' hobbyheaderid'}`}
           >
             {tabs.map((tab) => {
               if (tab === 'events') {
