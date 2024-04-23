@@ -115,6 +115,7 @@ const ProfileLayout: React.FC<Props> = ({
         <Image
           src={ChevronDown}
           className={`${expandAll ? styles['rotate-180'] : styles['rotate-0']}`}
+          style={{transition:"all 0.3s ease"}}
           alt=""
         />
       </div>

@@ -1068,6 +1068,82 @@ const ListingPageMain: React.FC<Props> = ({
                               socialMediaName = 'TripAdvisor'
                               socialMediaIcon = TripAdvisorIcon
                               break
+                            case key.startsWith('telegram'):
+                              socialMediaName = 'Telegram'
+                              socialMediaIcon = TelegramIcon
+                              break
+                            case key.startsWith('medium'):
+                              socialMediaName = 'Medium'
+                              socialMediaIcon = MediumIcon
+                              break
+                            case key.startsWith('ultimate_guitar'):
+                              socialMediaName = 'Ultimate Guitar'
+                              socialMediaIcon = UltimateGuitarIcon
+                              break
+                            case key.startsWith('youtube'):
+                              socialMediaName = 'YouTube'
+                              socialMediaIcon = YouTubeIcon
+                              break
+                            case key.startsWith('others'):
+                              socialMediaName = extractDomainName(url)
+                              socialMediaIcon = OthersIcon
+                              break
+                            // Add cases for other socialmedia URLs as needed
+                            default:
+                              break
+                          }switch (true) {
+                            case key.startsWith('facebook'):
+                              socialMediaName = 'Facebook'
+                              socialMediaIcon = FacebookIcon
+                              break
+                            case key.startsWith('twitter'):
+                              socialMediaName = 'Twitter'
+                              socialMediaIcon = TwitterIcon
+                              break
+                            case key.startsWith('instagram'):
+                              socialMediaName = 'Instagram'
+                              socialMediaIcon = InstagramIcon
+                              break
+                            case key.startsWith('behance'):
+                              socialMediaName = 'Behance'
+                              socialMediaIcon = BehanceIcon
+                              break
+                            case key.startsWith('bgg'):
+                              socialMediaName = 'BoardGameGeek'
+                              socialMediaIcon = BGGIcon
+                              break
+                            case key.startsWith('chess'):
+                              socialMediaName = 'Chess'
+                              socialMediaIcon = ChessIcon
+                              break
+                            case key.startsWith('deviantarts'):
+                              socialMediaName = 'DeviantArt'
+                              socialMediaIcon = DeviantArtIcon
+                              break
+                            case key.startsWith('goodreads'):
+                              socialMediaName = 'Goodreads'
+                              socialMediaIcon = GoodreadsIcon
+                              break
+                            case key.startsWith('pinterest'):
+                              socialMediaName = 'Pinterest'
+                              socialMediaIcon = PinterestIcon
+                              break
+                            case key.startsWith('smule'):
+                              socialMediaName = 'Smule'
+                              socialMediaIcon = SmuleIcon
+                              break
+                            case key.startsWith('soundcloud'):
+                              socialMediaName = 'SoundCloud'
+                              socialMediaIcon = SoundCloudIcon
+                              break
+                            case key.startsWith('strava'):
+                              socialMediaName = 'Strava'
+                              socialMediaIcon = StravaIcon
+                              break
+                            case key.startsWith('tripadvisor'):
+                              socialMediaName = 'TripAdvisor'
+                              socialMediaIcon = TripAdvisorIcon
+                              break
                             case key.startsWith('ultimate_guitar'):
                               socialMediaName = 'Ultimate Guitar'
                               socialMediaIcon = UltimateGuitarIcon

@@ -121,6 +121,7 @@ const HobbyPageLayout: React.FC<Props> = ({
         <Image
           src={ChevronDown}
           className={`${expandAll ? styles['rotate-180'] : ''}`}
+          style={{transition:"all 0.3s ease"}}
           alt=""
         />
       </div>
