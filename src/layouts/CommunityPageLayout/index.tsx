@@ -993,7 +993,7 @@ const CommunityLayout: React.FC<Props> = ({
                 >
                   {activeProfile.type === 'user' ? (
                     <>
-                      {activeProfile.data && activeProfile.data.profile_image ? (
+                      {activeProfile.data?.profile_image ? (
                         <img
                           className={styles['profile-img']}
                           src={activeProfile?.data?.profile_image}
@@ -1015,13 +1015,13 @@ const CommunityLayout: React.FC<Props> = ({
                       ) : (
                         <div
                           className={
-                            activeProfile.data.type == 1
+                            activeProfile.data?.type == 1
                               ? `default-people-listing-icon ${styles['img-listing']}`
-                              : activeProfile.data.type == 2
+                              : activeProfile.data?.type == 2
                               ? `${styles['img-listing']} default-place-listing-icon`
-                              : activeProfile.data.type == 3
+                              : activeProfile.data?.type == 3
                               ? `${styles['img-listingimg-listing']} default-program-listing-icon`
-                              : activeProfile.data.type == 4
+                              : activeProfile.data?.type == 4
                               ? `${styles['img-listing']} default-product-listing-icon`
                               : `${styles['contentImage']} default-people-listing-icon`
                           }
