@@ -106,7 +106,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
           <div className={styles['nav-mobile']}>
             <ProfileNavigationLinks activeTab={'blogs'} />
           </div>
-          <section className={`${styles['dual-section-wrapper']}`}>
+          <section className={`${styles['dual-section-wrapper']} ${styles['mob-min-height']} ${styles['mob-h-auto']}`}>
             <div className={styles['no-posts-div']}>
               <p className={styles['no-posts-text']}>
                 This feature is under development. Come back soon to view this

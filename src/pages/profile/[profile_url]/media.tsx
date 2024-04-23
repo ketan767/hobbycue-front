@@ -263,7 +263,7 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
         ) :null}
             {(
           (profileLayoutMode !== 'edit' && !data.pageData?.video_url) && (!data.pageData?.images||data.pageData?.images?.length<1) &&  (
-            <section className={`${styles['dual-section-wrapper']}`}>
+            <section className={`${styles['dual-section-wrapper']} ${styles['mob-min-height']} ${styles['mob-h-auto']}`}>
               <div className={styles['no-posts-div']}>
                 <p className={styles['no-posts-text']}>No media available</p>
               </div>

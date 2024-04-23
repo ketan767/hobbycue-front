@@ -169,7 +169,7 @@
     display: flex !important;
   }
   .display-mobile-main {
-    height: 90vh;
+    min-height: calc(100vh - 104px);
   }
 
   .expand-all {
