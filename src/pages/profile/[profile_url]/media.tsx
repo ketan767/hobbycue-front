@@ -134,22 +134,14 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
   useEffect(() => {
     // Save scroll position when navigating away from the page
     const handleRouteChange = () => {
-      let x : any=document.querySelector('.hobbyheaderid')?.getBoundingClientRect()?.y?.toString()
-      sessionStorage.setItem('scrollPositionProfile', x)
-      console.log(x,'asd');
-      
+      sessionStorage.setItem('scrollPositionProfile', window.scrollY.toString())
     }
 
     // Restore scroll position when navigating back to the page
     const handleScrollRestoration = () => {
-      let x : any=document.querySelector('.hobbyheaderid')?.getBoundingClientRect()?.y?.toString()
       const scrollPosition = sessionStorage.getItem('scrollPositionProfile')
-      
       if (scrollPosition) {
-        window.scrollTo({ 
-          top:x-parseInt(scrollPosition, 10)  ,
-          behavior: 'smooth' // Optional: Add smooth scrolling effect
-        }  )
+        window.scrollTo(0, parseInt(scrollPosition, 10))
         sessionStorage.removeItem('scrollPositionProfile')
       }
     }
@@ -205,10 +197,10 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
               <ProfileSocialMediaSide data={data.pageData} />
             </div>
           </aside>
-          <div className={styles['nav-mobile'] + ' hobbyheaderid'}>
+          <div className={styles['nav-mobile']}>
             <ProfileNavigationLinks activeTab={'media'} />
           </div>
-          <div className={styles['main'] + ' margin-bottom-65vh'}>
+          <div className={styles['main']}>
             {profileLayoutMode === 'edit' && (
               <div className={styles.uploadContainer}>
                 <div className={styles.uploadButton}>
