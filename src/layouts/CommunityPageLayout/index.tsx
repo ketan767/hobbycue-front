@@ -993,7 +993,7 @@ const CommunityLayout: React.FC<Props> = ({
                 >
                   {activeProfile.type === 'user' ? (
                     <>
-                      {activeProfile.data.profile_image ? (
+                      {activeProfile.data?.profile_image ? (
                         <img
                           className={styles['profile-img']}
                           src={activeProfile?.data?.profile_image}
