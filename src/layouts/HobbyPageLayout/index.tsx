@@ -242,7 +242,7 @@ const HobbyPageLayout: React.FC<Props> = ({
             </div>
           </aside>
         )}
-        <div className={`${styles['display-mobile'] + ' hobbyheaderid'} `}>
+        <div className={`${styles['display-mobile']}`}>
           <HobbyNavigationLinks activeTab={activeTab} />
         </div>
         <main className={styles['display-mobile']}>{children}</main>

@@ -20,8 +20,8 @@ const ProfileNavigationLinks: React.FC<Props> = ({
   const router = useRouter()
   const tabs: ProfilePageTabs[] = ['home', 'posts', 'media', 'pages', 'blogs']
   return (
-    <nav className={styles['nav']  }>
-      <div className={styles['navigation-tabs'] }>
+    <nav className={styles['nav']}>
+      <div className={styles['navigation-tabs']}>
         {tabs.map((tab) => {
           return (
             <Link
