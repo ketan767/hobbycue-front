@@ -440,6 +440,7 @@ line-height: 20px;
   }
   .no-posts-container{
     border-radius: 0;
+    margin-bottom: 55vh;
   }
   .links-container{
     grid-template-columns: 100%;

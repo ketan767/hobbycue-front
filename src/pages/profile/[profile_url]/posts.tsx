@@ -72,14 +72,22 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
   useEffect(() => {
     // Save scroll position when navigating away from the page
     const handleRouteChange = () => {
-      sessionStorage.setItem('scrollPositionProfile', window.scrollY.toString())
+      let x : any=document.querySelector('.hobbyheaderid')?.getBoundingClientRect()?.y?.toString()
+      sessionStorage.setItem('scrollPositionProfile', x)
+      console.log(x,'asd');
+      
     }
 
     // Restore scroll position when navigating back to the page
     const handleScrollRestoration = () => {
+      let x : any=document.querySelector('.hobbyheaderid')?.getBoundingClientRect()?.y?.toString()
       const scrollPosition = sessionStorage.getItem('scrollPositionProfile')
+      
       if (scrollPosition) {
-        window.scrollTo(0, parseInt(scrollPosition, 10))
+        window.scrollTo({ 
+          top:x-parseInt(scrollPosition, 10)  ,
+          behavior: 'smooth' // Optional: Add smooth scrolling effect
+        }  )
         sessionStorage.removeItem('scrollPositionProfile')
       }
     }
@@ -277,7 +285,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
             <ProfileSocialMediaSide data={data.pageData} />
           </aside>
 
-          <div className={styles['nav-mobile']}>
+          <div className={styles['nav-mobile'] + ' hobbyheaderid'}>
             <ProfileNavigationLinks activeTab={'posts'} />
           </div>
 
