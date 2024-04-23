@@ -1,3 +1,15 @@
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+    
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .hobby-list {
   margin-top: var(--spacing-16);
   list-style: none;
@@ -6,6 +18,7 @@
   flex-wrap: wrap;
   row-gap: var(--spacing-16);
   column-gap: var(--spacing-8);
+  animation: fadeDown 0.3s ease forwards;
 }
 
 .hobby-list li {

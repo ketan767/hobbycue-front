@@ -40,7 +40,7 @@
 
 .heading .icon {
   transition: rotate(180deg);
-  transition: 0.2s;
+  transition: 0.3s;
 }
 .drop-down:hover {
   border-radius: 4px;
@@ -48,7 +48,7 @@
   transition: 0.3s;
 }
 .icon-active {
-  transition: 0.2s;
+  transition: 0.3s;
   transform: rotate(180deg);
 }
 .dropdown-container p.dropdown-value {
