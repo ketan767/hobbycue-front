@@ -203,7 +203,9 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                             height={48}
                           />
                         ) : (
-                          <div className={`default-user-icon`}></div>
+                          <div
+                            className={`${styles['img']} default-user-icon`}
+                          ></div>
                         )}
                       </>
                     ) : (
@@ -231,7 +233,11 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                       </>
                     )}
                     <svg
-                      className={styles['profile-switcher-downarrow']}
+                      className={
+                        activeProfile?.data?.profile_image
+                          ? `${styles['profile-switcher-downarrow']}`
+                          : `${[styles['profile-switcher-downarrow-icon']]}`
+                      }
                       width="16"
                       height="16"
                       viewBox="0 0 16 16"
