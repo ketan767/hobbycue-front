@@ -1002,7 +1002,9 @@ const CommunityLayout: React.FC<Props> = ({
                           height={48}
                         />
                       ) : (
-                        <div className={`default-user-icon`}></div>
+                        <div
+                          className={`${styles['profile-img']} default-user-icon`}
+                        ></div>
                       )}
                     </>
                   ) : (

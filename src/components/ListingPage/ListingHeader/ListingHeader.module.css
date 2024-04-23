@@ -131,7 +131,7 @@
 
 .action-btn:hover {
   background-color: #ccc1da;
-  transition: 0.2s;
+  transition: 0.3s;
 }
 
 .action-dropdown {
@@ -175,7 +175,7 @@
   line-height: 18px; /* 128.571% */
   letter-spacing: 0.07px;
   padding: 12px;
-  transition: 0.2s;
+  transition: 0.3s;
 }
 .customList li:hover {
   background-color: #e5e5e5;

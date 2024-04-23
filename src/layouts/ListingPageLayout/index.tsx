@@ -291,6 +291,7 @@ const ListingPageLayout: React.FC<Props> = ({
           {expandAll ? <p>Collapse All</p> : <p>Expand All</p>}
           <Image
             src={ChevronDown}
+            style={{transition:"all 0.3s ease"}}
             className={`${
               expandAll ? styles['rotate-180'] : styles['rotate-0']
             }`}

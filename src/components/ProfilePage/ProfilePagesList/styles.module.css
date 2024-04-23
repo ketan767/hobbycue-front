@@ -1,8 +1,21 @@
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+    
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .pages-list {
   display: flex;
   flex-direction: column;
   row-gap: 8px;
   padding: 8px 0;
+  animation: fadeDown 0.3s ease forwards;
 }
 .pages-list li {
   list-style: none;
