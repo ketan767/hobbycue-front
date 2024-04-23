@@ -170,10 +170,11 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
               <PostCardSkeletonLoading />
             </>
           ) : (
-            posts.length === 0 &&
-            <div className={styles['no-posts-container']}>
-            <p>No pages available</p>
-          </div>
+            posts.length === 0 && (
+              <div className={styles['no-posts-container']}>
+                <p>No posts available</p>
+              </div>
+            )
           )}
           {posts.map((post: any) => {
             return <PostCard key={post._id} postData={post} />

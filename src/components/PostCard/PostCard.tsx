@@ -206,7 +206,13 @@ const PostCard: React.FC<Props> = (props) => {
               )}
             </Link>
             <div>
-              <Link href={`/profile/${postData?._author?.profile_url}`}>
+              <Link
+                href={
+                  postData?.author_type === 'User'
+                    ? `/profile/${postData?._author?.profile_url}`
+                    : `/page/${postData?._author?.page_url}`
+                }
+              >
                 <p className={styles['author-name']}>
                   {postData?.author_type === 'User'
                     ? postData?._author?.full_name
@@ -314,7 +320,7 @@ const PostCard: React.FC<Props> = (props) => {
         <section className={styles['body']}>
           {(!has_link || props.currentSection === 'posts') && (
             <div
-              className={styles['content']+" ql-editor"}
+              className={styles['content'] + ' ql-editor'}
               dangerouslySetInnerHTML={{
                 __html: postData.content
                   .replace(/<img\b[^>]*>/g, '') // deleted all images from here then did the link formatting

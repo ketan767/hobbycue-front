@@ -101,6 +101,7 @@ const ProfileLayout: React.FC<Props> = ({
           navigationTabs={navigationTabs}
           data={data.pageData}
           activeTab={activeTab}
+          noDataChecker={noDataChecker}
         />
       )}
 
