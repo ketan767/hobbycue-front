@@ -680,6 +680,9 @@ background: var(--Purple-3, #F7F5F9);
 .dropdowns-panel{
   display: none;
 }
+.img-listing {
+  display: none;
+}
 
 @media screen and (max-width: 1100px) {
   .community-left-aside,
@@ -988,6 +991,7 @@ letter-spacing: 0.06px;
     display: block;
   }
   .img-listing {
+    display: block;
     width: 45px;
     height: 40px;
     border-radius: 4px;
