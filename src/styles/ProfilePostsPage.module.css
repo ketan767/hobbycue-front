@@ -96,7 +96,8 @@
   }
   .posts-container-mobile {
     display: block;
-    min-height: calc(100vh - 107px - 56px);
+    height: 90vh;
+    /* min-height: calc(100vh - 107px - 56px); */
   }
   .nav-mobile {
     display: initial;

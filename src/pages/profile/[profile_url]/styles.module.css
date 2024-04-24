@@ -164,7 +164,7 @@
     display: initial !important;
   }
   .mob-min-height{
-    min-height: calc(100vh - 107px);
+    /* min-height: calc(100vh - 107px); */
   }
   .no-posts-div{
     border-radius: 0;
@@ -177,6 +177,6 @@
     height: 90vh;
   }
   .mob-h-auto{
-    height: auto;
+    /* height: auto; */
   }
 }

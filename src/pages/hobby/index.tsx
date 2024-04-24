@@ -518,6 +518,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
               <div className={styles['select-filter']}>
                 <p>Hobby</p>
                 <TextField
+                  className={hobbyStyles['hobby-search']}
                   size="small"
                   placeholder="Select Hobby"
                   id="outlined-basic"

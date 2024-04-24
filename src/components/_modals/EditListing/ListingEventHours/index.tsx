@@ -12,6 +12,7 @@ import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import {
+  GetListingEvents,
   getListingAddress,
   updateListingAddress,
 } from '@/services/listing.service'
@@ -51,8 +52,8 @@ type ListingAddressData = {
 }
 
 const initialEventHour = {
-  from_date: '02-02-2002',
-  to_date: '02-02-2002',
+  from_date: new Date().toISOString(),
+  to_date: new Date().toISOString(),
   from_time: '8:00 am',
   to_time: '9:00 pm',
 }
@@ -167,7 +168,21 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
       setEventData({ from_time, to_time, from_date, to_date })
       setInitialData({ from_time, to_time, from_date, to_date })
     }
-  }, [])
+  }, [listingModalData])
+
+  // const updateEventHours = async () => {
+  //   const { err, res } = await GetListingEvents(
+  //     listingModalData?._id
+  //   )
+  //   if (err) return console.log(err)
+  //     console.warn({res})
+  // }
+
+  // useEffect(() => {
+  //   updateEventHours()
+  // }, [user])
+
+  // console.warn({eventData})
 
   useEffect(() => {
     if (listingModalData.event_date_time === undefined) {

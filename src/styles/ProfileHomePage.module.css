@@ -101,7 +101,7 @@
     display: initial !important;
   }
   .mob-min-height{
-    min-height: calc(100vh - 107px);
+    /* min-height: calc(100vh - 107px); */
   }
 
   .display-desktop {

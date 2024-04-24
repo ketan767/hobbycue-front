@@ -49,7 +49,7 @@ const VisibilityAndNotification: React.FC = () => {
   const dispatch = useDispatch()
 
   const handleAddLocation = () => {
-    dispatch(openModal({ type: 'add-location', closable: false }))
+    dispatch(openModal({ type: 'add-location', closable: true }))
   }
 
   const handleAddressEdit = (id: string) => {

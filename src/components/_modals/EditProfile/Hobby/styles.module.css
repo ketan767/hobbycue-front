@@ -484,7 +484,7 @@
   }
 
   .modal-wrapper .header{
-    padding: 16px;
+    padding: var(--spacing-16) var(--spacing-16) 0;
   }
 
   .modal-wrapper .body {
@@ -492,7 +492,7 @@
     padding-right: 5px; */
     padding-left: 16px;
     padding-right: 16px;
-    padding-top: 0;
+    padding-top: 12px;
   }
   .add-hobbies-wrapper .add-new-hobby {
     flex-wrap: wrap;
@@ -560,15 +560,18 @@ line-height: 16px; /* 133.333% */
     background-color: #f7f5f9;
     height: 1.875rem;
   }
+  .levelwithtext{
+    margin-right: 20px;
+  }
   
-  .levelwithtext>p{
+  /* .levelwithtext>p{
     color: var(--Grey-Darker, #6D747A);
   font-family: Poppins;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
-  line-height: 16px; /* 133.333% */
-  }
+  line-height: 16px;
+  } */
 
   .menu-item-class{
     padding: 0;
