@@ -82,6 +82,22 @@ const HobbyDetail: React.FC<Props> = (props) => {
     }
   }, [data.level, data.slug, data.tags])
 
+  const displayDescMeta = () => {
+    if (data?.level === 0) {
+      return 'Category'
+    } else if (data?.level === 1) {
+      return 'Sub-Category'
+    } else if (data?.level === 2) {
+      return 'Hobby Tag'
+    } else if (data?.level === 3) {
+      return 'Hobby'
+    } else if (data?.level === 5) {
+      return 'Genre/Style'
+    } else {
+      return data?.about ?? ''
+    }
+  }
+
   const handleExpandAll: (value: boolean) => void = (value) => {
     setExpandAll(value)
     dispatch(updateHobbyMenuExpandAll(value))
@@ -121,10 +137,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
           property="og:image:secure_url"
           content={`${data?.profile_image}`}
         />
-        <meta
-          property="og:description"
-          content={`${data?.about ?? data?.about}`}
-        />
+        <meta property="og:description" content={displayDescMeta()} />
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${data?.display} | HobbyCue`}</title>
       </Head>
