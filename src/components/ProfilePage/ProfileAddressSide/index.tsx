@@ -80,7 +80,11 @@ const ProfileAddressSide = ({ data, expandData, addressError }: Props) => {
                 </span>
               ) : (
                 <span className={styles.textGray}>
-                  {`${data?.primary_address?.city}`}
+                  {`${
+                    data?.primary_address?.city
+                      ? data?.primary_address?.city
+                      : ''
+                  }`}
                 </span>
               )}
             </span>
