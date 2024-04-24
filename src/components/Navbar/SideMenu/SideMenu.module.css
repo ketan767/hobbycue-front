@@ -191,6 +191,12 @@
   bottom: 0;
 }
 
+.profile-switcher-downarrow-icon {
+  position: absolute;
+  right: 0;
+  top: 30px;
+}
+
 .profile-switcher-dropdown {
   position: absolute;
   top: 56px;

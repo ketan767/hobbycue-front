@@ -7,8 +7,8 @@ import { openModal } from '@/redux/slices/modal'
 
 type Props = {
   data: ProfilePageData['pageData']
-  expandData?:boolean
-  addressError?:boolean
+  expandData?: boolean
+  addressError?: boolean
 }
 
 const ProfileAddressSide = ({ data, expandData, addressError }: Props) => {
@@ -45,7 +45,7 @@ const ProfileAddressSide = ({ data, expandData, addressError }: Props) => {
         }
         setDisplayData={setDisplayData}
         expandData={expandData}
-        className={addressError===true?styles['error']:''}
+        className={addressError === true ? styles['error'] : ''}
       >
         <h4 className={styles['heading']}>Location</h4>
         <ul
@@ -75,10 +75,16 @@ const ProfileAddressSide = ({ data, expandData, addressError }: Props) => {
             </svg>
             <span>
               {profileLayoutMode === 'edit' ? (
-                <span className={styles.textGray}>{addressText}</span>
+                <span className={styles.textGray}>
+                  {addressText.replace(/,\s*$/, '')}
+                </span>
               ) : (
                 <span className={styles.textGray}>
-                  {`${data?.primary_address?.city}`}
+                  {`${
+                    data?.primary_address?.city
+                      ? data?.primary_address?.city
+                      : ''
+                  }`}
                 </span>
               )}
             </span>

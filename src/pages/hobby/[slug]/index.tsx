@@ -64,9 +64,9 @@ const HobbyDetail: React.FC<Props> = (props) => {
       query = `category=${data?.category?._id}&sub_category=${data?._id}&level=2&level=3`
     } else if (data.level === 2) {
       if (data?.sub_category) {
-        query = `category=${data?.category?._id}&sub_category=${data?.sub_category?._id}&level=3&level=5&show=true&tags=${data?._id}`
+        query = `level=0&level=1&level=2&level=3&level=5&tags=${data?._id}`
       } else {
-        query = `category=${data?.category?._id}&level=3&level=5&show=true&tags=${data?._id}`
+        query = `category=${data?.category?._id}&level=3&level=5&tags=${data?._id}`
       }
     }
 
@@ -74,13 +74,29 @@ const HobbyDetail: React.FC<Props> = (props) => {
       console.log('expceted condition')
       setNextLevels([])
     } else if (data.level === 3 && data.genre.length !== 0) {
-      query = `level=5&show=true&genre=${data.genre[0]}`
+      query = `level=5&genre=${data.genre[0]}`
     }
 
     if (query) {
       fetchAndUpdateNextLevels(`fields=display,slug&sort=level&${query}`)
     }
   }, [data.level, data.slug, data.tags])
+
+  const displayDescMeta = () => {
+    if (data?.level === 0) {
+      return 'Category'
+    } else if (data?.level === 1) {
+      return 'Sub-Category'
+    } else if (data?.level === 2) {
+      return 'Hobby Tag'
+    } else if (data?.level === 3) {
+      return 'Hobby'
+    } else if (data?.level === 5) {
+      return 'Genre/Style'
+    } else {
+      return data?.about ?? ''
+    }
+  }
 
   const handleExpandAll: (value: boolean) => void = (value) => {
     setExpandAll(value)
@@ -121,10 +137,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
           property="og:image:secure_url"
           content={`${data?.profile_image}`}
         />
-        <meta
-          property="og:description"
-          content={`${data?.about ?? data?.about}`}
-        />
+        <meta property="og:description" content={displayDescMeta()} />
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${data?.display} | HobbyCue`}</title>
       </Head>
