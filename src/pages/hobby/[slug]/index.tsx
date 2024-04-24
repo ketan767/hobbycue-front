@@ -64,9 +64,9 @@ const HobbyDetail: React.FC<Props> = (props) => {
       query = `category=${data?.category?._id}&sub_category=${data?._id}&level=2&level=3`
     } else if (data.level === 2) {
       if (data?.sub_category) {
-        query = `category=${data?.category?._id}&sub_category=${data?.sub_category?._id}&level=3&level=5&show=true&tags=${data?._id}`
+        query = `level=0&level=1&level=2&level=3&level=5&tags=${data?._id}`
       } else {
-        query = `category=${data?.category?._id}&level=3&level=5&show=true&tags=${data?._id}`
+        query = `category=${data?.category?._id}&level=3&level=5&tags=${data?._id}`
       }
     }
 
@@ -74,7 +74,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
       console.log('expceted condition')
       setNextLevels([])
     } else if (data.level === 3 && data.genre.length !== 0) {
-      query = `level=5&show=true&genre=${data.genre[0]}`
+      query = `level=5&genre=${data.genre[0]}`
     }
 
     if (query) {
