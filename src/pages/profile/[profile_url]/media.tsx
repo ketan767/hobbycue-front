@@ -200,7 +200,7 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
           <div className={styles['nav-mobile']}>
             <ProfileNavigationLinks activeTab={'media'} />
           </div>
-          <div className={styles['main']}>
+          <div className={styles['main'] + ' margin-bottom-68vh'}>
             {profileLayoutMode === 'edit' && (
               <div className={styles.uploadContainer}>
                 <div className={styles.uploadButton}>
