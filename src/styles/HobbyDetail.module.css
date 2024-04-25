@@ -439,6 +439,19 @@ line-height: 20px;
   .posts-container {
     margin: 10px 0 0 0;
   }
+
+  .mobile-mt-10{
+    margin-top: 10px;
+  }
+
+  .links-container.no-posts,
+  .dual-section-wrapper.no-posts,
+  .posts-container.no-posts{
+    min-height: calc(100vh - 270px + 160px);
+  }
+  .mob-min-height{
+    min-height: calc(100vh - 270px + 170px);
+  }
   .expand-all {
     display: flex;
     flex-direction: row;

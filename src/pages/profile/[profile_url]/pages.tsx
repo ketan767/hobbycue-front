@@ -138,7 +138,7 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
                 })}
               </div>
             ) : (
-              <section className={`${styles['dual-section-wrapper-mobile']}`}>
+              <section className={`${styles['dual-section-wrapper-mobile']} ${styles['mob-min-height']}`}>
                 <div className={styles['no-posts-div']}>
                   <p className={styles['no-posts-text']}>No pages available</p>
                 </div>

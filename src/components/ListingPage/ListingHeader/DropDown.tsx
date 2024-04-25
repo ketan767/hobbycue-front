@@ -21,10 +21,8 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType, showFeatureUnderDeve
 
   useEffect(() => {
     function handleClickOutside(event: any) {
-      if (ref.current && ref.current.contains(event.target) !== true) {
-        handleClose()
-        return
-      } else if (
+      console.log({targ:event.target,ref:ref.current})
+      if (
         event.target.nodeName == Claimref.current?.nodeName &&
         event.target.textContent === Claimref.current?.textContent
       ) {
@@ -57,6 +55,10 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType, showFeatureUnderDeve
         if (isLoggedIn)
           dispatch(openModal({ type: 'ListingReportModal', closable: true }))
         else dispatch(openModal({ type: 'auth', closable: true }))
+      }
+      else if (ref.current && !ref.current.contains(event.target)) {
+        handleClose()
+        return
       }
     }
     document.addEventListener('mousedown', handleClickOutside)

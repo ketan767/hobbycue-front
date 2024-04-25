@@ -460,6 +460,9 @@
   .modal-hr {
     display: none;
   }
+  .modal-wrapper .header{
+    padding: 16px 16px 0;
+  }
   .modal-wrapper .body {
     padding-top: 12px !important;
     padding: var(--spacing-16) var(--spacing-16);
