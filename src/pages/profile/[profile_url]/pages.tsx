@@ -43,25 +43,18 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
   useEffect(() => {
     // Save scroll position when navigating away from the page
     const handleRouteChange = () => {
-      let x : any=document.querySelector('.hobbyheaderid')?.getBoundingClientRect()?.y?.toString()
-      sessionStorage.setItem('scrollPositionProfile', x)
-      console.log(x,'asd');
-      
+      sessionStorage.setItem('scrollPositionProfile', window.scrollY.toString())
     }
 
     // Restore scroll position when navigating back to the page
     const handleScrollRestoration = () => {
-      let x : any=document.querySelector('.hobbyheaderid')?.getBoundingClientRect()?.y?.toString()
       const scrollPosition = sessionStorage.getItem('scrollPositionProfile')
-      
       if (scrollPosition) {
-        window.scrollTo({ 
-          top:x-parseInt(scrollPosition, 10) ,
-          behavior: 'smooth' // Optional: Add smooth scrolling effect
-        }  )
+        window.scrollTo(0, parseInt(scrollPosition, 10))
         sessionStorage.removeItem('scrollPositionProfile')
       }
     }
+
     router.events.on('routeChangeStart', handleRouteChange)
 
     router.events.on('routeChangeComplete', handleScrollRestoration)
@@ -135,7 +128,7 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
               )}
             </main>
 
-            <div className={styles['nav-mobile'] + ' hobbyheaderid'}>
+            <div className={styles['nav-mobile']}>
               <ProfileNavigationLinks activeTab={'pages'} />
             </div>
             {data.listingsData.length !== 0 ? (
@@ -145,9 +138,9 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
                 })}
               </div>
             ) : (
-              <section className={`${styles['dual-section-wrapper-mobile']}`}>
-                <div className={styles['no-posts-div'] + ' margin-bottom-43vh'}>
-                  <p className={styles['no-posts-text']  }>No pages available</p>
+              <section className={`${styles['dual-section-wrapper-mobile']} ${styles['mob-min-height']}`}>
+                <div className={styles['no-posts-div']+ ' margin-bottom-43vh'}>
+                  <p className={styles['no-posts-text']}>No pages available</p>
                 </div>
               </section>
             )}

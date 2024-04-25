@@ -1,6 +1,6 @@
 .modal-wrapper {
   background-color: white;
-  width: 63rem;
+  width: 65rem;
   /* width: 100%; */
   mix-blend-mode: normal;
   border-radius: var(--spacing-8);
@@ -220,7 +220,7 @@
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: contain;
-  transition: 0.2s ease-in-out;
+  transition: 0.3s ease-in-out;
   position: relative;
 
   top: 0;
@@ -237,7 +237,7 @@
 
 .show-metadata {
   position: relative;
-  max-height: 50%;
+  max-height: 100%;
   width: 100%;
   background-color: #EBEDF0;
   margin-bottom: 8px;
@@ -245,6 +245,10 @@
 
 .metadata-image {
   max-width: 100%;
+    max-height: 400px;
+    height: auto; /* Ensures the image maintains its aspect ratio */
+    display: block; /* Removes any extra spacing */
+    margin: 0 auto; 
 }
 
 .metadata-content {
@@ -273,6 +277,10 @@
 .metadata-content .metadata-url {
   font-size: 12px;
   color: rgba(var(--gray-50-rgb));
+  max-width: 600px;
+  overflow: hidden; 
+  text-overflow: ellipsis;
+  white-space: nowrap
 }
 
 .metadata-close-icon {
@@ -381,6 +389,7 @@
 
   .create-post-modal>aside>div>section {
     width: 100%;
+    overflow: hidden;
   }
 
   .modal-wrapper {

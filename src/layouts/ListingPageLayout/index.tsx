@@ -291,6 +291,7 @@ const ListingPageLayout: React.FC<Props> = ({
           {expandAll ? <p>Collapse All</p> : <p>Expand All</p>}
           <Image
             src={ChevronDown}
+            style={{transition:"all 0.3s ease"}}
             className={`${
               expandAll ? styles['rotate-180'] : styles['rotate-0']
             }`}
@@ -314,7 +315,7 @@ const ListingPageLayout: React.FC<Props> = ({
           <div
             className={`${styles['navigation-tabs']} ${
               !expandAll ? styles['mobile-mt-0'] : ''
-            } ${ ' hobbyheaderid'}`}
+            }`}
           >
             {tabs.map((tab) => {
               if (tab === 'events') {

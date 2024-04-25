@@ -392,7 +392,7 @@ line-height: 20px; /* 142.857% */
 .start-post-btn-container :hover {
   background-color: #8064a2;
   color: white;
-  transition: 0.2s;
+  transition: 0.3s;
 }
 
 .profile-img {
@@ -490,7 +490,7 @@ position: relative;
   left: 0;
   position: absolute;
 
-  transition: transform 0.2s ease-in-out;
+  transition: transform 0.3s ease-in-out;
   width: 100%;
 }
 
@@ -678,6 +678,9 @@ background: var(--Purple-3, #F7F5F9);
 }
 
 .dropdowns-panel{
+  display: none;
+}
+.img-listing {
   display: none;
 }
 
@@ -988,6 +991,7 @@ letter-spacing: 0.06px;
     display: block;
   }
   .img-listing {
+    display: block;
     width: 45px;
     height: 40px;
     border-radius: 4px;

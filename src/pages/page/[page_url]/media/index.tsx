@@ -43,25 +43,30 @@ const ListingMedia: React.FC<Props> = (props) => {
   const router = useRouter()
   useEffect(() => {
     const handleRouteChange = () => {
-      let x : any=document.querySelector('.hobbyheaderid')?.getBoundingClientRect()?.y?.toString()
-      sessionStorage.setItem('scrollPositionlisting', x)
-      console.log(x,'asd');
-      
+      sessionStorage.setItem('scrollPositionlisting', window.scrollY.toString())
     }
 
-    // Restore scroll position when navigating back to the page
     const handleScrollRestoration = () => {
-      let x : any=document.querySelector('.hobbyheaderid')?.getBoundingClientRect()?.y?.toString()
       const scrollPosition = sessionStorage.getItem('scrollPositionlisting')
-      
       if (scrollPosition) {
-        window.scrollTo({ 
-          top:x-parseInt(scrollPosition, 10)  ,
-          behavior: 'smooth' // Optional: Add smooth scrolling effect
-        }  )
+        const parsedScrollPosition = parseInt(scrollPosition, 10)
+        let adjustedScrollPosition = parsedScrollPosition
+
+        // Check screen width
+        if (window.innerWidth < 1100) {
+          adjustedScrollPosition -= 44 // Subtract 44 units if screen width is less than 1100px
+        }
+
+        // Scroll to adjusted position (ensure it's not negative)
+        window.scrollTo(
+          0,
+          adjustedScrollPosition >= 0 ? adjustedScrollPosition : 0,
+        )
+
         sessionStorage.removeItem('scrollPositionlisting')
       }
     }
+
     router.events.on('routeChangeStart', handleRouteChange)
     router.events.on('routeChangeComplete', handleScrollRestoration)
 

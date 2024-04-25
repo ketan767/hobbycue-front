@@ -15,6 +15,7 @@ import PageGridLayout from '@/layouts/PageGridLayout'
 import ProfileHobbySideList from '@/components/ProfilePage/ProfileHobbySideList'
 import PageContentBox from '@/layouts/PageContentBox'
 import { openModal } from '@/redux/slices/modal'
+
 import styles from '@/styles/ProfileHomePage.module.css'
 import ProfileAddressSide from '@/components/ProfilePage/ProfileAddressSide'
 import ProfileContactSide from '@/components/ProfilePage/ProfileContactSides'
@@ -90,22 +91,14 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
   useEffect(() => {
     // Save scroll position when navigating away from the page
     const handleRouteChange = () => {
-      let x : any=document.querySelector('.hobbyheaderid')?.getBoundingClientRect()?.y?.toString()
-      sessionStorage.setItem('scrollPositionProfile', x)
-      console.log(x,'asd');
-      
+      sessionStorage.setItem('scrollPositionProfile', window.scrollY.toString())
     }
 
     // Restore scroll position when navigating back to the page
     const handleScrollRestoration = () => {
-      let x : any=document.querySelector('.hobbyheaderid')?.getBoundingClientRect()?.y?.toString()
       const scrollPosition = sessionStorage.getItem('scrollPositionProfile')
-      
       if (scrollPosition) {
-        window.scrollTo({ 
-          top:x-parseInt(scrollPosition, 10)  ,
-          behavior: 'smooth' // Optional: Add smooth scrolling effect
-        }  )
+        window.scrollTo(0, parseInt(scrollPosition, 10))
         sessionStorage.removeItem('scrollPositionProfile')
       }
     }
@@ -463,14 +456,14 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
               <ProfileSocialMediaSide data={pageData} />
             </aside>
 
-            <div className={styles['nav-mobile'] + ' hobbyheaderid'}>
+            <div className={styles['nav-mobile']}>
               <ProfileNavigationLinks
                 navigationTabs={navigationTabs}
                 activeTab={'home'}
               />
             </div>
             {/* About for mobile view */}
-            <div className={styles['display-mobile']}>
+            <div className={`${styles['display-mobile']} ${styles['mob-min-height']}`}>
               <PageContentBox
                 showEditButton={profileLayoutMode === 'edit'}
                 onEditBtnClick={() =>
@@ -490,7 +483,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
             {/* User Information for mobile view */}
             <div
               className={
-               `${ profileLayoutMode === 'edit'
+                `${profileLayoutMode === 'edit'
                   ? styles['display-mobile']
                   : styles['display-none']} ${ ' margin-bottom-52vh'}`
               }

@@ -200,7 +200,7 @@ line-height: 16px; /* 114.286% */
 .view-more-btn:hover {
   background-color: #8064a2;
   color: white;
-  transition: 0.2s;
+  transition: 0.3s;
 }
 
 .resultHeading {

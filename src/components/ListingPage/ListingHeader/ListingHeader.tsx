@@ -572,16 +572,14 @@ const ListingHeader: React.FC<Props> = ({
         {/* Action Buttons */}
         <div className={styles['action-btn-wrapper']}>
           {/* Send Email Button  */}
-          <Link href={`mailto:${data.public_email || data.email}`}>
             <CustomTooltip title="Repost">
               <div
-                onClick={(e) => console.log(e)}
+                onClick={(e) => handleRepost()}
                 className={styles['action-btn']}
               >
                 <RepostIcon />
               </div>
             </CustomTooltip>
-          </Link>
 
           {/* Bookmark Button */}
           <CustomTooltip title="Bookmark">

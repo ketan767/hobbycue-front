@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles.module.css'
-import { CircularProgress, FormControl, MenuItem, Select } from '@mui/material'
+import { CircularProgress, FormControl, MenuItem, Select, useMediaQuery } from '@mui/material'
 import DeleteIcon from '@/assets/svg/trash-icon-colored.svg'
 import AddIcon from '@/assets/svg/add.svg'
 import Image from 'next/image'
@@ -495,6 +495,9 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
       onStatusChange(changesMade)
     }
   }, [mediaData, initialData])
+  
+  const isMobile = useMediaQuery('(max-width:1100px)');
+
   if (confirmationModal) {
     return (
       <SaveModal
@@ -509,12 +512,22 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
       {/* Modal Header */}
       <header className={styles['header']}>
         <h4 className={styles['heading']}>{'Social Media'}</h4>
+        {isMobile&&<div className={styles['header-add-new']} onClick={addSocialMedia}>
+          <Image
+            src={AddIcon}
+            alt="add"
+            width={12}
+            height={12}
+            className={styles.deleteIcon}
+          />
+          <p>Add New</p> 
+        </div>}
       </header>
 
       <hr className={styles['modal-hr']} />
 
       <section className={styles['body']}>
-        <div className={styles['body-header']} onClick={addSocialMedia}>
+        {!isMobile&&<div className={styles['body-header']} onClick={addSocialMedia}>
           <Image
             src={AddIcon}
             alt="add"
@@ -523,7 +536,7 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
             className={styles.deleteIcon}
           />
           Add New
-        </div>
+        </div>}
         {mediaData.map((item: any, idx: any) => {
           return (
             <div className={styles.inputContainer} key={idx}>

@@ -20,6 +20,7 @@ import HobbyNavigationLinks from '@/components/HobbyPage/HobbyHeader/HobbyNaviga
 import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
 import { openModal } from '@/redux/slices/modal'
 import { SetLinkviaAuth } from '@/redux/slices/user'
+import { useMediaQuery } from '@mui/material'
 type Props = {
   activeTab: HobbyPageTabs
   data: any
@@ -103,6 +104,7 @@ const HobbyPageLayout: React.FC<Props> = ({
       dispatch(openModal({ type: 'auth', closable: true }))
     }
   }
+  const isMobile = useMediaQuery("(max-width:1100px)");
   return (
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
@@ -121,6 +123,7 @@ const HobbyPageLayout: React.FC<Props> = ({
         <Image
           src={ChevronDown}
           className={`${expandAll ? styles['rotate-180'] : ''}`}
+          style={{transition:"all 0.3s ease"}}
           alt=""
         />
       </div>
@@ -165,7 +168,8 @@ const HobbyPageLayout: React.FC<Props> = ({
         </aside>
         <main className={styles['display-desktop']}>{children}</main>
 
-        {!hideLastColumn && (
+        {/* {!hideLastColumn && ( */}
+        {(isMobile || !hideLastColumn) && (
           <aside className={expandAll ? '' : styles['display-none']}>
             <div className={styles['members']}>
               <div className={styles['heading']}>
@@ -242,10 +246,10 @@ const HobbyPageLayout: React.FC<Props> = ({
             </div>
           </aside>
         )}
-        <div className={`${styles['display-mobile'] + ' hobbyheaderid'} `}>
+        <div className={`${styles['display-mobile']}`}>
           <HobbyNavigationLinks activeTab={activeTab} />
         </div>
-        <main className={styles['display-mobile']}>{children}</main>
+        <main className={`${styles['display-mobile']} ${styles['mob-min-height']}`}>{children}</main>
       </PageGridLayout>
     </>
   )

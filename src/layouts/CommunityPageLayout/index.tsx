@@ -1002,7 +1002,9 @@ const CommunityLayout: React.FC<Props> = ({
                           height={48}
                         />
                       ) : (
-                        <div className={`default-user-icon`}></div>
+                        <div
+                          className={`${styles['profile-img']} default-user-icon`}
+                        ></div>
                       )}
                     </>
                   ) : (
@@ -1015,13 +1017,13 @@ const CommunityLayout: React.FC<Props> = ({
                       ) : (
                         <div
                           className={
-                            activeProfile.data.type == 1
+                            activeProfile.data?.type == 1
                               ? `default-people-listing-icon ${styles['img-listing']}`
-                              : activeProfile.data.type == 2
+                              : activeProfile.data?.type == 2
                               ? `${styles['img-listing']} default-place-listing-icon`
-                              : activeProfile.data.type == 3
+                              : activeProfile.data?.type == 3
                               ? `${styles['img-listingimg-listing']} default-program-listing-icon`
-                              : activeProfile.data.type == 4
+                              : activeProfile.data?.type == 4
                               ? `${styles['img-listing']} default-product-listing-icon`
                               : `${styles['contentImage']} default-people-listing-icon`
                           }
