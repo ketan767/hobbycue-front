@@ -3,31 +3,43 @@ import { useDispatch, useSelector } from 'react-redux'
 import styles from '@/components/ProfilePage/ProfileHeader/ProfileHeader.module.css'
 import { openModal } from '@/redux/slices/modal'
 import { RootState } from '@/redux/store'
+import { showProfileError } from '@/redux/slices/user'
+import { useRouter } from 'next/router'
 
 type Props = {
   handleClose?: any
   userType: 'edit' | 'anonymous' | 'page'
-  showFeatureUnderDevelopment?: ()=>void
+  showFeatureUnderDevelopment?: () => void
 }
 
-const Dropdown: React.FC<Props> = ({ handleClose, userType, showFeatureUnderDevelopment }) => {
+const Dropdown: React.FC<Props> = ({
+  handleClose,
+  userType,
+  showFeatureUnderDevelopment,
+}) => {
   const dispatch = useDispatch()
   const ref = useRef<HTMLDivElement>(null)
   const Claimref = useRef<HTMLLIElement>(null)
   const Reviewref = useRef<HTMLLIElement>(null)
   const supportRef = useRef<HTMLLIElement>(null)
   const reportRef = useRef<HTMLLIElement>(null)
-  const { isLoggedIn } = useSelector((state: RootState) => state.user)
+  const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
+  const router = useRouter()
 
   useEffect(() => {
     function handleClickOutside(event: any) {
-      console.log({targ:event.target,ref:ref.current})
+      console.log({ targ: event.target, ref: ref.current })
       if (
         event.target.nodeName == Claimref.current?.nodeName &&
         event.target.textContent === Claimref.current?.textContent
       ) {
         if (isLoggedIn) {
-          dispatch(openModal({ type: 'claim-listing', closable: true }))
+          if (user.is_onboarded) {
+            dispatch(openModal({ type: 'claim-listing', closable: true }))
+          } else {
+            router.push(`/profile/${user.profile_url}`)
+            dispatch(showProfileError(true))
+          }
         } else {
           dispatch(openModal({ type: 'auth', closable: true }))
         }
@@ -37,14 +49,19 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType, showFeatureUnderDeve
       ) {
         // added timeout because DOM was detecting a click outside snackbar which hides the snackbar which looks like blinking
         setTimeout(() => {
-          showFeatureUnderDevelopment?.();
-        }, 100);
+          showFeatureUnderDevelopment?.()
+        }, 100)
       } else if (
         event.target.nodeName == supportRef.current?.nodeName &&
         event.target.textContent === supportRef.current?.textContent
       ) {
         if (isLoggedIn) {
-          dispatch(openModal({ type: 'ListingSupportModal', closable: true }))
+          if (user.is_onboarded) {
+            dispatch(openModal({ type: 'ListingSupportModal', closable: true }))
+          } else {
+            router.push(`/profile/${user.profile_url}`)
+            dispatch(showProfileError(true))
+          }
         } else {
           dispatch(openModal({ type: 'auth', closable: true }))
         }
@@ -52,11 +69,15 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType, showFeatureUnderDeve
         event.target.nodeName == reportRef.current?.nodeName &&
         event.target.textContent === reportRef.current?.textContent
       ) {
-        if (isLoggedIn)
-          dispatch(openModal({ type: 'ListingReportModal', closable: true }))
-        else dispatch(openModal({ type: 'auth', closable: true }))
-      }
-      else if (ref.current && !ref.current.contains(event.target)) {
+        if (isLoggedIn) {
+          if (user.is_onboarded) {
+            dispatch(openModal({ type: 'ListingReportModal', closable: true }))
+          } else {
+            router.push(`/profile/${user.profile_url}`)
+            dispatch(showProfileError(true))
+          }
+        } else dispatch(openModal({ type: 'auth', closable: true }))
+      } else if (ref.current && !ref.current.contains(event.target)) {
         handleClose()
         return
       }
@@ -75,7 +96,9 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType, showFeatureUnderDeve
           {userType === 'anonymous' && (
             <>
               <li ref={Claimref}>Claim</li>
-              <li ref={Reviewref} onClick={showFeatureUnderDevelopment}>Review</li>{' '}
+              <li ref={Reviewref} onClick={showFeatureUnderDevelopment}>
+                Review
+              </li>{' '}
               {/* Modified line */}
               <li ref={reportRef}>Report</li>
             </>
@@ -83,7 +106,9 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType, showFeatureUnderDeve
           {userType === 'page' && (
             <>
               <li ref={Claimref}>Claim</li>
-              <li ref={Reviewref} onClick={showFeatureUnderDevelopment}>Review</li>{' '}
+              <li ref={Reviewref} onClick={showFeatureUnderDevelopment}>
+                Review
+              </li>{' '}
               {/* Modified line */}
               <li ref={reportRef}>Report</li>
             </>

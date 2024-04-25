@@ -144,6 +144,11 @@
 }
 .street-input-container{
   position: relative;
+  
+}
+
+.disabled {
+cursor: not-allowed;
 }
 .street-input-container span{
   position: absolute;

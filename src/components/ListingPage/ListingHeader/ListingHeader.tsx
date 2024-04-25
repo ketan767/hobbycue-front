@@ -58,7 +58,7 @@ const ListingHeader: React.FC<Props> = ({
   setpageTypeErr,
 }) => {
   const dispatch = useDispatch()
-  const router = useRouter();
+  const router = useRouter()
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -196,12 +196,26 @@ const ListingHeader: React.FC<Props> = ({
   }
 
   const handleContact = () => {
-    dispatch(openModal({ type: 'ListingContactToOwner', closable: true }))
+    if (isLoggedIn) {
+      if (user.is_onboarded) {
+        dispatch(openModal({ type: 'ListingContactToOwner', closable: true }))
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
+    } else {
+      dispatch(openModal({ type: 'auth', closable: true }))
+    }
   }
 
   const handleClaim = async () => {
     if (isLoggedIn) {
-      dispatch(openModal({ type: 'claim-listing', closable: true }))
+      if (user.is_onboarded) {
+        dispatch(openModal({ type: 'claim-listing', closable: true }))
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
     } else {
       dispatch(openModal({ type: 'auth', closable: true }))
     }
@@ -328,7 +342,6 @@ const ListingHeader: React.FC<Props> = ({
       )
     }
   }
-
 
   return (
     <>
@@ -572,14 +585,14 @@ const ListingHeader: React.FC<Props> = ({
         {/* Action Buttons */}
         <div className={styles['action-btn-wrapper']}>
           {/* Send Email Button  */}
-            <CustomTooltip title="Repost">
-              <div
-                onClick={(e) => handleRepost()}
-                className={styles['action-btn']}
-              >
-                <RepostIcon />
-              </div>
-            </CustomTooltip>
+          <CustomTooltip title="Repost">
+            <div
+              onClick={(e) => handleRepost()}
+              className={styles['action-btn']}
+            >
+              <RepostIcon />
+            </div>
+          </CustomTooltip>
 
           {/* Bookmark Button */}
           <CustomTooltip title="Bookmark">

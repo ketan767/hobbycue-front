@@ -1091,7 +1091,8 @@ const ListingPageMain: React.FC<Props> = ({
                             // Add cases for other socialmedia URLs as needed
                             default:
                               break
-                          }switch (true) {
+                          }
+                          switch (true) {
                             case key.startsWith('facebook'):
                               socialMediaName = 'Facebook'
                               socialMediaIcon = FacebookIcon
@@ -1546,12 +1547,6 @@ const ListingPageMain: React.FC<Props> = ({
           >
             <div className={`${styles['location-heading']} `}>
               <h4>Location</h4>
-            </div>
-            <div
-              className={`${styles['display-desktop']}${
-                showLocation ? ' ' + styles['display-mobile'] : ''
-              }`}
-            >
               {listingLayoutMode === 'view' && (
                 <div
                   className={styles['direction-container']}
@@ -1561,6 +1556,12 @@ const ListingPageMain: React.FC<Props> = ({
                   <p> Get Direction </p>
                 </div>
               )}
+            </div>
+            <div
+              className={`${styles['display-desktop']}${
+                showLocation ? ' ' + styles['display-mobile'] : ''
+              }`}
+            >
               <ul className={`${styles['location-wrapper']}`}>
                 {/* Address */}
                 {data?._address && (

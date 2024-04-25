@@ -53,7 +53,9 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
   const router = useRouter()
 
   const { listingLayoutMode } = useSelector((state: any) => state.site)
-  const { isLoggedIn,user,isAuthenticated } = useSelector((state: RootState) => state.user)
+  const { isLoggedIn, user, isAuthenticated } = useSelector(
+    (state: RootState) => state.user,
+  )
 
   const [open, setOpen] = useState(false)
   const [snackbar, setSnackbar] = useState({
@@ -137,7 +139,16 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
   }
 
   const handleClaim = async () => {
-    dispatch(openModal({ type: 'claim-listing', closable: true }))
+    if (isLoggedIn) {
+      if (user.is_onboarded) {
+        dispatch(openModal({ type: 'claim-listing', closable: true }))
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
+    } else {
+      dispatch(openModal({ type: 'auth', closable: true }))
+    }
   }
 
   const handleEventEditClick = () => {
@@ -170,7 +181,16 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
   }
 
   const handleContact = () => {
-    dispatch(openModal({ type: 'ListingContactToOwner', closable: true }))
+    if (isLoggedIn) {
+      if (user.is_onboarded) {
+        dispatch(openModal({ type: 'ListingContactToOwner', closable: true }))
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
+    } else {
+      dispatch(openModal({ type: 'auth', closable: true }))
+    }
   }
 
   const handleShare = () => {
@@ -230,8 +250,8 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
       return `${fromDay} ${fromMonthYear} - ${toDay} ${toMonthYear}`
     }
   }
-   const location = typeof window !== 'undefined' ? window.location.href : ''
-   const handleRepost = () => {
+  const location = typeof window !== 'undefined' ? window.location.href : ''
+  const handleRepost = () => {
     if (!isAuthenticated) {
       dispatch(openModal({ type: 'auth', closable: true }))
       return

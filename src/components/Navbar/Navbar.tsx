@@ -452,6 +452,7 @@ export const Navbar: React.FC<Props> = ({}) => {
             </Link>
 
             <TextField
+              inputRef={searchInputRef}
               variant="outlined"
               placeholder="Search for anything on your hobbies..."
               size="small"
@@ -501,6 +502,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                             ...prev,
                             search: { ...prev.search, value: '' },
                           }))
+                          searchInputRef?.current?.focus()
                         }}
                         className={styles['search-cross-icon']}
                       >
@@ -1086,6 +1088,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                         }}
                         InputLabelProps={{ shrink: false }}
                       />
+
                       {isWriting && data.search.value.length > 0 && (
                         <div
                           onClick={() => {
@@ -1093,12 +1096,14 @@ export const Navbar: React.FC<Props> = ({}) => {
                               ...prev,
                               search: { ...prev.search, value: '' },
                             }))
+                            searchInputRef?.current?.focus()
                           }}
                           className={styles['search-cross-icon']}
                         >
                           {searchCrossIcon}
                         </div>
                       )}
+
                       <button
                         type="submit"
                         className={styles['search-icon-container']}
@@ -1131,6 +1136,18 @@ export const Navbar: React.FC<Props> = ({}) => {
                     {data.search.value.length > 0 && (
                       <input type="text" value={data.search.value} />
                     )}
+                    <div
+                      onClick={() => {
+                        setData((prev) => ({
+                          ...prev,
+                          search: { ...prev.search, value: '' },
+                        }))
+                        searchInputRef?.current?.focus()
+                      }}
+                      className={styles['search-cross-icon-inside']}
+                    >
+                      {searchCrossIcon}
+                    </div>
                     <Image src={Search} alt="search" />
                   </li>
                 ) : null}
