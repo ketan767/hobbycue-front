@@ -22,7 +22,7 @@ const ProfileHobbySideList = ({ data, expandData, hobbyError }: Props) => {
     if (expandData !== undefined) setDisplayData(expandData)
   }, [expandData])
   const openModalHobbiesModal = () => {
-    if(window.innerWidth<1100){
+    if(window.innerWidth>1100){
         setDisplayData(true)
       }
     }

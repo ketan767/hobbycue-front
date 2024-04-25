@@ -492,7 +492,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
               className={
                `${ profileLayoutMode === 'edit'
                   ? styles['display-mobile']
-                  : styles['display-none']} ${ ' margin-bottom-50vh'}`
+                  : styles['display-none']} ${ ' margin-bottom-52vh'}`
               }
             >
               <PageContentBox
