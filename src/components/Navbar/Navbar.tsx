@@ -73,8 +73,8 @@ type SearchInput = {
 export const Navbar: React.FC<Props> = ({}) => {
   const dispatch = useDispatch()
   const router = useRouter()
-  const [menuActive, setMenuActive] = useState(false);
-  const [isWriting,setIsWriting] = useState(false);
+  const [menuActive, setMenuActive] = useState(false)
+  const [isWriting, setIsWriting] = useState(false)
   const pathname = usePathname()
   console.log({ pathname })
 
@@ -164,7 +164,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   }
 
   const searchResult = async () => {
-      dispatch(setExplore(false))
+    dispatch(setExplore(false))
     if (router.pathname !== '/search') {
       dispatch(showAllTrue())
       router.push('/search')
@@ -458,11 +458,6 @@ export const Navbar: React.FC<Props> = ({}) => {
               className={styles.inputField}
               onFocus={() => {
                 setIsWriting(true)
-              }}
-              onBlur={() => {
-                setTimeout(() => {
-                  setIsWriting(false)
-                }, 100)
               }}
               onChange={handleInputChange}
               value={data.search.value}
@@ -1063,14 +1058,8 @@ export const Navbar: React.FC<Props> = ({}) => {
                         placeholder="Search here..."
                         size="small"
                         autoFocus
-                        onFocus={()=>{
+                        onFocus={() => {
                           setIsWriting(true)
-                        }}
-                        onBlur={() => {
-                          if (!isMobile) setIsSearchInputVisible(false)
-                            setTimeout(() => {
-                              setIsWriting(false)
-                            }, 100)
                         }}
                         className={styles.inputField}
                         onChange={handleInputChange}
