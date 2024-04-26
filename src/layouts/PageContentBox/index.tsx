@@ -30,7 +30,7 @@ const PageContentBox: React.FC<Props> = ({
 
   const onDropdownClick = () => {
     setShowDropdown((prevValue) => !prevValue)
-    if (setDisplayData !== undefined || null)
+    if (typeof setDisplayData !== 'undefined')
       setDisplayData((prevValue: boolean) => !prevValue)
   }
 
@@ -42,7 +42,7 @@ const PageContentBox: React.FC<Props> = ({
     <div className={`${styles['wrapper']}${className ? ' ' + className : ''}`}>
       {children}
 
-      {(setDisplayData !== undefined) &&
+      {(typeof setDisplayData !== 'undefined') &&
         <Image
           src={ChevronDown}
           alt=""
@@ -55,7 +55,7 @@ const PageContentBox: React.FC<Props> = ({
       {showEditButton && (
         <svg
           onClick={onEditBtnClick}
-          className={`${styles['edit-btn']}${(setDisplayData===undefined)?" "+ styles['edit-icon-without-dropdown']:""} ${showDropdown && styles['display-initial']
+          className={`${styles['edit-btn']}${(typeof setDisplayData==='undefined')?" "+ styles['edit-icon-without-dropdown']:""} ${showDropdown && styles['display-initial']
             }`}
           width="17"
           height="16"

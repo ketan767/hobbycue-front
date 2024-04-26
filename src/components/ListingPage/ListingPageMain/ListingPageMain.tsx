@@ -31,7 +31,7 @@ import ListingPageLayout from '../../../layouts/ListingPageLayout'
 import { getListingPages, getListingTags } from '@/services/listing.service'
 import { getAllUserDetail } from '@/services/user.service'
 import { dateFormat } from '@/utils'
-import { updateListingTypeModalMode } from '@/redux/slices/site'
+import { updateHobbyOpenState, updateListingTypeModalMode } from '@/redux/slices/site'
 import WhatsappIcon from '@/assets/svg/whatsapp.svg'
 import { listingTypes } from '@/constants/constant'
 import Link from 'next/link'
@@ -71,7 +71,7 @@ const ListingPageMain: React.FC<Props> = ({
 }) => {
   const dispatch = useDispatch()
   const [tags, setTags] = useState([])
-  const { listingLayoutMode } = useSelector((state: any) => state.site)
+  const { listingLayoutMode, hobbyStates } = useSelector((state: RootState) => state.site)
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
@@ -86,7 +86,7 @@ const ListingPageMain: React.FC<Props> = ({
   const lat = parseFloat(data._address.latitude)
   const lng = parseFloat(data._address.longitude)
 
-  const [showHobbies, setShowHobbies] = useState(false)
+  const [showHobbies, setShowHobbies] = useState(true)
   const [showTags, setShowTags] = useState(false)
   const [showRelatedListing1, setShowRelatedListing1] = useState(false)
   const [showContact, setShowContact] = useState(false)
@@ -132,6 +132,18 @@ const ListingPageMain: React.FC<Props> = ({
     const admin: any = await getAllUserDetail(`_id=${adminId}`)
     setPageAdmin(admin.res?.data.data.users[0])
   }
+
+  console.warn({showHobbies});
+  
+
+  useEffect(()=>{
+    if(hobbyStates && typeof hobbyStates[data?._id] === 'boolean'){
+      setShowHobbies(hobbyStates[data?._id])
+    }else if(data._id){
+      dispatch(updateHobbyOpenState({[data._id]:showHobbies}))
+    }
+  },[data._id, hobbyStates])
+
   useEffect(() => {
     getListingTags()
       .then((res: any) => {
@@ -236,11 +248,11 @@ const ListingPageMain: React.FC<Props> = ({
       setShowHobbies(true)
     }
   }
-  useEffect(() => {
-    openModalHobbiesModal()
-    window.addEventListener('resize', openModalHobbiesModal)
-    return window.removeEventListener('resize', openModalHobbiesModal)
-  }, [])
+  // useEffect(() => {
+  //   openModalHobbiesModal()
+  //   window.addEventListener('resize', openModalHobbiesModal)
+  //   return window.removeEventListener('resize', openModalHobbiesModal)
+  // }, [])
 
   // console.log('data', data)
 
@@ -305,13 +317,16 @@ const ListingPageMain: React.FC<Props> = ({
               )
             }
             initialShowDropdown
-            setDisplayData={setShowHobbies}
+            setDisplayData={(arg0:boolean)=>{
+              dispatch(updateHobbyOpenState({[data._id]:!showHobbies}))
+              }}
+              expandData={showHobbies}
           >
             <h4 className={styles['heading']}>Hobbies</h4>
             {/* yahi hai */}
             <div
               className={`${styles['display-desktop']}${
-                showHobbies ? ' ' + styles['display-mobile'] : ''
+                hobbyStates?.[data?._id] ? ' ' + styles['display-mobile'] : ''
               }`}
             >
               {!data || data._hobbies.length === 0 ? (

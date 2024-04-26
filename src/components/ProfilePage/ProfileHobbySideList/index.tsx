@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { openModal } from '@/redux/slices/modal'
 import Link from 'next/link'
+import { updateHobbyOpenState } from '@/redux/slices/site'
 
 type Props = {
   data: ProfilePageData['pageData']
@@ -13,13 +14,21 @@ type Props = {
 }
 
 const ProfileHobbySideList = ({ data, expandData, hobbyError }: Props) => {
-  const { profileLayoutMode } = useSelector((state: RootState) => state.site)
-  const [displayData, setDisplayData] = useState(false)
-  console.log('data', data)
+  const { profileLayoutMode, hobbyStates } = useSelector((state: RootState) => state.site)
+  const [displayData, setDisplayData] = useState(true)
+  console.log('data', {data})
   const dispatch = useDispatch()
 
+  useEffect(()=>{
+    if(hobbyStates && typeof hobbyStates[data?._id] === 'boolean'){
+      setDisplayData(hobbyStates[data?._id])
+    }else if(data._id){
+      dispatch(updateHobbyOpenState({[data._id]:displayData}))
+    }
+  },[data._id, hobbyStates])
+
   useEffect(() => {
-    if (expandData !== undefined) setDisplayData(expandData)
+    if (expandData !== undefined) {setDisplayData(expandData);}
   }, [expandData])
   const openModalHobbiesModal = () => {
     if(window.innerWidth>1100){
@@ -27,9 +36,9 @@ const ProfileHobbySideList = ({ data, expandData, hobbyError }: Props) => {
       }
     }
     useEffect(()=>{
-      openModalHobbiesModal();
-      window.addEventListener("resize",openModalHobbiesModal);
-      return window.removeEventListener("resize",openModalHobbiesModal)
+      // openModalHobbiesModal();
+      // window.addEventListener("resize",openModalHobbiesModal);
+      // return window.removeEventListener("resize",openModalHobbiesModal)
     },[])
 
   return (
@@ -39,15 +48,18 @@ const ProfileHobbySideList = ({ data, expandData, hobbyError }: Props) => {
         onEditBtnClick={() =>
           dispatch(openModal({ type: 'profile-hobby-edit', closable: true }))
         }
-        setDisplayData={setDisplayData}
-        expandData={expandData}
+        setDisplayData={(arg0:boolean)=>{setDisplayData(prev=>{
+          dispatch(updateHobbyOpenState({[data._id]:!prev}))
+          return !prev
+        })}}
+        expandData={displayData}
         initialShowDropdown
         className={hobbyError===true?styles['error']:''}
       >
         <h4 className={styles['heading']}>Hobbies</h4>
         <ul
           className={`${styles['hobby-list']} ${
-            displayData && styles['display-mobile-flex']
+            hobbyStates?.[data?._id] && styles['display-mobile-flex']
           }`}
         >
           {data._hobbies.map((item: any) => {
