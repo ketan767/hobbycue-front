@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styles from './ListingHeader.module.css'
 import Image from 'next/image'
 
@@ -58,7 +58,7 @@ const ListingHeader: React.FC<Props> = ({
   setpageTypeErr,
 }) => {
   const dispatch = useDispatch()
-  const router = useRouter();
+  const router = useRouter()
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -196,12 +196,26 @@ const ListingHeader: React.FC<Props> = ({
   }
 
   const handleContact = () => {
-    dispatch(openModal({ type: 'ListingContactToOwner', closable: true }))
+    if (isLoggedIn) {
+      if (user.is_onboarded) {
+        dispatch(openModal({ type: 'ListingContactToOwner', closable: true }))
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
+    } else {
+      dispatch(openModal({ type: 'auth', closable: true }))
+    }
   }
 
   const handleClaim = async () => {
     if (isLoggedIn) {
-      dispatch(openModal({ type: 'claim-listing', closable: true }))
+      if (user.is_onboarded) {
+        dispatch(openModal({ type: 'claim-listing', closable: true }))
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
     } else {
       dispatch(openModal({ type: 'auth', closable: true }))
     }
@@ -215,7 +229,14 @@ const ListingHeader: React.FC<Props> = ({
   const [open, setOpen] = useState(false)
 
   const handleDropdown = () => {
-    setOpen(!open)
+    if (open) {
+      setOpen(false)
+      if (!isAuthenticated) {
+        dispatch(openModal({ type: 'auth', closable: true }))
+      }
+    } else {
+      setOpen(true)
+    }
   }
 
   const OpenProfileImage = () => {
@@ -328,7 +349,22 @@ const ListingHeader: React.FC<Props> = ({
       )
     }
   }
+  const Dropdownref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        Dropdownref.current &&
+        !Dropdownref.current.contains(event.target as Node)
+      ) {
+        setOpen(false) // Close the dropdown when clicked outside
+      }
+    }
 
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [Dropdownref])
 
   return (
     <>
@@ -530,7 +566,10 @@ const ListingHeader: React.FC<Props> = ({
             </CustomTooltip>
 
             {/* More Options Button */}
-            <div className={styles['action-btn-dropdown-wrapper']}>
+            <div
+              className={styles['action-btn-dropdown-wrapper']}
+              ref={Dropdownref}
+            >
               <CustomTooltip title="Click to view options">
                 <div
                   onClick={(e) => handleDropdown()}
@@ -572,16 +611,14 @@ const ListingHeader: React.FC<Props> = ({
         {/* Action Buttons */}
         <div className={styles['action-btn-wrapper']}>
           {/* Send Email Button  */}
-          <Link href={`mailto:${data.public_email || data.email}`}>
-            <CustomTooltip title="Repost">
-              <div
-                onClick={(e) => console.log(e)}
-                className={styles['action-btn']}
-              >
-                <RepostIcon />
-              </div>
-            </CustomTooltip>
-          </Link>
+          <CustomTooltip title="Repost">
+            <div
+              onClick={(e) => handleRepost()}
+              className={styles['action-btn']}
+            >
+              <RepostIcon />
+            </div>
+          </CustomTooltip>
 
           {/* Bookmark Button */}
           <CustomTooltip title="Bookmark">

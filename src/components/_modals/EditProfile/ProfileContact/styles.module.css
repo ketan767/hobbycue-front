@@ -241,6 +241,10 @@
   .modal-wrapper .body {
     height: 100%;
     overflow: auto;
+    padding: 12px var(--spacing-16) var(--spacing-16);
+  }
+  .modal-wrapper .header{
+    padding: var(--spacing-16) var(--spacing-16) 0;
   }
   .footer {
     background: var(--Base-White, #fff);

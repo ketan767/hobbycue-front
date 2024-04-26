@@ -4,6 +4,8 @@ import styles from './ProfileHeader.module.css'
 import { openModal } from '@/redux/slices/modal'
 import useOutsideClick from '@/hooks/useOutsideClick'
 import { RootState } from '@/redux/store'
+import { useRouter } from 'next/router'
+import { showProfileError } from '@/redux/slices/user'
 
 type Props = {
   handleClose?: any
@@ -15,29 +17,46 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType }) => {
   const ref = useRef<HTMLDivElement>(null)
   const supportRef = useRef<HTMLLIElement>(null)
   const reportRef = useRef<HTMLLIElement>(null)
-  const { isLoggedIn } = useSelector((state: RootState) => state.user)
+  const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
+  const router = useRouter()
+
   useEffect(() => {
     function handleClickOutside(event: any) {
       console.log({ targ: event.target })
       if (ref.current && ref.current.contains(event.target) !== true) {
         handleClose()
         return
-      }
-      else if (
+      } else if (
         event.target.nodeName == supportRef.current?.nodeName &&
         event.target.textContent === supportRef.current?.textContent
       ) {
-        dispatch(openModal({ type: 'SupportUserModal', closable: true }))
-      }
-
-      else if (
+        if (isLoggedIn) {
+          if (user.is_onboarded) {
+            dispatch(openModal({ type: 'SupportUserModal', closable: true }))
+            handleClose()
+          } else {
+            router.push(`/profile/${user.profile_url}`)
+            dispatch(showProfileError(true))
+          }
+        } else {
+          dispatch(openModal({ type: 'auth', closable: true }))
+          handleClose()
+        }
+      } else if (
         event.target.nodeName == reportRef.current?.nodeName &&
         event.target.textContent === reportRef.current?.textContent
       ) {
         if (isLoggedIn) {
-          dispatch(openModal({ type: 'UserReportModal', closable: true }))
+          if (user.is_onboarded) {
+            dispatch(openModal({ type: 'UserReportModal', closable: true }))
+            handleClose()
+          } else {
+            router.push(`/profile/${user.profile_url}`)
+            dispatch(showProfileError(true))
+          }
         } else {
           dispatch(openModal({ type: 'auth', closable: true }))
+          handleClose()
         }
       }
     }

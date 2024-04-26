@@ -12,6 +12,13 @@
   position: relative;
 }
 
+
+.profile-img-wrapper-small {
+  position: relative;
+  height: 40px;
+  width: 40px;
+}
+
 .profile-img-wrapper-small-header{
   width: 60px;
   height: 60px;

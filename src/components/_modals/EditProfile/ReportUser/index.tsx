@@ -39,6 +39,8 @@ type reportData = {
   user_id: string
   type: string
   reported_user_id: string
+  reported_user_name: string
+  reported_user_email: string
 }
 
 const UserReport: React.FC<Props> = ({
@@ -60,6 +62,8 @@ const UserReport: React.FC<Props> = ({
     user_id: '',
     type: '',
     reported_user_id: '',
+    reported_user_name: '',
+    reported_user_email: '',
   })
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null)
   const [nextDisabled, setNextDisabled] = useState(false)
@@ -78,6 +82,8 @@ const UserReport: React.FC<Props> = ({
     user_id: user._id,
     type: 'user',
     reported_user_id: currprofile?._id,
+    reported_user_name: currprofile?.full_name,
+    reported_user_email: currprofile?.public_email,
   })
   const [isChanged, setIsChanged] = useState(false)
   const [snackbar, setSnackbar] = useState({
@@ -93,6 +99,8 @@ const UserReport: React.FC<Props> = ({
       user_id: user._id,
       type: 'user',
       reported_user_id: currprofile?._id,
+      reported_user_name: currprofile?.full_name,
+      reported_user_email: currprofile?.public_email,
     })
   }, [user])
 
@@ -156,6 +164,8 @@ const UserReport: React.FC<Props> = ({
       user_id: user._id,
       type: 'user',
       reported_user_id: currprofile?._id,
+      reported_user_name: currprofile?.full_name,
+      reported_user_email: currprofile?.public_email,
     })
   }, [user])
 
@@ -189,13 +199,14 @@ const UserReport: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        if(event?.srcElement?.tagName && 
-          event?.srcElement?.tagName?.toLowerCase()==="textarea" ||
-          event?.srcElement?.tagName?.toLowerCase()==="svg"
-        ){
+        if (
+          (event?.srcElement?.tagName &&
+            event?.srcElement?.tagName?.toLowerCase() === 'textarea') ||
+          event?.srcElement?.tagName?.toLowerCase() === 'svg'
+        ) {
           return
         }
-        nextButtonRef.current?.click();
+        nextButtonRef.current?.click()
       }
     }
 

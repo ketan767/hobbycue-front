@@ -74,6 +74,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   const dispatch = useDispatch()
   const router = useRouter()
   const [menuActive, setMenuActive] = useState(false)
+  const [isWriting, setIsWriting] = useState(false)
   const pathname = usePathname()
   console.log({ pathname })
 
@@ -109,6 +110,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   }
 
   const searchInputRef = useRef<HTMLInputElement>(null)
+  const mobileSearchRef = useRef<HTMLFormElement>(null)
   const [isSearchInputVisible, setIsSearchInputVisible] = useState(false)
 
   const toggleSearchInput = () => {
@@ -162,7 +164,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   }
 
   const searchResult = async () => {
-      dispatch(setExplore(false))
+    dispatch(setExplore(false))
     if (router.pathname !== '/search') {
       dispatch(showAllTrue())
       router.push('/search')
@@ -319,6 +321,22 @@ export const Navbar: React.FC<Props> = ({}) => {
     }
   }
 
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (
+      mobileSearchRef.current &&
+      !mobileSearchRef.current.contains(event.target as Node)
+    ) {
+      setIsSearchInputVisible(false)
+    }
+  }
+  useEffect(() => {
+    document.addEventListener('mousedown', handleOutsideClick)
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick)
+    }
+  }, [])
+
   useEffect(() => {
     if (sidemenuRefresh !== 0) {
       toggleMenu()
@@ -354,6 +372,33 @@ export const Navbar: React.FC<Props> = ({}) => {
             height="24"
             fill="white"
             transform="translate(0 0.195312)"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+
+  const searchCrossIcon = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="17"
+      viewBox="0 0 16 17"
+      fill="none"
+    >
+      <g clip-path="url(#clip0_7497_129809)">
+        <path
+          d="M12.2005 4.14112C11.9405 3.88112 11.5205 3.88112 11.2605 4.14112L8.00047 7.39445L4.74047 4.13445C4.48047 3.87445 4.06047 3.87445 3.80047 4.13445C3.54047 4.39445 3.54047 4.81445 3.80047 5.07445L7.06047 8.33445L3.80047 11.5945C3.54047 11.8545 3.54047 12.2745 3.80047 12.5345C4.06047 12.7945 4.48047 12.7945 4.74047 12.5345L8.00047 9.27445L11.2605 12.5345C11.5205 12.7945 11.9405 12.7945 12.2005 12.5345C12.4605 12.2745 12.4605 11.8545 12.2005 11.5945L8.94047 8.33445L12.2005 5.07445C12.4538 4.82112 12.4538 4.39445 12.2005 4.14112Z"
+          fill="#08090A"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_7497_129809">
+          <rect
+            width="16"
+            height="16"
+            fill="white"
+            transform="translate(0 0.333984)"
           />
         </clipPath>
       </defs>
@@ -407,10 +452,14 @@ export const Navbar: React.FC<Props> = ({}) => {
             </Link>
 
             <TextField
+              inputRef={searchInputRef}
               variant="outlined"
               placeholder="Search for anything on your hobbies..."
               size="small"
               className={styles.inputField}
+              onFocus={() => {
+                setIsWriting(true)
+              }}
               onChange={handleInputChange}
               value={data.search.value}
               onKeyDown={(e) => {
@@ -442,7 +491,24 @@ export const Navbar: React.FC<Props> = ({}) => {
               InputLabelProps={{ shrink: false }}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">
+                  <InputAdornment
+                    style={{ position: 'relative' }}
+                    position="end"
+                  >
+                    {data.search.value.length > 0 && isWriting && (
+                      <div
+                        onClick={() => {
+                          setData((prev) => ({
+                            ...prev,
+                            search: { ...prev.search, value: '' },
+                          }))
+                          searchInputRef?.current?.focus()
+                        }}
+                        className={styles['search-cross-icon']}
+                      >
+                        {searchCrossIcon}
+                      </div>
+                    )}
                     <IconButton
                       onClick={searchResult}
                       sx={{
@@ -969,6 +1035,7 @@ export const Navbar: React.FC<Props> = ({}) => {
               >
                 {isSearchInputVisible ? (
                   <form
+                    ref={mobileSearchRef}
                     onSubmit={handleSearchSubmit}
                     className={
                       styles['mobile-search-input'] +
@@ -993,13 +1060,8 @@ export const Navbar: React.FC<Props> = ({}) => {
                         placeholder="Search here..."
                         size="small"
                         autoFocus
-                        onBlur={() => {
-                          if (!isMobile) setIsSearchInputVisible(false)
-                          else {
-                            setTimeout(() => {
-                              setIsSearchInputVisible(false)
-                            }, 100)
-                          }
+                        onFocus={() => {
+                          setIsWriting(true)
                         }}
                         className={styles.inputField}
                         onChange={handleInputChange}
@@ -1026,6 +1088,22 @@ export const Navbar: React.FC<Props> = ({}) => {
                         }}
                         InputLabelProps={{ shrink: false }}
                       />
+
+                      {isWriting && data.search.value.length > 0 && (
+                        <div
+                          onClick={() => {
+                            setData((prev) => ({
+                              ...prev,
+                              search: { ...prev.search, value: '' },
+                            }))
+                            searchInputRef?.current?.focus()
+                          }}
+                          className={styles['search-cross-icon']}
+                        >
+                          {searchCrossIcon}
+                        </div>
+                      )}
+
                       <button
                         type="submit"
                         className={styles['search-icon-container']}
@@ -1058,6 +1136,18 @@ export const Navbar: React.FC<Props> = ({}) => {
                     {data.search.value.length > 0 && (
                       <input type="text" value={data.search.value} />
                     )}
+                    <div
+                      onClick={() => {
+                        setData((prev) => ({
+                          ...prev,
+                          search: { ...prev.search, value: '' },
+                        }))
+                        searchInputRef?.current?.focus()
+                      }}
+                      className={styles['search-cross-icon-inside']}
+                    >
+                      {searchCrossIcon}
+                    </div>
                     <Image src={Search} alt="search" />
                   </li>
                 ) : null}

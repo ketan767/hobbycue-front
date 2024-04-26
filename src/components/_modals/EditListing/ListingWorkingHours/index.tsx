@@ -95,7 +95,7 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
   const { user } = useSelector((state: RootState) => state.user)
 
   const { listingModalData } = useSelector((state: RootState) => state.site)
-
+  const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
   const [data, setData] = useState<ListingAddressData>({
@@ -129,6 +129,31 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
   const getAvailableTimings = (selectedTime: string) => {
     const index = timings.indexOf(selectedTime)
     return timings.slice(index + 1)
+  }
+  const handleBack = async () => {
+    setBackBtnLoading(true)
+    const jsonData = workingHoursData.map((item: any) => {
+      const { fromDay, toDay, fromTime, toTime } = item
+      return {
+        from_day: fromDay,
+        to_day: toDay,
+        from_time: fromTime,
+        to_time: toTime,
+      }
+    })
+
+    const { err, res } = await updateListing(listingModalData._id, {
+      work_hours: jsonData,
+    })
+    if (err) return console.log(err)
+    console.log('res', res?.data.data.listing)
+    const updatedData = {
+      ...listingModalData,
+      work_hours: res?.data.data.listing.work_hours,
+    }
+
+    dispatch(updateListingModalData(updatedData))
+    if (onBackBtnClick) onBackBtnClick()
   }
 
   const handleSubmit = async () => {
@@ -299,22 +324,24 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
               )}
             </div>
           </div>
-          <div className={styles.listContainer}>
-            <div className={styles.listItem}>
-              <div className={styles.listSubItem}>
-                <label> From Day </label>
-              </div>
-              <div className={styles.listSubItem}>
-                <label> To Day </label>
-              </div>
-              <div className={styles.listSubItem}>
-                <label> From Time </label>
-              </div>
-              <div className={styles.listSubItem}>
-                <label> To Time </label>
+          {workingHoursData.length >= 1 && (
+            <div className={styles.listContainer}>
+              <div className={styles.listItem}>
+                <div className={styles.listSubItem}>
+                  <label> From Day </label>
+                </div>
+                <div className={styles.listSubItem}>
+                  <label> To Day </label>
+                </div>
+                <div className={styles.listSubItem}>
+                  <label> From Time </label>
+                </div>
+                <div className={styles.listSubItem}>
+                  <label> To Time </label>
+                </div>
               </div>
             </div>
-          </div>
+          )}
           <div className={styles.listContainer}>
             {workingHoursData.map((item: any, idx) => {
               return (
@@ -378,11 +405,14 @@ const ListingWorkingHoursEditModal: React.FC<Props> = ({
         <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
             <>
-              <button
-                className="modal-footer-btn cancel"
-                onClick={onBackBtnClick}
-              >
-                Back
+              <button className="modal-footer-btn cancel" onClick={handleBack}>
+                {backBtnLoading ? (
+                  <CircularProgress color="inherit" size={'24px'} />
+                ) : onBackBtnClick ? (
+                  'Back'
+                ) : (
+                  'Back'
+                )}
               </button>
               {/* SVG Button for Mobile */}
               <div onClick={onBackBtnClick}>

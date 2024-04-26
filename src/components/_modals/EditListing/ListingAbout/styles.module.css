@@ -185,7 +185,7 @@
     position: fixed !important;
   }
   .modal-wrapper .body {
-    padding: var(--spacing-16) var(--spacing-16);
+    padding: 12px var(--spacing-16) var(--spacing-16);
     max-width: 100vw;
   }
 }

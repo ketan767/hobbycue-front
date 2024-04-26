@@ -223,7 +223,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                                 : activeProfile.data.type == 2
                                 ? `${styles['img-listing']} default-place-listing-icon`
                                 : activeProfile.data.type == 3
-                                ? `${styles['img-listingimg-listing']} default-program-listing-icon`
+                                ? `${styles['img-listing']} default-program-listing-icon`
                                 : activeProfile.data.type == 4
                                 ? `${styles['img-listing']} default-product-listing-icon`
                                 : `${styles['contentImage']} default-people-listing-icon`

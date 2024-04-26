@@ -19,7 +19,7 @@
 .create-post-modal {
   display: flex;
   justify-content: space-between;
-  gap: calc(var(--spacing-40) + var(--spacing-8));
+  gap: calc(var(--spacing-40) );
   padding: 0 var(--spacing-24);
 }
 
@@ -30,8 +30,8 @@
 }
 
 .create-post-modal>aside {
-  width: 242px;
-  min-width: 242px;
+  width: 250px;
+  min-width: 250px;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-32);
@@ -226,13 +226,25 @@
   top: 0;
   left: 0;
 }
-
 .editor-container {
   display: flex;
   flex-direction: column;
   align-items: stretch;
   max-width: calc(100vw - 3rem);
   overflow: auto;
+}
+
+.editor-container::-webkit-scrollbar {
+  width: 5px !important; 
+}
+
+.editor-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.editor-container::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 5px;
 }
 
 .show-metadata {
@@ -389,6 +401,7 @@
 
   .create-post-modal>aside>div>section {
     width: 100%;
+    overflow: hidden;
   }
 
   .modal-wrapper {

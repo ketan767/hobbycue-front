@@ -484,7 +484,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
             genre.display.toLowerCase() === genreInputValue.toLowerCase(),
         )
 
-        if (selectedGenre !== matchedGenre || !matchedGenre) {
+        if (!matchedGenre && genreInputValue.trim().length !== 0) {
           setIsChanged(false)
           setShowAddGenreModal(true)
           return

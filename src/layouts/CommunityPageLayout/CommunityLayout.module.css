@@ -404,6 +404,7 @@ line-height: 20px; /* 142.857% */
   display: none;
 }
 
+
 .start-post-btn {
   padding: var(--spacing-12) var(--spacing-16);
   width: 100%;
@@ -989,9 +990,14 @@ letter-spacing: 0.06px;
 
   .profile-img {
     display: block;
+
   }
+  .profile-img-user {
+    width: 46.8px !important;
+  }
+
   .img-listing {
-    display: block;
+    display: block !important;
     width: 45px;
     height: 40px;
     border-radius: 4px;

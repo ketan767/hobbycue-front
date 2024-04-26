@@ -12,6 +12,7 @@ import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import {
+  GetListingEvents,
   getListingAddress,
   updateListingAddress,
 } from '@/services/listing.service'
@@ -51,8 +52,8 @@ type ListingAddressData = {
 }
 
 const initialEventHour = {
-  from_date: '02-02-2002',
-  to_date: '02-02-2002',
+  from_date: new Date().toISOString(),
+  to_date: new Date().toISOString(),
   from_time: '8:00 am',
   to_time: '9:00 pm',
 }
@@ -96,8 +97,8 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
   const { user } = useSelector((state: RootState) => state.user)
 
   const { listingModalData } = useSelector((state: RootState) => state.site)
-
-  console.log('listingModalData:', listingModalData.event_date_time)
+  const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
+  console.log('listingModalData:', listingModalData)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [isSelectingStartDate, setIsSelectingStartDate] = useState(true)
@@ -119,9 +120,13 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     'nov',
     'dec',
   ]
-  function formatDate(date:string) {
-    const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'short', year: 'numeric' };
-    return new Date(date).toLocaleDateString('en-GB', options);
+  function formatDate(date: string) {
+    const options: Intl.DateTimeFormatOptions = {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    }
+    return new Date(date).toLocaleDateString('en-GB', options)
   }
   const handleDateSelection = (selectedDate: string, isFromDate: boolean) => {
     const date = selectedDate?.split('-')
@@ -150,14 +155,38 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     const { err, res } = await updateListing(listingModalData._id, {
       event_date_time: jsonData,
     })
+    const updatedData = {
+      ...listingModalData,
+      event_date_time: res?.data.data.listing.event_date_time,
+    }
+    dispatch(updateListingModalData(updatedData))
     if (err) return console.log(err)
     console.log('res', res?.data.data.listing)
-    dispatch(updateEventDateTime(res?.data.data.listing.event_date_time))
+
     if (onComplete) onComplete()
     else {
       window.location.reload()
       dispatch(closeModal())
     }
+  }
+
+  const handleBack = async () => {
+    const jsonData = {
+      ...eventData,
+    }
+    console.log({ jsonData })
+    setBackBtnLoading(true)
+    const { err, res } = await updateListing(listingModalData._id, {
+      event_date_time: jsonData,
+    })
+    const updatedData = {
+      ...listingModalData,
+      event_date_time: res?.data.data.listing.event_date_time,
+    }
+    dispatch(updateListingModalData(updatedData))
+    if (err) return console.log(err)
+    console.log('res', res?.data.data.listing)
+    if (onBackBtnClick) onBackBtnClick()
   }
 
   useEffect(() => {
@@ -168,6 +197,20 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
       setInitialData({ from_time, to_time, from_date, to_date })
     }
   }, [])
+
+  // const updateEventHours = async () => {
+  //   const { err, res } = await GetListingEvents(
+  //     listingModalData?._id
+  //   )
+  //   if (err) return console.log(err)
+  //     console.warn({res})
+  // }
+
+  // useEffect(() => {
+  //   updateEventHours()
+  // }, [user])
+
+  // console.warn({eventData})
 
   useEffect(() => {
     if (listingModalData.event_date_time === undefined) {
@@ -218,13 +261,17 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
   }, [])
 
   const formatDateFunc = (inputDate: string): string => {
-    const parts = inputDate.split('-');
-    const formattedDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
-  
-    const day = formattedDate.getDate();
-    const month = formattedDate.toLocaleString('default', { month: 'short' });
-    const year = formattedDate.getFullYear();
-    return `${day}-${month}-${year}`;
+    const parts = inputDate.split('-')
+    const formattedDate = new Date(
+      parseInt(parts[0]),
+      parseInt(parts[1]) - 1,
+      parseInt(parts[2]),
+    )
+
+    const day = formattedDate.getDate()
+    const month = formattedDate.toLocaleString('default', { month: 'short' })
+    const year = formattedDate.getFullYear()
+    return `${day}-${month}-${year}`
   }
 
   if (confirmationModal) {
@@ -269,7 +316,9 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                     handleDateSelection(e.target.value, true)
                   }
                 />
-                <p className={styles['formatted-date']}>{formatDateFunc(eventData.from_date)}</p>
+                <p className={styles['formatted-date']}>
+                  {formatDateFunc(eventData.from_date)}
+                </p>
               </div>
               <div className={styles.listSubItem}>
                 <label> To Date </label>
@@ -283,7 +332,13 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                     handleDateSelection(e.target.value, false)
                   }
                 />
-                <p className={styles['formatted-date']+` ${styles['left-more']}`}>{formatDateFunc(eventData.to_date)}</p>
+                <p
+                  className={
+                    styles['formatted-date'] + ` ${styles['left-more']}`
+                  }
+                >
+                  {formatDateFunc(eventData.to_date)}
+                </p>
               </div>
               <div className={styles.listSubItem}>
                 <label> From Time </label>
@@ -310,11 +365,14 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
         <footer className={styles['footer']}>
           {Boolean(onBackBtnClick) && (
             <>
-              <button
-                className="modal-footer-btn cancel"
-                onClick={onBackBtnClick}
-              >
-                Back
+              <button className="modal-footer-btn cancel" onClick={handleBack}>
+                {backBtnLoading ? (
+                  <CircularProgress color="inherit" size={'24px'} />
+                ) : onBackBtnClick ? (
+                  'Back'
+                ) : (
+                  'Back'
+                )}
               </button>
               {/* SVG Button for Mobile */}
               <div onClick={onBackBtnClick}>

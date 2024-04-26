@@ -9,7 +9,7 @@ import {
 } from '@/services/user.service'
 import { checkFullname, isEmpty, isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
-import { closeModal } from '@/redux/slices/modal'
+import { closeModal, setHasChanges } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import LocationIcon from '@/assets/svg/location-2.svg'
@@ -84,21 +84,48 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   const [dropdownList, setShowDropdownList] = useState<DropdownListItem[]>([])
   const inputRef = useRef<HTMLInputElement>(null)
   const [initialData, setInitialData] = useState({})
+  const [initialLabel,setInitialLabel] = useState('')
   const [isChanged, setIsChanged] = useState(false)
 
+  useEffect(()=>{
+    dispatch(setHasChanges(false));
+  },[])
+
   useEffect(() => {
-    setInitialData({
-      street: user.primary_address?.street,
-      society: user.primary_address?.society,
-      locality: user.primary_address?.locality,
-      city: user.primary_address?.city,
-      pin_code: user.primary_address?.pin_code,
-      state: user.primary_address?.state,
-      country: user.primary_address?.country,
-      latitude: user.primary_address?.latitude,
-      longitude: user.primary_address?.longitude,
-    })
-  }, [user, editLocation])
+    if (addLocation !== true) {
+      const adressToEditObj = user?._addresses?.find(
+        (obj: any) => obj?._id === addressToEdit,
+      )
+      if (adressToEditObj) {
+        setInitialData(adressToEditObj)
+        setInitialLabel(adressToEditObj?.label)
+      } else {
+        setInitialData({
+          street: user.primary_address?.street,
+          society: user.primary_address?.society,
+          locality: user.primary_address?.locality,
+          city: user.primary_address?.city,
+          pin_code: user.primary_address?.pin_code,
+          state: user.primary_address?.state,
+          country: user.primary_address?.country,
+          latitude: user.primary_address?.latitude,
+          longitude: user.primary_address?.longitude,
+        })
+      }
+    } else {
+      setInitialData({
+        street: '',
+        society: '',
+        locality: '',
+        city: '',
+        pin_code: '',
+        state: '',
+        country: '',
+        latitude: '',
+        longitude: '',
+      })
+    }
+  }, [user, editLocation, addLocation, addressToEdit])
 
   useEffect(() => {
     inputRef?.current?.focus()
@@ -142,10 +169,11 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     setData((prev) => ({ ...prev, [name]: value }))
     setInputErrs((prev) => ({ ...prev, [name]: null }))
 
-    const currentData = { ...data, [name]: value }
+    const {set_as_primary:set_as_primary,...currentData} = { ...data, [name]: value }
     const hasChanges =
       JSON.stringify(currentData) !== JSON.stringify(initialData)
     setIsChanged(hasChanges)
+    dispatch(setHasChanges(hasChanges))
     if (onStatusChange) {
       onStatusChange(hasChanges)
     }
@@ -353,7 +381,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         setConfirmationModal(false);
       }
 
-      if (addLocation && addressLabel === '') {
+      if (addLocation && addressLabel === '' && user?._addresses?.length!==0) {
         addressLabelRef.current?.focus()
         setInputErrs((prev) => {
           return { ...prev, addressLabel: 'This field is required!' }
@@ -371,7 +399,6 @@ const ProfileAddressEditModal: React.FC<Props> = ({
           }
         })
       }
-      return
     }
     setSubmitBtnLoading(true)
     if (editLocation) {
@@ -421,6 +448,9 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     if (addLocation) {
       let reqBody: any = { ...data }
       reqBody.label = addressLabel
+      if(user?._addresses?.length===0 && reqBody.label === ''){
+        reqBody.label = 'Default';
+      }
     await addUserAddress(reqBody, async (err, res) => {
         console.warn({res})
         // res.data.data.newAddress._id
@@ -880,15 +910,24 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       }))
     }
     setIsChanged(true)
+    dispatch(setHasChanges(true))
   }
 
-  useEffect(()=>{
-    if(JSON.stringify(initialData)!==JSON.stringify(data)){
+  useEffect(() => {
+    const { set_as_primary, ...currentData } = data
+    if(initialLabel!==addressLabel){
       setIsChanged(true)
-    }else{
-      setIsChanged(false);
+      dispatch(setHasChanges(true))
     }
-  },[data])
+    if (JSON.stringify(initialData) !== JSON.stringify(currentData)) {
+      setIsChanged(true)
+      dispatch(setHasChanges(true))
+    } else {
+      setIsChanged(false)
+      dispatch(setHasChanges(false))
+    }
+    console.warn({ currentData, initialData })
+  }, [data, initialData, addressLabel, initialLabel])
 
   if (confirmationModal) {
     return (
@@ -939,7 +978,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   value={addressLabel}
                   name="label"
                   ref={addressLabelRef}
-                  onChange={(e: any) => {setAddressLabel(e.target.value);setInputErrs((prev)=>({...prev,addressLabel:null}))}}
+                  onChange={(e: any) => {setAddressLabel(e.target.value);setInputErrs((prev)=>({...prev,addressLabel:null}));}}
                 />
               </div>
               <p className={styles['helper-text']}>{inputErrs.addressLabel}</p>
