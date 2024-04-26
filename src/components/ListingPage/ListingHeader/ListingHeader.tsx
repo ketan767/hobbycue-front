@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styles from './ListingHeader.module.css'
 import Image from 'next/image'
 
@@ -229,7 +229,14 @@ const ListingHeader: React.FC<Props> = ({
   const [open, setOpen] = useState(false)
 
   const handleDropdown = () => {
-    setOpen(!open)
+    if (open) {
+      setOpen(false)
+      if (!isAuthenticated) {
+        dispatch(openModal({ type: 'auth', closable: true }))
+      }
+    } else {
+      setOpen(true)
+    }
   }
 
   const OpenProfileImage = () => {
@@ -342,6 +349,22 @@ const ListingHeader: React.FC<Props> = ({
       )
     }
   }
+  const Dropdownref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        Dropdownref.current &&
+        !Dropdownref.current.contains(event.target as Node)
+      ) {
+        setOpen(false) // Close the dropdown when clicked outside
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [Dropdownref])
 
   return (
     <>
@@ -543,7 +566,10 @@ const ListingHeader: React.FC<Props> = ({
             </CustomTooltip>
 
             {/* More Options Button */}
-            <div className={styles['action-btn-dropdown-wrapper']}>
+            <div
+              className={styles['action-btn-dropdown-wrapper']}
+              ref={Dropdownref}
+            >
               <CustomTooltip title="Click to view options">
                 <div
                   onClick={(e) => handleDropdown()}

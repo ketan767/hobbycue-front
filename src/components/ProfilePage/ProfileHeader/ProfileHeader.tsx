@@ -58,9 +58,9 @@ const ProfileHeader: React.FC<Props> = ({
 
   const handleDropdown = () => {
     if (open) {
+      setOpen(false)
       if (!isAuthenticated) {
         dispatch(openModal({ type: 'auth', closable: true }))
-        setOpen(false)
       }
     } else {
       setOpen(true)
@@ -280,8 +280,24 @@ const ProfileHeader: React.FC<Props> = ({
     )
   }
 
-  const itsMe = data?._id === user?._id;
+  const itsMe = data?._id === user?._id
 
+  const Dropdownref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        Dropdownref.current &&
+        !Dropdownref.current.contains(event.target as Node)
+      ) {
+        setOpen(false) // Close the dropdown when clicked outside
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [Dropdownref])
   return (
     <>
       <div className={`${styles['container']}`}>
@@ -506,7 +522,10 @@ const ProfileHeader: React.FC<Props> = ({
               </Tooltip>
 
               {/* More Options Button */}
-              <div className={styles['action-btn-dropdown-wrapper']}>
+              <div
+                className={styles['action-btn-dropdown-wrapper']}
+                ref={Dropdownref}
+              >
                 <Tooltip title="Click to view options">
                   <div
                     onClick={(e) => handleDropdown()}
@@ -592,8 +611,10 @@ const ProfileHeader: React.FC<Props> = ({
                   )}
             </div>
             <FilledButton
-            disabled={itsMe}
-            className={styles.contactBtn} onClick={handleContact}>
+              disabled={itsMe}
+              className={styles.contactBtn}
+              onClick={handleContact}
+            >
               Contact
             </FilledButton>
           </div>

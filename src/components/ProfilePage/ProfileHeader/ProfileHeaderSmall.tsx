@@ -27,7 +27,7 @@ type Props = {
   activeTab: ProfilePageTabs
   data: ProfilePageData['pageData']
   navigationTabs?: (tab: string) => void
-  noDataChecker?:()=>boolean
+  noDataChecker?: () => boolean
 }
 
 /** // #fix: There are many things to update and improve code in this file. // */
@@ -35,7 +35,7 @@ const ProfileHeaderSmall: React.FC<Props> = ({
   activeTab,
   data,
   navigationTabs,
-  noDataChecker
+  noDataChecker,
 }) => {
   const router = useRouter()
   const dispatch = useDispatch()
@@ -172,6 +172,22 @@ const ProfileHeaderSmall: React.FC<Props> = ({
       message: 'This feature is under development',
     })
   }
+  const Dropdownref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        Dropdownref.current &&
+        !Dropdownref.current.contains(event.target as Node)
+      ) {
+        setOpen(false) // Close the dropdown when clicked outside
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [Dropdownref])
 
   return (
     <>
@@ -291,7 +307,10 @@ const ProfileHeaderSmall: React.FC<Props> = ({
             </Tooltip>
 
             {/* More Options Button */}
-            <div className={styles['action-btn-dropdown-wrapper']}>
+            <div
+              className={styles['action-btn-dropdown-wrapper']}
+              ref={Dropdownref}
+            >
               <Tooltip title="Click to view options">
                 <div
                   onClick={(e) => handleDropdown()}

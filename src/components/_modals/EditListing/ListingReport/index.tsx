@@ -39,6 +39,8 @@ type reportData = {
   user_id: string
   type: string
   reported_user_id: string
+  reported_user_name: string
+  reported_user_email: string
 }
 
 const ListingReport: React.FC<Props> = ({
@@ -59,6 +61,8 @@ const ListingReport: React.FC<Props> = ({
     user_id: '',
     type: '',
     reported_user_id: '',
+    reported_user_name: '',
+    reported_user_email: '',
   })
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backDisabled, SetBackDisabled] = useState(false)
@@ -79,6 +83,8 @@ const ListingReport: React.FC<Props> = ({
     user_id: user._id,
     type: listingPageData.type,
     reported_user_id: listingPageData._id,
+    reported_user_name: listingPageData?.title,
+    reported_user_email: listingPageData?.public_email,
   })
   const [isChanged, setIsChanged] = useState(false)
   const [snackbar, setSnackbar] = useState({
@@ -95,6 +101,8 @@ const ListingReport: React.FC<Props> = ({
       user_id: user._id,
       type: listingPageData.type,
       reported_user_id: listingPageData._id,
+      reported_user_name: listingPageData?.title,
+      reported_user_email: listingPageData?.public_email,
     })
   }, [user])
 
@@ -155,6 +163,8 @@ const ListingReport: React.FC<Props> = ({
       user_id: user._id,
       type: listingPageData.type,
       reported_user_id: listingPageData._id,
+      reported_user_name: listingPageData?.title,
+      reported_user_email: listingPageData?.public_email,
     })
   }, [user])
 
@@ -197,13 +207,14 @@ const ListingReport: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        if(event?.srcElement?.tagName && 
-          event?.srcElement?.tagName?.toLowerCase()==="textarea" ||
-          event?.srcElement?.tagName?.toLowerCase()==="svg"
-        ){
+        if (
+          (event?.srcElement?.tagName &&
+            event?.srcElement?.tagName?.toLowerCase() === 'textarea') ||
+          event?.srcElement?.tagName?.toLowerCase() === 'svg'
+        ) {
           return
         }
-       nextButtonRef.current?.click();
+        nextButtonRef.current?.click()
       }
     }
 

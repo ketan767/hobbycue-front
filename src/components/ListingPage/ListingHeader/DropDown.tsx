@@ -36,12 +36,14 @@ const Dropdown: React.FC<Props> = ({
         if (isLoggedIn) {
           if (user.is_onboarded) {
             dispatch(openModal({ type: 'claim-listing', closable: true }))
+            handleClose()
           } else {
             router.push(`/profile/${user.profile_url}`)
             dispatch(showProfileError(true))
           }
         } else {
           dispatch(openModal({ type: 'auth', closable: true }))
+          handleClose()
         }
       } else if (
         event.target.nodeName == Reviewref.current?.nodeName &&
@@ -51,6 +53,7 @@ const Dropdown: React.FC<Props> = ({
         setTimeout(() => {
           showFeatureUnderDevelopment?.()
         }, 100)
+        handleClose()
       } else if (
         event.target.nodeName == supportRef.current?.nodeName &&
         event.target.textContent === supportRef.current?.textContent
@@ -58,12 +61,14 @@ const Dropdown: React.FC<Props> = ({
         if (isLoggedIn) {
           if (user.is_onboarded) {
             dispatch(openModal({ type: 'ListingSupportModal', closable: true }))
+            handleClose()
           } else {
             router.push(`/profile/${user.profile_url}`)
             dispatch(showProfileError(true))
           }
         } else {
           dispatch(openModal({ type: 'auth', closable: true }))
+          handleClose()
         }
       } else if (
         event.target.nodeName == reportRef.current?.nodeName &&
@@ -72,6 +77,7 @@ const Dropdown: React.FC<Props> = ({
         if (isLoggedIn) {
           if (user.is_onboarded) {
             dispatch(openModal({ type: 'ListingReportModal', closable: true }))
+            handleClose()
           } else {
             router.push(`/profile/${user.profile_url}`)
             dispatch(showProfileError(true))

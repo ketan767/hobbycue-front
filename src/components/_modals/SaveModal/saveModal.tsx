@@ -72,37 +72,46 @@ const SaveModal: React.FC<Props> = ({
       to: user?.public_email,
       name: user.full_name,
     }
-    console.log('activeprofileeeeeeeeeeee', user)
-    const { err: error, res: response } = await getMyProfileDetail()
+    console.log('activeprofileee', user)
+    if (activeModal === 'profile-hobby-edit') {
+      if (!user.is_onboarded) {
+        const { err: error, res: response } = await getMyProfileDetail()
 
-    if (response?.data?.data?.user?.completed_onboarding_steps.length === 3) {
-      await sendWelcomeMail(payload)
+        if (
+          response?.data?.data?.user?.completed_onboarding_steps.length === 3
+        ) {
+          await sendWelcomeMail(payload)
 
-      const data = { is_onboarded: true }
-      const { err, res } = await updateMyProfileDetail(data)
+          const data = { is_onboarded: true }
+          const { err, res } = await updateMyProfileDetail(data)
 
-      if (err) return console.log(err)
-      if (res?.data.success) {
-        dispatch(updateUser(res.data.data.user))
-        setConfirmationModal(false)
-        dispatch(closeModal())
+          if (err) return console.log(err)
+          if (res?.data.success) {
+            dispatch(updateUser(res.data.data.user))
+            setConfirmationModal(false)
+            dispatch(closeModal())
+          }
+
+          window.location.href = `/community`
+        }
+      } else {
+        router.reload()
       }
-
-      window.location.href = `/community`
-    } else {
-      if (activeModal !== 'profile-general-edit') {
-        window.location.href = `/profile/${user.profile_url}`
-        dispatch(showProfileError(true))
-        setConfirmationModal(false)
-        dispatch(closeModal())
-      }
+    } else if (activeModal === 'listing-hobby-edit') {
+      router.reload()
+    } else if (activeModal !== 'profile-general-edit') {
+      window.location.href = `/profile/${user.profile_url}`
+      dispatch(showProfileError(true))
+      setConfirmationModal(false)
+      dispatch(closeModal())
     }
   }
 
-  const isMobile = useMediaQuery("(max-width:1100px)");
+  const isMobile = useMediaQuery('(max-width:1100px)')
 
   if (reloadrouter) {
     IsOnboardingCompete()
+    return <></>
   }
 
   return (
@@ -116,7 +125,10 @@ const SaveModal: React.FC<Props> = ({
         <div className={styles['buttons']}>
           <FilledButton className={styles['button1']} onClick={handleYesClick}>
             {YesBtnLoading ? (
-              <CircularProgress color="inherit" size={isMobile?'14px':'24px'} />
+              <CircularProgress
+                color="inherit"
+                size={isMobile ? '14px' : '24px'}
+              />
             ) : (
               'Yes'
             )}
