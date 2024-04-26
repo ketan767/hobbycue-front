@@ -46,23 +46,11 @@ const ListingHome: React.FC<Props> = (props) => {
       sessionStorage.setItem('scrollPositionlisting', window.scrollY.toString())
     }
 
+    // Restore scroll position when navigating back to the page
     const handleScrollRestoration = () => {
       const scrollPosition = sessionStorage.getItem('scrollPositionlisting')
       if (scrollPosition) {
-        const parsedScrollPosition = parseInt(scrollPosition, 10)
-        let adjustedScrollPosition = parsedScrollPosition
-
-        // Check screen width
-        if (window.innerWidth < 1100) {
-          adjustedScrollPosition -= 44 // Subtract 44 units if screen width is less than 1100px
-        }
-
-        // Scroll to adjusted position (ensure it's not negative)
-        window.scrollTo(
-          0,
-          adjustedScrollPosition >= 0 ? adjustedScrollPosition : 0,
-        )
-
+        window.scrollTo(0, parseInt(scrollPosition, 10))
         sessionStorage.removeItem('scrollPositionlisting')
       }
     }
