@@ -232,7 +232,7 @@ const ListingPageMain: React.FC<Props> = ({
   }
 
   const openModalHobbiesModal = () => {
-    if (window.innerWidth >1100) {
+    if (window.innerWidth > 1100) {
       setShowHobbies(true)
     }
   }

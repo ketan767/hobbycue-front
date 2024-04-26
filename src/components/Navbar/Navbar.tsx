@@ -1096,7 +1096,9 @@ export const Navbar: React.FC<Props> = ({}) => {
                               ...prev,
                               search: { ...prev.search, value: '' },
                             }))
-                            searchInputRef?.current?.focus()
+                            setTimeout(() => {
+                              searchInputRef?.current?.focus()
+                            }, 100)
                           }}
                           className={styles['search-cross-icon']}
                         >
