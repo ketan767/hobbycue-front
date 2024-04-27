@@ -1089,23 +1089,6 @@ export const Navbar: React.FC<Props> = ({}) => {
                         InputLabelProps={{ shrink: false }}
                       />
 
-                      {isWriting && data.search.value.length > 0 && (
-                        <div
-                          onClick={() => {
-                            setData((prev) => ({
-                              ...prev,
-                              search: { ...prev.search, value: '' },
-                            }))
-                            setTimeout(() => {
-                              searchInputRef?.current?.focus()
-                            }, 100)
-                          }}
-                          className={styles['search-cross-icon']}
-                        >
-                          {searchCrossIcon}
-                        </div>
-                      )}
-
                       <button
                         type="submit"
                         className={styles['search-icon-container']}
