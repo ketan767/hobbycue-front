@@ -132,13 +132,21 @@ const HobbyDetail: React.FC<Props> = (props) => {
   return (
     <>
       <Head>
-        <meta property="og:image" content={`${data?.profile_image}`} />
-        <meta
-          property="og:image:secure_url"
-          content={`${data?.profile_image}`}
-        />
+        {data?.profile_image ? (
+          <>
+            <meta property="og:image" content={`${data?.profile_image}`} />
+
+            <meta
+              property="og:image:secure_url"
+              content={`${data?.profile_image}`}
+            />
+
+            <meta property="og:image:alt" content="Profile picture" />
+          </>
+        ) : (
+          ''
+        )}
         <meta property="og:description" content={displayDescMeta()} />
-        <meta property="og:image:alt" content="Profile picture" />
         <title>{`${data?.display} | HobbyCue`}</title>
       </Head>
       <HobbyPageLayout

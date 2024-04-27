@@ -427,7 +427,8 @@ line-height: 20px;
     display: initial !important;
   }
   .display-flex-mobile {
-    display: flex !important;
+    display: grid !important;
+    grid-template-rows: 1fr;
   }
   .dual-section-wrapper {
     flex-direction: column;
