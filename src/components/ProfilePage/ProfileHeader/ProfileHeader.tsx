@@ -30,6 +30,7 @@ import RepostIcon from '../../../assets/icons/RepostIcon'
 import ShareIcon from '@/assets/icons/ShareIcon'
 import { updateImageUrl } from '@/redux/slices/modal'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import { showProfileError } from '@/redux/slices/user'
 
 type Props = {
   data: ProfilePageData['pageData']
@@ -211,6 +212,7 @@ const ProfileHeader: React.FC<Props> = ({
       // dispatch(closeModal())
     }
   }
+
   const handleRepost = () => {
     if (!isAuthenticated) {
       dispatch(openModal({ type: 'auth', closable: true }))
@@ -220,13 +222,18 @@ const ProfileHeader: React.FC<Props> = ({
       return
     }
     if (isLoggedIn) {
-      dispatch(
-        openModal({
-          type: 'create-post',
-          closable: true,
-          propData: { defaultValue: location },
-        }),
-      )
+      if (user.is_onboarded) {
+        dispatch(
+          openModal({
+            type: 'create-post',
+            closable: true,
+            propData: { defaultValue: location },
+          }),
+        )
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
     } else {
       dispatch(
         openModal({
@@ -250,11 +257,16 @@ const ProfileHeader: React.FC<Props> = ({
   }
 
   const handleContact = () => {
-    if (!isAuthenticated) {
+    if (isLoggedIn) {
+      if (user.is_onboarded) {
+        dispatch(openModal({ type: 'UserContactToOwner', closable: true }))
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
+    } else {
       dispatch(openModal({ type: 'auth', closable: true }))
-      return
     }
-    dispatch(openModal({ type: 'UserContactToOwner', closable: true }))
   }
 
   const OpenProfileImage = () => {

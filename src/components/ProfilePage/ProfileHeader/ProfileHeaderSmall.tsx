@@ -20,7 +20,7 @@ import Tooltip from '@/components/Tooltip/ToolTip'
 import { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
 import Dropdown from './DropDown'
-import { SetLinkviaAuth } from '@/redux/slices/user'
+import { SetLinkviaAuth, showProfileError } from '@/redux/slices/user'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
@@ -66,11 +66,16 @@ const ProfileHeaderSmall: React.FC<Props> = ({
   }
 
   const handleContact = () => {
-    if (!isAuthenticated) {
+    if (isLoggedIn) {
+      if (user.is_onboarded) {
+        dispatch(openModal({ type: 'UserContactToOwner', closable: true }))
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
+    } else {
       dispatch(openModal({ type: 'auth', closable: true }))
-      return
     }
-    dispatch(openModal({ type: 'UserContactToOwner', closable: true }))
   }
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
     e.preventDefault()
@@ -140,6 +145,7 @@ const ProfileHeaderSmall: React.FC<Props> = ({
     dispatch(updateShareUrl(window.location.href))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
   }
+
   const handleRepost = () => {
     if (!isAuthenticated) {
       dispatch(openModal({ type: 'auth', closable: true }))
@@ -149,13 +155,18 @@ const ProfileHeaderSmall: React.FC<Props> = ({
       return
     }
     if (isLoggedIn) {
-      dispatch(
-        openModal({
-          type: 'create-post',
-          closable: true,
-          propData: { defaultValue: location },
-        }),
-      )
+      if (user.is_onboarded) {
+        dispatch(
+          openModal({
+            type: 'create-post',
+            closable: true,
+            propData: { defaultValue: location },
+          }),
+        )
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
     } else {
       dispatch(
         openModal({
@@ -165,6 +176,7 @@ const ProfileHeaderSmall: React.FC<Props> = ({
       )
     }
   }
+
   const showFeatureUnderDevelopment = () => {
     setSnackbar({
       display: true,
@@ -265,17 +277,7 @@ const ProfileHeaderSmall: React.FC<Props> = ({
               Contact
             </FilledButton>
             {/* Send Email Button  */}
-            <div
-              onClick={() => {
-                dispatch(
-                  openModal({
-                    type: 'create-post',
-                    closable: true,
-                    propData: { defaultValue: location },
-                  }),
-                )
-              }}
-            >
+            <div onClick={handleRepost}>
               <Tooltip title="Repost">
                 <div
                   onClick={(e) => console.log(e)}

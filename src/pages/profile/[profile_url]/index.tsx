@@ -220,7 +220,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
   )
 
   useEffect(() => {
-    if (showProfileError) {
+    if (showProfileError && profileLayoutMode === 'edit') {
       noDataChecker()
     }
   }, [CurrentUrl, showProfileError])
@@ -463,7 +463,9 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
               />
             </div>
             {/* About for mobile view */}
-            <div className={`${styles['display-mobile']} ${styles['mob-min-height']}`}>
+            <div
+              className={`${styles['display-mobile']} ${styles['mob-min-height']}`}
+            >
               <PageContentBox
                 showEditButton={profileLayoutMode === 'edit'}
                 onEditBtnClick={() =>
@@ -482,11 +484,11 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
 
             {/* User Information for mobile view */}
             <div
-              className={
-                `${profileLayoutMode === 'edit'
+              className={`${
+                profileLayoutMode === 'edit'
                   ? styles['display-mobile']
-                  : styles['display-none']} ${ ' margin-bottom-52vh'}`
-              }
+                  : styles['display-none']
+              } ${' margin-bottom-52vh'}`}
             >
               <PageContentBox
                 showEditButton={profileLayoutMode === 'edit'}
