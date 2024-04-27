@@ -139,12 +139,20 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     } else {
       if (new Date(selectedDate) < new Date(eventData.from_date)) {
         alert('To Date cannot be before From Date')
-        return // Prevent updating the state
+        return
       }
       setEventData((prevData) => ({ ...prevData, to_date: selectedDate }))
       setIsSelectingStartDate(true)
     }
   }
+
+  useEffect(() => {
+    if (new Date(eventData.to_date) < new Date(eventData.from_date))
+      setEventData((prevData) => ({
+        ...prevData,
+        to_date: eventData.from_date,
+      }))
+  }, [eventData.from_date])
 
   const handleSubmit = async () => {
     const jsonData = {
