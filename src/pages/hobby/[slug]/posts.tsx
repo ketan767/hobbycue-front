@@ -140,6 +140,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
             ) : (
               <div className={styles['no-posts-container']}>
                 <p
+                  className="cursor-pointer"
                   onClick={() => {
                     dispatch(openModal({ type: 'auth', closable: true }))
                   }}
@@ -150,26 +151,26 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
             )}
           </section>
         </main>
-      <main className={`${styles['display-mobile']}`}>
-        <section className={`${styles['posts-container']}}`}>
-          {loadingPosts ? (
-            <>
-              <PostCardSkeletonLoading />
-              <PostCardSkeletonLoading />
-              <PostCardSkeletonLoading />
-            </>
-          ) : (
-            posts.length === 0 && (
-              <div className={styles['no-posts-container']}>
-                <p>No posts available</p>
-              </div>
-            )
-          )}
-          {posts.map((post: any) => {
-            return <PostCard key={post._id} postData={post} />
-          })}
-        </section>
-      </main>
+        <main className={`${styles['display-mobile']}`}>
+          <section className={`${styles['posts-container']}}`}>
+            {loadingPosts ? (
+              <>
+                <PostCardSkeletonLoading />
+                <PostCardSkeletonLoading />
+                <PostCardSkeletonLoading />
+              </>
+            ) : (
+              posts.length === 0 && (
+                <div className={styles['no-posts-container']}>
+                  <p>No posts available</p>
+                </div>
+              )
+            )}
+            {posts.map((post: any) => {
+              return <PostCard key={post._id} postData={post} />
+            })}
+          </section>
+        </main>
       </HobbyPageLayout>
     </div>
   )

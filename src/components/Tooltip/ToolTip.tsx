@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { styled } from '@mui/material/styles'
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
@@ -30,7 +30,28 @@ const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
 }))
 
 const CustomizedTooltips: React.FC<Props> = ({ title, children }) => {
-  return <BootstrapTooltip title={title}>{children}</BootstrapTooltip>
+  const [clicked, setClicked] = useState(false)
+  return (
+    <>
+      <BootstrapTooltip
+        onMouseLeave={() => {
+          if (clicked) {
+            setClicked(false)
+          }
+        }}
+        title={clicked ? '' : title}
+      >
+        {React.cloneElement(children, {
+          onClick: (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+            if (children.props.onClick) {
+              children.props.onClick(event)
+            }
+            setClicked(true)
+          },
+        })}
+      </BootstrapTooltip>
+    </>
+  )
 }
 
 export default CustomizedTooltips

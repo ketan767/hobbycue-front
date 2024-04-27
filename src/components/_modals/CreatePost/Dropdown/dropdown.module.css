@@ -65,8 +65,21 @@
   flex-direction: column;
   gap: 4px;
 }
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .dropdown-options.active {
   max-height: 1200px;
+  animation: fadeDown 0.3s ease forwards;
 }
 .value-container {
   padding-left: 8px;

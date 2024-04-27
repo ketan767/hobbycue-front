@@ -265,6 +265,20 @@
 .name-container img {
   cursor: pointer;
 }
+
+@keyframes fadeDownWithScale {
+  from {
+    opacity: 0;
+    transform: translate3d(10px,-20px,0);
+    scale: 0.8;
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0,0,0);
+    scale: 1;
+  }
+}
+
 .dropdown {
   position: absolute;
   top: calc(120%);
@@ -274,6 +288,7 @@
     0px 0px 2px 0px rgba(147, 156, 163, 0.36);
   border-radius: 4px;
   overflow: hidden;
+  animation: fadeDownWithScale 0.3s ease forwards;
 }
 .customList {
   list-style: none;

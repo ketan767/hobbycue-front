@@ -129,6 +129,7 @@
   overflow: auto;
  max-width: 242px;
  animation: fadeDown 0.3s ease forwards !important;
+ box-shadow: 0px 8px 12px 0px rgba(147, 156, 163, 0.12), 0px 0px 2px 0px rgba(147, 156, 163, 0.36);
 }
 
 .dd-item.dd-item-listing > div.default-img{
