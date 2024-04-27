@@ -5,7 +5,7 @@ import ProfileHeader from '../../components/ProfilePage/ProfileHeader/ProfileHea
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
-import { updateProfileLayoutMode } from '@/redux/slices/site'
+import { updateHobbyOpenState, updateProfileLayoutMode } from '@/redux/slices/site'
 import ProfileHeaderSmall from '@/components/ProfilePage/ProfileHeader/ProfileHeaderSmall'
 import HobbyPageHeader from '@/components/HobbyPage/HobbyHeader/HobbyHeader'
 import PageGridLayout from '../PageGridLayout'
@@ -37,6 +37,7 @@ const HobbyPageLayout: React.FC<Props> = ({
   setExpandAll,
 }) => {
   const dispatch = useDispatch()
+  const {hobbyStates} = useSelector((state:RootState)=>state.site)
   const [showSmallHeader, setShowSmallHeader] = useState(false)
   const [members, setMembers] = useState([])
   const hideLastColumnPages = ['pages', 'blogs', 'links', 'store']
@@ -46,7 +47,7 @@ const HobbyPageLayout: React.FC<Props> = ({
   const [loading, setLoading] = useState(true)
   const [showMembers, setShowMembers] = useState(false)
   const [showHobbiesClassification, setShowHobbiesClassification] =
-    useState(false)
+    useState(true)
 
   useEffect(() => {
     if (hideLastColumnPages.includes(activeTab)) {
@@ -92,6 +93,14 @@ const HobbyPageLayout: React.FC<Props> = ({
     // return window.removeEventListener('scroll', checkScroll)
   }, [])
 
+  useEffect(()=>{
+    if(hobbyStates && typeof hobbyStates[data?._id] === 'boolean'){
+      setShowHobbiesClassification(hobbyStates[data?._id])
+    }else if(data._id){
+      dispatch(updateHobbyOpenState({[data._id]:showHobbiesClassification}))
+    }
+  },[data._id, hobbyStates])
+
   const toggleMembers = () => {
     setSeeAll(!seeAll)
   }
@@ -136,7 +145,12 @@ const HobbyPageLayout: React.FC<Props> = ({
         >
           <PageContentBox
             showEditButton={false}
-            setDisplayData={setShowHobbiesClassification}
+            initialShowDropdown
+            setDisplayData={(arg0:boolean)=>{setShowHobbiesClassification(prev=>{
+              dispatch(updateHobbyOpenState({[data._id]:!prev}))
+              return !prev
+            })}}
+            expandData={showHobbiesClassification}
           >
             <h4 className={styles['heading']}>Hobbies Classification</h4>
             <div

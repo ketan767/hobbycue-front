@@ -401,7 +401,7 @@
 
   .create-post-modal>aside>div>section {
     width: 100%;
-    overflow: hidden;
+    /* overflow: hidden; */
   }
 
   .modal-wrapper {
