@@ -107,9 +107,7 @@
     z-index: 1001 !important;
 
   }
-  .modal-wrapper main .modal-close-icon{
-    top: 10px;
-  }
+
   .close-icon-clicked {
     /* left: calc(50vw + 152x) !important; */
     left: calc(50vw + 133px) !important;

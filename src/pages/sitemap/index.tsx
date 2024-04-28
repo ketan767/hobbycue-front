@@ -30,6 +30,11 @@ export const getServerSideProps: GetServerSideProps = async () => {
       loc: '/sitemap/others',
       name: 'Others',
     },
+    {
+      lastmod: new Date().toISOString(),
+      loc: '/sitemap/blogs',
+      name: 'blogs',
+    },
   ]
   return {
     props: {

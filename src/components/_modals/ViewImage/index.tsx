@@ -23,8 +23,8 @@ const ViewImageModal: React.FC<Props> = ({ isOpen, onClose, handleClose }) => {
   const imageUrl = useSelector((state: any) => state.modal.imageUrl)
   const initialInnerWidth = () => {
     let width = window.innerWidth
-    if (width - 1300 >= 0) {
-      return (width - 1300) / 2
+    if (width) {
+      return width
     } else return 0
   }
 
@@ -32,28 +32,28 @@ const ViewImageModal: React.FC<Props> = ({ isOpen, onClose, handleClose }) => {
   useEffect(() => {
     const updateScreenWidth = () => {
       let width = window.innerWidth
-      if (width - 1300 >= 0) {
-        setScreenWidth((width - 1300) / 2)
-      } else setScreenWidth(0)
+      setScreenWidth(width)
     }
     window.addEventListener('resize', updateScreenWidth)
     return () => {
       window.removeEventListener('resize', updateScreenWidth)
     }
-  }, [])
+  }, [window.innerWidth])
   return (
     <>
       <header className={styles['header']}>
         {screenWidth <= 1100 ? (
+          <CloseIcon
+            className={styles['modal-close-icon']}
+            onClick={handleClose}
+          />
+        ) : screenWidth >= 1100 ? (
           <CloseIconWhite
             className={styles['modal-close-icon']}
             onClick={handleClose}
           />
         ) : (
-          <CloseIcon
-            className={styles['modal-close-icon']}
-            onClick={handleClose}
-          />
+          ''
         )}
       </header>
       <div className={styles.imageModalContent}>

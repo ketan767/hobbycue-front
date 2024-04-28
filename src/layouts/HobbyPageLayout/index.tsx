@@ -5,7 +5,10 @@ import ProfileHeader from '../../components/ProfilePage/ProfileHeader/ProfileHea
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
-import { updateHobbyOpenState, updateProfileLayoutMode } from '@/redux/slices/site'
+import {
+  updateHobbyOpenState,
+  updateProfileLayoutMode,
+} from '@/redux/slices/site'
 import ProfileHeaderSmall from '@/components/ProfilePage/ProfileHeader/ProfileHeaderSmall'
 import HobbyPageHeader from '@/components/HobbyPage/HobbyHeader/HobbyHeader'
 import PageGridLayout from '../PageGridLayout'
@@ -37,7 +40,7 @@ const HobbyPageLayout: React.FC<Props> = ({
   setExpandAll,
 }) => {
   const dispatch = useDispatch()
-  const {hobbyStates} = useSelector((state:RootState)=>state.site)
+  const { hobbyStates } = useSelector((state: RootState) => state.site)
   const [showSmallHeader, setShowSmallHeader] = useState(false)
   const [members, setMembers] = useState([])
   const hideLastColumnPages = ['pages', 'blogs', 'links', 'store']
@@ -48,6 +51,10 @@ const HobbyPageLayout: React.FC<Props> = ({
   const [showMembers, setShowMembers] = useState(false)
   const [showHobbiesClassification, setShowHobbiesClassification] =
     useState(true)
+
+  useEffect(() => {
+    if (window.innerWidth >= 1300) setShowHobbiesClassification(false)
+  })
 
   useEffect(() => {
     if (hideLastColumnPages.includes(activeTab)) {
@@ -93,13 +100,13 @@ const HobbyPageLayout: React.FC<Props> = ({
     // return window.removeEventListener('scroll', checkScroll)
   }, [])
 
-  useEffect(()=>{
-    if(hobbyStates && typeof hobbyStates[data?._id] === 'boolean'){
+  useEffect(() => {
+    if (hobbyStates && typeof hobbyStates[data?._id] === 'boolean') {
       setShowHobbiesClassification(hobbyStates[data?._id])
-    }else if(data._id){
-      dispatch(updateHobbyOpenState({[data._id]:showHobbiesClassification}))
+    } else if (data._id) {
+      dispatch(updateHobbyOpenState({ [data._id]: showHobbiesClassification }))
     }
-  },[data._id, hobbyStates])
+  }, [data._id, hobbyStates])
 
   const toggleMembers = () => {
     setSeeAll(!seeAll)
@@ -113,7 +120,7 @@ const HobbyPageLayout: React.FC<Props> = ({
       dispatch(openModal({ type: 'auth', closable: true }))
     }
   }
-  const isMobile = useMediaQuery("(max-width:1100px)");
+  const isMobile = useMediaQuery('(max-width:1100px)')
   return (
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
@@ -132,7 +139,7 @@ const HobbyPageLayout: React.FC<Props> = ({
         <Image
           src={ChevronDown}
           className={`${expandAll ? styles['rotate-180'] : ''}`}
-          style={{transition:"all 0.3s ease"}}
+          style={{ transition: 'all 0.3s ease' }}
           alt=""
         />
       </div>
@@ -146,10 +153,12 @@ const HobbyPageLayout: React.FC<Props> = ({
           <PageContentBox
             showEditButton={false}
             initialShowDropdown
-            setDisplayData={(arg0:boolean)=>{setShowHobbiesClassification(prev=>{
-              dispatch(updateHobbyOpenState({[data._id]:!prev}))
-              return !prev
-            })}}
+            setDisplayData={(arg0: boolean) => {
+              setShowHobbiesClassification((prev) => {
+                dispatch(updateHobbyOpenState({ [data._id]: !prev }))
+                return !prev
+              })
+            }}
             expandData={showHobbiesClassification}
           >
             <h4 className={styles['heading']}>Hobbies Classification</h4>
@@ -263,7 +272,11 @@ const HobbyPageLayout: React.FC<Props> = ({
         <div className={`${styles['display-mobile']}`}>
           <HobbyNavigationLinks activeTab={activeTab} />
         </div>
-        <main className={`${styles['display-mobile']} ${styles['mob-min-height']}`}>{children}</main>
+        <main
+          className={`${styles['display-mobile']} ${styles['mob-min-height']}`}
+        >
+          {children}
+        </main>
       </PageGridLayout>
     </>
   )
