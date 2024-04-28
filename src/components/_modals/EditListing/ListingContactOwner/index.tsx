@@ -37,6 +37,7 @@ type ContactOwnerData = {
   name: string
   senderName: string
   to: string
+  sender_id: string
 }
 
 const ListingContactToOwner: React.FC<Props> = ({
@@ -58,8 +59,9 @@ const ListingContactToOwner: React.FC<Props> = ({
     message: '',
     sub: '',
     name: listingPageData.title,
-    senderName: user.full_name,
+    senderName: user?.full_name,
     to: listingPageData?.public_email,
+    sender_id: user?._id,
   })
   const subref = useRef<HTMLInputElement>(null)
   const [isTextAreaActive, setTextAreaActive] = useState(false)
@@ -82,6 +84,7 @@ const ListingContactToOwner: React.FC<Props> = ({
     name: listingPageData.title,
     senderName: user.full_name,
     to: listingPageData?.public_email,
+    sender_id: user?._id,
   })
   const [isChanged, setIsChanged] = useState(false)
   const [snackbar, setSnackbar] = useState({
@@ -97,6 +100,7 @@ const ListingContactToOwner: React.FC<Props> = ({
       name: '',
       senderName: '',
       to: '',
+      sender_id: '',
     })
   }, [user])
 
@@ -201,14 +205,13 @@ const ListingContactToOwner: React.FC<Props> = ({
       if (event.key === 'Enter') {
         if (isTextAreaActive) {
           return
-        } 
-        else if(event?.srcElement?.tagName && 
-          event?.srcElement?.tagName?.toLowerCase()==="textarea" ||
-          event?.srcElement?.tagName?.toLowerCase()==="svg"
-        ){
+        } else if (
+          (event?.srcElement?.tagName &&
+            event?.srcElement?.tagName?.toLowerCase() === 'textarea') ||
+          event?.srcElement?.tagName?.toLowerCase() === 'svg'
+        ) {
           return
-        }
-        else {
+        } else {
           nextButtonRef.current?.click()
         }
       }
