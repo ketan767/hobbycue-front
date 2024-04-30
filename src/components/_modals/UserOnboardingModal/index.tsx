@@ -77,7 +77,7 @@ export const UserOnboardingModal: React.FC<PropTypes> = ({
   }
 
   const IsOnboardingCompete = async () => {
-    const payload: InviteToCommunityPayload = {
+    const payload: sendWelcomeMailPayload = {
       to: user?.public_email,
       name: user.full_name,
     }

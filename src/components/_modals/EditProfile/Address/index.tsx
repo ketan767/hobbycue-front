@@ -84,12 +84,12 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   const [dropdownList, setShowDropdownList] = useState<DropdownListItem[]>([])
   const inputRef = useRef<HTMLInputElement>(null)
   const [initialData, setInitialData] = useState({})
-  const [initialLabel,setInitialLabel] = useState('')
+  const [initialLabel, setInitialLabel] = useState('')
   const [isChanged, setIsChanged] = useState(false)
 
-  useEffect(()=>{
-    dispatch(setHasChanges(false));
-  },[])
+  useEffect(() => {
+    dispatch(setHasChanges(false))
+  }, [])
 
   useEffect(() => {
     if (addLocation !== true) {
@@ -169,7 +169,10 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     setData((prev) => ({ ...prev, [name]: value }))
     setInputErrs((prev) => ({ ...prev, [name]: null }))
 
-    const {set_as_primary:set_as_primary,...currentData} = { ...data, [name]: value }
+    const { set_as_primary: set_as_primary, ...currentData } = {
+      ...data,
+      [name]: value,
+    }
     const hasChanges =
       JSON.stringify(currentData) !== JSON.stringify(initialData)
     setIsChanged(hasChanges)
@@ -227,7 +230,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         let reqBody: any = { ...data }
         reqBody.label = addressLabel
         addUserAddress(reqBody, async (err, res) => {
-          console.warn({res})
+          console.warn({ res })
           setBackBtnLoading(true)
           if (err) {
             return console.log(err)
@@ -265,7 +268,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         if (!user.primary_address?._id) {
           setBackBtnLoading(true)
           addUserAddress(reqBody, async (err, res) => {
-            console.warn({res})
+            console.warn({ res })
             if (err) {
               return console.log(err)
             }
@@ -284,7 +287,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               await updateMyProfileDetail({
                 onboarding_step: newOnboardingStep,
                 completed_onboarding_steps: updatedCompletedSteps,
-                primary_address:res?.data?._id
+                primary_address: res?.data?._id,
               })
             const { err: error, res: response } = await getMyProfileDetail()
 
@@ -378,20 +381,25 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         setInputErrs((prev) => {
           return { ...prev, city: 'This field is required!' }
         })
-        setConfirmationModal(false);
+        setConfirmationModal(false)
+        return
       }
 
-      if (addLocation && addressLabel === '' && user?._addresses?.length!==0) {
+      if (
+        addLocation &&
+        addressLabel === '' &&
+        user?._addresses?.length !== 0
+      ) {
         addressLabelRef.current?.focus()
         setInputErrs((prev) => {
           return { ...prev, addressLabel: 'This field is required!' }
         })
-        setConfirmationModal(false);
+        setConfirmationModal(false)
       }
 
       if (checkFullname(data.city)) {
         cityRef.current?.focus()
-        setConfirmationModal(false);
+        setConfirmationModal(false)
         return setInputErrs((prev) => {
           return {
             ...prev,
@@ -448,20 +456,20 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     if (addLocation) {
       let reqBody: any = { ...data }
       reqBody.label = addressLabel
-      if(user?._addresses?.length===0 && reqBody.label === ''){
-        reqBody.label = 'Default';
+      if (user?._addresses?.length === 0 && reqBody.label === '') {
+        reqBody.label = 'Default'
       }
-    await addUserAddress(reqBody, async (err, res) => {
-        console.warn({res})
+      await addUserAddress(reqBody, async (err, res) => {
+        console.warn({ res })
         // res.data.data.newAddress._id
         if (err) {
           setSubmitBtnLoading(false)
-          setConfirmationModal(false);
+          setConfirmationModal(false)
           return console.log(err)
         }
         if (!res.data.success) {
           setSubmitBtnLoading(false)
-        setConfirmationModal(false);
+          setConfirmationModal(false)
           return alert('Something went wrong!')
         }
         const newOnboardingStep =
@@ -471,28 +479,29 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         if (!updatedCompletedSteps.includes('Address')) {
           updatedCompletedSteps.push('Address')
         }
-        
-      if(user?.primary_address?._id){
-        const { err: updtProfileErr, res: updtProfileRes } =
-          await updateMyProfileDetail({
-            onboarding_step: newOnboardingStep,
-            completed_onboarding_steps: updatedCompletedSteps
-          })
-      }else{
-        const { err: updtProfileErr, res: updtProfileRes } =
-          await updateMyProfileDetail({
-            onboarding_step: newOnboardingStep,
-            completed_onboarding_steps: updatedCompletedSteps,
-            primary_address:res?.data?.data?.newAddress?._id
-          })
-      }
+
+        if (user?.primary_address?._id) {
+          const { err: updtProfileErr, res: updtProfileRes } =
+            await updateMyProfileDetail({
+              onboarding_step: newOnboardingStep,
+              completed_onboarding_steps: updatedCompletedSteps,
+            })
+        } else {
+          const { err: updtProfileErr, res: updtProfileRes } =
+            await updateMyProfileDetail({
+              onboarding_step: newOnboardingStep,
+              completed_onboarding_steps: updatedCompletedSteps,
+              primary_address: res?.data?.data?.newAddress?._id,
+            })
+        }
 
         const { err: error, res: response } = await getMyProfileDetail()
 
         setSubmitBtnLoading(false)
         if (error) {
-          setConfirmationModal(false);
-          return console.log(error)}
+          setConfirmationModal(false)
+          return console.log(error)
+        }
         if (response?.data.success) {
           dispatch(updateUser(response.data.data.user))
           if (onComplete) onComplete()
@@ -649,7 +658,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         setDataLoaded(true)
       }
     } else if (addLocation) {
-      setDataLoaded(true); // just to fetch geolocation
+      setDataLoaded(true) // just to fetch geolocation
     } else {
       setDataLoaded(true)
       setData({
@@ -694,7 +703,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       })
     }
   }
-  
+
   useEffect(() => {
     if (dataLoaded) {
       if (
@@ -847,8 +856,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        if(event?.srcElement?.tagName === "svg"){
-          return;
+        if (event?.srcElement?.tagName === 'svg') {
+          return
         }
         nextButtonRef.current?.click()
       }
@@ -915,7 +924,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
 
   useEffect(() => {
     const { set_as_primary, ...currentData } = data
-    if(initialLabel!==addressLabel){
+    if (initialLabel !== addressLabel) {
       setIsChanged(true)
       dispatch(setHasChanges(true))
     }
@@ -945,11 +954,11 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       <div className={styles['modal-wrapper']}>
         <CloseIcon
           className={styles['modal-close-icon']}
-          onClick={()=>{
-            if(isChanged){
+          onClick={() => {
+            if (isChanged) {
               setConfirmationModal(true)
-            }else{
-              handleClose();
+            } else {
+              handleClose()
             }
           }}
         />
@@ -978,7 +987,10 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   value={addressLabel}
                   name="label"
                   ref={addressLabelRef}
-                  onChange={(e: any) => {setAddressLabel(e.target.value);setInputErrs((prev)=>({...prev,addressLabel:null}));}}
+                  onChange={(e: any) => {
+                    setAddressLabel(e.target.value)
+                    setInputErrs((prev) => ({ ...prev, addressLabel: null }))
+                  }}
                 />
               </div>
               <p className={styles['helper-text']}>{inputErrs.addressLabel}</p>
@@ -1009,14 +1021,14 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                     inputRef?.current?.focus()
                   }}
                   tabIndex={0}
-                  onKeyDown={(e)=>{
-                    if(e.key==="Enter"){
-                      e.preventDefault();
-                      e.stopPropagation();
-                      getLocation();
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      getLocation()
                       setTimeout(() => {
-                      inputRef?.current?.focus();
-                      }, 50);
+                        inputRef?.current?.focus()
+                      }, 50)
                     }
                   }}
                 />

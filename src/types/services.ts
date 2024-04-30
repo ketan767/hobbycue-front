@@ -81,6 +81,14 @@ interface InvitetoHobbycuePayload {
 interface InviteToCommunityPayload {
   to:string
   name: string
+  _id: string
+  hobby_id: string
+  location: string
+}
+
+interface sendWelcomeMailPayload {
+  to:string
+  name: string
 }
 
 interface ContactToOwner {

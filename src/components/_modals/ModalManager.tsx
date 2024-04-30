@@ -188,7 +188,7 @@ const ModalManager: React.FC = () => {
     if (user.is_onboarded) {
       return
     }
-    const payload: InviteToCommunityPayload = {
+    const payload: sendWelcomeMailPayload = {
       to: user?.public_email,
       name: user.full_name,
     }

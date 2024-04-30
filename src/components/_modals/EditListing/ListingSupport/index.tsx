@@ -45,6 +45,7 @@ type supportData = {
   email: string
   user_id: string
   type: string
+  for_url: string
 }
 
 const ListingSupportModal: React.FC<Props> = ({
@@ -64,6 +65,7 @@ const ListingSupportModal: React.FC<Props> = ({
     email: '',
     user_id: '',
     type: '',
+    for_url: '',
   })
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backDisabled, SetBackDisabled] = useState(false)
@@ -73,7 +75,7 @@ const ListingSupportModal: React.FC<Props> = ({
   const listingPageData = useSelector(
     (state: RootState) => state.site.listingPageData,
   )
-
+  const currentUrl = `${process.env.NEXT_PUBLIC_VERCEL_URL}/page/${listingPageData.page_url}`
   const [inputErrs, setInputErrs] = useState<{ error: string | null }>({
     error: null,
   })
@@ -83,6 +85,7 @@ const ListingSupportModal: React.FC<Props> = ({
     email: listingPageData?.public_email,
     user_id: listingPageData._id,
     type: listingPageData.type,
+    for_url: currentUrl,
   })
   const [isChanged, setIsChanged] = useState(false)
   const [snackbar, setSnackbar] = useState({
@@ -98,6 +101,7 @@ const ListingSupportModal: React.FC<Props> = ({
       email: listingPageData?.public_email,
       user_id: listingPageData._id,
       type: listingPageData.type,
+      for_url: currentUrl,
     })
   }, [user])
 
@@ -183,6 +187,7 @@ const ListingSupportModal: React.FC<Props> = ({
       email: listingPageData?.public_email,
       user_id: listingPageData._id,
       type: listingPageData.type,
+      for_url: currentUrl,
     })
   }, [user])
 
@@ -225,13 +230,14 @@ const ListingSupportModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        if(event?.srcElement?.tagName && 
-          event?.srcElement?.tagName?.toLowerCase()==="textarea" ||
-          event?.srcElement?.tagName?.toLowerCase()==="svg"
-        ){
+        if (
+          (event?.srcElement?.tagName &&
+            event?.srcElement?.tagName?.toLowerCase() === 'textarea') ||
+          event?.srcElement?.tagName?.toLowerCase() === 'svg'
+        ) {
           return
         }
-        nextButtonRef.current?.click();
+        nextButtonRef.current?.click()
       }
     }
 

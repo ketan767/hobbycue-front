@@ -41,6 +41,7 @@ type reportData = {
   reported_user_id: string
   reported_user_name: string
   reported_user_email: string
+  for_url: string
 }
 
 const ListingReport: React.FC<Props> = ({
@@ -63,6 +64,7 @@ const ListingReport: React.FC<Props> = ({
     reported_user_id: '',
     reported_user_name: '',
     reported_user_email: '',
+    for_url: '',
   })
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backDisabled, SetBackDisabled] = useState(false)
@@ -72,7 +74,7 @@ const ListingReport: React.FC<Props> = ({
   const listingPageData = useSelector(
     (state: RootState) => state.site.listingPageData,
   )
-
+  const currentUrl = `${process.env.NEXT_PUBLIC_VERCEL_URL}/page/${listingPageData.page_url}`
   const [inputErrs, setInputErrs] = useState<{ error: string | null }>({
     error: null,
   })
@@ -85,6 +87,7 @@ const ListingReport: React.FC<Props> = ({
     reported_user_id: listingPageData._id,
     reported_user_name: listingPageData?.title,
     reported_user_email: listingPageData?.public_email,
+    for_url: currentUrl,
   })
   const [isChanged, setIsChanged] = useState(false)
   const [snackbar, setSnackbar] = useState({
@@ -103,6 +106,7 @@ const ListingReport: React.FC<Props> = ({
       reported_user_id: listingPageData._id,
       reported_user_name: listingPageData?.title,
       reported_user_email: listingPageData?.public_email,
+      for_url: currentUrl,
     })
   }, [user])
 
@@ -165,6 +169,7 @@ const ListingReport: React.FC<Props> = ({
       reported_user_id: listingPageData._id,
       reported_user_name: listingPageData?.title,
       reported_user_email: listingPageData?.public_email,
+      for_url: currentUrl,
     })
   }, [user])
 

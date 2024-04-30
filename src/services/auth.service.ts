@@ -220,7 +220,7 @@ export const ClaimRequest = async (data: ClaimListingPayload): Promise<ApiReturn
   }
 };
 
-export const sendWelcomeMail = async (data: InviteToCommunityPayload): Promise<ApiReturnObject> => {
+export const sendWelcomeMail = async (data: sendWelcomeMailPayload): Promise<ApiReturnObject> => {
   try {
     const res = await axiosInstance.post(`/auth/send-welcome-mail`, data);
     return { res: res, err: null };
