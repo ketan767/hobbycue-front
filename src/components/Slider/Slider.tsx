@@ -8,9 +8,10 @@ type Props = {
   setActiveIdx: any
   activeIdx: number
   images: any
+  sameImgLinkInMeta?:string
 }
 
-const Slider: React.FC<Props> = ({ images }) => {
+const Slider: React.FC<Props> = ({ images, sameImgLinkInMeta }) => {
   const [activeIdx, setActiveIdx] = useState(0)
 
   const handleChange = (e: any, idx: number) => {
@@ -25,6 +26,10 @@ const Slider: React.FC<Props> = ({ images }) => {
     e.preventDefault()
   }
   
+  if(sameImgLinkInMeta && images.length === 1){
+    return null
+  }
+
   if(images.length<1||(images as any[]).every(str=>str?.length===0)){
     return null
   }
