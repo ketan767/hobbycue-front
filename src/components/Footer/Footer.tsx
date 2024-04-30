@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import styles from './footer.module.css'
 
 import Facebook from '@/assets/svg/social/facebook.svg'
@@ -72,6 +72,7 @@ const Footer: React.FC = () => {
   const [expandQuickLinks, setExpandQuickLinks] = useState(false)
   const [inviteBtnLoader, setInviteBtnLoader] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const inviteBtnRef = useRef<HTMLButtonElement>(null)
 
   const [snackbar, setSnackbar] = useState({
     type: 'success',
@@ -278,8 +279,13 @@ const Footer: React.FC = () => {
                   name="society"
                   onChange={(e: any) => setEmail(e.target.value)}
                   className={errorMessage !== '' ? styles['errorInput'] : ''}
+                  onKeyDown={(e)=>{
+                    if(e.key==="Enter"){
+                      inviteBtnRef?.current?.click()
+                    }
+                  }}
                 />
-                <button onClick={sendInvite} className={styles.button}>
+                <button ref={inviteBtnRef} onClick={sendInvite} className={styles.button}>
                   {inviteBtnLoader ? (
                     <CircularProgress color="inherit" size={'20px'} />
                   ) : (

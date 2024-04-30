@@ -147,6 +147,68 @@
   cursor: pointer;
 }
 
+.posts-meta-parent{
+  margin-bottom: 10px;
+}
+
+.posts-meta-data-container {
+  display: flex;
+  width: 100%;
+  max-width: inherit;
+  padding: 16px;
+  align-items: center;
+  gap: 24px;
+  background: var(--Purple-3, #F7F5F9);
+}
+
+.posts-meta-img,
+.posts-meta-img img {
+  height: 80px;
+  width: 80px;
+  border-radius: 5px;
+}
+
+.posts-meta-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+}
+
+.posts-meta-content .contentHead {
+  color: var(--Black, #000);
+  font-family: Poppins;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  max-width: 559px;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.posts-meta-content .contentUrl {
+  color: var(--Grey-Darkest, #08090A);
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  /* 125% */
+  max-width: 559px;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inline-block;
+}
+
 .inputContainer {
   display: flex;
   padding: 6px 12px 12px;
@@ -293,5 +355,66 @@
     right: 12px;
     left: auto;
   }
-
+  .posts-meta-parent {
+    display: flex;
+    align-items: center;
+    background: var(--Purple-3, #F7F5F9);
+    width: calc(100% - 24px);
+    margin: 0 12px 10px;
+    border-radius: 4px;
+    gap: 8px;
+    flex-direction: column;
+  
+    padding: 8px 12px;
+  }
+  
+  .posts-meta-data-container {
+    display: flex;
+    /* width: 304px; */
+    padding: 0;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .posts-meta-img,
+  .posts-meta-img img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.08);
+  }
+  
+  .posts-meta-content .contentHead {
+    color: var(--Grey-Darkest, #08090A);
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+    /* 142.857% */
+    max-width: inherit;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    white-space: unset;
+  }
+  
+  .posts-meta-parent .contentUrl {
+    color: var(--Grey-Darkest, #08090A);
+    font-family: Poppins;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    max-width: inherit;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    white-space: unset;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
 }

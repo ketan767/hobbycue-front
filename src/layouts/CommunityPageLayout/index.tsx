@@ -85,6 +85,7 @@ const CommunityLayout: React.FC<Props> = ({
 }) => {
   const dispatch = useDispatch()
   const membersContainerRef = useRef<HTMLElement>(null)
+  const inviteBtnRef = useRef<HTMLButtonElement>(null)
   const { activeProfile, user } = useSelector((state: RootState) => state.user)
   const { allPosts, filters } = useSelector((state: RootState) => state.post)
   const [showPanel, setShowPanel] = useState(false)
@@ -1296,10 +1297,16 @@ const CommunityLayout: React.FC<Props> = ({
                   type="email"
                   id=""
                   className={errorMessage !== '' ? styles['error-input'] : ''}
+                  onKeyDown={(e)=>{
+                    if(e.key==="Enter"){
+                      inviteBtnRef?.current?.click()
+                    }
+                  }}
                 />
                 <span className={styles['input-prefix']}></span>
                 <FilledButton
                   onClick={Invitecommunity}
+                  inviteBtnRef={inviteBtnRef}
                   className={inviteBtnLoader ? styles['invite-loader-btn'] : ''}
                 >
                   {inviteBtnLoader ? (

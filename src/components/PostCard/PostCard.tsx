@@ -24,6 +24,7 @@ import defaultImg from '@/assets/svg/default-images/default-user-icon.svg'
 
 import 'react-quill/dist/quill.snow.css'
 import 'quill-emoji/dist/quill-emoji.css'
+import { useMediaQuery } from '@mui/material'
 type Props = {
   postData: any
   fromProfile?: boolean
@@ -169,6 +170,8 @@ const PostCard: React.FC<Props> = (props) => {
       fetchComments()
     }
   }, [])
+
+  const isMobile = useMediaQuery("(max-width:1100px)")
 
   return (
     <>
@@ -347,9 +350,42 @@ const PostCard: React.FC<Props> = (props) => {
               setActiveIdx={setActiveIdx}
               activeIdx={activeIdx}
               images={postData.media}
+              sameImgLinkInMeta={metaData.image}
             ></Slider>
           ) : (
             <></>
+          )}
+          {has_link && props.currentSection !== 'links' && (
+            <div className={styles['posts-meta-parent']}>
+            <div className={styles['posts-meta-data-container']}>
+              <a href={url} target="_blank" className={styles['posts-meta-img']}>
+                <img
+                  src={
+                    (typeof metaData?.image === 'string' && metaData.image) ||
+                    (typeof metaData?.icon === 'string' && metaData.icon) ||
+                    defaultImg
+                  }
+                  alt="link-image"
+                  width={80}
+                  height={80}
+                />
+              </a>
+              <div className={styles['posts-meta-content']}>
+                <a href={url} target="_blank" className={styles.contentHead}>
+                  {' '}
+                  {metaData?.title}{' '}
+                </a>
+                {!isMobile&&<a href={url} target="_blank" className={styles.contentUrl}>
+                  {' '}
+                  {metaData?.description}{' '}
+                </a>}
+              </div>
+            </div>
+            {isMobile&&<a href={url} target="_blank" className={styles.contentUrl}>
+                  {' '}
+                  {metaData?.description}{' '}
+                </a>}
+            </div>
           )}
           {has_link && props.currentSection === 'links' && (
             <div className={styles.postMetadata}>

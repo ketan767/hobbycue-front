@@ -18,7 +18,7 @@ import {
 import { closeModal, openModal, updateShareUrl } from '@/redux/slices/modal'
 
 import DOMPurify from 'dompurify'
-import { MenuItem, Select } from '@mui/material'
+import { MenuItem, Select, useMediaQuery } from '@mui/material'
 // import CancelBtn from '@/assets/svg/trash-icon.svg'
 import CancelBtn from '@/assets/icons/x-icon.svg'
 import FilledButton from '@/components/_buttons/FilledButton'
@@ -32,10 +32,12 @@ import PostComments from '@/components/PostCard/Comments'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { setActivePost } from '@/redux/slices/post'
 import defaultUserImage from '@/assets/svg/default-images/default-user-icon.svg'
+import defaultImg from '@/assets/svg/default-images/default-user-icon.svg'
 
 import 'react-quill/dist/quill.snow.css'
 import 'quill-emoji/dist/quill-emoji.css'
 import Link from 'next/link'
+import Slider from '@/components/Slider/Slider'
 
 type Props = {
   confirmationModal?: boolean
@@ -62,6 +64,14 @@ export const PostModal: React.FC<Props> = ({
   const { activeProfile } = useSelector((state: RootState) => state.user)
   const [isChanged, setIsChanged] = useState(false)
   const [newComment, setNewComment] = useState('')
+  const [metaData, setMetaData] = useState({
+    title: '',
+    description: '',
+    image: '',
+    icon: '',
+    url: '',
+  })
+  const [url, setUrl] = useState('')
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -108,6 +118,26 @@ export const PostModal: React.FC<Props> = ({
     fetchComments()
   }, [])
 
+  useEffect(() => {
+    if (activePost?.has_link) {
+      const regex =
+        /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
+      const url = activePost?.content.match(regex)
+      if(url){
+        setUrl(url[0])
+      }
+      if (url) {
+        getMetadata(url[0])
+          .then((res: any) => {
+            setMetaData(res?.res?.data?.data.data)
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
+    }
+  }, [activePost])
+
   const handleShare = () => {
     dispatch(updateShareUrl(`${window.location.origin}/post/${activePost._id}`))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
@@ -143,6 +173,8 @@ export const PostModal: React.FC<Props> = ({
       setIsChanged(true)
     }
   }, [newComment])
+  const isMobile = useMediaQuery("(max-width:1100px)")
+
   if (confirmationModal) {
     return (
       <SaveModal
@@ -257,13 +289,45 @@ export const PostModal: React.FC<Props> = ({
             ></div>
             {activePost?.media?.length > 0 && (
               <div>
-                <img
+                {activePost?.media?.length === 1 ? <img
                   src={activePost?.media[0]}
                   className={styles['post-image']}
                   alt=""
-                />
+                />:<Slider images={activePost.media} setActiveIdx={undefined} activeIdx={0}/>}
               </div>
             )}
+                      {activePost?.has_link && (
+            <div className={styles['posts-meta-parent']}>
+            <div className={styles['posts-meta-data-container']}>
+              <a href={url} target="_blank" className={styles['posts-meta-img']}>
+                <img
+                  src={
+                    (typeof metaData?.image === 'string' && metaData.image) ||
+                    (typeof metaData?.icon === 'string' && metaData.icon) ||
+                    defaultImg
+                  }
+                  alt="link-image"
+                  width={80}
+                  height={80}
+                />
+              </a>
+              <div className={styles['posts-meta-content']}>
+                <a href={url} target="_blank" className={styles.contentHead}>
+                  {' '}
+                  {metaData?.title}{' '}
+                </a>
+                {!isMobile&&<a href={url} target="_blank" className={styles.contentUrl}>
+                  {' '}
+                  {metaData?.description}{' '}
+                </a>}
+              </div>
+            </div>
+            {isMobile&&<a href={url} target="_blank" className={styles.contentUrl}>
+                  {' '}
+                  {metaData?.description}{' '}
+                </a>}
+            </div>
+          )}
             <div className={styles['post-functions']}>
               <div className={styles['likes-comments']}>
                 <PostVotes
