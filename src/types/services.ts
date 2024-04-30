@@ -86,6 +86,11 @@ interface InviteToCommunityPayload {
   location: string
 }
 
+interface sendWelcomeMailPayload {
+  to:string
+  name: string
+}
+
 interface ContactToOwner {
   to:string
   name:string
