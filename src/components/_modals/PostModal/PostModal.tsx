@@ -35,6 +35,7 @@ import defaultUserImage from '@/assets/svg/default-images/default-user-icon.svg'
 
 import 'react-quill/dist/quill.snow.css'
 import 'quill-emoji/dist/quill-emoji.css'
+import Link from 'next/link'
 
 type Props = {
   confirmationModal?: boolean
@@ -66,6 +67,7 @@ export const PostModal: React.FC<Props> = ({
     display: false,
     message: '',
   })
+  const pageUrlClass = styles.postUrl
   const fetchComments = async () => {
     if (activePost?._id) {
       const { err, res } = await getPostComment(
@@ -167,40 +169,48 @@ export const PostModal: React.FC<Props> = ({
           className={`${styles['header']}`}
           style={displayMoreComments ? { display: 'none' } : {}}
         >
-          <div className={`${styles['header-user']}`}>
-            {activePost?._author?.profile_image ? (
-              <img
-                className={styles['profile-img']}
-                src={activePost._author.profile_image}
-                alt=""
-                width={40}
-                height={40}
-              />
-            ) : (
-              <Image
-                className={styles['profile-img']}
-                src={defaultUserImage}
-                alt=""
-                width={40}
-                height={40}
-              />
-            )}
+          <Link
+            href={
+              activePost?.author_type === 'User'
+                ? `/profile/${activePost?._author?.profile_url}`
+                : `/page/${activePost?._author?.page_url}`
+            }
+          >
+            <div className={`${styles['header-user']}`}>
+              {activePost?._author?.profile_image ? (
+                <img
+                  className={styles['profile-img']}
+                  src={activePost._author.profile_image}
+                  alt=""
+                  width={40}
+                  height={40}
+                />
+              ) : (
+                <Image
+                  className={styles['profile-img']}
+                  src={defaultUserImage}
+                  alt=""
+                  width={40}
+                  height={40}
+                />
+              )}
 
-            <div className={styles['title']}>
-              <p>{activePost?._author?.full_name}</p>
-              <p>
-                <span>
-                  {dateFormat?.format(new Date(activePost?.createdAt))}
-                  {' | '}
-                </span>
-                <span>
-                  {activePost?._hobby?.display}
-                  {' | '}
-                </span>
-                <span>{activePost?.visibility}</span>
-              </p>
+              <div className={styles['title']}>
+                <p>{activePost?._author?.full_name}</p>
+                <p>
+                  <span>
+                    {dateFormat?.format(new Date(activePost?.createdAt))}
+                    {' | '}
+                  </span>
+                  <span>
+                    {activePost?._hobby?.display}
+                    {' | '}
+                  </span>
+                  <span>{activePost?.visibility}</span>
+                </p>
+              </div>
             </div>
-          </div>
+          </Link>
           <div className={`${styles['header-options']}`}>
             {/* <svg
               className={styles['more-actions-icon']}
@@ -229,9 +239,20 @@ export const PostModal: React.FC<Props> = ({
             style={displayMoreComments ? { display: 'none' } : {}}
           >
             <div
-              className={styles['post-content']+" ql-editor"}
+              className={styles['post-content'] + ' ql-editor'}
               dangerouslySetInnerHTML={{
-                __html: `${activePost?.content}`,
+                __html: activePost?.content
+                  .replace(/<img\b[^>]*>/g, '') // deleted all images from here then did the link formatting
+                  .replace(
+                    /(?:\b(?:https?:\/\/|ftp|file):\/\/|www\.)?([-A-Z0-9+&@#/%?=~_|!:,.;]*\.[a-zA-Z]{2,}(?:[-A-Z0-9+&@#/%?=~_|])*(?:\?[^\s]*)?)/gi,
+                    (match: any, url: string) => {
+                      const href =
+                        url.startsWith('http://') || url.startsWith('https://')
+                          ? url
+                          : `http://${url}`
+                      return `<a href="${href}" class="${pageUrlClass}" target="_blank">${url}</a>`
+                    },
+                  ),
               }}
             ></div>
             {activePost?.media?.length > 0 && (

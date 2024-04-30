@@ -31,7 +31,10 @@ import ListingPageLayout from '../../../layouts/ListingPageLayout'
 import { getListingPages, getListingTags } from '@/services/listing.service'
 import { getAllUserDetail } from '@/services/user.service'
 import { dateFormat } from '@/utils'
-import { updateHobbyOpenState, updateListingTypeModalMode } from '@/redux/slices/site'
+import {
+  updateHobbyOpenState,
+  updateListingTypeModalMode,
+} from '@/redux/slices/site'
 import WhatsappIcon from '@/assets/svg/whatsapp.svg'
 import { listingTypes } from '@/constants/constant'
 import Link from 'next/link'
@@ -71,7 +74,9 @@ const ListingPageMain: React.FC<Props> = ({
 }) => {
   const dispatch = useDispatch()
   const [tags, setTags] = useState([])
-  const { listingLayoutMode, hobbyStates } = useSelector((state: RootState) => state.site)
+  const { listingLayoutMode, hobbyStates } = useSelector(
+    (state: RootState) => state.site,
+  )
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
@@ -95,6 +100,7 @@ const ListingPageMain: React.FC<Props> = ({
   const [showRelatedListing2, setShowRelatedListing2] = useState(false)
   const [showSocialMedia, setShowSocialMedia] = useState(false)
   const [showAside, setShowAside] = useState(true)
+  const [isRelatedLoading, SetisRelatedLoading] = useState(true)
 
   function renderSocialLink(url: any, iconSrc: any, altText: any) {
     if (!url) return null
@@ -133,16 +139,15 @@ const ListingPageMain: React.FC<Props> = ({
     setPageAdmin(admin.res?.data.data.users[0])
   }
 
-  console.warn({showHobbies});
-  
+  console.warn({ showHobbies })
 
-  useEffect(()=>{
-    if(hobbyStates && typeof hobbyStates[data?._id] === 'boolean'){
+  useEffect(() => {
+    if (hobbyStates && typeof hobbyStates[data?._id] === 'boolean') {
       setShowHobbies(hobbyStates[data?._id])
-    }else if(data._id){
-      dispatch(updateHobbyOpenState({[data._id]:showHobbies}))
+    } else if (data._id) {
+      dispatch(updateHobbyOpenState({ [data._id]: showHobbies }))
     }
-  },[data._id, hobbyStates])
+  }, [data._id, hobbyStates])
 
   useEffect(() => {
     getListingTags()
@@ -164,6 +169,7 @@ const ListingPageMain: React.FC<Props> = ({
     FetchAdmin()
   }, [data._tags])
   console.log('admin', PageAdmin)
+
   useEffect(() => {
     setListingPagesLeft([])
     if (data.related_listings_left.relation) {
@@ -209,6 +215,7 @@ const ListingPageMain: React.FC<Props> = ({
           console.log(err)
         })
     })
+    SetisRelatedLoading(false)
   }, [data?.related_listings_left?.listings])
 
   useEffect(() => {
@@ -317,10 +324,10 @@ const ListingPageMain: React.FC<Props> = ({
               )
             }
             initialShowDropdown
-            setDisplayData={(arg0:boolean)=>{
-              dispatch(updateHobbyOpenState({[data._id]:!showHobbies}))
-              }}
-              expandData={showHobbies}
+            setDisplayData={(arg0: boolean) => {
+              dispatch(updateHobbyOpenState({ [data._id]: !showHobbies }))
+            }}
+            expandData={showHobbies}
           >
             <h4 className={styles['heading']}>Hobbies</h4>
             {/* yahi hai */}
@@ -382,7 +389,8 @@ const ListingPageMain: React.FC<Props> = ({
           }
           {/* Related Listing */}
           {listingLayoutMode !== 'edit' &&
-          (!listingPagesLeft || listingPagesLeft.length === 0) ? null : (
+          (!listingPagesLeft ||
+            data?.related_listings_left.listings?.length === 0) ? null : (
             <PageContentBox
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
@@ -934,7 +942,8 @@ const ListingPageMain: React.FC<Props> = ({
 
             {/* Related Listing */}
             {listingLayoutMode !== 'edit' &&
-            (!listingPagesRight || listingPagesRight.length === 0) ? null : (
+            (!listingPagesRight ||
+              data?.related_listings_right.listings?.length === 0) ? null : (
               <PageContentBox
                 showEditButton={listingLayoutMode === 'edit'}
                 onEditBtnClick={() =>

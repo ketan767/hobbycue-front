@@ -41,6 +41,7 @@ type reportData = {
   reported_user_id: string
   reported_user_name: string
   reported_user_email: string
+  for_url: string
 }
 
 const UserReport: React.FC<Props> = ({
@@ -64,6 +65,7 @@ const UserReport: React.FC<Props> = ({
     reported_user_id: '',
     reported_user_name: '',
     reported_user_email: '',
+    for_url: '',
   })
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null)
   const [nextDisabled, setNextDisabled] = useState(false)
@@ -71,7 +73,7 @@ const UserReport: React.FC<Props> = ({
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [isError, setIsError] = useState(false)
-
+  const currentUrl = `${process.env.NEXT_PUBLIC_VERCEL_URL}/profile/${currprofile.profile_url}`
   const [inputErrs, setInputErrs] = useState<{ error: string | null }>({
     error: null,
   })
@@ -84,6 +86,7 @@ const UserReport: React.FC<Props> = ({
     reported_user_id: currprofile?._id,
     reported_user_name: currprofile?.full_name,
     reported_user_email: currprofile?.public_email,
+    for_url: currentUrl,
   })
   const [isChanged, setIsChanged] = useState(false)
   const [snackbar, setSnackbar] = useState({
@@ -101,6 +104,7 @@ const UserReport: React.FC<Props> = ({
       reported_user_id: currprofile?._id,
       reported_user_name: currprofile?.full_name,
       reported_user_email: currprofile?.public_email,
+      for_url: currentUrl,
     })
   }, [user])
 
@@ -166,6 +170,7 @@ const UserReport: React.FC<Props> = ({
       reported_user_id: currprofile?._id,
       reported_user_name: currprofile?.full_name,
       reported_user_email: currprofile?.public_email,
+      for_url: currentUrl,
     })
   }, [user])
 

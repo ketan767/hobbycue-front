@@ -692,10 +692,17 @@ const CommunityLayout: React.FC<Props> = ({
     }
     setErrorMessage('')
     const name = activeProfile?.data.full_name
+    const _id = activeProfile?.data?._id
+    const hobby_id = filters?.hobby
+    const location = filters?.location || ''
     setInviteBtnLoader(true)
+
     const { err, res } = await InviteToCommunity({
       to,
       name,
+      _id,
+      hobby_id,
+      location,
     })
     if (res.data?.success) {
       setInviteBtnLoader(false)
