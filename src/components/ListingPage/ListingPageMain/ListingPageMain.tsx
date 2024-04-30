@@ -32,8 +32,15 @@ import { getListingPages, getListingTags } from '@/services/listing.service'
 import { getAllUserDetail } from '@/services/user.service'
 import { dateFormat } from '@/utils'
 import {
+  updateContactOpenStates,
   updateHobbyOpenState,
   updateListingTypeModalMode,
+  updateLocationOpenStates,
+  updateSocialMediaOpenStates,
+  updateRelatedListingsOpenStates,
+  updateTagsOpenStates,
+  updateWorkingHoursOpenStates,
+  updateRelatedListingsOpenStates2
 } from '@/redux/slices/site'
 import WhatsappIcon from '@/assets/svg/whatsapp.svg'
 import { listingTypes } from '@/constants/constant'
@@ -74,7 +81,7 @@ const ListingPageMain: React.FC<Props> = ({
 }) => {
   const dispatch = useDispatch()
   const [tags, setTags] = useState([])
-  const { listingLayoutMode, hobbyStates } = useSelector(
+  const { listingLayoutMode, hobbyStates, contactStates, socialMediaStates, locationStates, relatedListingsStates, relatedListingsStates2, tagsStates, workingHoursStates } = useSelector(
     (state: RootState) => state.site,
   )
   const { isLoggedIn, isAuthenticated, user } = useSelector(
@@ -148,6 +155,62 @@ const ListingPageMain: React.FC<Props> = ({
       dispatch(updateHobbyOpenState({ [data._id]: showHobbies }))
     }
   }, [data._id, hobbyStates])
+
+  useEffect(() => {
+    if (contactStates && typeof contactStates[data?._id] === 'boolean') {
+      setShowContact(contactStates[data?._id])
+    } else if (data._id) {
+      dispatch(updateContactOpenStates({ [data._id]: showContact }))
+    }
+  }, [data._id, contactStates])
+
+  useEffect(() => {
+    if (locationStates && typeof locationStates[data?._id] === 'boolean') {
+      setShowLocation(locationStates[data?._id])
+    } else if (data._id) {
+      dispatch(updateLocationOpenStates({ [data._id]: showLocation }))
+    }
+  }, [data._id, locationStates])
+
+  useEffect(() => {
+    if (socialMediaStates && typeof socialMediaStates[data?._id] === 'boolean') {
+      setShowSocialMedia(socialMediaStates[data?._id])
+    } else if (data._id) {
+      dispatch(updateSocialMediaOpenStates({ [data._id]: showSocialMedia }))
+    }
+  }, [data._id, socialMediaStates])
+
+  useEffect(() => {
+    if (relatedListingsStates && typeof relatedListingsStates[data?._id] === 'boolean') {
+      setShowRelatedListing1(relatedListingsStates[data?._id])
+    } else if (data._id) {
+      dispatch(updateRelatedListingsOpenStates({ [data._id]: showRelatedListing1 }))
+    }
+  }, [data._id, relatedListingsStates])
+
+  useEffect(() => {
+    if (relatedListingsStates2 && typeof relatedListingsStates2[data?._id] === 'boolean') {
+      setShowRelatedListing2(relatedListingsStates2[data?._id])
+    } else if (data._id) {
+      dispatch(updateRelatedListingsOpenStates2({ [data._id]: showRelatedListing2 }))
+    }
+  }, [data._id, relatedListingsStates2])
+
+  useEffect(() => {
+    if (tagsStates && typeof tagsStates[data?._id] === 'boolean') {
+      setShowTags(tagsStates[data?._id])
+    } else if (data._id) {
+      dispatch(updateTagsOpenStates({ [data._id]: showTags }))
+    }
+  }, [data._id, tagsStates])
+
+  useEffect(() => {
+    if (workingHoursStates && typeof workingHoursStates[data?._id] === 'boolean') {
+      setShowWorkingHours(workingHoursStates[data?._id])
+    } else if (data._id) {
+      dispatch(updateWorkingHoursOpenStates({ [data._id]: showWorkingHours }))
+    }
+  }, [data._id, workingHoursStates])
 
   useEffect(() => {
     getListingTags()
@@ -368,7 +431,10 @@ const ListingPageMain: React.FC<Props> = ({
                   openModal({ type: 'listing-tags-edit', closable: true }),
                 )
               }
-              setDisplayData={setShowTags}
+              setDisplayData={(arg0: boolean) => {
+                dispatch(updateTagsOpenStates({ [data._id]: !showTags }))
+              }}
+              expandData={showTags}
             >
               <h4 className={styles['heading']}>Tags</h4>
               <ul
@@ -401,7 +467,10 @@ const ListingPageMain: React.FC<Props> = ({
                   }),
                 )
               }
-              setDisplayData={setShowRelatedListing1}
+              setDisplayData={(arg0: boolean) => {
+                dispatch(updateRelatedListingsOpenStates({ [data._id]: !showRelatedListing1 }))
+              }}
+              expandData={showRelatedListing1}
             >
               <h4 className={styles['heading']}>
                 {' '}
@@ -411,7 +480,7 @@ const ListingPageMain: React.FC<Props> = ({
               </h4>
               <div
                 className={`${styles['display-desktop']}${
-                  showRelatedListing1 ? ' ' + styles['display-mobile'] : ''
+                  relatedListingsStates?.[data?._id] ? ' ' + styles['display-mobile'] : ''
                 }`}
               >
                 {!listingPagesLeft || listingPagesLeft.length === 0 ? null : (
@@ -464,13 +533,16 @@ const ListingPageMain: React.FC<Props> = ({
                   openModal({ type: 'listing-contact-edit', closable: true }),
                 )
               }
-              setDisplayData={setShowContact}
+              setDisplayData={(arg0: boolean) => {
+                dispatch(updateContactOpenStates({ [data._id]: !showContact }))
+              }}
+              expandData={showContact}
             >
               <h4 className={styles['heading']}>Contact Information</h4>
               <ul
                 className={`${styles['contact-wrapper']} ${
                   styles['display-desktop']
-                }${showContact ? ' ' + styles['display-mobile'] : ''}`}
+                }${contactStates?.[data?._id] ? ' ' + styles['display-mobile'] : ''}`}
               >
                 {/* Page Admin */}
                 {(PageAdmin as any)?.full_name && isLoggedIn && (
@@ -805,14 +877,17 @@ const ListingPageMain: React.FC<Props> = ({
                   openModal({ type: 'listing-address-edit', closable: true }),
                 )
               }
-              setDisplayData={setShowLocation}
+              setDisplayData={(arg0: boolean) => {
+                dispatch(updateLocationOpenStates({ [data._id]: !showLocation }))
+              }}
+              expandData={showLocation}
             >
               <div className={`${styles['location-heading']} `}>
                 <h4>Location</h4>
               </div>
               <div
                 className={`${styles['display-desktop']}${
-                  showLocation ? ' ' + styles['display-mobile'] : ''
+                  locationStates?.[data?._id] ? ' ' + styles['display-mobile'] : ''
                 }`}
               >
                 {listingLayoutMode === 'view' && (
@@ -894,13 +969,16 @@ const ListingPageMain: React.FC<Props> = ({
                     }),
                   )
                 }
-                setDisplayData={setShowWorkingHours}
+                setDisplayData={(arg0: boolean) => {
+                  dispatch(updateWorkingHoursOpenStates({ [data._id]: !showWorkingHours }))
+                }}
+                expandData={showWorkingHours}
               >
                 <h4 className={styles['heading']}>Working Hours</h4>
                 <div
                   className={`${styles['working-hours-wrapper']} ${
                     styles['display-desktop']
-                  }${showWorkingHours ? ' ' + styles['display-mobile'] : ''}`}
+                  }${workingHoursStates?.[data?._id] ? ' ' + styles['display-mobile'] : ''}`}
                 >
                   {/* Working Hours  */}
                   {data?.work_hours && (
@@ -941,7 +1019,7 @@ const ListingPageMain: React.FC<Props> = ({
             )}
 
             {/* Related Listing */}
-            {listingLayoutMode !== 'edit' &&
+            {/* {listingLayoutMode !== 'edit' &&
             (!listingPagesRight ||
               data?.related_listings_right.listings?.length === 0) ? null : (
               <PageContentBox
@@ -1007,7 +1085,7 @@ const ListingPageMain: React.FC<Props> = ({
                   )}
                 </div>
               </PageContentBox>
-            )}
+            )} */}
 
             {data?.type === listingTypes.PROGRAM ||
             data?.type === listingTypes.PRODUCT ||
@@ -1023,14 +1101,17 @@ const ListingPageMain: React.FC<Props> = ({
                     }),
                   )
                 }
-                setDisplayData={setShowSocialMedia}
+                setDisplayData={(arg0: boolean) => {
+                  dispatch(updateSocialMediaOpenStates({ [data._id]: !showSocialMedia }))
+                }}
+                expandData={showSocialMedia}
               >
                 <h4 className={styles['heading']}>Social Media</h4>
 
                 <ul
                   className={`${styles['social-contact-wrapper']} ${
                     styles['display-desktop']
-                  }${showSocialMedia ? ' ' + styles['display-mobile'] : ''}`}
+                  }${socialMediaStates?.[data?._id] ? ' ' + styles['display-mobile'] : ''}`}
                 >
                   {data?.social_media_urls && (
                     <>
@@ -1715,7 +1796,10 @@ const ListingPageMain: React.FC<Props> = ({
                   }),
                 )
               }
-              setDisplayData={setShowRelatedListing2}
+              setDisplayData={(arg0: boolean) => {
+                dispatch(updateRelatedListingsOpenStates2({ [data._id]: !showRelatedListing2 }))
+              }}
+              expandData={showRelatedListing2}
             >
               <h4 className={styles['heading']}>
                 {relationRight && relationRight.trim() !== ''
@@ -1725,7 +1809,7 @@ const ListingPageMain: React.FC<Props> = ({
 
               <div
                 className={`${styles['display-desktop']}${
-                  showRelatedListing2 ? ' ' + styles['display-mobile'] : ''
+                  relatedListingsStates2?.[data?._id] ? ' ' + styles['display-mobile'] : ''
                 }`}
               >
                 {!listingPagesRight || listingPagesRight.length === 0 ? null : (

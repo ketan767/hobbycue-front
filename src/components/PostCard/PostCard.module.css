@@ -280,6 +280,7 @@
   height: 80px;
   width: 80px;
   border-radius: 5px;
+  object-fit: cover;
 }
 
 .posts-meta-content {
@@ -293,7 +294,7 @@
 .posts-meta-content .contentHead {
   color: var(--Black, #000);
   font-family: Poppins;
-  font-size: 20px;
+  font-size: 16;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
@@ -309,7 +310,7 @@
 .posts-meta-content .contentUrl {
   color: var(--Grey-Darkest, #08090A);
   font-family: Poppins;
-  font-size: 16px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: 20px;
@@ -539,12 +540,13 @@ background: rgba(128, 100, 162, 0.25);
 .optionsContainer {
   position: absolute;
   top: calc(100% - 2px);
-  left: 0;
+  right: 0;
   width: 30px;
   border: 1px solid #cfcfcf;
   border-radius: 8px;
   width: 80px;
   background-color: white;
+  animation: fadeDownWithScale 0.3s ease forwards;
 }
 .optionsContainer li {
   list-style: none;

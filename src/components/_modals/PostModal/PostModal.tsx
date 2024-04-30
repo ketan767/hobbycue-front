@@ -38,6 +38,7 @@ import 'react-quill/dist/quill.snow.css'
 import 'quill-emoji/dist/quill-emoji.css'
 import Link from 'next/link'
 import Slider from '@/components/Slider/Slider'
+import LinkPreviewLoader from '@/components/LinkPreviewLoader'
 
 type Props = {
   confirmationModal?: boolean
@@ -77,6 +78,7 @@ export const PostModal: React.FC<Props> = ({
     display: false,
     message: '',
   })
+  const [linkLoading,setLinkLoading] = useState(false);
   const pageUrlClass = styles.postUrl
   const fetchComments = async () => {
     if (activePost?._id) {
@@ -127,12 +129,15 @@ export const PostModal: React.FC<Props> = ({
         setUrl(url[0])
       }
       if (url) {
+        setLinkLoading(true)
         getMetadata(url[0])
           .then((res: any) => {
             setMetaData(res?.res?.data?.data.data)
+            setLinkLoading(false)
           })
           .catch((err) => {
             console.log(err)
+            setLinkLoading(false)
           })
       }
     }
@@ -298,6 +303,7 @@ export const PostModal: React.FC<Props> = ({
             )}
                       {activePost?.has_link && (
             <div className={styles['posts-meta-parent']}>
+              {linkLoading?<LinkPreviewLoader/>:<>
             <div className={styles['posts-meta-data-container']}>
               <a href={url} target="_blank" className={styles['posts-meta-img']}>
                 <img
@@ -325,7 +331,7 @@ export const PostModal: React.FC<Props> = ({
             {isMobile&&<a href={url} target="_blank" className={styles.contentUrl}>
                   {' '}
                   {metaData?.description}{' '}
-                </a>}
+                </a>}</>}
             </div>
           )}
             <div className={styles['post-functions']}>
