@@ -633,9 +633,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
             }
             return
           } else {
-            if (!user.is_onboarded) {
-              window.location.href = `/profile/${response?.data?.data?.user?.profile_url}`
-              dispatch(showProfileError(true))
+            if (user.is_onboarded) {
+              window.location.href = `/community`
             }
             window.location.reload()
 

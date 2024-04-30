@@ -68,7 +68,7 @@ const SaveModal: React.FC<Props> = ({
   const wrapperRef = useRef<HTMLDivElement>(null)
 
   const IsOnboardingCompete = async () => {
-    const payload: InviteToCommunityPayload = {
+    const payload: sendWelcomeMailPayload = {
       to: user?.public_email,
       name: user.full_name,
     }
