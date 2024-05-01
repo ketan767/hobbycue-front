@@ -23,10 +23,7 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType }) => {
   useEffect(() => {
     function handleClickOutside(event: any) {
       console.log({ targ: event.target })
-      if (ref.current && ref.current.contains(event.target) !== true) {
-        handleClose()
-        return
-      } else if (
+       if (
         event.target.nodeName == supportRef.current?.nodeName &&
         event.target.textContent === supportRef.current?.textContent
       ) {
@@ -53,11 +50,16 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType }) => {
           dispatch(openModal({ type: 'auth', closable: true }))
           handleClose()
         }
+      } else if (ref.current && ref.current.contains(event.target) !== true) {
+        handleClose()
+        return
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('touchstart', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('touchstart', handleClickOutside);
     }
   }, [ref])
 
