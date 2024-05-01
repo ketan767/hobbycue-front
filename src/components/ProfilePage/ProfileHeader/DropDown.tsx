@@ -31,13 +31,8 @@ const Dropdown: React.FC<Props> = ({ handleClose, userType }) => {
         event.target.textContent === supportRef.current?.textContent
       ) {
         if (isLoggedIn) {
-          if (user.is_onboarded) {
-            dispatch(openModal({ type: 'SupportUserModal', closable: true }))
-            handleClose()
-          } else {
-            router.push(`/profile/${user.profile_url}`)
-            dispatch(showProfileError(true))
-          }
+          dispatch(openModal({ type: 'SupportUserModal', closable: true }))
+          handleClose()
         } else {
           dispatch(openModal({ type: 'auth', closable: true }))
           handleClose()
