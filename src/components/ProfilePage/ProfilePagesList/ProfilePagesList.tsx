@@ -8,6 +8,7 @@ import { useRouter } from 'next/router'
 import Image from 'next/image'
 import { listingTypes } from '@/constants/constant'
 import { listingData } from '@/components/_modals/EditListing/ListingRelated/data'
+import { updatePagesOpenState } from '@/redux/slices/site'
 
 type Props = {
   data: ProfilePageData['pageData']
@@ -15,9 +16,10 @@ type Props = {
 }
 
 const ProfilePagesList = ({ data, expandData }: Props) => {
-  const { profileLayoutMode } = useSelector((state: RootState) => state.site)
+  const { profileLayoutMode,pagesStates } = useSelector((state: RootState) => state.site)
   const { user } = useSelector((state: RootState) => state.user)
   const router = useRouter()
+  const dispatch = useDispatch()
   const [displayData, setDisplayData] = useState(false)
   function getClassName(type: any) {
     if (type === 'user') {
@@ -35,6 +37,14 @@ const ProfilePagesList = ({ data, expandData }: Props) => {
     }
   }
 
+  useEffect(()=>{
+    if(pagesStates && typeof pagesStates[data?._id] === 'boolean'){
+      setDisplayData(pagesStates[data?._id])
+    }else if(data._id){
+      dispatch(updatePagesOpenState({[data._id]:displayData}))
+    }
+  },[data._id, pagesStates])
+
   useEffect(() => {
     if (expandData !== undefined) setDisplayData(expandData)
   }, [expandData])
@@ -43,11 +53,16 @@ const ProfilePagesList = ({ data, expandData }: Props) => {
   console.log('user_id', user._id)
 
   return (
-    <PageContentBox setDisplayData={setDisplayData} expandData={expandData}>
+    <PageContentBox 
+      setDisplayData={(arg0:boolean)=>{setDisplayData(prev=>{
+      dispatch(updatePagesOpenState({[data._id]:!prev}))
+      return !prev
+    })}}
+    expandData={displayData}>
       <h4 className={styles['heading']}>Pages</h4>
       <ul
         className={`${styles['pages-list']} ${
-          displayData && styles['display-mobile-flex']
+          pagesStates?.[data?._id] && styles['display-mobile-flex']
         } `}
       >
         {data.listingsData?.map((item: any) => {

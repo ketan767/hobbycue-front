@@ -4,6 +4,7 @@ import PageContentBox from '@/layouts/PageContentBox'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { openModal } from '@/redux/slices/modal'
+import { updateLocationOpenStates } from '@/redux/slices/site'
 
 type Props = {
   data: ProfilePageData['pageData']
@@ -12,7 +13,7 @@ type Props = {
 }
 
 const ProfileAddressSide = ({ data, expandData, addressError }: Props) => {
-  const { profileLayoutMode } = useSelector((state: RootState) => state.site)
+  const { profileLayoutMode, locationStates } = useSelector((state: RootState) => state.site)
   const dispatch = useDispatch()
   const [displayData, setDisplayData] = useState(false)
   let addressText = ''
@@ -31,6 +32,14 @@ const ProfileAddressSide = ({ data, expandData, addressError }: Props) => {
   if (data?.primary_address?.country) {
     addressText += `${data?.primary_address?.country}, `
   }
+  
+  useEffect(()=>{
+    if(locationStates && typeof locationStates[data?._id] === 'boolean'){
+      setDisplayData(locationStates[data?._id])
+    }else if(data._id){
+      dispatch(updateLocationOpenStates({[data._id]:displayData}))
+    }
+  },[data._id, locationStates])
 
   useEffect(() => {
     if (expandData !== undefined) setDisplayData(expandData)
@@ -43,14 +52,17 @@ const ProfileAddressSide = ({ data, expandData, addressError }: Props) => {
         onEditBtnClick={() =>
           dispatch(openModal({ type: 'profile-address-edit', closable: true }))
         }
-        setDisplayData={setDisplayData}
-        expandData={expandData}
+        setDisplayData={(arg0:boolean)=>{setDisplayData(prev=>{
+          dispatch(updateLocationOpenStates({[data._id]:!prev}))
+          return !prev
+        })}}
+        expandData={displayData}
         className={addressError === true ? styles['error'] : ''}
       >
         <h4 className={styles['heading']}>Location</h4>
         <ul
           className={`${styles['location-wrapper']} ${
-            displayData && styles['display-mobile-flex']
+            locationStates?.[data?._id] && styles['display-mobile-flex']
           }`}
         >
           <li>
