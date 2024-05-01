@@ -7,6 +7,7 @@ import { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
 import {
   updateHobbyOpenState,
+  updateMembersOpenStates,
   updateProfileLayoutMode,
 } from '@/redux/slices/site'
 import ProfileHeaderSmall from '@/components/ProfilePage/ProfileHeader/ProfileHeaderSmall'
@@ -40,7 +41,7 @@ const HobbyPageLayout: React.FC<Props> = ({
   setExpandAll,
 }) => {
   const dispatch = useDispatch()
-  const { hobbyStates } = useSelector((state: RootState) => state.site)
+  const { hobbyStates, membersStates } = useSelector((state: RootState) => state.site)
   const [showSmallHeader, setShowSmallHeader] = useState(false)
   const [members, setMembers] = useState([])
   const hideLastColumnPages = ['pages', 'blogs', 'links', 'store']
@@ -107,6 +108,14 @@ const HobbyPageLayout: React.FC<Props> = ({
       dispatch(updateHobbyOpenState({ [data._id]: showHobbiesClassification }))
     }
   }, [data._id, hobbyStates])
+
+  useEffect(() => {
+    if (membersStates && typeof membersStates[data?._id] === 'boolean') {
+      setShowMembers(membersStates[data?._id])
+    } else if (data._id) {
+      dispatch(updateMembersOpenStates({ [data._id]: showMembers }))
+    }
+  }, [data._id, membersStates])
 
   const toggleMembers = () => {
     setSeeAll(!seeAll)
@@ -200,7 +209,14 @@ const HobbyPageLayout: React.FC<Props> = ({
                 <Image
                   src={ChevronDown}
                   alt=""
-                  onClick={() => setShowMembers((prevValue) => !prevValue)}
+                  onClick={
+                    () => {
+                      setShowMembers((prev) => {
+                        dispatch(updateMembersOpenStates({ [data._id]: !prev }))
+                        return !prev
+                      })
+                    }
+                  }
                   className={`${styles['display-mobile']} ${
                     showMembers ? styles['rotate-180'] : ''
                   }`}

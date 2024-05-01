@@ -24,6 +24,7 @@ import OthersIcon from '@/assets/svg/social-media/other.svg'
 import MediumIcon from '@/assets/svg/social-media/MediumWeb.svg'
 import TelegramIcon from '@/assets/svg/social-media/Telegram.svg'
 import Image from 'next/image'
+import { updateSocialMediaOpenStates } from '@/redux/slices/site'
 
 type Props = {
   data: ProfilePageData['pageData']
@@ -31,7 +32,7 @@ type Props = {
 }
 
 const ProfileSocialMediaSide = ({ data, expandData }: Props) => {
-  const { profileLayoutMode } = useSelector((state: RootState) => state.site)
+  const { profileLayoutMode, socialMediaStates } = useSelector((state: RootState) => state.site)
   const { isLoggedIn } = useSelector((state: RootState) => state.user)
   const [displayData, setDisplayData] = useState(false)
   const dispatch = useDispatch()
@@ -66,6 +67,14 @@ const ProfileSocialMediaSide = ({ data, expandData }: Props) => {
     return domain.charAt(0).toUpperCase() + domain.slice(1)
   }
 
+  useEffect(()=>{
+    if(socialMediaStates && typeof socialMediaStates[data?._id] === 'boolean'){
+      setDisplayData(socialMediaStates[data?._id])
+    }else if(data._id){
+      dispatch(updateSocialMediaOpenStates({[data._id]:displayData}))
+    }
+  },[data._id, socialMediaStates])
+
   useEffect(() => {
     if (expandData !== undefined) setDisplayData(expandData)
   }, [expandData])
@@ -77,13 +86,16 @@ const ProfileSocialMediaSide = ({ data, expandData }: Props) => {
         onEditBtnClick={() =>
           dispatch(openModal({ type: 'social-media-edit', closable: true }))
         }
-        setDisplayData={setDisplayData}
-        expandData={expandData}
+        setDisplayData={(arg0:boolean)=>{setDisplayData(prev=>{
+          dispatch(updateSocialMediaOpenStates({[data._id]:!prev}))
+          return !prev
+        })}}
+        expandData={displayData}
       >
         <h4 className={styles['heading']}>Social Media</h4>
         <ul
           className={`${styles['contact-wrapper']} ${
-            displayData && styles['display-mobile-flex']
+            socialMediaStates?.[data?._id] && styles['display-mobile-flex']
           }`}
         >
           {data?.social_media_urls && (

@@ -103,7 +103,7 @@ const ListingHome: React.FC<Props> = (props) => {
         <meta
           property="og:description"
           content={`${
-            props?.data?.pageData?.tagline ?? props?.data?.pageData?.tagline
+            props?.data?.pageData?.tagline ?? ''
           }`}
         />
         <meta

@@ -8,6 +8,7 @@ interface FilledButtonProps {
   disabled?: boolean
   className?: string
   loading?: boolean
+  inviteBtnRef?:React.RefObject<HTMLButtonElement>
 }
 
 const FilledButton: React.FC<FilledButtonProps> = ({
@@ -16,10 +17,12 @@ const FilledButton: React.FC<FilledButtonProps> = ({
   type = 'button',
   disabled = false,
   className = '',
-  loading = false
+  loading = false,
+  inviteBtnRef
 }) => {
   return (
     <button
+      ref={inviteBtnRef}
       type={type}
       onClick={onClick}
       disabled={disabled}

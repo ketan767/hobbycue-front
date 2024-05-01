@@ -28,6 +28,7 @@ import { useRouter } from 'next/router'
 import { increaseRefreshNum, setFilters } from '@/redux/slices/post'
 import MobileLocationDropdown from './MobileLocationDropdown'
 import { updateActiveProfile } from '@/redux/slices/user'
+import defaultImg from '@/assets/svg/default-images/default-user-icon.svg'
 
 const CustomEditor = dynamic(() => import('@/components/CustomEditor'), {
   ssr: false,
@@ -437,7 +438,8 @@ export const CreatePost: React.FC<Props> = ({
       content: DOMPurify.sanitize(data.content),
       visibility: data.visibility,
       media:
-        hasLink && showMetaData ? [...data.media, metadataImg] : data.media,
+        // hasLink && showMetaData ? [...data.media, metadataImg] :
+         data.media,
       has_link: hasLink,
       video_url: data.video_url ? data.video_url : null,
     }
@@ -627,34 +629,39 @@ export const CreatePost: React.FC<Props> = ({
                     </defs>
                   </svg>
 
-                  {metaData?.image && (
+                  {/* {metaData?.image && (
                     <img
                       className={styles['metadata-image']}
                       src={metaData?.image}
                       alt=""
                     />
-                  )}
+                  )} */}
                   <div className={styles['metadata-content']}>
                     {metaData?.icon && (
                       <img
                         className={styles['metadata']}
-                        src={metaData?.icon}
+                        src={(typeof metaData?.image === 'string' && metaData.image) ||
+                        (typeof metaData?.icon === 'string' && metaData.icon)||defaultImg}
                         alt=""
                       />
                     )}
-                    <div>
+                    <div className={styles['metadata-info-container']}>
                       {metaData?.title && (
                         <p className={styles['metadata-title']}>
                           {metaData?.title}
                         </p>
                       )}
-                      {metaData?.url && (
+                      {!isMobile && metaData?.url && (
                         <p className={styles['metadata-url']}>
-                          {metaData?.url}
+                          {metaData?.description}
                         </p>
                       )}
                     </div>
                   </div>
+                  {isMobile&&<p className={styles['metadata-url']}>
+                  {' '}
+                  {metaData?.description}{' '}
+                </p>}
                 </div>
               )}
             </section>

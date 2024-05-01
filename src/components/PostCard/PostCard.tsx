@@ -24,6 +24,8 @@ import defaultImg from '@/assets/svg/default-images/default-user-icon.svg'
 
 import 'react-quill/dist/quill.snow.css'
 import 'quill-emoji/dist/quill-emoji.css'
+import { useMediaQuery } from '@mui/material'
+import LinkPreviewLoader from '../LinkPreviewLoader'
 type Props = {
   postData: any
   fromProfile?: boolean
@@ -73,6 +75,7 @@ const PostCard: React.FC<Props> = (props) => {
     icon: '',
     url: '',
   })
+  const [linkLoading,setLinkLoading] = useState(false);
 
   const domain = metaData?.url
     ? new URL(metaData.url).hostname.replace('www.', '')
@@ -126,12 +129,15 @@ const PostCard: React.FC<Props> = (props) => {
         setUrl(url[0])
       }
       if (url) {
+        setLinkLoading(true)
         getMetadata(url[0])
           .then((res: any) => {
             setMetaData(res?.res?.data?.data.data)
+            setLinkLoading(false)
           })
           .catch((err) => {
             console.log(err)
+            setLinkLoading(false)
           })
       }
     }
@@ -169,6 +175,8 @@ const PostCard: React.FC<Props> = (props) => {
       fetchComments()
     }
   }, [])
+
+  const isMobile = useMediaQuery("(max-width:1100px)")
 
   return (
     <>
@@ -282,7 +290,8 @@ const PostCard: React.FC<Props> = (props) => {
                 viewBox="0 0 24 24"
                 fill="none"
                 onClick={() => {
-                  setOptionsActive(true)
+                  if(fromProfile && postedByMe){
+                  setOptionsActive(true)}else
                   setOpenAction(true)
                 }}
               >
@@ -309,7 +318,14 @@ const PostCard: React.FC<Props> = (props) => {
                   >
                     Pin post
                   </li>
-                  <li>Delete</li>
+                  <li onClick={()=>{
+                    showFeatureUnderDevelopment();
+                    setOptionsActive(false)
+                  }} >Edit</li>
+                  <li onClick={()=>{
+                    showFeatureUnderDevelopment();
+                    setOptionsActive(false)
+                  }} >Delete</li>
                 </ul>
               )}
             </div>
@@ -347,9 +363,43 @@ const PostCard: React.FC<Props> = (props) => {
               setActiveIdx={setActiveIdx}
               activeIdx={activeIdx}
               images={postData.media}
+              sameImgLinkInMeta={metaData.image}
             ></Slider>
           ) : (
             <></>
+          )}
+          {has_link && props.currentSection !== 'links' && (
+            <div className={styles['posts-meta-parent']}>
+              {linkLoading?<LinkPreviewLoader/>:<><div className={styles['posts-meta-data-container']}>
+              <a href={url} target="_blank" className={styles['posts-meta-img']}>
+                <img
+                  src={
+                    (typeof metaData?.image === 'string' && metaData.image) ||
+                    (typeof metaData?.icon === 'string' && metaData.icon) ||
+                    defaultImg
+                  }
+                  alt="link-image"
+                  width={80}
+                  height={80}
+                />
+              </a>
+              <div className={styles['posts-meta-content']}>
+                <a href={url} target="_blank" className={styles.contentHead}>
+                  {' '}
+                  {metaData?.title}{' '}
+                </a>
+                {!isMobile&&<a href={url} target="_blank" className={styles.contentUrl}>
+                  {' '}
+                  {metaData?.description}{' '}
+                </a>}
+              </div>
+            </div>
+            {isMobile&&<a href={url} target="_blank" className={styles.contentUrl}>
+                  {' '}
+                  {metaData?.description}{' '}
+                </a>}</>}
+            
+            </div>
           )}
           {has_link && props.currentSection === 'links' && (
             <div className={styles.postMetadata}>
