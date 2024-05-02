@@ -114,12 +114,12 @@ const SupportUserModal: React.FC<Props> = ({
     setData((prev) => ({ ...prev, description: value }))
     setInputErrs({ error: null })
 
-    const hasChanged = value !== initialData.description
-    setIsChanged(hasChanged)
+    // const hasChanged = value !== initialData.description
+    // setIsChanged(hasChanged)
 
-    if (onStatusChange) {
-      onStatusChange(hasChanged)
-    }
+    // if (onStatusChange) {
+    //   onStatusChange(hasChanged)
+    // }
   }
 
   const Backsave = async () => {

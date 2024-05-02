@@ -51,8 +51,8 @@ export type ModalType =
   | 'SupportUserModal'
   | 'UserReportModal'
   | 'ListingReportModal'
-  | 'ListingContactToOwner'
-  | 'UserContactToOwner'
+  | 'Listing-Contact-To-Owner'
+  | 'User-Contact-To-Owner'
   | 'add-genre'
   | 'save-Modal'
 

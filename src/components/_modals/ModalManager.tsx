@@ -477,10 +477,10 @@ const ModalManager: React.FC = () => {
               {activeModal === 'ListingReportModal' && (
                 <ListingReport {...props} />
               )}
-              {activeModal === 'ListingContactToOwner' && (
+              {activeModal === 'Listing-Contact-To-Owner' && (
                 <ListingContactToOwner {...props} />
               )}
-              {activeModal === 'UserContactToOwner' && (
+              {activeModal === 'User-Contact-To-Owner' && (
                 <UserContactToOwner {...props} />
               )}
               {activeModal === 'save-Modal' && <SaveModal {...props} />}

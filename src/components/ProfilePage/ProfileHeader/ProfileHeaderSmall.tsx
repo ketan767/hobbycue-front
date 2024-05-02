@@ -68,7 +68,7 @@ const ProfileHeaderSmall: React.FC<Props> = ({
   const handleContact = () => {
     if (isLoggedIn) {
       if (user.is_onboarded) {
-        dispatch(openModal({ type: 'UserContactToOwner', closable: true }))
+        dispatch(openModal({ type: 'User-Contact-To-Owner', closable: true }))
       } else {
         router.push(`/profile/${user.profile_url}`)
         dispatch(showProfileError(true))
