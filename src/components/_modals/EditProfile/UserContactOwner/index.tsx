@@ -107,12 +107,12 @@ const UserContactToOwner: React.FC<Props> = ({
     setData((prev) => ({ ...prev, sub: value }))
     setInputErrs({ error: null })
 
-    const hasChanged = value !== initialData.sub
-    setIsChanged(hasChanged)
+    // const hasChanged = value !== initialData.sub
+    // setIsChanged(hasChanged)
 
-    if (onStatusChange) {
-      onStatusChange(hasChanged)
-    }
+    // if (onStatusChange) {
+    //   onStatusChange(hasChanged)
+    // }
   }
 
   const handleTextAreaChange = (
@@ -122,12 +122,12 @@ const UserContactToOwner: React.FC<Props> = ({
     setData((prev) => ({ ...prev, message: value }))
     setInputErrs({ error: null })
 
-    const hasChanged = value !== initialData.message
-    setIsChanged(hasChanged)
+    // const hasChanged = value !== initialData.message
+    // setIsChanged(hasChanged)
 
-    if (onStatusChange) {
-      onStatusChange(hasChanged)
-    }
+    // if (onStatusChange) {
+    //   onStatusChange(hasChanged)
+    // }
   }
 
   const handleTextAreaFocus = () => {

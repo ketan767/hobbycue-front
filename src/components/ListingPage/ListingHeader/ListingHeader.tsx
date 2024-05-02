@@ -198,7 +198,9 @@ const ListingHeader: React.FC<Props> = ({
   const handleContact = () => {
     if (isLoggedIn) {
       if (user.is_onboarded) {
-        dispatch(openModal({ type: 'ListingContactToOwner', closable: true }))
+        dispatch(
+          openModal({ type: 'Listing-Contact-To-Owner', closable: true }),
+        )
       } else {
         router.push(`/profile/${user.profile_url}`)
         dispatch(showProfileError(true))

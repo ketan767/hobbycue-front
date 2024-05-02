@@ -149,7 +149,6 @@ const Home: React.FC<PropTypes> = function () {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       {/** Landing Container **/}
       {/* <DownloadInMobile/> */}
       <section className={styles['landing-contaniner']}>
@@ -192,7 +191,6 @@ const Home: React.FC<PropTypes> = function () {
           </main>
         </div>
       </section>
-
       {/** Cards Container **/}
       <section className={`${styles['cards-container']}`}>
         {/* `4Ps Cards` Section */}
@@ -364,7 +362,6 @@ const Home: React.FC<PropTypes> = function () {
           </div>
         </section>
       </section>
-
       {/** Testimonial Container  **/}
       <section>
         <div className={`site-container ${styles['testimonial-contaniner']}`}>
@@ -443,7 +440,6 @@ const Home: React.FC<PropTypes> = function () {
           </div>
         </div>
       </section>
-
       <section className={`site-container ${styles.bigTextContainer}`}>
         <p className={`${styles.bigText}`}>
           Your <span className={styles.hobbyText}>Hobby </span> , Your{' '}
@@ -467,12 +463,13 @@ const Home: React.FC<PropTypes> = function () {
       <section className={`site-container ${styles['site-container-footer']}`}>
         <Footer />
       </section>
-      {showAddToHome === true && (
+      {/* removing temporalily for go live */}
+      {/* {showAddToHome === true && (
         <InstallPopup
           showAddToHome={showAddToHome}
           setShowAddToHome={setShowAddToHome}
         />
-      )}
+      )} */}
     </>
   )
 }
