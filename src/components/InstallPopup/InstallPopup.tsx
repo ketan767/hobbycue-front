@@ -28,6 +28,13 @@ const InstallPopup: FC<InstallPopupProps> = ({
         .then(function(registration) {
           // Registration was successful
           console.log('ServiceWorker registration successful with scope: ', registration.scope);
+         
+          const handleBeforeInstallPrompt = (event: Event) => {
+            event.preventDefault()
+            console.log(event,'click');
+            
+            setDeferredPrompt(event)
+          }
           window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
           console.log('click');
           

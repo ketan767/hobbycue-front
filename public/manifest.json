@@ -3,35 +3,31 @@
   "name": "HobbyCue",
   "icons": [
     {
-      "src": "example.jpg",
-      "type": "jpg",
-      "sizes": "316x316",
-      "purpose":"any"
+      "src": "maskable.png",
+      "sizes": "3125x3125",
+      "type": "image/png",
+      "purpose": " maskable"
     },
     {
-      "src": "logo-small.png",
-      "type": "png",
-      "sizes": "28x28",
-      "purpose":"any"
-
-    },
-    {
-      "src": "icon192.png",
-      "type": "png",
+      "src": "logo192.png",
+      "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "7500045.png",
-      "type": "png",
-      "sizes": "512x512"
+      "src": "logo256.png",
+      "type": "image/png",
+      "sizes": "256x256"
     },
     {
-      "src": "squash.jpg",
-      "sizes": "612x408",
-      "type": "jpg" ,
-      "purpose":"any"
-     } 
-    
+      "src": "logo384.png",
+      "type": "image/png",
+      "sizes": "384x384"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
   ],
   "screenshots": [
     {
@@ -47,7 +43,7 @@
       "form_factor": "narrow"
     }
   ],
-  "start_url": "https://hobbycue-front.vercel.app/",
+  "start_url": "http://localhost:3000/",
   "background_color": "white",
   "display": "standalone"
 }
