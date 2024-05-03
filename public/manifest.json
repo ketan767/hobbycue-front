@@ -29,20 +29,7 @@
       "sizes": "512x512"
     }
   ],
-  "screenshots": [
-    {
-      "src": "squash.jpg",
-      "sizes": "612x408",
-      "type": "jpg",
-      "form_factor": "wide"
-    },
-    {
-      "src": "squash.jpg",
-      "sizes": "612x408",
-      "type": "jpg",
-      "form_factor": "narrow"
-    }
-  ],
+
   "start_url": "http://localhost:3000/",
   "background_color": "white",
   "display": "standalone"
