@@ -29,7 +29,7 @@
   height: 28rem;
 }
 
-.cropper-wrapper .save-btn {
+.save-btn {
   background: #8064a2;
   border-radius: 8px;
   /* padding: var(--spacing-12) var(--spacing-16); */
@@ -50,7 +50,7 @@
   .modal-wrapper {
     width: 100%;
     border-radius: 0;
-
+    height: calc(100vh - 48px);
   }
   .modal-wrapper .footer {
     background: var(--Base-White, #FFF);
@@ -67,6 +67,25 @@
   }
   .modal-hr{
     display: none;
+  }
+  .cropper *{
+    max-width: calc(100vw - 6rem) !important;
+  }
+
+  .footer {
+    z-index: 2;
+    padding: var(--spacing-16) var(--spacing-24);
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    background: var(--Base-White, #fff);
+    box-shadow: 0px -6px 15px 0px rgba(0, 0, 0, 0.06);
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+  }
+  .footer .save-btn{
+    width: 100%;
   }
 }
 .modal-wrapper .footer {

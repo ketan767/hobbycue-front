@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import styles from './footer.module.css'
 
 import Facebook from '@/assets/svg/social/facebook.svg'
@@ -33,6 +33,7 @@ import { RootState } from '@/redux/store'
 import { openModal } from '@/redux/slices/modal'
 import { useRouter } from 'next/router'
 import { validateEmail } from '@/utils'
+import { showProfileError } from '@/redux/slices/user'
 
 const icons = [
   {
@@ -71,6 +72,7 @@ const Footer: React.FC = () => {
   const [expandQuickLinks, setExpandQuickLinks] = useState(false)
   const [inviteBtnLoader, setInviteBtnLoader] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const inviteBtnRef = useRef<HTMLButtonElement>(null)
 
   const [snackbar, setSnackbar] = useState({
     type: 'success',
@@ -123,7 +125,7 @@ const Footer: React.FC = () => {
         { title: 'Sign Up', link: 'http://blog.hobbycue.com/how-to/' },
         {
           title: 'Add a Listing',
-          link: 'http://blog.hobbycue.com/how-to/#add-listing/',
+          link: '/add-listing',
         },
         {
           title: 'Claim Listing',
@@ -162,6 +164,9 @@ const Footer: React.FC = () => {
               return
             } else {
               dispatch(openModal({ type: 'auth', closable: true }))
+              if (!user?.is_onboarded) {
+                dispatch(showProfileError(true))
+              }
             }
           },
         },
@@ -190,7 +195,7 @@ const Footer: React.FC = () => {
       setSnackbar({
         display: true,
         type: 'success',
-        message: 'Invitation sent sucessfully!',
+        message: 'Invitation sent',
       })
       setEmail('')
     }
@@ -273,9 +278,14 @@ const Footer: React.FC = () => {
                   value={email}
                   name="society"
                   onChange={(e: any) => setEmail(e.target.value)}
-                  className={errorMessage !== ''?styles['errorInput']:""}
+                  className={errorMessage !== '' ? styles['errorInput'] : ''}
+                  onKeyDown={(e)=>{
+                    if(e.key==="Enter"){
+                      inviteBtnRef?.current?.click()
+                    }
+                  }}
                 />
-                <button onClick={sendInvite} className={styles.button}>
+                <button ref={inviteBtnRef} onClick={sendInvite} className={styles.button}>
                   {inviteBtnLoader ? (
                     <CircularProgress color="inherit" size={'20px'} />
                   ) : (

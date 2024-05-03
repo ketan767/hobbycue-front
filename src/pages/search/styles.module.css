@@ -158,6 +158,7 @@
   height: 64px;
   border-radius: 50%;
   border: 1px solid #8064a2;
+  object-fit: cover;
 }
 
 .peopleavatarImage {
@@ -223,7 +224,7 @@
 .view-more-btn:hover {
   background-color: #8064a2;
   color: white;
-  transition: 0.2s;
+  transition: 0.3s;
 }
 
 .resultHeading {
@@ -259,6 +260,15 @@
   font-size: 14px;
   font-weight: 500;
   color: #6d747a;
+}
+
+.no-results-wrapper p a{
+  color: #8064a2;
+  opacity: 0.85;
+}
+
+.no-results-wrapper p a:hover{
+  opacity: 1;
 }
 
 .menuItemContent {

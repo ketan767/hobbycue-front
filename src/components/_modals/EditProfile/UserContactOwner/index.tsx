@@ -37,6 +37,7 @@ type ContactOwnerData = {
   name: string
   senderName: string
   to: string
+  sender_id: string
 }
 
 const UserContactToOwner: React.FC<Props> = ({
@@ -58,8 +59,10 @@ const UserContactToOwner: React.FC<Props> = ({
     name: currprofile.full_name,
     senderName: user.full_name,
     to: currprofile?.public_email,
+    sender_id: user?._id,
   })
   const subref = useRef<HTMLInputElement>(null)
+  const [isTextAreaActive, setTextAreaActive] = useState(false)
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backDisabled, SetBackDisabled] = useState(false)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
@@ -79,6 +82,7 @@ const UserContactToOwner: React.FC<Props> = ({
     name: currprofile.full_name,
     senderName: user.full_name,
     to: currprofile?.public_email,
+    sender_id: user?._id,
   })
   const [isChanged, setIsChanged] = useState(false)
   const [snackbar, setSnackbar] = useState({
@@ -94,6 +98,7 @@ const UserContactToOwner: React.FC<Props> = ({
       name: '',
       senderName: '',
       to: '',
+      sender_id: '',
     })
   }, [user])
 
@@ -102,12 +107,12 @@ const UserContactToOwner: React.FC<Props> = ({
     setData((prev) => ({ ...prev, sub: value }))
     setInputErrs({ error: null })
 
-    const hasChanged = value !== initialData.sub
-    setIsChanged(hasChanged)
+    // const hasChanged = value !== initialData.sub
+    // setIsChanged(hasChanged)
 
-    if (onStatusChange) {
-      onStatusChange(hasChanged)
-    }
+    // if (onStatusChange) {
+    //   onStatusChange(hasChanged)
+    // }
   }
 
   const handleTextAreaChange = (
@@ -117,12 +122,20 @@ const UserContactToOwner: React.FC<Props> = ({
     setData((prev) => ({ ...prev, message: value }))
     setInputErrs({ error: null })
 
-    const hasChanged = value !== initialData.message
-    setIsChanged(hasChanged)
+    // const hasChanged = value !== initialData.message
+    // setIsChanged(hasChanged)
 
-    if (onStatusChange) {
-      onStatusChange(hasChanged)
-    }
+    // if (onStatusChange) {
+    //   onStatusChange(hasChanged)
+    // }
+  }
+
+  const handleTextAreaFocus = () => {
+    setTextAreaActive(true)
+  }
+
+  const handleTextAreaBlur = () => {
+    setTextAreaActive(false)
   }
 
   const handleSubmit = async () => {
@@ -147,7 +160,7 @@ const UserContactToOwner: React.FC<Props> = ({
       setSubmitBtnLoading(false)
       setTimeout(() => {
         dispatch(closeModal())
-      }, 2000)
+      }, 2500)
     } else if (err) {
       setSubmitBtnLoading(false)
       setSnackbar({
@@ -188,6 +201,13 @@ const UserContactToOwner: React.FC<Props> = ({
     subref?.current?.focus()
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
+        if (
+          (event?.srcElement?.tagName &&
+            event?.srcElement?.tagName?.toLowerCase() === 'textarea') ||
+          event?.srcElement?.tagName?.toLowerCase() === 'svg'
+        ) {
+          return
+        }
         nextButtonRef.current?.click()
       }
     }
@@ -263,6 +283,8 @@ const UserContactToOwner: React.FC<Props> = ({
                 name="message"
                 onChange={handleTextAreaChange}
                 value={data.message}
+                onFocus={handleTextAreaFocus}
+                onBlur={handleTextAreaBlur}
               />
             </div>
           </div>
@@ -321,7 +343,11 @@ const UserContactToOwner: React.FC<Props> = ({
               onClick={handleSubmit}
               disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
             >
-              Submit
+              {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'14px'} />
+              ) : (
+                'Submit'
+              )}
             </button>
           )}
         </footer>

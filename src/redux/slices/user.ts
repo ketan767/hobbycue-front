@@ -12,6 +12,9 @@ export interface AuthState {
     data: any
   }
   addressToEdit: any
+  showProfileError: Boolean,
+  CurrentUrl: String
+  linkviaAuth: string
 }
 
 const initialState: AuthState = {
@@ -25,6 +28,9 @@ const initialState: AuthState = {
     data: null,
   },
   addressToEdit: null,
+  showProfileError: false,
+  CurrentUrl: '',
+  linkviaAuth:''
 }
 
 const authSlice = createSlice({
@@ -61,6 +67,15 @@ const authSlice = createSlice({
       }
       localStorage.setItem('active_profile', JSON.stringify(data))
     },
+    showProfileError(state, action: PayloadAction<boolean>) {
+      state.showProfileError = action.payload;
+    },
+    UpdateCurrentUrl(state, action: PayloadAction<string>) {
+      state.CurrentUrl = action.payload;
+    },
+    SetLinkviaAuth(state, action: PayloadAction<string>) {
+      state.linkviaAuth = action.payload;
+    },
   },
 })
 
@@ -72,6 +87,9 @@ export const {
   updateUserListing,
   updateAddressToEdit,
   updateProfileData,
+  showProfileError,
+  UpdateCurrentUrl,
+  SetLinkviaAuth,
 } = authSlice.actions
 
 export default authSlice.reducer

@@ -126,7 +126,7 @@ const EmailSentModal: React.FC<Props> = ({}) => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className={styles.input}
                 placeholder="Confirm New Password"
-                type='password'
+                type="password"
               />
               <p className={styles['helper-text']}>{errors.confirmPassword}</p>
             </div>
@@ -146,7 +146,11 @@ const EmailSentModal: React.FC<Props> = ({}) => {
             )}
           </button>
           <button className="modal-mob-btn-save" onClick={handleSubmit}>
-            Save
+          {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'14px'} />
+              ) : (
+                'Save'
+              )}
           </button>
           <OutlinedButton>Cancel</OutlinedButton>
         </footer>

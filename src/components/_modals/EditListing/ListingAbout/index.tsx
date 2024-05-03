@@ -164,7 +164,10 @@ const ListingAboutEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        if (event?.srcElement?.className?.includes('ql-editor')) {
+        if(event?.srcElement?.tagName === "svg"){
+          return;
+        }
+        else if (typeof event?.srcElement?.className?.includes === "function" && event?.srcElement?.className?.includes('ql-editor')) {
           return
         } else {
           nextButtonRef.current?.click()
@@ -219,7 +222,7 @@ const ListingAboutEditModal: React.FC<Props> = ({
     if (isError) {
       const timer = setTimeout(() => {
         setIsError(false)
-      }, 2000)
+      }, 2500)
       return () => clearTimeout(timer)
     }
   }, [isError])
@@ -321,7 +324,11 @@ const ListingAboutEditModal: React.FC<Props> = ({
               onClick={handleSubmit}
               disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
             >
-              Save
+              {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'14px'} />
+              ) : (
+                'Save'
+              )}
             </button>
           )}
         </footer>

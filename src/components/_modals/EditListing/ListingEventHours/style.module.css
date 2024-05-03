@@ -3,8 +3,6 @@
   border-radius: var(--spacing-8);
   max-width: 50rem;
   width: 38rem;
-  max-height: calc(100vh - 6rem);
-  height: 93.2%;
   display: flex;
   flex-direction: column;
 }
@@ -23,7 +21,8 @@
 
 @media screen and (min-width: 1100px) {
   .modal-wrapper {
-    max-height: calc(100vh - 6rem);
+    max-height: 50rem;
+    height: calc(100vh - 6rem);
   }
   .modal-wrapper .body {
     height: calc(100vh - 6rem);
@@ -211,6 +210,23 @@
   display: flex;
   flex-direction: column;
   padding: 0 8px;
+  position: relative;
+}
+
+.formatted-date{
+  position: absolute;
+  bottom: 5px;
+  left: 11px;
+  user-select: none;
+  pointer-events: none;
+  z-index: 1;
+  background-color: #f8f9fa;
+  padding: 5px 0;
+  text-align: left;
+}
+
+.left-more{
+  left: 19px;
 }
 
 .listSubItem:nth-child(2){
@@ -243,10 +259,19 @@
   border: 1px solid #ebedf0;
   border-radius: 8px;
   padding: 8px 12px;
-  color: #000;
+  color: transparent;
   width: 137px;
   font-size: 14px;
 }
+
+.inputField:focus,
+.inputField:focus-visible,
+.inputField:focus-within,
+.inputField:hover
+{
+  color: transparent;
+}
+
 @media screen and (max-width: 1100px) {
   .modal-wrapper {
     max-width: 1100px;
@@ -256,9 +281,13 @@
     margin: -5px 0 5rem 0;
     padding: 5px 0 0 0;
   }
+  .modal-wrapper .header{
+    padding: 16px 16px 0;
+  }
   .modal-wrapper .body {
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 12px;
   }
   .modal-wrapper .footer {
     background: var(--Base-White, #fff);
@@ -283,6 +312,9 @@
   }
   .inputField {
     width: auto;
+  }
+  .left-more{
+    left: 11px;
   }
   .modal-hr {
     display: none;

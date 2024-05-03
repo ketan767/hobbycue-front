@@ -7,10 +7,10 @@
   flex-direction: column;
 }
 
-  .modal-wrapper{
-    max-height: calc(100vh - 6rem);
-
-  }
+.modal-wrapper {
+  max-height: 50rem;
+  height: calc(100vh - 6rem);
+}
   .modal-wrapper .body {
     height: 100%;
     overflow: auto;
@@ -144,6 +144,11 @@
 }
 .street-input-container{
   position: relative;
+  
+}
+
+.disabled {
+cursor: not-allowed;
 }
 .street-input-container span{
   position: absolute;

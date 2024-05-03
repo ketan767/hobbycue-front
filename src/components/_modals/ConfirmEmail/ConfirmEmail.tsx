@@ -27,7 +27,7 @@ type Props = {
   onBackBtnClick?: () => void
 }
 
-const ConfirmEmailModal: React.FC<Props> = ({}) => {
+const ConfirmEmail: React.FC<Props> = ({}) => {
   const elementRef = useRef<HTMLInputElement>(null)
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -40,8 +40,18 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
   })
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  function isValidEmail(email: string): boolean {
+    const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
   const handleSubmit = async () => {
     setSubmitBtnLoading(true)
+    if (isValidEmail(email) === false) {
+      setSubmitBtnLoading(false)
+      setErrors({ email: 'Email is invalid!' })
+      elementRef.current?.focus()
+      return
+    }
     const { err, res } = await forgotPassword({
       email,
     })
@@ -53,6 +63,7 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
           ...errors,
           email: err?.response?.data?.message,
         })
+        elementRef.current?.focus()
       }
       return
     }
@@ -90,13 +101,13 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
       <div className={styles['modal-wrapper']}>
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>Forgot Password</h4>
+          <h4 className={styles['heading']}>Confirm E-mail</h4>
         </header>
         <section className={styles['body']}>
           <div className={styles.inputField}>
             <label className={styles.label}>
               Enter the email address of the account, and we will send you a
-              verification code to reset password.
+              verification code to set a password.
             </label>
             <div
               className={`${styles['input-box']} ${
@@ -134,7 +145,7 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
             onClick={handleSubmit}
           >
             {submitBtnLoading ? (
-              <CircularProgress color="inherit" size={'16px'} />
+              <CircularProgress color="inherit" size={'14px'} />
             ) : (
               'Send'
             )}
@@ -145,4 +156,4 @@ const ConfirmEmailModal: React.FC<Props> = ({}) => {
   )
 }
 
-export default ConfirmEmailModal
+export default ConfirmEmail

@@ -98,12 +98,6 @@ function SiteAdminLayout({ children }: { children: ReactElement }) {
   }, [isLoggedIn, isAuthenticated])
 
   useEffect(() => {
-    if (isLoggedIn && isAuthenticated && !user.is_onboarded) {
-      dispatch(openModal({ type: 'user-onboarding', closable: true }))
-    }
-  }, [isLoggedIn, isAuthenticated, user])
-
-  useEffect(() => {
     let timeout: NodeJS.Timeout
     const handleStart = (url: any, { shallow }: any) => {
       timeout = setTimeout(() => {

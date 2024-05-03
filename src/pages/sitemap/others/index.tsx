@@ -64,6 +64,11 @@ export const getServerSideProps: GetServerSideProps = async () => {
     },
     {
       lastmod: new Date().toISOString(),
+      loc: '/hobbies',
+      name: `${baseUrl}/hobbies`,
+    },
+    {
+      lastmod: new Date().toISOString(),
       loc: '/notifications',
       name: `${baseUrl}/notifications`,
     },
@@ -91,8 +96,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
     },
     {
       lastmod: new Date().toISOString(),
-      loc: '/settings/data-others',
-      name: `${baseUrl}/settings/data-others`,
+      loc: '/settings/account-data',
+      name: `${baseUrl}/settings/account-data`,
     },
     {
       lastmod: new Date().toISOString(),
@@ -113,6 +118,86 @@ export const getServerSideProps: GetServerSideProps = async () => {
       lastmod: new Date().toISOString(),
       loc: '/terms',
       name: `${baseUrl}/terms`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://blog.hobbycue.com',
+      name: `https://blog.hobbycue.com`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://blog.hobbycue.com/faq',
+      name: `https://blog.hobbycue.com/faq`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://blog.hobbycue.com/about',
+      name: `https://blog.hobbycue.com/about`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://blog.hobbycue.com/services',
+      name: `https://blog.hobbycue.com/services`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://blog.hobbycue.com/work',
+      name: `https://blog.hobbycue.com/work`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://blog.hobbycue.com/help',
+      name: `https://blog.hobbycue.com/help`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://blog.hobbycue.com/how-to',
+      name: `https://blog.hobbycue.com/how-to`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://blog.hobbycue.com/team',
+      name: `https://blog.hobbycue.com/team`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://blog.hobbycue.com/purple-cues',
+      name: `https://blog.hobbycue.com/purple-cues`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://blog.hobbycue.com/intern',
+      name: `https://blog.hobbycue.com/intern`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://blog.hobbycue.com/intern-links',
+      name: `https://blog.hobbycue.com/intern-links`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://blog.hobbycue.com/terms/',
+      name: `https://blog.hobbycue.com/terms/`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://blog.hobbycue.com/privacy/',
+      name: `https://blog.hobbycue.com/privacy/`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://blog.hobbycue.com/returns/',
+      name: `https://blog.hobbycue.com/returns/`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://blog.hobbycue.com/thank-you/',
+      name: `https://blog.hobbycue.com/thank-you/`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://blog.hobbycue.com/releases/',
+      name: `https://blog.hobbycue.com/releases/`,
     },
   ]
   return {

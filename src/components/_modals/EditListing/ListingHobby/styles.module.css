@@ -3,8 +3,7 @@
   border-radius: var(--spacing-8);
   max-width: 50rem;
   width: 38rem;
-  height: 93.5%;
-  max-height: calc(100vh - 6rem);
+
   display: flex;
   flex-direction: column;
   
@@ -32,7 +31,8 @@
 }
 @media screen and (min-width: 1100px) {
   .modal-wrapper {
-    max-height: calc(100vh - 6rem);
+    max-height: 50rem;
+    height: calc(100vh - 6rem);
   }
   .modal-wrapper .body {
     height: calc(100vh - 6rem);
@@ -397,6 +397,7 @@
 
 @media screen and (max-width: 1100px) {
   .modal-wrapper {
+    height: 93.5%;
     width: auto;
     max-height: none;
     margin-bottom: 3rem;
@@ -415,7 +416,13 @@
   }
   .add-btn {
     margin: auto;
+    margin-right: -9px;
   }
+  
+  .added-hobby-list .delete-hobby-btn{
+    margin-right: -9px;
+  }
+
   .added-hobby-list table tbody {
     max-height: 15rem;
     padding: 0;
@@ -453,8 +460,11 @@
   .modal-hr {
     display: none;
   }
+  .modal-wrapper .header{
+    padding: 16px 16px 0;
+  }
   .modal-wrapper .body {
-    padding-top: 0 !important;
+    padding-top: 12px !important;
     padding: var(--spacing-16) var(--spacing-16);
   }
   .modal-close-icon {

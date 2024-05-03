@@ -20,7 +20,12 @@ import CustomizedTooltips from '../Tooltip/ToolTip'
 import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import { RootState } from '@/redux/store'
 import { setActivePost } from '@/redux/slices/post'
+import defaultImg from '@/assets/svg/default-images/default-user-icon.svg'
 
+import 'react-quill/dist/quill.snow.css'
+import 'quill-emoji/dist/quill-emoji.css'
+import { useMediaQuery } from '@mui/material'
+import LinkPreviewLoader from '../LinkPreviewLoader'
 type Props = {
   postData: any
   fromProfile?: boolean
@@ -70,6 +75,12 @@ const PostCard: React.FC<Props> = (props) => {
     icon: '',
     url: '',
   })
+  const [linkLoading,setLinkLoading] = useState(false);
+
+  const domain = metaData?.url
+    ? new URL(metaData.url).hostname.replace('www.', '')
+    : ''
+  const displayDomain = domain ? domain.split('.').slice(-2).join('.') : ''
   useCheckIfClickedOutside(optionRef, () => setOptionsActive(false))
 
   const modalRef = useRef(null)
@@ -118,12 +129,15 @@ const PostCard: React.FC<Props> = (props) => {
         setUrl(url[0])
       }
       if (url) {
+        setLinkLoading(true)
         getMetadata(url[0])
           .then((res: any) => {
             setMetaData(res?.res?.data?.data.data)
+            setLinkLoading(false)
           })
           .catch((err) => {
             console.log(err)
+            setLinkLoading(false)
           })
       }
     }
@@ -162,6 +176,8 @@ const PostCard: React.FC<Props> = (props) => {
     }
   }, [])
 
+  const isMobile = useMediaQuery("(max-width:1100px)")
+
   return (
     <>
       <div className={styles['post-card-wrapper']} onClick={handleCardClick}>
@@ -171,7 +187,7 @@ const PostCard: React.FC<Props> = (props) => {
             <Link href={`/profile/${postData?._author?.profile_url}`}>
               {postData?.author_type === 'Listing' ? (
                 postData?._author?.profile_image ? (
-                  <Image
+                  <img
                     className={styles['author-listing']}
                     src={postData?._author?.profile_image}
                     alt="Author Profile"
@@ -184,7 +200,7 @@ const PostCard: React.FC<Props> = (props) => {
                   ></div>
                 )
               ) : postData?._author?.profile_image ? (
-                <Image
+                <img
                   className={styles['author-profile']}
                   src={postData?._author?.profile_image}
                   alt="Author Profile"
@@ -198,7 +214,13 @@ const PostCard: React.FC<Props> = (props) => {
               )}
             </Link>
             <div>
-              <Link href={`/profile/${postData?._author?.profile_url}`}>
+              <Link
+                href={
+                  postData?.author_type === 'User'
+                    ? `/profile/${postData?._author?.profile_url}`
+                    : `/page/${postData?._author?.page_url}`
+                }
+              >
                 <p className={styles['author-name']}>
                   {postData?.author_type === 'User'
                     ? postData?._author?.full_name
@@ -268,7 +290,8 @@ const PostCard: React.FC<Props> = (props) => {
                 viewBox="0 0 24 24"
                 fill="none"
                 onClick={() => {
-                  setOptionsActive(true)
+                  if(fromProfile && postedByMe){
+                  setOptionsActive(true)}else
                   setOpenAction(true)
                 }}
               >
@@ -295,7 +318,14 @@ const PostCard: React.FC<Props> = (props) => {
                   >
                     Pin post
                   </li>
-                  <li>Delete</li>
+                  <li onClick={()=>{
+                    showFeatureUnderDevelopment();
+                    setOptionsActive(false)
+                  }} >Edit</li>
+                  <li onClick={()=>{
+                    showFeatureUnderDevelopment();
+                    setOptionsActive(false)
+                  }} >Delete</li>
                 </ul>
               )}
             </div>
@@ -306,7 +336,7 @@ const PostCard: React.FC<Props> = (props) => {
         <section className={styles['body']}>
           {(!has_link || props.currentSection === 'posts') && (
             <div
-              className={styles['content']}
+              className={styles['content'] + ' ql-editor'}
               dangerouslySetInnerHTML={{
                 __html: postData.content
                   .replace(/<img\b[^>]*>/g, '') // deleted all images from here then did the link formatting
@@ -333,15 +363,53 @@ const PostCard: React.FC<Props> = (props) => {
               setActiveIdx={setActiveIdx}
               activeIdx={activeIdx}
               images={postData.media}
+              sameImgLinkInMeta={metaData.image}
             ></Slider>
           ) : (
             <></>
+          )}
+          {has_link && props.currentSection !== 'links' && (
+            <div className={styles['posts-meta-parent']}>
+              {linkLoading?<LinkPreviewLoader/>:<><div className={styles['posts-meta-data-container']}>
+              <a href={url} target="_blank" className={styles['posts-meta-img']}>
+                <img
+                  src={
+                    (typeof metaData?.image === 'string' && metaData.image) ||
+                    (typeof metaData?.icon === 'string' && metaData.icon) ||
+                    defaultImg
+                  }
+                  alt="link-image"
+                  width={80}
+                  height={80}
+                />
+              </a>
+              <div className={styles['posts-meta-content']}>
+                <a href={url} target="_blank" className={styles.contentHead}>
+                  {' '}
+                  {metaData?.title}{' '}
+                </a>
+                {!isMobile&&<a href={url} target="_blank" className={styles.contentUrl}>
+                  {' '}
+                  {metaData?.description}{' '}
+                </a>}
+              </div>
+            </div>
+            {isMobile&&<a href={url} target="_blank" className={styles.contentUrl}>
+                  {' '}
+                  {metaData?.description}{' '}
+                </a>}</>}
+            
+            </div>
           )}
           {has_link && props.currentSection === 'links' && (
             <div className={styles.postMetadata}>
               <a href={url} target="_blank" className={styles.metaImgContainer}>
                 <img
-                  src={metaData?.image ? metaData.image : metaData?.icon}
+                  src={
+                    (typeof metaData?.image === 'string' && metaData.image) ||
+                    (typeof metaData?.icon === 'string' && metaData.icon) ||
+                    defaultImg
+                  }
                   alt="link-image"
                   width={200}
                   height={130}
@@ -354,7 +422,7 @@ const PostCard: React.FC<Props> = (props) => {
                 </a>
                 <a href={url} target="_blank" className={styles.contentUrl}>
                   {' '}
-                  {metaData?.url}{' '}
+                  {displayDomain}{' '}
                 </a>
                 <div className={styles['meta-author']}>
                   <p className={styles['author-name']}>
@@ -387,7 +455,12 @@ const PostCard: React.FC<Props> = (props) => {
                   {props?.currentSection === 'links' && (
                     <div className={styles['comment-and-count']}>
                       <svg
-                        onClick={() => setShowComments(!showComments)}
+                        onClick={() => {
+                          dispatch(
+                            setActivePost({ ...postData, comments: comments }),
+                          )
+                          dispatch(openModal({ type: 'post', closable: false }))
+                        }}
                         xmlns="http://www.w3.org/2000/svg"
                         width="18"
                         height="18"
@@ -440,7 +513,7 @@ const PostCard: React.FC<Props> = (props) => {
         {/* Card Footer */}
         {props.currentSection === 'links' ? (
           <div className={styles['metadata-footer']}>
-            <Link href={metaData?.url ?? ''} target="_blank">
+            <Link href={url} target="_blank">
               {url}
             </Link>
             {showComments && <PostComments data={postData} styles={styles} />}

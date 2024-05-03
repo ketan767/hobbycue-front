@@ -58,9 +58,9 @@ const ListingHome: React.FC<Props> = (props) => {
     setExpandAll(value)
     dispatch(updateListingMenuExpandAll(value))
   }
+  console.warn('warnnnnnnnnnnn', router)
 
   useEffect(() => {
-    // Save scroll position when navigating away from the page
     const handleRouteChange = () => {
       sessionStorage.setItem('scrollPositionlisting', window.scrollY.toString())
     }
@@ -73,16 +73,15 @@ const ListingHome: React.FC<Props> = (props) => {
         sessionStorage.removeItem('scrollPositionlisting')
       }
     }
-
     router.events.on('routeChangeStart', handleRouteChange)
-
     router.events.on('routeChangeComplete', handleScrollRestoration)
 
     return () => {
       router.events.off('routeChangeStart', handleRouteChange)
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
-  }, [])
+  }, [router.events])
+
   if (
     props?.data?.pageData?.admin !== user?._id &&
     props?.data?.pageData?.is_published !== true
@@ -93,6 +92,25 @@ const ListingHome: React.FC<Props> = (props) => {
   return (
     <>
       <Head>
+        <meta
+          property="og:image"
+          content={`${props?.data?.pageData?.profile_image}`}
+        />
+        <meta
+          property="og:image:secure_url"
+          content={`${props?.data?.pageData?.profile_image}`}
+        />
+        <meta
+          property="og:description"
+          content={`${
+            props?.data?.pageData?.tagline ?? ''
+          }`}
+        />
+        <meta
+          property="og:url"
+          content={`${process.env.NEXT_PUBLIC_VERCEL_URL}/page/${props?.data?.pageData?.slug}`}
+        />
+        <meta property="og:image:alt" content="Profile picture" />
         <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
       </Head>
 

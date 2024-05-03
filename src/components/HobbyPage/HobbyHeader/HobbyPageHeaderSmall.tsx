@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './HobbyHeader.module.css'
 
 import Image from 'next/image'
@@ -12,8 +12,12 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import DefaultProfile from '@/assets/svg/default-images/default-hobbies.svg'
 import { openModal, updateShareUrl } from '@/redux/slices/modal'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import FilledButton from '@/components/_buttons/FilledButton'
+import { RootState } from '@/redux/store'
+import { showProfileError } from '@/redux/slices/user'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import Tooltip from '@/components/Tooltip/ToolTip'
 
 type Props = {
   activeTab: HobbyPageTabs
@@ -23,6 +27,11 @@ type Props = {
 const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
   console.log('🚀 ~ file: HobbyHeader.tsx:22 ~ HobbyPageHeader ~ data:', data)
   const router = useRouter()
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
   const tabs: HobbyPageTabs[] = [
     'home',
     'posts',
@@ -32,15 +41,55 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
     'blogs',
   ]
   const dispatch = useDispatch()
+  const { user, isLoggedIn, isAuthenticated } = useSelector((state: RootState) => state.user)
   const handleShare = () => {
     dispatch(updateShareUrl(window.location.href))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
   }
-
+  const location = typeof window !== 'undefined' ? window.location.href : '';
   const handleAddhobby = () => {
-    dispatch(openModal({ type: 'profile-hobby-edit', closable: true }))
+    if (isLoggedIn) {
+      dispatch(openModal({ type: 'profile-hobby-edit', closable: true }))
+    } else {
+      dispatch(openModal({ type: 'auth', closable: true }))
+    }
   }
+  const handleRepost = () => {
+    if (!isAuthenticated) {
+      dispatch(openModal({ type: 'auth', closable: true }))
+      return
+    }
 
+    if (isLoggedIn) {
+      if (!user.is_onboarded) {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      } else {
+        dispatch(
+          openModal({
+            type: 'create-post',
+            closable: true,
+            propData: { defaultValue: location },
+          }),
+        )
+      }
+    } else {
+      dispatch(
+        openModal({
+          type: 'auth',
+          closable: true,
+        }),
+      )
+    }
+  }
+  const showFeatureUnderDevelopment = () => {
+    setSnackbar({
+      display: true,
+      type: 'warning',
+      message: 'This feature is under development',
+    })
+  }
+  
   return (
     <>
       {/* Page Header  */}
@@ -49,7 +98,7 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
           className={`site-container ${styles['header']} ${styles['small']}`}
         >
           {data?.profile_image ? (
-            <Image
+            <img
               className={styles['profile-img']}
               src={data.profile_image}
               alt=""
@@ -92,8 +141,8 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
               Add to mine
             </FilledButton>
             {/* Send Email Button  */}
-            <div
-              onClick={(e) => console.log(e)}
+            <div 
+              onClick={handleRepost}
               className={styles['action-btn']}
             >
               <Image src={MailIcon} alt="share" />
@@ -101,23 +150,25 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
 
             {/* Bookmark Button */}
             <div
-              onClick={(e) => console.log(e)}
+              onClick={showFeatureUnderDevelopment}
               className={styles['action-btn']}
             >
+              <Tooltip title="Bookmark">
               <BookmarkBorderRoundedIcon color="primary" />
+              </Tooltip>
             </div>
 
             {/* Share Button */}
             <div
-              onClick={(e) => console.log(e)}
+              onClick={handleShare}
               className={styles['action-btn']}
             >
-              <Image src={ShareIcon} alt="share" onClick={handleShare} />
+              <Image src={ShareIcon} alt="share" />
             </div>
 
             {/* More Options Button */}
             <div
-              onClick={(e) => console.log(e)}
+              onClick={(e) => showFeatureUnderDevelopment()}
               className={styles['action-btn']}
             >
               <MoreHorizRoundedIcon color="primary" />
@@ -142,6 +193,16 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
           })}
         </div>
       </div>
+      {
+        <CustomSnackbar
+          message={snackbar.message}
+          triggerOpen={snackbar.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

@@ -164,28 +164,31 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   }
 
   const handleSubmit = async () => {
+    let hasErrors = false;
     if (isEmptyField(data.title.value) || !data.title.value) {
       fullNameRef.current?.focus()
-      return setData((prev) => {
+      setData((prev) => {
         return {
           ...prev,
           title: { ...prev.title, error: 'This field is required!' },
         }
       })
+      hasErrors = true;
     }
     if (isEmptyField(data.page_url.value) || !data.page_url.value) {
       pageUrlRef.current?.focus()
-      return setData((prev) => {
+      setData((prev) => {
         return {
           ...prev,
           page_url: { ...prev.page_url, error: 'This field is required!' },
         }
       })
+      hasErrors = true;
     }
     if (data?.year.value && data.year.value !== '') {
       const currentYear = new Date().getFullYear()
       if (isNaN(Number(data.year.value))) {
-        return setData((prev) => {
+        setData((prev) => {
           return {
             ...prev,
             year: {
@@ -194,21 +197,27 @@ const ListingGeneralEditModal: React.FC<Props> = ({
             },
           }
         })
+        hasErrors = true;
       } else if (currentYear - Number(data.year.value) < 0) {
-        return setData((prev) => {
+        setData((prev) => {
           return {
             ...prev,
             year: { ...prev.year, error: 'Enter a valid year' },
           }
         })
+        hasErrors = true;
       } else if (Number(data.year.value) <= 999) {
-        return setData((prev) => {
+        setData((prev) => {
           return {
             ...prev,
             year: { ...prev.year, error: 'Enter a valid year' },
           }
         })
+        hasErrors = true;
       }
+    }
+    if(hasErrors===true){
+      return;
     }
 
     // if(data.year.value && data.year.value?.trim() !== '' && !containOnlyNumbers(data.year.value)) {
@@ -366,7 +375,10 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        nextButtonRef.current?.focus()
+        if(event?.srcElement?.tagName === "svg"){
+          return;
+        }
+        nextButtonRef.current?.click()
       }
     }
 
@@ -676,7 +688,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
             <div onClick={handleSubmit}>
               <Image
                 src={NextIcon}
-                alt="next"
+                alt="back"
                 className="modal-mob-btn cancel"
               />
             </div>
@@ -687,7 +699,11 @@ const ListingGeneralEditModal: React.FC<Props> = ({
               onClick={handleSubmit}
               disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
             >
-              Save
+              {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'14px'} />
+              ) : (
+                'Save'
+              )}
             </button>
           )}
         </footer>

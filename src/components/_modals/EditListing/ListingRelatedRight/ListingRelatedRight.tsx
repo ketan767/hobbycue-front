@@ -369,16 +369,22 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
                         }}
                         className={styles.dropdownItem}
                       >
-                        <Image
-                          src={
-                            item.profile_image
-                              ? item.profile_image
-                              : DefaultProfile
-                          }
-                          alt="profile"
-                          width={40}
-                          height={40}
-                        />
+                        {item?.profile_image ? (
+                          <img
+                            src={item.profile_image}
+                            alt="profile"
+                            width={40}
+                            height={40}
+                          />
+                        ) : (
+                          <Image
+                            src={DefaultProfile}
+                            alt="profile"
+                            width={40}
+                            height={40}
+                          />
+                        )}
+
                         <p>{item?.title}</p>
                       </div>
                     )
@@ -525,7 +531,11 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
               className="modal-mob-btn-save"
               onClick={handleSubmit}
             >
-              Save
+              {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'14px'} />
+              ) : (
+                'Save'
+              )}
             </button>
           )}
         </footer>

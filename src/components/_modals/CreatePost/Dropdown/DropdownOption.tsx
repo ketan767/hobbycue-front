@@ -9,15 +9,18 @@ import { useSelector } from 'react-redux'
 type Props = {
   type: String
   value: String
-  currentValue: String
+  currentValue?: String
+  selected?:boolean
   display: String
   options: any
   onChange: any
   _id: any
+  item?:any
+  className?:string
 }
 
 export const DropdownOption: React.FC<Props> = (props) => {
-  const { value, type, display, options, onChange, currentValue, _id } = props
+  const { value, type, display, options, onChange, currentValue, _id, selected, item, className } = props
   const { activeProfile, user } = useSelector((state: any) => state.user)
 
   const [active, setActive] = useState(
@@ -29,9 +32,24 @@ export const DropdownOption: React.FC<Props> = (props) => {
     setActive(!active)
   }
 
+  if(type==='hobby'){
+    return (
+      <div className={styles['value-container']+" "+styles['no-border']}>
+        <p
+          className={`${styles['dropdown-value']} ${
+            selected ? styles['dropdown-value-active'] : ''
+          }`}
+          onClick={() => onChange(item)}
+        >
+          {display}
+        </p>
+      </div>
+    )
+  }
+
   if (type === 'text') {
     return (
-      <div className={styles['value-container']}>
+      <div className={styles['value-container']+` ${className}`}>
         <p
           className={`${styles['dropdown-value']} ${
             currentValue === value ? styles['dropdown-value-active'] : ''
@@ -44,7 +62,7 @@ export const DropdownOption: React.FC<Props> = (props) => {
     )
   }
   return (
-    <div data-column="2" className={styles['dropdown-container']}>
+    <div data-column="2" className={styles['dropdown-container']+` ${className}`}>
       <aside
         className={`
     ${styles['heading']} 

@@ -9,35 +9,49 @@ import { useDispatch, useSelector } from 'react-redux'
 import Tooltip from '@/components/Tooltip/ToolTip'
 import styles from './styles.module.css'
 import AdminSvg from '@/assets/svg/adminSvg.svg'
-import FacebookIcon from '@/assets/svg/Facebook.svg'
-import TwitterIcon from '@/assets/svg/Twitter.svg'
-import InstagramIcon from '@/assets/svg/Instagram.svg'
-import BehanceIcon from '@/assets/svg/Behance.svg'
-import BGGIcon from '@/assets/svg/BGG.svg'
-import ChessIcon from '@/assets/svg/Chess.com.svg'
-import DeviantArtIcon from '@/assets/svg/DeviantArt.svg'
-import GoodreadsIcon from '@/assets/svg/GoodReads.svg'
-import PinterestIcon from '@/assets/svg/Pinterest.svg'
-import SmuleIcon from '@/assets/svg/Smule.svg'
-import SoundCloudIcon from '@/assets/svg/Soundcloud.svg'
-import StravaIcon from '@/assets/svg/Strava.svg'
-import TripAdvisorIcon from '@/assets/svg/Tripadvisor.svg'
-import UltimateGuitarIcon from '@/assets/svg/Ultimate-Guitar.svg'
-import YouTubeIcon from '@/assets/svg/Youtube.svg'
+import FacebookIcon from '@/assets/svg/social-media/facebook.svg'
+import TwitterIcon from '@/assets/svg/social-media/twitter.svg'
+import InstagramIcon from '@/assets/svg/social-media/instagram.svg'
+import BehanceIcon from '@/assets/svg/social-media/behance.svg'
+import BGGIcon from '@/assets/svg/social-media/bgg.svg'
+import ChessIcon from '@/assets/svg/social-media/chess.com.svg'
+import DeviantArtIcon from '@/assets/svg/social-media/DeviantArt.svg'
+import GoodreadsIcon from '@/assets/svg/social-media/GoodReads.svg'
+import PinterestIcon from '@/assets/svg/social-media/pinterest.svg'
+import SmuleIcon from '@/assets/svg/social-media/smule.svg'
+import SoundCloudIcon from '@/assets/svg/social-media/soundcloud.svg'
+import StravaIcon from '@/assets/svg/social-media/strava.svg'
+import TripAdvisorIcon from '@/assets/svg/social-media/tripadvisor.svg'
+import UltimateGuitarIcon from '@/assets/svg/social-media/Ultimate-Guitar.svg'
+import YouTubeIcon from '@/assets/svg/social-media/youtube.svg'
+import OthersIcon from '@/assets/svg/social-media/other.svg'
+import MediumIcon from '@/assets/svg/social-media/MediumWeb.svg'
+import TelegramIcon from '@/assets/svg/social-media/Telegram.svg'
 import ListingPageLayout from '../../../layouts/ListingPageLayout'
 import { getListingPages, getListingTags } from '@/services/listing.service'
 import { getAllUserDetail } from '@/services/user.service'
 import { dateFormat } from '@/utils'
-import { updateListingTypeModalMode } from '@/redux/slices/site'
+import {
+  updateContactOpenStates,
+  updateHobbyOpenState,
+  updateListingTypeModalMode,
+  updateLocationOpenStates,
+  updateSocialMediaOpenStates,
+  updateRelatedListingsOpenStates,
+  updateTagsOpenStates,
+  updateWorkingHoursOpenStates,
+  updateRelatedListingsOpenStates2
+} from '@/redux/slices/site'
 import WhatsappIcon from '@/assets/svg/whatsapp.svg'
 import { listingTypes } from '@/constants/constant'
 import Link from 'next/link'
 import DirectionIcon from '@/assets/svg/direction.svg'
 import DefaultPageImage from '@/assets/svg/default-images/default-people-listing-icon.svg'
-import OthersIcon from '@/assets/svg/other.svg'
+
 import dynamic from 'next/dynamic'
 import MapComponent from '@/components/Gmap'
 import { RootState } from '@/redux/store'
+import { SetLinkviaAuth } from '@/redux/slices/user'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -67,7 +81,9 @@ const ListingPageMain: React.FC<Props> = ({
 }) => {
   const dispatch = useDispatch()
   const [tags, setTags] = useState([])
-  const { listingLayoutMode } = useSelector((state: any) => state.site)
+  const { listingLayoutMode, hobbyStates, contactStates, socialMediaStates, locationStates, relatedListingsStates, relatedListingsStates2, tagsStates, workingHoursStates } = useSelector(
+    (state: RootState) => state.site,
+  )
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
@@ -82,7 +98,7 @@ const ListingPageMain: React.FC<Props> = ({
   const lat = parseFloat(data._address.latitude)
   const lng = parseFloat(data._address.longitude)
 
-  const [showHobbies, setShowHobbies] = useState(false)
+  const [showHobbies, setShowHobbies] = useState(true)
   const [showTags, setShowTags] = useState(false)
   const [showRelatedListing1, setShowRelatedListing1] = useState(false)
   const [showContact, setShowContact] = useState(false)
@@ -91,6 +107,7 @@ const ListingPageMain: React.FC<Props> = ({
   const [showRelatedListing2, setShowRelatedListing2] = useState(false)
   const [showSocialMedia, setShowSocialMedia] = useState(false)
   const [showAside, setShowAside] = useState(true)
+  const [isRelatedLoading, SetisRelatedLoading] = useState(true)
 
   function renderSocialLink(url: any, iconSrc: any, altText: any) {
     if (!url) return null
@@ -128,6 +145,73 @@ const ListingPageMain: React.FC<Props> = ({
     const admin: any = await getAllUserDetail(`_id=${adminId}`)
     setPageAdmin(admin.res?.data.data.users[0])
   }
+
+  console.warn({ showHobbies })
+
+  useEffect(() => {
+    if (hobbyStates && typeof hobbyStates[data?._id] === 'boolean') {
+      setShowHobbies(hobbyStates[data?._id])
+    } else if (data._id) {
+      dispatch(updateHobbyOpenState({ [data._id]: showHobbies }))
+    }
+  }, [data._id, hobbyStates])
+
+  useEffect(() => {
+    if (contactStates && typeof contactStates[data?._id] === 'boolean') {
+      setShowContact(contactStates[data?._id])
+    } else if (data._id) {
+      dispatch(updateContactOpenStates({ [data._id]: showContact }))
+    }
+  }, [data._id, contactStates])
+
+  useEffect(() => {
+    if (locationStates && typeof locationStates[data?._id] === 'boolean') {
+      setShowLocation(locationStates[data?._id])
+    } else if (data._id) {
+      dispatch(updateLocationOpenStates({ [data._id]: showLocation }))
+    }
+  }, [data._id, locationStates])
+
+  useEffect(() => {
+    if (socialMediaStates && typeof socialMediaStates[data?._id] === 'boolean') {
+      setShowSocialMedia(socialMediaStates[data?._id])
+    } else if (data._id) {
+      dispatch(updateSocialMediaOpenStates({ [data._id]: showSocialMedia }))
+    }
+  }, [data._id, socialMediaStates])
+
+  useEffect(() => {
+    if (relatedListingsStates && typeof relatedListingsStates[data?._id] === 'boolean') {
+      setShowRelatedListing1(relatedListingsStates[data?._id])
+    } else if (data._id) {
+      dispatch(updateRelatedListingsOpenStates({ [data._id]: showRelatedListing1 }))
+    }
+  }, [data._id, relatedListingsStates])
+
+  useEffect(() => {
+    if (relatedListingsStates2 && typeof relatedListingsStates2[data?._id] === 'boolean') {
+      setShowRelatedListing2(relatedListingsStates2[data?._id])
+    } else if (data._id) {
+      dispatch(updateRelatedListingsOpenStates2({ [data._id]: showRelatedListing2 }))
+    }
+  }, [data._id, relatedListingsStates2])
+
+  useEffect(() => {
+    if (tagsStates && typeof tagsStates[data?._id] === 'boolean') {
+      setShowTags(tagsStates[data?._id])
+    } else if (data._id) {
+      dispatch(updateTagsOpenStates({ [data._id]: showTags }))
+    }
+  }, [data._id, tagsStates])
+
+  useEffect(() => {
+    if (workingHoursStates && typeof workingHoursStates[data?._id] === 'boolean') {
+      setShowWorkingHours(workingHoursStates[data?._id])
+    } else if (data._id) {
+      dispatch(updateWorkingHoursOpenStates({ [data._id]: showWorkingHours }))
+    }
+  }, [data._id, workingHoursStates])
+
   useEffect(() => {
     getListingTags()
       .then((res: any) => {
@@ -148,6 +232,7 @@ const ListingPageMain: React.FC<Props> = ({
     FetchAdmin()
   }, [data._tags])
   console.log('admin', PageAdmin)
+
   useEffect(() => {
     setListingPagesLeft([])
     if (data.related_listings_left.relation) {
@@ -193,6 +278,7 @@ const ListingPageMain: React.FC<Props> = ({
           console.log(err)
         })
     })
+    SetisRelatedLoading(false)
   }, [data?.related_listings_left?.listings])
 
   useEffect(() => {
@@ -228,15 +314,15 @@ const ListingPageMain: React.FC<Props> = ({
   }
 
   const openModalHobbiesModal = () => {
-    if (window.innerWidth < 1100) {
+    if (window.innerWidth > 1100) {
       setShowHobbies(true)
     }
   }
-  useEffect(() => {
-    openModalHobbiesModal()
-    window.addEventListener('resize', openModalHobbiesModal)
-    return window.removeEventListener('resize', openModalHobbiesModal)
-  }, [])
+  // useEffect(() => {
+  //   openModalHobbiesModal()
+  //   window.addEventListener('resize', openModalHobbiesModal)
+  //   return window.removeEventListener('resize', openModalHobbiesModal)
+  // }, [])
 
   // console.log('data', data)
 
@@ -301,13 +387,16 @@ const ListingPageMain: React.FC<Props> = ({
               )
             }
             initialShowDropdown
-            setDisplayData={setShowHobbies}
+            setDisplayData={(arg0: boolean) => {
+              dispatch(updateHobbyOpenState({ [data._id]: !showHobbies }))
+            }}
+            expandData={showHobbies}
           >
             <h4 className={styles['heading']}>Hobbies</h4>
             {/* yahi hai */}
             <div
               className={`${styles['display-desktop']}${
-                showHobbies ? ' ' + styles['display-mobile'] : ''
+                hobbyStates?.[data?._id] ? ' ' + styles['display-mobile'] : ''
               }`}
             >
               {!data || data._hobbies.length === 0 ? (
@@ -318,7 +407,9 @@ const ListingPageMain: React.FC<Props> = ({
                     if (typeof item === 'string') return
                     return (
                       <Link
-                        href={`/hobby/${item?.hobby?.slug}`}
+                        href={`/hobby/${
+                          item?.genre?.slug ?? item?.hobby?.slug
+                        }`}
                         className={styles.textGray}
                         key={item._id}
                       >
@@ -332,8 +423,7 @@ const ListingPageMain: React.FC<Props> = ({
             </div>
           </PageContentBox>
           {/* Tags */}
-          {listingLayoutMode !== 'edit' &&
-          (!listingPagesRight || listingPagesRight.length === 0) ? null : (
+          {
             <PageContentBox
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
@@ -341,7 +431,10 @@ const ListingPageMain: React.FC<Props> = ({
                   openModal({ type: 'listing-tags-edit', closable: true }),
                 )
               }
-              setDisplayData={setShowTags}
+              setDisplayData={(arg0: boolean) => {
+                dispatch(updateTagsOpenStates({ [data._id]: !showTags }))
+              }}
+              expandData={showTags}
             >
               <h4 className={styles['heading']}>Tags</h4>
               <ul
@@ -359,10 +452,11 @@ const ListingPageMain: React.FC<Props> = ({
                 })}
               </ul>
             </PageContentBox>
-          )}
+          }
           {/* Related Listing */}
           {listingLayoutMode !== 'edit' &&
-          (!listingPagesLeft || listingPagesLeft.length === 0) ? null : (
+          (!listingPagesLeft ||
+            data?.related_listings_left.listings?.length === 0) ? null : (
             <PageContentBox
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
@@ -373,7 +467,10 @@ const ListingPageMain: React.FC<Props> = ({
                   }),
                 )
               }
-              setDisplayData={setShowRelatedListing1}
+              setDisplayData={(arg0: boolean) => {
+                dispatch(updateRelatedListingsOpenStates({ [data._id]: !showRelatedListing1 }))
+              }}
+              expandData={showRelatedListing1}
             >
               <h4 className={styles['heading']}>
                 {' '}
@@ -383,7 +480,7 @@ const ListingPageMain: React.FC<Props> = ({
               </h4>
               <div
                 className={`${styles['display-desktop']}${
-                  showRelatedListing1 ? ' ' + styles['display-mobile'] : ''
+                  relatedListingsStates?.[data?._id] ? ' ' + styles['display-mobile'] : ''
                 }`}
               >
                 {!listingPagesLeft || listingPagesLeft.length === 0 ? null : (
@@ -397,16 +494,21 @@ const ListingPageMain: React.FC<Props> = ({
                             href={`/page/${item.page_url}`}
                           >
                             <div className={styles['related']}>
-                              <Image
-                                src={
-                                  item.profile_image
-                                    ? item.profile_image
-                                    : DefaultPageImage
-                                }
-                                alt={item?.title}
-                                width="32"
-                                height="32"
-                              />
+                              {item.profile_image ? (
+                                <img
+                                  src={item.profile_image}
+                                  alt={item?.title}
+                                  width="32"
+                                  height="32"
+                                />
+                              ) : (
+                                <Image
+                                  src={DefaultPageImage}
+                                  alt={item?.title}
+                                  width="32"
+                                  height="32"
+                                />
+                              )}
                               <span className={styles['item-title']}>
                                 {item?.title}
                               </span>
@@ -431,13 +533,16 @@ const ListingPageMain: React.FC<Props> = ({
                   openModal({ type: 'listing-contact-edit', closable: true }),
                 )
               }
-              setDisplayData={setShowContact}
+              setDisplayData={(arg0: boolean) => {
+                dispatch(updateContactOpenStates({ [data._id]: !showContact }))
+              }}
+              expandData={showContact}
             >
               <h4 className={styles['heading']}>Contact Information</h4>
               <ul
                 className={`${styles['contact-wrapper']} ${
                   styles['display-desktop']
-                }${showContact ? ' ' + styles['display-mobile'] : ''}`}
+                }${contactStates?.[data?._id] ? ' ' + styles['display-mobile'] : ''}`}
               >
                 {/* Page Admin */}
                 {(PageAdmin as any)?.full_name && isLoggedIn && (
@@ -455,9 +560,14 @@ const ListingPageMain: React.FC<Props> = ({
                 )}
                 {(PageAdmin as any)?.full_name && !isLoggedIn && (
                   <a
-                    onClick={(e) =>
+                    onClick={(e) => {
+                      dispatch(
+                        SetLinkviaAuth(
+                          `/profile/${(PageAdmin as any)?.profile_url}`,
+                        ),
+                      )
                       dispatch(openModal({ type: 'auth', closable: true }))
-                    }
+                    }}
                   >
                     <Image
                       src={AdminSvg}
@@ -767,14 +877,17 @@ const ListingPageMain: React.FC<Props> = ({
                   openModal({ type: 'listing-address-edit', closable: true }),
                 )
               }
-              setDisplayData={setShowLocation}
+              setDisplayData={(arg0: boolean) => {
+                dispatch(updateLocationOpenStates({ [data._id]: !showLocation }))
+              }}
+              expandData={showLocation}
             >
               <div className={`${styles['location-heading']} `}>
                 <h4>Location</h4>
               </div>
               <div
                 className={`${styles['display-desktop']}${
-                  showLocation ? ' ' + styles['display-mobile'] : ''
+                  locationStates?.[data?._id] ? ' ' + styles['display-mobile'] : ''
                 }`}
               >
                 {listingLayoutMode === 'view' && (
@@ -856,13 +969,16 @@ const ListingPageMain: React.FC<Props> = ({
                     }),
                   )
                 }
-                setDisplayData={setShowWorkingHours}
+                setDisplayData={(arg0: boolean) => {
+                  dispatch(updateWorkingHoursOpenStates({ [data._id]: !showWorkingHours }))
+                }}
+                expandData={showWorkingHours}
               >
                 <h4 className={styles['heading']}>Working Hours</h4>
                 <div
                   className={`${styles['working-hours-wrapper']} ${
                     styles['display-desktop']
-                  }${showWorkingHours ? ' ' + styles['display-mobile'] : ''}`}
+                  }${workingHoursStates?.[data?._id] ? ' ' + styles['display-mobile'] : ''}`}
                 >
                   {/* Working Hours  */}
                   {data?.work_hours && (
@@ -903,8 +1019,9 @@ const ListingPageMain: React.FC<Props> = ({
             )}
 
             {/* Related Listing */}
-            {listingLayoutMode !== 'edit' &&
-            (!listingPagesRight || listingPagesRight.length === 0) ? null : (
+            {/* {listingLayoutMode !== 'edit' &&
+            (!listingPagesRight ||
+              data?.related_listings_right.listings?.length === 0) ? null : (
               <PageContentBox
                 showEditButton={listingLayoutMode === 'edit'}
                 onEditBtnClick={() =>
@@ -941,16 +1058,21 @@ const ListingPageMain: React.FC<Props> = ({
                               href={`/page/${item.page_url}`}
                             >
                               <div className={styles['related']}>
-                                <Image
-                                  src={
-                                    item.profile_image
-                                      ? item.profile_image
-                                      : DefaultPageImage
-                                  }
-                                  alt={item?.title}
-                                  width="32"
-                                  height="32"
-                                />
+                                {item.profile_image ? (
+                                  <img
+                                    src={item.profile_image}
+                                    alt={item?.title}
+                                    width="32"
+                                    height="32"
+                                  />
+                                ) : (
+                                  <Image
+                                    src={DefaultPageImage}
+                                    alt={item?.title}
+                                    width="32"
+                                    height="32"
+                                  />
+                                )}
                                 <span className={styles['item-title']}>
                                   {item?.title}
                                 </span>
@@ -963,15 +1085,12 @@ const ListingPageMain: React.FC<Props> = ({
                   )}
                 </div>
               </PageContentBox>
-            )}
+            )} */}
 
-            {listingLayoutMode !== 'edit' &&
-            (!listingPagesRight ||
-              listingPagesRight.length === 0) ? null : data?.type ===
-                listingTypes.PROGRAM ||
-              data?.type === listingTypes.PRODUCT ||
-              data?.type === listingTypes.PLACE ||
-              data?.type === listingTypes.PEOPLE ? (
+            {data?.type === listingTypes.PROGRAM ||
+            data?.type === listingTypes.PRODUCT ||
+            data?.type === listingTypes.PLACE ||
+            data?.type === listingTypes.PEOPLE ? (
               <PageContentBox
                 showEditButton={listingLayoutMode === 'edit'}
                 onEditBtnClick={() =>
@@ -982,96 +1101,182 @@ const ListingPageMain: React.FC<Props> = ({
                     }),
                   )
                 }
-                setDisplayData={setShowSocialMedia}
+                setDisplayData={(arg0: boolean) => {
+                  dispatch(updateSocialMediaOpenStates({ [data._id]: !showSocialMedia }))
+                }}
+                expandData={showSocialMedia}
               >
                 <h4 className={styles['heading']}>Social Media</h4>
 
                 <ul
                   className={`${styles['social-contact-wrapper']} ${
                     styles['display-desktop']
-                  }${showSocialMedia ? ' ' + styles['display-mobile'] : ''}`}
+                  }${socialMediaStates?.[data?._id] ? ' ' + styles['display-mobile'] : ''}`}
                 >
                   {data?.social_media_urls && (
                     <>
-                      {renderSocialLink(
-                        data.social_media_urls.facebook_url,
-                        FacebookIcon,
-                        'Facebook',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.twitter_url,
-                        TwitterIcon,
-                        'Twitter',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.instagram_url,
-                        InstagramIcon,
-                        'Instagram',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.behance_url,
-                        BehanceIcon,
-                        'Behance',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.bgg_url,
-                        BGGIcon,
-                        'BoardGameGeek',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.chess_url,
-                        ChessIcon,
-                        'Chess',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.deviantarts_url,
-                        DeviantArtIcon,
-                        'DeviantArt',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.goodreads_url,
-                        GoodreadsIcon,
-                        'Goodreads',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.pinterest_url,
-                        PinterestIcon,
-                        'Pinterest',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.smule_url,
-                        SmuleIcon,
-                        'Smule',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.soundcloud_url,
-                        SoundCloudIcon,
-                        'SoundCloud',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.strava_url,
-                        StravaIcon,
-                        'Strava',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.tripadvisor_url,
-                        TripAdvisorIcon,
-                        'TripAdvisor',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.ultimate_guitar_url,
-                        UltimateGuitarIcon,
-                        'Ultimate Guitar',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.youtube_url,
-                        YouTubeIcon,
-                        'YouTube',
-                      )}
-                      {renderSocialLink(
-                        data.social_media_urls.Others_url,
-                        OthersIcon,
-                        extractDomainName(data.social_media_urls.Others_url),
+                      {Object.entries(data.social_media_urls).map(
+                        ([key, url]) => {
+                          let socialMediaName = ''
+                          let socialMediaIcon = null
+
+                          switch (true) {
+                            case key.startsWith('facebook'):
+                              socialMediaName = 'Facebook'
+                              socialMediaIcon = FacebookIcon
+                              break
+                            case key.startsWith('twitter'):
+                              socialMediaName = 'Twitter'
+                              socialMediaIcon = TwitterIcon
+                              break
+                            case key.startsWith('instagram'):
+                              socialMediaName = 'Instagram'
+                              socialMediaIcon = InstagramIcon
+                              break
+                            case key.startsWith('behance'):
+                              socialMediaName = 'Behance'
+                              socialMediaIcon = BehanceIcon
+                              break
+                            case key.startsWith('bgg'):
+                              socialMediaName = 'BoardGameGeek'
+                              socialMediaIcon = BGGIcon
+                              break
+                            case key.startsWith('chess'):
+                              socialMediaName = 'Chess'
+                              socialMediaIcon = ChessIcon
+                              break
+                            case key.startsWith('deviantarts'):
+                              socialMediaName = 'DeviantArt'
+                              socialMediaIcon = DeviantArtIcon
+                              break
+                            case key.startsWith('goodreads'):
+                              socialMediaName = 'Goodreads'
+                              socialMediaIcon = GoodreadsIcon
+                              break
+                            case key.startsWith('pinterest'):
+                              socialMediaName = 'Pinterest'
+                              socialMediaIcon = PinterestIcon
+                              break
+                            case key.startsWith('smule'):
+                              socialMediaName = 'Smule'
+                              socialMediaIcon = SmuleIcon
+                              break
+                            case key.startsWith('soundcloud'):
+                              socialMediaName = 'SoundCloud'
+                              socialMediaIcon = SoundCloudIcon
+                              break
+                            case key.startsWith('strava'):
+                              socialMediaName = 'Strava'
+                              socialMediaIcon = StravaIcon
+                              break
+                            case key.startsWith('tripadvisor'):
+                              socialMediaName = 'TripAdvisor'
+                              socialMediaIcon = TripAdvisorIcon
+                              break
+                            case key.startsWith('telegram'):
+                              socialMediaName = 'Telegram'
+                              socialMediaIcon = TelegramIcon
+                              break
+                            case key.startsWith('medium'):
+                              socialMediaName = 'Medium'
+                              socialMediaIcon = MediumIcon
+                              break
+                            case key.startsWith('ultimate_guitar'):
+                              socialMediaName = 'Ultimate Guitar'
+                              socialMediaIcon = UltimateGuitarIcon
+                              break
+                            case key.startsWith('youtube'):
+                              socialMediaName = 'YouTube'
+                              socialMediaIcon = YouTubeIcon
+                              break
+                            case key.startsWith('others'):
+                              socialMediaName = extractDomainName(url)
+                              socialMediaIcon = OthersIcon
+                              break
+                            // Add cases for other socialmedia URLs as needed
+                            default:
+                              break
+                          }
+                          switch (true) {
+                            case key.startsWith('facebook'):
+                              socialMediaName = 'Facebook'
+                              socialMediaIcon = FacebookIcon
+                              break
+                            case key.startsWith('twitter'):
+                              socialMediaName = 'Twitter'
+                              socialMediaIcon = TwitterIcon
+                              break
+                            case key.startsWith('instagram'):
+                              socialMediaName = 'Instagram'
+                              socialMediaIcon = InstagramIcon
+                              break
+                            case key.startsWith('behance'):
+                              socialMediaName = 'Behance'
+                              socialMediaIcon = BehanceIcon
+                              break
+                            case key.startsWith('bgg'):
+                              socialMediaName = 'BoardGameGeek'
+                              socialMediaIcon = BGGIcon
+                              break
+                            case key.startsWith('chess'):
+                              socialMediaName = 'Chess'
+                              socialMediaIcon = ChessIcon
+                              break
+                            case key.startsWith('deviantarts'):
+                              socialMediaName = 'DeviantArt'
+                              socialMediaIcon = DeviantArtIcon
+                              break
+                            case key.startsWith('goodreads'):
+                              socialMediaName = 'Goodreads'
+                              socialMediaIcon = GoodreadsIcon
+                              break
+                            case key.startsWith('pinterest'):
+                              socialMediaName = 'Pinterest'
+                              socialMediaIcon = PinterestIcon
+                              break
+                            case key.startsWith('smule'):
+                              socialMediaName = 'Smule'
+                              socialMediaIcon = SmuleIcon
+                              break
+                            case key.startsWith('soundcloud'):
+                              socialMediaName = 'SoundCloud'
+                              socialMediaIcon = SoundCloudIcon
+                              break
+                            case key.startsWith('strava'):
+                              socialMediaName = 'Strava'
+                              socialMediaIcon = StravaIcon
+                              break
+                            case key.startsWith('tripadvisor'):
+                              socialMediaName = 'TripAdvisor'
+                              socialMediaIcon = TripAdvisorIcon
+                              break
+                            case key.startsWith('ultimate_guitar'):
+                              socialMediaName = 'Ultimate Guitar'
+                              socialMediaIcon = UltimateGuitarIcon
+                              break
+                            case key.startsWith('youtube'):
+                              socialMediaName = 'YouTube'
+                              socialMediaIcon = YouTubeIcon
+                              break
+                            case key.startsWith('others'):
+                              socialMediaName = extractDomainName(url)
+                              socialMediaIcon = OthersIcon
+                              break
+                            // Add cases for other social media URLs as needed
+                            default:
+                              break
+                          }
+
+                          if (socialMediaIcon && socialMediaName) {
+                            return renderSocialLink(
+                              url,
+                              socialMediaIcon,
+                              socialMediaName,
+                            )
+                          }
+
+                          return null // If no matching social media key is found, return null
+                        },
                       )}
                     </>
                   )}
@@ -1113,7 +1318,12 @@ const ListingPageMain: React.FC<Props> = ({
               {/* Page Admin */}
               {(PageAdmin as any)?.full_name && isLoggedIn && (
                 <Link href={`/profile/${(PageAdmin as any)?.profile_url}`}>
-                  <Image src={AdminSvg} alt="whatsapp" width={24} height={24} />
+                  <Image
+                    src={AdminSvg}
+                    alt="page admin"
+                    width={24}
+                    height={24}
+                  />
                   <span className={styles.textdefault}>
                     {(PageAdmin as any)?.full_name}
                   </span>
@@ -1121,9 +1331,14 @@ const ListingPageMain: React.FC<Props> = ({
               )}
               {(PageAdmin as any)?.full_name && !isLoggedIn && (
                 <a
-                  onClick={(e) =>
+                  onClick={(e) => {
+                    dispatch(
+                      SetLinkviaAuth(
+                        `/profile/${(PageAdmin as any)?.profile_url}`,
+                      ),
+                    )
                     dispatch(openModal({ type: 'auth', closable: true }))
-                  }
+                  }}
                 >
                   <Image src={AdminSvg} alt="whatsapp" width={24} height={24} />
                   <span className={styles.textdefault}>
@@ -1158,7 +1373,7 @@ const ListingPageMain: React.FC<Props> = ({
                 </Link>
               )}
               {data?.phone?.number && (
-                <Link href={`tel:${data?.phone?.number}`}>
+                <Link href={`tel:${data.phone.prefix + data?.phone?.number}`}>
                   <svg
                     width="24"
                     height="24"
@@ -1437,12 +1652,6 @@ const ListingPageMain: React.FC<Props> = ({
           >
             <div className={`${styles['location-heading']} `}>
               <h4>Location</h4>
-            </div>
-            <div
-              className={`${styles['display-desktop']}${
-                showLocation ? ' ' + styles['display-mobile'] : ''
-              }`}
-            >
               {listingLayoutMode === 'view' && (
                 <div
                   className={styles['direction-container']}
@@ -1452,6 +1661,12 @@ const ListingPageMain: React.FC<Props> = ({
                   <p> Get Direction </p>
                 </div>
               )}
+            </div>
+            <div
+              className={`${styles['display-desktop']}${
+                showLocation ? ' ' + styles['display-mobile'] : ''
+              }`}
+            >
               <ul className={`${styles['location-wrapper']}`}>
                 {/* Address */}
                 {data?._address && (
@@ -1581,7 +1796,10 @@ const ListingPageMain: React.FC<Props> = ({
                   }),
                 )
               }
-              setDisplayData={setShowRelatedListing2}
+              setDisplayData={(arg0: boolean) => {
+                dispatch(updateRelatedListingsOpenStates2({ [data._id]: !showRelatedListing2 }))
+              }}
+              expandData={showRelatedListing2}
             >
               <h4 className={styles['heading']}>
                 {relationRight && relationRight.trim() !== ''
@@ -1591,7 +1809,7 @@ const ListingPageMain: React.FC<Props> = ({
 
               <div
                 className={`${styles['display-desktop']}${
-                  showRelatedListing2 ? ' ' + styles['display-mobile'] : ''
+                  relatedListingsStates2?.[data?._id] ? ' ' + styles['display-mobile'] : ''
                 }`}
               >
                 {!listingPagesRight || listingPagesRight.length === 0 ? null : (
@@ -1605,16 +1823,21 @@ const ListingPageMain: React.FC<Props> = ({
                             href={`/page/${item.page_url}`}
                           >
                             <div className={styles['related']}>
-                              <Image
-                                src={
-                                  item.profile_image
-                                    ? item.profile_image
-                                    : DefaultPageImage
-                                }
-                                alt={item?.title}
-                                width="32"
-                                height="32"
-                              />
+                              {item.profile_image ? (
+                                <img
+                                  src={item.profile_image}
+                                  alt={item?.title}
+                                  width="32"
+                                  height="32"
+                                />
+                              ) : (
+                                <Image
+                                  src={DefaultPageImage}
+                                  alt={item?.title}
+                                  width="32"
+                                  height="32"
+                                />
+                              )}
                               <span className={styles['item-title']}>
                                 {item?.title}
                               </span>
@@ -1629,13 +1852,10 @@ const ListingPageMain: React.FC<Props> = ({
             </PageContentBox>
           )}
 
-          {listingLayoutMode !== 'edit' &&
-          (!listingPagesRight ||
-            listingPagesRight.length === 0) ? null : data?.type ===
-              listingTypes.PROGRAM ||
-            data?.type === listingTypes.PRODUCT ||
-            data?.type === listingTypes.PLACE ||
-            data?.type === listingTypes.PEOPLE ? (
+          {data?.type === listingTypes.PROGRAM ||
+          data?.type === listingTypes.PRODUCT ||
+          data?.type === listingTypes.PLACE ||
+          data?.type === listingTypes.PEOPLE ? (
             <PageContentBox
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
@@ -1655,87 +1875,101 @@ const ListingPageMain: React.FC<Props> = ({
                   styles['display-desktop']
                 }${showSocialMedia ? ' ' + styles['display-mobile'] : ''}`}
               >
-                {data && (
+                {data.social_media_urls && (
                   <>
-                    {renderSocialLink(
-                      data.social_media_urls?.facebook_url,
-                      FacebookIcon,
-                      'Facebook',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.twitter_url,
-                      TwitterIcon,
-                      'Twitter',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.instagram_url,
-                      InstagramIcon,
-                      'Instagram',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.behance_url,
-                      BehanceIcon,
-                      'Behance',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.bgg_url,
-                      BGGIcon,
-                      'BoardGameGeek',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.chess_url,
-                      ChessIcon,
-                      'Chess',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.deviantarts_url,
-                      DeviantArtIcon,
-                      'DeviantArt',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.goodreads_url,
-                      GoodreadsIcon,
-                      'Goodreads',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.pinterest_url,
-                      PinterestIcon,
-                      'Pinterest',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.smule_url,
-                      SmuleIcon,
-                      'Smule',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.soundcloud_url,
-                      SoundCloudIcon,
-                      'SoundCloud',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.strava_url,
-                      StravaIcon,
-                      'Strava',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.tripadvisor_url,
-                      TripAdvisorIcon,
-                      'TripAdvisor',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.ultimate_guitar_url,
-                      UltimateGuitarIcon,
-                      'Ultimate Guitar',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.youtube_url,
-                      YouTubeIcon,
-                      'YouTube',
-                    )}
-                    {renderSocialLink(
-                      data.social_media_urls?.Others_url,
-                      OthersIcon,
-                      extractDomainName(data.social_media_urls?.Others_url),
+                    {Object.entries(data.social_media_urls).map(
+                      ([key, url]) => {
+                        let socialMediaName = ''
+                        let socialMediaIcon = null
+
+                        switch (true) {
+                          case key.startsWith('facebook'):
+                            socialMediaName = 'Facebook'
+                            socialMediaIcon = FacebookIcon
+                            break
+                          case key.startsWith('twitter'):
+                            socialMediaName = 'Twitter'
+                            socialMediaIcon = TwitterIcon
+                            break
+                          case key.startsWith('instagram'):
+                            socialMediaName = 'Instagram'
+                            socialMediaIcon = InstagramIcon
+                            break
+                          case key.startsWith('behance'):
+                            socialMediaName = 'Behance'
+                            socialMediaIcon = BehanceIcon
+                            break
+                          case key.startsWith('bgg'):
+                            socialMediaName = 'BoardGameGeek'
+                            socialMediaIcon = BGGIcon
+                            break
+                          case key.startsWith('chess'):
+                            socialMediaName = 'Chess'
+                            socialMediaIcon = ChessIcon
+                            break
+                          case key.startsWith('deviantarts'):
+                            socialMediaName = 'DeviantArt'
+                            socialMediaIcon = DeviantArtIcon
+                            break
+                          case key.startsWith('goodreads'):
+                            socialMediaName = 'Goodreads'
+                            socialMediaIcon = GoodreadsIcon
+                            break
+                          case key.startsWith('pinterest'):
+                            socialMediaName = 'Pinterest'
+                            socialMediaIcon = PinterestIcon
+                            break
+                          case key.startsWith('smule'):
+                            socialMediaName = 'Smule'
+                            socialMediaIcon = SmuleIcon
+                            break
+                          case key.startsWith('soundcloud'):
+                            socialMediaName = 'SoundCloud'
+                            socialMediaIcon = SoundCloudIcon
+                            break
+                          case key.startsWith('strava'):
+                            socialMediaName = 'Strava'
+                            socialMediaIcon = StravaIcon
+                            break
+                          case key.startsWith('tripadvisor'):
+                            socialMediaName = 'TripAdvisor'
+                            socialMediaIcon = TripAdvisorIcon
+                            break
+                          case key.startsWith('telegram'):
+                            socialMediaName = 'Telegram'
+                            socialMediaIcon = TelegramIcon
+                            break
+                          case key.startsWith('medium'):
+                            socialMediaName = 'Medium'
+                            socialMediaIcon = MediumIcon
+                            break
+                          case key.startsWith('ultimate_guitar'):
+                            socialMediaName = 'Ultimate Guitar'
+                            socialMediaIcon = UltimateGuitarIcon
+                            break
+                          case key.startsWith('youtube'):
+                            socialMediaName = 'YouTube'
+                            socialMediaIcon = YouTubeIcon
+                            break
+                          case key.startsWith('others'):
+                            socialMediaName = extractDomainName(url)
+                            socialMediaIcon = OthersIcon
+                            break
+                          // Add cases for other socialmedia URLs as needed
+                          default:
+                            break
+                        }
+
+                        if (socialMediaIcon && socialMediaName) {
+                          return renderSocialLink(
+                            url,
+                            socialMediaIcon,
+                            socialMediaName,
+                          )
+                        }
+
+                        return null // If no matching socialmedia key is found, return null
+                      },
                     )}
                   </>
                 )}

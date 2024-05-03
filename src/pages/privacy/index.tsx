@@ -7,14 +7,17 @@ type Props = {}
 const Privacy: React.FC<Props> = (props) => {
   return (
     <div
-      className={styles['explore-wrapper'] + ` ${styles['side-margin-auto']} ${styles['padding-top-12']}`}
+      className={
+        styles['explore-wrapper'] +
+        ` ${styles['side-margin-auto']} ${styles['padding-top-12']}`
+      }
     >
       <div className={styles.terms}>
         <h1 className={styles.pageheading}>Privacy Policy</h1>
 
         <p>[Updated: 27-Nov-2018]</p>
 
-        <h2 className={styles.heading}>Introduction</h2>
+        <h2 className={styles.pheading}>Introduction</h2>
         <p>
           Purple Cues Pvt Ltd (“PCPL”) is the licensed owner of the service
           hobbycue.com (also referred to as our website, site, or platform).
@@ -23,7 +26,7 @@ const Privacy: React.FC<Props> = (props) => {
           visiting, accessing, or using our website, you are agreeing to the
           terms of this Privacy Policy.
         </p>
-        <h2 className={styles.heading}>Registered User Information</h2>
+        <h2 className={styles.pheading}>Registered User Information</h2>
         <p>
           When you sign up to become a Registered User, you need to provide
           personal information such as your name, email ID, personal phone
@@ -47,7 +50,7 @@ const Privacy: React.FC<Props> = (props) => {
           first and last name, username, profile picture, unique identifiers and
           access tokens, and e-mail address.
         </p>
-        <h2 className={styles.heading}>Third-Party Transactions</h2>
+        <h2 className={styles.pheading}>Third-Party Transactions</h2>
         <p>
           If you create an account, your name, address, email and phone number
           will be stored and used to populate the checkout for future orders. If
@@ -61,7 +64,7 @@ const Privacy: React.FC<Props> = (props) => {
           information. We do not store or process this information and disclaim
           any liability that may arise from such transactions.
         </p>
-        <h2 className={styles.heading}>Cookies</h2>
+        <h2 className={styles.pheading}>Cookies</h2>
         <p>
           Similar to most websites, our website utilises “Cookies” and Web
           server logs to collect information about how our website is used.
@@ -77,7 +80,7 @@ const Privacy: React.FC<Props> = (props) => {
           on our website and may make it impossible for you to use certain
           services available on our website.
         </p>
-        <h2 className={styles.heading}>Session Data</h2>
+        <h2 className={styles.pheading}>Session Data</h2>
         <p>
           When you view, access, or use our website, we automatically log the
           session data. Session data is general information about your
@@ -94,7 +97,7 @@ const Privacy: React.FC<Props> = (props) => {
           Service Provider (ISP) and the approximate geographic location from an
           IP address.
         </p>
-        <h2 className={styles.heading}>Comments</h2>
+        <h2 className={styles.pheading}>Comments</h2>
         <p>
           When you leave comments on our website, we collect the data shown in
           the comments form, your IP address, and browser user agent string to
@@ -103,7 +106,7 @@ const Privacy: React.FC<Props> = (props) => {
           service to see if you are using it. You can read the Gravatar service
           Privacy Policy here: https://automattic.com/privacy/
         </p>
-        <h2 className={styles.heading}>External Sites</h2>
+        <h2 className={styles.pheading}>External Sites</h2>
         <p>
           Our website may contain links to third-party websites (“External
           Sites”). We have no control over the privacy practices of these
@@ -115,7 +118,7 @@ const Privacy: React.FC<Props> = (props) => {
           use when visiting any External Sites, and before providing any
           personal information to such External Sites.
         </p>
-        <h2 className={styles.heading}>Use of Information</h2>
+        <h2 className={styles.pheading}>Use of Information</h2>
         <p>
           Personal information provided by Registered Users is available to all
           users and visitors of our website. Personal information may also be
@@ -135,7 +138,7 @@ const Privacy: React.FC<Props> = (props) => {
           third party sources. The onus for such compliance is with you and we
           disclaim any liability that way arise from such copyright violations.
         </p>
-        <h2 className={styles.heading}>
+        <h2 className={styles.pheading}>
           Access to Personal and Account Information
         </h2>
         <p>
@@ -148,7 +151,7 @@ const Privacy: React.FC<Props> = (props) => {
           website. However, we retain the legal right to save any data we are
           obliged to keep for administrative, legal, or security purposes.
         </p>
-        <h2 className={styles.heading}>
+        <h2 className={styles.pheading}>
           Retention Period of Personal Information
         </h2>
         <p>
@@ -162,7 +165,7 @@ const Privacy: React.FC<Props> = (props) => {
           expired, we may either delete your personal information or retain it
           in a form such that it does not identify you personally.
         </p>
-        <h2 className={styles.heading}>Data Security and Privacy</h2>
+        <h2 className={styles.pheading}>Data Security and Privacy</h2>
         <p>
           We are committed to the security and privacy of the personal
           information that we collect in accordance with this Privacy Policy. We
@@ -172,7 +175,7 @@ const Privacy: React.FC<Props> = (props) => {
           involved in the processing and the nature of such data, and comply
           with applicable laws and regulations.
         </p>
-        <h2 className={styles.heading}>Disclosure to Third Parties</h2>
+        <h2 className={styles.pheading}>Disclosure to Third Parties</h2>
         <p>
           We may be required to disclose personal information in response to
           lawful requests by public authorities or third parties, including, but
@@ -180,7 +183,7 @@ const Privacy: React.FC<Props> = (props) => {
           regulatory compliance, outsourcing our support services, and
           protection of any and all of our rights or property.
         </p>
-        <h2 className={styles.heading}>Children’s Privacy</h2>
+        <h2 className={styles.pheading}>Children’s Privacy</h2>
         <p>
           We require that users of the site are at least 13 years old and have
           their own e-mail ID. We do not knowingly collect any personal
@@ -194,7 +197,7 @@ const Privacy: React.FC<Props> = (props) => {
           contact us at info@hobbycue.com so that we may take immediate steps to
           delete the child’s information.{' '}
         </p>
-        <h2 className={styles.heading}>Revisions to this Privacy Policy</h2>
+        <h2 className={styles.pheading}>Revisions to this Privacy Policy</h2>
         <p>
           This Privacy Policy is effective as of the date stated at the top of
           this Privacy Policy. However, in connection with specific products or
@@ -206,7 +209,7 @@ const Privacy: React.FC<Props> = (props) => {
           our website after we make any changes to this Privacy Policy, you are
           deemed to have accepted such changes.
         </p>
-        <h2 className={styles.heading}>Queries / Concerns</h2>
+        <h2 className={styles.pheading}>Queries / Concerns</h2>
         <p>
           For any queries or concerns regarding the Privacy Policy of our
           website, you may send an email to info@hobbycue.com

@@ -1,3 +1,15 @@
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+    
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .listing-page-type {
   margin: 0 !important;
   display: flex;
@@ -21,6 +33,7 @@
   flex-wrap: wrap;
   row-gap: var(--spacing-16);
   column-gap: var(--spacing-8);
+  animation: fadeDown 0.3s ease forwards;
 }
 
 .hobby-list li {
@@ -63,12 +76,14 @@ ul.location-wrapper {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-16);
+  animation: fadeDown 0.3s ease forwards;
 }
 ul.contact-wrapper {
   margin-top: var(--spacing-16);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-16);
+  animation: fadeDown 0.3s ease forwards;
 }
 
 ul.social-contact-wrapper {
@@ -76,6 +91,7 @@ ul.social-contact-wrapper {
   display: flex;
   flex-direction: row;
   gap: var(--spacing-16);
+  animation: fadeDown 0.3s ease forwards;
 }
 
 ul.location-wrapper li {
@@ -171,6 +187,7 @@ ul.seller-info-wrapper li svg:last-child {
   color: #939ca3;
   list-style: none;
   font-size: 14px;
+  animation: fadeDown 0.3s ease forwards;
 }
 .workingHour {
   margin-bottom: 8px;
@@ -236,6 +253,7 @@ ul.seller-info-wrapper li svg:last-child {
 
 .related img {
   border-radius: 4px;
+  object-fit: cover;
 }
 .item-title {
   margin-left: 10px;
@@ -246,6 +264,7 @@ ul.seller-info-wrapper li svg:last-child {
   list-style-type: none; /* This will remove the bullet points */
   padding: 0; /* This will remove any default padding */
   margin: 0; /* This will remove any default margin */
+  animation: fadeDown 0.3s ease forwards;
 }
 
 /* If you only want to target the li inside .related-list */
@@ -268,6 +287,7 @@ ul.seller-info-wrapper li svg:last-child {
 
 .location-map > div {
   width: 100%;
+  animation: fadeDown 0.3s ease forwards;
 }
 
 .display-none {

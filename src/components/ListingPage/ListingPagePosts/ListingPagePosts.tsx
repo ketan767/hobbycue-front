@@ -19,6 +19,8 @@ import ListingCard from '@/components/ListingCard/ListingCard'
 import ListingPageCard from '@/components/ListingPageCard/ListingPageCard'
 import PostCard from '@/components/PostCard/PostCard'
 import PostWrapper from '@/layouts/PinnedPost/PinnedPost'
+import { useRouter } from 'next/router'
+import { showProfileError } from '@/redux/slices/user'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -29,15 +31,11 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
   const dispatch = useDispatch()
   const [pagesData, setPagesData] = useState([])
   const { listingLayoutMode } = useSelector((state: RootState) => state.site)
-  const { user } = useSelector((state: RootState) => state)
-  const { is_onboarded } = useSelector((state: any) => state.user.user)
+  const { refreshNum } = useSelector((state: RootState) => state.post)
+  const { user } = useSelector((state: any) => state.user)
   const { isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
   )
-
-  useEffect(() => {
-    fetchPages()
-  }, [data])
 
   const fetchPages = () => {
     const id = data?._id
@@ -69,9 +67,32 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
       fetchPages()
     }
   }
+  useEffect(() => {
+    fetchPages()
+  }, [refreshNum])
 
-  let pinnedPosts = pagesData.filter((item: any) => item.isPinned === true)
-  let unpinnnedPosts = pagesData.filter((item: any) => item.isPinned !== true)
+  const router = useRouter()
+
+  const handleCreatePostClick = () => {
+    if (isLoggedIn) {
+      if (user.is_onboarded) {
+        dispatch(openModal({ type: 'create-post', closable: true }))
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
+    } else {
+      dispatch(
+        openModal({
+          type: 'auth',
+          closable: true,
+        }),
+      )
+    }
+  }
+
+  const pinnedPosts = pagesData.filter((item: any) => item.isPinned === true)
+  const unpinnnedPosts = pagesData.filter((item: any) => item.isPinned !== true)
 
   return (
     <>
@@ -82,14 +103,7 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
             className={`content-box-wrapper ${styles['start-post-btn-container']}`}
           >
             <button
-              onClick={() => {
-                if (is_onboarded)
-                  dispatch(openModal({ type: 'create-post', closable: true }))
-                else
-                  dispatch(
-                    openModal({ type: 'user-onboarding', closable: true }),
-                  )
-              }}
+              onClick={handleCreatePostClick}
               className={styles['start-post-btn']}
             >
               <svg
@@ -125,7 +139,14 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
           )}
         {!isLoggedIn && (
           <div className={styles['no-posts-container']}>
-            <p>Login to see the posts</p>
+            <p
+              className="cursor-pointer"
+              onClick={() => {
+                dispatch(openModal({ type: 'auth', closable: true }))
+              }}
+            >
+              Login to see the posts
+            </p>
           </div>
         )}
         {isLoggedIn &&

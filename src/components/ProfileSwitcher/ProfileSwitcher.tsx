@@ -7,13 +7,15 @@ import useOutsideAlerter from '@/hooks/useOutsideAlerter'
 
 import { updateActiveProfile } from '@/redux/slices/user'
 import { updateListingModalData } from '@/redux/slices/site'
+import { setFilters } from '@/redux/slices/post'
 
 type Props = {
-  className?:string
+  className?: string
+  dropdownClass?:string
 }
 
 const ProfileSwitcher: React.FC<Props> = (props) => {
-  const {className} = props;
+  const { className, dropdownClass } = props
   const { user, listing, activeProfile } = useSelector(
     (state: RootState) => state.user,
   )
@@ -26,7 +28,13 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
   useOutsideAlerter(dropdownRef, () => setShowDropdown(false))
 
   const handleUpdateActiveProfile = (type: 'user' | 'listing', data: any) => {
-    dispatch(updateActiveProfile({ type, data }))
+    dispatch(updateActiveProfile({ type, data }));
+    dispatch(setFilters({
+      location:null,
+      hobby:"",
+      genre:"",
+      seeMoreHobbies:false
+    }))
     if (type === 'listing') {
       dispatch(updateListingModalData(data))
     }
@@ -46,7 +54,7 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
         onClick={() => setShowDropdown((prev) => !prev)}
       >
         {activeProfile?.data?.profile_image ? (
-          <Image
+          <img
             className={styles['profile-image']}
             data-profile-type={activeProfile.type}
             src={activeProfile.data?.profile_image}
@@ -79,7 +87,7 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
             : activeProfile.data?.full_name}
         </p>
 
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <svg style={{rotate:showDropdown?'180deg':'0deg'}} width="24" height="24" viewBox="0 0 24 24" fill="none">
           <g clip-path="url(#clip0_25_51286)">
             <path
               d="M15.88 9.29055L12 13.1705L8.11998 9.29055C7.72998 8.90055 7.09998 8.90055 6.70998 9.29055C6.31998 9.68055 6.31998 10.3105 6.70998 10.7005L11.3 15.2905C11.69 15.6805 12.32 15.6805 12.71 15.2905L17.3 10.7005C17.69 10.3105 17.69 9.68055 17.3 9.29055C16.91 8.91055 16.27 8.90055 15.88 9.29055Z"
@@ -96,7 +104,7 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
         {showDropdown && (
           <div
             onClick={(e) => e.stopPropagation()}
-            className={`${styles['dropdown']} `}
+            className={`${styles['dropdown']} ${dropdownClass??''}`}
           >
             <ul className={styles['dd-list']}>
               <li
@@ -106,7 +114,7 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
                 }`}
               >
                 {user?.profile_image ? (
-                  <Image
+                  <img
                     className={styles['img']}
                     src={user?.profile_image}
                     alt=""
@@ -135,7 +143,7 @@ const ProfileSwitcher: React.FC<Props> = (props) => {
                     }`}
                   >
                     {page?.profile_image ? (
-                      <Image
+                      <img
                         className={styles['img']}
                         src={page?.profile_image}
                         alt=""

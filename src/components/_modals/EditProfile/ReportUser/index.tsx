@@ -39,6 +39,9 @@ type reportData = {
   user_id: string
   type: string
   reported_user_id: string
+  reported_user_name: string
+  reported_user_email: string
+  for_url: string
 }
 
 const UserReport: React.FC<Props> = ({
@@ -60,6 +63,9 @@ const UserReport: React.FC<Props> = ({
     user_id: '',
     type: '',
     reported_user_id: '',
+    reported_user_name: '',
+    reported_user_email: '',
+    for_url: '',
   })
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null)
   const [nextDisabled, setNextDisabled] = useState(false)
@@ -67,7 +73,7 @@ const UserReport: React.FC<Props> = ({
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [isError, setIsError] = useState(false)
-
+  const currentUrl = `${process.env.NEXT_PUBLIC_VERCEL_URL}/profile/${currprofile.profile_url}`
   const [inputErrs, setInputErrs] = useState<{ error: string | null }>({
     error: null,
   })
@@ -78,6 +84,9 @@ const UserReport: React.FC<Props> = ({
     user_id: user._id,
     type: 'user',
     reported_user_id: currprofile?._id,
+    reported_user_name: currprofile?.full_name,
+    reported_user_email: currprofile?.public_email,
+    for_url: currentUrl,
   })
   const [isChanged, setIsChanged] = useState(false)
   const [snackbar, setSnackbar] = useState({
@@ -93,6 +102,9 @@ const UserReport: React.FC<Props> = ({
       user_id: user._id,
       type: 'user',
       reported_user_id: currprofile?._id,
+      reported_user_name: currprofile?.full_name,
+      reported_user_email: currprofile?.public_email,
+      for_url: currentUrl,
     })
   }, [user])
 
@@ -101,12 +113,12 @@ const UserReport: React.FC<Props> = ({
     setData((prev) => ({ ...prev, description: value }))
     setInputErrs({ error: null })
 
-    const hasChanged = value !== initialData.description
-    setIsChanged(hasChanged)
+    // const hasChanged = value !== initialData.description
+    // setIsChanged(hasChanged)
 
-    if (onStatusChange) {
-      onStatusChange(hasChanged)
-    }
+    // if (onStatusChange) {
+    //   onStatusChange(hasChanged)
+    // }
   }
 
   const handleSubmit = async () => {
@@ -136,7 +148,7 @@ const UserReport: React.FC<Props> = ({
       setSubmitBtnLoading(false)
       setTimeout(() => {
         dispatch(closeModal())
-      }, 2000)
+      }, 2500)
     } else if (err) {
       setSubmitBtnLoading(false)
       setSnackbar({
@@ -156,6 +168,9 @@ const UserReport: React.FC<Props> = ({
       user_id: user._id,
       type: 'user',
       reported_user_id: currprofile?._id,
+      reported_user_name: currprofile?.full_name,
+      reported_user_email: currprofile?.public_email,
+      for_url: currentUrl,
     })
   }, [user])
 
@@ -188,9 +203,15 @@ const UserReport: React.FC<Props> = ({
 
   useEffect(() => {
     const handleKeyPress = (event: any) => {
-      if (event.key === 'Enter' && !textAreaRef.current?.matches(':focus')) {
-        event.preventDefault()
-        handleSubmit()
+      if (event.key === 'Enter') {
+        if (
+          (event?.srcElement?.tagName &&
+            event?.srcElement?.tagName?.toLowerCase() === 'textarea') ||
+          event?.srcElement?.tagName?.toLowerCase() === 'svg'
+        ) {
+          return
+        }
+        nextButtonRef.current?.click()
       }
     }
 
@@ -200,6 +221,12 @@ const UserReport: React.FC<Props> = ({
       window.removeEventListener('keydown', handleKeyPress)
     }
   }, [data?.description])
+
+  useEffect(() => {
+    if (textAreaRef.current) {
+      textAreaRef.current?.focus()
+    }
+  }, [textAreaRef.current])
 
   if (confirmationModal) {
     return (
@@ -211,12 +238,6 @@ const UserReport: React.FC<Props> = ({
       />
     )
   }
-
-  useEffect(() => {
-    if (textAreaRef.current) {
-      textAreaRef.current?.focus()
-    }
-  }, [textAreaRef.current])
 
   return (
     <>
@@ -316,7 +337,11 @@ const UserReport: React.FC<Props> = ({
               onClick={handleSubmit}
               disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
             >
-              Submit
+              {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'14px'} />
+              ) : (
+                'Submit'
+              )}
             </button>
           )}
         </footer>

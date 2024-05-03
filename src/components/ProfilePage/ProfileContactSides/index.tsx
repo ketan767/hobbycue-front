@@ -7,13 +7,15 @@ import { RootState } from '@/redux/store'
 import { openModal } from '@/redux/slices/modal'
 import Whatsapp from '@/assets/svg/whatsapp.svg'
 import Link from 'next/link'
+import { updateContactOpenStates } from '@/redux/slices/site'
 type Props = {
   data: ProfilePageData['pageData']
   expandData?: boolean
+  contactError?: boolean
 }
 
-const ProfileContactSide = ({ data, expandData }: Props) => {
-  const { profileLayoutMode } = useSelector((state: RootState) => state.site)
+const ProfileContactSide = ({ data, expandData, contactError }: Props) => {
+  const { profileLayoutMode, contactStates } = useSelector((state: RootState) => state.site)
   const { user } = useSelector((state: RootState) => state.user)
   const ulRef = useRef(null)
   const dispatch = useDispatch()
@@ -30,11 +32,21 @@ const ProfileContactSide = ({ data, expandData }: Props) => {
     }
   }, [data])
 
+  useEffect(()=>{
+    if(contactStates && typeof contactStates[data?._id] === 'boolean'){
+      setDisplayData(contactStates[data?._id])
+    }else if(data._id){
+      dispatch(updateContactOpenStates({[data._id]:displayData}))
+    }
+  },[data._id, contactStates])
+
   useEffect(() => {
     if (expandData !== undefined) setDisplayData(expandData)
   }, [expandData])
 
-  const itsMe = data?.public_email === user?.email
+  const itsMe = data?.public_email === user?.public_email
+
+  console.warn({ data })
 
   return (
     <>
@@ -43,18 +55,22 @@ const ProfileContactSide = ({ data, expandData }: Props) => {
         onEditBtnClick={() =>
           dispatch(openModal({ type: 'profile-contact-edit', closable: true }))
         }
-        setDisplayData={setDisplayData}
-        expandData={expandData}
+        setDisplayData={(arg0:boolean)=>{setDisplayData(prev=>{
+          dispatch(updateContactOpenStates({[data._id]:!prev}))
+          return !prev
+        })}}
+        expandData={displayData}
+        className={contactError ? styles['error'] : ''}
       >
         <h4 className={styles['heading']}>Contact Information</h4>
         <ul
           className={`${styles['contact-wrapper']} ${
-            displayData && styles['display-mobile-flex']
+            contactStates?.[data?._id] && styles['display-mobile-flex']
           }`}
         >
           {/* Phone */}
-          {data.phone.number && (
-            <Link href={`tel:${data?.phone.number}`}>
+          {data.phone.number && itsMe && (
+            <Link href={`tel:${data.phone.prefix + data?.phone.number}`}>
               <li className={styles['list-item']}>
                 <svg
                   width="24"
@@ -82,7 +98,7 @@ const ProfileContactSide = ({ data, expandData }: Props) => {
           )}
 
           {/* WhatsApp Number */}
-          {data.whatsapp_number.number && (
+          {data.whatsapp_number.number && itsMe && (
             <a
               href={`https://wa.me/${
                 data?.whatsapp_number?.prefix + data?.whatsapp_number?.number

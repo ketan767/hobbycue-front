@@ -76,7 +76,28 @@ const CommunityPages: React.FC<Props> = ({}) => {
               <PostCardSkeletonLoading />
             </>
           ) : allPages?.length === 0 ? (
-            <p>No pages found</p>
+            <>
+              <div className={styles['no-posts-div']}>
+                <p className={styles['no-posts-text']}>No pages available</p>
+                <div
+                  style={{
+                    display: 'flex',
+                    flex: 1,
+                    justifyContent: 'center',
+                  }}
+                ></div>
+              </div>
+              <div className={styles['no-posts-div']}>
+                <p className={styles['no-posts-text']}>No pages available</p>
+                <div
+                  style={{
+                    display: 'flex',
+                    flex: 1,
+                    justifyContent: 'center',
+                  }}
+                ></div>
+              </div>
+            </>
           ) : (
             allPages.map((post: any) => {
               return <ListingCard key={post._id} data={post} />

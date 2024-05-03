@@ -30,12 +30,19 @@ import RepostIcon from '../../../assets/icons/RepostIcon'
 import ShareIcon from '@/assets/icons/ShareIcon'
 import { updateImageUrl } from '@/redux/slices/modal'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import { showProfileError } from '@/redux/slices/user'
 
 type Props = {
   data: ProfilePageData['pageData']
+  titleError?: boolean
+  noDataChecker?: () => boolean
 }
 
-const ProfileHeader: React.FC<Props> = ({ data }) => {
+const ProfileHeader: React.FC<Props> = ({
+  data,
+  titleError,
+  noDataChecker,
+}) => {
   const router = useRouter()
   const dispatch = useDispatch()
   const [open, setOpen] = useState(false)
@@ -52,16 +59,16 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
 
   const handleDropdown = () => {
     if (open) {
+      setOpen(false)
       if (!isAuthenticated) {
         dispatch(openModal({ type: 'auth', closable: true }))
-        setOpen(false)
       }
     } else {
       setOpen(true)
     }
   }
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
-  const { isLoggedIn, isAuthenticated } = useSelector(
+  const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
   const location = typeof window !== 'undefined' ? window.location.href : ''
@@ -205,19 +212,28 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
       // dispatch(closeModal())
     }
   }
+
   const handleRepost = () => {
     if (!isAuthenticated) {
       dispatch(openModal({ type: 'auth', closable: true }))
       return
     }
+    if (noDataChecker?.() === true) {
+      return
+    }
     if (isLoggedIn) {
-      dispatch(
-        openModal({
-          type: 'create-post',
-          closable: true,
-          propData: { defaultValue: location },
-        }),
-      )
+      if (user.is_onboarded) {
+        dispatch(
+          openModal({
+            type: 'create-post',
+            closable: true,
+            propData: { defaultValue: location },
+          }),
+        )
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
     } else {
       dispatch(
         openModal({
@@ -233,16 +249,24 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
       dispatch(openModal({ type: 'auth', closable: true }))
       return
     }
+    if (noDataChecker?.() === true) {
+      return
+    }
     dispatch(updateShareUrl(window.location.href))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
   }
 
   const handleContact = () => {
-    if (!isAuthenticated) {
+    if (isLoggedIn) {
+      if (user.is_onboarded) {
+        dispatch(openModal({ type: 'User-Contact-To-Owner', closable: true }))
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
+    } else {
       dispatch(openModal({ type: 'auth', closable: true }))
-      return
     }
-    dispatch(openModal({ type: 'UserContactToOwner', closable: true }))
   }
 
   const OpenProfileImage = () => {
@@ -268,6 +292,24 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
     )
   }
 
+  const itsMe = data?._id === user?._id
+
+  const Dropdownref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        Dropdownref.current &&
+        !Dropdownref.current.contains(event.target as Node)
+      ) {
+        setOpen(false) // Close the dropdown when clicked outside
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [Dropdownref])
   return (
     <>
       <div className={`${styles['container']}`}>
@@ -277,7 +319,7 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
           <div className={styles['profile-img-wrapper']}>
             <div className={styles['relative']}>
               {data?.profile_image ? (
-                <Image
+                <img
                   onClick={OpenProfileImage}
                   className={`${styles['img']} imageclick`}
                   src={data?.profile_image}
@@ -314,10 +356,13 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
                 <h1
                   className={`${styles['name']} ${
                     eliipsis.name ? styles['text-ellipsis-mobile'] : ''
-                  }`}
+                  }
+                  ${titleError === true ? styles['error-name'] : ''}
+                  `}
                   ref={nameRef2}
                 >
                   {data.full_name}
+                  {titleError === true ? 'Full Name of Profile*' : ''}
                 </h1>
                 {profileLayoutMode === 'edit' && (
                   <Image
@@ -353,7 +398,7 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
           <section className={styles['center-container']}>
             <div className={styles['cover-img-wrapper']}>
               {data?.cover_image ? (
-                <Image
+                <img
                   onClick={OpenCoverImage}
                   className={`${styles['img']} imageclick`}
                   src={data.cover_image}
@@ -388,10 +433,13 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
                   <h1
                     className={`${styles['name']} ${
                       eliipsis.name ? styles['text-ellipsis'] : ''
-                    }`}
+                    }
+                    ${titleError === true ? styles['error-name'] : ''}
+                    `}
                     ref={nameRef1}
                   >
                     {data.full_name}
+                    {titleError === true ? 'Full Name of Profile*' : ''}
                   </h1>
                   {profileLayoutMode === 'edit' && (
                     <Image
@@ -424,6 +472,7 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
               <FilledButton
                 className={styles.contactBtn}
                 onClick={handleContact}
+                disabled={itsMe}
               >
                 Contact
               </FilledButton>
@@ -435,6 +484,9 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
             {profileLayoutMode === 'edit' && (
               <FilledButton
                 onClick={() => {
+                  if (noDataChecker?.() === true) {
+                    return
+                  }
                   dispatch(updateListingModalData({ type: 1 }))
                   dispatch(
                     openModal({ type: 'CopyProfileDataModal', closable: true }),
@@ -482,7 +534,10 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
               </Tooltip>
 
               {/* More Options Button */}
-              <div className={styles['action-btn-dropdown-wrapper']}>
+              <div
+                className={styles['action-btn-dropdown-wrapper']}
+                ref={Dropdownref}
+              >
                 <Tooltip title="Click to view options">
                   <div
                     onClick={(e) => handleDropdown()}
@@ -567,7 +622,11 @@ const ProfileHeader: React.FC<Props> = ({ data }) => {
                     />
                   )}
             </div>
-            <FilledButton className={styles.contactBtn} onClick={handleContact}>
+            <FilledButton
+              disabled={itsMe}
+              className={styles.contactBtn}
+              onClick={handleContact}
+            >
               Contact
             </FilledButton>
           </div>

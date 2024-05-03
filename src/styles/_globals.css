@@ -36,6 +36,12 @@
   /* Heights */
   --navbar-height-desktop: 5rem;
 }
+@media screen and (min-width: 1100px) {
+  .scrollable-section {
+    height: calc(100vh - var(--navbar-height-desktop) - var(--spacing-24));
+    overflow-y: auto;
+  }
+}
 
 
 @media screen and (max-width: 1100px) {
@@ -246,6 +252,10 @@ select:-webkit-autofill {
   border-color: 1px solid #ebedf0 !important;
   height: 48px;
 }
+.ql-toolbar.ql-snow .ql-formats button:hover {
+  border-radius: 4px;
+  background: var(--Grey-Hover, #F8F9FA);
+}
 .ql-toolbar.ql-snow .ql-formats button {
   opacity: 0.8;
   padding: 0 12px !important;
@@ -282,8 +292,9 @@ select:-webkit-autofill {
 }
 .ql-container {
   font-size: 14px !important;
-  max-width: 671px;
+  max-width: 800px;
   width: 100%;
+  font-family: 'Poppins';
 }
 
 .ck.ck-content.ck-editor__editable ul,
@@ -343,6 +354,33 @@ select:-webkit-autofill {
 
 .btnOutlinePurple button:focus-visible {
   outline-color: #8064a2;
+}
+
+.btnOutlinePurple button:hover svg path,
+.btnOutlinePurple button:focus svg path,
+.btnOutlinePurple button:active svg path,
+.btnOutlinePurple button:target svg path,
+.btnOutlinePurple button:visited svg path,
+.btnOutlinePurple button:focus-visible svg path {
+  stroke: #8064a2 !important;
+}
+
+.btnOutlinePurple button:hover svg line,
+.btnOutlinePurple button:focus svg line,
+.btnOutlinePurple button:active svg line,
+.btnOutlinePurple button:target svg line,
+.btnOutlinePurple button:visited svg line,
+.btnOutlinePurple button:focus-visible svg line {
+  stroke: #8064a2 !important;
+}
+
+.btnOutlinePurple button:hover svg rect,
+.btnOutlinePurple button:focus svg rect,
+.btnOutlinePurple button:active svg rect,
+.btnOutlinePurple button:target svg rect,
+.btnOutlinePurple button:visited svg rect,
+.btnOutlinePurple button:focus-visible svg rect{
+  fill: #8064a2 !important;
 }
 
 @media screen and (max-width: 1100px) {
@@ -419,15 +457,34 @@ select:-webkit-autofill {
   .modal-mob-btn-save {
     display: block;
   }
+
+  .settings-title{
+    padding: var(--spacing-16);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--Purple-1, #8064a2);
+    font-family: Poppins;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 16px;
+  }
+  .settings-container{
+    margin-top: var(--spacing-12);
+  }
 }
 @media screen and (max-width: 500px) {
   .ql-toolbar.ql-snow .ql-formats button {
-    padding: 0 4px !important;
+    padding: 0 12px !important;
   }
 }
 @media screen and (max-width: 380px) {
   .ql-toolbar.ql-snow .ql-formats button {
-    padding: 0 1px !important;
+    padding: 0 6px !important;
   }
 }
 
@@ -464,6 +521,10 @@ select:-webkit-autofill {
   border-radius: 8px;
 }
 
+.textFieldClass>div>input{
+  padding: 12px 16px;
+}
+
 .textFieldClass:hover{
   border: none;
   outline: none;
@@ -493,4 +554,32 @@ border: 1px solid #8064a2 !important;
 
 .static-position{
   position: static;
+}
+
+.cursor-pointer{
+  cursor: pointer;
+}
+
+@media screen and (max-width:1100px) {
+  .margin-bottom-55vh{
+    margin-bottom: 55vh;
+  }
+  .margin-bottom-50vh{
+    margin-bottom: 50vh;
+  }
+  .margin-bottom-52vh{
+    margin-bottom: 52vh;
+  }
+  .margin-bottom-68vh{
+    margin-bottom: 68vh;
+  }
+  .margin-bottom-40vh{
+    margin-bottom: 40vh;
+  }
+  .margin-bottom-43vh{
+    margin-bottom: 43vh;
+  }
+  .margin-bottom-65vh{
+    margin-bottom: 65vh;
+}
 }

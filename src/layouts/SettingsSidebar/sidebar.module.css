@@ -45,6 +45,11 @@
    min-width: 194px;
    padding: 7px 8px;
    width: 100%;
+   min-height: 32px;
+}
+
+.listItem:hover{
+   background: #ccc1da;
 }
 
 .listLink{

@@ -3,7 +3,6 @@ import styles from './styles.module.css'
 import { useMediaQuery } from '@mui/material'
 import hcSmallLogo from '@/assets/image/logo-small.png'
 import Image from 'next/image'
-
 interface InstallPopupProps {
   showAddToHome: boolean | 'loading'
   setShowAddToHome: React.Dispatch<React.SetStateAction<boolean | 'loading'>>
@@ -15,24 +14,66 @@ const InstallPopup: FC<InstallPopupProps> = ({
 }) => {
   const isMobile = useMediaQuery('(max-width:1100px)')
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
-
   useEffect(() => {
     const handleBeforeInstallPrompt = (event: Event) => {
       event.preventDefault()
+      console.log(event,'click');
+      
       setDeferredPrompt(event)
     }
+    if ('serviceWorker' in navigator) {
+       
+         console.log('sas');
+    navigator.serviceWorker.register('./sw.js')        
+        .then(function(registration) {
+          // Registration was successful
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+         
+          const handleBeforeInstallPrompt = (event: Event) => {
+            event.preventDefault()
+            console.log(event,'click');
+            
+            setDeferredPrompt(event)
+          }
+          window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+          console.log('click');
+          
+        }, function(err) {
+          // Registration failed
+          console.log('ServiceWorker registration failed: ', err);
+        });
+       console.log('click1');
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-
+    }
     return () => {
       window.removeEventListener(
         'beforeinstallprompt',
         handleBeforeInstallPrompt,
       )
     }
-  }, [])
+  }, []);
+  // useEffect(() => {
+  //   console.log('click22');
+  //   const handleBeforeInstallPrompt = (event: Event) => {
+  //     event.preventDefault()
+  //     console.log(event,'click');
+      
+  //     setDeferredPrompt(event)
+  //   }
+
+  //   window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+
+  //   return () => {
+  //     window.removeEventListener(
+  //       'beforeinstallprompt',
+  //       handleBeforeInstallPrompt,
+  //     )
+  //   }
+  // }, [])
 
   const addToHomeScreen = () => {
+    console.log(deferredPrompt,'click');
+    
     if (deferredPrompt) {
       (deferredPrompt as any).prompt();
       (deferredPrompt as any).userChoice.then((choiceResult: any) => {

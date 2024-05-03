@@ -133,7 +133,18 @@ const ListingContactEditModal: React.FC<Props> = ({
   }, [])
   const handleInputChange = (event: any) => {
     const { name, value } = event.target
-
+    if((data.phone.error==='At least one mode of contact is required'||data.public_email.error==='At least one mode of contact is required')&&(name==='phone'||name==='public_email')){
+      setData((prev) => ({
+        ...prev,
+        phone:{...prev.phone,error:null},
+        public_email:{...prev.public_email,error:null},
+        [name]: {
+          ...prev[name as keyof ListingContactData],
+          number: value || '',
+          error: null,
+        },
+      }))
+    }
     // Check if the input is for phone or whatsapp number
     if (name === 'phone' || name === 'whatsapp_number') {
       setData((prev) => ({
@@ -163,17 +174,22 @@ const ListingContactEditModal: React.FC<Props> = ({
   }
 
   const handleBlur = (e: any) => {
-    const {name,value} = e.target;
-      setWpSelectedCountryCode(selectedCountryCode)
-    if(name==="phone"){
+    const { name, value } = e.target
+    setWpSelectedCountryCode(selectedCountryCode)
+    if (name === 'phone') {
       setData((prev) => ({
         ...prev,
-        "whatsapp_number": {
-          ...prev["whatsapp_number"],
+        whatsapp_number: {
+          ...prev['whatsapp_number'],
           number: value || '',
           error: null,
         },
       }))
+    }
+  }
+  const handlePhoneBlur = (e: any) => {
+    if (tick) {
+      handleBlur(e)
     }
   }
   const handleBack = async () => {
@@ -213,13 +229,18 @@ const ListingContactEditModal: React.FC<Props> = ({
   const handlePrefixChange = (element: any) => {
     const id = element?.id
     setSelectedCountryCode(countryData[id]?.phonePrefix)
+    if (tick) {
+      handleWpPrefixChange(element)
+    }
   }
   const handleSubmit = async () => {
+    let hasError = false
     console.log(data.website)
     if (!data.whatsapp_number.number) {
       if (!data.phone.number && !data.public_email.value) {
         emailRef.current?.focus()
-        return setData((prev) => {
+        hasError = true
+        setData((prev) => {
           return {
             ...prev,
             phone: {
@@ -237,10 +258,12 @@ const ListingContactEditModal: React.FC<Props> = ({
     if (data.phone.number) {
       if (
         !containOnlyNumbers(data.phone.number.toString().trim()) ||
-        data.phone.number.toString().trim().length !== 10
+        data.phone.number.toString().replace(/\s/g, '').length > 12 ||
+        data.phone.number.toString().replace(/\s/g, '').length < 7
       ) {
         phoneRef.current?.focus()
-        return setData((prev) => {
+        hasError = true
+        setData((prev) => {
           return {
             ...prev,
             phone: { ...prev.phone, error: 'Enter a valid phone number' },
@@ -251,10 +274,12 @@ const ListingContactEditModal: React.FC<Props> = ({
     if (data.whatsapp_number.number) {
       if (
         !containOnlyNumbers(data.whatsapp_number.number.toString().trim()) ||
-        data.whatsapp_number.number.toString().trim().length !== 10
+        data.whatsapp_number.number.toString().replace(/\s/g, '').length > 12 ||
+        data.whatsapp_number.number.toString().replace(/\s/g, '').length < 7
       ) {
         WhtphoneRef.current?.focus()
-        return setData((prev) => {
+        hasError = true
+        setData((prev) => {
           return {
             ...prev,
             whatsapp_number: {
@@ -271,7 +296,8 @@ const ListingContactEditModal: React.FC<Props> = ({
         !emailRegex.test(data.public_email.value.trim())
       ) {
         emailRef.current?.focus()
-        return setData((prev) => ({
+        hasError = true
+        setData((prev) => ({
           ...prev,
           public_email: {
             ...prev.public_email,
@@ -283,7 +309,8 @@ const ListingContactEditModal: React.FC<Props> = ({
     if (data.website.value && data.website.value !== '') {
       websiteRef.current?.focus()
       if (!validateUrl(data.website.value)) {
-        return setData((prev) => {
+        hasError = true
+        setData((prev) => {
           return {
             ...prev,
             website: {
@@ -294,15 +321,18 @@ const ListingContactEditModal: React.FC<Props> = ({
         })
       }
     }
+    if (hasError === true) {
+      return
+    }
     const jsonData = {
       phone: {
-        number: data.phone.number,
+        number: data.phone.number?.replace(/\s/g, ''),
         prefix: selectedCountryCode,
       },
       public_email: data.public_email.value,
       website: data.website.value,
       whatsapp_number: {
-        number: data.whatsapp_number.number,
+        number: data.whatsapp_number.number?.replace(/\s/g, ''),
         prefix: selectedWpCountryCode,
       },
     }
@@ -356,7 +386,7 @@ const ListingContactEditModal: React.FC<Props> = ({
       )
   }, [user])
 
-  // client said to remove this checkbox function
+  // client said to remove this checkbox function and add it again
   // useEffect(() => {
   //   if (tick) {
   //     setData((prev) => {
@@ -376,7 +406,10 @@ const ListingContactEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        nextButtonRef.current?.focus()
+        if(event?.srcElement?.tagName === "svg"){
+          return;
+        }
+        nextButtonRef.current?.click()
       }
     }
 
@@ -466,6 +499,24 @@ const ListingContactEditModal: React.FC<Props> = ({
                 <p>At least one mode of contact is required</p>
                 <OutlinedButton
                   className={styles['use-mine-button']}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      setData((prev) => {
+                        return {
+                          ...prev,
+                          public_email: { value: user.email, error: null },
+                          phone: {
+                            number: data.phone.number,
+                            prefix: selectedCountryCode,
+                            error: null,
+                          },
+                          website: { value: user.website, error: null },
+                        }
+                      })
+                    }
+                  }}
                   onClick={() =>
                     setData((prev) => {
                       return {
@@ -554,20 +605,23 @@ const ListingContactEditModal: React.FC<Props> = ({
                     value={data.phone.number}
                     name="phone"
                     autoComplete="phone"
-                    required
                     ref={phoneRef}
                     onChange={handleInputChange}
                     className={styles['phone-input']}
-                    onBlur={handleBlur}
+                    onBlur={handlePhoneBlur}
                   />
                 </div>
 
                 <p className={styles['helper-text']}>{data.phone.error}</p>
               </div>
-              <div className={styles['input-box']}>
+              <div
+                className={`${styles['input-box']} ${
+                  data.whatsapp_number.error ? styles['input-box-error'] : ''
+                }`}
+              >
                 <label className={styles['whatsapp-label']}>
                   WhatsApp
-                  {/* <CustomTooltip title="Use same">
+                  <CustomTooltip title="Use same">
                     <div>
                       <Checkbox
                         size="small"
@@ -588,12 +642,53 @@ const ListingContactEditModal: React.FC<Props> = ({
                               }
                             })
                             setWpSelectedCountryCode('+91')
+                          } else {
+                            setData((prev) => {
+                              return {
+                                ...prev,
+                                whatsapp_number: {
+                                  number: prev['phone'].number,
+                                  prefix: selectedCountryCode,
+                                },
+                              }
+                            })
+                            setWpSelectedCountryCode(selectedCountryCode)
                           }
                           setTick(!tick)
                         }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            if (tick === true) {
+                              setData((prev) => {
+                                return {
+                                  ...prev,
+                                  whatsapp_number: {
+                                    number: '',
+                                    prefix: '+91',
+                                  },
+                                }
+                              })
+                              setWpSelectedCountryCode('+91')
+                            } else {
+                              setData((prev) => {
+                                return {
+                                  ...prev,
+                                  whatsapp_number: {
+                                    number: prev['phone'].number,
+                                    prefix: selectedCountryCode,
+                                  },
+                                }
+                              })
+                              setWpSelectedCountryCode(selectedCountryCode)
+                            }
+                            setTick(!tick)
+                          }
+                        }}
                       />
                     </div>
-                  </CustomTooltip> */}
+                  </CustomTooltip>
                 </label>
                 <div className={styles['phone-prefix-input']}>
                   <DropdownMenu
@@ -707,7 +802,11 @@ const ListingContactEditModal: React.FC<Props> = ({
               onClick={handleSubmit}
               disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
             >
-              Save
+              {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'14px'} />
+              ) : (
+                'Save'
+              )}
             </button>
           )}
         </footer>

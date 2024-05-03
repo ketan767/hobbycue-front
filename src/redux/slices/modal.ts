@@ -33,6 +33,7 @@ export type ModalType =
   | 'upload-image-user'
   | 'social-media-edit'
   | 'change-password'
+  | 'email-forget-password'
   | 'confirm-email'
   | 'email-sent'
   | 'reset-password'
@@ -50,8 +51,8 @@ export type ModalType =
   | 'SupportUserModal'
   | 'UserReportModal'
   | 'ListingReportModal'
-  | 'ListingContactToOwner'
-  | 'UserContactToOwner'
+  | 'Listing-Contact-To-Owner'
+  | 'User-Contact-To-Owner'
   | 'add-genre'
   | 'save-Modal'
 

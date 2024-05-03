@@ -41,7 +41,7 @@ background: var(--Purple-3, #F7F5F9) !important;
     width: 100%;
     max-height: 0;
     overflow: hidden;
-    transition: 0.2s;
+    transition: 0.3s;
     z-index: 500;
     background-color: white;
     border-radius: 4px;
@@ -97,6 +97,7 @@ background: var(--Purple-3, #F7F5F9) !important;
     flex-direction: row;
     height: 45px;
     min-width: 129px;
+    width: 100%;
 }
 
 @media screen and (max-width: 1100px) {

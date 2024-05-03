@@ -18,6 +18,9 @@ type Props = {
   children: React.ReactElement
   setExpandAll?: (value: boolean) => void
   expandAll?: boolean
+  navigationTabs?: (tab: string) => void
+  titleError?: boolean
+  noDataChecker?: () => boolean
 }
 
 const ProfileLayout: React.FC<Props> = ({
@@ -26,6 +29,9 @@ const ProfileLayout: React.FC<Props> = ({
   data,
   setExpandAll,
   expandAll,
+  navigationTabs,
+  titleError,
+  noDataChecker,
 }) => {
   const router = useRouter()
   const dispatch = useDispatch()
@@ -34,7 +40,7 @@ const ProfileLayout: React.FC<Props> = ({
     (state: RootState) => state.user,
   )
   const [showSmallHeader, setShowSmallHeader] = useState(false)
-
+  const { activeModal } = useSelector((state: RootState) => state.modal)
   useEffect(() => {
     if (
       isLoggedIn &&
@@ -58,7 +64,9 @@ const ProfileLayout: React.FC<Props> = ({
   useEffect(() => {
     if (!isLoggedIn) {
       dispatch(openModal({ type: 'auth', closable: true }))
-    } else dispatch(closeModal())
+    } else if (activeModal !== 'user-onboarding') {
+      dispatch(closeModal())
+    }
   }, [isLoggedIn])
 
   function checkScroll() {
@@ -76,13 +84,25 @@ const ProfileLayout: React.FC<Props> = ({
   return (
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
-      <ProfileHeader data={data.pageData} />
+      <ProfileHeader
+        noDataChecker={noDataChecker}
+        titleError={titleError}
+        data={data.pageData}
+      />
       <div className={styles['nav']}>
-        <ProfileNavigationLinks activeTab={activeTab} />
+        <ProfileNavigationLinks
+          navigationTabs={navigationTabs}
+          activeTab={activeTab}
+        />
       </div>
 
       {showSmallHeader && (
-        <ProfileHeaderSmall data={data.pageData} activeTab={activeTab} />
+        <ProfileHeaderSmall
+          navigationTabs={navigationTabs}
+          data={data.pageData}
+          activeTab={activeTab}
+          noDataChecker={noDataChecker}
+        />
       )}
 
       <div
@@ -95,6 +115,7 @@ const ProfileLayout: React.FC<Props> = ({
         <Image
           src={ChevronDown}
           className={`${expandAll ? styles['rotate-180'] : styles['rotate-0']}`}
+          style={{transition:"all 0.3s ease"}}
           alt=""
         />
       </div>

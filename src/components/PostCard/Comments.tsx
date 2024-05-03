@@ -13,6 +13,7 @@ import CommentCheckWithUrl from './CommentCheckWithUrl'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { setActivePost } from '@/redux/slices/post'
 import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
+import { showProfileError } from '@/redux/slices/user'
 
 type Props = {
   styles: any
@@ -59,7 +60,9 @@ const PostComments = ({
   const addComment = async (event: any) => {
     event.preventDefault()
     if (user.is_onboarded === false) {
-      dispatch(openModal({ type: 'user-onboarding', closable: true }))
+      router.push(`/profile/${user.profile_url}`)
+      dispatch(showProfileError(true))
+      dispatch(closeModal())
       return
     }
     if (isEmptyField(inputValue.trim())) return
@@ -111,7 +114,7 @@ const PostComments = ({
         {/* Comment Input */}
         <section className={styles['inputContainer']}>
           {activeProfile?.data?.profile_image ? (
-            <Image
+            <img
               className={styles['inputAuthorImage']}
               src={activeProfile?.data?.profile_image}
               alt="Author Profile"
@@ -172,7 +175,7 @@ const PostComments = ({
                     {/* Profile Image */}
                     <>
                       {comment?._author?.profile_image ? (
-                        <Image
+                        <img
                           className={styles['inputAuthorImage']}
                           src={comment?._author?.profile_image}
                           alt="Author Profile"
@@ -251,7 +254,7 @@ const PostComments = ({
                   {/* Profile Image */}
                   <>
                     {comments?.[0]?._author?.profile_image ? (
-                      <Image
+                      <img
                         className={styles['inputAuthorImage']}
                         src={comments?.[0]?._author?.profile_image}
                         alt="Author Profile"

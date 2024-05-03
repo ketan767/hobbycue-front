@@ -23,7 +23,7 @@ const sidebarItems = [
   },
   {
     text: 'Account & Data',
-    link: '/settings/data-others',
+    link: '/settings/account-data',
   },
 ]
 

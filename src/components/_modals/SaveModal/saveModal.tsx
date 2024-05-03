@@ -7,7 +7,13 @@ import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import { closeModal, openModal, setHasChanges } from '@/redux/slices/modal'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import { useRouter } from 'next/router'
-import { CircularProgress } from '@mui/material'
+import { CircularProgress, useMediaQuery } from '@mui/material'
+import { showProfileError, updateUser } from '@/redux/slices/user'
+import {
+  getMyProfileDetail,
+  updateMyProfileDetail,
+} from '@/services/user.service'
+import { sendWelcomeMail } from '@/services/auth.service'
 
 type Props = {
   setConfirmationModal?: any
@@ -31,17 +37,26 @@ const SaveModal: React.FC<Props> = ({
   const [YesBtnLoading, setYesBtnLoading] = useState<boolean>(false)
   const { user } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
+  const { activeModal } = useSelector((state: RootState) => state.modal)
   const dispatch = useDispatch()
   const router = useRouter()
   const onboardcheck = () => {
     console.log('isError', isError)
     if (OnBoarding || !user.is_onboarded) {
       router.push(`/profile/${user.profile_url}`)
+      setConfirmationModal(false)
+      dispatch(closeModal())
+      dispatch(showProfileError(true))
     } else if (isError) {
       setConfirmationModal(false)
     }
 
     dispatch(setHasChanges(false))
+  }
+  const handleListingOnboarding = async () => {
+    if (activeModal === 'listing-onboarding') {
+      window.location.reload()
+    }
   }
 
   const handleYesClick = async () => {
@@ -52,9 +67,51 @@ const SaveModal: React.FC<Props> = ({
   }
   const wrapperRef = useRef<HTMLDivElement>(null)
 
+  const IsOnboardingCompete = async () => {
+    const payload: sendWelcomeMailPayload = {
+      to: user?.public_email,
+      name: user.full_name,
+    }
+    console.log('activeprofileee', user)
+    if (activeModal === 'profile-hobby-edit') {
+      if (!user.is_onboarded) {
+        const { err: error, res: response } = await getMyProfileDetail()
+
+        if (
+          response?.data?.data?.user?.completed_onboarding_steps.length === 3
+        ) {
+          await sendWelcomeMail(payload)
+
+          const data = { is_onboarded: true }
+          const { err, res } = await updateMyProfileDetail(data)
+
+          if (err) return console.log(err)
+          if (res?.data.success) {
+            dispatch(updateUser(res.data.data.user))
+            setConfirmationModal(false)
+            dispatch(closeModal())
+          }
+
+          window.location.href = `/community`
+        }
+      } else {
+        router.reload()
+      }
+    } else if (activeModal === 'listing-hobby-edit') {
+      router.reload()
+    } else if (activeModal !== 'profile-general-edit') {
+      window.location.href = `/profile/${user.profile_url}`
+      dispatch(showProfileError(true))
+      setConfirmationModal(false)
+      dispatch(closeModal())
+    }
+  }
+
+  const isMobile = useMediaQuery('(max-width:1100px)')
+
   if (reloadrouter) {
-    router.reload()
-    return <div></div>
+    IsOnboardingCompete()
+    return <></>
   }
 
   return (
@@ -68,13 +125,17 @@ const SaveModal: React.FC<Props> = ({
         <div className={styles['buttons']}>
           <FilledButton className={styles['button1']} onClick={handleYesClick}>
             {YesBtnLoading ? (
-              <CircularProgress color="inherit" size={'24px'} />
+              <CircularProgress
+                color="inherit"
+                size={isMobile ? '14px' : '24px'}
+              />
             ) : (
               'Yes'
             )}
           </FilledButton>
           <OutlinedButton
             onClick={() => {
+              handleListingOnboarding()
               handleClose
               onboardcheck()
               setConfirmationModal(false)

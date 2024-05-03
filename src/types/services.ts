@@ -25,7 +25,7 @@ type UpdateProfilePayload = {
   phone?: {number: string, prefix: string}
   website?: string
   about?: string
-
+  public_email?: string
   street?: string
   society?: string
   locality?: string
@@ -79,6 +79,14 @@ interface InvitetoHobbycuePayload {
 }
 
 interface InviteToCommunityPayload {
+  to:string
+  name: string
+  _id: string
+  hobby_id: string
+  location: string
+}
+
+interface sendWelcomeMailPayload {
   to:string
   name: string
 }

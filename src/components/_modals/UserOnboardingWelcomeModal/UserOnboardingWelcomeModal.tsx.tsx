@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import styles from './UserOnboardingWelcomeModal.module.css'
+import LogoSmall from '@/assets/image/logo-small.png'
 import Image from 'next/image'
 import FilledButton from '@/components/_buttons/FilledButton'
 import { useRouter } from 'next/router'
@@ -8,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
 import { IconButton, InputAdornment, TextField } from '@mui/material'
 import SearchIcon from '@/assets/svg/search-small.svg'
-import { setShowPageLoader } from '@/redux/slices/site'
+import { increaseSearchRefresh, setShowPageLoader } from '@/redux/slices/site'
 import {
   getMyProfileDetail,
   searchUsers,
@@ -23,6 +24,7 @@ import {
   setTypeResultTwo,
   setUserSearchResults,
 } from '@/redux/slices/search'
+import { increaseSidemenuRefresh } from '@/redux/slices/site'
 import { searchPages } from '@/services/listing.service'
 import { getAllHobbies } from '@/services/hobby.service'
 import { RootState } from '@/redux/store'
@@ -62,11 +64,11 @@ const UserOnboardingWelcomeModal = () => {
     message: '',
   })
   const searchResult = async () => {
-    if(localStorage){
-      localStorage.setItem("modal-shown-after-login","true");
+    if (localStorage) {
+      localStorage.setItem('modal-shown-after-login', 'true')
     }
-    dispatch(closeModal())
     router.push('/search')
+    dispatch(closeModal())
     const searchValue = data.search.value.trim()
     const taglineValue = ''
     const cityValue = ''
@@ -180,6 +182,23 @@ const UserOnboardingWelcomeModal = () => {
       console.error('An error occurred during the combined search:', error)
     }
   }
+
+  const openSidebar = () => {
+    if (localStorage) {
+      localStorage.setItem('modal-shown-after-login', 'true')
+    }
+    dispatch(increaseSidemenuRefresh())
+    dispatch(closeModal())
+  }
+
+  const openSearchToggle = () => {
+    if (localStorage) {
+      localStorage.setItem('modal-shown-after-login', 'true')
+    }
+    dispatch(increaseSearchRefresh())
+    dispatch(closeModal())
+  }
+
   const updateWelcomeStatus = async () => {
     const { err: error, res: response } = await getMyProfileDetail()
     console.log('userdataaa', response)
@@ -222,10 +241,11 @@ const UserOnboardingWelcomeModal = () => {
             style={{ left: `calc(0rem + ${screenWidth}px - 5px)` }}
             className={styles['my-community-wrapper']}
           >
-            <Image
+            <img
+              className={styles['hobbycue-logo']}
               src="/logo-welcome-small.svg"
               onClick={() => {
-                localStorage.setItem("modal-shown-after-login","true");
+                localStorage.setItem('modal-shown-after-login', 'true')
                 dispatch(closeModal())
                 router.push('/community')
               }}
@@ -252,7 +272,7 @@ const UserOnboardingWelcomeModal = () => {
                     className={styles['button']}
                     onClick={() => {
                       router.push('/community')
-                      localStorage.setItem("modal-shown-after-login","true");
+                      localStorage.setItem('modal-shown-after-login', 'true')
                       dispatch(closeModal())
                     }}
                   >
@@ -351,7 +371,7 @@ const UserOnboardingWelcomeModal = () => {
                     className={styles['button']}
                     onClick={() => {
                       router.push('/search')
-                      localStorage.setItem("modal-shown-after-login","true");
+                      localStorage.setItem('modal-shown-after-login', 'true')
                       dispatch(closeModal())
                     }}
                   >
@@ -362,30 +382,36 @@ const UserOnboardingWelcomeModal = () => {
             </div>
           </div>
           <div
-            style={{ right: `calc(1.5rem + ${screenWidth}px)` }}
+            style={{ right: `calc(1.5rem + ${screenWidth}px + 12px)` }}
             className={styles['my-profile-wrapper']}
           >
             <div className={styles['my-profile']}>
               {user.profile_image ? (
-                <Image
+                <img
                   onClick={() => {
-                    localStorage.setItem("modal-shown-after-login","true");
+                    localStorage.setItem('modal-shown-after-login', 'true')
                     dispatch(closeModal())
                     router.push(`/profile/${user?.profile_url}`)
                   }}
-                  src={
-                    user?.profile_image ? user?.profile_image : defaultUserImage
-                  }
+                  src={user?.profile_image}
                   alt=""
                   width={50}
                   height={50}
                   className={styles['my-profile-rounded']}
                 />
               ) : (
-                <div
-                  style={{ width: '50px', height: '50px' }}
-                  className="default-user-icon"
-                ></div>
+                <Image
+                  onClick={() => {
+                    localStorage.setItem('modal-shown-after-login', 'true')
+                    dispatch(closeModal())
+                    router.push(`/profile/${user?.profile_url}`)
+                  }}
+                  src={defaultUserImage}
+                  alt=""
+                  width={50}
+                  height={50}
+                  className={styles['my-profile-rounded']}
+                />
               )}
             </div>
             <div>
@@ -406,7 +432,7 @@ const UserOnboardingWelcomeModal = () => {
                   <FilledButton
                     className={styles['button']}
                     onClick={() => {
-                      localStorage.setItem("modal-shown-after-login","true");
+                      localStorage.setItem('modal-shown-after-login', 'true')
                       dispatch(closeModal())
                       router.reload()
                     }}
@@ -419,7 +445,7 @@ const UserOnboardingWelcomeModal = () => {
           </div>
           <div className={styles['welcome-wrapper']}>
             <div>
-              <Image src={'/celebration.png'} alt="" width={60} height={60} />
+              <img src={'/celebration.png'} alt="" width={60} height={60} />
             </div>
             <div>
               <p>Welcome to HobbyCue</p>
@@ -443,9 +469,9 @@ const UserOnboardingWelcomeModal = () => {
           <div>
             <div className={styles['my-community-wrapper-mobile']}>
               <Image
-                src="/logo-welcome-small.svg"
+                src={LogoSmall}
                 onClick={() => {
-                  localStorage.setItem("modal-shown-after-login","true");
+                  localStorage.setItem('modal-shown-after-login', 'true')
                   dispatch(closeModal())
                 }}
                 alt=""
@@ -456,7 +482,7 @@ const UserOnboardingWelcomeModal = () => {
                 <div className={styles['my-community-mobile']}>
                   <svg
                     width="44"
-                    height="314"
+                    height="300"
                     viewBox="0 0 44 314"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -478,9 +504,9 @@ const UserOnboardingWelcomeModal = () => {
               </div>
             </div>
             <div className={styles['search-wrapper-mobile']}>
-              <Image
-                onClick={searchResult}
-                src={'/searchIcon.svg'}
+              <img
+                onClick={openSearchToggle}
+                src="/searchIcon.svg"
                 width={30}
                 height={30}
                 alt=""
@@ -515,6 +541,7 @@ const UserOnboardingWelcomeModal = () => {
                 width={30}
                 height={30}
                 alt=""
+                onClick={()=>{openSidebar()}}
               />
               <div>
                 <div className={styles['my-profile-mobile']}>
@@ -542,14 +569,24 @@ const UserOnboardingWelcomeModal = () => {
             </div>
             <div className={styles['welcome-wrapper-mobile']}>
               <div>
-                <Image src={'/celebration.png'} alt="" width={60} height={60} />
+                <img src="/celebration.png" alt="" width={60} height={60} />
               </div>
               <div>
-                <p>Welcome to HobbyCue</p>
+                <p className={styles['mobile-welcome-txt']}>
+                  Welcome to HobbyCue
+                </p>
                 <div>
                   <p>Choose from one of the options to continue.</p>
                   <p>You can always find them on the top navigation.</p>
                 </div>
+              </div>
+              <div className={styles['do-not-show-next-time']}>
+                <Image
+                  alt={'dont show checkbox'}
+                  onClick={ShowWelcome}
+                  src={showWelcome ? checkedboxUnChecked : checkedboxChecked}
+                />
+                <p>Do not show this next time</p>
               </div>
             </div>
           </div>
@@ -561,7 +598,7 @@ const UserOnboardingWelcomeModal = () => {
           triggerOpen={snackbar?.display}
           type={snackbar.type === 'success' ? 'success' : 'error'}
           closeSnackbar={() => {
-            localStorage.setItem("modal-shown-after-login","true");
+            localStorage.setItem('modal-shown-after-login', 'true')
             dispatch(closeModal())
             setSnackbar((prevValue) => ({ ...prevValue, display: false }))
           }}

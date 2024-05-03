@@ -45,6 +45,7 @@ type supportData = {
   email: string
   user_id: string
   type: string
+  for_url: string
 }
 
 const ListingSupportModal: React.FC<Props> = ({
@@ -64,6 +65,7 @@ const ListingSupportModal: React.FC<Props> = ({
     email: '',
     user_id: '',
     type: '',
+    for_url: '',
   })
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backDisabled, SetBackDisabled] = useState(false)
@@ -73,7 +75,7 @@ const ListingSupportModal: React.FC<Props> = ({
   const listingPageData = useSelector(
     (state: RootState) => state.site.listingPageData,
   )
-
+  const currentUrl = `${process.env.NEXT_PUBLIC_VERCEL_URL}/page/${listingPageData.page_url}`
   const [inputErrs, setInputErrs] = useState<{ error: string | null }>({
     error: null,
   })
@@ -83,6 +85,7 @@ const ListingSupportModal: React.FC<Props> = ({
     email: listingPageData?.public_email,
     user_id: listingPageData._id,
     type: listingPageData.type,
+    for_url: currentUrl,
   })
   const [isChanged, setIsChanged] = useState(false)
   const [snackbar, setSnackbar] = useState({
@@ -98,6 +101,7 @@ const ListingSupportModal: React.FC<Props> = ({
       email: listingPageData?.public_email,
       user_id: listingPageData._id,
       type: listingPageData.type,
+      for_url: currentUrl,
     })
   }, [user])
 
@@ -106,12 +110,12 @@ const ListingSupportModal: React.FC<Props> = ({
     setData((prev) => ({ ...prev, description: value }))
     setInputErrs({ error: null })
 
-    const hasChanged = value !== initialData.description
-    setIsChanged(hasChanged)
+    // const hasChanged = value !== initialData.description
+    // setIsChanged(hasChanged)
 
-    if (onStatusChange) {
-      onStatusChange(hasChanged)
-    }
+    // if (onStatusChange) {
+    //   onStatusChange(hasChanged)
+    // }
   }
 
   const Backsave = async () => {
@@ -165,7 +169,7 @@ const ListingSupportModal: React.FC<Props> = ({
       setSubmitBtnLoading(false)
       setTimeout(() => {
         dispatch(closeModal())
-      }, 2000)
+      }, 2500)
     } else if (err) {
       setSubmitBtnLoading(false)
       setSnackbar({
@@ -183,6 +187,7 @@ const ListingSupportModal: React.FC<Props> = ({
       email: listingPageData?.public_email,
       user_id: listingPageData._id,
       type: listingPageData.type,
+      for_url: currentUrl,
     })
   }, [user])
 
@@ -224,9 +229,15 @@ const ListingSupportModal: React.FC<Props> = ({
 
   useEffect(() => {
     const handleKeyPress = (event: any) => {
-      if (event.key === 'Enter' && !textareaRef.current?.matches(':focus')) {
-        event.preventDefault()
-        handleSubmit()
+      if (event.key === 'Enter') {
+        if (
+          (event?.srcElement?.tagName &&
+            event?.srcElement?.tagName?.toLowerCase() === 'textarea') ||
+          event?.srcElement?.tagName?.toLowerCase() === 'svg'
+        ) {
+          return
+        }
+        nextButtonRef.current?.click()
       }
     }
 
@@ -346,7 +357,11 @@ const ListingSupportModal: React.FC<Props> = ({
               onClick={handleSubmit}
               disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
             >
-              Submit
+              {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'14px'} />
+              ) : (
+                'Submit'
+              )}
             </button>
           )}
         </footer>

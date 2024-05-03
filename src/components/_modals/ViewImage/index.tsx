@@ -11,6 +11,7 @@ import CoverPhotoLayout from '@/layouts/CoverPhotoLayout/CoverPhotoLayout'
 import { updateListingCover } from '@/services/listing.service'
 import { updateListingProfile } from '@/services/listing.service'
 import { updatePhotoEditModalData } from '@/redux/slices/site'
+import CloseIconWhite from '@/assets/icons/CloseIconWhite'
 
 interface Props {
   isOpen?: boolean
@@ -20,23 +21,59 @@ interface Props {
 
 const ViewImageModal: React.FC<Props> = ({ isOpen, onClose, handleClose }) => {
   const imageUrl = useSelector((state: any) => state.modal.imageUrl)
+  const initialInnerWidth = () => {
+    let width = window.innerWidth
+    if (width) {
+      return width
+    } else return 0
+  }
 
+  const [screenWidth, setScreenWidth] = useState(initialInnerWidth)
+  useEffect(() => {
+    const updateScreenWidth = () => {
+      let width = window.innerWidth
+      setScreenWidth(width)
+    }
+    window.addEventListener('resize', updateScreenWidth)
+    return () => {
+      window.removeEventListener('resize', updateScreenWidth)
+    }
+  }, [window.innerWidth])
   return (
     <>
       <header className={styles['header']}>
-        <CloseIcon
-          className={styles['modal-close-icon']}
-          onClick={handleClose}
-        />
+        {screenWidth <= 1100 ? (
+          <CloseIcon
+            className={styles['modal-close-icon']}
+            onClick={handleClose}
+          />
+        ) : screenWidth >= 1100 ? (
+          <CloseIconWhite
+            className={styles['modal-close-icon']}
+            onClick={handleClose}
+          />
+        ) : (
+          ''
+        )}
       </header>
       <div className={styles.imageModalContent}>
-        <Image
-          className={styles['img']}
-          src={imageUrl || ''}
-          alt=""
-          height={296}
-          width={1000}
-        />
+        {imageUrl ? (
+          <img
+            className={styles['img']}
+            src={imageUrl || ''}
+            alt=""
+            height={296}
+            width={1000}
+          />
+        ) : (
+          <Image
+            className={styles['img']}
+            src={''}
+            alt=""
+            height={296}
+            width={1000}
+          />
+        )}
       </div>
     </>
   )

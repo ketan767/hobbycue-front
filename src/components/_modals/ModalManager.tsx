@@ -43,7 +43,7 @@ import UploadVideoUser from './UploadVideoUser'
 import SocialMediaEditModal from './EditProfile/SocialMedia/SocialMedia'
 import ListingSocialMediaEditModal from './EditListing/ListingSocialMedia/ListingSocialMedia'
 import ChangePasswordModal from './ChangePassword/ChangePassword'
-import ConfirmEmailModal from './ConfirmEmail/ConfirmEmail'
+import EmailForgetPassword from './EmailForgetPassword/EmailForgetPassword'
 import EmailSentModal from './EmailSent/EmailSent'
 import ResetPasswordModal from './ResetPassword/ResetPassword'
 import ShareModal from './ShareModal/ShareModal'
@@ -64,6 +64,7 @@ import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import UserReport from './EditProfile/ReportUser'
 import ListingReport from './EditListing/ListingReport'
 import ContactToOwner from './EditListing/ListingContactOwner'
+import ConfirmEmail from './ConfirmEmail/ConfirmEmail'
 import ListingSupportModal from './EditListing/ListingSupport'
 import SupportUserModal from './EditProfile/supportUser'
 import AddHobby from './AddHobby/AddHobbyModal'
@@ -78,7 +79,7 @@ import {
   updateMyProfileDetail,
 } from '@/services/user.service'
 import { sendWelcomeMail } from '@/services/auth.service'
-import { updateUser } from '@/redux/slices/user'
+import { showProfileError, updateUser } from '@/redux/slices/user'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -124,7 +125,7 @@ const ModalManager: React.FC = () => {
     'upload-image-page': closewithoutCfrm,
     'upload-video-user': closewithoutCfrm,
     'change-password': closewithoutCfrm,
-    'confirm-email': closewithoutCfrm,
+    'email-forget-password': closewithoutCfrm,
     'email-sent': closewithoutCfrm,
     'social-media-share': closewithoutCfrm,
     'Verify-ActionModal': closewithoutCfrm,
@@ -147,6 +148,7 @@ const ModalManager: React.FC = () => {
       !hasChanges
     ) {
       router.push(`/profile/${user?.profile_url}`)
+      dispatch(showProfileError(true))
       dispatch(closeModal())
     } else if (confirmationModal) {
       setConfirmationModal(false)
@@ -184,14 +186,14 @@ const ModalManager: React.FC = () => {
     if (user.is_onboarded) {
       return
     }
-    const payload: InviteToCommunityPayload = {
+    const payload: sendWelcomeMailPayload = {
       to: user?.public_email,
       name: user.full_name,
     }
     console.log('activeprofileeeeeeeeeeee', user)
     const { err: error, res: response } = await getMyProfileDetail()
 
-    if (response?.data?.data?.user?.completed_onboarding_steps.length === 5) {
+    if (response?.data?.data?.user?.completed_onboarding_steps.length === 3) {
       await sendWelcomeMail(payload)
 
       const data = { is_onboarded: true }
@@ -207,6 +209,7 @@ const ModalManager: React.FC = () => {
     } else {
       if (activeModal !== 'profile-general-edit') {
         window.location.href = `/profile/${user.profile_url}`
+        dispatch(showProfileError(true))
       }
     }
   }
@@ -261,6 +264,7 @@ const ModalManager: React.FC = () => {
             !hasChanges
           ) {
             window.location.href = `/profile/${user?.profile_url}`
+            dispatch(showProfileError(true))
             dispatch(closeModal())
           }
 
@@ -281,9 +285,24 @@ const ModalManager: React.FC = () => {
             dispatch(closeModal())
           }
         }
+      } else {
+        if (
+          activeModal === 'listing-hobby-edit' ||
+          activeModal === 'profile-hobby-edit'
+        ) {
+          setShowAddHobbyModal(false)
+          setShowAddGenreModal(false)
+        }
       }
     },
-    [hasChanges, confirmationModal, dispatch, activeModal],
+    [
+      hasChanges,
+      confirmationModal,
+      dispatch,
+      activeModal,
+      showAddGenreModal,
+      showAddHobbyModal,
+    ],
   )
 
   useEffect(() => {
@@ -301,6 +320,16 @@ const ModalManager: React.FC = () => {
       ) {
         handleClose()
         setCloseIconClicked((prev) => !prev)
+      }
+    } else {
+      if (mainRef.current && !mainRef.current.contains(event.target as Node)) {
+        if (
+          activeModal === 'listing-hobby-edit' ||
+          activeModal === 'profile-hobby-edit'
+        ) {
+          setShowAddGenreModal(false)
+          setShowAddHobbyModal(false)
+        }
       }
     }
   }
@@ -360,6 +389,8 @@ const ModalManager: React.FC = () => {
                         className={styles['responsive-logo']}
                         src={hobbycueLogo}
                         alt="hobbycue"
+                        height={40}
+                        width={40}
                       />
                       <h2 className={styles['modal-heading']}></h2>
                     </header>
@@ -444,10 +475,10 @@ const ModalManager: React.FC = () => {
               {activeModal === 'ListingReportModal' && (
                 <ListingReport {...props} />
               )}
-              {activeModal === 'ListingContactToOwner' && (
+              {activeModal === 'Listing-Contact-To-Owner' && (
                 <ListingContactToOwner {...props} />
               )}
-              {activeModal === 'UserContactToOwner' && (
+              {activeModal === 'User-Contact-To-Owner' && (
                 <UserContactToOwner {...props} />
               )}
               {activeModal === 'save-Modal' && <SaveModal {...props} />}
@@ -472,7 +503,10 @@ const ModalManager: React.FC = () => {
               )}
               {activeModal === 'change-password' && <ChangePasswordModal />}
 
-              {activeModal === 'confirm-email' && <ConfirmEmailModal />}
+              {activeModal === 'email-forget-password' && (
+                <EmailForgetPassword />
+              )}
+              {activeModal === 'confirm-email' && <ConfirmEmail />}
               {activeModal === 'email-sent' && <EmailSentModal />}
               {activeModal === 'reset-password' && <ResetPasswordModal />}
               {activeModal === 'social-media-share' && (

@@ -6,7 +6,10 @@ type Props = {}
 
 const Terms: React.FC<Props> = (props) => {
   return (
-    <div style={{margin:"0 auto"}} className={styles['explore-wrapper']+` ${styles['padding-top-12']}`}>
+    <div
+      style={{ margin: '0 auto' }}
+      className={styles['explore-wrapper'] + ` ${styles['padding-top-12']}`}
+    >
       <div className={styles.terms}>
         <h1 className={styles.pageheading}>Terms and Conditions</h1>
 
@@ -54,7 +57,7 @@ const Terms: React.FC<Props> = (props) => {
           as the purchase total and billing information.
         </p>
 
-        <h2 className={styles.heading}>Ownership</h2>
+        <h2 className={styles.pheading}>Ownership</h2>
 
         <p>
           Except for the Content submitted by members or users, the hobbycue.com
@@ -74,7 +77,7 @@ const Terms: React.FC<Props> = (props) => {
           retained by hobbycue.com.
         </p>
 
-        <h2 className={styles.heading}>Limitation of Liability</h2>
+        <h2 className={styles.pheading}>Limitation of Liability</h2>
 
         <p>
           The site, content, and services are provided as is, without warranty

@@ -11,6 +11,9 @@ type Props = {
   value: any
   children: any
   className?: any
+  selectText?:string
+  optionsContainerClass?:string
+  optionsContainerUnactiveClass?:string
 }
 
 const InputSelect: React.FC<Props> = ({
@@ -19,6 +22,9 @@ const InputSelect: React.FC<Props> = ({
   value,
   children,
   className,
+  selectText,
+  optionsContainerClass,
+  optionsContainerUnactiveClass
 }) => {
   const [active, setactive] = useState(false)
   const toggle = () => setactive(!active)
@@ -52,7 +58,7 @@ const InputSelect: React.FC<Props> = ({
   return (
     <div className={`${styles.container} ${className ? className : ''}`}>
       <header className={styles.header} onClick={handleHeaderClick}>
-        <p>{value ? value : 'Select...'}</p>
+        <p>{value ? value : selectText??'Select...'}</p>
         {/* <Image src={ChevronDown} alt="arrow" /> */}
         <svg
           width="16"
@@ -60,6 +66,7 @@ const InputSelect: React.FC<Props> = ({
           viewBox="0 0 16 16"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          style={{rotate:active?"180deg":"0deg"}}
         >
           <g id="expand_more_black_24dp 1" clip-path="url(#clip0_173_70421)">
             <path
@@ -79,7 +86,10 @@ const InputSelect: React.FC<Props> = ({
         ref={dropdownRef}
         className={`${styles['options-container']} ${
           active ? styles['active'] : ''
-        }`}
+        }
+        ${optionsContainerUnactiveClass??''}
+        ${active?optionsContainerClass??'':''}
+        `}
       >
         {React.Children.map(children, (child) =>
           React.cloneElement(child, { onClick: handleChildClick }),

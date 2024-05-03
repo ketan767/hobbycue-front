@@ -72,7 +72,8 @@
 }
 @media screen and (min-width: 1100px) {
   .modal-wrapper {
-    max-height: calc(100vh - 6rem);
+    max-height: 50rem;
+    height: calc(100vh - 6rem);
   }
   .modal-wrapper .body {
     height: calc(100vh - 6rem);
@@ -240,6 +241,10 @@
   .modal-wrapper .body {
     height: 100%;
     overflow: auto;
+    padding: 12px var(--spacing-16) var(--spacing-16);
+  }
+  .modal-wrapper .header{
+    padding: var(--spacing-16) var(--spacing-16) 0;
   }
   .footer {
     background: var(--Base-White, #fff);

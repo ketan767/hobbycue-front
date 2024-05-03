@@ -2,7 +2,7 @@ import React, { useState, createRef } from 'react'
 import styles from './styles.module.css'
 import dynamic from 'next/dynamic'
 
-import { CircularProgress } from '@mui/material'
+import { CircularProgress, useMediaQuery } from '@mui/material'
 import Image from 'next/image'
 import store, { RootState } from '@/redux/store'
 import { useSelector } from 'react-redux'
@@ -28,38 +28,60 @@ export const UploadImageModal: React.FC<Props> = (props) => {
     }
   }
 
-  return (
-    <div className={styles['modal-wrapper']}>
-      <h3 className={styles['modal-heading']}>Crop Image</h3>
-      <div className={styles['cropper-wrapper']}>
-        <Cropper
-          ref={cropperRef}
-          zoomTo={0.2}
-          className={styles['cropper']}
-          initialAspectRatio={3 / 1}
-          src={editPhotoModalData.image}
-          viewMode={1}
-          minCropBoxHeight={10}
-          minCropBoxWidth={10}
-          // background={false}
-          responsive={true}
-          autoCropArea={1}
-          // https://github.com/fengyuanchen/cropperjs/issues/671
-          guides={true}
-        />
+  const isMobile = useMediaQuery('(max-width:1100px)')
 
-        <button
-          className={styles['save-btn']}
-          disabled={loading}
-          onClick={handleUpload}
-        >
-          {loading ? (
-            <CircularProgress color="inherit" size={'20px'} />
-          ) : (
-            'Save Photo'
+  return (
+    <>
+      <div className={styles['modal-wrapper']}>
+        <h3 className={styles['modal-heading']}>Crop Image</h3>
+        <div className={styles['cropper-wrapper']}>
+          <Cropper
+            style={{width:isMobile?"":"100%"}}
+            ref={cropperRef}
+            zoomTo={0.2}
+            className={styles['cropper']}
+            initialAspectRatio={editPhotoModalData.type === 'profile' ? 1 : 3}
+            src={editPhotoModalData.image}
+            viewMode={1}
+            minCropBoxHeight={10}
+            minCropBoxWidth={10}
+            // background={false}
+            responsive={true}
+            autoCropArea={1}
+            // https://github.com/fengyuanchen/cropperjs/issues/671
+            guides={true}
+          />
+
+          {!isMobile && (
+            <button
+              className={styles['save-btn']}
+              disabled={loading}
+              onClick={handleUpload}
+            >
+              {loading ? (
+                <CircularProgress color="inherit" size={'20px'} />
+              ) : (
+                'Save Photo'
+              )}
+            </button>
           )}
-        </button>
+        </div>
       </div>
-    </div>
+      {isMobile && (
+        <footer className={styles['footer']}>
+          <button
+            className={styles['save-btn']}
+            disabled={loading}
+            onClick={handleUpload}
+          >
+            {loading ? (
+              <CircularProgress color="inherit" size={'14px'} />
+            ) : (
+              'Save Photo'
+            )}
+          </button>
+        </footer>
+      )}
+    </>
   )
 }

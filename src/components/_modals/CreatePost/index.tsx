@@ -16,7 +16,7 @@ import { closeModal } from '@/redux/slices/modal'
 
 import DOMPurify from 'dompurify'
 import CreatePostProfileSwitcher from './ProfileSwitcher'
-import { MenuItem, Select } from '@mui/material'
+import { CircularProgress, Input, MenuItem, Select, useMediaQuery } from '@mui/material'
 // import CancelBtn from '@/assets/svg/trash-icon.svg'
 import CancelBtn from '@/assets/icons/x-icon.svg'
 import FilledButton from '@/components/_buttons/FilledButton'
@@ -25,6 +25,10 @@ import InputSelect from '@/components/_formElements/Select/Select'
 import SaveModal from '../SaveModal/saveModal'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import { useRouter } from 'next/router'
+import { increaseRefreshNum, setFilters } from '@/redux/slices/post'
+import MobileLocationDropdown from './MobileLocationDropdown'
+import { updateActiveProfile } from '@/redux/slices/user'
+import defaultImg from '@/assets/svg/default-images/default-user-icon.svg'
 
 const CustomEditor = dynamic(() => import('@/components/CustomEditor'), {
   ssr: false,
@@ -68,7 +72,9 @@ export const CreatePost: React.FC<Props> = ({
   onStatusChange,
   propData,
 }) => {
+  const router = useRouter();
   const { user, activeProfile } = useSelector((state: RootState) => state.user)
+  const { filters } = useSelector((state: RootState) => state.post)
   const [hobbies, setHobbies] = useState([])
   const [data, setData] = useState<NewPostData>({
     type: 'user',
@@ -82,6 +88,105 @@ export const CreatePost: React.FC<Props> = ({
     video_url: '',
   })
   const [showMetaData, setShowMetaData] = useState(true)
+
+  useEffect(() => {
+    const hobbiesDropDownArr =
+      activeProfile.data?._hobbies?.map((item: any) => ({
+        hobbyId: item.hobby?._id,
+        genreId: item.genre?._id ?? '', // Add genre id to the object
+        hobbyDisplay: `${item.hobby?.display}`,
+        genreDisplay: `${item?.genre?.display ?? ''}`,
+      })) ?? []
+    const selectedHobby = hobbiesDropDownArr.find((obj: any) => {
+      if (filters.genre && filters.genre !== '') {
+        return obj.hobbyId === filters.hobby && obj.genreId === filters.genre
+      } else {
+        return obj.hobbyId === filters.hobby
+      }
+    })
+    setData((prev) => {
+      if (selectedHobby) {
+        return {
+          ...prev,
+          hobby: {
+            _id: selectedHobby.hobbyId,
+            display: selectedHobby.hobbyDisplay,
+          },
+          genre: {
+            _id: selectedHobby.genreId,
+            display: selectedHobby.genreDisplay,
+          },
+          visibility:filters.location??''
+        }
+      } else {
+        if(hobbiesDropDownArr && hobbiesDropDownArr?.length>0){
+        return ({...prev,visibility:filters.location??'All Locations',
+          hobby:{
+            _id:hobbiesDropDownArr[0]?.hobbyId,
+            display:hobbiesDropDownArr[0]?.hobbyDisplay
+          },
+          genre:hobbiesDropDownArr[0]?.genreId?{
+            _id:hobbiesDropDownArr[0]?.genreId,
+            display:hobbiesDropDownArr[0]?.genreDisplay
+          }:null
+        })}
+        else{
+          return {...prev,visibility:filters.location??'All Locations',}
+        }
+      }
+    })
+  }, [filters])
+
+
+  // automatically hobby will take user's hobby[0] when profile switches
+
+  useEffect(()=>{
+    const hobbiesDropDownArr =
+      data.data?._hobbies?.map((item: any) => ({
+        hobbyId: item.hobby?._id,
+        genreId: item.genre?._id ?? '', // Add genre id to the object
+        hobbyDisplay: `${item.hobby?.display}`,
+        genreDisplay: `${item?.genre?.display ?? ''}`,
+      })) ?? []
+    const selectedHobby = hobbiesDropDownArr.find((obj: any) => {
+      if (filters.genre && filters.genre !== '') {
+        return obj.hobbyId === filters.hobby && obj.genreId === filters.genre
+      } else {
+        return obj.hobbyId === filters.hobby
+      }
+    })
+    setData((prev) => {
+      if (selectedHobby) {
+        return {
+          ...prev,
+          hobby: {
+            _id: selectedHobby.hobbyId,
+            display: selectedHobby.hobbyDisplay,
+          },
+          genre: {
+            _id: selectedHobby.genreId,
+            display: selectedHobby.genreDisplay,
+          },
+          visibility:filters.location??''
+        }
+      } else {
+        if(hobbiesDropDownArr && hobbiesDropDownArr?.length>0){
+        return ({...prev,visibility:filters.location??'All Locations',
+          hobby:{
+            _id:hobbiesDropDownArr[0]?.hobbyId,
+            display:hobbiesDropDownArr[0]?.hobbyDisplay
+          },
+          genre:hobbiesDropDownArr[0]?.genreId?{
+            _id:hobbiesDropDownArr[0]?.genreId,
+            display:hobbiesDropDownArr[0]?.genreDisplay
+          }:null
+        })}
+        else{
+          return {...prev,visibility:filters.location??'All Locations',}
+        }
+      }
+    })
+  },[data.data])
 
   useEffect(() => {
     setHobbies(activeProfile.data?._hobbies)
@@ -215,8 +320,8 @@ export const CreatePost: React.FC<Props> = ({
       let address = data.data?._address
       let visibilityArr: any = [
         {
-          value: 'All locations',
-          display: 'All locations',
+          value: 'All Locations',
+          display: 'All Locations',
           type: 'text',
         },
       ]
@@ -328,15 +433,20 @@ export const CreatePost: React.FC<Props> = ({
       })
     }
     const jsonData: any = {
-      hobbyId: data.hobby,
-      genreId: data.genre ? data.genre : '',
+      hobbyId: data.hobby?._id,
+
       content: DOMPurify.sanitize(data.content),
       visibility: data.visibility,
       media:
-        hasLink && showMetaData ? [...data.media, metadataImg] : data.media,
+        // hasLink && showMetaData ? [...data.media, metadataImg] :
+         data.media,
       has_link: hasLink,
       video_url: data.video_url ? data.video_url : null,
     }
+    if (typeof data.genre === 'object' && typeof data.genre?._id === 'string') {
+      jsonData.genreId = data.genre._id
+    }
+
     console.log('jsonData', jsonData.hobbyId)
     console.log('jsonData genreId', jsonData.genreId)
     setSubmitBtnLoading(true)
@@ -349,8 +459,13 @@ export const CreatePost: React.FC<Props> = ({
         return console.log(err)
       }
       if (res.data.success) {
+        store.dispatch(setFilters({location:data.visibility!==""?data.visibility:null,hobby:data.hobby?._id??"",
+        genre:data.genre?._id??"",}))
+        store.dispatch(updateActiveProfile({ type:data.type, data:data.data }));
         store.dispatch(closeModal())
-        window.location.reload()
+        // window.location.reload()
+        store.dispatch(increaseRefreshNum())
+        router.push("/community")
       }
       return
     }
@@ -362,8 +477,13 @@ export const CreatePost: React.FC<Props> = ({
     }
     if (res.data.success) {
       console.log('res', res)
+      store.dispatch(setFilters({location:data.visibility!==""?data.visibility:null,hobby:data.hobby?._id??"",
+      genre:data.genre?._id??"",}))
+      store.dispatch(updateActiveProfile({ type:data.type, data:data.data }));
       store.dispatch(closeModal())
-      window.location.reload()
+      // window.location.reload()
+      store.dispatch(increaseRefreshNum())
+      router.push("/community")
     }
   }
 
@@ -399,7 +519,8 @@ export const CreatePost: React.FC<Props> = ({
   const handleAddressChange = (value: string) => {
     setData((prev: any) => ({ ...prev, visibility: value }))
   }
-
+  console.log({ hobbies })
+  const isMobile = useMediaQuery("(max-width:1100px)");
   if (confirmationModal) {
     return (
       <SaveModal
@@ -508,34 +629,39 @@ export const CreatePost: React.FC<Props> = ({
                     </defs>
                   </svg>
 
-                  {metaData?.image && (
+                  {/* {metaData?.image && (
                     <img
                       className={styles['metadata-image']}
                       src={metaData?.image}
                       alt=""
                     />
-                  )}
+                  )} */}
                   <div className={styles['metadata-content']}>
                     {metaData?.icon && (
                       <img
                         className={styles['metadata']}
-                        src={metaData?.icon}
+                        src={(typeof metaData?.image === 'string' && metaData.image) ||
+                        (typeof metaData?.icon === 'string' && metaData.icon)||defaultImg}
                         alt=""
                       />
                     )}
-                    <div>
+                    <div className={styles['metadata-info-container']}>
                       {metaData?.title && (
                         <p className={styles['metadata-title']}>
                           {metaData?.title}
                         </p>
                       )}
-                      {metaData?.url && (
+                      {!isMobile && metaData?.url && (
                         <p className={styles['metadata-url']}>
-                          {metaData?.url}
+                          {metaData?.description}
                         </p>
                       )}
                     </div>
                   </div>
+                  {isMobile&&<p className={styles['metadata-url']}>
+                  {' '}
+                  {metaData?.description}{' '}
+                </p>}
                 </div>
               )}
             </section>
@@ -546,103 +672,10 @@ export const CreatePost: React.FC<Props> = ({
                   data={data}
                   setData={setData}
                   setHobbies={setHobbies}
+                  classForShowDropdown={styles['full-width-all']}
+                  className={styles['profile-switcher-parent']}
                 />
               </div>
-
-              {/* Hobby Input and Dropdown */}
-              {/* <section className={styles['dropdown-wrapper']}>
-            <div
-              className={`${styles['input-box']} ${
-                errors.hobby ? styles['error-input-box'] : ''
-              } `}
-            >
-              <label>Hobby</label>
-              <input
-                type="text"
-                placeholder="Search hobby..."
-                autoComplete="name"
-                required
-                value={hobbyInputValue}
-                ref={hobbyRef}
-                onFocus={() => setShowHobbyDropdown(true)}
-                onBlur={() =>
-                  setTimeout(() => {
-                    setShowHobbyDropdown(false)
-                  }, 300)
-                }
-                onChange={handleHobbyInputChange}
-              />
-              {errors.hobby && (
-                <p className={styles['error-text']}>{errors.hobby}</p>
-              )}
-            </div>
-            {showHobbyDropdown && hobbyDropdownList.length !== 0 && (
-              <div className={styles['dropdown']}>
-                {hobbyDropdownList.map((hobby) => {
-                  return (
-                    <p
-                      key={hobby._id}
-                      onClick={() => {
-                        setData((prev) => {
-                          return { ...prev, hobby: hobby }
-                        })
-                        setHobbyInputValue(hobby.display)
-                      }}
-                    >
-                      {hobby.display}
-                    </p>
-                  )
-                })}
-              </div>
-            )}
-          </section> */}
-              {/* 
-          <section className={styles['dropdown-wrapper']}>
-            <div
-              className={`${styles['input-box']}  ${
-                errors.genre ? styles['error-input-box'] : ''
-              } `}
-            >
-              <label>Genre/Style</label>
-
-              <input
-                type="text"
-                placeholder="Search genre/style..."
-                autoComplete="name"
-                ref={genreRef}
-                value={genreInputValue}
-                onFocus={() => setShowGenreDropdown(true)}
-                onBlur={() =>
-                  setTimeout(() => {
-                    setShowGenreDropdown(false)
-                  }, 300)
-                }
-                onChange={handleGenreInputChange}
-              />
-              {errors.genre && (
-                <p className={styles['error-text']}>{errors.genre}</p>
-              )}
-            </div>
-            {showGenreDropdown && genreDropdownList.length !== 0 && (
-              <div className={styles['dropdown']}>
-                {genreDropdownList.map((genre) => {
-                  return (
-                    <p
-                      key={genre?._id}
-                      onClick={() => {
-                        setData((prev) => {
-                          return { ...prev, genre: genre }
-                        })
-                        setGenreInputValue(genre?.display)
-                      }}
-                    >
-                      {genre?.display}
-                    </p>
-                  )
-                })}
-              </div>
-            )}
-          </section> */}
 
               <div
                 className={`${styles['input-box']}  ${
@@ -650,108 +683,120 @@ export const CreatePost: React.FC<Props> = ({
                 } `}
               >
                 <label>Select Hobby</label>
-                <Select
-                  value={`${data.hobby}${data.genre&&"-"}${data.genre??""}`}
-                  onChange={(e) => {
-                    console.warn({e})
-                    let val = e.target.value 
-                    // const selected = user._hobbies.find(
-                    //   (item: any) => item.hobby?._id === val,
-                    // )
-                    setData((prev: any) => ({
-                      ...prev,
-                      hobby: val.split("-")[0]??null,
-                      genre: val.split("-")[1]??null
-                    }))
-                  }}
-                  displayEmpty
-                  inputProps={{ 'aria-label': 'Without label' }}
-                  className={` ${styles['visibility-dropdown']}`}
-                >
-                  {hobbies?.map((item: any, idx: any) => {
-                    return (
-                      <MenuItem
-                        key={idx}
-                        value={item.hobby?._id+"-"+item?.genre?._id}
-                        selected={item.hobby?._id === data.hobby && item?.genre?._id===data.genre}
-                      >
-                        <p>
-                          {item.hobby?.display
-                            ? item.hobby?.display
-                            : item.hobby?.slug}{' '}
-                          {item?.genre && ` - ${item?.genre?.display} `}
-                        </p>
-                      </MenuItem>
-                    )
-                  })}
-                </Select>
-                {errors.hobby && (
-                  <p className={styles['error-text']}>{errors.hobby}</p>
-                )}
-              </div>
-
-              {/* <div
-            className={`${styles['input-box']}  ${
-              errors.genre ? styles['error-input-box'] : ''
-            } `}
-          >
-            <label>Genre/Style</label>
-            <Select
-              value={data.genre}
-              onChange={(e) => {
-                let val = e.target.value
-                setData((prev: any) => ({ ...prev, genre: val }))
-              }}
-              displayEmpty
-              inputProps={{ 'aria-label': 'Without label' }}
-              className={` ${styles['visibility-dropdown']}`}
-            >
-              {user._hobbies?.map((item: any, idx: any) => {
-                return (
-                  <MenuItem
-                    key={idx}
-                    value={item.genre?._id}
-                    selected={item.genre?._id === data.genre}
-                  >
-                    <p>
-                      {item.genre?.display
-                        ? item.genre?.display
-                        : item.genre?.slug}
-                    </p>
-                  </MenuItem>
-                )
-              })}
-            </Select>
-            {errors.genre && (
-              <p className={styles['error-text']}>{errors.genre}</p>
-            )}
-          </div> */}
-
-              <div>
-                <label>Who Can View</label>
-
                 <InputSelect
-                  onChange={(e: any) => {
-                    let val = e.target.value
-                    setData((prev: any) => ({ ...prev, visibility: val }))
-                  }}
-                  value={data.visibility}
-                  // inputProps={{ 'aria-label': 'Without label' }}
-                  // className={` ${styles['visibility-dropdown']}`}
+                  value={`${data.hobby?.display ?? ''}${
+                    data.genre?.display ? '-' : ''
+                  }${data.genre?.display ?? ''}`}
+                  onChange={(e: any) => {}}
+                  selectText=""
+                  optionsContainerClass={styles['options-container-class']}
+                  optionsContainerUnactiveClass={styles['optionsContainerUnactiveClass']}
+                  className={styles['input-select']}
                 >
-                  {visibilityData?.map((item: any, idx) => {
+                  {hobbies?.map((item: any, idx) => {
                     return (
                       <>
                         <DropdownOption
-                          {...item}
+                          _id={undefined}
+                          type={'hobby'}
+                          display={
+                            (item.hobby?.display
+                              ? item.hobby?.display
+                              : item.hobby?.slug) +
+                            (item?.genre ? ` - ${item?.genre?.display} ` : '')
+                          }
+                          value={item.hobby?._id + '-' + item?.genre?._id ?? ''}
+                          options={null}
                           key={idx}
-                          currentValue={data.visibility}
-                          onChange={handleAddressChange}
+                          selected={
+                            item.hobby?._id === data.hobby?._id &&
+                            (data.genre
+                              ? item.genre?._id === data.genre?._id
+                              : item.genre
+                              ? false
+                              : true)
+                          }
+                          item={item}
+                          onChange={(e: any) => {
+                            // const selected = user._hobbies.find(
+                            //   (item: any) => item.hobby?._id === val,
+                            // )
+                            setData((prev: any) => ({
+                              ...prev,
+                              hobby: e?.hobby ?? null,
+                              genre: e?.genre ?? null,
+                            }))
+                          }}
                         />
                       </>
                     )
                   })}
                 </InputSelect>
+                {errors.hobby && (
+                  <p className={styles['error-text']}>{errors.hobby}</p>
+                )}
+              </div>
+
+              <div>
+                <label>Who Can View</label>
+
+                {!isMobile && (
+                  <InputSelect
+                    onChange={(e: any) => {
+                      let val = e.target.value
+                      setData((prev: any) => ({ ...prev, visibility: val }))
+                    }}
+                    value={data.visibility}
+                    className={styles['input-select']}
+                    
+                  optionsContainerClass={styles['options-container-class']}
+                  optionsContainerUnactiveClass={styles['optionsContainerUnactiveClass']}
+                    // inputProps={{ 'aria-label': 'Without label' }}
+                    // className={` ${styles['visibility-dropdown']}`}
+                  >
+                    {visibilityData?.map((item: any, idx) => {
+                      return (
+                        <>
+                          <DropdownOption
+                            {...item}
+                            key={idx}
+                            currentValue={data.visibility}
+                            onChange={handleAddressChange}
+                          />
+                        </>
+                      )
+                    })}
+                  </InputSelect>
+                )}
+
+                {isMobile && (
+                  <InputSelect
+                    onChange={(e: any) => {
+                      let val = e.target.value
+                      setData((prev: any) => ({ ...prev, visibility: val }))
+                    }}
+                    value={data.visibility}
+                    className={styles['input-select']}
+                    
+                  optionsContainerClass={styles['options-container-class']}
+                  optionsContainerUnactiveClass={styles['optionsContainerUnactiveClass']}
+                    // inputProps={{ 'aria-label': 'Without label' }}
+                    // className={` ${styles['visibility-dropdown']}`}
+                  >
+                    {visibilityData?.map((item: any, idx: number) => {
+                      return (
+                        <>
+                          <MobileLocationDropdown
+                            key={idx}
+                            {...item}
+                            currentValue={data.visibility}
+                            onChange={handleAddressChange}
+                          />
+                        </>
+                      )
+                    })}
+                  </InputSelect>
+                )}
               </div>
 
               <FilledButton
@@ -760,7 +805,11 @@ export const CreatePost: React.FC<Props> = ({
                 className={styles['create-post-btn']}
                 loading={submitBtnLoading}
               >
-                Post
+                {submitBtnLoading ? (
+              <CircularProgress color="inherit" size={'16px'} />
+            ) : (
+              'Post'
+            )}
               </FilledButton>
             </aside>
             <div className={styles['background']}></div>

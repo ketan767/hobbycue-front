@@ -31,6 +31,7 @@ import ListingEventsTab from '@/components/ListingPage/ListingPageEvents/Listing
 import PageContentBox from '../PageContentBox'
 import { openModal } from '@/redux/slices/modal'
 import EditIcon from '@/assets/svg/edit-colored.svg'
+import { SetLinkviaAuth } from '@/redux/slices/user'
 
 interface Props {
   activeTab: ListingPageTabs
@@ -79,6 +80,11 @@ const ListingPageLayout: React.FC<Props> = ({
   }
   const navigationTabs = (tab: any) => {
     if (!isLoggedIn && tab === 'posts') {
+      dispatch(
+        SetLinkviaAuth(
+          `/page/${router.query.page_url}/${tab !== 'home' ? tab : ''}`,
+        ),
+      )
       dispatch(openModal({ type: 'auth', closable: true }))
       return
     }
@@ -188,13 +194,21 @@ const ListingPageLayout: React.FC<Props> = ({
   return (
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
-      <ListingHeader setContactInfoErr={setContactInfoErr} setHAboutErr={setHAboutErr} setHobbyError={setHobbyError} setLocationErr={setLocationErr} setpageTypeErr={setpageTypeErr} data={data.pageData} activeTab={activeTab} />
+      <ListingHeader
+        setContactInfoErr={setContactInfoErr}
+        setHAboutErr={setHAboutErr}
+        setHobbyError={setHobbyError}
+        setLocationErr={setLocationErr}
+        setpageTypeErr={setpageTypeErr}
+        data={data.pageData}
+        activeTab={activeTab}
+      />
       {showSmallHeader && (
         <ListingHeaderSmall data={data.pageData} activeTab={activeTab} />
       )}
       {/* Navigation Links */}
       <nav className={styles['nav']}>
-        <div className={styles['navigation-tabs']}>
+        <div className={`${styles['navigation-tabs']}`}>
           {tabs.map((tab) => {
             if (tab === 'events') {
               if (data.pageData.type !== 3)
@@ -277,6 +291,7 @@ const ListingPageLayout: React.FC<Props> = ({
           {expandAll ? <p>Collapse All</p> : <p>Expand All</p>}
           <Image
             src={ChevronDown}
+            style={{transition:"all 0.3s ease"}}
             className={`${
               expandAll ? styles['rotate-180'] : styles['rotate-0']
             }`}
@@ -297,7 +312,11 @@ const ListingPageLayout: React.FC<Props> = ({
       </main>
       <div style={{ backgroundColor: '#f8f9fa' }}>
         <nav className={styles['nav-mobile']}>
-          <div className={styles['navigation-tabs']}>
+          <div
+            className={`${styles['navigation-tabs']} ${
+              !expandAll ? styles['mobile-mt-0'] : ''
+            }`}
+          >
             {tabs.map((tab) => {
               if (tab === 'events') {
                 if (data.pageData.type !== 3)
@@ -324,86 +343,95 @@ const ListingPageLayout: React.FC<Props> = ({
             })}
           </div>
         </nav>
-        {activeTab === 'home' && (
-          <div className={styles['display-mobile']}>
-            <PageContentBox
-              className={AboutErr ? styles.errorBorder : ''}
-              showEditButton={listingLayoutMode === 'edit'}
-              onEditBtnClick={() =>
-                dispatch(
-                  openModal({ type: 'listing-about-edit', closable: true }),
-                )
-              }
-            >
-              <h4>About</h4>
-              <div
-                className={`${styles['about-text']} ${styles['display-mobile']}`}
-                dangerouslySetInnerHTML={{ __html: data.pageData?.description }}
-              ></div>
-            </PageContentBox>
-            <PageContentBox
-              showEditButton={listingLayoutMode === 'edit'}
-              onEditBtnClick={() =>
-                dispatch(
-                  openModal({ type: 'listing-general-edit', closable: true }),
-                )
-              }
-            >
-              <h4 className={styles['display-mobile']}>Other Information</h4>
-              <div className={`${styles['other-data-wrapper-mobile']}`}>
-                <h4>Profile URL</h4>
-                <div className={styles.textGray}>{data.pageData?.page_url}</div>
-                {data.pageData?.gender && (
-                  <>
-                    <h4>Gender</h4>
-                    <div className={styles.textGray}>
-                      {data.pageData?.gender}
-                    </div>
-                  </>
-                )}
-                {data.pageData?.year && (
-                  <>
-                    <h4>Year</h4>
-                    <div className={styles.textGray}>{data.pageData?.year}</div>
-                  </>
-                )}
-                {data.pageData?.admin_note && (
-                  <>
-                    <h4>Notes</h4>
-                    <div className={styles.textGray}>
-                      {data.pageData?.admin_note}
-                    </div>
-                  </>
-                )}
-              </div>
-            </PageContentBox>
-          </div>
-        )}
-        {activeTab === 'posts' && (
-          <div className={styles['display-mobile']}>
-            <ListingPostsTab data={data} hideStartPost={true} />
-          </div>
-        )}
-        {activeTab === 'media' && (
-          <div className={styles['display-mobile']}>
-            <ListingMediaTab data={data?.pageData} />
-          </div>
-        )}
-        {activeTab === 'reviews' && (
-          <div className={styles['display-mobile']}>
-            <ListingReviewsTab />
-          </div>
-        )}
-        {activeTab === 'store' && (
-          <div className={styles['display-mobile']}>
-            <ListingStoreTab />
-          </div>
-        )}
-        {activeTab === 'events' && (
-          <div className={styles['display-mobile']}>
-            <ListingEventsTab data={data.pageData} />
-          </div>
-        )}
+        <div className={styles['display-mobile-main']}>
+          {activeTab === 'home' && (
+            <div className={styles['display-mobile']}>
+              <PageContentBox
+                className={AboutErr ? styles.errorBorder : ''}
+                showEditButton={listingLayoutMode === 'edit'}
+                onEditBtnClick={() =>
+                  dispatch(
+                    openModal({ type: 'listing-about-edit', closable: true }),
+                  )
+                }
+              >
+                <h4>About</h4>
+                <div
+                  className={`${styles['about-text']} ${styles['display-mobile']}`}
+                  dangerouslySetInnerHTML={{
+                    __html: data.pageData?.description,
+                  }}
+                ></div>
+              </PageContentBox>
+              <PageContentBox
+                showEditButton={listingLayoutMode === 'edit'}
+                onEditBtnClick={() =>
+                  dispatch(
+                    openModal({ type: 'listing-general-edit', closable: true }),
+                  )
+                }
+              >
+                <h4 className={styles['display-mobile']}>Other Information</h4>
+                <div className={`${styles['other-data-wrapper-mobile']}`}>
+                  <h4>Profile URL</h4>
+                  <div className={styles.textGray}>
+                    {data.pageData?.page_url}
+                  </div>
+                  {data.pageData?.gender && (
+                    <>
+                      <h4>Gender</h4>
+                      <div className={styles.textGray}>
+                        {data.pageData?.gender}
+                      </div>
+                    </>
+                  )}
+                  {data.pageData?.year && (
+                    <>
+                      <h4>Year</h4>
+                      <div className={styles.textGray}>
+                        {data.pageData?.year}
+                      </div>
+                    </>
+                  )}
+                  {data.pageData?.admin_note && (
+                    <>
+                      <h4>Notes</h4>
+                      <div className={styles.textGray}>
+                        {data.pageData?.admin_note}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </PageContentBox>
+            </div>
+          )}
+
+          {activeTab === 'posts' && (
+            <div className={styles['display-mobile']}>
+              <ListingPostsTab data={data} hideStartPost={true} />
+            </div>
+          )}
+          {activeTab === 'media' && (
+            <div className={styles['display-mobile']}>
+              <ListingMediaTab data={data?.pageData} />
+            </div>
+          )}
+          {activeTab === 'reviews' && (
+            <div className={styles['display-mobile']}>
+              <ListingReviewsTab />
+            </div>
+          )}
+          {activeTab === 'store' && (
+            <div className={styles['display-mobile']}>
+              <ListingStoreTab />
+            </div>
+          )}
+          {activeTab === 'events' && (
+            <div className={styles['display-mobile']}>
+              <ListingEventsTab data={data.pageData} />
+            </div>
+          )}
+        </div>
       </div>
       {/* Snackbar component */}
       <Snackbar

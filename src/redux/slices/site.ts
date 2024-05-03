@@ -83,6 +83,38 @@ interface AuthState {
     hobby: boolean
     listing: boolean
     profile: boolean
+  },
+  sidemenuRefresh: number // added to add nav click feature on welcome mobile screen
+  searchToggleRefresh: number // added to show search popup from welcome search click
+  hobbyStates?: {
+    [key:string]:boolean
+  }
+  pagesStates?: {
+    [key:string]:boolean
+  }
+  locationStates?: {
+    [key:string]:boolean
+  }
+  contactStates?: {
+    [key:string]:boolean
+  }
+  socialMediaStates?: {
+    [key:string]:boolean
+  }
+  tagsStates?: {
+    [key:string]:boolean
+  }
+  relatedListingsStates?:{
+    [key:string]:boolean
+  }
+  relatedListingsStates2?:{
+    [key:string]:boolean
+  }
+  workingHoursStates?:{
+    [key:string]:boolean
+  }
+  membersStates?:{
+    [key:string]:boolean
   }
 }
 
@@ -112,6 +144,18 @@ const initialState: AuthState = {
     listing: true,
     profile: true
   },
+  sidemenuRefresh: 0,
+  searchToggleRefresh: 0,
+  hobbyStates:{},
+  pagesStates:{},
+  locationStates:{},
+  contactStates:{},
+  socialMediaStates:{},
+  tagsStates:{},
+  relatedListingsStates:{},
+  relatedListingsStates2:{},
+  workingHoursStates:{},
+  membersStates:{},
 }
 
 /** Template Listing Data 
@@ -204,6 +248,92 @@ const siteSlice = createSlice({
     updateProfileMenuExpandAll: (state, { payload }) => {
       state.expandMenu.profile = payload
     },
+    increaseSidemenuRefresh: (state)=> {
+      state.sidemenuRefresh = state.sidemenuRefresh+1
+    },
+    increaseSearchRefresh: (state)=> {
+      state.searchToggleRefresh = state.searchToggleRefresh+1
+    },
+    updateHobbyOpenState: (state,{payload}:{payload:{
+      [key:string]:boolean
+    }})=>{
+      const objKey = Object.keys(payload);
+      if(objKey[0] && state.hobbyStates){
+      state.hobbyStates[objKey[0]] = payload[objKey[0]];
+      }
+    },
+    updatePagesOpenState: (state,{payload}:{payload:{
+      [key:string]:boolean
+    }})=>{
+      const objKey = Object.keys(payload);
+      if(objKey[0] && state.pagesStates){
+      state.pagesStates[objKey[0]] = payload[objKey[0]];
+      }
+    },
+    updateLocationOpenStates: (state,{payload}:{payload:{
+      [key:string]:boolean
+    }})=>{
+      const objKey = Object.keys(payload);
+      if(objKey[0] && state.locationStates){
+      state.locationStates[objKey[0]] = payload[objKey[0]];
+      }
+    },
+    updateContactOpenStates: (state,{payload}:{payload:{
+      [key:string]:boolean
+    }})=>{
+      const objKey = Object.keys(payload);
+      if(objKey[0] && state.contactStates){
+      state.contactStates[objKey[0]] = payload[objKey[0]];
+      }
+    },
+    updateSocialMediaOpenStates: (state,{payload}:{payload:{
+      [key:string]:boolean
+    }})=>{
+      const objKey = Object.keys(payload);
+      if(objKey[0] && state.socialMediaStates){
+      state.socialMediaStates[objKey[0]] = payload[objKey[0]];
+      }
+    },
+    updateTagsOpenStates: (state,{payload}:{payload:{
+      [key:string]:boolean
+    }})=>{
+      const objKey = Object.keys(payload);
+      if(objKey[0] && state.tagsStates){
+      state.tagsStates[objKey[0]] = payload[objKey[0]];
+      }
+    },
+    updateRelatedListingsOpenStates: (state,{payload}:{payload:{
+      [key:string]:boolean
+    }})=>{
+      const objKey = Object.keys(payload);
+      if(objKey[0] && state.relatedListingsStates){
+      state.relatedListingsStates[objKey[0]] = payload[objKey[0]];
+      }
+    },
+    updateRelatedListingsOpenStates2: (state,{payload}:{payload:{
+      [key:string]:boolean
+    }})=>{
+      const objKey = Object.keys(payload);
+      if(objKey[0] && state.relatedListingsStates2){
+      state.relatedListingsStates2[objKey[0]] = payload[objKey[0]];
+      }
+    },
+    updateWorkingHoursOpenStates: (state,{payload}:{payload:{
+      [key:string]:boolean
+    }})=>{
+      const objKey = Object.keys(payload);
+      if(objKey[0] && state.workingHoursStates){
+      state.workingHoursStates[objKey[0]] = payload[objKey[0]];
+      }
+    },
+    updateMembersOpenStates: (state,{payload}:{payload:{
+      [key:string]:boolean
+    }})=>{
+      const objKey = Object.keys(payload);
+      if(objKey[0] && state.membersStates){
+      state.membersStates[objKey[0]] = payload[objKey[0]];
+      }
+    },
   },
 })
 
@@ -220,6 +350,18 @@ export const {
   updateHobbyMenuExpandAll,
   updateListingMenuExpandAll,
   updateProfileMenuExpandAll,
+  increaseSidemenuRefresh,
+  increaseSearchRefresh,
+  updateHobbyOpenState,
+  updateContactOpenStates,
+  updateLocationOpenStates,
+  updatePagesOpenState,
+  updateSocialMediaOpenStates,
+  updateRelatedListingsOpenStates,
+  updateRelatedListingsOpenStates2,
+  updateTagsOpenStates,
+  updateWorkingHoursOpenStates,
+  updateMembersOpenStates
 } = siteSlice.actions
 
 export default siteSlice.reducer

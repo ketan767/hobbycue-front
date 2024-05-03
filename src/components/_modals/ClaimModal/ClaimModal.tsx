@@ -15,8 +15,8 @@ type Props = {
   setSnackbar?: React.Dispatch<SetStateAction<SnackbarState>>
 }
 
-const ClaimModal = (props:Props) => {
-  const {setSnackbar} = props;
+const ClaimModal = (props: Props) => {
+  const { setSnackbar } = props
   const phoneRef = useRef<HTMLInputElement>(null)
   const [selectedCountryCode, setSelectedCountryCode] = useState('+91')
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
@@ -24,7 +24,7 @@ const ClaimModal = (props:Props) => {
   const pageURL = window.location.href.split('/').reverse()[0]
   const listingUrlSpanRef = useRef<HTMLSpanElement>(null)
   const [listingUrlSpanLength, setListingUrlSpanLength] = useState(0)
-
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   let userData = useSelector((store: any) => store.user.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
 
@@ -35,7 +35,7 @@ const ClaimModal = (props:Props) => {
     email: userData.email,
     phonenumber: userData.phone?.number,
     phonePrefix: selectedCountryCode,
-    pageUrl: pageURL,
+    pageUrl: String(listingModalData?.page_url),
     userRelation: '',
     websiteLink: 'https://',
   })
@@ -87,6 +87,7 @@ const ClaimModal = (props:Props) => {
   const HandleClaim = async () => {
     if (!formData.userRelation || formData.userRelation === '') {
       setInputErrs((prev) => {
+        textareaRef.current?.focus()
         return { ...prev, userRelation: 'This field is Required' }
       })
     } else {
@@ -105,7 +106,7 @@ const ClaimModal = (props:Props) => {
           link,
         })
         setSubmitBtnLoading(false)
-        if(err===null||err===undefined){
+        if (err === null || err === undefined) {
           setSnackbar?.({
             show: true,
             type: 'success',
@@ -113,10 +114,10 @@ const ClaimModal = (props:Props) => {
           })
           dispatch(closeModal())
           window.location.reload()
-        }else{
+        } else {
           setSnackbar?.({
             show: true,
-            type: "error",
+            type: 'error',
             message: 'Claim request not sent',
           })
         }
@@ -131,20 +132,20 @@ const ClaimModal = (props:Props) => {
           link,
         })
         setSubmitBtnLoading(false)
-        if(err===null||err===undefined){
-        setSnackbar?.({
-          show: true,
-          type: 'success',
-          message: 'Claim request sent successfully',
-        })
-        dispatch(closeModal())
-      }else{
-        setSnackbar?.({
-          show: true,
-          type: "error",
-          message: 'Claim request not sent',
-        })
-      }
+        if (err === null || err === undefined) {
+          setSnackbar?.({
+            show: true,
+            type: 'success',
+            message: 'Claim request sent successfully',
+          })
+          dispatch(closeModal())
+        } else {
+          setSnackbar?.({
+            show: true,
+            type: 'error',
+            message: 'Claim request not sent',
+          })
+        }
       }
     }
   }
@@ -178,6 +179,8 @@ const ClaimModal = (props:Props) => {
                 name="profileName"
                 value={formData.profileName}
                 onChange={handleInputChange}
+                disabled
+                className={styles.disabled}
               />
             </div>
           </div>
@@ -242,6 +245,8 @@ const ClaimModal = (props:Props) => {
                 style={{
                   paddingLeft: listingUrlSpanLength + 12 + 'px',
                 }}
+                className={styles.disabled}
+                disabled
               />
               <span ref={listingUrlSpanRef}>{'/page/'}</span>
             </div>
@@ -254,6 +259,7 @@ const ClaimModal = (props:Props) => {
             <label>How are you related to this listing?</label>
             <div className={styles['street-input-container']}>
               <textarea
+                ref={textareaRef}
                 className={styles['long-input-box']}
                 required
                 name="userRelation"
@@ -294,7 +300,7 @@ const ClaimModal = (props:Props) => {
             onClick={HandleClaim}
           >
             {submitBtnLoading ? (
-              <CircularProgress color="inherit" size={'24px'} />
+              <CircularProgress color="inherit" size={'14px'} />
             ) : (
               'Claim'
             )}

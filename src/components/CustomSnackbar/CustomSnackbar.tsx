@@ -26,7 +26,7 @@ const CustomSnackbar: React.FC<Props> = ({
       onClose={closeSnackbar}
       key={'bottom' + 'left'}
       className={type === 'success' ? styles.successSnackbar : styles.Snackbar}
-      autoHideDuration={2000}
+      autoHideDuration={3000}
     >
       <SnackbarContent
         className={

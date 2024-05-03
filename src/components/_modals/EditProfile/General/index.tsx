@@ -41,7 +41,7 @@ type ProfileGeneralData = {
   profile_url: string
   gender: 'male' | 'female' | null
   year_of_birth: string
-  onboarding_step: string
+  onboarding_step?: string
   completed_onboarding_steps?: any
 }
 
@@ -77,7 +77,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     profile_url: '',
     gender: null,
     year_of_birth: '',
-    onboarding_step: '1',
+
     completed_onboarding_steps: 'General',
   })
 
@@ -128,53 +128,72 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     (window.location.port ? ':' + window.location.port : '')
 
   const handleSubmit = async () => {
+    let hasErrors = false
     if (isEmptyField(data.full_name) || !data.full_name) {
       fullNameRef.current?.focus()
-      return setInputErrs((prev) => {
+      setInputErrs((prev) => {
         return { ...prev, full_name: 'This field is required!' }
       })
+      hasErrors = true
     }
 
     if (!data.display_name || data.display_name === '') {
       displayNameRef.current?.focus()
-      return setInputErrs((prev) => {
+      setInputErrs((prev) => {
         return { ...prev, display_name: 'This field is required!' }
       })
+      hasErrors = true
     }
     if (isEmptyField(data.profile_url) || !data.profile_url) {
       profileUrlRef.current?.focus()
-      return setInputErrs((prev) => {
+      setInputErrs((prev) => {
         return { ...prev, profile_url: 'This field is required!' }
       })
+      hasErrors = true
     }
+
+    if (
+      (isEmptyField(data.full_name) || !data.full_name) &&
+      (!data.display_name || data.display_name === '')
+    ) {
+      fullNameRef.current?.focus()
+    }
+
     if (data.year_of_birth && data.year_of_birth !== '') {
       if (containOnlyNumbers(data?.year_of_birth)) {
         var check = yearOfBirthCheck(data.year_of_birth)
         dobRef.current?.focus()
         if (check !== false) {
           if (check >= 100) {
-            return setInputErrs((prev) => {
+            setInputErrs((prev) => {
               return { ...prev, year_of_birth: 'Maximum age: 100' }
             })
+            hasErrors = true
           }
 
           if (check < 13) {
-            return setInputErrs((prev) => {
+            setInputErrs((prev) => {
               return { ...prev, year_of_birth: 'Minimum age is 13' }
             })
+            return
           }
         } else {
-          return setInputErrs((prev) => {
+          setInputErrs((prev) => {
             return { ...prev, year_of_birth: 'Enter a valid year' }
           })
+          hasErrors = true
         }
       } else {
-        return setInputErrs((prev) => {
+        setInputErrs((prev) => {
           return { ...prev, year_of_birth: 'Enter a valid year' }
         })
+        hasErrors = true
       }
     }
 
+    if (hasErrors === true) {
+      return
+    }
     setSubmitBtnLoading(true)
     const newOnboardingStep =
       Number(user?.onboarding_step) > 0 ? user?.onboarding_step : '1'
@@ -195,7 +214,6 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     }
     if (!res?.data.success) {
       setSubmitBtnLoading(false)
-      return alert('Something went wrong!')
     }
 
     const { err: error, res: response } = await getMyProfileDetail()
@@ -269,9 +287,11 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   useEffect(() => {
     if (onComplete !== undefined && /^\d+$/.test(user.profile_url)) {
       let profileUrl = data.full_name
-      profileUrl = profileUrl?.toLowerCase().replace(/ /g, '-')
-      // Replace special characters with '-'
-      profileUrl = profileUrl.replace(/[^a-zA-Z0-9-]/g, '-')
+      profileUrl = profileUrl
+        ?.toLowerCase()
+        .replace(/\s+/g, '-') // Replace consecutive spaces with a single hyphen
+        .replace(/[^\w\s-]/g, '-') // Replace special characters with a single hyphen
+        .replace(/-+/g, '-') // Replace consecutive hyphens with a single hyphen
       setData((prev) => ({ ...prev, profile_url: profileUrl }))
       if (!user.display_name) {
         setData((prev) => ({
@@ -337,7 +357,10 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        nextButtonRef.current?.focus()
+        if(event?.srcElement?.tagName === "svg"){
+          return;
+        }
+        nextButtonRef.current?.click()
       }
     }
 
@@ -589,7 +612,11 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
               onClick={handleSubmit}
               disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
             >
-              Save
+              {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'14px'} />
+              ) : (
+                'Save'
+              )}
             </button>
           )}
         </footer>

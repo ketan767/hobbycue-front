@@ -39,6 +39,9 @@ type reportData = {
   user_id: string
   type: string
   reported_user_id: string
+  reported_user_name: string
+  reported_user_email: string
+  for_url: string
 }
 
 const ListingReport: React.FC<Props> = ({
@@ -59,6 +62,9 @@ const ListingReport: React.FC<Props> = ({
     user_id: '',
     type: '',
     reported_user_id: '',
+    reported_user_name: '',
+    reported_user_email: '',
+    for_url: '',
   })
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backDisabled, SetBackDisabled] = useState(false)
@@ -68,7 +74,7 @@ const ListingReport: React.FC<Props> = ({
   const listingPageData = useSelector(
     (state: RootState) => state.site.listingPageData,
   )
-
+  const currentUrl = `${process.env.NEXT_PUBLIC_VERCEL_URL}/page/${listingPageData.page_url}`
   const [inputErrs, setInputErrs] = useState<{ error: string | null }>({
     error: null,
   })
@@ -79,6 +85,9 @@ const ListingReport: React.FC<Props> = ({
     user_id: user._id,
     type: listingPageData.type,
     reported_user_id: listingPageData._id,
+    reported_user_name: listingPageData?.title,
+    reported_user_email: listingPageData?.public_email,
+    for_url: currentUrl,
   })
   const [isChanged, setIsChanged] = useState(false)
   const [snackbar, setSnackbar] = useState({
@@ -95,6 +104,9 @@ const ListingReport: React.FC<Props> = ({
       user_id: user._id,
       type: listingPageData.type,
       reported_user_id: listingPageData._id,
+      reported_user_name: listingPageData?.title,
+      reported_user_email: listingPageData?.public_email,
+      for_url: currentUrl,
     })
   }, [user])
 
@@ -103,12 +115,12 @@ const ListingReport: React.FC<Props> = ({
     setData((prev) => ({ ...prev, description: value }))
     setInputErrs({ error: null })
 
-    const hasChanged = value !== initialData.description
-    setIsChanged(hasChanged)
+    // const hasChanged = value !== initialData.description
+    // setIsChanged(hasChanged)
 
-    if (onStatusChange) {
-      onStatusChange(hasChanged)
-    }
+    // if (onStatusChange) {
+    //   onStatusChange(hasChanged)
+    // }
   }
 
   const handleSubmit = async () => {
@@ -135,7 +147,7 @@ const ListingReport: React.FC<Props> = ({
       setSubmitBtnLoading(false)
       setTimeout(() => {
         dispatch(closeModal())
-      }, 2000)
+      }, 2500)
     } else if (err) {
       setSubmitBtnLoading(false)
       setSnackbar({
@@ -155,6 +167,9 @@ const ListingReport: React.FC<Props> = ({
       user_id: user._id,
       type: listingPageData.type,
       reported_user_id: listingPageData._id,
+      reported_user_name: listingPageData?.title,
+      reported_user_email: listingPageData?.public_email,
+      for_url: currentUrl,
     })
   }, [user])
 
@@ -183,7 +198,7 @@ const ListingReport: React.FC<Props> = ({
     }
   }, [isError])
 
-  const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  const nextButtonRef = useRef<HTMLButtonElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   useEffect(() => {
     const focusTextarea = () => {
@@ -196,9 +211,15 @@ const ListingReport: React.FC<Props> = ({
 
   useEffect(() => {
     const handleKeyPress = (event: any) => {
-      if (event.key === 'Enter' && !textareaRef.current?.matches(':focus')) {
-        event.preventDefault()
-        handleSubmit()
+      if (event.key === 'Enter') {
+        if (
+          (event?.srcElement?.tagName &&
+            event?.srcElement?.tagName?.toLowerCase() === 'textarea') ||
+          event?.srcElement?.tagName?.toLowerCase() === 'svg'
+        ) {
+          return
+        }
+        nextButtonRef.current?.click()
       }
     }
 
@@ -318,7 +339,11 @@ const ListingReport: React.FC<Props> = ({
               onClick={handleSubmit}
               disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
             >
-              Submit
+              {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'14px'} />
+              ) : (
+                'Submit'
+              )}
             </button>
           )}
         </footer>

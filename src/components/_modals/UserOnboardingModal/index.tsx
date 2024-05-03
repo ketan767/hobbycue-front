@@ -77,14 +77,14 @@ export const UserOnboardingModal: React.FC<PropTypes> = ({
   }
 
   const IsOnboardingCompete = async () => {
-    const payload: InviteToCommunityPayload = {
+    const payload: sendWelcomeMailPayload = {
       to: user?.public_email,
       name: user.full_name,
     }
     console.log('activeprofileeeeeeeeeeee', user)
     const { err: error, res: response } = await getMyProfileDetail()
 
-    if (response?.data?.data?.user?.completed_onboarding_steps.length === 5) {
+    if (response?.data?.data?.user?.completed_onboarding_steps.length === 3) {
       await sendWelcomeMail(payload)
 
       const data = { is_onboarded: true }

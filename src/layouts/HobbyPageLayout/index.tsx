@@ -5,7 +5,11 @@ import ProfileHeader from '../../components/ProfilePage/ProfileHeader/ProfileHea
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
-import { updateProfileLayoutMode } from '@/redux/slices/site'
+import {
+  updateHobbyOpenState,
+  updateMembersOpenStates,
+  updateProfileLayoutMode,
+} from '@/redux/slices/site'
 import ProfileHeaderSmall from '@/components/ProfilePage/ProfileHeader/ProfileHeaderSmall'
 import HobbyPageHeader from '@/components/HobbyPage/HobbyHeader/HobbyHeader'
 import PageGridLayout from '../PageGridLayout'
@@ -19,6 +23,8 @@ import Image from 'next/image'
 import HobbyNavigationLinks from '@/components/HobbyPage/HobbyHeader/HobbyNavigationLinks'
 import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
 import { openModal } from '@/redux/slices/modal'
+import { SetLinkviaAuth } from '@/redux/slices/user'
+import { useMediaQuery } from '@mui/material'
 type Props = {
   activeTab: HobbyPageTabs
   data: any
@@ -35,6 +41,7 @@ const HobbyPageLayout: React.FC<Props> = ({
   setExpandAll,
 }) => {
   const dispatch = useDispatch()
+  const { hobbyStates, membersStates } = useSelector((state: RootState) => state.site)
   const [showSmallHeader, setShowSmallHeader] = useState(false)
   const [members, setMembers] = useState([])
   const hideLastColumnPages = ['pages', 'blogs', 'links', 'store']
@@ -44,7 +51,11 @@ const HobbyPageLayout: React.FC<Props> = ({
   const [loading, setLoading] = useState(true)
   const [showMembers, setShowMembers] = useState(false)
   const [showHobbiesClassification, setShowHobbiesClassification] =
-    useState(false)
+    useState(true)
+
+  useEffect(() => {
+    if (window.innerWidth >= 1300) setShowHobbiesClassification(false)
+  })
 
   useEffect(() => {
     if (hideLastColumnPages.includes(activeTab)) {
@@ -90,15 +101,35 @@ const HobbyPageLayout: React.FC<Props> = ({
     // return window.removeEventListener('scroll', checkScroll)
   }, [])
 
+  useEffect(() => {
+    if (hobbyStates && typeof hobbyStates[data?._id] === 'boolean') {
+      setShowHobbiesClassification(hobbyStates[data?._id])
+    } else if (data._id) {
+      dispatch(updateHobbyOpenState({ [data._id]: showHobbiesClassification }))
+    }
+  }, [data._id, hobbyStates])
+
+  useEffect(() => {
+    if (membersStates && typeof membersStates[data?._id] === 'boolean') {
+      setShowMembers(membersStates[data?._id])
+    } else if (data._id) {
+      dispatch(updateMembersOpenStates({ [data._id]: showMembers }))
+    }
+  }, [data._id, membersStates])
+
   const toggleMembers = () => {
     setSeeAll(!seeAll)
   }
-
+  console.log('dataonhobbbypage', data)
   const handleMemberClick = (user: any) => {
     if (isLoggedIn) {
       router.push(`/profile/${user.profile_url}`)
-    } else dispatch(openModal({ type: 'auth', closable: true }))
+    } else {
+      dispatch(SetLinkviaAuth(`/profile/${user.profile_url}`))
+      dispatch(openModal({ type: 'auth', closable: true }))
+    }
   }
+  const isMobile = useMediaQuery('(max-width:1100px)')
   return (
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
@@ -117,6 +148,7 @@ const HobbyPageLayout: React.FC<Props> = ({
         <Image
           src={ChevronDown}
           className={`${expandAll ? styles['rotate-180'] : ''}`}
+          style={{ transition: 'all 0.3s ease' }}
           alt=""
         />
       </div>
@@ -129,7 +161,14 @@ const HobbyPageLayout: React.FC<Props> = ({
         >
           <PageContentBox
             showEditButton={false}
-            setDisplayData={setShowHobbiesClassification}
+            initialShowDropdown
+            setDisplayData={(arg0: boolean) => {
+              setShowHobbiesClassification((prev) => {
+                dispatch(updateHobbyOpenState({ [data._id]: !prev }))
+                return !prev
+              })
+            }}
+            expandData={showHobbiesClassification}
           >
             <h4 className={styles['heading']}>Hobbies Classification</h4>
             <div
@@ -161,7 +200,8 @@ const HobbyPageLayout: React.FC<Props> = ({
         </aside>
         <main className={styles['display-desktop']}>{children}</main>
 
-        {!hideLastColumn && (
+        {/* {!hideLastColumn && ( */}
+        {(isMobile || !hideLastColumn) && (
           <aside className={expandAll ? '' : styles['display-none']}>
             <div className={styles['members']}>
               <div className={styles['heading']}>
@@ -169,7 +209,14 @@ const HobbyPageLayout: React.FC<Props> = ({
                 <Image
                   src={ChevronDown}
                   alt=""
-                  onClick={() => setShowMembers((prevValue) => !prevValue)}
+                  onClick={
+                    () => {
+                      setShowMembers((prev) => {
+                        dispatch(updateMembersOpenStates({ [data._id]: !prev }))
+                        return !prev
+                      })
+                    }
+                  }
                   className={`${styles['display-mobile']} ${
                     showMembers ? styles['rotate-180'] : ''
                   }`}
@@ -199,13 +246,23 @@ const HobbyPageLayout: React.FC<Props> = ({
                             }}
                           >
                             <div className={styles['hobbies-members']}>
-                              <Image
-                                className={styles['member-img']}
-                                width="24"
-                                height="24"
-                                src={user.profile_image || defaultUserIcon}
-                                alt=""
-                              />
+                              {user.profile_image ? (
+                                <img
+                                  className={styles['member-img']}
+                                  width="24"
+                                  height="24"
+                                  src={user.profile_image}
+                                  alt=""
+                                />
+                              ) : (
+                                <Image
+                                  className={styles['member-img']}
+                                  width="24"
+                                  height="24"
+                                  src={defaultUserIcon}
+                                  alt=""
+                                />
+                              )}
                               <div>{user.full_name}</div>
                             </div>
                           </div>
@@ -231,7 +288,11 @@ const HobbyPageLayout: React.FC<Props> = ({
         <div className={`${styles['display-mobile']}`}>
           <HobbyNavigationLinks activeTab={activeTab} />
         </div>
-        <main className={styles['display-mobile']}>{children}</main>
+        <main
+          className={`${styles['display-mobile']} ${styles['mob-min-height']}`}
+        >
+          {children}
+        </main>
       </PageGridLayout>
     </>
   )

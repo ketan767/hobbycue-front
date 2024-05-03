@@ -1,3 +1,15 @@
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+    
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 ul.location-wrapper {
   margin-top: var(--spacing-16);
   display: flex;
@@ -10,6 +22,7 @@ ul.contact-wrapper {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-16);
+  animation: fadeDown 0.3s ease forwards;
 }
 
 
@@ -51,6 +64,11 @@ ul.contact-wrapper svg {
   max-width: 100%;
   overflow: hidden;
   color: #08090A;
+  text-overflow: ellipsis;
+}
+
+.error{
+  border: 1px solid #C0504D !important;
 }
 
 @media screen and (max-width: 1100px) {

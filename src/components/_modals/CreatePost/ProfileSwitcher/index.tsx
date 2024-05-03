@@ -12,12 +12,16 @@ type Props = {
   data: any
   setData: any
   setHobbies: any
+  classForShowDropdown?:string
+  className?:string
 }
 
 const ProfileSwitcher: React.FC<Props> = ({
   data: activeProfile,
   setData,
   setHobbies,
+  classForShowDropdown,
+  className
 }) => {
   const { user, listing } = useSelector((state: RootState) => state.user)
   const filteredListing = listing.filter((item: any) => item.is_published)
@@ -54,12 +58,12 @@ const ProfileSwitcher: React.FC<Props> = ({
       <section
         className={`${styles['profile-switcher']} ${
           showDropdown ? styles['show-dropdown'] : ''
-        }`}
+        } ${classForShowDropdown??''} ${className??''}`}
         ref={dropdownRef}
         onClick={() => setShowDropdown((prev) => !prev)}
       >
         {activeProfile?.data?.profile_image ? (
-          <Image
+          <img
             data-profile-type={activeProfile.type}
             src={activeProfile.data?.profile_image}
             alt=""
@@ -91,7 +95,7 @@ const ProfileSwitcher: React.FC<Props> = ({
             : activeProfile.data?.full_name}
         </p>
 
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <svg width="24" height="24" style={{rotate:showDropdown?"180deg":"0deg"}} viewBox="0 0 24 24" fill="none">
           <g clip-path="url(#clip0_25_51286)">
             <path
               d="M15.88 9.29055L12 13.1705L8.11998 9.29055C7.72998 8.90055 7.09998 8.90055 6.70998 9.29055C6.31998 9.68055 6.31998 10.3105 6.70998 10.7005L11.3 15.2905C11.69 15.6805 12.32 15.6805 12.71 15.2905L17.3 10.7005C17.69 10.3105 17.69 9.68055 17.3 9.29055C16.91 8.91055 16.27 8.90055 15.88 9.29055Z"
@@ -118,7 +122,7 @@ const ProfileSwitcher: React.FC<Props> = ({
                 }`}
               >
                 {user?.profile_image ? (
-                  <Image
+                  <img
                     src={user?.profile_image}
                     alt=""
                     width={24}
@@ -148,7 +152,7 @@ const ProfileSwitcher: React.FC<Props> = ({
                     }`}
                   >
                     {page?.profile_image ? (
-                      <Image
+                      <img
                         src={page?.profile_image}
                         alt=""
                         width={24}

@@ -5,24 +5,26 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { openModal } from '@/redux/slices/modal'
 import Tooltip from '@/components/Tooltip/ToolTip'
-import FacebookIcon from '@/assets/svg/Facebook.svg'
-import TwitterIcon from '@/assets/svg/Twitter.svg'
-import InstagramIcon from '@/assets/svg/Instagram.svg'
-import BehanceIcon from '@/assets/svg/Behance.svg'
-import BGGIcon from '@/assets/svg/BGG.svg'
-import ChessIcon from '@/assets/svg/Chess.com.svg'
-import DeviantArtIcon from '@/assets/svg/DeviantArt.svg'
-import GoodreadsIcon from '@/assets/svg/GoodReads.svg'
-import PinterestIcon from '@/assets/svg/Pinterest.svg'
-import SmuleIcon from '@/assets/svg/Smule.svg'
-import SoundCloudIcon from '@/assets/svg/Soundcloud.svg'
-import StravaIcon from '@/assets/svg/Strava.svg'
-import TripAdvisorIcon from '@/assets/svg/Tripadvisor.svg'
-import UltimateGuitarIcon from '@/assets/svg/Ultimate-Guitar.svg'
-import YouTubeIcon from '@/assets/svg/Youtube.svg'
-import OthersIcon from '@/assets/svg/other.svg'
+import FacebookIcon from '@/assets/svg/social-media/facebook.svg'
+import TwitterIcon from '@/assets/svg/social-media/twitter.svg'
+import InstagramIcon from '@/assets/svg/social-media/instagram.svg'
+import BehanceIcon from '@/assets/svg/social-media/behance.svg'
+import BGGIcon from '@/assets/svg/social-media/bgg.svg'
+import ChessIcon from '@/assets/svg/social-media/chess.com.svg'
+import DeviantArtIcon from '@/assets/svg/social-media/DeviantArt.svg'
+import GoodreadsIcon from '@/assets/svg/social-media/GoodReads.svg'
+import PinterestIcon from '@/assets/svg/social-media/pinterest.svg'
+import SmuleIcon from '@/assets/svg/social-media/smule.svg'
+import SoundCloudIcon from '@/assets/svg/social-media/soundcloud.svg'
+import StravaIcon from '@/assets/svg/social-media/strava.svg'
+import TripAdvisorIcon from '@/assets/svg/social-media/tripadvisor.svg'
+import UltimateGuitarIcon from '@/assets/svg/social-media/Ultimate-Guitar.svg'
+import YouTubeIcon from '@/assets/svg/social-media/youtube.svg'
+import OthersIcon from '@/assets/svg/social-media/other.svg'
+import MediumIcon from '@/assets/svg/social-media/MediumWeb.svg'
+import TelegramIcon from '@/assets/svg/social-media/Telegram.svg'
 import Image from 'next/image'
-import Link from 'next/link'
+import { updateSocialMediaOpenStates } from '@/redux/slices/site'
 
 type Props = {
   data: ProfilePageData['pageData']
@@ -30,7 +32,8 @@ type Props = {
 }
 
 const ProfileSocialMediaSide = ({ data, expandData }: Props) => {
-  const { profileLayoutMode } = useSelector((state: RootState) => state.site)
+  const { profileLayoutMode, socialMediaStates } = useSelector((state: RootState) => state.site)
+  const { isLoggedIn } = useSelector((state: RootState) => state.user)
   const [displayData, setDisplayData] = useState(false)
   const dispatch = useDispatch()
   function renderSocialLink(url: any, iconSrc: any, altText: any) {
@@ -64,6 +67,14 @@ const ProfileSocialMediaSide = ({ data, expandData }: Props) => {
     return domain.charAt(0).toUpperCase() + domain.slice(1)
   }
 
+  useEffect(()=>{
+    if(socialMediaStates && typeof socialMediaStates[data?._id] === 'boolean'){
+      setDisplayData(socialMediaStates[data?._id])
+    }else if(data._id){
+      dispatch(updateSocialMediaOpenStates({[data._id]:displayData}))
+    }
+  },[data._id, socialMediaStates])
+
   useEffect(() => {
     if (expandData !== undefined) setDisplayData(expandData)
   }, [expandData])
@@ -75,97 +86,108 @@ const ProfileSocialMediaSide = ({ data, expandData }: Props) => {
         onEditBtnClick={() =>
           dispatch(openModal({ type: 'social-media-edit', closable: true }))
         }
-        setDisplayData={setDisplayData}
-        expandData={expandData}
+        setDisplayData={(arg0:boolean)=>{setDisplayData(prev=>{
+          dispatch(updateSocialMediaOpenStates({[data._id]:!prev}))
+          return !prev
+        })}}
+        expandData={displayData}
       >
         <h4 className={styles['heading']}>Social Media</h4>
         <ul
           className={`${styles['contact-wrapper']} ${
-            displayData && styles['display-mobile-flex']
+            socialMediaStates?.[data?._id] && styles['display-mobile-flex']
           }`}
         >
           {data?.social_media_urls && (
             <>
-              {renderSocialLink(
-                data.social_media_urls.facebook_url,
-                FacebookIcon,
-                'Facebook',
-              )}
-              {renderSocialLink(
-                data.social_media_urls.twitter_url,
-                TwitterIcon,
-                'Twitter',
-              )}
-              {renderSocialLink(
-                data.social_media_urls.instagram_url,
-                InstagramIcon,
-                'Instagram',
-              )}
-              {renderSocialLink(
-                data.social_media_urls.behance_url,
-                BehanceIcon,
-                'Behance',
-              )}
-              {renderSocialLink(
-                data.social_media_urls.bgg_url,
-                BGGIcon,
-                'BoardGameGeek',
-              )}
-              {renderSocialLink(
-                data.social_media_urls.chess_url,
-                ChessIcon,
-                'Chess',
-              )}
-              {renderSocialLink(
-                data.social_media_urls.deviantarts_url,
-                DeviantArtIcon,
-                'DeviantArt',
-              )}
-              {renderSocialLink(
-                data.social_media_urls.goodreads_url,
-                GoodreadsIcon,
-                'Goodreads',
-              )}
-              {renderSocialLink(
-                data.social_media_urls.pinterest_url,
-                PinterestIcon,
-                'Pinterest',
-              )}
-              {renderSocialLink(
-                data.social_media_urls.smule_url,
-                SmuleIcon,
-                'Smule',
-              )}
-              {renderSocialLink(
-                data.social_media_urls.soundcloud_url,
-                SoundCloudIcon,
-                'SoundCloud',
-              )}
-              {renderSocialLink(
-                data.social_media_urls.strava_url,
-                StravaIcon,
-                'Strava',
-              )}
-              {renderSocialLink(
-                data.social_media_urls.tripadvisor_url,
-                TripAdvisorIcon,
-                'TripAdvisor',
-              )}
-              {renderSocialLink(
-                data.social_media_urls.ultimate_guitar_url,
-                UltimateGuitarIcon,
-                'Ultimate Guitar',
-              )}
-              {renderSocialLink(
-                data.social_media_urls.youtube_url,
-                YouTubeIcon,
-                'YouTube',
-              )}
-              {renderSocialLink(
-                data.social_media_urls.Others_url,
-                OthersIcon,
-                extractDomainName(data.social_media_urls.Others_url),
-              )}
+              {Object.entries(data.social_media_urls).map(([key, url]) => {
+                let socialMediaName = ''
+                let socialMediaIcon = null
+
+                switch (true) {
+                  case key.startsWith('facebook'):
+                    socialMediaName = 'Facebook'
+                    socialMediaIcon = FacebookIcon
+                    break
+                  case key.startsWith('twitter'):
+                    socialMediaName = 'Twitter'
+                    socialMediaIcon = TwitterIcon
+                    break
+                  case key.startsWith('instagram'):
+                    socialMediaName = 'Instagram'
+                    socialMediaIcon = InstagramIcon
+                    break
+                  case key.startsWith('behance'):
+                    socialMediaName = 'Behance'
+                    socialMediaIcon = BehanceIcon
+                    break
+                  case key.startsWith('bgg'):
+                    socialMediaName = 'BoardGameGeek'
+                    socialMediaIcon = BGGIcon
+                    break
+                  case key.startsWith('chess'):
+                    socialMediaName = 'Chess'
+                    socialMediaIcon = ChessIcon
+                    break
+                  case key.startsWith('deviantarts'):
+                    socialMediaName = 'DeviantArt'
+                    socialMediaIcon = DeviantArtIcon
+                    break
+                  case key.startsWith('goodreads'):
+                    socialMediaName = 'Goodreads'
+                    socialMediaIcon = GoodreadsIcon
+                    break
+                  case key.startsWith('pinterest'):
+                    socialMediaName = 'Pinterest'
+                    socialMediaIcon = PinterestIcon
+                    break
+                  case key.startsWith('smule'):
+                    socialMediaName = 'Smule'
+                    socialMediaIcon = SmuleIcon
+                    break
+                  case key.startsWith('soundcloud'):
+                    socialMediaName = 'SoundCloud'
+                    socialMediaIcon = SoundCloudIcon
+                    break
+                  case key.startsWith('strava'):
+                    socialMediaName = 'Strava'
+                    socialMediaIcon = StravaIcon
+                    break
+                  case key.startsWith('tripadvisor'):
+                    socialMediaName = 'TripAdvisor'
+                    socialMediaIcon = TripAdvisorIcon
+                    break
+                  case key.startsWith('telegram'):
+                    socialMediaName = 'Telegram'
+                    socialMediaIcon = TelegramIcon
+                    break
+                  case key.startsWith('medium'):
+                    socialMediaName = 'Medium'
+                    socialMediaIcon = MediumIcon
+                    break
+                  case key.startsWith('ultimate_guitar'):
+                    socialMediaName = 'Ultimate Guitar'
+                    socialMediaIcon = UltimateGuitarIcon
+                    break
+                  case key.startsWith('youtube'):
+                    socialMediaName = 'YouTube'
+                    socialMediaIcon = YouTubeIcon
+                    break
+                  case key.startsWith('others'):
+                    socialMediaName = extractDomainName(url)
+                    socialMediaIcon = OthersIcon
+                    break
+                  // Add cases for other social media URLs as needed
+                  default:
+                    break
+                }
+
+                if (socialMediaIcon && socialMediaName) {
+                  return renderSocialLink(url, socialMediaIcon, socialMediaName)
+                }
+
+                return null // If no matching social media key is found, return null
+              })}
             </>
           )}
         </ul>

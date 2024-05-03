@@ -87,7 +87,6 @@ const ProfileContactEditModal: React.FC<Props> = ({
     public_email: { value: '', error: null },
     website: { value: '', error: null },
     whatsapp_number: { number: '', prefix: '', error: null },
-    completed_onboarding_steps: 'Contact',
   })
 
   const [initialData, setInitialData] = useState<ProfileContactData>()
@@ -146,6 +145,12 @@ const ProfileContactEditModal: React.FC<Props> = ({
     }
   }
 
+  const handlePhoneBlur = (e: any) => {
+    if (tick) {
+      handleBlur(e)
+    }
+  }
+
   const Backsave = async () => {
     setBackBtnLoading(true)
     if (
@@ -169,16 +174,11 @@ const ProfileContactEditModal: React.FC<Props> = ({
       setBackBtnLoading(true)
       let updatedCompletedSteps = [...user.completed_onboarding_steps]
 
-      if (!updatedCompletedSteps.includes('Contact')) {
-        updatedCompletedSteps.push('Contact')
-      }
-
       const newOnboardingStep =
         Number(user?.onboarding_step) > 2 ? user?.onboarding_step : '3'
       const { err, res } = await updateMyProfileDetail({
         ...jsonData,
         onboarding_step: newOnboardingStep,
-        completed_onboarding_steps: updatedCompletedSteps,
       })
 
       if (err) {
@@ -217,7 +217,8 @@ const ProfileContactEditModal: React.FC<Props> = ({
     if (data.phone.number) {
       if (
         !containOnlyNumbers(data.phone.number.toString().trim()) ||
-        data.phone.number.toString().trim().length !== 10
+        data.phone.number.toString().replace(/\s/g, '').length > 12 ||
+        data.phone.number.toString().replace(/\s/g, '').length < 7
       ) {
         phoneRef.current?.focus()
         return setData((prev) => {
@@ -231,7 +232,8 @@ const ProfileContactEditModal: React.FC<Props> = ({
     if (data.whatsapp_number.number) {
       if (
         !containOnlyNumbers(data.whatsapp_number.number.toString().trim()) ||
-        data.whatsapp_number.number.toString().trim().length !== 10
+        data.whatsapp_number.number.toString().replace(/\s/g, '').length > 12 ||
+        data.whatsapp_number.number.toString().replace(/\s/g, '').length < 7
       ) {
         WhtphoneRef.current?.focus()
         return setData((prev) => {
@@ -261,13 +263,13 @@ const ProfileContactEditModal: React.FC<Props> = ({
     }
     const jsonData = {
       phone: {
-        number: data.phone.number,
+        number: data.phone.number?.replace(/\s/g, ''),
         prefix: selectedCountryCode,
       },
       public_email: data.public_email.value,
       website: data.website.value,
       whatsapp_number: {
-        number: data.whatsapp_number.number,
+        number: data.whatsapp_number.number?.replace(/\s/g, ''),
         prefix: selectedWpCountryCode,
       },
       onboarding_step: '3',
@@ -277,16 +279,11 @@ const ProfileContactEditModal: React.FC<Props> = ({
 
     let updatedCompletedSteps = [...user.completed_onboarding_steps]
 
-    if (!updatedCompletedSteps.includes('Contact')) {
-      updatedCompletedSteps.push('Contact')
-    }
-
     const newOnboardingStep =
       Number(user?.onboarding_step) > 2 ? user?.onboarding_step : '3'
     const { err, res } = await updateMyProfileDetail({
       ...jsonData,
       onboarding_step: newOnboardingStep,
-      completed_onboarding_steps: updatedCompletedSteps,
     })
 
     if (err) {
@@ -311,7 +308,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
       }
     }
   }
-  // client said to remove this checkbox function
+  // client said to remove this checkbox function and add it again
   // useEffect(() => {
   //   if (tick) {
   //     setData((prev) => {
@@ -329,15 +326,10 @@ const ProfileContactEditModal: React.FC<Props> = ({
   const handleSkip = async () => {
     let updatedCompletedSteps = [...user.completed_onboarding_steps]
 
-    if (!updatedCompletedSteps.includes('Contact')) {
-      updatedCompletedSteps.push('Contact')
-    }
-
     const newOnboardingStep =
       Number(user?.onboarding_step) > 2 ? user?.onboarding_step : '3'
     const { err, res } = await updateMyProfileDetail({
       onboarding_step: newOnboardingStep,
-      completed_onboarding_steps: updatedCompletedSteps,
     })
 
     if (err) {
@@ -387,6 +379,9 @@ const ProfileContactEditModal: React.FC<Props> = ({
   const handlePrefixChange = (element: any) => {
     const id = element?.id
     setSelectedCountryCode(countryData[id]?.phonePrefix)
+    if (tick) {
+      handleWpPrefixChange(element)
+    }
   }
 
   const checkEmpty = (data: any) => {
@@ -420,7 +415,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
         } else if (event.target.tagName.toLowerCase() === 'svg') {
           onComplete
         } else {
-          nextButtonRef.current?.focus()
+          nextButtonRef.current?.click()
         }
       }
     }
@@ -575,7 +570,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
                     onChange={handleInputChange}
                     ref={phoneRef}
                     className={styles['phone-input']}
-                    onBlur={handleBlur}
+                    onBlur={handlePhoneBlur}
                   />
                 </div>
                 <p className={styles['helper-text']}>{data.phone.error}</p>
@@ -585,7 +580,7 @@ const ProfileContactEditModal: React.FC<Props> = ({
               <div className={styles['input-box']}>
                 <label className={styles['whatsapp-label']}>
                   WhatsApp
-                  {/* <CustomTooltip title="Use same">
+                  <CustomTooltip title="Use same">
                     <div>
                       <Checkbox
                         size="small"
@@ -596,6 +591,34 @@ const ProfileContactEditModal: React.FC<Props> = ({
                         checked={tick}
                         onChange={(e) => {
                           if (tick === true) {
+                            setData((prev) => {
+                              return {
+                                ...prev,
+                                whatsapp_number: {
+                                  number: '',
+                                  prefix: '+91',
+                                },
+                              }
+                            })
+                            setWpSelectedCountryCode('+91')
+                          } else {
+                            setData((prev) => {
+                              return {
+                                ...prev,
+                                whatsapp_number: {
+                                  number: prev['phone'].number,
+                                  prefix: selectedCountryCode,
+                                },
+                              }
+                            })
+                            setWpSelectedCountryCode(selectedCountryCode)
+                          }
+                          setTick(!tick)
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            e.stopPropagation();
                             if (tick === true) {
                               setData((prev) => {
                                 return {
@@ -607,13 +630,24 @@ const ProfileContactEditModal: React.FC<Props> = ({
                                 }
                               })
                               setWpSelectedCountryCode('+91')
+                            } else {
+                              setData((prev) => {
+                                return {
+                                  ...prev,
+                                  whatsapp_number: {
+                                    number: prev['phone'].number,
+                                    prefix: selectedCountryCode,
+                                  },
+                                }
+                              })
+                              setWpSelectedCountryCode(selectedCountryCode)
                             }
+                            setTick(!tick)
                           }
-                          setTick(!tick)
                         }}
                       />{' '}
                     </div>
-                  </CustomTooltip> */}
+                  </CustomTooltip>
                 </label>
                 <div className={styles['phone-prefix-input']}>
                   <DropdownMenu
@@ -719,7 +753,11 @@ const ProfileContactEditModal: React.FC<Props> = ({
               className="modal-mob-btn-save"
               onClick={handleSubmit}
             >
-              Save
+              {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'14px'} />
+              ) : (
+                'Save'
+              )}
             </button>
           )}
         </footer>

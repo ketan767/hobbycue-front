@@ -24,6 +24,7 @@ import { updateListingModalData } from '@/redux/slices/site'
 import { updateListing } from '@/services/listing.service'
 
 import DownArrow from '@/assets/svg/chevron-down.svg'
+import UpArrow from '@/assets/svg/chevron-up.svg'
 import TickIcon from '@/assets/svg/tick.svg'
 import CrossIcon from '@/assets/svg/cross.svg'
 import useOutsideAlerter from '@/hooks/useOutsideAlerter'
@@ -58,13 +59,17 @@ const ListingTypeEditModal: React.FC<Props> = ({
   const [list, setList] = useState<{ name: string; description: string }[]>([])
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [value, setValue] = useState<any>([])
+  const [hoveredValue, setHoveredValue] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [isError, setIsError] = useState(false)
 
   const [showDropdown, setShowDropdown] = useState(false)
   const dropdownRef: any = useRef()
-  useOutsideAlerter(dropdownRef, () => setShowDropdown(false))
+  useOutsideAlerter(dropdownRef, () => {
+    setShowDropdown(false)
+    setHoveredValue(null)
+  })
   const [initialData, setInitialData] = useState<any>([])
   const [isChanged, setIsChanged] = useState(false)
 
@@ -260,6 +265,10 @@ const ListingTypeEditModal: React.FC<Props> = ({
       name: 'Voucher',
       description: 'Redeemable code',
     },
+    {
+      name: 'Other',
+      description: 'Request addition of options',
+    },
   ]
 
   useEffect(() => {
@@ -333,7 +342,26 @@ const ListingTypeEditModal: React.FC<Props> = ({
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
-    const handleKeyPress = (event: any) => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      console.log({ event })
+      // if(event.key==="ArrowUp" && showDropdown && hoveredValue!==null){
+      //   setHoveredValue(prev=>{
+      //     if(prev===0){
+      //       return list.length-1;
+      //     }else{
+      //       return (prev as number) - 1
+      //     }
+      //   })
+      // }
+      // else if(event.key==="ArrowDown" && showDropdown && hoveredValue!==null){
+      //   setHoveredValue(prev=>{
+      //     if(prev===list.length-1){
+      //       return 0;
+      //     }else{
+      //       return (prev as number) + 1
+      //     }
+      //   })
+      // }
       if (event.key === 'Enter') {
         nextButtonRef.current?.focus()
       }
@@ -367,12 +395,14 @@ const ListingTypeEditModal: React.FC<Props> = ({
           />
           {/* Modal Header */}
           <header className={styles['header']}>
-            <h4 className={styles['heading']}>{'Category'}</h4>
+            <h4 className={styles['heading']}>{'Listing Category'}
+            {listingTypeModalMode==="create"&&<span className={styles['red-error-mobile']}>*</span>}
+            </h4>
           </header>
 
           <hr className={styles['modal-hr']} />
 
-          <section className={styles['body']}>
+          <section className={styles['body']+" custom-scrollbar"}>
             <p className={styles['info']}>
               Please select two of the most appropriate categories. One type is
               recommended. Use another type only if it is significantly
@@ -401,16 +431,69 @@ const ListingTypeEditModal: React.FC<Props> = ({
               <FormControl variant="outlined" size="small">
                 <div className={styles['select-container']} ref={dropdownRef}>
                   <div
+                    tabIndex={0}
                     className={`${styles['select-input']} ${
                       error ? styles['select-input-error'] : ' '
                     }`}
-                    onClick={() => setShowDropdown(true)}
+                    onClick={() =>
+                      setShowDropdown((prev) => {
+                        if (prev === true) {
+                          setHoveredValue(null)
+                        }
+                        return !prev
+                      })
+                    }
+                    onKeyDown={(e) => {
+                      if (['Enter'].includes(e.key) || e.key === ' ') {
+                          e.preventDefault();
+                          e.stopPropagation();
+                        if (
+                          e.key === 'Enter' &&
+                          showDropdown &&
+                          hoveredValue !== null
+                        ) {
+                          handleChange(list[hoveredValue].name)
+                          setShowDropdown(false)
+                          setHoveredValue(null)
+                        } else if (!showDropdown) {
+                          setShowDropdown(true)
+                          setHoveredValue(0)
+                        }
+                      } else if (
+                        e.key === 'ArrowUp' &&
+                        showDropdown &&
+                        hoveredValue !== null
+                      ) {
+                        setHoveredValue((prev) => {
+                          if (prev === 0) {
+                            return list.length - 1
+                          } else {
+                            return (prev as number) - 1
+                          }
+                        })
+                      } else if (
+                        e.key === 'ArrowDown' &&
+                        showDropdown &&
+                        hoveredValue !== null
+                      ) {
+                        setHoveredValue((prev) => {
+                          if (prev === list.length - 1) {
+                            return 0
+                          } else {
+                            return (prev as number) + 1
+                          }
+                        })
+                      }
+                    }}
                   >
                     <p> Select Category </p>
-                    <Image src={DownArrow} alt="down" />
+                    <Image
+                      src={showDropdown ? UpArrow : DownArrow}
+                      alt="down"
+                    />
                   </div>
                   {showDropdown && (
-                    <div className={styles['options-container']}>
+                    <div className={styles['options-container']+" custom-scrollbar"}>
                       {list.map(
                         (
                           item: { name: string; description: string },
@@ -429,11 +512,17 @@ const ListingTypeEditModal: React.FC<Props> = ({
                                   value?.includes(item.name)
                                     ? styles['selcted-option']
                                     : ''
-                                }`}
+                                }
+                                ${
+                                  hoveredValue === idx &&
+                                  styles['hovered-single-option']
+                                }
+                                `}
                                 key={item.name}
                                 onClick={() => {
                                   handleChange(item.name)
                                   setShowDropdown(false)
+                                  setHoveredValue(null)
                                 }}
                               >
                                 <p className={styles.tagDesc}>{item.name}</p>
@@ -493,7 +582,10 @@ const ListingTypeEditModal: React.FC<Props> = ({
               )}
             </button>
             {/* SVG Button for Mobile */}
-            {onComplete ? (
+            {onComplete||listingTypeModalMode==="create"?
+            <div className={styles['desktop-hidden']}></div>
+            :null}
+            {onComplete || listingTypeModalMode==="create" ? (
               <div onClick={handleSubmit}>
                 <Image
                   src={NextIcon}
@@ -508,7 +600,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
                 onClick={handleSubmit}
               >
                 {submitBtnLoading ? (
-                  <CircularProgress color="inherit" size={'16px'} />
+                  <CircularProgress color="inherit" size={'14px'} />
                 ) : listingTypeModalMode === 'edit' ? (
                   'Save'
                 ) : (

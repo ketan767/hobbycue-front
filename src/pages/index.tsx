@@ -25,11 +25,14 @@ import {
 } from '@/redux/slices/search'
 import DownloadInMobile from '@/components/DownloadInMobile'
 import InstallPopup from '@/components/InstallPopup/InstallPopup'
+import { getMyProfileDetail } from '@/services/user.service'
 
 const Home: React.FC<PropTypes> = function () {
   const [isPlaying, setIsPlaying] = useState(false)
   const [duration, setDuration] = useState(0)
-  const [showAddToHome,setShowAddToHome] = useState<boolean|"loading">("loading")
+  const [showAddToHome, setShowAddToHome] = useState<boolean | 'loading'>(
+    'loading',
+  )
 
   const dispatch = useDispatch()
   const openLogin = () => {
@@ -40,9 +43,19 @@ const Home: React.FC<PropTypes> = function () {
 
   useEffect(() => {
     if (user.isLoggedIn) {
-      router.push('/community')
+      checkIfLoggin()
     }
   }, [user.isLoggedIn])
+
+  const checkIfLoggin = async () => {
+    const { err, res } = await getMyProfileDetail()
+    if (!res?.data?.data?.user?.is_onboarded) {
+      console.warn('profileurl', res?.data?.data?.user)
+      router.push(`/profile/${res?.data?.data?.user?.profile_url}`)
+    } else {
+      router.push(`/community`)
+    }
+  }
 
   useEffect(() => {
     // Save the scroll position before navigating to another page
@@ -101,14 +114,14 @@ const Home: React.FC<PropTypes> = function () {
     }
   }, [])
 
-  useEffect(()=>{
-    const localShowAddtoHome = localStorage.getItem("addToHomePopup");
-    if(localShowAddtoHome==="false"){
-      setShowAddToHome(false);
-    }else{
+  useEffect(() => {
+    const localShowAddtoHome = localStorage.getItem('addToHomePopup')
+    if (localShowAddtoHome === 'false') {
+      setShowAddToHome(false)
+    } else {
       setShowAddToHome(true)
     }
-  },[])
+  }, [])
 
   const audioRef = useRef<HTMLAudioElement>(null)
 
@@ -132,10 +145,10 @@ const Home: React.FC<PropTypes> = function () {
           name="description"
           content="hobbycue – explore your hobby or passion Sign-in to interact with a community of fellow hobbyists and an eco-system of experts, teachers, suppliers, classes, workshops, and places to practice, participate or perform. Your hobby may be about visual or performing arts, sports, games, gardening, model making, cooking, indoor or outdoor activities… If you are an expert […]"
         />
+        <link rel="manifest" href="/manifest.json"></link>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       {/** Landing Container **/}
       {/* <DownloadInMobile/> */}
       <section className={styles['landing-contaniner']}>
@@ -178,7 +191,6 @@ const Home: React.FC<PropTypes> = function () {
           </main>
         </div>
       </section>
-
       {/** Cards Container **/}
       <section className={`${styles['cards-container']}`}>
         {/* `4Ps Cards` Section */}
@@ -350,7 +362,6 @@ const Home: React.FC<PropTypes> = function () {
           </div>
         </section>
       </section>
-
       {/** Testimonial Container  **/}
       <section>
         <div className={`site-container ${styles['testimonial-contaniner']}`}>
@@ -429,7 +440,6 @@ const Home: React.FC<PropTypes> = function () {
           </div>
         </div>
       </section>
-
       <section className={`site-container ${styles.bigTextContainer}`}>
         <p className={`${styles.bigText}`}>
           Your <span className={styles.hobbyText}>Hobby </span> , Your{' '}
@@ -453,7 +463,13 @@ const Home: React.FC<PropTypes> = function () {
       <section className={`site-container ${styles['site-container-footer']}`}>
         <Footer />
       </section>
-       {showAddToHome===true&&<InstallPopup showAddToHome={showAddToHome} setShowAddToHome={setShowAddToHome}/>}
+      {/* removing temporalily for go live */}
+      {/* {showAddToHome === true && (
+        <InstallPopup
+          showAddToHome={showAddToHome}
+          setShowAddToHome={setShowAddToHome}
+        />
+      )} */}
     </>
   )
 }

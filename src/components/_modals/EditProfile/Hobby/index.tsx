@@ -18,7 +18,7 @@ import hobbyLvlThree from '@/assets/svg/hobby_level_Three.svg'
 import hobbyLvlTwo from '@/assets/svg/hobby_level_Two.svg'
 import addhobby from '@/assets/svg/addhobby.svg'
 import { closeModal, openModal } from '@/redux/slices/modal'
-import { updateUser } from '@/redux/slices/user'
+import { showProfileError, updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import { getAllHobbies } from '@/services/hobby.service'
 import { isEmptyField } from '@/utils'
@@ -26,7 +26,6 @@ import { FormControl, MenuItem, Select } from '@mui/material'
 import Image from 'next/image'
 import { useDispatch, useSelector } from 'react-redux'
 import SaveModal from '../../SaveModal/saveModal'
-import DropdownMenu from '@/components/DropdownMenu'
 import { useRouter } from 'next/router'
 import AddHobby from '../../AddHobby/AddHobbyModal'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
@@ -91,6 +90,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const [showModal, setShowModal] = useState(false)
   const hobbyDropdownRef = useRef<HTMLDivElement>(null)
   const genreDropdownRef = useRef<HTMLDivElement>(null)
+  const selectLevelRef = useRef<HTMLSelectElement>(null)
   const { user } = useSelector((state: RootState) => state.user)
   const searchref = useRef<HTMLInputElement>(null)
   const [addHobbyBtnLoading, setAddHobbyBtnLoading] = useState<boolean>(false)
@@ -105,6 +105,8 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   })
   const [showHobbyDowpdown, setShowHobbyDowpdown] = useState<boolean>(false)
   const [showGenreDowpdown, setShowGenreDowpdown] = useState<boolean>(false)
+  console.warn({ showGenreDowpdown })
+
   const [isError, setIsError] = useState(false)
   const [HobbyError, setHobbyError] = useState(false)
   const [focusedHobbyIndex, setFocusedHobbyIndex] = useState<number>(-1)
@@ -136,7 +138,33 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     type: 'success' || 'error',
   })
 
+  const handleGenreInputFocus = () => {
+    setShowGenreDowpdown(true)
+    const query = `fields=display,genre&level=3&level=2&level=1&level=0&show=true&search=${hobbyInputValue}`
+    getAllHobbies(query).then((result) => {
+      const sortedHobbies = result.res.data.hobbies.sort((a: any, b: any) => {
+        const indexA = a.display
+          ?.toLowerCase()
+          .indexOf(hobbyInputValue.toLowerCase())
+        const indexB = b.display
+          ?.toLowerCase()
+          .indexOf(hobbyInputValue.toLowerCase())
+
+        if (indexA === 0 && indexB !== 0) {
+          return -1
+        } else if (indexB === 0 && indexA !== 0) {
+          return 1
+        }
+
+        return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
+      })
+      const selectedHobby = sortedHobbies[0]
+      handleHobbySelection(selectedHobby)
+    })
+  }
+
   const handleHobbyInputChange = async (e: any) => {
+    setShowHobbyDowpdown(true)
     setHobbyInputValue(e.target.value)
     setGenreInputValue('')
     setGenreDropdownList([])
@@ -174,8 +202,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         return 1
       }
 
-      // Otherwise, use default sorting behavior
-      return 0
+      return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
     })
 
     setHobbyDropdownList(sortedHobbies)
@@ -184,11 +211,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   }
 
   const handleHobbyKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      AddButtonRef.current?.click()
-    }
-    if (hobbyDropdownList.length === 0) return
-
     switch (e.key) {
       case 'ArrowDown':
         setFocusedHobbyIndex((prevIndex) =>
@@ -201,9 +223,17 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         )
         break
       case 'Enter':
-        if (focusedHobbyIndex !== -1) {
-          handleHobbySelection(hobbyDropdownList[focusedHobbyIndex])
+        if (hobbyInputValue.length !== 0 && !showHobbyDowpdown) {
+          AddButtonRef.current?.click()
+        } else if (focusedHobbyIndex !== -1 && showHobbyDowpdown) {
+          handleHobbySelection(hobbyDropdownList[focusedHobbyIndex]).finally(
+            () => {
+              setShowHobbyDowpdown(false)
+            },
+          )
+        } else if (focusedHobbyIndex === -1 && hobbyInputValue.length !== 0) {
           setShowHobbyDowpdown(false)
+          // handleGenreInputFocus();
         }
         break
       default:
@@ -252,10 +282,12 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   }
 
   const handleGenreKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      AddButtonRef.current?.click()
+    if (!showGenreDowpdown) {
+      if (e.key === 'Enter') {
+        AddButtonRef.current?.click()
+      }
+      return
     }
-    if (genreDropdownList.length === 0) return
 
     switch (e.key) {
       case 'ArrowDown':
@@ -269,13 +301,22 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         )
         break
       case 'Enter':
-        if (focusedGenreIndex !== -1) {
+        if (genreInputValue.length !== 0 && !showGenreDowpdown) {
+          setGenreInputValue(genreDropdownList[focusedGenreIndex]?.display)
+        } else if (focusedGenreIndex !== -1) {
           setData((prevValue) => ({
             ...prevValue,
             genre: genreDropdownList[focusedGenreIndex],
           }))
           setShowGenreDowpdown(false)
           setGenreInputValue(genreDropdownList[focusedGenreIndex]?.display)
+        } else if (genreDropdownList.length > 0) {
+          setData((prevValue) => ({
+            ...prevValue,
+            genre: genreDropdownList[0],
+          }))
+          setShowGenreDowpdown(false)
+          setGenreInputValue(genreDropdownList[0]?.display)
         }
         break
       default:
@@ -284,14 +325,17 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   }
 
   const handleHobbySelection = async (selectedHobby: DropdownListItem) => {
-    setShowGenreDowpdown(false)
     setGenreId('')
     console.log(selectedHobby)
 
     setData((prev) => ({ ...prev, hobby: selectedHobby }))
-    setHobbyInputValue(selectedHobby.display)
+    setHobbyInputValue(selectedHobby?.display ?? hobbyInputValue)
 
-    if (selectedHobby.genre && selectedHobby.genre.length > 0) {
+    if (
+      selectedHobby &&
+      selectedHobby.genre &&
+      selectedHobby.genre.length > 0
+    ) {
       setGenreId(selectedHobby.genre[0])
 
       const query = `fields=display&show=true&genre=${selectedHobby.genre[0]}&level=5`
@@ -299,14 +343,22 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
       if (!err) {
         setGenreDropdownList(res.data.hobbies)
-        setShowGenreDowpdown(true)
-        genreInputRef.current?.focus()
       } else {
       }
     }
   }
+  const handleGenreSelection = async () => {
+    if (genreDropdownList.length !== 0 && !data.genre?._id && genreInputValue) {
+      setGenreInputValue(genreDropdownList[0]?.display)
+      setData((prevValue) => ({
+        ...prevValue,
+        genre: genreDropdownList[0],
+      }))
+    }
+  }
 
-  const handleAddHobby = () => {
+  const handleAddHobby = async () => {
+    await handleGenreSelection()
     setHobbyError(false)
     setErrorOrmsg(null)
     setShowGenreDowpdown(false)
@@ -333,6 +385,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         setErrorOrmsg('hobby added Successfully!')
       } else {
         setShowAddHobbyModal(true)
+        setIsChanged(true)
         return
       }
     } else {
@@ -364,6 +417,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       )
       if (!matchedGenre) {
         setShowAddGenreModal(true)
+        setIsChanged(false)
         return
       } else {
         selectedGenre = data.genre
@@ -405,7 +459,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         updatedCompletedSteps.push('Hobby')
       }
       let onboarded = false
-      if (user.completed_onboarding_steps.length === 5) {
+      if (user.completed_onboarding_steps.length === 3) {
         onboarded = true
       }
       const { err: updtProfileErr, res: updtProfileRes } =
@@ -428,6 +482,10 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       }
       setAddHobbyBtnLoading(false)
     })
+    setData({ hobby: null, genre: null, level: 1 })
+    setHobbyDropdownList([])
+    setGenreDropdownList([])
+    searchref.current?.focus()
   }
 
   const handleSubmit = async () => {
@@ -470,6 +528,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           // setHobbyError(true)
           setSubmitBtnLoading(false)
           setShowAddHobbyModal(true)
+          setIsChanged(false)
           return
         }
       } else {
@@ -487,6 +546,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           // setErrorOrmsg('Typed Genre not found!')
           // setHobbyError(true)
           setShowAddGenreModal(true)
+          setIsChanged(false)
           setSubmitBtnLoading(false)
           return
         }
@@ -494,6 +554,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
           // setErrorOrmsg("This hobby doesn't contain this genre")
           // setHobbyError(true)
           setShowAddGenreModal(true)
+          setIsChanged(false)
           setSubmitBtnLoading(false)
           return
         }
@@ -527,7 +588,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         updatedCompletedSteps.push('Hobby')
       }
       let onboarded = false
-      if (user.completed_onboarding_steps.length === 5) {
+      if (user.completed_onboarding_steps.length === 3) {
         onboarded = true
       }
       const { err: updtProfileErr, res: updtProfileRes } =
@@ -548,7 +609,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
         if (error) return console.log(error)
         setAddHobbyBtnLoading(false)
         setSubmitBtnLoading(false)
-
+        dispatch(updateUser(response?.data.data.user))
         if (response?.data.success) {
           if (onComplete !== undefined) {
             isOnboarded = true
@@ -557,12 +618,29 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
             setSubmitBtnLoading(false)
             return
           }
-          dispatch(updateUser(response?.data.data.user))
-          handleClose()
-          window.location.reload()
-          setAddHobbyBtnLoading(false)
-          setSubmitBtnLoading(false)
-          return
+          if (!user.is_onboarded) {
+            const { err: error, res: response } = await getMyProfileDetail()
+            if (
+              response?.data?.data?.user?.completed_onboarding_steps.length == 3
+            ) {
+              const data = { is_onboarded: true }
+              const { err, res } = await updateMyProfileDetail(data)
+              window.location.href = `/community`
+            } else {
+              dispatch(closeModal())
+              window.location.href = `/profile/${response?.data?.data?.user?.profile_url}`
+              dispatch(showProfileError(true))
+            }
+            return
+          } else {
+            if (user.is_onboarded) {
+              window.location.href = `/community`
+            }
+            window.location.reload()
+
+            dispatch(closeModal())
+            return
+          }
         }
       })
     }
@@ -570,14 +648,31 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     if (userHobbies.length === 0 && !isOnboarded) {
       setErrorOrmsg('Add atleast one hobby!')
       setHobbyError(true)
+      setSubmitBtnLoading(false)
       searchref.current?.focus()
       return
     }
-    if (onComplete !== undefined) {
-      onComplete()
+    if (!user.is_onboarded) {
+      const { err: error, res: response } = await getMyProfileDetail()
+      if (response?.data?.data?.user?.completed_onboarding_steps.length == 3) {
+        const data = { is_onboarded: true }
+        const { err, res } = await updateMyProfileDetail(data)
+        window.location.href = `/community`
+      } else {
+        dispatch(closeModal())
+        window.location.href = `/profile/${response?.data?.data?.user?.profile_url}`
+        dispatch(showProfileError(true))
+      }
+      return
     } else {
-      window.location.reload()
-      dispatch(closeModal())
+      if (!user.is_onboarded) {
+        window.location.href = `/profile/${user?.profile_url}`
+        dispatch(showProfileError(true))
+      } else {
+        window.location.reload()
+        dispatch(closeModal())
+      }
+      return
     }
   }
 
@@ -763,7 +858,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     }
   }, [])
 
-  console.log({ data })
+  console.log({ data, isChanged })
 
   if (showAddHobbyModal) {
     return (
@@ -1044,9 +1139,19 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                                 autoComplete="name"
                                 required
                                 value={genreInputValue}
-                                onFocus={() => setShowGenreDowpdown(true)}
+                                onFocus={() => {
+                                  setShowGenreDowpdown(true)
+                                  if (
+                                    genreDropdownList.length === 0 &&
+                                    hobbyInputValue.length !== 0 &&
+                                    data.hobby === null
+                                  ) {
+                                    handleGenreInputFocus()
+                                  }
+                                }}
                                 onBlur={() =>
                                   setTimeout(() => {
+                                    handleGenreSelection()
                                     setShowGenreDowpdown(false)
                                   }, 300)
                                 }
@@ -1093,91 +1198,53 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                         </div>
                       </td>
                       <td>
-                        {/* <FormControl
-                          variant="outlined"
-                          size="small"
-                          sx={{ width: '150px' }}
-                        >
-                          <Select
-                            className={styles['select-level-main']}
-                            value={data.level}
-                            onChange={(e) => {
-                              setData((prev: any) => {
-                                return { ...prev, level: e?.target?.value }
-                              })
-                            }}
-                            displayEmpty
-                            inputProps={{ 'aria-label': ' label' }}
-                          >
-                            <MenuItem
-                              className={styles['levelwithtext-add']}
-                              value={1}
-                            >
-                              <Image alt="hobbyOne" src={hobbyLvlOne}></Image>
-                              <span className={styles.lvltext}>Beginner</span>
-                            </MenuItem>
-                            <MenuItem
-                              value={2}
-                              className={styles['levelwithtext-add']}
-                            >
-                              <Image alt="hobbyTwo" src={hobbyLvlTwo}></Image>
-                              <span className={styles.lvltext}>
-                                Intermediate
-                              </span>
-                            </MenuItem>
-                            <MenuItem
-                              value={3}
-                              className={styles['levelwithtext-add']}
-                            >
+                        <Select
+                          ref={selectLevelRef}
+                          value={levels[data.level - 1]?.name}
+                          className={styles['hobby-dropdown']}
+                          onChange={(e) => {
+                            console.log({ e })
+                            let val: any = e?.target?.value
+                            setData((prev: any) => {
+                              return { ...prev, level: parseInt(val) }
+                            })
+                          }}
+                          sx={{
+                            boxShadow: 'none',
+                            '.MuiOutlinedInput-notchedOutline': {
+                              border: 0,
+                              outline: 'none',
+                            },
+                          }}
+                          displayEmpty
+                          renderValue={(selected: any) => (
+                            <div className={styles?.levelwithtext}>
                               <Image
-                                alt="hobbyThree"
-                                src={hobbyLvlThree}
-                              ></Image>
-                              <span className={styles.lvltext}>Advanced</span>
-                            </MenuItem>
-                          </Select>
-                        </FormControl> */}
-                        <DropdownMenu
-                          value={
-                            <div
-                              style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                gap: '8px',
-                              }}
-                            >
-                              <Image
-                                src={levels[data.level - 1]?.src.src}
-                                width={17}
-                                height={17}
-                                alt=""
+                                alt={`hobby${selected}`}
+                                src={levels[data.level - 1]?.src}
                               />
-                              <p
-                                style={{
-                                  fontWeight: '600',
-                                  color: '#6d747a',
-                                  fontSize: '14px',
-                                }}
-                                className={`${styles['display-desktop']} ${styles['new-hobby-level-dropdown']}`}
-                              >
+                              <p className={styles['render-p']}>
                                 {levels[data.level - 1]?.name}
                               </p>
                             </div>
-                          }
-                          options={levels.map((item) => item.name)}
-                          iconOptions={levels.map((item) => item.src?.src)}
-                          onOptionClick={(e: any) => {
-                            setData((prev: any) => {
-                              return { ...prev, level: parseInt(e?.id) + 1 }
-                            })
-                          }}
-                          dropdownHeaderClass={
-                            styles['new-hobby-level-dropdown-header']
-                          }
-                          valueIndex={data?.level - 1}
-                          dropdownIcon
-                        />
+                          )}
+                        >
+                          {levels?.map((item, idx) => (
+                            <MenuItem
+                              key={idx}
+                              value={idx + 1}
+                              style={{ padding: '8px 0px' }}
+                            >
+                              <div className={styles.levelwithtext}>
+                                <Image
+                                  alt={`hobby${idx + 1}`}
+                                  src={item?.src}
+                                />
+                                <p>{item?.name}</p>
+                              </div>
+                            </MenuItem>
+                          ))}
+                        </Select>
                       </td>
 
                       <td>

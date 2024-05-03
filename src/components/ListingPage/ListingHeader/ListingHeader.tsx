@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styles from './ListingHeader.module.css'
 import Image from 'next/image'
 
@@ -35,19 +35,30 @@ import ListingPageLayout from '@/layouts/ListingPageLayout'
 import RepostIcon from '@/assets/icons/RepostIcon'
 import { ClaimListing } from '@/services/auth.service'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import { showProfileError } from '@/redux/slices/user'
+import { useRouter } from 'next/router'
 
 type Props = {
   data: ListingPageData['pageData']
   activeTab: ListingPageTabs
-  setpageTypeErr?:React.Dispatch<React.SetStateAction<boolean>>
-  setHobbyError?:React.Dispatch<React.SetStateAction<boolean>>
-  setHAboutErr?:React.Dispatch<React.SetStateAction<boolean>>
-  setContactInfoErr?:React.Dispatch<React.SetStateAction<boolean>>
-  setLocationErr?:React.Dispatch<React.SetStateAction<boolean>>
+  setpageTypeErr?: React.Dispatch<React.SetStateAction<boolean>>
+  setHobbyError?: React.Dispatch<React.SetStateAction<boolean>>
+  setHAboutErr?: React.Dispatch<React.SetStateAction<boolean>>
+  setContactInfoErr?: React.Dispatch<React.SetStateAction<boolean>>
+  setLocationErr?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const ListingHeader: React.FC<Props> = ({ data, activeTab,setContactInfoErr,setHAboutErr,setHobbyError,setLocationErr,setpageTypeErr }) => {
+const ListingHeader: React.FC<Props> = ({
+  data,
+  activeTab,
+  setContactInfoErr,
+  setHAboutErr,
+  setHobbyError,
+  setLocationErr,
+  setpageTypeErr,
+}) => {
   const dispatch = useDispatch()
+  const router = useRouter()
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -148,27 +159,31 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab,setContactInfoErr,setH
   }
 
   const handlePublish = async () => {
-    if(data.is_published!==true){
-    let hasError = false;
+    if (data.is_published !== true) {
+      let hasError = false
       if (data._hobbies.length === 0) {
-        hasError = true;
+        hasError = true
         setHobbyError?.(true)
       }
       if (data.page_type.length === 0) {
-        hasError = true;
+        hasError = true
         setpageTypeErr?.(true)
       }
       if (!data.phone && !data.public_email) {
-        hasError = true;
+        hasError = true
         setContactInfoErr?.(true)
       }
       if (!data._address.city) {
-        hasError = true;
+        hasError = true
         setLocationErr?.(true)
       }
-      if(hasError){
-        setSnackbar({display:true,type:"warning",message:"Fill up the mandatory fields."});
-        return;
+      if (hasError) {
+        setSnackbar({
+          display: true,
+          type: 'warning',
+          message: 'Fill up the mandatory fields.',
+        })
+        return
       }
     }
     const { err, res } = await updateListing(data._id, {
@@ -181,12 +196,28 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab,setContactInfoErr,setH
   }
 
   const handleContact = () => {
-    dispatch(openModal({ type: 'ListingContactToOwner', closable: true }))
+    if (isLoggedIn) {
+      if (user.is_onboarded) {
+        dispatch(
+          openModal({ type: 'Listing-Contact-To-Owner', closable: true }),
+        )
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
+    } else {
+      dispatch(openModal({ type: 'auth', closable: true }))
+    }
   }
 
   const handleClaim = async () => {
     if (isLoggedIn) {
-      dispatch(openModal({ type: 'claim-listing', closable: true }))
+      if (user.is_onboarded) {
+        dispatch(openModal({ type: 'claim-listing', closable: true }))
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
     } else {
       dispatch(openModal({ type: 'auth', closable: true }))
     }
@@ -200,7 +231,14 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab,setContactInfoErr,setH
   const [open, setOpen] = useState(false)
 
   const handleDropdown = () => {
-    setOpen(!open)
+    if (open) {
+      setOpen(false)
+      if (!isAuthenticated) {
+        dispatch(openModal({ type: 'auth', closable: true }))
+      }
+    } else {
+      setOpen(true)
+    }
   }
 
   const OpenProfileImage = () => {
@@ -286,14 +324,24 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab,setContactInfoErr,setH
   }
   const location = typeof window !== 'undefined' ? window.location.href : ''
   const handleRepost = () => {
+    if (!isAuthenticated) {
+      dispatch(openModal({ type: 'auth', closable: true }))
+      return
+    }
+
     if (isLoggedIn) {
-      dispatch(
-        openModal({
-          type: 'create-post',
-          closable: true,
-          propData: { defaultValue: location },
-        }),
-      )
+      if (!user.is_onboarded) {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      } else {
+        dispatch(
+          openModal({
+            type: 'create-post',
+            closable: true,
+            propData: { defaultValue: location },
+          }),
+        )
+      }
     } else {
       dispatch(
         openModal({
@@ -303,6 +351,22 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab,setContactInfoErr,setH
       )
     }
   }
+  const Dropdownref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        Dropdownref.current &&
+        !Dropdownref.current.contains(event.target as Node)
+      ) {
+        setOpen(false) // Close the dropdown when clicked outside
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [Dropdownref])
 
   return (
     <>
@@ -311,7 +375,7 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab,setContactInfoErr,setH
         <div className={styles['profile-img-wrapper']}>
           <div className={styles['relative']}>
             {data?.profile_image ? (
-              <Image
+              <img
                 onClick={OpenProfileImage}
                 className={`${styles['img']} imageclick`}
                 src={data?.profile_image}
@@ -370,7 +434,7 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab,setContactInfoErr,setH
               style={{ backgroundImage: `url(${data?.cover_image})` }}
             ></div>
             {data?.cover_image ? (
-              <Image
+              <img
                 onClick={OpenCoverImage}
                 className={`${styles['img']} imageclick`}
                 src={data?.cover_image}
@@ -504,7 +568,10 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab,setContactInfoErr,setH
             </CustomTooltip>
 
             {/* More Options Button */}
-            <div className={styles['action-btn-dropdown-wrapper']}>
+            <div
+              className={styles['action-btn-dropdown-wrapper']}
+              ref={Dropdownref}
+            >
               <CustomTooltip title="Click to view options">
                 <div
                   onClick={(e) => handleDropdown()}
@@ -515,7 +582,11 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab,setContactInfoErr,setH
               </CustomTooltip>
               {listingLayoutMode === 'edit'
                 ? open && (
-                    <Dropdown userType={'edit'} handleClose={handleDropdown} showFeatureUnderDevelopment={showFeatureUnderDevelopment} />
+                    <Dropdown
+                      userType={'edit'}
+                      handleClose={handleDropdown}
+                      showFeatureUnderDevelopment={showFeatureUnderDevelopment}
+                    />
                   )
                 : open && (
                     <Dropdown
@@ -542,16 +613,14 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab,setContactInfoErr,setH
         {/* Action Buttons */}
         <div className={styles['action-btn-wrapper']}>
           {/* Send Email Button  */}
-          <Link href={`mailto:${data.public_email || data.email}`}>
-            <CustomTooltip title="Repost">
-              <div
-                onClick={(e) => console.log(e)}
-                className={styles['action-btn']}
-              >
-                <RepostIcon />
-              </div>
-            </CustomTooltip>
-          </Link>
+          <CustomTooltip title="Repost">
+            <div
+              onClick={(e) => handleRepost()}
+              className={styles['action-btn']}
+            >
+              <RepostIcon />
+            </div>
+          </CustomTooltip>
 
           {/* Bookmark Button */}
           <CustomTooltip title="Bookmark">
@@ -585,7 +654,11 @@ const ListingHeader: React.FC<Props> = ({ data, activeTab,setContactInfoErr,setH
             </CustomTooltip>
             {listingLayoutMode === 'edit'
               ? open && (
-                  <Dropdown showFeatureUnderDevelopment={showFeatureUnderDevelopment} userType={'edit'} handleClose={handleDropdown} />
+                  <Dropdown
+                    showFeatureUnderDevelopment={showFeatureUnderDevelopment}
+                    userType={'edit'}
+                    handleClose={handleDropdown}
+                  />
                 )
               : open && (
                   <Dropdown

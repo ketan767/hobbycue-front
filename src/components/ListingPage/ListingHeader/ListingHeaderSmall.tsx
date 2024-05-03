@@ -31,6 +31,9 @@ import ProfileImageLayout from '@/layouts/ProfileImageLayout/ProfileImageLayout'
 import { useRouter } from 'next/router'
 import { listingTypes } from '@/constants/constant'
 import Dropdown from './DropDown'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import CustomizedTooltips from '@/components/Tooltip/ToolTip'
+import { showProfileError } from '@/redux/slices/user'
 
 type Props = {
   data: ListingPageData['pageData']
@@ -50,13 +53,27 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
   const router = useRouter()
 
   const { listingLayoutMode } = useSelector((state: any) => state.site)
+  const { isLoggedIn, user, isAuthenticated } = useSelector(
+    (state: RootState) => state.user,
+  )
 
   const [open, setOpen] = useState(false)
-
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
   const handleDropdown = () => {
     setOpen(!open)
   }
-  console.log('head', data)
+  const showFeatureUnderDevelopment = () => {
+    setSnackbar({
+      display: true,
+      type: 'warning',
+      message: 'This feature is under development',
+    })
+  }
+  // console.log('head', data)
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
     e.preventDefault()
     let files = e.target.files
@@ -122,7 +139,16 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
   }
 
   const handleClaim = async () => {
-    dispatch(openModal({ type: 'claim-listing', closable: true }))
+    if (isLoggedIn) {
+      if (user.is_onboarded) {
+        dispatch(openModal({ type: 'claim-listing', closable: true }))
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
+    } else {
+      dispatch(openModal({ type: 'auth', closable: true }))
+    }
   }
 
   const handleEventEditClick = () => {
@@ -155,7 +181,18 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
   }
 
   const handleContact = () => {
-    dispatch(openModal({ type: 'ListingContactToOwner', closable: true }))
+    if (isLoggedIn) {
+      if (user.is_onboarded) {
+        dispatch(
+          openModal({ type: 'Listing-Contact-To-Owner', closable: true }),
+        )
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
+    } else {
+      dispatch(openModal({ type: 'auth', closable: true }))
+    }
   }
 
   const handleShare = () => {
@@ -215,15 +252,46 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
       return `${fromDay} ${fromMonthYear} - ${toDay} ${toMonthYear}`
     }
   }
+  const location = typeof window !== 'undefined' ? window.location.href : ''
+  const handleRepost = () => {
+    if (!isAuthenticated) {
+      dispatch(openModal({ type: 'auth', closable: true }))
+      return
+    }
+
+    if (isLoggedIn) {
+      if (!user.is_onboarded) {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      } else {
+        dispatch(
+          openModal({
+            type: 'create-post',
+            closable: true,
+            propData: { defaultValue: location },
+          }),
+        )
+      }
+    } else {
+      dispatch(
+        openModal({
+          type: 'auth',
+          closable: true,
+        }),
+      )
+    }
+  }
 
   return (
     <>
       <div className={`${styles['container']} ${styles['small']} `}>
         <header className={`site-container ${styles['header']}`}>
           {/* Profile Picture */}
-          <div className={styles['profile-img-wrapper']}>
+          <div
+            className={`${styles['profile-img-wrapper']} ${styles['profile-img-wrapper-small']}`}
+          >
             {data?.profile_image ? (
-              <Image
+              <img
                 className={styles['img']}
                 src={data.profile_image}
                 alt=""
@@ -331,20 +399,15 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
 
             {/* Send Email Button  */}
             <Tooltip title="Repost">
-              <Link href={`mailto:${data.public_email || data.email}`}>
-                <div
-                  onClick={(e) => console.log(e)}
-                  className={styles['action-btn']}
-                >
-                  <Image src={MailIcon} alt="share" />
-                </div>
-              </Link>
+              <div onClick={handleRepost} className={styles['action-btn']}>
+                <Image src={MailIcon} alt="share" />
+              </div>
             </Tooltip>
 
             {/* Bookmark Button */}
             <Tooltip title="Bookmark">
               <div
-                onClick={(e) => console.log(e)}
+                onClick={showFeatureUnderDevelopment}
                 className={styles['action-btn']}
               >
                 <BookmarkBorderRoundedIcon color="primary" />
@@ -362,22 +425,28 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
             </Tooltip>
 
             {/* More Options Button */}
-
-            <div
-              onClick={(e) => handleDropdown()}
-              className={styles['action-btn']}
-            >
-              <Tooltip title="More options">
-                <MoreHorizRoundedIcon color="primary" />
-              </Tooltip>
+            <div className={styles['action-btn-dropdown-wrapper']}>
+              <CustomizedTooltips title="Click to view options">
+                <div
+                  onClick={(e) => handleDropdown()}
+                  className={styles['action-btn']}
+                >
+                  <MoreHorizRoundedIcon color="primary" />
+                </div>
+              </CustomizedTooltips>
               {listingLayoutMode === 'edit'
                 ? open && (
-                    <Dropdown userType={'edit'} handleClose={handleDropdown} />
+                    <Dropdown
+                      userType={'edit'}
+                      handleClose={handleDropdown}
+                      showFeatureUnderDevelopment={showFeatureUnderDevelopment}
+                    />
                   )
                 : open && (
                     <Dropdown
                       userType={'anonymous'}
                       handleClose={handleDropdown}
+                      showFeatureUnderDevelopment={showFeatureUnderDevelopment}
                     />
                   )}
             </div>
@@ -421,6 +490,16 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
           </div>
         </nav>
       </div>
+      {
+        <CustomSnackbar
+          message={snackbar.message}
+          triggerOpen={snackbar.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

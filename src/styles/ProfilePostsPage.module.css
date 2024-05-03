@@ -52,7 +52,7 @@
   position: sticky;
   transition: 0.6s;
   height: calc(
-    100vh - calc(var(--navbar-height-desktop) + var(--spacing-24)) + 3rem
+    100vh - calc(var(--navbar-height-desktop) + var(--spacing-24) + 9rem)
   );
   overflow: auto;
 }
@@ -74,7 +74,7 @@
   padding: var(--spacing-12) var(--spacing-16);
   border-radius: 8px;
   border: 2px solid #ebedf0;
-  height: 5rem;
+  height: 10rem;
   background-color: #ffffff;
 }
 .no-posts-container p{
@@ -95,7 +95,9 @@
     display: none;
   }
   .posts-container-mobile {
-    display: initial;
+    display: block;
+    height: 90vh;
+    /* min-height: calc(100vh - 107px - 56px); */
   }
   .nav-mobile {
     display: initial;

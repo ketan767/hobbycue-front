@@ -21,6 +21,7 @@ import { changePassword, resetPassword } from '@/services/auth.service'
 import IconButton from '@mui/material/IconButton'
 import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded'
 import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 const CustomCKEditor = dynamic(() => import('@/components/CustomCkEditor'), {
   ssr: false,
@@ -63,11 +64,17 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
   const newPasswordRef = useRef<HTMLInputElement>(null)
   const confirmPasswordRef = useRef<HTMLInputElement>(null)
   const otpRef = useRef<HTMLInputElement>(null)
+  const desktopSubmitBtnRef = useRef<HTMLButtonElement>(null)
 
   const [showValidations, setShowValidations] = useState(false)
   const [inputValidation, setInputValidation] = useState(
     validatePasswordConditions(newPassword),
   )
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
   const [strength, setStrength] = useState(0)
 
   const [errors, setErrors] = useState({
@@ -76,19 +83,72 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
     confirmPassword: '',
   })
   const handleSubmit = async () => {
+    setSubmitBtnLoading(true)
+    let hasErrors = false
     if (confirmPassword !== newPassword) {
-      setErrors({ ...errors, confirmPassword: 'Passwords does not match!' });
-      confirmPasswordRef?.current?.focus();
+      hasErrors = true
+      setErrors({ ...errors, confirmPassword: 'Passwords does not match!' })
+      confirmPasswordRef?.current?.focus()
+    }
+    if (threeConditionsValid < 3) {
+      if (inputValidation.length === false) {
+        hasErrors = true
+        setErrors((prev) => ({
+          ...prev,
+          newPassword: 'New password should be valid!',
+        }))
+        newPasswordRef?.current?.focus()
+      }
+      if (inputValidation.lowercase === false) {
+        hasErrors = true
+        setErrors((prev) => ({
+          ...prev,
+          newPassword: 'New password should be valid!',
+        }))
+        newPasswordRef?.current?.focus()
+      }
+      if (inputValidation.number === false) {
+        hasErrors = true
+        setErrors((prev) => ({
+          ...prev,
+          newPassword: 'New password should be valid!',
+        }))
+        newPasswordRef.current?.focus()
+      }
+      if (inputValidation.specialChar === false) {
+        hasErrors = true
+        setErrors((prev) => ({
+          ...prev,
+          newPassword: 'New password should be valid!',
+        }))
+        newPasswordRef.current?.focus()
+      }
+      if (inputValidation.uppercase === false) {
+        hasErrors = true
+        setErrors((prev) => ({
+          ...prev,
+          newPassword: 'New password should be valid!',
+        }))
+        newPasswordRef.current?.focus()
+      }
+    }
+    if (otp.length === 0) {
+      hasErrors = true
+      setErrors((prev) => ({ ...prev, otp: 'Please enter OTP!' }))
+      otpRef.current?.focus()
+    }
+    if (hasErrors === true) {
+      setSubmitBtnLoading(false)
       return
     }
-    setSubmitBtnLoading(true)
     const { err, res } = await resetPassword({
       email: forgotPasswordEmail,
       otp: otp,
       newPassword: newPassword,
     })
-    setSubmitBtnLoading(false)
+
     if (err) {
+      setSubmitBtnLoading(false)
       if (err?.response?.data?.message) {
         setErrors({
           ...errors,
@@ -99,9 +159,18 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
       return
     }
     if (res?.data.success) {
+      setSnackbar({
+        display: true,
+        type: 'success',
+        message: 'Password Changed',
+      })
+
+      setTimeout(() => {
+        dispatch(closeModal())
+        setSubmitBtnLoading(false)
+      }, 2500)
+
       console.log(res.data)
-      dispatch(closeModal())
-      window.location.reload()
     }
   }
   //   console.log('user', user)
@@ -134,13 +203,12 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
   }, [newPassword, inputValidation])
 
   useEffect(() => {
-    otpRef?.current?.focus()
-    const handleKeyPress = (event: any) => {
+    const handleKeyPress = (event: KeyboardEvent) => {
       if (event.key === 'Enter') {
         // if(event?.target?.tagName==="INPUT"){
         //   return
         // }else{
-        handleSubmit()
+        desktopSubmitBtnRef.current?.click()
         // }
       }
     }
@@ -151,6 +219,8 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
       window.removeEventListener('keydown', handleKeyPress)
     }
   }, [])
+
+  console.warn({ inputValidation })
 
   useEffect(() => {
     otpRef.current?.focus()
@@ -179,7 +249,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
         <section className={styles['body']}>
           <div className={styles.inputField}>
             <label className={styles.label}>
-              OTP to set password has been sent to your registered E-mail id.
+              OTP to set password has been sent to your registered E-mail ID.
             </label>
             <div
               className={`${styles['input-box']} ${
@@ -200,19 +270,22 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
             {/* <label className={styles.label}>New Password</label> */}
             <div
               className={`${styles['input-box']} ${
-                errors.newPassword ? styles['input-error'] : ''
+                errors.newPassword ? styles['child-div-error'] : ''
               }`}
             >
               <TextField
                 className={styles['input-password'] + ' textFieldClass'}
                 fullWidth
                 required
-                ref={newPasswordRef}
+                inputRef={newPasswordRef}
                 placeholder="New Password"
                 type={showPassword ? 'text' : 'password'}
                 onFocus={() => setShowValidations(true)}
                 onBlur={() => setShowValidations(false)}
-                onChange={(e) => setNewPassword(e.target.value)}
+                onChange={(e) => {
+                  setNewPassword(e.target.value)
+                  setErrors((prev) => ({ ...prev, newPassword: '' }))
+                }}
                 InputProps={{
                   endAdornment: (
                     <IconButton onClick={() => setShowPassword(!showPassword)}>
@@ -317,6 +390,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
         <footer className={styles['footer']}>
           <button
             className="modal-footer-btn submit"
+            ref={desktopSubmitBtnRef}
             onClick={handleSubmit}
             disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
           >
@@ -328,13 +402,23 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
           </button>
           <button className="modal-mob-btn-save" onClick={handleSubmit}>
             {submitBtnLoading ? (
-              <CircularProgress color="inherit" size={'16px'} />
+              <CircularProgress color="inherit" size={'14px'} />
             ) : (
               'Verify Action'
             )}
           </button>
         </footer>
       </div>
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

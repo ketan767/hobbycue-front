@@ -26,7 +26,9 @@ const ListingHome: React.FC<Props> = (props) => {
   const { listing } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(listing)
 
-  const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
+  const { isLoggedIn, isAuthenticated, user } = useSelector(
+    (state: RootState) => state.user,
+  )
   // const { listingPageData } = useSelector((state: RootState) => state.site)
   // console.log('posts data', props.data)
   useEffect(() => {
@@ -40,7 +42,6 @@ const ListingHome: React.FC<Props> = (props) => {
   }
   const router = useRouter()
   useEffect(() => {
-    // Save scroll position when navigating away from the page
     const handleRouteChange = () => {
       sessionStorage.setItem('scrollPositionlisting', window.scrollY.toString())
     }
@@ -55,14 +56,14 @@ const ListingHome: React.FC<Props> = (props) => {
     }
 
     router.events.on('routeChangeStart', handleRouteChange)
-
     router.events.on('routeChangeComplete', handleScrollRestoration)
 
     return () => {
       router.events.off('routeChangeStart', handleRouteChange)
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
-  }, [])
+  }, [router.events])
+
   if (
     props?.data?.pageData?.admin !== user?._id &&
     props?.data?.pageData?.is_published !== true

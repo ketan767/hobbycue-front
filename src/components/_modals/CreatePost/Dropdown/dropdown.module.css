@@ -2,6 +2,7 @@
   position: relative;
   padding: 0 8px;
   border-bottom: 1px solid #ced4da;
+  margin-top: 4px;
 }
 .dropdown-container:last-child {
   border-bottom: 0;
@@ -22,13 +23,15 @@
   column-gap: 12px;
   flex-direction: row !important;
   align-items: center;
-  padding: 8px 8px;
+  padding: 7px 8px;
   width: 180px;
+  min-height: 32px;
 }
 
 .heading:hover {
-  background-color: #f7f5f9;
+  background-color: #ccc1da;
   border-radius: 4px;
+  transition: 0.3s;
 }
 
 .heading::selection {
@@ -37,46 +40,72 @@
 
 .heading .icon {
   transition: rotate(180deg);
-  transition: 0.2s;
+  transition: 0.3s;
 }
 .drop-down:hover {
   border-radius: 4px;
-  background-color: #f7f5f9;
+  background-color: #ccc1da;
+  transition: 0.3s;
 }
 .icon-active {
-  transition: 0.2s;
+  transition: 0.3s;
   transform: rotate(180deg);
 }
 .dropdown-container p.dropdown-value {
   color: var(--grey-dark, #939ca3);
   padding-left: 16px;
+  min-height: 32px;
 }
 
 .dropdown-options {
   max-height: 0;
   transition: 0.1s;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .dropdown-options.active {
   max-height: 1200px;
+  animation: fadeDown 0.3s ease forwards;
 }
 .value-container {
   padding-left: 8px;
   padding-right: 8px;
-  border-bottom: 1px solid #ced4da;
+  /* border-bottom: 1px solid #ced4da; */
 }
 p.dropdown-value {
   padding-left: 8px;
   padding-right: 8px;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 7px;
+  padding-bottom: 7px;
   cursor: pointer;
+  line-height: 18px;
+  border-radius: 4px;
+}
+
+p.dropdown-value:hover{
+  background: #ccc1da !important;
+  color: #8064a2;
+  transition: 0.3s;
 }
 
 p.dropdown-value-active {
   background-color: #DFD8E7;
   color: #8064a2 !important;
-  border-radius: 8px;
+  border-radius: 4px;
   /* width: 218px; */
 }
 .dropdown-options p.option-active {
@@ -86,7 +115,7 @@ p.dropdown-value-active {
 }
 .city-select {
   background-color: #DFD8E7;
-  border-radius: 8px;
+  border-radius: 4px;
 }
 .city-select > p {
   color: #8064a2 !important;
@@ -121,4 +150,8 @@ p.dropdown-value-active {
   p.dropdown-value-active {
     width: auto;
   }
+}
+
+.no-border{
+  border: none !important;
 }

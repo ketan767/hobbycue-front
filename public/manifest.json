@@ -1,0 +1,36 @@
+{
+  "short_name": "HobbyCue",
+  "name": "HobbyCue",
+  "icons": [
+    {
+      "src": "maskable.png",
+      "sizes": "3125x3125",
+      "type": "image/png",
+      "purpose": " maskable"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo256.png",
+      "type": "image/png",
+      "sizes": "256x256"
+    },
+    {
+      "src": "logo384.png",
+      "type": "image/png",
+      "sizes": "384x384"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+
+  "start_url": "http://localhost:3000/",
+  "background_color": "white",
+  "display": "standalone"
+}

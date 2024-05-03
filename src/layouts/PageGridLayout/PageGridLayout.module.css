@@ -6,6 +6,10 @@
 
 }
 
+.minheight100vh{
+  min-height: 100vh;
+}
+
 .grid-container {
   display: grid;
   align-items: start;
@@ -31,5 +35,8 @@
 
   .grid-container {
     gap: 0;
+  }
+  .minheight100vh{
+    min-height: 0 !important;
   }
 }

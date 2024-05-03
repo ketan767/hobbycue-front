@@ -63,6 +63,10 @@
   border-radius: 8px;
 }
 
+.input-box-error>div>div>fieldset{
+  border-color: transparent !important;
+}
+
 .input-box{
   background: #f8f9fa;
   
@@ -138,13 +142,7 @@
 
   color: #c0504d;
 }
-.footer button {
-  margin-right: 16px;
-  width: 99px;
-  font-size: 14px;
-  padding-left: 8px;
-  padding-right: 8px;
-}
+
 .input-box .helper-text {
   position: absolute;
   top: calc(100% + var(--spacing-4));
@@ -158,9 +156,6 @@
   color: #c0504d;
 }
 
-.input-error.input-box input {
-  border: 1px solid #c0504d;
-}
 
 .validation-messages {
   position: absolute;
@@ -194,7 +189,9 @@
 .validation-messages p.valid::before {
   content: url('../../../assets/svg/green-check-icon.svg');
 }
-
+.save-btn{
+  margin-left: 64% !important;
+}
 @media screen and (max-width:1100px) {
 
   .modal-wrapper {

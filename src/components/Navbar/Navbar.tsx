@@ -23,6 +23,7 @@ import {
   showAllUsersTrue,
   showAllTrue,
   resetSearch,
+  setExplore,
 } from '@/redux/slices/search'
 import LogoFull from '@/assets/image/logo-full.svg'
 import LogoSmall from '@/assets/image/logo-small.png'
@@ -73,6 +74,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   const dispatch = useDispatch()
   const router = useRouter()
   const [menuActive, setMenuActive] = useState(false)
+  const [isWriting, setIsWriting] = useState(false)
   const pathname = usePathname()
   console.log({ pathname })
 
@@ -80,6 +82,9 @@ export const Navbar: React.FC<Props> = ({}) => {
     (state: RootState) => state.user,
   )
   const { activeModal } = useSelector((state: RootState) => state.modal)
+  const { sidemenuRefresh, searchToggleRefresh } = useSelector(
+    (state: RootState) => state.site,
+  )
 
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
@@ -105,6 +110,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   }
 
   const searchInputRef = useRef<HTMLInputElement>(null)
+  const mobileSearchRef = useRef<HTMLFormElement>(null)
   const [isSearchInputVisible, setIsSearchInputVisible] = useState(false)
 
   const toggleSearchInput = () => {
@@ -158,6 +164,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   }
 
   const searchResult = async () => {
+    dispatch(setExplore(false))
     if (router.pathname !== '/search') {
       dispatch(showAllTrue())
       router.push('/search')
@@ -204,82 +211,78 @@ export const Navbar: React.FC<Props> = ({}) => {
       const { res: titleRes, err: titleErr } = await searchPages({
         title: searchValue,
       })
+
       if (titleErr) {
         console.error('An error occurred during the title search:', titleErr)
         return
       }
 
-      let combinedResults = new Set(titleRes.data.slice(0, 100))
-      let remainingSlots = 50 - combinedResults.size
+      const titlePages = titleRes.data.slice(0, 100) // Get title search results
 
-      if (combinedResults.size < 10) {
-        dispatch(setShowPageLoader(true))
-        const { res: taglineRes, err: taglineErr } = await searchPages({
-          tagline: searchValue,
+      // Function to fetch tagline search results and process unique pages
+
+      dispatch(setShowPageLoader(true))
+      const { res: taglineRes, err: taglineErr } = await searchPages({
+        tagline: searchValue,
+      })
+
+      if (!taglineErr) {
+        const taglinePages = taglineRes.data.slice(0, 50) // Get tagline search results
+
+        // Combine titlePages and taglinePages and filter out duplicate URLs
+        const uniqueUrls = new Set<string>()
+        const uniquePages: any[] = [] // Use 'any[]' if you prefer not to define a specific type
+
+        ;[...titlePages, ...taglinePages].forEach((page) => {
+          if (
+            page &&
+            page.page_url &&
+            typeof page.page_url === 'string' &&
+            !uniqueUrls.has(page.page_url)
+          ) {
+            uniqueUrls.add(page.page_url)
+            uniquePages.push(page)
+          }
         })
-        if (!taglineErr) {
-          taglineRes.data.slice(0, remainingSlots).forEach((item: any) => {
-            combinedResults.add(item)
-          })
-        }
+
+        // Filter uniquePages by type and is_published
+        const typeResultOne = uniquePages.filter(
+          (page) => page.type === 1 && page.is_published,
+        )
+        const typeResultTwo = uniquePages.filter(
+          (page) => page.type === 2 && page.is_published,
+        )
+        const typeResultThree = uniquePages.filter(
+          (page) => page.type === 3 && page.is_published,
+        )
+
+        // Dispatch the unique results to the appropriate actions
+        dispatch(
+          setTypeResultOne({
+            data: typeResultOne,
+            message: 'Search completed successfully.',
+            success: true,
+          }),
+        )
+        dispatch(
+          setTypeResultTwo({
+            data: typeResultTwo,
+            message: 'Search completed successfully.',
+            success: true,
+          }),
+        )
+        dispatch(
+          setTypeResultThree({
+            data: typeResultThree,
+            message: 'Search completed successfully.',
+            success: true,
+          }),
+        )
       }
-      if (combinedResults.size < 10) {
-        dispatch(setShowPageLoader(true))
-        const { res: taglineRes, err: taglineErr } = await searchPages({
-          tagline: searchValue,
-        })
-        if (!taglineErr) {
-          combinedResults = combinedResults.add(
-            taglineRes.data.slice(0, remainingSlots),
-          )
-        }
-      }
-      // If title search results are exactly 50, prioritize the first 40 and get 10 by tagline
-      else if (combinedResults.size >= 100) {
-        dispatch(setShowPageLoader(true))
-        combinedResults = new Set(Array.from(combinedResults).slice(0, 70))
-        const { res: taglineRes, err: taglineErr } = await searchPages({
-          tagline: searchValue,
-        })
-        if (!taglineErr) {
-          combinedResults = combinedResults.add(taglineRes.data.slice(0, 10))
-        }
-      }
 
-      const typeResultOne = Array.from(combinedResults).filter(
-        (page: any) => page.type === 1 && page.is_published === true,
-      )
+      dispatch(setShowPageLoader(false))
 
-      dispatch(
-        setTypeResultOne({
-          data: typeResultOne as Page[],
-          message: 'Search completed successfully.',
-          success: true,
-        }),
-      )
-      const typeResultTwo = Array.from(combinedResults).filter(
-        (page: any) => page.type === 2 && page.is_published === true,
-      )
-
-      dispatch(
-        setTypeResultTwo({
-          data: typeResultTwo as Page[],
-          message: 'Search completed successfully.',
-          success: true,
-        }),
-      )
-      const typeResultThree = Array.from(combinedResults).filter(
-        (page: any) => page.type === 3 && page.is_published === true,
-      )
-
-      dispatch(
-        setTypeResultThree({
-          data: typeResultThree as Page[],
-          message: 'Search completed successfully.',
-          success: true,
-        }),
-      )
-      const query = `fields=display,genre,description,slug,profile_image&level=3&level=2&level=1&level=0&show=true&search=${searchValue}`
+      const query = `level=1&level=2&level=3&level=4&level=5&search=${searchValue}`
       dispatch(setShowPageLoader(true))
       const { res: hobbyRes, err: hobbyErr } = await getAllHobbies(query)
       if (hobbyErr) {
@@ -298,7 +301,7 @@ export const Navbar: React.FC<Props> = ({}) => {
           } else if (indexB === 0 && indexA !== 0) {
             return 1
           }
-          return 0
+          return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
         })
         console.log('hobbies search results:', hobbyRes.data.hobbies)
         dispatch(
@@ -317,6 +320,33 @@ export const Navbar: React.FC<Props> = ({}) => {
       console.error('An error occurred during the combined search:', error)
     }
   }
+
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (
+      mobileSearchRef.current &&
+      !mobileSearchRef.current.contains(event.target as Node)
+    ) {
+      setIsSearchInputVisible(false)
+    }
+  }
+  useEffect(() => {
+    document.addEventListener('mousedown', handleOutsideClick)
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (sidemenuRefresh !== 0) {
+      toggleMenu()
+    }
+  }, [sidemenuRefresh])
+  useEffect(() => {
+    if (searchToggleRefresh !== 0) {
+      toggleSearchInput()
+    }
+  }, [searchToggleRefresh])
 
   const isMobile = useMediaQuery('(max-width:1100px)')
 
@@ -348,6 +378,33 @@ export const Navbar: React.FC<Props> = ({}) => {
     </svg>
   )
 
+  const searchCrossIcon = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="17"
+      viewBox="0 0 16 17"
+      fill="none"
+    >
+      <g clip-path="url(#clip0_7497_129809)">
+        <path
+          d="M12.2005 4.14112C11.9405 3.88112 11.5205 3.88112 11.2605 4.14112L8.00047 7.39445L4.74047 4.13445C4.48047 3.87445 4.06047 3.87445 3.80047 4.13445C3.54047 4.39445 3.54047 4.81445 3.80047 5.07445L7.06047 8.33445L3.80047 11.5945C3.54047 11.8545 3.54047 12.2745 3.80047 12.5345C4.06047 12.7945 4.48047 12.7945 4.74047 12.5345L8.00047 9.27445L11.2605 12.5345C11.5205 12.7945 11.9405 12.7945 12.2005 12.5345C12.4605 12.2745 12.4605 11.8545 12.2005 11.5945L8.94047 8.33445L12.2005 5.07445C12.4538 4.82112 12.4538 4.39445 12.2005 4.14112Z"
+          fill="#08090A"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_7497_129809">
+          <rect
+            width="16"
+            height="16"
+            fill="white"
+            transform="translate(0 0.333984)"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+
   return (
     <>
       <header className={`${styles['navbar-wrappper']}`}>
@@ -363,6 +420,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                   router.push('/')
                 }
               }}
+              className={styles['pos-relative-z-2']}
               href={isLoggedIn ? '/community' : '/'}
             >
               {isLoggedIn ? (
@@ -394,10 +452,14 @@ export const Navbar: React.FC<Props> = ({}) => {
             </Link>
 
             <TextField
+              inputRef={searchInputRef}
               variant="outlined"
               placeholder="Search for anything on your hobbies..."
               size="small"
               className={styles.inputField}
+              onFocus={() => {
+                setIsWriting(true)
+              }}
               onChange={handleInputChange}
               value={data.search.value}
               onKeyDown={(e) => {
@@ -429,7 +491,24 @@ export const Navbar: React.FC<Props> = ({}) => {
               InputLabelProps={{ shrink: false }}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">
+                  <InputAdornment
+                    style={{ position: 'relative' }}
+                    position="end"
+                  >
+                    {data.search.value.length > 0 && isWriting && (
+                      <div
+                        onClick={() => {
+                          setData((prev) => ({
+                            ...prev,
+                            search: { ...prev.search, value: '' },
+                          }))
+                          searchInputRef?.current?.focus()
+                        }}
+                        className={styles['search-cross-icon']}
+                      >
+                        {searchCrossIcon}
+                      </div>
+                    )}
                     <IconButton
                       onClick={searchResult}
                       sx={{
@@ -487,6 +566,8 @@ export const Navbar: React.FC<Props> = ({}) => {
                               },
                             }))
                             dispatch(showAllPeopleTrue())
+                            dispatch(setExplore(true))
+                            setShowDropdown(null)
 
                             router.push('/search')
                           }}
@@ -515,7 +596,9 @@ export const Navbar: React.FC<Props> = ({}) => {
                                 value: '',
                               },
                             }))
+                            setShowDropdown(null)
                             dispatch(showAllPlaceTrue())
+                            dispatch(setExplore(true))
                             router.push('/search')
                           }}
                         >
@@ -531,6 +614,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           onClick={(e) => {
                             e.preventDefault()
                             dispatch(resetSearch())
+                            setShowDropdown(null)
                             setData((prevData) => ({
                               ...prevData,
                               search: {
@@ -539,6 +623,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                               },
                             }))
                             dispatch(showAllEventTrue())
+                            dispatch(setExplore(true))
                             router.push('/search')
                           }}
                         >
@@ -554,6 +639,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           onClick={(e) => {
                             e.preventDefault()
                             dispatch(resetSearch())
+                            setShowDropdown(null)
                             setData((prevData) => ({
                               ...prevData,
                               search: {
@@ -562,6 +648,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                               },
                             }))
                             dispatch(showAllProductsTrue())
+                            dispatch(setExplore(true))
                             router.push('/search')
                           }}
                         >
@@ -571,13 +658,15 @@ export const Navbar: React.FC<Props> = ({}) => {
                     </section>
                     <section className={styles['list']}>
                       <h4>
-                        <Link
-                          href={'/search'}
+                        <a
                           className={styles['hobbiescategory']}
-                          onClick={showFeatureUnderDevelopment}
+                          onClick={() => {
+                            showFeatureUnderDevelopment()
+                            setShowDropdown(null)
+                          }}
                         >
                           Posts - Write-ups
-                        </Link>
+                        </a>
                       </h4>
                     </section>
                   </div>
@@ -844,7 +933,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                     onBlur={() => setShowDropdown(null)}
                   >
                     {user?.profile_image ? (
-                      <Image
+                      <img
                         className={styles['img']}
                         src={user.profile_image}
                         alt=""
@@ -864,7 +953,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                       <section className={styles['general-info']}>
                         <div className={styles['profile-name']}>
                           {user?.profile_image ? (
-                            <Image
+                            <img
                               className={styles['img']}
                               src={user.profile_image}
                               alt=""
@@ -941,11 +1030,12 @@ export const Navbar: React.FC<Props> = ({}) => {
                 className={`${styles['mobile-search-input']} ${
                   isSearchInputVisible
                     ? styles['mobile-search-input-visible']
-                    : ''
+                    : styles['left-0']
                 }`}
               >
                 {isSearchInputVisible ? (
                   <form
+                    ref={mobileSearchRef}
                     onSubmit={handleSearchSubmit}
                     className={
                       styles['mobile-search-input'] +
@@ -970,10 +1060,8 @@ export const Navbar: React.FC<Props> = ({}) => {
                         placeholder="Search here..."
                         size="small"
                         autoFocus
-                        onBlur={() => {if(!isMobile)setIsSearchInputVisible(false)
-                        else{setTimeout(() => {
-                          setIsSearchInputVisible(false)
-                        }, 100);}
+                        onFocus={() => {
+                          setIsWriting(true)
                         }}
                         className={styles.inputField}
                         onChange={handleInputChange}
@@ -1000,7 +1088,11 @@ export const Navbar: React.FC<Props> = ({}) => {
                         }}
                         InputLabelProps={{ shrink: false }}
                       />
-                      <button type="submit" className={styles['search-icon-container']}>
+
+                      <button
+                        type="submit"
+                        className={styles['search-icon-container']}
+                      >
                         {/* Search Icon */}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -1017,17 +1109,39 @@ export const Navbar: React.FC<Props> = ({}) => {
                       </button>
                     </div>
                   </form>
-                ) : (
-                  <li className={data.search.value.length>0?styles['topbar-search-box']:''}>
-                    {data.search.value.length>0&& <input type="text" value={data.search.value} onChange={handleInputChange} />}
-                    <Image
-                      src={Search}
-                      alt="search"
-                      onClick={toggleSearchInput}
-                    />
+                ) : data.search.value.length > 0 ? (
+                  <li
+                    onClick={toggleSearchInput}
+                    className={
+                      data.search.value.length > 0
+                        ? styles['topbar-search-box']
+                        : ''
+                    }
+                  >
+                    {data.search.value.length > 0 && (
+                      <input type="text" value={data.search.value} />
+                    )}
+                    <div
+                      onClick={() => {
+                        setData((prev) => ({
+                          ...prev,
+                          search: { ...prev.search, value: '' },
+                        }))
+                        searchInputRef?.current?.focus()
+                      }}
+                      className={styles['search-cross-icon-inside']}
+                    >
+                      {searchCrossIcon}
+                    </div>
+                    <Image src={Search} alt="search" />
                   </li>
-                )}
+                ) : null}
               </div>
+              {data.search.value.length === 0 && (
+                <li onClick={toggleSearchInput} className={''}>
+                  <Image src={Search} alt="search" />
+                </li>
+              )}
               <li>
                 <Link href={'/notifications'}>
                   <Image src={BellIcon} alt="Bell" />

@@ -52,7 +52,7 @@
   position: sticky;
   transition: 0.6s;
   height: calc(
-    100vh - calc(var(--navbar-height-desktop) + var(--spacing-24)) + 3rem
+    100vh - calc(var(--navbar-height-desktop) + var(--spacing-24) + 9rem)
   );
   overflow: auto;
 }
@@ -134,6 +134,10 @@
   display: none !important;
 }
 
+.error{
+  border: 1px solid #C0504D !important;
+}
+
 @media screen and (max-width: 1100px) {
   .medias {
     display: flex;
@@ -159,11 +163,20 @@
   .display-mobile {
     display: initial !important;
   }
+  .mob-min-height{
+    /* min-height: calc(100vh - 107px); */
+  }
   .no-posts-div{
     border-radius: 0;
   }
   .profile-left-aside{
     position: static;
     height: auto;
+  }
+  .dual-section-wrapper {
+    height: 90vh;
+  }
+  .mob-h-auto{
+    /* height: auto; */
   }
 }

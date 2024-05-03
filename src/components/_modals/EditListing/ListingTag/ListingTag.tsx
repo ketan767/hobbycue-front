@@ -60,6 +60,9 @@ const ListingTagsEditModal: React.FC<Props> = ({
   const [tags, setTags] = useState<
     { _id: string; name: string; description: string }[]
   >([])
+  useEffect(() => {
+    console.warn({ listingModalData }, { tags })
+  }, [listingModalData, tags])
 
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [showDropdown, setShowDropdown] = useState(false)
@@ -228,33 +231,34 @@ const ListingTagsEditModal: React.FC<Props> = ({
                 <div className={styles['options-container']}>
                   <div className={styles['vertical-line']}></div>
                   {tags.map((item: any, idx) => {
-                    return (
-                      <div
-                        className={`${styles['single-option']} ${
-                          selectedTags.includes(item._id)
-                            ? styles['chosen-option']
-                            : ''
-                        }`}
-                        key={item._id}
-                        onClick={() => {
-                          handleTagChange(item._id)
-                          setShowDropdown(false)
-                        }}
-                      >
-                        {selectedTags.includes(item._id) ? (
-                          <div className={styles['selected-bg']}></div>
-                        ) : null}
-                        <p className={`${styles.tagText}`}>{item.name}</p>
-                        <p className={styles.tagDesc}>
-                          {item.description}
-                          <Image
-                            src={TickIcon}
-                            alt="down"
-                            className={styles['tick-icon']}
-                          />
-                        </p>
-                      </div>
-                    )
+                    if (listingModalData?.type == item?.type)
+                      return (
+                        <div
+                          className={`${styles['single-option']} ${
+                            selectedTags.includes(item._id)
+                              ? styles['chosen-option']
+                              : ''
+                          }`}
+                          key={item._id}
+                          onClick={() => {
+                            handleTagChange(item._id)
+                            setShowDropdown(false)
+                          }}
+                        >
+                          {selectedTags.includes(item._id) ? (
+                            <div className={styles['selected-bg']}></div>
+                          ) : null}
+                          <p className={`${styles.tagText}`}>{item.name}</p>
+                          <p className={styles.tagDesc}>
+                            {item.description}
+                            <Image
+                              src={TickIcon}
+                              alt="down"
+                              className={styles['tick-icon']}
+                            />
+                          </p>
+                        </div>
+                      )
                   })}
                 </div>
               )}
@@ -317,7 +321,11 @@ const ListingTagsEditModal: React.FC<Props> = ({
             className="modal-mob-btn-save"
             onClick={handleSubmit}
           >
-            Save
+            {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'14px'} />
+              ) : (
+                'Save'
+              )}
           </button>
         </footer>
       </div>

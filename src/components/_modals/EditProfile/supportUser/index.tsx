@@ -51,6 +51,7 @@ type supportData = {
   email: string
   user_id: string
   type: string
+  for_url: string
 }
 
 const SupportUserModal: React.FC<Props> = ({
@@ -70,6 +71,7 @@ const SupportUserModal: React.FC<Props> = ({
     email: '',
     user_id: '',
     type: '',
+    for_url: '',
   })
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backDisabled, SetBackDisabled] = useState(false)
@@ -85,12 +87,14 @@ const SupportUserModal: React.FC<Props> = ({
   const [inputErrs, setInputErrs] = useState<{ error: string | null }>({
     error: null,
   })
+  const currentUrl = `${process.env.NEXT_PUBLIC_VERCEL_URL}/profile/${user.profile_url}`
   const [initialData, setInitialData] = useState<supportData>({
     description: '',
     name: user.full_name,
     email: user?.public_email,
     user_id: user._id,
     type: 'user',
+    for_url: currentUrl,
   })
   const [isChanged, setIsChanged] = useState(false)
 
@@ -101,6 +105,7 @@ const SupportUserModal: React.FC<Props> = ({
       email: user?.public_email,
       user_id: user._id,
       type: 'user',
+      for_url: currentUrl,
     })
   }, [user])
 
@@ -109,12 +114,12 @@ const SupportUserModal: React.FC<Props> = ({
     setData((prev) => ({ ...prev, description: value }))
     setInputErrs({ error: null })
 
-    const hasChanged = value !== initialData.description
-    setIsChanged(hasChanged)
+    // const hasChanged = value !== initialData.description
+    // setIsChanged(hasChanged)
 
-    if (onStatusChange) {
-      onStatusChange(hasChanged)
-    }
+    // if (onStatusChange) {
+    //   onStatusChange(hasChanged)
+    // }
   }
 
   const Backsave = async () => {
@@ -169,7 +174,7 @@ const SupportUserModal: React.FC<Props> = ({
       setSubmitBtnLoading(false)
       setTimeout(() => {
         dispatch(closeModal())
-      }, 2000)
+      }, 2500)
     } else if (err) {
       setSubmitBtnLoading(false)
       setSnackbar({
@@ -187,6 +192,7 @@ const SupportUserModal: React.FC<Props> = ({
       email: user?.public_email,
       user_id: user._id,
       type: 'user',
+      for_url: currentUrl,
     })
   }, [user])
 
@@ -227,9 +233,15 @@ const SupportUserModal: React.FC<Props> = ({
   }, [textareaRef.current])
   useEffect(() => {
     const handleKeyPress = (event: any) => {
-      if (event.key === 'Enter' && !textareaRef.current?.matches(':focus')) {
-        event.preventDefault()
-        handleSubmit()
+      if (event.key === 'Enter') {
+        if (
+          (event?.srcElement?.tagName &&
+            event?.srcElement?.tagName?.toLowerCase() === 'textarea') ||
+          event?.srcElement?.tagName?.toLowerCase() === 'svg'
+        ) {
+          return
+        }
+        nextButtonRef.current?.click()
       }
     }
 
@@ -343,7 +355,11 @@ const SupportUserModal: React.FC<Props> = ({
               onClick={handleSubmit}
               disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
             >
-              Submit
+              {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'14px'} />
+              ) : (
+                'Submit'
+              )}
             </button>
           )}
         </footer>

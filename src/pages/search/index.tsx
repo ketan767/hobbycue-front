@@ -18,6 +18,8 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import User from '../../assets/svg/Search/User.svg'
 import styles from './styles.module.css'
+import { SetLinkviaAuth } from '@/redux/slices/user'
+import Link from 'next/link'
 
 type Props = {
   data?: any
@@ -91,19 +93,19 @@ const MainContent: React.FC<SearchResultsProps> = ({
   EventResults,
   hobbyResults,
 }) => {
-  const showAll = useSelector((state: any) => state.search.showAll)
-  const showAllUsers = useSelector((state: any) => state.search.showAllUsers)
-  const showAllPeople = useSelector((state: any) => state.search.showAllPeople)
-  const showAllPlace = useSelector((state: any) => state.search.showAllPlace)
-  const showAllEvent = useSelector((state: any) => state.search.showAllEvent)
+  const showAll = useSelector((state: RootState) => state.search.showAll)
+  const showAllUsers = useSelector((state: RootState) => state.search.showAllUsers)
+  const showAllPeople = useSelector((state: RootState) => state.search.showAllPeople)
+  const showAllPlace = useSelector((state: RootState) => state.search.showAllPlace)
+  const showAllEvent = useSelector((state: RootState) => state.search.showAllEvent)
   const showAllProducts = useSelector(
-    (state: any) => state.search.showAllProducts,
+    (state: RootState) => state.search.showAllProducts,
   )
   const showAllhobbies = useSelector(
-    (state: any) => state.search.showAllHobbies,
+    (state: RootState) => state.search.showAllHobbies,
   )
-  const searchString = useSelector((state: any) => state.search.searchString)
-
+  const searchString = useSelector((state: RootState) => state.search.searchString)
+  const isExplore = useSelector((state:RootState)=>state.search.explore)
   const dispatch = useDispatch()
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
@@ -119,138 +121,87 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const router = useRouter()
 
   useEffect(() => {
-    if (showAll) {
+    if (showAll===true) {
       setHideUser(false)
       setHidePeople(false)
       setHidePlace(false)
       setHideEvent(false)
       setHideHobbies(false)
+      setHideProduct(true)
     }
-  }, [showAll])
-
-  const toggleShowAllusers = () => {
-    dispatch(toggleShowAllUsers())
-  }
-  useEffect(() => {
-    if (showAllUsers) {
+    else if (showAllUsers===true) {
       setHideHobbies(true)
       setHidePeople(true)
       setHidePlace(true)
       setHideEvent(true)
       setHideProduct(true)
-    } else {
-      setHideHobbies(false)
-      setHidePeople(false)
-      setHidePlace(false)
-      setHideEvent(false)
-      setHideProduct(true)
+      setHideUser(false)
     }
-  }, [showAllUsers])
-
-  const toggleShowAllhobbies = () => {
-    dispatch(toggleShowAllHobbies())
-  }
-  useEffect(() => {
-    if (showAllhobbies) {
+    else if (showAllhobbies===true) {
       setHideUser(true)
       setHidePeople(true)
       setHidePlace(true)
       setHideEvent(true)
       setHideProduct(true)
-    } else {
-      setHideUser(false)
-      setHidePeople(false)
-      setHidePlace(false)
-      setHideEvent(false)
-      setHideProduct(true)
+      setHideHobbies(false)
     }
-  }, [showAllhobbies])
+    else  if (showAllPeople===true) {
+      setHideUser(true)
+      setHideHobbies(true)
+      setHidePlace(true)
+      setHideEvent(true)
+      setHideProduct(true)
+      setHidePeople(false)
+    }
+    else if (showAllPlace===true) {
+      setHideUser(true)
+      setHideHobbies(true)
+      setHidePeople(true)
+      setHideEvent(true)
+      setHideProduct(true)
+      setHidePlace(false)
+    }
+    else if (showAllEvent===true) {
+      setHideUser(true)
+      setHidePeople(true)
+      setHidePlace(true)
+      setHideHobbies(true)
+      setHideProduct(true)
+      setHideEvent(false)
+    }
+    else if (showAllProducts===true) {
+      setHideUser(true)
+      setHideHobbies(true)
+      setHidePeople(true)
+      setHidePlace(true)
+      setHideEvent(true)
+      setHideProduct(false)
+    }
+  }, [showAll, showAllEvent, showAllPeople, showAllPlace, showAllProducts, showAllUsers, showAllhobbies])
+
+  const toggleShowAllusers = () => {
+    dispatch(toggleShowAllUsers())
+  }
+
+  const toggleShowAllhobbies = () => {
+    dispatch(toggleShowAllHobbies())
+  }
 
   const toggleShowAllpeople = () => {
     dispatch(toggleShowAllPeople())
   }
 
-  useEffect(() => {
-    if (showAllPeople) {
-      setHideUser(true)
-      setHideHobbies(true)
-      setHidePlace(true)
-      setHideEvent(true)
-      setHideHobbies(true)
-      setHideProduct(true)
-    } else {
-      setHideUser(false)
-      setHideHobbies(false)
-      setHidePlace(false)
-      setHideEvent(false)
-      setHideHobbies(false)
-      setHideProduct(false)
-    }
-  }, [showAllPeople])
-
   const toggleShowAllplace = () => {
     dispatch(toggleShowAllPlace())
   }
-
-  useEffect(() => {
-    if (showAllPlace) {
-      setHideUser(true)
-      setHideHobbies(true)
-      setHidePeople(true)
-      setHideEvent(true)
-      setHideHobbies(true)
-      setHideProduct(true)
-    } else {
-      setHideUser(false)
-      setHideHobbies(false)
-      setHidePeople(false)
-      setHideEvent(false)
-      setHideHobbies(false)
-      setHideProduct(false)
-    }
-  }, [showAllPlace])
 
   const toggleShowAllevent = () => {
     dispatch(toggleShowAllEvent())
   }
 
-  useEffect(() => {
-    if (showAllEvent) {
-      setHideUser(true)
-      setHidePeople(true)
-      setHidePlace(true)
-      setHideHobbies(true)
-      setHideProduct(true)
-    } else {
-      setHideUser(false)
-      setHideHobbies(false)
-      setHidePeople(false)
-      setHidePlace(false)
-      setHideHobbies(false)
-      setHideProduct(false)
-    }
-  }, [showAllEvent])
-
   const toggleShowAllproducts = () => {
     dispatch(toggleShowAllProducts())
   }
-
-  useEffect(() => {
-    if (showAllProducts) {
-      setHideUser(true)
-      setHideHobbies(true)
-      setHidePeople(true)
-      setHidePlace(true)
-      setHideProduct(true)
-    } else {
-      setHideUser(false)
-      setHideHobbies(false)
-      setHidePeople(false)
-      setHidePlace(false)
-      setHideHobbies(false)
-      setHideProduct(false)
-    }
-  }, [showAllProducts])
 
   const navigateToHobby = (slug: string) => {
     router.push(`hobby/${slug}`)
@@ -260,6 +211,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
     if (isLoggedIn) {
       router.push(`profile/${profileUrl}`)
     } else {
+      dispatch(SetLinkviaAuth(`profile/${profileUrl}`))
       dispatch(openModal({ type: 'auth', closable: true }))
     }
   }
@@ -286,14 +238,22 @@ const MainContent: React.FC<SearchResultsProps> = ({
       {noResultsFound ? (
         <div className={styles['no-results-wrapper']}>
           {searchString === '' ? (
-            <p>
-              The Explore functionality is under development. Use the Search box
-              at the top to look up pages on your hobby by other users. If you
-              don&apos;t find any pages, you may Add Listing Page from the menu
-              at the top right corner.
-            </p>
+            isExplore ? (
+              <p>
+                The Explore functionality is under development. Use the Search
+                box at the top to look up pages on your hobby by other users. If
+                you don&apos;t find any pages, you may Add Listing Page from the
+                menu at the top right corner.
+              </p>
+            ) : (
+              <p>
+                Use the Search box at the top to look up pages on your hobby by
+                other users. If you don&apos;t find any pages, you may Add
+                Listing Page from the menu at the top right corner.
+              </p>
+            )
           ) : (
-            <p>No results for {searchString}</p>
+            <p>{`No results for "${searchString}". `}Try shorter or alternate keywords.  Or <Link href={'/contact'}>contact us</Link> if you feel we are missing something.  For further help, <Link href={'/help'}>click here</Link>.</p>
           )}
         </div>
       ) : (
@@ -320,7 +280,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       >
                         {/* Render the image */}
                         {hobby.profile_image ? (
-                          <Image
+                          <img
                             src={hobby.profile_image}
                             alt={`${hobby.display}'s `}
                             width={64}
@@ -352,13 +312,18 @@ const MainContent: React.FC<SearchResultsProps> = ({
 
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>{hobby.display}</div>
-                        <div className={styles.userTagline}>{`${
-                          hobby?.category?.display ? hobby.category.display : ''
-                        }${
-                          hobby?.sub_category?.display
-                            ? ' | ' + hobby.sub_category.display
-                            : ''
-                        }`}</div>
+                        <div className={styles.userTagline}>
+                          {`${
+                            hobby?.category?.display
+                              ? hobby.category.display
+                              : ''
+                          }${
+                            hobby?.sub_category?.display
+                              ? ' | ' + hobby.sub_category.display
+                              : ''
+                          }`}
+                          &nbsp;
+                        </div>
                         <div className={styles.hobbydescription}>
                           {hobby?.description}
                         </div>
@@ -399,7 +364,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     >
                       <div className={styles.userAvatar}>
                         {user?.profile_image ? (
-                          <Image
+                          <img
                             src={user?.profile_image}
                             alt={`${user.full_name}'s profile`}
                             width={64}
@@ -455,7 +420,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     >
                       <div className={styles.peopleAvatar}>
                         {page.profile_image ? (
-                          <Image
+                          <img
                             src={page.profile_image}
                             alt={`${page.title}'s `}
                             width={64}
@@ -481,8 +446,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
                               return ' ' + item
                             }
                           }) +
-                            ' | ' +
-                            page._address?.city || '\u00a0'}
+                            (page._address?.city
+                              ? ` | ${page._address?.city}`
+                              : '') || '\u00a0'}
                         </div>
                       </div>
                     </div>
@@ -519,7 +485,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     >
                       <div className={styles.peopleAvatar}>
                         {page.profile_image ? (
-                          <Image
+                          <img
                             src={page.profile_image}
                             alt={`${page.title}'s `}
                             width={64}
@@ -538,8 +504,10 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           {page?.tagline || '\u00a0'}
                         </div>
                         <div className={styles.userLocation}>
-                          {page.page_type + ' | ' + page._address?.city ||
-                            '\u00a0'}
+                          {page.page_type +
+                            (page._address?.city
+                              ? ` | ${page._address?.city}`
+                              : '') || '\u00a0'}
                         </div>
                       </div>
                     </div>
@@ -576,7 +544,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     >
                       <div className={styles.peopleAvatar}>
                         {page.profile_image ? (
-                          <Image
+                          <img
                             src={page.profile_image}
                             alt={`${page.title}'s `}
                             width={64}
@@ -595,8 +563,10 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           {page?.tagline || '\u00a0'}
                         </div>
                         <div className={styles.userLocation}>
-                          {page.page_type + ' | ' + page._address?.city ||
-                            '\u00a0'}
+                          {page.page_type +
+                            (page._address?.city
+                              ? ` | ${page._address?.city}`
+                              : '') || '\u00a0'}
                         </div>
                       </div>
                     </div>
@@ -628,6 +598,53 @@ const MainContent: React.FC<SearchResultsProps> = ({
 const FilterDropdown: React.FC<Props> = () => {
   const [activeFilter, setActiveFilter] = useState('all')
   const dispatch = useDispatch()
+
+  const showAll = useSelector((state: any) => state.search.showAll)
+  const showAllUsers = useSelector((state: any) => state.search.showAllUsers)
+  const showAllhobbies = useSelector(
+    (state: any) => state.search.showAllhobbies,
+  )
+  const showAllPeople = useSelector((state: any) => state.search.showAllPeople)
+  const showAllPlace = useSelector((state: any) => state.search.showAllPlace)
+  const showAllEvent = useSelector((state: any) => state.search.showAllEvent)
+  const showAllProducts = useSelector(
+    (state: any) => state.search.showAllProducts,
+  )
+  useEffect(() => {
+    if (showAll) {
+      setActiveFilter('all')
+    }
+  }, [showAll])
+  useEffect(() => {
+    if (showAllUsers) {
+      setActiveFilter('users')
+    }
+  }, [showAllUsers])
+  useEffect(() => {
+    if (showAllhobbies) {
+      setActiveFilter('hobby')
+    }
+  }, [showAllhobbies])
+  useEffect(() => {
+    if (showAllPeople) {
+      setActiveFilter('people')
+    }
+  }, [showAllPeople])
+  useEffect(() => {
+    if (showAllPlace) {
+      setActiveFilter('places')
+    }
+  }, [showAllPlace])
+  useEffect(() => {
+    if (showAllEvent) {
+      setActiveFilter('events')
+    }
+  }, [showAllEvent])
+  useEffect(() => {
+    if (showAllProducts) {
+      setActiveFilter('products')
+    }
+  }, [showAllProducts])
   const handleFilterClick = (filterType: any) => {
     if (activeFilter === filterType) {
       setActiveFilter('all')

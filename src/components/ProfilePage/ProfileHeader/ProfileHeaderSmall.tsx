@@ -20,34 +20,61 @@ import Tooltip from '@/components/Tooltip/ToolTip'
 import { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
 import Dropdown from './DropDown'
+import { SetLinkviaAuth, showProfileError } from '@/redux/slices/user'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   activeTab: ProfilePageTabs
   data: ProfilePageData['pageData']
+  navigationTabs?: (tab: string) => void
+  noDataChecker?: () => boolean
 }
 
 /** // #fix: There are many things to update and improve code in this file. // */
-const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
+const ProfileHeaderSmall: React.FC<Props> = ({
+  activeTab,
+  data,
+  navigationTabs,
+  noDataChecker,
+}) => {
   const router = useRouter()
   const dispatch = useDispatch()
 
-  const { profileLayoutMode } = useSelector((state: RootState) => state.site);
-  const {isAuthenticated} = useSelector((state:RootState)=>state.user);
+  const { profileLayoutMode } = useSelector((state: RootState) => state.site)
+  const { isAuthenticated, user, isLoggedIn } = useSelector(
+    (state: RootState) => state.user,
+  )
   const tabs: ProfilePageTabs[] = ['home', 'posts', 'media', 'pages', 'blogs']
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
 
   const [open, setOpen] = useState(false)
   const location = window.location.href
 
   const handleDropdown = () => {
-    setOpen(!open)
+    if (open) {
+      if (!isAuthenticated) {
+        dispatch(openModal({ type: 'auth', closable: true }))
+        setOpen(false)
+      }
+    } else {
+      setOpen(true)
+    }
   }
 
   const handleContact = () => {
-    console.log('data', data)
-    if (data.public_email) {
-      window.open(
-        `mailto:${data.public_email}?subject=Subject&body=Body%20goes%20here`,
-      )
+    if (isLoggedIn) {
+      if (user.is_onboarded) {
+        dispatch(openModal({ type: 'User-Contact-To-Owner', closable: true }))
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
+    } else {
+      dispatch(openModal({ type: 'auth', closable: true }))
     }
   }
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
@@ -113,11 +140,66 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
       // dispatch(closeModal())
     }
   }
-
+  const itsMe = data?._id === user?._id
   const handleShare = () => {
     dispatch(updateShareUrl(window.location.href))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
   }
+
+  const handleRepost = () => {
+    if (!isAuthenticated) {
+      dispatch(openModal({ type: 'auth', closable: true }))
+      return
+    }
+    if (noDataChecker?.() === true) {
+      return
+    }
+    if (isLoggedIn) {
+      if (user.is_onboarded) {
+        dispatch(
+          openModal({
+            type: 'create-post',
+            closable: true,
+            propData: { defaultValue: location },
+          }),
+        )
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
+    } else {
+      dispatch(
+        openModal({
+          type: 'auth',
+          closable: true,
+        }),
+      )
+    }
+  }
+
+  const showFeatureUnderDevelopment = () => {
+    setSnackbar({
+      display: true,
+      type: 'warning',
+      message: 'This feature is under development',
+    })
+  }
+  const Dropdownref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        Dropdownref.current &&
+        !Dropdownref.current.contains(event.target as Node)
+      ) {
+        setOpen(false) // Close the dropdown when clicked outside
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [Dropdownref])
 
   return (
     <>
@@ -129,7 +211,7 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
             className={`${styles['profile-img-wrapper']} ${styles['profile-img-wrapper-small']}`}
           >
             {data?.profile_image ? (
-              <Image
+              <img
                 className={styles['img']}
                 src={data.profile_image}
                 alt=""
@@ -157,7 +239,7 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
           <section className={styles['center-container']}>
             <div className={styles['cover-img-wrapper']}>
               {data?.cover_image ? (
-                <Image
+                <img
                   className={styles['img']}
                   src={data.cover_image}
                   alt=""
@@ -187,21 +269,15 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
 
           {/* Action Buttons */}
           <div className={styles['action-btn-wrapper']}>
-            <FilledButton className={styles.contactBtn} onClick={handleContact}>
+            <FilledButton
+              disabled={itsMe}
+              className={styles.contactBtn}
+              onClick={handleContact}
+            >
               Contact
             </FilledButton>
             {/* Send Email Button  */}
-            <div
-              onClick={() => {
-                dispatch(
-                  openModal({
-                    type: 'create-post',
-                    closable: true,
-                    propData: { defaultValue: location },
-                  }),
-                )
-              }}
-            >
+            <div onClick={handleRepost}>
               <Tooltip title="Repost">
                 <div
                   onClick={(e) => console.log(e)}
@@ -215,7 +291,7 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
             {/* Bookmark Button */}
             <Tooltip title="Bookmark">
               <div
-                onClick={(e) => console.log(e)}
+                onClick={(e) => showFeatureUnderDevelopment()}
                 className={styles['action-btn']}
               >
                 <BookmarkBorderRoundedIcon color="primary" />
@@ -223,7 +299,7 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
             </Tooltip>
 
             {/* Share Button */}
-            <Tooltip title="Ahare">
+            <Tooltip title="Share">
               <div
                 onClick={(e) => handleShare()}
                 className={styles['action-btn']}
@@ -233,13 +309,17 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
             </Tooltip>
 
             {/* More Options Button */}
-
             <div
-              onClick={(e) => handleDropdown()}
-              className={styles['action-btn']}
+              className={styles['action-btn-dropdown-wrapper']}
+              ref={Dropdownref}
             >
-              <Tooltip title="More options">
-                <MoreHorizRoundedIcon color="primary" />
+              <Tooltip title="Click to view options">
+                <div
+                  onClick={(e) => handleDropdown()}
+                  className={styles['action-btn']}
+                >
+                  <MoreHorizRoundedIcon color="primary" />
+                </div>
               </Tooltip>
               {profileLayoutMode === 'edit'
                 ? open && (
@@ -265,16 +345,31 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
                     tab !== 'home' ? tab : ''
                   }`}
                   className={activeTab === tab ? styles['active'] : ''}
-                  onClick={(e)=>{
-                      e.preventDefault();
-                      e.stopPropagation();
-                    if(!isAuthenticated){
-                      dispatch(openModal({type:"auth",closable:true}));
-                      return;
-                    }else{
-                      router.push(`/profile/${router.query.profile_url}/${
-                        tab !== 'home' ? tab : ''
-                      }`)
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    if (!isAuthenticated) {
+                      dispatch(
+                        SetLinkviaAuth(
+                          `/profile/${router.query.profile_url}/${
+                            tab !== 'home' ? tab : ''
+                          }`,
+                        ),
+                      )
+                      dispatch(openModal({ type: 'auth', closable: true }))
+
+                      return
+                    } else {
+                      if (navigationTabs) {
+                        console.log('running nav')
+                        navigationTabs(tab)
+                      } else {
+                        router.push(
+                          `/profile/${router.query.profile_url}/${
+                            tab !== 'home' ? tab : ''
+                          }`,
+                        )
+                      }
                     }
                   }}
                 >
@@ -285,6 +380,16 @@ const ProfileHeaderSmall: React.FC<Props> = ({ activeTab, data }) => {
           </div>
         </nav>
       </div>
+      {
+        <CustomSnackbar
+          message={snackbar.message}
+          triggerOpen={snackbar.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }
