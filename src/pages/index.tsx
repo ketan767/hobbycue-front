@@ -464,12 +464,12 @@ const Home: React.FC<PropTypes> = function () {
         <Footer />
       </section>
       {/* removing temporalily for go live */}
-      {showAddToHome === true && (
+      {/* {showAddToHome === true && (
         <InstallPopup
           showAddToHome={showAddToHome}
           setShowAddToHome={setShowAddToHome}
         />
-      )}
+      )} */}
     </>
   )
 }
