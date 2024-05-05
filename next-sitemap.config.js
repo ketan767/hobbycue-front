@@ -1,4 +1,4 @@
-const siteUrl = 'https://localhost:8000'
+const siteUrl = 'https://hobbycue.com'
 
 module.exports = {
   siteUrl,
