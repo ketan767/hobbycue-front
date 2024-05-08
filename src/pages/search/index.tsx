@@ -20,6 +20,7 @@ import User from '../../assets/svg/Search/User.svg'
 import styles from './styles.module.css'
 import { SetLinkviaAuth } from '@/redux/slices/user'
 import Link from 'next/link'
+import SearchLoader from '@/components/SearchLoader'
 
 type Props = {
   data?: any
@@ -106,6 +107,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
   )
   const searchString = useSelector((state: RootState) => state.search.searchString)
   const isExplore = useSelector((state:RootState)=>state.search.explore)
+  const searchLoading = useSelector((state:RootState)=>state.search.loading)
   const dispatch = useDispatch()
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
@@ -258,7 +260,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
         </div>
       ) : (
         <div>
-          {!HideHobbies && hobbyResults.length > 0 && (
+          {searchLoading===true&&<div className={styles.loaders}>
+          <SearchLoader/>
+          <SearchLoader showBox/>
+          </div>}
+          {!HideHobbies && hobbyResults.length > 0 && searchLoading===false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>Hobbies</div>
@@ -350,7 +356,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
           )}
           {/* User  */}
 
-          {!HideUser && searchResults.length > 0 && (
+          {!HideUser && searchResults.length > 0 && searchLoading===false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>User Profiles</div>
@@ -406,7 +412,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
             </section>
           )}
           {/* People */}
-          {!HidePeople && peopleResults.length > 0 && (
+          {!HidePeople && peopleResults.length > 0 && searchLoading===false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>People</div>
@@ -471,7 +477,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
             </section>
           )}
           {/* Place  */}
-          {!HidePlace && placeResults.length > 0 && (
+          {!HidePlace && placeResults.length > 0 && searchLoading===false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>Places</div>
@@ -531,7 +537,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
           )}
 
           {/* Event  */}
-          {!HideEvent && EventResults.length > 0 && (
+          {!HideEvent && EventResults.length > 0 && searchLoading===false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>Programs</div>

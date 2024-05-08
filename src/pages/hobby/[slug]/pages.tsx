@@ -20,6 +20,7 @@ import { openModal } from '@/redux/slices/modal'
 import ListingCard from '@/components/ListingCard/ListingCard'
 import { updateHobbyMenuExpandAll } from '@/redux/slices/site'
 import { useMediaQuery } from '@mui/material'
+import PagesLoader from '@/components/PagesLoader/PagesLoader'
 
 type Props = { data: { hobbyData: any } }
 
@@ -102,8 +103,8 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
           <section className={styles['pages-container']}>
             {loadingPosts && (
               <>
-                <PostCardSkeletonLoading /> <PostCardSkeletonLoading />{' '}
-                <PostCardSkeletonLoading />{' '}
+                <PagesLoader /> <PagesLoader />{' '}
+                <PagesLoader />{' '}<PagesLoader/>{' '}
               </>
             )}
             {pages.length !== 0 &&

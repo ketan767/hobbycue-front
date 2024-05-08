@@ -277,6 +277,12 @@
   align-items: center;
 }
 
+.loaders{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 @media screen and (max-width: 1100px) {
   .profile-left-aside {
     order: 0;
