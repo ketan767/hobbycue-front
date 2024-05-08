@@ -147,7 +147,7 @@ const Home: React.FC<PropTypes> = function () {
         />
         <link rel="manifest" href="/manifest.json"></link>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/logo-small.png" />
       </Head>
       {/** Landing Container **/}
       {/* <DownloadInMobile/> */}
@@ -464,12 +464,12 @@ const Home: React.FC<PropTypes> = function () {
         <Footer />
       </section>
       {/* removing temporalily for go live */}
-      {showAddToHome === true && (
+      {/* {showAddToHome === true && (
         <InstallPopup
           showAddToHome={showAddToHome}
           setShowAddToHome={setShowAddToHome}
         />
-      )}
+      )} */}
     </>
   )
 }
