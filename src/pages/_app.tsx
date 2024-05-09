@@ -65,6 +65,7 @@ function App({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <title>HobbyCue - Your Hobby, Your Community</title>
+        <meta property="og:image" content="/logo-small.png" />
       </Head>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
