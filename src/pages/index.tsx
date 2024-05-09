@@ -463,13 +463,13 @@ const Home: React.FC<PropTypes> = function () {
       <section className={`site-container ${styles['site-container-footer']}`}>
         <Footer />
       </section>
-      {/* removing temporalily for go live */}
-      {/* {showAddToHome === true && (
+
+      {showAddToHome === true && (
         <InstallPopup
           showAddToHome={showAddToHome}
           setShowAddToHome={setShowAddToHome}
         />
-      )} */}
+      )}
     </>
   )
 }

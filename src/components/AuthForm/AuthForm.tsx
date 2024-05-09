@@ -278,9 +278,6 @@ const AuthForm: React.FC<Props> = (props) => {
       if (res?.data?.message === 'User registered successfully') {
         dispatch(openModal({ type: 'user-onboarding', closable: true }))
       }
-      if (!res.data.data.user.verified) {
-        dispatch(openModal({ type: 'user-onboarding', closable: true }))
-      }
       const { err: error, res: response } = await getMyProfileDetail()
       if (router.pathname === '/') {
         if (response?.data?.data?.user?.is_onboarded) {
@@ -340,9 +337,6 @@ const AuthForm: React.FC<Props> = (props) => {
       }
 
       if (res?.data?.message === 'User registered successfully') {
-        dispatch(openModal({ type: 'user-onboarding', closable: true }))
-      }
-      if (!res.data.data.user.verified) {
         dispatch(openModal({ type: 'user-onboarding', closable: true }))
       }
 
