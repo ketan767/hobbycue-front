@@ -3,28 +3,28 @@
   "name": "HobbyCue",
   "icons": [
     {
-      "src": "logo-welcome-small.svg",
+      "src": "maskable.png",
       "sizes": "3125x3125",
       "type": "image/png",
       "purpose": " maskable"
     },
     {
-      "src": "logo-welcome-small.svg",
+      "src": "logo192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "logo-welcome-small.svg",
+      "src": "logo256.png",
       "type": "image/png",
       "sizes": "256x256"
     },
     {
-      "src": "logo-welcome-small.svg",
+      "src": "logo384.png",
       "type": "image/png",
       "sizes": "384x384"
     },
     {
-      "src": "logo-welcome-small.svg",
+      "src": "logo512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
