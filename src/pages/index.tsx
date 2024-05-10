@@ -4,6 +4,7 @@ import landingIllustration from '@/assets/svg/landing-illustration.svg'
 import Microphone from '@/assets/svg/microphone.svg'
 import PlayIcon from '@/assets/svg/pause-icon.svg'
 import PauseIcon from '@/assets/svg/play_arrow.svg'
+import hobbycueLogo from '@/assets/image/logo-small.png'
 import AuthForm from '@/components/AuthForm/AuthForm'
 import Footer from '@/components/Footer/Footer'
 import FilledButton from '@/components/_buttons/FilledButton'
@@ -158,6 +159,7 @@ const Home: React.FC<PropTypes> = function () {
         <meta property="og:image" content="/logo-small.png" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/logo-small.png" />
+        <meta property="og:url" content={process.env.NEXT_PUBLIC_BASE_URL} />
       </Head>
       {/** Landing Container **/}
       {/* <DownloadInMobile/> */}
