@@ -4,6 +4,7 @@ import landingIllustration from '@/assets/svg/landing-illustration.svg'
 import Microphone from '@/assets/svg/microphone.svg'
 import PlayIcon from '@/assets/svg/pause-icon.svg'
 import PauseIcon from '@/assets/svg/play_arrow.svg'
+import hobbycueLogo from '@/assets/image/logo-small.png'
 import AuthForm from '@/components/AuthForm/AuthForm'
 import Footer from '@/components/Footer/Footer'
 import FilledButton from '@/components/_buttons/FilledButton'
@@ -146,9 +147,11 @@ const Home: React.FC<PropTypes> = function () {
           content="hobbycue – explore your hobby or passion Sign-in to interact with a community of fellow hobbyists and an eco-system of experts, teachers, suppliers, classes, workshops, and places to practice, participate or perform. Your hobby may be about visual or performing arts, sports, games, gardening, model making, cooking, indoor or outdoor activities… If you are an expert […]"
         />
         <link rel="manifest" href="/manifest.json"></link>
-        <meta property="og:image" content="/logo-small.png" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/logo-small.png" />
+        <meta property="og:image" content="/hobbycue-small-logo.jpg" />
+        <meta property="og:image:width" content="478" />
+        <meta property="og:image:height" content="477" />
+        <meta property="og:image:type" content="image/png" />
       </Head>
       {/** Landing Container **/}
       {/* <DownloadInMobile/> */}
