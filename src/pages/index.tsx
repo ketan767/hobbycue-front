@@ -148,7 +148,10 @@ const Home: React.FC<PropTypes> = function () {
         />
         <link rel="manifest" href="/manifest.json"></link>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/logo-small.ico" />
+        <meta property="og:image" content="/hobbycue-small-logo.jpg" />
+        <meta property="og:image:width" content="478" />
+        <meta property="og:image:height" content="477" />
+        <meta property="og:image:type" content="image/png" />
       </Head>
       {/** Landing Container **/}
       {/* <DownloadInMobile/> */}
