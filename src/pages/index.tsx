@@ -158,7 +158,7 @@ const Home: React.FC<PropTypes> = function () {
         />
         <meta property="og:image" content="/logo-small.png" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" type="image/png" href="/logo-small.png" />
+        <link rel="icon" href="/logo-welcome-small.ico" />
       </Head>
       {/** Landing Container **/}
       {/* <DownloadInMobile/> */}
