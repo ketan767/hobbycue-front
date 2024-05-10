@@ -583,3 +583,19 @@ border: 1px solid #8064a2 !important;
     margin-bottom: 65vh;
 }
 }
+
+.font-italic{
+  font-style: italic;
+}
+
+.font-medium{
+  font-weight: 500;
+}
+
+.font-semibold{
+  font-weight: 600;
+}
+
+.font-bold{
+  font-weight: 700;
+}

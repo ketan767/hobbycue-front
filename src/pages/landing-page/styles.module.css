@@ -1,0 +1,29 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    background: #f4f4f4;
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.container p{
+    color: #242429;
+    font-size: 14px;
+    line-height: 26px;
+    margin: 0 0 10px;
+}
+
+.container h1, .container h2, .container h3, .container h4{
+    margin-top: 20px;
+    margin-bottom: 10px;
+    line-height: 1.25;
+    font-weight: 600;
+    color: #242429;
+    font-size: 24px;
+}
+
+.container a:hover{
+    color: #8064a2;
+}
