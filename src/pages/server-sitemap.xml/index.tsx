@@ -11,7 +11,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { res: pagesRes, err: pagesErr } = await getAllListingUrls()
 
   const { res: hobbyRes, err: hobbyErr } = await getAllHobbiesUrls()
-  
+
   if (userErr || pagesErr) {
     console.error('Error fetching user or pages URLs:', userErr || pagesErr)
     return {
@@ -21,23 +21,23 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const usersData: any[] = userRes?.data?.data || []
   const pagesData: any[] = pagesRes?.data?.data || []
-  const hobyData: any[] = hobbyRes?.data?.data || [];
-  console.log('urls',hobyData)
+  const hobyData: any[] = hobbyRes?.data?.data || []
+  console.log('urls', hobyData)
 
   const users: ISitemapField[] = usersData.map((user) => ({
     loc: `${baseUrl}/profile/${encodeURIComponent(user.profile_url)}`,
     lastmod: new Date().toISOString(),
-  }));
+  }))
 
   const pages: ISitemapField[] = pagesData.map((page) => ({
     loc: `${baseUrl}/pages/${encodeURIComponent(page.page_url)}`,
     lastmod: new Date().toISOString(),
-  }));
-  
+  }))
+
   const hobby: ISitemapField[] = hobyData.map((page) => ({
     loc: `${baseUrl}/hobby/${encodeURIComponent(page.page_url)}`,
     lastmod: new Date().toISOString(),
-  }));
+  }))
 
   const allOtherPagesData = [
     {
@@ -134,23 +134,28 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     },
     {
       lastmod: new Date().toISOString(),
-      loc: 'https://blog.hobbycue.com/faq',
-      name: `https://blog.hobbycue.com/faq`,
+      loc: 'https://hobbycue.com/faq',
+      name: `https://hobbycue.com/faq`,
     },
     {
       lastmod: new Date().toISOString(),
-      loc: 'https://blog.hobbycue.com/about',
-      name: `https://blog.hobbycue.com/about`,
+      loc: 'https://hobbycue.com/about',
+      name: `https://hobbycue.com/about`,
     },
     {
       lastmod: new Date().toISOString(),
-      loc: 'https://blog.hobbycue.com/services',
-      name: `https://blog.hobbycue.com/services`,
+      loc: 'https://hobbycue.com/services',
+      name: `https://hobbycue.com/services`,
     },
     {
       lastmod: new Date().toISOString(),
-      loc: 'https://blog.hobbycue.com/work',
-      name: `https://blog.hobbycue.com/work`,
+      loc: 'https://hobbycue.com/work',
+      name: `https://hobbycue.com/work`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://hobbycue.com/landing-page',
+      name: `https://hobbycue.com/landing-page`,
     },
     {
       lastmod: new Date().toISOString(),
@@ -159,13 +164,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     },
     {
       lastmod: new Date().toISOString(),
-      loc: 'https://blog.hobbycue.com/how-to',
-      name: `https://blog.hobbycue.com/how-to`,
+      loc: 'https://hobbycue.com/how-to',
+      name: `https://hobbycue.com/how-to`,
     },
     {
       lastmod: new Date().toISOString(),
-      loc: 'https://blog.hobbycue.com/team',
-      name: `https://blog.hobbycue.com/team`,
+      loc: 'https://hobbycue.com/team',
+      name: `https://hobbycue.com/team`,
     },
     {
       lastmod: new Date().toISOString(),
@@ -174,8 +179,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     },
     {
       lastmod: new Date().toISOString(),
-      loc: 'https://blog.hobbycue.com/intern',
-      name: `https://blog.hobbycue.com/intern`,
+      loc: 'https://hobbycue.com/intern',
+      name: `https://hobbycue.com/intern`,
     },
     {
       lastmod: new Date().toISOString(),
@@ -207,7 +212,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       loc: 'https://blog.hobbycue.com/releases/',
       name: `https://blog.hobbycue.com/releases/`,
     },
-  ];
+  ]
 
   const allBlogsData = [
     // Add links in the required format
@@ -426,17 +431,21 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       loc: 'https://blog.hobbycue.com/blog/balance-in-life-for-holistic-wellness-development/',
       name: `https://blog.hobbycue.com/blog/balance-in-life-for-holistic-wellness-development/`,
     },
-  ];
-  
-  const allUrls: ISitemapField[] = [...allOtherPagesData, ...allBlogsData, ...users, ...pages, ...hobby,]
+  ]
 
+  const allUrls: ISitemapField[] = [
+    ...allOtherPagesData,
+    ...allBlogsData,
+    ...users,
+    ...pages,
+    ...hobby,
+  ]
 
   const sitemapJSON = allUrls.map((item) => ({
     loc: item.loc,
     lastmod: item.lastmod,
   }))
 
-  
   const sitemap = generateSiteMap(sitemapJSON)
 
   ctx.res.setHeader('Content-Type', 'text/xml')
@@ -454,7 +463,7 @@ const generateSiteMap = (data: any) => {
     posts.push(data[i])
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
   return `<?xml version="1.0" encoding="UTF-8"?>
   <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
@@ -464,7 +473,9 @@ const generateSiteMap = (data: any) => {
       posts &&
       posts
         .map((item) => {
-          return `<url><loc>${item?.loc}</loc><lastmod>${item?.lastmod}</lastmod></url>`}).join('')
+          return `<url><loc>${item?.loc}</loc><lastmod>${item?.lastmod}</lastmod></url>`
+        })
+        .join('')
     }
   </urlset>
   `
