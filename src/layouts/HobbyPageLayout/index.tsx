@@ -40,6 +40,7 @@ const HobbyPageLayout: React.FC<Props> = ({
   expandAll,
   setExpandAll,
 }) => {
+  console.warn({tags:data.tags})
   const dispatch = useDispatch()
   const { hobbyStates, membersStates } = useSelector((state: RootState) => state.site)
   const [showSmallHeader, setShowSmallHeader] = useState(false)
@@ -177,19 +178,19 @@ const HobbyPageLayout: React.FC<Props> = ({
               }`}
             >
               <ul className={styles['classification-items']}>
-                <Link href={`/hobby/${data?.category?.slug}`}>
+                {data?.category?.slug&&<Link href={`/hobby/${data?.category?.slug}`}>
                   <li>{data?.category?.display}</li>
-                </Link>
-                <Link href={`/hobby/${data?.sub_category?.slug}`}>
+                </Link>}
+               {data?.sub_category?.slug&&<Link href={`/hobby/${data?.sub_category?.slug}`}>
                   <li>{data?.sub_category?.display}</li>
-                </Link>
+                </Link>}
                 {data?.tags &&
                   data?.tags.map((tag: any, idx: number) => {
-                    return (
+                    return tag.slug? (
                       <Link key={idx} href={`/hobby/${tag?.slug}`}>
                         <li>{tag.display}</li>
                       </Link>
-                    )
+                    ):null
                   })}
                 <li className={styles['active']}>
                   <p>{data?.display}</p>

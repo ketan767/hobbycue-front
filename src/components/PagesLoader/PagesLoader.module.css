@@ -1,0 +1,22 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: 8px;
+    border: 1px solid var(--Grey-Lighter, #EBEDF0);
+    background: var(--Base-White, #FFF);
+}
+
+.box {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    height: 180px;
+    background: var(--Purple-3, #F7F5F9);
+    width: 100%;
+}
+
+@media screen and (max-width:1100px) {
+    .box {
+        width: 100%;
+    }
+}

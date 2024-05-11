@@ -1,0 +1,125 @@
+.container{
+    background: #f4f4f4;
+    min-height: 100vh;
+    padding: 60px 0;
+    display: flex;
+    width: 100%;
+    justify-items: center;
+    align-items: flex-start;
+}
+
+.dataSection{
+    padding: 0 15px;
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.about{
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 25px;
+    border: 1px solid #ebebeb;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    max-width: 800px;
+}
+
+.about h1{
+    line-height: 1.25;
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #242429;
+    font-size: 36px;
+}
+
+.about p{
+    font-size: 14px;
+    color: #565d62;
+    font-family: 'Rubik', 'Poppins', sans-serif;
+    margin: 10px 0;
+    line-height: 26px;
+}
+
+.about a:hover{
+    color:#8064a2;
+}
+
+.about img{
+    width: 400px;
+    margin: 20px 0;
+}
+
+.allPosts{
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    padding: 4px 15px;
+}
+
+.allPosts h2{
+    font-weight: 600;
+    color: #242429;
+    padding-bottom: 5px;
+    letter-spacing: 0;
+    font-size: 14px;
+    float: left;
+    line-height: 20px;
+}
+
+.mt40{
+    margin-top: 40px;
+}
+
+.allPosts a{
+    font-size: 14px;
+    color: #3f4245;
+    font-family: 'Rubik', 'Poppins', sans-serif;
+    margin: 2px 0;
+}
+
+.allPosts a:hover{
+    color:#8064a2;
+}
+
+.myLinks{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-top: 60px;
+}
+
+.myLinks a{
+    color: #242429;
+    font-size: 14px;
+    font-weight: 600;
+    -webkit-transition: .2s ease;
+    transition: .2s ease;
+}
+
+@media screen and (max-width:1100px) {
+    .dataSection{
+        flex-direction: column;
+        width: 100%;
+    }
+    .about{
+        width: 100%;
+    }
+    .about img{
+        width: 100%;
+    }
+    .allPosts{
+        width: 100%;
+    }
+
+    .myLinks{
+        margin-top: 10px;
+    }
+}

@@ -19,6 +19,7 @@ import PostCard from '@/components/PostCard/PostCard'
 import { openModal } from '@/redux/slices/modal'
 import { updateHobbyMenuExpandAll } from '@/redux/slices/site'
 import { useMediaQuery } from '@mui/material'
+import LinksLoader from '@/components/LinksLoader/LinksLoader'
 
 type Props = { data: { hobbyData: any } }
 
@@ -118,9 +119,10 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
           <section className={styles['links-container']}>
             {loadingPosts ? (
               <>
-                <PostCardSkeletonLoading />
-                <PostCardSkeletonLoading />
-                <PostCardSkeletonLoading />
+                <LinksLoader/>
+                <LinksLoader/>
+                <LinksLoader/>
+                <LinksLoader/>
               </>
             ) : (
               posts.length === 0 &&

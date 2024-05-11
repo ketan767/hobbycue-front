@@ -56,6 +56,7 @@ interface SearchState {
   showAllProducts:boolean;
   showAllHobbies:boolean;
   explore:boolean;
+  loading:boolean;
 }
 
 const initialState: SearchState = {
@@ -94,7 +95,8 @@ const initialState: SearchState = {
   showAllEvent: false,
   showAllProducts: false,
   showAllHobbies:false,
-  explore:false
+  explore:false,
+  loading:false
 };
 
 export const searchSlice = createSlice({
@@ -279,6 +281,9 @@ export const searchSlice = createSlice({
     setExplore:(state,{payload}:{payload:boolean})=>{
       state.explore = payload
     },
+    setSearchLoading:(state,{payload}:{payload:boolean})=>{
+      state.loading = payload
+    },
     resetSearch:()=>{
       return initialState
     }
@@ -287,7 +292,7 @@ export const searchSlice = createSlice({
 
 export const { setUserSearchResults, setTypeResultOne,setTypeResultTwo, setTypeResultThree, setSearchString,
    setHobbiesSearchResult,toggleShowAll, toggleShowAllUsers, toggleShowAllPeople, toggleShowAllPlace, toggleShowAllEvent,toggleShowAllProducts,
-  showAllEventTrue,showAllPeopleTrue,showAllPlaceTrue,showAllUsersTrue,showAllProductsTrue, showAllTrue, toggleShowAllHobbies, resetSearch, setExplore
+  showAllEventTrue,showAllPeopleTrue,showAllPlaceTrue,showAllUsersTrue,showAllProductsTrue, showAllTrue, toggleShowAllHobbies, resetSearch, setExplore, setSearchLoading
   } = searchSlice.actions;
 
 export default searchSlice.reducer;

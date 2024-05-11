@@ -126,23 +126,28 @@ export const getServerSideProps: GetServerSideProps = async () => {
     },
     {
       lastmod: new Date().toISOString(),
-      loc: 'https://blog.hobbycue.com/faq',
-      name: `https://blog.hobbycue.com/faq`,
+      loc: 'https://hobbycue.com/faq',
+      name: `https://hobbycue.com/faq`,
     },
     {
       lastmod: new Date().toISOString(),
-      loc: 'https://blog.hobbycue.com/about',
-      name: `https://blog.hobbycue.com/about`,
+      loc: 'https://hobbycue.com/about',
+      name: `https://hobbycue.com/about`,
     },
     {
       lastmod: new Date().toISOString(),
-      loc: 'https://blog.hobbycue.com/services',
-      name: `https://blog.hobbycue.com/services`,
+      loc: 'https://hobbycue.com/services',
+      name: `https://hobbycue.com/services`,
     },
     {
       lastmod: new Date().toISOString(),
-      loc: 'https://blog.hobbycue.com/work',
-      name: `https://blog.hobbycue.com/work`,
+      loc: 'https://hobbycue.com/work',
+      name: `https://hobbycue.com/work`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://hobbycue.com/landing-page',
+      name: `https://hobbycue.com/landing-page`,
     },
     {
       lastmod: new Date().toISOString(),
@@ -156,8 +161,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
     },
     {
       lastmod: new Date().toISOString(),
-      loc: 'https://blog.hobbycue.com/team',
-      name: `https://blog.hobbycue.com/team`,
+      loc: 'https://hobbycue.com/team',
+      name: `https://hobbycue.com/team`,
     },
     {
       lastmod: new Date().toISOString(),

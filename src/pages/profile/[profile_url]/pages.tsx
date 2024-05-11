@@ -22,7 +22,6 @@ import ProfileContactSide from '@/components/ProfilePage/ProfileContactSides'
 import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/ProfileSocialMedia'
 import { updateProfileMenuExpandAll } from '@/redux/slices/site'
 import { useRouter } from 'next/router'
-import ErrorPage from '@/components/ErrorPage'
 
 interface Props {
   data: ProfilePageData

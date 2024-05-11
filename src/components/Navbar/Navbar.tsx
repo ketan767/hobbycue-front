@@ -24,6 +24,7 @@ import {
   showAllTrue,
   resetSearch,
   setExplore,
+  setSearchLoading,
 } from '@/redux/slices/search'
 import LogoFull from '@/assets/image/logo-full.svg'
 import LogoSmall from '@/assets/image/logo-small.png'
@@ -189,6 +190,7 @@ export const Navbar: React.FC<Props> = ({}) => {
     }
 
     try {
+      dispatch(setSearchLoading(true))
       const { res: userRes, err: userErr } = await searchUsers({
         full_name: searchValue,
       })
@@ -214,6 +216,7 @@ export const Navbar: React.FC<Props> = ({}) => {
 
       if (titleErr) {
         console.error('An error occurred during the title search:', titleErr)
+        dispatch(setSearchLoading(false))
         return
       }
 
@@ -312,10 +315,13 @@ export const Navbar: React.FC<Props> = ({}) => {
           }),
         )
       }
+      
+      dispatch(setSearchLoading(false))
       dispatch(setShowPageLoader(false))
       dispatch(setSearchString(searchValue))
       dispatch(showAllTrue())
     } catch (error) {
+      dispatch(setSearchLoading(false))
       dispatch(setShowPageLoader(false))
       console.error('An error occurred during the combined search:', error)
     }

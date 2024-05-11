@@ -14,6 +14,7 @@ import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
 import { getListingPages } from '@/services/listing.service'
 import ListingCard from '@/components/ListingCard/ListingCard'
+import PagesLoader from '@/components/PagesLoader/PagesLoader'
 
 type Props = {}
 
@@ -71,9 +72,10 @@ const CommunityPages: React.FC<Props> = ({}) => {
         <section className={styles['pages-container']}>
           {pagesLoading ? (
             <>
-              <PostCardSkeletonLoading />
-              <PostCardSkeletonLoading />
-              <PostCardSkeletonLoading />
+              <PagesLoader/>
+              <PagesLoader/>
+              <PagesLoader/>
+              <PagesLoader/>
             </>
           ) : allPages?.length === 0 ? (
             <>

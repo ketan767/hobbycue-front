@@ -6,8 +6,8 @@ import store, { RootState } from '@/redux/store'
 import { getAllPosts } from '@/services/post.service'
 import { updateLoading, updatePosts } from '@/redux/slices/post'
 import PostCard from '@/components/PostCard/PostCard'
-import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
+import LinksLoader from '@/components/LinksLoader/LinksLoader'
 
 type Props = {}
 
@@ -91,9 +91,10 @@ const CommunityLinks: React.FC<Props> = ({}) => {
         <section className={styles['pages-container']}>
           {loading ? (
             <>
-              <PostCardSkeletonLoading />
-              <PostCardSkeletonLoading />
-              <PostCardSkeletonLoading />
+              <LinksLoader/>
+              <LinksLoader/>
+              <LinksLoader/>
+              <LinksLoader/>
             </>
           ) : posts?.length > 0 ? (
             posts.map((post: any) => {

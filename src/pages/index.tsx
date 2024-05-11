@@ -4,6 +4,7 @@ import landingIllustration from '@/assets/svg/landing-illustration.svg'
 import Microphone from '@/assets/svg/microphone.svg'
 import PlayIcon from '@/assets/svg/pause-icon.svg'
 import PauseIcon from '@/assets/svg/play_arrow.svg'
+import hobbycueLogo from '@/assets/image/logo-small.png'
 import AuthForm from '@/components/AuthForm/AuthForm'
 import Footer from '@/components/Footer/Footer'
 import FilledButton from '@/components/_buttons/FilledButton'
@@ -147,7 +148,10 @@ const Home: React.FC<PropTypes> = function () {
         />
         <link rel="manifest" href="/manifest.json"></link>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <meta property="og:image" content="/hobbycue-small-logo.jpg" />
+        <meta property="og:image:width" content="478" />
+        <meta property="og:image:height" content="477" />
+        <meta property="og:image:type" content="image/png" />
       </Head>
       {/** Landing Container **/}
       {/* <DownloadInMobile/> */}
@@ -463,13 +467,13 @@ const Home: React.FC<PropTypes> = function () {
       <section className={`site-container ${styles['site-container-footer']}`}>
         <Footer />
       </section>
-      {/* removing temporalily for go live */}
-      {/* {showAddToHome === true && (
+
+      {showAddToHome === true && (
         <InstallPopup
           showAddToHome={showAddToHome}
           setShowAddToHome={setShowAddToHome}
         />
-      )} */}
+      )}
     </>
   )
 }

@@ -18,6 +18,7 @@ import EditIcon from '@/assets/svg/edit-icon.svg'
 import { uploadImage } from '@/services/post.service'
 import ReactPlayer from 'react-player'
 import { useMediaQuery } from '@mui/material'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -26,7 +27,11 @@ interface Props {
 const ListingMediaTab: React.FC<Props> = ({ data }) => {
   const dispatch = useDispatch()
   const inputRef = useRef<HTMLInputElement>(null)
-
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
   const [pagesData, setPagesData] = useState([])
   const { listingLayoutMode, listingModalData } = useSelector(
     (state: RootState) => state.site,
@@ -75,6 +80,19 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
   }
 
   const handleImageUpload = async (image: any, isVideo: boolean) => {
+    // const fileTobeUploaded = image
+    // if (fileTobeUploaded) {
+    //   const fileSize = fileTobeUploaded.size
+    //   const fileSizeKB = fileSize / 1024
+    //   if (fileSizeKB > 2048) {
+    //     setSnackbar({
+    //       display: true,
+    //       type: 'warning',
+    //       message: 'Image size should not be greater than 2MB',
+    //     })
+    //     return
+    //   }
+    // }
     const formData = new FormData()
     formData.append('post', image)
     console.log('formData', formData)
@@ -276,6 +294,16 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
         {/* </PageContentBox> */}
 
         {/* User Information */}
+        {
+        <CustomSnackbar
+          message={snackbar.message}
+          triggerOpen={snackbar.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
       </main>
     </>
   )
