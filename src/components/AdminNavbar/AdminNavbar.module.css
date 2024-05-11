@@ -1,0 +1,18 @@
+.container{
+    width: 72px;
+height: 100vh;
+position: fixed;
+left: 0;
+padding: 28px 16px;
+border-right: 1px solid var(--Grey-Lighter, #EBEDF0);
+background: var(--background-white, #FFF);
+z-index: 100;
+}
+
+.navlist{
+    display: flex;
+flex-direction: column;
+align-items: flex-start;
+gap: 12px;
+align-self: stretch;
+}

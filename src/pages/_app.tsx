@@ -65,18 +65,6 @@ function App({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <title>HobbyCue - Your Hobby, Your Community</title>
-        <meta
-          property="og:title"
-          content="HobbyCue - Your Hobby, Your Community"
-        />
-        <meta
-          property="og:description"
-          content="hobbycue – explore your hobby or passion Sign-in to interact with a community of fellow hobbyists and an eco-system of experts, teachers, suppliers, classes, workshops, and places to practice, participate or perform. Your hobby may be about visual or performing arts, sports, games, gardening, model making, cooking, indoor or outdoor activities… If you are an expert […]"
-        />
-        <meta property="og:image" content="/hobbycue-small-logo.jpg" />
-        <meta property="og:image:width" content="478" />
-        <meta property="og:image:height" content="477" />
-        <meta property="og:image:type" content="image/png" />
       </Head>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
