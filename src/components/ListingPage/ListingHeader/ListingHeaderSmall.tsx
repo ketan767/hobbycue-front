@@ -79,6 +79,19 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
     let files = e.target.files
 
     if (files.length === 0) return
+    // const fileTobeUploaded = files[0]
+    // if (fileTobeUploaded) {
+    //   const fileSize = fileTobeUploaded.size
+    //   const fileSizeKB = fileSize / 1024
+    //   if (fileSizeKB > 2048) {
+    //     setSnackbar({
+    //       display: true,
+    //       type: 'warning',
+    //       message: 'Image size should not be greater than 2MB',
+    //     })
+    //     return
+    //   }
+    // }
     console.log('data', data?.pageData)
     const reader = new FileReader()
     reader.onload = () => {

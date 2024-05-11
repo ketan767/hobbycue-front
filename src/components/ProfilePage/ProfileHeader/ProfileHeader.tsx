@@ -152,8 +152,20 @@ const ProfileHeader: React.FC<Props> = ({
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
     e.preventDefault()
     let files = e.target.files
-
     if (files.length === 0) return
+    // const fileTobeUploaded = files[0]
+    // if (fileTobeUploaded) {
+    //   const fileSize = fileTobeUploaded.size
+    //   const fileSizeKB = fileSize / 1024
+    //   if (fileSizeKB > 2048) {
+    //     setSnackbar({
+    //       display: true,
+    //       type: 'warning',
+    //       message: 'Image size should not be greater than 2MB',
+    //     })
+    //     return
+    //   }
+    // }
 
     const reader = new FileReader()
     reader.onload = () => {

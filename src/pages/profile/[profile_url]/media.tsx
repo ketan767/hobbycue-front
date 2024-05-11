@@ -27,6 +27,7 @@ import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/
 import { updateProfileMenuExpandAll } from '@/redux/slices/site'
 import ErrorPage from '@/components/ErrorPage'
 import { useMediaQuery } from '@mui/material'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 interface Props {
   data: ProfilePageData['pageData']
@@ -42,6 +43,11 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
   const { profile } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(profile)
   const inputRef = useRef<HTMLInputElement>(null)
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
   const dispatch = useDispatch()
 
   const getPost = async () => {
@@ -87,6 +93,19 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
   }
 
   const handleImageUpload = async (image: any, isVideo: boolean) => {
+    const fileTobeUploaded = image;
+    if (fileTobeUploaded) {
+      const fileSize = fileTobeUploaded.size
+      const fileSizeKB = fileSize / 1024
+      if (fileSizeKB > 2048) {
+        setSnackbar({
+          display: true,
+          type: 'warning',
+          message: 'Image size should not be greater than 2MB',
+        })
+        return
+      }
+    }
     const formData = new FormData()
     formData.append('post', image)
     console.log('formData', formData)
@@ -287,6 +306,16 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
           </div>
         </PageGridLayout>
       </ProfileLayout>
+      {
+        <CustomSnackbar
+          message={snackbar.message}
+          triggerOpen={snackbar.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

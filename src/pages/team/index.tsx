@@ -73,6 +73,15 @@ export default function index() {
                 <Link target="_blank" href={"https://blog.hobbycue.com/blog/plan-your-travel-and-tours-on-your-own/"}>Plan your travel and tours on your own…</Link>
                 <Link target="_blank" href={"https://blog.hobbycue.com/blog/ponniyin-selvan-characters/"}>Ponniyin Selvan main characters (and movie cast)</Link>
                 <Link target="_blank" href={"https://blog.hobbycue.com/blog/balance-in-life-for-holistic-wellness-development/"}>Balance in Life for Holistic Wellness & Development</Link>
+                <div className={styles.myLinks}>
+                    <Link target="_blank" href={"https://blog.hobbycue.com/dashboard/"}>Home</Link>
+                    <Link target="_blank" href={"https://blog.hobbycue.com/members/me/profile/edit"}>My Profile</Link>
+                    <Link target="_blank" href={"https://blog.hobbycue.com/community/"}>My Community</Link>
+                    <Link target="_blank" href={"https://blog.hobbycue.com/my-account/my-listings/"}>My Listings</Link>
+                    <Link target="_blank" href={"https://blog.hobbycue.com/my-account/edit-account"}>My Account</Link>
+                    <Link target="_blank" href={"https://blog.hobbycue.com/wp-admin/edit.php"}>My Blog Posts</Link>
+                    <Link target="_blank" href={"https://blog.hobbycue.com/shop/"}>Store</Link>
+                </div>
             </div>
         </div>
     </div>
