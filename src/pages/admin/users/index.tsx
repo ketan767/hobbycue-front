@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
-import { searchUsers } from './../../../services/user.service'
+import { searchUsers } from '../../../services/user.service'
 import styles from './styles.module.css'
 import Image from 'next/image'
 import DefaultProfile from '@/assets/svg/default-images/default-user-icon.svg'
@@ -26,6 +26,7 @@ type UserProps = {
   email: string
   last_loggedIn_via: string
   is_password: string
+  profile_url: string
 }
 type SearchInput = {
   search: InputData<string>
@@ -155,12 +156,9 @@ const AdminDashboard: React.FC = () => {
   const pagesLength = (user: any) => {
     return user?._listings?.length || 0
   }
-
-  // useEffect(()=>{
-  //   if(!user.is_admin){
-  //     router.replace("/admin")
-  //   }
-  // },[user,router])
+  const handleEdit = (profile_url: any) => {
+    router.push(`/admin/users/edit/${profile_url}`)
+  }
 
   return (
     <>
@@ -191,7 +189,13 @@ const AdminDashboard: React.FC = () => {
                 <th style={{ width: '19.48%' }}>Email</th>
                 <th style={{ width: '13.87%' }}>Phone Number</th>
                 <th style={{ width: '9.163%' }}>Login Mode</th>
-                <th style={{ width: '16.54%', paddingRight: '16px', textAlign:"center" }}>
+                <th
+                  style={{
+                    width: '16.54%',
+                    paddingRight: '16px',
+                    textAlign: 'center',
+                  }}
+                >
                   Last Login
                 </th>
                 <th style={{ width: '6.939%', paddingRight: '16px' }}>Pages</th>
@@ -252,13 +256,17 @@ const AdminDashboard: React.FC = () => {
                       : ''}
                   </td>
                   <td className={styles.lastLoggedIn}>
-                        {user?.last_loggedIn_via}
+                    {user?.last_loggedIn_via}
                   </td>
                   <td className={styles.pagesLength}>{pagesLength(user)}</td>
-                  <td className={styles.pagesLength}>{/* posts not in logs */}0</td>
+                  <td className={styles.pagesLength}>
+                    {/* posts not in logs */}0
+                  </td>
                   <td>
                     <div className={styles.actions}>
-                      {pencilSvg}
+                      <div onClick={() => handleEdit(user.profile_url)}>
+                        {pencilSvg}
+                      </div>
                       {deleteSvg}
                     </div>
                   </td>
