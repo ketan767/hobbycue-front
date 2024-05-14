@@ -85,7 +85,7 @@ const ListingReviews: React.FC<Props> = (props) => {
           activeTab={'reviews'}
         >
           <div className={styles['display-desktop']}>
-            <ListingReviewsTab />
+            <ListingReviewsTab pageData={props?.data?.pageData} />
           </div>
         </ListingPageMain>
       </ListingPageLayout>
