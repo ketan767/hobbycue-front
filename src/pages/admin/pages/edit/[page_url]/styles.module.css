@@ -1,0 +1,51 @@
+.mainWrapper {
+    padding: 30px;
+  }
+  .inputbox {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+  }
+  
+  .inputbox label {
+    font-size: 14px;
+    font-family: 'Poppins';
+  }
+  
+  .inputbox input {
+    max-width: 500px;
+  }
+  
+  .inputbox textarea {
+    max-width: 500px;
+    height: 400px;
+  }
+  
+  .inputbox select {
+    max-width: 100px;
+  }
+  
+  .prefix {
+    max-width: 50px !important;
+  }
+  .longInputContainer {
+    padding: 20px;
+  }
+  .longInputContainer input {
+    display: flex;
+    flex-direction: column;
+    width: 700px;
+   
+  }
+  
+  .twoColumnGrid {
+    display: flex;
+    flex-direction: row;
+    padding:  10px 20px 20px 20px;
+  }
+  
+  .Addressinputbox{
+    display: flex;
+    flex-direction: column;
+    padding:  10px 20px 20px 0;
+  }

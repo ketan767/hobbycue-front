@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { getAllUserDetail } from '@/services/user.service'
 import styles from './styles.module.css'
+import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 const EditUserPage: React.FC = () => {
   const router = useRouter()
   const { profile_url } = router.query
@@ -28,6 +29,8 @@ const EditUserPage: React.FC = () => {
   }
 
   return (
+    <AdminLayout>
+
     <div className={styles.mainWrapper}>
       <h1>Edit User: {user?.full_name}</h1>
       <form>
@@ -248,6 +251,7 @@ const EditUserPage: React.FC = () => {
         <button type="submit">Save Changes</button>
       </form>
     </div>
+    </AdminLayout>
   )
 }
 

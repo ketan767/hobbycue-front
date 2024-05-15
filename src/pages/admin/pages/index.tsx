@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
-import { searchUsers } from '../../../services/user.service'
 import styles from './styles.module.css'
 import Image from 'next/image'
 import DefaultProfile from '@/assets/svg/default-images/default-user-icon.svg'
@@ -14,9 +13,14 @@ import {
 import { RootState } from '@/redux/store'
 import AdminNavbar from '@/components/AdminNavbar/AdminNavbar'
 import Link from 'next/link'
+import { searchPages } from '@/services/listing.service'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 
-type UserProps = {
+type PagesProps = {
+  type: string
+  title: string
+  public_email: string
+  page_url: string
   profile_image: string
   full_name: string
   tagline: string
@@ -41,7 +45,7 @@ const AdminDashboard: React.FC = () => {
     search: { value: '', error: null },
   })
   const [email, setEmail] = useState('')
-  const [searchResults, setSearchResults] = useState<UserProps[]>([])
+  const [searchResults, setSearchResults] = useState<PagesProps[]>([])
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
@@ -52,10 +56,10 @@ const AdminDashboard: React.FC = () => {
     const searchValue = data.search.value.trim()
     event.preventDefault()
     let searchCriteria = {
-      full_name: searchValue,
+      title: searchValue,
     }
 
-    const { res, err } = await searchUsers(searchCriteria)
+    const { res, err } = await searchPages(searchCriteria)
     if (err) {
       console.log('An error', err)
     } else {
@@ -157,133 +161,112 @@ const AdminDashboard: React.FC = () => {
   const pagesLength = (user: any) => {
     return user?._listings?.length || 0
   }
-  const handleEdit = (profile_url: any) => {
-    router.push(`/admin/users/edit/${profile_url}`)
+  const handleEdit = (page_url: any) => {
+    router.push(`/admin/pages/edit/${page_url}`)
   }
 
   return (
     <>
       <AdminLayout>
-        <div className={styles.searchContainer}>
-          {/* <div className={styles.admintitle}>Admin Search</div> */}
-          <div className={styles.searchAndFilter}>
-            <form onSubmit={handleSearch} className={styles.searchForm}>
-              <input
-                type="text"
-                value={data.search.value}
-                onChange={handleInputChange}
-                placeholder="Search users..."
-                className={styles.searchInput}
-              />
-              <button type="submit" className={styles.searchButton}>
-                {searchSvg}
-              </button>
-            </form>
-            <button className={styles.filterBtn}>{filterSvg}</button>
-          </div>
-
-          <div className={styles.resultsContainer}>
-            <table className={styles.resultsTable}>
-              <thead>
-                <tr>
-                  <th style={{ width: '18.06%' }}>User</th>
-                  <th style={{ width: '19.48%' }}>Email</th>
-                  <th style={{ width: '13.87%' }}>Phone Number</th>
-                  <th style={{ width: '9.163%' }}>Login Mode</th>
-                  <th
-                    style={{
-                      width: '16.54%',
-                      paddingRight: '16px',
-                      textAlign: 'center',
-                    }}
-                  >
-                    Last Login
-                  </th>
-                  <th style={{ width: '6.939%', paddingRight: '16px' }}>
-                    Pages
-                  </th>
-                  <th style={{ width: '6.672%', paddingRight: '16px' }}>
-                    Posts
-                  </th>
-                  <th style={{ width: '9.252%', paddingRight: '16px' }}>
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {searchResults.map((user, index) => (
-                  <tr key={index}>
-                    <td>
-                      <div className={styles.resultItem}>
-                        <div className={styles.avatarContainer}>
-                          {user.profile_image ? (
-                            <img
-                              src={user.profile_image}
-                              alt={`${user.full_name}'s profile`}
-                              width={40}
-                              height={40}
-                              className={styles.avatarImage}
-                            />
-                          ) : (
-                            <Image
-                              className={styles['img']}
-                              src={DefaultProfile}
-                              alt="profile"
-                              width={40}
-                              height={40}
-                            />
-                          )}
-                        </div>
-                        <div className={styles.detailsContainer}>
-                          <div className={styles.userName}>
-                            {user?.full_name}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className={styles.userEmail}>
-                      <Link href={`mailto:${user.email}`}>{user.email}</Link>
-                    </td>
-                    <td className={styles.userPhone}>{fullNumber(user)}</td>
-                    <td className={styles.LoginType}>
-                      {user.facebook.id && user.google.id && user.is_password
-                        ? 'Facebook | Google | Mail'
-                        : user.facebook.id && user.google.id
-                        ? 'Facebook and Google'
-                        : user.facebook.id && user.is_password
-                        ? 'Facebook | Mail'
-                        : user.google.id && user.is_password
-                        ? 'Google | Mail'
-                        : user.facebook.id
-                        ? 'Facebook'
-                        : user.google.id
-                        ? 'Google'
-                        : user.is_password
-                        ? 'Mail'
-                        : ''}
-                    </td>
-                    <td className={styles.lastLoggedIn}>
-                      {user?.last_loggedIn_via}
-                    </td>
-                    <td className={styles.pagesLength}>{pagesLength(user)}</td>
-                    <td className={styles.pagesLength}>
-                      {/* posts not in logs */}0
-                    </td>
-                    <td>
-                      <div className={styles.actions}>
-                        <div onClick={() => handleEdit(user.profile_url)}>
-                          {pencilSvg}
-                        </div>
-                        {deleteSvg}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+      <div className={styles.searchContainer}>
+        {/* <div className={styles.admintitle}>Admin Search</div> */}
+        <div className={styles.searchAndFilter}>
+          <form onSubmit={handleSearch} className={styles.searchForm}>
+            <input
+              type="text"
+              value={data.search.value}
+              onChange={handleInputChange}
+              placeholder="Search users..."
+              className={styles.searchInput}
+            />
+            <button type="submit" className={styles.searchButton}>
+              {searchSvg}
+            </button>
+          </form>
+          <button className={styles.filterBtn}>{filterSvg}</button>
         </div>
-      </AdminLayout>
+
+        <div className={styles.resultsContainer}>
+          <table className={styles.resultsTable}>
+            <thead>
+              <tr>
+                <th style={{ width: '18.06%' }}>User</th>
+                <th style={{ width: '19.48%' }}>Public Email</th>
+                <th style={{ width: '13.87%' }}>Phone Number</th>
+                <th style={{ width: '9.163%' }}>Page Type</th>
+                <th
+                  style={{
+                    width: '16.54%',
+                    paddingRight: '16px',
+                    textAlign: 'center',
+                  }}
+                >
+                  Last Login
+                </th>
+                <th style={{ width: '6.939%', paddingRight: '16px' }}>Pages</th>
+                <th style={{ width: '6.672%', paddingRight: '16px' }}>Posts</th>
+                <th style={{ width: '9.252%', paddingRight: '16px' }}>
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {searchResults.map((page, index) => (
+                <tr key={index}>
+                  <td>
+                    <div className={styles.resultItem}>
+                      <div className={styles.avatarContainer}>
+                        {page.profile_image ? (
+                          <img
+                            src={page.profile_image}
+                            alt={`${page.full_name}'s profile`}
+                            width={40}
+                            height={40}
+                            className={styles.avatarImage}
+                          />
+                        ) : (
+                          <Image
+                            className={styles['img']}
+                            src={DefaultProfile}
+                            alt="profile"
+                            width={40}
+                            height={40}
+                          />
+                        )}
+                      </div>
+                      <div className={styles.detailsContainer}>
+                        <div className={styles.userName}>{page?.title}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className={styles.userEmail}>
+                    <Link href={`mailto:${page?.public_email}`}>{page?.public_email}</Link>
+                  </td>
+                  <td className={styles.userPhone}>{fullNumber(page)}</td>
+                  <td className={styles.pageType}>
+                   {page?.type}
+                  </td>
+                  <td className={styles.lastLoggedIn}>
+                    {page?.last_loggedIn_via}
+                  </td>
+                  <td className={styles.pagesLength}>{pagesLength(page)}</td>
+                  <td className={styles.pagesLength}>
+                    {/* posts not in logs */}0
+                  </td>
+                  <td>
+                    <div className={styles.actions}>
+                      <div onClick={() => handleEdit(page.page_url)}>
+                        {pencilSvg}
+                      </div>
+                      {deleteSvg}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div></AdminLayout>
     </>
   )
 }
