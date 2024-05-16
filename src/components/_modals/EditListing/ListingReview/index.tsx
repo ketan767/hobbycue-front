@@ -9,6 +9,9 @@ import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import Image from 'next/image'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import { addListingReview } from '@/services/listing.service'
+import { closeModal } from '@/redux/slices/modal'
+import { useRouter } from 'next/router'
 
 type Props = {
   onComplete?: () => void
@@ -21,15 +24,8 @@ type Props = {
 }
 
 type reviewData = {
+  user_id: any
   description: string
-  name: string
-  email: string
-  user_id: string
-  type: string
-  reviewed_user_id: string
-  reviewed_user_name: string
-  reviewed_user_email: string
-  for_url: string
 }
 
 const ListingReview: React.FC<Props> = ({
@@ -44,15 +40,8 @@ const ListingReview: React.FC<Props> = ({
   const { user } = useSelector((state: RootState) => state.user)
 
   const [data, setData] = useState<reviewData>({
+    user_id: user._id,
     description: '',
-    name: '',
-    email: '',
-    user_id: '',
-    type: '',
-    reviewed_user_id: '',
-    reviewed_user_name: '',
-    reviewed_user_email: '',
-    for_url: '',
   })
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
@@ -71,7 +60,7 @@ const ListingReview: React.FC<Props> = ({
     display: false,
     message: '',
   })
-
+  const router = useRouter()
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.target.value
     setData((prev) => ({ ...prev, description: value }))
@@ -79,26 +68,39 @@ const ListingReview: React.FC<Props> = ({
   }
 
   const handleSubmit = async () => {
-    setSnackbar({
-      display:true,
-      type:"warning",
-      message:"API is not added yet"
-    })
+    if (!data.description || data.description?.trim() === '') {
+      if (textareaRef.current) {
+        textareaRef.current?.focus()
+      }
+      setInputErrs((prev) => {
+        return { ...prev, error: 'This field is required!' }
+      })
+      setIsError(true)
+      return
+    }
+    setSubmitBtnLoading(true)
+    let jsonData = { user_id: data.user_id, text: data.description }
+    const { err, res } = await addListingReview(listingPageData._id, jsonData)
+    if (res?.data.success) {
+      setSnackbar({
+        display: true,
+        type: 'success',
+        message: 'Review Sent',
+      })
+      setSubmitBtnLoading(false)
+      setTimeout(() => {
+        router.reload()
+      }, 2500)
+    } else if (err) {
+      setSubmitBtnLoading(false)
+      setSnackbar({
+        display: true,
+        type: 'warning',
+        message: 'Something went wrong',
+      })
+      console.log(err)
+    }
   }
-
-  useEffect(() => {
-    setData({
-      description: '',
-      name: user.full_name,
-      email: user?.public_email,
-      user_id: user._id,
-      type: listingPageData.type,
-      reviewed_user_id: listingPageData._id,
-      reviewed_user_name: listingPageData?.title,
-      reviewed_user_email: listingPageData?.public_email,
-      for_url: currentUrl,
-    })
-  }, [user])
 
   const HandleSaveError = async () => {
     if (

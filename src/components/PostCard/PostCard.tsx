@@ -7,6 +7,7 @@ import BarsIcon from '../../assets/svg/vertical-bars.svg'
 import PostVotes from './Votes'
 import PostComments from './Comments'
 import {
+  deletePost,
   getAllPosts,
   getMetadata,
   getPostComment,
@@ -75,7 +76,7 @@ const PostCard: React.FC<Props> = (props) => {
     icon: '',
     url: '',
   })
-  const [linkLoading,setLinkLoading] = useState(false);
+  const [linkLoading, setLinkLoading] = useState(false)
 
   const domain = metaData?.url
     ? new URL(metaData.url).hostname.replace('www.', '')
@@ -176,7 +177,28 @@ const PostCard: React.FC<Props> = (props) => {
     }
   }, [])
 
-  const isMobile = useMediaQuery("(max-width:1100px)")
+  const handleDeletePost = async (postid: any) => {
+    const { err, res } = await deletePost(postid)
+    if (err) {
+      console.log(err)
+      setSnackbar({
+        display: true,
+        type: 'warning',
+        message: 'Something went wrong',
+      })
+    } else if (res.data.success) {
+      setSnackbar({
+        display: true,
+        type: 'success',
+        message: 'Post deleted Successfully',
+      })
+      setTimeout(() => {
+        router.reload()
+      }, 1000)
+    }
+  }
+
+  const isMobile = useMediaQuery('(max-width:1100px)')
 
   return (
     <>
@@ -263,7 +285,7 @@ const PostCard: React.FC<Props> = (props) => {
                       </button>
                       <button
                         onClick={() => {
-                          showFeatureUnderDevelopment()
+                          handleDeletePost(postData._id)
                           setOpenAction(false)
                         }}
                       >
@@ -290,9 +312,9 @@ const PostCard: React.FC<Props> = (props) => {
                 viewBox="0 0 24 24"
                 fill="none"
                 onClick={() => {
-                  if(fromProfile && postedByMe){
-                  setOptionsActive(true)}else
-                  setOpenAction(true)
+                  if (fromProfile && postedByMe) {
+                    setOptionsActive(true)
+                  } else setOpenAction(true)
                 }}
               >
                 <g clip-path="url(#clip0_173_72891)">
@@ -318,14 +340,22 @@ const PostCard: React.FC<Props> = (props) => {
                   >
                     Pin post
                   </li>
-                  <li onClick={()=>{
-                    showFeatureUnderDevelopment();
-                    setOptionsActive(false)
-                  }} >Edit</li>
-                  <li onClick={()=>{
-                    showFeatureUnderDevelopment();
-                    setOptionsActive(false)
-                  }} >Delete</li>
+                  <li
+                    onClick={() => {
+                      showFeatureUnderDevelopment()
+                      setOptionsActive(false)
+                    }}
+                  >
+                    Edit
+                  </li>
+                  <li
+                    onClick={() => {
+                      showFeatureUnderDevelopment()
+                      setOptionsActive(false)
+                    }}
+                  >
+                    Delete
+                  </li>
                 </ul>
               )}
             </div>
@@ -370,35 +400,58 @@ const PostCard: React.FC<Props> = (props) => {
           )}
           {has_link && props.currentSection !== 'links' && (
             <div className={styles['posts-meta-parent']}>
-              {linkLoading?<LinkPreviewLoader/>:<><div className={styles['posts-meta-data-container']}>
-              <a href={url} target="_blank" className={styles['posts-meta-img']}>
-                <img
-                  src={
-                    (typeof metaData?.image === 'string' && metaData.image) ||
-                    (typeof metaData?.icon === 'string' && metaData.icon) ||
-                    defaultImg
-                  }
-                  alt="link-image"
-                  width={80}
-                  height={80}
-                />
-              </a>
-              <div className={styles['posts-meta-content']}>
-                <a href={url} target="_blank" className={styles.contentHead}>
-                  {' '}
-                  {metaData?.title}{' '}
-                </a>
-                {!isMobile&&<a href={url} target="_blank" className={styles.contentUrl}>
-                  {' '}
-                  {metaData?.description}{' '}
-                </a>}
-              </div>
-            </div>
-            {isMobile&&<a href={url} target="_blank" className={styles.contentUrl}>
-                  {' '}
-                  {metaData?.description}{' '}
-                </a>}</>}
-            
+              {linkLoading ? (
+                <LinkPreviewLoader />
+              ) : (
+                <>
+                  <div className={styles['posts-meta-data-container']}>
+                    <a
+                      href={url}
+                      target="_blank"
+                      className={styles['posts-meta-img']}
+                    >
+                      <img
+                        src={
+                          (typeof metaData?.image === 'string' &&
+                            metaData.image) ||
+                          (typeof metaData?.icon === 'string' &&
+                            metaData.icon) ||
+                          defaultImg
+                        }
+                        alt="link-image"
+                        width={80}
+                        height={80}
+                      />
+                    </a>
+                    <div className={styles['posts-meta-content']}>
+                      <a
+                        href={url}
+                        target="_blank"
+                        className={styles.contentHead}
+                      >
+                        {' '}
+                        {metaData?.title}{' '}
+                      </a>
+                      {!isMobile && (
+                        <a
+                          href={url}
+                          target="_blank"
+                          className={styles.contentUrl}
+                        >
+                          {' '}
+                          {metaData?.description}{' '}
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                  {isMobile && (
+                    <a href={url} target="_blank" className={styles.contentUrl}>
+                      {' '}
+                      {metaData?.description}{' '}
+                    </a>
+                  )}
+                </>
+              )}
             </div>
           )}
           {has_link && props.currentSection === 'links' && (

@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import styles from './styles.module.css'
 import { useMediaQuery } from '@mui/material'
 
-const ListingReviewsTab = ({pageData}:{pageData:any}) => {
+const ListingReviewsTab = ({ pageData }: { pageData: any }) => {
   const isMobile = useMediaQuery('(max-width:1100px)')
-  console.warn({pageData})
+  console.warn('listingreivew', pageData)
   const sampleReviews = [
     {
       username: 'Manjesh',
@@ -14,7 +14,7 @@ const ListingReviewsTab = ({pageData}:{pageData:any}) => {
       userimg:
         'https://s3.ap-south-1.amazonaws.com/hobby.cue/user-profile-1715350937390',
       user_id: '6628d7c31f38de303538fbb7',
-      published:true
+      published: true,
     },
     {
       username: 'Manjesh',
@@ -24,7 +24,7 @@ const ListingReviewsTab = ({pageData}:{pageData:any}) => {
       userimg:
         'https://s3.ap-south-1.amazonaws.com/hobby.cue/user-profile-1715350937390',
       user_id: '6628d7c31f38de303538fbb7',
-      published:false
+      published: false,
     },
     {
       username: 'Manjesh',
@@ -34,7 +34,7 @@ const ListingReviewsTab = ({pageData}:{pageData:any}) => {
       userimg:
         'https://s3.ap-south-1.amazonaws.com/hobby.cue/user-profile-1715350937390',
       user_id: '6628d7c31f38de303538fbb7',
-      published:true
+      published: true,
     },
   ]
 
@@ -70,28 +70,37 @@ const ListingReviewsTab = ({pageData}:{pageData:any}) => {
   return (
     <>
       <main>
-        <section className={styles['data-container']}>
-          <div className={styles['no-data-div']}>
-            <p className={styles['no-data-text']}>
-              This feature is under development. Come back soon to view this
-            </p>
-          </div>
-          {!isMobile&&<div className={styles['no-data-div']}></div>}
-          {/* {sampleReviews.map((REVIEW, i) => (
-            <div key={i} className={styles['review-container']}>
-              <img src={REVIEW.userimg} alt={REVIEW.username} />
-              <div className={styles['review-content']}>
-                <div className={styles['review-content-top']}>
-                  <p className={styles['review-username']}>{REVIEW.username} </p>
-                  <p className={styles['review-date']}>
-                    {formatDate(REVIEW.date)}
-                  </p>
-                </div>
-                <p className={styles['review']}>{REVIEW.review}</p>
-              </div>
+        {pageData?._reviews.length == 0 ? (
+          <section className={styles['data-container']}>
+            <div className={styles['no-data-div']}>
+              <p className={styles['no-data-text']}>No reviews</p>
             </div>
-          ))} */}
-        </section>{' '}
+
+            {!isMobile && <div className={styles['no-data-div']}></div>}
+          </section>
+        ) : (
+          <div className={styles['review-wrapper']}>
+            {pageData?._reviews.map((review: any, i: any) => (
+              <div key={i} className={styles['review-container']}>
+                <img
+                  src={review.user_id.profile_image}
+                  alt={review.user_id.full_name}
+                />
+                <div className={styles['review-content']}>
+                  <div className={styles['review-content-top']}>
+                    <p className={styles['review-username']}>
+                      {review.user_id?.full_name}{' '}
+                    </p>
+                    <p className={styles['review-date']}>
+                      {formatDate(review.createdAt)}
+                    </p>
+                  </div>
+                  <p className={styles['review']}>{review.text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </main>
     </>
   )
