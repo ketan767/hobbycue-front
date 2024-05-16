@@ -9,9 +9,10 @@ import { openModal, updateForgotPasswordEmail } from '@/redux/slices/modal'
 import { RootState } from '@/redux/store'
 import Link from 'next/link'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
-import { deletePost, getAllPosts } from '@/services/post.service'
+import { getAllPosts } from '@/services/post.service'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import { deletePostByAdmin } from '@/services/admin.service'
 
 type PostProps = any
 type SearchInput = {
@@ -195,7 +196,7 @@ const AdminDashboard: React.FC = () => {
   const deleteFunc = async (post_id: string) => {
     try {
       setDeleteData({ open: false, _id: undefined })
-      const { err, res } = await deletePost(post_id)
+      const { err, res } = await deletePostByAdmin(post_id)
       if (err) {
         setSnackbar({
           display: true,
@@ -377,6 +378,7 @@ const AdminDashboard: React.FC = () => {
             setDeleteData({ open: false, _id: undefined })
           }}
           yesHandler={deleteFunc}
+          text='post'
         />
       )}
       {
