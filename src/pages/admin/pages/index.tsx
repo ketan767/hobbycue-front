@@ -13,7 +13,7 @@ import {
 import { RootState } from '@/redux/store'
 import AdminNavbar from '@/components/AdminNavbar/AdminNavbar'
 import Link from 'next/link'
-import { searchPages } from '@/services/listing.service'
+import { getListingPages, searchPages } from '@/services/listing.service'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 
 type PagesProps = {
@@ -46,17 +46,22 @@ const AdminDashboard: React.FC = () => {
   })
   const [email, setEmail] = useState('')
   const [searchResults, setSearchResults] = useState<PagesProps[]>([])
+  const [page,setPage] = useState(1);
+  const [pagelimit,setPagelimit] = useState(25);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
-    setData((prev) => ({ ...prev, search: { value, error: null } }))
+    setData((prev) => ({ ...prev, search: { value, error: null } }));
+    setPage(1);
   }
 
-  const handleSearch = async (event: any) => {
+  const fetchSearchResults = async () => {
     const searchValue = data.search.value.trim()
-    event.preventDefault()
     let searchCriteria = {
       title: searchValue,
+      limit:pagelimit,
+      sort:'-createdAt',
+      page:page
     }
 
     const { res, err } = await searchPages(searchCriteria)
@@ -67,6 +72,35 @@ const AdminDashboard: React.FC = () => {
       console.log('res', res)
     }
   }
+
+  const fetchPages = async () => {
+    const { res, err } = await getListingPages(
+      `limit=${pagelimit}&sort=-createdAt&page=${page}`,
+    )
+    if (err) {
+      console.log('An error', err)
+    } else {
+      console.log('fetchPages', res?.data)
+      setSearchResults(res?.data?.data?.listings)
+    }
+  }
+  
+  const goToPreviousPage = () => {
+    setPage(page - 1)
+  }
+
+  const goToNextPage = () => {
+    setPage(page + 1)
+  }
+
+  useEffect(() => {
+    if (data.search.value) {
+      fetchSearchResults()
+    } else if(page) {
+      fetchPages()
+    }
+  }, [data.search.value,page])
+
   const resetbtn = async () => {
     const { err, res } = await forgotPassword({
       email,
@@ -171,7 +205,7 @@ const AdminDashboard: React.FC = () => {
       <div className={styles.searchContainer}>
         {/* <div className={styles.admintitle}>Admin Search</div> */}
         <div className={styles.searchAndFilter}>
-          <form onSubmit={handleSearch} className={styles.searchForm}>
+          <form onSubmit={(e)=>{e.preventDefault()}} className={styles.searchForm}>
             <input
               type="text"
               value={data.search.value}
@@ -265,6 +299,27 @@ const AdminDashboard: React.FC = () => {
               ))}
             </tbody>
           </table>
+          <div className={styles.pagination}>
+              {/* Previous Page Button */}
+              {page > 1 ? (
+                <button onClick={goToPreviousPage}>Previous</button>
+              ) : (
+                ''
+              )}
+
+              {/* {pageNumber.map((num) => (
+                <button key={num} onClick={() => goToPage(num)}>
+                  {num}
+                </button>
+              ))} */}
+
+              {/* Next Page Button */}
+              {searchResults.length === pagelimit ? (
+                <button onClick={goToNextPage}>Next</button>
+              ) : (
+                ''
+              )}
+            </div>
         </div>
       </div></AdminLayout>
     </>

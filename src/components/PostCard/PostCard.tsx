@@ -27,6 +27,7 @@ import 'react-quill/dist/quill.snow.css'
 import 'quill-emoji/dist/quill-emoji.css'
 import { useMediaQuery } from '@mui/material'
 import LinkPreviewLoader from '../LinkPreviewLoader'
+import DeletePrompt from '../DeletePrompt/DeletePrompt'
 type Props = {
   postData: any
   fromProfile?: boolean
@@ -77,6 +78,13 @@ const PostCard: React.FC<Props> = (props) => {
     url: '',
   })
   const [linkLoading, setLinkLoading] = useState(false)
+  const [deleteData, setDeleteData] = useState<{
+    open: boolean
+    _id: string | undefined
+  }>({
+    open: false,
+    _id: undefined,
+  })
 
   const domain = metaData?.url
     ? new URL(metaData.url).hostname.replace('www.', '')
@@ -181,12 +189,14 @@ const PostCard: React.FC<Props> = (props) => {
     const { err, res } = await deletePost(postid)
     if (err) {
       console.log(err)
+      setDeleteData({open:false,_id:undefined});
       setSnackbar({
         display: true,
         type: 'warning',
         message: 'Something went wrong',
       })
     } else if (res.data.success) {
+      setDeleteData({open:false,_id:undefined});
       setSnackbar({
         display: true,
         type: 'success',
@@ -196,6 +206,9 @@ const PostCard: React.FC<Props> = (props) => {
         router.reload()
       }, 1000)
     }
+  }
+  const handleShowDelete = (postid:string) => {
+    setDeleteData({ open: true, _id: postid })
   }
 
   const isMobile = useMediaQuery('(max-width:1100px)')
@@ -285,7 +298,7 @@ const PostCard: React.FC<Props> = (props) => {
                       </button>
                       <button
                         onClick={() => {
-                          handleDeletePost(postData._id)
+                          handleShowDelete(postData._id)
                           setOpenAction(false)
                         }}
                       >
@@ -664,6 +677,19 @@ const PostCard: React.FC<Props> = (props) => {
           </footer>
         )}
       </div>
+      {deleteData.open && (
+        <DeletePrompt
+          triggerOpen={deleteData.open}
+          _id={deleteData._id}
+          closeHandler={() => {
+            setDeleteData({ open: false, _id: undefined })
+          }}
+          noHandler={() => {
+            setDeleteData({ open: false, _id: undefined })
+          }}
+          yesHandler={handleDeletePost}
+        />
+      )}
       {
         <CustomSnackbar
           message={snackbar.message}

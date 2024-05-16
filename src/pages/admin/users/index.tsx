@@ -191,10 +191,10 @@ const AdminDashboard: React.FC = () => {
   useEffect(() => {
     if (data.search.value) {
       fetchSearchResults()
-    } else {
+    } else if(page) {
       fetchUsers()
     }
-  }, [data.search.value])
+  }, [data.search.value,page])
 
   const goToPage = (page: number) => {
     // Logic to navigate to specific page
@@ -202,14 +202,11 @@ const AdminDashboard: React.FC = () => {
 
   const goToPreviousPage = () => {
     setPage(page - 1)
-    fetchUsers()
   }
 
   const goToNextPage = () => {
     setPage(page + 1)
-    fetchUsers()
   }
-  console.log('page', page)
 
   return (
     <>
