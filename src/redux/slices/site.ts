@@ -79,6 +79,7 @@ interface AuthState {
   }
   showPageLoader: boolean
   listingTypeModalMode?: any
+  admin_nav:boolean
   expandMenu: {
     hobby: boolean
     listing: boolean
@@ -139,6 +140,7 @@ const initialState: AuthState = {
   },
   showPageLoader: false,
   listingTypeModalMode: 'create',
+  admin_nav:true,
   expandMenu: {
     hobby: true,
     listing: true,
@@ -226,6 +228,9 @@ const siteSlice = createSlice({
       }>,
     ) => {
       state.editPhotoModalData = payload
+    },
+    toggleAdminNav:(state)=>{
+      state.admin_nav = !state.admin_nav;
     },
     updateEventDateTime: (state, { payload }) => {
       state.listingPageData.event_date_time = payload
@@ -350,6 +355,7 @@ export const {
   updateHobbyMenuExpandAll,
   updateListingMenuExpandAll,
   updateProfileMenuExpandAll,
+  toggleAdminNav,
   increaseSidemenuRefresh,
   increaseSearchRefresh,
   updateHobbyOpenState,

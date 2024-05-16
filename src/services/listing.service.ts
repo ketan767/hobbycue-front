@@ -147,6 +147,23 @@ export const addListingHobby = async (
   }
 }
 
+/** Add Listing Hobby `POST: /api/listing/:listingId/reviews` */
+export const addListingReview = async (
+  listingId: string,
+  data: { text: string; user_id?: string },
+) => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(`/listing/${listingId}/reviews`, data, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
 /** Delete Listing Hobby `DELETE: /api/listing/hobby/:listingId/?hobbyId={Hobby ID}` */
 export const deleteListingHobby = async (listingId: string, hobbyId: string) => {
   const token = localStorage.getItem('token')
