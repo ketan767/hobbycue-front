@@ -1,62 +1,82 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './styles.module.css'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
+import { admindashboard } from '@/services/admin.service'
 
 export default function Index() {
+  const [data, setData] = useState<any>([])
   const table1data = [
     {
       name: 'User Support',
-      open: 2,
-      total: 11,
+      open: data.usersSupportOpen,
+      total: data.userSupportCount,
+    },
+    {
+      name: 'User Report',
+      open: data.userReportpen,
+      total: data.userReportCount,
     },
     {
       name: 'Hobby Requests',
-      open: 4,
-      total: 20,
+      open: 0,
+      total: 0,
     },
     {
       name: 'Blog Approvals',
-      open: 1,
-      total: 17,
+      open: 0,
+      total: 0,
     },
     {
       name: 'Post Reports',
-      open: 3,
-      total: 48,
+      open: data.postReportOpen,
+      total: data.postReportCount,
     },
     {
       name: 'Location Edit',
       open: 0,
-      total: 4,
+      total: 0,
     },
   ]
   const table2data = [
     {
       name: 'Page Claims',
-      open: 9,
-      total: 101,
+      open: 0,
+      total: 0,
     },
     {
       name: 'Page Reports',
-      open: 2,
-      total: 9,
+      open: data.listingReportOpen,
+      total: data.listingReportCount,
     },
     {
       name: 'Page Support',
-      open: 5,
-      total: 14,
+      open: data.listingSupportOpen,
+      total: data.listingSupportCount,
     },
     {
       name: 'Page Relations',
-      open: 2,
-      total: 32,
+      open: 0,
+      total: 0,
     },
     {
       name: 'Seller KYC',
       open: 0,
-      total: 24,
+      total: 0,
     },
   ]
+
+  useEffect(() => {
+    const getDashboardDetails = async () => {
+      const { res, err } = await admindashboard()
+      if (err) {
+        console.error('Error:', err)
+      } else {
+        setData(res?.data.data)
+        console.log('Dashboard data:', res)
+      }
+    }
+    getDashboardDetails()
+  })
 
   return (
     <>
@@ -65,7 +85,7 @@ export default function Index() {
           <div className={styles.allLabels}>
             <div className={styles.label}>
               <p>
-                Version : <span>1 . 16</span>
+                Version : <span>0 . 91</span>
               </p>
             </div>
             <div className={styles.label}>
@@ -75,12 +95,12 @@ export default function Index() {
             </div>
             <div className={styles.label}>
               <p>
-                Users : <span>1,250</span>
+                Users : <span>{data.userCount}</span>
               </p>
             </div>
             <div className={styles.label}>
               <p>
-                Pages : <span>4,856</span>
+                Pages : <span>{data.listingCount}</span>
               </p>
             </div>
           </div>
