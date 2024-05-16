@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
-import { searchUsers } from '../../../services/user.service'
+import { getAllUserDetail, searchUsers } from '../../../services/user.service'
 import styles from './styles.module.css'
 import Image from 'next/image'
 import DefaultProfile from '@/assets/svg/default-images/default-user-icon.svg'
@@ -42,11 +42,13 @@ const AdminDashboard: React.FC = () => {
   })
   const [email, setEmail] = useState('')
   const [searchResults, setSearchResults] = useState<UserProps[]>([])
-
+  const [pageNumber, setPageNumber] = useState<number[]>([])
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     setData((prev) => ({ ...prev, search: { value, error: null } }))
   }
+  const [page, setPage] = useState(1)
+  const [pagelimit, setPagelimit] = useState(25)
 
   const handleSearch = async (event: any) => {
     const searchValue = data.search.value.trim()
@@ -62,13 +64,6 @@ const AdminDashboard: React.FC = () => {
       setSearchResults(res.data)
       console.log('res', res)
     }
-  }
-  const resetbtn = async () => {
-    const { err, res } = await forgotPassword({
-      email,
-    })
-    dispatch(openModal({ type: 'reset-password', closable: true }))
-    dispatch(updateForgotPasswordEmail(email))
   }
 
   const filterSvg = (
@@ -161,6 +156,61 @@ const AdminDashboard: React.FC = () => {
     router.push(`/admin/users/edit/${profile_url}`)
   }
 
+  const fetchSearchResults = async () => {
+    const searchValue = data.search.value.trim()
+    let searchCriteria = {
+      full_name: searchValue,
+    }
+
+    const { res, err } = await searchUsers(searchCriteria)
+    if (err) {
+      console.log('An error', err)
+    } else {
+      setSearchResults(res.data)
+
+      // Calculate total number of pages based on search results length
+      const totalPages = Math.ceil(res.data.length / 50)
+      const pages = []
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i)
+      }
+      setPageNumber(pages)
+    }
+  }
+  const fetchUsers = async () => {
+    const { res, err } = await getAllUserDetail(
+      `limit=${pagelimit}&sort=-createdAt&page=${page}`,
+    )
+    if (err) {
+      console.log('An error', err)
+    } else {
+      console.log('fetchUsers', res.data)
+      setSearchResults(res.data.data.users)
+    }
+  }
+  useEffect(() => {
+    if (data.search.value) {
+      fetchSearchResults()
+    } else {
+      fetchUsers()
+    }
+  }, [data.search.value])
+
+  const goToPage = (page: number) => {
+    // Logic to navigate to specific page
+  }
+
+  const goToPreviousPage = () => {
+    setPage(page - 1)
+    fetchUsers()
+  }
+
+  const goToNextPage = () => {
+    setPage(page + 1)
+    fetchUsers()
+  }
+  console.log('page', page)
+
   return (
     <>
       <AdminLayout>
@@ -211,7 +261,7 @@ const AdminDashboard: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {searchResults.map((user, index) => (
+                {searchResults?.map((user, index) => (
                   <tr key={index}>
                     <td>
                       <div className={styles.resultItem}>
@@ -281,6 +331,27 @@ const AdminDashboard: React.FC = () => {
                 ))}
               </tbody>
             </table>
+            <div className={styles.pagination}>
+              {/* Previous Page Button */}
+              {page > 1 ? (
+                <button onClick={goToPreviousPage}>Previous</button>
+              ) : (
+                ''
+              )}
+
+              {/* {pageNumber.map((num) => (
+                <button key={num} onClick={() => goToPage(num)}>
+                  {num}
+                </button>
+              ))} */}
+
+              {/* Next Page Button */}
+              {searchResults.length === pagelimit ? (
+                <button onClick={goToNextPage}>Next</button>
+              ) : (
+                ''
+              )}
+            </div>
           </div>
         </div>
       </AdminLayout>
