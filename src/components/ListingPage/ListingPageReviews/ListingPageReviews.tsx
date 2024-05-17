@@ -4,11 +4,13 @@ import styles from './styles.module.css'
 import { useMediaQuery } from '@mui/material'
 import defaultUserImage from '@/assets/svg/default-images/default-user-icon.svg'
 import { closeModal, openModal } from '@/redux/slices/modal'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { FC } from 'react'
+import { RootState } from '@/redux/store';
 
 const ListingReviewsTab: FC<{ pageData: any }> = ({ pageData }) => {
-  const isMobile = useMediaQuery('(max-width:1100px)')
+  const isMobile = useMediaQuery('(max-width:1100px)');
+  const {user} = useSelector((state:RootState)=>state.user)
   const dispatch = useDispatch();
   const addReview = () => {
     dispatch(openModal({type:'ListingReviewModal',closable:true}))
@@ -72,6 +74,7 @@ const ListingReviewsTab: FC<{ pageData: any }> = ({ pageData }) => {
     </svg>
   )
 
+  const iamAdmin = pageData?.admin === user?._id;
 
   return (
     <>
@@ -86,13 +89,13 @@ const ListingReviewsTab: FC<{ pageData: any }> = ({ pageData }) => {
           </section>
         ) : (
           <div className={styles['review-wrapper']}>
-            <div
+            {!iamAdmin&&<div
               onClick={addReview}
               className={styles['add-review-btn']}
             >
               {plusSvg}
               <p>Add Review</p>
-            </div>
+            </div>}
             {pageData?._reviews.map((review: any, i: any) => (
               <div key={i} className={styles['review-container']}>
                 <img

@@ -6,7 +6,7 @@
 }
 
 .no-data-div {
-  width: 100%;
+  width: calc(50% - 12px);
   height: 10rem;
   background-color: #ffffff;
   padding: var(--spacing-12) var(--spacing-16);
@@ -50,6 +50,7 @@ border-radius: 8px;
 border: 1px dashed var(--Primary-Full, #8064A2);
 background: #FFF;
 cursor: pointer;
+min-height: 88px;
 }
 
 .add-review-btn p{
