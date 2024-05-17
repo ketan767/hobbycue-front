@@ -222,7 +222,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
   }
 
   const noResultsFound =
-    (searchResults.length === 0 &&
+    ((searchResults.length === 0 &&
       hobbyResults.length === 0 &&
       peopleResults.length === 0 &&
       placeResults.length === 0 &&
@@ -233,7 +233,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
     (peopleResults.length === 0 && showAllPeople) ||
     (placeResults.length === 0 && showAllPlace) ||
     (EventResults.length === 0 && showAllEvent) ||
-    showAllProducts
+    showAllProducts) && searchLoading === false;
 
   return (
     <main className={styles.searchResults}>

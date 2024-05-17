@@ -15,8 +15,12 @@ import { RootState } from '@/redux/store'
 import AdminNavbar from '@/components/AdminNavbar/AdminNavbar'
 import Link from 'next/link'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
+import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import { deleteUserByAdmin } from '@/services/admin.service'
 
 type UserProps = {
+  _id: string
   profile_image: string
   full_name: string
   tagline: string
@@ -34,9 +38,7 @@ type SearchInput = {
 }
 
 const AdminDashboard: React.FC = () => {
-  const dispatch = useDispatch()
   const router = useRouter()
-  const { user } = useSelector((state: RootState) => state.user)
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
   })
@@ -49,6 +51,18 @@ const AdminDashboard: React.FC = () => {
   }
   const [page, setPage] = useState(1)
   const [pagelimit, setPagelimit] = useState(25)
+  const [deleteData, setDeleteData] = useState<{
+    open: boolean
+    _id: string | undefined
+  }>({
+    open: false,
+    _id: undefined,
+  })
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
 
   const handleSearch = async (event: any) => {
     const searchValue = data.search.value.trim()
@@ -191,10 +205,10 @@ const AdminDashboard: React.FC = () => {
   useEffect(() => {
     if (data.search.value) {
       fetchSearchResults()
-    } else {
+    } else if (page) {
       fetchUsers()
     }
-  }, [data.search.value])
+  }, [data.search.value, page])
 
   const goToPage = (page: number) => {
     // Logic to navigate to specific page
@@ -202,14 +216,39 @@ const AdminDashboard: React.FC = () => {
 
   const goToPreviousPage = () => {
     setPage(page - 1)
-    fetchUsers()
   }
 
   const goToNextPage = () => {
     setPage(page + 1)
-    fetchUsers()
   }
-  console.log('page', page)
+
+  const handleDelete = (user_id: string) => {
+    setDeleteData({ open: true, _id: user_id })
+  }
+
+  const deleteFunc = async (user_id: string) => {
+    const { err, res } = await deleteUserByAdmin(user_id)
+    if (err) {
+      setSnackbar({
+        type: 'warning',
+        display: true,
+        message: 'Some error occured',
+      })
+    } else if (res) {
+      setSnackbar({
+        type: 'success',
+        display: true,
+        message: 'User deleted successfully',
+      })
+      window.location.reload()
+    } else {
+      setSnackbar({
+        type: 'warning',
+        display: true,
+        message: 'Some error occured',
+      })
+    }
+  }
 
   return (
     <>
@@ -324,7 +363,9 @@ const AdminDashboard: React.FC = () => {
                         <div onClick={() => handleEdit(user.profile_url)}>
                           {pencilSvg}
                         </div>
-                        {deleteSvg}
+                        <div onClick={() => handleDelete(user._id)}>
+                          {deleteSvg}
+                        </div>
                       </div>
                     </td>
                   </tr>
@@ -355,6 +396,30 @@ const AdminDashboard: React.FC = () => {
           </div>
         </div>
       </AdminLayout>
+      {deleteData.open && (
+        <DeletePrompt
+          triggerOpen={deleteData.open}
+          _id={deleteData._id}
+          closeHandler={() => {
+            setDeleteData({ open: false, _id: undefined })
+          }}
+          noHandler={() => {
+            setDeleteData({ open: false, _id: undefined })
+          }}
+          yesHandler={deleteFunc}
+          text='user'
+        />
+      )}
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

@@ -1,52 +1,84 @@
-.errorSnackbar {
-    border-radius: 8px;
-    border: 1px solid var(--red-lighter, #ffbec0);
-  }
-  .successSnackbar {
-    border-radius: 8px;
-    border: 1px solid #9fdfbe;
-  }
-  .errorSnackbarContent {
-    background-color: #ffd6e0;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    padding: 8px 16px;
-  }
-  .successSnackbarContent {
-    background-color: #e8f7ee;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    padding: 6px 16px;
-  }
-  
-  .message {
-    display: flex;
-    align-items: center;
-    color: var(--grey-darker, #6d747a);
-    font-weight: 500;
-    margin-right: 12px;
-  }
-  .typeIcon {
-    transform: scale(1.8);
-    margin: 0 10px -5px 0;
-  }
-  
-  .customSnackbarContent .CloseIcon {
-    color: #6d747a;
-  }
-  
-  @media screen and (max-width: 1100px) {
-    .typeIcon {
-      width: 40px;
-      height: 40px;
-    }
-    .message {
-      font-size: 12px;
-    }
-    .errorSnackbarContent {
-      padding: 0 8px;
-      flex: none;
-    }
-  }
+.modal-wrapper{
+  opacity: 1;
+  transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  display: grid;
+  place-items: center;
+  height: 100%;
+  overflow: auto;
+  padding: 1rem;
+  position: fixed;
+  inset: 0;
+  background: #00000099;
+  z-index: 1000000;
+}
+
+.confirmation-modal {
+  background-color: white;
+  border-radius: 8px;
+  padding: 28px 32px;
+  position: relative;
+  max-width: 387px;
+}
+.confirmation-modal .buttons {
+  display: flex;
+  align-items: center;
+  column-gap: 1rem;
+  justify-content: center;
+  margin-top: 2.5rem;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 250px;
+}
+.confirmation-modal .buttons button {
+  flex: 1;
+  padding: 0.5rem 1rem;
+}
+
+.button1{
+ font-size: 1rem !important;
+ height: 40px ;
+}
+
+.modal-close-icon {
+ position: absolute;
+ top: var(--spacing-12);
+ right: var(--spacing-12);
+ cursor: pointer;
+ border-radius: 100%;
+ padding: var(--spacing-2);
+ z-index: 10;
+}
+.modal-close-icon:hover {
+ background: #ddd;
+}
+
+.confirmation-modal-body>p{
+  color: var(--Black, #000);
+text-align: center;
+font-family: 'Poppins';
+font-size: 18px;
+font-style: normal;
+font-weight: 600;
+line-height: 26px; /* 144.444% */
+}
+
+@media screen and (max-width:1100px) {
+ .confirmation-modal{
+   margin-top: calc(50vh - 96px);
+   max-width: 405px;
+   width: fit-content;
+   margin-left: auto;
+   margin-right: auto;
+ }
+ .confirmation-modal {
+   display: flex;
+   padding: 35px 28px;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   gap: 32px;
+ }
+ .confirmation-modal p{
+   text-align: center;
+ }
+}

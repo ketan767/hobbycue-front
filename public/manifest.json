@@ -3,48 +3,48 @@
   "name": "HobbyCue",
   "icons": [
     {
-      "src": "logo-small.png",
-      "sizes": "28x28",
+      "src": "maskable.png",
+      "sizes": "3125x3125",
       "type": "image/png",
       "purpose": " maskable"
     },
     {
-      "src": "logo-small.png",
+      "src": "logo192.png",
       "type": "image/png",
-      "sizes": "28x28"
+      "sizes": "192x192"
     },
     {
-      "src": "logo-small.png",
+      "src": "logo256.png",
       "type": "image/png",
-      "sizes": "28x28"
+      "sizes": "256x256"
     },
     {
-      "src": "logo-small.png",
+      "src": "logo384.png",
       "type": "image/png",
-      "sizes": "28x28"
+      "sizes": "384x384"
     },
     {
-      "src": "hobbycue-small-logo.png",
+      "src": "logo512.png",
       "type": "image/png",
-      "sizes": "144x144"
+      "sizes": "512x512"
     }
   ],
   "screenshots": [
     {
-      "src": "hobbycue-small-logo.jpg",
-      "sizes": "478x477",
+      "src": "squash.jpg",
+      "sizes": "612x408",
       "type": "jpg",
       "form_factor": "wide"
     },
     {
-      "src": "hobbycue-small-logo.jpg",
-      "sizes": "478x477",
+      "src": "squash.jpg",
+      "sizes": "612x408",
       "type": "jpg",
       "form_factor": "narrow"
     }
   ],
 
-  "start_url": "http://localhost:3000/",
+  "start_url": "http://localhost:3000",
   "background_color": "white",
   "display": "standalone"
 }
