@@ -688,6 +688,7 @@ const PostCard: React.FC<Props> = (props) => {
             setDeleteData({ open: false, _id: undefined })
           }}
           yesHandler={handleDeletePost}
+          text='post'
         />
       )}
       {

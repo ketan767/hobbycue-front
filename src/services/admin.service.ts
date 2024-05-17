@@ -10,3 +10,86 @@ export const admindashboard = async () => {
       return { err: error, res: null }
     }
   }
+
+/** PATCH `/api/admin/user/:user_id` */
+
+export const updateUserByAdmin = async (user_id: string,data:any): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.patch(`/admin/user/${user_id}`,data, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+/** DELETE `/api/admin/user/:user_id` */
+
+export const deleteUserByAdmin = async (user_id: string): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.delete(`/admin/user/${user_id}`, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+/** PATCH `/api/admin/listing/:listing_id` */
+
+export const updateListingByAdmin = async (listing_id: string,data:any): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.patch(`/admin/listing/${listing_id}`,data, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+/** DELETE `/api/admin/listing/:listing_id` */
+
+export const deleteListingByAdmin = async (listing_id: string): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.delete(`/admin/listing/${listing_id}`, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+/** PATCH `/api/admin/post/:post_id` */
+
+export const updatePostByAdmin = async (post_id: string,data:any): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.patch(`/admin/post/${post_id}`,data, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+/** DELETE `/api/admin/post/:post_id` */
+
+export const deletePostByAdmin = async (post_id: string): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.delete(`/admin/post/${post_id}`, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}

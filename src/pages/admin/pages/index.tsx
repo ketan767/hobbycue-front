@@ -15,8 +15,12 @@ import AdminNavbar from '@/components/AdminNavbar/AdminNavbar'
 import Link from 'next/link'
 import { getListingPages, searchPages } from '@/services/listing.service'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
+import { deleteListingByAdmin } from '@/services/admin.service'
+import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type PagesProps = {
+  _id: string
   type: string
   title: string
   public_email: string
@@ -40,28 +44,39 @@ type SearchInput = {
 const AdminDashboard: React.FC = () => {
   const dispatch = useDispatch()
   const router = useRouter()
-  const { user } = useSelector((state: RootState) => state.user)
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
   })
   const [email, setEmail] = useState('')
   const [searchResults, setSearchResults] = useState<PagesProps[]>([])
-  const [page,setPage] = useState(1);
-  const [pagelimit,setPagelimit] = useState(25);
+  const [page, setPage] = useState(1)
+  const [pagelimit, setPagelimit] = useState(25)
+  const [deleteData, setDeleteData] = useState<{
+    open: boolean
+    _id: string | undefined
+  }>({
+    open: false,
+    _id: undefined,
+  })
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
-    setData((prev) => ({ ...prev, search: { value, error: null } }));
-    setPage(1);
+    setData((prev) => ({ ...prev, search: { value, error: null } }))
+    setPage(1)
   }
 
   const fetchSearchResults = async () => {
     const searchValue = data.search.value.trim()
     let searchCriteria = {
       title: searchValue,
-      limit:pagelimit,
-      sort:'-createdAt',
-      page:page
+      limit: pagelimit,
+      sort: '-createdAt',
+      page: page,
     }
 
     const { res, err } = await searchPages(searchCriteria)
@@ -84,7 +99,7 @@ const AdminDashboard: React.FC = () => {
       setSearchResults(res?.data?.data?.listings)
     }
   }
-  
+
   const goToPreviousPage = () => {
     setPage(page - 1)
   }
@@ -96,10 +111,10 @@ const AdminDashboard: React.FC = () => {
   useEffect(() => {
     if (data.search.value) {
       fetchSearchResults()
-    } else if(page) {
+    } else if (page) {
       fetchPages()
     }
-  }, [data.search.value,page])
+  }, [data.search.value, page])
 
   const resetbtn = async () => {
     const { err, res } = await forgotPassword({
@@ -199,107 +214,146 @@ const AdminDashboard: React.FC = () => {
     router.push(`/admin/pages/edit/${page_url}`)
   }
 
+  const handleDelete = (listing_id: string) => {
+    setDeleteData({ open: true, _id: listing_id })
+  }
+
+  const deleteFunc = async (listing_id: string) => {
+    const { err, res } = await deleteListingByAdmin(listing_id)
+    if (err) {
+      setSnackbar({
+        type: 'warning',
+        display: true,
+        message: 'Some error occured',
+      })
+    } else if (res) {
+      setSnackbar({
+        type: 'success',
+        display: true,
+        message: 'User deleted successfully',
+      })
+      window.location.reload()
+    } else {
+      setSnackbar({
+        type: 'warning',
+        display: true,
+        message: 'Some error occured',
+      })
+    }
+  }
+
   return (
     <>
       <AdminLayout>
-      <div className={styles.searchContainer}>
-        {/* <div className={styles.admintitle}>Admin Search</div> */}
-        <div className={styles.searchAndFilter}>
-          <form onSubmit={(e)=>{e.preventDefault()}} className={styles.searchForm}>
-            <input
-              type="text"
-              value={data.search.value}
-              onChange={handleInputChange}
-              placeholder="Search users..."
-              className={styles.searchInput}
-            />
-            <button type="submit" className={styles.searchButton}>
-              {searchSvg}
-            </button>
-          </form>
-          <button className={styles.filterBtn}>{filterSvg}</button>
-        </div>
+        <div className={styles.searchContainer}>
+          {/* <div className={styles.admintitle}>Admin Search</div> */}
+          <div className={styles.searchAndFilter}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
+              }}
+              className={styles.searchForm}
+            >
+              <input
+                type="text"
+                value={data.search.value}
+                onChange={handleInputChange}
+                placeholder="Search users..."
+                className={styles.searchInput}
+              />
+              <button type="submit" className={styles.searchButton}>
+                {searchSvg}
+              </button>
+            </form>
+            <button className={styles.filterBtn}>{filterSvg}</button>
+          </div>
 
-        <div className={styles.resultsContainer}>
-          <table className={styles.resultsTable}>
-            <thead>
-              <tr>
-                <th style={{ width: '18.06%' }}>User</th>
-                <th style={{ width: '19.48%' }}>Public Email</th>
-                <th style={{ width: '13.87%' }}>Phone Number</th>
-                <th style={{ width: '9.163%' }}>Page Type</th>
-                <th
-                  style={{
-                    width: '16.54%',
-                    paddingRight: '16px',
-                    textAlign: 'center',
-                  }}
-                >
-                  Last Login
-                </th>
-                <th style={{ width: '6.939%', paddingRight: '16px' }}>Pages</th>
-                <th style={{ width: '6.672%', paddingRight: '16px' }}>Posts</th>
-                <th style={{ width: '9.252%', paddingRight: '16px' }}>
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {searchResults.map((page, index) => (
-                <tr key={index}>
-                  <td>
-                    <div className={styles.resultItem}>
-                      <div className={styles.avatarContainer}>
-                        {page.profile_image ? (
-                          <img
-                            src={page.profile_image}
-                            alt={`${page.full_name}'s profile`}
-                            width={40}
-                            height={40}
-                            className={styles.avatarImage}
-                          />
-                        ) : (
-                          <Image
-                            className={styles['img']}
-                            src={DefaultProfile}
-                            alt="profile"
-                            width={40}
-                            height={40}
-                          />
-                        )}
-                      </div>
-                      <div className={styles.detailsContainer}>
-                        <div className={styles.userName}>{page?.title}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className={styles.userEmail}>
-                    <Link href={`mailto:${page?.public_email}`}>{page?.public_email}</Link>
-                  </td>
-                  <td className={styles.userPhone}>{fullNumber(page)}</td>
-                  <td className={styles.pageType}>
-                   {page?.type}
-                  </td>
-                  <td className={styles.lastLoggedIn}>
-                    {page?.last_loggedIn_via}
-                  </td>
-                  <td className={styles.pagesLength}>{pagesLength(page)}</td>
-                  <td className={styles.pagesLength}>
-                    {/* posts not in logs */}0
-                  </td>
-                  <td>
-                    <div className={styles.actions}>
-                      <div onClick={() => handleEdit(page.page_url)}>
-                        {pencilSvg}
-                      </div>
-                      {deleteSvg}
-                    </div>
-                  </td>
+          <div className={styles.resultsContainer}>
+            <table className={styles.resultsTable}>
+              <thead>
+                <tr>
+                  <th style={{ width: '18.06%' }}>User</th>
+                  <th style={{ width: '19.48%' }}>Public Email</th>
+                  <th style={{ width: '13.87%' }}>Phone Number</th>
+                  <th style={{ width: '9.163%' }}>Page Type</th>
+                  <th
+                    style={{
+                      width: '16.54%',
+                      paddingRight: '16px',
+                      textAlign: 'center',
+                    }}
+                  >
+                    Last Login
+                  </th>
+                  <th style={{ width: '6.939%', paddingRight: '16px' }}>
+                    Pages
+                  </th>
+                  <th style={{ width: '6.672%', paddingRight: '16px' }}>
+                    Posts
+                  </th>
+                  <th style={{ width: '9.252%', paddingRight: '16px' }}>
+                    Actions
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className={styles.pagination}>
+              </thead>
+              <tbody>
+                {searchResults.map((page, index) => (
+                  <tr key={index}>
+                    <td>
+                      <div className={styles.resultItem}>
+                        <div className={styles.avatarContainer}>
+                          {page.profile_image ? (
+                            <img
+                              src={page.profile_image}
+                              alt={`${page.full_name}'s profile`}
+                              width={40}
+                              height={40}
+                              className={styles.avatarImage}
+                            />
+                          ) : (
+                            <Image
+                              className={styles['img']}
+                              src={DefaultProfile}
+                              alt="profile"
+                              width={40}
+                              height={40}
+                            />
+                          )}
+                        </div>
+                        <div className={styles.detailsContainer}>
+                          <div className={styles.userName}>{page?.title}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className={styles.userEmail}>
+                      <Link href={`mailto:${page?.public_email}`}>
+                        {page?.public_email}
+                      </Link>
+                    </td>
+                    <td className={styles.userPhone}>{fullNumber(page)}</td>
+                    <td className={styles.pageType}>{page?.type}</td>
+                    <td className={styles.lastLoggedIn}>
+                      {page?.last_loggedIn_via}
+                    </td>
+                    <td className={styles.pagesLength}>{pagesLength(page)}</td>
+                    <td className={styles.pagesLength}>
+                      {/* posts not in logs */}0
+                    </td>
+                    <td>
+                      <div className={styles.actions}>
+                        <div onClick={() => handleEdit(page.page_url)}>
+                          {pencilSvg}
+                        </div>
+                        <div onClick={() => handleDelete(page._id)}>
+                          {deleteSvg}
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className={styles.pagination}>
               {/* Previous Page Button */}
               {page > 1 ? (
                 <button onClick={goToPreviousPage}>Previous</button>
@@ -320,8 +374,33 @@ const AdminDashboard: React.FC = () => {
                 ''
               )}
             </div>
+          </div>
         </div>
-      </div></AdminLayout>
+      </AdminLayout>
+      {deleteData.open && (
+        <DeletePrompt
+          triggerOpen={deleteData.open}
+          _id={deleteData._id}
+          closeHandler={() => {
+            setDeleteData({ open: false, _id: undefined })
+          }}
+          noHandler={() => {
+            setDeleteData({ open: false, _id: undefined })
+          }}
+          yesHandler={deleteFunc}
+          text='page'
+        />
+      )}
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }
