@@ -102,13 +102,11 @@ const ListingHome: React.FC<Props> = (props) => {
         />
         <meta
           property="og:description"
-          content={`${
-            props?.data?.pageData?.tagline ?? ''
-          }`}
+          content={`${props?.data?.pageData?.tagline ?? ''}`}
         />
         <meta
           property="og:url"
-          content={`${process.env.NEXT_PUBLIC_VERCEL_URL}/page/${props?.data?.pageData?.slug}`}
+          content={`${process.env.NEXT_PUBLIC_BASE_URL}/page/${props?.data?.pageData?.slug}`}
         />
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
