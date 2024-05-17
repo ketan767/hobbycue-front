@@ -192,7 +192,6 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
             <FilledButton
               className={styles['add-mine']}
               onClick={handleAddhobby}
-              disabled={data?.level !== 3}
             >
               {addBtnLoading ? (
                 <CircularProgress color="inherit" size={'12px'} />

@@ -49,59 +49,9 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
   }
   const handleAddhobby = () => {
     if (isLoggedIn) {
-      const alreadyAdded = user?._hobbies?.some(
-        (obj: any) => obj?.hobby?._id === data?._id,
-      )
-      if (alreadyAdded) {
-        setSnackbar({
-          type: 'warning',
-          display: true,
-          message: 'This hobby is already added to your profile',
-        })
-      } else {
-        addUserHobby({ hobby: data?._id, level: 1 }, async (err, res) => {
-          setAddHobbyBtnLoading(true)
-          if (err) {
-            setSnackbar({
-              display: true,
-              message: 'Some error occured',
-              type: 'warning',
-            })
-          } else {
-            setSnackbar({
-              display: true,
-              message: 'Hobby added successfully',
-              type: 'success',
-            })
-          }
-          let updatedCompletedSteps = [...user.completed_onboarding_steps]
-
-          if (!updatedCompletedSteps.includes('Hobby')) {
-            updatedCompletedSteps.push('Hobby')
-          }
-          let onboarded = false
-          if (user.completed_onboarding_steps.length === 3) {
-            onboarded = true
-          }
-          const { err: updtProfileErr, res: updtProfileRes } =
-            await updateMyProfileDetail({
-              is_onboarded: onboarded,
-              completed_onboarding_steps: updatedCompletedSteps,
-            })
-          const { err: error, res: response } = await getMyProfileDetail()
-          setAddHobbyBtnLoading(false)
-          if (error) return console.log(error)
-
-          if (response?.data.success) {
-            const { is_onboarded } = user
-            dispatch(updateUser({ ...response?.data.data.user, is_onboarded }))
-            setAddHobbyBtnLoading(false)
-          }
-          setAddHobbyBtnLoading(false)
-        })
-      }
+      dispatch(openModal({type:'profile-hobby-edit',closable:true, propData:{selectedHobbyToAdd:data}} ))
     } else {
-      dispatch(openModal({ type: 'auth', closable: true }))
+      dispatch(openModal({ type: 'auth', closable: true}))
     }
   }
   const location = typeof window !== 'undefined' ? window.location.href : ''
@@ -233,7 +183,6 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
             <FilledButton
               className={styles['add-mine']}
               onClick={handleAddhobby}
-              disabled={data?.level !== 3}
             >
               {addBtnLoading ? (
                 <CircularProgress color="inherit" size={'12px'} />
