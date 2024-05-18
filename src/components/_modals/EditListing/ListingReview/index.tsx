@@ -87,6 +87,10 @@ const ListingReview: React.FC<Props> = ({
         type: 'success',
         message: 'Review Sent',
       })
+      setData({
+        user_id: user._id,
+        description: '',
+      })
       setSubmitBtnLoading(false)
       setTimeout(() => {
         router.reload()
@@ -130,12 +134,11 @@ const ListingReview: React.FC<Props> = ({
   const nextButtonRef = useRef<HTMLButtonElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   useEffect(() => {
-    const focusTextarea = () => {
-      if (textareaRef.current) {
-        textareaRef.current?.focus()
-      }
+    if(textareaRef.current){
+      setTimeout(() => {
+      textareaRef.current?.focus()
+      }, 50);
     }
-    focusTextarea()
   }, [textareaRef.current])
 
   useEffect(() => {

@@ -409,6 +409,10 @@ const ProfileHeader: React.FC<Props> = ({
           {/* Center Section */}
           <section className={styles['center-container']}>
             <div className={styles['cover-img-wrapper']}>
+            <div
+              className={styles['background']}
+              style={{ backgroundImage: `url(${data?.cover_image})` }}
+            ></div>
               {data?.cover_image ? (
                 <img
                   onClick={OpenCoverImage}

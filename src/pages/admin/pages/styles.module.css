@@ -88,11 +88,20 @@
   }
   
   /* Results table styles */
-  
+  .resultsContainer{
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+  }
+
   .resultsTable {
     width: 100%;
     border-collapse: collapse;
     border-radius: 8px;
+  }
+
+  .resultsTable thead{
+    position: sticky;
+    top:0;
   }
   
   .resultsTable td,
