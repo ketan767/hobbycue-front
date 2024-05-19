@@ -94,6 +94,19 @@
   overflow-y: auto;
 }
 
+.resultsContainer::-webkit-scrollbar {
+  width: 5px !important; 
+}
+
+.resultsContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.resultsContainer::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 5px;
+}
+
 .resultsTable {
   width: 100%;
   border-collapse: collapse;
