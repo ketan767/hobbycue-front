@@ -353,6 +353,7 @@ const AdminDashboard: React.FC = () => {
                 ))}
               </tbody>
             </table>
+          </div>
             <div className={styles.pagination}>
               {/* Previous Page Button */}
               {page > 1 ? (
@@ -360,21 +361,12 @@ const AdminDashboard: React.FC = () => {
               ) : (
                 ''
               )}
-
-              {/* {pageNumber.map((num) => (
-                <button key={num} onClick={() => goToPage(num)}>
-                  {num}
-                </button>
-              ))} */}
-
-              {/* Next Page Button */}
               {searchResults.length === pagelimit ? (
                 <button onClick={goToNextPage}>Next</button>
               ) : (
                 ''
               )}
             </div>
-          </div>
         </div>
       </AdminLayout>
       {deleteData.open && (

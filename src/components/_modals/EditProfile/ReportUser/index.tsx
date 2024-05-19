@@ -145,6 +145,17 @@ const UserReport: React.FC<Props> = ({
         type: 'success',
         message: 'Report sent',
       })
+      setData({
+        description: '',
+        name: '',
+        email: '',
+        user_id: '',
+        type: '',
+        reported_user_id: '',
+        reported_user_name: '',
+        reported_user_email: '',
+        for_url: '',
+      })
       setSubmitBtnLoading(false)
       setTimeout(() => {
         dispatch(closeModal())
@@ -223,8 +234,10 @@ const UserReport: React.FC<Props> = ({
   }, [data?.description])
 
   useEffect(() => {
-    if (textAreaRef.current) {
-      textAreaRef.current?.focus()
+    if(textAreaRef.current){
+      setTimeout(() => {
+        textAreaRef.current?.focus()
+      }, 50);
     }
   }, [textAreaRef.current])
 

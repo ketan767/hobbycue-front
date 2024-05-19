@@ -45,6 +45,7 @@ type Props = {
   setShowAddGenreModal?: any
   setShowAddHobbyModal?: any
   CheckIsOnboarded?: any
+  propData?:{selectedHobbyToAdd?:{_id:string,display:string,level:number}}
 }
 const levels = ['Beginner', 'Intermediate', 'Advanced']
 // const levels = {
@@ -85,8 +86,10 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   setShowAddGenreModal,
   setShowAddHobbyModal,
   CheckIsOnboarded,
+  propData
 }) => {
   const dispatch = useDispatch()
+  const selectedHobbyToAdd = propData && propData?.selectedHobbyToAdd;
   const [showModal, setShowModal] = useState(false)
   const hobbyDropdownRef = useRef<HTMLDivElement>(null)
   const genreDropdownRef = useRef<HTMLDivElement>(null)
@@ -99,7 +102,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const [errorOrmsg, setErrorOrmsg] = useState<string | null>(null)
 
   const [data, setData] = useState<ProfileHobbyData>({
-    hobby: null,
+    hobby:null,
     genre: null,
     level: 1,
   })
@@ -857,6 +860,23 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       document.removeEventListener('mousedown', handleOutsideClick)
     }
   }, [])
+  useEffect(()=>{
+    // setData((prev)=>{
+    //   if(selectedHobbyToAdd && selectedHobbyToAdd?.level>=5){
+    //     return {...prev,genre:selectedHobbyToAdd}
+    //   }else if (selectedHobbyToAdd && selectedHobbyToAdd?.level<5){
+    //     return {...prev,hobby:selectedHobbyToAdd}
+    //   }
+    //   return {...prev}
+    // })
+    if(selectedHobbyToAdd && selectedHobbyToAdd?.level>=5){
+      setData((prev)=>({...prev,genre:selectedHobbyToAdd}));
+      setGenreInputValue(selectedHobbyToAdd.display);
+    }else if(selectedHobbyToAdd && selectedHobbyToAdd?.level<5){
+      setData((prev)=>({...prev,hobby:selectedHobbyToAdd}));
+      setHobbyInputValue(selectedHobbyToAdd.display);
+    }
+  },[selectedHobbyToAdd])
 
   console.log({ data, isChanged })
 

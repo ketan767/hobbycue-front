@@ -54,8 +54,8 @@ const AdminDashboard: React.FC = () => {
     search: { value: '', error: null },
   })
   const [searchResults, setSearchResults] = useState<PostProps[]>([])
-  const [page,setPage] = useState(1);
-  const [pagelimit,setPagelimit] = useState(25);
+  const [page, setPage] = useState(1)
+  const [pagelimit, setPagelimit] = useState(25)
   const [deleteData, setDeleteData] = useState<{
     open: boolean
     _id: string | undefined
@@ -75,7 +75,9 @@ const AdminDashboard: React.FC = () => {
   }
 
   const fetchPosts = async () => {
-    const { res, err } = await getAllPosts(`populate=_author,_genre,_hobby&limit=${pagelimit}&sort=-createdAt&page=${page}`)
+    const { res, err } = await getAllPosts(
+      `populate=_author,_genre,_hobby&limit=${pagelimit}&sort=-createdAt&page=${page}`,
+    )
     if (err) {
       console.log('An error', err)
     } else {
@@ -92,11 +94,11 @@ const AdminDashboard: React.FC = () => {
     setPage(page + 1)
   }
 
-  useEffect(()=>{
-    if(page){
+  useEffect(() => {
+    if (page) {
       fetchPosts()
     }
-  },[page])
+  }, [page])
 
   const filterSvg = (
     <svg
@@ -172,7 +174,7 @@ const AdminDashboard: React.FC = () => {
       />
     </svg>
   )
-  
+
   const fullNumber = (post: any) => {
     if (post?.phone?.prefix && post?.phone?.number) {
       return post?.phone?.prefix + post?.phone?.number
@@ -204,11 +206,13 @@ const AdminDashboard: React.FC = () => {
           type: 'warning',
         })
       } else if (res) {
+        fetchPosts()
         setSnackbar({
           display: true,
           message: 'Post deleted successfully',
           type: 'success',
         })
+        fetchPosts()
       } else {
         setSnackbar({
           display: true,
@@ -232,7 +236,12 @@ const AdminDashboard: React.FC = () => {
         <div className={styles.searchContainer}>
           {/* <div className={styles.admintitle}>Admin Search</div> */}
           <div className={styles.searchAndFilter}>
-            <form onSubmit={e=>{e.preventDefault()}} className={styles.searchForm}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
+              }}
+              className={styles.searchForm}
+            >
               <input
                 type="text"
                 value={data.search.value}
@@ -343,27 +352,19 @@ const AdminDashboard: React.FC = () => {
                 ))}
               </tbody>
             </table>
-            <div className={styles.pagination}>
-              {/* Previous Page Button */}
-              {page > 1 ? (
-                <button onClick={goToPreviousPage}>Previous</button>
-              ) : (
-                ''
-              )}
-
-              {/* {pageNumber.map((num) => (
-                <button key={num} onClick={() => goToPage(num)}>
-                  {num}
-                </button>
-              ))} */}
-
-              {/* Next Page Button */}
-              {searchResults.length === pagelimit ? (
-                <button onClick={goToNextPage}>Next</button>
-              ) : (
-                ''
-              )}
-            </div>
+          </div>
+          <div className={styles.pagination}>
+            {/* Previous Page Button */}
+            {page > 1 ? (
+              <button onClick={goToPreviousPage}>Previous</button>
+            ) : (
+              ''
+            )}
+            {searchResults.length === pagelimit ? (
+              <button onClick={goToNextPage}>Next</button>
+            ) : (
+              ''
+            )}
           </div>
         </div>
       </AdminLayout>
@@ -378,7 +379,7 @@ const AdminDashboard: React.FC = () => {
             setDeleteData({ open: false, _id: undefined })
           }}
           yesHandler={deleteFunc}
-          text='post'
+          text="post"
         />
       )}
       {
