@@ -39,10 +39,12 @@ const Admin = () => {
   }, [router, user])
 
   return (
-    <div className={styles['Admin-login']}>
-      <h1>Admin Login</h1>
+    <div className={styles['admin-login-wrapper']}>
       <form onSubmit={handleLogin}>
-        <div>
+        <h1>Hobbycue Admin</h1>
+
+        <div style={{ paddingBottom: '20px' }}></div>
+        <div className={styles['input-box']}>
           <label>Email:</label>
           <input
             type="email"
@@ -51,7 +53,7 @@ const Admin = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-        <div>
+        <div className={styles['input-box']}>
           <label>Password:</label>
           <input
             type="password"
@@ -60,7 +62,12 @@ const Admin = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button type="submit">Login</button>
+        <button className="modal-footer-btn submit" type="submit">
+          Login
+        </button>
+        <button className="modal-mob-btn-save" type="submit">
+          Login
+        </button>
       </form>
     </div>
   )
