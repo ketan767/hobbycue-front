@@ -1,4 +1,76 @@
 /* styles.module.css */
+.admin-login-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f7f5f9;;
+}
+
+.input-box label {
+  font: "poppins";
+}
+
+.input-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-32);
+  position: relative;
+}
+
+.input-box input {
+  
+  width: 100%;
+  /* all: unset; */
+  background: #f8f9fa;
+  
+  /* Grey/Lighter */
+
+  
+  border-radius: 8px;
+  padding: calc(var(--spacing-8) + var(--spacing-4));
+
+  /* font-family: 'Poppins'; */
+  /* font-style: normal; */
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  /* color: #878c90; */
+  min-width: 6.25rem;
+}
+
+.input-box div div{
+  border-radius: 8px;
+}
+
+.input-box-error>div>div>fieldset{
+  border-color: transparent !important;
+}
+
+.input-box{
+  background: #f8f9fa;
+  
+}
+
+.input ::placeholder{
+  color: #939CA3;
+}
+
+.input-box .show-pass-icon {
+  all: unset;
+  height: -webkit-fill-available;
+  cursor: pointer;
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.input-box input:focus-within {
+  outline: none;
+  
+}
 
 /* Container styles */
 .searchContainer {

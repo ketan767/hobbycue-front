@@ -18,6 +18,7 @@ import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { deleteUserByAdmin } from '@/services/admin.service'
+import { formatDateTime } from '@/utils'
 
 type UserProps = {
   _id: string
@@ -32,6 +33,8 @@ type UserProps = {
   last_loggedIn_via: string
   is_password: string
   profile_url: string
+  createdAt: string
+  last_login: string
 }
 type SearchInput = {
   search: InputData<string>
@@ -193,7 +196,7 @@ const AdminDashboard: React.FC = () => {
   }
   const fetchUsers = async () => {
     const { res, err } = await getAllUserDetail(
-      `limit=${pagelimit}&sort=-createdAt&page=${page}`,
+      `limit=${pagelimit}&sort=-last_login&page=${page}`,
     )
     if (err) {
       console.log('An error', err)
@@ -275,10 +278,10 @@ const AdminDashboard: React.FC = () => {
             <table className={styles.resultsTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '18.06%' }}>User</th>
-                  <th style={{ width: '19.48%' }}>Email</th>
-                  <th style={{ width: '13.87%' }}>Phone Number</th>
-                  <th style={{ width: '9.163%' }}>Login Mode</th>
+                  <th style={{ width: '20.06%' }}>User</th>
+                  <th style={{ width: '10.48%' }}>Joined</th>
+
+                  <th style={{ width: '14.163%' }}>Login Modes</th>
                   <th
                     style={{
                       width: '16.54%',
@@ -330,10 +333,10 @@ const AdminDashboard: React.FC = () => {
                         </div>
                       </div>
                     </td>
-                    <td className={styles.userEmail}>
-                      <Link href={`mailto:${user.email}`}>{user.email}</Link>
+                    <td className={styles.userName}>
+                      <div>{formatDateTime(user?.createdAt)}</div>
                     </td>
-                    <td className={styles.userPhone}>{fullNumber(user)}</td>
+
                     <td className={styles.LoginType}>
                       {user.facebook.id && user.google.id && user.is_password
                         ? 'Facebook | Google | Mail'
@@ -353,6 +356,7 @@ const AdminDashboard: React.FC = () => {
                     </td>
                     <td className={styles.lastLoggedIn}>
                       {user?.last_loggedIn_via}
+                      {`, ` + formatDateTime(user?.last_login)}
                     </td>
                     <td className={styles.pagesLength}>{pagesLength(user)}</td>
                     <td className={styles.pagesLength}>
@@ -373,19 +377,19 @@ const AdminDashboard: React.FC = () => {
               </tbody>
             </table>
           </div>
-            <div className={styles.pagination}>
-              {/* Previous Page Button */}
-              {page > 1 ? (
-                <button onClick={goToPreviousPage}>Previous</button>
-              ) : (
-                ''
-              )}
-              {searchResults.length === pagelimit ? (
-                <button onClick={goToNextPage}>Next</button>
-              ) : (
-                ''
-              )}
-            </div>
+          <div className={styles.pagination}>
+            {/* Previous Page Button */}
+            {page > 1 ? (
+              <button onClick={goToPreviousPage}>Previous</button>
+            ) : (
+              ''
+            )}
+            {searchResults.length === pagelimit ? (
+              <button onClick={goToNextPage}>Next</button>
+            ) : (
+              ''
+            )}
+          </div>
         </div>
       </AdminLayout>
       {deleteData.open && (
@@ -399,7 +403,7 @@ const AdminDashboard: React.FC = () => {
             setDeleteData({ open: false, _id: undefined })
           }}
           yesHandler={deleteFunc}
-          text='user'
+          text="user"
         />
       )}
       {

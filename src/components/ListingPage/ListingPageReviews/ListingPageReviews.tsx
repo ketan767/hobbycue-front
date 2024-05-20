@@ -1,19 +1,22 @@
-'use client';
-import React from 'react';
+'use client'
+import React, { useEffect, useRef, useState } from 'react'
 import styles from './styles.module.css'
 import { useMediaQuery } from '@mui/material'
 import defaultUserImage from '@/assets/svg/default-images/default-user-icon.svg'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
 import { FC } from 'react'
-import { RootState } from '@/redux/store';
+import { RootState } from '@/redux/store'
+import { updateListingLayoutMode } from '@/redux/slices/site'
 
 const ListingReviewsTab: FC<{ pageData: any }> = ({ pageData }) => {
-  const isMobile = useMediaQuery('(max-width:1100px)');
-  const {user} = useSelector((state:RootState)=>state.user)
-  const dispatch = useDispatch();
+  const isMobile = useMediaQuery('(max-width:1100px)')
+  const { user } = useSelector((state: RootState) => state.user)
+  const { listingLayoutMode } = useSelector((state: any) => state.site)
+  const optionRef: any = useRef(null)
+  const dispatch = useDispatch()
   const addReview = () => {
-    dispatch(openModal({type:'ListingReviewModal',closable:true}))
+    dispatch(openModal({ type: 'ListingReviewModal', closable: true }))
   }
 
   console.warn('listingreivew', pageData)
@@ -74,7 +77,26 @@ const ListingReviewsTab: FC<{ pageData: any }> = ({ pageData }) => {
     </svg>
   )
 
-  const iamAdmin = pageData?.admin === user?._id;
+  const iamAdmin = pageData?.admin === user?._id
+
+  const [reviews, setReviews] = useState([])
+
+  const reviewList = async () => {
+    if (listingLayoutMode === 'edit') {
+      setReviews(pageData?._reviews)
+    } else {
+      setReviews(
+        pageData?._reviews?.filter(
+          (review: any) =>
+            review.is_published || review.user_id._id === user._id,
+        ),
+      )
+    }
+  }
+
+  useEffect(() => {
+    reviewList()
+  })
 
   return (
     <>
@@ -89,14 +111,13 @@ const ListingReviewsTab: FC<{ pageData: any }> = ({ pageData }) => {
           </section>
         ) : (
           <div className={styles['review-wrapper']}>
-            {!iamAdmin&&<div
-              onClick={addReview}
-              className={styles['add-review-btn']}
-            >
-              {plusSvg}
-              <p>Add Review</p>
-            </div>}
-            {pageData?._reviews.map((review: any, i: any) => (
+            {!iamAdmin && (
+              <div onClick={addReview} className={styles['add-review-btn']}>
+                {plusSvg}
+                <p>Add Review</p>
+              </div>
+            )}
+            {reviews?.map((review: any, i: any) => (
               <div key={i} className={styles['review-container']}>
                 <img
                   src={review?.user_id?.profile_image ?? defaultUserImage.src}
@@ -104,9 +125,37 @@ const ListingReviewsTab: FC<{ pageData: any }> = ({ pageData }) => {
                 />
                 <div className={styles['review-content']}>
                   <div className={styles['review-content-top']}>
-                    <p className={styles['review-username']}>
-                      {review.user_id?.full_name}{' '}
-                    </p>
+                    <div className={styles['review-name-status']}>
+                      <p className={styles['review-username']}>
+                        {review.user_id?.full_name}{' '}
+                      </p>
+                      <p className={styles['review-status']}>
+                        {listingLayoutMode === 'edit' && review.is_published
+                          ? 'published'
+                          : 'Unpublished'}
+                      </p>
+                      <svg
+                        /////
+                        ref={optionRef}
+                        className={styles['more-actions-icon']}
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <g clip-path="url(#clip0_173_72891)">
+                          <path
+                            d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z"
+                            fill="#8064A2"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_173_72891">
+                            <rect width="24" height="24" fill="white" />
+                          </clipPath>
+                        </defs>
+                      </svg>
+                    </div>
                     <p className={styles['review-date']}>
                       {formatDate(review.createdAt)}
                     </p>
