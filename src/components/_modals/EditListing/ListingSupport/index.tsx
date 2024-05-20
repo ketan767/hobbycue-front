@@ -166,6 +166,14 @@ const ListingSupportModal: React.FC<Props> = ({
         type: 'success',
         message: 'Support ticket rasied',
       })
+      setData({
+        description: '',
+        name: '',
+        email: '',
+        user_id: '',
+        type: '',
+        for_url: '',
+      })
       setSubmitBtnLoading(false)
       setTimeout(() => {
         dispatch(closeModal())
@@ -219,12 +227,11 @@ const ListingSupportModal: React.FC<Props> = ({
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   useEffect(() => {
-    const focusTextarea = () => {
-      if (textareaRef.current) {
-        textareaRef.current?.focus()
-      }
+    if(textareaRef.current){
+      setTimeout(() => {
+      textareaRef.current?.focus()
+      }, 50);
     }
-    focusTextarea()
   }, [textareaRef.current])
 
   useEffect(() => {

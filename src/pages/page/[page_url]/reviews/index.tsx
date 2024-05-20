@@ -24,7 +24,9 @@ const ListingReviews: React.FC<Props> = (props) => {
   const dispatch = useDispatch()
   const { listing } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(listing)
-  const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
+  const { isLoggedIn, isAuthenticated, user } = useSelector(
+    (state: RootState) => state.user,
+  )
   // const { listingPageData } = useSelector((state: RootState) => state.site)
   console.log('posts data', props.data)
   useEffect(() => {
@@ -85,7 +87,7 @@ const ListingReviews: React.FC<Props> = (props) => {
           activeTab={'reviews'}
         >
           <div className={styles['display-desktop']}>
-            <ListingReviewsTab />
+            <ListingReviewsTab pageData={props?.data?.pageData} />
           </div>
         </ListingPageMain>
       </ListingPageLayout>
@@ -99,7 +101,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   const { query } = context
 
   const { err, res } = await getListingPages(
-    `page_url=${query['page_url']}&populate=_hobbies,_address`,
+    `page_url=${query['page_url']}&populate=_hobbies,_address,_reviews`,
   )
 
   if (res?.data.success && res.data.data.no_of_listings === 0) {

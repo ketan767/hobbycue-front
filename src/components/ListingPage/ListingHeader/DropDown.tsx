@@ -49,11 +49,18 @@ const Dropdown: React.FC<Props> = ({
         event.target.nodeName == Reviewref.current?.nodeName &&
         event.target.textContent === Reviewref.current?.textContent
       ) {
-        // added timeout because DOM was detecting a click outside snackbar which hides the snackbar which looks like blinking
-        setTimeout(() => {
-          showFeatureUnderDevelopment?.()
-        }, 100)
-        handleClose()
+        if (isLoggedIn) {
+          if (user.is_onboarded) {
+            dispatch(openModal({ type: 'ListingReviewModal', closable: true }))
+            handleClose()
+          } else {
+            router.push(`/profile/${user.profile_url}`)
+            dispatch(showProfileError(true))
+          }
+        } else {
+          dispatch(openModal({ type: 'auth', closable: true }))
+          handleClose()
+        }
       } else if (
         event.target.nodeName == supportRef.current?.nodeName &&
         event.target.textContent === supportRef.current?.textContent

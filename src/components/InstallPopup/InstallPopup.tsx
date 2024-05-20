@@ -17,33 +17,38 @@ const InstallPopup: FC<InstallPopupProps> = ({
   useEffect(() => {
     const handleBeforeInstallPrompt = (event: Event) => {
       event.preventDefault()
-      console.log(event,'click');
-      
+      console.log(event, 'click')
+
       setDeferredPrompt(event)
     }
     if ('serviceWorker' in navigator) {
-       
-         console.log('sas');
-    navigator.serviceWorker.register('./sw.js')        
-        .then(function(registration) {
+      console.log('sas')
+      navigator.serviceWorker.register('./sw.js').then(
+        function (registration) {
           // Registration was successful
-          console.log('ServiceWorker registration successful with scope: ', registration.scope);
-         
+          console.log(
+            'ServiceWorker registration successful with scope: ',
+            registration.scope,
+          )
+
           const handleBeforeInstallPrompt = (event: Event) => {
             event.preventDefault()
-            console.log(event,'click');
-            
+            console.log(event, 'click')
+
             setDeferredPrompt(event)
           }
-          window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-          console.log('click');
-          
-        }, function(err) {
+          window.addEventListener(
+            'beforeinstallprompt',
+            handleBeforeInstallPrompt,
+          )
+          console.log('click')
+        },
+        function (err) {
           // Registration failed
-          console.log('ServiceWorker registration failed: ', err);
-        });
-       console.log('click1');
-
+          console.log('ServiceWorker registration failed: ', err)
+        },
+      )
+      console.log('click1')
     }
     return () => {
       window.removeEventListener(
@@ -51,13 +56,13 @@ const InstallPopup: FC<InstallPopupProps> = ({
         handleBeforeInstallPrompt,
       )
     }
-  }, []);
+  }, [])
   // useEffect(() => {
   //   console.log('click22');
   //   const handleBeforeInstallPrompt = (event: Event) => {
   //     event.preventDefault()
   //     console.log(event,'click');
-      
+
   //     setDeferredPrompt(event)
   //   }
 
@@ -72,11 +77,11 @@ const InstallPopup: FC<InstallPopupProps> = ({
   // }, [])
 
   const addToHomeScreen = () => {
-    console.log(deferredPrompt,'click');
-    
+    console.log(deferredPrompt, 'click')
+
     if (deferredPrompt) {
-      (deferredPrompt as any).prompt();
-      (deferredPrompt as any).userChoice.then((choiceResult: any) => {
+      ;(deferredPrompt as any).prompt()
+      ;(deferredPrompt as any).userChoice.then((choiceResult: any) => {
         if (choiceResult.outcome === 'accepted') {
           console.log('User accepted the A2HS prompt')
           localStorage.setItem('addToHomePopup', 'false')
@@ -90,7 +95,7 @@ const InstallPopup: FC<InstallPopupProps> = ({
   }
 
   const remindLater = () => {
-    localStorage.setItem('addToHomePopup', 'false')
+    localStorage.setItem('addToHomePopup', 'true')
     setShowAddToHome(false)
   }
   return (

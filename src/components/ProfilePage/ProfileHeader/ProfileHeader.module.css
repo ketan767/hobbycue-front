@@ -47,6 +47,7 @@
 .center-container .cover-img-wrapper {
   position: relative;
   max-height: 310px;
+  overflow: hidden;
 }
 .center-container .cover-img-wrapper .img {
   width: 100%;
@@ -78,6 +79,26 @@
   color: #08090a;
   margin-top: var(--spacing-12);
   word-break: break-all;
+}
+.background{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(10px);
+  z-index: -1;
+}
+
+.center-container .cover-img-wrapper .img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3/1;
+  border-radius: 8px;
+  object-fit: contain;
+  background-color: rgb(var(--gray-50-rgb), 0.2);
 }
 
 .text-ellipsis {

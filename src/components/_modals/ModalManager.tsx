@@ -80,6 +80,7 @@ import {
 } from '@/services/user.service'
 import { sendWelcomeMail } from '@/services/auth.service'
 import { showProfileError, updateUser } from '@/redux/slices/user'
+import ListingReview from './EditListing/ListingReview'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -474,6 +475,9 @@ const ModalManager: React.FC = () => {
               {activeModal === 'UserReportModal' && <UserReport {...props} />}
               {activeModal === 'ListingReportModal' && (
                 <ListingReport {...props} />
+              )}
+              {activeModal === 'ListingReviewModal' && (
+                <ListingReview {...props}/>
               )}
               {activeModal === 'Listing-Contact-To-Owner' && (
                 <ListingContactToOwner {...props} />
