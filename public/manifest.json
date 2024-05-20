@@ -3,42 +3,42 @@
   "name": "HobbyCue",
   "icons": [
     {
-      "src": "maskable.png",
-      "sizes": "3125x3125",
+      "src": "logo-small.png",
+      "sizes": "28x28",
       "type": "image/png",
       "purpose": " maskable"
     },
     {
-      "src": "logo192.png",
+      "src": "logo-small.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "28x28"
     },
     {
-      "src": "logo256.png",
+      "src": "logo-small.png",
       "type": "image/png",
-      "sizes": "256x256"
+      "sizes": "28x28"
     },
     {
-      "src": "logo384.png",
+      "src": "logo-small.png",
       "type": "image/png",
-      "sizes": "384x384"
+      "sizes": "28x28"
     },
     {
-      "src": "logo512.png",
+      "src": "hobbycue-small-logo.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "144x144"
     }
   ],
   "screenshots": [
     {
-      "src": "squash.jpg",
-      "sizes": "612x408",
+      "src": "hobbycue-small-logo.jpg",
+      "sizes": "478x477",
       "type": "jpg",
       "form_factor": "wide"
     },
     {
-      "src": "squash.jpg",
-      "sizes": "612x408",
+      "src": "hobbycue-small-logo.jpg",
+      "sizes": "478x477",
       "type": "jpg",
       "form_factor": "narrow"
     }
