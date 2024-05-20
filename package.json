@@ -69,5 +69,9 @@
     "@types/react-leaflet": "^3.0.0",
     "file-loader": "^6.2.0",
     "prettier": "^2.8.8"
-  }
+  },
+  "description": "This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).",
+  "main": "next-sitemap.config.js",
+  "author": "",
+  "license": "ISC"
 }

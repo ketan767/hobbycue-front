@@ -53,6 +53,7 @@ type ProfileAddressPayload = {
   locality: string
   city: string
   pin_code: string
+  post_code:string
   state: string
   country: string
   latitude: string
