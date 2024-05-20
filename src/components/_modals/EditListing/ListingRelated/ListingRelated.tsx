@@ -24,6 +24,7 @@ import {
   updateListing,
   deleteRelatedListingLeft,
   searchPages,
+  getAllListingRelationTypes,
 } from '@/services/listing.service'
 import {
   updateListingModalData,
@@ -75,7 +76,14 @@ const RelatedListingEditModal: React.FC<Props> = ({
   const [selectedPage, setSelectedPage] = useState<any>({})
   const [relatedListingsLeft, setRelatedListingsLeft] = useState<any>([])
   const [dropdownLoading, setDropdownLoading] = useState<boolean>(true)
-  const [selectedRelated, setSelectedRelated] = useState<string[]>([])
+  const [options, setOptions] = useState<
+    {
+      Side: 'Left' | 'Right'
+      Show: 'Y' | 'N' | ''
+      pageType: string
+      relationType: string
+    }[]
+  >([])
 
   const inputRef = useRef<HTMLInputElement>(null)
   const dropdownRef = useRef<HTMLInputElement>(null)
@@ -263,6 +271,22 @@ const RelatedListingEditModal: React.FC<Props> = ({
     }
   }, [dropdownRef])
 
+  useEffect(() => {
+    getAllListingRelationTypes()
+      .then((result) => {
+        const { res, err } = result
+        if (err) {
+          console.log({ err })
+        } else if (res?.data && res?.data?.data) {
+          setOptions(res.data.data)
+          console.log({ d: res.data.data })
+        }
+      })
+      .catch((err) => {
+        console.log({ err })
+      })
+  }, [])
+
   if (confirmationModal) {
     return (
       <SaveModal
@@ -300,15 +324,17 @@ const RelatedListingEditModal: React.FC<Props> = ({
                 inputProps={{ 'aria-label': 'Without label' }}
               >
                 <MenuItem value="">Select</MenuItem>
-                {relatedListingData.map((item: any, idx) => {
-                  return (
-                    <MenuItem key={item._id} value={item.relation}>
-                      <div className={styles.tagContainer}>
-                        <p className={styles.tagText}>{item.relation}</p>
-                      </div>
-                    </MenuItem>
-                  )
-                })}
+                {options
+                  .filter((obj) => obj.Show === 'Y' && obj.Side === 'Left')
+                  .map((item: any, idx: number) => {
+                    return (
+                      <MenuItem key={idx} value={item.relationType}>
+                        <div className={styles.tagContainer}>
+                          <p className={styles.tagText}>{item.relationType}</p>
+                        </div>
+                      </MenuItem>
+                    )
+                  })}
               </Select>
             </FormControl>
             <p className={styles['helper-text']}>{error}</p>

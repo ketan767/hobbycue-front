@@ -283,3 +283,39 @@ export const getAllListingUrls = async (
       .then((res) => cb(null, res))
       .catch((err) => cb(err, null))
   }
+
+  export const getAllListingPageTypes = async (
+
+  ): Promise<ApiReturnObject> => {
+    try {
+      const res = await axiosInstance.get(`/listing/page-types`)
+      return { res: res, err: null }
+    } catch (error) {
+      console.error(error)
+      return { err: error, res: null }
+    }
+  }
+
+  export const getAllListingCategories = async (
+
+  ): Promise<ApiReturnObject> => {
+    try {
+      const res = await axiosInstance.get(`listing/listing-categories`)
+      return { res: res, err: null }
+    } catch (error) {
+      console.error(error)
+      return { err: error, res: null }
+    }
+  }
+
+  export const getAllListingRelationTypes = async (
+
+  ): Promise<ApiReturnObject> => {
+    try {
+      const res = await axiosInstance.get(`listing/relation-types`)
+      return { res: res, err: null }
+    } catch (error) {
+      console.error(error)
+      return { err: error, res: null }
+    }
+  }
