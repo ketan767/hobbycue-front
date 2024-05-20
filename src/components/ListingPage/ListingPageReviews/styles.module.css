@@ -27,6 +27,27 @@
   column-gap: 24px;
   row-gap: 12px;
 }
+.review-name-status {
+  display: flex;
+  flex-direction: row;
+}
+.more-actions-icon {
+  margin-left: 256px;
+  cursor: pointer;
+}
+
+.review-status {
+  color: var(--primary, #8064A2);
+  font-family: Poppins;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px; /* 160% */
+  text-transform: capitalize;
+  display: flex;
+  
+  padding-left: 12px;
+}
 
 .review-container {
   display: flex;
