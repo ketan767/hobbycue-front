@@ -7,28 +7,29 @@ type Props = {
     title: string
     children: React.ReactElement<any, any>
     placement: any
+    width:number
 }
 
-const BootstrapTooltip = styled(({ className, placement, ...props }: TooltipProps) => (
-    <Tooltip {...props} arrow classes={{ popper: className }} placement={placement} />
-))(({ theme }) => ({
-    [`& .${tooltipClasses.arrow}`]: {
+const BootstrapTooltip = styled(({ className, placement,width, ...props }: TooltipProps & {width:number}) => (
+    <Tooltip {...props} arrow classes={{ popper: className }} placement={placement}/>
+))(({ theme,width }) => ({
+    [`& .${tooltipClasses.arrow}`]: { 
         color: theme.palette.common.white,
     },
     [`& .${tooltipClasses.tooltip}`]: {
         backgroundColor: theme.palette.common.white,
-        maxWidth: '345px',
+        maxWidth: `${width}`,
         color: '#6D747A',
         margin: '10px !important',
         fontFamily: 'Poppins, sans-serif',
-        fontSize: '14px',
+        fontSize: '11px',
         fontStyle: 'normal',
         fontWeight: 400,
-        lineHeight: '24px',
+        lineHeight: '18px',
         letterSpacing: '0.14px',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.12)',
         transform: 'none !important',
-        textAlign: 'left',
+        // textAlign: 'justify',
         padding: "8px 10px 8px 10px",
         gap: "10px",
         borderRadius: "8px",
@@ -36,7 +37,7 @@ const BootstrapTooltip = styled(({ className, placement, ...props }: TooltipProp
     },
 }))
 
-const CustomizedTooltips2: React.FC<Props> = ({ title, children, placement }) => {
+const CustomizedTooltips2: React.FC<Props> = ({ title, children, placement, width}) => {
     const [clicked, setClicked] = useState(false)
     return (
         <>
@@ -48,6 +49,7 @@ const CustomizedTooltips2: React.FC<Props> = ({ title, children, placement }) =>
                 }}
                 title={clicked ? '' : title}
                 placement={placement}
+                width={width}
 
             >
                 {React.cloneElement(children, {
