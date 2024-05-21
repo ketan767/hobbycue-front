@@ -15,9 +15,11 @@ import { openModal, updateShareUrl } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
 import FilledButton from '@/components/_buttons/FilledButton'
 import { RootState } from '@/redux/store'
-import { showProfileError } from '@/redux/slices/user'
+import { showProfileError, updateUser } from '@/redux/slices/user'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import Tooltip from '@/components/Tooltip/ToolTip'
+import { addUserHobby, getMyProfileDetail, updateMyProfileDetail } from '@/services/user.service'
+import { CircularProgress } from '@mui/material'
 
 type Props = {
   activeTab: HobbyPageTabs
@@ -27,6 +29,7 @@ type Props = {
 const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
   console.log('🚀 ~ file: HobbyHeader.tsx:22 ~ HobbyPageHeader ~ data:', data)
   const router = useRouter()
+  const [addBtnLoading, setAddHobbyBtnLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -41,15 +44,67 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
     'blogs',
   ]
   const dispatch = useDispatch()
-  const { user, isLoggedIn, isAuthenticated } = useSelector((state: RootState) => state.user)
+  const { user, isLoggedIn, isAuthenticated } = useSelector(
+    (state: RootState) => state.user,
+  )
   const handleShare = () => {
     dispatch(updateShareUrl(window.location.href))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
   }
-  const location = typeof window !== 'undefined' ? window.location.href : '';
+  const location = typeof window !== 'undefined' ? window.location.href : ''
   const handleAddhobby = () => {
     if (isLoggedIn) {
-      dispatch(openModal({ type: 'profile-hobby-edit', closable: true }))
+      const alreadyAdded = user?._hobbies?.some(
+        (obj: any) => obj?.hobby?._id === data?._id,
+      )
+      if (alreadyAdded) {
+        setSnackbar({
+          type: 'warning',
+          display: true,
+          message: 'This hobby is already added to your profile',
+        })
+      } else {
+        addUserHobby({ hobby: data?._id, level: 1 }, async (err, res) => {
+          setAddHobbyBtnLoading(true)
+          if (err) {
+            setSnackbar({
+              display: true,
+              message: 'Some error occured',
+              type: 'warning',
+            })
+          } else {
+            setSnackbar({
+              display: true,
+              message: 'Hobby added successfully',
+              type: 'success',
+            })
+          }
+          let updatedCompletedSteps = [...user.completed_onboarding_steps]
+
+          if (!updatedCompletedSteps.includes('Hobby')) {
+            updatedCompletedSteps.push('Hobby')
+          }
+          let onboarded = false
+          if (user.completed_onboarding_steps.length === 3) {
+            onboarded = true
+          }
+          const { err: updtProfileErr, res: updtProfileRes } =
+            await updateMyProfileDetail({
+              is_onboarded: onboarded,
+              completed_onboarding_steps: updatedCompletedSteps,
+            })
+          const { err: error, res: response } = await getMyProfileDetail()
+          setAddHobbyBtnLoading(false)
+          if (error) return console.log(error)
+
+          if (response?.data.success) {
+            const { is_onboarded } = user
+            dispatch(updateUser({ ...response?.data.data.user, is_onboarded }))
+            setAddHobbyBtnLoading(false)
+          }
+          setAddHobbyBtnLoading(false)
+        })
+      }
     } else {
       dispatch(openModal({ type: 'auth', closable: true }))
     }
@@ -89,7 +144,7 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
       message: 'This feature is under development',
     })
   }
-  
+
   return (
     <>
       {/* Page Header  */}
@@ -138,13 +193,14 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
               className={styles['add-mine']}
               onClick={handleAddhobby}
             >
-              Add to mine
+              {addBtnLoading ? (
+                <CircularProgress color="inherit" size={'12px'} />
+              ) : (
+                'Add to mine'
+              )}
             </FilledButton>
             {/* Send Email Button  */}
-            <div 
-              onClick={handleRepost}
-              className={styles['action-btn']}
-            >
+            <div onClick={handleRepost} className={styles['action-btn']}>
               <Image src={MailIcon} alt="share" />
             </div>
 
@@ -154,15 +210,12 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
               className={styles['action-btn']}
             >
               <Tooltip title="Bookmark">
-              <BookmarkBorderRoundedIcon color="primary" />
+                <BookmarkBorderRoundedIcon color="primary" />
               </Tooltip>
             </div>
 
             {/* Share Button */}
-            <div
-              onClick={handleShare}
-              className={styles['action-btn']}
-            >
+            <div onClick={handleShare} className={styles['action-btn']}>
               <Image src={ShareIcon} alt="share" />
             </div>
 

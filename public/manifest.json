@@ -4,33 +4,47 @@
   "icons": [
     {
       "src": "logo-small.png",
-      "sizes": "3125x3125",
+      "sizes": "28x28",
       "type": "image/png",
       "purpose": " maskable"
     },
     {
       "src": "logo-small.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "28x28"
     },
     {
       "src": "logo-small.png",
       "type": "image/png",
-      "sizes": "256x256"
+      "sizes": "28x28"
     },
     {
       "src": "logo-small.png",
       "type": "image/png",
-      "sizes": "384x384"
+      "sizes": "28x28"
     },
     {
-      "src": "logo-small.png",
+      "src": "hobbycue-small-logo.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "144x144"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "hobbycue-small-logo.jpg",
+      "sizes": "478x477",
+      "type": "jpg",
+      "form_factor": "wide"
+    },
+    {
+      "src": "hobbycue-small-logo.jpg",
+      "sizes": "478x477",
+      "type": "jpg",
+      "form_factor": "narrow"
     }
   ],
 
-  "start_url": "https://hobbycue.com",
+  "start_url": "https://hobbycue-front.vercel.app/",
   "background_color": "white",
   "display": "standalone"
 }

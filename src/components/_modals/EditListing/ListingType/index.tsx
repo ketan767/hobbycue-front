@@ -21,7 +21,7 @@ import store, { RootState } from '@/redux/store'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { updateListingModalData } from '@/redux/slices/site'
-import { updateListing } from '@/services/listing.service'
+import { getAllListingCategories, updateListing } from '@/services/listing.service'
 
 import DownArrow from '@/assets/svg/chevron-down.svg'
 import UpArrow from '@/assets/svg/chevron-up.svg'
@@ -57,6 +57,14 @@ const ListingTypeEditModal: React.FC<Props> = ({
     (state: RootState) => state.site,
   )
   const [list, setList] = useState<{ name: string; description: string }[]>([])
+  const [pagedata,setPagedata] = useState<
+    {
+      Description: string
+      Show: 'Y' | 'N' | ''
+      pageType: string
+      listingCategory: string
+    }[]
+  >([])
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   const [value, setValue] = useState<any>([])
   const [hoveredValue, setHoveredValue] = useState<number | null>(null)
@@ -107,6 +115,19 @@ const ListingTypeEditModal: React.FC<Props> = ({
       }
     }
   }
+
+  useEffect(()=>{
+    getAllListingCategories().then((result)=>{
+      const {res,err} = result;
+      if(err){
+        console.log({err})
+      }
+      else if(res?.data && res?.data?.data){
+        setPagedata(res.data.data);
+      }
+    }).catch(err=>{console.log({err})})
+  },[])
+
   const peoplePageTypeList: PeoplePageType = [
     {
       name: 'Teacher',
@@ -274,16 +295,16 @@ const ListingTypeEditModal: React.FC<Props> = ({
   useEffect(() => {
     switch (listingModalData.type) {
       case 1:
-        setList(peoplePageTypeList)
+        setList(pagedata?.filter(obj=>obj.pageType==='People'&&obj.Show==='Y').map(obj=>({name:obj.listingCategory,description:obj.Description})));
         break
       case 2:
-        setList(placePageTypeList)
+        setList(pagedata?.filter(obj=>obj.pageType==='Place'&&obj.Show==='Y').map(obj=>({name:obj.listingCategory,description:obj.Description})));
         break
       case 3:
-        setList(programPageTypeList)
+        setList(pagedata?.filter(obj=>obj.pageType==='Program'&&obj.Show==='Y').map(obj=>({name:obj.listingCategory,description:obj.Description})));
         break
       case 4:
-        setList(productPageTypeList)
+        setList(pagedata?.filter(obj=>obj.pageType==='Product'&&obj.Show==='Y').map(obj=>({name:obj.listingCategory,description:obj.Description})));
         break
       default:
         setList([])
@@ -291,7 +312,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
     }
     setValue(listingModalData.page_type as string)
     setInitialData(listingModalData.page_type as string)
-  }, [listingModalData])
+  }, [listingModalData,pagedata])
 
   const handleChange = (itemToChange: any) => {
     if (value?.includes(itemToChange)) {
@@ -395,14 +416,17 @@ const ListingTypeEditModal: React.FC<Props> = ({
           />
           {/* Modal Header */}
           <header className={styles['header']}>
-            <h4 className={styles['heading']}>{'Listing Category'}
-            {listingTypeModalMode==="create"&&<span className={styles['red-error-mobile']}>*</span>}
+            <h4 className={styles['heading']}>
+              {'Listing Category'}
+              {listingTypeModalMode === 'create' && (
+                <span className={styles['red-error-mobile']}>*</span>
+              )}
             </h4>
           </header>
 
           <hr className={styles['modal-hr']} />
 
-          <section className={styles['body']+" custom-scrollbar"}>
+          <section className={styles['body'] + ' custom-scrollbar'}>
             <p className={styles['info']}>
               Please select two of the most appropriate categories. One type is
               recommended. Use another type only if it is significantly
@@ -445,8 +469,8 @@ const ListingTypeEditModal: React.FC<Props> = ({
                     }
                     onKeyDown={(e) => {
                       if (['Enter'].includes(e.key) || e.key === ' ') {
-                          e.preventDefault();
-                          e.stopPropagation();
+                        e.preventDefault()
+                        e.stopPropagation()
                         if (
                           e.key === 'Enter' &&
                           showDropdown &&
@@ -493,7 +517,11 @@ const ListingTypeEditModal: React.FC<Props> = ({
                     />
                   </div>
                   {showDropdown && (
-                    <div className={styles['options-container']+" custom-scrollbar"}>
+                    <div
+                      className={
+                        styles['options-container'] + ' custom-scrollbar'
+                      }
+                    >
                       {list.map(
                         (
                           item: { name: string; description: string },
@@ -582,10 +610,10 @@ const ListingTypeEditModal: React.FC<Props> = ({
               )}
             </button>
             {/* SVG Button for Mobile */}
-            {onComplete||listingTypeModalMode==="create"?
-            <div className={styles['desktop-hidden']}></div>
-            :null}
-            {onComplete || listingTypeModalMode==="create" ? (
+            {onComplete || listingTypeModalMode === 'create' ? (
+              <div className={styles['desktop-hidden']}></div>
+            ) : null}
+            {onComplete || listingTypeModalMode === 'create' ? (
               <div onClick={handleSubmit}>
                 <Image
                   src={NextIcon}

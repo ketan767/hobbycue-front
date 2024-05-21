@@ -13,7 +13,10 @@ import {
   getMyProfileDetail,
   updateMyProfileDetail,
 } from '@/services/user.service'
-import { searchPages } from '@/services/listing.service'
+import {
+  getAllListingRelationTypes,
+  searchPages,
+} from '@/services/listing.service'
 import styles from './styles.module.css'
 import { isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
@@ -82,6 +85,14 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
   })
   const [selectedlisting, setselectedListing] = useState<
     { _id: string; name: string; description: string }[]
+  >([])
+  const [options, setOptions] = useState<
+    {
+      Side: 'Left' | 'Right'
+      Show: 'Y' | 'N' | ''
+      pageType: string
+      relationType: string
+    }[]
   >([])
   const inputRef = useRef<HTMLInputElement>(null)
   const [initialData, setInitialData] = useState({})
@@ -280,6 +291,22 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
     }
   }, [dropdownRef])
 
+  useEffect(() => {
+    getAllListingRelationTypes()
+      .then((result) => {
+        const { res, err } = result
+        if (err) {
+          console.log({ err })
+        } else if (res?.data && res?.data?.data) {
+          setOptions(res.data.data)
+          console.log({ d: res.data.data })
+        }
+      })
+      .catch((err) => {
+        console.log({ err })
+      })
+  }, [])
+
   if (confirmationModal) {
     return (
       <SaveModal
@@ -315,11 +342,11 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
                 inputProps={{ 'aria-label': 'Without label' }}
               >
                 <MenuItem value="">Select</MenuItem>
-                {relatedListingData.map((item: any, idx) => {
+                {options.map((item: any, idx: number) => {
                   return (
-                    <MenuItem key={item._id} value={item.relation}>
+                    <MenuItem key={idx} value={item.relationType}>
                       <div className={styles.tagContainer}>
-                        <p className={styles.tagText}>{item.relation}</p>
+                        <p className={styles.tagText}>{item.relationType}</p>
                       </div>
                     </MenuItem>
                   )

@@ -24,6 +24,7 @@ import CloseIcon from '@/assets/icons/CloseIcon'
 
 import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
+import CustomizedTooltips2 from '@/components/Tooltip/Tooltip2'
 
 type Props = {
   onComplete?: () => void
@@ -42,6 +43,7 @@ type ListingAddressData = {
   locality: InputData<string>
   city: InputData<string>
   pin_code: InputData<string>
+  post_code: InputData<string>
   state: InputData<string>
   country: InputData<string>
   latitude: InputData<string>
@@ -58,7 +60,8 @@ type AddressObj = {
   route?: string
   administrative_area_level_1?: string
   country?: string
-  postal_code?: string
+  pin_code?: string
+  post_code?: string
   sublocality_level_1?: string
   sublocality_level_2?: string
   sublocality_level_3?: string
@@ -98,6 +101,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
   const stateRef = useRef<HTMLInputElement>(null)
   const countryRef = useRef<HTMLInputElement>(null)
   const pincodeRef = useRef<HTMLInputElement>(null)
+  const postcodeRef = useRef<HTMLInputElement>(null)
   const streetRef = useRef<HTMLInputElement>(null)
   const localityRef = useRef<HTMLInputElement>(null)
   const societyRef = useRef<HTMLInputElement>(null)
@@ -115,6 +119,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
     locality: { value: '', error: null },
     city: { value: '', error: null },
     pin_code: { value: '', error: null },
+    post_code: { value: '', error: null },
     state: { value: '', error: null },
     country: { value: '', error: null },
     latitude: { value: '', error: null },
@@ -145,6 +150,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
       locality: data.locality.value,
       city: data.city.value,
       pin_code: data.pin_code.value,
+      post_code: data.post_code.value,
       state: data.state.value,
       country: data.country.value,
       latitude: data.latitude.value,
@@ -211,6 +217,15 @@ const ListingAddressEditModal: React.FC<Props> = ({
           }
         })
       }
+      if (isEmptyField(data.post_code.value) || !data.post_code.value) {
+        postcodeRef.current?.focus()
+        return setData((prev) => {
+          return {
+            ...prev,
+            post_code: { ...prev.post_code, error: 'This field is required!' },
+          }
+        })
+      }
     }
     if (
       isEmptyField(data.city.value) ||
@@ -255,6 +270,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
       locality: data.locality.value,
       city: data.city.value,
       pin_code: data.pin_code.value,
+      post_code: data.post_code.value,
       state: data.state.value,
       country: data.country.value,
       latitude: data.latitude.value,
@@ -291,6 +307,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
       locality: { value: res?.data.data.address.locality, error: null },
       city: { value: res?.data.data.address.city, error: null },
       pin_code: { value: res?.data.data.address.pin_code, error: null },
+      post_code: { value: res?.data.data.address.post_code, error: null },
       state: { value: res?.data.data.address.state, error: null },
       country: { value: res?.data.data.address.country, error: null },
       latitude: { value: res?.data.data.address.latitude, error: null },
@@ -302,6 +319,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
       locality: { value: res?.data.data.address.locality, error: null },
       city: { value: res?.data.data.address.city, error: null },
       pin_code: { value: res?.data.data.address.pin_code, error: null },
+      post_code: { value: res?.data.data.address.post_code, error: null },
       state: { value: res?.data.data.address.state, error: null },
       country: { value: res?.data.data.address.country, error: null },
       latitude: { value: res?.data.data.address.latitude, error: null },
@@ -424,9 +442,13 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   addressParts.push(component.long_name)
                   addressObj.country = component.long_name
                 }
-                if (component.types.includes('postal_code')) {
+                if (component.types.includes('pin_code')) {
                   addressParts.push(component.long_name)
-                  addressObj.postal_code = component.long_name
+                  addressObj.pin_code = component.long_name
+                }
+                if (component.types.includes('post_code')) {
+                  addressParts.push(component.long_name)
+                  addressObj.post_code = component.long_name
                 }
                 if (component.types.includes('sublocality_level_1')) {
                   addressParts.push(component.long_name)
@@ -445,7 +467,6 @@ const ListingAddressEditModal: React.FC<Props> = ({
 
               return {
                 ...result,
-
                 formatted_address: addressParts.join(', '),
                 addressObj,
               }
@@ -462,7 +483,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        if(event?.srcElement?.tagName === "svg"){
+        if (event?.srcElement?.tagName === "svg") {
           return;
         }
         nextButtonRef.current?.click()
@@ -525,7 +546,12 @@ const ListingAddressEditModal: React.FC<Props> = ({
       ...prev,
       pin_code: {
         ...prev.pin_code,
-        value: addressObj.postal_code ?? '',
+        value: addressObj.pin_code ?? '',
+        error: null,
+      },
+      post_code: {
+        ...prev.post_code,
+        value: addressObj.post_code ?? '',
         error: null,
       },
       country: {
@@ -592,9 +618,8 @@ const ListingAddressEditModal: React.FC<Props> = ({
             <div className={styles['input-box']}>
               <label>Street Address</label>
               <div
-                className={` ${styles['street-input-container']}  ${
-                  data.street.error ? styles['input-box-error'] : ''
-                }`}
+                className={` ${styles['street-input-container']}  ${data.street.error ? styles['input-box-error'] : ''
+                  }`}
               >
                 <input
                   type="text"
@@ -614,13 +639,13 @@ const ListingAddressEditModal: React.FC<Props> = ({
                     streetRef?.current?.focus()
                   }}
                   tabIndex={0}
-                  onKeyDown={(e)=>{
-                    if(e.key==='Enter'){
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
                       e.preventDefault();
                       e.stopPropagation();
                       getLocation();
                       setTimeout(() => {
-                      streetRef?.current?.focus();
+                        streetRef?.current?.focus();
                       }, 50);
                     }
                   }}
@@ -646,11 +671,18 @@ const ListingAddressEditModal: React.FC<Props> = ({
             </div>
             <section className={styles['two-column-grid']}>
               <div
-                className={`${styles['input-box']} ${
-                  data.society.error ? styles['input-box-error'] : ''
-                }`}
+                className={`${styles['input-box']} ${data.society.error ? styles['input-box-error'] : ''
+                  }`}
               >
-                <label>Society</label>
+                <label className={styles['info-container']}>
+                  <span>Society</span>
+                  <CustomizedTooltips2 width={273} placement="right" title='Society is where community events are organized.  It could be an apartment complex, row of houses or neighbourhood, typically within walking distance.  It should ideally be between 20 and 2000 individual addresses.'>
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M8.25 12.75H9.75V8.25H8.25V12.75ZM9 6.75C9.2125 6.75 9.39075 6.678 9.53475 6.534C9.67875 6.39 9.7505 6.212 9.75 6C9.7495 5.788 9.6775 5.61 9.534 5.466C9.3905 5.322 9.2125 5.25 9 5.25C8.7875 5.25 8.6095 5.322 8.466 5.466C8.3225 5.61 8.2505 5.788 8.25 6C8.2495 6.212 8.3215 6.39025 8.466 6.53475C8.6105 6.67925 8.7885 6.751 9 6.75ZM9 16.5C7.9625 16.5 6.9875 16.303 6.075 15.909C5.1625 15.515 4.36875 14.9808 3.69375 14.3063C3.01875 13.6318 2.4845 12.838 2.091 11.925C1.6975 11.012 1.5005 10.037 1.5 9C1.4995 7.963 1.6965 6.988 2.091 6.075C2.4855 5.162 3.01975 4.36825 3.69375 3.69375C4.36775 3.01925 5.1615 2.485 6.075 2.091C6.9885 1.697 7.9635 1.5 9 1.5C10.0365 1.5 11.0115 1.697 11.925 2.091C12.8385 2.485 13.6323 3.01925 14.3063 3.69375C14.9803 4.36825 15.5148 5.162 15.9098 6.075C16.3048 6.988 16.5015 7.963 16.5 9C16.4985 10.037 16.3015 11.012 15.909 11.925C15.5165 12.838 14.9823 13.6318 14.3063 14.3063C13.6303 14.9808 12.8365 15.5152 11.925 15.9097C11.0135 16.3042 10.0385 16.501 9 16.5ZM9 15C10.675 15 12.0938 14.4187 13.2563 13.2562C14.4187 12.0937 15 10.675 15 9C15 7.325 14.4187 5.90625 13.2563 4.74375C12.0938 3.58125 10.675 3 9 3C7.325 3 5.90625 3.58125 4.74375 4.74375C3.58125 5.90625 3 7.325 3 9C3 10.675 3.58125 12.0937 4.74375 13.2562C5.90625 14.4187 7.325 15 9 15Z" fill="#939CA3" />
+                    </svg>
+                  </CustomizedTooltips2>
+                </label>
+
                 <input
                   type="text"
                   placeholder={`Building Name`}
@@ -663,9 +695,8 @@ const ListingAddressEditModal: React.FC<Props> = ({
                 <p className={styles['helper-text']}>{data.society.error}</p>
               </div>
               <div
-                className={`${styles['input-box']} ${
-                  data.locality.error ? styles['input-box-error'] : ''
-                }`}
+                className={`${styles['input-box']} ${data.locality.error ? styles['input-box-error'] : ''
+                  }`}
               >
                 <label>Locality</label>
                 <input
@@ -682,9 +713,8 @@ const ListingAddressEditModal: React.FC<Props> = ({
             </section>
             <section className={styles['two-column-grid']}>
               <div
-                className={`${styles['input-box']} ${
-                  data.city.error ? styles['input-box-error'] : ''
-                }`}
+                className={`${styles['input-box']} ${data.city.error ? styles['input-box-error'] : ''
+                  }`}
               >
                 <label>City</label>
                 <input
@@ -698,25 +728,50 @@ const ListingAddressEditModal: React.FC<Props> = ({
                 />
                 <p className={styles['helper-text']}>{data.city.error}</p>
               </div>
-              <div className={styles['input-box']}>
-                <label>PIN Code</label>
-                <input
-                  type="text"
-                  placeholder={`PIN Code`}
-                  value={data.pin_code.value}
-                  required={listingModalData.type === listingTypes.PLACE}
-                  name="pin_code"
-                  onChange={handleInputChange}
-                  ref={pincodeRef}
-                />
-                <p className={styles['helper-text']}>{data.pin_code.error}</p>
+
+              <div className={styles['pincode-input-box']}>
+                <div className={styles['input-box']}>
+                  <label>Postal Code</label>
+                  <input
+                    type="text"
+                    placeholder={`Postal Code`}
+                    value={data.post_code.value}
+                    required={listingModalData.type === listingTypes.PLACE}
+                    name="post_code"
+                    onChange={handleInputChange}
+                    ref={postcodeRef}
+                  />
+                  <p className={styles['helper-text']}>{data.post_code.error}</p>
+                </div>
+
+                <div className={styles['input-box']}>
+                  <label className={styles['info-container']}>
+                    <span>GPS PIN Code</span>
+                    <CustomizedTooltips2 width={287} placement="bottom-end" title='GPS PIN Code is the mapping as per Google Maps.  Postal Code is the Post Office that delivers to this address.  In some cases, these two may be different.  Clicking on the GPS icon updates only the GPS PIN Code, not the Postal Code.'>
+                      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8.25 12.75H9.75V8.25H8.25V12.75ZM9 6.75C9.2125 6.75 9.39075 6.678 9.53475 6.534C9.67875 6.39 9.7505 6.212 9.75 6C9.7495 5.788 9.6775 5.61 9.534 5.466C9.3905 5.322 9.2125 5.25 9 5.25C8.7875 5.25 8.6095 5.322 8.466 5.466C8.3225 5.61 8.2505 5.788 8.25 6C8.2495 6.212 8.3215 6.39025 8.466 6.53475C8.6105 6.67925 8.7885 6.751 9 6.75ZM9 16.5C7.9625 16.5 6.9875 16.303 6.075 15.909C5.1625 15.515 4.36875 14.9808 3.69375 14.3063C3.01875 13.6318 2.4845 12.838 2.091 11.925C1.6975 11.012 1.5005 10.037 1.5 9C1.4995 7.963 1.6965 6.988 2.091 6.075C2.4855 5.162 3.01975 4.36825 3.69375 3.69375C4.36775 3.01925 5.1615 2.485 6.075 2.091C6.9885 1.697 7.9635 1.5 9 1.5C10.0365 1.5 11.0115 1.697 11.925 2.091C12.8385 2.485 13.6323 3.01925 14.3063 3.69375C14.9803 4.36825 15.5148 5.162 15.9098 6.075C16.3048 6.988 16.5015 7.963 16.5 9C16.4985 10.037 16.3015 11.012 15.909 11.925C15.5165 12.838 14.9823 13.6318 14.3063 14.3063C13.6303 14.9808 12.8365 15.5152 11.925 15.9097C11.0135 16.3042 10.0385 16.501 9 16.5ZM9 15C10.675 15 12.0938 14.4187 13.2563 13.2562C14.4187 12.0937 15 10.675 15 9C15 7.325 14.4187 5.90625 13.2563 4.74375C12.0938 3.58125 10.675 3 9 3C7.325 3 5.90625 3.58125 4.74375 4.74375C3.58125 5.90625 3 7.325 3 9C3 10.675 3.58125 12.0937 4.74375 13.2562C5.90625 14.4187 7.325 15 9 15Z" fill="#939CA3" />
+                      </svg>
+                    </CustomizedTooltips2>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder={`GPS PIN Code`}
+                    value={data.pin_code.value}
+                    required={listingModalData.type === listingTypes.PLACE}
+                    name="pin_code"
+                    onChange={handleInputChange}
+                    ref={pincodeRef}
+                  />
+                  <p className={styles['helper-text']}>{data.pin_code.error}</p>
+                </div>
               </div>
+
+
             </section>
             <section className={styles['two-column-grid']}>
               <div
-                className={`${styles['input-box']} ${
-                  data.state.error ? styles['input-box-error'] : ''
-                }`}
+                className={`${styles['input-box']} ${data.state.error ? styles['input-box-error'] : ''
+                  }`}
               >
                 <label>State</label>
                 <input
@@ -731,9 +786,8 @@ const ListingAddressEditModal: React.FC<Props> = ({
                 <p className={styles['helper-text']}>{data.state.error}</p>
               </div>
               <div
-                className={`${styles['input-box']} ${
-                  data.country.error ? styles['input-box-error'] : ''
-                }`}
+                className={`${styles['input-box']} ${data.country.error ? styles['input-box-error'] : ''
+                  }`}
               >
                 <label>Country</label>
                 <input
@@ -807,7 +861,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
               onClick={handleSubmit}
               disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
             >
-               {submitBtnLoading ? (
+              {submitBtnLoading ? (
                 <CircularProgress color="inherit" size={'14px'} />
               ) : (
                 'Save'

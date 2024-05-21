@@ -9,24 +9,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import Tooltip from '@/components/Tooltip/ToolTip'
 import styles from './styles.module.css'
 import AdminSvg from '@/assets/svg/adminSvg.svg'
-import FacebookIcon from '@/assets/svg/social-media/facebook.svg'
-import TwitterIcon from '@/assets/svg/social-media/twitter.svg'
-import InstagramIcon from '@/assets/svg/social-media/instagram.svg'
-import BehanceIcon from '@/assets/svg/social-media/behance.svg'
-import BGGIcon from '@/assets/svg/social-media/bgg.svg'
-import ChessIcon from '@/assets/svg/social-media/chess.com.svg'
-import DeviantArtIcon from '@/assets/svg/social-media/DeviantArt.svg'
-import GoodreadsIcon from '@/assets/svg/social-media/GoodReads.svg'
-import PinterestIcon from '@/assets/svg/social-media/pinterest.svg'
-import SmuleIcon from '@/assets/svg/social-media/smule.svg'
-import SoundCloudIcon from '@/assets/svg/social-media/soundcloud.svg'
-import StravaIcon from '@/assets/svg/social-media/strava.svg'
-import TripAdvisorIcon from '@/assets/svg/social-media/tripadvisor.svg'
-import UltimateGuitarIcon from '@/assets/svg/social-media/Ultimate-Guitar.svg'
-import YouTubeIcon from '@/assets/svg/social-media/youtube.svg'
-import OthersIcon from '@/assets/svg/social-media/other.svg'
-import MediumIcon from '@/assets/svg/social-media/MediumWeb.svg'
-import TelegramIcon from '@/assets/svg/social-media/Telegram.svg'
 import ListingPageLayout from '../../../layouts/ListingPageLayout'
 import { getListingPages, getListingTags } from '@/services/listing.service'
 import { getAllUserDetail } from '@/services/user.service'
@@ -40,7 +22,7 @@ import {
   updateRelatedListingsOpenStates,
   updateTagsOpenStates,
   updateWorkingHoursOpenStates,
-  updateRelatedListingsOpenStates2
+  updateRelatedListingsOpenStates2,
 } from '@/redux/slices/site'
 import WhatsappIcon from '@/assets/svg/whatsapp.svg'
 import { listingTypes } from '@/constants/constant'
@@ -68,6 +50,26 @@ interface Props {
   expandAll?: boolean
 }
 
+type SocialMediaOption =
+  | 'Facebook'
+  | 'Twitter'
+  | 'Instagram'
+  | 'Youtube'
+  | 'SoundCloud'
+  | 'Pinterest'
+  | 'Medium'
+  | 'Telegram'
+  | 'TripAdvisor'
+  | 'Ultimate Guitar'
+  | 'Strava'
+  | 'DeviantArts'
+  | 'Behance'
+  | 'GoodReads'
+  | 'Smule'
+  | 'Chess.com'
+  | 'BGG'
+  | 'Others'
+
 const ListingPageMain: React.FC<Props> = ({
   data,
   children,
@@ -81,9 +83,17 @@ const ListingPageMain: React.FC<Props> = ({
 }) => {
   const dispatch = useDispatch()
   const [tags, setTags] = useState([])
-  const { listingLayoutMode, hobbyStates, contactStates, socialMediaStates, locationStates, relatedListingsStates, relatedListingsStates2, tagsStates, workingHoursStates } = useSelector(
-    (state: RootState) => state.site,
-  )
+  const {
+    listingLayoutMode,
+    hobbyStates,
+    contactStates,
+    socialMediaStates,
+    locationStates,
+    relatedListingsStates,
+    relatedListingsStates2,
+    tagsStates,
+    workingHoursStates,
+  } = useSelector((state: RootState) => state.site)
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
@@ -114,7 +124,7 @@ const ListingPageMain: React.FC<Props> = ({
     return (
       <Tooltip title={altText}>
         <a href={url} target="_blank" rel="noopener noreferrer">
-          <Image src={iconSrc} alt={altText} />
+          <img src={iconSrc} alt={altText} />
         </a>
       </Tooltip>
     )
@@ -173,7 +183,10 @@ const ListingPageMain: React.FC<Props> = ({
   }, [data._id, locationStates])
 
   useEffect(() => {
-    if (socialMediaStates && typeof socialMediaStates[data?._id] === 'boolean') {
+    if (
+      socialMediaStates &&
+      typeof socialMediaStates[data?._id] === 'boolean'
+    ) {
       setShowSocialMedia(socialMediaStates[data?._id])
     } else if (data._id) {
       dispatch(updateSocialMediaOpenStates({ [data._id]: showSocialMedia }))
@@ -181,18 +194,28 @@ const ListingPageMain: React.FC<Props> = ({
   }, [data._id, socialMediaStates])
 
   useEffect(() => {
-    if (relatedListingsStates && typeof relatedListingsStates[data?._id] === 'boolean') {
+    if (
+      relatedListingsStates &&
+      typeof relatedListingsStates[data?._id] === 'boolean'
+    ) {
       setShowRelatedListing1(relatedListingsStates[data?._id])
     } else if (data._id) {
-      dispatch(updateRelatedListingsOpenStates({ [data._id]: showRelatedListing1 }))
+      dispatch(
+        updateRelatedListingsOpenStates({ [data._id]: showRelatedListing1 }),
+      )
     }
   }, [data._id, relatedListingsStates])
 
   useEffect(() => {
-    if (relatedListingsStates2 && typeof relatedListingsStates2[data?._id] === 'boolean') {
+    if (
+      relatedListingsStates2 &&
+      typeof relatedListingsStates2[data?._id] === 'boolean'
+    ) {
       setShowRelatedListing2(relatedListingsStates2[data?._id])
     } else if (data._id) {
-      dispatch(updateRelatedListingsOpenStates2({ [data._id]: showRelatedListing2 }))
+      dispatch(
+        updateRelatedListingsOpenStates2({ [data._id]: showRelatedListing2 }),
+      )
     }
   }, [data._id, relatedListingsStates2])
 
@@ -205,7 +228,10 @@ const ListingPageMain: React.FC<Props> = ({
   }, [data._id, tagsStates])
 
   useEffect(() => {
-    if (workingHoursStates && typeof workingHoursStates[data?._id] === 'boolean') {
+    if (
+      workingHoursStates &&
+      typeof workingHoursStates[data?._id] === 'boolean'
+    ) {
       setShowWorkingHours(workingHoursStates[data?._id])
     } else if (data._id) {
       dispatch(updateWorkingHoursOpenStates({ [data._id]: showWorkingHours }))
@@ -318,6 +344,45 @@ const ListingPageMain: React.FC<Props> = ({
       setShowHobbies(true)
     }
   }
+
+  const socialMediaIcons: Record<SocialMediaOption, any> = {
+    Facebook:
+      'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/facebook.svg',
+    Twitter:
+      'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/twitter.svg',
+    Instagram:
+      'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/instagram.svg',
+    Youtube:
+      'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/youtube.svg',
+    SoundCloud:
+      'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/soundcloud.svg',
+    Pinterest:
+      'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/pinterest.svg',
+    Medium:
+      'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/MediumWeb.svg',
+    Telegram:
+      'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/Telegram.svg',
+    TripAdvisor:
+      'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/tripadvisor.svg',
+    'Ultimate Guitar':
+      'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/Ultimate-Guitar.svg',
+    Strava:
+      'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/strava.svg',
+    DeviantArts:
+      'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/DeviantArt.svg',
+    Behance:
+      'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/behance.svg',
+    GoodReads:
+      'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/GoodReads.svg',
+    Smule:
+      'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/smule.svg',
+    'Chess.com':
+      'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/chess.com.svg',
+    BGG: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/bgg.svg',
+    Others:
+      'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/other.svg',
+  }
+
   // useEffect(() => {
   //   openModalHobbiesModal()
   //   window.addEventListener('resize', openModalHobbiesModal)
@@ -468,7 +533,11 @@ const ListingPageMain: React.FC<Props> = ({
                 )
               }
               setDisplayData={(arg0: boolean) => {
-                dispatch(updateRelatedListingsOpenStates({ [data._id]: !showRelatedListing1 }))
+                dispatch(
+                  updateRelatedListingsOpenStates({
+                    [data._id]: !showRelatedListing1,
+                  }),
+                )
               }}
               expandData={showRelatedListing1}
             >
@@ -480,7 +549,9 @@ const ListingPageMain: React.FC<Props> = ({
               </h4>
               <div
                 className={`${styles['display-desktop']}${
-                  relatedListingsStates?.[data?._id] ? ' ' + styles['display-mobile'] : ''
+                  relatedListingsStates?.[data?._id]
+                    ? ' ' + styles['display-mobile']
+                    : ''
                 }`}
               >
                 {!listingPagesLeft || listingPagesLeft.length === 0 ? null : (
@@ -542,7 +613,11 @@ const ListingPageMain: React.FC<Props> = ({
               <ul
                 className={`${styles['contact-wrapper']} ${
                   styles['display-desktop']
-                }${contactStates?.[data?._id] ? ' ' + styles['display-mobile'] : ''}`}
+                }${
+                  contactStates?.[data?._id]
+                    ? ' ' + styles['display-mobile']
+                    : ''
+                }`}
               >
                 {/* Page Admin */}
                 {(PageAdmin as any)?.full_name && isLoggedIn && (
@@ -878,7 +953,9 @@ const ListingPageMain: React.FC<Props> = ({
                 )
               }
               setDisplayData={(arg0: boolean) => {
-                dispatch(updateLocationOpenStates({ [data._id]: !showLocation }))
+                dispatch(
+                  updateLocationOpenStates({ [data._id]: !showLocation }),
+                )
               }}
               expandData={showLocation}
             >
@@ -887,7 +964,9 @@ const ListingPageMain: React.FC<Props> = ({
               </div>
               <div
                 className={`${styles['display-desktop']}${
-                  locationStates?.[data?._id] ? ' ' + styles['display-mobile'] : ''
+                  locationStates?.[data?._id]
+                    ? ' ' + styles['display-mobile']
+                    : ''
                 }`}
               >
                 {listingLayoutMode === 'view' && (
@@ -970,7 +1049,11 @@ const ListingPageMain: React.FC<Props> = ({
                   )
                 }
                 setDisplayData={(arg0: boolean) => {
-                  dispatch(updateWorkingHoursOpenStates({ [data._id]: !showWorkingHours }))
+                  dispatch(
+                    updateWorkingHoursOpenStates({
+                      [data._id]: !showWorkingHours,
+                    }),
+                  )
                 }}
                 expandData={showWorkingHours}
               >
@@ -978,7 +1061,11 @@ const ListingPageMain: React.FC<Props> = ({
                 <div
                   className={`${styles['working-hours-wrapper']} ${
                     styles['display-desktop']
-                  }${workingHoursStates?.[data?._id] ? ' ' + styles['display-mobile'] : ''}`}
+                  }${
+                    workingHoursStates?.[data?._id]
+                      ? ' ' + styles['display-mobile']
+                      : ''
+                  }`}
                 >
                   {/* Working Hours  */}
                   {data?.work_hours && (
@@ -1102,7 +1189,11 @@ const ListingPageMain: React.FC<Props> = ({
                   )
                 }
                 setDisplayData={(arg0: boolean) => {
-                  dispatch(updateSocialMediaOpenStates({ [data._id]: !showSocialMedia }))
+                  dispatch(
+                    updateSocialMediaOpenStates({
+                      [data._id]: !showSocialMedia,
+                    }),
+                  )
                 }}
                 expandData={showSocialMedia}
               >
@@ -1111,7 +1202,11 @@ const ListingPageMain: React.FC<Props> = ({
                 <ul
                   className={`${styles['social-contact-wrapper']} ${
                     styles['display-desktop']
-                  }${socialMediaStates?.[data?._id] ? ' ' + styles['display-mobile'] : ''}`}
+                  }${
+                    socialMediaStates?.[data?._id]
+                      ? ' ' + styles['display-mobile']
+                      : ''
+                  }`}
                 >
                   {data?.social_media_urls && (
                     <>
@@ -1123,144 +1218,76 @@ const ListingPageMain: React.FC<Props> = ({
                           switch (true) {
                             case key.startsWith('facebook'):
                               socialMediaName = 'Facebook'
-                              socialMediaIcon = FacebookIcon
+                              socialMediaIcon = socialMediaIcons['Facebook']
                               break
                             case key.startsWith('twitter'):
                               socialMediaName = 'Twitter'
-                              socialMediaIcon = TwitterIcon
+                              socialMediaIcon = socialMediaIcons['Twitter']
                               break
                             case key.startsWith('instagram'):
                               socialMediaName = 'Instagram'
-                              socialMediaIcon = InstagramIcon
+                              socialMediaIcon = socialMediaIcons['Instagram']
                               break
                             case key.startsWith('behance'):
                               socialMediaName = 'Behance'
-                              socialMediaIcon = BehanceIcon
+                              socialMediaIcon = socialMediaIcons['Behance']
                               break
                             case key.startsWith('bgg'):
                               socialMediaName = 'BoardGameGeek'
-                              socialMediaIcon = BGGIcon
+                              socialMediaIcon = socialMediaIcons['BGG']
                               break
                             case key.startsWith('chess'):
                               socialMediaName = 'Chess'
-                              socialMediaIcon = ChessIcon
+                              socialMediaIcon = socialMediaIcons['Chess.com']
                               break
                             case key.startsWith('deviantarts'):
                               socialMediaName = 'DeviantArt'
-                              socialMediaIcon = DeviantArtIcon
+                              socialMediaIcon = socialMediaIcons['DeviantArts']
                               break
                             case key.startsWith('goodreads'):
                               socialMediaName = 'Goodreads'
-                              socialMediaIcon = GoodreadsIcon
+                              socialMediaIcon = socialMediaIcons['GoodReads']
                               break
                             case key.startsWith('pinterest'):
                               socialMediaName = 'Pinterest'
-                              socialMediaIcon = PinterestIcon
+                              socialMediaIcon = socialMediaIcons['Pinterest']
                               break
                             case key.startsWith('smule'):
                               socialMediaName = 'Smule'
-                              socialMediaIcon = SmuleIcon
+                              socialMediaIcon = socialMediaIcons['Smule']
                               break
                             case key.startsWith('soundcloud'):
                               socialMediaName = 'SoundCloud'
-                              socialMediaIcon = SoundCloudIcon
+                              socialMediaIcon = socialMediaIcons['SoundCloud']
                               break
                             case key.startsWith('strava'):
                               socialMediaName = 'Strava'
-                              socialMediaIcon = StravaIcon
+                              socialMediaIcon = socialMediaIcons['Strava']
                               break
                             case key.startsWith('tripadvisor'):
                               socialMediaName = 'TripAdvisor'
-                              socialMediaIcon = TripAdvisorIcon
+                              socialMediaIcon = socialMediaIcons['TripAdvisor']
                               break
                             case key.startsWith('telegram'):
                               socialMediaName = 'Telegram'
-                              socialMediaIcon = TelegramIcon
+                              socialMediaIcon = socialMediaIcons['Telegram']
                               break
                             case key.startsWith('medium'):
                               socialMediaName = 'Medium'
-                              socialMediaIcon = MediumIcon
+                              socialMediaIcon = socialMediaIcons['Medium']
                               break
                             case key.startsWith('ultimate_guitar'):
                               socialMediaName = 'Ultimate Guitar'
-                              socialMediaIcon = UltimateGuitarIcon
+                              socialMediaIcon =
+                                socialMediaIcons['Ultimate Guitar']
                               break
                             case key.startsWith('youtube'):
                               socialMediaName = 'YouTube'
-                              socialMediaIcon = YouTubeIcon
+                              socialMediaIcon = socialMediaIcons['Youtube']
                               break
                             case key.startsWith('others'):
                               socialMediaName = extractDomainName(url)
-                              socialMediaIcon = OthersIcon
-                              break
-                            // Add cases for other socialmedia URLs as needed
-                            default:
-                              break
-                          }
-                          switch (true) {
-                            case key.startsWith('facebook'):
-                              socialMediaName = 'Facebook'
-                              socialMediaIcon = FacebookIcon
-                              break
-                            case key.startsWith('twitter'):
-                              socialMediaName = 'Twitter'
-                              socialMediaIcon = TwitterIcon
-                              break
-                            case key.startsWith('instagram'):
-                              socialMediaName = 'Instagram'
-                              socialMediaIcon = InstagramIcon
-                              break
-                            case key.startsWith('behance'):
-                              socialMediaName = 'Behance'
-                              socialMediaIcon = BehanceIcon
-                              break
-                            case key.startsWith('bgg'):
-                              socialMediaName = 'BoardGameGeek'
-                              socialMediaIcon = BGGIcon
-                              break
-                            case key.startsWith('chess'):
-                              socialMediaName = 'Chess'
-                              socialMediaIcon = ChessIcon
-                              break
-                            case key.startsWith('deviantarts'):
-                              socialMediaName = 'DeviantArt'
-                              socialMediaIcon = DeviantArtIcon
-                              break
-                            case key.startsWith('goodreads'):
-                              socialMediaName = 'Goodreads'
-                              socialMediaIcon = GoodreadsIcon
-                              break
-                            case key.startsWith('pinterest'):
-                              socialMediaName = 'Pinterest'
-                              socialMediaIcon = PinterestIcon
-                              break
-                            case key.startsWith('smule'):
-                              socialMediaName = 'Smule'
-                              socialMediaIcon = SmuleIcon
-                              break
-                            case key.startsWith('soundcloud'):
-                              socialMediaName = 'SoundCloud'
-                              socialMediaIcon = SoundCloudIcon
-                              break
-                            case key.startsWith('strava'):
-                              socialMediaName = 'Strava'
-                              socialMediaIcon = StravaIcon
-                              break
-                            case key.startsWith('tripadvisor'):
-                              socialMediaName = 'TripAdvisor'
-                              socialMediaIcon = TripAdvisorIcon
-                              break
-                            case key.startsWith('ultimate_guitar'):
-                              socialMediaName = 'Ultimate Guitar'
-                              socialMediaIcon = UltimateGuitarIcon
-                              break
-                            case key.startsWith('youtube'):
-                              socialMediaName = 'YouTube'
-                              socialMediaIcon = YouTubeIcon
-                              break
-                            case key.startsWith('others'):
-                              socialMediaName = extractDomainName(url)
-                              socialMediaIcon = OthersIcon
+                              socialMediaIcon = socialMediaIcons['Others']
                               break
                             // Add cases for other social media URLs as needed
                             default:
@@ -1797,7 +1824,11 @@ const ListingPageMain: React.FC<Props> = ({
                 )
               }
               setDisplayData={(arg0: boolean) => {
-                dispatch(updateRelatedListingsOpenStates2({ [data._id]: !showRelatedListing2 }))
+                dispatch(
+                  updateRelatedListingsOpenStates2({
+                    [data._id]: !showRelatedListing2,
+                  }),
+                )
               }}
               expandData={showRelatedListing2}
             >
@@ -1809,7 +1840,9 @@ const ListingPageMain: React.FC<Props> = ({
 
               <div
                 className={`${styles['display-desktop']}${
-                  relatedListingsStates2?.[data?._id] ? ' ' + styles['display-mobile'] : ''
+                  relatedListingsStates2?.[data?._id]
+                    ? ' ' + styles['display-mobile']
+                    : ''
                 }`}
               >
                 {!listingPagesRight || listingPagesRight.length === 0 ? null : (
@@ -1885,77 +1918,78 @@ const ListingPageMain: React.FC<Props> = ({
                         switch (true) {
                           case key.startsWith('facebook'):
                             socialMediaName = 'Facebook'
-                            socialMediaIcon = FacebookIcon
+                            socialMediaIcon = socialMediaIcons['Facebook']
                             break
                           case key.startsWith('twitter'):
                             socialMediaName = 'Twitter'
-                            socialMediaIcon = TwitterIcon
+                            socialMediaIcon = socialMediaIcons['Twitter']
                             break
                           case key.startsWith('instagram'):
                             socialMediaName = 'Instagram'
-                            socialMediaIcon = InstagramIcon
+                            socialMediaIcon = socialMediaIcons['Instagram']
                             break
                           case key.startsWith('behance'):
                             socialMediaName = 'Behance'
-                            socialMediaIcon = BehanceIcon
+                            socialMediaIcon = socialMediaIcons['Behance']
                             break
                           case key.startsWith('bgg'):
                             socialMediaName = 'BoardGameGeek'
-                            socialMediaIcon = BGGIcon
+                            socialMediaIcon = socialMediaIcons['BGG']
                             break
                           case key.startsWith('chess'):
                             socialMediaName = 'Chess'
-                            socialMediaIcon = ChessIcon
+                            socialMediaIcon = socialMediaIcons['Chess.com']
                             break
                           case key.startsWith('deviantarts'):
                             socialMediaName = 'DeviantArt'
-                            socialMediaIcon = DeviantArtIcon
+                            socialMediaIcon = socialMediaIcons['DeviantArts']
                             break
                           case key.startsWith('goodreads'):
                             socialMediaName = 'Goodreads'
-                            socialMediaIcon = GoodreadsIcon
+                            socialMediaIcon = socialMediaIcons['GoodReads']
                             break
                           case key.startsWith('pinterest'):
                             socialMediaName = 'Pinterest'
-                            socialMediaIcon = PinterestIcon
+                            socialMediaIcon = socialMediaIcons['Pinterest']
                             break
                           case key.startsWith('smule'):
                             socialMediaName = 'Smule'
-                            socialMediaIcon = SmuleIcon
+                            socialMediaIcon = socialMediaIcons['Smule']
                             break
                           case key.startsWith('soundcloud'):
                             socialMediaName = 'SoundCloud'
-                            socialMediaIcon = SoundCloudIcon
+                            socialMediaIcon = socialMediaIcons['SoundCloud']
                             break
                           case key.startsWith('strava'):
                             socialMediaName = 'Strava'
-                            socialMediaIcon = StravaIcon
+                            socialMediaIcon = socialMediaIcons['Strava']
                             break
                           case key.startsWith('tripadvisor'):
                             socialMediaName = 'TripAdvisor'
-                            socialMediaIcon = TripAdvisorIcon
+                            socialMediaIcon = socialMediaIcons['TripAdvisor']
                             break
                           case key.startsWith('telegram'):
                             socialMediaName = 'Telegram'
-                            socialMediaIcon = TelegramIcon
+                            socialMediaIcon = socialMediaIcons['Telegram']
                             break
                           case key.startsWith('medium'):
                             socialMediaName = 'Medium'
-                            socialMediaIcon = MediumIcon
+                            socialMediaIcon = socialMediaIcons['Medium']
                             break
                           case key.startsWith('ultimate_guitar'):
                             socialMediaName = 'Ultimate Guitar'
-                            socialMediaIcon = UltimateGuitarIcon
+                            socialMediaIcon =
+                              socialMediaIcons['Ultimate Guitar']
                             break
                           case key.startsWith('youtube'):
                             socialMediaName = 'YouTube'
-                            socialMediaIcon = YouTubeIcon
+                            socialMediaIcon = socialMediaIcons['Youtube']
                             break
                           case key.startsWith('others'):
                             socialMediaName = extractDomainName(url)
-                            socialMediaIcon = OthersIcon
+                            socialMediaIcon = socialMediaIcons['Others']
                             break
-                          // Add cases for other socialmedia URLs as needed
+                          // Add cases for other social media URLs as needed
                           default:
                             break
                         }
@@ -1968,7 +2002,7 @@ const ListingPageMain: React.FC<Props> = ({
                           )
                         }
 
-                        return null // If no matching socialmedia key is found, return null
+                        return null // If no matching social media key is found, return null
                       },
                     )}
                   </>

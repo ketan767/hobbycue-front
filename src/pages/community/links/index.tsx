@@ -91,10 +91,10 @@ const CommunityLinks: React.FC<Props> = ({}) => {
         <section className={styles['pages-container']}>
           {loading ? (
             <>
-              <LinksLoader/>
-              <LinksLoader/>
-              <LinksLoader/>
-              <LinksLoader/>
+              <LinksLoader />
+              <LinksLoader />
+              <LinksLoader />
+              <LinksLoader />
             </>
           ) : posts?.length > 0 ? (
             posts.map((post: any) => {

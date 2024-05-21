@@ -20,7 +20,7 @@ import addhobby from '@/assets/svg/addhobby.svg'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { showProfileError, updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
-import { getAllHobbies } from '@/services/hobby.service'
+import { SendHobbyRequest, getAllHobbies } from '@/services/hobby.service'
 import { isEmptyField } from '@/utils'
 import { FormControl, MenuItem, Select } from '@mui/material'
 import Image from 'next/image'
@@ -45,6 +45,14 @@ type Props = {
   setShowAddGenreModal?: any
   setShowAddHobbyModal?: any
   CheckIsOnboarded?: any
+  propData?: {
+    selectedHobbyToAdd?: {
+      _id: string
+      display: string
+      level: number
+      show: boolean
+    }
+  }
 }
 const levels = ['Beginner', 'Intermediate', 'Advanced']
 // const levels = {
@@ -85,8 +93,10 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   setShowAddGenreModal,
   setShowAddHobbyModal,
   CheckIsOnboarded,
+  propData,
 }) => {
   const dispatch = useDispatch()
+  const selectedHobbyToAdd = propData && propData?.selectedHobbyToAdd
   const [showModal, setShowModal] = useState(false)
   const hobbyDropdownRef = useRef<HTMLDivElement>(null)
   const genreDropdownRef = useRef<HTMLDivElement>(null)
@@ -857,25 +867,62 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       document.removeEventListener('mousedown', handleOutsideClick)
     }
   }, [])
+  useEffect(() => {
+    // setData((prev)=>{
+    //   if(selectedHobbyToAdd && selectedHobbyToAdd?.level>=5){
+    //     return {...prev,genre:selectedHobbyToAdd}
+    //   }else if (selectedHobbyToAdd && selectedHobbyToAdd?.level<5){
+    //     return {...prev,hobby:selectedHobbyToAdd}
+    //   }
+    //   return {...prev}
+    // })
+    if (selectedHobbyToAdd && selectedHobbyToAdd?.level >= 5) {
+      if (selectedHobbyToAdd.show === true) {
+        setData((prev) => ({ ...prev, genre: selectedHobbyToAdd }))
+      }
+      setGenreInputValue(selectedHobbyToAdd.display)
+    } else if (selectedHobbyToAdd && selectedHobbyToAdd?.level < 5) {
+      if (selectedHobbyToAdd.show === true) {
+        setData((prev) => ({ ...prev, hobby: selectedHobbyToAdd }))
+      }
+      setHobbyInputValue(selectedHobbyToAdd.display)
+    }
+  }, [selectedHobbyToAdd])
 
   console.log({ data, isChanged })
 
   if (showAddHobbyModal) {
     return (
       <>
-        {/* {genreInputValue.length === 0 ? ( */}
         <AddHobby
           handleClose={() => {
             setShowAddHobbyModal(false)
           }}
-          handleSubmit={() => {
-            setShowSnackbar({
-              message: 'This feature is under development',
-              triggerOpen: true,
-              type: 'success',
-            })
+          handleSubmit={() => async () => {
+            let jsonData = {
+              user_id: user._id,
+              user_type: 'user',
+              hobby: hobbyInputValue,
+              level: 'Hobby',
+            }
+            const { err, res } = await SendHobbyRequest(jsonData)
+            if (res?.data.success) {
+              setShowSnackbar({
+                triggerOpen: true,
+                type: 'success',
+                message: 'Request sent',
+              })
+            } else if (err) {
+              setShowSnackbar({
+                triggerOpen: true,
+                type: 'error',
+                message: 'Something went wrong',
+              })
+              console.log(err)
+            }
           }}
           propData={{ defaultValue: hobbyInputValue }}
+          selectedHobbyText={(selectedHobbyToAdd&&selectedHobbyToAdd?.show===false&&selectedHobbyToAdd.display===hobbyInputValue)?selectedHobbyToAdd.display:undefined}
         />
         {/* ) : ( */}
         {/* )} */}

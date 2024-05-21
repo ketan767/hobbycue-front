@@ -38,7 +38,7 @@ type reportData = {
   email: string
   user_id: string
   type: string
-  reported_user_id: string
+  reported_page_id: string
   reported_user_name: string
   reported_user_email: string
   for_url: string
@@ -61,7 +61,7 @@ const ListingReport: React.FC<Props> = ({
     email: '',
     user_id: '',
     type: '',
-    reported_user_id: '',
+    reported_page_id: '',
     reported_user_name: '',
     reported_user_email: '',
     for_url: '',
@@ -84,7 +84,7 @@ const ListingReport: React.FC<Props> = ({
     email: user?.public_email,
     user_id: user._id,
     type: listingPageData.type,
-    reported_user_id: listingPageData._id,
+    reported_page_id: listingPageData._id,
     reported_user_name: listingPageData?.title,
     reported_user_email: listingPageData?.public_email,
     for_url: currentUrl,
@@ -103,7 +103,7 @@ const ListingReport: React.FC<Props> = ({
       email: user?.public_email,
       user_id: user._id,
       type: listingPageData.type,
-      reported_user_id: listingPageData._id,
+      reported_page_id: listingPageData._id,
       reported_user_name: listingPageData?.title,
       reported_user_email: listingPageData?.public_email,
       for_url: currentUrl,
@@ -144,6 +144,17 @@ const ListingReport: React.FC<Props> = ({
         type: 'success',
         message: 'Report sent',
       })
+      setData({
+        description: '',
+        name: '',
+        email: '',
+        user_id: '',
+        type: '',
+        reported_page_id: '',
+        reported_user_name: '',
+        reported_user_email: '',
+        for_url: '',
+      })
       setSubmitBtnLoading(false)
       setTimeout(() => {
         dispatch(closeModal())
@@ -166,7 +177,7 @@ const ListingReport: React.FC<Props> = ({
       email: user?.public_email,
       user_id: user._id,
       type: listingPageData.type,
-      reported_user_id: listingPageData._id,
+      reported_page_id: listingPageData._id,
       reported_user_name: listingPageData?.title,
       reported_user_email: listingPageData?.public_email,
       for_url: currentUrl,
@@ -201,12 +212,11 @@ const ListingReport: React.FC<Props> = ({
   const nextButtonRef = useRef<HTMLButtonElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   useEffect(() => {
-    const focusTextarea = () => {
-      if (textareaRef.current) {
+    if (textareaRef.current) {
+      setTimeout(() => {
         textareaRef.current?.focus()
-      }
+      }, 50)
     }
-    focusTextarea()
   }, [textareaRef.current])
 
   useEffect(() => {

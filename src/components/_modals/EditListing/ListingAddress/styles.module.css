@@ -152,6 +152,19 @@
   color: #c0504d;
 }
 
+.pincode-input-box{
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-24);
+}
+
+.info-container{
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+
 /* General Profile */
 .year-gender-wrapper {
   display: flex;

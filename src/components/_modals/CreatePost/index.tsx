@@ -685,7 +685,7 @@ export const CreatePost: React.FC<Props> = ({
                 <label>Select Hobby</label>
                 <InputSelect
                   value={`${data.hobby?.display ?? ''}${
-                    data.genre?.display ? '-' : ''
+                    data.genre?.display ? ' - ' : ''
                   }${data.genre?.display ?? ''}`}
                   onChange={(e: any) => {}}
                   selectText=""

@@ -5,24 +5,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { openModal } from '@/redux/slices/modal'
 import Tooltip from '@/components/Tooltip/ToolTip'
-import FacebookIcon from '@/assets/svg/social-media/facebook.svg'
-import TwitterIcon from '@/assets/svg/social-media/twitter.svg'
-import InstagramIcon from '@/assets/svg/social-media/instagram.svg'
-import BehanceIcon from '@/assets/svg/social-media/behance.svg'
-import BGGIcon from '@/assets/svg/social-media/bgg.svg'
-import ChessIcon from '@/assets/svg/social-media/chess.com.svg'
-import DeviantArtIcon from '@/assets/svg/social-media/DeviantArt.svg'
-import GoodreadsIcon from '@/assets/svg/social-media/GoodReads.svg'
-import PinterestIcon from '@/assets/svg/social-media/pinterest.svg'
-import SmuleIcon from '@/assets/svg/social-media/smule.svg'
-import SoundCloudIcon from '@/assets/svg/social-media/soundcloud.svg'
-import StravaIcon from '@/assets/svg/social-media/strava.svg'
-import TripAdvisorIcon from '@/assets/svg/social-media/tripadvisor.svg'
-import UltimateGuitarIcon from '@/assets/svg/social-media/Ultimate-Guitar.svg'
-import YouTubeIcon from '@/assets/svg/social-media/youtube.svg'
-import OthersIcon from '@/assets/svg/social-media/other.svg'
-import MediumIcon from '@/assets/svg/social-media/MediumWeb.svg'
-import TelegramIcon from '@/assets/svg/social-media/Telegram.svg'
 import Image from 'next/image'
 import { updateSocialMediaOpenStates } from '@/redux/slices/site'
 
@@ -30,6 +12,26 @@ type Props = {
   data: ProfilePageData['pageData']
   expandData?: boolean
 }
+
+type SocialMediaOption =
+  | 'Facebook'
+  | 'Twitter'
+  | 'Instagram'
+  | 'Youtube'
+  | 'SoundCloud'
+  | 'Pinterest'
+  | 'Medium'
+  | 'Telegram'
+  | 'TripAdvisor'
+  | 'Ultimate Guitar'
+  | 'Strava'
+  | 'DeviantArts'
+  | 'Behance'
+  | 'GoodReads'
+  | 'Smule'
+  | 'Chess.com'
+  | 'BGG'
+  | 'Others';
 
 const ProfileSocialMediaSide = ({ data, expandData }: Props) => {
   const { profileLayoutMode, socialMediaStates } = useSelector((state: RootState) => state.site)
@@ -41,7 +43,7 @@ const ProfileSocialMediaSide = ({ data, expandData }: Props) => {
     return (
       <Tooltip title={altText}>
         <a href={url} target="_blank" rel="noopener noreferrer">
-          <Image src={iconSrc} alt={altText} />
+          <img src={iconSrc} alt={altText} />
         </a>
       </Tooltip>
     )
@@ -79,6 +81,27 @@ const ProfileSocialMediaSide = ({ data, expandData }: Props) => {
     if (expandData !== undefined) setDisplayData(expandData)
   }, [expandData])
 
+  const socialMediaIcons: Record<SocialMediaOption, any> = {
+    Facebook: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/facebook.svg',
+    Twitter: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/twitter.svg',
+    Instagram: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/instagram.svg',
+    Youtube: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/youtube.svg',
+    SoundCloud: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/soundcloud.svg',
+    Pinterest: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/pinterest.svg',
+    Medium: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/MediumWeb.svg',
+    Telegram: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/Telegram.svg',
+    TripAdvisor: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/tripadvisor.svg',
+    'Ultimate Guitar': 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/Ultimate-Guitar.svg',
+    Strava: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/strava.svg',
+    DeviantArts: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/DeviantArt.svg',
+    Behance: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/behance.svg',
+    GoodReads: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/GoodReads.svg',
+    Smule: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/smule.svg',
+    'Chess.com': 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/chess.com.svg',
+    BGG: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/bgg.svg',
+    Others: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/other.svg',
+  }
+
   return (
     <>
       <PageContentBox
@@ -107,75 +130,75 @@ const ProfileSocialMediaSide = ({ data, expandData }: Props) => {
                 switch (true) {
                   case key.startsWith('facebook'):
                     socialMediaName = 'Facebook'
-                    socialMediaIcon = FacebookIcon
+                    socialMediaIcon = socialMediaIcons['Facebook'];
                     break
                   case key.startsWith('twitter'):
                     socialMediaName = 'Twitter'
-                    socialMediaIcon = TwitterIcon
+                    socialMediaIcon = socialMediaIcons['Twitter'];
                     break
                   case key.startsWith('instagram'):
                     socialMediaName = 'Instagram'
-                    socialMediaIcon = InstagramIcon
+                    socialMediaIcon = socialMediaIcons['Instagram'];
                     break
                   case key.startsWith('behance'):
                     socialMediaName = 'Behance'
-                    socialMediaIcon = BehanceIcon
+                    socialMediaIcon = socialMediaIcons['Behance'];
                     break
                   case key.startsWith('bgg'):
                     socialMediaName = 'BoardGameGeek'
-                    socialMediaIcon = BGGIcon
+                    socialMediaIcon = socialMediaIcons['BGG'];
                     break
                   case key.startsWith('chess'):
                     socialMediaName = 'Chess'
-                    socialMediaIcon = ChessIcon
+                    socialMediaIcon = socialMediaIcons['Chess.com'];
                     break
                   case key.startsWith('deviantarts'):
                     socialMediaName = 'DeviantArt'
-                    socialMediaIcon = DeviantArtIcon
+                    socialMediaIcon = socialMediaIcons['DeviantArts'];
                     break
                   case key.startsWith('goodreads'):
                     socialMediaName = 'Goodreads'
-                    socialMediaIcon = GoodreadsIcon
+                    socialMediaIcon = socialMediaIcons['GoodReads'];
                     break
                   case key.startsWith('pinterest'):
                     socialMediaName = 'Pinterest'
-                    socialMediaIcon = PinterestIcon
+                    socialMediaIcon = socialMediaIcons['Pinterest'];
                     break
                   case key.startsWith('smule'):
                     socialMediaName = 'Smule'
-                    socialMediaIcon = SmuleIcon
+                    socialMediaIcon = socialMediaIcons['Smule'];
                     break
                   case key.startsWith('soundcloud'):
                     socialMediaName = 'SoundCloud'
-                    socialMediaIcon = SoundCloudIcon
+                    socialMediaIcon = socialMediaIcons['SoundCloud'];
                     break
                   case key.startsWith('strava'):
                     socialMediaName = 'Strava'
-                    socialMediaIcon = StravaIcon
+                    socialMediaIcon = socialMediaIcons['Strava'];
                     break
                   case key.startsWith('tripadvisor'):
                     socialMediaName = 'TripAdvisor'
-                    socialMediaIcon = TripAdvisorIcon
+                    socialMediaIcon = socialMediaIcons['TripAdvisor'];
                     break
                   case key.startsWith('telegram'):
                     socialMediaName = 'Telegram'
-                    socialMediaIcon = TelegramIcon
+                    socialMediaIcon = socialMediaIcons['Telegram'];
                     break
                   case key.startsWith('medium'):
                     socialMediaName = 'Medium'
-                    socialMediaIcon = MediumIcon
+                    socialMediaIcon = socialMediaIcons['Medium'];
                     break
                   case key.startsWith('ultimate_guitar'):
                     socialMediaName = 'Ultimate Guitar'
-                    socialMediaIcon = UltimateGuitarIcon
+                    socialMediaIcon = socialMediaIcons['Ultimate Guitar'];
                     break
                   case key.startsWith('youtube'):
                     socialMediaName = 'YouTube'
-                    socialMediaIcon = YouTubeIcon
+                    socialMediaIcon = socialMediaIcons['Youtube'];
                     break
                   case key.startsWith('others'):
                     socialMediaName = extractDomainName(url)
-                    socialMediaIcon = OthersIcon
+                    socialMediaIcon = socialMediaIcons['Others'];
                     break
                   // Add cases for other social media URLs as needed
                   default:
