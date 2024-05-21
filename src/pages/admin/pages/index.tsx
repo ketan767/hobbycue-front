@@ -18,6 +18,7 @@ import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import { deleteListingByAdmin } from '@/services/admin.service'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import { formatDateTime } from '@/utils'
 
 type PagesProps = {
   _id: string
@@ -36,12 +37,16 @@ type PagesProps = {
   last_loggedIn_via: string
   is_password: string
   profile_url: string
+  admin: any
+  is_published: any
+  is_claimed: any
+  createdAt: any
 }
 type SearchInput = {
   search: InputData<string>
 }
 
-const AdminDashboard: React.FC = () => {
+const AdminPages: React.FC = () => {
   const dispatch = useDispatch()
   const router = useRouter()
   const [data, setData] = useState<SearchInput>({
@@ -90,7 +95,7 @@ const AdminDashboard: React.FC = () => {
 
   const fetchPages = async () => {
     const { res, err } = await getListingPages(
-      `limit=${pagelimit}&sort=-createdAt&page=${page}`,
+      `limit=${pagelimit}&sort=-createdAt&page=${page}&populate=admin`,
     )
     if (err) {
       console.log('An error', err)
@@ -272,10 +277,10 @@ const AdminDashboard: React.FC = () => {
             <table className={styles.resultsTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '18.06%' }}>User</th>
-                  <th style={{ width: '19.48%' }}>Public Email</th>
-                  <th style={{ width: '13.87%' }}>Phone Number</th>
-                  <th style={{ width: '9.163%' }}>Page Type</th>
+                  <th style={{ width: '22.06%' }}>Page</th>
+                  <th style={{ width: '19.48%' }}>Page Admin</th>
+                  <th style={{ width: '13.87%' }}>Status</th>
+                  <th style={{ width: '9.163%' }}>Claimed</th>
                   <th
                     style={{
                       width: '16.54%',
@@ -283,14 +288,12 @@ const AdminDashboard: React.FC = () => {
                       textAlign: 'center',
                     }}
                   >
-                    Last Login
+                    Last update
                   </th>
                   <th style={{ width: '6.939%', paddingRight: '16px' }}>
-                    Pages
-                  </th>
-                  <th style={{ width: '6.672%', paddingRight: '16px' }}>
                     Posts
                   </th>
+
                   <th style={{ width: '9.252%', paddingRight: '16px' }}>
                     Actions
                   </th>
@@ -325,20 +328,20 @@ const AdminDashboard: React.FC = () => {
                         </div>
                       </div>
                     </td>
-                    <td className={styles.userEmail}>
-                      <Link href={`mailto:${page?.public_email}`}>
-                        {page?.public_email}
-                      </Link>
+                    <td className={styles.userName}>
+                      <a>{page?.admin?.full_name}</a>
                     </td>
-                    <td className={styles.userPhone}>{fullNumber(page)}</td>
-                    <td className={styles.pageType}>{page?.type}</td>
+                    <td className={styles.userPhone}>
+                      {page.is_published ? 'Published' : 'Unpublished'}
+                    </td>
+                    <td className={styles.pageType}>
+                      {page?.is_claimed ? 'Yes' : 'No'}
+                    </td>
                     <td className={styles.lastLoggedIn}>
-                      {page?.last_loggedIn_via}
+                      {formatDateTime(page?.createdAt)}
                     </td>
                     <td className={styles.pagesLength}>{pagesLength(page)}</td>
-                    <td className={styles.pagesLength}>
-                      {/* posts not in logs */}0
-                    </td>
+
                     <td>
                       <div className={styles.actions}>
                         <div onClick={() => handleEdit(page.page_url)}>
@@ -354,19 +357,19 @@ const AdminDashboard: React.FC = () => {
               </tbody>
             </table>
           </div>
-            <div className={styles.pagination}>
-              {/* Previous Page Button */}
-              {page > 1 ? (
-                <button onClick={goToPreviousPage}>Previous</button>
-              ) : (
-                ''
-              )}
-              {searchResults.length === pagelimit ? (
-                <button onClick={goToNextPage}>Next</button>
-              ) : (
-                ''
-              )}
-            </div>
+          <div className={styles.pagination}>
+            {/* Previous Page Button */}
+            {page > 1 ? (
+              <button onClick={goToPreviousPage}>Previous</button>
+            ) : (
+              ''
+            )}
+            {searchResults.length === pagelimit ? (
+              <button onClick={goToNextPage}>Next</button>
+            ) : (
+              ''
+            )}
+          </div>
         </div>
       </AdminLayout>
       {deleteData.open && (
@@ -380,7 +383,7 @@ const AdminDashboard: React.FC = () => {
             setDeleteData({ open: false, _id: undefined })
           }}
           yesHandler={deleteFunc}
-          text='page'
+          text="page"
         />
       )}
       {
@@ -397,4 +400,4 @@ const AdminDashboard: React.FC = () => {
   )
 }
 
-export default AdminDashboard
+export default AdminPages

@@ -1,37 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles.module.css'
-import { CircularProgress, FormControl, MenuItem, Select, useMediaQuery } from '@mui/material'
+import { CircularProgress, MenuItem, Select, useMediaQuery } from '@mui/material'
 import DeleteIcon from '@/assets/svg/trash-icon-colored.svg'
 import AddIcon from '@/assets/svg/add.svg'
 import Image from 'next/image'
-import {
-  getMyProfileDetail,
-  updateMyProfileDetail,
-} from '@/services/user.service'
 import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
-import { updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import { updateListing } from '@/services/listing.service'
-import FacebookIcon from '@/assets/svg/social-media/facebook.svg'
-import TwitterIcon from '@/assets/svg/social-media/twitter.svg'
-import InstagramIcon from '@/assets/svg/social-media/instagram.svg'
-import BehanceIcon from '@/assets/svg/social-media/behance.svg'
-import BGGIcon from '@/assets/svg/social-media/bgg.svg'
-import ChessIcon from '@/assets/svg/social-media/chess.com.svg'
-import DeviantArtIcon from '@/assets/svg/social-media/DeviantArt.svg'
-import GoodreadsIcon from '@/assets/svg/social-media/GoodReads.svg'
-import PinterestIcon from '@/assets/svg/social-media/pinterest.svg'
-import SmuleIcon from '@/assets/svg/social-media/smule.svg'
-import SoundCloudIcon from '@/assets/svg/social-media/soundcloud.svg'
-import StravaIcon from '@/assets/svg/social-media/strava.svg'
-import TripAdvisorIcon from '@/assets/svg/social-media/tripadvisor.svg'
-import UltimateGuitarIcon from '@/assets/svg/social-media/Ultimate-Guitar.svg'
-import YouTubeIcon from '@/assets/svg/social-media/youtube.svg'
-import OthersIcon from '@/assets/svg/social-media/other.svg'
-import MediumIcon from '@/assets/svg/social-media/MediumWeb.svg'
-import TelegramIcon from '@/assets/svg/social-media/Telegram.svg'
 import SaveModal from '../../SaveModal/saveModal'
+import { getSocialNetworks } from '@/services/socialnetworks.service'
 
 type Props = {
   data?: ProfilePageData['pageData']
@@ -50,7 +28,7 @@ const options: SocialMediaOption[] = [
   'Facebook',
   'Twitter',
   'Instagram',
-  'Youtube',
+  'YouTube',
   'SoundCloud',
   'Pinterest',
   'Medium',
@@ -58,7 +36,7 @@ const options: SocialMediaOption[] = [
   'TripAdvisor',
   'Ultimate Guitar',
   'Strava',
-  'DeviantArts',
+  'DeviantArt',
   'Behance',
   'GoodReads',
   'Smule',
@@ -71,7 +49,7 @@ type SocialMediaOption =
   | 'Facebook'
   | 'Twitter'
   | 'Instagram'
-  | 'Youtube'
+  | 'YouTube'
   | 'SoundCloud'
   | 'Pinterest'
   | 'Medium'
@@ -79,7 +57,7 @@ type SocialMediaOption =
   | 'TripAdvisor'
   | 'Ultimate Guitar'
   | 'Strava'
-  | 'DeviantArts'
+  | 'DeviantArt'
   | 'Behance'
   | 'GoodReads'
   | 'Smule'
@@ -87,32 +65,32 @@ type SocialMediaOption =
   | 'BGG'
   | 'Others'
 
-const socialMediaIcons: Record<SocialMediaOption, any> = {
-  Facebook: FacebookIcon,
-  Twitter: TwitterIcon,
-  Instagram: InstagramIcon,
-  Youtube: YouTubeIcon,
-  SoundCloud: SoundCloudIcon,
-  Pinterest: PinterestIcon,
-  Medium: MediumIcon,
-  Telegram: TelegramIcon,
-  TripAdvisor: TripAdvisorIcon,
-  'Ultimate Guitar': UltimateGuitarIcon,
-  Strava: StravaIcon,
-  DeviantArts: DeviantArtIcon,
-  Behance: BehanceIcon,
-  GoodReads: GoodreadsIcon,
-  Smule: SmuleIcon,
-  'Chess.com': ChessIcon,
-  BGG: BGGIcon,
-  Others: OthersIcon,
-}
+  const socialMediaIcons: Record<SocialMediaOption, any> = {
+    Facebook: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/facebook.svg',
+    Twitter: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/twitter.svg',
+    Instagram: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/instagram.svg',
+    YouTube: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/youtube.svg',
+    SoundCloud: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/soundcloud.svg',
+    Pinterest: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/pinterest.svg',
+    Medium: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/MediumWeb.svg',
+    Telegram: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/Telegram.svg',
+    TripAdvisor: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/tripadvisor.svg',
+    'Ultimate Guitar': 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/Ultimate-Guitar.svg',
+    Strava: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/strava.svg',
+    DeviantArt: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/DeviantArt.svg',
+    Behance: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/behance.svg',
+    GoodReads: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/GoodReads.svg',
+    Smule: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/smule.svg',
+    'Chess.com': 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/chess.com.svg',
+    BGG: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/bgg.svg',
+    Others: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/other.svg',
+  }
 
 const defaultSocialMediaURLs: Record<SocialMediaOption, string> = {
   Facebook: 'https://facebook.com/',
   Twitter: 'https://twitter.com/',
   Instagram: 'https://instagram.com/',
-  Youtube: 'https://youtube.com/',
+  YouTube: 'https://youtube.com/',
   SoundCloud: 'https://soundcloud.com/',
   Pinterest: 'https://pinterest.com/',
   Medium: 'https://medium.com/',
@@ -120,7 +98,7 @@ const defaultSocialMediaURLs: Record<SocialMediaOption, string> = {
   TripAdvisor: 'https://tripadvisor.com/profile/',
   'Ultimate Guitar': 'https://ultimate-guitar.com/u/',
   Strava: 'https://strava.com/athletes/',
-  DeviantArts: 'https://deviantart.com/',
+  DeviantArt: 'https://deviantart.com/',
   Behance: 'https://behance.net/',
   GoodReads: 'https://goodreads.com/',
   Smule: 'https://smule.com/',
@@ -138,7 +116,14 @@ const ListingSocialMediaEditModal = ({
 }: Props) => {
   const [submitBtnLoading, setSubmitBtnLoading] = useState(false)
   const { listingModalData } = useSelector((state: RootState) => state.site)
-
+  const [allOptions, setAllOptions] = useState<
+    {
+      Mouseover: string
+      Show: 'Y' | 'N' | ''
+      socialMedia: string
+      urlPrompt: string
+    }[]
+  >([])
   const [isChanged, setIsChanged] = useState(false)
 
   useEffect(() => {
@@ -491,6 +476,19 @@ const ListingSocialMediaEditModal = ({
     }
   }, [mediaData, initialData])
 
+  useEffect(()=>{
+    getSocialNetworks().then((result)=>{
+      const {res,err} = result;
+      if(err){
+        console.log({err})
+      }
+      else if(res?.data&&res?.data?.data){
+        setAllOptions(res.data.data)
+        console.log({d:res.data.data})
+      }
+    }).catch(err=>{console.log({err})})
+  },[])
+
   const isMobile = useMediaQuery('(max-width:1100px)');
 
   if (confirmationModal) {
@@ -554,17 +552,17 @@ const ListingSocialMediaEditModal = ({
                 className={styles.dropdown}
                 inputProps={{ 'aria-label': 'Without label' }}
               >
-                {options.map((option) => {
+                {allOptions.filter(obj=>obj.Show==='Y').map((option,i) => {
                   return (
-                    <MenuItem key={option} value={option}>
+                    <MenuItem key={i} value={option.socialMedia}>
                       <div className={styles['menu-item']}>
-                        <Image
-                          src={socialMediaIcons[option]}
-                          alt={option}
+                        <img
+                          src={socialMediaIcons[option.socialMedia as SocialMediaOption]}
+                          alt={option.socialMedia}
                           width={24}
                           height={24}
                         />
-                        <p style={{ marginLeft: '8px' }}>{option}</p>
+                        <p style={{ marginLeft: '8px' }}>{option.socialMedia}</p>
                       </div>
                     </MenuItem>
                   )

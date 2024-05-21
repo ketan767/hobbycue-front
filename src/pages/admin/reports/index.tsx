@@ -1,59 +1,53 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
+import { getAllUserDetail, searchUsers } from '../../../services/user.service'
 import styles from './styles.module.css'
 import Image from 'next/image'
 import DefaultProfile from '@/assets/svg/default-images/default-user-icon.svg'
 import { forgotPassword } from '@/services/auth.service'
-import { openModal, updateForgotPasswordEmail } from '@/redux/slices/modal'
+import {
+  closeModal,
+  openModal,
+  updateForgotPasswordEmail,
+} from '@/redux/slices/modal'
 import { RootState } from '@/redux/store'
+import AdminNavbar from '@/components/AdminNavbar/AdminNavbar'
 import Link from 'next/link'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
-import { getAllPosts } from '@/services/post.service'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
-import { deletePostByAdmin } from '@/services/admin.service'
+import {
+  deleteUserByAdmin,
+  getReports,
+  getSupports,
+} from '@/services/admin.service'
 
-type PostProps = any
+type UserProps = {
+  _id: string
+  name: string
+  email: string
+  type: string
+  description: string
+  for_url: string
+  resolved: any
+}
 type SearchInput = {
   search: InputData<string>
 }
 
-function formatDate(inputDate: string): string {
-  const months: string[] = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ]
-
-  const date = new Date(inputDate)
-  const day = date.getDate()
-  const month = months[date.getMonth()]
-  const year = date.getFullYear()
-  const hours = date.getHours()
-  const minutes = date.getMinutes()
-  const ampm = hours >= 12 ? 'PM' : 'AM'
-  const formattedHours = hours % 12 === 0 ? 12 : hours % 12
-  const formattedMinutes = minutes < 10 ? '0' + minutes : minutes
-
-  return `${day} ${month} ${year} at ${formattedHours}:${formattedMinutes} ${ampm}`
-}
-
-const AdminDashboard: React.FC = () => {
+const AdminReport: React.FC = () => {
   const router = useRouter()
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
   })
-  const [searchResults, setSearchResults] = useState<PostProps[]>([])
+  const [email, setEmail] = useState('')
+  const [searchResults, setSearchResults] = useState<UserProps[]>([])
+  const [pageNumber, setPageNumber] = useState<number[]>([])
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value
+    setData((prev) => ({ ...prev, search: { value, error: null } }))
+  }
   const [page, setPage] = useState(1)
   const [pagelimit, setPagelimit] = useState(25)
   const [deleteData, setDeleteData] = useState<{
@@ -69,36 +63,21 @@ const AdminDashboard: React.FC = () => {
     message: '',
   })
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value
-    setData((prev) => ({ ...prev, search: { value, error: null } }))
-  }
+  const handleSearch = async (event: any) => {
+    const searchValue = data.search.value.trim()
+    event.preventDefault()
+    let searchCriteria = {
+      name: searchValue,
+    }
 
-  const fetchPosts = async () => {
-    const { res, err } = await getAllPosts(
-      `populate=_author,_genre,_hobby&limit=${pagelimit}&sort=-createdAt&page=${page}`,
-    )
+    const { res, err } = await getSupports('')
     if (err) {
       console.log('An error', err)
     } else {
-      setSearchResults(res.data?.data?.posts)
-      console.log('res', res.data?.data?.posts)
+      setSearchResults(res.data.data.supports)
+      console.log('res', res)
     }
   }
-
-  const goToPreviousPage = () => {
-    setPage(page - 1)
-  }
-
-  const goToNextPage = () => {
-    setPage(page + 1)
-  }
-
-  useEffect(() => {
-    if (page) {
-      fetchPosts()
-    }
-  }, [page])
 
   const filterSvg = (
     <svg
@@ -174,58 +153,100 @@ const AdminDashboard: React.FC = () => {
       />
     </svg>
   )
-
-  const fullNumber = (post: any) => {
-    if (post?.phone?.prefix && post?.phone?.number) {
-      return post?.phone?.prefix + post?.phone?.number
+  console.log({ searchResults })
+  const fullNumber = (user: any) => {
+    if (user?.phone?.prefix && user?.phone?.number) {
+      return user?.phone?.prefix + user?.phone?.number
     } else {
       return 'No number'
     }
   }
-
-  const pagesLength = (post: any) => {
-    return post?._listings?.length || 0
+  function extractPath(url: any) {
+    const urlObject = new URL(url)
+    return urlObject.pathname.slice(1)
   }
 
-  const handleEdit = (post_id: string) => {
-    router.push(`/admin/posts/edit/${post_id}`)
+  const pagesLength = (user: any) => {
+    return user?._listings?.length || 0
+  }
+  const handleEdit = (profile_url: any) => {
+    router.push(`/admin/users/edit/${profile_url}`)
   }
 
-  const handleDelete = (post_id: string) => {
-    setDeleteData({ open: true, _id: post_id })
-  }
+  const fetchSearchResults = async () => {
+    const searchValue = data.search.value.trim()
+    let searchCriteria = {
+      full_name: searchValue,
+    }
 
-  const deleteFunc = async (post_id: string) => {
-    try {
-      setDeleteData({ open: false, _id: undefined })
-      const { err, res } = await deletePostByAdmin(post_id)
-      if (err) {
-        setSnackbar({
-          display: true,
-          message: 'Some error occured',
-          type: 'warning',
-        })
-      } else if (res) {
-        fetchPosts()
-        setSnackbar({
-          display: true,
-          message: 'Post deleted successfully',
-          type: 'success',
-        })
-        fetchPosts()
-      } else {
-        setSnackbar({
-          display: true,
-          message: 'Some error occured',
-          type: 'warning',
-        })
+    const { res, err } = await searchUsers(searchCriteria)
+    if (err) {
+      console.log('An error', err)
+    } else {
+      setSearchResults(res?.data?.data.supports)
+
+      // Calculate total number of pages based on search results length
+      const totalPages = Math.ceil(res.data.length / 50)
+      const pages = []
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i)
       }
-    } catch (error) {
-      console.log({ error })
+      setPageNumber(pages)
+    }
+  }
+  const fetchReports = async () => {
+    const { res, err } = await getReports(``)
+    if (err) {
+      console.log('An error', err)
+    } else {
+      console.log('fetchUsers', res.data)
+      setSearchResults(res.data.data.reports)
+    }
+  }
+  useEffect(() => {
+    if (data.search.value) {
+      fetchSearchResults()
+    } else if (page) {
+      fetchReports()
+    }
+  }, [data.search.value, page])
+
+  const goToPage = (page: number) => {
+    // Logic to navigate to specific page
+  }
+
+  const goToPreviousPage = () => {
+    setPage(page - 1)
+  }
+
+  const goToNextPage = () => {
+    setPage(page + 1)
+  }
+
+  const handleDelete = (user_id: string) => {
+    setDeleteData({ open: true, _id: user_id })
+  }
+
+  const deleteFunc = async (user_id: string) => {
+    const { err, res } = await deleteUserByAdmin(user_id)
+    if (err) {
       setSnackbar({
+        type: 'warning',
         display: true,
         message: 'Some error occured',
+      })
+    } else if (res) {
+      setSnackbar({
+        type: 'success',
+        display: true,
+        message: 'User deleted successfully',
+      })
+      window.location.reload()
+    } else {
+      setSnackbar({
         type: 'warning',
+        display: true,
+        message: 'Some error occured',
       })
     }
   }
@@ -236,12 +257,7 @@ const AdminDashboard: React.FC = () => {
         <div className={styles.searchContainer}>
           {/* <div className={styles.admintitle}>Admin Search</div> */}
           <div className={styles.searchAndFilter}>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault()
-              }}
-              className={styles.searchForm}
-            >
+            <form onSubmit={handleSearch} className={styles.searchForm}>
               <input
                 type="text"
                 value={data.search.value}
@@ -260,10 +276,8 @@ const AdminDashboard: React.FC = () => {
             <table className={styles.resultsTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '18.06%' }}>User</th>
-                  <th style={{ width: '19.48%' }}>Content</th>
-                  <th style={{ width: '13.87%' }}>Posted at</th>
-                  <th style={{ width: '9.163%' }}>Hobby</th>
+                  <th style={{ width: '14.06%' }}>User</th>
+
                   <th
                     style={{
                       width: '16.54%',
@@ -271,29 +285,25 @@ const AdminDashboard: React.FC = () => {
                       textAlign: 'center',
                     }}
                   >
-                    Location
+                    Report for
                   </th>
-                  <th style={{ width: '6.939%', paddingRight: '16px' }}>
-                    Up Votes
-                  </th>
-                  <th style={{ width: '6.672%', paddingRight: '16px' }}>
-                    Down Votes
-                  </th>
+                  <th style={{ width: '35.87%' }}>Report</th>
+
                   <th style={{ width: '9.252%', paddingRight: '16px' }}>
                     Actions
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {searchResults.map((post, index) => (
+                {searchResults?.map((user, index) => (
                   <tr key={index}>
                     <td>
                       <div className={styles.resultItem}>
-                        <div className={styles.avatarContainer}>
-                          {post.profile_image ? (
+                        {/* <div className={styles.avatarContainer}>
+                          {user.profile_image ? (
                             <img
-                              src={post?._author?.profile_image}
-                              alt={`${post.full_name}'s profile`}
+                              src={user.profile_image}
+                              alt={`${user.full_name}'s profile`}
                               width={40}
                               height={40}
                               className={styles.avatarImage}
@@ -307,66 +317,49 @@ const AdminDashboard: React.FC = () => {
                               height={40}
                             />
                           )}
-                        </div>
+                        </div> */}
                         <div className={styles.detailsContainer}>
-                          <div className={styles.userName}>
-                            {post?._author?.full_name ||
-                              post?._author?.title ||
-                              ''}
-                          </div>
+                          <div className={styles.userName}>{user?.name}</div>
                         </div>
                       </div>
                     </td>
-                    <td 
-                      dangerouslySetInnerHTML={{ __html: post?.content ?? '' }}
-                    
-                    className={styles.userEmail}>
-                      
-                    </td>
-                    <td
-                      className={styles.userPhone}
-                    >
-                      {formatDate(post?.createdAt)}
-                    </td>
+
                     <td className={styles.LoginType}>
-                    {post?._hobby?.display}{`${post?._genre?` - ${post?._genre?.display}`:''}`} 
+                      {extractPath(user.for_url)}
                     </td>
-                    <td className={styles.lastLoggedIn}>
-                      {post?.visibility}
-                    </td>
-                    <td className={styles.pagesLength}>
-                      {post?.up_votes?.count}
-                    </td>
-                    <td className={styles.pagesLength}>
-                      {post?.down_votes?.count}
-                    </td>
+                    <td className={styles.userPhone}>{user?.description}</td>
+
                     <td>
                       <div className={styles.actions}>
-                        <div onClick={() => handleEdit(post._id)}>
-                          {pencilSvg}
-                        </div>
-                        <div onClick={() => handleDelete(post._id)}>
-                          {deleteSvg}
-                        </div>
+                        <div>{pencilSvg}</div>
+                        <div>{deleteSvg}</div>
                       </div>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          </div>
-          <div className={styles.pagination}>
-            {/* Previous Page Button */}
-            {page > 1 ? (
-              <button onClick={goToPreviousPage}>Previous</button>
-            ) : (
-              ''
-            )}
-            {searchResults.length === pagelimit ? (
-              <button onClick={goToNextPage}>Next</button>
-            ) : (
-              ''
-            )}
+            <div className={styles.pagination}>
+              {/* Previous Page Button */}
+              {page > 1 ? (
+                <button onClick={goToPreviousPage}>Previous</button>
+              ) : (
+                ''
+              )}
+
+              {/* {pageNumber.map((num) => (
+                <button key={num} onClick={() => goToPage(num)}>
+                  {num}
+                </button>
+              ))} */}
+
+              {/* Next Page Button */}
+              {searchResults.length === pagelimit ? (
+                <button onClick={goToNextPage}>Next</button>
+              ) : (
+                ''
+              )}
+            </div>
           </div>
         </div>
       </AdminLayout>
@@ -381,7 +374,7 @@ const AdminDashboard: React.FC = () => {
             setDeleteData({ open: false, _id: undefined })
           }}
           yesHandler={deleteFunc}
-          text="post"
+          text="user"
         />
       )}
       {
@@ -398,4 +391,4 @@ const AdminDashboard: React.FC = () => {
   )
 }
 
-export default AdminDashboard
+export default AdminReport

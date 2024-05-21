@@ -315,7 +315,7 @@ export const Navbar: React.FC<Props> = ({}) => {
           }),
         )
       }
-      
+
       dispatch(setSearchLoading(false))
       dispatch(setShowPageLoader(false))
       dispatch(showAllTrue())

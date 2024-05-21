@@ -25,6 +25,20 @@ export const admindashboard = async () => {
     }
   }
 
+
+  /** Get `/api/admin/report` */
+  export const getReports = async (query: string,): Promise<ApiReturnObject> => {
+    const token = localStorage.getItem('token')
+    const headers = { Authorization: `Bearer ${token}` }
+    try {
+      const res = await axiosInstance.get(`/admin/report/?${query}`, { headers })
+      return { res: res, err: null }
+    } catch (error) {
+      console.error(error)
+      return { err: error, res: null }
+    }
+  }
+
 /** PATCH `/api/admin/user/:user_id` */
 
 export const updateUserByAdmin = async (user_id: string,data:any): Promise<ApiReturnObject> => {
@@ -107,3 +121,31 @@ export const deletePostByAdmin = async (post_id: string): Promise<ApiReturnObjec
     return { err: error, res: null }
   }
 }
+
+
+/** Get `/api/admin/hobbyreq` */
+export const getHobbyRequests = async (query: string,): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.get(`/admin/hobbyreq/?${query}`, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+/** Get `/api/admin/hobbyreq` */
+export const getClaimRequests = async (query: string,): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.get(`/admin/claimreq/?${query}`, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+

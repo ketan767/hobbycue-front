@@ -109,8 +109,5 @@ export const formatDateTime = (dateString: any) => {
   const hours = date.getHours()
   const minutes = date.getMinutes()
 
-  const formattedDay = day < 10 ? '0' : '' + day
-  const formattedMinutes = minutes < 10 ? '0' : '' + minutes
-
-  return `${formattedDay}-${month}-${year}, ${hours}:${formattedMinutes}`
+  return `${day}-${month}-${year}, ${hours}:${minutes}`
 }

@@ -62,7 +62,11 @@ const icons = [
     link: 'https://www.youtube.com/@hobbycue',
     hover: HoverYoutube,
   },
-  { name: Telegram, link: 'https://t.me/hobbycue', hover: HoverTelegram },
+  {
+    name: Telegram,
+    link: 'https://t.me/hobbycue_community',
+    hover: HoverTelegram,
+  },
   { name: Message, link: 'mailto:info@hobbycue.com', hover: HoverMessage },
 ]
 const Footer: React.FC = () => {
@@ -279,13 +283,17 @@ const Footer: React.FC = () => {
                   name="society"
                   onChange={(e: any) => setEmail(e.target.value)}
                   className={errorMessage !== '' ? styles['errorInput'] : ''}
-                  onKeyDown={(e)=>{
-                    if(e.key==="Enter"){
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
                       inviteBtnRef?.current?.click()
                     }
                   }}
                 />
-                <button ref={inviteBtnRef} onClick={sendInvite} className={styles.button}>
+                <button
+                  ref={inviteBtnRef}
+                  onClick={sendInvite}
+                  className={styles.button}
+                >
                   {inviteBtnLoader ? (
                     <CircularProgress color="inherit" size={'20px'} />
                   ) : (

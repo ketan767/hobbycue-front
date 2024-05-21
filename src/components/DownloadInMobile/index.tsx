@@ -48,7 +48,7 @@ const DownloadInMobile: FC<DownloadInMobileProps> = () => {
     <div className={styles.container}>
       {showButton && (
         <div className={styles.childContainer}>
-          <p>Add HobbyCue shortcut to your Home screen</p>
+          <p>Install HobbyCue web app on your phone</p>
           <button onClick={addToHomeScreen} className={styles.downloadBtn}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
