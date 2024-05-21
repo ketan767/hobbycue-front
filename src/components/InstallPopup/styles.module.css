@@ -12,10 +12,10 @@
 .container {
     display: flex;
     width: 100%;
-    padding: 24px 16px 16px 16px;
+    padding: 24px 16px 24px 16px;
     flex-direction: column;
     align-items: center;
-    gap: 48px;
+    gap: 24px;
     border-radius: 24px 24px 0px 0px;
     background: var(--Base-White, #FFF);
 }
@@ -30,7 +30,7 @@
     padding: 0px 16px;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: 24px;
     align-self: stretch;
 }
 
@@ -70,7 +70,7 @@
 
     color: var(--Grey-white, #FFF);
     font-family: Poppins;
-    font-size: 10px;
+    font-size: 14px;
     font-style: normal;
     font-weight: 600;
     line-height: 14px;
@@ -80,11 +80,11 @@
 }
 
 .secondary-txt {
-    color: var(--Grey-Darker, #6D747A);
+    color: var(--Grey-Darker, #8064A2);
     font-family: Poppins;
-    font-size: 10px;
+    font-size: 14px;
     font-style: normal;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 14px;
     /* 140% */
 }

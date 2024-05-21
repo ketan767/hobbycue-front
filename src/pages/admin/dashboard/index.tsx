@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styles from './styles.module.css'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import { admindashboard } from '@/services/admin.service'
+import Link from 'next/link'
 
 export default function Index() {
   const [data, setData] = useState<any>([])
@@ -90,18 +91,18 @@ export default function Index() {
             </div>
             <div className={styles.label}>
               <p>
-                Updated : <span>20 Jan 2024</span>
+                Updated : <span>21 May 2024</span>
               </p>
             </div>
             <div className={styles.label}>
-              <p>
+              <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/admin/users`}>
                 Users : <span>{data.userCount}</span>
-              </p>
+              </Link>
             </div>
             <div className={styles.label}>
-              <p>
+              <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/admin/pages`}>
                 Pages : <span>{data.listingCount}</span>
-              </p>
+              </Link>
             </div>
           </div>
           <div className={styles.twoTables}>
