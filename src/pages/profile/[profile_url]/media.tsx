@@ -93,7 +93,7 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
   }
 
   const handleImageUpload = async (image: any, isVideo: boolean) => {
-    const fileTobeUploaded = image;
+    const fileTobeUploaded = image
     if (fileTobeUploaded) {
       const fileSize = fileTobeUploaded.size
       const fileSizeKB = fileSize / 1024
@@ -180,8 +180,8 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
         data.pageData.is_published || user._id === data.pageData.admin
       if (!userIsAuthorized) router.push('/404')
     }
-  }, [user._id, data.pageData, router]);
-  const isMobile = useMediaQuery("(max-width:1100px)");
+  }, [user._id, data.pageData, router])
+  const isMobile = useMediaQuery('(max-width:1100px)')
   // if (!user.is_onboarded && data?.pageData?.email !== user?.email) {
   //   return <ErrorPage />
   // }
@@ -199,9 +199,11 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
         setExpandAll={handleExpandAll}
       >
         <PageGridLayout column={2}>
-          <aside className={`custom-scrollbar ${styles['profile-left-aside']} ${
-                expandAll ? '' : styles['display-none']
-              }`}>
+          <aside
+            className={`custom-scrollbar ${styles['profile-left-aside']} ${
+              expandAll ? '' : styles['display-none']
+            }`}
+          >
             {/* User Hobbies */}
             <ProfileHobbySideList data={data.pageData} />
             <ProfilePagesList data={data} />
@@ -219,7 +221,7 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
           <div className={styles['nav-mobile']}>
             <ProfileNavigationLinks activeTab={'media'} />
           </div>
-          <div className={styles['main'] + ' margin-bottom-68vh'}>
+          <div className={styles['main-media'] + ' margin-bottom-68vh'}>
             {profileLayoutMode === 'edit' && (
               <div className={styles.uploadContainer}>
                 <div className={styles.uploadButton}>
@@ -258,11 +260,11 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
                 </div>
               </div>
             )}
-        {data.pageData?.video_url ? (
-          <div className={styles.medias}>
-            {data.pageData?.video_url && (
-              <div className={styles['videos']}>
-                {/* <video
+            {data.pageData?.video_url ? (
+              <div className={styles.medias}>
+                {data.pageData?.video_url && (
+                  <div className={styles['videos']}>
+                    {/* <video
                 width="250"
                 height="240"
                 controls={true}
@@ -270,39 +272,43 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
               >
                 <source src={listingModalData?.video_url} type="video/mp4" />
               </video> */}
-                <ReactPlayer
-                  width="100%"
-                  height="100%"
-                  url={data.pageData?.video_url}
-                  controls={true}
-                />
+                    <ReactPlayer
+                      width="100%"
+                      height="100%"
+                      url={data.pageData?.video_url}
+                      controls={true}
+                    />
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        ) :null}
-            {(
-          (profileLayoutMode !== 'edit' && !data.pageData?.video_url) && (!data.pageData?.images||data.pageData?.images?.length<1) &&  (
-            <section className={`${styles['dual-section-wrapper']} ${styles['mob-min-height']} ${styles['mob-h-auto']}`}>
-              <div className={styles['no-posts-div']}>
-                <p className={styles['no-posts-text']}>No media available</p>
-              </div>
-              {!isMobile&&<div className={styles['no-posts-div']}></div>}
-            </section>
-          )
-        )}
-        {data.pageData?.images?.map((item: any, idx:number) => {
-          return (
-            <div key={idx} className={styles.medias}>
-              <div
-                key={idx}
-                className={styles.image}
-                onClick={() => OpenMediaImage(item)}
-              >
-                <img src={item} />
-              </div>
-            </div>
-          )
-        })}
+            ) : null}
+            {profileLayoutMode !== 'edit' &&
+              !data.pageData?.video_url &&
+              (!data.pageData?.images || data.pageData?.images?.length < 1) && (
+                <section
+                  className={`${styles['dual-section-wrapper']} ${styles['mob-min-height']} ${styles['mob-h-auto']}`}
+                >
+                  <div className={styles['no-posts-div']}>
+                    <p className={styles['no-posts-text']}>
+                      No media available
+                    </p>
+                  </div>
+                  {!isMobile && <div className={styles['no-posts-div']}></div>}
+                </section>
+              )}
+            {data.pageData?.images?.map((item: any, idx: number) => {
+              return (
+                <div key={idx} className={styles.medias}>
+                  <div
+                    key={idx}
+                    className={styles.image}
+                    onClick={() => OpenMediaImage(item)}
+                  >
+                    <img src={item} />
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </PageGridLayout>
       </ProfileLayout>
@@ -327,7 +333,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   const { err, res } = await getAllUserDetail(
     `profile_url=${query['profile_url']}&populate=_hobbies,_addresses,primary_address,_listings`,
   )
-  const user = res.data?.data?.users[0]
+  const user = res?.data?.data?.users[0]
 
   if (err) return { notFound: true }
   const { err: error, res: response } = await getListingPages(

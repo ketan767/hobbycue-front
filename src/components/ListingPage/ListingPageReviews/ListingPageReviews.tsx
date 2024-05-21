@@ -8,18 +8,30 @@ import { useDispatch, useSelector } from 'react-redux'
 import { FC } from 'react'
 import { RootState } from '@/redux/store'
 import { updateListingLayoutMode } from '@/redux/slices/site'
+import {
+  deleteListingReview,
+  editListingReview,
+  getListingPages,
+} from '@/services/listing.service'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import { useRouter } from 'next/router'
 
 const ListingReviewsTab: FC<{ pageData: any }> = ({ pageData }) => {
   const isMobile = useMediaQuery('(max-width:1100px)')
-  const { user } = useSelector((state: RootState) => state.user)
+  const { user, isLoggedIn } = useSelector((state: RootState) => state.user)
   const { listingLayoutMode } = useSelector((state: any) => state.site)
   const optionRef: any = useRef(null)
   const dispatch = useDispatch()
   const addReview = () => {
-    dispatch(openModal({ type: 'ListingReviewModal', closable: true }))
+    if (isLoggedIn) {
+      dispatch(openModal({ type: 'ListingReviewModal', closable: true }))
+    } else {
+      dispatch(openModal({ type: 'auth', closable: true }))
+    }
   }
-
-  console.warn('listingreivew', pageData)
+  const [optionsActive, setOptionsActive] = useState(false)
+  const [activeReview, setActiveReview] = useState(null)
+  const router = useRouter()
 
   function formatDate(inputDate: string): string {
     const months: string[] = [
@@ -82,91 +94,182 @@ const ListingReviewsTab: FC<{ pageData: any }> = ({ pageData }) => {
   const [reviews, setReviews] = useState([])
 
   const reviewList = async () => {
-    if (listingLayoutMode === 'edit') {
-      setReviews(pageData?._reviews)
-    } else {
-      setReviews(
-        pageData?._reviews?.filter(
-          (review: any) =>
-            review.is_published || review.user_id._id === user._id,
-        ),
-      )
+    const { err, res } = await getListingPages(
+      `_id=${pageData._id}&populate=_reviews`,
+    )
+    console.log('res', res)
+    if (res?.data.success) {
+      if (listingLayoutMode === 'edit') {
+        setReviews(res?.data.data?.listings[0]?._reviews)
+      } else {
+        setReviews(
+          res?.data.data?.listings[0]?._reviews?.filter(
+            (review: any) =>
+              review.is_published || review.user_id._id === user._id,
+          ),
+        )
+      }
+    }
+  }
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
+  const handlePublish = async (reviewId: any, pub_status: any) => {
+    let jsonData = { is_published: pub_status }
+    const { err, res } = await editListingReview(reviewId, jsonData)
+
+    if (res?.data.success) {
+      reviewList()
+      setSnackbar({
+        display: true,
+        type: 'success',
+        message: 'Review updated',
+      })
+    } else if (err) {
+      setSnackbar({
+        display: true,
+        type: 'warning',
+        message: 'Something went wrong',
+      })
+      console.log(err)
+    }
+  }
+
+  const handleDelete = async (reviewid: any) => {
+    const { err, res } = await deleteListingReview(reviewid)
+    if (res?.data.success) {
+      reviewList()
+      setSnackbar({
+        display: true,
+        type: 'success',
+        message: 'Review Deleted',
+      })
+    } else if (err) {
+      setSnackbar({
+        display: true,
+        type: 'warning',
+        message: 'Something went wrong',
+      })
+      console.log(err)
     }
   }
 
   useEffect(() => {
     reviewList()
-  })
+  }, [])
+  console.log('optionsActive', optionsActive)
 
   return (
     <>
       <main>
-        {pageData?._reviews.length == 0 ? (
-          <section className={styles['data-container']}>
-            <div className={styles['no-data-div']}>
-              <p className={styles['no-data-text']}>No reviews</p>
+        <section className={styles['data-container']}>
+          {listingLayoutMode === 'view' && (
+            <div onClick={addReview} className={styles['add-review-btn']}>
+              {plusSvg}
+              <p>Add Review</p>
             </div>
+          )}
+          {pageData?._reviews.length == 0 ? (
+            <>
+              <div className={styles['no-data-div']}>
+                <p className={styles['no-data-text']}>No reviews</p>
+              </div>
 
-            {!isMobile && <div className={styles['no-data-div']}></div>}
-          </section>
-        ) : (
-          <div className={styles['review-wrapper']}>
-            {!iamAdmin && (
-              <div onClick={addReview} className={styles['add-review-btn']}>
-                {plusSvg}
-                <p>Add Review</p>
-              </div>
-            )}
-            {reviews?.map((review: any, i: any) => (
-              <div key={i} className={styles['review-container']}>
-                <img
-                  src={review?.user_id?.profile_image ?? defaultUserImage.src}
-                  alt={review?.user_id?.full_name}
-                />
-                <div className={styles['review-content']}>
-                  <div className={styles['review-content-top']}>
-                    <div className={styles['review-name-status']}>
-                      <p className={styles['review-username']}>
-                        {review.user_id?.full_name}{' '}
+              {!isMobile && <div className={styles['no-data-div']}></div>}
+            </>
+          ) : (
+            <>
+              {reviews?.map((review: any, i: any) => (
+                <div key={i} className={styles['review-container']}>
+                  <img
+                    src={review?.user_id?.profile_image ?? defaultUserImage.src}
+                    alt={review?.user_id?.full_name}
+                  />
+                  <div className={styles['review-content']}>
+                    <div className={styles['review-content-top']}>
+                      <div className={styles['review-name-status']}>
+                        <p className={styles['review-username']}>
+                          {review.user_id?.full_name}{' '}
+                        </p>
+                        <p className={styles['review-status']}>
+                          {listingLayoutMode === 'edit'
+                            ? review.is_published
+                              ? 'Published'
+                              : 'Unpublished'
+                            : ''}
+                        </p>
+                      </div>
+                      <p className={styles['review-date']}>
+                        {formatDate(review.createdAt)}
                       </p>
-                      <p className={styles['review-status']}>
-                        {listingLayoutMode === 'edit' && review.is_published
-                          ? 'published'
-                          : 'Unpublished'}
-                      </p>
-                      <svg
-                        /////
-                        ref={optionRef}
-                        className={styles['more-actions-icon']}
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                      >
-                        <g clip-path="url(#clip0_173_72891)">
-                          <path
-                            d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z"
-                            fill="#8064A2"
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_173_72891">
-                            <rect width="24" height="24" fill="white" />
-                          </clipPath>
-                        </defs>
-                      </svg>
                     </div>
-                    <p className={styles['review-date']}>
-                      {formatDate(review.createdAt)}
-                    </p>
+                    <p className={styles['review']}>{review.text}</p>
                   </div>
-                  <p className={styles['review']}>{review.text}</p>
+                  {iamAdmin && (
+                    <svg
+                      ref={optionRef}
+                      className={styles['more-actions-icon']}
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      onClick={() =>
+                        setActiveReview(activeReview === i ? null : i)
+                      }
+                    >
+                      <g clip-path="url(#clip0_173_72891)">
+                        <path
+                          d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z"
+                          fill="#8064A2"
+                        />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_173_72891">
+                          <rect width="24" height="24" fill="white" />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  )}
+                  <div>
+                    {activeReview === i && iamAdmin && (
+                      <ul className={styles.optionsContainer}>
+                        <li
+                          onClick={() => {
+                            handlePublish(review._id, !review?.is_published)
+                            setActiveReview(null)
+                          }}
+                        >
+                          {review?.is_published ? 'Unpublish' : 'Publish'}
+                        </li>
+                        <li
+                          onClick={() => {
+                            handleDelete(review._id)
+                            setActiveReview(null)
+                          }}
+                        >
+                          Delete
+                        </li>
+                      </ul>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </>
+          )}
+        </section>
       </main>
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

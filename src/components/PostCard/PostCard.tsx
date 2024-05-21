@@ -189,14 +189,14 @@ const PostCard: React.FC<Props> = (props) => {
     const { err, res } = await deletePost(postid)
     if (err) {
       console.log(err)
-      setDeleteData({open:false,_id:undefined});
+      setDeleteData({ open: false, _id: undefined })
       setSnackbar({
         display: true,
         type: 'warning',
         message: 'Something went wrong',
       })
     } else if (res.data.success) {
-      setDeleteData({open:false,_id:undefined});
+      setDeleteData({ open: false, _id: undefined })
       setSnackbar({
         display: true,
         type: 'success',
@@ -207,7 +207,7 @@ const PostCard: React.FC<Props> = (props) => {
       }, 1000)
     }
   }
-  const handleShowDelete = (postid:string) => {
+  const handleShowDelete = (postid: string) => {
     setDeleteData({ open: true, _id: postid })
   }
 
@@ -688,7 +688,7 @@ const PostCard: React.FC<Props> = (props) => {
             setDeleteData({ open: false, _id: undefined })
           }}
           yesHandler={handleDeletePost}
-          text='post'
+          text="post"
         />
       )}
       {

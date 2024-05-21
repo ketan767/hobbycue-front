@@ -62,3 +62,13 @@ export const getAllHobbiesUrls = async (
       return { err: error, res: null }
     }
   }
+  export const SendHobbyRequest = async (data:any): Promise<ApiReturnObject> => {
+    try {
+      const res = await axiosInstance.post(`/hobby/hobbyRequest`,data)
+      return { res: res, err: null }
+    } catch (error) {
+      console.error(error)
+      return { err: error, res: null }
+    }
+  }
+  

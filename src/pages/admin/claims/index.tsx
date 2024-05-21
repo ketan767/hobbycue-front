@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
+import { getAllUserDetail, searchUsers } from '../../../services/user.service'
 import styles from './styles.module.css'
 import Image from 'next/image'
 import DefaultProfile from '@/assets/svg/default-images/default-user-icon.svg'
@@ -13,47 +14,32 @@ import {
 import { RootState } from '@/redux/store'
 import AdminNavbar from '@/components/AdminNavbar/AdminNavbar'
 import Link from 'next/link'
-import { getListingPages, searchPages } from '@/services/listing.service'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
-import { deleteListingByAdmin } from '@/services/admin.service'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import {
+  deleteUserByAdmin,
+  getClaimRequests,
+  getHobbyRequests,
+} from '@/services/admin.service'
 import { formatDateTime } from '@/utils'
 
-type PagesProps = {
-  _id: string
-  type: string
-  title: string
-  public_email: string
-  page_url: string
-  profile_image: string
-  full_name: string
-  tagline: string
-  _address: { city: string }
-  user_url: string
-  facebook: any
-  google: any
-  email: string
-  last_loggedIn_via: string
-  is_password: string
-  profile_url: string
-  admin: any
-  is_published: any
-  is_claimed: any
-  createdAt: any
-}
 type SearchInput = {
   search: InputData<string>
 }
 
-const AdminPages: React.FC = () => {
-  const dispatch = useDispatch()
+const ClaimsPage: React.FC = () => {
   const router = useRouter()
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
   })
   const [email, setEmail] = useState('')
-  const [searchResults, setSearchResults] = useState<PagesProps[]>([])
+  const [searchResults, setSearchResults] = useState<any[]>([])
+  const [pageNumber, setPageNumber] = useState<number[]>([])
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value
+    setData((prev) => ({ ...prev, search: { value, error: null } }))
+  }
   const [page, setPage] = useState(1)
   const [pagelimit, setPagelimit] = useState(25)
   const [deleteData, setDeleteData] = useState<{
@@ -69,64 +55,20 @@ const AdminPages: React.FC = () => {
     message: '',
   })
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value
-    setData((prev) => ({ ...prev, search: { value, error: null } }))
-    setPage(1)
-  }
-
-  const fetchSearchResults = async () => {
+  const handleSearch = async (event: any) => {
     const searchValue = data.search.value.trim()
+    event.preventDefault()
     let searchCriteria = {
-      title: searchValue,
-      limit: pagelimit,
-      sort: '-createdAt',
-      page: page,
+      full_name: searchValue,
     }
 
-    const { res, err } = await searchPages(searchCriteria)
+    const { res, err } = await searchUsers(searchCriteria)
     if (err) {
       console.log('An error', err)
     } else {
       setSearchResults(res.data)
       console.log('res', res)
     }
-  }
-
-  const fetchPages = async () => {
-    const { res, err } = await getListingPages(
-      `limit=${pagelimit}&sort=-createdAt&page=${page}&populate=admin`,
-    )
-    if (err) {
-      console.log('An error', err)
-    } else {
-      console.log('fetchPages', res?.data)
-      setSearchResults(res?.data?.data?.listings)
-    }
-  }
-
-  const goToPreviousPage = () => {
-    setPage(page - 1)
-  }
-
-  const goToNextPage = () => {
-    setPage(page + 1)
-  }
-
-  useEffect(() => {
-    if (data.search.value) {
-      fetchSearchResults()
-    } else if (page) {
-      fetchPages()
-    }
-  }, [data.search.value, page])
-
-  const resetbtn = async () => {
-    const { err, res } = await forgotPassword({
-      email,
-    })
-    dispatch(openModal({ type: 'reset-password', closable: true }))
-    dispatch(updateForgotPasswordEmail(email))
   }
 
   const filterSvg = (
@@ -215,16 +157,73 @@ const AdminPages: React.FC = () => {
   const pagesLength = (user: any) => {
     return user?._listings?.length || 0
   }
-  const handleEdit = (page_url: any) => {
-    router.push(`/admin/pages/edit/${page_url}`)
+  const handleEdit = (profile_url: any) => {
+    router.push(`/admin/users/edit/${profile_url}`)
   }
 
-  const handleDelete = (listing_id: string) => {
-    setDeleteData({ open: true, _id: listing_id })
+  const fetchSearchResults = async () => {
+    const searchValue = data.search.value.trim()
+    let searchCriteria = {
+      full_name: searchValue,
+    }
+
+    const { res, err } = await searchUsers(searchCriteria)
+    if (err) {
+      console.log('An error', err)
+    } else {
+      setSearchResults(res.data)
+
+      // Calculate total number of pages based on search results length
+      const totalPages = Math.ceil(res.data.length / 50)
+      const pages = []
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i)
+      }
+      setPageNumber(pages)
+    }
+  }
+  const FetchClaimReq = async () => {
+    const { res, err } = await getClaimRequests(
+      `limit=${pagelimit}&sort=-createdAt&page=${page}&populate=user_id`,
+    )
+    if (err) {
+      console.log('An error', err)
+    } else {
+      console.log('FetchClaimReq', res.data)
+      setSearchResults(res.data.data.claimreq)
+    }
+  }
+  useEffect(() => {
+    if (data.search.value) {
+      fetchSearchResults()
+    } else if (page) {
+      FetchClaimReq()
+    }
+  }, [data.search.value, page])
+
+  const getUserName = async (_id: any) => {
+    const { res, err } = await getClaimRequests(`_id=${_id}`)
+    return res?.data.data.users[0].full_name
   }
 
-  const deleteFunc = async (listing_id: string) => {
-    const { err, res } = await deleteListingByAdmin(listing_id)
+  const goToPage = (page: number) => {
+    // Logic to navigate to specific page
+  }
+
+  const goToPreviousPage = () => {
+    setPage(page - 1)
+  }
+
+  const goToNextPage = () => {
+    setPage(page + 1)
+  }
+
+  const handleDelete = (user_id: string) => {
+    setDeleteData({ open: true, _id: user_id })
+  }
+
+  const deleteFunc = async (user_id: string) => {
+    const { err, res } = await deleteUserByAdmin(user_id)
     if (err) {
       setSnackbar({
         type: 'warning',
@@ -253,12 +252,7 @@ const AdminPages: React.FC = () => {
         <div className={styles.searchContainer}>
           {/* <div className={styles.admintitle}>Admin Search</div> */}
           <div className={styles.searchAndFilter}>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault()
-              }}
-              className={styles.searchForm}
-            >
+            <form onSubmit={handleSearch} className={styles.searchForm}>
               <input
                 type="text"
                 value={data.search.value}
@@ -277,79 +271,62 @@ const AdminPages: React.FC = () => {
             <table className={styles.resultsTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '22.06%' }}>Page</th>
-                  <th style={{ width: '19.48%' }}>Page Admin</th>
-                  <th style={{ width: '13.87%' }}>Status</th>
-                  <th style={{ width: '9.163%' }}>Claimed</th>
+                  <th style={{ width: '8.06%' }}>Hobby</th>
+                  <th style={{ width: '8%' }}>Level</th>
+
+                  <th style={{ width: '12.163%' }}>Requested By</th>
                   <th
                     style={{
-                      width: '16.54%',
+                      width: '12.54%',
                       paddingRight: '16px',
                       textAlign: 'center',
                     }}
                   >
-                    Last update
+                    Matching or Similar
                   </th>
-                  <th style={{ width: '6.939%', paddingRight: '16px' }}>
-                    Posts
+                  <th style={{ width: '10.939%', paddingRight: '16px' }}>
+                    Hobby Status
                   </th>
-
+                  <th style={{ width: '30.672%', paddingRight: '16px' }}>
+                    Admin Notes
+                  </th>
                   <th style={{ width: '9.252%', paddingRight: '16px' }}>
-                    Actions
+                    Status
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {searchResults.map((page, index) => (
+                {searchResults?.map((hobbyreq, index) => (
                   <tr key={index}>
                     <td>
                       <div className={styles.resultItem}>
-                        <div className={styles.avatarContainer}>
-                          {page.profile_image ? (
-                            <img
-                              src={page.profile_image}
-                              alt={`${page.full_name}'s profile`}
-                              width={40}
-                              height={40}
-                              className={styles.avatarImage}
-                            />
-                          ) : (
-                            <Image
-                              className={styles['img']}
-                              src={DefaultProfile}
-                              alt="profile"
-                              width={40}
-                              height={40}
-                            />
-                          )}
-                        </div>
                         <div className={styles.detailsContainer}>
-                          <div className={styles.userName}>{page?.title}</div>
+                          <div className={styles.userName}>
+                            {hobbyreq?.hobby}
+                          </div>
                         </div>
                       </div>
                     </td>
                     <td className={styles.userName}>
-                      <a>{page?.admin?.full_name}</a>
+                      <div>{hobbyreq?.level}</div>
                     </td>
-                    <td className={styles.userPhone}>
-                      {page.is_published ? 'Published' : 'Unpublished'}
-                    </td>
-                    <td className={styles.pageType}>
-                      {page?.is_claimed ? 'Yes' : 'No'}
-                    </td>
-                    <td className={styles.lastLoggedIn}>
-                      {formatDateTime(page?.createdAt)}
-                    </td>
-                    <td className={styles.pagesLength}>{pagesLength(page)}</td>
 
+                    <td className={styles.LoginType}>
+                      {hobbyreq.user_id.full_name}
+                    </td>
+                    <td className={styles.lastLoggedIn}>{hobbyreq?.similar}</td>
+                    <td className={styles.pagesLength}>{hobbyreq.status}</td>
+                    <td className={styles.pagesLength}>
+                      {/* posts not in logs */}0
+                    </td>
                     <td>
                       <div className={styles.actions}>
-                        <div onClick={() => handleEdit(page.page_url)}>
+                        {/* <div onClick={() => handleEdit(hobbyreq.profile_url)}>
                           {pencilSvg}
                         </div>
-                        <div onClick={() => handleDelete(page._id)}>
+                        <div onClick={() => handleDelete(user._id)}>
                           {deleteSvg}
-                        </div>
+                        </div> */}
                       </div>
                     </td>
                   </tr>
@@ -383,7 +360,7 @@ const AdminPages: React.FC = () => {
             setDeleteData({ open: false, _id: undefined })
           }}
           yesHandler={deleteFunc}
-          text="page"
+          text="user"
         />
       )}
       {
@@ -400,4 +377,4 @@ const AdminPages: React.FC = () => {
   )
 }
 
-export default AdminPages
+export default ClaimsPage

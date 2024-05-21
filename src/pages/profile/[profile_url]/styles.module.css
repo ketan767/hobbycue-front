@@ -1,5 +1,12 @@
 .main{
   display: grid;
+  grid-template-columns: 50% 50%;
+  row-gap: 12px;
+  column-gap: 24px;
+}
+
+.main-media {
+  display: grid;
   grid-template-columns: auto auto;
   row-gap: 12px;
   column-gap: 24px;
@@ -163,9 +170,7 @@
   .display-mobile {
     display: initial !important;
   }
-  .mob-min-height{
-    /* min-height: calc(100vh - 107px); */
-  }
+  
   .no-posts-div{
     border-radius: 0;
   }
@@ -176,7 +181,5 @@
   .dual-section-wrapper {
     height: 90vh;
   }
-  .mob-h-auto{
-    /* height: auto; */
-  }
+ 
 }
