@@ -33,7 +33,8 @@ const EditUserPage: React.FC = () => {
     display: false,
     message: '',
   })
-
+console.log({genres});
+console.log({post})
   useEffect(() => {
     const fetchPostData = async () => {
       const { err, res } = await getAllPosts(
@@ -77,6 +78,21 @@ const EditUserPage: React.FC = () => {
       })
     }
   }
+
+  useEffect(() => {
+    const fetchGenres = async () => {
+      const chosenHobby = hobbies.find((obj) => obj._id === post?._hobby?._id)
+      if (chosenHobby && chosenHobby.genre && chosenHobby.genre.length > 0) {
+        const query = `fields=display&show=true&genre=${chosenHobby.genre[0]}&level=5`
+        const { err, res } = await getAllHobbies(query)
+        console.log({ res })
+        if (!err) {
+          setGenres(res.data.hobbies)
+        }
+      }
+    }
+    fetchGenres()
+  }, [hobbies, post])
 
   if (!_id || !post) {
     return <div>Loading...</div>
@@ -135,19 +151,7 @@ const EditUserPage: React.FC = () => {
                   setGenres([])
                   const chosenHobby = hobbies.find(
                     (obj) => obj._id === e.target.value,
-                  )
-                  if (
-                    chosenHobby &&
-                    chosenHobby.genre &&
-                    chosenHobby.genre.length > 0
-                  ) {
-                    const query = `fields=display&show=true&genre=${chosenHobby.genre[0]}&level=5`
-                    const { err, res } = await getAllHobbies(query)
-                    console.log({ res })
-                    if (!err) {
-                      setGenres(res.data.hobbies)
-                    }
-                  }
+                  );
                   setPost({
                     ...post,
                     _hobby: chosenHobby,

@@ -46,7 +46,12 @@ type Props = {
   setShowAddHobbyModal?: any
   CheckIsOnboarded?: any
   propData?: {
-    selectedHobbyToAdd?: { _id: string; display: string; level: number }
+    selectedHobbyToAdd?: {
+      _id: string
+      display: string
+      level: number
+      show: boolean
+    }
   }
 }
 const levels = ['Beginner', 'Intermediate', 'Advanced']
@@ -872,10 +877,14 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     //   return {...prev}
     // })
     if (selectedHobbyToAdd && selectedHobbyToAdd?.level >= 5) {
-      setData((prev) => ({ ...prev, genre: selectedHobbyToAdd }))
+      if (selectedHobbyToAdd.show === true) {
+        setData((prev) => ({ ...prev, genre: selectedHobbyToAdd }))
+      }
       setGenreInputValue(selectedHobbyToAdd.display)
     } else if (selectedHobbyToAdd && selectedHobbyToAdd?.level < 5) {
-      setData((prev) => ({ ...prev, hobby: selectedHobbyToAdd }))
+      if (selectedHobbyToAdd.show === true) {
+        setData((prev) => ({ ...prev, hobby: selectedHobbyToAdd }))
+      }
       setHobbyInputValue(selectedHobbyToAdd.display)
     }
   }, [selectedHobbyToAdd])
@@ -913,6 +922,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
             }
           }}
           propData={{ defaultValue: hobbyInputValue }}
+          selectedHobbyText={(selectedHobbyToAdd&&selectedHobbyToAdd?.show===false&&selectedHobbyToAdd.display===hobbyInputValue)?selectedHobbyToAdd.display:undefined}
         />
         {/* ) : ( */}
         {/* )} */}

@@ -261,9 +261,9 @@ const AdminDashboard: React.FC = () => {
               <thead>
                 <tr>
                   <th style={{ width: '18.06%' }}>User</th>
-                  <th style={{ width: '19.48%' }}>Email</th>
-                  <th style={{ width: '13.87%' }}>Content</th>
-                  <th style={{ width: '9.163%' }}>Posted at</th>
+                  <th style={{ width: '19.48%' }}>Content</th>
+                  <th style={{ width: '13.87%' }}>Posted at</th>
+                  <th style={{ width: '9.163%' }}>Hobby</th>
                   <th
                     style={{
                       width: '16.54%',
@@ -271,7 +271,7 @@ const AdminDashboard: React.FC = () => {
                       textAlign: 'center',
                     }}
                   >
-                    Hobby
+                    Location
                   </th>
                   <th style={{ width: '6.939%', paddingRight: '16px' }}>
                     Up Votes
@@ -317,20 +317,22 @@ const AdminDashboard: React.FC = () => {
                         </div>
                       </div>
                     </td>
-                    <td className={styles.userEmail}>
-                      <Link href={`mailto:${post.email}`}>
-                        {post?._author?.public_email}
-                      </Link>
+                    <td 
+                      dangerouslySetInnerHTML={{ __html: post?.content ?? '' }}
+                    
+                    className={styles.userEmail}>
+                      
                     </td>
                     <td
-                      dangerouslySetInnerHTML={{ __html: post?.content ?? '' }}
                       className={styles.userPhone}
-                    ></td>
-                    <td className={styles.LoginType}>
+                    >
                       {formatDate(post?.createdAt)}
                     </td>
+                    <td className={styles.LoginType}>
+                    {post?._hobby?.display}{`${post?._genre?` - ${post?._genre?.display}`:''}`} 
+                    </td>
                     <td className={styles.lastLoggedIn}>
-                      {post?._hobby?.display}
+                      {post?.visibility}
                     </td>
                     <td className={styles.pagesLength}>
                       {post?.up_votes?.count}
