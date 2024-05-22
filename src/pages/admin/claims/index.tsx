@@ -5,7 +5,7 @@ import { getAllUserDetail, searchUsers } from '../../../services/user.service'
 import styles from './styles.module.css'
 import Image from 'next/image'
 import DefaultProfile from '@/assets/svg/default-images/default-user-icon.svg'
-import { forgotPassword } from '@/services/auth.service'
+import { ClaimRequest, forgotPassword } from '@/services/auth.service'
 import {
   closeModal,
   openModal,
@@ -62,7 +62,7 @@ const ClaimsPage: React.FC = () => {
       full_name: searchValue,
     }
 
-    const { res, err } = await searchUsers(searchCriteria)
+    const { res, err } = await getClaimRequests(searchCriteria)
     if (err) {
       console.log('An error', err)
     } else {
@@ -271,27 +271,22 @@ const ClaimsPage: React.FC = () => {
             <table className={styles.resultsTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '8.06%' }}>Hobby</th>
-                  <th style={{ width: '8%' }}>Level</th>
+                  <th style={{ width: '20.06%' }}>Name</th>
+                  <th style={{ width: '20%' }}>Page</th>
 
-                  <th style={{ width: '12.163%' }}>Requested By</th>
+                  <th style={{ width: '32.163%' }}>Relation to Page</th>
                   <th
                     style={{
-                      width: '12.54%',
+                      width: '22.54%',
                       paddingRight: '16px',
                       textAlign: 'center',
                     }}
                   >
-                    Matching or Similar
+                    Web Link
                   </th>
-                  <th style={{ width: '10.939%', paddingRight: '16px' }}>
-                    Hobby Status
-                  </th>
-                  <th style={{ width: '30.672%', paddingRight: '16px' }}>
-                    Admin Notes
-                  </th>
-                  <th style={{ width: '9.252%', paddingRight: '16px' }}>
-                    Status
+
+                  <th style={{ width: '15.252%', paddingRight: '16px' }}>
+                    Action
                   </th>
                 </tr>
               </thead>
@@ -302,23 +297,20 @@ const ClaimsPage: React.FC = () => {
                       <div className={styles.resultItem}>
                         <div className={styles.detailsContainer}>
                           <div className={styles.userName}>
-                            {hobbyreq?.hobby}
+                            {hobbyreq?.name}
                           </div>
                         </div>
                       </div>
                     </td>
                     <td className={styles.userName}>
-                      <div>{hobbyreq?.level}</div>
+                      <div>{hobbyreq?.pageUrl}</div>
                     </td>
 
-                    <td className={styles.LoginType}>
-                      {hobbyreq.user_id.full_name}
+                    <td className={styles.lastLoggedIn}>
+                      {hobbyreq?.HowRelated}
                     </td>
-                    <td className={styles.lastLoggedIn}>{hobbyreq?.similar}</td>
-                    <td className={styles.pagesLength}>{hobbyreq.status}</td>
-                    <td className={styles.pagesLength}>
-                      {/* posts not in logs */}0
-                    </td>
+
+                    <td className={styles.pagesLength}>{hobbyreq?.link}</td>
                     <td>
                       <div className={styles.actions}>
                         {/* <div onClick={() => handleEdit(hobbyreq.profile_url)}>

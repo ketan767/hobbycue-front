@@ -272,19 +272,17 @@ const AdminSupport: React.FC = () => {
             <table className={styles.resultsTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '18.06%' }}>User</th>
-                  <th style={{ width: '19.48%' }}>Email</th>
+                  <th style={{ width: '15.06%' }}>User</th>
 
                   <th
                     style={{
                       width: '16.54%',
                       paddingRight: '16px',
-                      textAlign: 'center',
                     }}
                   >
-                    Report for
+                    URL
                   </th>
-                  <th style={{ width: '13.87%' }}>Report</th>
+                  <th style={{ width: '30.87%' }}>Support</th>
 
                   <th style={{ width: '9.252%', paddingRight: '16px' }}>
                     Actions
@@ -320,23 +318,22 @@ const AdminSupport: React.FC = () => {
                         </div>
                       </div>
                     </td>
-                    <td className={styles.userEmail}>
-                      <Link href={`mailto:${user.email}`}>{user.email}</Link>
-                    </td>
 
                     <td className={styles.LoginType}>
-                      {extractPath(user.for_url)}
+                      <a
+                        href={user.for_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {extractPath(user.for_url)}
+                      </a>
                     </td>
                     <td className={styles.userPhone}>{user?.description}</td>
 
                     <td>
                       <div className={styles.actions}>
-                        <div onClick={() => handleEdit(user._id)}>
-                          {pencilSvg}
-                        </div>
-                        <div onClick={() => handleDelete(user._id)}>
-                          {deleteSvg}
-                        </div>
+                        <div>{pencilSvg}</div>
+                        <div>{deleteSvg}</div>
                       </div>
                     </td>
                   </tr>

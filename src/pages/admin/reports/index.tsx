@@ -282,10 +282,9 @@ const AdminReport: React.FC = () => {
                     style={{
                       width: '16.54%',
                       paddingRight: '16px',
-                      textAlign: 'center',
                     }}
                   >
-                    Report for
+                    Page
                   </th>
                   <th style={{ width: '35.87%' }}>Report</th>
 
@@ -325,7 +324,13 @@ const AdminReport: React.FC = () => {
                     </td>
 
                     <td className={styles.LoginType}>
-                      {extractPath(user.for_url)}
+                      <a
+                        href={user.for_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {extractPath(user.for_url)}
+                      </a>
                     </td>
                     <td className={styles.userPhone}>{user?.description}</td>
 
