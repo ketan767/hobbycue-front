@@ -137,7 +137,7 @@ export const getHobbyRequests = async (query: string,): Promise<ApiReturnObject>
 }
 
 /** Get `/api/admin/hobbyreq` */
-export const getClaimRequests = async (query: string,): Promise<ApiReturnObject> => {
+export const getClaimRequests = async (query: any,): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
   try {

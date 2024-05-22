@@ -31,9 +31,9 @@
   ],
   "screenshots": [
     {
-      "src": "hobbycue-small-logo.jpg",
-      "sizes": "478x477",
-      "type": "jpg",
+      "src": "HobbyCue_Square.png",
+      "sizes": "400x400",
+      "type": "png",
       "form_factor": "wide"
     },
     {
@@ -44,7 +44,7 @@
     }
   ],
 
-  "start_url": "https://hobbycue-front.vercel.app/",
+  "start_url": "https://hobbycue.com/",
   "background_color": "white",
   "display": "standalone"
 }

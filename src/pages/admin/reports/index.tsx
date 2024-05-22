@@ -194,20 +194,20 @@ const AdminReport: React.FC = () => {
       setPageNumber(pages)
     }
   }
-  const fetchSupports = async () => {
+  const fetchReports = async () => {
     const { res, err } = await getReports(``)
     if (err) {
       console.log('An error', err)
     } else {
       console.log('fetchUsers', res.data)
-      setSearchResults(res.data.data.supports)
+      setSearchResults(res.data.data.reports)
     }
   }
   useEffect(() => {
     if (data.search.value) {
       fetchSearchResults()
     } else if (page) {
-      fetchSupports()
+      fetchReports()
     }
   }, [data.search.value, page])
 
@@ -276,19 +276,17 @@ const AdminReport: React.FC = () => {
             <table className={styles.resultsTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '18.06%' }}>User</th>
-                  <th style={{ width: '19.48%' }}>Email</th>
+                  <th style={{ width: '14.06%' }}>User</th>
 
                   <th
                     style={{
                       width: '16.54%',
                       paddingRight: '16px',
-                      textAlign: 'center',
                     }}
                   >
-                    Report for
+                    Page
                   </th>
-                  <th style={{ width: '13.87%' }}>Report</th>
+                  <th style={{ width: '35.87%' }}>Report</th>
 
                   <th style={{ width: '9.252%', paddingRight: '16px' }}>
                     Actions
@@ -324,23 +322,22 @@ const AdminReport: React.FC = () => {
                         </div>
                       </div>
                     </td>
-                    <td className={styles.userEmail}>
-                      <Link href={`mailto:${user.email}`}>{user.email}</Link>
-                    </td>
 
                     <td className={styles.LoginType}>
-                      {extractPath(user.for_url)}
+                      <a
+                        href={user.for_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {extractPath(user.for_url)}
+                      </a>
                     </td>
                     <td className={styles.userPhone}>{user?.description}</td>
 
                     <td>
                       <div className={styles.actions}>
-                        <div onClick={() => handleEdit(user._id)}>
-                          {pencilSvg}
-                        </div>
-                        <div onClick={() => handleDelete(user._id)}>
-                          {deleteSvg}
-                        </div>
+                        <div>{pencilSvg}</div>
+                        <div>{deleteSvg}</div>
                       </div>
                     </td>
                   </tr>

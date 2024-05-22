@@ -105,12 +105,12 @@ const InstallPopup: FC<InstallPopupProps> = ({
       <div className={styles['container']}>
         <Image src={hcSmallLogo} alt="Hobbycue Small Logo" />
         <div className={styles['data-container']}>
-          <p className={styles['title']}>Add HobbyCue to your Home screen?</p>
-          <p className={styles['desc']}>
-            Get to HobbyCue quickly and easily by adding it to your Home creen.
+          <p className={styles['title']}>
+            Install HobbyCue web app on your phone?
           </p>
+
           <button onClick={addToHomeScreen} className={styles['primary-btn']}>
-            Add to Home screen
+            Yes
           </button>
           <p onClick={remindLater} className={styles['secondary-txt']}>
             Remind me later
