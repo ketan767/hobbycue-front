@@ -318,7 +318,6 @@ export const Navbar: React.FC<Props> = ({}) => {
       
       dispatch(setSearchLoading(false))
       dispatch(setShowPageLoader(false))
-      dispatch(setSearchString(searchValue))
       dispatch(showAllTrue())
     } catch (error) {
       dispatch(setSearchLoading(false))

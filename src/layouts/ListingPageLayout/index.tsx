@@ -418,7 +418,7 @@ const ListingPageLayout: React.FC<Props> = ({
           )}
           {activeTab === 'reviews' && (
             <div className={styles['display-mobile']}>
-              <ListingReviewsTab />
+              <ListingReviewsTab pageData={data?.pageData} />
             </div>
           )}
           {activeTab === 'store' && (

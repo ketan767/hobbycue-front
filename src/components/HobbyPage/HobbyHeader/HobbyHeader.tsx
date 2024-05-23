@@ -13,10 +13,16 @@ import HobbyNavigationLinks from './HobbyNavigationLinks'
 import FilledButton from '@/components/_buttons/FilledButton'
 import { RootState } from '@/redux/store'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
-import { showProfileError } from '@/redux/slices/user'
+import { showProfileError, updateUser } from '@/redux/slices/user'
 import { useRouter } from 'next/router'
 import Tooltip from '@/components/Tooltip/ToolTip'
 import RepostIcon from '../../../assets/icons/RepostIcon'
+import {
+  addUserHobby,
+  getMyProfileDetail,
+  updateMyProfileDetail,
+} from '@/services/user.service'
+import { CircularProgress } from '@mui/material'
 
 type Props = {
   activeTab: HobbyPageTabs
@@ -27,6 +33,7 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
   // console.log('🚀 ~ file: HobbyHeader.tsx:22 ~ HobbyPageHeader ~ data:', data)
   const dispatch = useDispatch()
   const router = useRouter()
+  const [addBtnLoading, setAddHobbyBtnLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -42,9 +49,9 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
   }
   const handleAddhobby = () => {
     if (isLoggedIn) {
-      dispatch(openModal({ type: 'profile-hobby-edit', closable: true }))
+      dispatch(openModal({type:'profile-hobby-edit',closable:true, propData:{selectedHobbyToAdd:data}} ))
     } else {
-      dispatch(openModal({ type: 'auth', closable: true }))
+      dispatch(openModal({ type: 'auth', closable: true}))
     }
   }
   const location = typeof window !== 'undefined' ? window.location.href : ''
@@ -177,7 +184,11 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
               className={styles['add-mine']}
               onClick={handleAddhobby}
             >
-              Add to mine
+              {addBtnLoading ? (
+                <CircularProgress color="inherit" size={'12px'} />
+              ) : (
+                'Add to mine'
+              )}
             </FilledButton>
           </div>
         </section>
@@ -216,7 +227,10 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
           </Tooltip>
 
           {/* More Options Button */}
-          <div onClick={(e) => showFeatureUnderDevelopment()} className={styles['action-btn']}>
+          <div
+            onClick={(e) => showFeatureUnderDevelopment()}
+            className={styles['action-btn']}
+          >
             <MoreHorizRoundedIcon color="primary" />
           </div>
         </div>
@@ -245,12 +259,19 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
         </div>
 
         {/* More Options Button */}
-        <div onClick={(e) => showFeatureUnderDevelopment()} className={styles['action-btn']}>
+        <div
+          onClick={(e) => showFeatureUnderDevelopment()}
+          className={styles['action-btn']}
+        >
           <MoreHorizRoundedIcon color="primary" />
         </div>
         {/*  */}
         <FilledButton className={styles['add-mine']} onClick={handleAddhobby}>
-          Add to mine
+          {addBtnLoading ? (
+            <CircularProgress color="inherit" size={'12px'} />
+          ) : (
+            'Add to mine'
+          )}
         </FilledButton>
       </div>
 

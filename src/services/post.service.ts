@@ -262,7 +262,28 @@ export const removeVote = async (
   const headers = { Authorization: `Bearer ${token}` }
 
   try {
-    const res = await axiosInstance.patch(`/post/remove-upvote/${postId}`, data, {
+    const res = await axiosInstance.patch(
+      `/post/remove-upvote/${postId}`,
+      data,
+      {
+        headers,
+      },
+    )
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+/** DELETE Post  `DELETE: /api/post/delete:postId` */
+
+export const deletePost = async (post_id: string): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.delete(`/post/delete/${post_id}`, {
       headers,
     })
     return { res: res, err: null }

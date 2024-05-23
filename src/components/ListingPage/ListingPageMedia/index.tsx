@@ -133,91 +133,74 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
   const isMobile = useMediaQuery('(max-width:1100px)')
   const plusIconSvg = (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="17"
-      height="16"
-      viewBox="0 0 17 16"
+      width="64"
+      height="64"
+      viewBox="0 0 64 64"
       fill="none"
+      xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_11387_36832)">
+      <circle cx="32" cy="32" r="31.5" fill="white" stroke="#8064A2" />
+      <g clip-path="url(#clip0_13842_168936)">
         <path
-          d="M13.6429 8.85763H9.35714V13.1433C9.35714 13.6148 8.97143 14.0005 8.5 14.0005C8.02857 14.0005 7.64286 13.6148 7.64286 13.1433V8.85763H3.35714C2.88571 8.85763 2.5 8.47192 2.5 8.00049C2.5 7.52906 2.88571 7.14335 3.35714 7.14335H7.64286V2.85763C7.64286 2.3862 8.02857 2.00049 8.5 2.00049C8.97143 2.00049 9.35714 2.3862 9.35714 2.85763V7.14335H13.6429C14.1143 7.14335 14.5 7.52906 14.5 8.00049C14.5 8.47192 14.1143 8.85763 13.6429 8.85763Z"
+          d="M42.2857 33.7148H33.7143V42.2862C33.7143 43.2291 32.9429 44.0005 32 44.0005C31.0571 44.0005 30.2857 43.2291 30.2857 42.2862V33.7148H21.7143C20.7714 33.7148 20 32.9433 20 32.0005C20 31.0576 20.7714 30.2862 21.7143 30.2862H30.2857V21.7148C30.2857 20.7719 31.0571 20.0005 32 20.0005C32.9429 20.0005 33.7143 20.7719 33.7143 21.7148V30.2862H42.2857C43.2286 30.2862 44 31.0576 44 32.0005C44 32.9433 43.2286 33.7148 42.2857 33.7148Z"
           fill="#8064A2"
         />
       </g>
       <defs>
-        <clipPath id="clip0_11387_36832">
+        <clipPath id="clip0_13842_168936">
           <rect
-            width="16"
-            height="16"
+            width="32"
+            height="32"
             fill="white"
-            transform="translate(0.5)"
+            transform="translate(16 16)"
           />
         </clipPath>
       </defs>
     </svg>
   )
-  console.log({con:(listingModalData?.video_url || listingModalData?.images) })
+  const pencilIconSvg = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+    >
+      <g clip-path="url(#clip0_13842_168963)">
+        <path
+          d="M2 11.5002V14.0002H4.5L11.8733 6.62687L9.37333 4.12687L2 11.5002ZM13.8067 4.69354C14.0667 4.43354 14.0667 4.01354 13.8067 3.75354L12.2467 2.19354C11.9867 1.93354 11.5667 1.93354 11.3067 2.19354L10.0867 3.41354L12.5867 5.91354L13.8067 4.69354Z"
+          fill="#8064A2"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_13842_168963">
+          <rect width="16" height="16" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+  console.log({ con: listingModalData?.video_url || listingModalData?.images })
   return (
     <>
       <main className={styles['main']}>
         <div className={styles.uploadContainer}>
           {data?.admin === user?.user._id && (
             <>
-              {isMobile ? (
-                <>
-                  <div className={styles.uploadButton}>
-                    <input
-                      type="file"
-                      accept="image/png, image/gif, image/jpeg"
-                      className={styles.hidden}
-                      onChange={(e) => handleImageChange(e)}
-                      ref={inputRef}
-                    />
-                    <p> image </p>
+              <div className={styles.uploadButtonDescktop}>
+                <div className={styles.newTag}>NEW</div>
+                <input
+                  type="file"
+                  accept="image/png, image/gif, image/jpeg"
+                  className={styles.hidden}
+                  onChange={(e) => handleImageChange(e)}
+                  ref={inputRef}
+                />
+                {plusIconSvg}
+              </div>
 
-                    <Image
-                      src={EditIcon}
-                      alt="edit"
-                      className={styles.editIcon}
-                      onClick={() => {
-                        inputRef.current?.click()
-                      }}
-                    />
-                  </div>
-
-                  <div className={styles.uploadButton}>
-                    <p> Video </p>
-
-                    <Image
-                      src={EditIcon}
-                      alt="edit"
-                      className={styles.editIcon}
-                      onClick={() => {
-                        dispatch(
-                          openModal({
-                            type: 'upload-video-page',
-                            closable: true,
-                          }),
-                        )
-                      }}
-                    />
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className={styles.uploadButtonDescktop}>
-                    <input
-                      type="file"
-                      accept="image/png, image/gif, image/jpeg"
-                      className={styles.hidden}
-                      onChange={(e) => handleImageChange(e)}
-                      ref={inputRef}
-                    />
-                    {plusIconSvg}
-                    <p>Add Image </p>
-                  </div>
-
+              <div className={styles.uploadVideoContainer}>
+                <div className={styles.uploadVideo}>
+                  <p>Video</p>
                   <div
                     onClick={() => {
                       dispatch(
@@ -227,83 +210,83 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
                         }),
                       )
                     }}
-                    className={styles.uploadButtonDescktop}
                   >
-                    {plusIconSvg}
-                    <p>Add Video </p>
+                    {pencilIconSvg}
                   </div>
-                </>
-              )}
+                </div>
+                <div
+                  onClick={() => {
+                    dispatch(
+                      openModal({
+                        type: 'upload-video-page',
+                        closable: true,
+                      }),
+                    )
+                  }}
+                  className={styles.addvidText}
+                >
+                  Add video URL to embedded the video
+                </div>
+              </div>
             </>
           )}
         </div>
-        {/* User About */}
-        {/* <PageContentBox
-          onEditBtnClick={() =>
-            dispatch(openModal({ type: 'listing-about-edit', closable: true }))
-          }
-        > */}
-
-        {listingModalData?.video_url ? (
-          <div className={styles.medias}>
-            {listingModalData?.video_url && (
-              <div className={styles['videos']}>
-                {/* <video
-                width="250"
-                height="240"
-                controls={true}
-                className={styles.video}
-              >
-                <source src={listingModalData?.video_url} type="video/mp4" />
-              </video> */}
-                <ReactPlayer
-                  width="100%"
-                  height="100%"
-                  url={listingModalData?.video_url}
-                  controls={true}
-                />
-              </div>
-            )}
-          </div>
-        ) :null}
-        
-        {(
-          (listingLayoutMode !== 'edit' && !listingModalData?.video_url) && (!listingModalData?.images||listingModalData?.images?.length<1) &&  (
+        {listingLayoutMode !== 'edit' &&
+          !listingModalData?.video_url &&
+          (!listingModalData?.images ||
+            listingModalData?.images?.length < 1) && (
             <section className={`${styles['dual-section-wrapper']}`}>
               <div className={styles['no-posts-div']}>
                 <p className={styles['no-posts-text']}>No media available</p>
               </div>
-              {!isMobile&&<div className={styles['no-posts-div']}></div>}
+              {!isMobile && <div className={styles['no-posts-div']}></div>}
             </section>
-          )
-        )}
-        {listingModalData.images?.map((item: any, idx) => {
-          return (
-            <div key={idx} className={styles.medias}>
-              <div
-                key={idx}
-                className={styles.image}
-                onClick={() => OpenMediaImage(item)}
-              >
-                <img src={item} />
+          )}
+        <div className={styles.videoAndImages}>
+          <div className={styles.imagesContainer}>
+            {listingModalData.images?.map((item: any, idx) => {
+              return (
+                <div key={idx} className={styles.medias}>
+                  <div
+                    key={idx}
+                    className={styles.image}
+                    onClick={() => OpenMediaImage(item)}
+                  >
+                    <img src={item} />
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+          <div className={styles.imagesContainer}>
+            {listingModalData?.video_url ? (
+              <div className={styles.medias}>
+                {listingModalData?.video_url && (
+                  <div className={styles['videos']}>
+                    <ReactPlayer
+                      width="100%"
+                      height="100%"
+                      url={listingModalData?.video_url}
+                      controls={true}
+                    />
+                  </div>
+                )}
               </div>
-            </div>
-          )
-        })}
-
-        {/* </PageContentBox> */}
+            ) : null}
+          </div>
+        </div>
 
         {/* User Information */}
         {
-        <CustomSnackbar
-          message={snackbar.message}
-          triggerOpen={snackbar.display}
-          type={snackbar.type === 'success' ? 'success' : 'error'}
-          closeSnackbar={() => {
-            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
-          }}
-        />
-      }
+          <CustomSnackbar
+            message={snackbar.message}
+            triggerOpen={snackbar.display}
+            type={snackbar.type === 'success' ? 'success' : 'error'}
+            closeSnackbar={() => {
+              setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+            }}
+          />
+        }
       </main>
     </>
   )
