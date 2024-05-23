@@ -150,7 +150,7 @@ export const addListingHobby = async (
 /** Add Listing Hobby `POST: /api/listing/:listingId/reviews` */
 export const addListingReview = async (
   listingId: string,
-  data: { text: string; user_id?: string },
+  data: { text: string; user_id ?: string },
 ) => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
@@ -164,6 +164,39 @@ export const addListingReview = async (
   }
 }
 
+/** update Listing Hobby `POST: /api/listing/:reviewId/reviews` */
+export const editListingReview = async (
+  reviewId: string,
+  data: { is_published?: any },
+) => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(`/listing/reviews/${reviewId}`, data, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+/** Delete Listing Hobby `POST: /api/listing/:reviewId/reviews` */
+export const deleteListingReview = async (
+  reviewId: string,
+
+) => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.delete(`/listing/reviews/${reviewId}`,  { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
 /** Delete Listing Hobby `DELETE: /api/listing/hobby/:listingId/?hobbyId={Hobby ID}` */
 export const deleteListingHobby = async (listingId: string, hobbyId: string) => {
   const token = localStorage.getItem('token')
@@ -282,4 +315,40 @@ export const getAllListingUrls = async (
       .get(`/listing/check-page-url/${url}`, { headers })
       .then((res) => cb(null, res))
       .catch((err) => cb(err, null))
+  }
+
+  export const getAllListingPageTypes = async (
+
+  ): Promise<ApiReturnObject> => {
+    try {
+      const res = await axiosInstance.get(`/listing/page-types`)
+      return { res: res, err: null }
+    } catch (error) {
+      console.error(error)
+      return { err: error, res: null }
+    }
+  }
+
+  export const getAllListingCategories = async (
+
+  ): Promise<ApiReturnObject> => {
+    try {
+      const res = await axiosInstance.get(`listing/listing-categories`)
+      return { res: res, err: null }
+    } catch (error) {
+      console.error(error)
+      return { err: error, res: null }
+    }
+  }
+
+  export const getAllListingRelationTypes = async (
+
+  ): Promise<ApiReturnObject> => {
+    try {
+      const res = await axiosInstance.get(`listing/relation-types`)
+      return { res: res, err: null }
+    } catch (error) {
+      console.error(error)
+      return { err: error, res: null }
+    }
   }

@@ -89,33 +89,10 @@
 
 /* Results table styles */
 
-.resultsContainer{
-  max-height: calc(100vh - 140px);
-  overflow-y: auto;
-}
-
-.resultsContainer::-webkit-scrollbar {
-  width: 5px !important; 
-}
-
-.resultsContainer::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.resultsContainer::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 5px;
-}
-
 .resultsTable {
   width: 100%;
   border-collapse: collapse;
   border-radius: 8px;
-}
-
-.resultsTable thead{
-  position: sticky;
-  top:0;
 }
 
 .resultsTable td,
@@ -214,6 +191,19 @@
   line-height: 20px;
   /* 142.857% */
 }
+
+.userEmail {
+  color: #1877F2 !important;
+  font-feature-settings: 'clig' off, 'liga' off;
+  font-family: 'Poppins';
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  /* 142.857% */
+  text-decoration-line: underline;
+}
+
 
 /* Login types cell styles */
 .LoginType {

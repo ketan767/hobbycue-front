@@ -17,7 +17,11 @@ import Link from 'next/link'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
-import { deleteUserByAdmin, getSupports } from '@/services/admin.service'
+import {
+  deleteUserByAdmin,
+  getReports,
+  getSupports,
+} from '@/services/admin.service'
 
 type UserProps = {
   _id: string
@@ -32,7 +36,7 @@ type SearchInput = {
   search: InputData<string>
 }
 
-const AdminSupport: React.FC = () => {
+const AdminReport: React.FC = () => {
   const router = useRouter()
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
@@ -190,20 +194,20 @@ const AdminSupport: React.FC = () => {
       setPageNumber(pages)
     }
   }
-  const fetchSupports = async () => {
-    const { res, err } = await getSupports(``)
+  const fetchReports = async () => {
+    const { res, err } = await getReports(``)
     if (err) {
       console.log('An error', err)
     } else {
       console.log('fetchUsers', res.data)
-      setSearchResults(res.data.data.supports)
+      setSearchResults(res.data.data.reports)
     }
   }
   useEffect(() => {
     if (data.search.value) {
       fetchSearchResults()
     } else if (page) {
-      fetchSupports()
+      fetchReports()
     }
   }, [data.search.value, page])
 
@@ -272,7 +276,7 @@ const AdminSupport: React.FC = () => {
             <table className={styles.resultsTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '15.06%' }}>User</th>
+                  <th style={{ width: '14.06%' }}>User</th>
 
                   <th
                     style={{
@@ -280,9 +284,9 @@ const AdminSupport: React.FC = () => {
                       paddingRight: '16px',
                     }}
                   >
-                    URL
+                    Page
                   </th>
-                  <th style={{ width: '30.87%' }}>Support</th>
+                  <th style={{ width: '35.87%' }}>Report</th>
 
                   <th style={{ width: '9.252%', paddingRight: '16px' }}>
                     Actions
@@ -392,4 +396,4 @@ const AdminSupport: React.FC = () => {
   )
 }
 
-export default AdminSupport
+export default AdminReport

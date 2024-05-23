@@ -17,28 +17,20 @@ import Link from 'next/link'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
-import { deleteUserByAdmin, getSupports } from '@/services/admin.service'
+import { deleteUserByAdmin, getHobbyRequests } from '@/services/admin.service'
+import { formatDateTime } from '@/utils'
 
-type UserProps = {
-  _id: string
-  name: string
-  email: string
-  type: string
-  description: string
-  for_url: string
-  resolved: any
-}
 type SearchInput = {
   search: InputData<string>
 }
 
-const AdminSupport: React.FC = () => {
+const HobbiesRequest: React.FC = () => {
   const router = useRouter()
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
   })
   const [email, setEmail] = useState('')
-  const [searchResults, setSearchResults] = useState<UserProps[]>([])
+  const [searchResults, setSearchResults] = useState<any[]>([])
   const [pageNumber, setPageNumber] = useState<number[]>([])
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
@@ -63,14 +55,14 @@ const AdminSupport: React.FC = () => {
     const searchValue = data.search.value.trim()
     event.preventDefault()
     let searchCriteria = {
-      name: searchValue,
+      full_name: searchValue,
     }
 
-    const { res, err } = await getSupports('')
+    const { res, err } = await searchUsers(searchCriteria)
     if (err) {
       console.log('An error', err)
     } else {
-      setSearchResults(res.data.data.supports)
+      setSearchResults(res.data)
       console.log('res', res)
     }
   }
@@ -157,10 +149,6 @@ const AdminSupport: React.FC = () => {
       return 'No number'
     }
   }
-  function extractPath(url: any) {
-    const urlObject = new URL(url)
-    return urlObject.pathname.slice(1)
-  }
 
   const pagesLength = (user: any) => {
     return user?._listings?.length || 0
@@ -179,7 +167,7 @@ const AdminSupport: React.FC = () => {
     if (err) {
       console.log('An error', err)
     } else {
-      setSearchResults(res?.data?.data.supports)
+      setSearchResults(res.data)
 
       // Calculate total number of pages based on search results length
       const totalPages = Math.ceil(res.data.length / 50)
@@ -190,22 +178,29 @@ const AdminSupport: React.FC = () => {
       setPageNumber(pages)
     }
   }
-  const fetchSupports = async () => {
-    const { res, err } = await getSupports(``)
+  const FetchHobbyReq = async () => {
+    const { res, err } = await getHobbyRequests(
+      `limit=${pagelimit}&sort=-last_login&page=${page}&populate=user_id`,
+    )
     if (err) {
       console.log('An error', err)
     } else {
-      console.log('fetchUsers', res.data)
-      setSearchResults(res.data.data.supports)
+      console.log('FetchHobbyReq', res.data)
+      setSearchResults(res.data.data.hobbyreq)
     }
   }
   useEffect(() => {
     if (data.search.value) {
       fetchSearchResults()
     } else if (page) {
-      fetchSupports()
+      FetchHobbyReq()
     }
   }, [data.search.value, page])
+
+  const getUserName = async (_id: any) => {
+    const { res, err } = await getAllUserDetail(`_id=${_id}`)
+    return res?.data.data.users[0].full_name
+  }
 
   const goToPage = (page: number) => {
     // Logic to navigate to specific page
@@ -272,95 +267,81 @@ const AdminSupport: React.FC = () => {
             <table className={styles.resultsTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '15.06%' }}>User</th>
+                  <th style={{ width: '8.06%' }}>Hobby</th>
+                  <th style={{ width: '8%' }}>Level</th>
 
+                  <th style={{ width: '12.163%' }}>Requested By</th>
                   <th
                     style={{
-                      width: '16.54%',
+                      width: '12.54%',
                       paddingRight: '16px',
+                      textAlign: 'center',
                     }}
                   >
-                    URL
+                    Matching or Similar
                   </th>
-                  <th style={{ width: '30.87%' }}>Support</th>
-
+                  <th style={{ width: '10.939%', paddingRight: '16px' }}>
+                    Hobby Status
+                  </th>
+                  <th style={{ width: '30.672%', paddingRight: '16px' }}>
+                    Admin Notes
+                  </th>
                   <th style={{ width: '9.252%', paddingRight: '16px' }}>
-                    Actions
+                    Status
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {searchResults?.map((user, index) => (
+                {searchResults?.map((hobbyreq, index) => (
                   <tr key={index}>
                     <td>
                       <div className={styles.resultItem}>
-                        {/* <div className={styles.avatarContainer}>
-                          {user.profile_image ? (
-                            <img
-                              src={user.profile_image}
-                              alt={`${user.full_name}'s profile`}
-                              width={40}
-                              height={40}
-                              className={styles.avatarImage}
-                            />
-                          ) : (
-                            <Image
-                              className={styles['img']}
-                              src={DefaultProfile}
-                              alt="profile"
-                              width={40}
-                              height={40}
-                            />
-                          )}
-                        </div> */}
                         <div className={styles.detailsContainer}>
-                          <div className={styles.userName}>{user?.name}</div>
+                          <div className={styles.userName}>
+                            {hobbyreq?.hobby}
+                          </div>
                         </div>
                       </div>
                     </td>
+                    <td className={styles.userName}>
+                      <div>{hobbyreq?.level}</div>
+                    </td>
 
                     <td className={styles.LoginType}>
-                      <a
-                        href={user.for_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {extractPath(user.for_url)}
-                      </a>
+                      {hobbyreq.user_id.full_name}
                     </td>
-                    <td className={styles.userPhone}>{user?.description}</td>
-
+                    <td className={styles.lastLoggedIn}>{hobbyreq?.similar}</td>
+                    <td className={styles.pagesLength}>{hobbyreq.status}</td>
+                    <td className={styles.pagesLength}>
+                      {/* posts not in logs */}0
+                    </td>
                     <td>
                       <div className={styles.actions}>
-                        <div>{pencilSvg}</div>
-                        <div>{deleteSvg}</div>
+                        {/* <div onClick={() => handleEdit(hobbyreq.profile_url)}>
+                          {pencilSvg}
+                        </div>
+                        <div onClick={() => handleDelete(user._id)}>
+                          {deleteSvg}
+                        </div> */}
                       </div>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            <div className={styles.pagination}>
-              {/* Previous Page Button */}
-              {page > 1 ? (
-                <button onClick={goToPreviousPage}>Previous</button>
-              ) : (
-                ''
-              )}
-
-              {/* {pageNumber.map((num) => (
-                <button key={num} onClick={() => goToPage(num)}>
-                  {num}
-                </button>
-              ))} */}
-
-              {/* Next Page Button */}
-              {searchResults.length === pagelimit ? (
-                <button onClick={goToNextPage}>Next</button>
-              ) : (
-                ''
-              )}
-            </div>
+          </div>
+          <div className={styles.pagination}>
+            {/* Previous Page Button */}
+            {page > 1 ? (
+              <button onClick={goToPreviousPage}>Previous</button>
+            ) : (
+              ''
+            )}
+            {searchResults.length === pagelimit ? (
+              <button onClick={goToNextPage}>Next</button>
+            ) : (
+              ''
+            )}
           </div>
         </div>
       </AdminLayout>
@@ -392,4 +373,4 @@ const AdminSupport: React.FC = () => {
   )
 }
 
-export default AdminSupport
+export default HobbiesRequest

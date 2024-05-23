@@ -93,7 +93,7 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
   }
 
   const handleImageUpload = async (image: any, isVideo: boolean) => {
-    const fileTobeUploaded = image;
+    const fileTobeUploaded = image
     if (fileTobeUploaded) {
       const fileSize = fileTobeUploaded.size
       const fileSizeKB = fileSize / 1024
@@ -180,8 +180,56 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
         data.pageData.is_published || user._id === data.pageData.admin
       if (!userIsAuthorized) router.push('/404')
     }
-  }, [user._id, data.pageData, router]);
-  const isMobile = useMediaQuery("(max-width:1100px)");
+  }, [user._id, data.pageData, router])
+  const plusIconSvg = (
+    <svg
+      width="64"
+      height="64"
+      viewBox="0 0 64 64"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle cx="32" cy="32" r="31.5" fill="white" stroke="#8064A2" />
+      <g clip-path="url(#clip0_13842_168936)">
+        <path
+          d="M42.2857 33.7148H33.7143V42.2862C33.7143 43.2291 32.9429 44.0005 32 44.0005C31.0571 44.0005 30.2857 43.2291 30.2857 42.2862V33.7148H21.7143C20.7714 33.7148 20 32.9433 20 32.0005C20 31.0576 20.7714 30.2862 21.7143 30.2862H30.2857V21.7148C30.2857 20.7719 31.0571 20.0005 32 20.0005C32.9429 20.0005 33.7143 20.7719 33.7143 21.7148V30.2862H42.2857C43.2286 30.2862 44 31.0576 44 32.0005C44 32.9433 43.2286 33.7148 42.2857 33.7148Z"
+          fill="#8064A2"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_13842_168936">
+          <rect
+            width="32"
+            height="32"
+            fill="white"
+            transform="translate(16 16)"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+  const pencilIconSvg = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+    >
+      <g clip-path="url(#clip0_13842_168963)">
+        <path
+          d="M2 11.5002V14.0002H4.5L11.8733 6.62687L9.37333 4.12687L2 11.5002ZM13.8067 4.69354C14.0667 4.43354 14.0667 4.01354 13.8067 3.75354L12.2467 2.19354C11.9867 1.93354 11.5667 1.93354 11.3067 2.19354L10.0867 3.41354L12.5867 5.91354L13.8067 4.69354Z"
+          fill="#8064A2"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_13842_168963">
+          <rect width="16" height="16" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+  const isMobile = useMediaQuery('(max-width:1100px)')
   // if (!user.is_onboarded && data?.pageData?.email !== user?.email) {
   //   return <ErrorPage />
   // }
@@ -199,9 +247,11 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
         setExpandAll={handleExpandAll}
       >
         <PageGridLayout column={2}>
-          <aside className={`custom-scrollbar ${styles['profile-left-aside']} ${
-                expandAll ? '' : styles['display-none']
-              }`}>
+          <aside
+            className={`custom-scrollbar ${styles['profile-left-aside']} ${
+              expandAll ? '' : styles['display-none']
+            }`}
+          >
             {/* User Hobbies */}
             <ProfileHobbySideList data={data.pageData} />
             <ProfilePagesList data={data} />
@@ -219,10 +269,52 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
           <div className={styles['nav-mobile']}>
             <ProfileNavigationLinks activeTab={'media'} />
           </div>
-          <div className={styles['main'] + ' margin-bottom-68vh'}>
+          <div className={styles['main-media'] + ' margin-bottom-68vh'}>
             {profileLayoutMode === 'edit' && (
               <div className={styles.uploadContainer}>
-                <div className={styles.uploadButton}>
+                 <div className={styles.uploadButtonDescktop}>
+                <div className={styles.newTag}>NEW</div>
+                <input
+                  type="file"
+                  accept="image/png, image/gif, image/jpeg"
+                  className={styles.hidden}
+                  onChange={(e) => handleImageChange(e)}
+                  ref={inputRef}
+                />
+                {plusIconSvg}
+              </div>
+
+              <div className={styles.uploadVideoContainer}>
+                <div className={styles.uploadVideo}>
+                  <p>Video</p>
+                  <div
+                    onClick={() => {
+                      dispatch(
+                        openModal({
+                          type: 'upload-video-page',
+                          closable: true,
+                        }),
+                      )
+                    }}
+                  >
+                    {pencilIconSvg}
+                  </div>
+                </div>
+                <div
+                  onClick={() => {
+                    dispatch(
+                      openModal({
+                        type: 'upload-video-user',
+                        closable: true,
+                      }),
+                    )
+                  }}
+                  className={styles.addvidText}
+                >
+                  Add video URL to embedded the video
+                </div>
+              </div>
+                {/* <div className={styles.uploadButton}>
                   <p> image </p>
                   <input
                     type="file"
@@ -255,54 +347,53 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
                       )
                     }}
                   />
-                </div>
+                </div> */}
               </div>
             )}
-        {data.pageData?.video_url ? (
-          <div className={styles.medias}>
-            {data.pageData?.video_url && (
-              <div className={styles['videos']}>
-                {/* <video
-                width="250"
-                height="240"
-                controls={true}
-                className={styles.video}
-              >
-                <source src={listingModalData?.video_url} type="video/mp4" />
-              </video> */}
-                <ReactPlayer
-                  width="100%"
-                  height="100%"
-                  url={data.pageData?.video_url}
-                  controls={true}
-                />
-              </div>
-            )}
-          </div>
-        ) :null}
-            {(
-          (profileLayoutMode !== 'edit' && !data.pageData?.video_url) && (!data.pageData?.images||data.pageData?.images?.length<1) &&  (
-            <section className={`${styles['dual-section-wrapper']} ${styles['mob-min-height']} ${styles['mob-h-auto']}`}>
+            {profileLayoutMode !== 'edit' &&
+          !data.pageData?.video_url &&
+          (!data.pageData?.images ||
+            data.pageData?.images?.length < 1) && (
+            <section className={`${styles['dual-section-wrapper']}`}>
               <div className={styles['no-posts-div']}>
                 <p className={styles['no-posts-text']}>No media available</p>
               </div>
-              {!isMobile&&<div className={styles['no-posts-div']}></div>}
+              {!isMobile && <div className={styles['no-posts-div']}></div>}
             </section>
-          )
-        )}
-        {data.pageData?.images?.map((item: any, idx:number) => {
-          return (
-            <div key={idx} className={styles.medias}>
-              <div
-                key={idx}
-                className={styles.image}
-                onClick={() => OpenMediaImage(item)}
-              >
-                <img src={item} />
+          )}
+        <div className={styles.videoAndImages}>
+          <div className={styles.imagesContainer}>
+            {data.pageData.images?.map((item: any, idx:number) => {
+              return (
+                <div key={idx} className={styles.medias}>
+                  <div
+                    key={idx}
+                    className={styles.image}
+                    onClick={() => OpenMediaImage(item)}
+                  >
+                    <img src={item} />
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+          <div className={styles.imagesContainer}>
+            {data.pageData?.video_url ? (
+              <div className={styles.medias}>
+                {data.pageData?.video_url && (
+                  <div className={styles['videos']}>
+                    <ReactPlayer
+                      width="100%"
+                      height="100%"
+                      url={data.pageData?.video_url}
+                      controls={true}
+                    />
+                  </div>
+                )}
               </div>
-            </div>
-          )
-        })}
+            ) : null}
+          </div>
+        </div>
           </div>
         </PageGridLayout>
       </ProfileLayout>
@@ -327,7 +418,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   const { err, res } = await getAllUserDetail(
     `profile_url=${query['profile_url']}&populate=_hobbies,_addresses,primary_address,_listings`,
   )
-  const user = res.data?.data?.users[0]
+  const user = res?.data?.data?.users[0]
 
   if (err) return { notFound: true }
   const { err: error, res: response } = await getListingPages(
