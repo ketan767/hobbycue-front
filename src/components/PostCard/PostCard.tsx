@@ -58,7 +58,7 @@ const PostCard: React.FC<Props> = (props) => {
       ? false
       : props.postData.has_link
       ? false
-      : true
+      : comments.length>0?true:false
   )
   const pageUrlClass = styles.postUrl
   // useEffect(() => {
@@ -173,6 +173,7 @@ const PostCard: React.FC<Props> = (props) => {
     })
   }
   const fetchComments = async () => {
+    console.error("running comm")
     const { err, res } = await getPostComment(
       `_post=${props.postData._id}&populate=_author`,
     )
@@ -180,8 +181,23 @@ const PostCard: React.FC<Props> = (props) => {
     setComments(res?.data?.data?.comments)
   }
   useEffect(() => {
-    if (props.currentSection === 'links') {
-      fetchComments()
+    
+  const fetchCommentsInUseeffect = async () => {
+    const { err, res } = await getPostComment(
+      `_post=${props.postData._id}&populate=_author`,
+    )
+    if (err) return console.log(err)
+    setComments(res?.data?.data?.comments)
+  console.error({comments:res?.data?.data?.comments})
+  if(res?.data?.data?.comments && res?.data?.data?.comments?.length>0){
+    setShowComments(props.currentSection === 'links'
+    ? false
+    : props.postData.has_link
+    ? false
+    : true)}
+  }
+    if (props.currentSection !== 'links') {
+      fetchCommentsInUseeffect()
     }
   }, [])
 
