@@ -282,7 +282,7 @@ const ListingReport: React.FC<Props> = ({
                 ref={textareaRef}
                 className={styles['long-input-box']}
                 required
-                placeholder="Write your description here"
+                placeholder="Report the issue to the admin for their action."
                 name="message"
                 onChange={handleInputChange}
                 value={data.description}

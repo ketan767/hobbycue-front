@@ -287,7 +287,7 @@ const SupportUserModal: React.FC<Props> = ({
               <textarea
                 className={styles['long-input-box']}
                 required
-                placeholder="Write your description here"
+                placeholder="Explain your need for help."
                 name="message"
                 onChange={handleInputChange}
                 value={data.description}
