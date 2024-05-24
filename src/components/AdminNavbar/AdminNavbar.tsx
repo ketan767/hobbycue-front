@@ -8,13 +8,13 @@ import { toggleAdminNav } from '@/redux/slices/site'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
-interface AdminNavbarProps {}
+interface AdminNavbarProps { }
 
 interface IconProps {
   active?: boolean
 }
 
-const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
+const AdminNavbar: FC<AdminNavbarProps> = ({ }) => {
   const { admin_nav } = useSelector((state: RootState) => state.site)
   const dispatch = useDispatch()
   const router = useRouter()
@@ -347,7 +347,9 @@ const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
         {/* <ProfileSwitcher /> */}
         <div className={styles['profile-switcher']}>
           <div className={styles['profile-and-title']}>
-            <img src={defaultUserImage?.src} alt="" />
+            <Link href={"/admin/dashboard"} className={styles['profile-and-title']}>
+              <img src={defaultUserImage?.src} alt="" />
+            </Link>
             {admin_nav && <p>Hobbycue Admin</p>}
           </div>
           {admin_nav && (
