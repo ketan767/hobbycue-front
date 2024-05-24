@@ -328,7 +328,7 @@ const AdminSupport: React.FC = () => {
                         {extractPath(user.for_url)}
                       </a>
                     </td>
-                    <td className={styles.userPhone}>{user?.description}</td>
+                    <td className={styles.userPhone}>{user?.description.slice(0,60)+"..." }</td>
 
                     <td>
                       <div className={styles.actions}>
