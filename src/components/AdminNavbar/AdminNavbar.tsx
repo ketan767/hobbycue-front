@@ -51,6 +51,7 @@ const AdminNavbar: FC<AdminNavbarProps> = ({ }) => {
       height="24"
       viewBox="0 0 24 24"
       fill="none"
+      className={styles['admin-nav-arrow']}
     >
       <g clip-path="url(#clip0_11919_191435)">
         <path
@@ -325,8 +326,10 @@ const AdminNavbar: FC<AdminNavbarProps> = ({ }) => {
           styles['nav-item'] + ` ${pathname === url && styles['active']}`
         }
       >
-        <Icon active={pathname === url} />
-        {admin_nav && <p>{name}</p>}
+        <span>
+          <Icon active={pathname === url} />
+        </span>
+        {admin_nav && <p className={styles['nav-item-para']}>{name}</p>}
       </Link>
     )
   }
@@ -345,19 +348,23 @@ const AdminNavbar: FC<AdminNavbarProps> = ({ }) => {
       </div>
       <div className={styles.navlist}>
         {/* <ProfileSwitcher /> */}
+
         <div className={styles['profile-switcher']}>
           <div className={styles['profile-and-title']}>
-            <Link href={"/admin/dashboard"} className={styles['profile-and-title']}>
-              <img src={defaultUserImage?.src} alt="" />
-            </Link>
+
+
+            <span>
+              <Link href={"/admin/dashboard"} className={styles['profile-and-title']}>
+                <img src={defaultUserImage?.src} alt="" />
+              </Link>
+            </span>
+
             {admin_nav && <p>Hobbycue Admin</p>}
+            {admin_nav && <ArrowDown />}
           </div>
-          {admin_nav && (
-            <div>
-              <ArrowDown />
-            </div>
-          )}
+
         </div>
+
         <NavItem url="/admin/users" name="Users" Icon={UserIcon} />
         <NavItem url="/admin/posts" name="Posts" Icon={PostIcon} />
         <NavItem url="/admin/hobbies" name="Hobbies" Icon={UserHobbies} />

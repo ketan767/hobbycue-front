@@ -7,12 +7,11 @@
     border-right: 1px solid var(--Grey-Lighter, #EBEDF0);
     background: var(--background-white, #FFF);
     z-index: 100;
-    transition: all 0.3s;
+    transition: all 0.5s ease-in-out;
 }
 
 .container.open {
     width: 260px;
-    transition: all 0.3s;
 }
 
 .arrowbox {
@@ -28,7 +27,7 @@
     filter: drop-shadow(0px 2px 4px rgba(9, 30, 66, 0.25)) drop-shadow(0px 0px 1px rgba(9, 30, 66, 0.31));
     border-radius: 50%;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.5s ease-in-out;
 }
 
 .profile-switcher {
@@ -38,6 +37,7 @@
     align-self: stretch;
     width: 100%;
     margin-bottom: 12px;
+    position: relative;
 }
 
 .profile-and-title {
@@ -45,6 +45,7 @@
     gap: 5px;
     justify-content: flex-start;
     align-items: center;
+    overflow: hidden;
 }
 
 .profile-and-title>img {
@@ -60,6 +61,7 @@
     font-style: normal;
     font-weight: 500;
     line-height: normal;
+    white-space: nowrap;
 }
 
 .navlist {
@@ -88,6 +90,8 @@
     font-weight: 500;
     line-height: 16px;
     /* 114.286% */
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .nav-item.active{
