@@ -279,7 +279,7 @@ const UserContactToOwner: React.FC<Props> = ({
               <textarea
                 className={styles['long-input-box']}
                 required
-                placeholder="Message to the user or admin"
+                placeholder="Message to the user or admin."
                 name="message"
                 onChange={handleTextAreaChange}
                 value={data.message}

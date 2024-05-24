@@ -12,6 +12,15 @@
   gap: 12px;
 }
 
+.uploadVideoContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border-radius: 8px;
+  border: 1px solid var(--Grey-Lighter, #EBEDF0);
+  background: var(--Base-White, #FFF);
+}
+
 .uploadContainer{
   grid-column: span 2;
     display: grid;
@@ -35,8 +44,8 @@ width: 100%;
 .image img {
   width: 100%;
   border-radius: 8px;
-  object-fit: cover;
-  height: 100%;
+  object-fit: contain;
+  height: auto;
 }
 .image video {
   width: 100%;
@@ -254,7 +263,7 @@ width: 100%;
   width: 100%;
   aspect-ratio: 16 / 9;
   border-radius: 0px 0px 8px 8px;
-background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), lightgray 50% / cover no-repeat;
+
 }
 
 @media screen and (max-width: 1100px) {

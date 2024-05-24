@@ -116,34 +116,34 @@ const Footer: React.FC = () => {
     {
       title: 'HobbyCue',
       values: [
-        { title: 'About Us', link: 'http://blog.hobbycue.com/about/' },
-        { title: 'Our Services', link: 'http://blog.hobbycue.com/services/' },
-        { title: 'Work with Us', link: 'http://blog.hobbycue.com/work/' },
-        { title: 'FAQ', link: 'http://blog.hobbycue.com/faq/' },
+        { title: 'About Us', link: 'https://hobbycue.com/about/' },
+        { title: 'Our Services', link: 'https://hobbycue.com/services/' },
+        { title: 'Work with Us', link: 'https://hobbycue.com/work/' },
+        { title: 'FAQ', link: 'https://hobbycue.com/faq/' },
         { title: 'Contact Us', link: '/contact/' },
       ],
     },
     {
       title: 'How do I',
       values: [
-        { title: 'Sign Up', link: 'http://blog.hobbycue.com/how-to/' },
+        { title: 'Sign Up', link: 'https://hobbycue.com/how-to/' },
         {
           title: 'Add a Listing',
           link: '/add-listing',
         },
         {
           title: 'Claim Listing',
-          link: 'http://blog.hobbycue.com/how-to/#claim-listing/',
+          link: 'https://hobbycue.com/how-to/#claim-listing/',
         },
         {
           title: 'Post a Query',
-          link: 'http://blog.hobbycue.com/how-to/#post-query/',
+          link: 'https://hobbycue.com/how-to/#post-query/',
         },
         {
           title: 'Add a Blog Post',
-          link: 'http://blog.hobbycue.com/how-to/#blog-post/',
+          link: 'https://hobbycue.com/how-to/#blog-post/',
         },
-        { title: 'Other Queries', link: 'http://blog.hobbycue.com/how-to/' },
+        { title: 'Other Queries', link: 'https://hobbycue.com/how-to/' },
       ],
     },
     {
