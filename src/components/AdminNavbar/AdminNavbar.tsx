@@ -356,7 +356,6 @@ const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
             </div>
           )}
         </div>
-        <NavItem url="/admin/dashboard" name="Dashboard" Icon={UserIcon} />
         <NavItem url="/admin/users" name="Users" Icon={UserIcon} />
         <NavItem url="/admin/posts" name="Posts" Icon={PostIcon} />
         <NavItem url="/admin/hobbies" name="Hobbies" Icon={UserHobbies} />
