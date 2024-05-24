@@ -13,6 +13,20 @@ export const getAllPosts = async (query: string): Promise<ApiReturnObject> => {
   }
 }
 
+/** Gets all User Posts with Comments data `GET: /api/post/with-comments/` */
+export const getAllPostsWithComments = async (query: string): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.get(`/post/with-comments/?${query}`, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
 /** Create a User Post `POST: /api/post/user/` */
 export const createUserPost = async (data: {
   hobbyId: string

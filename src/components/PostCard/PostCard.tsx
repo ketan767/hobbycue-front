@@ -57,8 +57,8 @@ const PostCard: React.FC<Props> = (props) => {
     props.currentSection === 'links'
       ? false
       : props.postData.has_link
-      ? true
-      : false,
+      ? false
+      : true
   )
   const pageUrlClass = styles.postUrl
   // useEffect(() => {
