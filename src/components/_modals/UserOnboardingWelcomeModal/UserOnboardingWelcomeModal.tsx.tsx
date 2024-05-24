@@ -434,7 +434,7 @@ const UserOnboardingWelcomeModal = () => {
                     onClick={() => {
                       localStorage.setItem('modal-shown-after-login', 'true')
                       dispatch(closeModal())
-                      router.reload()
+                      router.push(`/profile/${user?.profile_url}`)
                     }}
                   >
                     My Profile
@@ -541,7 +541,9 @@ const UserOnboardingWelcomeModal = () => {
                 width={30}
                 height={30}
                 alt=""
-                onClick={()=>{openSidebar()}}
+                onClick={() => {
+                  openSidebar()
+                }}
               />
               <div>
                 <div className={styles['my-profile-mobile']}>

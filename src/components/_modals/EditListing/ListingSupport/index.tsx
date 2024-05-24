@@ -227,10 +227,10 @@ const ListingSupportModal: React.FC<Props> = ({
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   useEffect(() => {
-    if(textareaRef.current){
+    if (textareaRef.current) {
       setTimeout(() => {
-      textareaRef.current?.focus()
-      }, 50);
+        textareaRef.current?.focus()
+      }, 50)
     }
   }, [textareaRef.current])
 
@@ -297,7 +297,7 @@ const ListingSupportModal: React.FC<Props> = ({
                 ref={textareaRef}
                 className={styles['long-input-box']}
                 required
-                placeholder="Write your description here"
+                placeholder="Explain your need for help."
                 name="message"
                 onChange={handleInputChange}
                 value={data.description}

@@ -23,6 +23,7 @@ const AddListing: React.FC<Props> = (props) => {
     display: false,
     message: '',
   })
+  const [hoveredIndex, setHoveredIndex] = useState<any>(null)
   const [data, setData] = useState<any[]>([])
   const handleClick = (type: ListingPages) => {
     if (isLoggedIn && user.is_onboarded) {
@@ -87,10 +88,13 @@ const AddListing: React.FC<Props> = (props) => {
           </svg>
           <span>Add Your Listing</span>
         </h1>
+        <p className={styles['select-text']}>Select Page type</p>
         <div className={styles['cards-wrapper']}>
           {data?.map((obj, i: number) => (
             <section
               key={i}
+              onMouseEnter={() => setHoveredIndex(i)}
+              onMouseLeave={() => setHoveredIndex(null)}
               onClick={() => handleClick((i + 1) as ListingPages)}
               className={`${styles['card']} ${
                 obj?.pageType === 'People' && styles['people']
@@ -99,7 +103,10 @@ const AddListing: React.FC<Props> = (props) => {
               } ${obj?.pageType === 'Place' && styles['place']}`}
             >
               <h3>
-                <img src={obj?.img} alt="" />
+                <img
+                  src={hoveredIndex === i ? obj?.hoverImg : obj?.img}
+                  alt=""
+                />
                 <span>{obj?.pageType}</span>
               </h3>
               <p>{obj?.Description}</p>

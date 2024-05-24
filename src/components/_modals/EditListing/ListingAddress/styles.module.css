@@ -268,4 +268,10 @@
   .modal-close-icon {
     position: fixed !important;
   }
+  .pincode-input-box{
+    
+    gap: var(--spacing-12);
+  }
+  
+  
 }
