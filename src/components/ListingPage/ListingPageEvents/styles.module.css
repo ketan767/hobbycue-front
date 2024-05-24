@@ -19,11 +19,11 @@
   color: #6d747a;
 }
 .card-container {
-  display: flex;
+  display: grid;
   row-gap: 12px;
   column-gap: 24px;
   flex-wrap: wrap;
-  justify-content: space-between;
+  grid-template-columns: 1fr 1fr;
 }
 
 .dual-section-wrapper {
