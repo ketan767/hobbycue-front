@@ -225,8 +225,8 @@
 }
 .pages-container {
   display: grid;
-  width:calc(100% - 24px);
-  grid-template-columns: 50% 50%; /* Two equal-width columns */
+  width:calc(100% - 0px);
+  grid-template-columns: 1fr 1fr; /* Two equal-width columns */
   column-gap: 24px;
   row-gap: 12px; /* Gap between grid items */
 }
