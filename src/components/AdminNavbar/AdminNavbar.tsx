@@ -370,7 +370,7 @@ const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
         <NavItem url="/admin/sellers-kyc" name="Seller KYC" Icon={SellerKYC} />
         <NavItem
           url="/admin/list-of-values"
-          name="List of Values"
+          name="List Values"
           Icon={ListValues}
         />
       </div>
