@@ -234,10 +234,10 @@ const UserReport: React.FC<Props> = ({
   }, [data?.description])
 
   useEffect(() => {
-    if(textAreaRef.current){
+    if (textAreaRef.current) {
       setTimeout(() => {
         textAreaRef.current?.focus()
-      }, 50);
+      }, 50)
     }
   }, [textAreaRef.current])
 
@@ -282,7 +282,7 @@ const UserReport: React.FC<Props> = ({
               <textarea
                 className={styles['long-input-box']}
                 required
-                placeholder="Write your description here"
+                placeholder="Report the issue to the admin for their action."
                 name="message"
                 onChange={handleInputChange}
                 value={data.description}

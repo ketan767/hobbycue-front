@@ -578,9 +578,9 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
               <p>
                 While we maintain the same 5 top-level categories for a
                 Hobbyist, the sub-categories may be slightly different. Each
-                Category or Sub-Category has a dedicated page – just click on
-                the name to navigate. Search on this page for any hobby and let
-                us know if we’re missing something.
+                Category or Sub-Category has a dedicated page – just{' '}
+                <strong>click on the name</strong> to navigate. Search on this
+                page for any hobby and let us know if we’re missing something.
               </p>
             </div>
           </div>
