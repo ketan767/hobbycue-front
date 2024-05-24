@@ -366,6 +366,8 @@ const AdminNavbar: FC<AdminNavbarProps> = ({ }) => {
         <NavItem url="/admin/claims" name="Claims" Icon={Claims} />
         <NavItem url="/admin/reports" name="Reports" Icon={Reports} />
         <NavItem url="/admin/supports" name="Support" Icon={Supports} />
+        {/* here please change the Supports icon with contact us icon */}
+        <NavItem url="/admin/contactUs" name="Contact Us" Icon={Supports} />
         <NavItem url="/admin/relations" name="Relation" Icon={Relations} />
         <NavItem url="/admin/blogs" name="Blogs" Icon={Blogs} />
         <NavItem url="/admin/sellers-kyc" name="Seller KYC" Icon={SellerKYC} />
