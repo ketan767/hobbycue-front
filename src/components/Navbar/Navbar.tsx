@@ -34,7 +34,7 @@ import Search from '@/assets/svg/search.svg'
 import SearchIcon from '@/assets/svg/search-small.svg'
 import BellIcon from '@/assets/svg/bell.svg'
 import BarsIcon from '@/assets/svg/bars.svg'
-import { searchUsers } from '@/services/user.service'
+import { addSearchHistory, searchUsers } from '@/services/user.service'
 import styles from './Navbar.module.css'
 import OutlinedButton from '../_buttons/OutlinedButton'
 import { useDispatch, useSelector } from 'react-redux'
@@ -235,7 +235,7 @@ export const Navbar: React.FC<Props> = ({}) => {
         // Combine titlePages and taglinePages and filter out duplicate URLs
         const uniqueUrls = new Set<string>()
         const uniquePages: any[] = [] // Use 'any[]' if you prefer not to define a specific type
-
+        console.warn({titlePages,taglinePages});
         ;[...titlePages, ...taglinePages].forEach((page) => {
           if (
             page &&
@@ -281,7 +281,9 @@ export const Navbar: React.FC<Props> = ({}) => {
             success: true,
           }),
         )
+      const {res,err} = await addSearchHistory({no_of_pages:typeResultOne.length,search_input:searchValue})
       }
+
 
       dispatch(setShowPageLoader(false))
 
