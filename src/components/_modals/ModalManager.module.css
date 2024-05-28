@@ -22,7 +22,7 @@
 }
 .create-post-postion{
   position: relative;
-  left: 102px;
+  /* left: 102px; */
 }
 .modal-wrapper main .modal-close-icon {
   position: absolute;
