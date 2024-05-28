@@ -3,7 +3,7 @@ import styles from './CreatePost.module.css'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import store, { RootState } from '@/redux/store'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { checkIfUrlExists, isEmptyField } from '@/utils'
 import { getAllHobbies } from '@/services/hobby.service'
 import {
@@ -35,6 +35,7 @@ import { increaseRefreshNum, setFilters } from '@/redux/slices/post'
 import MobileLocationDropdown from './MobileLocationDropdown'
 import { updateActiveProfile } from '@/redux/slices/user'
 import defaultImg from '@/assets/svg/default-images/default-user-icon.svg'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 const CustomEditor = dynamic(() => import('@/components/CustomEditor'), {
   ssr: false,
@@ -78,10 +79,16 @@ export const CreatePost: React.FC<Props> = ({
   onStatusChange,
   propData,
 }) => {
+  console.warn({propData});
   const router = useRouter()
-  const { user, activeProfile } = useSelector((state: RootState) => state.user)
+  const { user, listing, activeProfile } = useSelector(
+    (state: RootState) => state.user,
+  )
+  const dispatch = useDispatch()
+  const filteredListing = listing.filter((item: any) => item.is_published)
   const { filters } = useSelector((state: RootState) => state.post)
-  const [hobbies, setHobbies] = useState([])
+  const [hobbies, setHobbies] = useState([]);
+  const [editing,setEditing] = useState(false);
   const [data, setData] = useState<NewPostData>({
     type: 'user',
     data: null,
@@ -94,6 +101,32 @@ export const CreatePost: React.FC<Props> = ({
     video_url: '',
   })
   const [showMetaData, setShowMetaData] = useState(true)
+  useEffect(()=>{
+    if(propData && propData._hobby){
+      setData(prev=>({...prev,hobby:(propData._hobby as DropdownListItem)}))
+    }
+    if(propData && propData._genre){
+      setData(prev=>({...prev,genre:(propData._genre as DropdownListItem)}))
+    }
+    if(propData && propData.content){
+      setData(prev=>({...prev,content:propData.content}))
+    }
+    if(propData && propData.visibility){
+      setData(prev=>({...prev,visibility:propData.visibility}))
+    }
+    if(propData && propData._id){
+      setEditing(true)
+    }
+    if(propData && propData.author_type==='User'){
+      if(activeProfile.type==='user'){
+        return
+      }else{
+        dispatch(updateActiveProfile({ type:'user', data:user }));
+      }
+    }else if(propData && propData._author!=='User'){
+      dispatch(updateActiveProfile({ type:'user', data:propData._author }));
+    }
+  },[propData])
 
   useEffect(() => {
     const hobbiesDropDownArr =
@@ -110,6 +143,19 @@ export const CreatePost: React.FC<Props> = ({
         return obj.hobbyId === filters.hobby
       }
     })
+    const updateFilters = () => {
+      if(propData && propData._hobby){
+        console.log(propData,'hobby')
+        setData(prev=>({...prev,hobby:(propData._hobby as DropdownListItem)}))
+      }
+      if(propData && propData._genre){
+        console.log(propData,'genre')
+        setData(prev=>({...prev,genre:(propData._genre as DropdownListItem)}))
+      }
+      if(propData && propData.createdAt){
+        return;
+      }
+      console.warn(propData,'still running')
     setData((prev) => {
       if (selectedHobby) {
         return {
@@ -145,7 +191,9 @@ export const CreatePost: React.FC<Props> = ({
         }
       }
     })
-  }, [filters])
+    }
+    updateFilters();
+  }, [filters,propData])
 
   // automatically hobby will take user's hobby[0] when profile switches
 
@@ -164,7 +212,20 @@ export const CreatePost: React.FC<Props> = ({
         return obj.hobbyId === filters.hobby
       }
     })
-    setData((prev) => {
+    const updateData = () =>
+    {
+      if(propData && propData._hobby){
+        console.log(propData,'hobby')
+        setData(prev=>({...prev,hobby:(propData._hobby as DropdownListItem)}))
+      }
+      if(propData && propData._genre){
+        console.log(propData,'genre')
+        setData(prev=>({...prev,genre:(propData._genre as DropdownListItem)}))
+      }
+      if(propData && propData.createdAt){
+        return;
+      }
+      setData((prev) => {
       if (selectedHobby) {
         return {
           ...prev,
@@ -198,8 +259,9 @@ export const CreatePost: React.FC<Props> = ({
           return { ...prev, visibility: filters.location ?? 'All Locations' }
         }
       }
-    })
-  }, [data.data])
+    })}
+    updateData();
+  }, [data.data, propData])
 
   useEffect(() => {
     setHobbies(activeProfile.data?._hobbies)
@@ -217,6 +279,21 @@ export const CreatePost: React.FC<Props> = ({
   const [url, setUrl] = useState('')
   const [isError, setIsError] = useState(false)
   const [isChanged, setIsChanged] = useState(false)
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
+  const showFeatureUnderDevelopment = () => {
+    setSnackbar({
+      display: true,
+      type: 'warning',
+      message: 'This feature is under development',
+    })
+    setTimeout(() => {
+      dispatch(closeModal());
+    }, 2500)
+  }
   const [metaData, setMetaData] = useState({
     title: '',
     description: '',
@@ -464,6 +541,14 @@ export const CreatePost: React.FC<Props> = ({
     console.log('jsonData genreId', jsonData.genreId)
     setSubmitBtnLoading(true)
 
+    if(editing||propData&&propData._id){
+      showFeatureUnderDevelopment();
+      await setTimeout(() => {
+        return
+      }, 2500);
+      return;
+    }
+
     if (data.type === 'listing') {
       jsonData.listingId = data.data._id
       const { err, res } = await createListingPost(jsonData)
@@ -566,7 +651,7 @@ export const CreatePost: React.FC<Props> = ({
       >
         {/* Modal Header */}
         <div className={styles['modal-wrapper']}>
-          <h3 className={styles['modal-heading']}>Create Post</h3>
+          <h3 className={styles['modal-heading']}>{editing?'Update Post':'Create Post'}</h3>
           <div className={styles['create-post-modal']}>
             <div className={styles['image-posting-as']}>
               <img
@@ -855,6 +940,16 @@ export const CreatePost: React.FC<Props> = ({
           </div>
         </div>
       </div>
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

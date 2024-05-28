@@ -9,6 +9,7 @@ export type ModalType =
   | 'user-onboarding'
   | 'listing-onboarding'
   | 'create-post'
+  | 'update-post'
   | 'upload-image'
   | 'profile-general-edit'
   | 'profile-about-edit'
