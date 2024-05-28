@@ -797,14 +797,12 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   addressParts.push(component.long_name)
                   addressObj.country = component.long_name
                 }
-                if (component.types.includes('pin_code')) {
+                if (component.types.includes('postal_code')) {
                   addressParts.push(component.long_name)
                   addressObj.pin_code = component.long_name
-                }
-                if (component.types.includes('post_code')) {
-                  addressParts.push(component.long_name)
                   addressObj.post_code = component.long_name
                 }
+
                 if (component.types.includes('sublocality_level_1')) {
                   addressParts.push(component.long_name)
                   addressObj.sublocality_level_1 = component.long_name
@@ -902,10 +900,11 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         city: addressObj.locality ?? '',
         state: addressObj.administrative_area_level_1 ?? '',
         society: addressObj.sublocality_level_2 ?? '',
-        street: `${addressObj.street_number}, ${addressObj.neighbour}, ${addressObj.route
-          }, ${[addressObj.premise, addressObj.primise2]
-            .filter(Boolean)
-            .join(', ')}, ${addressObj.sublocality_level_3}`,
+        street: `${addressObj.street_number}, ${addressObj.neighbour}, ${
+          addressObj.route
+        }, ${[addressObj.premise, addressObj.primise2]
+          .filter(Boolean)
+          .join(', ')}, ${addressObj.sublocality_level_3}`,
         locality: addressObj.sublocality_level_1 ?? '',
       }))
     } else {
@@ -987,8 +986,9 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         <section className={styles['body']}>
           {addLocation || editLocation ? (
             <div
-              className={`${styles['input-box']} ${inputErrs.addressLabel ? styles['input-box-error'] : ''
-                }`}
+              className={`${styles['input-box']} ${
+                inputErrs.addressLabel ? styles['input-box-error'] : ''
+              }`}
             >
               <label className={styles['label-required']}>Address Label</label>
               <div className={styles['street-input-container']}>
@@ -1067,8 +1067,10 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               <div className={styles['input-box']}>
                 <label className={styles['info-container']}>
                   <span>Society</span>
+
                   <CustomizedTooltips2 width={273} placement="right" title='Society is where community events are organized.  It could be an apartment complex, row of houses or neighbourhood, typically within walking distance.  It should ideally be between 20 and 2000 individual addresses.'>
                     <Image height={18} width={18} src={InfoIcon} alt='info-icon' />
+
                   </CustomizedTooltips2>
                 </label>
                 <input
@@ -1094,8 +1096,9 @@ const ProfileAddressEditModal: React.FC<Props> = ({
             </section>
             <section className={styles['two-column-grid']}>
               <div
-                className={`${styles['input-box']} ${inputErrs.city ? styles['input-box-error'] : ''
-                  }`}
+                className={`${styles['input-box']} ${
+                  inputErrs.city ? styles['input-box-error'] : ''
+                }`}
               >
                 <label className={styles['label-required']}>City</label>
                 <input
@@ -1111,7 +1114,6 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               </div>
 
               <div className={styles['pincode-input-box']}>
-
                 <div className={styles['input-box']}>
                   <label> Postal code</label>
                   <input
@@ -1128,8 +1130,10 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                 <div className={styles['input-box']}>
                   <label className={styles['info-container']}>
                     <span>GPS PIN Code</span>
+
                     <CustomizedTooltips2 width={287} placement="bottom-end" title='GPS PIN Code is the mapping as per Google Maps.  Postal Code is the Post Office that delivers to this address.  In some cases, these two may be different.  Clicking on the GPS icon updates only the GPS PIN Code, not the Postal Code.'>
                       <Image height={18} width={18} src={InfoIcon} alt='info-icon' />
+
                     </CustomizedTooltips2>
                   </label>
                   <input
@@ -1142,16 +1146,13 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   />
                   <p className={styles['helper-text']}>{inputErrs.pin_code}</p>
                 </div>
-
               </div>
-
-
-
             </section>
             <section className={styles['two-column-grid']}>
               <div
-                className={`${styles['input-box']} ${inputErrs.state ? styles['input-box-error'] : ''
-                  }`}
+                className={`${styles['input-box']} ${
+                  inputErrs.state ? styles['input-box-error'] : ''
+                }`}
               >
                 <label className={styles['label-required']}>State</label>
                 <input
@@ -1166,8 +1167,9 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                 <p className={styles['helper-text']}>{inputErrs.state}</p>
               </div>
               <div
-                className={`${styles['input-box']} ${inputErrs.country ? styles['input-box-error'] : ''
-                  }`}
+                className={`${styles['input-box']} ${
+                  inputErrs.country ? styles['input-box-error'] : ''
+                }`}
               >
                 <label className={styles['label-required']}>Country</label>
                 <input
@@ -1256,7 +1258,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
             </button>
           )}
         </footer>
-      </div >
+      </div>
     </>
   )
 }

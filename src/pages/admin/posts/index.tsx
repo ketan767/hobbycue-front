@@ -9,7 +9,7 @@ import { openModal, updateForgotPasswordEmail } from '@/redux/slices/modal'
 import { RootState } from '@/redux/store'
 import Link from 'next/link'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
-import { getAllPosts } from '@/services/post.service'
+import { getAllPostsWithComments } from '@/services/post.service'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { deletePostByAdmin } from '@/services/admin.service'
@@ -75,7 +75,7 @@ const AdminDashboard: React.FC = () => {
   }
 
   const fetchPosts = async () => {
-    const { res, err } = await getAllPosts(
+    const { res, err } = await getAllPostsWithComments(
       `populate=_author,_genre,_hobby&limit=${pagelimit}&sort=-createdAt&page=${page}`,
     )
     if (err) {
@@ -262,7 +262,7 @@ const AdminDashboard: React.FC = () => {
                 <tr>
                   <th style={{ width: '18.06%' }}>User</th>
                   <th style={{ width: '19.48%' }}>Content</th>
-                  <th style={{ width: '13.87%' }}>Posted at</th>
+                  <th style={{ width: '10%' }}>Posted at</th>
                   <th style={{ width: '9.163%' }}>Hobby</th>
                   <th
                     style={{
@@ -279,7 +279,10 @@ const AdminDashboard: React.FC = () => {
                   <th style={{ width: '6.672%', paddingRight: '16px' }}>
                     Down Votes
                   </th>
-                  <th style={{ width: '9.252%', paddingRight: '16px' }}>
+                  <th style={{ width: '6.87%', paddingRight: '16px' }}>
+                    Comments
+                  </th>
+                  <th style={{ width: '6.252%', paddingRight: '16px' }}>
                     Actions
                   </th>
                 </tr>
@@ -339,6 +342,9 @@ const AdminDashboard: React.FC = () => {
                     </td>
                     <td className={styles.pagesLength}>
                       {post?.down_votes?.count}
+                    </td>
+                    <td className={styles.pagesLength}>
+                      {post?.comments?.length}
                     </td>
                     <td>
                       <div className={styles.actions}>

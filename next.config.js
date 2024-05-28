@@ -28,6 +28,22 @@ const nextConfig = {
     })
     return config
   },
+  async redirects() {
+    return [
+      {
+        source: '/(.*)',
+        has: [
+          {
+            type: 'header',
+            key: 'x-forwarded-proto',
+            value: 'http',
+          },
+        ],
+        destination: 'https://hobbycue.com/:path*',
+        permanent: true,
+      },
+    ]
+  },
 }
 
 const withPWA = require('next-pwa')({

@@ -443,13 +443,11 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   addressParts.push(component.long_name)
                   addressObj.country = component.long_name
                 }
-                if (component.types.includes('pin_code')) {
-                  addressParts.push(component.long_name)
-                  addressObj.pin_code = component.long_name
-                }
-                if (component.types.includes('post_code')) {
+
+                if (component.types.includes('postal_code')) {
                   addressParts.push(component.long_name)
                   addressObj.post_code = component.long_name
+                  addressObj.pin_code = component.long_name
                 }
                 if (component.types.includes('sublocality_level_1')) {
                   addressParts.push(component.long_name)
@@ -484,8 +482,8 @@ const ListingAddressEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        if (event?.srcElement?.tagName === "svg") {
-          return;
+        if (event?.srcElement?.tagName === 'svg') {
+          return
         }
         nextButtonRef.current?.click()
       }
@@ -619,8 +617,9 @@ const ListingAddressEditModal: React.FC<Props> = ({
             <div className={styles['input-box']}>
               <label>Street Address</label>
               <div
-                className={` ${styles['street-input-container']}  ${data.street.error ? styles['input-box-error'] : ''
-                  }`}
+                className={` ${styles['street-input-container']}  ${
+                  data.street.error ? styles['input-box-error'] : ''
+                }`}
               >
                 <input
                   type="text"
@@ -642,12 +641,12 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   tabIndex={0}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      getLocation();
+                      e.preventDefault()
+                      e.stopPropagation()
+                      getLocation()
                       setTimeout(() => {
-                        streetRef?.current?.focus();
-                      }, 50);
+                        streetRef?.current?.focus()
+                      }, 50)
                     }
                   }}
                 />
@@ -672,13 +671,16 @@ const ListingAddressEditModal: React.FC<Props> = ({
             </div>
             <section className={styles['two-column-grid']}>
               <div
-                className={`${styles['input-box']} ${data.society.error ? styles['input-box-error'] : ''
-                  }`}
+                className={`${styles['input-box']} ${
+                  data.society.error ? styles['input-box-error'] : ''
+                }`}
               >
                 <label className={styles['info-container']}>
                   <span>Society</span>
+
                   <CustomizedTooltips2 width={273} placement="right" title='Society is where community events are organized.  It could be an apartment complex, row of houses or neighbourhood, typically within walking distance.  It should ideally be between 20 and 2000 individual addresses.'>
                     <Image height={18} width={18} src={InfoIcon} alt='info-icon' />
+
                   </CustomizedTooltips2>
                 </label>
 
@@ -694,8 +696,9 @@ const ListingAddressEditModal: React.FC<Props> = ({
                 <p className={styles['helper-text']}>{data.society.error}</p>
               </div>
               <div
-                className={`${styles['input-box']} ${data.locality.error ? styles['input-box-error'] : ''
-                  }`}
+                className={`${styles['input-box']} ${
+                  data.locality.error ? styles['input-box-error'] : ''
+                }`}
               >
                 <label>Locality</label>
                 <input
@@ -712,8 +715,9 @@ const ListingAddressEditModal: React.FC<Props> = ({
             </section>
             <section className={styles['two-column-grid']}>
               <div
-                className={`${styles['input-box']} ${data.city.error ? styles['input-box-error'] : ''
-                  }`}
+                className={`${styles['input-box']} ${
+                  data.city.error ? styles['input-box-error'] : ''
+                }`}
               >
                 <label>City</label>
                 <input
@@ -740,14 +744,18 @@ const ListingAddressEditModal: React.FC<Props> = ({
                     onChange={handleInputChange}
                     ref={postcodeRef}
                   />
-                  <p className={styles['helper-text']}>{data.post_code.error}</p>
+                  <p className={styles['helper-text']}>
+                    {data.post_code.error}
+                  </p>
                 </div>
 
                 <div className={styles['input-box']}>
                   <label className={styles['info-container']}>
                     <span>GPS PIN Code</span>
+
                     <CustomizedTooltips2 width={287} placement="bottom-end" title='GPS PIN Code is the mapping as per Google Maps.  Postal Code is the Post Office that delivers to this address.  In some cases, these two may be different.  Clicking on the GPS icon updates only the GPS PIN Code, not the Postal Code.'>
                       <Image height={18} width={18} src={InfoIcon} alt='info-icon' />
+
                     </CustomizedTooltips2>
                   </label>
                   <input
@@ -762,13 +770,12 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   <p className={styles['helper-text']}>{data.pin_code.error}</p>
                 </div>
               </div>
-
-
             </section>
             <section className={styles['two-column-grid']}>
               <div
-                className={`${styles['input-box']} ${data.state.error ? styles['input-box-error'] : ''
-                  }`}
+                className={`${styles['input-box']} ${
+                  data.state.error ? styles['input-box-error'] : ''
+                }`}
               >
                 <label>State</label>
                 <input
@@ -783,8 +790,9 @@ const ListingAddressEditModal: React.FC<Props> = ({
                 <p className={styles['helper-text']}>{data.state.error}</p>
               </div>
               <div
-                className={`${styles['input-box']} ${data.country.error ? styles['input-box-error'] : ''
-                  }`}
+                className={`${styles['input-box']} ${
+                  data.country.error ? styles['input-box-error'] : ''
+                }`}
               >
                 <label>Country</label>
                 <input
