@@ -321,7 +321,7 @@ const AdminDashboard: React.FC = () => {
                       </div>
                     </td>
                     <td 
-                      dangerouslySetInnerHTML={{ __html: post?.content ?? '' }}
+                      dangerouslySetInnerHTML={{ __html: post?.content.slice(0,30)+"..." ?? '' }}
                     
                     className={styles.userEmail}>
                       

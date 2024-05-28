@@ -307,7 +307,7 @@ const ClaimsPage: React.FC = () => {
                     </td>
 
                     <td className={styles.lastLoggedIn}>
-                      {hobbyreq?.HowRelated}
+                      {hobbyreq?.HowRelated.slice(0,60)+"..." }
                     </td>
 
                     <td className={styles.pagesLength}>{hobbyreq?.link}</td>

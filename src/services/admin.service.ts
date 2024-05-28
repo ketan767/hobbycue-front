@@ -39,6 +39,19 @@ export const admindashboard = async () => {
     }
   }
 
+  /** Get `/api/admin/contactUs` */
+  export const getContactUs = async (query: string,): Promise<ApiReturnObject> => {
+    const token = localStorage.getItem('token')
+    const headers = { Authorization: `Bearer ${token}` }
+    try {
+      const res = await axiosInstance.get(`/admin/contactUs/?${query}`, { headers })
+      return { res: res, err: null }
+    } catch (error) {
+      console.error(error)
+      return { err: error, res: null }
+    }
+  }
+
 /** PATCH `/api/admin/user/:user_id` */
 
 export const updateUserByAdmin = async (user_id: string,data:any): Promise<ApiReturnObject> => {

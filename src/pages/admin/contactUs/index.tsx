@@ -19,7 +19,7 @@ import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import {
   deleteUserByAdmin,
-  getReports,
+  getContactUs,
   getSupports,
 } from '@/services/admin.service'
 
@@ -29,14 +29,14 @@ type UserProps = {
   email: string
   type: string
   description: string
-  for_url: string
-  resolved: any
+  YouAre: string
+  Regarding: string
 }
 type SearchInput = {
   search: InputData<string>
 }
 
-const AdminReport: React.FC = () => {
+const AdminContactUs: React.FC = () => {
   const router = useRouter()
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
@@ -194,20 +194,20 @@ const AdminReport: React.FC = () => {
       setPageNumber(pages)
     }
   }
-  const fetchReports = async () => {
-    const { res, err } = await getReports(``)
+  const fetchContactUs = async () => {
+    const { res, err } = await getContactUs(``)
     if (err) {
       console.log('An error', err)
     } else {
       console.log('fetchUsers', res.data)
-      setSearchResults(res.data.data.reports)
+      setSearchResults(res.data.data.contacts)
     }
   }
   useEffect(() => {
     if (data.search.value) {
       fetchSearchResults()
     } else if (page) {
-      fetchReports()
+      fetchContactUs()
     }
   }, [data.search.value, page])
 
@@ -277,6 +277,7 @@ const AdminReport: React.FC = () => {
               <thead>
                 <tr>
                   <th style={{ width: '14.06%' }}>User</th>
+                  <th style={{ width: '14.06%' }}>Role</th>
 
                   <th
                     style={{
@@ -284,9 +285,9 @@ const AdminReport: React.FC = () => {
                       paddingRight: '16px',
                     }}
                   >
-                    Page
+                    Purpose
                   </th>
-                  <th style={{ width: '35.87%' }}>Report</th>
+                  <th style={{ width: '35.87%' }}>Message</th>
 
                   <th style={{ width: '9.252%', paddingRight: '16px' }}>
                     Actions
@@ -323,15 +324,27 @@ const AdminReport: React.FC = () => {
                       </div>
                     </td>
 
+                    {/*There is no url input in ContactUs model therefore avoiding extractUrl method*/}
                     <td className={styles.LoginType}>
                       <a
-                        href={user.for_url}
+                        href={user.YouAre}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        {extractPath(user.for_url)}
+                        {user.YouAre}
                       </a>
                     </td>
+
+                    <td className={styles.LoginType}>
+                      <a
+                        href={user.YouAre}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {user.Regarding}
+                      </a>
+                    </td>
+
                     <td className={styles.userPhone}>{user?.description.slice(0, 120) + "..."}</td>
 
                     <td>
@@ -396,4 +409,4 @@ const AdminReport: React.FC = () => {
   )
 }
 
-export default AdminReport
+export default AdminContactUs
