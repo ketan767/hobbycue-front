@@ -258,7 +258,7 @@ const CommunityLayout: React.FC<Props> = ({
     else {
       console.warn({ selectedGenre, selectedHobby })
       activeProfile?.data?._hobbies.forEach((item: any) => {
-        params.append('_hobby', item.hobby._id)
+        params.append('_hobby', item?.hobby?._id)
       })
     }
     let selectedPinCode = ''
@@ -1265,12 +1265,12 @@ const CommunityLayout: React.FC<Props> = ({
                 <h3>
                   <span>
                     {activeProfile.data?._hobbies?.find(
-                      (obj: any) => obj.hobby._id === selectedHobby,
+                      (obj: any) => obj?.hobby?._id === selectedHobby,
                     )?.hobby?.display ?? 'All Hobbies'}
 
                     {activeProfile.data?._hobbies?.find(
                       (obj: any) =>
-                        obj.hobby._id === selectedHobby &&
+                        obj?.hobby?._id === selectedHobby &&
                         obj?.genre?._id === selectedGenre,
                     )?.genre &&
                       ` - ${

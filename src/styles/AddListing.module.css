@@ -5,10 +5,12 @@ body:has(.add-listing-container) {
 
 .add-listing-container {
   background-color: rgb(var(--white-rgb));
+  
   padding: var(--spacing-40);
+  padding-top: 24px;
   border-radius: 8px;
   max-width: fit-content;
-  margin-top: 32px;
+  margin-top: 24px;
 }
 
 .add-listing-heading {
@@ -22,6 +24,19 @@ body:has(.add-listing-container) {
   justify-content: center;
   align-items: center;
   gap: 1rem;
+}
+
+.select-text {
+  display: flex;
+  justify-content: center;
+  color: #6D747A;
+  font-family: "Poppins";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  padding-top: 22px;
+
 }
 
 .cards-wrapper {

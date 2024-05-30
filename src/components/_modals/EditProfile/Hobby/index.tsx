@@ -101,6 +101,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const hobbyDropdownRef = useRef<HTMLDivElement>(null)
   const genreDropdownRef = useRef<HTMLDivElement>(null)
   const selectLevelRef = useRef<HTMLSelectElement>(null)
+  const bodyRef = useRef<HTMLElement>(null)
   const { user } = useSelector((state: RootState) => state.user)
   const searchref = useRef<HTMLInputElement>(null)
   const [addHobbyBtnLoading, setAddHobbyBtnLoading] = useState<boolean>(false)
@@ -887,7 +888,13 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       }
       setHobbyInputValue(selectedHobbyToAdd.display)
     }
-  }, [selectedHobbyToAdd])
+  }, [selectedHobbyToAdd]);
+
+  useEffect(()=>{
+    if(bodyRef.current && selectedHobbyToAdd && selectedHobbyToAdd?.show === true){
+      bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
+    }
+  },[selectedHobbyToAdd, userHobbies])
 
   console.log({ data, isChanged })
 
@@ -1001,7 +1008,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
         <hr className={styles['modal-hr']} />
 
-        <section className={`${styles['body']}`}>
+        <section ref={bodyRef} className={`${styles['body']}`}>
           <>
             <section className={styles['add-hobbies-wrapper']}>
               <section className={styles['added-hobby-list']}>

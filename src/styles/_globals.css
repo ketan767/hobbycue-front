@@ -383,6 +383,15 @@ select:-webkit-autofill {
   fill: #8064a2 !important;
 }
 
+.admin-next-btn {
+  border-radius: 8px;
+  padding: 5px 10px;
+  background-color: #0056b3;
+  color: white;
+  font-size: 16px;
+  line-height: 16px;
+  font-weight: 500;
+}
 @media screen and (max-width: 1100px) {
   .content-box-wrapper {
     border: none;
@@ -582,6 +591,26 @@ border: 1px solid #8064a2 !important;
   .margin-bottom-65vh{
     margin-bottom: 65vh;
 }
+.ql-toolbar.ql-snow + .ql-container.ql-snow {
+  border: none !important;
+}
+.ql-toolbar.ql-snow{
+border-radius: 0;
+position: relative;
+overflow: hidden;
+}
+/* not working because overflow hidden is there, and without overflow hidden you will face scrollbar */
+/* .ql-toolbar.ql-snow::after{
+  content: ' ';
+  position: absolute;
+  display: block;
+  top: 0;
+  left: -16px;
+  right: -16px;
+  background: #EBEDF0;
+  height: 1px;
+  z-index: 1;
+} */
 }
 
 .font-italic{

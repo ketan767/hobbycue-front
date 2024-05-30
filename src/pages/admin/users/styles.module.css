@@ -75,6 +75,7 @@
 /* Container styles */
 .searchContainer {
   padding: 28.5px 24px 20px 32px;
+  transition: all 0.5s ease-in-out;
 }
 
 .admintitle {
@@ -292,13 +293,18 @@
   font-size: 14px;
   font-weight: 400;
   color: #000000;
-  /* Fixed width for the Login Types column */
+
+}
+.loginIcon {
+  display: flex;
+  justify-content: center;
+  gap: 3px;
 }
 
 
 .lastLoggedIn {
   padding-right: 16px !important;
-  text-align: center !important;
+
   /* Fixed width for the Last LoggedIn by column */
 }
 
@@ -307,11 +313,15 @@
   padding-right: 16px !important;
 }
 
+.accountStatus {
+  text-align: center;
+  
+}
 /* Responsive styles (optional) */
 
 .actions {
   display: flex;
-  padding: 24px 20px;
+  padding: 24px 5px;
   justify-content: center;
   align-items: center;
   gap: 16px;
@@ -320,7 +330,13 @@
 .actions svg{
   cursor: pointer;
 }
+.pagination {
+  width: 180px;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 12px;
 
+}
 @media (max-width: 768px) {
   .searchForm {
     flex-direction: column;

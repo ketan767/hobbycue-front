@@ -5,7 +5,7 @@ import { getAllUserDetail, searchUsers } from '../../../services/user.service'
 import styles from './styles.module.css'
 import Image from 'next/image'
 import DefaultProfile from '@/assets/svg/default-images/default-user-icon.svg'
-import { ClaimRequest, forgotPassword } from '@/services/auth.service'
+import { forgotPassword } from '@/services/auth.service'
 import {
   closeModal,
   openModal,
@@ -19,23 +19,31 @@ import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import {
   deleteUserByAdmin,
-  getClaimRequests,
-  getHobbyRequests,
+  getContactUs,
+  getSupports,
 } from '@/services/admin.service'
-import { formatDateTime } from '@/utils'
 import StatusDropdown from '@/components/_formElements/StatusDropdown'
 
+type UserProps = {
+  _id: string
+  name: string
+  email: string
+  type: string
+  description: string
+  YouAre: string
+  Regarding: string
+}
 type SearchInput = {
   search: InputData<string>
 }
 
-const ClaimsPage: React.FC = () => {
+const AdminContactUs: React.FC = () => {
   const router = useRouter()
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
   })
   const [email, setEmail] = useState('')
-  const [searchResults, setSearchResults] = useState<any[]>([])
+  const [searchResults, setSearchResults] = useState<UserProps[]>([])
   const [pageNumber, setPageNumber] = useState<number[]>([])
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
@@ -60,14 +68,14 @@ const ClaimsPage: React.FC = () => {
     const searchValue = data.search.value.trim()
     event.preventDefault()
     let searchCriteria = {
-      full_name: searchValue,
+      name: searchValue,
     }
 
-    const { res, err } = await getClaimRequests(searchCriteria)
+    const { res, err } = await getSupports('')
     if (err) {
       console.log('An error', err)
     } else {
-      setSearchResults(res.data)
+      setSearchResults(res.data.data.supports)
       console.log('res', res)
     }
   }
@@ -154,6 +162,10 @@ const ClaimsPage: React.FC = () => {
       return 'No number'
     }
   }
+  function extractPath(url: any) {
+    const urlObject = new URL(url)
+    return urlObject.pathname.slice(1)
+  }
 
   const pagesLength = (user: any) => {
     return user?._listings?.length || 0
@@ -172,7 +184,7 @@ const ClaimsPage: React.FC = () => {
     if (err) {
       console.log('An error', err)
     } else {
-      setSearchResults(res.data)
+      setSearchResults(res?.data?.data.supports)
 
       // Calculate total number of pages based on search results length
       const totalPages = Math.ceil(res.data.length / 50)
@@ -183,29 +195,22 @@ const ClaimsPage: React.FC = () => {
       setPageNumber(pages)
     }
   }
-  const FetchClaimReq = async () => {
-    const { res, err } = await getClaimRequests(
-      `limit=${pagelimit}&sort=-createdAt&page=${page}&populate=user_id`,
-    )
+  const fetchContactUs = async () => {
+    const { res, err } = await getContactUs(``)
     if (err) {
       console.log('An error', err)
     } else {
-      console.log('FetchClaimReq', res.data)
-      setSearchResults(res.data.data.claimreq)
+      console.log('fetchUsers', res.data)
+      setSearchResults(res.data.data.contacts)
     }
   }
   useEffect(() => {
     if (data.search.value) {
       fetchSearchResults()
     } else if (page) {
-      FetchClaimReq()
+      fetchContactUs()
     }
   }, [data.search.value, page])
-
-  const getUserName = async (_id: any) => {
-    const { res, err } = await getClaimRequests(`_id=${_id}`)
-    return res?.data.data.users[0].full_name
-  }
 
   const goToPage = (page: number) => {
     // Logic to navigate to specific page
@@ -272,46 +277,79 @@ const ClaimsPage: React.FC = () => {
             <table className={styles.resultsTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '20.06%' }}>Name</th>
-                  <th style={{ width: '20%' }}>Page</th>
+                  <th style={{ width: '14.06%' }}>User</th>
+                  <th style={{ width: '14.06%' }}>Role</th>
 
-                  <th style={{ width: '32.163%' }}>Relation to Page</th>
                   <th
                     style={{
-                      width: '22.54%',
+                      width: '16.54%',
                       paddingRight: '16px',
-                      textAlign: 'center',
                     }}
                   >
-                    Web Link
+                    Purpose
                   </th>
+                  <th style={{ width: '35.87%' }}>Message</th>
 
-                  <th style={{ width: '15.252%', paddingRight: '16px' }}>
-                    Action
+                  <th style={{ width: '9.252%', paddingRight: '16px' }}>
+                    Actions
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {searchResults?.map((hobbyreq, index) => (
+                {searchResults?.map((user, index) => (
                   <tr key={index}>
                     <td>
                       <div className={styles.resultItem}>
+                        {/* <div className={styles.avatarContainer}>
+                          {user.profile_image ? (
+                            <img
+                              src={user.profile_image}
+                              alt={`${user.full_name}'s profile`}
+                              width={40}
+                              height={40}
+                              className={styles.avatarImage}
+                            />
+                          ) : (
+                            <Image
+                              className={styles['img']}
+                              src={DefaultProfile}
+                              alt="profile"
+                              width={40}
+                              height={40}
+                            />
+                          )}
+                        </div> */}
                         <div className={styles.detailsContainer}>
-                          <div className={styles.userName}>
-                            {hobbyreq?.name}
-                          </div>
+                          <div className={styles.userName}>{user?.name}</div>
                         </div>
                       </div>
                     </td>
-                    <td className={styles.userName}>
-                      <div>{hobbyreq?.pageUrl}</div>
+
+                    {/*There is no url input in ContactUs model therefore avoiding extractUrl method*/}
+                    <td className={styles.LoginType}>
+                      <a
+                        href={user.YouAre}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {user.YouAre}
+                      </a>
                     </td>
 
-                    <td className={styles.lastLoggedIn}>
-                      {hobbyreq?.HowRelated.slice(0, 60) + '...'}
+                    <td className={styles.LoginType}>
+                      <a
+                        href={user.YouAre}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {user.Regarding}
+                      </a>
                     </td>
 
-                    <td className={styles.pagesLength}>{hobbyreq?.link}</td>
+                    <td className={styles.userPhone}>
+                      {user?.description.slice(0, 120) + '...'}
+                    </td>
+
                     <td>
                       <div className={styles.actions}>
                         <StatusDropdown />
@@ -321,19 +359,27 @@ const ClaimsPage: React.FC = () => {
                 ))}
               </tbody>
             </table>
-          </div>
-          <div className={styles.pagination}>
-            {/* Previous Page Button */}
-            {page > 1 ? (
-              <button onClick={goToPreviousPage}>Previous</button>
-            ) : (
-              ''
-            )}
-            {searchResults.length === pagelimit ? (
-              <button onClick={goToNextPage}>Next</button>
-            ) : (
-              ''
-            )}
+            <div className={styles.pagination}>
+              {/* Previous Page Button */}
+              {page > 1 ? (
+                <button onClick={goToPreviousPage}>Previous</button>
+              ) : (
+                ''
+              )}
+
+              {/* {pageNumber.map((num) => (
+                <button key={num} onClick={() => goToPage(num)}>
+                  {num}
+                </button>
+              ))} */}
+
+              {/* Next Page Button */}
+              {searchResults.length === pagelimit ? (
+                <button onClick={goToNextPage}>Next</button>
+              ) : (
+                ''
+              )}
+            </div>
           </div>
         </div>
       </AdminLayout>
@@ -365,4 +411,4 @@ const ClaimsPage: React.FC = () => {
   )
 }
 
-export default ClaimsPage
+export default AdminContactUs

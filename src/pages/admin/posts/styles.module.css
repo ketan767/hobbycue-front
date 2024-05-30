@@ -3,6 +3,7 @@
 /* Container styles */
 .searchContainer {
   padding: 28.5px 24px 20px 32px;
+  transition: all 0.5s ease-in-out;
 }
 
 .admintitle {

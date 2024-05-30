@@ -329,15 +329,15 @@ const AuthForm: React.FC<Props> = (props) => {
           console.error('Error uploading profile image:', uploadError)
         }
       }
+      if (res?.data?.message === 'User registered successfully') {
+        dispatch(openModal({ type: 'user-onboarding', closable: true }))
+      }
+
       const { err: error, res: response } = await getMyProfileDetail()
       if (response?.data?.data?.user?.is_onboarded) {
         router.push('/community', undefined, { shallow: false })
       } else {
         router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
-      }
-
-      if (res?.data?.message === 'User registered successfully') {
-        dispatch(openModal({ type: 'user-onboarding', closable: true }))
       }
 
       console.log('user', user)

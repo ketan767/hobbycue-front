@@ -58,7 +58,9 @@ const PostCard: React.FC<Props> = (props) => {
       ? false
       : props.postData.has_link
       ? false
-      : comments.length>0?true:false
+      : comments.length > 0
+      ? true
+      : false,
   )
   const pageUrlClass = styles.postUrl
   // useEffect(() => {
@@ -173,7 +175,7 @@ const PostCard: React.FC<Props> = (props) => {
     })
   }
   const fetchComments = async () => {
-    console.error("running comm")
+    console.error('running comm')
     const { err, res } = await getPostComment(
       `_post=${props.postData._id}&populate=_author`,
     )
@@ -181,21 +183,23 @@ const PostCard: React.FC<Props> = (props) => {
     setComments(res?.data?.data?.comments)
   }
   useEffect(() => {
-    
-  const fetchCommentsInUseeffect = async () => {
-    const { err, res } = await getPostComment(
-      `_post=${props.postData._id}&populate=_author`,
-    )
-    if (err) return console.log(err)
-    setComments(res?.data?.data?.comments)
-  console.error({comments:res?.data?.data?.comments})
-  if(res?.data?.data?.comments && res?.data?.data?.comments?.length>0){
-    setShowComments(props.currentSection === 'links'
-    ? false
-    : props.postData.has_link
-    ? false
-    : true)}
-  }
+    const fetchCommentsInUseeffect = async () => {
+      const { err, res } = await getPostComment(
+        `_post=${props.postData._id}&populate=_author`,
+      )
+      if (err) return console.log(err)
+      setComments(res?.data?.data?.comments)
+      console.error({ comments: res?.data?.data?.comments })
+      if (res?.data?.data?.comments && res?.data?.data?.comments?.length > 0) {
+        setShowComments(
+          props.currentSection === 'links'
+            ? false
+            : props.postData.has_link
+            ? false
+            : true,
+        )
+      }
+    }
     if (props.currentSection !== 'links') {
       fetchCommentsInUseeffect()
     }
@@ -247,7 +251,17 @@ const PostCard: React.FC<Props> = (props) => {
                   />
                 ) : (
                   <div
-                    className={`default-people-listing-icon  ${styles['author-listing']}`}
+                    className={`${
+                      postData?._author?.type == 1
+                        ? `default-people-listing-icon ${styles['default-img']}`
+                        : postData?._author?.type == 2
+                        ? `${styles['default-img']} default-place-listing-icon`
+                        : postData?._author?.type == 3
+                        ? `${styles['default-img']} default-program-listing-icon`
+                        : postData?._author?.type == 4
+                        ? `${styles['default-img']} default-product-listing-icon`
+                        : `${styles['default-img']} default-user-icon`
+                    } ${styles['author-listing']}`}
                   ></div>
                 )
               ) : postData?._author?.profile_image ? (
@@ -260,7 +274,7 @@ const PostCard: React.FC<Props> = (props) => {
                 />
               ) : (
                 <div
-                  className={`${styles['author-profile']} default-author-icon`}
+                  className={`${styles['author-profile']} default-user-icon`}
                 ></div>
               )}
             </Link>
@@ -306,7 +320,13 @@ const PostCard: React.FC<Props> = (props) => {
                     <>
                       <button
                         onClick={() => {
-                          showFeatureUnderDevelopment()
+                          dispatch(
+                            openModal({
+                              type: 'update-post',
+                              closable: true,
+                              propData: postData,
+                            }),
+                          )
                           setOpenAction(false)
                         }}
                       >

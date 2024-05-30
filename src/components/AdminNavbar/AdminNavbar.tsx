@@ -8,13 +8,13 @@ import { toggleAdminNav } from '@/redux/slices/site'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
-interface AdminNavbarProps {}
+interface AdminNavbarProps { }
 
 interface IconProps {
   active?: boolean
 }
 
-const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
+const AdminNavbar: FC<AdminNavbarProps> = ({ }) => {
   const { admin_nav } = useSelector((state: RootState) => state.site)
   const dispatch = useDispatch()
   const router = useRouter()
@@ -51,6 +51,7 @@ const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
       height="24"
       viewBox="0 0 24 24"
       fill="none"
+      className={styles['admin-nav-arrow']}
     >
       <g clip-path="url(#clip0_11919_191435)">
         <path
@@ -325,8 +326,10 @@ const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
           styles['nav-item'] + ` ${pathname === url && styles['active']}`
         }
       >
-        <Icon active={pathname === url} />
-        {admin_nav && <p>{name}</p>}
+        <span>
+          <Icon active={pathname === url} />
+        </span>
+        {admin_nav && <p className={styles['nav-item-para']}>{name}</p>}
       </Link>
     )
   }
@@ -345,18 +348,23 @@ const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
       </div>
       <div className={styles.navlist}>
         {/* <ProfileSwitcher /> */}
+
         <div className={styles['profile-switcher']}>
           <div className={styles['profile-and-title']}>
-            <img src={defaultUserImage?.src} alt="" />
+
+
+            <span>
+              <Link href={"/admin/dashboard"} className={styles['profile-and-title']}>
+                <img src={defaultUserImage?.src} alt="" />
+              </Link>
+            </span>
+
             {admin_nav && <p>Hobbycue Admin</p>}
+            {admin_nav && <ArrowDown />}
           </div>
-          {admin_nav && (
-            <div>
-              <ArrowDown />
-            </div>
-          )}
+
         </div>
-        <NavItem url="/admin/dashboard" name="Dashboard" Icon={UserIcon} />
+
         <NavItem url="/admin/users" name="Users" Icon={UserIcon} />
         <NavItem url="/admin/posts" name="Posts" Icon={PostIcon} />
         <NavItem url="/admin/hobbies" name="Hobbies" Icon={UserHobbies} />
@@ -365,12 +373,14 @@ const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
         <NavItem url="/admin/claims" name="Claims" Icon={Claims} />
         <NavItem url="/admin/reports" name="Reports" Icon={Reports} />
         <NavItem url="/admin/supports" name="Support" Icon={Supports} />
+        {/* here please change the Supports icon with contact us icon */}
+        <NavItem url="/admin/contactUs" name="Contact Us" Icon={Supports} />
         <NavItem url="/admin/relations" name="Relation" Icon={Relations} />
         <NavItem url="/admin/blogs" name="Blogs" Icon={Blogs} />
         <NavItem url="/admin/sellers-kyc" name="Seller KYC" Icon={SellerKYC} />
         <NavItem
           url="/admin/list-of-values"
-          name="List of Values"
+          name="List Values"
           Icon={ListValues}
         />
       </div>

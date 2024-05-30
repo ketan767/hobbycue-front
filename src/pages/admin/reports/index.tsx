@@ -22,6 +22,7 @@ import {
   getReports,
   getSupports,
 } from '@/services/admin.service'
+import StatusDropdown from '@/components/_formElements/StatusDropdown'
 
 type UserProps = {
   _id: string
@@ -332,12 +333,13 @@ const AdminReport: React.FC = () => {
                         {extractPath(user.for_url)}
                       </a>
                     </td>
-                    <td className={styles.userPhone}>{user?.description}</td>
+                    <td className={styles.userPhone}>
+                      {user?.description.slice(0, 120) + '...'}
+                    </td>
 
                     <td>
                       <div className={styles.actions}>
-                        <div>{pencilSvg}</div>
-                        <div>{deleteSvg}</div>
+                        <StatusDropdown />
                       </div>
                     </td>
                   </tr>
