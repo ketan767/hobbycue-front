@@ -19,6 +19,7 @@ import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { deleteUserByAdmin, getHobbyRequests } from '@/services/admin.service'
 import { formatDateTime } from '@/utils'
+import StatusDropdown from '@/components/_formElements/StatusDropdown'
 
 type SearchInput = {
   search: InputData<string>
@@ -317,12 +318,7 @@ const HobbiesRequest: React.FC = () => {
                     </td>
                     <td>
                       <div className={styles.actions}>
-                        {/* <div onClick={() => handleEdit(hobbyreq.profile_url)}>
-                          {pencilSvg}
-                        </div>
-                        <div onClick={() => handleDelete(user._id)}>
-                          {deleteSvg}
-                        </div> */}
+                        <StatusDropdown />
                       </div>
                     </td>
                   </tr>

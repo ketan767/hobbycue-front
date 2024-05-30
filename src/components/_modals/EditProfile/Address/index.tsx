@@ -1068,9 +1068,17 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                 <label className={styles['info-container']}>
                   <span>Society</span>
 
-                  <CustomizedTooltips2 width={273} placement="right" title='Society is where community events are organized.  It could be an apartment complex, row of houses or neighbourhood, typically within walking distance.  It should ideally be between 20 and 2000 individual addresses.'>
-                    <Image height={18} width={18} src={InfoIcon} alt='info-icon' />
-
+                  <CustomizedTooltips2
+                    width={273}
+                    placement="right"
+                    title="Society is where community events are organized.  It could be an apartment complex, row of houses or neighbourhood, typically within walking distance.  It should ideally be between 20 and 2000 individual addresses."
+                  >
+                    <Image
+                      height={18}
+                      width={18}
+                      src={InfoIcon}
+                      alt="info-icon"
+                    />
                   </CustomizedTooltips2>
                 </label>
                 <input
@@ -1129,11 +1137,19 @@ const ProfileAddressEditModal: React.FC<Props> = ({
 
                 <div className={styles['input-box']}>
                   <label className={styles['info-container']}>
-                    <span>GPS PIN Code</span>
+                    <span>GPS PIN</span>
 
-                    <CustomizedTooltips2 width={287} placement="bottom-end" title='GPS PIN Code is the mapping as per Google Maps.  Postal Code is the Post Office that delivers to this address.  In some cases, these two may be different.  Clicking on the GPS icon updates only the GPS PIN Code, not the Postal Code.'>
-                      <Image height={18} width={18} src={InfoIcon} alt='info-icon' />
-
+                    <CustomizedTooltips2
+                      width={287}
+                      placement="bottom-end"
+                      title="GPS PIN Code is the mapping as per Google Maps.  Postal Code is the Post Office that delivers to this address.  In some cases, these two may be different.  Clicking on the GPS icon updates only the GPS PIN Code, not the Postal Code."
+                    >
+                      <Image
+                        height={18}
+                        width={18}
+                        src={InfoIcon}
+                        alt="info-icon"
+                      />
                     </CustomizedTooltips2>
                   </label>
                   <input

@@ -23,6 +23,7 @@ import {
   getHobbyRequests,
 } from '@/services/admin.service'
 import { formatDateTime } from '@/utils'
+import StatusDropdown from '@/components/_formElements/StatusDropdown'
 
 type SearchInput = {
   search: InputData<string>
@@ -307,18 +308,13 @@ const ClaimsPage: React.FC = () => {
                     </td>
 
                     <td className={styles.lastLoggedIn}>
-                      {hobbyreq?.HowRelated.slice(0,60)+"..." }
+                      {hobbyreq?.HowRelated.slice(0, 60) + '...'}
                     </td>
 
                     <td className={styles.pagesLength}>{hobbyreq?.link}</td>
                     <td>
                       <div className={styles.actions}>
-                        {/* <div onClick={() => handleEdit(hobbyreq.profile_url)}>
-                          {pencilSvg}
-                        </div>
-                        <div onClick={() => handleDelete(user._id)}>
-                          {deleteSvg}
-                        </div> */}
+                        <StatusDropdown />
                       </div>
                     </td>
                   </tr>

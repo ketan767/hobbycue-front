@@ -232,6 +232,9 @@
   padding: 0 50px;
   height: 32px;
   width: 157px !important;
+  display: flex;
+  gap: 20px;
+  align-items: center;
 }
 .relative {
   position: relative;

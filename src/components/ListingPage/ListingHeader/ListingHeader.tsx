@@ -28,7 +28,7 @@ import FilledButton from '@/components/_buttons/FilledButton'
 import CoverPhotoLayout from '@/layouts/CoverPhotoLayout/CoverPhotoLayout'
 import ProfileImageLayout from '@/layouts/ProfileImageLayout/ProfileImageLayout'
 import claimSvg from '@/assets/svg/claimedsvg.svg'
-
+import EditWhite from '@/assets/svg/edit_white.svg'
 import Dropdown from './DropDown'
 import { listingTypes } from '@/constants/constant'
 import ListingPageLayout from '@/layouts/ListingPageLayout'
@@ -285,12 +285,24 @@ const ListingHeader: React.FC<Props> = ({
     button = (
       <FilledButton className={styles.contactBtn} onClick={handleClaim}>
         Claim
+        <Image
+          className={styles['edit-icon']}
+          src={EditWhite}
+          alt="edit"
+          onClick={openTitleEditModal}
+        />
       </FilledButton>
     )
   } else {
     button = (
       <FilledButton className={styles.contactBtn} onClick={handleContact}>
         Contact
+        <Image
+          className={styles['edit-icon']}
+          src={EditWhite}
+          alt="edit"
+          onClick={openTitleEditModal}
+        />
       </FilledButton>
     )
   }

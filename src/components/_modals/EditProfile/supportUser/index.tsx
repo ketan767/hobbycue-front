@@ -87,7 +87,7 @@ const SupportUserModal: React.FC<Props> = ({
   const [inputErrs, setInputErrs] = useState<{ error: string | null }>({
     error: null,
   })
-  const currentUrl = `${process.env.NEXT_PUBLIC_VERCEL_URL}/profile/${user.profile_url}`
+  const currentUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/profile/${user.profile_url}`
   const [initialData, setInitialData] = useState<supportData>({
     description: '',
     name: user.full_name,

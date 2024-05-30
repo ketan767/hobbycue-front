@@ -22,6 +22,7 @@ import {
   getContactUs,
   getSupports,
 } from '@/services/admin.service'
+import StatusDropdown from '@/components/_formElements/StatusDropdown'
 
 type UserProps = {
   _id: string
@@ -345,12 +346,13 @@ const AdminContactUs: React.FC = () => {
                       </a>
                     </td>
 
-                    <td className={styles.userPhone}>{user?.description.slice(0, 120) + "..."}</td>
+                    <td className={styles.userPhone}>
+                      {user?.description.slice(0, 120) + '...'}
+                    </td>
 
                     <td>
                       <div className={styles.actions}>
-                        <div>{pencilSvg}</div>
-                        <div>{deleteSvg}</div>
+                        <StatusDropdown />
                       </div>
                     </td>
                   </tr>
