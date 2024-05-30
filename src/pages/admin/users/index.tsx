@@ -18,24 +18,13 @@ import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { deleteUserByAdmin } from '@/services/admin.service'
-import { formatDateTime } from '@/utils'
+import { formatDateTime, formatDateTimeTwo } from '@/utils'
+import phoneIcon from '@/assets/svg/admin_phone.svg'
+import emailIcon from '@/assets/svg/admin_email.svg'
+import GoogleIcon from '@/assets/svg/google-icon.svg'
+import MailIcon from '@/assets/svg/mail.svg'
+import FacebookIcon from '@/assets/svg/mobile-social/facebook.svg'
 
-type UserProps = {
-  _id: string
-  profile_image: string
-  full_name: string
-  tagline: string
-  _address: { city: string }
-  user_url: string
-  facebook: any
-  google: any
-  email: string
-  last_loggedIn_via: string
-  is_password: string
-  profile_url: string
-  createdAt: string
-  last_login: string
-}
 type SearchInput = {
   search: InputData<string>
 }
@@ -46,7 +35,7 @@ const AdminDashboard: React.FC = () => {
     search: { value: '', error: null },
   })
   const [email, setEmail] = useState('')
-  const [searchResults, setSearchResults] = useState<UserProps[]>([])
+  const [searchResults, setSearchResults] = useState<any[]>([])
   const [pageNumber, setPageNumber] = useState<number[]>([])
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
@@ -279,25 +268,30 @@ const AdminDashboard: React.FC = () => {
               <thead>
                 <tr>
                   <th style={{ width: '20.06%' }}>User</th>
-                  <th style={{ width: '10.48%' }}>Joined</th>
+                  <th style={{ width: '6.48%' }}>Contact</th>
+                  <th style={{ width: '15.48%' }}>Last Login</th>
 
-                  <th style={{ width: '14.163%' }}>Login Modes</th>
+                  <th style={{ width: '8.163%', textAlign: 'center' }}>
+                    Modes
+                  </th>
                   <th
                     style={{
-                      width: '16.54%',
+                      width: '12.54%',
                       paddingRight: '16px',
                       textAlign: 'center',
                     }}
                   >
-                    Last Login
+                    Joined
                   </th>
-                  <th style={{ width: '6.939%', paddingRight: '16px' }}>
+                  <th style={{ width: '5.939%' }}>Onb</th>
+                  <th style={{ width: '4.939%', paddingRight: '16px' }}>
                     Pages
                   </th>
-                  <th style={{ width: '6.672%', paddingRight: '16px' }}>
+                  <th style={{ width: '4.672%', paddingRight: '16px' }}>
                     Posts
                   </th>
-                  <th style={{ width: '9.252%', paddingRight: '16px' }}>
+                  <th style={{ width: '8.672%' }}>Status</th>
+                  <th style={{ width: '5.252%', textAlign: 'center' }}>
                     Actions
                   </th>
                 </tr>
@@ -327,40 +321,168 @@ const AdminDashboard: React.FC = () => {
                           )}
                         </div>
                         <div className={styles.detailsContainer}>
-                          <div className={styles.userName}>
+                          <Link
+                            href={`${process.env.NEXT_PUBLIC_BASE_URL}/profile/${user.profile_url}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.userName}
+                          >
                             {user?.full_name}
-                          </div>
+                          </Link>
                         </div>
+                      </div>
+                    </td>
+                    <td>
+                      {user?.phone?.number && (
+                        <Link
+                          href={`tel:${user.phone.prefix + user.phone.number}`}
+                        >
+                          <Image alt={user?.full_name} src={phoneIcon} />
+                        </Link>
+                      )}
+                      {user?.email && (
+                        <Link href={`mailto:${user.public_email}`}>
+                          <Image alt={user?.full_name} src={emailIcon} />
+                        </Link>
+                      )}
+                    </td>
+                    <td className={styles.lastLoggedIn}>
+                      {user?.last_loggedIn_via === 'google' ? (
+                        <Image
+                          src={GoogleIcon}
+                          alt="Google Icon"
+                          className={styles.icon}
+                        />
+                      ) : user?.last_loggedIn_via === 'facebook' ? (
+                        <Image
+                          src={FacebookIcon}
+                          alt="Facebook Icon"
+                          className={styles.icon}
+                        />
+                      ) : user?.last_loggedIn_via === 'mail' ? (
+                        <Image
+                          src={MailIcon}
+                          alt="Mail Icon"
+                          className={styles.icon}
+                        />
+                      ) : (
+                        ''
+                      )}
+                      {` ` + formatDateTimeTwo(user?.last_login)}
+                    </td>
+
+                    <td className={styles.LoginType}>
+                      <div className={styles.loginIcon}>
+                        {user.facebook.id &&
+                          user.google.id &&
+                          user.is_password && (
+                            <>
+                              <Image
+                                src={GoogleIcon}
+                                alt="Google Icon"
+                                className={styles.icon}
+                              />
+                              <Image
+                                src={FacebookIcon}
+                                alt="Facebook Icon"
+                                className={styles.icon}
+                              />
+                              <Image
+                                src={MailIcon}
+                                alt="Mail Icon"
+                                className={styles.icon}
+                              />
+                            </>
+                          )}
+                        {user.facebook.id &&
+                          user.google.id &&
+                          !user.is_password && (
+                            <>
+                              <Image
+                                src={GoogleIcon}
+                                alt="Google Icon"
+                                className={styles.icon}
+                              />
+                              <Image
+                                src={FacebookIcon}
+                                alt="Facebook Icon"
+                                className={styles.icon}
+                              />
+                            </>
+                          )}
+                        {user.facebook.id &&
+                          !user.google.id &&
+                          user.is_password && (
+                            <>
+                              <Image
+                                src={FacebookIcon}
+                                alt="Facebook Icon"
+                                className={styles.icon}
+                              />
+                              <Image
+                                src={MailIcon}
+                                alt="Mail Icon"
+                                className={styles.icon}
+                              />
+                            </>
+                          )}
+                        {!user.facebook.id &&
+                          user.google.id &&
+                          user.is_password && (
+                            <>
+                              <Image
+                                src={GoogleIcon}
+                                alt="Google Icon"
+                                className={styles.icon}
+                              />
+                              <Image
+                                src={MailIcon}
+                                alt="Mail Icon"
+                                className={styles.icon}
+                              />
+                            </>
+                          )}
+                        {user.facebook.id &&
+                          !user.google.id &&
+                          !user.is_password && (
+                            <Image
+                              src={FacebookIcon}
+                              alt="Facebook Icon"
+                              className={styles.icon}
+                            />
+                          )}
+                        {!user.facebook.id &&
+                          user.google.id &&
+                          !user.is_password && (
+                            <Image
+                              src={GoogleIcon}
+                              alt="Google Icon"
+                              className={styles.icon}
+                            />
+                          )}
+                        {!user.facebook.id &&
+                          !user.google.id &&
+                          user.is_password && (
+                            <Image
+                              src={MailIcon}
+                              alt="Mail Icon"
+                              className={styles.icon}
+                            />
+                          )}
                       </div>
                     </td>
                     <td className={styles.userName}>
                       <div>{formatDateTime(user?.createdAt)}</div>
                     </td>
-
-                    <td className={styles.LoginType}>
-                      {user.facebook.id && user.google.id && user.is_password
-                        ? 'Facebook | Google | Mail'
-                        : user.facebook.id && user.google.id
-                        ? 'Facebook and Google'
-                        : user.facebook.id && user.is_password
-                        ? 'Facebook | Mail'
-                        : user.google.id && user.is_password
-                        ? 'Google | Mail'
-                        : user.facebook.id
-                        ? 'Facebook'
-                        : user.google.id
-                        ? 'Google'
-                        : user.is_password
-                        ? 'Mail'
-                        : ''}
-                    </td>
-                    <td className={styles.lastLoggedIn}>
-                      {user?.last_loggedIn_via}
-                      {`, ` + formatDateTime(user?.last_login)}
+                    <td className={styles.pagesLength}>
+                      {user.is_onboarded ? 'Y' : 'N'}
                     </td>
                     <td className={styles.pagesLength}>{pagesLength(user)}</td>
                     <td className={styles.pagesLength}>
                       {/* posts not in logs */}0
+                    </td>
+                    <td className={styles.accountStatus}>
+                      {user.is_account_activated ? 'Active' : 'Deactivated'}
                     </td>
                     <td>
                       <div className={styles.actions}>
@@ -380,12 +502,16 @@ const AdminDashboard: React.FC = () => {
           <div className={styles.pagination}>
             {/* Previous Page Button */}
             {page > 1 ? (
-              <button onClick={goToPreviousPage}>Previous</button>
+              <button className="admin-next-btn" onClick={goToPreviousPage}>
+                Previous
+              </button>
             ) : (
               ''
             )}
             {searchResults.length === pagelimit ? (
-              <button onClick={goToNextPage}>Next</button>
+              <button className="admin-next-btn" onClick={goToNextPage}>
+                Next
+              </button>
             ) : (
               ''
             )}

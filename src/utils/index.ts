@@ -111,3 +111,29 @@ export const formatDateTime = (dateString: any) => {
 
   return `${day}-${month}-${year}, ${hours}:${minutes}`
 }
+
+export const formatDateTimeTwo = (dateString: any) => {
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ]
+  const date = new Date(dateString)
+
+  const day = date.getDate()
+  const month = months[date.getMonth()]
+  const year = date.getFullYear().toString().slice(-2)
+  const hours = date.getHours()
+  const minutes = date.getMinutes()
+
+  return `${day}-${month}, ${hours}:${minutes}`
+}

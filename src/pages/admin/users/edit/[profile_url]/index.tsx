@@ -283,6 +283,7 @@ const EditUserPage: React.FC = () => {
                 <option value={'true'}>Yes</option>
                 <option value={'false'}>No</option>
               </select>
+              <div>{`Completed modals: ${user?.completed_onboarding_steps}`}</div>
             </div>
             <div className={styles.inputbox}>
               <label>Is Account activated:</label>

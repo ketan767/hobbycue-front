@@ -285,24 +285,24 @@ const ListingHeader: React.FC<Props> = ({
     button = (
       <FilledButton className={styles.contactBtn} onClick={handleClaim}>
         Claim
-        <Image
+        {/* <Image
           className={styles['edit-icon']}
           src={EditWhite}
           alt="edit"
           onClick={openTitleEditModal}
-        />
+        /> */}
       </FilledButton>
     )
   } else {
     button = (
       <FilledButton className={styles.contactBtn} onClick={handleContact}>
         Contact
-        <Image
+        {/* <Image
           className={styles['edit-icon']}
           src={EditWhite}
           alt="edit"
           onClick={openTitleEditModal}
-        />
+        /> */}
       </FilledButton>
     )
   }

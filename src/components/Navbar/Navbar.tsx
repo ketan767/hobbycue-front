@@ -235,7 +235,7 @@ export const Navbar: React.FC<Props> = ({}) => {
         // Combine titlePages and taglinePages and filter out duplicate URLs
         const uniqueUrls = new Set<string>()
         const uniquePages: any[] = [] // Use 'any[]' if you prefer not to define a specific type
-        console.warn({titlePages,taglinePages});
+        console.warn({ titlePages, taglinePages })
         ;[...titlePages, ...taglinePages].forEach((page) => {
           if (
             page &&
@@ -246,6 +246,13 @@ export const Navbar: React.FC<Props> = ({}) => {
             uniqueUrls.add(page.page_url)
             uniquePages.push(page)
           }
+        })
+        const user_id = isLoggedIn ? user?._id : null
+        console.log('sto')
+        const { res, err } = await addSearchHistory({
+          user_id: user_id,
+          no_of_pages: uniquePages?.length,
+          search_input: searchValue,
         })
 
         // Filter uniquePages by type and is_published
@@ -281,9 +288,7 @@ export const Navbar: React.FC<Props> = ({}) => {
             success: true,
           }),
         )
-      const {res,err} = await addSearchHistory({no_of_pages:typeResultOne.length,search_input:searchValue})
       }
-
 
       dispatch(setShowPageLoader(false))
 

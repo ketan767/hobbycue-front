@@ -383,6 +383,15 @@ select:-webkit-autofill {
   fill: #8064a2 !important;
 }
 
+.admin-next-btn {
+  border-radius: 8px;
+  padding: 5px 10px;
+  background-color: #0056b3;
+  color: white;
+  font-size: 16px;
+  line-height: 16px;
+  font-weight: 500;
+}
 @media screen and (max-width: 1100px) {
   .content-box-wrapper {
     border: none;

@@ -233,11 +233,9 @@ export const ReportUser = async (data: ReportPayload): Promise<ApiReturnObject> 
   }
 };
 
-export const addSearchHistory = async (data: {search_input:string, no_of_pages:number}): Promise<ApiReturnObject> => {
-  const token = localStorage.getItem('token')
-  const headers = { Authorization: `Bearer ${token}` }
+export const addSearchHistory = async (data: {search_input:string, no_of_pages:number, user_id: any}): Promise<ApiReturnObject> => {
   try {
-    const res = await axiosInstance.post(`/user/search-history`, data, { headers });
+    const res = await axiosInstance.post(`/user/search-history`, data,);
     return { res: res, err: null };
   } catch (error: any) {
     return { err: error, res: null };

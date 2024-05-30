@@ -79,7 +79,7 @@ export const CreatePost: React.FC<Props> = ({
   onStatusChange,
   propData,
 }) => {
-  console.warn({propData});
+  console.warn({ propData })
   const router = useRouter()
   const { user, listing, activeProfile } = useSelector(
     (state: RootState) => state.user,
@@ -87,8 +87,8 @@ export const CreatePost: React.FC<Props> = ({
   const dispatch = useDispatch()
   const filteredListing = listing.filter((item: any) => item.is_published)
   const { filters } = useSelector((state: RootState) => state.post)
-  const [hobbies, setHobbies] = useState([]);
-  const [editing,setEditing] = useState(false);
+  const [hobbies, setHobbies] = useState([])
+  const [editing, setEditing] = useState(false)
   const [data, setData] = useState<NewPostData>({
     type: 'user',
     data: null,
@@ -101,32 +101,38 @@ export const CreatePost: React.FC<Props> = ({
     video_url: '',
   })
   const [showMetaData, setShowMetaData] = useState(true)
-  useEffect(()=>{
-    if(propData && propData._hobby){
-      setData(prev=>({...prev,hobby:(propData._hobby as DropdownListItem)}))
+  useEffect(() => {
+    if (propData && propData._hobby) {
+      setData((prev) => ({
+        ...prev,
+        hobby: propData._hobby as DropdownListItem,
+      }))
     }
-    if(propData && propData._genre){
-      setData(prev=>({...prev,genre:(propData._genre as DropdownListItem)}))
+    if (propData && propData._genre) {
+      setData((prev) => ({
+        ...prev,
+        genre: propData._genre as DropdownListItem,
+      }))
     }
-    if(propData && propData.content){
-      setData(prev=>({...prev,content:propData.content}))
+    if (propData && propData.content) {
+      setData((prev) => ({ ...prev, content: propData.content }))
     }
-    if(propData && propData.visibility){
-      setData(prev=>({...prev,visibility:propData.visibility}))
+    if (propData && propData.visibility) {
+      setData((prev) => ({ ...prev, visibility: propData.visibility }))
     }
-    if(propData && propData._id){
+    if (propData && propData._id) {
       setEditing(true)
     }
-    if(propData && propData.author_type==='User'){
-      if(activeProfile.type==='user'){
+    if (propData && propData.author_type === 'User') {
+      if (activeProfile.type === 'user') {
         return
-      }else{
-        dispatch(updateActiveProfile({ type:'user', data:user }));
+      } else {
+        dispatch(updateActiveProfile({ type: 'user', data: user }))
       }
-    }else if(propData && propData._author!=='User'){
-      dispatch(updateActiveProfile({ type:'user', data:propData._author }));
+    } else if (propData && propData._author !== 'User') {
+      dispatch(updateActiveProfile({ type: 'user', data: propData._author }))
     }
-  },[propData])
+  }, [propData])
 
   useEffect(() => {
     const hobbiesDropDownArr =
@@ -144,56 +150,62 @@ export const CreatePost: React.FC<Props> = ({
       }
     })
     const updateFilters = () => {
-      if(propData && propData._hobby){
-        console.log(propData,'hobby')
-        setData(prev=>({...prev,hobby:(propData._hobby as DropdownListItem)}))
-      }
-      if(propData && propData._genre){
-        console.log(propData,'genre')
-        setData(prev=>({...prev,genre:(propData._genre as DropdownListItem)}))
-      }
-      if(propData && propData.createdAt){
-        return;
-      }
-      console.warn(propData,'still running')
-    setData((prev) => {
-      if (selectedHobby) {
-        return {
+      if (propData && propData._hobby) {
+        console.log(propData, 'hobby')
+        setData((prev) => ({
           ...prev,
-          hobby: {
-            _id: selectedHobby.hobbyId,
-            display: selectedHobby.hobbyDisplay,
-          },
-          genre: {
-            _id: selectedHobby.genreId,
-            display: selectedHobby.genreDisplay,
-          },
-          visibility: filters.location ?? '',
-        }
-      } else {
-        if (hobbiesDropDownArr && hobbiesDropDownArr?.length > 0) {
+          hobby: propData._hobby as DropdownListItem,
+        }))
+      }
+      if (propData && propData._genre) {
+        console.log(propData, 'genre')
+        setData((prev) => ({
+          ...prev,
+          genre: propData._genre as DropdownListItem,
+        }))
+      }
+      if (propData && propData.createdAt) {
+        return
+      }
+      console.warn(propData, 'still running')
+      setData((prev) => {
+        if (selectedHobby) {
           return {
             ...prev,
-            visibility: filters.location ?? 'All Locations',
             hobby: {
-              _id: hobbiesDropDownArr[0]?.hobbyId,
-              display: hobbiesDropDownArr[0]?.hobbyDisplay,
+              _id: selectedHobby.hobbyId,
+              display: selectedHobby.hobbyDisplay,
             },
-            genre: hobbiesDropDownArr[0]?.genreId
-              ? {
-                  _id: hobbiesDropDownArr[0]?.genreId,
-                  display: hobbiesDropDownArr[0]?.genreDisplay,
-                }
-              : null,
+            genre: {
+              _id: selectedHobby.genreId,
+              display: selectedHobby.genreDisplay,
+            },
+            visibility: filters.location ?? '',
           }
         } else {
-          return { ...prev, visibility: filters.location ?? 'All Locations' }
+          if (hobbiesDropDownArr && hobbiesDropDownArr?.length > 0) {
+            return {
+              ...prev,
+              visibility: filters.location ?? 'All Locations',
+              hobby: {
+                _id: hobbiesDropDownArr[0]?.hobbyId,
+                display: hobbiesDropDownArr[0]?.hobbyDisplay,
+              },
+              genre: hobbiesDropDownArr[0]?.genreId
+                ? {
+                    _id: hobbiesDropDownArr[0]?.genreId,
+                    display: hobbiesDropDownArr[0]?.genreDisplay,
+                  }
+                : null,
+            }
+          } else {
+            return { ...prev, visibility: filters.location ?? 'All Locations' }
+          }
         }
-      }
-    })
+      })
     }
-    updateFilters();
-  }, [filters,propData])
+    updateFilters()
+  }, [filters, propData])
 
   // automatically hobby will take user's hobby[0] when profile switches
 
@@ -212,55 +224,61 @@ export const CreatePost: React.FC<Props> = ({
         return obj.hobbyId === filters.hobby
       }
     })
-    const updateData = () =>
-    {
-      if(propData && propData._hobby){
-        console.log(propData,'hobby')
-        setData(prev=>({...prev,hobby:(propData._hobby as DropdownListItem)}))
+    const updateData = () => {
+      if (propData && propData._hobby) {
+        console.log(propData, 'hobby')
+        setData((prev) => ({
+          ...prev,
+          hobby: propData._hobby as DropdownListItem,
+        }))
       }
-      if(propData && propData._genre){
-        console.log(propData,'genre')
-        setData(prev=>({...prev,genre:(propData._genre as DropdownListItem)}))
+      if (propData && propData._genre) {
+        console.log(propData, 'genre')
+        setData((prev) => ({
+          ...prev,
+          genre: propData._genre as DropdownListItem,
+        }))
       }
-      if(propData && propData.createdAt){
-        return;
+      if (propData && propData.createdAt) {
+        return
       }
       setData((prev) => {
-      if (selectedHobby) {
-        return {
-          ...prev,
-          hobby: {
-            _id: selectedHobby.hobbyId,
-            display: selectedHobby.hobbyDisplay,
-          },
-          genre: {
-            _id: selectedHobby.genreId,
-            display: selectedHobby.genreDisplay,
-          },
-          visibility: filters.location ?? '',
-        }
-      } else {
-        if (hobbiesDropDownArr && hobbiesDropDownArr?.length > 0) {
+        if (selectedHobby) {
           return {
             ...prev,
-            visibility: filters.location ?? 'All Locations',
             hobby: {
-              _id: hobbiesDropDownArr[0]?.hobbyId,
-              display: hobbiesDropDownArr[0]?.hobbyDisplay,
+              _id: selectedHobby.hobbyId,
+              display: selectedHobby.hobbyDisplay,
             },
-            genre: hobbiesDropDownArr[0]?.genreId
-              ? {
-                  _id: hobbiesDropDownArr[0]?.genreId,
-                  display: hobbiesDropDownArr[0]?.genreDisplay,
-                }
-              : null,
+            genre: {
+              _id: selectedHobby.genreId,
+              display: selectedHobby.genreDisplay,
+            },
+            visibility: filters.location ?? '',
           }
         } else {
-          return { ...prev, visibility: filters.location ?? 'All Locations' }
+          if (hobbiesDropDownArr && hobbiesDropDownArr?.length > 0) {
+            return {
+              ...prev,
+              visibility: filters.location ?? 'All Locations',
+              hobby: {
+                _id: hobbiesDropDownArr[0]?.hobbyId,
+                display: hobbiesDropDownArr[0]?.hobbyDisplay,
+              },
+              genre: hobbiesDropDownArr[0]?.genreId
+                ? {
+                    _id: hobbiesDropDownArr[0]?.genreId,
+                    display: hobbiesDropDownArr[0]?.genreDisplay,
+                  }
+                : null,
+            }
+          } else {
+            return { ...prev, visibility: filters.location ?? 'All Locations' }
+          }
         }
-      }
-    })}
-    updateData();
+      })
+    }
+    updateData()
   }, [data.data, propData])
 
   useEffect(() => {
@@ -291,7 +309,7 @@ export const CreatePost: React.FC<Props> = ({
       message: 'This feature is under development',
     })
     setTimeout(() => {
-      dispatch(closeModal());
+      dispatch(closeModal())
     }, 2500)
   }
   const [metaData, setMetaData] = useState({
@@ -488,7 +506,7 @@ export const CreatePost: React.FC<Props> = ({
     setHobbyDropdownList(hobbies)
     // setGenreDropdownList(genres)
   }
-
+  console.warn('alldata', data)
   const handleGenreInputChange = async (e: any) => {
     setGenreInputValue(e.target.value)
 
@@ -541,12 +559,12 @@ export const CreatePost: React.FC<Props> = ({
     console.log('jsonData genreId', jsonData.genreId)
     setSubmitBtnLoading(true)
 
-    if(editing||propData&&propData._id){
-      showFeatureUnderDevelopment();
+    if (editing || (propData && propData._id)) {
+      showFeatureUnderDevelopment()
       await setTimeout(() => {
         return
-      }, 2500);
-      return;
+      }, 2500)
+      return
     }
 
     if (data.type === 'listing') {
@@ -651,13 +669,38 @@ export const CreatePost: React.FC<Props> = ({
       >
         {/* Modal Header */}
         <div className={styles['modal-wrapper']}>
-          <h3 className={styles['modal-heading']}>{editing?'Update Post':'Create Post'}</h3>
+          <h3 className={styles['modal-heading']}>
+            {editing ? 'Update Post' : 'Create Post'}
+          </h3>
           <div className={styles['create-post-modal']}>
             <div className={styles['image-posting-as']}>
-              <img
-                src={activeProfile.data?.profile_image ?? defaultImg.src}
-                alt=""
-              />
+              {data.type === 'user' ? (
+                <img
+                  className={styles['user-profile-img']}
+                  src={data.data?.profile_image ?? defaultImg.src}
+                  alt=""
+                />
+              ) : data?.data?.profile_image ? (
+                <img
+                  className={styles['listing-profile-img']}
+                  src={data.data?.profile_image}
+                  alt=""
+                />
+              ) : (
+                <div
+                  className={` ${styles['listing-profile-img']}
+                    ${
+                      data.data.type === 1
+                        ? 'default-people-listing-icon'
+                        : data.data.type === 2
+                        ? 'default-place-listing-icon'
+                        : data.data.type === 3
+                        ? 'default-program-listing-icon'
+                        : 'default-people-listing-icon'
+                    }
+                  `}
+                ></div>
+              )}
 
               <aside>
                 <div>
