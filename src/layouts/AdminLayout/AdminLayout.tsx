@@ -9,6 +9,11 @@ interface AdminLayoutProps {
 
 const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
   const { admin_nav } = useSelector((state: RootState) => state.site)
+  const { user } = useSelector((state: RootState) => state.user)
+
+  if (!user.is_admin) {
+    return null
+  }
   return (
     <>
       <AdminNavbar />
@@ -17,7 +22,7 @@ const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
           style: {
             width: `calc(100% - ${admin_nav ? '248px' : '59px'})`,
             left: admin_nav ? '248px' : '59px',
-            position:"relative"
+            position: 'relative',
           },
         }),
       )}
