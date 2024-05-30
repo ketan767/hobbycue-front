@@ -308,10 +308,10 @@ const HobbiesRequest: React.FC = () => {
                     </td>
 
                     <td className={styles.LoginType}>
-                      {hobbyreq.user_id.full_name}
+                      {hobbyreq.user_id?.full_name}
                     </td>
                     <td className={styles.lastLoggedIn}>{hobbyreq?.similar}</td>
-                    <td className={styles.pagesLength}>{hobbyreq.status}</td>
+                    <td className={styles.pagesLength}>{hobbyreq?.status}</td>
                     <td className={styles.pagesLength}>
                       {/* posts not in logs */}0
                     </td>

@@ -8,21 +8,14 @@ interface AdminLayoutProps {
   children: any
 }
 
-const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
-  const router = useRouter()
+const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const { user } = useSelector((state: RootState) => state.user)
   const { admin_nav } = useSelector((state: RootState) => state.site)
+  const router = useRouter()
 
-  useEffect(() => {
-    if (!user.is_admin) {
-      router.push('https://hobbycue.com/')
-    }
-  }, [user, router])
-
-  if (!user.is_admin) {
-    return null // Optionally render a loading state or null
+  if (!user?.is_admin) {
+    return null
   }
-
   return (
     <>
       <AdminNavbar />
