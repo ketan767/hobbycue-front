@@ -12,8 +12,8 @@ type Props = {
   data: any
   setData: any
   setHobbies: any
-  classForShowDropdown?:string
-  className?:string
+  classForShowDropdown?: string
+  className?: string
 }
 
 const ProfileSwitcher: React.FC<Props> = ({
@@ -21,7 +21,7 @@ const ProfileSwitcher: React.FC<Props> = ({
   setData,
   setHobbies,
   classForShowDropdown,
-  className
+  className,
 }) => {
   const { user, listing } = useSelector((state: RootState) => state.user)
   const filteredListing = listing.filter((item: any) => item.is_published)
@@ -58,11 +58,11 @@ const ProfileSwitcher: React.FC<Props> = ({
       <section
         className={`${styles['profile-switcher']} ${
           showDropdown ? styles['show-dropdown'] : ''
-        } ${classForShowDropdown??''} ${className??''}`}
+        } ${classForShowDropdown ?? ''} ${className ?? ''}`}
         ref={dropdownRef}
         onClick={() => setShowDropdown((prev) => !prev)}
       >
-        {activeProfile?.data?.profile_image ? (
+        {/* {activeProfile?.data?.profile_image ? (
           <img
             data-profile-type={activeProfile.type}
             src={activeProfile.data?.profile_image}
@@ -88,23 +88,35 @@ const ProfileSwitcher: React.FC<Props> = ({
             `}
             data-profile-type={activeProfile.type}
           ></div>
-        )}
+        )} */}
         <p className={styles['name']}>
           {activeProfile.type === 'listing'
             ? activeProfile.data.title
             : activeProfile.data?.full_name}
         </p>
 
-        <svg width="24" height="24" style={{rotate:showDropdown?"180deg":"0deg"}} viewBox="0 0 24 24" fill="none">
-          <g clip-path="url(#clip0_25_51286)">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          style={{ rotate: showDropdown ? '180deg' : '0deg' }}
+          width="17"
+          height="17"
+          viewBox="0 0 17 17"
+          fill="none"
+        >
+          <g clip-path="url(#clip0_14316_102457)">
             <path
-              d="M15.88 9.29055L12 13.1705L8.11998 9.29055C7.72998 8.90055 7.09998 8.90055 6.70998 9.29055C6.31998 9.68055 6.31998 10.3105 6.70998 10.7005L11.3 15.2905C11.69 15.6805 12.32 15.6805 12.71 15.2905L17.3 10.7005C17.69 10.3105 17.69 9.68055 17.3 9.29055C16.91 8.91055 16.27 8.90055 15.88 9.29055Z"
-              fill="#08090A"
+              d="M11.0876 6.695L8.50096 9.28167L5.9143 6.695C5.6543 6.435 5.2343 6.435 4.9743 6.695C4.7143 6.955 4.7143 7.375 4.9743 7.635L8.0343 10.695C8.2943 10.955 8.7143 10.955 8.9743 10.695L12.0343 7.635C12.2943 7.375 12.2943 6.955 12.0343 6.695C11.7743 6.44167 11.3476 6.435 11.0876 6.695Z"
+              fill="#6D747A"
             />
           </g>
           <defs>
-            <clipPath id="clip0_25_51286">
-              <rect width="24" height="24" fill="white" />
+            <clipPath id="clip0_14316_102457">
+              <rect
+                width="16"
+                height="16"
+                fill="white"
+                transform="translate(0.5 0.5)"
+              />
             </clipPath>
           </defs>
         </svg>

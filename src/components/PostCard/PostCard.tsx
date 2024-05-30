@@ -173,7 +173,6 @@ const PostCard: React.FC<Props> = (props) => {
     })
   }
   const fetchComments = async () => {
-    console.error("running comm")
     const { err, res } = await getPostComment(
       `_post=${props.postData._id}&populate=_author`,
     )
@@ -306,7 +305,7 @@ const PostCard: React.FC<Props> = (props) => {
                     <>
                       <button
                         onClick={() => {
-                          showFeatureUnderDevelopment()
+                          dispatch(openModal({type:'update-post',closable:true,propData:postData}))
                           setOpenAction(false)
                         }}
                       >
