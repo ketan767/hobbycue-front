@@ -374,7 +374,8 @@ const ModalManager: React.FC = () => {
             <main
               className={
                 !(activeModal === 'user-onboarding-welcome')
-                  ? activeModal === 'create-post'
+                  ? activeModal === 'create-post' ||
+                    activeModal === 'update-post'
                     ? styles['create-post-postion']
                     : styles['pos-relative']
                   : ''
@@ -480,7 +481,7 @@ const ModalManager: React.FC = () => {
                 <ListingReport {...props} />
               )}
               {activeModal === 'ListingReviewModal' && (
-                <ListingReview {...props}/>
+                <ListingReview {...props} />
               )}
               {activeModal === 'Listing-Contact-To-Owner' && (
                 <ListingContactToOwner {...props} />

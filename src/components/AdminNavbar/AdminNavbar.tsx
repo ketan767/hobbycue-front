@@ -8,13 +8,13 @@ import { toggleAdminNav } from '@/redux/slices/site'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
-interface AdminNavbarProps { }
+interface AdminNavbarProps {}
 
 interface IconProps {
   active?: boolean
 }
 
-const AdminNavbar: FC<AdminNavbarProps> = ({ }) => {
+const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
   const { admin_nav } = useSelector((state: RootState) => state.site)
   const dispatch = useDispatch()
   const router = useRouter()
@@ -351,10 +351,11 @@ const AdminNavbar: FC<AdminNavbarProps> = ({ }) => {
 
         <div className={styles['profile-switcher']}>
           <div className={styles['profile-and-title']}>
-
-
             <span>
-              <Link href={"/admin/dashboard"} className={styles['profile-and-title']}>
+              <Link
+                href={'/admin/dashboard'}
+                className={styles['profile-and-title']}
+              >
                 <img src={defaultUserImage?.src} alt="" />
               </Link>
             </span>
@@ -362,7 +363,6 @@ const AdminNavbar: FC<AdminNavbarProps> = ({ }) => {
             {admin_nav && <p>Hobbycue Admin</p>}
             {admin_nav && <ArrowDown />}
           </div>
-
         </div>
 
         <NavItem url="/admin/users" name="Users" Icon={UserIcon} />
@@ -375,6 +375,11 @@ const AdminNavbar: FC<AdminNavbarProps> = ({ }) => {
         <NavItem url="/admin/supports" name="Support" Icon={Supports} />
         {/* here please change the Supports icon with contact us icon */}
         <NavItem url="/admin/contactUs" name="Contact Us" Icon={Supports} />
+        <NavItem
+          url="/admin/searchHistory"
+          name="Search History"
+          Icon={Supports}
+        />
         <NavItem url="/admin/relations" name="Relation" Icon={Relations} />
         <NavItem url="/admin/blogs" name="Blogs" Icon={Blogs} />
         <NavItem url="/admin/sellers-kyc" name="Seller KYC" Icon={SellerKYC} />
