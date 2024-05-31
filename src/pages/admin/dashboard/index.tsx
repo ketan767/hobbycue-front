@@ -86,12 +86,12 @@ export default function Index() {
           <div className={styles.allLabels}>
             <div className={styles.label}>
               <p>
-                Version : <span>0.9.1a</span>
+                Version : <span>0.9.1b</span>
               </p>
             </div>
             <div className={styles.label}>
               <p>
-                Updated : <span>24 May 2024</span>
+                Updated : <span>31 May 2024</span>
               </p>
             </div>
             <div className={styles.label}>
