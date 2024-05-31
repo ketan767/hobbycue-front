@@ -49,21 +49,28 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
           </section>
         ) : (
           <div className={styles['card-container']}>
-            {/* For artists and venues */}
-            {eventData?.res?.data?.result.map((listings: any) => {
-              return (
-                <ListingCard
-                  key={listings.listings._id}
-                  data={listings.listings}
-                />
-              )
-            })}
-            {/* For page events */}
-            {eventData?.res?.data?.listingMap?.map((listings: any) => {
-              const listingId = listings._id
+            {/* Combine both data sources */}
+            {(() => {
+              const allListings = [
+                ...eventData?.res?.data?.result.map(
+                  (listings: any) => listings.listings,
+                ),
+                ...eventData?.res?.data?.listingMap.map(
+                  (listings: any) => listings,
+                ),
+              ]
 
-              return <ListingCard key={listingId} data={listings.listings} />
-            })}
+              // Filter out duplicates based on the _id
+              const uniqueListings = allListings.filter(
+                (listing, index, self) =>
+                  index === self.findIndex((t) => t._id === listing._id),
+              )
+
+              // Map unique listings to ListingCard components
+              return uniqueListings.map((listing) => (
+                <ListingCard key={listing._id} data={listing} />
+              ))
+            })()}
           </div>
         )}
       </main>

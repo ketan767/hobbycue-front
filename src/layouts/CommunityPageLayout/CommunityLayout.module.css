@@ -60,6 +60,33 @@ cursor: pointer;
   border-radius: 50%;
   border: 1px solid #8064A2;
 }
+.img-name-listing {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.img-name-listing img {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  border: 1px solid #8064A2;
+}
+
+.img-name-listing p{
+  color: var(--Grey-Darker, #08090A);
+font-family: Poppins;
+font-size: 14px;
+font-style: normal;
+font-weight: 500;
+line-height: 18px; /* 128.571% */
+letter-spacing: 0.07px;
+max-width: 230px;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+}
 
 .desktop-members-conatiner .member .img-name p{
   color: var(--Grey-Darker, #6D747A);
@@ -75,7 +102,7 @@ overflow: hidden;
 text-overflow: ellipsis;
 }
 
-.desktop-members-conatiner .see-all{
+.see-all{
   display: flex;
 padding: 7px 16px;
 justify-content: center;
@@ -86,7 +113,7 @@ cursor: pointer;
 margin-bottom: 8px;
 }
 
-.desktop-members-conatiner .see-all p{
+.see-all p{
   color: var(--Primary-Full, #8064A2);
 font-family: Poppins;
 font-size: 14px;
@@ -329,7 +356,7 @@ line-height: 20px; /* 142.857% */
   margin-bottom: var(--spacing-16);
 }
 .trending-hobbies-side-wrapper header {
-  padding: var(--spacing-16) var(--spacing-16) var(--spacing-12);
+  padding: var(--spacing-16) var(--spacing-16) var(--spacing-8);
   display: flex;
   justify-content: space-between;
   align-items: center;

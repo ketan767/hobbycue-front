@@ -1,16 +1,16 @@
 import AdminNavbar from '@/components/AdminNavbar/AdminNavbar'
 import { RootState } from '@/redux/store'
-import React, { FC } from 'react'
+import { useRouter } from 'next/router'
+import React, { FC, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 interface AdminLayoutProps {
   children: any
 }
 
-const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
-  const { admin_nav } = useSelector((state: RootState) => state.site)
+const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const { user } = useSelector((state: RootState) => state.user)
-
+  const { admin_nav } = useSelector((state: RootState) => state.site)
   if (!user.is_admin) {
     return null
   }

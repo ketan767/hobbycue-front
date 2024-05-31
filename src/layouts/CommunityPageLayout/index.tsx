@@ -85,6 +85,7 @@ const CommunityLayout: React.FC<Props> = ({
 }) => {
   const dispatch = useDispatch()
   const membersContainerRef = useRef<HTMLElement>(null)
+  const whatsNewContainerRef = useRef<HTMLElement>(null)
   const inviteBtnRef = useRef<HTMLButtonElement>(null)
   const { activeProfile, user } = useSelector((state: RootState) => state.user)
   const { allPosts, filters } = useSelector((state: RootState) => state.post)
@@ -124,7 +125,10 @@ const CommunityLayout: React.FC<Props> = ({
   const [inviteBtnLoader, setInviteBtnLoader] = useState(false)
   const [trendingHobbies, setTrendingHobbies] = useState([])
   const [seeMoreMembers, setSeeMoreMembers] = useState(true)
+  const [seeMoreTrendHobbies, setSeeMoreTrendHobbies] = useState(true)
   const [hobbyMembers, setHobbymembers] = useState([])
+  const [whatsNew, setWhatsNew] = useState([])
+  const [SeeMorewhatsNew, setSeeMoreWhatsNew] = useState(true)
 
   console.log('Number of hobbies:', activeProfile.data?._hobbies?.length)
 
@@ -360,6 +364,14 @@ const CommunityLayout: React.FC<Props> = ({
     }
   }
 
+  const fetchWhatsNew = async () => {
+    const { res, err } = await getListingPages(`sort=-createdAt&limit=15`)
+    if (res?.data) {
+      setWhatsNew(res.data.data.listings)
+      console.warn('listingssss', res.data.data.listings)
+    }
+  }
+
   useEffect(() => {
     if (activeProfile?.data?._hobbies) {
       fetchHobbyMembers(activeProfile?.data?._hobbies)
@@ -376,6 +388,7 @@ const CommunityLayout: React.FC<Props> = ({
 
   useEffect(() => {
     fetchTrendingHobbies()
+    fetchWhatsNew()
   }, [])
 
   useEffect(() => {
@@ -737,6 +750,19 @@ const CommunityLayout: React.FC<Props> = ({
       }
     }
   }, [seeMoreMembers, hobbyMembers])
+
+  useEffect(() => {
+    if (whatsNewContainerRef.current) {
+      const requiredHeight = whatsNew.length * 46 + 84
+      if (whatsNew.length <= 2) {
+        whatsNewContainerRef.current.style.height = 'auto'
+      } else if (SeeMorewhatsNew) {
+        whatsNewContainerRef.current.style.height = '225px'
+      } else {
+        whatsNewContainerRef.current.style.height = requiredHeight + 'px'
+      }
+    }
+  }, [SeeMorewhatsNew, whatsNew])
 
   const DoubleArrowSvg = ({ rotate }: { rotate?: boolean }) => {
     return (
@@ -1297,8 +1323,8 @@ const CommunityLayout: React.FC<Props> = ({
                   type="email"
                   id=""
                   className={errorMessage !== '' ? styles['error-input'] : ''}
-                  onKeyDown={(e)=>{
-                    if(e.key==="Enter"){
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
                       inviteBtnRef?.current?.click()
                     }
                   }}
@@ -1322,7 +1348,7 @@ const CommunityLayout: React.FC<Props> = ({
               </section>
             </section>
 
-            <section
+            {/* <section
               ref={membersContainerRef}
               className={styles['desktop-members-conatiner']}
             >
@@ -1355,7 +1381,7 @@ const CommunityLayout: React.FC<Props> = ({
                   <p>{seeMoreMembers ? 'See all' : 'See less'}</p>
                 </div>
               )}
-            </section>
+            </section> */}
 
             <section
               className={`content-box-wrapper ${styles['trending-hobbies-side-wrapper']}`}
@@ -1366,38 +1392,84 @@ const CommunityLayout: React.FC<Props> = ({
               {/* <span className={styles['divider']}></span> */}
               <section>
                 <ul>
-                  {trendingHobbies?.map((hobby: any) => {
-                    if (hobby.profile_image) {
-                      console.log('hobby', hobby)
-                    }
-                    return (
-                      <li key={hobby._id}>
-                        <Link href={`/hobby/${hobby.slug}`}>
-                          {/* <div className={styles['default-img']}></div> */}
-                          <svg
-                            className={styles.polygonOverlay}
-                            width={40}
-                            viewBox="0 0 160 160"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M80 0L149.282 40V120L80 160L10.718 120V40L80 0Z"
-                              fill="#969696"
-                              fill-opacity="0.5"
-                            />
-                            <path
-                              d="M79.6206 46.1372C79.7422 45.7727 80.2578 45.7727 80.3794 46.1372L87.9122 68.7141C87.9663 68.8763 88.1176 68.9861 88.2885 68.9875L112.088 69.175C112.472 69.178 112.632 69.6684 112.323 69.8967L93.1785 84.0374C93.041 84.139 92.9833 84.3168 93.0348 84.4798L100.211 107.173C100.327 107.539 99.9097 107.842 99.5971 107.619L80.2326 93.7812C80.0935 93.6818 79.9065 93.6818 79.7674 93.7812L60.4029 107.619C60.0903 107.842 59.6731 107.539 59.789 107.173L66.9652 84.4798C67.0167 84.3168 66.959 84.139 66.8215 84.0374L47.6773 69.8967C47.3682 69.6684 47.5276 69.178 47.9118 69.175L71.7115 68.9875C71.8824 68.9861 72.0337 68.8763 72.0878 68.7141L79.6206 46.1372Z"
-                              fill="white"
-                            />
-                          </svg>
-                          <span>{`${hobby.display}`}</span>
-                        </Link>
-                      </li>
-                    )
-                  })}
+                  {trendingHobbies
+                    ?.slice(0, seeMoreTrendHobbies ? 3 : trendingHobbies.length)
+                    .map((hobby: any) => {
+                      if (hobby.profile_image) {
+                        console.log('hobby', hobby)
+                      }
+                      return (
+                        <li key={hobby._id}>
+                          <Link href={`/hobby/${hobby.slug}`}>
+                            {/* <div className={styles['default-img']}></div> */}
+                            <svg
+                              className={styles.polygonOverlay}
+                              width={40}
+                              viewBox="0 0 160 160"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M80 0L149.282 40V120L80 160L10.718 120V40L80 0Z"
+                                fill="#969696"
+                                fill-opacity="0.5"
+                              />
+                              <path
+                                d="M79.6206 46.1372C79.7422 45.7727 80.2578 45.7727 80.3794 46.1372L87.9122 68.7141C87.9663 68.8763 88.1176 68.9861 88.2885 68.9875L112.088 69.175C112.472 69.178 112.632 69.6684 112.323 69.8967L93.1785 84.0374C93.041 84.139 92.9833 84.3168 93.0348 84.4798L100.211 107.173C100.327 107.539 99.9097 107.842 99.5971 107.619L80.2326 93.7812C80.0935 93.6818 79.9065 93.6818 79.7674 93.7812L60.4029 107.619C60.0903 107.842 59.6731 107.539 59.789 107.173L66.9652 84.4798C67.0167 84.3168 66.959 84.139 66.8215 84.0374L47.6773 69.8967C47.3682 69.6684 47.5276 69.178 47.9118 69.175L71.7115 68.9875C71.8824 68.9861 72.0337 68.8763 72.0878 68.7141L79.6206 46.1372Z"
+                                fill="white"
+                              />
+                            </svg>
+                            <span>{`${hobby.display}`}</span>
+                          </Link>
+                        </li>
+                      )
+                    })}
                 </ul>
+                {trendingHobbies.length > 3 && (
+                  <div
+                    onClick={() => {
+                      setSeeMoreTrendHobbies((prev) => !prev)
+                    }}
+                    className={styles['see-all']}
+                  >
+                    <p>{seeMoreTrendHobbies ? 'See all' : 'See less'}</p>
+                  </div>
+                )}
               </section>
+            </section>
+            <section
+              ref={whatsNewContainerRef}
+              className={styles['desktop-members-conatiner']}
+            >
+              <header>What's New</header>
+              {whatsNew
+                ?.slice(0, SeeMorewhatsNew ? 3 : whatsNew.length)
+                .map((obj: any, idx) => (
+                  <div key={idx} className={styles['member']}>
+                    <Link
+                      href={`/page/${obj.page_url}`}
+                      className={styles['img-name-listing']}
+                    >
+                      {obj?.profile_image ? (
+                        <img src={obj.profile_image} />
+                      ) : (
+                        <Image src={defaultUserIcon} alt="" />
+                      )}
+
+                      <p>{obj?.title}</p>
+                    </Link>
+                  </div>
+                ))}
+              {whatsNew.length > 3 && (
+                <div
+                  onClick={() => {
+                    setSeeMoreWhatsNew((prev) => !prev)
+                  }}
+                  className={styles['see-all']}
+                >
+                  <p>{SeeMorewhatsNew ? 'See all' : 'See less'}</p>
+                </div>
+              )}
             </section>
           </aside>
         )}

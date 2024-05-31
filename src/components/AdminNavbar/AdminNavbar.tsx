@@ -346,7 +346,7 @@ const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
       >
         <ArrowRight />
       </div>
-      <div className={styles.navlist}>
+      <div className={`${styles.navlist} custom-scrollbar`}>
         {/* <ProfileSwitcher /> */}
 
         <div className={styles['profile-switcher']}>
@@ -380,6 +380,7 @@ const AdminNavbar: FC<AdminNavbarProps> = ({}) => {
           name="Search History"
           Icon={Supports}
         />
+        <NavItem url="/admin/communities" name="Communities" Icon={Supports} />
         <NavItem url="/admin/relations" name="Relation" Icon={Relations} />
         <NavItem url="/admin/blogs" name="Blogs" Icon={Blogs} />
         <NavItem url="/admin/sellers-kyc" name="Seller KYC" Icon={SellerKYC} />

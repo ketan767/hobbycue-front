@@ -17,15 +17,24 @@ import Link from 'next/link'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
-import { deleteUserByAdmin, getHobbyRequests } from '@/services/admin.service'
-import { formatDateTime } from '@/utils'
+import {
+  deleteUserByAdmin,
+  getCommunities,
+  getsearchHistory,
+} from '@/services/admin.service'
+import { formatDateTime, formatDateTimeTwo } from '@/utils'
+import phoneIcon from '@/assets/svg/admin_phone.svg'
+import emailIcon from '@/assets/svg/admin_email.svg'
+import GoogleIcon from '@/assets/svg/google-icon.svg'
+import MailIcon from '@/assets/svg/mail.svg'
+import FacebookIcon from '@/assets/svg/mobile-social/facebook.svg'
 import StatusDropdown from '@/components/_formElements/StatusDropdown'
 
 type SearchInput = {
   search: InputData<string>
 }
 
-const HobbiesRequest: React.FC = () => {
+const AdminCommunities: React.FC = () => {
   const router = useRouter()
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
@@ -164,7 +173,7 @@ const HobbiesRequest: React.FC = () => {
       full_name: searchValue,
     }
 
-    const { res, err } = await searchUsers(searchCriteria)
+    const { res, err } = await getCommunities()
     if (err) {
       console.log('An error', err)
     } else {
@@ -179,29 +188,22 @@ const HobbiesRequest: React.FC = () => {
       setPageNumber(pages)
     }
   }
-  const FetchHobbyReq = async () => {
-    const { res, err } = await getHobbyRequests(
-      `limit=${pagelimit}&sort=-last_login&page=${page}&populate=user_id`,
-    )
+  const fetchUsers = async () => {
+    const { res, err } = await getCommunities()
     if (err) {
       console.log('An error', err)
     } else {
-      console.log('FetchHobbyReq', res.data)
-      setSearchResults(res.data.data.hobbyreq)
+      console.log('fetchUsers', res.data)
+      setSearchResults(res.data.data)
     }
   }
   useEffect(() => {
     if (data.search.value) {
       fetchSearchResults()
     } else if (page) {
-      FetchHobbyReq()
+      fetchUsers()
     }
   }, [data.search.value, page])
-
-  const getUserName = async (_id: any) => {
-    const { res, err } = await getAllUserDetail(`_id=${_id}`)
-    return res?.data.data.users[0].full_name
-  }
 
   const goToPage = (page: number) => {
     // Logic to navigate to specific page
@@ -268,54 +270,46 @@ const HobbiesRequest: React.FC = () => {
             <table className={styles.resultsTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '8.06%' }}>Hobby</th>
-                  <th style={{ width: '8%' }}>Level</th>
+                  <th style={{ width: '20.06%' }}>Hobby</th>
+                  <th style={{ width: '30.48%' }}>Location</th>
+                  <th style={{ width: '15.48%' }}>Members</th>
 
-                  <th style={{ width: '12.163%' }}>Requested By</th>
-                  <th
-                    style={{
-                      width: '12.54%',
-                      paddingRight: '16px',
-                      textAlign: 'center',
-                    }}
-                  >
-                    Matching or Similar
+                  <th style={{ width: '8.163%' }}>Posts</th>
+
+                  <th style={{ width: '13.252%', textAlign: 'center' }}>
+                    Most Active
                   </th>
-                  <th style={{ width: '10.939%', paddingRight: '16px' }}>
-                    Hobby Status
-                  </th>
-                  <th style={{ width: '30.672%', paddingRight: '16px' }}>
-                    Admin Notes
-                  </th>
-                  <th style={{ width: '9.252%', paddingRight: '16px' }}>
-                    Status
-                  </th>
+                  <th style={{ width: '8.163%' }}>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {searchResults?.map((hobbyreq, index) => (
+                {searchResults?.map((user, index) => (
                   <tr key={index}>
                     <td>
                       <div className={styles.resultItem}>
                         <div className={styles.detailsContainer}>
                           <div className={styles.userName}>
-                            {hobbyreq?.hobby}
+                            {`${user?.hobby?.display}${
+                              user?.genre?.display
+                                ? ' - ' + user?.genre?.display
+                                : ''
+                            }`}
                           </div>
                         </div>
                       </div>
                     </td>
                     <td className={styles.userName}>
-                      <div>{hobbyreq?.level}</div>
+                      <div>{user?._id?.city}</div>
+                    </td>
+                    <td className={styles.userName}>
+                      <div>{user?.user_count}</div>
                     </td>
 
-                    <td className={styles.LoginType}>
-                      {hobbyreq.user_id?.full_name}
+                    <td className={styles.userName}>
+                      <div>{user?.post_count}</div>
                     </td>
-                    <td className={styles.lastLoggedIn}>{hobbyreq?.similar}</td>
-                    <td className={styles.pagesLength}>{hobbyreq?.status}</td>
-                    <td className={styles.pagesLength}>
-                      {/* posts not in logs */}0
-                    </td>
+                    <td className={styles.userName}></td>
+
                     <td>
                       <div className={styles.actions}>
                         <StatusDropdown />
@@ -329,12 +323,16 @@ const HobbiesRequest: React.FC = () => {
           <div className={styles.pagination}>
             {/* Previous Page Button */}
             {page > 1 ? (
-              <button onClick={goToPreviousPage}>Previous</button>
+              <button className="admin-next-btn" onClick={goToPreviousPage}>
+                Previous
+              </button>
             ) : (
               ''
             )}
-            {searchResults.length === pagelimit ? (
-              <button onClick={goToNextPage}>Next</button>
+            {searchResults?.length === pagelimit ? (
+              <button className="admin-next-btn" onClick={goToNextPage}>
+                Next
+              </button>
             ) : (
               ''
             )}
@@ -369,4 +367,4 @@ const HobbiesRequest: React.FC = () => {
   )
 }
 
-export default HobbiesRequest
+export default AdminCommunities
