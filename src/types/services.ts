@@ -4,15 +4,15 @@ type ApiReturnObject = { res: any; err: any }
 interface SignInPayload {
   email: string
   password: string
-  browser: String
-  device: String
+  browser?: String
+  device?: String
 }
 
 interface RegisterPayload {
   email: string
   otp: string
-  browser: String
-  device: String
+  browser?: String
+  device?: String
 }
 interface ChangePasswordPayload {
   currentPassword: string
