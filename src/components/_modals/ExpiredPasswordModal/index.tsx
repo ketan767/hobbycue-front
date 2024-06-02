@@ -6,9 +6,9 @@ import {
   getMyProfileDetail,
   updateMyProfileDetail,
 } from '@/services/user.service'
-
+import UAParser from 'ua-parser-js'
 import styles from './style.module.css'
-import { isEmpty, isEmptyField } from '@/utils'
+import { isBrowser, isEmpty, isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import TextField from '@mui/material/TextField'
@@ -73,6 +73,30 @@ const ExpiredPassword: React.FC<Props> = ({}) => {
     newPassword: '',
     confirmPassword: '',
   })
+  const [deviceInfo, setDeviceInfo] = useState<any>({
+    device: 'unknown',
+    browser: 'unknown',
+  })
+
+  useEffect(() => {
+    const getBrowserData = async () => {
+      if (isBrowser()) {
+        const parser = new UAParser()
+        const result = parser.getResult()
+        const userAgent = navigator?.userAgent
+        const regex = /\(([^)]+)\)/
+        const match = userAgent.match(regex)
+
+        const deivce = match ? match[1] : null
+
+        setDeviceInfo({
+          device: deivce,
+          browser: result?.browser?.name || 'unknown',
+        })
+      }
+    }
+    getBrowserData()
+  })
 
   useEffect(() => {
     const result = validatePasswordConditions(newPassword)
@@ -123,6 +147,8 @@ const ExpiredPassword: React.FC<Props> = ({}) => {
         email: forgotPasswordEmail,
         password: newPassword,
         profile_url: '',
+        browser: deviceInfo?.browser,
+        device: deviceInfo.device,
       }
       const { err: signErr, res: signRes } = await signIn(data)
 
