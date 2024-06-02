@@ -112,6 +112,8 @@ export const formatDateTime = (dateString: any) => {
   return `${day}-${month}-${year}, ${hours}:${minutes}`
 }
 
+export const isBrowser = (): boolean => typeof window !== 'undefined';
+
 export const formatDateTimeTwo = (dateString: any) => {
   const months = [
     'Jan',
@@ -136,4 +138,14 @@ export const formatDateTimeTwo = (dateString: any) => {
   const minutes = date.getMinutes()
 
   return `${day}-${month}, ${hours}:${minutes}`
+}
+
+export const extractPlatform = (deviceString:any) => {
+  if (!deviceString) {
+    return null;
+}
+  const keywords = ['linux', 'windows', 'iphone', 'android', 'mac'];
+  const regex = new RegExp(keywords.join('|'), 'i');
+  const match = deviceString.match(regex); 
+  return match ? match[0].toLowerCase() : null; 
 }

@@ -16,6 +16,9 @@ import { GoogleLogin } from 'react-google-login'
 
 import OutlinedButton from '../_buttons/OutlinedButton'
 
+import UAParser from 'ua-parser-js'
+import { isBrowser } from '@/utils/index'
+
 import {
   facebookAuth,
   googleAuth,
@@ -98,6 +101,32 @@ const AuthForm: React.FC<Props> = (props) => {
     })
     return num
   }
+  const [deviceInfo, setDeviceInfo] = useState<any>({
+    device: 'unknown',
+    browser: 'unknown',
+  })
+
+  useEffect(() => {
+    const getBrowserData = async () => {
+      if (isBrowser()) {
+        const parser = new UAParser()
+        const result = parser.getResult()
+        const userAgent = navigator?.userAgent
+        const regex = /\(([^)]+)\)/
+        const match = userAgent.match(regex)
+
+        const deivce = match ? match[1] : null
+
+        setDeviceInfo({
+          device: deivce,
+          browser: result?.browser?.name || 'unknown',
+        })
+      }
+    }
+    getBrowserData()
+  })
+
+  console.warn('devicee', deviceInfo)
 
   useEffect(() => {
     emailRef.current?.focus()
@@ -131,6 +160,8 @@ const AuthForm: React.FC<Props> = (props) => {
       email: authFormData.email,
       password: authFormData.password,
       profile_url: '',
+      browser: deviceInfo?.browser,
+      device: deviceInfo.device,
     }
     if (authFormData.password === '') {
       setSubmitBtnLoading(false)
@@ -248,6 +279,8 @@ const AuthForm: React.FC<Props> = (props) => {
       tokenId: e.tokenId,
       name: e.profileObj.name,
       imageUrl: e.profileObj.imageUrl,
+      browser: deviceInfo?.browser,
+      device: deviceInfo.device,
     })
     console.log('g-image', e.profileObj.imageUrl)
     console.log('resgoogle', res)
@@ -308,6 +341,8 @@ const AuthForm: React.FC<Props> = (props) => {
       accessToken: e.accessToken,
       userId: e.userID,
       name: e.name,
+      browser: deviceInfo?.browser,
+      device: deviceInfo.device,
     })
     dispatch(setShowPageLoader(false))
     if (err) return console.log(err)

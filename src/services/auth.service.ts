@@ -39,6 +39,8 @@ export const facebookAuth = async (data: {
   userId: String
   accessToken: String
   name: String
+  browser: String
+  device: String
 }): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
@@ -56,6 +58,8 @@ export const googleAuth = async (data: {
   tokenId: String
   name: String
   imageUrl: String
+  browser: String
+  device: String
 }): Promise<ApiReturnObject> => {
   try {
     const res = await axiosInstance.post(`/auth/google`, data)

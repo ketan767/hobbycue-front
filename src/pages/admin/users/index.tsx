@@ -18,7 +18,7 @@ import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { deleteUserByAdmin } from '@/services/admin.service'
-import { formatDateTime, formatDateTimeTwo } from '@/utils'
+import { extractPlatform, formatDateTime, formatDateTimeTwo } from '@/utils'
 import phoneIcon from '@/assets/svg/admin_phone.svg'
 import emailIcon from '@/assets/svg/admin_email.svg'
 import GoogleIcon from '@/assets/svg/google-icon.svg'
@@ -185,7 +185,7 @@ const AdminDashboard: React.FC = () => {
   }
   const fetchUsers = async () => {
     const { res, err } = await getAllUserDetail(
-      `limit=${pagelimit}&sort=-last_login&page=${page}`,
+      `limit=${pagelimit}&sort=-last_login&page=${page}&populate=sessions`,
     )
     if (err) {
       console.log('An error', err)
@@ -369,6 +369,9 @@ const AdminDashboard: React.FC = () => {
                         ''
                       )}
                       {` ` + formatDateTimeTwo(user?.last_login)}
+                      {user?._sessions[0]?.device
+                        ? ' | ' + extractPlatform(user?._sessions[0]?.device)
+                        : ''}
                     </td>
 
                     <td className={styles.LoginType}>
