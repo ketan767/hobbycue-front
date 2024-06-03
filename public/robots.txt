@@ -6,4 +6,5 @@ Allow: /
 Host: https://hobbycue.com
 
 # Sitemaps
+Sitemap: https://hobbycue.com/sitemap.xml
 Sitemap: https://hobbycue.com/server-sitemap.xml

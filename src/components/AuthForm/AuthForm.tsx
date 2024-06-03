@@ -112,13 +112,10 @@ const AuthForm: React.FC<Props> = (props) => {
         const parser = new UAParser()
         const result = parser.getResult()
         const userAgent = navigator?.userAgent
-        const regex = /\(([^)]+)\)/
-        const match = userAgent.match(regex)
 
-        const deivce = match ? match[1] : null
-
+        const deviceType = window.innerWidth < 800 ? 'Phone' : 'Desktop'
         setDeviceInfo({
-          device: deivce,
+          device: `${deviceType} - ${userAgent}`,
           browser: result?.browser?.name || 'unknown',
         })
       }

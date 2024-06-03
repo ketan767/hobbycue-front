@@ -1,4 +1,9 @@
-import React, { HTMLInputTypeAttribute, useEffect, useRef, useState } from 'react'
+import React, {
+  HTMLInputTypeAttribute,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import styles from './VerifyEmail.module.css'
 
 import { useDispatch, useSelector } from 'react-redux'
@@ -16,6 +21,8 @@ import {
   updateIsLoggedIn,
   updateUser,
 } from '@/redux/slices/user'
+import { isBrowser } from '@/utils'
+import UAParser from 'ua-parser-js'
 
 export const VerifyEmailModal: React.FC<PropTypes> = (props) => {
   const dispatch = useDispatch()
@@ -27,10 +34,39 @@ export const VerifyEmailModal: React.FC<PropTypes> = (props) => {
   const [otp, setOtp] = useState('')
   const [errMsg, setErrMsg] = useState('')
   const [submitBtnLoading, setSubmitBtnLoading] = useState(false)
+  const [deviceInfo, setDeviceInfo] = useState<any>({
+    device: 'unknown',
+    browser: 'unknown',
+  })
 
+  useEffect(() => {
+    const getBrowserData = async () => {
+      if (isBrowser()) {
+        const parser = new UAParser()
+        const result = parser.getResult()
+        const userAgent = navigator?.userAgent
+        const regex = /\(([^)]+)\)/
+        const match = userAgent.match(regex)
+
+        const device = match ? match[1] : null
+        const deviceType = window.innerWidth < 800 ? 'Phone' : 'Desktop'
+        setDeviceInfo({
+          device: `${deviceType} - ${device}`,
+          browser: result?.browser?.name || 'unknown',
+        })
+      }
+    }
+    getBrowserData()
+  })
   const handleRegister = async () => {
+    const data = {
+      email: email,
+      otp: otp,
+      device: deviceInfo.device,
+      browser: deviceInfo.browser,
+    }
     setSubmitBtnLoading(true)
-    const { err, res } = await register({ email, otp })
+    const { err, res } = await register(data)
     setSubmitBtnLoading(false)
     if (err) {
       otpref?.current?.focus()
@@ -52,10 +88,10 @@ export const VerifyEmailModal: React.FC<PropTypes> = (props) => {
     otpref?.current?.focus()
   })
 
-  useEffect(()=>{
+  useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       if (event.key === 'Enter') {
-          desktopSubmitBtnRef.current?.click();
+        desktopSubmitBtnRef.current?.click()
       }
     }
 
@@ -64,7 +100,7 @@ export const VerifyEmailModal: React.FC<PropTypes> = (props) => {
     return () => {
       window.removeEventListener('keydown', handleKeyPress)
     }
-  },[])
+  }, [])
 
   return (
     <div className={styles['modal-wrapper']}>

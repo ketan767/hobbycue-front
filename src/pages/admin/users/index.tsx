@@ -370,7 +370,7 @@ const AdminDashboard: React.FC = () => {
                       )}
                       {` ` + formatDateTimeTwo(user?.last_login)}
                       {user?._sessions[0]?.device
-                        ? ' | ' + extractPlatform(user?._sessions[0]?.device)
+                        ? ' | ' + user?._sessions[0]?.device.split(' ')[0]
                         : ''}
                     </td>
 

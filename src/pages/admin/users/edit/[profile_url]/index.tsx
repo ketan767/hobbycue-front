@@ -31,7 +31,7 @@ const EditUserPage: React.FC = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       const { err, res } = await getAllUserDetail(
-        `profile_url=${profile_url}&populate=_hobbies,_addresses,primary_address,_listings,_listings,_listings`,
+        `profile_url=${profile_url}&populate=_hobbies,_addresses,primary_address,_listings,_listings,_listings,sessions`,
       )
       setUser(res?.data.data?.users[0])
       console.log(res?.data.data?.users)
@@ -303,7 +303,7 @@ const EditUserPage: React.FC = () => {
             <div className={styles.inputbox}>
               <label>Is Account verified:</label>
               <select
-                value={user.verified.toString()} // Convert boolean to string explicitly
+                value={user.verified.toString()}
                 onChange={(e) => {
                   setUser({
                     ...user,
@@ -315,6 +315,9 @@ const EditUserPage: React.FC = () => {
                 <option value={'false'}>No</option>
               </select>
             </div>
+            <div
+              className={styles.inputbox}
+            >{`Last Login: ${user._sessions[0]?.device}`}</div>
             <button type="submit">Save Changes</button>
           </form>
         </div>

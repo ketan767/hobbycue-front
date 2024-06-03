@@ -87,10 +87,10 @@ const ExpiredPassword: React.FC<Props> = ({}) => {
         const regex = /\(([^)]+)\)/
         const match = userAgent.match(regex)
 
-        const deivce = match ? match[1] : null
-
+        const device = match ? match[1] : null
+        const deviceType = window.innerWidth < 800 ? 'Phone' : 'Desktop'
         setDeviceInfo({
-          device: deivce,
+          device: `${deviceType} - ${device}`,
           browser: result?.browser?.name || 'unknown',
         })
       }
