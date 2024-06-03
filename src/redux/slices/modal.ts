@@ -19,6 +19,8 @@ export type ModalType =
   | 'listing-type-edit'
   | 'listing-general-edit'
   | 'listing-about-edit'
+  | 'listing-cta-edit'
+  | 'listing-product-variants-edit'
   | 'listing-working-hours-edit'
   | 'listing-event-hours-edit'
   | 'listing-address-edit'

@@ -33,6 +33,7 @@ import { listingTypes } from '@/constants/constant'
 import Dropdown from './DropDown'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import CustomizedTooltips from '@/components/Tooltip/ToolTip'
+import smallPencilSvg from '@/assets/svg/small-pencil.svg'
 import { showProfileError } from '@/redux/slices/user'
 
 type Props = {
@@ -164,6 +165,10 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
     }
   }
 
+  const handleRegister = async () => {
+
+  }
+
   const handleEventEditClick = () => {
     dispatch(
       openModal({
@@ -213,20 +218,30 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
     dispatch(openModal({ type: 'social-media-share', closable: true }))
   }
 
-  const isClaimed = data.is_claimed
+  const handleUpdateCTA = () => {
+    dispatch(openModal({type:"listing-cta-edit",closable:true,propData:{currentListing:data}}));
+  }
+
+  const ctaText = data.cta_text
   const isEditMode = listingLayoutMode === 'edit'
 
   let button
-  if (!isClaimed && !isEditMode) {
+  if (!ctaText || ctaText === 'Contact') {
     button = (
-      <FilledButton className={styles.contactBtn} onClick={handleClaim}>
-        Claim
+      <FilledButton className={styles.contactBtn} onClick={isEditMode?handleUpdateCTA:handleContact}>
+        <p>Contact</p>{isEditMode&&<img width={16} height={16} src={smallPencilSvg.src} alt='small pencil'/>}
       </FilledButton>
     )
-  } else {
+  } else if(ctaText==='Claim') {
     button = (
-      <FilledButton className={styles.contactBtn} onClick={handleContact}>
-        Contact
+      <FilledButton className={styles.contactBtn} onClick={isEditMode?handleUpdateCTA:handleClaim}>
+        <p>Claim</p>{isEditMode&&<img width={16} height={16} src={smallPencilSvg.src} alt='small pencil'/>}
+      </FilledButton>
+    )
+  }else if(ctaText==="Register"){
+    button = (
+      <FilledButton className={styles.contactBtn} onClick={isEditMode?handleUpdateCTA:handleRegister}>
+        <p>Register</p>{isEditMode&&<img width={16} height={16} src={smallPencilSvg.src} alt='small pencil'/>}
       </FilledButton>
     )
   }

@@ -35,6 +35,7 @@ import ProfileContactEditModal from './EditProfile/ProfileContact'
 import ListingTagsEditModal from './EditListing/ListingTag/ListingTag'
 import ListingWorkingHoursEditModal from './EditListing/ListingWorkingHours'
 import ListingEventHoursEditModal from './EditListing/ListingEventHours'
+import ListingCTAModal from './EditListing/ListingCTA'
 import RelatedListingEditModal from './EditListing/ListingRelated/ListingRelated'
 import RelatedListingRightEditModal from './EditListing/ListingRelatedRight/ListingRelatedRight'
 import UploadVideoPage from './uploadVideoPage'
@@ -81,6 +82,7 @@ import {
 import { sendWelcomeMail } from '@/services/auth.service'
 import { showProfileError, updateUser } from '@/redux/slices/user'
 import ListingReview from './EditListing/ListingReview'
+import ListingProductVariantsModal from './EditListing/ListingProductVariants'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -435,6 +437,12 @@ const ModalManager: React.FC = () => {
 
               {activeModal === 'listing-type-edit' && (
                 <ListingTypeEditModal {...props} />
+              )}
+              {activeModal === 'listing-cta-edit' && (
+                <ListingCTAModal {...props} />
+              )}
+              {activeModal === "listing-product-variants-edit" && (
+                <ListingProductVariantsModal {...props} />
               )}
 
               {activeModal === 'listing-tags-edit' && (
