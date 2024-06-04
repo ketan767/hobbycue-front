@@ -1,9 +1,8 @@
 .navigation-tabs {
   display: flex;
-  display: flex;
-
   gap: 38px;
-  justify-content: center;
+  justify-content: start;
+  padding-left: 20vw;
   margin-top: 14px;
   position: -webkit-sticky;
   position: sticky;
@@ -152,6 +151,7 @@
     width: 100%;
     flex-shrink: 0;
     padding: 0 16px;
+    padding-left: 16px;
   }
   .navigation-tabs > a {
     flex-shrink: 0;
@@ -219,5 +219,12 @@
   }
   .listing-page-type-wrapper > div {
     gap: 2px;
+  }
+}
+
+
+@media screen and (min-width:1440px) {
+  .navigation-tabs{
+    padding-left: calc(50vw - 720px + 288px);
   }
 }

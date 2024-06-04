@@ -47,6 +47,7 @@ const tabs: ListingPageTabs[] = [
   'reviews',
   'events',
   'store',
+  'orders'
 ]
 
 const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
@@ -166,7 +167,7 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
   }
 
   const handleRegister = async () => {
-
+    dispatch(openModal({type:"listing-product-purchase",closable:true,propData:{currentListing:data}}))
   }
 
   const handleEventEditClick = () => {

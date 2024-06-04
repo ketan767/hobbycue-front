@@ -238,7 +238,7 @@ const ListingHeader: React.FC<Props> = ({
   }
 
   const handleRegister = async () => {
-
+    dispatch(openModal({type:"listing-product-purchase",closable:true,propData:{currentListing:data}}))
   }
 
   const handleShare = () => {

@@ -32,6 +32,7 @@ import PageContentBox from '../PageContentBox'
 import { openModal } from '@/redux/slices/modal'
 import EditIcon from '@/assets/svg/edit-colored.svg'
 import { SetLinkviaAuth } from '@/redux/slices/user'
+import ListingOrdersTab from '@/components/ListingPage/ListingOrdersTab/ListingOrdersTab'
 
 interface Props {
   activeTab: ListingPageTabs
@@ -177,6 +178,7 @@ const ListingPageLayout: React.FC<Props> = ({
     'reviews',
     'events',
     'store',
+    'orders'
   ]
   let content
 
@@ -429,6 +431,11 @@ const ListingPageLayout: React.FC<Props> = ({
           {activeTab === 'events' && (
             <div className={styles['display-mobile']}>
               <ListingEventsTab data={data.pageData} />
+            </div>
+          )}
+          {activeTab === 'orders' && (
+            <div className={styles['display-mobile']}>
+              <ListingOrdersTab data={data.pageData?._purchases||[]} />
             </div>
           )}
         </div>

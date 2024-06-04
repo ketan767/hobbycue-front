@@ -297,8 +297,8 @@
   display: flex;
   padding-top: 4px;
   gap: 38px;
-  justify-content: center;
-
+  justify-content: flex-start;
+  padding-left: 20vw;
   position: sticky;
   min-height: 40px;
 }
@@ -474,5 +474,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+}
+
+
+@media screen and (min-width: 1440px) {
+  .container:has(.header).small .navigation-tabs{
+    padding-left: calc(50vw - 720px + 288px);
   }
 }
