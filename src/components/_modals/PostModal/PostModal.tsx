@@ -78,7 +78,7 @@ export const PostModal: React.FC<Props> = ({
     display: false,
     message: '',
   })
-  const [linkLoading,setLinkLoading] = useState(false);
+  const [linkLoading, setLinkLoading] = useState(false)
   const pageUrlClass = styles.postUrl
   const fetchComments = async () => {
     if (activePost?._id) {
@@ -125,7 +125,7 @@ export const PostModal: React.FC<Props> = ({
       const regex =
         /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
       const url = activePost?.content.match(regex)
-      if(url){
+      if (url) {
         setUrl(url[0])
       }
       if (url) {
@@ -178,7 +178,7 @@ export const PostModal: React.FC<Props> = ({
       setIsChanged(true)
     }
   }, [newComment])
-  const isMobile = useMediaQuery("(max-width:1100px)")
+  const isMobile = useMediaQuery('(max-width:1100px)')
 
   if (confirmationModal) {
     return (
@@ -281,7 +281,7 @@ export const PostModal: React.FC<Props> = ({
                 __html: activePost?.content
                   .replace(/<img\b[^>]*>/g, '') // deleted all images from here then did the link formatting
                   .replace(
-                    /(?:\b(?:https?:\/\/|ftp|file):\/\/|www\.)?([-A-Z0-9+&@#/%?=~_|!:,.;]*\.[a-zA-Z]{2,}(?:[-A-Z0-9+&@#/%?=~_|])*(?:\?[^\s]*)?)/gi,
+                    /(?:\b(?:https?:\/\/|ftp|file):\/\/|www\.)?([-A-Z0-9+&@#/%?=~_|!:,.;]*\.[a-zA-Z]{2,}(?:[-A-Z0-9+&@#/%?=~_|])*(?:\?[^\s]*)?(?::\w+)?)\b/gi,
                     (match: any, url: string) => {
                       const href =
                         url.startsWith('http://') || url.startsWith('https://')
@@ -294,46 +294,81 @@ export const PostModal: React.FC<Props> = ({
             ></div>
             {activePost?.media?.length > 0 && (
               <div>
-                {activePost?.media?.length === 1 ? <img
-                  src={activePost?.media[0]}
-                  className={styles['post-image']}
-                  alt=""
-                />:<Slider images={activePost.media} setActiveIdx={undefined} activeIdx={0}/>}
+                {activePost?.media?.length === 1 ? (
+                  <img
+                    src={activePost?.media[0]}
+                    className={styles['post-image']}
+                    alt=""
+                  />
+                ) : (
+                  <Slider
+                    images={activePost.media}
+                    setActiveIdx={undefined}
+                    activeIdx={0}
+                  />
+                )}
               </div>
             )}
-                      {activePost?.has_link && (
-            <div className={styles['posts-meta-parent']}>
-              {linkLoading?<LinkPreviewLoader/>:<>
-            <div className={styles['posts-meta-data-container']}>
-              <a href={url} target="_blank" className={styles['posts-meta-img']}>
-                <img
-                  src={
-                    (typeof metaData?.image === 'string' && metaData.image) ||
-                    (typeof metaData?.icon === 'string' && metaData.icon) ||
-                    defaultImg
-                  }
-                  alt="link-image"
-                  width={80}
-                  height={80}
-                />
-              </a>
-              <div className={styles['posts-meta-content']}>
-                <a href={url} target="_blank" className={styles.contentHead}>
-                  {' '}
-                  {metaData?.title}{' '}
-                </a>
-                {!isMobile&&<a href={url} target="_blank" className={styles.contentUrl}>
-                  {' '}
-                  {metaData?.description}{' '}
-                </a>}
+            {activePost?.has_link && (
+              <div className={styles['posts-meta-parent']}>
+                {linkLoading ? (
+                  <LinkPreviewLoader />
+                ) : (
+                  <>
+                    <div className={styles['posts-meta-data-container']}>
+                      <a
+                        href={url}
+                        target="_blank"
+                        className={styles['posts-meta-img']}
+                      >
+                        <img
+                          src={
+                            (typeof metaData?.image === 'string' &&
+                              metaData.image) ||
+                            (typeof metaData?.icon === 'string' &&
+                              metaData.icon) ||
+                            defaultImg
+                          }
+                          alt="link-image"
+                          width={80}
+                          height={80}
+                        />
+                      </a>
+                      <div className={styles['posts-meta-content']}>
+                        <a
+                          href={url}
+                          target="_blank"
+                          className={styles.contentHead}
+                        >
+                          {' '}
+                          {metaData?.title}{' '}
+                        </a>
+                        {!isMobile && (
+                          <a
+                            href={url}
+                            target="_blank"
+                            className={styles.contentUrl}
+                          >
+                            {' '}
+                            {metaData?.description}{' '}
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                    {isMobile && (
+                      <a
+                        href={url}
+                        target="_blank"
+                        className={styles.contentUrl}
+                      >
+                        {' '}
+                        {metaData?.description}{' '}
+                      </a>
+                    )}
+                  </>
+                )}
               </div>
-            </div>
-            {isMobile&&<a href={url} target="_blank" className={styles.contentUrl}>
-                  {' '}
-                  {metaData?.description}{' '}
-                </a>}</>}
-            </div>
-          )}
+            )}
             <div className={styles['post-functions']}>
               <div className={styles['likes-comments']}>
                 <PostVotes

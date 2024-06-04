@@ -63,7 +63,7 @@ const authSlice = createSlice({
 
       const data: LocalStorageActiveProfile = {
         type: payload.type,
-        id: payload.data._id,
+        id: payload.data?._id,
       }
       localStorage.setItem('active_profile', JSON.stringify(data))
     },

@@ -121,7 +121,7 @@ const AuthForm: React.FC<Props> = (props) => {
       }
     }
     getBrowserData()
-  })
+  }, [user])
 
   console.warn('devicee', deviceInfo)
 

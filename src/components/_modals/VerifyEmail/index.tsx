@@ -29,6 +29,7 @@ export const VerifyEmailModal: React.FC<PropTypes> = (props) => {
   const router = useRouter()
 
   const { email } = useSelector((state: RootState) => state.modal.authFormData)
+  const { user } = useSelector((state: RootState) => state.user)
   const otpref = useRef<HTMLInputElement>(null)
   const desktopSubmitBtnRef = useRef<HTMLButtonElement>(null)
   const [otp, setOtp] = useState('')
@@ -57,7 +58,7 @@ export const VerifyEmailModal: React.FC<PropTypes> = (props) => {
       }
     }
     getBrowserData()
-  })
+  }, [user])
   const handleRegister = async () => {
     const data = {
       email: email,

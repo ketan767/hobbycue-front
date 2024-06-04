@@ -365,7 +365,9 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   const fetchWhatsNew = async () => {
-    const { res, err } = await getListingPages(`sort=-createdAt&limit=15`)
+    const { res, err } = await getListingPages(
+      `sort=-createdAt&limit=15&is_published=true`,
+    )
     if (res?.data) {
       setWhatsNew(res.data.data.listings)
       console.warn('listingssss', res.data.data.listings)

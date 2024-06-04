@@ -268,10 +268,12 @@ const AdminDashboard: React.FC = () => {
               <thead>
                 <tr>
                   <th style={{ width: '20.06%' }}>User</th>
-                  <th style={{ width: '6.48%' }}>Contact</th>
-                  <th style={{ width: '15.48%' }}>Last Login</th>
+                  <th style={{ width: '4.48%', textAlign: 'center' }}>
+                    Contact
+                  </th>
+                  <th style={{ width: '16.48%' }}>Last Login</th>
 
-                  <th style={{ width: '8.163%', textAlign: 'center' }}>
+                  <th style={{ width: '6.163%', textAlign: 'center' }}>
                     Modes
                   </th>
                   <th
@@ -291,7 +293,7 @@ const AdminDashboard: React.FC = () => {
                     Posts
                   </th>
                   <th style={{ width: '8.672%' }}>Status</th>
-                  <th style={{ width: '5.252%', textAlign: 'center' }}>
+                  <th style={{ width: '5.852%', textAlign: 'center' }}>
                     Actions
                   </th>
                 </tr>
@@ -332,19 +334,23 @@ const AdminDashboard: React.FC = () => {
                         </div>
                       </div>
                     </td>
-                    <td>
-                      {user?.phone?.number && (
-                        <Link
-                          href={`tel:${user.phone.prefix + user.phone.number}`}
-                        >
-                          <Image alt={user?.full_name} src={phoneIcon} />
-                        </Link>
-                      )}
-                      {user?.email && (
-                        <Link href={`mailto:${user.public_email}`}>
-                          <Image alt={user?.full_name} src={emailIcon} />
-                        </Link>
-                      )}
+                    <td className={styles.LoginType}>
+                      <div className={styles.loginIcon}>
+                        {user?.phone?.number && (
+                          <Link
+                            href={`tel:${
+                              user.phone.prefix + user.phone.number
+                            }`}
+                          >
+                            <Image alt={user?.full_name} src={phoneIcon} />
+                          </Link>
+                        )}
+                        {user?.email && (
+                          <Link href={`mailto:${user.public_email}`}>
+                            <Image alt={user?.full_name} src={emailIcon} />
+                          </Link>
+                        )}
+                      </div>
                     </td>
                     <td className={styles.lastLoggedIn}>
                       {user?.last_loggedIn_via === 'google' ? (
@@ -504,20 +510,22 @@ const AdminDashboard: React.FC = () => {
           </div>
           <div className={styles.pagination}>
             {/* Previous Page Button */}
-            {page > 1 ? (
-              <button className="admin-next-btn" onClick={goToPreviousPage}>
-                Previous
-              </button>
-            ) : (
-              ''
-            )}
-            {searchResults.length === pagelimit ? (
-              <button className="admin-next-btn" onClick={goToNextPage}>
-                Next
-              </button>
-            ) : (
-              ''
-            )}
+
+            <button
+              disabled={page <= 1}
+              className="admin-next-btn"
+              onClick={goToPreviousPage}
+            >
+              Previous
+            </button>
+
+            <button
+              disabled={searchResults.length !== pagelimit}
+              className="admin-next-btn"
+              onClick={goToNextPage}
+            >
+              Next
+            </button>
           </div>
         </div>
       </AdminLayout>

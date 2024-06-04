@@ -26,6 +26,11 @@ const AddListing: React.FC<Props> = (props) => {
   const [hoveredIndex, setHoveredIndex] = useState<any>(null)
   const [data, setData] = useState<any[]>([])
   const handleClick = (type: ListingPages) => {
+    console.warn('lisrihhnr', type)
+    if (type === 3) {
+      showFeatureUnderDevelopment()
+      return
+    }
     if (isLoggedIn && user.is_onboarded) {
       dispatch(updateListingModalData({ type }))
       dispatch(openModal({ type: 'listing-type-edit', closable: true }))
@@ -62,6 +67,7 @@ const AddListing: React.FC<Props> = (props) => {
         console.log({ err })
       })
   }, [])
+  console.warn('dataaaa', data)
 
   return (
     <>

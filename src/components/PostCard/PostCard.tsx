@@ -232,7 +232,18 @@ const PostCard: React.FC<Props> = (props) => {
   }
 
   const isMobile = useMediaQuery('(max-width:1100px)')
-
+  const processedContent = postData.content
+    .replace(/<img\b[^>]*>/g, '') // Remove all images
+    .replace(
+      /(?:\b(?:https?:\/\/|ftp|file):\/\/|www\.)?([-A-Z0-9+&@#/%?=~_|!:,.;]*\.[a-zA-Z]{2,}(?:[-A-Z0-9+&@#/%?=~_|])*(?:\?[^\s]*)?(?::\w+)?)\b/gi,
+      (match: any, url: string) => {
+        const href =
+          url.startsWith('http://') || url.startsWith('https://')
+            ? url
+            : `http://${url}`
+        return `<a href="${href}" class="${pageUrlClass}" target="_blank">${url}</a>`
+      },
+    )
   return (
     <>
       <div className={styles['post-card-wrapper']} onClick={handleCardClick}>
@@ -416,20 +427,7 @@ const PostCard: React.FC<Props> = (props) => {
           {(!has_link || props.currentSection === 'posts') && (
             <div
               className={styles['content'] + ' ql-editor'}
-              dangerouslySetInnerHTML={{
-                __html: postData.content
-                  .replace(/<img\b[^>]*>/g, '') // deleted all images from here then did the link formatting
-                  .replace(
-                    /(?:\b(?:https?:\/\/|ftp|file):\/\/|www\.)?([-A-Z0-9+&@#/%?=~_|!:,.;]*\.[a-zA-Z]{2,}(?:[-A-Z0-9+&@#/%?=~_|])*(?:\?[^\s]*)?)/gi,
-                    (match: any, url: string) => {
-                      const href =
-                        url.startsWith('http://') || url.startsWith('https://')
-                          ? url
-                          : `http://${url}`
-                      return `<a href="${href}" class="${pageUrlClass}" target="_blank">${url}</a>`
-                    },
-                  ),
-              }}
+              dangerouslySetInnerHTML={{ __html: processedContent }}
             ></div>
           )}
           {postData.video_url && (

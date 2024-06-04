@@ -324,16 +324,22 @@ const ClaimsPage: React.FC = () => {
           </div>
           <div className={styles.pagination}>
             {/* Previous Page Button */}
-            {page > 1 ? (
-              <button onClick={goToPreviousPage}>Previous</button>
-            ) : (
-              ''
-            )}
-            {searchResults.length === pagelimit ? (
-              <button onClick={goToNextPage}>Next</button>
-            ) : (
-              ''
-            )}
+
+            <button
+              disabled={page <= 1}
+              className="admin-next-btn"
+              onClick={goToPreviousPage}
+            >
+              Previous
+            </button>
+
+            <button
+              disabled={searchResults.length !== pagelimit}
+              className="admin-next-btn"
+              onClick={goToNextPage}
+            >
+              Next
+            </button>
           </div>
         </div>
       </AdminLayout>

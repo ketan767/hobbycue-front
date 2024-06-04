@@ -8,7 +8,7 @@ import {
 } from '@/services/user.service'
 
 import { FormControl, MenuItem, Select, TextField } from '@mui/material'
-import { getAllHobbies } from '@/services/hobby.service'
+import { SendHobbyRequest, getAllHobbies } from '@/services/hobby.service'
 import { isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateUser } from '@/redux/slices/user'
@@ -27,6 +27,7 @@ import AddHobby from '../../AddHobby/AddHobbyModal'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import AddGenre from '../../AddGenre/AddGenreModal'
 import { usePathname } from 'next/navigation'
+import { listingData } from '../ListingRelated/data'
 
 type Props = {
   onComplete?: () => void
@@ -107,6 +108,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
     message: '',
     type: 'success' || 'error',
   })
+  const bodyRef = useRef<HTMLElement>(null)
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     DropdownListItem[]
   >([])
@@ -166,22 +168,21 @@ const ListingHobbyEditModal: React.FC<Props> = ({
     if (err) return console.log(err)
 
     // Modify the sorting logic to prioritize items where the search keyword appears at the beginning
-    const sortedHobbies = res.data.hobbies.sort((a: any, b: any) => {
-      const indexA = a.display
-        .toLowerCase()
-        .indexOf(e.target.value.toLowerCase())
-      const indexB = b.display
-        .toLowerCase()
-        .indexOf(e.target.value.toLowerCase())
+    let sortedHobbies = res.data.hobbies
 
-      if (indexA === 0 && indexB !== 0) {
-        return -1
-      } else if (indexB === 0 && indexA !== 0) {
-        return 1
-      }
-
-      return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
-    })
+    if (e.target.value.toLowerCase() === 'sing') {
+      // Prioritize "vocal music" at the top
+      sortedHobbies = sortedHobbies.sort((a: any, b: any) => {
+        if (a.display.toLowerCase() === 'vocal music') return -1
+        if (b.display.toLowerCase() === 'vocal music') return 1
+        return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
+      })
+    } else {
+      // Sort alphabetically
+      sortedHobbies = sortedHobbies.sort((a: any, b: any) => {
+        return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
+      })
+    }
 
     setHobbyDropdownList(sortedHobbies)
     setFocusedHobbyIndex(-1)
@@ -678,6 +679,15 @@ const ListingHobbyEditModal: React.FC<Props> = ({
     }
   }, [activeProfile])
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (bodyRef.current) {
+        bodyRef.current.scrollTop = bodyRef.current.scrollHeight
+      }
+    }, 10)
+    return () => clearTimeout(timer)
+  }, [hobbyInputValue])
+
   if (showAddHobbyModal) {
     return (
       <>
@@ -685,12 +695,27 @@ const ListingHobbyEditModal: React.FC<Props> = ({
           handleClose={() => {
             setShowAddHobbyModal(false)
           }}
-          handleSubmit={() => {
-            setShowSnackbar({
-              message: 'This feature is under development',
-              triggerOpen: true,
-              type: 'success',
-            })
+          handleSubmit={() => async () => {
+            let jsonData = {
+              user_id: listingModalData._id,
+              user_type: 'listing',
+              hobby: hobbyInputValue,
+              level: 'Hobby',
+            }
+            const { err, res } = await SendHobbyRequest(jsonData)
+            if (res?.data.success) {
+              setShowAddHobbyModal(false)
+              setErrorOrmsg('Request sent!')
+              setHobbyInputValue('')
+              setGenreInputValue('')
+            } else if (err) {
+              setShowSnackbar({
+                triggerOpen: true,
+                type: 'error',
+                message: 'Something went wrong',
+              })
+              console.log(err)
+            }
           }}
           propData={{ defaultValue: hobbyInputValue }}
         />
@@ -717,12 +742,27 @@ const ListingHobbyEditModal: React.FC<Props> = ({
           handleClose={() => {
             setShowAddGenreModal(false)
           }}
-          handleSubmit={() => {
-            setShowSnackbar({
-              message: 'This feature is under development',
-              triggerOpen: true,
-              type: 'success',
-            })
+          handleSubmit={() => async () => {
+            let jsonData = {
+              user_id: listingModalData._id,
+              user_type: 'listing',
+              hobby: genreInputValue,
+              level: 'Genre',
+            }
+            const { err, res } = await SendHobbyRequest(jsonData)
+            if (res?.data.success) {
+              setShowAddGenreModal(false)
+              setErrorOrmsg('Request sent!')
+              setHobbyInputValue('')
+              setGenreInputValue('')
+            } else if (err) {
+              setShowSnackbar({
+                triggerOpen: true,
+                type: 'error',
+                message: 'Something went wrong',
+              })
+              console.log(err)
+            }
           }}
           propData={{ defaultValue: genreInputValue }}
         />
@@ -770,7 +810,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
 
         <hr className={styles['modal-hr']} />
 
-        <section className={`${styles['body']}`}>
+        <section ref={bodyRef} className={`${styles['body']}`}>
           <>
             <section className={styles['add-hobbies-wrapper']}>
               {/* Hobbies List, that are already Added */}

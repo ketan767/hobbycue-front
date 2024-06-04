@@ -96,7 +96,7 @@ const ExpiredPassword: React.FC<Props> = ({}) => {
       }
     }
     getBrowserData()
-  })
+  }, [user])
 
   useEffect(() => {
     const result = validatePasswordConditions(newPassword)

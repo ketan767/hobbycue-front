@@ -53,7 +53,7 @@ const AddGenre: React.FC<Props> = ({ handleClose, handleSubmit, propData }) => {
           <div className={styles['buttons']}>
             <FilledButton
               className={styles['button1']}
-              onClick={showFeatureUnderDevelopment}
+              onClick={handleSubmit()}
             >
               Send Request
             </FilledButton>

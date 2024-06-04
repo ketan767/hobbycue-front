@@ -53,8 +53,9 @@ export const dateFormatShort = new Intl.DateTimeFormat('en-US', {
 })
 
 export const checkIfUrlExists = (str: any) => {
-  const regex =
-    /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
+  const regex = /(http|https|ftp):\/\/[^\s/$.?#].[^\s]*/g;
+  ;
+
   return regex.test(str)
 }
 
