@@ -352,3 +352,74 @@ export const getAllListingUrls = async (
       return { err: error, res: null }
     }
   }
+
+  export const getProductVariant = async (
+    id:string
+  ): Promise<ApiReturnObject> => {
+      const token = localStorage.getItem('token')
+      const headers = { Authorization: `Bearer ${token}` }
+    try {
+      const res = await axiosInstance.get(`listing/product-variant/${id}`,{headers})
+      return { res: res, err: null }
+    } catch (error) {
+      console.error(error)
+      return { err: error, res: null }
+    }
+  }
+  export const addProductVariant = async (
+    id:string,
+    data:any
+  ): Promise<ApiReturnObject> => {
+      const token = localStorage.getItem('token')
+      const headers = { Authorization: `Bearer ${token}` }
+    try {
+      const res = await axiosInstance.post(`listing/product-variant/${id}`,data,{headers})
+      return { res: res, err: null }
+    } catch (error) {
+      console.error(error)
+      return { err: error, res: null }
+    }
+  }
+  export const updateProductVariant = async (
+    id:string,
+    data:any
+  ): Promise<ApiReturnObject> => {
+      const token = localStorage.getItem('token')
+      const headers = { Authorization: `Bearer ${token}` }
+    try {
+      const res = await axiosInstance.patch(`listing/product-variant/${id}`,data,{headers})
+      return { res: res, err: null }
+    } catch (error) {
+      console.error(error)
+      return { err: error, res: null }
+    }
+  }
+
+  export const purchaseProduct = async (
+    id:string,
+    data:any
+  ): Promise<ApiReturnObject> => {
+      const token = localStorage.getItem('token')
+      const headers = { Authorization: `Bearer ${token}` }
+    try {
+      const res = await axiosInstance.post(`listing/purchase/${id}`,data,{headers})
+      return { res: res, err: null }
+    } catch (error) {
+      console.error(error)
+      return { err: error, res: null }
+    }
+  }
+
+  export const getPurchases = async (
+    id:string
+  ): Promise<ApiReturnObject> => {
+      const token = localStorage.getItem('token')
+      const headers = { Authorization: `Bearer ${token}` }
+    try {
+      const res = await axiosInstance.get(`listing/purchases/${id}`,{headers})
+      return { res: res, err: null }
+    } catch (error) {
+      console.error(error)
+      return { err: error, res: null }
+    }
+  }

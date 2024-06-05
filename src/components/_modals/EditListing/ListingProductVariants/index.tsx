@@ -1,0 +1,288 @@
+import React, { useState, useEffect, useRef } from 'react'
+import styles from './style.module.css'
+import { CircularProgress, TextField } from '@mui/material'
+import { useDispatch, useSelector } from 'react-redux'
+import { closeModal, openModal } from '@/redux/slices/modal'
+import { RootState } from '@/redux/store'
+import Image from 'next/image'
+import { addProductVariant, getProductVariant, updateListing, updateProductVariant } from '@/services/listing.service'
+import { updateListingModalData } from '@/redux/slices/site'
+import CloseIcon from '@/assets/icons/CloseIcon'
+import BackIcon from '@/assets/svg/Previous.svg'
+import NextIcon from '@/assets/svg/Next.svg'
+import InputSelect from '@/components/_formElements/Select/Select'
+import { DropdownOption } from '../../CreatePost/Dropdown/DropdownOption'
+
+type Props = {
+  onComplete?: () => void
+  onBackBtnClick?: () => void
+  confirmationModal?: boolean
+  setConfirmationModal?: any
+  handleClose?: any
+  onStatusChange?: (isChanged: boolean) => void
+  onBoarding?: boolean
+  propData?: any
+}
+
+const ListingProductVariantsModal: React.FC<Props> = ({
+  onComplete,
+  onBackBtnClick,
+  confirmationModal,
+  setConfirmationModal,
+  handleClose,
+  onStatusChange,
+  onBoarding,
+  propData,
+}) => {
+  const dispatch = useDispatch()
+  const { user } = useSelector((state: RootState) => state.user)
+
+  const { listingModalData } = useSelector((state: RootState) => state.site)
+  const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
+  console.log('listingModalData:', listingModalData)
+
+  const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
+  const [cta, setCta] = useState('Contact')
+  const [data, setData] = useState<{
+    _id?:string
+    variant_tag: string
+    variations: { name: string; value: string }[]
+  }>({ variant_tag: '', variations: [] })
+
+  useEffect(() => {
+    if (propData && propData.currentListing && propData.currentListing._id) {
+      getProductVariant(propData.currentListing._id)
+        .then((result) => {
+          console.log({result})
+          if (result.res && result.res.data && result.res.data.data) {
+            if (result.res?.data?.data.variations)
+              setData(result.res?.data?.data)
+            else {
+              setData({ ...result.res?.data?.data, variations: [] })
+            }
+            // console.log(result.res)
+          } else if (result.err) {
+            console.log({ err: result.err })
+          }
+        })
+        .catch((err) => {
+          console.log({ err })
+        })
+    }
+  }, [propData])
+
+  const handleSubmit = async () => {
+    const apiFunc = data._id?updateProductVariant: addProductVariant;
+    setSubmitBtnLoading(true)
+    const { err, res } = await apiFunc(listingModalData._id as string, {
+      ...data
+    })
+    if (err) return console.log(err)
+    console.log('res', res?.data.data.listing)
+
+    if (onComplete) onComplete()
+    else {
+     dispatch(closeModal());
+     window.location.reload();
+    }
+  }
+
+  const handleBack = async () => {
+    setBackBtnLoading(true)
+    const apiFunc = data._id?updateProductVariant: addProductVariant;
+    const { err, res } = await apiFunc(listingModalData._id as string, {
+      ...data,
+    })
+    if (err) return console.log(err)
+    console.log('res', res?.data.data.listing)
+    if (onBackBtnClick) onBackBtnClick()
+  }
+
+  const handleDelete = async (i: number) => {
+    const newArr = [...data.variations].filter((_, index) => index !== i);
+    setData((prev) => {
+      return { ...prev, variations: newArr }
+    })
+  }
+
+  const handleVariationChange = (str:string,varName:'value'|'name',i:number) => {
+    setData(prev=>{
+     let newArr = [...prev.variations];
+     newArr[i] = {...newArr[i],[varName]:str}
+      return ({...prev,variations:newArr})
+    })
+  };
+
+  const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+
+  const plusIcon = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+    >
+      <g clip-path="url(#clip0_14513_208561)">
+        <path
+          d="M13.1429 8.85714H8.85714V13.1429C8.85714 13.6143 8.47143 14 8 14C7.52857 14 7.14286 13.6143 7.14286 13.1429V8.85714H2.85714C2.38571 8.85714 2 8.47143 2 8C2 7.52857 2.38571 7.14286 2.85714 7.14286H7.14286V2.85714C7.14286 2.38571 7.52857 2 8 2C8.47143 2 8.85714 2.38571 8.85714 2.85714V7.14286H13.1429C13.6143 7.14286 14 7.52857 14 8C14 8.47143 13.6143 8.85714 13.1429 8.85714Z"
+          fill="#8064A2"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_14513_208561">
+          <rect width="16" height="16" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+  const deleteSvg = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+      <g clip-path="url(#clip0_14226_71091)">
+        <path
+          d="M6 19C6 20.1 6.9 21 8 21H16C17.1 21 18 20.1 18 19V7H6V19ZM19 4H15.5L14.5 3H9.5L8.5 4H5V6H19V4Z"
+          fill="#8064A2"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_14226_71091">
+          <rect width="24" height="24" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+
+  return (
+    <>
+      <div className={styles['modal-wrapper']}>
+        <CloseIcon
+          className={styles['modal-close-icon']}
+          onClick={handleClose}
+        />
+        {/* Modal Header */}
+        <header className={styles['header']}>
+          <h4 className={styles['heading']}>{'Variants'}</h4>
+        </header>
+
+        <hr className={styles['modal-hr']} />
+
+        <section className={styles['body']}>
+          <div className={styles['container']}>
+            <div className={styles['input-and-label']}>
+              <p>Variation Tag</p>
+              <TextField
+                placeholder="eg: Size + Color"
+                value={data.variant_tag}
+                className={styles['input']}
+                onChange={(e)=>{setData(prev=>({...prev,variant_tag:e.target.value}))}}
+              />
+            </div>
+            <div
+              onClick={() => {
+                setData((prev) => ({
+                  ...prev,
+                  variations: [...prev.variations, { value: '', name: '' }],
+                }))
+              }}
+              className={styles['flex-end']}
+            >
+              {plusIcon}
+              <p>Add another</p>
+            </div>
+            <div className={styles['variations']}>
+              <p>Variations</p>
+              <div className={styles['variations-list']}>
+                {data.variations.map((obj, i) => (
+                  <div key={i} className={styles['variant']}>
+                    <TextField
+                      placeholder="Variant name  eg:  Large Blue"
+                      value={obj.name}
+                      className={styles['input']}
+                      onChange={(e)=>{handleVariationChange(e.target.value,'name',i)}}
+                    />
+                    <TextField
+                      placeholder="₹"
+                      type='number'
+                      value={obj.value}
+                      className={styles['input']}
+                      onChange={(e)=>{handleVariationChange(e.target.value,'value',i)}}
+                    />
+                    <button onClick={() => handleDelete(i)}>{deleteSvg}</button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <footer className={styles['footer']}>
+          {Boolean(onBackBtnClick) && (
+            <>
+              <button className="modal-footer-btn cancel" onClick={handleBack}>
+                {backBtnLoading ? (
+                  <CircularProgress color="inherit" size={'24px'} />
+                ) : onBackBtnClick ? (
+                  'Back'
+                ) : (
+                  'Back'
+                )}
+              </button>
+              {/* SVG Button for Mobile */}
+              <div onClick={onBackBtnClick}>
+                <Image
+                  src={BackIcon}
+                  alt="Back"
+                  className="modal-mob-btn cancel"
+                />
+              </div>
+            </>
+          )}
+
+          <button
+            ref={nextButtonRef}
+            className="modal-footer-btn submit"
+            onClick={handleSubmit}
+          >
+            {submitBtnLoading ? (
+              <CircularProgress color="inherit" size={'24px'} />
+            ) : onComplete ? (
+              'Next'
+            ) : (
+              'Save'
+            )}
+          </button>
+          {/* SVG Button for Mobile */}
+          {onComplete ? (
+            <div onClick={handleSubmit}>
+              <Image
+                src={NextIcon}
+                alt="back"
+                className="modal-mob-btn cancel"
+              />
+            </div>
+          ) : (
+            <button
+              ref={nextButtonRef}
+              className="modal-mob-btn-save"
+              onClick={handleSubmit}
+            >
+              {submitBtnLoading ? (
+                <CircularProgress color="inherit" size={'14px'} />
+              ) : (
+                'Save'
+              )}
+            </button>
+          )}
+        </footer>
+      </div>
+    </>
+  )
+}
+
+export default ListingProductVariantsModal

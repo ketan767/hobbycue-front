@@ -37,6 +37,7 @@ import { ClaimListing } from '@/services/auth.service'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { showProfileError } from '@/redux/slices/user'
 import { useRouter } from 'next/router'
+import smallPencilSvg from '@/assets/svg/small-pencil.svg'
 
 type Props = {
   data: ListingPageData['pageData']
@@ -236,6 +237,10 @@ const ListingHeader: React.FC<Props> = ({
     }
   }
 
+  const handleRegister = async () => {
+    dispatch(openModal({type:"listing-product-purchase",closable:true,propData:{currentListing:data}}))
+  }
+
   const handleShare = () => {
     dispatch(updateShareUrl(window.location.href))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
@@ -277,32 +282,30 @@ const ListingHeader: React.FC<Props> = ({
     )
   }
 
-  const isClaimed = data.is_claimed
+  const handleUpdateCTA = () => {
+    dispatch(openModal({type:"listing-cta-edit",closable:true,propData:{currentListing:data}}));
+  }
+
+  const ctaText = data.cta_text;
   const isEditMode = listingLayoutMode === 'edit'
 
   let button
-  if (!isClaimed && !isEditMode) {
+  if (!ctaText || ctaText === 'Contact') {
     button = (
-      <FilledButton className={styles.contactBtn} onClick={handleClaim}>
-        Claim
-        {/* <Image
-          className={styles['edit-icon']}
-          src={EditWhite}
-          alt="edit"
-          onClick={openTitleEditModal}
-        /> */}
+      <FilledButton className={styles.contactBtn} onClick={isEditMode?handleUpdateCTA:handleContact}>
+        <p>Contact</p>{isEditMode&&<img width={16} height={16} src={smallPencilSvg.src} alt='small pencil'/>}
       </FilledButton>
     )
-  } else {
+  } else if(ctaText==='Claim') {
     button = (
-      <FilledButton className={styles.contactBtn} onClick={handleContact}>
-        Contact
-        {/* <Image
-          className={styles['edit-icon']}
-          src={EditWhite}
-          alt="edit"
-          onClick={openTitleEditModal}
-        /> */}
+      <FilledButton className={styles.contactBtn} onClick={isEditMode?handleUpdateCTA:handleClaim}>
+        <p>Claim</p>{isEditMode&&<img width={16} height={16} src={smallPencilSvg.src} alt='small pencil'/>}
+      </FilledButton>
+    )
+  }else if(ctaText==="Register"){
+    button = (
+      <FilledButton className={styles.contactBtn} onClick={isEditMode?handleUpdateCTA:handleRegister}>
+        <p>Register</p>{isEditMode&&<img width={16} height={16} src={smallPencilSvg.src} alt='small pencil'/>}
       </FilledButton>
     )
   }

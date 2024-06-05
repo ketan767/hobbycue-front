@@ -7,7 +7,7 @@ import { toggleButtonClasses } from '@mui/material'
 
 type Props = {
   options?: any
-  onChange: any
+  onChange?: any
   value: any
   children: any
   className?: any
