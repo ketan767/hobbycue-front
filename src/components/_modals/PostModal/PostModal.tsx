@@ -123,7 +123,7 @@ export const PostModal: React.FC<Props> = ({
   useEffect(() => {
     if (activePost?.has_link) {
       const regex =
-        /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
+        /((https?:\/\/|ftp:\/\/|file:\/\/|www\.)[-A-Z0-9+&@#/%?=~_|!:,.;]*)/gi
       const url = activePost?.content.match(regex)
       if (url) {
         setUrl(url[0])
@@ -281,7 +281,7 @@ export const PostModal: React.FC<Props> = ({
                 __html: activePost?.content
                   .replace(/<img\b[^>]*>/g, '') // deleted all images from here then did the link formatting
                   .replace(
-                    /(?:\b(?:https?:\/\/|ftp|file):\/\/|www\.)?([-A-Z0-9+&@#/%?=~_|!:,.;]*\.[a-zA-Z]{2,}(?:[-A-Z0-9+&@#/%?=~_|])*(?:\?[^\s]*)?(?::\w+)?)\b/gi,
+                    /((https?:\/\/|ftp:\/\/|file:\/\/|www\.)[-A-Z0-9+&@#/%?=~_|!:,.;]*)/gi,
                     (match: any, url: string) => {
                       const href =
                         url.startsWith('http://') || url.startsWith('https://')

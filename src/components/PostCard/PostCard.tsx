@@ -235,7 +235,7 @@ const PostCard: React.FC<Props> = (props) => {
   const processedContent = postData.content
     .replace(/<img\b[^>]*>/g, '') // Remove all images
     .replace(
-      /(?:\b(?:https?:\/\/|ftp|file):\/\/|www\.)?([-A-Z0-9+&@#/%?=~_|!:,.;]*\.[a-zA-Z]{2,}(?:[-A-Z0-9+&@#/%?=~_|])*(?:\?[^\s]*)?(?::\w+)?)\b/gi,
+      /((https?:\/\/|ftp:\/\/|file:\/\/|www\.)[-A-Z0-9+&@#/%?=~_|!:,.;]*)/gi,
       (match: any, url: string) => {
         const href =
           url.startsWith('http://') || url.startsWith('https://')
