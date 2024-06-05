@@ -178,7 +178,7 @@ const ListingPageLayout: React.FC<Props> = ({
     'reviews',
     'events',
     'store',
-    'orders'
+    'orders',
   ]
   let content
 
@@ -214,6 +214,17 @@ const ListingPageLayout: React.FC<Props> = ({
           {tabs.map((tab) => {
             if (tab === 'events') {
               if (data.pageData.type !== 3)
+                return (
+                  <a
+                    key={tab}
+                    onClick={() => navigationTabs(tab)}
+                    className={activeTab === tab ? styles['active'] : ''}
+                  >
+                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  </a>
+                )
+            } else if (tab === 'orders') {
+              if (data.pageData.type === 3)
                 return (
                   <a
                     key={tab}
@@ -293,7 +304,7 @@ const ListingPageLayout: React.FC<Props> = ({
           {expandAll ? <p>Collapse All</p> : <p>Expand All</p>}
           <Image
             src={ChevronDown}
-            style={{transition:"all 0.3s ease"}}
+            style={{ transition: 'all 0.3s ease' }}
             className={`${
               expandAll ? styles['rotate-180'] : styles['rotate-0']
             }`}
@@ -435,7 +446,7 @@ const ListingPageLayout: React.FC<Props> = ({
           )}
           {activeTab === 'orders' && (
             <div className={styles['display-mobile']}>
-              <ListingOrdersTab data={data.pageData?._purchases||[]} />
+              <ListingOrdersTab data={data.pageData?._purchases || []} />
             </div>
           )}
         </div>

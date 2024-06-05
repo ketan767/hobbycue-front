@@ -20,7 +20,12 @@
 .modal-close-icon:hover {
   background: #ddd;
 }
-
+.default-img {
+  width: 100px;
+  height: 100px;
+  border: 1px solid #8064A2;
+  border-radius: 8px;
+}
 @media screen and (min-width: 1100px) {
   .modal-wrapper {
     max-height: 50rem;
@@ -96,6 +101,7 @@ gap: 4px;
 height: 100px;
 border-radius: 8px;
 object-fit: contain;
+border: 1px solid #8064A2
 }
 
 .img-and-label p {

@@ -70,7 +70,6 @@ const ListingCTAModal: React.FC<Props> = ({
     if (onComplete) onComplete()
     else {
       if (cta === 'Register') {
-        
         dispatch(
           openModal({
             type: 'listing-product-variants-edit',
@@ -120,7 +119,8 @@ const ListingCTAModal: React.FC<Props> = ({
 
         <section className={styles['body']}>
           <InputSelect className={styles['cta-selector']} value={cta}>
-            {['Claim', 'Contact', 'Register']
+            {['Claim', 'Contact', listingModalData?.type === 3 && 'Register']
+              .filter(Boolean)
               .map((str) => ({ value: str, display: str }))
               .map((item: any, idx) => {
                 return (

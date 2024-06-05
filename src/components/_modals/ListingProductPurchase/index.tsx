@@ -15,6 +15,7 @@ import CloseIcon from '@/assets/icons/CloseIcon'
 import NextIcon from '@/assets/svg/Next.svg'
 import hcLogo from '@/assets/image/logo-full.png'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import InputSelect from '@/components/InputSelect/inputSelect'
 
 type Props = {
   onComplete?: () => void
@@ -205,13 +206,16 @@ const ListingProductPurchase: React.FC<Props> = ({
         <section className={styles['body']}>
           <div className={styles['container']}>
             <div className={styles['img-and-label']}>
-              <img
-                src={propData?.currentListing?.cover_image || hcLogo.src}
-                alt=""
-              />
+              {listingModalData.profile_image ? (
+                <img src={listingModalData?.profile_image} alt="" />
+              ) : (
+                <div
+                  className={`${styles['default-img']} default-program-listing-icon`}
+                ></div>
+              )}
               <div>
-                <strong>{data?.variant_tag}</strong>
-                <p>Guitar Classes</p>
+                <strong>{listingModalData?.title}</strong>
+                <p>{listingModalData?.tagline}</p>
               </div>
             </div>
             <div className={styles['variations']}>

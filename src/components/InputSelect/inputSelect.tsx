@@ -2,10 +2,10 @@ import React, { useState } from 'react'
 import styles from './input.module.css'
 
 type Props = {
-  options: any
+  options?: any
   onChange?: any
   value?: any
-
+  disabled?: any
   name?: any
   optionValues?: any
 }
@@ -37,22 +37,23 @@ const InputSelect: React.FC<Props> = ({
   onChange,
   value,
   optionValues,
+  disabled,
 }) => {
-  
   return (
     <div style={{ position: 'relative' }}>
       <select
+        disabled={disabled ?? ''}
         name="select"
         className={styles.select}
         onChange={(e: any) => {
-          console.log(e.target.value);
-          
+          console.log(e.target.value)
+
           onChange(e.target.value)
         }}
         value={value}
         style={{ paddingRight: '30px' }}
       >
-        {options.map((item: any, idx: number) => {
+        {options?.map((item: any, idx: number) => {
           return (
             <option
               key={idx}

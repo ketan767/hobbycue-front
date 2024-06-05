@@ -238,7 +238,22 @@ const ListingHeader: React.FC<Props> = ({
   }
 
   const handleRegister = async () => {
-    dispatch(openModal({type:"listing-product-purchase",closable:true,propData:{currentListing:data}}))
+    if (isLoggedIn) {
+      if (user.is_onboarded) {
+        dispatch(
+          openModal({
+            type: 'listing-product-purchase',
+            closable: true,
+            propData: { currentListing: data },
+          }),
+        )
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
+    } else {
+      dispatch(openModal({ type: 'auth', closable: true }))
+    }
   }
 
   const handleShare = () => {
@@ -283,29 +298,77 @@ const ListingHeader: React.FC<Props> = ({
   }
 
   const handleUpdateCTA = () => {
-    dispatch(openModal({type:"listing-cta-edit",closable:true,propData:{currentListing:data}}));
+    if (isLoggedIn) {
+      if (user.is_onboarded) {
+        dispatch(
+          openModal({
+            type: 'listing-cta-edit',
+            closable: true,
+            propData: { currentListing: data },
+          }),
+        )
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
+    } else {
+      dispatch(openModal({ type: 'auth', closable: true }))
+    }
   }
 
-  const ctaText = data.cta_text;
+  const ctaText = data.cta_text
   const isEditMode = listingLayoutMode === 'edit'
 
   let button
   if (!ctaText || ctaText === 'Contact') {
     button = (
-      <FilledButton className={styles.contactBtn} onClick={isEditMode?handleUpdateCTA:handleContact}>
-        <p>Contact</p>{isEditMode&&<img width={16} height={16} src={smallPencilSvg.src} alt='small pencil'/>}
+      <FilledButton
+        className={styles.contactBtn}
+        onClick={isEditMode ? handleUpdateCTA : handleContact}
+      >
+        <p>Contact</p>
+        {isEditMode && (
+          <img
+            width={16}
+            height={16}
+            src={smallPencilSvg.src}
+            alt="small pencil"
+          />
+        )}
       </FilledButton>
     )
-  } else if(ctaText==='Claim') {
+  } else if (ctaText === 'Claim') {
     button = (
-      <FilledButton className={styles.contactBtn} onClick={isEditMode?handleUpdateCTA:handleClaim}>
-        <p>Claim</p>{isEditMode&&<img width={16} height={16} src={smallPencilSvg.src} alt='small pencil'/>}
+      <FilledButton
+        className={styles.contactBtn}
+        onClick={isEditMode ? handleUpdateCTA : handleClaim}
+      >
+        <p>Claim</p>
+        {isEditMode && (
+          <img
+            width={16}
+            height={16}
+            src={smallPencilSvg.src}
+            alt="small pencil"
+          />
+        )}
       </FilledButton>
     )
-  }else if(ctaText==="Register"){
+  } else if (ctaText === 'Register') {
     button = (
-      <FilledButton className={styles.contactBtn} onClick={isEditMode?handleUpdateCTA:handleRegister}>
-        <p>Register</p>{isEditMode&&<img width={16} height={16} src={smallPencilSvg.src} alt='small pencil'/>}
+      <FilledButton
+        className={styles.contactBtn}
+        onClick={isEditMode ? handleUpdateCTA : handleRegister}
+      >
+        <p>Register</p>
+        {isEditMode && (
+          <img
+            width={16}
+            height={16}
+            src={smallPencilSvg.src}
+            alt="small pencil"
+          />
+        )}
       </FilledButton>
     )
   }

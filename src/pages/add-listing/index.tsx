@@ -27,7 +27,7 @@ const AddListing: React.FC<Props> = (props) => {
   const [data, setData] = useState<any[]>([])
   const handleClick = (type: ListingPages) => {
     console.warn('lisrihhnr', type)
-    if (type === 3) {
+    if (type === 4) {
       showFeatureUnderDevelopment()
       return
     }
