@@ -30,6 +30,13 @@ type Props = {
   propData?: any
 }
 
+const initialEventHour = {
+  from_date: new Date().toISOString(),
+  to_date: new Date().toISOString(),
+  from_time: '8:00 am',
+  to_time: '9:00 pm',
+}
+
 const ListingProductPurchase: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
@@ -47,7 +54,7 @@ const ListingProductPurchase: React.FC<Props> = ({
   const { listingModalData } = useSelector((state: RootState) => state.site)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   console.log('listingModalData:', listingModalData)
-
+  const [eventData, setEventData] = useState(initialEventHour)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [data, setData] = useState<{
     _id?: string
@@ -59,6 +66,14 @@ const ListingProductPurchase: React.FC<Props> = ({
     display: false,
     message: '',
   })
+
+  useEffect(() => {
+    if (listingModalData.event_date_time) {
+      const { from_time, to_time, from_date, to_date } =
+        listingModalData.event_date_time
+      setEventData({ from_time, to_time, from_date, to_date })
+    }
+  }, [])
 
   useEffect(() => {
     if (propData && propData.currentListing && propData.currentListing._id) {
@@ -193,6 +208,19 @@ const ListingProductPurchase: React.FC<Props> = ({
     setData((prev) => ({ ...prev, variations: newArr }))
   }
 
+  const formatDateFunc = (inputDate: string): string => {
+    const parts = inputDate.split('-')
+    const formattedDate = new Date(
+      parseInt(parts[0]),
+      parseInt(parts[1]) - 1,
+      parseInt(parts[2]),
+    )
+
+    const day = formattedDate.getDate()
+    const month = formattedDate.toLocaleString('default', { month: 'short' })
+    const year = formattedDate.getFullYear()
+    return `${day}-${month}-${year}`
+  }
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -220,6 +248,23 @@ const ListingProductPurchase: React.FC<Props> = ({
               <div>
                 <strong>{listingModalData?.title}</strong>
                 <p>{listingModalData?.tagline}</p>
+              </div>
+            </div>
+            <div className={styles['display-time-container']}>
+              <div className={styles['display-time']}>
+                <p>{formatDateFunc(eventData?.from_date)}</p>
+              </div>
+
+              <div className={styles['display-time']}>
+                <p>{formatDateFunc(eventData?.to_date)}</p>
+              </div>
+
+              <div className={styles['display-time']}>
+                <p>{eventData?.from_time}</p>
+              </div>
+
+              <div className={styles['display-time']}>
+                <p>{eventData?.to_time}</p>
               </div>
             </div>
             <div className={styles['variations']}>
