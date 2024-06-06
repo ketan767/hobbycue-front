@@ -273,8 +273,8 @@ const ListingPageMain: React.FC<Props> = ({
           const listingData = res.res.data.data.listings[0]
           setListingPagesLeft((prevArray: any) => {
             const updated: any = [...prevArray, listingData]
-            const ids = prevArray.map((item: any) => item._id)
-            if (!ids.includes(listingData._id)) {
+            const ids = prevArray.map((item: any) => item?._id)
+            if (!ids.includes(listingData?._id)) {
               return updated
             } else {
               return prevArray
@@ -559,15 +559,15 @@ const ListingPageMain: React.FC<Props> = ({
                     {listingPagesLeft?.map((item: any) => {
                       if (typeof item === 'string') return null
                       return (
-                        <li key={item._id}>
+                        <li key={item?._id}>
                           <Link
                             className={styles.textGray}
-                            href={`/page/${item.page_url}`}
+                            href={`/page/${item?.page_url}`}
                           >
                             <div className={styles['related']}>
-                              {item.profile_image ? (
+                              {item?.profile_image ? (
                                 <img
-                                  src={item.profile_image}
+                                  src={item?.profile_image}
                                   alt={item?.title}
                                   width="32"
                                   height="32"

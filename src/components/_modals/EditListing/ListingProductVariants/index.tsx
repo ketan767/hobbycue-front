@@ -61,8 +61,11 @@ const ListingProductVariantsModal: React.FC<Props> = ({
         .then((result) => {
           console.log({ result })
           if (result.res && result.res.data && result.res.data.data) {
-            setData(result.res?.data?.data)
-
+            if (result.res?.data?.data.variations)
+              setData(result.res?.data?.data)
+            else {
+              setData({ ...result.res?.data?.data, variations: [] })
+            }
             // console.log(result.res)
           } else if (result.err) {
             console.log({ err: result.err })
@@ -77,18 +80,8 @@ const ListingProductVariantsModal: React.FC<Props> = ({
   const handleSubmit = async () => {
     const apiFunc = data._id ? updateProductVariant : addProductVariant
     setSubmitBtnLoading(true)
-
-    const filteredVariations = data.variations.filter(
-      (variation) => variation.name?.trim() !== '' && variation.value !== '',
-    )
-
-    const payload = {
-      ...data,
-      variations: filteredVariations,
-    }
-
     const { err, res } = await apiFunc(listingModalData._id as string, {
-      payload,
+      ...data,
     })
     if (err) return console.log(err)
     console.log('res', res?.data.data.listing)
@@ -96,6 +89,7 @@ const ListingProductVariantsModal: React.FC<Props> = ({
     if (onComplete) onComplete()
     else {
       dispatch(closeModal())
+      window.location.reload()
     }
   }
 
@@ -127,26 +121,6 @@ const ListingProductVariantsModal: React.FC<Props> = ({
       newArr[i] = { ...newArr[i], [varName]: str }
       return { ...prev, variations: newArr }
     })
-  }
-
-  const handleVariationChangeNumber = (
-    str: string,
-    varName: 'value' | 'name',
-    i: number,
-  ) => {
-    // Remove commas from the string and convert it to a number
-    const numValue =
-      str.replace(/,/g, '') !== '' ? parseInt(str.replace(/,/g, '')) : ''
-
-    setData((prev) => {
-      let newArr = [...prev.variations]
-      newArr[i] = { ...newArr[i], [varName]: numValue }
-      return { ...prev, variations: newArr }
-    })
-  }
-
-  const OpenCTA = () => {
-    dispatch(openModal({ type: 'listing-cta-edit', closable: true }))
   }
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
@@ -193,6 +167,25 @@ const ListingProductVariantsModal: React.FC<Props> = ({
       </defs>
     </svg>
   )
+  const handleVariationChangeNumber = (
+    str: string,
+    varName: 'value' | 'name',
+    i: number,
+  ) => {
+    // Remove commas from the string and convert it to a number
+    const numValue =
+      str.replace(/,/g, '') !== '' ? parseInt(str.replace(/,/g, '')) : ''
+
+    setData((prev) => {
+      let newArr = [...prev.variations]
+      newArr[i] = { ...newArr[i], [varName]: numValue }
+      return { ...prev, variations: newArr }
+    })
+  }
+
+  const OpenCTA = () => {
+    dispatch(openModal({ type: 'listing-cta-edit', closable: true }))
+  }
 
   return (
     <>
@@ -225,7 +218,10 @@ const ListingProductVariantsModal: React.FC<Props> = ({
               onClick={() => {
                 setData((prev) => ({
                   ...prev,
-                  variations: [...prev.variations, { value: '', name: '' }],
+                  variations: [
+                    ...prev.variations,
+                    { name: 'No value', value: '0' },
+                  ],
                 }))
               }}
               className={styles['flex-end']}
@@ -268,7 +264,6 @@ const ListingProductVariantsModal: React.FC<Props> = ({
             is no payment, you can leave Price as blank.
           </p>
         </div>
-
         <footer className={styles['footer']}>
           <>
             <button className="modal-footer-btn cancel" onClick={OpenCTA}>

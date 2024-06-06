@@ -341,11 +341,9 @@ export const getAllListingUrls = async (
     }
   }
 
-  export const getAllListingRelationTypes = async (
-
-  ): Promise<ApiReturnObject> => {
+  export const getAllListingRelationTypes = async (query: string) => {
     try {
-      const res = await axiosInstance.get(`listing/relation-types`)
+      const res = await axiosInstance.get(`listing/relation-types/?${query}`)
       return { res: res, err: null }
     } catch (error) {
       console.error(error)

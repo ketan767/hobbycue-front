@@ -21,7 +21,7 @@ import styles from './styles.module.css'
 import { isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
-import { closeModal, openModal } from '@/redux/slices/modal'
+import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import {
   getListingPages,
@@ -150,6 +150,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
       }
     }
   }
+  console.log('relatedlisting', listingModalData)
   const handleChange = (idToChange: any) => {
     if (selectedRelated.includes(idToChange)) {
       setSelectedRelated((prev: any) =>
@@ -251,7 +252,7 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
   }, [])
 
   useEffect(() => {
-    const matchedListings = allListingPages.filter((item: any) =>
+    const matchedListings = allListingPages?.filter((item: any) =>
       relatedListingsRight.includes(item._id),
     )
 
@@ -290,21 +291,27 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [dropdownRef])
+  const getPageType = async () => {
+    if (listingModalData.type === 1) return 'People'
+    if (listingModalData.type === 2) return 'Place'
+    if (listingModalData.type === 3) return 'Program'
+    if (listingModalData.type === 4) return 'Product'
+  }
 
   useEffect(() => {
-    getAllListingRelationTypes()
-      .then((result) => {
-        const { res, err } = result
-        if (err) {
-          console.log({ err })
-        } else if (res?.data && res?.data?.data) {
-          setOptions(res.data.data)
-          console.log({ d: res.data.data })
-        }
-      })
-      .catch((err) => {
+    const fetchRelations = async () => {
+      const pageType = await getPageType()
+      let query = `pageType=${pageType}&Side=Right&Show=Y`
+      const { err, res } = await getAllListingRelationTypes(query)
+
+      if (err) {
         console.log({ err })
-      })
+      } else if (res?.data && res?.data?.data) {
+        setOptions(res.data.data)
+        console.log({ d: res.data.data })
+      }
+    }
+    fetchRelations()
   }, [])
 
   if (confirmationModal) {
@@ -317,64 +324,12 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
     )
   }
 
-  const ArrowDown = () => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      style={{ width: '30px', marginRight: '12px' }}
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-    >
-      <g clip-path="url(#clip0_14129_154950)">
-        <path
-          d="M10.5876 6.19305L8.00096 8.77971L5.4143 6.19305C5.1543 5.93305 4.7343 5.93305 4.4743 6.19305C4.2143 6.45305 4.2143 6.87305 4.4743 7.13305L7.5343 10.193C7.7943 10.453 8.2143 10.453 8.4743 10.193L11.5343 7.13305C11.7943 6.87305 11.7943 6.45305 11.5343 6.19305C11.2743 5.93971 10.8476 5.93305 10.5876 6.19305Z"
-          fill="#6D747A"
-        />
-      </g>
-      <defs>
-        <clipPath id="clip0_14129_154950">
-          <rect width="16" height="16" fill="white" />
-        </clipPath>
-      </defs>
-    </svg>
-  )
-  const plusIcon = (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-    >
-      <g clip-path="url(#clip0_14129_154988)">
-        <path
-          d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM16 13H13V16C13 16.55 12.55 17 12 17C11.45 17 11 16.55 11 16V13H8C7.45 13 7 12.55 7 12C7 11.45 7.45 11 8 11H11V8C11 7.45 11.45 7 12 7C12.55 7 13 7.45 13 8V11H16C16.55 11 17 11.45 17 12C17 12.55 16.55 13 16 13Z"
-          fill="#8064A2"
-        />
-      </g>
-      <defs>
-        <clipPath id="clip0_14129_154988">
-          <rect width="24" height="24" fill="white" />
-        </clipPath>
-      </defs>
-    </svg>
-  )
-
-  const openLeftListingRelated = () => {
-    dispatch(openModal({type:"related-listing-left-edit",closable:true}))
-  }
-
   return (
     <>
       <div className={styles['modal-wrapper']}>
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 onClick={openLeftListingRelated} className={styles['heading']}>
-            {'Related Left'}
-          </h4>
-          <h4 className={styles['heading']}>{'Related Right'}
-            <div className={styles['active']}></div></h4>
+          <h4 className={styles['heading']}>{'Related Listing'}</h4>
         </header>
         <hr className={styles['modal-hr']} />
         <section className={styles['body']}>
@@ -385,51 +340,155 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
             <FormControl variant="outlined" size="small" sx={{ width: '100%' }}>
               <Select
                 className={styles['select-relation']}
-                placeholder="Select"
                 value={relation}
                 onChange={(e) => {
                   let val = e.target.value
                   setRelation(val)
                 }}
                 displayEmpty
-                inputProps={{
-                  'aria-label': 'Without label',
-                  IconComponent: ArrowDown,
-                }}
+                inputProps={{ 'aria-label': 'Without label' }}
               >
                 <MenuItem value="">Select</MenuItem>
-                {options
-                  .filter((obj) => obj.Show === 'Y' && obj.Side === 'Left')
-                  .map((item: any, idx: number) => {
-                    return (
-                      <MenuItem key={idx} value={item.relationType}>
-                        <div className={styles.tagContainer}>
-                          <p className={styles.tagText}>{item.relationType}</p>
-                        </div>
-                      </MenuItem>
-                    )
-                  })}
+                {options.map((item: any, idx: number) => {
+                  return (
+                    <MenuItem key={idx} value={item.relationType}>
+                      <div className={styles.tagContainer}>
+                        <p className={styles.tagText}>{item.relationType}</p>
+                      </div>
+                    </MenuItem>
+                  )
+                })}
               </Select>
             </FormControl>
-            {error && <p className={styles['helper-text']}>{error}</p>}
+            <p className={styles['helper-text']}>{error}</p>
           </div>
-
-          <section className={styles['added-hobby-list']}>
-            {
-              <table>
-                <thead>
-                  <tr>
-                    <td>Listing Page</td>
-                    <td>Action</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  {tableData?.map((item: any) => {
+          <section className={styles['dropdown-warpper']}>
+            <div
+              className={`${styles['input-box']} ${styles['dropdown-input-box']}`}
+            >
+              <label>Listing Page</label>
+              <input
+                type="text"
+                placeholder="Search user profile..."
+                autoComplete="name"
+                required
+                value={pageInputValue}
+                onClick={() => setShowDropdown(true)}
+                ref={inputRef}
+                onBlur={() =>
+                  setTimeout(() => {
+                    setShowDropdown(false)
+                  }, 300)
+                }
+                onChange={(e) => {
+                  handleSearchPages(e)
+                  setPageInputValue(e.target.value)
+                }}
+              />
+              {/* <p className={styles['helper-text']}>{inputErrs.full_name}</p> */}
+            </div>
+            {showDropdown && (
+              <div className={styles['dropdown']} ref={dropdownRef}>
+                {dropdownLoading ? (
+                  <div className={styles.dropdownItem}>Loading...</div>
+                ) : allDropdownValues?.length !== 0 ? (
+                  allDropdownValues?.map((item: any) => {
                     return (
-                      <tr key={item.id}>
-                        <td>{item.title}</td>
-                        <td>
-                          <div className={styles['plus-button']}>
+                      <div
+                        key={item?._id}
+                        onClick={() => {
+                          setSelectedPage(item)
+                          setPageInputValue(item.title)
+                          setShowDropdown(false)
+                        }}
+                        className={styles.dropdownItem}
+                      >
+                        {item?.profile_image ? (
+                          <img
+                            src={item.profile_image}
+                            alt="profile"
+                            width={40}
+                            height={40}
+                          />
+                        ) : (
+                          <Image
+                            src={DefaultProfile}
+                            alt="profile"
+                            width={40}
+                            height={40}
+                          />
+                        )}
+
+                        <p>{item?.title}</p>
+                      </div>
+                    )
+                  })
+                ) : (
+                  <div className={styles.dropdownItem}>No results found</div>
+                )}
+              </div>
+            )}
+            <button
+              disabled={addPageLoading}
+              className={styles['add-btn']}
+              onClick={handleAddPage}
+            >
+              {addPageLoading ? (
+                <CircularProgress color="inherit" size={'22px'} />
+              ) : (
+                'Add'
+              )}
+            </button>
+          </section>
+
+          {/* <div className={styles['input-box']}>
+            <label>Add Listing Page</label>
+            <input hidden required />
+
+            <FormControl variant="outlined" size="small" sx={{ width: '100%' }}>
+              <Select
+                value={relation}
+                onChange={(e) => {
+                  let val = e.target.value
+                  setRelation(val)
+                }}
+                displayEmpty
+                inputProps={{ 'aria-label': 'Without label' }}
+              >
+                {relatedListingData.map((item: any, idx) => {
+                  return (
+                    <MenuItem key={item._id} value={idx}>
+                      <div className={styles.tagContainer}>
+                        <p className={styles.tagText}>{item.relation}</p>
+                      </div>
+                    </MenuItem>
+                  )
+                })}
+              </Select>
+            </FormControl>
+          </div> */}
+          <section className={styles['added-hobby-list']}>
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              tableData && (
+                <table>
+                  <thead>
+                    <tr>
+                      <td>Listing Page</td>
+                      <td></td>
+                      <td></td>
+                      <td>Action</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tableData?.map((item: any) => {
+                      return (
+                        <tr key={item._id}>
+                          <td>{item?.title}</td>
+                          <td></td>
+                          <td></td>
+                          <td>
                             <svg
                               width="24"
                               height="24"
@@ -457,94 +516,14 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
                                 </clipPath>
                               </defs>
                             </svg>
-                          </div>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                  <tr>
-                    <td>
-                      <div className={styles['search-input']}>
-                        <input
-                          type="text"
-                          placeholder="Search listing page..."
-                          autoComplete="name"
-                          required
-                          value={pageInputValue}
-                          onClick={() => setShowDropdown(true)}
-                          ref={inputRef}
-                          onChange={(e) => {
-                            handleSearchPages(e)
-                            setPageInputValue(e.target.value)
-                          }}
-                          onFocus={() => {
-                            setShowDropdown(true)
-                          }}
-                        />
-                        {showDropdown && (
-                          <div
-                            className={styles['dropdown-list']}
-                            ref={dropdownRef}
-                          >
-                            {dropdownLoading ? (
-                              <div className={styles.dropdownItem}>
-                                Loading...
-                              </div>
-                            ) : allDropdownValues?.length !== 0 ? (
-                              allDropdownValues?.map((item: any) => {
-                                return (
-                                  <div
-                                    key={item?._id}
-                                    onClick={() => {
-                                      setSelectedPage(item._id)
-                                      setPageInputValue(item.title)
-                                      setShowDropdown(false)
-                                    }}
-                                    className={styles.dropdownItem}
-                                  >
-                                    <div>
-                                      {item.profile_image ? (
-                                        <img
-                                          src={item?.profile_image}
-                                          alt="profile"
-                                          width={40}
-                                          height={40}
-                                        />
-                                      ) : (
-                                        <Image
-                                          src={DefaultProfile}
-                                          alt="profile"
-                                          width={40}
-                                          height={40}
-                                        />
-                                      )}
-
-                                      <p>{item?.title}</p>
-                                    </div>
-                                  </div>
-                                )
-                              })
-                            ) : (
-                              <div className={styles.dropdownItem}>
-                                No results found
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    <td>
-                      <div
-                        onClick={handleAddPage}
-                        className={styles['plus-button']}
-                      >
-                        {plusIcon}
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            }
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              )
+            )}
           </section>
         </section>
 
