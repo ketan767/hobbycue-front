@@ -129,6 +129,10 @@ line-height: normal;
   background: var(--Grey-Hover, #F8F9FA);
   padding: 12px;
 }
+.rupees-icon{
+  width: 9px;
+  height: auto;
+}
 
 .input {
   border-radius: 8px;

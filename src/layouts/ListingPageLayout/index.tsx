@@ -224,7 +224,7 @@ const ListingPageLayout: React.FC<Props> = ({
                   </a>
                 )
             } else if (tab === 'orders') {
-              if (data.pageData.type === 3)
+              if (data.pageData.type === 3 && listingLayoutMode === 'edit')
                 return (
                   <a
                     key={tab}

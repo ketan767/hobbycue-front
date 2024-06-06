@@ -21,6 +21,26 @@
   background: #ddd;
 }
 
+.bottom-txt-container {
+  padding: 19.5px 134px 16px 134px
+}
+.hr-line {
+ display: flex;
+ width: 559px;
+ margin: 0 auto;
+ height: 1px;
+ border-top: 1px solid #EBEDF0;
+}
+.bottom-text {
+  color: #6D747A;
+  text-align: center;
+  font-family: "Poppins";
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px;
+}
+
 @media screen and (min-width: 1100px) {
   .modal-wrapper {
     max-height: 50rem;
@@ -120,7 +140,7 @@
 }
 
 .input input::placeholder {
-  color: var(--Grey-Dark, #939CA3);
+
   font-family: 'Poppins';
   font-size: 12px;
   font-style: normal;
@@ -194,7 +214,7 @@ width: 100%;
 }
 
 .variant .input:first-of-type{
-  width: 95%;
+  width: 120%;
 }
 
 @media screen and (max-width: 1100px) {
@@ -206,6 +226,7 @@ width: 100%;
     margin: -5px 0 5rem 0;
     padding: 5px 0 0 0;
   }
+
 
   .modal-wrapper .header {
     padding: 16px 16px 0;
@@ -226,8 +247,21 @@ width: 100%;
     width: 100%;
     z-index: 1000;
   }
+  .variant .input:first-of-type{
+    width: 100%;
+  }
 
   .modal-close-icon {
     position: fixed !important;
+  }
+  .hr-line {
+    display: flex;
+    width: 90%;
+    margin: 0 auto;
+    height: 1px;
+    border-top: 1px solid #EBEDF0;
+   }
+   .bottom-txt-container {
+    padding: 19.5px 16px 16px 16px
   }
 }

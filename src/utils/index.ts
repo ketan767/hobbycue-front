@@ -150,3 +150,17 @@ export const extractPlatform = (deviceString:any) => {
   const match = deviceString.match(regex); 
   return match ? match[0].toLowerCase() : null; 
 }
+
+
+export const formatPrice = (price: any): string => {
+  const priceStr = price.toString();
+  const lastThree = priceStr.slice(-3);
+  const otherNumbers = priceStr.slice(0, -3);
+
+  if (otherNumbers !== '') {
+    const remainingNumbers = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',');
+    return `${remainingNumbers},${lastThree}`;
+  } else {
+    return lastThree;
+  }
+};

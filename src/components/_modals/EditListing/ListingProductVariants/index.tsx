@@ -5,13 +5,19 @@ import { useDispatch, useSelector } from 'react-redux'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { RootState } from '@/redux/store'
 import Image from 'next/image'
-import { addProductVariant, getProductVariant, updateListing, updateProductVariant } from '@/services/listing.service'
+import {
+  addProductVariant,
+  getProductVariant,
+  updateListing,
+  updateProductVariant,
+} from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
 import CloseIcon from '@/assets/icons/CloseIcon'
 import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import InputSelect from '@/components/_formElements/Select/Select'
 import { DropdownOption } from '../../CreatePost/Dropdown/DropdownOption'
+import { formatPrice } from '@/utils'
 
 type Props = {
   onComplete?: () => void
@@ -44,22 +50,19 @@ const ListingProductVariantsModal: React.FC<Props> = ({
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [cta, setCta] = useState('Contact')
   const [data, setData] = useState<{
-    _id?:string
+    _id?: string
     variant_tag: string
     variations: { name: string; value: string }[]
-  }>({ variant_tag: '', variations: [] })
+  }>({ variant_tag: '', variations: [{ name: '', value: '' }] })
 
   useEffect(() => {
     if (propData && propData.currentListing && propData.currentListing._id) {
       getProductVariant(propData.currentListing._id)
         .then((result) => {
-          console.log({result})
+          console.log({ result })
           if (result.res && result.res.data && result.res.data.data) {
-            if (result.res?.data?.data.variations)
-              setData(result.res?.data?.data)
-            else {
-              setData({ ...result.res?.data?.data, variations: [] })
-            }
+            setData(result.res?.data?.data)
+
             // console.log(result.res)
           } else if (result.err) {
             console.log({ err: result.err })
@@ -72,24 +75,33 @@ const ListingProductVariantsModal: React.FC<Props> = ({
   }, [propData])
 
   const handleSubmit = async () => {
-    const apiFunc = data._id?updateProductVariant: addProductVariant;
+    const apiFunc = data._id ? updateProductVariant : addProductVariant
     setSubmitBtnLoading(true)
+
+    const filteredVariations = data.variations.filter(
+      (variation) => variation.name?.trim() !== '' && variation.value !== '',
+    )
+
+    const payload = {
+      ...data,
+      variations: filteredVariations,
+    }
+
     const { err, res } = await apiFunc(listingModalData._id as string, {
-      ...data
+      payload,
     })
     if (err) return console.log(err)
     console.log('res', res?.data.data.listing)
 
     if (onComplete) onComplete()
     else {
-     dispatch(closeModal());
-     window.location.reload();
+      dispatch(closeModal())
     }
   }
 
   const handleBack = async () => {
     setBackBtnLoading(true)
-    const apiFunc = data._id?updateProductVariant: addProductVariant;
+    const apiFunc = data._id ? updateProductVariant : addProductVariant
     const { err, res } = await apiFunc(listingModalData._id as string, {
       ...data,
     })
@@ -99,19 +111,43 @@ const ListingProductVariantsModal: React.FC<Props> = ({
   }
 
   const handleDelete = async (i: number) => {
-    const newArr = [...data.variations].filter((_, index) => index !== i);
+    const newArr = [...data.variations].filter((_, index) => index !== i)
     setData((prev) => {
       return { ...prev, variations: newArr }
     })
   }
 
-  const handleVariationChange = (str:string,varName:'value'|'name',i:number) => {
-    setData(prev=>{
-     let newArr = [...prev.variations];
-     newArr[i] = {...newArr[i],[varName]:str}
-      return ({...prev,variations:newArr})
+  const handleVariationChange = (
+    str: string,
+    varName: 'value' | 'name',
+    i: number,
+  ) => {
+    setData((prev) => {
+      let newArr = [...prev.variations]
+      newArr[i] = { ...newArr[i], [varName]: str }
+      return { ...prev, variations: newArr }
     })
-  };
+  }
+
+  const handleVariationChangeNumber = (
+    str: string,
+    varName: 'value' | 'name',
+    i: number,
+  ) => {
+    // Remove commas from the string and convert it to a number
+    const numValue =
+      str.replace(/,/g, '') !== '' ? parseInt(str.replace(/,/g, '')) : ''
+
+    setData((prev) => {
+      let newArr = [...prev.variations]
+      newArr[i] = { ...newArr[i], [varName]: numValue }
+      return { ...prev, variations: newArr }
+    })
+  }
+
+  const OpenCTA = () => {
+    dispatch(openModal({ type: 'listing-cta-edit', closable: true }))
+  }
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
 
@@ -178,9 +214,11 @@ const ListingProductVariantsModal: React.FC<Props> = ({
               <p>Variation Tag</p>
               <TextField
                 placeholder="eg: Size + Color"
-                value={data.variant_tag}
+                value={data.variant_tag === 'No value' ? '' : data.variant_tag}
                 className={styles['input']}
-                onChange={(e)=>{setData(prev=>({...prev,variant_tag:e.target.value}))}}
+                onChange={(e) => {
+                  setData((prev) => ({ ...prev, variant_tag: e.target.value }))
+                }}
               />
             </div>
             <div
@@ -202,16 +240,19 @@ const ListingProductVariantsModal: React.FC<Props> = ({
                   <div key={i} className={styles['variant']}>
                     <TextField
                       placeholder="Variant name  eg:  Large Blue"
-                      value={obj.name}
+                      value={obj.name === 'No value' ? '' : obj.name}
                       className={styles['input']}
-                      onChange={(e)=>{handleVariationChange(e.target.value,'name',i)}}
+                      onChange={(e) => {
+                        handleVariationChange(e.target.value, 'name', i)
+                      }}
                     />
                     <TextField
                       placeholder="₹"
-                      type='number'
-                      value={obj.value}
+                      value={formatPrice(obj.value)}
                       className={styles['input']}
-                      onChange={(e)=>{handleVariationChange(e.target.value,'value',i)}}
+                      onChange={(e) => {
+                        handleVariationChangeNumber(e.target.value, 'value', i)
+                      }}
                     />
                     <button onClick={() => handleDelete(i)}>{deleteSvg}</button>
                   </div>
@@ -220,29 +261,27 @@ const ListingProductVariantsModal: React.FC<Props> = ({
             </div>
           </div>
         </section>
+        <hr className={styles['hr-line']} />
+        <div className={styles['bottom-txt-container']}>
+          <p className={styles['bottom-text']}>
+            If there are no Variants, you can leave everything blank. If there
+            is no payment, you can leave Price as blank.
+          </p>
+        </div>
 
         <footer className={styles['footer']}>
-          {Boolean(onBackBtnClick) && (
-            <>
-              <button className="modal-footer-btn cancel" onClick={handleBack}>
-                {backBtnLoading ? (
-                  <CircularProgress color="inherit" size={'24px'} />
-                ) : onBackBtnClick ? (
-                  'Back'
-                ) : (
-                  'Back'
-                )}
-              </button>
-              {/* SVG Button for Mobile */}
-              <div onClick={onBackBtnClick}>
-                <Image
-                  src={BackIcon}
-                  alt="Back"
-                  className="modal-mob-btn cancel"
-                />
-              </div>
-            </>
-          )}
+          <>
+            <button className="modal-footer-btn cancel" onClick={OpenCTA}>
+              {backBtnLoading ? (
+                <CircularProgress color="inherit" size={'24px'} />
+              ) : onBackBtnClick ? (
+                'Back'
+              ) : (
+                'Back'
+              )}
+            </button>
+            {/* SVG Button for Mobile */}
+          </>
 
           <button
             ref={nextButtonRef}

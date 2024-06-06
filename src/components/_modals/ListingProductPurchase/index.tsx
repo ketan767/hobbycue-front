@@ -16,6 +16,8 @@ import NextIcon from '@/assets/svg/Next.svg'
 import hcLogo from '@/assets/image/logo-full.png'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import InputSelect from '@/components/InputSelect/inputSelect'
+import { formatPrice } from '@/utils'
+import rupeesIcon from '@/assets/svg/rupees.svg'
 
 type Props = {
   onComplete?: () => void
@@ -175,8 +177,10 @@ const ListingProductPurchase: React.FC<Props> = ({
 
   const incQuantity = (i: number) => {
     let newArr = [...data.variations]
-    newArr[i] = { ...newArr[i], quantity: Number(newArr[i].quantity) + 1 }
-    setData((prev) => ({ ...prev, variations: newArr }))
+    if (Number(newArr[i].quantity) < 9) {
+      newArr[i] = { ...newArr[i], quantity: Number(newArr[i].quantity) + 1 }
+      setData((prev) => ({ ...prev, variations: newArr }))
+    }
   }
 
   const decQuantity = (i: number) => {
@@ -223,10 +227,12 @@ const ListingProductPurchase: React.FC<Props> = ({
                 {data.variations.map((obj, i) => (
                   <div key={i} className={styles['variant']}>
                     <TextField
-                      placeholder="Variant name  eg:  Large Blue"
-                      value={obj.name}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      placeholder=""
+                      value={obj.name === 'No value' ? '' : obj.name}
                       className={styles['input']}
-                      disabled
                     />
                     <div className={styles['quantity']}>
                       <button
@@ -249,7 +255,16 @@ const ListingProductPurchase: React.FC<Props> = ({
                       className={styles['show-value']}
                       // onChange={(e)=>{handleVariationChange(e.target.value,'value',i)}}
                     >
-                      <p>₹ {obj.value}</p>
+                      <p>
+                        {
+                          <Image
+                            className={styles['rupees-icon']}
+                            src={rupeesIcon}
+                            alt="rupeesIcon"
+                          />
+                        }{' '}
+                        {formatPrice(obj.value)}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -260,7 +275,9 @@ const ListingProductPurchase: React.FC<Props> = ({
 
         <footer className={styles['footer']}>
           <div className={styles['price']}>
-            <p>₹ {totalPrice}</p>
+            <p>
+              {} {formatPrice(totalPrice)}
+            </p>
           </div>
           <button
             ref={nextButtonRef}

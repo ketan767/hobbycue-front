@@ -314,7 +314,6 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
     fromDate: string | number | Date,
     toDate: string | number | Date,
   ): string {
-    // Extracting day, month, and year separately
     const dayOptions: Intl.DateTimeFormatOptions = { day: 'numeric' }
     const monthYearOptions: Intl.DateTimeFormatOptions = {
       year: 'numeric',
@@ -337,9 +336,16 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
 
     if (
       from.getMonth() === to.getMonth() &&
-      from.getFullYear() === to.getFullYear()
+      from.getFullYear() === to.getFullYear() &&
+      from.getDate() !== to.getDate()
     ) {
       return `${fromDay} - ${toDay} ${fromMonthYear}`
+    } else if (
+      from.getMonth() === to.getMonth() &&
+      from.getFullYear() === to.getFullYear() &&
+      from.getDate() === to.getDate()
+    ) {
+      return `${fromDay} ${fromMonthYear}`
     } else {
       return `${fromDay} ${fromMonthYear} - ${toDay} ${toMonthYear}`
     }
