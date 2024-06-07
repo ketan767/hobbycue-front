@@ -133,6 +133,11 @@ line-height: normal;
   width: 9px;
   height: auto;
 }
+.rupees-icon-big {
+  width: 14px;
+  height: auto;
+
+}
 
 .input {
   border-radius: 8px;

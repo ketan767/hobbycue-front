@@ -121,7 +121,7 @@ const ListingProductPurchase: React.FC<Props> = ({
       setSnackbar({
         display: true,
         type: 'success',
-        message: 'Purchased Successfully',
+        message: 'Registered Successfully',
       })
       setTimeout(() => {
         dispatch(closeModal())
@@ -276,7 +276,7 @@ const ListingProductPurchase: React.FC<Props> = ({
                         readOnly: true,
                       }}
                       placeholder=""
-                      value={obj.name === 'No value' ? '' : obj.name}
+                      value={obj.name === 'No value' ? 'Quantity' : obj.name}
                       className={styles['input']}
                     />
                     <div className={styles['quantity']}>
@@ -321,7 +321,14 @@ const ListingProductPurchase: React.FC<Props> = ({
         <footer className={styles['footer']}>
           <div className={styles['price']}>
             <p>
-              {} {formatPrice(totalPrice)}
+              {
+                <Image
+                  className={styles['rupees-icon-big']}
+                  src={rupeesIcon}
+                  alt="rupeesIcon"
+                />
+              }{' '}
+              {formatPrice(totalPrice)}
             </p>
           </div>
           <button

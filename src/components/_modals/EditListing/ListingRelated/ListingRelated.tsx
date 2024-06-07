@@ -65,6 +65,9 @@ const RelatedListingEditModal: React.FC<Props> = ({
   const [selectedlisting, setselectedListing] = useState<
     { _id: string; name: string; description: string }[]
   >([])
+  const listingPageData = useSelector(
+    (state: RootState) => state.site.listingPageData,
+  )
   const [error, setError] = useState<string | null>(null)
   const [relatedListingData, setRelatedListingData] = useState(listingData)
   const [allListingPages, setAllListingPages] = useState([])
@@ -132,8 +135,10 @@ const RelatedListingEditModal: React.FC<Props> = ({
 
       if (res?.data.success) {
         dispatch(updateListingModalData(res.data.data.listing))
-        if (onComplete) onComplete()
-        else {
+
+        if (onComplete) {
+          onComplete()
+        } else {
           window.location.reload()
           dispatch(closeModal())
         }
@@ -170,10 +175,12 @@ const RelatedListingEditModal: React.FC<Props> = ({
         const { err, res } = await updateListing(listingModalData._id, jsonData)
         setAddPageLoading(false)
         if (err) return console.log(err)
-        console.log('resp', res?.data.data.listing)
+        console.log('respcc', res?.data.data.listing)
         setRelatedListingsLeft(
           res?.data.data.listing?.related_listings_left.listings,
         )
+        dispatch(updateListingModalData(res?.data?.data?.listing))
+        GetTableData()
         if (onComplete) onComplete()
         else {
           // window.location.reload()
@@ -211,32 +218,30 @@ const RelatedListingEditModal: React.FC<Props> = ({
         setRelatedListingsLeft(
           res?.data.data.listing?.related_listings_left.listings,
         )
+        dispatch(updateListingModalData(res?.data?.data?.listing))
+        GetTableData()
       }
     }
   }
 
   const [loading, setLoading] = useState(true)
 
-  const fetchListings = async () => {
-    setLoading(true)
-    const { res, err } = await searchPages('')
-    setAllListingPages(res?.data)
-    setLoading(false)
+  const GetTableData = async () => {
+    const listingsIds = listingModalData?.related_listings_left?.listings
+    const relatedString =
+      listingsIds?.map((id: any) => `_id=${id}`).join('&') || 'abc'
+
+    const { err, res } = await getListingPages(`${relatedString}`)
+    if (res?.data?.data?.listings) {
+      setTableData(res?.data?.data?.listings)
+      setLoading(false)
+    }
   }
+  useEffect(() => {}, [tableData])
 
   useEffect(() => {
-    const matchedListings = allListingPages?.filter((item: any) =>
-      relatedListingsLeft?.includes(item._id),
-    )
-
-    const matchedTitles = matchedListings?.map((listing: any) => ({
-      id: listing._id,
-      title: listing.title,
-    }))
-
-    setTableData(matchedTitles)
-    console.log('idsss', tableData)
-  }, [allListingPages, relatedListingsLeft])
+    GetTableData()
+  }, [])
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
@@ -252,7 +257,6 @@ const RelatedListingEditModal: React.FC<Props> = ({
       window.removeEventListener('keydown', handleKeyPress)
     }
   }, [])
-  console.warn('relatedlefttt', relatedListingsLeft)
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
@@ -461,7 +465,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
                     {tableData?.map((item: any) => {
                       return (
                         <tr key={item.id}>
-                          <td>{item.title}</td>
+                          <td>{item?.title}</td>
 
                           <td></td>
                           <td></td>
@@ -473,7 +477,7 @@ const RelatedListingEditModal: React.FC<Props> = ({
                               fill="none"
                               className={styles['delete-hobby-btn']}
                               onClick={() => {
-                                handleRemovePage(item.id)
+                                handleRemovePage(item._id)
                               }}
                             >
                               <g clip-path="url(#clip0_173_49175)">
