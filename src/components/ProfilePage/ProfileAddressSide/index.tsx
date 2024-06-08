@@ -59,14 +59,15 @@ const ProfileAddressSide = ({ data, expandData, addressError }: Props) => {
         expandData={displayData}
         className={addressError === true ? styles['error'] : ''}
       >
-        <h4 className={styles['heading']}>Location</h4>
+        <h4 className={styles['heading']+` ${addressError&&styles['error-text']}`}>Location{addressError&&"*"}</h4>
+        {addressError&&displayData&&<p className={styles['error-text']+` ${styles['absolute-text']}`}>City is mandatory</p>}
         <ul
           className={`${styles['location-wrapper']} ${
             locationStates?.[data?._id] && styles['display-mobile-flex']
           }`}
         >
           <li>
-            <svg
+            {!addressError&&<svg
               width="24"
               height="24"
               viewBox="0 0 24 24"
@@ -84,7 +85,7 @@ const ProfileAddressSide = ({ data, expandData, addressError }: Props) => {
                   <rect width="24" height="24" fill="white" />
                 </clipPath>
               </defs>
-            </svg>
+            </svg>}
             <span>
               {profileLayoutMode === 'edit' ? (
                 <span className={styles.textGray}>

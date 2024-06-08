@@ -444,7 +444,7 @@ const ListingPageMain: React.FC<Props> = ({
           </div>
           {/* Listing Hobbies */}
           <PageContentBox
-            className={hobbyError ? styles.errorBorder : ''}
+            className={hobbyError ? styles.error : ''}
             showEditButton={listingLayoutMode === 'edit'}
             onEditBtnClick={() =>
               dispatch(
@@ -457,16 +457,14 @@ const ListingPageMain: React.FC<Props> = ({
             }}
             expandData={showHobbies}
           >
-            <h4 className={styles['heading']}>Hobbies</h4>
-            {/* yahi hai */}
+            <h4 className={styles['heading']+` ${hobbyError&&styles['error-text']}`}>Hobbies{hobbyError&&"*"}</h4>
+            {hobbyError&&showHobbies&&<p className={styles['error-text']+` ${styles['absolute-text']}`}>At least one hobby is mandatory</p>}
             <div
               className={`${styles['display-desktop']}${
                 hobbyStates?.[data?._id] ? ' ' + styles['display-mobile'] : ''
               }`}
             >
-              {!data || data._hobbies.length === 0 ? (
-                <span className={`${styles['textGray']}`}>{''}</span>
-              ) : (
+              {
                 <ul className={styles['hobby-list']}>
                   {data?._hobbies?.map((item: any) => {
                     if (typeof item === 'string') return
@@ -484,7 +482,7 @@ const ListingPageMain: React.FC<Props> = ({
                     )
                   })}
                 </ul>
-              )}
+            }
             </div>
           </PageContentBox>
           {/* Tags */}
@@ -959,8 +957,9 @@ const ListingPageMain: React.FC<Props> = ({
               }}
               expandData={showLocation}
             >
-              <div className={`${styles['location-heading']} `}>
-                <h4>Location</h4>
+              <div className={`${styles['location-heading']}  ${LocationErr&&styles['error-text']}`}>
+                <h4>Location{LocationErr&&"*"}</h4>
+                {LocationErr&&showLocation&&<p className={styles['error-text']+` ${styles['absolute-text']}`}>Fill up the mandatory fields</p>}
               </div>
               <div
                 className={`${styles['display-desktop']}${
@@ -982,7 +981,7 @@ const ListingPageMain: React.FC<Props> = ({
                   {/* Address */}
                   {data?._address && (
                     <li>
-                      <svg
+                      {LocationErr?null:<svg
                         width="24"
                         height="24"
                         viewBox="0 0 24 24"
@@ -1000,7 +999,7 @@ const ListingPageMain: React.FC<Props> = ({
                             <rect width="24" height="24" fill="white" />
                           </clipPath>
                         </defs>
-                      </svg>
+                      </svg>}
 
                       <span className={styles.textdefault}>
                         {data?.wp_data?.location_str}
@@ -1027,15 +1026,15 @@ const ListingPageMain: React.FC<Props> = ({
                       </span>
                     </li>
                   )}
-                </ul>
+                </ul> 
               </div>
-              <div
+              {isNaN(lat)||isNaN(lng)?null:<div
                 className={`${styles['location-map']} ${
                   styles['display-desktop']
                 }${showLocation ? ' ' + styles['display-mobile'] : ''}`}
               >
                 <MapComponent lat={lat} lng={lng} />
-              </div>
+              </div>}
             </PageContentBox>
             {data?.type === listingTypes.PLACE && (
               <PageContentBox

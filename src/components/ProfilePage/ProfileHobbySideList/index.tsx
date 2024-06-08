@@ -56,7 +56,8 @@ const ProfileHobbySideList = ({ data, expandData, hobbyError }: Props) => {
         initialShowDropdown
         className={hobbyError===true?styles['error']:''}
       >
-        <h4 className={styles['heading']}>Hobbies</h4>
+        <h4 className={styles['heading']+` ${hobbyError&&styles['error-text']}`}>Hobbies{hobbyError&&"*"}</h4>
+        {hobbyError&&displayData&&<p className={styles['error-text']+` ${styles['absolute-text']}`}>At least one bobby is mandatory</p>}
         <ul
           className={`${styles['hobby-list']} ${
             hobbyStates?.[data?._id] && styles['display-mobile-flex']

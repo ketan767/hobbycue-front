@@ -45,6 +45,7 @@
 
 .error{
   border: 1px solid #C0504D !important;
+  position: relative;
 }
 
 @media screen and (max-width:1100px) {
@@ -53,5 +54,35 @@
   }
   .display-mobile-flex{
     display: flex;
+  }
+  .error::after{
+    content: '';
+    margin-left: 4px;
+    margin-right: 4px;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    left: 0;
+    border-left: 1px solid #C0504D !important;
+    border-right: 1px solid #C0504D !important;
+    user-select: none;
+    pointer-events: none;
+  }
+  .error svg path{
+    fill: #C0504D;
+  }
+  .error-text{
+    color: #C0504D !important;
+  }
+  .absolute-text{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 20px;
+    position: absolute;
+    top: 36px;
+    left: 16px;
   }
 }
