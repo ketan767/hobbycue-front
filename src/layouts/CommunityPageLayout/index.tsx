@@ -1178,8 +1178,8 @@ const CommunityLayout: React.FC<Props> = ({
                   <section className={styles['dropdowns-panel']}>
                     {[
                       {
-                        name: 'Hobby Members',
-                        options: hobbyMembers,
+                        name: "What's New",
+                        options: whatsNew,
                         type: 'members',
                       },
                       {

@@ -27,7 +27,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
   const [open, setOpen] = useState(false)
   const router = useRouter()
   const [seeMore, setSeeMore] = useState(true)
-  const membersContainerRef = useRef<HTMLDivElement>(null);
+  const membersContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (type === 'members') {
@@ -155,7 +155,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                   <div key={idx} className={styles['option']}>
                     <div className={styles['member-container']}>
                       <Link
-                        href={`/profile/${obj.profile_url}`}
+                        href={`/page/${obj?.page_url}`}
                         className={styles['img-name']}
                       >
                         {obj?.profile_image ? (
@@ -169,7 +169,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                           />
                         )}
 
-                        <p>{obj?.full_name}</p>
+                        <p>{obj?.title}</p>
                       </Link>
                       {obj?.admin === true && (
                         <button className={styles['admin-btn']}>

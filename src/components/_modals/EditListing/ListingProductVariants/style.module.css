@@ -238,6 +238,11 @@ width: 100%;
     padding-top: 12px;
   }
 
+  .modal-wrapper .body {
+    height: calc((100vh - 15rem));
+    overflow-y: auto;
+  }
+
   .modal-wrapper .footer {
     background: var(--Base-White, #fff);
     padding: var(--spacing-16) var(--spacing-16);

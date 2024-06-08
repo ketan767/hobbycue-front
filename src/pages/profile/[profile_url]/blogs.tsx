@@ -35,7 +35,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
   }
 
   const router = useRouter()
-  const isMobile = useMediaQuery("(max-width:1100px)");
+  const isMobile = useMediaQuery('(max-width:1100px)')
 
   useEffect(() => {
     // Save scroll position when navigating away from the page
@@ -75,7 +75,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
   return (
     <>
       <Head>
-        <title>{`Posts | ${data.pageData.full_name} | HobbyCue`}</title>
+        <title>{`Blogs | ${data.pageData.full_name} | HobbyCue`}</title>
       </Head>
 
       <ProfileLayout
@@ -85,10 +85,11 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
         setExpandAll={handleExpandAll}
       >
         <PageGridLayout column={2}>
-          <aside 
-          className={`custom-scrollbar ${styles['profile-left-aside']} ${
-            expandAll ? '' : styles['display-none']
-          }`}>
+          <aside
+            className={`custom-scrollbar ${styles['profile-left-aside']} ${
+              expandAll ? '' : styles['display-none']
+            }`}
+          >
             {/* User Hobbies */}
             <ProfileHobbySideList data={data.pageData} />
             <ProfilePagesList data={data} />
@@ -106,16 +107,20 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
           <div className={styles['nav-mobile']}>
             <ProfileNavigationLinks activeTab={'blogs'} />
           </div>
-          <section className={`${styles['dual-section-wrapper']} ${styles['mob-min-height']} ${styles['mob-h-auto']}`}>
+          <section
+            className={`${styles['dual-section-wrapper']} ${styles['mob-min-height']} ${styles['mob-h-auto']}`}
+          >
             <div className={styles['no-posts-div']}>
               <p className={styles['no-posts-text']}>
                 This feature is under development. Come back soon to view this
               </p>
             </div>
-            {isMobile?null:<>
-            <div className={styles['no-posts-div']}></div>
-            <div className={styles['no-posts-div']}></div>
-            </>}
+            {isMobile ? null : (
+              <>
+                <div className={styles['no-posts-div']}></div>
+                <div className={styles['no-posts-div']}></div>
+              </>
+            )}
           </section>
         </PageGridLayout>
       </ProfileLayout>

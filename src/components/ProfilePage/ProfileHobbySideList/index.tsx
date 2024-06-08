@@ -10,36 +10,40 @@ import { updateHobbyOpenState } from '@/redux/slices/site'
 type Props = {
   data: ProfilePageData['pageData']
   expandData?: boolean
-  hobbyError?:boolean
+  hobbyError?: boolean
 }
 
 const ProfileHobbySideList = ({ data, expandData, hobbyError }: Props) => {
-  const { profileLayoutMode, hobbyStates } = useSelector((state: RootState) => state.site)
+  const { profileLayoutMode, hobbyStates } = useSelector(
+    (state: RootState) => state.site,
+  )
   const [displayData, setDisplayData] = useState(true)
-  console.log('data', {data})
+  console.log('data', { data })
   const dispatch = useDispatch()
 
-  useEffect(()=>{
-    if(hobbyStates && typeof hobbyStates[data?._id] === 'boolean'){
+  useEffect(() => {
+    if (hobbyStates && typeof hobbyStates[data?._id] === 'boolean') {
       setDisplayData(hobbyStates[data?._id])
-    }else if(data._id){
-      dispatch(updateHobbyOpenState({[data._id]:displayData}))
+    } else if (data._id) {
+      dispatch(updateHobbyOpenState({ [data._id]: displayData }))
     }
-  },[data._id, hobbyStates])
+  }, [data._id, hobbyStates])
 
   useEffect(() => {
-    if (expandData !== undefined) {setDisplayData(expandData);}
+    if (expandData !== undefined) {
+      setDisplayData(expandData)
+    }
   }, [expandData])
   const openModalHobbiesModal = () => {
-    if(window.innerWidth>1100){
-        setDisplayData(true)
-      }
+    if (window.innerWidth > 1100) {
+      setDisplayData(true)
     }
-    useEffect(()=>{
-      // openModalHobbiesModal();
-      // window.addEventListener("resize",openModalHobbiesModal);
-      // return window.removeEventListener("resize",openModalHobbiesModal)
-    },[])
+  }
+  useEffect(() => {
+    // openModalHobbiesModal();
+    // window.addEventListener("resize",openModalHobbiesModal);
+    // return window.removeEventListener("resize",openModalHobbiesModal)
+  }, [])
 
   return (
     <>
@@ -48,16 +52,28 @@ const ProfileHobbySideList = ({ data, expandData, hobbyError }: Props) => {
         onEditBtnClick={() =>
           dispatch(openModal({ type: 'profile-hobby-edit', closable: true }))
         }
-        setDisplayData={(arg0:boolean)=>{setDisplayData(prev=>{
-          dispatch(updateHobbyOpenState({[data._id]:!prev}))
-          return !prev
-        })}}
+        setDisplayData={(arg0: boolean) => {
+          setDisplayData((prev) => {
+            dispatch(updateHobbyOpenState({ [data._id]: !prev }))
+            return !prev
+          })
+        }}
         expandData={displayData}
         initialShowDropdown
-        className={hobbyError===true?styles['error']:''}
+        className={hobbyError === true ? styles['error'] : ''}
       >
-        <h4 className={styles['heading']+` ${hobbyError&&styles['error-text']}`}>Hobbies{hobbyError&&"*"}</h4>
-        {hobbyError&&displayData&&<p className={styles['error-text']+` ${styles['absolute-text']}`}>At least one bobby is mandatory</p>}
+        <h4
+          className={
+            styles['heading'] + ` ${hobbyError && styles['error-label']}`
+          }
+        >
+          Hobbies
+        </h4>
+        {hobbyError && displayData && (
+          <p className={styles['error-text'] + ` ${styles['absolute-text']}`}>
+            At least one hobby is mandatory
+          </p>
+        )}
         <ul
           className={`${styles['hobby-list']} ${
             hobbyStates?.[data?._id] && styles['display-mobile-flex']
@@ -66,7 +82,10 @@ const ProfileHobbySideList = ({ data, expandData, hobbyError }: Props) => {
           {data._hobbies.map((item: any) => {
             if (typeof item === 'string') return
             return (
-              <Link href={`/hobby/${item?.genre?.slug??item?.hobby?.slug}`} key={item._id}>
+              <Link
+                href={`/hobby/${item?.genre?.slug ?? item?.hobby?.slug}`}
+                key={item._id}
+              >
                 <li>
                   {item?.hobby?.display}
                   {item?.genre && ` - ${item?.genre?.display} `}

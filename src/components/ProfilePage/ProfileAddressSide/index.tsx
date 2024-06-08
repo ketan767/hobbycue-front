@@ -13,7 +13,9 @@ type Props = {
 }
 
 const ProfileAddressSide = ({ data, expandData, addressError }: Props) => {
-  const { profileLayoutMode, locationStates } = useSelector((state: RootState) => state.site)
+  const { profileLayoutMode, locationStates } = useSelector(
+    (state: RootState) => state.site,
+  )
   const dispatch = useDispatch()
   const [displayData, setDisplayData] = useState(false)
   let addressText = ''
@@ -32,14 +34,14 @@ const ProfileAddressSide = ({ data, expandData, addressError }: Props) => {
   if (data?.primary_address?.country) {
     addressText += `${data?.primary_address?.country}, `
   }
-  
-  useEffect(()=>{
-    if(locationStates && typeof locationStates[data?._id] === 'boolean'){
+
+  useEffect(() => {
+    if (locationStates && typeof locationStates[data?._id] === 'boolean') {
       setDisplayData(locationStates[data?._id])
-    }else if(data._id){
-      dispatch(updateLocationOpenStates({[data._id]:displayData}))
+    } else if (data._id) {
+      dispatch(updateLocationOpenStates({ [data._id]: displayData }))
     }
-  },[data._id, locationStates])
+  }, [data._id, locationStates])
 
   useEffect(() => {
     if (expandData !== undefined) setDisplayData(expandData)
@@ -52,40 +54,54 @@ const ProfileAddressSide = ({ data, expandData, addressError }: Props) => {
         onEditBtnClick={() =>
           dispatch(openModal({ type: 'profile-address-edit', closable: true }))
         }
-        setDisplayData={(arg0:boolean)=>{setDisplayData(prev=>{
-          dispatch(updateLocationOpenStates({[data._id]:!prev}))
-          return !prev
-        })}}
+        setDisplayData={(arg0: boolean) => {
+          setDisplayData((prev) => {
+            dispatch(updateLocationOpenStates({ [data._id]: !prev }))
+            return !prev
+          })
+        }}
         expandData={displayData}
         className={addressError === true ? styles['error'] : ''}
       >
-        <h4 className={styles['heading']+` ${addressError&&styles['error-text']}`}>Location{addressError&&"*"}</h4>
-        {addressError&&displayData&&<p className={styles['error-text']+` ${styles['absolute-text']}`}>City is mandatory</p>}
+        <h4
+          className={
+            styles['heading'] + ` ${addressError && styles['error-text']}`
+          }
+        >
+          Location
+        </h4>
+        {addressError && displayData && (
+          <p className={styles['error-text'] + ` ${styles['absolute-text']}`}>
+            City is mandatory
+          </p>
+        )}
         <ul
           className={`${styles['location-wrapper']} ${
             locationStates?.[data?._id] && styles['display-mobile-flex']
           }`}
         >
           <li>
-            {!addressError&&<svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g clipPath="url(#clip0_173_51417)">
-                <path
-                  d="M12 2C7.8 2 4 5.22 4 10.2C4 13.38 6.45 17.12 11.34 21.43C11.72 21.76 12.29 21.76 12.67 21.43C17.55 17.12 20 13.38 20 10.2C20 5.22 16.2 2 12 2ZM12 12C10.9 12 10 11.1 10 10C10 8.9 10.9 8 12 8C13.1 8 14 8.9 14 10C14 11.1 13.1 12 12 12Z"
-                  fill="#8064A2"
-                />
-              </g>
-              <defs>
-                <clipPath id="clip0_173_51417">
-                  <rect width="24" height="24" fill="white" />
-                </clipPath>
-              </defs>
-            </svg>}
+            {!addressError && (
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g clipPath="url(#clip0_173_51417)">
+                  <path
+                    d="M12 2C7.8 2 4 5.22 4 10.2C4 13.38 6.45 17.12 11.34 21.43C11.72 21.76 12.29 21.76 12.67 21.43C17.55 17.12 20 13.38 20 10.2C20 5.22 16.2 2 12 2ZM12 12C10.9 12 10 11.1 10 10C10 8.9 10.9 8 12 8C13.1 8 14 8.9 14 10C14 11.1 13.1 12 12 12Z"
+                    fill="#8064A2"
+                  />
+                </g>
+                <defs>
+                  <clipPath id="clip0_173_51417">
+                    <rect width="24" height="24" fill="white" />
+                  </clipPath>
+                </defs>
+              </svg>
+            )}
             <span>
               {profileLayoutMode === 'edit' ? (
                 <span className={styles.textGray}>

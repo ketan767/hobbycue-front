@@ -77,6 +77,9 @@ ul.contact-wrapper svg {
   .error-text{
     color: #C0504D !important;
   }
+  .error-text::after{
+    content: '*';
+  }
   .absolute-text{
     font-style: normal;
     font-weight: 400;
@@ -85,5 +88,20 @@ ul.contact-wrapper svg {
     position: absolute;
     top: 36px;
     left: 16px;
+  }
+  .error::after{
+    content: '';
+    margin-left: 4px;
+    margin-right: 4px;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    left: 0;
+    border-left: 1px solid #C0504D !important;
+    border-right: 1px solid #C0504D !important;
+    user-select: none;
+    pointer-events: none;
   }
 }

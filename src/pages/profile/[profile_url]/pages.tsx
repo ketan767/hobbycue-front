@@ -77,7 +77,7 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
   return (
     <>
       <Head>
-        <title>{`Posts | ${data.pageData.full_name} | HobbyCue`}</title>
+        <title>{`Pages | ${data.pageData.full_name} | HobbyCue`}</title>
       </Head>
 
       <ProfileLayout
@@ -88,9 +88,11 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
       >
         {data.pageData && (
           <PageGridLayout column={2}>
-            <aside className={`custom-scrollbar ${styles['profile-left-aside']} ${
+            <aside
+              className={`custom-scrollbar ${styles['profile-left-aside']} ${
                 expandAll ? '' : styles['display-none']
-              }`}>
+              }`}
+            >
               {/* User Hobbies */}
               <ProfileHobbySideList data={data.pageData} />
               <ProfilePagesList data={data} />
@@ -137,8 +139,10 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
                 })}
               </div>
             ) : (
-              <section className={`${styles['dual-section-wrapper-mobile']} ${styles['mob-min-height']}`}>
-                <div className={styles['no-posts-div']+ ' margin-bottom-43vh'}>
+              <section
+                className={`${styles['dual-section-wrapper-mobile']} ${styles['mob-min-height']}`}
+              >
+                <div className={styles['no-posts-div'] + ' margin-bottom-43vh'}>
                   <p className={styles['no-posts-text']}>No pages available</p>
                 </div>
               </section>

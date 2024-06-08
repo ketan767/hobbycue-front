@@ -301,6 +301,12 @@ ul.seller-info-wrapper li svg:last-child {
 .display-initial {
   display: initial !important;
 }
+.error-text {
+  display: none;
+}
+.error-label {
+  color: #000000;
+}
 
 @media screen and (max-width: 1100px) {
   .page-left-aside {
@@ -347,9 +353,18 @@ ul.seller-info-wrapper li svg:last-child {
   .error svg path{
     fill: #C0504D;
   }
-  .error-text,.error-text *{
+  .error-text {
+    display: block;
     color: #C0504D !important;
   }
+
+  .error-label::after {
+    content: "*";
+  }
+  .error-label {
+    color: #C0504D !important;
+  }
+  
   .absolute-text{
     font-style: normal;
     font-weight: 400;

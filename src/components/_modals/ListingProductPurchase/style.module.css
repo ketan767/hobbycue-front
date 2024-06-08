@@ -373,4 +373,10 @@ justify-content: flex-end;
   .modal-close-icon {
     position: fixed !important;
   }
+  .display-time   {
+    width: 100%;
+  }
+  .display-time-container {
+    width: 100%;
+  }
 }

@@ -457,8 +457,20 @@ const ListingPageMain: React.FC<Props> = ({
             }}
             expandData={showHobbies}
           >
-            <h4 className={styles['heading']+` ${hobbyError&&styles['error-text']}`}>Hobbies{hobbyError&&"*"}</h4>
-            {hobbyError&&showHobbies&&<p className={styles['error-text']+` ${styles['absolute-text']}`}>At least one hobby is mandatory</p>}
+            <h4
+              className={
+                styles['heading'] + ` ${hobbyError && styles['error-label']}`
+              }
+            >
+              Hobbies
+            </h4>
+            {hobbyError && showHobbies && (
+              <p
+                className={styles['error-text'] + ` ${styles['absolute-text']}`}
+              >
+                At least one hobby is mandatory
+              </p>
+            )}
             <div
               className={`${styles['display-desktop']}${
                 hobbyStates?.[data?._id] ? ' ' + styles['display-mobile'] : ''
@@ -482,7 +494,7 @@ const ListingPageMain: React.FC<Props> = ({
                     )
                   })}
                 </ul>
-            }
+              }
             </div>
           </PageContentBox>
           {/* Tags */}
@@ -943,7 +955,7 @@ const ListingPageMain: React.FC<Props> = ({
 
             {/* User Location Details */}
             <PageContentBox
-              className={LocationErr ? styles.errorBorder : ''}
+              className={LocationErr ? styles.error : ''}
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
                 dispatch(
@@ -957,9 +969,23 @@ const ListingPageMain: React.FC<Props> = ({
               }}
               expandData={showLocation}
             >
-              <div className={`${styles['location-heading']}  ${LocationErr&&styles['error-text']}`}>
-                <h4>Location{LocationErr&&"*"}</h4>
-                {LocationErr&&showLocation&&<p className={styles['error-text']+` ${styles['absolute-text']}`}>Fill up the mandatory fields</p>}
+              <div
+                className={`${styles['location-heading']}  ${
+                  LocationErr && styles['error-text']
+                }`}
+              >
+                <h4 className={`${hobbyError && styles['error-label']}`}>
+                  Location
+                </h4>
+                {LocationErr && showLocation && (
+                  <p
+                    className={
+                      styles['error-text'] + ` ${styles['absolute-text']}`
+                    }
+                  >
+                    Fill up the mandatory fields
+                  </p>
+                )}
               </div>
               <div
                 className={`${styles['display-desktop']}${
@@ -981,25 +1007,27 @@ const ListingPageMain: React.FC<Props> = ({
                   {/* Address */}
                   {data?._address && (
                     <li>
-                      {LocationErr?null:<svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <g clip-path="url(#clip0_173_56226)">
-                          <path
-                            d="M12 2C7.8 2 4 5.22 4 10.2C4 13.38 6.45 17.12 11.34 21.43C11.72 21.76 12.29 21.76 12.67 21.43C17.55 17.12 20 13.38 20 10.2C20 5.22 16.2 2 12 2ZM12 12C10.9 12 10 11.1 10 10C10 8.9 10.9 8 12 8C13.1 8 14 8.9 14 10C14 11.1 13.1 12 12 12Z"
-                            fill="#8064A2"
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_173_56226">
-                            <rect width="24" height="24" fill="white" />
-                          </clipPath>
-                        </defs>
-                      </svg>}
+                      {LocationErr ? null : (
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <g clip-path="url(#clip0_173_56226)">
+                            <path
+                              d="M12 2C7.8 2 4 5.22 4 10.2C4 13.38 6.45 17.12 11.34 21.43C11.72 21.76 12.29 21.76 12.67 21.43C17.55 17.12 20 13.38 20 10.2C20 5.22 16.2 2 12 2ZM12 12C10.9 12 10 11.1 10 10C10 8.9 10.9 8 12 8C13.1 8 14 8.9 14 10C14 11.1 13.1 12 12 12Z"
+                              fill="#8064A2"
+                            />
+                          </g>
+                          <defs>
+                            <clipPath id="clip0_173_56226">
+                              <rect width="24" height="24" fill="white" />
+                            </clipPath>
+                          </defs>
+                        </svg>
+                      )}
 
                       <span className={styles.textdefault}>
                         {data?.wp_data?.location_str}
@@ -1026,15 +1054,17 @@ const ListingPageMain: React.FC<Props> = ({
                       </span>
                     </li>
                   )}
-                </ul> 
+                </ul>
               </div>
-              {isNaN(lat)||isNaN(lng)?null:<div
-                className={`${styles['location-map']} ${
-                  styles['display-desktop']
-                }${showLocation ? ' ' + styles['display-mobile'] : ''}`}
-              >
-                <MapComponent lat={lat} lng={lng} />
-              </div>}
+              {isNaN(lat) || isNaN(lng) ? null : (
+                <div
+                  className={`${styles['location-map']} ${
+                    styles['display-desktop']
+                  }${showLocation ? ' ' + styles['display-mobile'] : ''}`}
+                >
+                  <MapComponent lat={lat} lng={lng} />
+                </div>
+              )}
             </PageContentBox>
             {data?.type === listingTypes.PLACE && (
               <PageContentBox
