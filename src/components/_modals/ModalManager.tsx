@@ -254,6 +254,8 @@ const ModalManager: React.FC = () => {
       }, 500)
   }, [activeModal])
 
+  console.log('showaddhobby', showAddHobbyModal)
+
   const escFunction = useCallback(
     (event: KeyboardEvent) => {
       if (!showAddGenreModal && !showAddHobbyModal) {
@@ -442,10 +444,10 @@ const ModalManager: React.FC = () => {
               {activeModal === 'listing-cta-edit' && (
                 <ListingCTAModal {...props} />
               )}
-              {activeModal === "listing-product-variants-edit" && (
+              {activeModal === 'listing-product-variants-edit' && (
                 <ListingProductVariantsModal {...props} />
               )}
-              {activeModal === "listing-product-purchase" && (
+              {activeModal === 'listing-product-purchase' && (
                 <ListingProductPurchase {...props} />
               )}
 

@@ -63,6 +63,10 @@ export const ListingOnboardingModal: React.FC<PropTypes> = ({
   setConfirmationModal,
   handleClose,
   onStatusChange,
+  showAddHobbyModal,
+  showAddGenreModal,
+  setShowAddGenreModal,
+  setShowAddHobbyModal,
 }) => {
   const dispatch = useDispatch()
   const [activeStep, setActiveStep] = useState<Step>('General')
@@ -145,18 +149,21 @@ export const ListingOnboardingModal: React.FC<PropTypes> = ({
     }
   }
 
-  // if (confirmationModal) {
-  //   return <SaveModal OnBoarding={true} />
-  // }
-
   return (
     <div
       ref={modalRef}
-      className={`${confirmationModal ? '' : styles['modal-container']} ${
-        confirmationModal ? styles['ins-active'] : ''
-      }`}
+      className={`
+    ${confirmationModal ? styles['ins-active'] : ''}
+    ${showAddHobbyModal ? styles['hobby-active'] : ''}
+    ${showAddGenreModal ? styles['genre-active'] : ''}
+    ${
+      !confirmationModal && !showAddHobbyModal && !showAddGenreModal
+        ? styles['modal-container']
+        : ''
+    }
+  `}
     >
-      {!confirmationModal && (
+      {!confirmationModal && !showAddHobbyModal && !showAddGenreModal && (
         <>
           <header className={styles['header']}>
             <Image
@@ -248,10 +255,14 @@ export const ListingOnboardingModal: React.FC<PropTypes> = ({
           confirmationModal={confirmationModal}
           handleClose={handleClose}
           onBoarding={true}
+          showAddHobbyModal={showAddHobbyModal}
+          showAddGenreModal={showAddGenreModal}
+          setShowAddGenreModal={setShowAddGenreModal}
+          setShowAddHobbyModal={setShowAddHobbyModal}
         />
       )}
 
-      {!confirmationModal && (
+      {!confirmationModal && !showAddHobbyModal && !showAddGenreModal && (
         <section className={styles['step-indicators']}>
           {totalSteps.map((step, index) => {
             const isClickable = index <= furthestStepIndex
@@ -263,12 +274,12 @@ export const ListingOnboardingModal: React.FC<PropTypes> = ({
                   isClickable ? styles['active'] : ''
                 }`}
                 onClick={isClickable ? () => setActiveStep(step) : undefined}
-                tabIndex={isClickable?0:-1}
-                onKeyDown={(e)=>{
-                  if(e.key==="Enter"){
+                tabIndex={isClickable ? 0 : -1}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
                     e.stopPropagation()
-                    if(isClickable){
-                    setActiveStep(step)
+                    if (isClickable) {
+                      setActiveStep(step)
                     }
                   }
                 }}
@@ -288,5 +299,10 @@ type PropTypes = {
   setConfirmationModal?: any
   handleClose?: any
   isError?: boolean
+  showAddHobbyModal: any
+  showAddGenreModal: any
+  setShowAddGenreModal: any
+  setShowAddHobbyModal: any
+
   onStatusChange?: (isChanged: boolean) => void
 }

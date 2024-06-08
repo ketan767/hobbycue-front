@@ -39,6 +39,10 @@ type PropTypes = {
   handleClose?: any
   isError?: boolean
   onStatusChange?: (isChanged: boolean) => void
+  showAddHobbyModal: any
+  showAddGenreModal: any
+  setShowAddGenreModal: any
+  setShowAddHobbyModal: any
 }
 
 export const UserOnboardingModal: React.FC<PropTypes> = ({
@@ -46,6 +50,11 @@ export const UserOnboardingModal: React.FC<PropTypes> = ({
   setConfirmationModal,
   handleClose,
   onStatusChange,
+  showAddHobbyModal,
+  showAddGenreModal,
+
+  setShowAddGenreModal,
+  setShowAddHobbyModal,
 }) => {
   const dispatch = useDispatch()
   const [activeStep, setActiveStep] = useState<steps>('General')
@@ -119,11 +128,18 @@ export const UserOnboardingModal: React.FC<PropTypes> = ({
   return (
     <div
       ref={modalRef}
-      className={`${confirmationModal ? '' : styles['modal-container']} ${
-        confirmationModal ? styles['ins-active'] : ''
-      }`}
+      className={`
+    ${confirmationModal ? styles['ins-active'] : ''}
+    ${showAddHobbyModal ? styles['hobby-active'] : ''}
+    ${showAddGenreModal ? styles['genre-active'] : ''}
+    ${
+      !confirmationModal && !showAddHobbyModal && !showAddGenreModal
+        ? styles['modal-container']
+        : ''
+    }
+  `}
     >
-      {!confirmationModal && (
+      {!confirmationModal && !showAddHobbyModal && !showAddGenreModal && (
         <header className={styles['header']}>
           <Image
             className={styles['responsive-logo']}
@@ -197,10 +213,14 @@ export const UserOnboardingModal: React.FC<PropTypes> = ({
           confirmationModal={confirmationModal}
           handleClose={handleClose}
           onStatusChange={onStatusChange}
+          showAddGenreModal={showAddGenreModal}
+          showAddHobbyModal={showAddHobbyModal}
+          setShowAddGenreModal={setShowAddGenreModal}
+          setShowAddHobbyModal={setShowAddHobbyModal}
         />
       )}
 
-      {!confirmationModal && (
+      {!confirmationModal && !showAddHobbyModal && !showAddGenreModal && (
         <section className={styles['step-indicators']}>
           {totalSteps.map((step, index) => {
             const isClickable = index <= furthestStepIndex
