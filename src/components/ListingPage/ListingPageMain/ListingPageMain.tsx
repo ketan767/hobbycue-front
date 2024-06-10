@@ -498,7 +498,7 @@ const ListingPageMain: React.FC<Props> = ({
             </div>
           </PageContentBox>
           {/* Tags */}
-          {
+          {data?.social_media_urls || listingLayoutMode === 'edit' ? (
             <PageContentBox
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
@@ -527,7 +527,9 @@ const ListingPageMain: React.FC<Props> = ({
                 })}
               </ul>
             </PageContentBox>
-          }
+          ) : (
+            <></>
+          )}
           {/* Related Listing */}
           {listingLayoutMode !== 'edit' &&
           (!listingPagesLeft ||
@@ -1135,7 +1137,7 @@ const ListingPageMain: React.FC<Props> = ({
             )}
 
             {/* Related Listing */}
-            {/* {listingLayoutMode !== 'edit' &&
+            {listingLayoutMode !== 'edit' &&
             (!listingPagesRight ||
               data?.related_listings_right.listings?.length === 0) ? null : (
               <PageContentBox
@@ -1201,12 +1203,9 @@ const ListingPageMain: React.FC<Props> = ({
                   )}
                 </div>
               </PageContentBox>
-            )} */}
+            )}
 
-            {data?.type === listingTypes.PROGRAM ||
-            data?.type === listingTypes.PRODUCT ||
-            data?.type === listingTypes.PLACE ||
-            data?.type === listingTypes.PEOPLE ? (
+            {data?.social_media_urls || listingLayoutMode === 'edit' ? (
               <PageContentBox
                 showEditButton={listingLayoutMode === 'edit'}
                 onEditBtnClick={() =>
@@ -1914,10 +1913,7 @@ const ListingPageMain: React.FC<Props> = ({
             </PageContentBox>
           )}
 
-          {data?.type === listingTypes.PROGRAM ||
-          data?.type === listingTypes.PRODUCT ||
-          data?.type === listingTypes.PLACE ||
-          data?.type === listingTypes.PEOPLE ? (
+          {data?.social_media_urls || listingLayoutMode === 'edit' ? (
             <PageContentBox
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>

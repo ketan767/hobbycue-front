@@ -78,7 +78,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 32px;
+  gap: 24px;
   width: 100%;
 }
 
@@ -212,11 +212,12 @@ width: 100%;
 }
 
 .variations-list .variant{
-  display: flex;
-justify-content: center;
-align-items: center;
-gap: 16px;
-width: 100%;
+  display: grid;
+  grid-template-columns: 62.02% 16.04% 17.48%;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
 }
 
 .variant button{
@@ -280,15 +281,13 @@ align-items: center;
 
 .display-time {
   display: flex;
-  width: 128px;
+
   height: 40px;
-  padding: 12px;
-  justify-content: center;
+ 
+
   align-items: center;
   gap: 10px;
-  border-radius: 8px;
-  border: 1px solid var(--Grey-Lighter, #EBEDF0);
-  background: var(--Grey-Hover, #F8F9FA);
+
 }
 
 .display-time  p{
@@ -308,8 +307,7 @@ justify-content: flex-end;
 align-items: center;
 gap: 10px;
 border-radius: 8px;
-border: 1px solid var(--Grey-Lighter, #EBEDF0);
-background: var(--Grey-Hover, #F8F9FA);
+
 }
 
 .show-value p{
@@ -337,7 +335,9 @@ justify-content: flex-end;
 .display-time-container {
   display: flex;
   flex-direction: row;
+  width: 100%;
   gap: 16px;
+  align-items: flex-start;
 }
 
 @media screen and (max-width: 1100px) {
@@ -351,7 +351,12 @@ justify-content: flex-end;
   }
 
   .modal-wrapper .header {
+    display: none;
     padding: 16px 16px 0;
+  }
+
+  .modal-hr {
+    display: none;
   }
 
   .modal-wrapper .body {
@@ -377,8 +382,21 @@ justify-content: flex-end;
     width: 100%;
   }
   .display-time-container {
+    display: flex;
+    align-items: flex-start !important;
+    width: 100%;
+  }
+  .show-value{
+    width: 100%;
+    padding: 0;
+  }
+
+  .variations-list .variant{
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
     width: 100%;
   }
 }

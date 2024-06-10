@@ -342,6 +342,17 @@ const ListingPageLayout: React.FC<Props> = ({
                       {tab.charAt(0).toUpperCase() + tab.slice(1)}
                     </a>
                   )
+              } else if (tab === 'orders') {
+                if (data.pageData.type === 3 && listingLayoutMode === 'edit')
+                  return (
+                    <a
+                      key={tab}
+                      onClick={() => navigationTabs(tab)}
+                      className={activeTab === tab ? styles['active'] : ''}
+                    >
+                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    </a>
+                  )
               } else {
                 return (
                   <a

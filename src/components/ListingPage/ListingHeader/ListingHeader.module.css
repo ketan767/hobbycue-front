@@ -412,8 +412,8 @@
     width: 100%;
     height: auto;
     margin: 0 0 10px 0;
-    padding: 8px;
-    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.12);
+
+    box-shadow: none
   }
 
   .contactBtn {
@@ -427,6 +427,9 @@
     padding: 0px 12px;
     height: 40px;
   }
+  .name-container .name {
+    font-weight: 600;
+  }
 
   .header {
     padding: 8px 16px 8px 16px;
@@ -438,6 +441,9 @@
   .profile-img-wrapper .name-container,
   .profile-img-wrapper .tagline {
     display: block;
+  }
+  .profile-img-wrapper .tagline {
+    font-size: 14px;
   }
   .center-container .name-container {
     display: none;

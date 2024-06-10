@@ -17,6 +17,8 @@ import hcLogo from '@/assets/image/logo-full.png'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import InputSelect from '@/components/InputSelect/inputSelect'
 import { formatPrice } from '@/utils'
+import Calendar from '@/assets/svg/calendar-light.svg'
+import Time from '@/assets/svg/clock-light.svg'
 import rupeesIcon from '@/assets/svg/rupees.svg'
 
 type Props = {
@@ -208,19 +210,47 @@ const ListingProductPurchase: React.FC<Props> = ({
     setData((prev) => ({ ...prev, variations: newArr }))
   }
 
-  const formatDateFunc = (inputDate: string): string => {
-    const parts = inputDate.split('-')
-    const formattedDate = new Date(
-      parseInt(parts[0]),
-      parseInt(parts[1]) - 1,
-      parseInt(parts[2]),
-    )
+  function formatDateRange(
+    fromDate: string | number | Date,
+    toDate: string | number | Date,
+  ): string {
+    const dayOptions: Intl.DateTimeFormatOptions = { day: 'numeric' }
+    const monthYearOptions: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'short',
+    }
 
-    const day = formattedDate.getDate()
-    const month = formattedDate.toLocaleString('default', { month: 'short' })
-    const year = formattedDate.getFullYear()
-    return `${day}-${month}-${year}`
+    const from = new Date(fromDate)
+    const to = new Date(toDate)
+
+    const fromDay = new Intl.DateTimeFormat('en-US', dayOptions).format(from)
+    const toDay = new Intl.DateTimeFormat('en-US', dayOptions).format(to)
+    const fromMonthYear = new Intl.DateTimeFormat(
+      'en-US',
+      monthYearOptions,
+    ).format(from)
+    const toMonthYear = new Intl.DateTimeFormat(
+      'en-US',
+      monthYearOptions,
+    ).format(to)
+
+    if (
+      from.getMonth() === to.getMonth() &&
+      from.getFullYear() === to.getFullYear() &&
+      from.getDate() !== to.getDate()
+    ) {
+      return `${fromDay} - ${toDay} ${fromMonthYear}`
+    } else if (
+      from.getMonth() === to.getMonth() &&
+      from.getFullYear() === to.getFullYear() &&
+      from.getDate() === to.getDate()
+    ) {
+      return `${fromDay} ${fromMonthYear}`
+    } else {
+      return `${fromDay} ${fromMonthYear} - ${toDay} ${toMonthYear}`
+    }
   }
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -250,35 +280,26 @@ const ListingProductPurchase: React.FC<Props> = ({
                 <p>{listingModalData?.tagline}</p>
               </div>
             </div>
+
             <div className={styles['display-time-container']}>
               <div className={styles['display-time']}>
-                <p>{formatDateFunc(eventData?.from_date)}</p>
-              </div>
-
-              <div className={styles['display-time']}>
-                <p>{formatDateFunc(eventData?.to_date)}</p>
-              </div>
-
-              <div className={styles['display-time']}>
-                <p>{eventData?.from_time}</p>
-              </div>
-
-              <div className={styles['display-time']}>
-                <p>{eventData?.to_time}</p>
+                <Image className={styles['im']} src={Calendar} alt="calendar" />
+                <p className={styles.date}>
+                  {formatDateRange(eventData?.from_date, eventData?.to_date)}
+                </p>
+                <Image className={styles['im']} src={Time} alt="Time" />{' '}
+                <p className={styles.time}>
+                  {eventData?.from_time} - {eventData?.to_time}
+                </p>
               </div>
             </div>
+
             <div className={styles['variations']}>
               <div className={styles['variations-list']}>
                 {data.variations.map((obj, i) => (
                   <div key={i} className={styles['variant']}>
-                    <TextField
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      placeholder=""
-                      value={obj.name === 'No value' ? 'Quantity' : obj.name}
-                      className={styles['input']}
-                    />
+                    <div>{obj.name === 'No value' ? 'Quantity' : obj.name}</div>
+
                     <div className={styles['quantity']}>
                       <button
                         onClick={() => {
