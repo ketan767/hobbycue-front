@@ -63,4 +63,8 @@
   .no-data-div{
     border-radius: 0;
   }
+  .card-container { 
+    padding-top: 8px;
+    grid-template-columns: 1fr
+  }
 }
