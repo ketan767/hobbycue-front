@@ -93,6 +93,19 @@ export const updateListingByAdmin = async (listing_id: string,data:any): Promise
   }
 }
 
+/** Update Listing Address `PATCH: /api/admin/address/:addressId` */
+export const updateListingAddressByAdmin = async (addressId: string, data: any) => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.patch(`/admin/listing/address/${addressId}`, data, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
 /** DELETE `/api/admin/listing/:listing_id` */
 
 export const deleteListingByAdmin = async (listing_id: string): Promise<ApiReturnObject> => {

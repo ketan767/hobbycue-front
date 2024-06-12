@@ -4,7 +4,10 @@ import { FC, FormEvent, useEffect, useState } from 'react'
 import styles from './styles.module.css'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import { getAllHobbies } from '@/services/hobby.service'
-import { updateListingByAdmin } from '@/services/admin.service'
+import {
+  updateListingAddressByAdmin,
+  updateListingByAdmin,
+} from '@/services/admin.service'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 interface IndexProps {}
@@ -16,10 +19,82 @@ type DropdownListItem = {
   genre?: any
 }
 
+interface Phone {
+  prefix: string
+  number: string
+}
+
+interface WhatsappNumber {
+  prefix: string
+  number: string
+}
+
+interface Address {
+  _id: string
+  street: string
+  society: string
+  locality: string
+  city: string
+  pin_code: string
+  state: string
+  country: string
+  latitude: string
+  longitude: string
+}
+
+interface Page {
+  _id: string
+  title: string
+  tagline: string
+  description: string
+  page_url: string
+  public_email: string
+  phone: Phone
+  whatsapp_number: WhatsappNumber
+  year_of_birth: string
+  website: string
+  _address: Address
+  is_onboarded: boolean
+  is_published: boolean
+  is_verified: boolean
+  is_locked: boolean
+  is_claimed: boolean
+}
+
 const Index: FC<IndexProps> = ({}) => {
   const router = useRouter()
   const { page_url } = router.query
-  const [page, setPage] = useState<any>(null)
+
+  const [page, setPage] = useState<Page>({
+    _id: '',
+    title: '',
+    tagline: '',
+    description: '',
+    page_url: '',
+    public_email: '',
+    phone: { prefix: '', number: '' },
+    whatsapp_number: { prefix: '', number: '' },
+    year_of_birth: '',
+    website: '',
+    _address: {
+      _id: '',
+      street: '',
+      society: '',
+      locality: '',
+      city: '',
+      pin_code: '',
+      state: '',
+      country: '',
+      latitude: '',
+      longitude: '',
+    },
+    is_onboarded: false,
+    is_published: false,
+    is_verified: false,
+    is_locked: false,
+    is_claimed: false,
+  })
+
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -49,7 +124,7 @@ const Index: FC<IndexProps> = ({}) => {
 
   const updatePageFunc = async (e: FormEvent) => {
     e.preventDefault()
-    const { err, res } = await updateListingByAdmin(page._id, page)
+    const { err, res } = await updateListingByAdmin(page?._id, page)
     if (err) {
       setSnackbar({
         type: 'warning',
@@ -69,6 +144,19 @@ const Index: FC<IndexProps> = ({}) => {
         message: 'Some error occured',
       })
     }
+
+    if (page?._address && typeof page._address !== 'string') {
+      const { err: addressErr, res: addressRes } =
+        await updateListingAddressByAdmin(page._address?._id, page._address)
+      if (addressErr) {
+        setSnackbar({
+          type: 'warning',
+          display: true,
+          message: 'Error updating address',
+        })
+        return
+      }
+    }
   }
   console.log({ page })
   if (!page_url || !page) return <>Loading...</>
@@ -83,8 +171,8 @@ const Index: FC<IndexProps> = ({}) => {
               <input
                 type="text"
                 value={page?.title}
-                onChange={(e) =>
-                  setPage({ ...page, full_name: e.target.value })
+                onChange={
+                  (e) => setPage({ ...page, title: e.target.value }) // Fixed property name to 'title'
                 }
               />
             </div>
@@ -110,8 +198,8 @@ const Index: FC<IndexProps> = ({}) => {
               <input
                 type="text"
                 value={page?.page_url}
-                onChange={(e) =>
-                  setPage({ ...page, profile_url: e.target.value })
+                onChange={
+                  (e) => setPage({ ...page, page_url: e.target.value }) // Fixed property name to 'page_url'
                 }
               />
             </div>
@@ -131,13 +219,23 @@ const Index: FC<IndexProps> = ({}) => {
                 <input
                   className={styles.prefix}
                   type="text"
-                  value={page?.phone.prefix}
-                  onChange={(e) => setPage({ ...page, prefix: e.target.value })}
+                  value={page?.phone?.prefix}
+                  onChange={(e) =>
+                    setPage({
+                      ...page,
+                      phone: { ...page.phone, prefix: e.target.value },
+                    })
+                  }
                 />
                 <input
                   type="text"
-                  value={page?.phone.number}
-                  onChange={(e) => setPage({ ...page, number: e.target.value })}
+                  value={page?.phone?.number}
+                  onChange={(e) =>
+                    setPage({
+                      ...page,
+                      phone: { ...page.phone, number: e.target.value },
+                    })
+                  }
                 />
               </div>
             </div>
@@ -147,13 +245,29 @@ const Index: FC<IndexProps> = ({}) => {
                 <input
                   className={styles.prefix}
                   type="text"
-                  value={page?.whatsapp_number.prefix}
-                  onChange={(e) => setPage({ ...page, prefix: e.target.value })}
+                  value={page?.whatsapp_number?.prefix}
+                  onChange={(e) =>
+                    setPage({
+                      ...page,
+                      whatsapp_number: {
+                        ...page.whatsapp_number,
+                        prefix: e.target.value,
+                      },
+                    })
+                  }
                 />
                 <input
                   type="text"
-                  value={page?.whatsapp_number.number}
-                  onChange={(e) => setPage({ ...page, number: e.target.value })}
+                  value={page?.whatsapp_number?.number}
+                  onChange={(e) =>
+                    setPage({
+                      ...page,
+                      whatsapp_number: {
+                        ...page.whatsapp_number,
+                        number: e.target.value,
+                      },
+                    })
+                  }
                 />
               </div>
             </div>
@@ -167,13 +281,6 @@ const Index: FC<IndexProps> = ({}) => {
                 }
               />
             </div>
-            {/* <div className={styles.inputbox}>
-          <label>About</label>
-          <textarea
-            value={page?.about}
-            onChange={(e) => setPage({ ...page, about: e.target.value })}
-          />
-        </div> */}
             <div className={styles.inputbox}>
               <label>Website</label>
               <input
@@ -182,7 +289,6 @@ const Index: FC<IndexProps> = ({}) => {
                 onChange={(e) => setPage({ ...page, website: e.target.value })}
               />
             </div>
-
             <div>
               <h2>Address</h2>
               <div className={styles.longInputContainer}>
@@ -190,7 +296,12 @@ const Index: FC<IndexProps> = ({}) => {
                 <input
                   type="text"
                   value={page?._address?.street}
-                  onChange={(e) => setPage({ ...page, Street: e.target.value })}
+                  onChange={(e) =>
+                    setPage({
+                      ...page,
+                      _address: { ...page._address, street: e.target.value },
+                    })
+                  }
                 />
               </div>
               <section className={styles.twoColumnGrid}>
@@ -200,7 +311,10 @@ const Index: FC<IndexProps> = ({}) => {
                     type="text"
                     value={page?._address?.society}
                     onChange={(e) =>
-                      setPage({ ...page, website: e.target.value })
+                      setPage({
+                        ...page,
+                        _address: { ...page._address, society: e.target.value },
+                      })
                     }
                   />
                 </div>
@@ -210,7 +324,13 @@ const Index: FC<IndexProps> = ({}) => {
                     type="text"
                     value={page?._address?.locality}
                     onChange={(e) =>
-                      setPage({ ...page, website: e.target.value })
+                      setPage({
+                        ...page,
+                        _address: {
+                          ...page._address,
+                          locality: e.target.value,
+                        },
+                      })
                     }
                   />
                 </div>
@@ -222,7 +342,10 @@ const Index: FC<IndexProps> = ({}) => {
                     type="text"
                     value={page?._address?.city}
                     onChange={(e) =>
-                      setPage({ ...page, website: e.target.value })
+                      setPage({
+                        ...page,
+                        _address: { ...page._address, city: e.target.value },
+                      })
                     }
                   />
                 </div>
@@ -232,7 +355,13 @@ const Index: FC<IndexProps> = ({}) => {
                     type="text"
                     value={page?._address?.pin_code}
                     onChange={(e) =>
-                      setPage({ ...page, website: e.target.value })
+                      setPage({
+                        ...page,
+                        _address: {
+                          ...page._address,
+                          pin_code: e.target.value,
+                        },
+                      })
                     }
                   />
                 </div>
@@ -244,7 +373,10 @@ const Index: FC<IndexProps> = ({}) => {
                     type="text"
                     value={page?._address?.state}
                     onChange={(e) =>
-                      setPage({ ...page, website: e.target.value })
+                      setPage({
+                        ...page,
+                        _address: { ...page._address, state: e.target.value },
+                      })
                     }
                   />
                 </div>
@@ -254,7 +386,44 @@ const Index: FC<IndexProps> = ({}) => {
                     type="text"
                     value={page?._address?.country}
                     onChange={(e) =>
-                      setPage({ ...page, website: e.target.value })
+                      setPage({
+                        ...page,
+                        _address: { ...page._address, country: e.target.value },
+                      })
+                    }
+                  />
+                </div>
+              </section>
+              <section className={styles.twoColumnGrid}>
+                <div className={styles.Addressinputbox}>
+                  <label>Latitude</label>
+                  <input
+                    type="text"
+                    value={page?._address?.latitude}
+                    onChange={(e) =>
+                      setPage({
+                        ...page,
+                        _address: {
+                          ...page._address,
+                          latitude: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                </div>
+                <div className={styles.Addressinputbox}>
+                  <label>Longitude</label>
+                  <input
+                    type="text"
+                    value={page?._address?.longitude}
+                    onChange={(e) =>
+                      setPage({
+                        ...page,
+                        _address: {
+                          ...page._address,
+                          longitude: e.target.value,
+                        },
+                      })
                     }
                   />
                 </div>
@@ -263,7 +432,7 @@ const Index: FC<IndexProps> = ({}) => {
             <div className={styles.inputbox}>
               <label>Is Onboarded:</label>
               <select
-                value={page.is_onboarded.toString()} // Convert boolean to string explicitly
+                value={page.is_onboarded?.toString()}
                 onChange={(e) => {
                   setPage({ ...page, is_onboarded: e.target.value === 'true' })
                 }}
@@ -275,12 +444,9 @@ const Index: FC<IndexProps> = ({}) => {
             <div className={styles.inputbox}>
               <label>Is Published:</label>
               <select
-                value={page?.is_published} // Convert boolean to string explicitly
+                value={page?.is_published?.toString()}
                 onChange={(e) => {
-                  setPage({
-                    ...page,
-                    is_published: e.target.value === 'true',
-                  })
+                  setPage({ ...page, is_published: e.target.value === 'true' })
                 }}
               >
                 <option value={'true'}>Yes</option>
@@ -290,12 +456,9 @@ const Index: FC<IndexProps> = ({}) => {
             <div className={styles.inputbox}>
               <label>Is Verified:</label>
               <select
-                value={page?.is_verified} // Convert boolean to string explicitly
+                value={page?.is_verified?.toString()}
                 onChange={(e) => {
-                  setPage({
-                    ...page,
-                    is_verified: e.target.value === 'true',
-                  })
+                  setPage({ ...page, is_verified: e.target.value === 'true' })
                 }}
               >
                 <option value={'true'}>Yes</option>
@@ -305,12 +468,9 @@ const Index: FC<IndexProps> = ({}) => {
             <div className={styles.inputbox}>
               <label>Is Locked:</label>
               <select
-                value={page?.is_locked} // Convert boolean to string explicitly
+                value={page?.is_locked?.toString()}
                 onChange={(e) => {
-                  setPage({
-                    ...page,
-                    is_locked: e.target.value === 'true',
-                  })
+                  setPage({ ...page, is_locked: e.target.value === 'true' })
                 }}
               >
                 <option value={'true'}>Yes</option>
@@ -320,12 +480,9 @@ const Index: FC<IndexProps> = ({}) => {
             <div className={styles.inputbox}>
               <label>Is Claimed:</label>
               <select
-                value={page?.is_claimed} // Convert boolean to string explicitly
+                value={page?.is_claimed?.toString()}
                 onChange={(e) => {
-                  setPage({
-                    ...page,
-                    is_claimed: e.target.value === 'true',
-                  })
+                  setPage({ ...page, is_claimed: e.target.value === 'true' })
                 }}
               >
                 <option value={'true'}>Yes</option>
@@ -336,6 +493,7 @@ const Index: FC<IndexProps> = ({}) => {
           </form>
         </div>
       </AdminLayout>
+
       {
         <CustomSnackbar
           message={snackbar?.message}
