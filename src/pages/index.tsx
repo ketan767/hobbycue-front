@@ -34,6 +34,9 @@ const Home: React.FC<PropTypes> = function () {
   const [showAddToHome, setShowAddToHome] = useState<boolean | 'loading'>(
     'loading',
   )
+  const { activeModal, closable, propData, hasChanges } = useSelector(
+    (state: RootState) => state.modal,
+  )
 
   const dispatch = useDispatch()
   const openLogin = () => {
@@ -468,12 +471,14 @@ const Home: React.FC<PropTypes> = function () {
         <Footer />
       </section>
 
-      {showAddToHome === true && (
-        <InstallPopup
-          showAddToHome={showAddToHome}
-          setShowAddToHome={setShowAddToHome}
-        />
-      )}
+      {activeModal !== 'post' &&
+        activeModal !== 'auth' &&
+        showAddToHome === true && (
+          <InstallPopup
+            showAddToHome={showAddToHome}
+            setShowAddToHome={setShowAddToHome}
+          />
+        )}
     </>
   )
 }
