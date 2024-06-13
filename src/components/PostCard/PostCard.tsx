@@ -250,7 +250,13 @@ const PostCard: React.FC<Props> = (props) => {
         {/* Card Header */}
         {(!has_link || props.currentSection === 'posts') && (
           <header>
-            <Link href={`/profile/${postData?._author?.profile_url}`}>
+            <Link
+              href={
+                postData?.author_type === 'User'
+                  ? `/profile/${postData?._author?.profile_url}`
+                  : `/page/${postData?._author?.page_url}`
+              }
+            >
               {postData?.author_type === 'Listing' ? (
                 postData?._author?.profile_image ? (
                   <img

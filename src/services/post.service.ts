@@ -1,11 +1,9 @@
 import axiosInstance, { operation } from './_axios'
 
 export const getAllPosts = async (query: string): Promise<ApiReturnObject> => {
-  const token = localStorage.getItem('token')
-  const headers = { Authorization: `Bearer ${token}` }
 
   try {
-    const res = await axiosInstance.get(`/post/?${query}`, { headers })
+    const res = await axiosInstance.get(`/post/?${query}`)
     return { res: res, err: null }
   } catch (error) {
     console.error(error)

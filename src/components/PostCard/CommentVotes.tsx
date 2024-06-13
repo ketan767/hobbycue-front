@@ -1,3 +1,4 @@
+import { openModal } from '@/redux/slices/modal'
 import { showProfileError } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
 import {
@@ -22,7 +23,9 @@ const PostCommentVotes: React.FC<Props> = ({
   postData,
   updateComments,
 }: Props) => {
-  const { activeProfile, user } = useSelector((state: RootState) => state.user)
+  const { activeProfile, user, isLoggedIn } = useSelector(
+    (state: RootState) => state.user,
+  )
   const [voteStatus, setVoteStatus] = useState<'up' | 'down' | null>(null)
 
   const [loading, setLoading] = useState(false)
@@ -164,9 +167,13 @@ const PostCommentVotes: React.FC<Props> = ({
       <div className={styles['upvote-downvote']}>
         <div
           onClick={() => {
-            if (user.is_onboarded) {
-              handleUpVote
-            } else HandleNotOnboard()
+            if (isLoggedIn) {
+              if (user.is_onboarded) {
+                handleUpVote
+              } else HandleNotOnboard()
+            } else {
+              dispatch(openModal({ type: 'auth', closable: true }))
+            }
           }}
           className={styles['upvote']}
         >
@@ -189,9 +196,13 @@ const PostCommentVotes: React.FC<Props> = ({
         <span className={styles['divider']}></span>
         <svg
           onClick={() => {
-            if (user.is_onboarded) {
-              handleDownVote
-            } else HandleNotOnboard()
+            if (isLoggedIn) {
+              if (user.is_onboarded) {
+                handleDownVote
+              } else HandleNotOnboard()
+            } else {
+              dispatch(openModal({ type: 'auth', closable: true }))
+            }
           }}
           cursor={'pointer'}
           width="24"

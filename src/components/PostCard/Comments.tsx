@@ -35,7 +35,9 @@ const PostComments = ({
   const router = useRouter()
   const dispatch = useDispatch()
   const inputRef: any = useRef<HTMLTextAreaElement>(null)
-  const { activeProfile, user } = useSelector((state: RootState) => state.user)
+  const { activeProfile, user, isLoggedIn } = useSelector(
+    (state: RootState) => state.user,
+  )
   const [comments, setComments] = useState<any>([])
   const [loading, setLoading] = useState(false)
   const [inputValue, setInputValue] = useState('')
@@ -58,37 +60,41 @@ const PostComments = ({
   }
 
   const addComment = async (event: any) => {
-    event.preventDefault()
-    if (user.is_onboarded === false) {
-      router.push(`/profile/${user.profile_url}`)
-      dispatch(showProfileError(true))
-      dispatch(closeModal())
-      return
-    }
-    if (isEmptyField(inputValue.trim())) return
-    const jsonData = {
-      postId: data?._id,
-      commentBy:
-        activeProfile?.type === 'user'
-          ? 'User'
-          : activeProfile.type === 'listing'
-          ? 'Listing'
-          : '',
-      commentById: activeProfile?.data?._id,
-      content: inputValue.trim(),
-      date: Date.now(),
-    }
-    if (!jsonData?.commentBy) return
-    setLoading(true)
-    const { err, res } = await addPostComment(jsonData)
-    if (err) {
-      console.log(err)
+    if (isLoggedIn) {
+      event.preventDefault()
+      if (user.is_onboarded === false) {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+        dispatch(closeModal())
+        return
+      }
+      if (isEmptyField(inputValue.trim())) return
+      const jsonData = {
+        postId: data?._id,
+        commentBy:
+          activeProfile?.type === 'user'
+            ? 'User'
+            : activeProfile.type === 'listing'
+            ? 'Listing'
+            : '',
+        commentById: activeProfile?.data?._id,
+        content: inputValue.trim(),
+        date: Date.now(),
+      }
+      if (!jsonData?.commentBy) return
+      setLoading(true)
+      const { err, res } = await addPostComment(jsonData)
+      if (err) {
+        console.log(err)
+        setLoading(false)
+        return
+      }
+      await fetchComments()
+      setInputValue('')
       setLoading(false)
-      return
+    } else {
+      dispatch(openModal({ type: 'auth', closable: true }))
     }
-    await fetchComments()
-    setInputValue('')
-    setLoading(false)
   }
 
   const showFeatureUnderDevelopment = () => {

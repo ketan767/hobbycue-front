@@ -19,7 +19,9 @@ const PostVotes: React.FC<Props> = ({
   updatePost,
   className,
 }: Props) => {
-  const { activeProfile, user } = useSelector((state: RootState) => state.user)
+  const { activeProfile, user, isLoggedIn } = useSelector(
+    (state: RootState) => state.user,
+  )
   const [voteStatus, setVoteStatus] = useState<'up' | 'down' | null>(null)
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
@@ -55,6 +57,10 @@ const PostVotes: React.FC<Props> = ({
   }
 
   const handleUpVote = async () => {
+    if (!isLoggedIn) {
+      dispatch(openModal({ type: 'auth', closable: true }))
+      return
+    }
     let jsonData = {
       upvoteBy: activeProfile.type, // 'user' | 'listing'
       userId: activeProfile.data._id,
@@ -137,11 +143,13 @@ const PostVotes: React.FC<Props> = ({
         <div
           className={styles['upvote']}
           onClick={() => {
-            user.is_onboarded
-              ? voteStatus === 'up'
-                ? removeVoteFunc()
-                : handleUpVote()
-              : HandleNotOnboard()
+            isLoggedIn
+              ? user?.is_onboarded
+                ? voteStatus === 'up'
+                  ? removeVoteFunc()
+                  : handleUpVote()
+                : HandleNotOnboard()
+              : dispatch(openModal({ type: 'auth', closable: true }))
           }}
         >
           <svg
@@ -164,11 +172,13 @@ const PostVotes: React.FC<Props> = ({
 
         <svg
           onClick={() => {
-            user.is_onboarded
-              ? voteStatus === 'down'
-                ? removeVoteFunc()
-                : handleDownVote()
-              : HandleNotOnboard()
+            isLoggedIn
+              ? user.is_onboarded
+                ? voteStatus === 'down'
+                  ? removeVoteFunc()
+                  : handleDownVote()
+                : HandleNotOnboard()
+              : dispatch(openModal({ type: 'auth', closable: true }))
           }}
           width="24"
           height="22"

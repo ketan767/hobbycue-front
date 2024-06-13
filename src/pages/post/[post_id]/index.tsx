@@ -18,12 +18,27 @@ import { checkIfUrlExists } from '@/utils'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
+import { setShowPageLoader } from '@/redux/slices/site'
 
 type Props = {}
 
 const CommunityLayout: React.FC<Props> = ({}) => {
   const router = useRouter()
-  const postId = router.query.post_id
+  const [postId, setPostId] = useState<string | null>(null)
+
+  const getLastIdFromUrl = (url: any) => {
+    const urlObj = new URL(url)
+    const paths = urlObj.pathname.split('/')
+    return paths[paths.length - 1]
+  }
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const currUrl = window.location.href
+      const extractedId = getLastIdFromUrl(currUrl)
+      setPostId(extractedId)
+      console.log(`Extracted ID: ${extractedId}`)
+    }
+  }, [])
 
   const { activeProfile } = useSelector((state: RootState) => state.user)
   const { allPosts } = useSelector((state: RootState) => state.post)
@@ -51,10 +66,10 @@ const CommunityLayout: React.FC<Props> = ({}) => {
   }
 
   useEffect(() => {
-    const data = allPosts.find((post: any) => post?._id?.toString() === postId)
-    if (data) return setPostData(data)
-    else getPost()
-  }, [activeProfile])
+    if (postId) {
+      getPost()
+    }
+  }, [activeProfile, postId])
   useEffect(() => {
     if (postData?.content) openPostmodal()
   }, [[postData?.content]])

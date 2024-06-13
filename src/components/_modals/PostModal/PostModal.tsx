@@ -39,6 +39,7 @@ import 'quill-emoji/dist/quill-emoji.css'
 import Link from 'next/link'
 import Slider from '@/components/Slider/Slider'
 import LinkPreviewLoader from '@/components/LinkPreviewLoader'
+import { setShowPageLoader } from '@/redux/slices/site'
 
 type Props = {
   confirmationModal?: boolean
@@ -179,7 +180,7 @@ export const PostModal: React.FC<Props> = ({
     }
   }, [newComment])
   const isMobile = useMediaQuery('(max-width:1100px)')
-
+  dispatch(setShowPageLoader(false))
   if (confirmationModal) {
     return (
       <SaveModal
