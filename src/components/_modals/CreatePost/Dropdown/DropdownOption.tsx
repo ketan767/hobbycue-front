@@ -5,24 +5,36 @@ import ChevronDown from '@/assets/svg/chevron-up.svg'
 import Image from 'next/image'
 import useOutsideAlerter from '@/hooks/useOutsideAlerter'
 import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
 
 type Props = {
   type: String
   value: String
   currentValue?: String
-  selected?:boolean
+  selected?: boolean
   display: String
   options: any
   onChange: any
   _id: any
-  item?:any
-  className?:string
+  item?: any
+  className?: string
 }
 
 export const DropdownOption: React.FC<Props> = (props) => {
-  const { value, type, display, options, onChange, currentValue, _id, selected, item, className } = props
+  const {
+    value,
+    type,
+    display,
+    options,
+    onChange,
+    currentValue,
+    _id,
+    selected,
+    item,
+    className,
+  } = props
   const { activeProfile, user } = useSelector((state: any) => state.user)
-
+  const { activeModal } = useSelector((state: RootState) => state.modal)
   const [active, setActive] = useState(
     user?.primary_address?._id === _id ? true : false,
   )
@@ -32,9 +44,9 @@ export const DropdownOption: React.FC<Props> = (props) => {
     setActive(!active)
   }
 
-  if(type==='hobby'){
+  if (type === 'hobby') {
     return (
-      <div className={styles['value-container']+" "+styles['no-border']}>
+      <div className={styles['value-container'] + ' ' + styles['no-border']}>
         <p
           className={`${styles['dropdown-value']} ${
             selected ? styles['dropdown-value-active'] : ''
@@ -49,7 +61,7 @@ export const DropdownOption: React.FC<Props> = (props) => {
 
   if (type === 'text') {
     return (
-      <div className={styles['value-container']+` ${className}`}>
+      <div className={styles['value-container'] + ` ${className}`}>
         <p
           className={`${styles['dropdown-value']} ${
             currentValue === value ? styles['dropdown-value-active'] : ''
@@ -62,10 +74,17 @@ export const DropdownOption: React.FC<Props> = (props) => {
     )
   }
   return (
-    <div data-column="2" className={styles['dropdown-container']+` ${className}`}>
+    <div
+      data-column="2"
+      className={styles['dropdown-container'] + ` ${className}`}
+    >
       <aside
         className={`
-    ${styles['heading']} 
+    ${styles['heading']} ${
+          activeModal === 'create-post'
+            ? styles['create-post-width']
+            : styles['community-dropdown-width']
+        }
     ${currentValue === display?.split(' ')[0] ? styles['city-select'] : ''} 
     ${active ? styles['active'] : ''}
   `}
@@ -73,7 +92,12 @@ export const DropdownOption: React.FC<Props> = (props) => {
       >
         <p>{display}</p>
       </aside>
-      <aside className={styles['drop-down']} onClick={toggle}>
+      <aside
+        className={`${styles['drop-down']} ${
+          activeModal === 'create-post' && styles['drop-down-createpost']
+        }`}
+        onClick={toggle}
+      >
         <Image
           src={ChevronDown}
           alt="arrow-down"
