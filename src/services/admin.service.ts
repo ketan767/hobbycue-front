@@ -11,6 +11,19 @@ export const admindashboard = async () => {
     }
   }
 
+  /** Get `/api/admin/support` */
+  export const getAdminHobbies = async (query: string,): Promise<ApiReturnObject> => {
+    const token = localStorage.getItem('token')
+    const headers = { Authorization: `Bearer ${token}` }
+    try {
+      const res = await axiosInstance.get(`/admin/hobby/?${query}`, { headers })
+      return { res: res, err: null }
+    } catch (error) {
+      console.error(error)
+      return { err: error, res: null }
+    }
+  }
+
 
 /** Get `/api/admin/support` */
   export const getSupports = async (query: string,): Promise<ApiReturnObject> => {

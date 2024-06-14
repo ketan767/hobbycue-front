@@ -932,19 +932,17 @@ export const CreatePost: React.FC<Props> = ({
                     />
                   )} */}
                   <div className={styles['metadata-content']}>
-                    {metaData?.icon && (
-                      <img
-                        className={styles['metadata']}
-                        src={
-                          (typeof metaData?.image === 'string' &&
-                            metaData.image) ||
-                          (typeof metaData?.icon === 'string' &&
-                            metaData.icon) ||
-                          defaultImg
-                        }
-                        alt=""
-                      />
-                    )}
+                    <img
+                      className={styles['metadata']}
+                      src={
+                        (typeof metaData?.image === 'string' &&
+                          metaData.image) ||
+                        (typeof metaData?.icon === 'string' && metaData.icon) ||
+                        defaultImg
+                      }
+                      alt=""
+                    />
+
                     <div className={styles['metadata-info-container']}>
                       {metaData?.title && (
                         <p className={styles['metadata-title']}>

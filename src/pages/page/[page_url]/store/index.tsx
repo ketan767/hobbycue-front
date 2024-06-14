@@ -24,7 +24,9 @@ const ListingStore: React.FC<Props> = (props) => {
   const dispatch = useDispatch()
   const { listing } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(listing)
-  const { isLoggedIn, isAuthenticated, user } = useSelector((state: RootState) => state.user)
+  const { isLoggedIn, isAuthenticated, user } = useSelector(
+    (state: RootState) => state.user,
+  )
   // const { listingPageData } = useSelector((state: RootState) => state.site)
   console.log('posts data', props.data)
   useEffect(() => {
@@ -70,6 +72,23 @@ const ListingStore: React.FC<Props> = (props) => {
   return (
     <>
       <Head>
+        <meta
+          property="og:image"
+          content={`${props?.data?.pageData?.profile_image}`}
+        />
+        <meta
+          property="og:image:secure_url"
+          content={`${props?.data?.pageData?.profile_image}`}
+        />
+        <meta
+          property="og:description"
+          content={`${props?.data?.pageData?.tagline ?? ''}`}
+        />
+        <meta
+          property="og:url"
+          content={`${process.env.NEXT_PUBLIC_BASE_URL}/page/${props?.data?.pageData?.slug}/store`}
+        />
+        <meta property="og:image:alt" content="Profile picture" />
         <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
       </Head>
 

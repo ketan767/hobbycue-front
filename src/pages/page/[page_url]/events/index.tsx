@@ -68,16 +68,32 @@ const ListingEvents: React.FC<Props> = (props) => {
   }
   return (
     <>
+      <Head>
+        <meta
+          property="og:image"
+          content={`${props?.data?.pageData?.profile_image}`}
+        />
+        <meta
+          property="og:image:secure_url"
+          content={`${props?.data?.pageData?.profile_image}`}
+        />
+        <meta
+          property="og:description"
+          content={`${props?.data?.pageData?.tagline ?? ''}`}
+        />
+        <meta
+          property="og:url"
+          content={`${process.env.NEXT_PUBLIC_BASE_URL}/page/${props?.data?.pageData?.slug}/events`}
+        />
+        <meta property="og:image:alt" content="Profile picture" />
+        <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
+      </Head>
       {props.data.pageData.type === 3 ? (
         <div className={styles['no-events-wrapper']}>
           No events for page type Program
         </div>
       ) : (
         <div>
-          <Head>
-            <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
-          </Head>
-
           <ListingPageLayout
             activeTab={'events'}
             data={props.data}
