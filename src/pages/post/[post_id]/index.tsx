@@ -32,6 +32,7 @@ const CommunityLayout: React.FC<Props> = ({}) => {
     const paths = urlObj.pathname.split('/')
     return paths[paths.length - 1]
   }
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const currUrl = window.location.href
@@ -56,6 +57,7 @@ const CommunityLayout: React.FC<Props> = ({}) => {
   const [isLoadingPosts, setIsLoadingPosts] = useState(false)
   const [postData, setPostData] = useState<any>(null)
   const dispatch = useDispatch()
+
   const getPost = async () => {
     const params = new URLSearchParams(
       `populate=_author,_genre,_hobby&_id=${postId}`,
@@ -70,6 +72,7 @@ const CommunityLayout: React.FC<Props> = ({}) => {
     }
     setIsLoadingPosts(false)
   }
+
   const openPostmodal = () => {
     dispatch(setActivePost(postData))
     dispatch(openModal({ type: 'post', closable: false }))
@@ -80,9 +83,10 @@ const CommunityLayout: React.FC<Props> = ({}) => {
       getPost()
     }
   }, [activeProfile, postId])
+
   useEffect(() => {
     if (postData?.content) openPostmodal()
-  }, [[postData?.content]])
+  }, [postData?.content])
 
   useEffect(() => {
     if (postData?.has_link) {
