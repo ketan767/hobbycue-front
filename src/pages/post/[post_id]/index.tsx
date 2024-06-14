@@ -112,7 +112,7 @@ const CommunityLayout: React.FC<Props> = ({}) => {
     }
   }, [postData])
   console.warn('postdaaata', postData)
-  const processedContent = postData.content
+  const processedContent = postData?.content
 
   return (
     <>
