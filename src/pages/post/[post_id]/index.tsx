@@ -68,6 +68,7 @@ const CommunityLayout: React.FC<Props> = ({}) => {
     if (err) return console.log(err)
     if (res.data.success) {
       setPostData(res.data.data.posts?.[0])
+
       router.push('/community')
     }
     setIsLoadingPosts(false)
@@ -110,22 +111,26 @@ const CommunityLayout: React.FC<Props> = ({}) => {
       }
     }
   }, [postData])
+  console.warn('postdaaata', postData)
+  const processedContent = postData.content
 
   return (
     <>
       <Head>
-        <meta property="og:image" content={`${metaData?.image}`} />
-        <meta property="og:image:secure_url" content={`${metaData?.image}`} />
         <meta
-          property="og:description"
-          content={`${postData?.content.replace(/<img\b[^>]*>/g, '')}`}
+          property="og:image"
+          content={`${metaData?.image ? metaData?.image : postData?.media[0]}`}
         />
+        <meta property="og:image:secure_url" content={`${metaData?.image}`} />
+        <meta property="og:description" content={`${processedContent}`} />
         <meta
           property="og:url"
           content={`${process.env.NEXT_PUBLIC_BASE_URL}/post/${postData?._id}`}
         />
         <meta property="og:image:alt" content="Profile picture" />
-        <title>{`${postData?._author?.full_name} | HobbyCue`}</title>
+        <title>{`${
+          postData?._author?.full_name ? postData?._author?.full_name : ''
+        } | HobbyCue`}</title>
       </Head>
 
       <CommunityPageLayout activeTab="posts" singlePostPage={true}>
