@@ -114,7 +114,7 @@ const CommunityLayout: React.FC<Props> = ({}) => {
         <meta property="og:image:secure_url" content={`${metaData?.image}`} />
         <meta
           property="og:description"
-          content={`${postData.content.replace(/<img\b[^>]*>/g, '')}`}
+          content={`${postData?.content.replace(/<img\b[^>]*>/g, '')}`}
         />
         <meta
           property="og:url"
