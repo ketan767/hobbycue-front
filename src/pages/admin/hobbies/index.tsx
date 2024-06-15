@@ -17,9 +17,18 @@ import Link from 'next/link'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
-import { deleteUserByAdmin, getHobbyRequests } from '@/services/admin.service'
+import {
+  UpdateHobbyreq,
+  deleteUserByAdmin,
+  getHobbyRequests,
+} from '@/services/admin.service'
 import { formatDateTime } from '@/utils'
 import StatusDropdown from '@/components/_formElements/StatusDropdown'
+import selectIcon from '@/assets/svg/select_icon.svg'
+import InProgressIcon from '@/assets/svg/In_progress_icon.svg'
+import AcceptedIcon from '@/assets/svg/checked_icon.svg'
+import RejectedIcon from '@/assets/svg/cancel_icon.svg'
+import AdminActionModal from '@/components/_modals/AdminModals/ActionModal'
 
 type SearchInput = {
   search: InputData<string>
@@ -33,6 +42,7 @@ const HobbiesRequest: React.FC = () => {
   const [email, setEmail] = useState('')
   const [searchResults, setSearchResults] = useState<any[]>([])
   const [pageNumber, setPageNumber] = useState<number[]>([])
+  const [showAdminActionModal, setShowAdminActionModal] = useState(false)
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     setData((prev) => ({ ...prev, search: { value, error: null } }))
@@ -50,6 +60,12 @@ const HobbiesRequest: React.FC = () => {
     type: 'success',
     display: false,
     message: '',
+  })
+  const [hobbyData, setHobbydata] = useState({
+    hobby: '',
+    description: '',
+    status: '',
+    user_id: '',
   })
 
   const handleSearch = async (event: any) => {
@@ -243,6 +259,40 @@ const HobbiesRequest: React.FC = () => {
     }
   }
 
+  const handleSubmit = async () => {
+    let jsondata = {
+      user_id: hobbyData?.user_id,
+      hobby: hobbyData?.hobby,
+      status: hobbyData?.status,
+      description: hobbyData?.description,
+    }
+
+    const { err, res } = await UpdateHobbyreq(jsondata)
+  }
+  console.warn()
+  const handleAction = async (hobbyreq: any) => {
+    setHobbydata({
+      user_id: hobbyreq?.user_id?._id,
+      hobby: hobbyreq?.hobby,
+      description: hobbyreq?.description,
+      status: hobbyreq?.status,
+    })
+    setShowAdminActionModal(true)
+  }
+
+  if (showAdminActionModal) {
+    return (
+      <>
+        <AdminActionModal
+          data={hobbyData}
+          setData={setHobbydata}
+          handleSubmit={handleSubmit}
+          handleClose={() => setShowAdminActionModal(false)}
+        />
+      </>
+    )
+  }
+
   return (
     <>
       <AdminLayout>
@@ -317,8 +367,25 @@ const HobbiesRequest: React.FC = () => {
                       {/* posts not in logs */}0
                     </td>
                     <td>
-                      <div className={styles.actions}>
-                        <StatusDropdown />
+                      <div
+                        onClick={() => handleAction(hobbyreq)}
+                        className={styles.actions}
+                      >
+                        {pencilSvg}
+
+                        <div>
+                          {hobbyreq?.status == 'accepted' ? (
+                            <Image src={AcceptedIcon} alt="" />
+                          ) : hobbyreq?.status == 'rejected' ? (
+                            <Image src={RejectedIcon} alt="" />
+                          ) : hobbyreq?.status == 'in_progress' ? (
+                            <Image src={InProgressIcon} alt="" />
+                          ) : hobbyreq?.status == 'New' ? (
+                            <Image src={selectIcon} alt="" />
+                          ) : (
+                            ''
+                          )}
+                        </div>
                       </div>
                     </td>
                   </tr>

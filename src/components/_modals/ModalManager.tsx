@@ -84,6 +84,8 @@ import { showProfileError, updateUser } from '@/redux/slices/user'
 import ListingReview from './EditListing/ListingReview'
 import ListingProductVariantsModal from './EditListing/ListingProductVariants'
 import ListingProductPurchase from './ListingProductPurchase'
+import HandleAdminAction from './AdminModals/ActionModal'
+import AdminActionModal from './AdminModals/ActionModal'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -553,6 +555,8 @@ const ModalManager: React.FC = () => {
               {activeModal === 'View-Image-Modal' && (
                 <ViewImageModal {...viewImageProps} />
               )}
+
+              {activeModal === 'HandleAdminAction' && <AdminActionModal />}
               {/* Modal Close Icon */}
               {closable &&
                 activeModal !== 'user-onboarding-welcome' &&

@@ -18,13 +18,19 @@ import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import {
+  UpdateClaim,
   deleteUserByAdmin,
   getClaimRequests,
   getHobbyRequests,
 } from '@/services/admin.service'
 import { formatDateTime } from '@/utils'
 import StatusDropdown from '@/components/_formElements/StatusDropdown'
-
+import HandleAdminAction from '@/components/_modals/AdminModals/ActionModal'
+import AdminActionModal from '@/components/_modals/AdminModals/ActionModal'
+import selectIcon from '@/assets/svg/select_icon.svg'
+import InProgressIcon from '@/assets/svg/In_progress_icon.svg'
+import AcceptedIcon from '@/assets/svg/checked_icon.svg'
+import RejectedIcon from '@/assets/svg/cancel_icon.svg'
 type SearchInput = {
   search: InputData<string>
 }
@@ -34,6 +40,7 @@ const ClaimsPage: React.FC = () => {
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
   })
+  const [showAdminActionModal, setShowAdminActionModal] = useState(false)
   const [email, setEmail] = useState('')
   const [searchResults, setSearchResults] = useState<any[]>([])
   const [pageNumber, setPageNumber] = useState<number[]>([])
@@ -56,6 +63,14 @@ const ClaimsPage: React.FC = () => {
     message: '',
   })
 
+  const [claimdata, setClaimData] = useState({
+    pageUrl: '',
+    description: '',
+    status: '',
+    title: '',
+  })
+
+  const dispatch = useDispatch()
   const handleSearch = async (event: any) => {
     const searchValue = data.search.value.trim()
     event.preventDefault()
@@ -247,6 +262,40 @@ const ClaimsPage: React.FC = () => {
     }
   }
 
+  const handleSubmit = async () => {
+    let jsondata = {
+      pageUrl: claimdata?.pageUrl,
+      status: claimdata?.status,
+      description: claimdata?.description,
+      title: claimdata?.title,
+    }
+
+    const { err, res } = await UpdateClaim(jsondata)
+  }
+
+  const handleAction = async (hobbyreq: any) => {
+    setClaimData({
+      title: hobbyreq?.title,
+      description: hobbyreq?.description,
+      pageUrl: hobbyreq?.pageUrl,
+      status: hobbyreq?.status,
+    })
+    setShowAdminActionModal(true)
+  }
+
+  if (showAdminActionModal) {
+    return (
+      <>
+        <AdminActionModal
+          data={claimdata}
+          setData={setClaimData}
+          handleSubmit={handleSubmit}
+          handleClose={() => setShowAdminActionModal(false)}
+        />
+      </>
+    )
+  }
+
   return (
     <>
       <AdminLayout>
@@ -313,8 +362,25 @@ const ClaimsPage: React.FC = () => {
 
                     <td className={styles.pagesLength}>{hobbyreq?.link}</td>
                     <td>
-                      <div className={styles.actions}>
-                        <StatusDropdown />
+                      <div
+                        onClick={() => handleAction(hobbyreq)}
+                        className={styles.actions}
+                      >
+                        {pencilSvg}
+
+                        <div>
+                          {hobbyreq?.status == 'accepted' ? (
+                            <Image src={AcceptedIcon} alt="" />
+                          ) : hobbyreq?.status == 'rejected' ? (
+                            <Image src={RejectedIcon} alt="" />
+                          ) : hobbyreq?.status == 'in_progress' ? (
+                            <Image src={InProgressIcon} alt="" />
+                          ) : hobbyreq?.status == 'New' ? (
+                            <Image src={selectIcon} alt="" />
+                          ) : (
+                            ''
+                          )}
+                        </div>
                       </div>
                     </td>
                   </tr>

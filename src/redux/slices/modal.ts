@@ -60,6 +60,7 @@ export type ModalType =
   | 'User-Contact-To-Owner'
   | 'add-genre'
   | 'save-Modal'
+  | 'HandleAdminAction'
 
 
   interface ModalState {

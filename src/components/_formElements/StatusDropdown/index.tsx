@@ -1,5 +1,4 @@
-// components/StatusDropdown.js
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styles from './StatusDropdown.module.css'
 import selectIcon from '@/assets/svg/select_icon.svg'
 import InProgressIcon from '@/assets/svg/In_progress_icon.svg'
@@ -8,20 +7,40 @@ import RejectedIcon from '@/assets/svg/cancel_icon.svg'
 import Image from 'next/image'
 
 const statusOptions = [
-  { label: 'New', icon: selectIcon, color: 'gray' },
-  { label: 'In Progress', icon: InProgressIcon, color: 'blue' },
-  { label: 'Accepted', icon: AcceptedIcon, color: 'green' },
-  { label: 'Rejected', icon: RejectedIcon, color: 'red' },
+  { label: 'New', icon: selectIcon, color: 'gray', status: 'New' },
+  {
+    label: 'In Progress',
+    icon: InProgressIcon,
+    color: 'blue',
+    status: 'in_progress',
+  },
+  { label: 'Accepted', icon: AcceptedIcon, color: 'green', status: 'accepted' },
+  { label: 'Rejected', icon: RejectedIcon, color: 'red', status: 'rejected' },
 ]
 
-const StatusDropdown: React.FC = () => {
+const StatusDropdown: React.FC<{
+  status?: string
+  onStatusChange: (status: any) => void
+}> = ({ status, onStatusChange }) => {
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedStatus, setSelectedStatus] = useState(statusOptions[0])
+  const [selectedStatus, setSelectedStatus] = useState(
+    statusOptions.find((option) => option.status === status) ||
+      statusOptions[0],
+  )
+
+  useEffect(() => {
+    setSelectedStatus(
+      statusOptions.find((option) => option.status === status) ||
+        statusOptions[0],
+    )
+  }, [status])
 
   const toggleDropdown = () => setIsOpen(!isOpen)
+
   const selectStatus = (status: any) => {
     setSelectedStatus(status)
     setIsOpen(false)
+    onStatusChange(status)
   }
 
   return (
@@ -66,7 +85,6 @@ const StatusDropdown: React.FC = () => {
                 width={24}
                 height={24}
               />
-
               <span className={styles.dropdownLabel}>{status.label}</span>
             </li>
           ))}

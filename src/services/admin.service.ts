@@ -215,3 +215,29 @@ export const getCommunities = async (): Promise<ApiReturnObject> => {
   }
 }
 
+/** Post `/api/admin/hobbyreq` */
+export const UpdateClaim = async (data:any): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.post(`/admin/claimreq`, data, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+
+/** Post `/api/admin/hobbreq` */
+export const UpdateHobbyreq = async (data:any): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+  try {
+    const res = await axiosInstance.post(`/admin/hobbyreq`, data, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}

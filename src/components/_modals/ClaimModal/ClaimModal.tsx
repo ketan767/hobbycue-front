@@ -38,6 +38,7 @@ const ClaimModal = (props: Props) => {
     pageUrl: String(listingModalData?.page_url),
     userRelation: '',
     websiteLink: 'https://',
+    title: listingModalData?.title,
   })
 
   const [inputErrs, setInputErrs] = useState<{ [key: string]: string | null }>({
@@ -83,6 +84,7 @@ const ClaimModal = (props: Props) => {
   const pageUrl = formData.pageUrl
   const HowRelated = formData.userRelation
   const link = formData.websiteLink
+  const title = formData?.title
 
   const HandleClaim = async () => {
     if (!formData.userRelation || formData.userRelation === '') {
@@ -104,13 +106,14 @@ const ClaimModal = (props: Props) => {
           pageUrl,
           HowRelated,
           link,
+          title,
         })
         setSubmitBtnLoading(false)
         if (err === null || err === undefined) {
           setSnackbar?.({
             show: true,
             type: 'success',
-            message: 'Claim request sent successfully',
+            message: 'Page claimed successfully',
           })
           dispatch(closeModal())
           window.location.reload()
@@ -118,11 +121,13 @@ const ClaimModal = (props: Props) => {
           setSnackbar?.({
             show: true,
             type: 'error',
-            message: 'Claim request not sent',
+            message: 'Claim request error',
           })
         }
       } else {
         const { err, res } = await ClaimRequest({
+          userId,
+          listingId,
           name,
           email,
           phonenumber,
@@ -130,6 +135,7 @@ const ClaimModal = (props: Props) => {
           pageUrl,
           HowRelated,
           link,
+          title,
         })
         setSubmitBtnLoading(false)
         if (err === null || err === undefined) {

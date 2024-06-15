@@ -338,9 +338,7 @@ const AdminReport: React.FC = () => {
                     </td>
 
                     <td>
-                      <div className={styles.actions}>
-                        <StatusDropdown />
-                      </div>
+                      <div className={styles.actions}></div>
                     </td>
                   </tr>
                 ))}

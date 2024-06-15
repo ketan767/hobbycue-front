@@ -77,6 +77,7 @@ interface ClaimListingPayload {
   pageUrl: string
   HowRelated: string
   link: string
+  title: any
 }
 
 interface InvitetoHobbycuePayload {
