@@ -23,6 +23,7 @@ const Dropdown: React.FC<Props> = ({
   const Reviewref = useRef<HTMLLIElement>(null)
   const supportRef = useRef<HTMLLIElement>(null)
   const reportRef = useRef<HTMLLIElement>(null)
+  const transferRef = useRef<HTMLLIElement>(null)
   const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
   const router = useRouter()
 
@@ -90,16 +91,35 @@ const Dropdown: React.FC<Props> = ({
             dispatch(showProfileError(true))
           }
         } else dispatch(openModal({ type: 'auth', closable: true }))
+      } else if (
+        event.target.nodeName == transferRef.current?.nodeName &&
+        event.target.textContent === transferRef.current?.textContent
+      ) {
+        if (isLoggedIn) {
+          if (user.is_onboarded) {
+            dispatch(
+              openModal({
+                type: 'listing-contact-edit',
+                closable: true,
+                propData: { istransfer: true },
+              }),
+            )
+            handleClose()
+          } else {
+            router.push(`/profile/${user.profile_url}`)
+            dispatch(showProfileError(true))
+          }
+        } else dispatch(openModal({ type: 'auth', closable: true }))
       } else if (ref.current && !ref.current.contains(event.target)) {
         handleClose()
         return
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
-    document.addEventListener('touchstart', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside)
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
-      document.removeEventListener('touchstart', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside)
     }
   }, [ref])
 
@@ -107,7 +127,12 @@ const Dropdown: React.FC<Props> = ({
     <>
       <div className={styles['dropdown']} ref={ref}>
         <ul className={styles['customList']}>
-          {userType === 'edit' && <li ref={supportRef}>Support</li>}
+          {userType === 'edit' && (
+            <>
+              <li ref={supportRef}>Support</li>
+              <li ref={transferRef}>Transfer</li>
+            </>
+          )}
           {userType === 'anonymous' && (
             <>
               <li ref={Claimref}>Claim</li>

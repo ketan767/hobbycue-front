@@ -69,6 +69,7 @@ type ProfileAddressPayload = {
 
 interface ClaimListingPayload {
   userId?: string,
+  owner_id?: string,
    listingId?: any,
   name: string
   email: string

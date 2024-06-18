@@ -159,8 +159,11 @@ const AdminSupport: React.FC = () => {
     }
   }
   function extractPath(url: any) {
-    const urlObject = new URL(url)
-    return urlObject.pathname.slice(1)
+    console.log('urlss', url)
+    if (url) {
+      const urlObject = new URL(url)
+      return urlObject.pathname.slice(1)
+    }
   }
 
   const pagesLength = (user: any) => {
@@ -326,7 +329,7 @@ const AdminSupport: React.FC = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        {extractPath(user.for_url)}
+                        {extractPath(user?.for_url)}
                       </a>
                     </td>
                     <td className={styles.userPhone}>

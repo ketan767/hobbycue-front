@@ -613,7 +613,10 @@ const ListingPageMain: React.FC<Props> = ({
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
                 dispatch(
-                  openModal({ type: 'listing-contact-edit', closable: true }),
+                  openModal({
+                    type: 'listing-contact-edit',
+                    closable: true,
+                  }),
                 )
               }
               setDisplayData={(arg0: boolean) => {
@@ -1359,7 +1362,10 @@ const ListingPageMain: React.FC<Props> = ({
             showEditButton={listingLayoutMode === 'edit'}
             onEditBtnClick={() =>
               dispatch(
-                openModal({ type: 'listing-contact-edit', closable: true }),
+                openModal({
+                  type: 'listing-contact-edit',
+                  closable: true,
+                }),
               )
             }
             setDisplayData={setShowContact}

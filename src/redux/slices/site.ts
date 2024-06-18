@@ -7,6 +7,7 @@ type ListingModalData = {
    * * `3 -> PROGRAM`
    * * `4 -> PRODUCT`
    */
+  admin?: string 
   type?: ListingPages | null
   page_type?: string | string[]
   title?: string

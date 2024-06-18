@@ -197,7 +197,7 @@ const HobbiesRequest: React.FC = () => {
   }
   const FetchHobbyReq = async () => {
     const { res, err } = await getHobbyRequests(
-      `limit=${pagelimit}&sort=-last_login&page=${page}&populate=user_id`,
+      `limit=${pagelimit}&sort=-last_login&page=${page}&populate=user_id,listing_id`,
     )
     if (err) {
       console.log('An error', err)
@@ -359,7 +359,9 @@ const HobbiesRequest: React.FC = () => {
                     </td>
 
                     <td className={styles.LoginType}>
-                      {hobbyreq.user_id?.full_name}
+                      {hobbyreq.user_type == 'user'
+                        ? hobbyreq.user_id?.full_name
+                        : hobbyreq.listing_id?.title}
                     </td>
                     <td className={styles.lastLoggedIn}>{hobbyreq?.similar}</td>
                     <td className={styles.pagesLength}>{hobbyreq?.status}</td>

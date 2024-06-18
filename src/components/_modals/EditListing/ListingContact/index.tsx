@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles.module.css'
-import { Button, CircularProgress } from '@mui/material'
+import { Button, CircularProgress, debounce } from '@mui/material'
 import { MenuItem, Select } from '@mui/material'
 import {
   addUserAddress,
   getMyProfileDetail,
+  searchUsers,
   updateUserAddress,
 } from '@/services/user.service'
 import {
@@ -18,7 +19,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { RootState } from '@/redux/store'
-import { updateListing } from '@/services/listing.service'
+import {
+  searchPages,
+  transferListing,
+  updateListing,
+} from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
 import OutlinedButton from '@/components/_buttons/OutlinedButton'
 import Checkbox from '@mui/material/Checkbox'
@@ -31,6 +36,7 @@ import NextIcon from '@/assets/svg/Next.svg'
 import { countryData } from '@/utils/countrydata'
 import Image from 'next/image'
 import DropdownMenu from '@/components/DropdownMenu'
+import DefaultProfile from '@/assets/svg/default-images/default-user-icon.svg'
 
 type Props = {
   onComplete?: () => void
@@ -41,6 +47,7 @@ type Props = {
   isError?: boolean
   onStatusChange?: (isChanged: boolean) => void
   onBoarding?: boolean
+  propData?: any
 }
 type ListingContactData = {
   public_email: InputData<string>
@@ -66,11 +73,14 @@ const ListingContactEditModal: React.FC<Props> = ({
   handleClose,
   onStatusChange,
   onBoarding,
+  propData,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
-
+  const isTransferModal = propData?.istransfer
+  console.warn('propsdataa', propData)
+  const [disableAdmin, SetdisableAdmin] = useState(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backDisabled, SetBackDisabled] = useState(false)
@@ -100,6 +110,13 @@ const ListingContactEditModal: React.FC<Props> = ({
   const [selectedWpCountryCode, setWpSelectedCountryCode] = useState('+91')
   const [isChanged, setIsChanged] = useState(false)
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+  const [showDropdown, setShowDropdown] = useState(false)
+  const [dropdownLoading, setDropdownLoading] = useState<boolean>(true)
+  const [allDropdownValues, setAllDropdownValues] = useState<any>([])
+  const [selectedPage, setSelectedPage] = useState<any>({})
+  const dropdownRef = useRef<HTMLInputElement>(null)
+  const [pageInputValue, setPageInputValue] = useState('')
 
   useEffect(() => {
     setInitialData((prev) => {
@@ -133,11 +150,16 @@ const ListingContactEditModal: React.FC<Props> = ({
   }, [])
   const handleInputChange = (event: any) => {
     const { name, value } = event.target
-    if((data.phone.error==='At least one mode of contact is required'||data.public_email.error==='At least one mode of contact is required')&&(name==='phone'||name==='public_email')){
+    if (
+      (data.phone.error === 'At least one mode of contact is required' ||
+        data.public_email.error ===
+          'At least one mode of contact is required') &&
+      (name === 'phone' || name === 'public_email')
+    ) {
       setData((prev) => ({
         ...prev,
-        phone:{...prev.phone,error:null},
-        public_email:{...prev.public_email,error:null},
+        phone: { ...prev.phone, error: null },
+        public_email: { ...prev.public_email, error: null },
         [name]: {
           ...prev[name as keyof ListingContactData],
           number: value || '',
@@ -324,6 +346,15 @@ const ListingContactEditModal: React.FC<Props> = ({
     if (hasError === true) {
       return
     }
+    if (isTransferModal) {
+      const trasnferdata = {
+        userId: selectedPage,
+        listingId: listingModalData._id,
+        OwnerId: user._id,
+      }
+      const { err, res } = await transferListing(trasnferdata)
+    }
+
     const jsonData = {
       phone: {
         number: data.phone.number?.replace(/\s/g, ''),
@@ -336,7 +367,6 @@ const ListingContactEditModal: React.FC<Props> = ({
         prefix: selectedWpCountryCode,
       },
     }
-    console.log('jsonData', jsonData)
 
     setSubmitBtnLoading(true)
     const { err, res } = await updateListing(listingModalData._id, jsonData)
@@ -352,8 +382,32 @@ const ListingContactEditModal: React.FC<Props> = ({
     }
   }
 
+  const debouncedSearch = debounce(async (value: any) => {
+    setShowDropdown(true)
+    setDropdownLoading(true)
+    const { res, err } = await searchUsers({ full_name: value })
+    if (res) {
+      setAllDropdownValues(res.data)
+    } else {
+      // Handle error
+    }
+    setDropdownLoading(false)
+  }, 300)
+
+  const handleInputChangeAdmin = (e: any) => {
+    const { value } = e.target
+    setPageInputValue(value)
+    debouncedSearch(value)
+  }
+
   useEffect(() => {
-    emailRef?.current?.focus()
+    if (isTransferModal) {
+      setTimeout(() => {
+        inputRef?.current?.focus()
+      }, 100)
+    } else {
+      emailRef?.current?.focus()
+    }
     setData((prev) => {
       return {
         public_email: {
@@ -406,8 +460,8 @@ const ListingContactEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        if(event?.srcElement?.tagName === "svg"){
-          return;
+        if (event?.srcElement?.tagName === 'svg') {
+          return
         }
         nextButtonRef.current?.click()
       }
@@ -541,20 +595,74 @@ const ListingContactEditModal: React.FC<Props> = ({
 
             <div className={styles['two-column-grid']}>
               <div
-                className={`${styles['input-box-admin']} ${styles['input-box']}`}
+                className={`${
+                  isTransferModal
+                    ? styles['input-box']
+                    : styles['input-box-admin']
+                } ${styles['input-box']}`}
               >
                 <label> Page Admin </label>
                 <input
                   type="text"
                   placeholder={`Page Admin`}
-                  value={data.page_admin.value}
+                  value={
+                    isTransferModal ? pageInputValue : data.page_admin.value
+                  }
                   name="page_admin"
                   autoComplete="page_admin"
                   ref={inputRef}
-                  onChange={handleInputChange}
-                  disabled
+                  onChange={(e) => {
+                    if (isTransferModal) {
+                      handleInputChangeAdmin(e)
+                      setPageInputValue(e.target.value)
+                    } else {
+                      handleInputChange(e)
+                    }
+                  }}
+                  disabled={!isTransferModal ? true : false}
                 />
               </div>
+              {showDropdown && (
+                <div className={styles['dropdown']} ref={dropdownRef}>
+                  {dropdownLoading ? (
+                    <div className={styles.dropdownItem}>Loading...</div>
+                  ) : allDropdownValues?.length !== 0 ? (
+                    allDropdownValues?.map((item: any) => {
+                      return (
+                        <div
+                          key={item?._id}
+                          onClick={() => {
+                            setSelectedPage(item._id)
+                            setPageInputValue(item.full_name)
+                            setShowDropdown(false)
+                          }}
+                          className={styles.dropdownItem}
+                        >
+                          {item.profile_image ? (
+                            <img
+                              src={item?.profile_image}
+                              alt="profile"
+                              width={40}
+                              height={40}
+                            />
+                          ) : (
+                            <Image
+                              src={DefaultProfile}
+                              alt="profile"
+                              width={40}
+                              height={40}
+                            />
+                          )}
+
+                          <p>{item?.full_name}</p>
+                        </div>
+                      )
+                    })
+                  ) : (
+                    <div className={styles.dropdownItem}>No results found</div>
+                  )}
+                </div>
+              )}
 
               <div
                 className={`${styles['input-box']} ${

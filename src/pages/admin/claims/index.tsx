@@ -267,7 +267,6 @@ const ClaimsPage: React.FC = () => {
       pageUrl: claimdata?.pageUrl,
       status: claimdata?.status,
       description: claimdata?.description,
-      title: claimdata?.title,
     }
 
     const { err, res } = await UpdateClaim(jsondata)

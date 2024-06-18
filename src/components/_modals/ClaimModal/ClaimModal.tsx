@@ -30,6 +30,7 @@ const ClaimModal = (props: Props) => {
 
   const [formData, setFormData] = useState({
     id: userData._id,
+    owner_id: listingModalData.admin,
     listing_id: listingModalData._id,
     profileName: userData.full_name,
     email: userData.email,
@@ -76,6 +77,8 @@ const ClaimModal = (props: Props) => {
     }
   }, [])
   const userId = formData.id
+  const owner_id = formData.owner_id
+
   const listingId = formData.listing_id
   const name = formData.profileName
   const email = formData.email
@@ -98,6 +101,7 @@ const ClaimModal = (props: Props) => {
       if (userData.email === listingModalData.public_email) {
         const { err, res } = await ClaimListing({
           userId,
+          owner_id,
           listingId,
           name,
           email,
@@ -127,6 +131,7 @@ const ClaimModal = (props: Props) => {
       } else {
         const { err, res } = await ClaimRequest({
           userId,
+          owner_id,
           listingId,
           name,
           email,

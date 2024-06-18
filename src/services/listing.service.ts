@@ -421,3 +421,14 @@ export const getAllListingUrls = async (
       return { err: error, res: null }
     }
   }
+
+  export const transferListing = async (data: any): Promise<ApiReturnObject> => {
+    const token = localStorage.getItem('token')
+      const headers = { Authorization: `Bearer ${token}` }
+    try {
+      const res = await axiosInstance.post(`/listing/transfer`, data,{headers});
+      return { res: res, err: null };
+    } catch (error: any) {
+      return { err: error, res: null };
+    }
+  };
