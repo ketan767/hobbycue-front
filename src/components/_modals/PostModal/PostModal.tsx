@@ -234,7 +234,11 @@ export const PostModal: React.FC<Props> = ({
               )}
 
               <div className={styles['title']}>
-                <p>{activePost?._author?.full_name}</p>
+                <p>
+                  {activePost.author_type === 'User'
+                    ? activePost?._author?.full_name
+                    : activePost?._author?.title}
+                </p>
                 <p>
                   <span>
                     {dateFormat?.format(new Date(activePost?.createdAt))}
