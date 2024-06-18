@@ -744,7 +744,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
           }}
           handleSubmit={() => async () => {
             let jsonData = {
-              user_id: listingModalData._id,
+              listing_id: listingModalData._id,
               user_type: 'listing',
               hobby: genreInputValue,
               level: 'Genre',

@@ -49,3 +49,7 @@
   flex-direction: column;
   padding:  10px 20px 20px 0;
 }
+
+.addbtn {
+  width: 300px;
+}

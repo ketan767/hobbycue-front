@@ -6,7 +6,11 @@ import { getAllUserDetail } from '@/services/user.service'
 import styles from './styles.module.css'
 import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
-import { getAdminHobbies, updateUserByAdmin } from '@/services/admin.service'
+import {
+  getAdminHobbies,
+  updateHobbyByAdmin,
+  updateUserByAdmin,
+} from '@/services/admin.service'
 import { getAllHobbies } from '@/services/hobby.service'
 
 type DropdownListItem = {
@@ -27,11 +31,13 @@ const EditUserPage: React.FC = () => {
   })
   const [hobbies, setHobbies] = useState<DropdownListItem[]>([])
   const [genres, setGenres] = useState<DropdownListItem[]>([])
+  const [searchKey, setSearchKey] = useState('')
+  const [tag, setTag] = useState('')
 
   useEffect(() => {
     const fetchUserData = async () => {
       const { err, res } = await getAdminHobbies(
-        `slug=${slug}&populate=category,sub_category`,
+        `slug=${slug}&populate=category,sub_category,tags`, // Ensure tags are populated
       )
       setUser(res?.data.data?.hobbies[0])
       console.log(res?.data.data?.hobbies)
@@ -49,14 +55,49 @@ const EditUserPage: React.FC = () => {
     }
   }, [slug])
 
-  const updateUserFunc = async (e: FormEvent) => {
-    e.preventDefault()
-    const { err, res } = await updateUserByAdmin(user._id, user)
+  const handleAddSearchKey = () => {
+    if (searchKey.trim()) {
+      setUser((prevUser: any) => ({
+        ...prevUser,
+        search_key: [...prevUser.search_key, searchKey],
+      }))
+      setSearchKey('')
+    }
+  }
+
+  const handleDeleteSearchKey = (keyToDelete: string) => {
+    setUser((prevUser: any) => ({
+      ...prevUser,
+      search_key: prevUser.search_key.filter(
+        (key: string) => key !== keyToDelete,
+      ),
+    }))
+  }
+
+  const handleAddTag = () => {
+    if (tag.trim()) {
+      setUser((prevUser: any) => ({
+        ...prevUser,
+        tags: [...prevUser.tags, { _id: tag }],
+      }))
+      setTag('')
+    }
+  }
+
+  const handleDeleteTag = (tagId: string) => {
+    setUser((prevUser: any) => ({
+      ...prevUser,
+      tags: prevUser.tags.filter((t: any) => t._id !== tagId),
+    }))
+  }
+
+  const handleSubmit = async () => {
+    const { err, res } = await updateHobbyByAdmin(user._id, user)
     if (err) {
       setSnackbar({
         type: 'warning',
         display: true,
-        message: 'Some error occured',
+        message: 'Some error occurred',
       })
     } else if (res) {
       setSnackbar({
@@ -68,7 +109,7 @@ const EditUserPage: React.FC = () => {
       setSnackbar({
         type: 'warning',
         display: true,
-        message: 'Some error occured',
+        message: 'Some error occurred',
       })
     }
   }
@@ -81,8 +122,8 @@ const EditUserPage: React.FC = () => {
     <>
       <AdminLayout>
         <div className={styles.mainWrapper}>
-          <h1>Edit Hobby: {user?.full_name}</h1>
-          <form onSubmit={updateUserFunc}>
+          <h1>Edit Hobby: {user?.display}</h1>
+          <div>
             <div className={styles.inputbox}>
               <label>Display</label>
               <input
@@ -95,7 +136,7 @@ const EditUserPage: React.FC = () => {
               <label>Category</label>
               <input
                 type="text"
-                value={user?.category.display}
+                value={user?.category?.display || user?.category}
                 onChange={(e) => setUser({ ...user, category: e.target.value })}
               />
             </div>
@@ -103,9 +144,9 @@ const EditUserPage: React.FC = () => {
               <label>Sub Category</label>
               <input
                 type="text"
-                value={user?.sub_categoy}
+                value={user?.sub_category?.display || user?.sub_category}
                 onChange={(e) =>
-                  setUser({ ...user, sub_categoy: e.target.value })
+                  setUser({ ...user, sub_category: e.target.value })
                 }
               />
             </div>
@@ -118,126 +159,13 @@ const EditUserPage: React.FC = () => {
               />
             </div>
             <div className={styles.inputbox}>
-              <label>Email</label>
-              <input
-                type="text"
-                value={user?.email}
-                onChange={(e) => setUser({ ...user, email: e.target.value })}
-              />
-            </div>
-            <div className={styles.inputbox}>
-              <label>Public Email</label>
-              <input
-                type="text"
-                value={user?.public_email}
-                onChange={(e) =>
-                  setUser({ ...user, public_email: e.target.value })
-                }
-              />
-            </div>
-
-            <div className={styles.inputbox}>
-              <label>Year of Birth</label>
-              <input
-                type="text"
-                value={user?.year_of_birth}
-                onChange={(e) =>
-                  setUser({ ...user, year_of_birth: e.target.value })
-                }
-              />
-            </div>
-            <div className={styles.inputbox}>
-              <label>About</label>
+              <label>Description</label>
               <textarea
                 value={user?.description}
-                onChange={(e) => setUser({ ...user, about: e.target.value })}
+                onChange={(e) =>
+                  setUser({ ...user, description: e.target.value })
+                }
               />
-            </div>
-            <div className={styles.inputbox}>
-              <label>Website</label>
-              <input
-                type="text"
-                value={user?.website}
-                onChange={(e) => setUser({ ...user, website: e.target.value })}
-              />
-            </div>
-
-            <div>
-              <h2>Primary Address</h2>
-              <div className={styles.longInputContainer}>
-                <label>Street</label>
-                <input
-                  type="text"
-                  value={user?.primary_address?.street}
-                  onChange={(e) => setUser({ ...user, Street: e.target.value })}
-                />
-              </div>
-              <section className={styles.twoColumnGrid}>
-                <div className={styles.Addressinputbox}>
-                  <label>Society</label>
-                  <input
-                    type="text"
-                    value={user?.primary_address?.society}
-                    onChange={(e) =>
-                      setUser({ ...user, website: e.target.value })
-                    }
-                  />
-                </div>
-                <div className={styles.Addressinputbox}>
-                  <label>Locality</label>
-                  <input
-                    type="text"
-                    value={user?.primary_address?.locality}
-                    onChange={(e) =>
-                      setUser({ ...user, website: e.target.value })
-                    }
-                  />
-                </div>
-              </section>
-              <section className={styles.twoColumnGrid}>
-                <div className={styles.Addressinputbox}>
-                  <label>City</label>
-                  <input
-                    type="text"
-                    value={user?.primary_address?.city}
-                    onChange={(e) =>
-                      setUser({ ...user, website: e.target.value })
-                    }
-                  />
-                </div>
-                <div className={styles.Addressinputbox}>
-                  <label>Pin code</label>
-                  <input
-                    type="text"
-                    value={user?.primary_address?.pin_code}
-                    onChange={(e) =>
-                      setUser({ ...user, website: e.target.value })
-                    }
-                  />
-                </div>
-              </section>
-              <section className={styles.twoColumnGrid}>
-                <div className={styles.Addressinputbox}>
-                  <label>State</label>
-                  <input
-                    type="text"
-                    value={user?.primary_address?.state}
-                    onChange={(e) =>
-                      setUser({ ...user, website: e.target.value })
-                    }
-                  />
-                </div>
-                <div className={styles.Addressinputbox}>
-                  <label>Country</label>
-                  <input
-                    type="text"
-                    value={user?.primary_address?.country}
-                    onChange={(e) =>
-                      setUser({ ...user, website: e.target.value })
-                    }
-                  />
-                </div>
-              </section>
             </div>
             <div className={styles.inputbox}>
               <label>Allow Add:</label>
@@ -251,9 +179,50 @@ const EditUserPage: React.FC = () => {
                 <option value={'false'}>No</option>
               </select>
             </div>
-
-            <button type="submit">Save Changes</button>
-          </form>
+            <div className={styles.inputbox}>
+              <label>Search Keys</label>
+              <ul>
+                {user.search_key.map((key: string) => (
+                  <li key={key}>
+                    {key}{' '}
+                    <button onClick={() => handleDeleteSearchKey(key)}>
+                      Delete
+                    </button>
+                  </li>
+                ))}
+              </ul>
+              <input
+                type="text"
+                value={searchKey}
+                onChange={(e) => setSearchKey(e.target.value)}
+              />
+              <button className={styles.addbtn} onClick={handleAddSearchKey}>
+                Add Search Key
+              </button>
+            </div>
+            <div className={styles.inputbox}>
+              <label>Tags id</label>
+              <ul>
+                {user.tags.map((tag: any) => (
+                  <li key={tag._id || tag}>
+                    {tag._id || tag._id || tag}{' '}
+                    <button onClick={() => handleDeleteTag(tag._id || tag)}>
+                      Delete
+                    </button>
+                  </li>
+                ))}
+              </ul>
+              <input
+                type="text"
+                value={tag}
+                onChange={(e) => setTag(e.target.value)}
+              />
+              <button className={styles.addbtn} onClick={handleAddTag}>
+                Add Tag
+              </button>
+            </div>
+            <button onClick={handleSubmit}>Save Changes</button>
+          </div>
         </div>
       </AdminLayout>
       {

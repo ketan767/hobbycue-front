@@ -66,6 +66,7 @@ const HobbiesRequest: React.FC = () => {
     description: '',
     status: '',
     user_id: '',
+    listing_id: '',
   })
 
   const handleSearch = async (event: any) => {
@@ -197,7 +198,7 @@ const HobbiesRequest: React.FC = () => {
   }
   const FetchHobbyReq = async () => {
     const { res, err } = await getHobbyRequests(
-      `limit=${pagelimit}&sort=-last_login&page=${page}&populate=user_id,listing_id`,
+      `limit=${pagelimit}&sort=-createdAt&page=${page}&populate=user_id,listing_id`,
     )
     if (err) {
       console.log('An error', err)
@@ -262,6 +263,7 @@ const HobbiesRequest: React.FC = () => {
   const handleSubmit = async () => {
     let jsondata = {
       user_id: hobbyData?.user_id,
+      listing_id: hobbyData?.listing_id,
       hobby: hobbyData?.hobby,
       status: hobbyData?.status,
       description: hobbyData?.description,
@@ -273,6 +275,7 @@ const HobbiesRequest: React.FC = () => {
   const handleAction = async (hobbyreq: any) => {
     setHobbydata({
       user_id: hobbyreq?.user_id?._id,
+      listing_id: hobbyreq?.listing_id?._id,
       hobby: hobbyreq?.hobby,
       description: hobbyreq?.description,
       status: hobbyreq?.status,
@@ -366,7 +369,7 @@ const HobbiesRequest: React.FC = () => {
                     <td className={styles.lastLoggedIn}>{hobbyreq?.similar}</td>
                     <td className={styles.pagesLength}>{hobbyreq?.status}</td>
                     <td className={styles.pagesLength}>
-                      {/* posts not in logs */}0
+                      {hobbyreq?.admin_notes}
                     </td>
                     <td>
                       <div

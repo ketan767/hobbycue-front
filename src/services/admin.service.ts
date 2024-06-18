@@ -161,6 +161,19 @@ export const deletePostByAdmin = async (post_id: string): Promise<ApiReturnObjec
   }
 }
 
+/** PATCH `/api/admin/hobby/:hobby_id` */
+
+export const updateHobbyByAdmin = async (hobby_id: string,data:any): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearerhobby_id ${token}` }
+  try {
+    const res = await axiosInstance.patch(`/admin/hobby/${hobby_id}`,data, { headers })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
 
 /** Get `/api/admin/hobbyreq` */
 export const getHobbyRequests = async (query: string,): Promise<ApiReturnObject> => {
