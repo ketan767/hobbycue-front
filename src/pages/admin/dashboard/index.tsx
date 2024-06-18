@@ -91,7 +91,7 @@ export default function Index() {
             </div>
             <div className={styles.label}>
               <p>
-                Updated : <span>5 Jun 2024</span>
+                Updated : <span>18 Jun 2024</span>
               </p>
             </div>
             <div className={styles.label}>
