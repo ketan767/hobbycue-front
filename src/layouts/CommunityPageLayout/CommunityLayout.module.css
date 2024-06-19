@@ -712,6 +712,38 @@ background: var(--Purple-3, #F7F5F9);
   display: none;
 }
 
+
+.help-centre-btn{
+  cursor: pointer;
+  display: flex;
+height: 40px;
+padding: 6px 54px;
+justify-content: center;
+align-items: center;
+gap: 10px;
+align-self: stretch;
+border-radius: 8px;
+border: 1px solid var(--Primary-Full, #8064A2);
+background: var(--Base-White, #FFF);
+width: 100%;
+}
+
+.help-centre-btn:focus-visible{
+  outline: 1px solid var(--Primary-Full, #8064A2);
+  border: none;
+}
+
+.help-centre-btn p{
+  color: var(--Primary-Full, #8064A2);
+
+/* Text sm/Semibold */
+font-family: Poppins;
+font-size: 14px;
+font-style: normal;
+font-weight: 600;
+line-height: 16px; /* 114.286% */
+}
+
 @media screen and (max-width: 1100px) {
   .community-left-aside,
   .community-right-aside {

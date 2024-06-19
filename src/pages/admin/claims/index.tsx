@@ -345,14 +345,16 @@ const ClaimsPage: React.FC = () => {
                     <td>
                       <div className={styles.resultItem}>
                         <div className={styles.detailsContainer}>
-                          <div className={styles.userName}>
+                         {hobbyreq?.user_id?.profile_url?<Link href={`/profile/${hobbyreq?.user_id?.profile_url}`} className={styles.userName}>
                             {hobbyreq?.name}
-                          </div>
+                          </Link>:<p className={styles.userName}>
+                            {hobbyreq?.name}
+                          </p>}
                         </div>
                       </div>
                     </td>
                     <td className={styles.userName}>
-                      <div>{hobbyreq?.pageUrl}</div>
+                      <Link href={`/page/${hobbyreq?.pageUrl}`}>{hobbyreq?.pageUrl}</Link>
                     </td>
 
                     <td className={styles.lastLoggedIn}>

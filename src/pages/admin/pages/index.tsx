@@ -324,12 +324,12 @@ const AdminPages: React.FC = () => {
                           )}
                         </div>
                         <div className={styles.detailsContainer}>
-                          <div className={styles.userName}>{page?.title}</div>
+                          <Link href={`/page/${page?.page_url}`} className={styles.userName}>{page?.title}</Link>
                         </div>
                       </div>
                     </td>
                     <td className={styles.userName}>
-                      <a>{page?.admin?.full_name}</a>
+                      <Link href={`/profile/${page?.admin?.profile_url}`}>{page?.admin?.full_name}</Link>
                     </td>
                     <td className={styles.userPhone}>
                       {page.is_published ? 'Published' : 'Unpublished'}

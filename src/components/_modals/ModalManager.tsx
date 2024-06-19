@@ -556,7 +556,7 @@ const ModalManager: React.FC = () => {
                 <ViewImageModal {...viewImageProps} />
               )}
 
-              {activeModal === 'HandleAdminAction' && <AdminActionModal />}
+              {activeModal === 'HandleAdminAction' && <AdminActionModal {...propData} />}
               {/* Modal Close Icon */}
               {closable &&
                 activeModal !== 'user-onboarding-welcome' &&

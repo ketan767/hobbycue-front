@@ -43,6 +43,7 @@ const HobbiesRequest: React.FC = () => {
   const [searchResults, setSearchResults] = useState<any[]>([])
   const [pageNumber, setPageNumber] = useState<number[]>([])
   const [showAdminActionModal, setShowAdminActionModal] = useState(false)
+  const dispatch = useDispatch()
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     setData((prev) => ({ ...prev, search: { value, error: null } }))
@@ -159,7 +160,7 @@ const HobbiesRequest: React.FC = () => {
       />
     </svg>
   )
-  console.log({ searchResults })
+  console.warn({ searchResults })
   const fullNumber = (user: any) => {
     if (user?.phone?.prefix && user?.phone?.number) {
       return user?.phone?.prefix + user?.phone?.number
@@ -269,7 +270,8 @@ const HobbiesRequest: React.FC = () => {
       description: hobbyData?.description,
     }
 
-    const { err, res } = await UpdateHobbyreq(jsondata)
+    const { err, res } = await UpdateHobbyreq(jsondata);
+    window.location.reload();
   }
   console.warn()
   const handleAction = async (hobbyreq: any) => {
@@ -280,7 +282,21 @@ const HobbiesRequest: React.FC = () => {
       description: hobbyreq?.description,
       status: hobbyreq?.status,
     })
-    setShowAdminActionModal(true)
+    // setShowAdminActionModal(true)
+    dispatch(
+      openModal({
+        type: 'HandleAdminAction',
+        closable: false,
+        propData: {
+          data: hobbyData,
+          setData: setHobbydata,
+          handleSubmit,
+          handleClose: () => {
+            dispatch(closeModal())
+          },
+        },
+      }),
+    )
   }
 
   if (showAdminActionModal) {
@@ -362,9 +378,13 @@ const HobbiesRequest: React.FC = () => {
                     </td>
 
                     <td className={styles.LoginType}>
+                      <Link href={hobbyreq.user_type == 'user'
+                        ? `/profile/${hobbyreq.user_id?.profile_url}`
+                        : `/page/${hobbyreq.listing_id?.page_url}`}>
                       {hobbyreq.user_type == 'user'
                         ? hobbyreq.user_id?.full_name
                         : hobbyreq.listing_id?.title}
+                        </Link>
                     </td>
                     <td className={styles.lastLoggedIn}>{hobbyreq?.similar}</td>
                     <td className={styles.pagesLength}>{hobbyreq?.status}</td>

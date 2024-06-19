@@ -9,22 +9,26 @@ interface PanelDropdownListProps {
   name: string
   options: any[]
   type?: string
+  invite?:boolean;
   inviteFunction?: () => Promise<void>
   inviteError?: string
   inviteTextChangeFunc?: (arg0: any) => void
   inviteText?: string
+  initialOpen?:boolean
 }
 
 const PanelDropdownList: FC<PanelDropdownListProps> = ({
   name,
   options,
   type,
+  invite,
   inviteFunction,
   inviteError,
   inviteText,
   inviteTextChangeFunc,
+  initialOpen
 }) => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(initialOpen??false)
   const router = useRouter()
   const [seeMore, setSeeMore] = useState(true)
   const membersContainerRef = useRef<HTMLDivElement>(null)
@@ -97,7 +101,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
       </div>
       {open && (
         <>
-          {type === 'members' && (
+          {invite && (
             <div
               className={
                 styles['member-invite'] +
