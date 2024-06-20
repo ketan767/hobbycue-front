@@ -46,22 +46,8 @@ const AdminActionModal: React.FC<Props> = ({
 
   const handleFormSubmit = async () => {
     setSubmitBtnLoading(true)
-    try {
-      await handleSubmit()
-      setSnackbar({
-        type: 'success',
-        display: true,
-        message: 'Form submitted successfully',
-      })
-    } catch (error) {
-      setSnackbar({
-        type: 'error',
-        display: true,
-        message: 'Error submitting form',
-      })
-    } finally {
-      setSubmitBtnLoading(false)
-    }
+
+    await handleSubmit()
   }
 
   return (

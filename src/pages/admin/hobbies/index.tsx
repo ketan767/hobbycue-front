@@ -271,13 +271,13 @@ const HobbiesRequest: React.FC = () => {
       description: hobbyData?.description,
     }
 
-    const { err, res } = await UpdateHobbyreq(jsondata);
-    if(err){
-      throw new Error();
-    }else{
-    window.location.reload();
+    const { err, res } = await UpdateHobbyreq(jsondata)
+    if (err) {
+      throw new Error()
+    } else {
+      window.location.reload()
     }
-  };
+  }
   const handleAction = async (hobbyreq: any) => {
     setHobbydata({
       user_id: hobbyreq?.user_id?._id,
