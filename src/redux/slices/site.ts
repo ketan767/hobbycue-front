@@ -118,6 +118,8 @@ interface AuthState {
   membersStates?:{
     [key:string]:boolean
   }
+  eventflowRunning:boolean
+  pageDataForEvent:null|any
 }
 
 const initialState: AuthState = {
@@ -159,6 +161,8 @@ const initialState: AuthState = {
   relatedListingsStates2:{},
   workingHoursStates:{},
   membersStates:{},
+  eventflowRunning:false,
+  pageDataForEvent:null
 }
 
 /** Template Listing Data 
@@ -340,6 +344,12 @@ const siteSlice = createSlice({
       state.membersStates[objKey[0]] = payload[objKey[0]];
       }
     },
+    updateEventFlow: (state,{payload}:{payload:boolean}) => {
+      state.eventflowRunning = payload
+    },
+    updatePageDataForEvent: (state,{payload}:{payload:any}) => {
+      state.pageDataForEvent = payload;
+    }
   },
 })
 
@@ -368,7 +378,9 @@ export const {
   updateRelatedListingsOpenStates2,
   updateTagsOpenStates,
   updateWorkingHoursOpenStates,
-  updateMembersOpenStates
+  updateMembersOpenStates,
+  updateEventFlow,
+  updatePageDataForEvent
 } = siteSlice.actions
 
 export default siteSlice.reducer

@@ -20,6 +20,12 @@
 .pos-relative {
   position: relative;
 }
+
+.self-centre{
+  align-self: center;
+  justify-self: center;
+}
+
 .create-post-postion{
   position: relative;
   right: 41px;
@@ -112,6 +118,10 @@
     /* left: calc(50vw + 152x) !important; */
     left: calc(50vw + 133px) !important;
     top: calc(50vh - 44px) !important;
+  }
+
+  .self-centre{
+    width: 96vw;
   }
 }
 

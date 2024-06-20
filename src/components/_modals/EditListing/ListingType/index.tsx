@@ -53,7 +53,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
-  const { listingModalData, listingTypeModalMode } = useSelector(
+  const { listingModalData, listingTypeModalMode, pageDataForEvent } = useSelector(
     (state: RootState) => state.site,
   )
   const [list, setList] = useState<{ name: string; description: string }[]>([])
@@ -86,7 +86,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
     if (!value || value === '' || value.length === 0) {
       return setError('Select a Category!')
     }
-    if (listingTypeModalMode === 'edit') {
+    if (listingTypeModalMode === 'edit'||pageDataForEvent!==null) { // make this true with listingModalData automatic update will happen just page route change required
       handleEdit()
     } else {
       dispatch(
@@ -97,6 +97,17 @@ const ListingTypeEditModal: React.FC<Props> = ({
   }
   const handleEdit = async () => {
     // setSubmitBtnLoading(true)
+      if(pageDataForEvent){
+        console.warn({pageDataForEvent})
+        const { err, res } = await updateListing(pageDataForEvent?._id, {
+          page_type: value,
+        })
+        if (err) return console.log(err)
+          if (res?.data.success) {
+          dispatch(updateListingModalData(res.data.data.listing))
+          dispatch(openModal({ type: 'listing-onboarding', closable: true }))
+        }
+      }
     if (onComplete) {
       dispatch(
         updateListingModalData({ ...listingModalData, page_type: value }),
