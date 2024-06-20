@@ -26,6 +26,8 @@ type Props = {
 }
 
 const CommunityLayout: React.FC<Props> = ({ data }) => {
+  console.warn('dataaaaaaaaaaaaaaaaaaaaaadaata', data)
+
   const router = useRouter()
   const [postId, setPostId] = useState<string | null>(null)
 
@@ -87,19 +89,19 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
       <Head>
         <meta
           property="og:image"
-          content={`${data?.postsData?.profile_image}`}
+          content={`${data?.postsData?._author.profile_image}`}
         />
         <meta
           property="og:image:secure_url"
-          content={`${data?.postsData?.profile_image}`}
+          content={`${data?.postsData?._author.profile_image}`}
         />
         <meta
           property="og:description"
-          content={`${data?.postsData?.tagline ?? ''}`}
+          content={`${data.postsData?.description}`}
         />
         <meta
           property="og:url"
-          content={`${process.env.NEXT_PUBLIC_BASE_URL}/page/${data?.postsData?.slug}`}
+          content={`${process.env.NEXT_PUBLIC_BASE_URL}/page/${data?.postsData?._id}`}
         />
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${data.postsData?.visibility} | HobbyCue`}</title>
