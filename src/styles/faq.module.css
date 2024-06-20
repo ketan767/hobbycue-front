@@ -37,6 +37,10 @@
     flex-direction: column;
 }
 
+.list-container ul{
+    padding: 0 15px;
+}
+
 .list-container h3{
     line-height: 38px;
     box-sizing: border-box;

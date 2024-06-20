@@ -68,14 +68,16 @@ const AdminActionModal: React.FC<Props> = ({
     <>
       <div className={`${styles['modal-wrapper']}  `}>
         <header className={styles['header']}>
+          <h4 className={styles['heading']}>{'Admin Notes'}</h4>
           <CloseIcon
             className={styles['modal-close-icon']}
             onClick={handleClose}
           />
         </header>
 
+        <hr className={styles['modal-hr']} />
+
         <section className={styles['body']}>
-          <h4 className={styles['heading']}>{'Admin Notes'}</h4>
           <div className={styles['input-box']}>
             <div
               className={` ${
@@ -87,7 +89,7 @@ const AdminActionModal: React.FC<Props> = ({
               <textarea
                 className={styles['long-input-box']}
                 required
-                placeholder="Report the issue to the admin for their action."
+                placeholder=""
                 name="message"
                 onChange={handleInputChange}
                 value={data.description}

@@ -1,0 +1,17 @@
+.about p, .about li, .about a{
+    font-size: 16px;
+    color: #26292b;
+    font-family: 'Rubik', 'Poppins', sans-serif;
+    margin: 10px 0;
+    line-height: 26px;
+}
+
+.about h2{
+    font-size: 24px;
+    line-height: 36px;
+    font-weight: 600;
+}
+
+.about a:hover{
+    color: #8064a2;
+}

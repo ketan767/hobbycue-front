@@ -5,6 +5,7 @@ import InProgressIcon from '@/assets/svg/In_progress_icon.svg'
 import AcceptedIcon from '@/assets/svg/checked_icon.svg'
 import RejectedIcon from '@/assets/svg/cancel_icon.svg'
 import Image from 'next/image'
+import { MenuItem, Select } from '@mui/material'
 
 const statusOptions = [
   { label: 'New', icon: selectIcon, color: 'gray', status: 'New' },
@@ -72,9 +73,26 @@ const StatusDropdown: React.FC<{
         </svg>
       </button>
       {isOpen && (
-        <ul className={styles.dropdownMenu}>
-          {statusOptions.map((status) => (
-            <li
+        // <ul className={styles.dropdownMenu}>
+        //   {statusOptions.map((status) => (
+        //     <li
+        //       key={status.label}
+        //       className={styles.dropdownItem}
+        //       onClick={() => selectStatus(status)}
+        //     >
+        //       <Image
+        //         src={status.icon}
+        //         alt={status.label}
+        //         width={24}
+        //         height={24}
+        //       />
+        //       <span className={styles.dropdownLabel}>{status.label}</span>
+        //     </li>
+        //   ))}
+        // </ul>
+        <Select open className={styles['hideSelect']}>
+          {statusOptions.map((status,i)=><MenuItem key={i}>
+          <li
               key={status.label}
               className={styles.dropdownItem}
               onClick={() => selectStatus(status)}
@@ -87,8 +105,8 @@ const StatusDropdown: React.FC<{
               />
               <span className={styles.dropdownLabel}>{status.label}</span>
             </li>
-          ))}
-        </ul>
+          </MenuItem>)}
+        </Select>
       )}
     </div>
   )
