@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import styles from './PostCard.module.css'
-import { dateFormat } from '@/utils'
+import { dateFormat, isVideoLink } from '@/utils'
 import Link from 'next/link'
 import BarsIcon from '../../assets/svg/vertical-bars.svg'
 import PostVotes from './Votes'
@@ -28,6 +28,7 @@ import 'quill-emoji/dist/quill-emoji.css'
 import { useMediaQuery } from '@mui/material'
 import LinkPreviewLoader from '../LinkPreviewLoader'
 import DeletePrompt from '../DeletePrompt/DeletePrompt'
+import ReactPlayer from 'react-player'
 type Props = {
   postData: any
   fromProfile?: boolean
@@ -457,56 +458,71 @@ const PostCard: React.FC<Props> = (props) => {
                 <LinkPreviewLoader />
               ) : (
                 <>
-                  <div className={styles['posts-meta-data-container']}>
-                    <a
-                      href={url}
-                      target="_blank"
-                      className={styles['posts-meta-img']}
-                    >
-                      <img
-                        src={
-                          (typeof metaData?.image === 'string' &&
-                            metaData.image) ||
-                          (typeof metaData?.icon === 'string' &&
-                            metaData.icon) ||
-                          defaultImg
-                        }
-                        alt="link-image"
-                        width={80}
-                        height={80}
+                  {isVideoLink(url) ? (
+                    <div className={styles.videoPlayer}>
+                      <ReactPlayer
+                        width="100%"
+                        height="410px"
+                        url={url}
+                        controls={true}
                       />
-                    </a>
-                    <div className={styles['posts-meta-content']}>
-                      <a
-                        href={url}
-                        target="_blank"
-                        className={styles.contentHead}
-                      >
-                        {' '}
-                        {metaData?.title}{' '}
-                      </a>
-                      {!isMobile && (
+                    </div>
+                  ) : (
+                    <>
+                      <div className={styles['posts-meta-data-container']}>
+                        <a
+                          href={url}
+                          target="_blank"
+                          className={styles['posts-meta-img']}
+                        >
+                          <img
+                            src={
+                              (typeof metaData?.image === 'string' &&
+                                metaData.image) ||
+                              (typeof metaData?.icon === 'string' &&
+                                metaData.icon) ||
+                              defaultImg
+                            }
+                            alt="link-image"
+                            width={80}
+                            height={80}
+                          />
+                        </a>
+                        <div className={styles['posts-meta-content']}>
+                          <a
+                            href={url}
+                            target="_blank"
+                            className={styles.contentHead}
+                          >
+                            {metaData?.title}
+                          </a>
+                          {!isMobile && (
+                            <a
+                              href={url}
+                              target="_blank"
+                              className={styles.contentUrl}
+                            >
+                              {metaData?.description}
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                      {isMobile && (
                         <a
                           href={url}
                           target="_blank"
                           className={styles.contentUrl}
                         >
-                          {' '}
-                          {metaData?.description}{' '}
+                          {metaData?.description}
                         </a>
                       )}
-                    </div>
-                  </div>
-                  {isMobile && (
-                    <a href={url} target="_blank" className={styles.contentUrl}>
-                      {' '}
-                      {metaData?.description}{' '}
-                    </a>
+                    </>
                   )}
                 </>
               )}
             </div>
           )}
+
           {has_link && props.currentSection === 'links' && (
             <div className={styles.postMetadata}>
               <a href={url} target="_blank" className={styles.metaImgContainer}>

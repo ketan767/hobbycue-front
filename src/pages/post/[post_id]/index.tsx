@@ -19,10 +19,13 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
 import { setShowPageLoader } from '@/redux/slices/site'
+import Head from 'next/head'
 
-type Props = {}
+type Props = {
+  data: ListingPageData
+}
 
-const CommunityLayout: React.FC<Props> = ({}) => {
+const CommunityLayout: React.FC<Props> = ({ data }) => {
   const router = useRouter()
   const [postId, setPostId] = useState<string | null>(null)
 
@@ -31,6 +34,7 @@ const CommunityLayout: React.FC<Props> = ({}) => {
     const paths = urlObj.pathname.split('/')
     return paths[paths.length - 1]
   }
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const currUrl = window.location.href
@@ -46,7 +50,10 @@ const CommunityLayout: React.FC<Props> = ({}) => {
   const [isLoadingPosts, setIsLoadingPosts] = useState(false)
   const [postData, setPostData] = useState<any>(null)
   const dispatch = useDispatch()
+
   const getPost = async () => {
+    if (!postId) return
+
     const params = new URLSearchParams(
       `populate=_author,_genre,_hobby&_id=${postId}`,
     )
@@ -56,10 +63,10 @@ const CommunityLayout: React.FC<Props> = ({}) => {
     if (err) return console.log(err)
     if (res.data.success) {
       setPostData(res.data.data.posts?.[0])
-      router.push('/community')
     }
     setIsLoadingPosts(false)
   }
+
   const openPostmodal = () => {
     dispatch(setActivePost(postData))
     dispatch(openModal({ type: 'post', closable: false }))
@@ -70,11 +77,33 @@ const CommunityLayout: React.FC<Props> = ({}) => {
       getPost()
     }
   }, [activeProfile, postId])
+
   useEffect(() => {
     if (postData?.content) openPostmodal()
   }, [[postData?.content]])
+
   return (
     <>
+      <Head>
+        <meta
+          property="og:image"
+          content={`${data?.postsData?.profile_image}`}
+        />
+        <meta
+          property="og:image:secure_url"
+          content={`${data?.postsData?.profile_image}`}
+        />
+        <meta
+          property="og:description"
+          content={`${data?.postsData?.tagline ?? ''}`}
+        />
+        <meta
+          property="og:url"
+          content={`${process.env.NEXT_PUBLIC_BASE_URL}/page/${data?.postsData?.slug}`}
+        />
+        <meta property="og:image:alt" content="Profile picture" />
+        <title>{`${data.postsData?.visibility} | HobbyCue`}</title>
+      </Head>
       <CommunityPageLayout activeTab="posts" singlePostPage={true}>
         <main>
           {!postData || isLoadingPosts ? (
@@ -91,3 +120,31 @@ const CommunityLayout: React.FC<Props> = ({}) => {
 }
 
 export default CommunityLayout
+
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context,
+) => {
+  const { params } = context
+  console.log('paramssssssssssssssssssssssssssssssss', params)
+  const postId = params?.post_id
+
+  const queryParams = new URLSearchParams(
+    `populate=_author,_genre,_hobby&_id=6673af18122f27ad62bff9e3`,
+  )
+  const { err, res } = await getAllPosts(
+    `populate=_author,_genre,_hobby&_id=6673af18122f27ad62bff9e3`,
+  )
+
+  return {
+    props: {
+      data: {
+        pageData: null, // Adjust based on your actual response structure
+        postsData: res.data.data.posts[0],
+        mediaData: null,
+        reviewsData: null,
+        eventsData: null,
+        storeData: null,
+      },
+    },
+  }
+}
