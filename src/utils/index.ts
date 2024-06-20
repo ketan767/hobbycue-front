@@ -164,3 +164,19 @@ export const formatPrice = (price: any): string => {
     return lastThree;
   }
 };
+
+export const isVideoLink = (url: string) => {
+  const videoRegex = [
+    /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/).+/,
+    /^(https?:\/\/)?(www\.)?youtube\.com\/shorts\/.+/,
+    /^(https?:\/\/)?(www\.)?fb\.watch\/.+$/,
+ 
+    /^(https?:\/\/)?(www\.)?(instagram\.com|instagr\.am)\/p\/.+$/, // Only match Instagram post URLs
+    /^(https?:\/\/)?(www\.)?vimeo\.com\/.+$/,
+    /^(https?:\/\/)?(www\.)?dailymotion\.com\/video\/.+/,
+    /^(https?:\/\/)?(www\.)?(twitch\.tv\/videos\/|clips\.twitch\.tv\/).+$/, // Only match Twitch video/clip URLs
+    /^(https?:\/\/)?(www\.)?tiktok\.com\/.+$/,
+    /^(https?:\/\/)?(www\.)?soundcloud\.com\/.+/
+  ];
+  return videoRegex.some((regex) => regex.test(url));
+};
