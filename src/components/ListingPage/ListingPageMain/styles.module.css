@@ -382,3 +382,13 @@ ul.seller-info-wrapper li svg:last-child {
     margin: 8px 0;
   }
 }
+
+ul.contact-wrapper li.signInText{
+  color: var(--Primary-Full, #8064A2);
+font-family: 'Poppins';
+font-size: 14px;
+font-style: italic;
+font-weight: 500;
+line-height: normal;
+cursor: pointer;
+}
