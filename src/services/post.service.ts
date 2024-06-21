@@ -133,12 +133,11 @@ export const uploadImage = async (formData: FormData) => {
 }
 
 export const getMetadata = async (url: string): Promise<ApiReturnObject> => {
-  const token = localStorage.getItem('token')
-  const headers = { Authorization: `Bearer ${token}` }
+  
   const body = { url }
   try {
     const res = await axiosInstance.post(`/post/get-metadata`, body, {
-      headers,
+ 
     })
     return { res: res, err: null }
   } catch (error) {

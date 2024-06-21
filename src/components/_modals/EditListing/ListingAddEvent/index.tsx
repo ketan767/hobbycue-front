@@ -48,7 +48,7 @@ const ListingAddEvent: React.FC<Props> = ({
   useEffect(() => {
     const fetchRelations = async () => {
       let query = `pageType=${
-        parentType === 'people' ? 'People' : 'Place'
+        parentType === 'people' ? 'Program' : 'Program'
       }&Side=Right&Show=Y`
       const { err, res } = await getAllListingRelationTypes(query)
 
@@ -58,7 +58,8 @@ const ListingAddEvent: React.FC<Props> = ({
         setOptions(
           res.data.data.filter(
             (obj: any) =>
-              obj?.pageType === (parentType === 'people' ? 'People' : 'Place'),
+              obj?.pageType ===
+              (parentType === 'people' ? 'Program' : 'Program'),
           ),
         )
         console.log({ d: res.data.data })
@@ -94,9 +95,11 @@ const ListingAddEvent: React.FC<Props> = ({
     setSelectedOption(str)
   }
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
-  const closeModalFunc = ()=>{dispatch(closeModal())};
+  const closeModalFunc = () => {
+    dispatch(closeModal())
+  }
 
   return (
     <>
@@ -105,7 +108,7 @@ const ListingAddEvent: React.FC<Props> = ({
           <h4 className={styles['heading']}>{'Add Program'}</h4>
           <CloseIcon
             className={styles['modal-close-icon']}
-            onClick={handleClose??closeModalFunc}
+            onClick={handleClose ?? closeModalFunc}
           />
         </header>
 
