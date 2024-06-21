@@ -86,7 +86,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
 
   return (
     <>
-      <Head>
+      {/* <Head>
         <meta
           property="og:image"
           content={`${data?.postsData?._author.profile_image}`}
@@ -105,7 +105,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
         />
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${data.postsData?.visibility} | HobbyCue`}</title>
-      </Head>
+      </Head> */}
       <CommunityPageLayout activeTab="posts" singlePostPage={true}>
         <main>
           {!postData || isLoadingPosts ? (
@@ -123,30 +123,30 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
 
 export default CommunityLayout
 
-export const getServerSideProps: GetServerSideProps<Props> = async (
-  context,
-) => {
-  const { params } = context
-  console.log('paramssssssssssssssssssssssssssssssss', params)
-  const postId = params?.post_id
+// export const getServerSideProps: GetServerSideProps<Props> = async (
+//   context,
+// ) => {
+//   const { params } = context
+//   console.log('paramssssssssssssssssssssssssssssssss', params)
+//   const postId = params?.post_id
 
-  const queryParams = new URLSearchParams(
-    `populate=_author,_genre,_hobby&_id=6673af18122f27ad62bff9e3`,
-  )
-  const { err, res } = await getAllPosts(
-    `populate=_author,_genre,_hobby&_id=6673af18122f27ad62bff9e3`,
-  )
+//   const queryParams = new URLSearchParams(
+//     `populate=_author,_genre,_hobby&_id=6673af18122f27ad62bff9e3`,
+//   )
+//   const { err, res } = await getAllPosts(
+//     `populate=_author,_genre,_hobby&_id=6673af18122f27ad62bff9e3`,
+//   )
 
-  return {
-    props: {
-      data: {
-        pageData: null, // Adjust based on your actual response structure
-        postsData: res.data.data.posts[0],
-        mediaData: null,
-        reviewsData: null,
-        eventsData: null,
-        storeData: null,
-      },
-    },
-  }
-}
+//   return {
+//     props: {
+//       data: {
+//         pageData: null,
+//         postsData: res.data.data.posts[0],
+//         mediaData: null,
+//         reviewsData: null,
+//         eventsData: null,
+//         storeData: null,
+//       },
+//     },
+//   }
+// }
