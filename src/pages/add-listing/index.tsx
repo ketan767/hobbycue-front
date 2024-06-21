@@ -3,6 +3,7 @@ import styles from '@/styles/AddListing.module.css'
 import { openModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+  updateEventFlow,
   updateListingModalData,
   updateListingTypeModalMode,
 } from '@/redux/slices/site'
@@ -15,7 +16,8 @@ import { getAllListingPageTypes } from '@/services/listing.service'
 type Props = {}
 
 const AddListing: React.FC<Props> = (props) => {
-  const { user, isLoggedIn } = useSelector((state: RootState) => state.user)
+  const { user, isLoggedIn } = useSelector((state: RootState) => state.user);
+  const { eventflowRunning } = useSelector((state:RootState)=>state.site);
   const dispatch = useDispatch()
   const router = useRouter()
   const [snackbar, setSnackbar] = useState({
@@ -28,7 +30,7 @@ const AddListing: React.FC<Props> = (props) => {
   const handleClick = (type: ListingPages) => {
     console.warn('lisrihhnr', type)
     if (type === 4) {
-      showFeatureUnderDevelopment()
+      showFeatureUnderDevelopment();
       return
     }
     if (isLoggedIn && user.is_onboarded) {
@@ -40,7 +42,14 @@ const AddListing: React.FC<Props> = (props) => {
     } else {
       dispatch(openModal({ type: 'auth', closable: true }))
     }
+    dispatch(updateEventFlow(false))
   }
+
+  useEffect(()=>{
+    if(eventflowRunning){
+      handleClick(3)
+    }
+  },[eventflowRunning])
 
   const showFeatureUnderDevelopment = () => {
     setSnackbar({

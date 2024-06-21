@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllUserDetail, searchUsers } from '../../../services/user.service'
@@ -29,6 +29,7 @@ import InProgressIcon from '@/assets/svg/In_progress_icon.svg'
 import AcceptedIcon from '@/assets/svg/checked_icon.svg'
 import RejectedIcon from '@/assets/svg/cancel_icon.svg'
 import AdminActionModal from '@/components/_modals/AdminModals/ActionModal'
+import { Fade, Modal } from '@mui/material'
 
 type SearchInput = {
   search: InputData<string>
@@ -271,9 +272,12 @@ const HobbiesRequest: React.FC = () => {
     }
 
     const { err, res } = await UpdateHobbyreq(jsondata);
+    if(err){
+      throw new Error();
+    }else{
     window.location.reload();
-  }
-  console.warn()
+    }
+  };
   const handleAction = async (hobbyreq: any) => {
     setHobbydata({
       user_id: hobbyreq?.user_id?._id,
@@ -282,38 +286,39 @@ const HobbiesRequest: React.FC = () => {
       description: hobbyreq?.description,
       status: hobbyreq?.status,
     })
-    // setShowAdminActionModal(true)
-    dispatch(
-      openModal({
-        type: 'HandleAdminAction',
-        closable: false,
-        propData: {
-          data: hobbyData,
-          setData: setHobbydata,
-          handleSubmit,
-          handleClose: () => {
-            dispatch(closeModal())
-          },
-        },
-      }),
-    )
+    setShowAdminActionModal(true)
   }
 
-  if (showAdminActionModal) {
-    return (
-      <>
-        <AdminActionModal
-          data={hobbyData}
-          setData={setHobbydata}
-          handleSubmit={handleSubmit}
-          handleClose={() => setShowAdminActionModal(false)}
-        />
-      </>
-    )
+  const CustomBackdrop: React.FC = () => {
+    return <div className={styles['custom-backdrop']}></div>
   }
 
   return (
     <>
+      {showAdminActionModal && (
+        <Modal
+          open
+          onClose={() => {
+            setShowAdminActionModal(false)
+          }}
+          slots={{ backdrop: CustomBackdrop }}
+          disableEscapeKeyDown
+          closeAfterTransition
+        >
+          <Fade>
+            <div className={styles['modal-wrapper']}>
+              <main className={styles['pos-relative']}>
+                <AdminActionModal
+                  data={hobbyData}
+                  setData={setHobbydata}
+                  handleSubmit={handleSubmit}
+                  handleClose={() => setShowAdminActionModal(false)}
+                />
+              </main>
+            </div>
+          </Fade>
+        </Modal>
+      )}
       <AdminLayout>
         <div className={styles.searchContainer}>
           {/* <div className={styles.admintitle}>Admin Search</div> */}
@@ -378,13 +383,17 @@ const HobbiesRequest: React.FC = () => {
                     </td>
 
                     <td className={styles.LoginType}>
-                      <Link href={hobbyreq.user_type == 'user'
-                        ? `/profile/${hobbyreq.user_id?.profile_url}`
-                        : `/page/${hobbyreq.listing_id?.page_url}`}>
-                      {hobbyreq.user_type == 'user'
-                        ? hobbyreq.user_id?.full_name
-                        : hobbyreq.listing_id?.title}
-                        </Link>
+                      <Link
+                        href={
+                          hobbyreq.user_type == 'user'
+                            ? `/profile/${hobbyreq.user_id?.profile_url}`
+                            : `/page/${hobbyreq.listing_id?.page_url}`
+                        }
+                      >
+                        {hobbyreq.user_type == 'user'
+                          ? hobbyreq.user_id?.full_name
+                          : hobbyreq.listing_id?.title}
+                      </Link>
                     </td>
                     <td className={styles.lastLoggedIn}>{hobbyreq?.similar}</td>
                     <td className={styles.pagesLength}>{hobbyreq?.status}</td>

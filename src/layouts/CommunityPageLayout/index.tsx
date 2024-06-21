@@ -129,6 +129,7 @@ const CommunityLayout: React.FC<Props> = ({
   const [hobbyMembers, setHobbymembers] = useState([])
   const [whatsNew, setWhatsNew] = useState([])
   const [SeeMorewhatsNew, setSeeMoreWhatsNew] = useState(true)
+  console.log({whatsNew})
 
   console.log('Number of hobbies:', activeProfile.data?._hobbies?.length)
 
@@ -225,6 +226,22 @@ const CommunityLayout: React.FC<Props> = ({
   console.log('selected', selectedLocation)
 
   console.log('selectedhobbyy', selectedHobby)
+
+  function getClassName(type: any) {
+    if (type === 'user') {
+      return 'default-user-icon'
+    } else if (type === 1) {
+      return 'default-people-listing-icon'
+    } else if (type === 2) {
+      return 'default-place-listing-icon'
+    } else if (type === 3) {
+      return 'default-program-listing-icon'
+    } else if (type === 4) {
+      return 'default-product-listing-icon'
+    } else if (type === 'listing') {
+      return 'default-people-listing-icon'
+    }
+  }
 
   const fetchPosts = async () => {
     if (showPageLoader) {
@@ -1421,7 +1438,7 @@ const CommunityLayout: React.FC<Props> = ({
             >
               <header>What's New</header>
               {whatsNew
-                ?.slice(0, SeeMorewhatsNew ? 3 : whatsNew.length)
+                ?.slice(0, SeeMorewhatsNew ? 3 : whatsNew.length) 
                 .map((obj: any, idx) => (
                   <div key={idx} className={styles['member']}>
                     <Link
@@ -1431,7 +1448,7 @@ const CommunityLayout: React.FC<Props> = ({
                       {obj?.profile_image ? (
                         <img src={obj.profile_image} />
                       ) : (
-                        <Image src={defaultUserIcon} alt="" />
+                        <div className={getClassName(obj?.type)+` ${styles['defaultImg']}`}></div>
                       )}
 
                       <p>{obj?.title}</p>

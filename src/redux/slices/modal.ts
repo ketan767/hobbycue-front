@@ -61,6 +61,7 @@ export type ModalType =
   | 'add-genre'
   | 'save-Modal'
   | 'HandleAdminAction'
+  | 'add-event'
 
 
   interface ModalState {

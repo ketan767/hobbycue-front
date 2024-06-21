@@ -10,7 +10,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { AuthModal } from './AuthModal'
-import { Dialog, Modal, Grow, Fade } from '@mui/material'
+import { Dialog, Modal, Grow, Fade, useMediaQuery } from '@mui/material'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { VerifyEmailModal } from './VerifyEmail'
 import styles from './ModalManager.module.css'
@@ -86,6 +86,7 @@ import ListingProductVariantsModal from './EditListing/ListingProductVariants'
 import ListingProductPurchase from './ListingProductPurchase'
 import HandleAdminAction from './AdminModals/ActionModal'
 import AdminActionModal from './AdminModals/ActionModal'
+import ListingAddEvent from './EditListing/ListingAddEvent'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -358,6 +359,8 @@ const ModalManager: React.FC = () => {
     handleClose,
   }
 
+  const isMobile = useMediaQuery("(max-width:1100px)");
+
   return (
     <>
       <Modal
@@ -380,17 +383,19 @@ const ModalManager: React.FC = () => {
           >
             <main
               className={
-                !(activeModal === 'user-onboarding-welcome')
+                `${!(activeModal === 'user-onboarding-welcome')
                   ? activeModal === 'create-post' ||
                     activeModal === 'update-post'
                     ? styles['create-post-postion']
                     : styles['pos-relative']
-                  : ''
+                  : ''}`
+                  +` ${activeModal==='add-event'&&styles['self-centre']}`
               }
               ref={mainRef}
             >
               {activeModal !== 'listing-onboarding' &&
                 activeModal !== 'user-onboarding-welcome' &&
+                activeModal !== 'add-event' &&
                 activeModal !== 'user-onboarding' && (
                   <>
                     <header className={styles['header']}>
@@ -557,9 +562,10 @@ const ModalManager: React.FC = () => {
               )}
 
               {activeModal === 'HandleAdminAction' && <AdminActionModal {...propData} />}
+              {activeModal === 'add-event' && <ListingAddEvent {...propData} />}
               {/* Modal Close Icon */}
               {closable &&
-                activeModal !== 'user-onboarding-welcome' &&
+                activeModal !== 'user-onboarding-welcome' && activeModal!== 'add-event' &&
                 !showAddGenreModal &&
                 !showAddHobbyModal && (
                   <CloseIcon
