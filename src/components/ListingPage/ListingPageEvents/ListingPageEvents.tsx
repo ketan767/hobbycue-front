@@ -6,7 +6,12 @@ import { RootState } from '@/redux/store'
 import ListingCard from '@/components/ListingCard/ListingCard'
 import { useMediaQuery } from '@mui/material'
 import { openModal } from '@/redux/slices/modal'
-import { updateEventFlow, updateListingModalData, updateListingTypeModalMode, updatePageDataForEvent } from '@/redux/slices/site'
+import {
+  updateEventFlow,
+  updateListingModalData,
+  updateListingTypeModalMode,
+  updatePageDataForEvent,
+} from '@/redux/slices/site'
 import { useRouter } from 'next/router'
 
 interface Props {
@@ -45,7 +50,7 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
   console.log('eventdata', eventData?.res?.data)
   const isMobile = useMediaQuery('(max-width:1100px)')
 
-  const router = useRouter();
+  const router = useRouter()
 
   const handleAddEvent = () => {
     dispatch(
@@ -53,7 +58,7 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
         type: 'add-event',
         closable: true,
         propData: {
-          handleSubmit: async (str: string, side:string) => {
+          handleSubmit: async (str: string, side: string) => {
             const jsonData =
               side === 'Right'
                 ? {
@@ -61,27 +66,27 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
                       relation: str,
                       listings: [data?._id],
                     },
-                    type:3
+                    type: 3,
                   }
                 : {
                     related_listings_left: {
                       relation: str,
                       listings: [data?._id],
                     },
-                    type:3
+                    type: 3,
                   }
 
-              // await create program page
-              const {err,res} = await createNewListing(jsonData);
-              if(err){
-                throw new Error();
-              }else{
-                dispatch(updatePageDataForEvent(res?.data?.data?.listing));
-                dispatch(updateEventFlow(true));
-                router.push('/add-listing')
-              }
-              // set state of listing modal type and listing modal data with eventFlowRunning true
-              // redirect to add-listing
+            // await create program page
+            const { err, res } = await createNewListing(jsonData)
+            if (err) {
+              throw new Error()
+            } else {
+              dispatch(updatePageDataForEvent(res?.data?.data?.listing))
+              dispatch(updateEventFlow(true))
+              router.push('/add-listing')
+            }
+            // set state of listing modal type and listing modal data with eventFlowRunning true
+            // redirect to add-listing
           },
           data: data,
         },
@@ -120,27 +125,22 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
       <main>
         {!eventData?.res ? (
           <section className={styles['data-container']}>
-            {itsMe && (
-              <div onClick={handleAddEvent} className={styles['add-event']}>
-                <div className={styles['new-tag']}>NEW</div>
-                <button>{plusIcon}</button>
-              </div>
-            )}
+            <div onClick={handleAddEvent} className={styles['add-event']}>
+              <div className={styles['new-tag']}>NEW</div>
+              <button>{plusIcon}</button>
+            </div>
+
             <div className={styles['no-data-div']}>
               <p className={styles['no-data-text']}>No events available</p>
             </div>
-            {!isMobile && !itsMe && (
-              <div className={styles['no-data-div']}></div>
-            )}
           </section>
         ) : (
           <div className={styles['card-container']}>
-            {itsMe && (
-              <div onClick={handleAddEvent} className={styles['add-event']}>
-                <div className={styles['new-tag']}>NEW</div>
-                <button>{plusIcon}</button>
-              </div>
-            )}
+            <div onClick={handleAddEvent} className={styles['add-event']}>
+              <div className={styles['new-tag']}>NEW</div>
+              <button>{plusIcon}</button>
+            </div>
+
             {/* Combine both data sources */}
             {(() => {
               const allListings = [

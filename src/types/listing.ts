@@ -37,4 +37,5 @@ type ListingPageData = {
   reviewsData: any //{ [key: string]: any }
   eventsData: any //{ [key: string]: any }
   storeData: any //{ [key: string]: any }
+  metadata:any
 }
