@@ -46,6 +46,33 @@
   white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    width: 100%;
+}
+
+.time-and-title{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.date-time{
+  display: flex;
+justify-content: center;
+align-items: center;
+gap: 16px;
+color: var(--Grey-Darker, #6D747A);
+font-family: 'Poppins';
+font-size: 12px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+}
+
+.date-time section{
+  display: flex;
+align-items: center;
+gap: 8px;
 }
 
 .title {
@@ -108,4 +135,16 @@
   .container{
     min-width: auto;
   }
+}
+
+.purpleText{
+  color: #8064a2 !important;
+}
+
+.greenText{
+  color: #77933c !important;
+}
+
+.blueText{
+  color: #0096c8 !important;
 }

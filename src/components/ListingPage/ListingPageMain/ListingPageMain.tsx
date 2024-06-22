@@ -391,6 +391,8 @@ const ListingPageMain: React.FC<Props> = ({
 
   // console.log('data', data)
 
+  const openAuthModal = () => dispatch(openModal({type:"auth",closable:true}));
+
   return (
     <>
       <PageGridLayout
@@ -634,6 +636,7 @@ const ListingPageMain: React.FC<Props> = ({
                     : ''
                 }`}
               >
+                {!isLoggedIn&&<li onClick={openAuthModal} className={styles['signInText']}>Sign in to view full contact details</li>}
                 {/* Page Admin */}
                 {(PageAdmin as any)?.full_name && isLoggedIn && (
                   <Link href={`/profile/${(PageAdmin as any)?.profile_url}`}>
@@ -671,7 +674,7 @@ const ListingPageMain: React.FC<Props> = ({
                   </a>
                 )}
                 {/* Phone */}
-                {data?.name && (
+                {data?.name && isLoggedIn && (
                   <Link href={`tel:${data?.name}`}>
                     <svg
                       width="24"
@@ -696,7 +699,7 @@ const ListingPageMain: React.FC<Props> = ({
                     <span className={styles.textdefault}>{data?.name} </span>
                   </Link>
                 )}
-                {data?.phone?.number && (
+                {data?.phone?.number && isLoggedIn && (
                   <Link href={`tel:${data?.phone?.number}`}>
                     <svg
                       width="24"
@@ -725,7 +728,7 @@ const ListingPageMain: React.FC<Props> = ({
                 )}
 
                 {/* WhatsApp Number */}
-                {data?.whatsapp_number?.number && (
+                {data?.whatsapp_number?.number && isLoggedIn && (
                   <Link href={`https://wa.me/${data?.whatsapp_number.number}`}>
                     <Image
                       src={WhatsappIcon}
@@ -740,7 +743,7 @@ const ListingPageMain: React.FC<Props> = ({
                 )}
 
                 {/* Email */}
-                {data?.public_email && (
+                {data?.public_email && isLoggedIn && (
                   <Link href={`mailto:${data?.public_email}`}>
                     <svg
                       width="24"
@@ -1376,6 +1379,7 @@ const ListingPageMain: React.FC<Props> = ({
                 styles['display-desktop']
               }${showContact ? ' ' + styles['display-mobile'] : ''}`}
             >
+              {!isLoggedIn&&<li onClick={openAuthModal} className={styles['signInText']}>Sign in to view full contact details</li>}
               {/* Page Admin */}
               {(PageAdmin as any)?.full_name && isLoggedIn && (
                 <Link href={`/profile/${(PageAdmin as any)?.profile_url}`}>
@@ -1408,7 +1412,7 @@ const ListingPageMain: React.FC<Props> = ({
                 </a>
               )}
               {/* Phone */}
-              {data?.name && (
+              {data?.name && isLoggedIn && (
                 <Link href={`tel:${data?.name}`}>
                   <svg
                     width="24"
@@ -1433,7 +1437,7 @@ const ListingPageMain: React.FC<Props> = ({
                   <span className={styles.textdefault}>{data?.name} </span>
                 </Link>
               )}
-              {data?.phone?.number && (
+              {data?.phone?.number && isLoggedIn && (
                 <Link href={`tel:${data.phone.prefix + data?.phone?.number}`}>
                   <svg
                     width="24"
@@ -1462,7 +1466,7 @@ const ListingPageMain: React.FC<Props> = ({
               )}
 
               {/* WhatsApp Number */}
-              {data?.whatsapp_number?.number && (
+              {data?.whatsapp_number?.number && isLoggedIn && (
                 <Link
                   href={`https://wa.me/${
                     data?.whatsapp_number?.prefix +
@@ -1482,7 +1486,7 @@ const ListingPageMain: React.FC<Props> = ({
               )}
 
               {/* Email */}
-              {data?.public_email && (
+              {data?.public_email && isLoggedIn && (
                 <Link href={`mailto:${data?.public_email}`}>
                   <svg
                     width="24"

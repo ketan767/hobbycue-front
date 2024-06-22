@@ -22,6 +22,7 @@ import ProfileContactSide from '@/components/ProfilePage/ProfileContactSides'
 import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/ProfileSocialMedia'
 import { updateProfileMenuExpandAll } from '@/redux/slices/site'
 import { useRouter } from 'next/router'
+import { useMediaQuery } from '@mui/material'
 
 interface Props {
   data: ProfilePageData
@@ -74,6 +75,39 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
   //   return <ErrorPage />
   // }
 
+  const itsMe = user?._id === data.pageData?._id
+  const isMobile = useMediaQuery('(max-width:1100px)')
+  const plusIcon = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="33"
+      height="33"
+      viewBox="0 0 33 33"
+      fill="none"
+    >
+      <g clip-path="url(#clip0_15499_3164)">
+        <path
+          d="M26.5289 17.7933H17.9574V26.3647C17.9574 27.3076 17.186 28.079 16.2432 28.079C15.3003 28.079 14.5289 27.3076 14.5289 26.3647V17.7933H5.95745C5.01459 17.7933 4.24316 17.0219 4.24316 16.079C4.24316 15.1362 5.01459 14.3647 5.95745 14.3647H14.5289V5.7933C14.5289 4.85044 15.3003 4.07901 16.2432 4.07901C17.186 4.07901 17.9574 4.85044 17.9574 5.7933V14.3647H26.5289C27.4717 14.3647 28.2432 15.1362 28.2432 16.079C28.2432 17.0219 27.4717 17.7933 26.5289 17.7933Z"
+          fill="#8064A2"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_15499_3164">
+          <rect
+            width="32"
+            height="32"
+            fill="white"
+            transform="translate(0.243164 0.0783691)"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+
+  const handleAddPage = () => {
+    router.push('/add-listing')
+  }
+
   return (
     <>
       <Head>
@@ -111,20 +145,38 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
             <main>
               {data.listingsData.length !== 0 ? (
                 <div className={styles['card-container']}>
+                  {itsMe && (
+                    <div
+                      onClick={handleAddPage}
+                      className={styles['add-event']}
+                    >
+                      <div className={styles['new-tag']}>NEW</div>
+                      <button>{plusIcon}</button>
+                    </div>
+                  )}
                   {data.listingsData.map((listing: any) => {
                     return <ListingCard key={listing._id} data={listing} />
                   })}
                 </div>
               ) : (
-                <section
-                  className={`${styles['dual-section-wrapper-desktop']}`}
-                >
+                <section className={styles['card-container']}>
+                  {itsMe && (
+                    <div
+                      onClick={handleAddPage}
+                      className={styles['add-event']}
+                    >
+                      <div className={styles['new-tag']}>NEW</div>
+                      <button>{plusIcon}</button>
+                    </div>
+                  )}
                   <div className={styles['no-posts-div']}>
                     <p className={styles['no-posts-text']}>
                       No pages available
                     </p>
                   </div>
-                  <div className={styles['no-posts-div']}></div>
+                  {!isMobile && !itsMe && (
+                    <div className={styles['no-posts-div']}></div>
+                  )}
                 </section>
               )}
             </main>
