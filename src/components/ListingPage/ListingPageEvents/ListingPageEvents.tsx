@@ -23,7 +23,7 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
   console.warn({ data })
   const dispatch = useDispatch()
 
-  const { user } = useSelector((state: RootState) => state.user)
+  const { isLoggedIn, user } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
   const itsMe = user?._id === data?.admin
   console.warn({ itsMe })
@@ -53,45 +53,49 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
   const router = useRouter()
 
   const handleAddEvent = () => {
-    dispatch(
-      openModal({
-        type: 'add-event',
-        closable: true,
-        propData: {
-          handleSubmit: async (str: string, side: string) => {
-            const jsonData =
-              side === 'Right'
-                ? {
-                    related_listings_right: {
-                      relation: str,
-                      listings: [data?._id],
-                    },
-                    type: 3,
-                  }
-                : {
-                    related_listings_left: {
-                      relation: str,
-                      listings: [data?._id],
-                    },
-                    type: 3,
-                  }
+    if (isLoggedIn) {
+      dispatch(
+        openModal({
+          type: 'add-event',
+          closable: true,
+          propData: {
+            handleSubmit: async (str: string, side: string) => {
+              const jsonData =
+                side === 'Right'
+                  ? {
+                      related_listings_right: {
+                        relation: str,
+                        listings: [data?._id],
+                      },
+                      type: 3,
+                    }
+                  : {
+                      related_listings_left: {
+                        relation: str,
+                        listings: [data?._id],
+                      },
+                      type: 3,
+                    }
 
-            // await create program page
-            const { err, res } = await createNewListing(jsonData)
-            if (err) {
-              throw new Error()
-            } else {
-              dispatch(updatePageDataForEvent(res?.data?.data?.listing))
-              dispatch(updateEventFlow(true))
-              router.push('/add-listing')
-            }
-            // set state of listing modal type and listing modal data with eventFlowRunning true
-            // redirect to add-listing
+              // await create program page
+              const { err, res } = await createNewListing(jsonData)
+              if (err) {
+                throw new Error()
+              } else {
+                dispatch(updatePageDataForEvent(res?.data?.data?.listing))
+                dispatch(updateEventFlow(true))
+                router.push('/add-listing')
+              }
+              // set state of listing modal type and listing modal data with eventFlowRunning true
+              // redirect to add-listing
+            },
+            data: data,
           },
-          data: data,
-        },
-      }),
-    )
+        }),
+      )
+    } else {
+      dispatch(openModal({ type: 'auth', closable: true }))
+    }
   }
 
   const plusIcon = (

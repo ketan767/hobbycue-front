@@ -62,6 +62,33 @@ const ListingReviewsTab: FC<{ pageData: any }> = ({ pageData }) => {
     return `${day} ${month} ${year} at ${formattedHours}:${formattedMinutes} ${ampm}`
   }
 
+  const plusSvg = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="17"
+      height="17"
+      viewBox="0 0 17 17"
+      fill="none"
+    >
+      <g clip-path="url(#clip0_13885_12079)">
+        <path
+          d="M13.6565 9.60714H9.37081V13.8929C9.37081 14.3643 8.9851 14.75 8.51367 14.75C8.04224 14.75 7.65653 14.3643 7.65653 13.8929V9.60714H3.37081C2.89939 9.60714 2.51367 9.22143 2.51367 8.75C2.51367 8.27857 2.89939 7.89286 3.37081 7.89286H7.65653V3.60714C7.65653 3.13571 8.04224 2.75 8.51367 2.75C8.9851 2.75 9.37081 3.13571 9.37081 3.60714V7.89286H13.6565C14.128 7.89286 14.5137 8.27857 14.5137 8.75C14.5137 9.22143 14.128 9.60714 13.6565 9.60714Z"
+          fill="#8064A2"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_13885_12079">
+          <rect
+            width="16"
+            height="16"
+            fill="white"
+            transform="translate(0.513672 0.75)"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+
   const iamAdmin = pageData?.admin === user?._id
 
   const [reviews, setReviews] = useState([])
@@ -133,42 +160,16 @@ const ListingReviewsTab: FC<{ pageData: any }> = ({ pageData }) => {
     reviewList()
   }, [])
   console.log('optionsActive', optionsActive)
-  const plusIcon = (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="33"
-      height="33"
-      viewBox="0 0 33 33"
-      fill="none"
-    >
-      <g clip-path="url(#clip0_15499_3164)">
-        <path
-          d="M26.5289 17.7933H17.9574V26.3647C17.9574 27.3076 17.186 28.079 16.2432 28.079C15.3003 28.079 14.5289 27.3076 14.5289 26.3647V17.7933H5.95745C5.01459 17.7933 4.24316 17.0219 4.24316 16.079C4.24316 15.1362 5.01459 14.3647 5.95745 14.3647H14.5289V5.7933C14.5289 4.85044 15.3003 4.07901 16.2432 4.07901C17.186 4.07901 17.9574 4.85044 17.9574 5.7933V14.3647H26.5289C27.4717 14.3647 28.2432 15.1362 28.2432 16.079C28.2432 17.0219 27.4717 17.7933 26.5289 17.7933Z"
-          fill="#8064A2"
-        />
-      </g>
-      <defs>
-        <clipPath id="clip0_15499_3164">
-          <rect
-            width="32"
-            height="32"
-            fill="white"
-            transform="translate(0.243164 0.0783691)"
-          />
-        </clipPath>
-      </defs>
-    </svg>
-  );
 
   return (
     <>
       <main>
         <section className={styles['data-container']}>
           {listingLayoutMode === 'view' && (
-           <div onClick={addReview} className={styles['add-event']}>
-           <div className={styles['new-tag']}>NEW</div>
-           <button>{plusIcon}</button>
-         </div>
+            <div onClick={addReview} className={styles['add-review-btn']}>
+              {plusSvg}
+              <p>Add Review</p>
+            </div>
           )}
           {pageData?._reviews.length == 0 ? (
             <>
@@ -176,7 +177,7 @@ const ListingReviewsTab: FC<{ pageData: any }> = ({ pageData }) => {
                 <p className={styles['no-data-text']}>No reviews</p>
               </div>
 
-              {/* {!isMobile && <div className={styles['no-data-div']}></div>} */}
+              {!isMobile && <div className={styles['no-data-div']}></div>}
             </>
           ) : (
             <>

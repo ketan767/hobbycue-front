@@ -170,8 +170,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     },
     {
       lastmod: new Date().toISOString(),
-      loc: 'https://blog.hobbycue.com/purple-cues',
-      name: `https://blog.hobbycue.com/purple-cues`,
+      loc: 'https://hobbycue.com/purple-cues',
+      name: `https://hobbycue.com/purple-cues`,
     },
     {
       lastmod: new Date().toISOString(),
@@ -180,33 +180,33 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     },
     {
       lastmod: new Date().toISOString(),
-      loc: 'https://blog.hobbycue.com/intern-links',
-      name: `https://blog.hobbycue.com/intern-links`,
+      loc: 'https://hobbycue.com/intern-links',
+      name: `https://hobbycue.com/intern-links`,
     },
     {
       lastmod: new Date().toISOString(),
-      loc: 'https://blog.hobbycue.com/terms/',
-      name: `https://blog.hobbycue.com/terms/`,
+      loc: 'https://hobbycue.com/terms/',
+      name: `https://hobbycue.com/terms/`,
     },
     {
       lastmod: new Date().toISOString(),
-      loc: 'https://blog.hobbycue.com/privacy/',
-      name: `https://blog.hobbycue.com/privacy/`,
+      loc: 'https://hobbycue.com/privacy/',
+      name: `https://hobbycue.com/privacy/`,
     },
     {
       lastmod: new Date().toISOString(),
-      loc: 'https://blog.hobbycue.com/returns/',
-      name: `https://blog.hobbycue.com/returns/`,
+      loc: 'https://hobbycue.com/returns/',
+      name: `https://hobbycue.com/returns/`,
     },
     {
       lastmod: new Date().toISOString(),
-      loc: 'https://blog.hobbycue.com/thank-you/',
-      name: `https://blog.hobbycue.com/thank-you/`,
+      loc: 'https://hobbycue.com/thank-you/',
+      name: `https://hobbycue.com/thank-you/`,
     },
     {
       lastmod: new Date().toISOString(),
-      loc: 'https://blog.hobbycue.com/releases/',
-      name: `https://blog.hobbycue.com/releases/`,
+      loc: 'https://hobbycue.com/releases/',
+      name: `https://hobbycue.com/releases/`,
     },
   ]
 

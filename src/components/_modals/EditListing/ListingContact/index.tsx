@@ -50,7 +50,9 @@ type Props = {
   propData?: any
 }
 type ListingContactData = {
+  admin_note: InputData<string>
   public_email: InputData<string>
+  page_url: InputData<string>
   phone: {
     number: string
     prefix: string
@@ -88,6 +90,8 @@ const ListingContactEditModal: React.FC<Props> = ({
   const [tick, setTick] = useState(false)
   const [isError, setIsError] = useState(false)
   const [data, setData] = useState<ListingContactData>({
+    admin_note: { value: '', error: null },
+    page_url: { value: '', error: null },
     phone: { number: '', prefix: '', error: null },
     public_email: { value: '', error: null },
     website: { value: '', error: null },
@@ -99,7 +103,10 @@ const ListingContactEditModal: React.FC<Props> = ({
   const WhtphoneRef = useRef<HTMLInputElement>(null)
   const emailRef = useRef<HTMLInputElement>(null)
   const websiteRef = useRef<HTMLInputElement>(null)
+  const urlSpanRef = useRef<HTMLSpanElement>(null)
   const [initialData, setInitialData] = useState<ListingContactData>({
+    admin_note: { value: '', error: null },
+    page_url: { value: '', error: null },
     phone: { number: '', prefix: '', error: null },
     public_email: { value: '', error: null },
     website: { value: '', error: null },
@@ -109,8 +116,9 @@ const ListingContactEditModal: React.FC<Props> = ({
   const [selectedCountryCode, setSelectedCountryCode] = useState('+91')
   const [selectedWpCountryCode, setWpSelectedCountryCode] = useState('+91')
   const [isChanged, setIsChanged] = useState(false)
+  const [urlSpanLength, setUrlSpanLength] = useState<number>(0)
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
+  const profileUrlRef = useRef<HTMLInputElement>(null)
   const [showDropdown, setShowDropdown] = useState(false)
   const [dropdownLoading, setDropdownLoading] = useState<boolean>(true)
   const [allDropdownValues, setAllDropdownValues] = useState<any>([])
@@ -121,6 +129,14 @@ const ListingContactEditModal: React.FC<Props> = ({
   useEffect(() => {
     setInitialData((prev) => {
       return {
+        admin_note: {
+          ...prev.admin_note,
+          value: listingModalData.admin_note as string,
+        },
+        page_url: {
+          ...prev.page_url,
+          value: listingModalData.page_url as string,
+        },
         public_email: {
           ...prev.public_email,
           value: listingModalData.public_email as string,
@@ -346,14 +362,6 @@ const ListingContactEditModal: React.FC<Props> = ({
     if (hasError === true) {
       return
     }
-    if (isTransferModal) {
-      const trasnferdata = {
-        userId: selectedPage,
-        listingId: listingModalData._id,
-        OwnerId: user._id,
-      }
-      const { err, res } = await transferListing(trasnferdata)
-    }
 
     const jsonData = {
       phone: {
@@ -366,17 +374,32 @@ const ListingContactEditModal: React.FC<Props> = ({
         number: data.whatsapp_number.number?.replace(/\s/g, ''),
         prefix: selectedWpCountryCode,
       },
+      admin_note: data.admin_note.value,
+
+      ...(isTransferModal && { page_url: data.page_url.value }),
     }
 
     setSubmitBtnLoading(true)
     const { err, res } = await updateListing(listingModalData._id, jsonData)
+    if (isTransferModal) {
+      const trasnferdata = {
+        userId: selectedPage,
+        listingId: listingModalData._id,
+        OwnerId: user._id,
+      }
+      const { err, res } = await transferListing(trasnferdata)
+    }
     setSubmitBtnLoading(false)
     if (err) return console.log(err)
     if (res?.data.success) {
       dispatch(updateListingModalData(res?.data.data.listing))
       if (onComplete) onComplete()
       else {
-        window.location.reload()
+        if (isTransferModal) {
+          window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/page/${listingModalData.page_url}`
+        } else {
+          window.location.reload()
+        }
         dispatch(closeModal())
       }
     }
@@ -410,6 +433,14 @@ const ListingContactEditModal: React.FC<Props> = ({
     }
     setData((prev) => {
       return {
+        admin_note: {
+          ...prev.admin_note,
+          value: listingModalData.admin_note as string,
+        },
+        page_url: {
+          ...prev.page_url,
+          value: listingModalData.page_url as string,
+        },
         public_email: {
           ...prev.public_email,
           value: listingModalData.public_email as string,
@@ -516,6 +547,10 @@ const ListingContactEditModal: React.FC<Props> = ({
       return () => clearTimeout(timer)
     }
   }, [isError])
+  useEffect(() => {
+    const length = urlSpanRef.current?.offsetWidth ?? 0
+    setUrlSpanLength(length + 12)
+  }, [])
 
   if (confirmationModal) {
     return (
@@ -538,59 +573,92 @@ const ListingContactEditModal: React.FC<Props> = ({
         />
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>{'Contact Information'}</h4>
+          <h4 className={styles['heading']}>
+            {isTransferModal ? 'Transfer Page' : 'Contact Information'}
+          </h4>
         </header>
 
         <hr className={styles['modal-hr']} />
 
         <section className={styles['body']}>
           <>
-            {/* Public Email */}
-            {listingModalData.type === listingTypes.PEOPLE ||
-            listingModalData.type === listingTypes.PROGRAM ||
-            listingModalData.type === listingTypes.PLACE ? (
-              <div className={styles.useEmailContainer}>
-                <p>At least one mode of contact is required</p>
-                <OutlinedButton
-                  className={styles['use-mine-button']}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault()
-                      e.stopPropagation()
-                      setData((prev) => {
-                        return {
-                          ...prev,
-                          public_email: { value: user.email, error: null },
-                          phone: {
-                            number: data.phone.number,
-                            prefix: selectedCountryCode,
-                            error: null,
-                          },
-                          website: { value: user.website, error: null },
-                        }
-                      })
-                    }
-                  }}
-                  onClick={() =>
-                    setData((prev) => {
-                      return {
-                        ...prev,
-                        public_email: { value: user.email, error: null },
-                        phone: {
-                          number: data.phone.number,
-                          prefix: selectedCountryCode,
-                          error: null,
-                        },
-                        website: { value: user.website, error: null },
-                      }
-                    })
-                  }
-                >
-                  Use Mine
-                </OutlinedButton>
+            {isTransferModal ? (
+              <div
+                className={`${styles['input-box']} ${
+                  data.page_url.error ? styles['input-box-error'] : ''
+                }`}
+              >
+                <label className={styles['label-required']}>
+                  Listing page URL
+                </label>
+                <div className={styles['profile-url-input']}>
+                  <input
+                    type="text"
+                    placeholder=""
+                    required
+                    value={data?.page_url.value as string}
+                    name="page_url"
+                    onChange={handleInputChange}
+                    ref={profileUrlRef}
+                    style={{
+                      paddingLeft: urlSpanLength + 'px',
+                      paddingTop: '13px',
+                    }}
+                  />
+                  <span ref={urlSpanRef}>{'/page/'}</span>
+                </div>
+                <p className={styles['helper-text']}>{data.page_url.error}</p>
               </div>
             ) : (
-              <></>
+              <>
+                {/* Public Email */}
+                {listingModalData.type === listingTypes.PEOPLE ||
+                listingModalData.type === listingTypes.PROGRAM ||
+                listingModalData.type === listingTypes.PLACE ? (
+                  <div className={styles.useEmailContainer}>
+                    <p>At least one mode of contact is required</p>
+                    <OutlinedButton
+                      className={styles['use-mine-button']}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          setData((prev) => {
+                            return {
+                              ...prev,
+                              public_email: { value: user.email, error: null },
+                              phone: {
+                                number: data.phone.number,
+                                prefix: selectedCountryCode,
+                                error: null,
+                              },
+                              website: { value: user.website, error: null },
+                            }
+                          })
+                        }
+                      }}
+                      onClick={() =>
+                        setData((prev) => {
+                          return {
+                            ...prev,
+                            public_email: { value: user.email, error: null },
+                            phone: {
+                              number: data.phone.number,
+                              prefix: selectedCountryCode,
+                              error: null,
+                            },
+                            website: { value: user.website, error: null },
+                          }
+                        })
+                      }
+                    >
+                      Use Mine
+                    </OutlinedButton>
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </>
             )}
 
             <div className={styles['two-column-grid']}>
@@ -848,11 +916,26 @@ const ListingContactEditModal: React.FC<Props> = ({
               />
               <p className={styles['helper-text']}>{data.website.error}</p>
             </div>
+            <div className={styles['note-box']}>
+              <label>Note</label>
+              <textarea
+                className={styles['long-input-box']}
+                placeholder="This information is visible only to Admins of this Page"
+                autoComplete="nickname"
+                value={data.admin_note.value}
+                name="admin_note"
+                onChange={handleInputChange}
+              />
+              <p className={styles['helper-text']}>{data.admin_note.error}</p>
+            </div>
             <hr className={styles['hr-line']} />
 
             <p className={styles.kycText}>
-              After updating the Listing Page, it can be Transferred to a
-              different Page Admin
+              {isTransferModal
+                ? 'Once you update the Page Admin, you will lose access to edit the page.'
+                : `After updating the Listing Page
+              it can be Transferred to a
+              different Page Admin`}
             </p>
           </>
         </section>

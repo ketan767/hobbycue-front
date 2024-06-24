@@ -359,7 +359,7 @@ const ModalManager: React.FC = () => {
     handleClose,
   }
 
-  const isMobile = useMediaQuery("(max-width:1100px)");
+  const isMobile = useMediaQuery('(max-width:1100px)')
 
   return (
     <>
@@ -383,13 +383,14 @@ const ModalManager: React.FC = () => {
           >
             <main
               className={
-                `${!(activeModal === 'user-onboarding-welcome')
-                  ? activeModal === 'create-post' ||
-                    activeModal === 'update-post'
-                    ? styles['create-post-postion']
-                    : styles['pos-relative']
-                  : ''}`
-                  +` ${activeModal==='add-event'&&styles['self-centre']}`
+                `${
+                  !(activeModal === 'user-onboarding-welcome')
+                    ? activeModal === 'create-post' ||
+                      activeModal === 'update-post'
+                      ? styles['create-post-postion']
+                      : styles['pos-relative']
+                    : ''
+                }` + ` ${activeModal === 'add-event' && styles['self-centre']}`
               }
               ref={mainRef}
             >
@@ -561,11 +562,14 @@ const ModalManager: React.FC = () => {
                 <ViewImageModal {...viewImageProps} />
               )}
 
-              {activeModal === 'HandleAdminAction' && <AdminActionModal {...propData} />}
+              {activeModal === 'HandleAdminAction' && (
+                <AdminActionModal {...propData} />
+              )}
               {activeModal === 'add-event' && <ListingAddEvent {...propData} />}
               {/* Modal Close Icon */}
               {closable &&
-                activeModal !== 'user-onboarding-welcome' && activeModal!== 'add-event' &&
+                activeModal !== 'user-onboarding-welcome' &&
+                activeModal !== 'add-event' &&
                 !showAddGenreModal &&
                 !showAddHobbyModal && (
                   <CloseIcon

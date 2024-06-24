@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import store, { RootState } from '@/redux/store'
 import { useDispatch, useSelector } from 'react-redux'
-import { checkIfUrlExists, isEmptyField } from '@/utils'
+import { checkIfUrlExists, isEmptyField, isVideoLink } from '@/utils'
 import { getAllHobbies } from '@/services/hobby.service'
 import {
   createListingPost,
@@ -36,6 +36,7 @@ import MobileLocationDropdown from './MobileLocationDropdown'
 import { updateActiveProfile } from '@/redux/slices/user'
 import defaultImg from '@/assets/svg/default-images/default-user-icon.svg'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import ReactPlayer from 'react-player'
 
 const CustomEditor = dynamic(() => import('@/components/CustomEditor'), {
   ssr: false,
@@ -892,77 +893,91 @@ export const CreatePost: React.FC<Props> = ({
                 <></>
               )}
 
-              {hasLink && metaData && showMetaData && (
-                <div className={styles['show-metadata']}>
-                  <svg
-                    className={styles['metadata-close-icon']}
-                    onClick={() => {
-                      setShowMetaData(false)
-                    }}
-                    width="30"
-                    height="30"
-                    viewBox="0 0 25 25"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <circle cx="12.3242" cy="12.8281" r="12" fill="white" />
-                    <g clip-path="url(#clip0_11249_41681)">
-                      <path
-                        d="M16.5247 8.63526C16.2647 8.37526 15.8447 8.37526 15.5847 8.63526L12.3247 11.8886L9.06469 8.62859C8.80469 8.36859 8.38469 8.36859 8.12469 8.62859C7.86469 8.88859 7.86469 9.30859 8.12469 9.56859L11.3847 12.8286L8.12469 16.0886C7.86469 16.3486 7.86469 16.7686 8.12469 17.0286C8.38469 17.2886 8.80469 17.2886 9.06469 17.0286L12.3247 13.7686L15.5847 17.0286C15.8447 17.2886 16.2647 17.2886 16.5247 17.0286C16.7847 16.7686 16.7847 16.3486 16.5247 16.0886L13.2647 12.8286L16.5247 9.56859C16.778 9.31526 16.778 8.88859 16.5247 8.63526Z"
-                        fill="#08090A"
+              {hasLink && showMetaData && (
+                <>
+                  {isVideoLink(url) ? (
+                    <div className={styles.videoPlayer}>
+                      <ReactPlayer
+                        width="100%"
+                        height="410px"
+                        url={url}
+                        controls={true}
                       />
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_11249_41681">
-                        <rect
-                          width="16"
-                          height="16"
-                          fill="white"
-                          transform="translate(4.32422 4.82812)"
-                        />
-                      </clipPath>
-                    </defs>
-                  </svg>
+                    </div>
+                  ) : (
+                    <div className={styles['show-metadata']}>
+                      <svg
+                        className={styles['metadata-close-icon']}
+                        onClick={() => {
+                          setShowMetaData(false)
+                        }}
+                        width="30"
+                        height="30"
+                        viewBox="0 0 25 25"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <circle cx="12.3242" cy="12.8281" r="12" fill="white" />
+                        <g clip-path="url(#clip0_11249_41681)">
+                          <path
+                            d="M16.5247 8.63526C16.2647 8.37526 15.8447 8.37526 15.5847 8.63526L12.3247 11.8886L9.06469 8.62859C8.80469 8.36859 8.38469 8.36859 8.12469 8.62859C7.86469 8.88859 7.86469 9.30859 8.12469 9.56859L11.3847 12.8286L8.12469 16.0886C7.86469 16.3486 7.86469 16.7686 8.12469 17.0286C8.38469 17.2886 8.80469 17.2886 9.06469 17.0286L12.3247 13.7686L15.5847 17.0286C15.8447 17.2886 16.2647 17.2886 16.5247 17.0286C16.7847 16.7686 16.7847 16.3486 16.5247 16.0886L13.2647 12.8286L16.5247 9.56859C16.778 9.31526 16.778 8.88859 16.5247 8.63526Z"
+                            fill="#08090A"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_11249_41681">
+                            <rect
+                              width="16"
+                              height="16"
+                              fill="white"
+                              transform="translate(4.32422 4.82812)"
+                            />
+                          </clipPath>
+                        </defs>
+                      </svg>
 
-                  {/* {metaData?.image && (
+                      {/* {metaData?.image && (
                     <img
                       className={styles['metadata-image']}
                       src={metaData?.image}
                       alt=""
                     />
                   )} */}
-                  <div className={styles['metadata-content']}>
-                    <img
-                      className={styles['metadata']}
-                      src={
-                        (typeof metaData?.image === 'string' &&
-                          metaData.image) ||
-                        (typeof metaData?.icon === 'string' && metaData.icon) ||
-                        defaultImg
-                      }
-                      alt=""
-                    />
+                      <div className={styles['metadata-content']}>
+                        <img
+                          className={styles['metadata']}
+                          src={
+                            (typeof metaData?.image === 'string' &&
+                              metaData.image) ||
+                            (typeof metaData?.icon === 'string' &&
+                              metaData.icon) ||
+                            defaultImg
+                          }
+                          alt=""
+                        />
 
-                    <div className={styles['metadata-info-container']}>
-                      {metaData?.title && (
-                        <p className={styles['metadata-title']}>
-                          {metaData?.title}
-                        </p>
-                      )}
-                      {!isMobile && metaData?.url && (
+                        <div className={styles['metadata-info-container']}>
+                          {metaData?.title && (
+                            <p className={styles['metadata-title']}>
+                              {metaData?.title}
+                            </p>
+                          )}
+                          {!isMobile && metaData?.url && (
+                            <p className={styles['metadata-url']}>
+                              {metaData?.description}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                      {isMobile && (
                         <p className={styles['metadata-url']}>
-                          {metaData?.description}
+                          {' '}
+                          {metaData?.description}{' '}
                         </p>
                       )}
                     </div>
-                  </div>
-                  {isMobile && (
-                    <p className={styles['metadata-url']}>
-                      {' '}
-                      {metaData?.description}{' '}
-                    </p>
                   )}
-                </div>
+                </>
               )}
             </section>
 

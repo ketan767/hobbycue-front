@@ -67,6 +67,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
       setPostData(res.data.data.posts?.[0])
     }
     setIsLoadingPosts(false)
+    router.push('/community')
   }
 
   const openPostmodal = () => {
@@ -87,10 +88,10 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
   return (
     <>
       <Head>
-        <meta property="og:image" content={`${data?.metadata.data?.image}`} />
+        <meta property="og:image" content={`${data?.metadata?.data?.image}`} />
         <meta
           property="og:image:secure_url"
-          content={`${data.metadata.data?.image}`}
+          content={`${data.metadata?.data?.image}`}
         />
         <meta
           property="og:description"

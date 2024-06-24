@@ -10,6 +10,5 @@ module.exports = {
       `${siteUrl}/server-sitemap.xml`,
     ],
   },
-  exclude: ['/admin'],
-  exclude: ['/admin/dashbaord'],
+  exclude: ['/admin', '/admin/dashbaord'],
 }

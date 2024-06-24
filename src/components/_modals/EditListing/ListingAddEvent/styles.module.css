@@ -219,8 +219,15 @@
   height: 56px;
   flex-shrink: 0;
   border-radius: 4px;
+  border: 1px solid #8064A2;
 }
 
+.default-svg {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: 4px;
+}
 
 .page-group .page-details {
   display: flex;

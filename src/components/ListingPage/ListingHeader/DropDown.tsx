@@ -130,7 +130,7 @@ const Dropdown: React.FC<Props> = ({
           {userType === 'edit' && (
             <>
               <li ref={supportRef}>Support</li>
-              {/* <li ref={transferRef}>Transfer</li> */}
+              <li ref={transferRef}>Transfer</li>
             </>
           )}
           {userType === 'anonymous' && (

@@ -12,7 +12,11 @@ import peopleSvg from '@/assets/svg/People.svg'
 import placeSvg from '@/assets/svg/Place.svg'
 import InputSelect from '@/components/_formElements/Select/Select'
 import { DropdownOption } from '../../CreatePost/Dropdown/DropdownOption'
-import { getAllListingRelationTypes } from '@/services/listing.service'
+import {
+  getAllEventRelationTypes,
+  getAllListingRelationTypes,
+} from '@/services/listing.service'
+import { useRouter } from 'next/router'
 
 type Props = {
   data?: any
@@ -38,19 +42,22 @@ const ListingAddEvent: React.FC<Props> = ({
       _id: string
     }[]
   >([])
+  const listingPageData = useSelector(
+    (state: RootState) => state.site.listingPageData,
+  )
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
     message: '',
   })
-  console.log({ data })
+  const router = useRouter()
 
   useEffect(() => {
     const fetchRelations = async () => {
       let query = `pageType=${
-        parentType === 'people' ? 'Program' : 'Program'
-      }&Side=Right&Show=Y`
-      const { err, res } = await getAllListingRelationTypes(query)
+        listingPageData.type === 1 ? 'People' : 'Place'
+      }&Show=Y`
+      const { err, res } = await getAllEventRelationTypes(query)
 
       if (err) {
         console.log({ err })
@@ -59,7 +66,7 @@ const ListingAddEvent: React.FC<Props> = ({
           res.data.data.filter(
             (obj: any) =>
               obj?.pageType ===
-              (parentType === 'people' ? 'Program' : 'Program'),
+              (listingPageData.type === 1 ? 'People' : 'Place'),
           ),
         )
         console.log({ d: res.data.data })
@@ -121,9 +128,13 @@ const ListingAddEvent: React.FC<Props> = ({
           </p>
           <div className={styles['page-group']}>
             <img
-              className={styles['img']}
+              className={`${
+                data?.profile_image ? styles['img'] : styles['default-svg']
+              }`}
               src={
-                data?.profile_image ?? data?.type === 1
+                data?.profile_image
+                  ? data?.profile_image
+                  : data?.type === 1
                   ? peopleSvg.src
                   : placeSvg.src
               }
@@ -177,7 +188,15 @@ const ListingAddEvent: React.FC<Props> = ({
           </div>
         </section>
         <footer className={styles['footer']}>
-          <button className={styles['add-other']}>Add Other</button>
+          <button
+            onClick={() => {
+              router.push('/add-listing')
+              dispatch(closeModal())
+            }}
+            className={styles['add-other']}
+          >
+            Add Other
+          </button>
           <button
             ref={nextButtonRef}
             className="modal-footer-btn submit"

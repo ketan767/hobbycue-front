@@ -351,6 +351,20 @@ export const getAllListingUrls = async (
     }
   }
 
+
+  export const getAllEventRelationTypes = async (query: string) => {
+    try {
+      const res = await axiosInstance.get(`listing/event-relation-types/?${query}`)
+      return { res: res, err: null }
+    } catch (error) {
+      console.error(error)
+      return { err: error, res: null }
+    }
+  }
+
+
+  
+
   export const getProductVariant = async (
     id:string
   ): Promise<ApiReturnObject> => {

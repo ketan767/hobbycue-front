@@ -4,7 +4,12 @@ import styles from './style.module.css'
 
 import { RootState } from '@/redux/store'
 import { useDispatch, useSelector } from 'react-redux'
-import { checkIfUrlExists, dateFormat, isEmptyField } from '@/utils'
+import {
+  checkIfUrlExists,
+  dateFormat,
+  isEmptyField,
+  isVideoLink,
+} from '@/utils'
 import { getAllHobbies } from '@/services/hobby.service'
 import {
   addPostComment,
@@ -40,6 +45,7 @@ import Link from 'next/link'
 import Slider from '@/components/Slider/Slider'
 import LinkPreviewLoader from '@/components/LinkPreviewLoader'
 import { setShowPageLoader } from '@/redux/slices/site'
+import ReactPlayer from 'react-player'
 
 type Props = {
   confirmationModal?: boolean
@@ -320,35 +326,58 @@ export const PostModal: React.FC<Props> = ({
                   <LinkPreviewLoader />
                 ) : (
                   <>
-                    <div className={styles['posts-meta-data-container']}>
-                      <a
-                        href={url}
-                        target="_blank"
-                        className={styles['posts-meta-img']}
-                      >
-                        <img
-                          src={
-                            (typeof metaData?.image === 'string' &&
-                              metaData.image) ||
-                            (typeof metaData?.icon === 'string' &&
-                              metaData.icon) ||
-                            defaultImg
-                          }
-                          alt="link-image"
-                          width={80}
-                          height={80}
+                    {isVideoLink(url) ? (
+                      <div className={styles.videoPlayer}>
+                        <ReactPlayer
+                          width="100%"
+                          height="410px"
+                          url={url}
+                          controls={true}
                         />
-                      </a>
-                      <div className={styles['posts-meta-content']}>
-                        <a
-                          href={url}
-                          target="_blank"
-                          className={styles.contentHead}
-                        >
-                          {' '}
-                          {metaData?.title}{' '}
-                        </a>
-                        {!isMobile && (
+                      </div>
+                    ) : (
+                      <>
+                        <div className={styles['posts-meta-data-container']}>
+                          <a
+                            href={url}
+                            target="_blank"
+                            className={styles['posts-meta-img']}
+                          >
+                            <img
+                              src={
+                                (typeof metaData?.image === 'string' &&
+                                  metaData.image) ||
+                                (typeof metaData?.icon === 'string' &&
+                                  metaData.icon) ||
+                                defaultImg
+                              }
+                              alt="link-image"
+                              width={80}
+                              height={80}
+                            />
+                          </a>
+                          <div className={styles['posts-meta-content']}>
+                            <a
+                              href={url}
+                              target="_blank"
+                              className={styles.contentHead}
+                            >
+                              {' '}
+                              {metaData?.title}{' '}
+                            </a>
+                            {!isMobile && (
+                              <a
+                                href={url}
+                                target="_blank"
+                                className={styles.contentUrl}
+                              >
+                                {' '}
+                                {metaData?.description}{' '}
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                        {isMobile && (
                           <a
                             href={url}
                             target="_blank"
@@ -358,17 +387,7 @@ export const PostModal: React.FC<Props> = ({
                             {metaData?.description}{' '}
                           </a>
                         )}
-                      </div>
-                    </div>
-                    {isMobile && (
-                      <a
-                        href={url}
-                        target="_blank"
-                        className={styles.contentUrl}
-                      >
-                        {' '}
-                        {metaData?.description}{' '}
-                      </a>
+                      </>
                     )}
                   </>
                 )}
