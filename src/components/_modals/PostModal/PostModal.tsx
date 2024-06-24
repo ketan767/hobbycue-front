@@ -321,7 +321,13 @@ export const PostModal: React.FC<Props> = ({
               </div>
             )}
             {activePost?.has_link && (
-              <div className={styles['posts-meta-parent']}>
+              <div
+                className={
+                  isVideoLink(url)
+                    ? styles['post-video-link']
+                    : styles['posts-meta-parent']
+                }
+              >
                 {linkLoading ? (
                   <LinkPreviewLoader />
                 ) : (

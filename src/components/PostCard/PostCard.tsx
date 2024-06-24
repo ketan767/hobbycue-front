@@ -453,7 +453,13 @@ const PostCard: React.FC<Props> = (props) => {
             <></>
           )}
           {has_link && props.currentSection !== 'links' && (
-            <div className={styles['posts-meta-parent']}>
+            <div
+              className={
+                isVideoLink(url)
+                  ? styles['post-video-link']
+                  : styles['posts-meta-parent']
+              }
+            >
               {linkLoading ? (
                 <LinkPreviewLoader />
               ) : (
@@ -461,6 +467,7 @@ const PostCard: React.FC<Props> = (props) => {
                   {isVideoLink(url) ? (
                     <div className={styles.videoPlayer}>
                       <ReactPlayer
+                        className={styles.reactplayer}
                         width="100%"
                         height="410px"
                         url={url}
@@ -496,26 +503,16 @@ const PostCard: React.FC<Props> = (props) => {
                           >
                             {metaData?.title}
                           </a>
-                          {!isMobile && (
-                            <a
-                              href={url}
-                              target="_blank"
-                              className={styles.contentUrl}
-                            >
-                              {metaData?.description}
-                            </a>
-                          )}
+
+                          <a
+                            href={url}
+                            target="_blank"
+                            className={styles.contentUrl}
+                          >
+                            {metaData?.description}
+                          </a>
                         </div>
                       </div>
-                      {isMobile && (
-                        <a
-                          href={url}
-                          target="_blank"
-                          className={styles.contentUrl}
-                        >
-                          {metaData?.description}
-                        </a>
-                      )}
                     </>
                   )}
                 </>
