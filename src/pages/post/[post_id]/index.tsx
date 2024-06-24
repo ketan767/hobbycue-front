@@ -95,14 +95,18 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
         />
         <meta
           property="og:description"
-          content={`${data.metadata?.data.description}`}
+          content={`${
+            data.metadata?.data?.description
+              ? data.metadata?.data?.description
+              : ''
+          }`}
         />
         <meta
           property="og:url"
           content={`${process.env.NEXT_PUBLIC_BASE_URL}/page/${data?.postsData?._id}`}
         />
         <meta property="og:image:alt" content="Profile picture" />
-        <title>{`${data.metadata?.data.title} | HobbyCue`}</title>
+        <title>{`${data?.metadata?.data?.title} | HobbyCue`}</title>
       </Head>
       <CommunityPageLayout activeTab="posts" singlePostPage={true}>
         <main>
@@ -138,24 +142,21 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     `populate=_genre,_hobby&_id=${postId}`,
   )
   const { err, res } = await getAllPosts(queryParams.toString())
-  console.log('postiddddddddddddd', postId)
+
   let metadata = null
   if (res?.data?.data.posts) {
     const post = res?.data?.data?.posts[0]
-    console.log('postdataaaaaaaaaaaaaa', post)
+
     const regex =
       /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
     const urlMatch = post.content.match(regex)
-    console.log('isurlmachhhhhhhhhhhhh', urlMatch)
 
     if (urlMatch) {
       const url = urlMatch[0]
-      console.log('metaurllllllllllllllllllllllllllll', url)
+
       try {
         const response = await getMetadata(url)
         metadata = response?.res?.data?.data
-
-        console.log('metaaaaadataaaa', metadata)
       } catch (error) {
         console.error('Failed to fetch metadata', error)
       }

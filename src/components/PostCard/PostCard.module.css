@@ -587,6 +587,7 @@ background: rgba(128, 100, 162, 0.25);
     font-size: 12px;
   }
   .post-card-wrapper .body .content {
+    padding-top: 0;
     font-size: 12px;
   }
   .content{
@@ -653,5 +654,18 @@ background: rgba(128, 100, 162, 0.25);
   margin: 0;
   padding: 0;
   width: 100%;
+}
+.reactplayer {
+  height: 208px !important;
+}
+.post-card-wrapper > header {
+  padding-bottom: 0;
+}
+.metaImgContainer img {
+  width: 125px;
+  height: 125px;
+}
+.metaImgContainer {
+  width: 125px;
 }
 }
