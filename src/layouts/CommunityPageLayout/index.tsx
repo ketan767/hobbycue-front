@@ -129,7 +129,7 @@ const CommunityLayout: React.FC<Props> = ({
   const [hobbyMembers, setHobbymembers] = useState([])
   const [whatsNew, setWhatsNew] = useState([])
   const [SeeMorewhatsNew, setSeeMoreWhatsNew] = useState(true)
-  console.log({whatsNew})
+  console.log({ whatsNew })
 
   console.log('Number of hobbies:', activeProfile.data?._hobbies?.length)
 
@@ -333,9 +333,9 @@ const CommunityLayout: React.FC<Props> = ({
         return { ...post, content }
       })
       store.dispatch(updatePosts(posts))
-      if(posts?.length===0){
+      if (posts?.length === 0) {
         setShowPanel(true)
-      }else{
+      } else {
         setShowPanel(false)
       }
     }
@@ -701,7 +701,6 @@ const CommunityLayout: React.FC<Props> = ({
       }
     })
   }
-  console.warn('hobbyMembersssssssssss', hobbyMembers)
 
   const handleStartPost = () => {
     if (!user.is_onboarded) {
@@ -1215,16 +1214,16 @@ const CommunityLayout: React.FC<Props> = ({
                   <section className={styles['dropdowns-panel']}>
                     {[
                       {
-                        name: "Hobby Members",
+                        name: 'Hobby Members',
                         options: hobbyMembers,
                         type: 'members',
-                        invite: true
+                        invite: true,
                       },
                       {
                         name: "What's New",
                         options: whatsNew,
                         type: 'members',
-                        initialOpen: allPosts.length===0
+                        initialOpen: allPosts.length === 0,
                       },
                       {
                         name: 'Trending Hobbies',
@@ -1237,7 +1236,7 @@ const CommunityLayout: React.FC<Props> = ({
                           options: any[]
                           type?: string
                           invite?: boolean
-                          initialOpen?:boolean
+                          initialOpen?: boolean
                         },
                         idx: number,
                       ) => (
@@ -1438,7 +1437,7 @@ const CommunityLayout: React.FC<Props> = ({
             >
               <header>What's New</header>
               {whatsNew
-                ?.slice(0, SeeMorewhatsNew ? 3 : whatsNew.length) 
+                ?.slice(0, SeeMorewhatsNew ? 3 : whatsNew.length)
                 .map((obj: any, idx) => (
                   <div key={idx} className={styles['member']}>
                     <Link
@@ -1448,7 +1447,11 @@ const CommunityLayout: React.FC<Props> = ({
                       {obj?.profile_image ? (
                         <img src={obj.profile_image} />
                       ) : (
-                        <div className={getClassName(obj?.type)+` ${styles['defaultImg']}`}></div>
+                        <div
+                          className={
+                            getClassName(obj?.type) + ` ${styles['defaultImg']}`
+                          }
+                        ></div>
                       )}
 
                       <p>{obj?.title}</p>
@@ -1522,16 +1525,16 @@ const CommunityLayout: React.FC<Props> = ({
               </section>
             </section>
             {isMobile ? null : (
-          <button
-            onClick={() => {
-              router.push('/help')
-            }}
-            className={styles['help-centre-btn']}
-          >
-            {questionSvg}
-            <p>Help Centre</p>
-          </button>
-        )}
+              <button
+                onClick={() => {
+                  router.push('/help')
+                }}
+                className={styles['help-centre-btn']}
+              >
+                {questionSvg}
+                <p>Help Centre</p>
+              </button>
+            )}
           </aside>
         )}
       </PageGridLayout>

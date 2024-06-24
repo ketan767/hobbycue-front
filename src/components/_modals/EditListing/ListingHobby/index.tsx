@@ -167,7 +167,6 @@ const ListingHobbyEditModal: React.FC<Props> = ({
 
     if (err) return console.log(err)
 
-    // Modify the sorting logic to prioritize items where the search keyword appears at the beginning
     let sortedHobbies = res.data.hobbies
 
     if (e.target.value.toLowerCase() === 'sing') {
@@ -180,10 +179,22 @@ const ListingHobbyEditModal: React.FC<Props> = ({
     } else {
       // Sort alphabetically
       sortedHobbies = sortedHobbies.sort((a: any, b: any) => {
+        const indexA = a.display
+          .toLowerCase()
+          .indexOf(e.target.value.toLowerCase())
+        const indexB = b.display
+          .toLowerCase()
+          .indexOf(e.target.value.toLowerCase())
+
+        if (indexA === 0 && indexB !== 0) {
+          return -1
+        } else if (indexB === 0 && indexA !== 0) {
+          return 1
+        }
+
         return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
       })
     }
-
     setHobbyDropdownList(sortedHobbies)
     setFocusedHobbyIndex(-1)
   }

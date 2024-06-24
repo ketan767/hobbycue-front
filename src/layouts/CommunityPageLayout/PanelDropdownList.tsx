@@ -9,12 +9,12 @@ interface PanelDropdownListProps {
   name: string
   options: any[]
   type?: string
-  invite?:boolean;
+  invite?: boolean
   inviteFunction?: () => Promise<void>
   inviteError?: string
   inviteTextChangeFunc?: (arg0: any) => void
   inviteText?: string
-  initialOpen?:boolean
+  initialOpen?: boolean
 }
 
 const PanelDropdownList: FC<PanelDropdownListProps> = ({
@@ -26,9 +26,9 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
   inviteError,
   inviteText,
   inviteTextChangeFunc,
-  initialOpen
+  initialOpen,
 }) => {
-  const [open, setOpen] = useState(initialOpen??false)
+  const [open, setOpen] = useState(initialOpen ?? false)
   const router = useRouter()
   const [seeMore, setSeeMore] = useState(true)
   const membersContainerRef = useRef<HTMLDivElement>(null)
@@ -74,6 +74,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
       </svg>
     )
   }
+
   const hobbyIcon = (
     <svg
       xmlns="http://www.w3.org/2000/svg"
