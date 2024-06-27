@@ -87,6 +87,7 @@ import ListingProductPurchase from './ListingProductPurchase'
 import HandleAdminAction from './AdminModals/ActionModal'
 import AdminActionModal from './AdminModals/ActionModal'
 import ListingAddEvent from './EditListing/ListingAddEvent'
+import SimpleOnboarding from './EditProfile/SimpleOnboarding'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -564,6 +565,9 @@ const ModalManager: React.FC = () => {
 
               {activeModal === 'HandleAdminAction' && (
                 <AdminActionModal {...propData} />
+              )}
+              {activeModal === 'SimpleOnboarding' && (
+                <SimpleOnboarding {...propData} />
               )}
               {activeModal === 'add-event' && <ListingAddEvent {...propData} />}
               {/* Modal Close Icon */}

@@ -22,14 +22,14 @@
 }
 
 .dropdown {
-  width: 46%;
+  width: 100%;
   position: absolute;
   z-index: 10;
   height: 15rem;
   flex: 1;
-  left: 26px;
+  left: 0;
   right: 0;
-  top: calc(41% + var(--spacing-4));
+  top: calc(100% + var(--spacing-4));
   background: #ffffff;
   border-radius: var(--spacing-4);
   padding: var(--spacing-4);
@@ -169,6 +169,11 @@
   min-width: 6.25rem;
   line-height: 22px;
 }
+.long-input-box:focus-within{
+  outline: none;
+  border: 1px solid rgb(var(--primary-50-rgb));
+}
+
 @media screen and (min-width: 1100px) {
   .modal-wrapper {
     max-height: calc(100vh - 6rem);

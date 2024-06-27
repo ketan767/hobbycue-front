@@ -303,7 +303,7 @@ const searchHistory: React.FC = () => {
                         </div>
                         <div className={styles.detailsContainer}>
                           <Link
-                            href={`${process.env.NEXT_PUBLIC_BASE_URL}/profile/${user.profile_url}`}
+                            href={`${process.env.NEXT_PUBLIC_BASE_URL}/profile/${user.user_id?.profile_url}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className={styles.userName}

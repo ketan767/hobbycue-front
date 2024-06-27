@@ -155,7 +155,7 @@ const ListingContactEditModal: React.FC<Props> = ({
         website: { ...prev.website, value: listingModalData.website as string },
         page_admin: {
           ...prev.page_admin,
-          value: user.display_name,
+          value: user.full_name,
         },
       }
     })
@@ -458,7 +458,7 @@ const ListingContactEditModal: React.FC<Props> = ({
         website: { ...prev.website, value: listingModalData.website as string },
         page_admin: {
           ...prev.page_admin,
-          value: user.display_name,
+          value: user.full_name,
         },
       }
     })
@@ -689,48 +689,50 @@ const ListingContactEditModal: React.FC<Props> = ({
                   }}
                   disabled={!isTransferModal ? true : false}
                 />
-              </div>
-              {showDropdown && (
-                <div className={styles['dropdown']} ref={dropdownRef}>
-                  {dropdownLoading ? (
-                    <div className={styles.dropdownItem}>Loading...</div>
-                  ) : allDropdownValues?.length !== 0 ? (
-                    allDropdownValues?.map((item: any) => {
-                      return (
-                        <div
-                          key={item?._id}
-                          onClick={() => {
-                            setSelectedPage(item._id)
-                            setPageInputValue(item.full_name)
-                            setShowDropdown(false)
-                          }}
-                          className={styles.dropdownItem}
-                        >
-                          {item.profile_image ? (
-                            <img
-                              src={item?.profile_image}
-                              alt="profile"
-                              width={40}
-                              height={40}
-                            />
-                          ) : (
-                            <Image
-                              src={DefaultProfile}
-                              alt="profile"
-                              width={40}
-                              height={40}
-                            />
-                          )}
+                {showDropdown && (
+                  <div className={styles['dropdown']} ref={dropdownRef}>
+                    {dropdownLoading ? (
+                      <div className={styles.dropdownItem}>Loading...</div>
+                    ) : allDropdownValues?.length !== 0 ? (
+                      allDropdownValues?.map((item: any) => {
+                        return (
+                          <div
+                            key={item?._id}
+                            onClick={() => {
+                              setSelectedPage(item._id)
+                              setPageInputValue(item.full_name)
+                              setShowDropdown(false)
+                            }}
+                            className={styles.dropdownItem}
+                          >
+                            {item.profile_image ? (
+                              <img
+                                src={item?.profile_image}
+                                alt="profile"
+                                width={40}
+                                height={40}
+                              />
+                            ) : (
+                              <Image
+                                src={DefaultProfile}
+                                alt="profile"
+                                width={40}
+                                height={40}
+                              />
+                            )}
 
-                          <p>{item?.full_name}</p>
-                        </div>
-                      )
-                    })
-                  ) : (
-                    <div className={styles.dropdownItem}>No results found</div>
-                  )}
-                </div>
-              )}
+                            <p>{item?.full_name}</p>
+                          </div>
+                        )
+                      })
+                    ) : (
+                      <div className={styles.dropdownItem}>
+                        No results found
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
 
               <div
                 className={`${styles['input-box']} ${
@@ -973,6 +975,8 @@ const ListingContactEditModal: React.FC<Props> = ({
               <CircularProgress color="inherit" size={'24px'} />
             ) : onComplete ? (
               'Next'
+            ) : isTransferModal ? (
+              'Transfer'
             ) : (
               'Save'
             )}

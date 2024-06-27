@@ -129,10 +129,7 @@ const CommunityLayout: React.FC<Props> = ({
   const [hobbyMembers, setHobbymembers] = useState([])
   const [whatsNew, setWhatsNew] = useState([])
   const [SeeMorewhatsNew, setSeeMoreWhatsNew] = useState(true)
-  console.log({ whatsNew })
-
-  console.log('Number of hobbies:', activeProfile.data?._hobbies?.length)
-
+  console.warn('hobbymembersssssssssssssssssss', hobbyMembers)
   const hideThirdColumnTabs = ['pages', 'links', 'store', 'blogs']
   const { showPageLoader } = useSelector((state: RootState) => state.site)
   const { refreshNum } = useSelector((state: RootState) => state.post)
@@ -221,11 +218,7 @@ const CommunityLayout: React.FC<Props> = ({
       )
     }
   }
-  console.log('l', activeProfile.data?._hobbies?.length)
   console.log('activeprofile', activeProfile)
-  console.log('selected', selectedLocation)
-
-  console.log('selectedhobbyy', selectedHobby)
 
   function getClassName(type: any) {
     if (type === 'user') {
@@ -277,7 +270,6 @@ const CommunityLayout: React.FC<Props> = ({
     //   // don't remove it, somehow it is helping in fetching correct things according to hobby and genre
     // }
     else {
-      console.warn({ selectedGenre, selectedHobby })
       activeProfile?.data?._hobbies.forEach((item: any) => {
         params.append('_hobby', item?.hobby?._id)
       })
@@ -321,7 +313,6 @@ const CommunityLayout: React.FC<Props> = ({
       }
     }
 
-    console.log('PARAMS ---', params.toString())
     dispatch(updateLoading(true))
 
     const { err, res } = await getAllPosts(params.toString())
@@ -377,7 +368,6 @@ const CommunityLayout: React.FC<Props> = ({
 
       const { res, err } = await getHobbyMembersCommunity(url)
       if (res.data) {
-        console.warn('setHobbymembersrrr', res.data.users)
         setHobbymembers(res.data.users)
       }
     } catch (error) {
@@ -392,7 +382,6 @@ const CommunityLayout: React.FC<Props> = ({
     )
     if (res?.data) {
       setWhatsNew(res.data.data.listings)
-      console.warn('listingssss', res.data.data.listings)
     }
   }
 
@@ -513,7 +502,6 @@ const CommunityLayout: React.FC<Props> = ({
     setSeeMoreHobby(filters.seeMoreHobbies)
   }, [filters.seeMoreHobbies])
 
-  console.log({ selectedGenre, selectedHobby })
   // useEffect(() => {
   //   let tempLocations: any = []
   //   activeProfile.data?._addresses?.forEach((address: any) => {
@@ -1216,7 +1204,7 @@ const CommunityLayout: React.FC<Props> = ({
                       {
                         name: 'Hobby Members',
                         options: hobbyMembers,
-                        type: 'members',
+                        type: 'user members',
                         invite: true,
                       },
                       {
@@ -1483,7 +1471,6 @@ const CommunityLayout: React.FC<Props> = ({
                     ?.slice(0, seeMoreTrendHobbies ? 3 : trendingHobbies.length)
                     .map((hobby: any) => {
                       if (hobby.profile_image) {
-                        console.log('hobby', hobby)
                       }
                       return (
                         <li key={hobby._id}>
