@@ -16,8 +16,8 @@ import { getAllListingPageTypes } from '@/services/listing.service'
 type Props = {}
 
 const AddListing: React.FC<Props> = (props) => {
-  const { user, isLoggedIn } = useSelector((state: RootState) => state.user);
-  const { eventflowRunning } = useSelector((state:RootState)=>state.site);
+  const { user, isLoggedIn } = useSelector((state: RootState) => state.user)
+  const { eventflowRunning } = useSelector((state: RootState) => state.site)
   const dispatch = useDispatch()
   const router = useRouter()
   const [snackbar, setSnackbar] = useState({
@@ -30,7 +30,7 @@ const AddListing: React.FC<Props> = (props) => {
   const handleClick = (type: ListingPages) => {
     console.warn('lisrihhnr', type)
     if (type === 4) {
-      showFeatureUnderDevelopment();
+      showFeatureUnderDevelopment()
       return
     }
     if (isLoggedIn && user.is_onboarded) {
@@ -45,11 +45,11 @@ const AddListing: React.FC<Props> = (props) => {
     dispatch(updateEventFlow(false))
   }
 
-  useEffect(()=>{
-    if(eventflowRunning){
+  useEffect(() => {
+    if (eventflowRunning) {
       handleClick(3)
     }
-  },[eventflowRunning])
+  }, [eventflowRunning])
 
   const showFeatureUnderDevelopment = () => {
     setSnackbar({

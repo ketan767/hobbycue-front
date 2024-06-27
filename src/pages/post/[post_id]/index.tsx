@@ -88,10 +88,21 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
   return (
     <>
       <Head>
-        <meta property="og:image" content={`${data?.metadata?.data?.image}`} />
+        <meta
+          property="og:image"
+          content={`${
+            data?.metadata?.data?.image || data?.postsData?.media[0]
+              ? data?.postsData?.media[0]
+              : ''
+          }`}
+        />
         <meta
           property="og:image:secure_url"
-          content={`${data.metadata?.data?.image}`}
+          content={`${
+            data?.metadata?.data?.image || data?.postsData?.media[0]
+              ? data?.postsData?.media[0]
+              : ''
+          }`}
         />
         <meta
           property="og:description"
@@ -106,7 +117,9 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
           content={`${process.env.NEXT_PUBLIC_BASE_URL}/page/${data?.postsData?._id}`}
         />
         <meta property="og:image:alt" content="Profile picture" />
-        <title>{`${data?.metadata?.data?.title} | HobbyCue`}</title>
+        <title>{`${
+          data?.metadata?.data?.title ? data?.metadata?.data?.title : 'Post'
+        } | HobbyCue`}</title>
       </Head>
       <CommunityPageLayout activeTab="posts" singlePostPage={true}>
         <main>

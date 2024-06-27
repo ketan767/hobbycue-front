@@ -184,6 +184,37 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                     </div>
                   </div>
                 ))}
+            {type === 'user members' &&
+              options
+                .slice(0, seeMore ? 3 : options.length)
+                .map((obj: any, idx: number) => (
+                  <div key={idx} className={styles['option']}>
+                    <div className={styles['member-container']}>
+                      <Link
+                        href={`/profile/${obj?.profile_url}`}
+                        className={styles['img-name']}
+                      >
+                        {obj?.profile_image ? (
+                          <img width={24} height={24} src={obj.profile_image} />
+                        ) : (
+                          <Image
+                            width={24}
+                            height={24}
+                            src={defaultUserIcon}
+                            alt=""
+                          />
+                        )}
+
+                        <p>{obj?.full_name}</p>
+                      </Link>
+                      {obj?.admin === true && (
+                        <button className={styles['admin-btn']}>
+                          Location Admin
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
             {type === 'members' && options.length > 3 && (
               <div className={styles['option'] + ` ${styles['mb-15']}`}>
                 <div className={styles['member-container']}>

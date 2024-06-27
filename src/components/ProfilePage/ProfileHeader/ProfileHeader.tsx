@@ -31,6 +31,7 @@ import ShareIcon from '@/assets/icons/ShareIcon'
 import { updateImageUrl } from '@/redux/slices/modal'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { showProfileError } from '@/redux/slices/user'
+import OutlinedButton from '@/components/_buttons/OutlinedButton'
 
 type Props = {
   data: ProfilePageData['pageData']
@@ -409,10 +410,10 @@ const ProfileHeader: React.FC<Props> = ({
           {/* Center Section */}
           <section className={styles['center-container']}>
             <div className={styles['cover-img-wrapper']}>
-            <div
-              className={styles['background']}
-              style={{ backgroundImage: `url(${data?.cover_image})` }}
-            ></div>
+              <div
+                className={styles['background']}
+                style={{ backgroundImage: `url(${data?.cover_image})` }}
+              ></div>
               {data?.cover_image ? (
                 <img
                   onClick={OpenCoverImage}
@@ -498,7 +499,7 @@ const ProfileHeader: React.FC<Props> = ({
           {/* Action Buttons */}
           <div className={styles['actions-container-desktop']}>
             {profileLayoutMode === 'edit' && (
-              <FilledButton
+              <OutlinedButton
                 onClick={() => {
                   if (noDataChecker?.() === true) {
                     return
@@ -512,7 +513,7 @@ const ProfileHeader: React.FC<Props> = ({
                 className={styles.makeMyPageButton}
               >
                 Make My Page
-              </FilledButton>
+              </OutlinedButton>
             )}
             <div className={styles['action-btn-wrapper']}>
               {/* Send Email Button  */}

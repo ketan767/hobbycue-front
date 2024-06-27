@@ -159,6 +159,7 @@
   line-height: 16px;
   padding: 12px 24px;
   margin-bottom: var(--spacing-12);
+  font-size: 14px;
 }
 
 /* Navigation Tabs */

@@ -8,7 +8,6 @@
     "start": "next start",
     "lint": "next lint",
     "export": "next export"
-    
   },
   "dependencies": {
     "@ckeditor/ckeditor5-basic-styles": "^37.1.0",
@@ -20,7 +19,7 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.11.15",
     "@mui/styles": "^5.11.16",
-    "@react-google-maps/api": "^2.19.2",
+    "@react-google-maps/api": "^2.19.3",
     "@reduxjs/toolkit": "^1.9.3",
     "@swc/helpers": "^0.5.8",
     "@types/axios": "^0.14.0",
