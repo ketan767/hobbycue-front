@@ -64,7 +64,7 @@ const ProfileLayout: React.FC<Props> = ({
   useEffect(() => {
     if (!isLoggedIn) {
       dispatch(openModal({ type: 'auth', closable: true }))
-    } else if (activeModal !== 'user-onboarding') {
+    } else if (activeModal !== 'SimpleOnboarding') {
       dispatch(closeModal())
     }
   }, [isLoggedIn])
@@ -115,7 +115,7 @@ const ProfileLayout: React.FC<Props> = ({
         <Image
           src={ChevronDown}
           className={`${expandAll ? styles['rotate-180'] : styles['rotate-0']}`}
-          style={{transition:"all 0.3s ease"}}
+          style={{ transition: 'all 0.3s ease' }}
           alt=""
         />
       </div>

@@ -89,12 +89,14 @@ ul.contact-wrapper {
 ul.social-contact-wrapper {
   margin-top: var(--spacing-16);
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   gap: var(--spacing-16);
   animation: fadeDown 0.3s ease forwards;
 }
 
 ul.location-wrapper li {
+  flex: 1 0 17.77%; 
   display: flex;
   gap: var(--spacing-8);
   font-weight: 400;

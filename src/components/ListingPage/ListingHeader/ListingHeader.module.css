@@ -236,6 +236,17 @@
   gap: 8px;
   align-items: center;
 }
+
+.contactBtnpublic {
+  font-size: 14px;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  line-height: 16px;
+  padding: 0 50px;
+  height: 32px;
+  width: 157px !important;
+}
 .relative {
   position: relative;
   width: fit-content;

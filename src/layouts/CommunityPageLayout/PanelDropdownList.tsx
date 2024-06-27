@@ -133,6 +133,8 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
               `
             ${type === 'members' && styles['no-gap']}
             ${type === 'members' && styles['no-padding']}
+            ${type === 'user members' && styles['no-gap']}
+            ${type === 'user members' && styles['no-padding']}
           `
             }
           >
@@ -189,7 +191,9 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                 .slice(0, seeMore ? 3 : options.length)
                 .map((obj: any, idx: number) => (
                   <div key={idx} className={styles['option']}>
-                    <div className={styles['member-container']}>
+                    <div
+                      className={`${styles['member-container']} ${styles.userimg}`}
+                    >
                       <Link
                         href={`/profile/${obj?.profile_url}`}
                         className={styles['img-name']}
@@ -215,20 +219,21 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                     </div>
                   </div>
                 ))}
-            {type === 'members' && options.length > 3 && (
-              <div className={styles['option'] + ` ${styles['mb-15']}`}>
-                <div className={styles['member-container']}>
-                  <p
-                    onClick={() => {
-                      setSeeMore((prev) => !prev)
-                    }}
-                    className={styles['see-more']}
-                  >
-                    {seeMore ? 'See all' : 'See less'}
-                  </p>
+            {(type === 'members' || type === 'user members') &&
+              options.length > 3 && (
+                <div className={styles['option'] + ` ${styles['mb-15']}`}>
+                  <div className={styles['member-container']}>
+                    <p
+                      onClick={() => {
+                        setSeeMore((prev) => !prev)
+                      }}
+                      className={styles['see-more']}
+                    >
+                      {seeMore ? 'See more' : 'See less'}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
         </>
       )}

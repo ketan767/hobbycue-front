@@ -82,7 +82,7 @@ export const VerifyEmailModal: React.FC<PropTypes> = (props) => {
       // dispatch(updateIsAuthenticated(true))
       // dispatch(updateUser(res.data.data.user))
       router.push('/community', undefined, { shallow: false })
-      dispatch(openModal({ type: 'user-onboarding', closable: true }))
+      dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
     }
   }
   useEffect(() => {

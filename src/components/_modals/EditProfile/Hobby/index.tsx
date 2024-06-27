@@ -464,8 +464,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
       return
     }
     addUserHobby(jsonData, async (err, res) => {
-      console.log('json', jsonData)
-
       if (err) {
         setAddHobbyBtnLoading(false)
         return console.log(err)

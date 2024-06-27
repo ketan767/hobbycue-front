@@ -237,16 +237,20 @@ outline: none;
       align-items: flex-end; */
   letter-spacing: -0.01em;
   color: #8064a2;
+  display: flex;
+  align-items: center;
+  gap: 4px
 }
 .hobby-list li.active {
   color: #8064a2;
   font-weight: 500;
+  
 }
 
 @media screen and (min-width: 1100px) {
   .modal-wrapper {
     max-height: 50rem;
-    height: calc(100vh - 6rem);
+    height: calc(100vh - 2rem);
   }
   .modal-wrapper .body {
     height: calc(100vh - 6rem);
@@ -294,6 +298,9 @@ outline: none;
 
 .Back-btn {
   display: none;
+}
+.trendingHobby {
+  cursor: pointer;
 }
 
 @media screen and (max-width: 1100px) {

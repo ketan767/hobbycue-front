@@ -59,6 +59,24 @@ export const addUserHobby = async (
     .then((res) => cb(null, res))
     .catch((err) => cb(err, null))
 }
+export const addUserHobbies = async (
+  data: {
+    hobbies: {
+      hobby: string
+      genre: string
+      level: number
+    }[]
+  },
+  cb: CallbackFunction,
+) => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  await axiosInstance
+    .post(`/user/hobbies`, data, { headers })
+    .then((res) => cb(null, res))
+    .catch((err) => cb(err, null))
+}
 
 export const updateUserHobbyLevel = async (id: string, data: any) => {
   const token = localStorage.getItem('token')
