@@ -340,7 +340,7 @@ const ListingHeader: React.FC<Props> = ({
   } else if (ctaText === 'Claim') {
     button = (
       <FilledButton
-        className={styles.contactBtn}
+        className={isEditMode ? styles.contactBtn : styles.contactBtnpublic}
         onClick={isEditMode ? handleUpdateCTA : handleClaim}
       >
         <p>Claim</p>

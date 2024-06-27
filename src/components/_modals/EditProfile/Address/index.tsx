@@ -84,6 +84,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   const [dataLoaded, setDataLoaded] = useState(false)
   const [isError, setIsError] = useState(false)
   const [ShowDropdown, setShowDropdown] = useState<boolean>(false)
+  const [ShowAutoAddress, setShowAutoAddress] = useState<boolean>(false)
   const [dropdownList, setShowDropdownList] = useState<DropdownListItem[]>([])
   const inputRef = useRef<HTMLInputElement>(null)
   const [initialData, setInitialData] = useState({})
@@ -169,13 +170,34 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   const stateRef = useRef<HTMLInputElement>(null)
   const countryRef = useRef<HTMLInputElement>(null)
   const addressLabelRef = useRef<HTMLInputElement>(null)
+  const [suggestions, setSuggestions] = useState<string[]>([])
 
-  const handleInputChange = (event: any) => {
+  const handleInputChange = async (event: any) => {
     setShowDropdown(false)
     const { name, value } = event.target
     setData((prev) => ({ ...prev, [name]: value }))
     setInputErrs((prev) => ({ ...prev, [name]: null }))
-
+    if (data.street?.length > 1) {
+      setShowAutoAddress(true)
+      try {
+        const response = await fetch(`/api/autocomplete?input=${data.street}`)
+        const addressRes = await response.json()
+        if (addressRes.predictions) {
+          console.warn('suggestionsssss', data)
+          setSuggestions(
+            addressRes.predictions.map(
+              (prediction: any) => prediction.description,
+            ),
+          )
+        } else {
+          console.error('Error fetching suggestions:', addressRes.error)
+        }
+      } catch (error) {
+        console.error('Network error:', error)
+      }
+    } else {
+      setSuggestions([])
+    }
     const { set_as_primary: set_as_primary, ...currentData } = {
       ...data,
       [name]: value,
@@ -934,6 +956,32 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     dispatch(setHasChanges(true))
   }
 
+  const handleSelectAddressTwo = (suggestion: string) => {
+    const details: any = {}
+    console.warn('suggestionssssss', suggestion)
+
+    const terms = suggestion.split(',').map((term) => term.trim())
+
+    if (terms.length >= 1) details.country = terms[terms.length - 1]
+    if (terms.length >= 2) details.state = terms[terms.length - 2]
+    if (terms.length >= 3) details.city = terms[terms.length - 3]
+    if (terms.length >= 4) details.locality = terms[terms.length - 4]
+    if (terms.length >= 5) details.society = terms[terms.length - 5]
+    if (terms.length >= 6)
+      details.street = terms.slice(0, terms.length - 5).join(', ')
+
+    setData((prev: ProfileAddressPayload) => ({
+      ...prev,
+      street: details?.street || '',
+      locality: details.locality || '',
+      city: details.city || '',
+      state: details.state || '',
+      country: details.country || '',
+      society: details.society || '',
+    }))
+    setShowAutoAddress(false)
+  }
+
   useEffect(() => {
     const { set_as_primary, ...currentData } = data
     if (initialLabel !== addressLabel) {
@@ -1044,6 +1092,20 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                     }
                   }}
                 />
+              </div>
+              <div>
+                {ShowAutoAddress && (
+                  <div className={styles['dropdown']}>
+                    {suggestions.map((suggestion, index) => (
+                      <p
+                        onClick={() => handleSelectAddressTwo(suggestion)}
+                        key={index}
+                      >
+                        {suggestion}
+                      </p>
+                    ))}
+                  </div>
+                )}
               </div>
               {ShowDropdown && dropdownList.length !== 0 && (
                 <div className={styles['dropdown']}>

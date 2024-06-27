@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress, useMediaQuery } from '@mui/material'
 import {
+  addUserAddress,
+  addUserHobbies,
   getMyProfileDetail,
   updateMyProfileDetail,
 } from '@/services/user.service'
@@ -27,6 +29,8 @@ import { getAllHobbies, getTrendingHobbies } from '@/services/hobby.service'
 import Link from 'next/link'
 import { BubbleChartTwoTone } from '@mui/icons-material'
 import CrossIcon from '@/assets/svg/cross.svg'
+import { getAutocompleteAddress } from '@/services/auth.service'
+import { useRouter } from 'next/router'
 
 type Props = {
   onComplete?: () => void
@@ -67,6 +71,7 @@ type DropdownListItemHobby = {
   display: string
   sub_category?: string
   genre?: any
+  genreId?: any
 }
 
 type ProfileGeneralData = {
@@ -88,10 +93,9 @@ const SimpleOnboarding: React.FC<Props> = ({
   setConfirmationModal,
   handleClose,
   onStatusChange,
-  CheckIsOnboarded,
 }) => {
   const dispatch = useDispatch()
-
+  const router = useRouter()
   const { user } = useSelector((state: RootState) => state.user)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [nextDisabled, setNextDisabled] = useState(false)
@@ -118,6 +122,7 @@ const SimpleOnboarding: React.FC<Props> = ({
   const urlSpanRef = useRef<HTMLSpanElement>(null)
   const hobbysearchref = useRef<HTMLInputElement>(null)
   const [ShowDropdown, setShowDropdown] = useState<boolean>(false)
+  const [ShowAutoAddress, setShowAutoAddress] = useState<boolean>(false)
   const [showHobbyDowpdown, setShowHobbyDowpdown] = useState<boolean>(false)
   const [errorOrmsg, setErrorOrmsg] = useState<string | null>(null)
   const [trendingHobbies, setTrendingHobbies] = useState([])
@@ -132,7 +137,7 @@ const SimpleOnboarding: React.FC<Props> = ({
     country: '',
     latitude: '',
     longitude: '',
-    set_as_primary: false,
+    set_as_primary: true,
   })
 
   const [data, setData] = useState<ProfileGeneralData>({
@@ -150,29 +155,39 @@ const SimpleOnboarding: React.FC<Props> = ({
   const [inputErrs, setInputErrs] = useState<{ [key: string]: string | null }>({
     full_name: null,
     public_email: null,
-    tagline: null,
-    display_name: null,
-    profile_url: null,
-    gender: null,
-    year_of_birth: null,
+    location: null,
+    hobbies: null,
   })
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     DropdownListItemHobby[]
   >([])
 
-  const yearOfBirthCheck = (year: any) => {
-    if (isNaN(year)) {
-      return false
-    }
-    const currentYear = new Date().getFullYear()
-    return currentYear - year
-  }
-  const handleInputChangeAddress = (event: any) => {
+  const handleInputChangeAddress = async (event: any) => {
     setShowDropdown(false)
     const { name, value } = event.target
     setAddressData((prev) => ({ ...prev, [name]: value }))
     setInputErrs((prev) => ({ ...prev, [name]: null }))
-
+    if (Addressdata.street?.length > 1) {
+      setShowAutoAddress(true)
+      try {
+        const response = await fetch(
+          `/api/autocomplete?input=${Addressdata.street}`,
+        )
+        const data = await response.json()
+        if (data.predictions) {
+          console.warn('suggestionsssss', data)
+          setSuggestions(
+            data.predictions.map((prediction: any) => prediction.description),
+          )
+        } else {
+          console.error('Error fetching suggestions:', data.error)
+        }
+      } catch (error) {
+        console.error('Network error:', error)
+      }
+    } else {
+      setSuggestions([])
+    }
     const { set_as_primary: set_as_primary, ...currentData } = {
       ...Addressdata,
       [name]: value,
@@ -184,6 +199,32 @@ const SimpleOnboarding: React.FC<Props> = ({
     if (onStatusChange) {
       onStatusChange(hasChanges)
     }
+  }
+
+  const handleSelectAddressTwo = (suggestion: string) => {
+    const details: any = {}
+    console.warn('suggestionssssss', suggestion)
+
+    const terms = suggestion.split(',').map((term) => term.trim())
+
+    if (terms.length >= 1) details.country = terms[terms.length - 1]
+    if (terms.length >= 2) details.state = terms[terms.length - 2]
+    if (terms.length >= 3) details.city = terms[terms.length - 3]
+    if (terms.length >= 4) details.locality = terms[terms.length - 4]
+    if (terms.length >= 5) details.society = terms[terms.length - 5]
+    if (terms.length >= 6)
+      details.street = terms.slice(0, terms.length - 5).join(', ')
+
+    setAddressData((prev) => ({
+      ...prev,
+      street: `${details.street}, ${details.society}, ${details.locality}, ${details.city}, ${details.state}, ${details.country}`,
+      locality: details.locality || '',
+      city: details.city || '',
+      state: details.state || '',
+      country: details.country || '',
+      society: details.society || '',
+    }))
+    setShowAutoAddress(false)
   }
 
   const handleInputChange = (event: any) => {
@@ -217,6 +258,30 @@ const SimpleOnboarding: React.FC<Props> = ({
 
   const handleSubmit = async () => {
     let hasErrors = false
+
+    if (selectedHobbies == null) {
+      hobbysearchref?.current?.focus()
+      setInputErrs((prev) => {
+        return { ...prev, hobbies: 'This field is required!' }
+      })
+      hasErrors = true
+    }
+
+    if (isEmptyField(data.public_email) || !data.public_email) {
+      emailRef.current?.focus()
+      setInputErrs((prev) => {
+        return { ...prev, public_email: 'This field is required' }
+      })
+      hasErrors = true
+    }
+
+    if (isEmptyField(Addressdata.street) || !Addressdata.street) {
+      AddressRef?.current?.focus()
+      setInputErrs((prev) => {
+        return { ...prev, location: 'This field is required!' }
+      })
+      hasErrors = true
+    }
     if (isEmptyField(data.full_name) || !data.full_name) {
       fullNameRef.current?.focus()
       setInputErrs((prev) => {
@@ -225,76 +290,13 @@ const SimpleOnboarding: React.FC<Props> = ({
       hasErrors = true
     }
 
-    if (!data.display_name || data.display_name === '') {
-      displayNameRef.current?.focus()
-      setInputErrs((prev) => {
-        return { ...prev, display_name: 'This field is required!' }
-      })
-      hasErrors = true
-    }
-    if (isEmptyField(data.profile_url) || !data.profile_url) {
-      profileUrlRef.current?.focus()
-      setInputErrs((prev) => {
-        return { ...prev, profile_url: 'This field is required!' }
-      })
-      hasErrors = true
-    }
-
-    if (
-      (isEmptyField(data.full_name) || !data.full_name) &&
-      (!data.display_name || data.display_name === '')
-    ) {
-      fullNameRef.current?.focus()
-    }
-
-    if (data.year_of_birth && data.year_of_birth !== '') {
-      if (containOnlyNumbers(data?.year_of_birth)) {
-        var check = yearOfBirthCheck(data.year_of_birth)
-        dobRef.current?.focus()
-        if (check !== false) {
-          if (check >= 100) {
-            setInputErrs((prev) => {
-              return { ...prev, year_of_birth: 'Maximum age: 100' }
-            })
-            hasErrors = true
-          }
-
-          if (check < 13) {
-            setInputErrs((prev) => {
-              return { ...prev, year_of_birth: 'Minimum age is 13' }
-            })
-            return
-          }
-        } else {
-          setInputErrs((prev) => {
-            return { ...prev, year_of_birth: 'Enter a valid year' }
-          })
-          hasErrors = true
-        }
-      } else {
-        setInputErrs((prev) => {
-          return { ...prev, year_of_birth: 'Enter a valid year' }
-        })
-        hasErrors = true
-      }
-    }
-
     if (hasErrors === true) {
       return
     }
     setSubmitBtnLoading(true)
-    const newOnboardingStep =
-      Number(user?.onboarding_step) > 0 ? user?.onboarding_step : '1'
-
-    let updatedCompletedSteps = [...user.completed_onboarding_steps]
-
-    if (!updatedCompletedSteps.includes('General')) {
-      updatedCompletedSteps.push('General')
-    }
     const { err, res } = await updateMyProfileDetail({
       ...data,
-      onboarding_step: newOnboardingStep,
-      completed_onboarding_steps: updatedCompletedSteps,
+      is_onboarded: true,
     })
     if (err) {
       setSubmitBtnLoading(false)
@@ -303,29 +305,49 @@ const SimpleOnboarding: React.FC<Props> = ({
     if (!res?.data.success) {
       setSubmitBtnLoading(false)
     }
+    let reqBody: any = { ...Addressdata }
+
+    if (user?._addresses?.length === 0 && reqBody.label === '') {
+      reqBody.label = 'Default'
+    }
+    await addUserAddress(reqBody, async (err, res) => {
+      console.warn({ res })
+
+      if (err) {
+        setSubmitBtnLoading(false)
+        setConfirmationModal(false)
+        return console.log(err)
+      }
+      if (!res.data.success) {
+        setSubmitBtnLoading(false)
+        setConfirmationModal(false)
+        return alert('Something went wrong!')
+      }
+    })
+
+    const hobbies = selectedHobbies.map((item) => ({
+      hobby: item?._id,
+      genre: item?.genreId,
+      level: 1,
+    }))
+
+    await addUserHobbies({ hobbies }, (err, res) => {
+      if (err) {
+        console.log(err)
+      }
+    })
 
     const { err: error, res: response } = await getMyProfileDetail()
     setSubmitBtnLoading(false)
     if (error) return console.log(error)
     if (response?.data.success) {
       dispatch(updateUser(response?.data.data.user))
-      if (onComplete) {
-        onComplete()
-      } else {
-        if (!user.is_onboarded) {
-          await CheckIsOnboarded()
-          const newUrl = `/profile/${data.profile_url}`
-          window.location.href = newUrl
-          return
-        } else {
-          const newUrl = `/profile/${data.profile_url}`
-          window.location.href = newUrl
-          dispatch(closeModal())
-        }
-      }
+
+      router.push('/community')
+      dispatch(closeModal())
     }
   }
-
+  console.warn('selectedhobiessssss', selectedHobbies)
   useEffect(() => {
     if (
       isEmpty(data.full_name) ||
@@ -675,6 +697,8 @@ const SimpleOnboarding: React.FC<Props> = ({
         (hobby: any) => ({
           ...hobby,
           display: `${exactMatch.display} - ${hobby.display}`,
+          _id: exactMatch._id,
+          genreId: hobby._id,
         }),
       )
 
@@ -753,6 +777,7 @@ const SimpleOnboarding: React.FC<Props> = ({
   }
 
   useEffect(() => {
+    fullNameRef?.current?.focus()
     fetchTrendingHobbies()
   }, [])
 
@@ -770,6 +795,32 @@ const SimpleOnboarding: React.FC<Props> = ({
   }
   const isMobile = useMediaQuery('(max-width:1100px)')
 
+  const [input, setInput] = useState('')
+  const [suggestions, setSuggestions] = useState<string[]>([])
+
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value)
+
+    if (e.target.value.length > 2) {
+      try {
+        const response = await fetch(
+          `/api/autocomplete?input=${e.target.value}`,
+        )
+        const data = await response.json()
+        if (data.predictions) {
+          console.warn('suggestionsssss', data)
+          setSuggestions(data.predictions.map((prediction: any) => prediction))
+        } else {
+          console.error('Error fetching suggestions:', data.error)
+        }
+      } catch (error) {
+        console.error('Network error:', error)
+      }
+    } else {
+      setSuggestions([])
+    }
+  }
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -781,7 +832,7 @@ const SimpleOnboarding: React.FC<Props> = ({
         />
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>{'General'}</h4>
+          <h4 className={styles['heading']}>{'Complete your User Profile'}</h4>
         </header>
 
         <hr className={styles['modal-hr']} />
@@ -810,7 +861,7 @@ const SimpleOnboarding: React.FC<Props> = ({
               </div>
               <div
                 className={`${styles['input-box']} ${
-                  inputErrs.email ? styles['input-box-error'] : ''
+                  inputErrs.public_email ? styles['input-box-error'] : ''
                 }`}
               >
                 <label className={styles['label-required']}>Email ID</label>
@@ -832,7 +883,11 @@ const SimpleOnboarding: React.FC<Props> = ({
             {/* Address */}
             <div className={styles['input-box']}>
               <label className={styles['label-required']}>Location</label>
-              <div className={styles['street-input-container']}>
+              <div
+                className={`${styles['street-input-container']} ${
+                  inputErrs.location ? styles['input-box-error'] : ''
+                }`}
+              >
                 <input
                   type="text"
                   placeholder={`Enter address or click on GPS icon to the right`}
@@ -863,6 +918,20 @@ const SimpleOnboarding: React.FC<Props> = ({
                   }}
                 />
               </div>
+              <div>
+                {ShowAutoAddress && (
+                  <div className={styles['dropdown']}>
+                    {suggestions.map((suggestion, index) => (
+                      <p
+                        onClick={() => handleSelectAddressTwo(suggestion)}
+                        key={index}
+                      >
+                        {suggestion}
+                      </p>
+                    ))}
+                  </div>
+                )}
+              </div>
               {ShowDropdown && dropdownList.length !== 0 && (
                 <div className={styles['dropdown']}>
                   {dropdownList.map((location) => {
@@ -879,7 +948,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                   })}
                 </div>
               )}
-              <p className={styles['helper-text']}>{inputErrs.street}</p>
+              <p className={styles['helper-text']}>{inputErrs.location}</p>
             </div>
 
             {/* Hobby search */}
@@ -888,8 +957,8 @@ const SimpleOnboarding: React.FC<Props> = ({
               className={styles['dropdown-wrapper']}
             >
               <div
-                className={`${styles['input-box']} ${
-                  HobbyError ? styles['input-box-error'] : ''
+                className={`${styles['input-box']}  ${
+                  inputErrs.hobbies ? styles['input-box-error'] : ''
                 }`}
               >
                 <label className={styles['label-required']}>Hobbies</label>
@@ -909,6 +978,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                   onChange={handleHobbyInputChange}
                   onKeyDown={handleHobbyKeyDown}
                 />
+                <p className={styles['helper-text']}>{inputErrs.hobbies}</p>
                 {showHobbyDowpdown && hobbyDropdownList.length !== 0 && (
                   <div
                     className={`${styles['dropdown']}`}
@@ -938,20 +1008,19 @@ const SimpleOnboarding: React.FC<Props> = ({
                 {selectedHobbies?.map((item: any) => {
                   if (typeof item === 'string') return
                   return (
-                    <Link
-                      href={`/hobby/${item?.genre?.slug ?? item?.hobby?.slug}`}
-                      key={item._id}
-                    >
+                    <div key={item._id}>
                       <li>
                         {item?.display}
                         {item?.genre ? ` - ${item?.genre?.display} ` : ''}
                         <Image
                           src={CrossIcon}
+                          width={18}
+                          height={18}
                           alt="cancel"
                           onClick={() => removeSelectedHobby(item)}
                         />
                       </li>
-                    </Link>
+                    </div>
                   )
                 })}
               </ul>
@@ -962,15 +1031,18 @@ const SimpleOnboarding: React.FC<Props> = ({
               {trendingHobbies?.map((item: any) => {
                 if (typeof item === 'string') return
                 return (
-                  <Link
-                    href={`/hobby/${item?.genre?.slug ?? item?.hobby?.slug}`}
+                  <div
+                    className={styles.trendingHobby}
+                    onClick={() =>
+                      setselectedHobbies((prev) => [...prev, item])
+                    }
                     key={item._id}
                   >
                     <li>
                       {item?.display}
                       {item?.genre && ` - ${item?.genre?.display} `}
                     </li>
-                  </Link>
+                  </div>
                 )
               })}
             </ul>

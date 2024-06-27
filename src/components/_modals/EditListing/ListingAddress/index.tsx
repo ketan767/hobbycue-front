@@ -94,7 +94,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
   const [dataLoaded, setDataLoaded] = useState(false)
   const [isError, setIsError] = useState(false)
   const [fetchLocation, setFetchLocation] = useState(false)
-
+  const [suggestions, setSuggestions] = useState<string[]>([])
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -107,6 +107,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
   const localityRef = useRef<HTMLInputElement>(null)
   const societyRef = useRef<HTMLInputElement>(null)
   const [initialData, setInitialData] = useState({})
+  const [ShowAutoAddress, setShowAutoAddress] = useState<boolean>(false)
   const [isChanged, setIsChanged] = useState(false)
   const [ShowDropdown, setShowDropdown] = useState<boolean>(false)
   const [dropdownList, setShowDropdownList] = useState<DropdownListItem[]>([])
@@ -127,7 +128,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
     longitude: { value: '', error: null },
   })
 
-  const handleInputChange = (event: any) => {
+  const handleInputChange = async (event: any) => {
     setShowDropdown(false)
     setData((prev) => {
       return {
@@ -135,6 +136,29 @@ const ListingAddressEditModal: React.FC<Props> = ({
         [event.target.name]: { value: event.target.value, error: null },
       }
     })
+    if (data.street?.value?.length > 1) {
+      setShowAutoAddress(true)
+      try {
+        const response = await fetch(
+          `/api/autocomplete?input=${data.street.value}`,
+        )
+        const addressRes = await response.json()
+        if (addressRes.predictions) {
+          console.warn('suggestionsssss', data)
+          setSuggestions(
+            addressRes.predictions.map(
+              (prediction: any) => prediction.description,
+            ),
+          )
+        } else {
+          console.error('Error fetching suggestions:', addressRes.error)
+        }
+      } catch (error) {
+        console.error('Network error:', error)
+      }
+    } else {
+      setSuggestions([])
+    }
   }
 
   const handleBackButtonClick = async () => {
@@ -586,6 +610,56 @@ const ListingAddressEditModal: React.FC<Props> = ({
     }))
   }
 
+  const handleSelectAddressTwo = (suggestion: string) => {
+    const details: any = {}
+    console.warn('suggestionssssss', suggestion)
+
+    const terms = suggestion.split(',').map((term) => term.trim())
+
+    if (terms.length >= 1) details.country = terms[terms.length - 1]
+    if (terms.length >= 2) details.state = terms[terms.length - 2]
+    if (terms.length >= 3) details.city = terms[terms.length - 3]
+    if (terms.length >= 4) details.locality = terms[terms.length - 4]
+    if (terms.length >= 5) details.society = terms[terms.length - 5]
+    if (terms.length >= 6)
+      details.street = terms.slice(0, terms.length - 5).join(', ')
+
+    setData((prev) => ({
+      ...prev,
+      street: {
+        ...prev.street,
+        value: details.street || '',
+        error: null,
+      },
+      locality: {
+        ...prev.locality,
+        value: details.locality || '',
+        error: null,
+      },
+      city: {
+        ...prev.city,
+        value: details.city || '',
+        error: null,
+      },
+      state: {
+        ...prev.state,
+        value: details.state || '',
+        error: null,
+      },
+      country: {
+        ...prev.country,
+        value: details.country || '',
+        error: null,
+      },
+      society: {
+        ...prev.society,
+        value: details.society || '',
+        error: null,
+      },
+    }))
+    setShowAutoAddress(false)
+  }
+
   if (confirmationModal) {
     return (
       <SaveModal
@@ -650,6 +724,20 @@ const ListingAddressEditModal: React.FC<Props> = ({
                     }
                   }}
                 />
+              </div>
+              <div>
+                {ShowAutoAddress && (
+                  <div className={styles['dropdown']}>
+                    {suggestions.map((suggestion, index) => (
+                      <p
+                        onClick={() => handleSelectAddressTwo(suggestion)}
+                        key={index}
+                      >
+                        {suggestion}
+                      </p>
+                    ))}
+                  </div>
+                )}
               </div>
               {ShowDropdown && dropdownList.length !== 0 && (
                 <div className={styles['dropdown']}>

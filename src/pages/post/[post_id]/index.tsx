@@ -162,7 +162,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 
     const regex =
       /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
-    const urlMatch = post.content.match(regex)
+    const urlMatch = post?.content.match(regex)
 
     if (urlMatch) {
       const url = urlMatch[0]

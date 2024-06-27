@@ -259,3 +259,20 @@ export const sendMailtoOwner = async (data: ContactToOwner): Promise<ApiReturnOb
     return { err: error, res: null };
   }
 };
+
+export const getAutocompleteAddress = async (input: string): Promise<ApiReturnObject> => {
+  try {
+    const res = await axiosInstance.get(
+      `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${input}&key=AIzaSyCSFbd4Cf-Ui3JvMvEiXXs9xfGJaveKO_Y`
+    );
+    console.log('API Response:', res); // Debugging line
+    if (res && res.data) {
+      return { res: res.data, err: null }; // Make sure to return res.data
+    } else {
+      throw new Error('Unexpected response structure');
+    }
+  } catch (error: any) {
+    console.error('API Error:', error); // Debugging line
+    return { err: error, res: null };
+  }
+};

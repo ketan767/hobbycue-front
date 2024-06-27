@@ -260,7 +260,7 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
   if (!ctaText || ctaText === 'Contact') {
     button = (
       <FilledButton
-        className={styles.contactBtn}
+        className={isEditMode ? styles.contactBtn : styles.contactBtnpublic}
         onClick={isEditMode ? handleUpdateCTA : handleContact}
       >
         <p>Contact</p>

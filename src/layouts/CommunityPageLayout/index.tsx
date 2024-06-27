@@ -1205,7 +1205,6 @@ const CommunityLayout: React.FC<Props> = ({
                         name: 'Hobby Members',
                         options: hobbyMembers,
                         type: 'user members',
-                        invite: true,
                       },
                       {
                         name: "What's New",
