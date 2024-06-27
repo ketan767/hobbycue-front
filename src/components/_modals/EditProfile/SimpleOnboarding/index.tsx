@@ -217,7 +217,9 @@ const SimpleOnboarding: React.FC<Props> = ({
 
     setAddressData((prev) => ({
       ...prev,
-      street: `${details.street}, ${details.society}, ${details.locality}, ${details.city}, ${details.state}, ${details.country}`,
+      street: `${details.street || ''}, ${details.society || ''}, ${
+        details.locality || ''
+      }, ${details.city || ''}, ${details.state}, ${details.country}`,
       locality: details.locality || '',
       city: details.city || '',
       state: details.state || '',
@@ -343,7 +345,7 @@ const SimpleOnboarding: React.FC<Props> = ({
     if (response?.data.success) {
       dispatch(updateUser(response?.data.data.user))
 
-      router.push('/community')
+      window.location.href = '/community'
       dispatch(closeModal())
     }
   }
@@ -1071,9 +1073,9 @@ const SimpleOnboarding: React.FC<Props> = ({
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'24px'} />
             ) : onComplete ? (
-              'Next'
+              'Finish'
             ) : (
-              'Save'
+              'Finish'
             )}
           </button>
           {/* SVG Button for Mobile */}
