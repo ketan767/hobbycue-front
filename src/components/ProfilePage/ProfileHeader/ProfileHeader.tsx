@@ -465,7 +465,7 @@ const ProfileHeader: React.FC<Props> = ({
                       onClick={() =>
                         dispatch(
                           openModal({
-                            type: 'SimpleOnboarding',
+                            type: 'profile-general-edit',
                             closable: true,
                           }),
                         )

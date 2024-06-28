@@ -252,6 +252,7 @@
 }
 
 .members .member-list {
+  padding-top: 0 !important;
   padding: 16px;
 }
 
