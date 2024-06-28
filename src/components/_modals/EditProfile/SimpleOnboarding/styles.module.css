@@ -258,7 +258,7 @@ outline: none;
   }
 }
 
-.three-column-grid {
+.two-column-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--spacing-24);
@@ -342,6 +342,12 @@ outline: none;
   }
   .modal-close-icon {
     position: fixed !important;
+  }
+  .heading {
+    display: none;
+  }
+  .two-column-grid {
+    grid-template-columns: 1fr;
   }
 
 }

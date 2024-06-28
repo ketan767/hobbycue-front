@@ -841,7 +841,7 @@ const SimpleOnboarding: React.FC<Props> = ({
 
         <section className={styles['body']}>
           <>
-            <section className={styles['three-column-grid']}>
+            <section className={styles['two-column-grid']}>
               {/* Full Name */}
               <div
                 className={`${styles['input-box']} ${
@@ -869,6 +869,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                 <label className={styles['label-required']}>Email ID</label>
                 <input
                   type="text"
+                  required
                   placeholder=""
                   value={data.public_email}
                   ref={emailRef}
@@ -966,7 +967,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                 <label className={styles['label-required']}>Hobbies</label>
                 <input
                   type="text"
-                  placeholder="Type and select"
+                  placeholder="Type and select..."
                   autoComplete="name"
                   required
                   value={hobbyInputValue}
@@ -1005,27 +1006,27 @@ const SimpleOnboarding: React.FC<Props> = ({
                     ))}
                   </div>
                 )}
+                <ul className={`${styles['hobby-list']}`}>
+                  {selectedHobbies?.map((item: any) => {
+                    if (typeof item === 'string') return
+                    return (
+                      <div key={item._id}>
+                        <li>
+                          {item?.display}
+
+                          <Image
+                            src={CrossIcon}
+                            width={18}
+                            height={18}
+                            alt="cancel"
+                            onClick={() => removeSelectedHobby(item)}
+                          />
+                        </li>
+                      </div>
+                    )
+                  })}
+                </ul>
               </div>
-              <ul className={`${styles['hobby-list']}`}>
-                {selectedHobbies?.map((item: any) => {
-                  if (typeof item === 'string') return
-                  return (
-                    <div key={item._id}>
-                      <li>
-                        {item?.display}
-                        {item?.genre ? ` - ${item?.genre?.display} ` : ''}
-                        <Image
-                          src={CrossIcon}
-                          width={18}
-                          height={18}
-                          alt="cancel"
-                          onClick={() => removeSelectedHobby(item)}
-                        />
-                      </li>
-                    </div>
-                  )
-                })}
-              </ul>
             </div>
             <label className={styles['label']}>Trending</label>
 
@@ -1097,7 +1098,7 @@ const SimpleOnboarding: React.FC<Props> = ({
               {submitBtnLoading ? (
                 <CircularProgress color="inherit" size={'14px'} />
               ) : (
-                'Save'
+                'Finish'
               )}
             </button>
           )}

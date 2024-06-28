@@ -151,7 +151,7 @@ const ModalManager: React.FC = () => {
     ) {
       dispatch(closeModal())
     } else if (
-      activeModal === 'user-onboarding' &&
+      activeModal === 'SimpleOnboarding' &&
       !user?.is_onboarded &&
       !hasChanges
     ) {
@@ -408,7 +408,11 @@ const ModalManager: React.FC = () => {
                         height={40}
                         width={40}
                       />
-                      <h2 className={styles['modal-heading']}></h2>
+
+                      <h2 className={styles['modal-heading']}>
+                        {activeModal === 'SimpleOnboarding' &&
+                          `Complete your User Profile`}
+                      </h2>
                     </header>
                   </>
                 )}

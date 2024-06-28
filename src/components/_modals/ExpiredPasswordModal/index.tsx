@@ -158,7 +158,7 @@ const ExpiredPassword: React.FC<Props> = ({}) => {
         dispatch(updateIsLoggedIn(true))
         dispatch(closeModal())
         router.push('/community', undefined, { shallow: false })
-        dispatch(openModal({ type: 'user-onboarding', closable: true }))
+        dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
       }
     }
   }

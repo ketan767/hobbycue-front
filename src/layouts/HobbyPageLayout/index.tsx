@@ -40,9 +40,11 @@ const HobbyPageLayout: React.FC<Props> = ({
   expandAll,
   setExpandAll,
 }) => {
-  console.warn({tags:data.tags})
+  console.warn({ tags: data.tags })
   const dispatch = useDispatch()
-  const { hobbyStates, membersStates } = useSelector((state: RootState) => state.site)
+  const { hobbyStates, membersStates } = useSelector(
+    (state: RootState) => state.site,
+  )
   const [showSmallHeader, setShowSmallHeader] = useState(false)
   const [members, setMembers] = useState([])
   const hideLastColumnPages = ['pages', 'blogs', 'links', 'store']
@@ -178,19 +180,23 @@ const HobbyPageLayout: React.FC<Props> = ({
               }`}
             >
               <ul className={styles['classification-items']}>
-                {data?.category?.slug&&<Link href={`/hobby/${data?.category?.slug}`}>
-                  <li>{data?.category?.display}</li>
-                </Link>}
-               {data?.sub_category?.slug&&<Link href={`/hobby/${data?.sub_category?.slug}`}>
-                  <li>{data?.sub_category?.display}</li>
-                </Link>}
+                {data?.category?.slug && (
+                  <Link href={`/hobby/${data?.category?.slug}`}>
+                    <li>{data?.category?.display}</li>
+                  </Link>
+                )}
+                {data?.sub_category?.slug && (
+                  <Link href={`/hobby/${data?.sub_category?.slug}`}>
+                    <li>{data?.sub_category?.display}</li>
+                  </Link>
+                )}
                 {data?.tags &&
                   data?.tags.map((tag: any, idx: number) => {
-                    return tag.slug? (
+                    return tag.slug ? (
                       <Link key={idx} href={`/hobby/${tag?.slug}`}>
                         <li>{tag.display}</li>
                       </Link>
-                    ):null
+                    ) : null
                   })}
                 <li className={styles['active']}>
                   <p>{data?.display}</p>
@@ -210,24 +216,18 @@ const HobbyPageLayout: React.FC<Props> = ({
                 <Image
                   src={ChevronDown}
                   alt=""
-                  onClick={
-                    () => {
-                      setShowMembers((prev) => {
-                        dispatch(updateMembersOpenStates({ [data._id]: !prev }))
-                        return !prev
-                      })
-                    }
-                  }
+                  onClick={() => {
+                    setShowMembers((prev) => {
+                      dispatch(updateMembersOpenStates({ [data._id]: !prev }))
+                      return !prev
+                    })
+                  }}
                   className={`${styles['display-mobile']} ${
                     showMembers ? styles['rotate-180'] : ''
                   }`}
                 />
               </div>
-              <hr
-                className={`${styles['display-desktop']}${
-                  showMembers ? ' ' + styles['display-flex-mobile'] : ''
-                }`}
-              />
+
               <div
                 className={`${styles['member-list']} ${
                   styles['display-desktop']
