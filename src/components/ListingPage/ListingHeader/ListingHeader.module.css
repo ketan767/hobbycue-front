@@ -12,6 +12,12 @@
   position: relative;
 }
 
+.flex-col-4{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+}
 
 .profile-img-wrapper-small {
   position: relative;
@@ -193,9 +199,18 @@
   margin-top: 9px;
   align-items: flex-end;
 }
+
+.hide{
+  display: none !important;
+}
+
+.rotate{
+  rotate: 180deg;
+}
+
 .eventDate {
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   margin-bottom: 10px;
 }
 .event-date-container {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styles from './style.module.css'
-import { Button, CircularProgress } from '@mui/material'
+import { Button, CircularProgress, useMediaQuery } from '@mui/material'
 import {
   addUserAddress,
   getMyProfileDetail,
@@ -59,55 +59,72 @@ const initialEventHour = {
 }
 
 const timings = [
-  '12:00 am',
-  '12:30 am',
-  '1:00 am',
-  '1:30 am',
-  '2:00 am',
-  '2:30 am',
-  '3:00 am',
-  '3:30 am',
-  '4:00 am',
-  '4:30 am',
-  '5:00 am',
-  '5:30 am',
-  '6:00 am',
-  '6:30 am',
-  '7:00 am',
-  '7:30 am',
-  '8:00 am',
-  '8:30 am',
-  '9:00 am',
-  '9:30 am',
-  '10:00 am',
-  '10:30 am',
-  '11:00 am',
-  '11:30 am',
-  '12:00 pm',
-  '12:30 pm',
-  '1:00 pm',
-  '1:30 pm',
-  '2:00 pm',
-  '2:30 pm',
-  '3:00 pm',
-  '3:30 pm',
-  '4:00 pm',
-  '4:30 pm',
-  '5:00 pm',
-  '5:30 pm',
-  '6:00 pm',
-  '6:30 pm',
-  '7:00 pm',
-  '7:30 pm',
-  '8:00 pm',
-  '8:30 pm',
-  '9:00 pm',
-  '9:30 pm',
-  '10:00 pm',
-  '10:30 pm',
-  '11:00 pm',
-  '11:30 pm',
+  '12:00am',
+  '12:30am',
+  '1:00am',
+  '1:30am',
+  '2:00am',
+  '2:30am',
+  '3:00am',
+  '3:30am',
+  '4:00am',
+  '4:30am',
+  '5:00am',
+  '5:30am',
+  '6:00am',
+  '6:30am',
+  '7:00am',
+  '7:30am',
+  '8:00am',
+  '8:30am',
+  '9:00am',
+  '9:30am',
+  '10:00am',
+  '10:30am',
+  '11:00am',
+  '11:30am',
+  '12:00pm',
+  '12:30pm',
+  '1:00pm',
+  '1:30pm',
+  '2:00pm',
+  '2:30pm',
+  '3:00pm',
+  '3:30pm',
+  '4:00pm',
+  '4:30pm',
+  '5:00pm',
+  '5:30pm',
+  '6:00pm',
+  '6:30pm',
+  '7:00pm',
+  '7:30pm',
+  '8:00pm',
+  '8:30pm',
+  '9:00pm',
+  '9:30pm',
+  '10:00pm',
+  '10:30pm',
+  '11:00pm',
+  '11:30pm',
 ]
+
+const days = [
+  'Sun',
+  'Mon',
+  'Tue',
+  'Wed',
+  'Thu',
+  'Fri',
+  'Sat',
+]
+const initialWeekdays = {
+  from_day: 'Monday',
+  to_day: 'Friday',
+  from_time: '8:00 am',
+  to_time: '9:00 pm',
+}
+
 const ListingEventHoursEditModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
@@ -127,6 +144,9 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [isSelectingStartDate, setIsSelectingStartDate] = useState(true)
   const [eventData, setEventData] = useState(initialEventHour)
+  const [weekdays, setWeekdays] = useState<
+    { from_time: string; to_time: string; from_day: string; to_day: string }[]
+  >([initialWeekdays])
   const today = new Date().toISOString().split('T')[0]
   const [initialData, setInitialData] = useState({})
   const [isChanged, setIsChanged] = useState(false)
@@ -186,6 +206,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     setSubmitBtnLoading(true)
     const { err, res } = await updateListing(listingModalData._id, {
       event_date_time: jsonData,
+      event_weekdays: weekdays
     })
     const updatedData = {
       ...listingModalData,
@@ -210,6 +231,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     setBackBtnLoading(true)
     const { err, res } = await updateListing(listingModalData._id, {
       event_date_time: jsonData,
+      event_weekdays: weekdays
     })
     const updatedData = {
       ...listingModalData,
@@ -227,6 +249,9 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
         listingModalData.event_date_time
       setEventData({ from_time, to_time, from_date, to_date })
       setInitialData({ from_time, to_time, from_date, to_date })
+      if (listingModalData.event_weekdays) {
+        setWeekdays(listingModalData.event_weekdays)
+      }
     }
   }, [])
 
@@ -268,6 +293,48 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     // setWorkingHoursData(updated)
   }
 
+  const onChangeWeekday = (updatedItem: string, key: string, index: number) => {
+    setWeekdays((prevData) =>
+      prevData.map((event, i) =>
+        i === index ? { ...event, [key]: updatedItem } : event,
+      ),
+    )
+    console.log(updatedItem, key, index)
+  }
+
+  const addWeekday = () => {
+    if (weekdays.length === 0) {
+      const fromDay = days[new Date(eventData.from_date).getDay()];
+      const toDay = days[new Date(eventData.to_date).getDay()];
+  
+      setWeekdays([
+        {
+          from_day: fromDay,
+          to_day: toDay,
+          from_time: eventData.from_time,
+          to_time: eventData.to_time,
+        },
+      ]);
+    } else {
+      setWeekdays((prevWeekdays) => [
+        ...prevWeekdays,
+        {
+          from_day: 'Mon',
+          to_day: 'Fri',
+          from_time: '8:00 am',
+          to_time: '9:00 pm',
+        },
+      ]);
+    }
+  };
+
+  const deleteWeekday = (index:number) => {
+    setWeekdays((prevWeekdays) => 
+      prevWeekdays.filter((_, i) => i !== index)
+    );
+  };
+  
+
   useEffect(() => {
     const hasChanges = JSON.stringify(eventData) !== JSON.stringify(initialData)
     setIsChanged(hasChanges)
@@ -303,8 +370,67 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     const day = formattedDate.getDate()
     const month = formattedDate.toLocaleString('default', { month: 'short' })
     const year = formattedDate.getFullYear()
-    return `${day}-${month}-${year}`
+    const returnableString = `${isNaN(day) ? '' : day + '-'}${
+      month === 'Invalid Date' ? '' : month + '-'
+    }${isNaN(year) ? '' : year}`
+    return returnableString
   }
+
+  const isMobile = useMediaQuery("(max-width:1100px)")
+
+  const PlusIcon = () => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="17"
+      viewBox="0 0 16 17"
+      fill="none"
+    >
+      <g clip-path="url(#clip0_15789_420)">
+        <path
+          d="M13.1429 9.2991H8.85714V13.5848C8.85714 14.0562 8.47143 14.442 8 14.442C7.52857 14.442 7.14286 14.0562 7.14286 13.5848V9.2991H2.85714C2.38571 9.2991 2 8.91338 2 8.44196C2 7.97053 2.38571 7.58481 2.85714 7.58481H7.14286V3.2991C7.14286 2.82767 7.52857 2.44196 8 2.44196C8.47143 2.44196 8.85714 2.82767 8.85714 3.2991V7.58481H13.1429C13.6143 7.58481 14 7.97053 14 8.44196C14 8.91338 13.6143 9.2991 13.1429 9.2991Z"
+          fill="#8064A2"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_15789_420">
+          <rect
+            width="16"
+            height="16"
+            fill="white"
+            transform="translate(0 0.44165)"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+
+  const DeleteIcon = () => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="25"
+      viewBox="0 0 24 25"
+      fill="none"
+    >
+      <g clip-path="url(#clip0_15789_230)">
+        <path
+          d="M6 19.4417C6 20.5417 6.9 21.4417 8 21.4417H16C17.1 21.4417 18 20.5417 18 19.4417V7.44165H6V19.4417ZM19 4.44165H15.5L14.5 3.44165H9.5L8.5 4.44165H5V6.44165H19V4.44165Z"
+          fill="#8064A2"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_15789_230">
+          <rect
+            width="24"
+            height="24"
+            fill="white"
+            transform="translate(0 0.44165)"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  )
 
   if (confirmationModal) {
     return (
@@ -336,61 +462,144 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
           <div className={styles.sectionHead}></div>
           <div className={styles.listContainer}>
             <div className={styles.listItem}>
-              <div className={styles.listSubItem}>
-                <label> From Date </label>
+              <div className={styles['subitem-group']}>
+                <div className={styles.listSubItem}>
+                  <label> From Date </label>
 
-                <input
-                  value={eventData.from_date}
-                  className={styles.inputField}
-                  type="date"
-                  min={today}
-                  onChange={(e: any) =>
-                    handleDateSelection(e.target.value, true)
-                  }
-                />
-                <p className={styles['formatted-date']}>
-                  {formatDateFunc(eventData.from_date)}
-                </p>
-              </div>
-              <div className={styles.listSubItem}>
-                <label> To Date </label>
+                  <input
+                    value={eventData.from_date}
+                    className={styles.inputField}
+                    type="date"
+                    min={today}
+                    onChange={(e: any) =>
+                      handleDateSelection(e.target.value, true)
+                    }
+                  />
+                  <p className={styles['formatted-date']}>
+                    {formatDateFunc(eventData.from_date)}
+                  </p>
+                </div>
+                <div className={styles['breaker']} />
+                <div className={styles.listSubItem}>
+                  <label> To Date </label>
 
-                <input
-                  value={eventData.to_date}
-                  className={styles.inputField}
-                  type="date"
-                  min={eventData.from_date}
-                  onChange={(e: any) =>
-                    handleDateSelection(e.target.value, false)
-                  }
-                />
-                <p
-                  className={
-                    styles['formatted-date'] + ` ${styles['left-more']}`
-                  }
-                >
-                  {formatDateFunc(eventData.to_date)}
-                </p>
+                  <input
+                    value={eventData.to_date}
+                    className={styles.inputField}
+                    type="date"
+                    min={eventData.from_date}
+                    onChange={(e: any) =>
+                      handleDateSelection(e.target.value, false)
+                    }
+                  />
+                  <p
+                    className={
+                      styles['formatted-date'] 
+                      // + ` ${styles['left-more']}`
+                    }
+                  >
+                    {formatDateFunc(eventData.to_date)}
+                  </p>
+                </div>
               </div>
-              <div className={styles.listSubItem}>
-                <label> From Time </label>
-                <InputSelect
-                  options={timings}
-                  value={eventData.from_time}
-                  onChange={(item: any) => onChangeFromday(item, 'from_time')}
-                />
-              </div>
-              <div className={styles.listSubItem}>
-                <label> To Time </label>
-                <InputSelect
-                  value={eventData.to_time}
-                  options={timings.slice(
-                    timings.indexOf(eventData.from_time) + 1,
-                  )}
-                  onChange={(item: any) => onChangeFromday(item, 'to_time')}
-                />
+              <p className={styles['comma']}>,</p>
+              <div className={styles['subitem-group']}>
+                <div className={styles.listSubItem}>
+                  <label> From Time </label>
+                  <InputSelect
+                    options={timings}
+                    value={eventData.from_time}
+                    onChange={(item: any) => onChangeFromday(item, 'from_time')}
+                    className={styles['time-input']}
+                    iconClass={styles['input-icon']}
+                  />
+                </div>
+                <div className={styles['breaker']} />
+                <div className={styles.listSubItem}>
+                  <label> To Time </label>
+                  <InputSelect
+                    value={eventData.to_time}
+                    options={timings.slice(
+                      timings.indexOf(eventData.from_time) + 1,
+                    )}
+                    onChange={(item: any) => onChangeFromday(item, 'to_time')}
+                    className={styles['time-input']}
+                    iconClass={styles['input-icon']}
+                  />
+                </div>
               </div>
             </div>
+          </div>
+          {/* weekdays */}
+          <div className={styles.listContainer + ` ${styles['mt-32']}`}>
+            <div onClick={addWeekday} className={styles['adder']}>
+              <PlusIcon />
+              <p>Add Weekdays</p>
+            </div>
+            {weekdays.map((obj, i) => (
+              <div key={i} className={styles.listItem+` ${styles['no-wrap']}`}>
+                <div className={styles['subitem-group']+` ${styles['mobile-group']}`}>
+                  <div className={styles.listSubItem+` ${styles['mobile-w-auto']}`}>
+                    {i===0&&<label> From Day </label>}
+
+                    <InputSelect
+                      options={days}
+                      value={obj.from_day}
+                      onChange={(item: any) =>
+                        onChangeWeekday(item, 'from_day',i)
+                      }
+                      className={styles['weekday-input']}
+                      iconClass={styles['input-icon']}
+                    />
+                  </div>
+                  {isMobile?null:<div className={styles['breaker']+` ${i===0?"":styles['no-margin']}`} />}
+                  <div className={styles.listSubItem+` ${styles['mobile-w-auto']}`}>
+                    {i===0&&<label> To Day </label>}
+
+                    <InputSelect
+                      options={days}
+                      value={obj.to_day}
+                      onChange={(item: any) =>
+                        onChangeWeekday(item, 'to_day',i)
+                      }
+                      className={styles['weekday-input']}
+                      iconClass={styles['input-icon']}
+                    />
+                  </div>
+                </div>
+                <p className={styles['comma']}>,</p>
+                <div className={styles['subitem-group']+` ${styles['mobile-group']}`}>
+                  <div className={styles.listSubItem}>
+                    {i===0&&<label> From Time </label>}
+                    <InputSelect
+                      options={timings}
+                      value={()=>new String(obj.from_time).substring(0,3)}
+                      onChange={(item: any) =>
+                        onChangeWeekday(item, 'from_time',i)
+                      }
+                      className={styles['weektime-input']}
+                      iconClass={styles['input-icon']}
+                    />
+                  </div>
+                 {isMobile?null: <div className={styles['breaker']+` ${i===0?"":styles['no-margin']}`} />}
+                  <div className={styles.listSubItem}>
+                    {i===0&&<label> To Time </label>}
+                    <InputSelect
+                      value={()=>new String(obj.to_time).substring(0,3)}
+                      options={timings.slice(
+                        timings.indexOf(obj.from_time) + 1,
+                      )}
+                      onChange={(item: any) => onChangeWeekday(item, 'to_time',i)}
+                      className={styles['weektime-input']}
+                      iconClass={styles['input-icon']}
+                    />
+                  </div>
+                </div>
+                <div onClick={()=>deleteWeekday(i)} className={styles['self-left']}>
+                  <DeleteIcon />
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 

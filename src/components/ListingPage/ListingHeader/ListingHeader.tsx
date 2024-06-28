@@ -38,6 +38,7 @@ import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { showProfileError } from '@/redux/slices/user'
 import { useRouter } from 'next/router'
 import smallPencilSvg from '@/assets/svg/small-pencil.svg'
+import { useMediaQuery } from '@mui/material'
 
 type Props = {
   data: ListingPageData['pageData']
@@ -66,7 +67,7 @@ const ListingHeader: React.FC<Props> = ({
     message: '',
   })
   const { listingLayoutMode } = useSelector((state: any) => state.site)
-  const [titleEditModalActive, setTitleEditModalActive] = useState(false)
+  const [showDays, setShowDays] = useState(false)
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
@@ -77,6 +78,7 @@ const ListingHeader: React.FC<Props> = ({
       message: 'This feature is under development',
     })
   }
+  const isMobile = useMediaQuery("(max-width:1100px)");
   const onInputChange = (e: any, type: 'profile' | 'cover') => {
     e.preventDefault()
     let files = e.target.files
@@ -459,6 +461,10 @@ const ListingHeader: React.FC<Props> = ({
     }
   }, [Dropdownref])
 
+  const dropdownIcon = (<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none" cursor={'pointer'}>
+  <path d="M2.7313 13.0784H13.5506C13.6601 13.078 13.7675 13.0478 13.8612 12.991C13.9548 12.9341 14.0312 12.8529 14.0821 12.7558C14.1329 12.6588 14.1564 12.5498 14.1499 12.4404C14.1434 12.3311 14.1073 12.2256 14.0453 12.1353L8.63563 4.32134C8.41143 3.99736 7.87167 3.99736 7.64687 4.32134L2.23722 12.1353C2.1746 12.2254 2.13788 12.331 2.13105 12.4405C2.12421 12.55 2.14753 12.6593 2.19846 12.7565C2.24939 12.8538 2.32598 12.9351 2.41992 12.9919C2.51386 13.0486 2.62156 13.0785 2.7313 13.0784Z" fill="#6D747A"/>
+</svg>)
+
   return (
     <>
       <header className={`site-container ${styles['header']}`}>
@@ -578,7 +584,7 @@ const ListingHeader: React.FC<Props> = ({
             </div>
             <div className={styles['event-date-container']}>
               {data?.type === listingTypes.PROGRAM && data?.event_date_time ? (
-                <div>
+                <div> 
                   <div className={styles.eventDate}>
                     <Image
                       className={styles['im']}
@@ -592,18 +598,32 @@ const ListingHeader: React.FC<Props> = ({
                       )}
                     </p>
                     <Image className={styles['im']} src={Time} alt="Time" />{' '}
-                    <p className={styles.time}>
-                      {data?.event_date_time.from_time} -{' '}
-                      {data?.event_date_time.to_time}
-                    </p>
-                    {listingLayoutMode === 'edit' && (
+                    <div className={styles['flex-col-4']}>
+                      {data.event_weekdays && data?.event_weekdays?.length>0?
+                        data.event_weekdays.map((obj:any,i:number,arr:any[])=>
+                          <p key={i} className={styles.time+` ${i!==0&&showDays===false?styles['hide']:""}`}>
+                        {obj?.from_day} -{' '}
+                        {obj?.to_day}, {' '}
+                        {obj?.from_time}{isMobile && showDays===false?<>... <span onClick={()=>setShowDays(prev=>!prev)}>more</span></>:<> -{' '}
+                        {obj?.to_time}
+                        {arr.length-1===i&&isMobile&&<>{' '}<span onClick={()=>setShowDays(prev=>!prev)}>Less</span></>}
+                        </>}
+                      </p>
+                        ):<p className={styles.time}>
+                        {data?.event_date_time.from_time} -{' '}
+                        {data?.event_date_time.to_time}
+                      </p>
+                    }
+                    </div>
+                    {listingLayoutMode === 'edit' ? (
                       <Image
                         className={styles['edit-icon']}
                         src={EditIcon}
                         alt="edit"
                         onClick={handleEventEditClick}
                       />
-                    )}
+                    ):listingLayoutMode!=='edit'&&data.event_weekdays && data?.event_weekdays?.length>0&&!isMobile&&<div onClick={()=>setShowDays(prev=>!prev)} className={showDays?'':styles['rotate']}>
+                      {dropdownIcon}</div>}
                   </div>
                 </div>
               ) : (

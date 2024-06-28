@@ -8,9 +8,11 @@ type Props = {
   disabled?: any
   name?: any
   optionValues?: any
+  className?:string
+  iconClass?:string
 }
 
-const DropdownArrow = () => (
+const DropdownArrow = ({className}:{className?:string}) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="16"
@@ -24,6 +26,7 @@ const DropdownArrow = () => (
       transform: 'translateY(-50%)',
       pointerEvents: 'none',
     }}
+    className={className}
   >
     <path
       d="M10.5876 6.19347L8.00096 8.78014L5.4143 6.19347C5.1543 5.93347 4.7343 5.93347 4.4743 6.19347C4.2143 6.45347 4.2143 6.87347 4.4743 7.13347L7.5343 10.1935C7.7943 10.4535 8.2143 10.4535 8.4743 10.1935L11.5343 7.13347C11.7943 6.87347 11.7943 6.45347 11.5343 6.19347C11.2743 5.94014 10.8476 5.93347 10.5876 6.19347Z"
@@ -38,13 +41,15 @@ const InputSelect: React.FC<Props> = ({
   value,
   optionValues,
   disabled,
+  className,
+  iconClass
 }) => {
   return (
     <div style={{ position: 'relative' }}>
       <select
         disabled={disabled ?? ''}
         name="select"
-        className={styles.select}
+        className={styles.select+` ${className}`}
         onChange={(e: any) => {
           console.log(e.target.value)
 
@@ -65,7 +70,7 @@ const InputSelect: React.FC<Props> = ({
           )
         })}
       </select>
-      <DropdownArrow />
+      <DropdownArrow className={iconClass} />
     </div>
   )
 }
