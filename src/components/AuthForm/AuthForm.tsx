@@ -306,7 +306,7 @@ const AuthForm: React.FC<Props> = (props) => {
       }
       console.warn('its workingggg', res.data.message)
       if (res?.data?.message === 'User registered successfully') {
-        dispatch(openModal({ type: 'user-onboarding', closable: true }))
+        dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
       }
       const { err: error, res: response } = await getMyProfileDetail()
       if (router.pathname === '/') {
@@ -362,7 +362,7 @@ const AuthForm: React.FC<Props> = (props) => {
         }
       }
       if (res?.data?.message === 'User registered successfully') {
-        dispatch(openModal({ type: 'user-onboarding', closable: true }))
+        dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
       }
 
       const { err: error, res: response } = await getMyProfileDetail()

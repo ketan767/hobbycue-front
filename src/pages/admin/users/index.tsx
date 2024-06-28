@@ -20,10 +20,10 @@ import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { deleteUserByAdmin } from '@/services/admin.service'
 import { extractPlatform, formatDateTime, formatDateTimeTwo } from '@/utils'
 import phoneIcon from '@/assets/svg/admin_phone.svg'
-import emailIcon from '@/assets/svg/admin_email.svg'
-import GoogleIcon from '@/assets/svg/google-icon.svg'
-import MailIcon from '@/assets/svg/mail.svg'
-import FacebookIcon from '@/assets/svg/mobile-social/facebook.svg'
+import emailIcon from '@/assets/svg/admin_gmail.svg'
+import GoogleIcon from '@/assets/svg/admin_google.svg'
+import MailIcon from '@/assets/svg/admin_email.svg'
+import FacebookIcon from '@/assets/svg/admin_facebook.svg'
 
 type SearchInput = {
   search: InputData<string>
@@ -302,37 +302,36 @@ const AdminDashboard: React.FC = () => {
                 {searchResults?.map((user, index) => (
                   <tr key={index}>
                     <td>
-                      <div className={styles.resultItem}>
-                        <div className={styles.avatarContainer}>
-                          {user.profile_image ? (
-                            <img
-                              src={user.profile_image}
-                              alt={`${user.full_name}'s profile`}
-                              width={40}
-                              height={40}
-                              className={styles.avatarImage}
-                            />
-                          ) : (
-                            <Image
-                              className={styles['img']}
-                              src={DefaultProfile}
-                              alt="profile"
-                              width={40}
-                              height={40}
-                            />
-                          )}
-                        </div>
-                        <div className={styles.detailsContainer}>
-                          <Link
-                            href={`${process.env.NEXT_PUBLIC_BASE_URL}/profile/${user.profile_url}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={styles.userName}
-                          >
+                      <Link
+                        href={`${process.env.NEXT_PUBLIC_BASE_URL}/profile/${user.profile_url}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <div className={styles.resultItem}>
+                          <div className={styles.avatarContainer}>
+                            {user.profile_image ? (
+                              <img
+                                src={user.profile_image}
+                                alt={`${user.full_name}'s profile`}
+                                width={40}
+                                height={40}
+                                className={styles.avatarImage}
+                              />
+                            ) : (
+                              <Image
+                                className={styles['img']}
+                                src={DefaultProfile}
+                                alt="profile"
+                                width={40}
+                                height={40}
+                              />
+                            )}
+                          </div>
+                          <div className={styles.detailsContainer}>
                             {user?.full_name}
-                          </Link>
+                          </div>
                         </div>
-                      </div>
+                      </Link>
                     </td>
                     <td className={styles.LoginType}>
                       <div className={styles.loginIcon}>

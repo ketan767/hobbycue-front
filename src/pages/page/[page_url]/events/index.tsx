@@ -81,10 +81,6 @@ const ListingEvents: React.FC<Props> = (props) => {
           property="og:description"
           content={`${props?.data?.pageData?.tagline ?? ''}`}
         />
-        <meta
-          property="og:url"
-          content={`${process.env.NEXT_PUBLIC_BASE_URL}/page/${props?.data?.pageData?.slug}/events`}
-        />
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
       </Head>

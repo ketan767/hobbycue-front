@@ -108,7 +108,7 @@ function SiteMainLayout({ children }: { children: ReactElement }) {
   // /** If user is not onboarded then open the Onboarding model. */
   // useEffect(() => {
   //   if (isLoggedIn && isAuthenticated && !user.is_onboarded) {
-  //     dispatch(openModal({ type: 'user-onboarding', closable: true }))
+  //     dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
   //   }
   // }, [isLoggedIn, isAuthenticated, user])
 
