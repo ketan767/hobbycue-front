@@ -112,10 +112,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
               : ''
           }`}
         />
-        <meta
-          property="og:url"
-          content={`${process.env.NEXT_PUBLIC_BASE_URL}/page/${data?.postsData?._id}`}
-        />
+
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${
           data?.metadata?.data?.title ? data?.metadata?.data?.title : 'Post'
