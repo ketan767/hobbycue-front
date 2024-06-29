@@ -98,6 +98,8 @@ const SimpleOnboarding: React.FC<Props> = ({
   const router = useRouter()
   const { user } = useSelector((state: RootState) => state.user)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
+  const [SubmitAddress, setSubmitAddress] = useState<boolean>(false)
+  const [selectedAddress, setSelectedAddress] = useState('')
   const [nextDisabled, setNextDisabled] = useState(false)
   const [isError, setIsError] = useState(false)
   const [HobbyError, setHobbyError] = useState(false)
@@ -217,9 +219,11 @@ const SimpleOnboarding: React.FC<Props> = ({
 
     setAddressData((prev) => ({
       ...prev,
-      street: `${details.street || ''}, ${details.society || ''}, ${
-        details.locality || ''
-      }, ${details.city || ''}, ${details.state}, ${details.country}`,
+      street: `${details.street ? details.street + ',' : ''} ${
+        details.society ? details.society + ',' : ''
+      } ${details.locality ? details.locality + ',' : ''} ${
+        details.city ? details.city + ',' : ''
+      } ${details.state ? details.state + ',' : ''} ${details.country}`,
       locality: details.locality || '',
       city: details.city || '',
       state: details.state || '',
@@ -227,6 +231,21 @@ const SimpleOnboarding: React.FC<Props> = ({
       society: details.society || '',
     }))
     setShowAutoAddress(false)
+  }
+
+  const updateStreet = async () => {
+    const detail: any = {}
+    const terms = selectedAddress.split(',').map((term) => term.trim())
+
+    if (terms.length >= 1) detail.country = terms[terms.length - 1]
+    if (terms.length >= 2) detail.state = terms[terms.length - 2]
+    if (terms.length >= 3) detail.city = terms[terms.length - 3]
+    if (terms.length >= 4) detail.locality = terms[terms.length - 4]
+    if (terms.length >= 5) detail.society = terms[terms.length - 5]
+    if (terms.length >= 6)
+      detail.street = terms.slice(0, terms.length - 5).join(', ')
+
+    setAddressData((Addressdata.street = detail.street ? detail.street : ''))
   }
 
   const handleInputChange = (event: any) => {
@@ -307,8 +326,8 @@ const SimpleOnboarding: React.FC<Props> = ({
     if (!res?.data.success) {
       setSubmitBtnLoading(false)
     }
+    await updateStreet()
     let reqBody: any = { ...Addressdata }
-
     if (user?._addresses?.length === 0 && reqBody.label === '') {
       reqBody.label = 'Default'
     }
@@ -926,7 +945,10 @@ const SimpleOnboarding: React.FC<Props> = ({
                   <div className={styles['dropdown']}>
                     {suggestions.map((suggestion, index) => (
                       <p
-                        onClick={() => handleSelectAddressTwo(suggestion)}
+                        onClick={() => {
+                          handleSelectAddressTwo(suggestion)
+                          setSelectedAddress(suggestion)
+                        }}
                         key={index}
                       >
                         {suggestion}

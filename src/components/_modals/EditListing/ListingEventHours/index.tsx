@@ -109,15 +109,7 @@ const timings = [
   '11:30pm',
 ]
 
-const days = [
-  'Sun',
-  'Mon',
-  'Tue',
-  'Wed',
-  'Thu',
-  'Fri',
-  'Sat',
-]
+const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const initialWeekdays = {
   from_day: 'Monday',
   to_day: 'Friday',
@@ -206,7 +198,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     setSubmitBtnLoading(true)
     const { err, res } = await updateListing(listingModalData._id, {
       event_date_time: jsonData,
-      event_weekdays: weekdays
+      event_weekdays: weekdays,
     })
     const updatedData = {
       ...listingModalData,
@@ -231,7 +223,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     setBackBtnLoading(true)
     const { err, res } = await updateListing(listingModalData._id, {
       event_date_time: jsonData,
-      event_weekdays: weekdays
+      event_weekdays: weekdays,
     })
     const updatedData = {
       ...listingModalData,
@@ -253,7 +245,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
         setWeekdays(listingModalData.event_weekdays)
       }
     }
-  }, [])
+  }, [listingModalData])
 
   // const updateEventHours = async () => {
   //   const { err, res } = await GetListingEvents(
@@ -304,9 +296,9 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
 
   const addWeekday = () => {
     if (weekdays.length === 0) {
-      const fromDay = days[new Date(eventData.from_date).getDay()];
-      const toDay = days[new Date(eventData.to_date).getDay()];
-  
+      const fromDay = days[new Date(eventData.from_date).getDay()]
+      const toDay = days[new Date(eventData.to_date).getDay()]
+
       setWeekdays([
         {
           from_day: fromDay,
@@ -314,7 +306,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
           from_time: eventData.from_time,
           to_time: eventData.to_time,
         },
-      ]);
+      ])
     } else {
       setWeekdays((prevWeekdays) => [
         ...prevWeekdays,
@@ -324,16 +316,13 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
           from_time: '8:00 am',
           to_time: '9:00 pm',
         },
-      ]);
+      ])
     }
-  };
+  }
 
-  const deleteWeekday = (index:number) => {
-    setWeekdays((prevWeekdays) => 
-      prevWeekdays.filter((_, i) => i !== index)
-    );
-  };
-  
+  const deleteWeekday = (index: number) => {
+    setWeekdays((prevWeekdays) => prevWeekdays.filter((_, i) => i !== index))
+  }
 
   useEffect(() => {
     const hasChanges = JSON.stringify(eventData) !== JSON.stringify(initialData)
@@ -376,7 +365,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     return returnableString
   }
 
-  const isMobile = useMediaQuery("(max-width:1100px)")
+  const isMobile = useMediaQuery('(max-width:1100px)')
 
   const PlusIcon = () => (
     <svg
@@ -494,7 +483,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                   />
                   <p
                     className={
-                      styles['formatted-date'] 
+                      styles['formatted-date']
                       // + ` ${styles['left-more']}`
                     }
                   >
@@ -537,30 +526,50 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
               <p>Add Weekdays</p>
             </div>
             {weekdays.map((obj, i) => (
-              <div key={i} className={styles.listItem+` ${styles['no-wrap']}`}>
-                <div className={styles['subitem-group']+` ${styles['mobile-group']}`}>
-                  <div className={styles.listSubItem+` ${styles['mobile-w-auto']}`}>
-                    {i===0&&<label> From Day </label>}
-
+              <div
+                key={i}
+                className={styles.listItem + ` ${styles['no-wrap']}`}
+              >
+                <div
+                  className={
+                    styles['subitem-group'] + ` ${styles['mobile-group']}`
+                  }
+                >
+                  <div
+                    className={
+                      styles.listSubItem + ` ${styles['mobile-w-auto']}`
+                    }
+                  >
+                    {i === 0 && <label> From Day </label>}
                     <InputSelect
                       options={days}
-                      value={obj.from_day}
+                      value={obj.from_day} // Directly set the value
                       onChange={(item: any) =>
-                        onChangeWeekday(item, 'from_day',i)
+                        onChangeWeekday(item, 'from_day', i)
                       }
                       className={styles['weekday-input']}
                       iconClass={styles['input-icon']}
                     />
                   </div>
-                  {isMobile?null:<div className={styles['breaker']+` ${i===0?"":styles['no-margin']}`} />}
-                  <div className={styles.listSubItem+` ${styles['mobile-w-auto']}`}>
-                    {i===0&&<label> To Day </label>}
-
+                  {isMobile ? null : (
+                    <div
+                      className={
+                        styles['breaker'] +
+                        ` ${i === 0 ? '' : styles['no-margin']}`
+                      }
+                    />
+                  )}
+                  <div
+                    className={
+                      styles.listSubItem + ` ${styles['mobile-w-auto']}`
+                    }
+                  >
+                    {i === 0 && <label> To Day </label>}
                     <InputSelect
                       options={days}
-                      value={obj.to_day}
+                      value={obj.to_day} // Directly set the value
                       onChange={(item: any) =>
-                        onChangeWeekday(item, 'to_day',i)
+                        onChangeWeekday(item, 'to_day', i)
                       }
                       className={styles['weekday-input']}
                       iconClass={styles['input-icon']}
@@ -568,34 +577,50 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                   </div>
                 </div>
                 <p className={styles['comma']}>,</p>
-                <div className={styles['subitem-group']+` ${styles['mobile-group']}`}>
+                <div
+                  className={
+                    styles['subitem-group'] + ` ${styles['mobile-group']}`
+                  }
+                >
                   <div className={styles.listSubItem}>
-                    {i===0&&<label> From Time </label>}
+                    {i === 0 && <label> From Time </label>}
                     <InputSelect
                       options={timings}
-                      value={()=>new String(obj.from_time).substring(0,3)}
+                      value={obj.from_time} // Directly set the value
                       onChange={(item: any) =>
-                        onChangeWeekday(item, 'from_time',i)
+                        onChangeWeekday(item, 'from_time', i)
                       }
                       className={styles['weektime-input']}
                       iconClass={styles['input-icon']}
                     />
                   </div>
-                 {isMobile?null: <div className={styles['breaker']+` ${i===0?"":styles['no-margin']}`} />}
+                  {isMobile ? null : (
+                    <div
+                      className={
+                        styles['breaker'] +
+                        ` ${i === 0 ? '' : styles['no-margin']}`
+                      }
+                    />
+                  )}
                   <div className={styles.listSubItem}>
-                    {i===0&&<label> To Time </label>}
+                    {i === 0 && <label> To Time </label>}
                     <InputSelect
-                      value={()=>new String(obj.to_time).substring(0,3)}
+                      value={obj.to_time} // Directly set the value
                       options={timings.slice(
                         timings.indexOf(obj.from_time) + 1,
                       )}
-                      onChange={(item: any) => onChangeWeekday(item, 'to_time',i)}
+                      onChange={(item: any) =>
+                        onChangeWeekday(item, 'to_time', i)
+                      }
                       className={styles['weektime-input']}
                       iconClass={styles['input-icon']}
                     />
                   </div>
                 </div>
-                <div onClick={()=>deleteWeekday(i)} className={styles['self-left']}>
+                <div
+                  onClick={() => deleteWeekday(i)}
+                  className={styles['self-left']}
+                >
                   <DeleteIcon />
                 </div>
               </div>
