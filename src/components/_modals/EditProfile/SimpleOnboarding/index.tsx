@@ -219,11 +219,13 @@ const SimpleOnboarding: React.FC<Props> = ({
 
     setAddressData((prev) => ({
       ...prev,
+
       street: `${details.street ? details.street + ',' : ''} ${
         details.society ? details.society + ',' : ''
       } ${details.locality ? details.locality + ',' : ''} ${
         details.city ? details.city + ',' : ''
       } ${details.state ? details.state + ',' : ''} ${details.country}`,
+
       locality: details.locality || '',
       city: details.city || '',
       state: details.state || '',
