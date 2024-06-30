@@ -596,8 +596,8 @@ const ListingHeader: React.FC<Props> = ({
             </div>
             <div className={styles['event-date-container']}>
               {data?.type === listingTypes.PROGRAM && data?.event_date_time ? (
-                <div>
-                  <div className={styles.eventDate}>
+                <div className={styles['eventDate-parent']}>
+                  <div className={styles.eventDate+ ` ${showDays&&styles['eventDate-open']}`}>
                     <Image
                       className={styles['im']}
                       src={Calendar}
@@ -674,7 +674,7 @@ const ListingHeader: React.FC<Props> = ({
                         />
                         <div
                           onClick={() => setShowDays((prev) => !prev)}
-                          className={showDays ? '' : styles['rotate']}
+                          className={`${showDays ? '' : styles['rotate']} ${styles['flex-col-start']}`}
                         >
                           {dropdownIcon}
                         </div>
@@ -686,7 +686,7 @@ const ListingHeader: React.FC<Props> = ({
                       !isMobile && (
                         <div
                           onClick={() => setShowDays((prev) => !prev)}
-                          className={showDays ? '' : styles['rotate']}
+                          className={`${showDays ? '' : styles['rotate']} ${styles['flex-col-start']}`}
                         >
                           {dropdownIcon}
                         </div>
