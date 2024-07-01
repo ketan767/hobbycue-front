@@ -619,7 +619,9 @@ const ListingHeader: React.FC<Props> = ({
                       {data.event_weekdays &&
                       data?.event_weekdays?.length > 0 ? (
                         data.event_weekdays.map(
-                          (obj: any, i: number, arr: any[]) => (
+                          (obj: any, i: number, arr: any[]) =>
+                            i>0&&!showDays?null:
+                            (
                             <p
                               key={i}
                               className={
