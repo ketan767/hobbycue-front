@@ -538,7 +538,7 @@
 /* Desktop only */
 @media screen and (min-width:1100px) {
   .eventDate-parent{
-    min-width: 381px;
+    min-width: 470px;
   }
   .eventDate{
     position: absolute;
@@ -549,6 +549,7 @@
     right: 0;
    padding: 0 0 0 5px;
    border-radius: 8px;
+   left: auto !important;
 }
 .eventDate-open{
   box-shadow: 0px 8px 12px 0px rgba(147, 156, 163, 0.12), 0px 0px 2px 0px rgba(147, 156, 163, 0.36);

@@ -66,12 +66,12 @@ type ListingModalData = {
     listings: any
   }
   related_listings_right?: any
-  event_weekdays?:[{
+  event_weekdays?:{
     from_time: string
     to_time: string
     from_day: string
     to_day: string
-  }]
+  }[]
 }
 
 interface AuthState {

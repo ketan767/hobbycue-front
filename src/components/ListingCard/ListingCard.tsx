@@ -98,6 +98,9 @@ const ListingCard: React.FC<Props> = ({ data }) => {
         href={`/page/${data?.page_url}`}
         className={styles.container}
       >
+        <div className={`${data.is_published?styles['published-mark']:styles['unpublished-mark']}`}>
+          <p>{data.is_published?"PUBLISHED":"UNPUBLISHED"}</p>
+        </div>
         <div className={styles.imgContainer}>
           {data?.cover_image ? (
             <img
@@ -177,14 +180,14 @@ const ListingCard: React.FC<Props> = ({ data }) => {
                     }
                     alt="type"
                   />
-                  <p>
+                  <span>
                     {' '}
                     {data?.page_type?.map((item: string, idx: number) => {
                       if (idx === 0) {
                         return item
                       } else return ', ' + item
                     })}{' '}
-                  </p>
+                  </span>
                 </p>
                 {data?.event_date_time ? (
                   <div className={styles['date-time']}>

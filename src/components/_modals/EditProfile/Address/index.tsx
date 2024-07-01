@@ -183,7 +183,7 @@ const ProfileAddressEditModal: React.FC<Props> = ({
         const response = await fetch(`/api/autocomplete?input=${data.street}`)
         const addressRes = await response.json()
         if (addressRes.predictions) {
-          console.warn('suggestionsssss', data)
+          console.warn('suggestionsssss', addressRes)
           setSuggestions(
             addressRes.predictions.map(
               (prediction: any) => prediction.description,

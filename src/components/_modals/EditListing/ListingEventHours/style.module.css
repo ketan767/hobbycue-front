@@ -256,16 +256,19 @@
 .time-input {
   padding: 8px !important;
   width: 121px;
+  color: #000000;
 }
 
 .weekday-input {
   padding: 8px !important;
   width: 131px !important;
+  color: #000000;
 }
 
 .weektime-input {
   padding: 8px !important;
   width: 99px !important;
+  color: #000000;
 }
 
 .input-icon {
