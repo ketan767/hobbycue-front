@@ -597,7 +597,12 @@ const ListingHeader: React.FC<Props> = ({
             <div className={styles['event-date-container']}>
               {data?.type === listingTypes.PROGRAM && data?.event_date_time ? (
                 <div className={styles['eventDate-parent']}>
-                  <div className={styles.eventDate+ ` ${showDays&&styles['eventDate-open']}`}>
+                  <div
+                    className={
+                      styles.eventDate +
+                      ` ${showDays && styles['eventDate-open']}`
+                    }
+                  >
                     <Image
                       className={styles['im']}
                       src={Calendar}
@@ -618,12 +623,14 @@ const ListingHeader: React.FC<Props> = ({
                             <p
                               key={i}
                               className={
-                                styles.time +
-                                ` ${
-                                  i !== 0 && showDays === false
-                                    ? styles['hide']
-                                    : ''
-                                }`
+                                isEditMode
+                                  ? styles.time
+                                  : styles.editTime +
+                                    ` ${
+                                      i !== 0 && showDays === false
+                                        ? styles['hide']
+                                        : ''
+                                    }`
                               }
                             >
                               {obj?.from_day} - {obj?.to_day}, {obj?.from_time}
@@ -658,7 +665,9 @@ const ListingHeader: React.FC<Props> = ({
                           ),
                         )
                       ) : (
-                        <p className={styles.time}>
+                        <p
+                          className={isEditMode ? styles.time : styles.editTime}
+                        >
                           {data?.event_date_time.from_time} -{' '}
                           {data?.event_date_time.to_time}
                         </p>
@@ -672,12 +681,16 @@ const ListingHeader: React.FC<Props> = ({
                           alt="edit"
                           onClick={handleEventEditClick}
                         />
-                        <div
-                          onClick={() => setShowDays((prev) => !prev)}
-                          className={`${showDays ? '' : styles['rotate']} ${styles['flex-col-start']}`}
-                        >
-                          {dropdownIcon}
-                        </div>
+                        {data?.event_weekdays?.length > 0 && (
+                          <div
+                            onClick={() => setShowDays((prev) => !prev)}
+                            className={`${showDays ? '' : styles['rotate']} ${
+                              styles['flex-col-start']
+                            }`}
+                          >
+                            {dropdownIcon}
+                          </div>
+                        )}
                       </>
                     ) : (
                       listingLayoutMode !== 'edit' &&
@@ -686,7 +699,9 @@ const ListingHeader: React.FC<Props> = ({
                       !isMobile && (
                         <div
                           onClick={() => setShowDays((prev) => !prev)}
-                          className={`${showDays ? '' : styles['rotate']} ${styles['flex-col-start']}`}
+                          className={`${showDays ? '' : styles['rotate']} ${
+                            styles['flex-col-start']
+                          }`}
                         >
                           {dropdownIcon}
                         </div>
