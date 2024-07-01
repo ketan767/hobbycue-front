@@ -479,7 +479,9 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
             <div className={styles['event-date-container']}>
               {data?.type === listingTypes.PROGRAM && data?.event_date_time ? (
                 <div>
-                  <div className={styles.eventDate}>
+                  <div
+                    className={`${styles.eventDateSmall} ${styles.eventDate}`}
+                  >
                     <Image
                       className={styles['im']}
                       src={Calendar}
@@ -500,12 +502,14 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                             <p
                               key={i}
                               className={
-                                styles.time +
-                                ` ${
-                                  i !== 0 && showDays === false
-                                    ? styles['hide']
-                                    : ''
-                                }`
+                                isEditMode
+                                  ? styles.time
+                                  : styles.editTime +
+                                    ` ${
+                                      i !== 0 && showDays === false
+                                        ? styles['hide']
+                                        : ''
+                                    }`
                               }
                             >
                               {obj?.from_day} - {obj?.to_day}, {obj?.from_time}
@@ -540,7 +544,9 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                           ),
                         )
                       ) : (
-                        <p className={styles.time}>
+                        <p
+                          className={isEditMode ? styles.time : styles.editTime}
+                        >
                           {data?.event_date_time.from_time} -{' '}
                           {data?.event_date_time.to_time}
                         </p>
@@ -554,12 +560,14 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                           alt="edit"
                           onClick={handleEventEditClick}
                         />
-                        <div
-                          onClick={() => setShowDays((prev) => !prev)}
-                          className={showDays ? '' : styles['rotate']}
-                        >
-                          {dropdownIcon}
-                        </div>
+                        {data?.event_weekdays?.length > 0 && (
+                          <div
+                            onClick={() => setShowDays((prev) => !prev)}
+                            className={showDays ? '' : styles['rotate']}
+                          >
+                            {dropdownIcon}
+                          </div>
+                        )}
                       </>
                     ) : (
                       listingLayoutMode !== 'edit' &&

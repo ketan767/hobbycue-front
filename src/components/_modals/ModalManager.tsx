@@ -571,7 +571,7 @@ const ModalManager: React.FC = () => {
                 <AdminActionModal {...propData} />
               )}
               {activeModal === 'SimpleOnboarding' && (
-                <SimpleOnboarding {...propData} />
+                <SimpleOnboarding {...props} />
               )}
               {activeModal === 'add-event' && <ListingAddEvent {...propData} />}
               {/* Modal Close Icon */}

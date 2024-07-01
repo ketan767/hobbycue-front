@@ -804,16 +804,6 @@ const SimpleOnboarding: React.FC<Props> = ({
 
   console.warn('hobbydrodopwnlisttttt', hobbyDropdownList)
 
-  if (confirmationModal) {
-    return (
-      <SaveModal
-        handleClose={handleClose}
-        handleSubmit={handleSubmit}
-        setConfirmationModal={setConfirmationModal}
-        isError={isError}
-      />
-    )
-  }
   const isMobile = useMediaQuery('(max-width:1100px)')
 
   const [input, setInput] = useState('')
@@ -841,15 +831,26 @@ const SimpleOnboarding: React.FC<Props> = ({
       setSuggestions([])
     }
   }
+  if (confirmationModal) {
+    return (
+      <SaveModal
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        setConfirmationModal={setConfirmationModal}
+        isError={isError}
+      />
+    )
+  }
 
   return (
     <>
       <div className={styles['modal-wrapper']}>
         <CloseIcon
           className={styles['modal-close-icon']}
-          onClick={() =>
+          onClick={() => {
+            console.warn('Close clickeddddddddddd')
             isChanged ? setConfirmationModal(true) : handleClose()
-          }
+          }}
         />
         {/* Modal Header */}
         <header className={styles['header']}>
