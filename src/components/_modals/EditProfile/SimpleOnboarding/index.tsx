@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress, useMediaQuery } from '@mui/material'
 import {
+  TrendingHobbiesByUser,
   addUserAddress,
   addUserHobbies,
   getMyProfileDetail,
@@ -859,13 +860,13 @@ const SimpleOnboarding: React.FC<Props> = ({
     }
   }
   const fetchTrendingHobbies = async () => {
-    const { err, res } = await getTrendingHobbies(``)
+    const { err, res } = await TrendingHobbiesByUser()
 
     if (err) {
       return console.log('err', err)
     }
-    setTrendingHobbies(res.data?.hobbies)
-    console.warn('trending hobbiesssss', res.data.hobbies)
+    setTrendingHobbies(res?.data?.data)
+    console.warn('trending hobbiesssss', res?.data)
   }
 
   useEffect(() => {
@@ -1212,6 +1213,8 @@ const SimpleOnboarding: React.FC<Props> = ({
                       ...prev,
                       hobbies: null,
                     }))
+                    setIsChanged(true)
+                    dispatch(setHasChanges(true))
                   }
                 }
 
