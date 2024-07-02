@@ -25,12 +25,18 @@ import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import Image from 'next/image'
 import LocationIcon from '@/assets/svg/location-2.svg'
-import { getAllHobbies, getTrendingHobbies } from '@/services/hobby.service'
+import {
+  SendHobbyRequest,
+  getAllHobbies,
+  getTrendingHobbies,
+} from '@/services/hobby.service'
 import Link from 'next/link'
 import { BubbleChartTwoTone } from '@mui/icons-material'
 import CrossIcon from '@/assets/svg/cross.svg'
-import { getAutocompleteAddress } from '@/services/auth.service'
+import { gmapAutoComplete } from '@/services/auth.service'
 import { useRouter } from 'next/router'
+import AddHobby from '../../AddHobby/AddHobbyModal'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   onComplete?: () => void
@@ -41,6 +47,16 @@ type Props = {
   isError?: boolean
   onStatusChange?: (isChanged: boolean) => void
   CheckIsOnboarded?: any
+  setShowAddHobbyModal?: any
+  showAddHobbyModal?: boolean
+  propData?: {
+    selectedHobbyToAdd?: {
+      _id: string
+      display: string
+      level: number
+      show: boolean
+    }
+  }
 }
 
 type AddressObj = {
@@ -86,16 +102,27 @@ type ProfileGeneralData = {
   completed_onboarding_steps?: any
 }
 
+type Snackbar = {
+  triggerOpen: boolean
+  message: string
+  type: 'error' | 'success'
+  closeSnackbar?: () => void
+}
+
 const SimpleOnboarding: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
   confirmationModal,
   setConfirmationModal,
   handleClose,
+  setShowAddHobbyModal,
   onStatusChange,
+  propData,
+  showAddHobbyModal,
 }) => {
   const dispatch = useDispatch()
   const router = useRouter()
+  const selectedHobbyToAdd = propData && propData?.selectedHobbyToAdd
   const { user } = useSelector((state: RootState) => state.user)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [SubmitAddress, setSubmitAddress] = useState<boolean>(false)
@@ -160,6 +187,13 @@ const SimpleOnboarding: React.FC<Props> = ({
     location: null,
     hobbies: null,
   })
+
+  const [showSnackbar, setShowSnackbar] = useState<Snackbar>({
+    triggerOpen: false,
+    message: '',
+    type: 'success' || 'error',
+  })
+
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     DropdownListItemHobby[]
   >([])
@@ -172,10 +206,12 @@ const SimpleOnboarding: React.FC<Props> = ({
     if (Addressdata.street?.length > 1) {
       setShowAutoAddress(true)
       try {
-        const response = await fetch(
-          `/api/autocomplete?input=${Addressdata.street}`,
-        )
-        const data = await response.json()
+        const { err, res } = await gmapAutoComplete(Addressdata?.street)
+        if (err) {
+          console.error(err)
+          return
+        }
+        const data = res?.data.data
         if (data.predictions) {
           console.warn('suggestionsssss', data)
           setSuggestions(
@@ -280,11 +316,23 @@ const SimpleOnboarding: React.FC<Props> = ({
   const handleSubmit = async () => {
     let hasErrors = false
 
-    if (selectedHobbies == null) {
+    if (selectedHobbies.length === 0) {
+      if (hobbyInputValue) {
+        const matchedHobby = hobbyDropdownList.find(
+          (hobby) =>
+            hobby.display.toLowerCase() === hobbyInputValue.toLowerCase(),
+        )
+        if (!matchedHobby) {
+          setShowAddHobbyModal(true)
+          return
+        }
+      }
+
       hobbysearchref?.current?.focus()
       setInputErrs((prev) => {
         return { ...prev, hobbies: 'This field is required!' }
       })
+      setIsError(true)
       hasErrors = true
     }
 
@@ -294,6 +342,7 @@ const SimpleOnboarding: React.FC<Props> = ({
         return { ...prev, public_email: 'This field is required' }
       })
       hasErrors = true
+      setIsError(true)
     }
 
     if (isEmptyField(Addressdata.street) || !Addressdata.street) {
@@ -302,6 +351,7 @@ const SimpleOnboarding: React.FC<Props> = ({
         return { ...prev, location: 'This field is required!' }
       })
       hasErrors = true
+      setIsError(true)
     }
     if (isEmptyField(data.full_name) || !data.full_name) {
       fullNameRef.current?.focus()
@@ -309,6 +359,7 @@ const SimpleOnboarding: React.FC<Props> = ({
         return { ...prev, full_name: 'This field is required!' }
       })
       hasErrors = true
+      setIsError(true)
     }
 
     if (hasErrors === true) {
@@ -670,13 +721,33 @@ const SimpleOnboarding: React.FC<Props> = ({
   }
 
   const handleHobbySelection = async (selectedHobby: DropdownListItemHobby) => {
+    const isAlreadySelected = selectedHobbies.some(
+      (hobby) => hobby?.display === selectedHobby?.display,
+    )
+
+    if (isAlreadySelected) {
+      setInputErrs((prev) => {
+        return { ...prev, hobbies: 'Same hobby detected in the hobbies list' }
+      })
+      return
+    }
+
+    // Proceed with updating state if the hobby is not already selected
     setData((prev) => ({ ...prev, hobby: selectedHobby }))
     setHobbyInputValue(selectedHobby?.display ?? hobbyInputValue)
     setselectedHobbies((prev) => [...prev, selectedHobby])
+    setHobbyInputValue('')
+    setInputErrs((prev) => ({
+      ...prev,
+      hobbies: null,
+    }))
+    setIsChanged(true)
+    dispatch(setHasChanges(true))
   }
+
   const removeSelectedHobby = (hobbyToRemove: any) => {
     setselectedHobbies((prev) =>
-      prev.filter((hobby) => hobby._id !== hobbyToRemove._id),
+      prev.filter((hobby) => hobby.display !== hobbyToRemove.display),
     )
   }
   const handleHobbyInputChange = async (e: any) => {
@@ -831,6 +902,61 @@ const SimpleOnboarding: React.FC<Props> = ({
       setSuggestions([])
     }
   }
+
+  if (showAddHobbyModal) {
+    return (
+      <>
+        <AddHobby
+          handleClose={() => {
+            setShowAddHobbyModal(false)
+          }}
+          handleSubmit={() => async () => {
+            let jsonData = {
+              user_id: user._id,
+              user_type: 'user',
+              hobby: hobbyInputValue,
+              level: 'Hobby',
+            }
+            const { err, res } = await SendHobbyRequest(jsonData)
+            if (res?.data.success) {
+              setShowAddHobbyModal(false)
+              setErrorOrmsg('Request sent!')
+              setHobbyInputValue('')
+            } else if (err) {
+              setShowSnackbar({
+                triggerOpen: true,
+                type: 'error',
+                message: 'Something went wrong',
+              })
+              console.log(err)
+            }
+          }}
+          propData={{ defaultValue: hobbyInputValue }}
+          selectedHobbyText={
+            selectedHobbyToAdd &&
+            selectedHobbyToAdd?.show === false &&
+            selectedHobbyToAdd.display === hobbyInputValue
+              ? selectedHobbyToAdd.display
+              : undefined
+          }
+        />
+
+        <CustomSnackbar
+          message={showSnackbar.message}
+          type={showSnackbar.type}
+          triggerOpen={showSnackbar.triggerOpen}
+          closeSnackbar={() => {
+            setShowSnackbar({
+              message: '',
+              triggerOpen: false,
+              type: 'success',
+            })
+          }}
+        />
+      </>
+    )
+  }
+
   if (confirmationModal) {
     return (
       <SaveModal
@@ -1004,7 +1130,20 @@ const SimpleOnboarding: React.FC<Props> = ({
                   onChange={handleHobbyInputChange}
                   onKeyDown={handleHobbyKeyDown}
                 />
-                <p className={styles['helper-text']}>{inputErrs.hobbies}</p>
+                {inputErrs.hobbies || errorOrmsg ? (
+                  <p
+                    className={
+                      inputErrs.hobbies
+                        ? styles['helper-text']
+                        : styles['helper-text-green']
+                    }
+                  >
+                    {inputErrs.hobbies} {errorOrmsg}{' '}
+                  </p>
+                ) : (
+                  ''
+                )}
+
                 {showHobbyDowpdown && hobbyDropdownList.length !== 0 && (
                   <div
                     className={`${styles['dropdown']}`}
@@ -1056,12 +1195,30 @@ const SimpleOnboarding: React.FC<Props> = ({
             <ul className={`${styles['hobby-list']}`}>
               {trendingHobbies?.map((item: any) => {
                 if (typeof item === 'string') return
+
+                const isAlreadySelected = selectedHobbies.some(
+                  (hobby) => hobby._id === item._id,
+                )
+
+                const handleClick = () => {
+                  if (isAlreadySelected) {
+                    setInputErrs((prev) => ({
+                      ...prev,
+                      hobbies: 'Same hobby detected in the hobbies list',
+                    }))
+                  } else {
+                    setselectedHobbies((prev) => [...prev, item])
+                    setInputErrs((prev) => ({
+                      ...prev,
+                      hobbies: null,
+                    }))
+                  }
+                }
+
                 return (
                   <div
                     className={styles.trendingHobby}
-                    onClick={() =>
-                      setselectedHobbies((prev) => [...prev, item])
-                    }
+                    onClick={handleClick}
                     key={item._id}
                   >
                     <li>

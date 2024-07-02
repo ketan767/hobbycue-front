@@ -471,14 +471,14 @@ const Home: React.FC<PropTypes> = function () {
         <Footer />
       </section>
 
-      {activeModal !== 'post' &&
+      {/* {activeModal !== 'post' &&
         activeModal !== 'auth' &&
         showAddToHome === true && (
           <InstallPopup
             showAddToHome={showAddToHome}
             setShowAddToHome={setShowAddToHome}
           />
-        )}
+        )} */}
     </>
   )
 }

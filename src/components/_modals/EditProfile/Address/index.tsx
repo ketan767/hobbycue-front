@@ -22,6 +22,7 @@ import NextIcon from '@/assets/svg/Next.svg'
 import InfoIcon from '@/assets/svg/infoIcon.svg'
 import Image from 'next/image'
 import CustomizedTooltips2 from '@/components/Tooltip/Tooltip2'
+import { gmapAutoComplete } from '@/services/auth.service'
 
 type Props = {
   onComplete?: () => void
@@ -180,8 +181,12 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     if (data.street?.length > 1) {
       setShowAutoAddress(true)
       try {
-        const response = await fetch(`/api/autocomplete?input=${data.street}`)
-        const addressRes = await response.json()
+        const { err, res } = await gmapAutoComplete(data?.street)
+        if (err) {
+          console.error(err)
+          return
+        }
+        const addressRes = res?.data.data
         if (addressRes.predictions) {
           console.warn('suggestionsssss', addressRes)
           setSuggestions(

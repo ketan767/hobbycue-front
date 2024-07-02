@@ -26,6 +26,7 @@ import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import InfoIcon from '@/assets/svg/infoIcon.svg'
 import CustomizedTooltips2 from '@/components/Tooltip/Tooltip2'
+import { gmapAutoComplete } from '@/services/auth.service'
 
 type Props = {
   onComplete?: () => void
@@ -112,6 +113,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
   const [ShowDropdown, setShowDropdown] = useState<boolean>(false)
   const [dropdownList, setShowDropdownList] = useState<DropdownListItem[]>([])
 
+  const base_url = process.env.NEXT_PUBLIC_BASE_URL
   useEffect(() => {
     inputRef?.current?.focus()
   }, [])
@@ -139,12 +141,14 @@ const ListingAddressEditModal: React.FC<Props> = ({
     if (data.street?.value?.length > 1) {
       setShowAutoAddress(true)
       try {
-        const response = await fetch(
-          `/api/autocomplete?input=${data.street.value}`,
-        )
-        const addressRes = await response.json()
+        const { err, res } = await gmapAutoComplete(data?.street?.value)
+        if (err) {
+          console.error(err)
+          return
+        }
+        const addressRes = res?.data.data
+        console.warn('suggestionsssss', addressRes)
         if (addressRes.predictions) {
-          console.warn('suggestionsssss', data)
           setSuggestions(
             addressRes.predictions.map(
               (prediction: any) => prediction.description,
