@@ -23,6 +23,7 @@ import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/
 import { updateProfileMenuExpandAll } from '@/redux/slices/site'
 import { useRouter } from 'next/router'
 import { useMediaQuery } from '@mui/material'
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
 
 interface Props {
   data: ProfilePageData
@@ -34,10 +35,15 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
   const { profile } = useSelector((state: RootState) => state?.site.expandMenu)
   const { user } = useSelector((state: RootState) => state.user)
   const [expandAll, setExpandAll] = useState(profile)
+  const [mounted,setMounted] = useState(false);
   const handleExpandAll: (value: boolean) => void = (value) => {
     setExpandAll(value)
     dispatch(updateProfileMenuExpandAll(value))
   }
+
+  useEffect(()=>{
+    setMounted(true);
+  },[]);
 
   const router = useRouter()
   useEffect(() => {
@@ -143,22 +149,26 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
             </aside>
 
             <main>
-              {data.listingsData.length !== 0 ? (
-                <div className={styles['card-container']}>
-                  {itsMe && (
-                    <div
-                      onClick={handleAddPage}
-                      className={styles['add-event']}
-                    >
-                      <div className={styles['new-tag']}>NEW</div>
-                      <button>{plusIcon}</button>
-                    </div>
-                  )}
-                  {data.listingsData.map((listing: any) => {
-                    return <ListingCard key={listing._id} data={listing} />
-                  })}
-                </div>
+              {data.listingsData.length !== 0 && mounted ? (
+                // <div className={styles['card-container']}>
+                <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 1100: 2 }}>
+                  <Masonry gutter='12px' style={{columnGap:"24px",rowGap:"12px"}}>
+                    {itsMe && (
+                      <div
+                        onClick={handleAddPage}
+                        className={styles['add-event']}
+                      >
+                        <div className={styles['new-tag']}>NEW</div>
+                        <button>{plusIcon}</button>
+                      </div>
+                    )}
+                    {data.listingsData.map((listing: any) => {
+                      return <ListingCard key={listing._id} data={listing} />
+                    })}
+                  </Masonry>
+                </ResponsiveMasonry>
               ) : (
+                // </div>
                 <section className={styles['card-container']}>
                   {itsMe && (
                     <div

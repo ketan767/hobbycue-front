@@ -138,7 +138,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
   const [eventData, setEventData] = useState(initialEventHour)
   const [weekdays, setWeekdays] = useState<
     { from_time: string; to_time: string; from_day: string; to_day: string }[]
-  >([initialWeekdays])
+  >([]);
   const today = new Date().toISOString().split('T')[0]
   const [initialData, setInitialData] = useState({})
   const [isChanged, setIsChanged] = useState(false)
@@ -203,6 +203,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     const updatedData = {
       ...listingModalData,
       event_date_time: res?.data.data.listing.event_date_time,
+      event_weekdays: weekdays,
     }
     dispatch(updateListingModalData(updatedData))
     if (err) return console.log(err)
@@ -228,6 +229,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     const updatedData = {
       ...listingModalData,
       event_date_time: res?.data.data.listing.event_date_time,
+      event_weekdays: weekdays,
     }
     dispatch(updateListingModalData(updatedData))
     if (err) return console.log(err)
@@ -241,10 +243,11 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
         listingModalData.event_date_time
       setEventData({ from_time, to_time, from_date, to_date })
       setInitialData({ from_time, to_time, from_date, to_date })
+    }
       if (listingModalData.event_weekdays) {
         setWeekdays(listingModalData.event_weekdays)
       }
-    }
+      console.log({listingModalData})
   }, [listingModalData])
 
   // const updateEventHours = async () => {
@@ -401,6 +404,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
       height="25"
       viewBox="0 0 24 25"
       fill="none"
+      cursor={'pointer'}
     >
       <g clip-path="url(#clip0_15789_230)">
         <path

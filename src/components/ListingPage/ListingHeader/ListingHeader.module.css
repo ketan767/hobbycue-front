@@ -549,6 +549,7 @@
     right: 0;
    padding: 0 0 0 5px;
    border-radius: 8px;
+   left: auto !important;
 }
 .eventDateSmall {
   position: relative;
