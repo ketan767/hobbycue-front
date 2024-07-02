@@ -396,7 +396,7 @@ const ListingContactEditModal: React.FC<Props> = ({
       if (onComplete) onComplete()
       else {
         if (isTransferModal) {
-          window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/page/${listingModalData.page_url}`
+          window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/profile/${user?.profile_url}/pages`
         } else {
           window.location.reload()
         }

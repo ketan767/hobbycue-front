@@ -22,7 +22,11 @@ import NextIcon from '@/assets/svg/Next.svg'
 import InfoIcon from '@/assets/svg/infoIcon.svg'
 import Image from 'next/image'
 import CustomizedTooltips2 from '@/components/Tooltip/Tooltip2'
-import { getAutocompleteAddressFromGoogle, getLatLongFromPlaceID } from '@/services/auth.service'
+
+import {
+  getAutocompleteAddressFromGoogle,
+  getLatLongFromPlaceID,
+} from '@/services/auth.service'
 
 type Props = {
   onComplete?: () => void
@@ -171,7 +175,9 @@ const ProfileAddressEditModal: React.FC<Props> = ({
   const stateRef = useRef<HTMLInputElement>(null)
   const countryRef = useRef<HTMLInputElement>(null)
   const addressLabelRef = useRef<HTMLInputElement>(null)
-  const [suggestions, setSuggestions] = useState<{description:string,place_id:string}[]>([])
+  const [suggestions, setSuggestions] = useState<
+    { description: string; place_id: string }[]
+  >([])
 
   const handleInputChange = async (event: any) => {
     setShowDropdown(false)
@@ -182,14 +188,16 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       setShowAutoAddress(true)
       try {
         console.log('test running true here')
-        const {res,err} = await getAutocompleteAddressFromGoogle(data.street);
-        const addressRes = res.data;
+        const { res, err } = await getAutocompleteAddressFromGoogle(data.street)
+        const addressRes = res.data
+
         if (addressRes.predictions) {
           console.warn('suggestionsssss', addressRes)
           setSuggestions(
-            addressRes.predictions.map(
-              (prediction: any) => ({description:prediction.description,place_id:prediction.place_id}),
-            ),
+            addressRes.predictions.map((prediction: any) => ({
+              description: prediction.description,
+              place_id: prediction.place_id,
+            })),
           )
         } else {
           console.error('Error fetching suggestions:', addressRes.error)
@@ -958,10 +966,13 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     dispatch(setHasChanges(true))
   }
 
-  const handleSelectAddressTwo = async(suggestion: string,placeid:string) => {
+  const handleSelectAddressTwo = async (
+    suggestion: string,
+    placeid: string,
+  ) => {
     const details: any = {}
-    const {res,err} = await getLatLongFromPlaceID(placeid);
-    const latlongObj = res.data;
+    const { res, err } = await getLatLongFromPlaceID(placeid)
+    const latlongObj = res.data
     const terms = suggestion.split(',').map((term) => term.trim())
 
     if (terms.length >= 1) details.country = terms[terms.length - 1]
@@ -980,8 +991,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       state: details.state || '',
       country: details.country || '',
       society: details.society || '',
-      latitude: latlongObj.lat||'',
-      longitude: latlongObj.lng||''
+      latitude: latlongObj.lat || '',
+      longitude: latlongObj.lng || '',
     }))
     setShowAutoAddress(false)
   }
@@ -1102,7 +1113,12 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   <div className={styles['dropdown']}>
                     {suggestions.map((suggestion, index) => (
                       <p
-                        onClick={() => handleSelectAddressTwo(suggestion.description,suggestion.place_id)}
+                        onClick={() =>
+                          handleSelectAddressTwo(
+                            suggestion.description,
+                            suggestion.place_id,
+                          )
+                        }
                         key={index}
                       >
                         {suggestion.description}

@@ -26,7 +26,11 @@ import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import InfoIcon from '@/assets/svg/infoIcon.svg'
 import CustomizedTooltips2 from '@/components/Tooltip/Tooltip2'
-import { getAutocompleteAddressFromGoogle, getLatLongFromPlaceID } from '@/services/auth.service'
+
+import {
+  getAutocompleteAddressFromGoogle,
+  getLatLongFromPlaceID,
+} from '@/services/auth.service'
 
 type Props = {
   onComplete?: () => void
@@ -95,7 +99,9 @@ const ListingAddressEditModal: React.FC<Props> = ({
   const [dataLoaded, setDataLoaded] = useState(false)
   const [isError, setIsError] = useState(false)
   const [fetchLocation, setFetchLocation] = useState(false)
-  const [suggestions, setSuggestions] = useState<{description:string,place_id:string}[]>([])
+  const [suggestions, setSuggestions] = useState<
+    { description: string; place_id: string }[]
+  >([])
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -113,6 +119,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
   const [ShowDropdown, setShowDropdown] = useState<boolean>(false)
   const [dropdownList, setShowDropdownList] = useState<DropdownListItem[]>([])
 
+  const base_url = process.env.NEXT_PUBLIC_BASE_URL
   useEffect(() => {
     inputRef?.current?.focus()
   }, [])
@@ -140,14 +147,17 @@ const ListingAddressEditModal: React.FC<Props> = ({
     if (data.street?.value?.length > 1) {
       setShowAutoAddress(true)
       try {
-        const {res,err} = await getAutocompleteAddressFromGoogle(data.street.value);
-        const addressRes = res.data;
+        const { res, err } = await getAutocompleteAddressFromGoogle(
+          data.street.value,
+        )
+        const addressRes = res.data
+
         if (addressRes.predictions) {
-          console.warn('suggestionsssss', data)
           setSuggestions(
-            addressRes.predictions.map(
-              (prediction: any) => ({description:prediction.description,place_id:prediction.place_id}),
-            ),
+            addressRes.predictions.map((prediction: any) => ({
+              description: prediction.description,
+              place_id: prediction.place_id,
+            })),
           )
         } else {
           console.error('Error fetching suggestions:', addressRes.error)
@@ -609,10 +619,13 @@ const ListingAddressEditModal: React.FC<Props> = ({
     }))
   }
 
-  const handleSelectAddressTwo = async(suggestion: string,placeid:string) => {
+  const handleSelectAddressTwo = async (
+    suggestion: string,
+    placeid: string,
+  ) => {
     const details: any = {}
-    const {res,err} = await getLatLongFromPlaceID(placeid);
-    const latlongObj = res.data;
+    const { res, err } = await getLatLongFromPlaceID(placeid)
+    const latlongObj = res.data
     console.warn('suggestionssssss', suggestion)
 
     const terms = suggestion.split(',').map((term) => term.trim())
@@ -657,14 +670,14 @@ const ListingAddressEditModal: React.FC<Props> = ({
         value: details.society || '',
         error: null,
       },
-      latitude:{
-        value:latlongObj.lat||'',
-        error:null
+      latitude: {
+        value: latlongObj.lat || '',
+        error: null,
       },
-      longitude:{
-        value:latlongObj.lng||'',
-        error:null
-      }
+      longitude: {
+        value: latlongObj.lng || '',
+        error: null,
+      },
     }))
     setShowAutoAddress(false)
   }
@@ -739,7 +752,12 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   <div className={styles['dropdown']}>
                     {suggestions.map((suggestion, index) => (
                       <p
-                        onClick={() => handleSelectAddressTwo(suggestion.description,suggestion.place_id)}
+                        onClick={() =>
+                          handleSelectAddressTwo(
+                            suggestion.description,
+                            suggestion.place_id,
+                          )
+                        }
                         key={index}
                       >
                         {suggestion.description}
