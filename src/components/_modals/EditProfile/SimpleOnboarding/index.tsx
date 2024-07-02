@@ -179,7 +179,9 @@ const SimpleOnboarding: React.FC<Props> = ({
         if (data.predictions) {
           console.warn('suggestionsssss', data)
           setSuggestions(
-            data.predictions.map((prediction: any) => prediction.description),
+            data.predictions.map(
+              (prediction: any) => ({description:prediction.description,place_id:prediction.place_id}),
+            ),
           )
         } else {
           console.error('Error fetching suggestions:', data.error)
@@ -203,8 +205,10 @@ const SimpleOnboarding: React.FC<Props> = ({
     }
   }
 
-  const handleSelectAddressTwo = (suggestion: string) => {
+  const handleSelectAddressTwo = async(suggestion: string,placeid:string) => {
     const details: any = {}
+    const latlongRes = await fetch(`/api/placeid-to-latlong?place_id=${placeid}`);
+    const latlongObj = await latlongRes.json();
     console.warn('suggestionssssss', suggestion)
 
     const terms = suggestion.split(',').map((term) => term.trim())
@@ -229,6 +233,8 @@ const SimpleOnboarding: React.FC<Props> = ({
       state: details.state || '',
       country: details.country || '',
       society: details.society || '',
+      latitude: latlongObj.lat||'',
+      longitude: latlongObj.lng||''
     }))
     setShowAutoAddress(false)
   }
@@ -807,7 +813,7 @@ const SimpleOnboarding: React.FC<Props> = ({
   const isMobile = useMediaQuery('(max-width:1100px)')
 
   const [input, setInput] = useState('')
-  const [suggestions, setSuggestions] = useState<string[]>([])
+  const [suggestions, setSuggestions] = useState<{description:string,place_id:string}[]>([])
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value)
@@ -820,7 +826,11 @@ const SimpleOnboarding: React.FC<Props> = ({
         const data = await response.json()
         if (data.predictions) {
           console.warn('suggestionsssss', data)
-          setSuggestions(data.predictions.map((prediction: any) => prediction))
+          setSuggestions(
+            data.predictions.map(
+              (prediction: any) => ({description:prediction.description,place_id:prediction.place_id}),
+            ),
+          )
         } else {
           console.error('Error fetching suggestions:', data.error)
         }
@@ -947,12 +957,12 @@ const SimpleOnboarding: React.FC<Props> = ({
                     {suggestions.map((suggestion, index) => (
                       <p
                         onClick={() => {
-                          handleSelectAddressTwo(suggestion)
-                          setSelectedAddress(suggestion)
+                          handleSelectAddressTwo(suggestion.description,suggestion.place_id)
+                          setSelectedAddress(suggestion.description)
                         }}
                         key={index}
                       >
-                        {suggestion}
+                        {suggestion.description}
                       </p>
                     ))}
                   </div>

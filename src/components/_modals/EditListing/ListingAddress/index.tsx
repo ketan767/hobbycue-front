@@ -94,7 +94,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
   const [dataLoaded, setDataLoaded] = useState(false)
   const [isError, setIsError] = useState(false)
   const [fetchLocation, setFetchLocation] = useState(false)
-  const [suggestions, setSuggestions] = useState<string[]>([])
+  const [suggestions, setSuggestions] = useState<{description:string,place_id:string}[]>([])
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -147,7 +147,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
           console.warn('suggestionsssss', data)
           setSuggestions(
             addressRes.predictions.map(
-              (prediction: any) => prediction.description,
+              (prediction: any) => ({description:prediction.description,place_id:prediction.place_id}),
             ),
           )
         } else {
@@ -610,8 +610,10 @@ const ListingAddressEditModal: React.FC<Props> = ({
     }))
   }
 
-  const handleSelectAddressTwo = (suggestion: string) => {
+  const handleSelectAddressTwo = async(suggestion: string,placeid:string) => {
     const details: any = {}
+    const latlongRes = await fetch(`/api/placeid-to-latlong?place_id=${placeid}`);
+    const latlongObj = await latlongRes.json();
     console.warn('suggestionssssss', suggestion)
 
     const terms = suggestion.split(',').map((term) => term.trim())
@@ -656,6 +658,14 @@ const ListingAddressEditModal: React.FC<Props> = ({
         value: details.society || '',
         error: null,
       },
+      latitude:{
+        value:latlongObj.lat||'',
+        error:null
+      },
+      longitude:{
+        value:latlongObj.lng||'',
+        error:null
+      }
     }))
     setShowAutoAddress(false)
   }
@@ -730,10 +740,10 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   <div className={styles['dropdown']}>
                     {suggestions.map((suggestion, index) => (
                       <p
-                        onClick={() => handleSelectAddressTwo(suggestion)}
+                        onClick={() => handleSelectAddressTwo(suggestion.description,suggestion.place_id)}
                         key={index}
                       >
-                        {suggestion}
+                        {suggestion.description}
                       </p>
                     ))}
                   </div>
