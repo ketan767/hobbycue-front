@@ -391,7 +391,60 @@ const ListingPageMain: React.FC<Props> = ({
 
   // console.log('data', data)
 
-  const openAuthModal = () => dispatch(openModal({type:"auth",closable:true}));
+  const openAuthModal = () =>
+    dispatch(openModal({ type: 'auth', closable: true }))
+
+  const laptopIcon = (
+    <svg
+      width="23"
+      height="24"
+      viewBox="0 0 23 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <mask
+        id="mask0_15761_244939"
+        style={{ maskType: 'luminance' }}
+        maskUnits="userSpaceOnUse"
+        x="0"
+        y="0"
+        width="23"
+        height="24"
+      >
+        <path
+          d="M22.9997 0.246094H0.142578V23.1032H22.9997V0.246094Z"
+          fill="white"
+        />
+      </mask>
+      <g mask="url(#mask0_15761_244939)">
+        <path
+          d="M19.5999 6.08936H3.55078V18.751H19.5999V6.08936Z"
+          fill="#8064A2"
+        />
+        <path
+          d="M19.1902 18.4961C20.2378 18.4961 21.0949 17.5961 21.0949 16.4961V6.4961C21.0949 5.39609 20.2378 4.49609 19.1902 4.49609H3.9521C2.90449 4.49609 2.04734 5.39609 2.04734 6.4961V16.4961C2.04734 17.5961 2.90449 18.4961 3.9521 18.4961H1.09496C0.57115 18.4961 0.142578 18.9461 0.142578 19.4961C0.142578 20.0461 0.57115 20.4961 1.09496 20.4961H22.0474C22.5711 20.4961 22.9997 20.0461 22.9997 19.4961C22.9997 18.9461 22.5711 18.4961 22.0474 18.4961H19.1902ZM4.90449 6.4961H18.2378C18.7617 6.4961 19.1902 6.9461 19.1902 7.4961V15.496C19.1902 16.0461 18.7617 16.4961 18.2378 16.4961H4.90449C4.38067 16.4961 3.9521 16.0461 3.9521 15.496V7.4961C3.9521 6.9461 4.38067 6.4961 4.90449 6.4961Z"
+          fill="#8064A2"
+        />
+        <g clip-path="url(#clip0_15761_244939)">
+          <path
+            d="M13.1661 10.0496V9.18837C13.1661 8.70629 13.7961 8.46254 14.1636 8.80379L16.8411 11.29C17.0686 11.5013 17.0686 11.8425 16.8411 12.0538L14.1636 14.54C13.7961 14.8813 13.1661 14.643 13.1661 14.1609V13.2455C10.2494 13.2455 8.20776 14.1121 6.74943 16.008C7.33276 13.2996 9.08276 10.5913 13.1661 10.0496Z"
+            fill="white"
+          />
+        </g>
+      </g>
+      <defs>
+        <clipPath id="clip0_15761_244939">
+          <rect
+            width="14"
+            height="13"
+            rx="3"
+            transform="matrix(-1 0 0 1 19 5.1748)"
+            fill="white"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  )
 
   return (
     <>
@@ -636,7 +689,11 @@ const ListingPageMain: React.FC<Props> = ({
                     : ''
                 }`}
               >
-                {!isLoggedIn&&<li onClick={openAuthModal} className={styles['signInText']}>Sign in to view full contact details</li>}
+                {!isLoggedIn && (
+                  <li onClick={openAuthModal} className={styles['signInText']}>
+                    Sign in to view full contact details
+                  </li>
+                )}
                 {/* Page Admin */}
                 {(PageAdmin as any)?.full_name && isLoggedIn && (
                   <Link href={`/profile/${(PageAdmin as any)?.profile_url}`}>
@@ -985,6 +1042,15 @@ const ListingPageMain: React.FC<Props> = ({
                 <h4 className={`${hobbyError && styles['error-label']}`}>
                   Location
                 </h4>
+                {listingLayoutMode === 'view' && data?._address?.virtual && (
+                  <Link
+                    href={data?._address?.url ?? '#'}
+                    className={styles['join-online']}
+                  >
+                    {laptopIcon}
+                    <p>Join Online</p>
+                  </Link>
+                )}
                 {LocationErr && showLocation && (
                   <p
                     className={
@@ -995,51 +1061,61 @@ const ListingPageMain: React.FC<Props> = ({
                   </p>
                 )}
               </div>
-              <div
-                className={`${styles['display-desktop']}${
-                  locationStates?.[data?._id]
-                    ? ' ' + styles['display-mobile']
-                    : ''
-                }`}
-              >
-                {listingLayoutMode === 'view' && (
+              {data?._address?.virtual ? (
+                <>
+                  {showLocation && (
+                    <p className={styles['desc']}>
+                      {data?._address?.description}
+                    </p>
+                  )}
+                </>
+              ) : (
+                <>
                   <div
-                    className={styles['direction-container']}
-                    onClick={openGoogleMaps}
+                    className={`${styles['display-desktop']}${
+                      locationStates?.[data?._id]
+                        ? ' ' + styles['display-mobile']
+                        : ''
+                    }`}
                   >
-                    <Image src={DirectionIcon} alt="direction" />
-                    <p> Get Direction </p>
-                  </div>
-                )}
-                <ul className={`${styles['location-wrapper']}`}>
-                  {/* Address */}
-                  {data?._address && (
-                    <li>
-                      {LocationErr ? null : (
-                        <svg
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g clip-path="url(#clip0_173_56226)">
-                            <path
-                              d="M12 2C7.8 2 4 5.22 4 10.2C4 13.38 6.45 17.12 11.34 21.43C11.72 21.76 12.29 21.76 12.67 21.43C17.55 17.12 20 13.38 20 10.2C20 5.22 16.2 2 12 2ZM12 12C10.9 12 10 11.1 10 10C10 8.9 10.9 8 12 8C13.1 8 14 8.9 14 10C14 11.1 13.1 12 12 12Z"
-                              fill="#8064A2"
-                            />
-                          </g>
-                          <defs>
-                            <clipPath id="clip0_173_56226">
-                              <rect width="24" height="24" fill="white" />
-                            </clipPath>
-                          </defs>
-                        </svg>
-                      )}
+                    {listingLayoutMode === 'view' && (
+                      <div
+                        className={styles['direction-container']}
+                        onClick={openGoogleMaps}
+                      >
+                        <Image src={DirectionIcon} alt="direction" />
+                        <p> Get Direction </p>
+                      </div>
+                    )}
+                    <ul className={`${styles['location-wrapper']}`}>
+                      {/* Address */}
+                      {data?._address && (
+                        <li>
+                          {LocationErr ? null : (
+                            <svg
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <g clip-path="url(#clip0_173_56226)">
+                                <path
+                                  d="M12 2C7.8 2 4 5.22 4 10.2C4 13.38 6.45 17.12 11.34 21.43C11.72 21.76 12.29 21.76 12.67 21.43C17.55 17.12 20 13.38 20 10.2C20 5.22 16.2 2 12 2ZM12 12C10.9 12 10 11.1 10 10C10 8.9 10.9 8 12 8C13.1 8 14 8.9 14 10C14 11.1 13.1 12 12 12Z"
+                                  fill="#8064A2"
+                                />
+                              </g>
+                              <defs>
+                                <clipPath id="clip0_173_56226">
+                                  <rect width="24" height="24" fill="white" />
+                                </clipPath>
+                              </defs>
+                            </svg>
+                          )}
 
-                      <span className={styles.textdefault}>
-                        {data?.wp_data?.location_str}
-                        {/* {`${
+                          <span className={styles.textdefault}>
+                            {data?.wp_data?.location_str}
+                            {/* {`${
                         data?._address.street ? data._address.street + ',' : ''
                       }
                       
@@ -1059,19 +1135,21 @@ const ListingPageMain: React.FC<Props> = ({
                         ? ' - ' + data?._address?.pin_code
                         : ''
                       }`} */}
-                      </span>
-                    </li>
+                          </span>
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+                  {isNaN(lat) || isNaN(lng) ? null : (
+                    <div
+                      className={`${styles['location-map']} ${
+                        styles['display-desktop']
+                      }${showLocation ? ' ' + styles['display-mobile'] : ''}`}
+                    >
+                      <MapComponent lat={lat} lng={lng} />
+                    </div>
                   )}
-                </ul>
-              </div>
-              {isNaN(lat) || isNaN(lng) ? null : (
-                <div
-                  className={`${styles['location-map']} ${
-                    styles['display-desktop']
-                  }${showLocation ? ' ' + styles['display-mobile'] : ''}`}
-                >
-                  <MapComponent lat={lat} lng={lng} />
-                </div>
+                </>
               )}
             </PageContentBox>
             {data?.type === listingTypes.PLACE && (
@@ -1379,7 +1457,11 @@ const ListingPageMain: React.FC<Props> = ({
                 styles['display-desktop']
               }${showContact ? ' ' + styles['display-mobile'] : ''}`}
             >
-              {!isLoggedIn&&<li onClick={openAuthModal} className={styles['signInText']}>Sign in to view full contact details</li>}
+              {!isLoggedIn && (
+                <li onClick={openAuthModal} className={styles['signInText']}>
+                  Sign in to view full contact details
+                </li>
+              )}
               {/* Page Admin */}
               {(PageAdmin as any)?.full_name && isLoggedIn && (
                 <Link href={`/profile/${(PageAdmin as any)?.profile_url}`}>
@@ -1717,7 +1799,16 @@ const ListingPageMain: React.FC<Props> = ({
           >
             <div className={`${styles['location-heading']} `}>
               <h4>Location</h4>
-              {listingLayoutMode === 'view' && (
+              {listingLayoutMode === 'view' && data?._address?.virtual && (
+                <Link
+                  href={data?._address?.url ?? '#'}
+                  className={styles['join-online']}
+                >
+                  {laptopIcon}
+                  <p>Join Online</p>
+                </Link>
+              )}
+              {listingLayoutMode === 'view' && !data?._address?.virtual && (
                 <div
                   className={styles['direction-container']}
                   onClick={openGoogleMaps}
@@ -1727,38 +1818,40 @@ const ListingPageMain: React.FC<Props> = ({
                 </div>
               )}
             </div>
-            <div
-              className={`${styles['display-desktop']}${
-                showLocation ? ' ' + styles['display-mobile'] : ''
-              }`}
-            >
-              <ul className={`${styles['location-wrapper']}`}>
-                {/* Address */}
-                {data?._address && (
-                  <li>
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <g clip-path="url(#clip0_173_56226)">
-                        <path
-                          d="M12 2C7.8 2 4 5.22 4 10.2C4 13.38 6.45 17.12 11.34 21.43C11.72 21.76 12.29 21.76 12.67 21.43C17.55 17.12 20 13.38 20 10.2C20 5.22 16.2 2 12 2ZM12 12C10.9 12 10 11.1 10 10C10 8.9 10.9 8 12 8C13.1 8 14 8.9 14 10C14 11.1 13.1 12 12 12Z"
-                          fill="#8064A2"
-                        />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_173_56226">
-                          <rect width="24" height="24" fill="white" />
-                        </clipPath>
-                      </defs>
-                    </svg>
+            {!data?._address?.virtual && (
+              <>
+                <div
+                  className={`${styles['display-desktop']}${
+                    showLocation ? ' ' + styles['display-mobile'] : ''
+                  }`}
+                >
+                  <ul className={`${styles['location-wrapper']}`}>
+                    {/* Address */}
+                    {data?._address && (
+                      <li>
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <g clip-path="url(#clip0_173_56226)">
+                            <path
+                              d="M12 2C7.8 2 4 5.22 4 10.2C4 13.38 6.45 17.12 11.34 21.43C11.72 21.76 12.29 21.76 12.67 21.43C17.55 17.12 20 13.38 20 10.2C20 5.22 16.2 2 12 2ZM12 12C10.9 12 10 11.1 10 10C10 8.9 10.9 8 12 8C13.1 8 14 8.9 14 10C14 11.1 13.1 12 12 12Z"
+                              fill="#8064A2"
+                            />
+                          </g>
+                          <defs>
+                            <clipPath id="clip0_173_56226">
+                              <rect width="24" height="24" fill="white" />
+                            </clipPath>
+                          </defs>
+                        </svg>
 
-                    <span className={styles.textdefault}>
-                      {data?.wp_data?.location_str}
-                      {/* {`${
+                        <span className={styles.textdefault}>
+                          {data?.wp_data?.location_str}
+                          {/* {`${
                         data?._address.street ? data._address.street + ',' : ''
                       }
                       
@@ -1778,18 +1871,23 @@ const ListingPageMain: React.FC<Props> = ({
                         ? ' - ' + data?._address?.pin_code
                         : ''
                       }`} */}
-                    </span>
-                  </li>
-                )}
-              </ul>
-            </div>
-            <div
-              className={`${styles['location-map']} ${
-                styles['display-desktop']
-              }${showLocation ? ' ' + styles['display-mobile'] : ''}`}
-            >
-              <MapComponent lat={lat} lng={lng} />
-            </div>
+                        </span>
+                      </li>
+                    )}
+                  </ul>
+                </div>
+                <div
+                  className={`${styles['location-map']} ${
+                    styles['display-desktop']
+                  }${showLocation ? ' ' + styles['display-mobile'] : ''}`}
+                >
+                  <MapComponent lat={lat} lng={lng} />
+                </div>
+              </>
+            )}
+            {data?._address?.virtual && (
+              <p className={styles['desc']}>{data?._address?.description}</p>
+            )}
           </PageContentBox>
           {data?.type === listingTypes.PLACE && (
             <PageContentBox

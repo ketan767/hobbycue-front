@@ -310,6 +310,23 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
         )}
       </FilledButton>
     )
+  } else {
+    button = (
+      <FilledButton
+        className={styles.contactBtn}
+        onClick={isEditMode ? handleUpdateCTA : handleRegister}
+      >
+        <p>{ctaText}</p>
+        {isEditMode && (
+          <img
+            width={16}
+            height={16}
+            src={smallPencilSvg.src}
+            alt="small pencil"
+          />
+        )}
+      </FilledButton>
+    )
   }
 
   function formatDateRange(

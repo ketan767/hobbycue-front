@@ -9,6 +9,8 @@ import People from '@/assets/svg/People.svg'
 import Place from '@/assets/svg/Place.svg'
 import Program from '@/assets/svg/Program.svg'
 import { useMediaQuery } from '@mui/material'
+import {useSelector} from 'react-redux'
+import { RootState } from '@/redux/store'
 
 type Props = {
   data: any
@@ -17,7 +19,8 @@ type Props = {
 const ListingCard: React.FC<Props> = ({ data }) => {
   // console.log('🚀 ~ file: ListingCard.tsx:13 ~ data:', data)
   // console.log('Carddata', data)
-  const type = getListingTypeName(data?.type)
+  const type = getListingTypeName(data?.type);
+  const {user} = useSelector((state:RootState)=>state.user);
   console.warn({ data })
   function formatDateRange(prop: {
     from_date: string
@@ -90,6 +93,8 @@ const ListingCard: React.FC<Props> = ({ data }) => {
     </svg>
   )
 
+  const itsMe = data.admin===user?._id;
+
   const isMobile = useMediaQuery('(max-width:1100px)');
   return (
     <>
@@ -98,9 +103,9 @@ const ListingCard: React.FC<Props> = ({ data }) => {
         href={`/page/${data?.page_url}`}
         className={styles.container}
       >
-        <div className={`${data.is_published?styles['published-mark']:styles['unpublished-mark']}`}>
+        {itsMe&&<div className={`${data.is_published?styles['published-mark']:styles['unpublished-mark']}`}>
           <p>{data.is_published?"PUBLISHED":"UNPUBLISHED"}</p>
-        </div>
+        </div>}
         <div className={styles.imgContainer}>
           {data?.cover_image ? (
             <img

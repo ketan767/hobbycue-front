@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styles from './style.module.css'
-import { CircularProgress } from '@mui/material'
+import { CircularProgress, FormControl } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { RootState } from '@/redux/store'
@@ -12,6 +12,8 @@ import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import InputSelect from '@/components/_formElements/Select/Select'
 import { DropdownOption } from '../../CreatePost/Dropdown/DropdownOption'
+import DownArrow from '@/assets/svg/chevron-down.svg'
+import UpArrow from '@/assets/svg/chevron-up.svg'
 
 type Props = {
   onComplete?: () => void
@@ -43,7 +45,23 @@ const ListingCTAModal: React.FC<Props> = ({
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [cta, setCta] = useState('Contact')
-
+  const [list, setList] = useState<{ name: string; description: string }[]>([
+    { name: 'Contact', description: 'Opens a Contact or Message dialogue' },
+    { name: 'Claim', description: 'Allows others to Claim this Page' },
+    { name: 'Register', description: 'Allows to Register for the Program' },
+    {
+      name: 'Buy Now',
+      description: 'External Page for Online Shop (eg: Amazon)',
+    },
+  ])
+  const [value, setValue] = useState<any>([])
+  const [hoveredValue, setHoveredValue] = useState<number | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [showDropdown, setShowDropdown] = useState(false)
+  const dropdownRef: any = useRef()
+  const handleChange = (name: any) => {
+    setCta(name)
+  }
   useEffect(() => {
     if (
       propData &&
@@ -118,7 +136,7 @@ const ListingCTAModal: React.FC<Props> = ({
         <hr className={styles['modal-hr']} />
 
         <section className={styles['body']}>
-          <InputSelect className={styles['cta-selector']} value={cta}>
+          {/* <InputSelect className={styles['cta-selector']} value={cta}>
             {['Claim', 'Contact', listingModalData?.type === 3 && 'Register']
               .filter(Boolean)
               .map((str) => ({ value: str, display: str }))
@@ -136,7 +154,122 @@ const ListingCTAModal: React.FC<Props> = ({
                   </>
                 )
               })}
-          </InputSelect>
+          </InputSelect> */}
+          <div
+            className={styles['input-box']}
+            style={value?.length === 0 || !value ? { marginTop: '1rem' } : {}}
+          >
+            <input hidden required />
+
+            <FormControl variant="outlined" size="small">
+              <div className={styles['select-container']} ref={dropdownRef}>
+                <div
+                  tabIndex={0}
+                  className={`${styles['select-input']} ${
+                    error ? styles['select-input-error'] : ' '
+                  }`}
+                  onClick={() =>
+                    setShowDropdown((prev) => {
+                      if (prev === true) {
+                        setHoveredValue(null)
+                      }
+                      return !prev
+                    })
+                  }
+                  onKeyDown={(e) => {
+                    if (['Enter'].includes(e.key) || e.key === ' ') {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      if (
+                        e.key === 'Enter' &&
+                        showDropdown &&
+                        hoveredValue !== null
+                      ) {
+                        handleChange(list[hoveredValue].name)
+                        setShowDropdown(false)
+                        setHoveredValue(null)
+                      } else if (!showDropdown) {
+                        setShowDropdown(true)
+                        setHoveredValue(0)
+                      }
+                    } else if (
+                      e.key === 'ArrowUp' &&
+                      showDropdown &&
+                      hoveredValue !== null
+                    ) {
+                      setHoveredValue((prev) => {
+                        if (prev === 0) {
+                          return list.length - 1
+                        } else {
+                          return (prev as number) - 1
+                        }
+                      })
+                    } else if (
+                      e.key === 'ArrowDown' &&
+                      showDropdown &&
+                      hoveredValue !== null
+                    ) {
+                      setHoveredValue((prev) => {
+                        if (prev === list.length - 1) {
+                          return 0
+                        } else {
+                          return (prev as number) + 1
+                        }
+                      })
+                    }
+                  }}
+                >
+                  <p>{cta ?? 'Select Category'}</p>
+                  <Image src={showDropdown ? UpArrow : DownArrow} alt="down" />
+                </div>
+                {showDropdown && (
+                  <div
+                    className={
+                      styles['options-container'] + ' custom-scrollbar'
+                    }
+                  >
+                    {list.map(
+                      (
+                        item: { name: string; description: string },
+                        idx: number,
+                      ) => {
+                        const desc = item.description.trim()
+
+                        if (desc !== '' && desc !== null && desc !== undefined)
+                          return (
+                            <div
+                              className={`${styles['single-option']}  ${
+                                cta === item.name
+                                  ? styles['selcted-option']
+                                  : ''
+                              }
+                                ${
+                                  hoveredValue === idx &&
+                                  styles['hovered-single-option']
+                                }
+                                `}
+                              key={item.name}
+                              onClick={() => {
+                                handleChange(item.name)
+                                setShowDropdown(false)
+                                setHoveredValue(null)
+                              }}
+                            >
+                              <p className={styles.tagDesc}>{item.name}</p>
+                              <p className={styles.tagDesc}>
+                                {item.description}
+                              </p>
+                            </div>
+                          )
+                      },
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <p className={styles.error}>{error}</p>
+            </FormControl>
+          </div>
         </section>
 
         <footer className={styles['footer']}>
