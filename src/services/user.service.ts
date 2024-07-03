@@ -259,3 +259,13 @@ export const addSearchHistory = async (data: {search_input:string, no_of_pages:n
     return { err: error, res: null };
   }
 };
+
+export const TrendingHobbiesByUser = async (): Promise<ApiReturnObject> => {
+  try {
+    const res = await axiosInstance.get(`/user/trending-hobbies`)
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}

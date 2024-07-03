@@ -11,6 +11,7 @@ import Program from '@/assets/svg/Program.svg'
 import { useMediaQuery } from '@mui/material'
 import {useSelector} from 'react-redux'
 import { RootState } from '@/redux/store'
+import { Height } from '@mui/icons-material'
 
 type Props = {
   data: any
@@ -28,29 +29,29 @@ const ListingCard: React.FC<Props> = ({ data }) => {
   }): string {
     // Helper function to format date to "DD MMM YYYY"
     function formatDate(date: Date): string {
-        const options: Intl.DateTimeFormatOptions = {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric',
-        };
-        return date.toLocaleDateString('en-US', options).replace(',', '');
+      const options: Intl.DateTimeFormatOptions = {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      }
+      return date.toLocaleDateString('en-US', options).replace(',', '')
     }
 
     // Parse the dates and remove time component
-    const fromDateObj = new Date(prop.from_date.split('T')[0]);
-    const toDateObj = new Date(prop.to_date.split('T')[0]);
+    const fromDateObj = new Date(prop.from_date.split('T')[0])
+    const toDateObj = new Date(prop.to_date.split('T')[0])
 
     // Format the dates
-    const formattedFromDate = formatDate(fromDateObj);
-    const formattedToDate = formatDate(toDateObj);
+    const formattedFromDate = formatDate(fromDateObj)
+    const formattedToDate = formatDate(toDateObj)
 
     // Format the result
-    let result = `${formattedFromDate}`;
+    let result = `${formattedFromDate}`
     if (prop.from_date !== prop.to_date) {
-        result += ` - ${formattedToDate}`;
+      result += ` - ${formattedToDate}`
     }
 
-    return result;
+    return result
   }
   const calendarIcon = (
     <svg
@@ -103,10 +104,22 @@ const ListingCard: React.FC<Props> = ({ data }) => {
         href={`/page/${data?.page_url}`}
         className={styles.container}
       >
-        {itsMe&&<div className={`${data.is_published?styles['published-mark']:styles['unpublished-mark']}`}>
-          <p>{data.is_published?"PUBLISHED":"UNPUBLISHED"}</p>
-        </div>}
+        <div
+          className={`${
+            data.is_published
+              ? styles['published-mark']
+              : styles['unpublished-mark']
+          }`}
+        >
+          <p>{data.is_published ? 'PUBLISHED' : 'UNPUBLISHED'}</p>
+        </div>
+
         <div className={styles.imgContainer}>
+          <div
+            className={styles['background']}
+            style={{ backgroundImage: `url(${data?.cover_image})` }}
+          ></div>
+
           {data?.cover_image ? (
             <img
               src={data?.cover_image}
@@ -131,6 +144,11 @@ const ListingCard: React.FC<Props> = ({ data }) => {
             ></div>
           )}
         </div>
+
+        <div
+          style={{ width: '100%', height: '1px', background: '#939ca3' }}
+        ></div>
+
         <div className={styles.content}>
           <div className={styles.contentHead}>
             {data?.profile_image ? (
@@ -200,14 +218,16 @@ const ListingCard: React.FC<Props> = ({ data }) => {
                       {calendarIcon}{' '}
                       <p>{formatDateRange(data?.event_date_time)}</p>
                     </section>
-                    {!isMobile&&<section>
-                      {clockIcon}{' '}
-                      <p>
-                        {data?.event_date_time?.from_time +
-                          ' - ' +
-                          data?.event_date_time?.to_time}
-                      </p>
-                    </section>}
+                    {!isMobile && (
+                      <section>
+                        {clockIcon}{' '}
+                        <p>
+                          {data?.event_date_time?.from_time +
+                            ' - ' +
+                            data?.event_date_time?.to_time}
+                        </p>
+                      </section>
+                    )}
                   </div>
                 ) : (
                   ''
@@ -220,11 +240,12 @@ const ListingCard: React.FC<Props> = ({ data }) => {
 
           <div className={styles.bottom}>
             <Image src={LocationIcon} width={16} height={16} alt="location" />
-            {(data?._address?.city || data?._address?.country) && (
-              <p className={styles.location}>
-                {data?._address?.city} {', '} {data?._address?.country}{' '}
-              </p>
-            )}
+
+            <p className={styles.location}>
+              {data?._address?.society ? data?._address?.society + ', ' : ''}
+              {data?._address?.locality ? data?._address?.locality + ', ' : ''}
+              {data?._address?.city ? data?._address?.city : ''}
+            </p>
           </div>
           <div className={styles.bottom}>
             <Image src={HobbyIcon} width={16} height={16} alt="hobby" />
@@ -232,7 +253,8 @@ const ListingCard: React.FC<Props> = ({ data }) => {
               {data?._hobbies?.map((item: any) => {
                 return (
                   <span className={styles.hobby} key={item._id}>
-                    {item.hobby?.display}
+                    {item.hobby?.display}{' '}
+                    {item.genre?.display ? ' - ' + item.genre.display : ''}
                   </span>
                 )
               })}

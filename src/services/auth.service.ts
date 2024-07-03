@@ -260,19 +260,13 @@ export const sendMailtoOwner = async (data: ContactToOwner): Promise<ApiReturnOb
   }
 };
 
-export const getAutocompleteAddress = async (input: string): Promise<ApiReturnObject> => {
+export const gmapAutoComplete = async (SearchKey: any): Promise<ApiReturnObject> => {
   try {
-    const res = await axiosInstance.get(
-      `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${input}&key=AIzaSyCSFbd4Cf-Ui3JvMvEiXXs9xfGJaveKO_Y`
-    );
-    console.log('API Response:', res); // Debugging line
-    if (res && res.data) {
-      return { res: res.data, err: null }; // Make sure to return res.data
-    } else {
-      throw new Error('Unexpected response structure');
-    }
+    const res = await axiosInstance.get(`/auth/gmap-autocomplete`, {
+      params: { SearchKey }
+    });
+    return { res: res, err: null };
   } catch (error: any) {
-    console.error('API Error:', error); // Debugging line
     return { err: error, res: null };
   }
 };
@@ -306,3 +300,4 @@ export const getLatLongFromPlaceID = async (place_id:string): Promise<ApiReturnO
     return { err: error, res: null };
   }
 }
+

@@ -63,7 +63,7 @@ const SaveModal: React.FC<Props> = ({
     setYesBtnLoading(true)
     await handleSubmit()
     setYesBtnLoading(false)
-    onboardcheck()
+    if (activeModal !== 'SimpleOnboarding') onboardcheck()
   }
   const wrapperRef = useRef<HTMLDivElement>(null)
 
@@ -137,7 +137,9 @@ const SaveModal: React.FC<Props> = ({
             onClick={() => {
               handleListingOnboarding()
               handleClose
-              onboardcheck()
+              if (activeModal !== 'SimpleOnboarding') {
+                onboardcheck()
+              }
               setConfirmationModal(false)
 
               dispatch(closeModal())

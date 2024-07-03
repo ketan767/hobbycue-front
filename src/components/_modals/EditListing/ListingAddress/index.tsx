@@ -122,6 +122,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
   const [ShowDropdown, setShowDropdown] = useState<boolean>(false)
   const [dropdownList, setShowDropdownList] = useState<DropdownListItem[]>([])
 
+  const base_url = process.env.NEXT_PUBLIC_BASE_URL
   useEffect(() => {
     inputRef?.current?.focus()
   }, [])
@@ -157,7 +158,6 @@ const ListingAddressEditModal: React.FC<Props> = ({
         )
         const addressRes = res.data
         if (addressRes.predictions) {
-          console.warn('suggestionsssss', data)
           setSuggestions(
             addressRes.predictions.map((prediction: any) => ({
               description: prediction.description,

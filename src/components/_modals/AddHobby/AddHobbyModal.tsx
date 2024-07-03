@@ -14,10 +14,15 @@ type Props = {
   handleClose?: any
   handleSubmit?: any
   propData?: any
-  selectedHobbyText?:string
+  selectedHobbyText?: string
 }
 
-const AddHobby: React.FC<Props> = ({ handleClose, handleSubmit, propData, selectedHobbyText }) => {
+const AddHobby: React.FC<Props> = ({
+  handleClose,
+  handleSubmit,
+  propData,
+  selectedHobbyText,
+}) => {
   const dispatch = useDispatch()
 
   const [snackbar, setSnackbar] = useState({
@@ -37,7 +42,7 @@ const AddHobby: React.FC<Props> = ({ handleClose, handleSubmit, propData, select
     <>
       <div className={`${styles['add-hobby']}`}>
         <div className={styles['header']}>
-          <p>{selectedHobbyText?"Request Hobby":"Add Hobby"}</p>
+          <p>{'Request Hobby'}</p>
           <CloseIcon
             className={styles['modal-close-icon']}
             onClick={() => {
@@ -47,18 +52,25 @@ const AddHobby: React.FC<Props> = ({ handleClose, handleSubmit, propData, select
         </div>
         <hr className={styles['modal-hr']} />
         <div className={styles['content']}>
-          {selectedHobbyText?<p>
-            Request HobbyCue Admin to add <span>{selectedHobbyText ?? 'Typed Hobby'}</span> as a hobby so that we can grow this as a community
-          </p>:<p>
-            Add <span>{propData?.defaultValue ?? 'Typed Hobby'}</span> as a
-            hobby so that we can grow this as a community
-          </p>}
+          {selectedHobbyText ? (
+            <p>
+              Request HobbyCue Admin to add{' '}
+              <span>{selectedHobbyText ?? 'Typed Hobby'}</span> as a hobby so
+              that we can grow this as a community
+            </p>
+          ) : (
+            <p>
+              Request HobbyCue Admin to add{' '}
+              <span>{propData?.defaultValue ?? 'Typed Hobby'}</span> as a hobby
+              so that we can grow this as a community
+            </p>
+          )}
           <div className={styles['buttons']}>
             <FilledButton
               className={styles['button1']}
               onClick={handleSubmit()}
             >
-              Send Request
+              Send
             </FilledButton>
           </div>
         </div>
