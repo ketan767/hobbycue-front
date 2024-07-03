@@ -29,7 +29,7 @@ import { getAllHobbies, getTrendingHobbies } from '@/services/hobby.service'
 import Link from 'next/link'
 import { BubbleChartTwoTone } from '@mui/icons-material'
 import CrossIcon from '@/assets/svg/cross.svg'
-import { getAutocompleteAddress } from '@/services/auth.service'
+import { getAutocompleteAddress, getAutocompleteAddressFromGoogle, getLatLongFromPlaceID } from '@/services/auth.service'
 import { useRouter } from 'next/router'
 
 type Props = {
@@ -172,14 +172,14 @@ const SimpleOnboarding: React.FC<Props> = ({
     if (Addressdata.street?.length > 1) {
       setShowAutoAddress(true)
       try {
-        const response = await fetch(
-          `/api/autocomplete?input=${Addressdata.street}`,
-        )
-        const data = await response.json()
+        const {res,err} = await getAutocompleteAddressFromGoogle(Addressdata.street);
+        const data = res.data;
         if (data.predictions) {
           console.warn('suggestionsssss', data)
           setSuggestions(
-            data.predictions.map((prediction: any) => prediction.description),
+            data.predictions.map(
+              (prediction: any) => ({description:prediction.description,place_id:prediction.place_id}),
+            ),
           )
         } else {
           console.error('Error fetching suggestions:', data.error)
@@ -203,8 +203,10 @@ const SimpleOnboarding: React.FC<Props> = ({
     }
   }
 
-  const handleSelectAddressTwo = (suggestion: string) => {
+  const handleSelectAddressTwo = async(suggestion: string,placeid:string) => {
     const details: any = {}
+    const {res,err} = await getLatLongFromPlaceID(placeid);
+    const latlongObj = res.data;
     console.warn('suggestionssssss', suggestion)
 
     const terms = suggestion.split(',').map((term) => term.trim())
@@ -229,6 +231,8 @@ const SimpleOnboarding: React.FC<Props> = ({
       state: details.state || '',
       country: details.country || '',
       society: details.society || '',
+      latitude: latlongObj.lat||'',
+      longitude: latlongObj.lng||''
     }))
     setShowAutoAddress(false)
   }
@@ -807,20 +811,22 @@ const SimpleOnboarding: React.FC<Props> = ({
   const isMobile = useMediaQuery('(max-width:1100px)')
 
   const [input, setInput] = useState('')
-  const [suggestions, setSuggestions] = useState<string[]>([])
+  const [suggestions, setSuggestions] = useState<{description:string,place_id:string}[]>([])
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value)
 
     if (e.target.value.length > 2) {
       try {
-        const response = await fetch(
-          `/api/autocomplete?input=${e.target.value}`,
-        )
-        const data = await response.json()
+        const {res,err} = await getAutocompleteAddressFromGoogle(e.target.value);
+        const data = res.data;
         if (data.predictions) {
           console.warn('suggestionsssss', data)
-          setSuggestions(data.predictions.map((prediction: any) => prediction))
+          setSuggestions(
+            data.predictions.map(
+              (prediction: any) => ({description:prediction.description,place_id:prediction.place_id}),
+            ),
+          )
         } else {
           console.error('Error fetching suggestions:', data.error)
         }
@@ -947,12 +953,12 @@ const SimpleOnboarding: React.FC<Props> = ({
                     {suggestions.map((suggestion, index) => (
                       <p
                         onClick={() => {
-                          handleSelectAddressTwo(suggestion)
-                          setSelectedAddress(suggestion)
+                          handleSelectAddressTwo(suggestion.description,suggestion.place_id)
+                          setSelectedAddress(suggestion.description)
                         }}
                         key={index}
                       >
-                        {suggestion}
+                        {suggestion.description}
                       </p>
                     ))}
                   </div>
