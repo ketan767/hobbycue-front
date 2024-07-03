@@ -35,15 +35,15 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
   const { profile } = useSelector((state: RootState) => state?.site.expandMenu)
   const { user } = useSelector((state: RootState) => state.user)
   const [expandAll, setExpandAll] = useState(profile)
-  const [mounted,setMounted] = useState(false);
+  const [mounted, setMounted] = useState(false)
   const handleExpandAll: (value: boolean) => void = (value) => {
     setExpandAll(value)
     dispatch(updateProfileMenuExpandAll(value))
   }
 
-  useEffect(()=>{
-    setMounted(true);
-  },[]);
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const router = useRouter()
   useEffect(() => {
@@ -152,7 +152,10 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
               {data.listingsData.length !== 0 && mounted ? (
                 // <div className={styles['card-container']}>
                 <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 1100: 2 }}>
-                  <Masonry gutter='12px' style={{columnGap:"24px",rowGap:"12px"}}>
+                  <Masonry
+                    gutter="12px"
+                    style={{ columnGap: '24px', rowGap: '12px' }}
+                  >
                     {itsMe && (
                       <div
                         onClick={handleAddPage}

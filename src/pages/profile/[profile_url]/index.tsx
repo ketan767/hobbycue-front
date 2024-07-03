@@ -227,9 +227,9 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
 
   const noDataChecker = () => {
     let hasError = false
-    console.log({ hobbies: data.pageData._hobbies })
 
     if (profileLayoutMode === 'edit') {
+      dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
       setHobbyError(false)
       setLocationError(false)
       setTitleError(false)

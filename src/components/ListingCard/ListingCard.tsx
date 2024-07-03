@@ -9,6 +9,7 @@ import People from '@/assets/svg/People.svg'
 import Place from '@/assets/svg/Place.svg'
 import Program from '@/assets/svg/Program.svg'
 import { useMediaQuery } from '@mui/material'
+import { Height } from '@mui/icons-material'
 
 type Props = {
   data: any
@@ -113,6 +114,7 @@ const ListingCard: React.FC<Props> = ({ data }) => {
             className={styles['background']}
             style={{ backgroundImage: `url(${data?.cover_image})` }}
           ></div>
+
           {data?.cover_image ? (
             <img
               src={data?.cover_image}
@@ -137,6 +139,11 @@ const ListingCard: React.FC<Props> = ({ data }) => {
             ></div>
           )}
         </div>
+
+        <div
+          style={{ width: '100%', height: '1px', background: '#939ca3' }}
+        ></div>
+
         <div className={styles.content}>
           <div className={styles.contentHead}>
             {data?.profile_image ? (
@@ -228,11 +235,12 @@ const ListingCard: React.FC<Props> = ({ data }) => {
 
           <div className={styles.bottom}>
             <Image src={LocationIcon} width={16} height={16} alt="location" />
-            {(data?._address?.city || data?._address?.country) && (
-              <p className={styles.location}>
-                {data?._address?.city} {', '} {data?._address?.country}{' '}
-              </p>
-            )}
+
+            <p className={styles.location}>
+              {data?._address?.society ? data?._address?.society + ', ' : ''}
+              {data?._address?.locality ? data?._address?.locality + ', ' : ''}
+              {data?._address?.city ? data?._address?.city : ''}
+            </p>
           </div>
           <div className={styles.bottom}>
             <Image src={HobbyIcon} width={16} height={16} alt="hobby" />
@@ -240,7 +248,8 @@ const ListingCard: React.FC<Props> = ({ data }) => {
               {data?._hobbies?.map((item: any) => {
                 return (
                   <span className={styles.hobby} key={item._id}>
-                    {item.hobby?.display}
+                    {item.hobby?.display}{' '}
+                    {item.genre?.display ? ' - ' + item.genre.display : ''}
                   </span>
                 )
               })}

@@ -1,7 +1,7 @@
 .add-hobby {
   background-color: white;
   border-radius: 8px;
-  max-width: 400px;
+  max-width: 38rem;
   margin: auto;
 }
 .add-hobby .buttons {
@@ -10,8 +10,8 @@
   column-gap: 1rem;
   justify-content: center;
   margin-top: 1rem;
-  margin-right: auto;
-  max-width: 200px;
+  margin-left: auto;
+  max-width: 103px;
 }
 .add-hobby .buttons button {
   flex: 1;
@@ -22,7 +22,7 @@
   margin: 0 30px 0;
   padding: 14px 0;
   display: flex;
-  justify-content: center;
+
 }
 .header > p {
   font-size: 18px;

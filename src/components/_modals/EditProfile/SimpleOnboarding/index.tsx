@@ -7,6 +7,7 @@ import {
   addUserHobbies,
   getMyProfileDetail,
   updateMyProfileDetail,
+  updateUserAddress,
 } from '@/services/user.service'
 import {
   checkFullname,
@@ -253,7 +254,7 @@ const SimpleOnboarding: React.FC<Props> = ({
   ) => {
     const details: any = {}
     const { res, err } = await getLatLongFromPlaceID(placeid)
-    const latlongObj = res.data
+    const latlongObj = res?.data
     console.warn('suggestionssssss', suggestion)
 
     const terms = suggestion.split(',').map((term) => term.trim())
@@ -278,8 +279,8 @@ const SimpleOnboarding: React.FC<Props> = ({
       state: details.state || '',
       country: details.country || '',
       society: details.society || '',
-      latitude: latlongObj.lat || '',
-      longitude: latlongObj.lng || '',
+      latitude: latlongObj?.lat || '',
+      longitude: latlongObj?.lng || '',
     }))
     setShowAutoAddress(false)
   }
@@ -329,6 +330,9 @@ const SimpleOnboarding: React.FC<Props> = ({
     (window.location.port ? ':' + window.location.port : '')
 
   const handleSubmit = async () => {
+    if (isError) {
+      if (confirmationModal) setConfirmationModal(false)
+    }
     let hasErrors = false
 
     if (selectedHobbies.length === 0) {
@@ -397,20 +401,32 @@ const SimpleOnboarding: React.FC<Props> = ({
     if (user?._addresses?.length === 0 && reqBody.label === '') {
       reqBody.label = 'Default'
     }
-    await addUserAddress(reqBody, async (err, res) => {
-      console.warn({ res })
+    if (user?.primary_address?._id) {
+      updateUserAddress(user.primary_address._id, reqBody, async (err, res) => {
+        if (err) {
+          return console.log(err)
+        }
 
-      if (err) {
-        setSubmitBtnLoading(false)
-        setConfirmationModal(false)
-        return console.log(err)
-      }
-      if (!res.data.success) {
-        setSubmitBtnLoading(false)
-        setConfirmationModal(false)
-        return alert('Something went wrong!')
-      }
-    })
+        if (!res.data.success) {
+          return alert('Something went wrong!')
+        }
+      })
+    } else {
+      await addUserAddress(reqBody, async (err, res) => {
+        console.warn({ res })
+
+        if (err) {
+          setSubmitBtnLoading(false)
+          setConfirmationModal(false)
+          return console.log(err)
+        }
+        if (!res.data.success) {
+          setSubmitBtnLoading(false)
+          setConfirmationModal(false)
+          return alert('Something went wrong!')
+        }
+      })
+    }
 
     const hobbies = selectedHobbies.map((item) => ({
       hobby: item?._id,
@@ -430,7 +446,7 @@ const SimpleOnboarding: React.FC<Props> = ({
     if (response?.data.success) {
       dispatch(updateUser(response?.data.data.user))
 
-      // window.location.href = '/community'
+      window.location.href = '/community'
       dispatch(closeModal())
     }
   }
@@ -512,7 +528,7 @@ const SimpleOnboarding: React.FC<Props> = ({
       year_of_birth: user.year_of_birth || '',
       onboarding_step: user.onboarding_step || '0',
     }
-    const hobbiesData = user._hobbies.map((hobby: any) => ({
+    const hobbiesData = user._hobbies?.map((hobby: any) => ({
       _id: hobby.hobby._id,
       display: `${hobby.hobby.display}${
         hobby.genre ? ' - ' + hobby?.genre?.display : ''
@@ -530,6 +546,9 @@ const SimpleOnboarding: React.FC<Props> = ({
     if (user?.primary_address?.society) {
       addressText += `${user?.primary_address?.society}, `
     }
+    if (user?.primary_address?.locality) {
+      addressText += `${user?.primary_address?.locality}, `
+    }
     if (user?.primary_address?.city) {
       addressText += `${user?.primary_address?.city}, `
     }
@@ -539,13 +558,24 @@ const SimpleOnboarding: React.FC<Props> = ({
     if (user?.primary_address?.country) {
       addressText += `${user?.primary_address?.country} `
     }
-    setAddressData({ ...Addressdata, street: addressText })
+    setSelectedAddress(addressText)
+    setAddressData({
+      ...Addressdata,
+      street: addressText,
+      society: user?.primary_address?.society,
+      locality: user?.primary_address?.locality,
+      city: user?.primary_address?.city,
+      state: user?.primary_address?.state,
+      country: user?.primary_address?.country,
+      pin_code: user?.primary_address?.pin_code,
+      post_code: user?.primary_address?.post_code,
+    })
 
     setInitialData(initialProfileData)
     setData(initialProfileData)
   }, [user])
 
-  console.log('data', data)
+  console.warn('SelectedAddresssssssssss', selectedAddress)
 
   useEffect(() => {
     fullNameRef?.current?.focus()
@@ -1251,8 +1281,8 @@ const SimpleOnboarding: React.FC<Props> = ({
               {trendingHobbies?.map((item: any) => {
                 if (typeof item === 'string') return
 
-                const isAlreadySelected = selectedHobbies.some(
-                  (hobby) => hobby._id === item._id,
+                const isAlreadySelected = selectedHobbies?.some(
+                  (hobby) => hobby?._id === item?._id,
                 )
 
                 const handleClick = () => {
