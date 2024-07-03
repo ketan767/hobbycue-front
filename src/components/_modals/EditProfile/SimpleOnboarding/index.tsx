@@ -494,19 +494,16 @@ const SimpleOnboarding: React.FC<Props> = ({
   }
   useEffect(() => {
     const handleClickOutside = (event: any) => {
-      // Check if the click target is outside of the dropdown container
       if (AddressRef.current && !AddressRef.current.contains(event.target)) {
         setShowDropdown(false)
         setShowAutoAddress(false)
       }
     }
 
-    // Add event listener when the dropdown is shown
     if (ShowDropdown || ShowAutoAddress) {
       window.addEventListener('click', handleClickOutside)
     }
 
-    // Remove event listener when the component unmounts or when the dropdown is hidden
     return () => {
       window.removeEventListener('click', handleClickOutside)
     }
