@@ -26,6 +26,7 @@ import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import InfoIcon from '@/assets/svg/infoIcon.svg'
 import CustomizedTooltips2 from '@/components/Tooltip/Tooltip2'
+import { getAutocompleteAddressFromGoogle, getLatLongFromPlaceID } from '@/services/auth.service'
 
 type Props = {
   onComplete?: () => void
@@ -139,10 +140,8 @@ const ListingAddressEditModal: React.FC<Props> = ({
     if (data.street?.value?.length > 1) {
       setShowAutoAddress(true)
       try {
-        const response = await fetch(
-          `/api/autocomplete?input=${data.street.value}`,
-        )
-        const addressRes = await response.json()
+        const {res,err} = await getAutocompleteAddressFromGoogle(data.street.value);
+        const addressRes = res.data;
         if (addressRes.predictions) {
           console.warn('suggestionsssss', data)
           setSuggestions(
@@ -612,8 +611,8 @@ const ListingAddressEditModal: React.FC<Props> = ({
 
   const handleSelectAddressTwo = async(suggestion: string,placeid:string) => {
     const details: any = {}
-    const latlongRes = await fetch(`/api/placeid-to-latlong?place_id=${placeid}`);
-    const latlongObj = await latlongRes.json();
+    const {res,err} = await getLatLongFromPlaceID(placeid);
+    const latlongObj = res.data;
     console.warn('suggestionssssss', suggestion)
 
     const terms = suggestion.split(',').map((term) => term.trim())

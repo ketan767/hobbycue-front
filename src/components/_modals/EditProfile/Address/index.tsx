@@ -22,6 +22,7 @@ import NextIcon from '@/assets/svg/Next.svg'
 import InfoIcon from '@/assets/svg/infoIcon.svg'
 import Image from 'next/image'
 import CustomizedTooltips2 from '@/components/Tooltip/Tooltip2'
+import { getAutocompleteAddressFromGoogle, getLatLongFromPlaceID } from '@/services/auth.service'
 
 type Props = {
   onComplete?: () => void
@@ -180,13 +181,9 @@ const ProfileAddressEditModal: React.FC<Props> = ({
     if (data.street?.length > 1) {
       setShowAutoAddress(true)
       try {
-        // const gAutoSuggest = new google.maps.places.Autocomplete(inputRef.current as HTMLInputElement,{
-        //   fields:['formatted_address','geometry','name']
-        // });
-        // console.log({gAutoSuggest});
         console.log('test running true here')
-        const response = await fetch(`/api/autocomplete?input=${data.street}`)
-        const addressRes = await response.json()
+        const {res,err} = await getAutocompleteAddressFromGoogle(data.street);
+        const addressRes = res.data;
         if (addressRes.predictions) {
           console.warn('suggestionsssss', addressRes)
           setSuggestions(
@@ -963,8 +960,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
 
   const handleSelectAddressTwo = async(suggestion: string,placeid:string) => {
     const details: any = {}
-    const latlongRes = await fetch(`/api/placeid-to-latlong?place_id=${placeid}`);
-    const latlongObj = await latlongRes.json();
+    const {res,err} = await getLatLongFromPlaceID(placeid);
+    const latlongObj = res.data;
     const terms = suggestion.split(',').map((term) => term.trim())
 
     if (terms.length >= 1) details.country = terms[terms.length - 1]

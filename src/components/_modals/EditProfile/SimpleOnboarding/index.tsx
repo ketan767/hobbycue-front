@@ -29,7 +29,7 @@ import { getAllHobbies, getTrendingHobbies } from '@/services/hobby.service'
 import Link from 'next/link'
 import { BubbleChartTwoTone } from '@mui/icons-material'
 import CrossIcon from '@/assets/svg/cross.svg'
-import { getAutocompleteAddress } from '@/services/auth.service'
+import { getAutocompleteAddress, getAutocompleteAddressFromGoogle, getLatLongFromPlaceID } from '@/services/auth.service'
 import { useRouter } from 'next/router'
 
 type Props = {
@@ -172,10 +172,8 @@ const SimpleOnboarding: React.FC<Props> = ({
     if (Addressdata.street?.length > 1) {
       setShowAutoAddress(true)
       try {
-        const response = await fetch(
-          `/api/autocomplete?input=${Addressdata.street}`,
-        )
-        const data = await response.json()
+        const {res,err} = await getAutocompleteAddressFromGoogle(Addressdata.street);
+        const data = res.data;
         if (data.predictions) {
           console.warn('suggestionsssss', data)
           setSuggestions(
@@ -207,8 +205,8 @@ const SimpleOnboarding: React.FC<Props> = ({
 
   const handleSelectAddressTwo = async(suggestion: string,placeid:string) => {
     const details: any = {}
-    const latlongRes = await fetch(`/api/placeid-to-latlong?place_id=${placeid}`);
-    const latlongObj = await latlongRes.json();
+    const {res,err} = await getLatLongFromPlaceID(placeid);
+    const latlongObj = res.data;
     console.warn('suggestionssssss', suggestion)
 
     const terms = suggestion.split(',').map((term) => term.trim())
@@ -820,10 +818,8 @@ const SimpleOnboarding: React.FC<Props> = ({
 
     if (e.target.value.length > 2) {
       try {
-        const response = await fetch(
-          `/api/autocomplete?input=${e.target.value}`,
-        )
-        const data = await response.json()
+        const {res,err} = await getAutocompleteAddressFromGoogle(e.target.value);
+        const data = res.data;
         if (data.predictions) {
           console.warn('suggestionsssss', data)
           setSuggestions(
