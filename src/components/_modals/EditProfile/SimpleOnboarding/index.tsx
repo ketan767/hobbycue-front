@@ -430,7 +430,7 @@ const SimpleOnboarding: React.FC<Props> = ({
     if (response?.data.success) {
       dispatch(updateUser(response?.data.data.user))
 
-      window.location.href = '/community'
+      // window.location.href = '/community'
       dispatch(closeModal())
     }
   }
@@ -499,7 +499,7 @@ const SimpleOnboarding: React.FC<Props> = ({
     }
   }, [data.full_name])
 
-  console.log('type', typeof user.profile_url)
+  console.warn('userdataa', user)
   useEffect(() => {
     // Set initial data with user's current profile data
     const initialProfileData = {
@@ -512,6 +512,35 @@ const SimpleOnboarding: React.FC<Props> = ({
       year_of_birth: user.year_of_birth || '',
       onboarding_step: user.onboarding_step || '0',
     }
+    const hobbiesData = user._hobbies.map((hobby: any) => ({
+      _id: hobby.hobby._id,
+      display: `${hobby.hobby.display}${
+        hobby.genre ? ' - ' + hobby?.genre?.display : ''
+      }`,
+      sub_category: hobby?.sub_category,
+      genre: hobby?.genre?.display,
+      genreId: hobby.genre?._id,
+    }))
+    setselectedHobbies(hobbiesData)
+
+    let addressText = ''
+    if (user?.primary_address?.street) {
+      addressText += `${user?.primary_address?.street}, `
+    }
+    if (user?.primary_address?.society) {
+      addressText += `${user?.primary_address?.society}, `
+    }
+    if (user?.primary_address?.city) {
+      addressText += `${user?.primary_address?.city}, `
+    }
+    if (user?.primary_address?.state) {
+      addressText += `${user?.primary_address?.state}, `
+    }
+    if (user?.primary_address?.country) {
+      addressText += `${user?.primary_address?.country} `
+    }
+    setAddressData({ ...Addressdata, street: addressText })
+
     setInitialData(initialProfileData)
     setData(initialProfileData)
   }, [user])
@@ -1203,6 +1232,7 @@ const SimpleOnboarding: React.FC<Props> = ({
 
                           <Image
                             src={CrossIcon}
+                            style={{ cursor: 'pointer' }}
                             width={18}
                             height={18}
                             alt="cancel"
