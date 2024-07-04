@@ -187,7 +187,7 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
           {data?.admin === user?.user._id && (
             <>
               <div className={styles.uploadButtonDescktop}>
-                <div className={styles.newTag}>NEW</div>
+                <div className={styles.newTag}>ADD NEW</div>
                 <input
                   type="file"
                   accept="image/png, image/gif, image/jpeg"

@@ -150,14 +150,6 @@ const ModalManager: React.FC = () => {
       ['View-Image-Modal', 'CopyProfileDataModal'].includes(String(activeModal))
     ) {
       dispatch(closeModal())
-    } else if (
-      activeModal === 'SimpleOnboarding' &&
-      !user?.is_onboarded &&
-      !hasChanges
-    ) {
-      router.push(`/profile/${user?.profile_url}`)
-      dispatch(showProfileError(true))
-      dispatch(closeModal())
     } else if (confirmationModal) {
       setConfirmationModal(false)
     } else if (hasChanges && !confirmationModal) {
