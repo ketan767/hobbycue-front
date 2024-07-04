@@ -72,8 +72,8 @@ type ListingModalData = {
     from_day: string
     to_day: string
   }[]
-  click_url:string|null
-  cta_text:string|null
+  click_url?:string|null
+  cta_text?:string|null
 }
 
 interface AuthState {
