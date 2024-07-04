@@ -26,7 +26,7 @@ type ProductPageType = {
   description: string;
 }[];
 // Listing Page
-type ListingPageTabs = 'home' | 'posts' | 'media' | 'reviews' | 'events' | 'store' | 'orders'
+type ListingPageTabs = 'home' | 'posts' |'events' | 'media' | 'reviews' | 'store' | 'orders'
 
 type ListingLayoutMode = 'view' | 'edit'
 

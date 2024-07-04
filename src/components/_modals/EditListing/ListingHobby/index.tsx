@@ -816,7 +816,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
         />
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>{'Hobbies'}</h4>
+          <h4 className={styles['heading']}>{'Hobbies and Interests'}</h4>
         </header>
 
         <hr className={styles['modal-hr']} />

@@ -95,19 +95,29 @@ const MainContent: React.FC<SearchResultsProps> = ({
   hobbyResults,
 }) => {
   const showAll = useSelector((state: RootState) => state.search.showAll)
-  const showAllUsers = useSelector((state: RootState) => state.search.showAllUsers)
-  const showAllPeople = useSelector((state: RootState) => state.search.showAllPeople)
-  const showAllPlace = useSelector((state: RootState) => state.search.showAllPlace)
-  const showAllEvent = useSelector((state: RootState) => state.search.showAllEvent)
+  const showAllUsers = useSelector(
+    (state: RootState) => state.search.showAllUsers,
+  )
+  const showAllPeople = useSelector(
+    (state: RootState) => state.search.showAllPeople,
+  )
+  const showAllPlace = useSelector(
+    (state: RootState) => state.search.showAllPlace,
+  )
+  const showAllEvent = useSelector(
+    (state: RootState) => state.search.showAllEvent,
+  )
   const showAllProducts = useSelector(
     (state: RootState) => state.search.showAllProducts,
   )
   const showAllhobbies = useSelector(
     (state: RootState) => state.search.showAllHobbies,
   )
-  const searchString = useSelector((state: RootState) => state.search.searchString)
-  const isExplore = useSelector((state:RootState)=>state.search.explore)
-  const searchLoading = useSelector((state:RootState)=>state.search.loading)
+  const searchString = useSelector(
+    (state: RootState) => state.search.searchString,
+  )
+  const isExplore = useSelector((state: RootState) => state.search.explore)
+  const searchLoading = useSelector((state: RootState) => state.search.loading)
   const dispatch = useDispatch()
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
@@ -123,55 +133,49 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const router = useRouter()
 
   useEffect(() => {
-    if (showAll===true) {
+    if (showAll === true) {
       setHideUser(false)
       setHidePeople(false)
       setHidePlace(false)
       setHideEvent(false)
       setHideHobbies(false)
       setHideProduct(true)
-    }
-    else if (showAllUsers===true) {
+    } else if (showAllUsers === true) {
       setHideHobbies(true)
       setHidePeople(true)
       setHidePlace(true)
       setHideEvent(true)
       setHideProduct(true)
       setHideUser(false)
-    }
-    else if (showAllhobbies===true) {
+    } else if (showAllhobbies === true) {
       setHideUser(true)
       setHidePeople(true)
       setHidePlace(true)
       setHideEvent(true)
       setHideProduct(true)
       setHideHobbies(false)
-    }
-    else  if (showAllPeople===true) {
+    } else if (showAllPeople === true) {
       setHideUser(true)
       setHideHobbies(true)
       setHidePlace(true)
       setHideEvent(true)
       setHideProduct(true)
       setHidePeople(false)
-    }
-    else if (showAllPlace===true) {
+    } else if (showAllPlace === true) {
       setHideUser(true)
       setHideHobbies(true)
       setHidePeople(true)
       setHideEvent(true)
       setHideProduct(true)
       setHidePlace(false)
-    }
-    else if (showAllEvent===true) {
+    } else if (showAllEvent === true) {
       setHideUser(true)
       setHidePeople(true)
       setHidePlace(true)
       setHideHobbies(true)
       setHideProduct(true)
       setHideEvent(false)
-    }
-    else if (showAllProducts===true) {
+    } else if (showAllProducts === true) {
       setHideUser(true)
       setHideHobbies(true)
       setHidePeople(true)
@@ -179,7 +183,15 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHideEvent(true)
       setHideProduct(false)
     }
-  }, [showAll, showAllEvent, showAllPeople, showAllPlace, showAllProducts, showAllUsers, showAllhobbies])
+  }, [
+    showAll,
+    showAllEvent,
+    showAllPeople,
+    showAllPlace,
+    showAllProducts,
+    showAllUsers,
+    showAllhobbies,
+  ])
 
   const toggleShowAllusers = () => {
     dispatch(toggleShowAllUsers())
@@ -228,12 +240,13 @@ const MainContent: React.FC<SearchResultsProps> = ({
       placeResults.length === 0 &&
       EventResults.length === 0 &&
       showAll) ||
-    (searchResults.length === 0 && showAllUsers) ||
-    (hobbyResults.length === 0 && showAllhobbies) ||
-    (peopleResults.length === 0 && showAllPeople) ||
-    (placeResults.length === 0 && showAllPlace) ||
-    (EventResults.length === 0 && showAllEvent) ||
-    showAllProducts) && searchLoading === false;
+      (searchResults.length === 0 && showAllUsers) ||
+      (hobbyResults.length === 0 && showAllhobbies) ||
+      (peopleResults.length === 0 && showAllPeople) ||
+      (placeResults.length === 0 && showAllPlace) ||
+      (EventResults.length === 0 && showAllEvent) ||
+      showAllProducts) &&
+    searchLoading === false
 
   return (
     <main className={styles.searchResults}>
@@ -255,108 +268,117 @@ const MainContent: React.FC<SearchResultsProps> = ({
               </p>
             )
           ) : (
-            <p>{`No results for "${searchString}". `}Try shorter or alternate keywords.  Or <Link href={'/contact'}>contact us</Link> if you feel we are missing something.  For further help, <Link href={'/help'}>click here</Link>.</p>
+            <p>
+              {`No results for "${searchString}". `}Try shorter or alternate
+              keywords. Or <Link href={'/contact'}>contact us</Link> if you feel
+              we are missing something. For further help,{' '}
+              <Link href={'/help'}>click here</Link>.
+            </p>
           )}
         </div>
       ) : (
         <div>
-          {searchLoading===true&&<div className={styles.loaders}>
-          <SearchLoader/>
-          <SearchLoader showBox/>
-          </div>}
-          {!HideHobbies && hobbyResults.length > 0 && searchLoading===false && (
-            <section className={styles.userSection}>
-              <div className={styles.peopleItemsContainer}>
-                <div className={styles.resultHeading}>Hobbies</div>
-                {hobbyResults
-                  .slice(0, showAllhobbies ? undefined : 3)
-                  .map((hobby, index) => (
-                    <div
-                      className={styles.peopleItem}
-                      key={index}
-                      onClick={() => navigateToHobby(hobby.slug)}
-                    >
-                      <div
-                        className={styles.hobbyAvtar}
-                        style={{
-                          position: 'relative',
-                          width: '64px',
-                          height: '64px',
-                        }}
-                      >
-                        {/* Render the image */}
-                        {hobby.profile_image ? (
-                          <img
-                            src={hobby.profile_image}
-                            alt={`${hobby.display}'s `}
-                            width={64}
-                            height={64}
-                            className={styles.avatarImage}
-                          />
-                        ) : (
-                          <div className={`${styles['img-polygon']} `}></div>
-                        )}
-                        {/* Render the polygon overlay */}
-
-                        <svg
-                          className={styles.polygonOverlay}
-                          viewBox="0 0 160 160"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M80 0L149.282 40V120L80 160L10.718 120V40L80 0Z"
-                            fill="#969696"
-                            fill-opacity="0.5"
-                          />
-                          <path
-                            d="M79.6206 46.1372C79.7422 45.7727 80.2578 45.7727 80.3794 46.1372L87.9122 68.7141C87.9663 68.8763 88.1176 68.9861 88.2885 68.9875L112.088 69.175C112.472 69.178 112.632 69.6684 112.323 69.8967L93.1785 84.0374C93.041 84.139 92.9833 84.3168 93.0348 84.4798L100.211 107.173C100.327 107.539 99.9097 107.842 99.5971 107.619L80.2326 93.7812C80.0935 93.6818 79.9065 93.6818 79.7674 93.7812L60.4029 107.619C60.0903 107.842 59.6731 107.539 59.789 107.173L66.9652 84.4798C67.0167 84.3168 66.959 84.139 66.8215 84.0374L47.6773 69.8967C47.3682 69.6684 47.5276 69.178 47.9118 69.175L71.7115 68.9875C71.8824 68.9861 72.0337 68.8763 72.0878 68.7141L79.6206 46.1372Z"
-                            fill="white"
-                          />
-                        </svg>
-                      </div>
-
-                      <div className={styles.userDetails}>
-                        <div className={styles.userName}>{hobby.display}</div>
-                        <div className={styles.userTagline}>
-                          {`${
-                            hobby?.category?.display
-                              ? hobby.category.display
-                              : ''
-                          }${
-                            hobby?.sub_category?.display
-                              ? ' | ' + hobby.sub_category.display
-                              : ''
-                          }`}
-                          &nbsp;
-                        </div>
-                        <div className={styles.hobbydescription}>
-                          {hobby?.description}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-
-                <div className={styles['view-more-btn-container']}>
-                  {showAllhobbies
-                    ? undefined
-                    : (hobbyResults.length > 3 ? (
-                        <button
-                          onClick={toggleShowAllhobbies}
-                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
-                        >
-                          View More
-                        </button>
-                      ) : (
-                        ''
-                      )) || ''}
-                </div>
-              </div>
-            </section>
+          {searchLoading === true && (
+            <div className={styles.loaders}>
+              <SearchLoader />
+              <SearchLoader showBox />
+            </div>
           )}
+          {!HideHobbies &&
+            hobbyResults.length > 0 &&
+            searchLoading === false && (
+              <section className={styles.userSection}>
+                <div className={styles.peopleItemsContainer}>
+                  <div className={styles.resultHeading}>Hobbies</div>
+                  {hobbyResults
+                    .slice(0, showAllhobbies ? undefined : 3)
+                    .map((hobby, index) => (
+                      <div
+                        className={styles.peopleItem}
+                        key={index}
+                        onClick={() => navigateToHobby(hobby.slug)}
+                      >
+                        <div
+                          className={styles.hobbyAvtar}
+                          style={{
+                            position: 'relative',
+                            width: '64px',
+                            height: '64px',
+                          }}
+                        >
+                          {/* Render the image */}
+                          {hobby.profile_image ? (
+                            <img
+                              src={hobby.profile_image}
+                              alt={`${hobby.display}'s `}
+                              width={64}
+                              height={64}
+                              className={styles.avatarImage}
+                            />
+                          ) : (
+                            <div className={`${styles['img-polygon']} `}></div>
+                          )}
+                          {/* Render the polygon overlay */}
+
+                          <svg
+                            className={styles.polygonOverlay}
+                            viewBox="0 0 160 160"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M80 0L149.282 40V120L80 160L10.718 120V40L80 0Z"
+                              fill="#969696"
+                              fill-opacity="0.5"
+                            />
+                            <path
+                              d="M79.6206 46.1372C79.7422 45.7727 80.2578 45.7727 80.3794 46.1372L87.9122 68.7141C87.9663 68.8763 88.1176 68.9861 88.2885 68.9875L112.088 69.175C112.472 69.178 112.632 69.6684 112.323 69.8967L93.1785 84.0374C93.041 84.139 92.9833 84.3168 93.0348 84.4798L100.211 107.173C100.327 107.539 99.9097 107.842 99.5971 107.619L80.2326 93.7812C80.0935 93.6818 79.9065 93.6818 79.7674 93.7812L60.4029 107.619C60.0903 107.842 59.6731 107.539 59.789 107.173L66.9652 84.4798C67.0167 84.3168 66.959 84.139 66.8215 84.0374L47.6773 69.8967C47.3682 69.6684 47.5276 69.178 47.9118 69.175L71.7115 68.9875C71.8824 68.9861 72.0337 68.8763 72.0878 68.7141L79.6206 46.1372Z"
+                              fill="white"
+                            />
+                          </svg>
+                        </div>
+
+                        <div className={styles.userDetails}>
+                          <div className={styles.userName}>{hobby.display}</div>
+                          <div className={styles.userTagline}>
+                            {`${
+                              hobby?.category?.display
+                                ? hobby.category.display
+                                : ''
+                            }${
+                              hobby?.sub_category?.display
+                                ? ' | ' + hobby.sub_category.display
+                                : ''
+                            }`}
+                            &nbsp;
+                          </div>
+                          <div className={styles.hobbydescription}>
+                            {hobby?.description}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                  <div className={styles['view-more-btn-container']}>
+                    {showAllhobbies
+                      ? undefined
+                      : (hobbyResults.length > 3 ? (
+                          <button
+                            onClick={toggleShowAllhobbies}
+                            className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          >
+                            View More
+                          </button>
+                        ) : (
+                          ''
+                        )) || ''}
+                  </div>
+                </div>
+              </section>
+            )}
           {/* User  */}
 
-          {!HideUser && searchResults.length > 0 && searchLoading===false && (
+          {!HideUser && searchResults.length > 0 && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>User Profiles</div>
@@ -412,72 +434,74 @@ const MainContent: React.FC<SearchResultsProps> = ({
             </section>
           )}
           {/* People */}
-          {!HidePeople && peopleResults.length > 0 && searchLoading===false && (
-            <section className={styles.userSection}>
-              <div className={styles.peopleItemsContainer}>
-                <div className={styles.resultHeading}>People</div>
-                {peopleResults
-                  .slice(0, showAllPeople ? undefined : 3)
-                  .map((page, index) => (
-                    <div
-                      className={styles.peopleItem}
-                      key={index}
-                      onClick={() => navigateToPage(page.page_url)}
-                    >
-                      <div className={styles.peopleAvatar}>
-                        {page.profile_image ? (
-                          <img
-                            src={page.profile_image}
-                            alt={`${page.title}'s `}
-                            width={64}
-                            height={64}
-                            className={styles.peopleavatarImage}
-                          />
+          {!HidePeople &&
+            peopleResults.length > 0 &&
+            searchLoading === false && (
+              <section className={styles.userSection}>
+                <div className={styles.peopleItemsContainer}>
+                  <div className={styles.resultHeading}>People</div>
+                  {peopleResults
+                    .slice(0, showAllPeople ? undefined : 3)
+                    .map((page, index) => (
+                      <div
+                        className={styles.peopleItem}
+                        key={index}
+                        onClick={() => navigateToPage(page.page_url)}
+                      >
+                        <div className={styles.peopleAvatar}>
+                          {page.profile_image ? (
+                            <img
+                              src={page.profile_image}
+                              alt={`${page.title}'s `}
+                              width={64}
+                              height={64}
+                              className={styles.peopleavatarImage}
+                            />
+                          ) : (
+                            <div
+                              className={`${styles['people-img']} default-people-listing-icon`}
+                            ></div>
+                          )}
+                        </div>
+                        <div className={styles.userDetails}>
+                          <div className={styles.userName}>{page?.title}</div>
+                          <div className={styles.userTagline}>
+                            {page?.tagline || '\u00a0'}
+                          </div>
+                          <div className={styles.userLocation}>
+                            {page.page_type.map((item, idx) => {
+                              if (idx === 0) {
+                                return item
+                              } else {
+                                return ' ' + item
+                              }
+                            }) +
+                              (page._address?.city
+                                ? ` | ${page._address?.city}`
+                                : '') || '\u00a0'}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  <div className={styles['view-more-btn-container']}>
+                    {showAllPeople
+                      ? undefined
+                      : (peopleResults.length > 3 ? (
+                          <button
+                            onClick={toggleShowAllpeople}
+                            className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          >
+                            View More
+                          </button>
                         ) : (
-                          <div
-                            className={`${styles['people-img']} default-people-listing-icon`}
-                          ></div>
-                        )}
-                      </div>
-                      <div className={styles.userDetails}>
-                        <div className={styles.userName}>{page?.title}</div>
-                        <div className={styles.userTagline}>
-                          {page?.tagline || '\u00a0'}
-                        </div>
-                        <div className={styles.userLocation}>
-                          {page.page_type.map((item, idx) => {
-                            if (idx === 0) {
-                              return item
-                            } else {
-                              return ' ' + item
-                            }
-                          }) +
-                            (page._address?.city
-                              ? ` | ${page._address?.city}`
-                              : '') || '\u00a0'}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                <div className={styles['view-more-btn-container']}>
-                  {showAllPeople
-                    ? undefined
-                    : (peopleResults.length > 3 ? (
-                        <button
-                          onClick={toggleShowAllpeople}
-                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
-                        >
-                          View More
-                        </button>
-                      ) : (
-                        ''
-                      )) || ''}
+                          ''
+                        )) || ''}
+                  </div>
                 </div>
-              </div>
-            </section>
-          )}
+              </section>
+            )}
           {/* Place  */}
-          {!HidePlace && placeResults.length > 0 && searchLoading===false && (
+          {!HidePlace && placeResults.length > 0 && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>Places</div>
@@ -500,7 +524,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           />
                         ) : (
                           <div
-                            className={`${styles['people-img']} default-people-listing-icon`}
+                            className={`${styles['people-img']} default-place-listing-icon`}
                           ></div>
                         )}
                       </div>
@@ -537,7 +561,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
           )}
 
           {/* Event  */}
-          {!HideEvent && EventResults.length > 0 && searchLoading===false && (
+          {!HideEvent && EventResults.length > 0 && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
                 <div className={styles.resultHeading}>Programs</div>
@@ -559,7 +583,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           />
                         ) : (
                           <div
-                            className={`${styles['people-img']} default-people-listing-icon`}
+                            className={`${styles['people-img']} default-program-listing-icon`}
                           ></div>
                         )}
                       </div>

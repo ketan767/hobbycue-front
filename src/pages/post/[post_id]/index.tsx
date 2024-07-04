@@ -67,7 +67,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
       setPostData(res.data.data.posts?.[0])
     }
     setIsLoadingPosts(false)
-    router.push('/community')
+    // router.push('/community')
   }
 
   const openPostmodal = () => {
@@ -75,6 +75,28 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
     dispatch(openModal({ type: 'post', closable: false }))
   }
 
+  const convertHtmlToPlainText = (htmlContent: string): string => {
+    if (typeof document === 'undefined') {
+      // If document is not available (e.g., during SSR), return the original HTML content or handle appropriately
+      return htmlContent
+    }
+
+    const tempElement = document.createElement('div')
+    tempElement.innerHTML = htmlContent
+
+    // Get all anchor tags to preserve URLs
+    const links = tempElement.getElementsByTagName('a')
+    for (let i = 0; i < links.length; i++) {
+      links[i].innerText = links[i].href
+    }
+
+    // Strip HTML tags but keep the URLs
+    return tempElement.innerText
+  }
+
+  const post_descripton = convertHtmlToPlainText(postData?.content)
+
+  console.warn('postdesccccccccccccccccc', post_descripton)
   useEffect(() => {
     if (postId) {
       getPost()
@@ -109,6 +131,8 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
           content={`${
             data.metadata?.data?.description
               ? data.metadata?.data?.description
+              : postData?.content
+              ? post_descripton
               : ''
           }`}
         />

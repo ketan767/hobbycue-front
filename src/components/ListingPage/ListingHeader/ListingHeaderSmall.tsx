@@ -44,9 +44,9 @@ type Props = {
 const tabs: ListingPageTabs[] = [
   'home',
   'posts',
+  'events',
   'media',
   'reviews',
-  'events',
   'store',
   'orders',
 ]
@@ -186,15 +186,15 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
     }
   }
 
-  const handleCtaText = (ctaText:string) => {
-    if(ctaText==='Buy Now'){
-      if(data.click_url){
-      window.open(data.click_url, '_blank', 'noopener,noreferrer')
-      }else{
+  const handleCtaText = (ctaText: string) => {
+    if (ctaText === 'Buy Now') {
+      if (data.click_url) {
+        window.open(data.click_url, '_blank', 'noopener,noreferrer')
+      } else {
         setSnackbar({
-          type:'warning',
-          display:true,
-          message:'No Buy Now URL available'
+          type: 'warning',
+          display: true,
+          message: 'No Buy Now URL available',
         })
       }
     }
@@ -328,7 +328,7 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
     button = (
       <FilledButton
         className={styles.contactBtn}
-        onClick={isEditMode ? handleUpdateCTA : ()=>handleCtaText(ctaText)}
+        onClick={isEditMode ? handleUpdateCTA : () => handleCtaText(ctaText)}
       >
         <p>{ctaText}</p>
         {isEditMode && (
