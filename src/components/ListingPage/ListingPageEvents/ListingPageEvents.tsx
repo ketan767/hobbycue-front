@@ -130,7 +130,7 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
         {!eventData?.res ? (
           <section className={styles['data-container']}>
             <div onClick={handleAddEvent} className={styles['add-event']}>
-              <div className={styles['new-tag']}>NEW</div>
+              <div className={styles['new-tag']}>ADD NEW</div>
               <button>{plusIcon}</button>
             </div>
 
@@ -141,7 +141,7 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
         ) : (
           <div className={styles['card-container']}>
             <div onClick={handleAddEvent} className={styles['add-event']}>
-              <div className={styles['new-tag']}>NEW</div>
+              <div className={styles['new-tag']}>ADD NEW</div>
               <button>{plusIcon}</button>
             </div>
 

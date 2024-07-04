@@ -52,7 +52,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
   const [loadingPosts, setLoadingPosts] = useState(false)
   const [displayAbout, setDisplayAbout] = useState(false)
   const [displayOther, setDisplayOther] = useState(false)
-
+  const { activeModal } = useSelector((state: RootState) => state.modal)
   const [hobbyError, setHobbyError] = useState(false)
   const [titleError, setTitleError] = useState(false)
   const [locationError, setLocationError] = useState(false)
@@ -229,7 +229,6 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
     let hasError = false
 
     if (profileLayoutMode === 'edit') {
-      dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
       setHobbyError(false)
       setLocationError(false)
       setTitleError(false)

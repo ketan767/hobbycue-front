@@ -272,48 +272,48 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
           <div className={styles['main-media'] + ' margin-bottom-68vh'}>
             {profileLayoutMode === 'edit' && (
               <div className={styles.uploadContainer}>
-                 <div className={styles.uploadButtonDescktop}>
-                <div className={styles.newTag}>NEW</div>
-                <input
-                  type="file"
-                  accept="image/png, image/gif, image/jpeg"
-                  className={styles.hidden}
-                  onChange={(e) => handleImageChange(e)}
-                  ref={inputRef}
-                />
-                {plusIconSvg}
-              </div>
+                <div className={styles.uploadButtonDescktop}>
+                  <div className={styles.newTag}>ADD NEW</div>
+                  <input
+                    type="file"
+                    accept="image/png, image/gif, image/jpeg"
+                    className={styles.hidden}
+                    onChange={(e) => handleImageChange(e)}
+                    ref={inputRef}
+                  />
+                  {plusIconSvg}
+                </div>
 
-              <div className={styles.uploadVideoContainer}>
-                <div className={styles.uploadVideo}>
-                  <p>Video</p>
+                <div className={styles.uploadVideoContainer}>
+                  <div className={styles.uploadVideo}>
+                    <p>Video</p>
+                    <div
+                      onClick={() => {
+                        dispatch(
+                          openModal({
+                            type: 'upload-video-page',
+                            closable: true,
+                          }),
+                        )
+                      }}
+                    >
+                      {pencilIconSvg}
+                    </div>
+                  </div>
                   <div
                     onClick={() => {
                       dispatch(
                         openModal({
-                          type: 'upload-video-page',
+                          type: 'upload-video-user',
                           closable: true,
                         }),
                       )
                     }}
+                    className={styles.addvidText}
                   >
-                    {pencilIconSvg}
+                    Add video URL to embedded the video
                   </div>
                 </div>
-                <div
-                  onClick={() => {
-                    dispatch(
-                      openModal({
-                        type: 'upload-video-user',
-                        closable: true,
-                      }),
-                    )
-                  }}
-                  className={styles.addvidText}
-                >
-                  Add video URL to embedded the video
-                </div>
-              </div>
                 {/* <div className={styles.uploadButton}>
                   <p> image </p>
                   <input
@@ -351,49 +351,50 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
               </div>
             )}
             {profileLayoutMode !== 'edit' &&
-          !data.pageData?.video_url &&
-          (!data.pageData?.images ||
-            data.pageData?.images?.length < 1) && (
-            <section className={`${styles['dual-section-wrapper']}`}>
-              <div className={styles['no-posts-div']}>
-                <p className={styles['no-posts-text']}>No media available</p>
-              </div>
-              {!isMobile && <div className={styles['no-posts-div']}></div>}
-            </section>
-          )}
-        <div className={styles.videoAndImages}>
-          <div className={styles.imagesContainer}>
-            {data.pageData.images?.map((item: any, idx:number) => {
-              return (
-                <div key={idx} className={styles.medias}>
-                  <div
-                    key={idx}
-                    className={styles.image}
-                    onClick={() => OpenMediaImage(item)}
-                  >
-                    <img src={item} />
+              !data.pageData?.video_url &&
+              (!data.pageData?.images || data.pageData?.images?.length < 1) && (
+                <section className={`${styles['dual-section-wrapper']}`}>
+                  <div className={styles['no-posts-div']}>
+                    <p className={styles['no-posts-text']}>
+                      No media available
+                    </p>
                   </div>
-                </div>
-              )
-            })}
-          </div>
-          <div className={styles.imagesContainer}>
-            {data.pageData?.video_url ? (
-              <div className={styles.medias}>
-                {data.pageData?.video_url && (
-                  <div className={styles['videos']}>
-                    <ReactPlayer
-                      width="100%"
-                      height="100%"
-                      url={data.pageData?.video_url}
-                      controls={true}
-                    />
-                  </div>
-                )}
+                  {!isMobile && <div className={styles['no-posts-div']}></div>}
+                </section>
+              )}
+            <div className={styles.videoAndImages}>
+              <div className={styles.imagesContainer}>
+                {data.pageData.images?.map((item: any, idx: number) => {
+                  return (
+                    <div key={idx} className={styles.medias}>
+                      <div
+                        key={idx}
+                        className={styles.image}
+                        onClick={() => OpenMediaImage(item)}
+                      >
+                        <img src={item} />
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
-            ) : null}
-          </div>
-        </div>
+              <div className={styles.imagesContainer}>
+                {data.pageData?.video_url ? (
+                  <div className={styles.medias}>
+                    {data.pageData?.video_url && (
+                      <div className={styles['videos']}>
+                        <ReactPlayer
+                          width="100%"
+                          height="100%"
+                          url={data.pageData?.video_url}
+                          controls={true}
+                        />
+                      </div>
+                    )}
+                  </div>
+                ) : null}
+              </div>
+            </div>
           </div>
         </PageGridLayout>
       </ProfileLayout>

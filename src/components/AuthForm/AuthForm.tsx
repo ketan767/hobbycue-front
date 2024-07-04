@@ -220,6 +220,7 @@ const AuthForm: React.FC<Props> = (props) => {
         if (response?.data?.data?.user?.is_onboarded) {
           router.push('/community', undefined, { shallow: false })
         } else {
+          dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
           router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
         }
       }
@@ -304,7 +305,7 @@ const AuthForm: React.FC<Props> = (props) => {
       } else {
         console.log('else', e.profileObj.imageUrl)
       }
-      console.warn('its workingggg', res.data.message)
+
       if (res?.data?.message === 'User registered successfully') {
         dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
       }
@@ -320,6 +321,7 @@ const AuthForm: React.FC<Props> = (props) => {
           router.push(linkviaAuth)
           dispatch(SetLinkviaAuth(''))
         } else if (!response?.data?.data?.user?.is_onboarded) {
+          dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
           router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
           dispatch(showProfileError(true))
         }
@@ -369,6 +371,7 @@ const AuthForm: React.FC<Props> = (props) => {
       if (response?.data?.data?.user?.is_onboarded) {
         router.push('/community', undefined, { shallow: false })
       } else {
+        dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
         router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
       }
 

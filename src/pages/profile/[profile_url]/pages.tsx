@@ -161,7 +161,7 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
                         onClick={handleAddPage}
                         className={styles['add-event']}
                       >
-                        <div className={styles['new-tag']}>NEW</div>
+                        <div className={styles['new-tag']}>ADD NEW</div>
                         <button>{plusIcon}</button>
                       </div>
                     )}
@@ -178,7 +178,7 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
                       onClick={handleAddPage}
                       className={styles['add-event']}
                     >
-                      <div className={styles['new-tag']}>NEW</div>
+                      <div className={styles['new-tag']}>ADD NEW</div>
                       <button>{plusIcon}</button>
                     </div>
                   )}
