@@ -260,6 +260,10 @@
   align-items: center;
 }
 
+.contactBtn p{
+  min-width: max-content;
+}
+
 .contactBtnpublic {
   font-size: 14px;
   font-family: 'Poppins';

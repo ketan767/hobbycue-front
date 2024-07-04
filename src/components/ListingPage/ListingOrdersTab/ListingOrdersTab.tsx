@@ -17,7 +17,7 @@ type OrderType = {
     profile_url: string
   }
   variations: { name: string; quantity: string }[]
-  notes?: string
+  note?: string
 }
 
 function formatDate(dateStr: string): string {
@@ -44,6 +44,8 @@ function formatDate(dateStr: string): string {
 }
 
 const ListingOrdersTab: FC<ListingOrdersTabProps> = ({ data }) => {
+  console.warn({data});
+  
   const { listingLayoutMode } = useSelector((state: RootState) => state.site)
   return (
     <div className={styles['container']}>
@@ -113,7 +115,7 @@ const ListingOrdersTab: FC<ListingOrdersTabProps> = ({ data }) => {
                 </td>
                 <td>
                   <div>
-                    <p>{obj.notes || 'No notes'}</p>
+                    <p>{obj.note || 'No notes'}</p>
                   </div>
                 </td>
               </tr>

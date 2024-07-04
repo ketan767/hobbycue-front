@@ -186,6 +186,20 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
     }
   }
 
+  const handleCtaText = (ctaText:string) => {
+    if(ctaText==='Buy Now'){
+      if(data.click_url){
+      window.open(data.click_url, '_blank', 'noopener,noreferrer')
+      }else{
+        setSnackbar({
+          type:'warning',
+          display:true,
+          message:'No Buy Now URL available'
+        })
+      }
+    }
+  }
+
   const handleEventEditClick = () => {
     dispatch(
       openModal({
@@ -300,6 +314,23 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
         onClick={isEditMode ? handleUpdateCTA : handleRegister}
       >
         <p>Register</p>
+        {isEditMode && (
+          <img
+            width={16}
+            height={16}
+            src={smallPencilSvg.src}
+            alt="small pencil"
+          />
+        )}
+      </FilledButton>
+    )
+  } else {
+    button = (
+      <FilledButton
+        className={styles.contactBtn}
+        onClick={isEditMode ? handleUpdateCTA : ()=>handleCtaText(ctaText)}
+      >
+        <p>{ctaText}</p>
         {isEditMode && (
           <img
             width={16}

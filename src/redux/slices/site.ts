@@ -72,6 +72,8 @@ type ListingModalData = {
     from_day: string
     to_day: string
   }[]
+  click_url:string|null
+  cta_text:string|null
 }
 
 interface AuthState {
@@ -141,6 +143,8 @@ const initialState: AuthState = {
     year: '',
     admin_note: '',
     tagline: '',
+    click_url: null,
+    cta_text: 'Contact'
   },
   editPhotoModalData: {
     image: null,

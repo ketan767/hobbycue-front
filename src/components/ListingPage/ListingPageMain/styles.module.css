@@ -224,6 +224,33 @@ ul.seller-info-wrapper li svg:last-child {
   line-height: 20px;
   color: #000000;
 }
+
+.join-online{
+  display: flex;
+justify-content: center;
+align-items: center;
+gap: 4px;
+}
+
+.join-online p{
+  color: var(--Purple-1, #8064A2);
+font-family: 'Poppins';
+font-size: 14px;
+font-style: normal;
+font-weight: 600;
+line-height: 22px; /* 157.143% */
+}
+
+.desc{
+  color: var(--Grey-Darkest, #08090A);
+font-family: 'Poppins';
+font-size: 14px;
+font-style: normal;
+font-weight: 400;
+line-height: 21px; /* 150% */
+margin-top: 16px;
+}
+
 .direction-container {
   display: flex;
   align-items: center;
@@ -376,7 +403,9 @@ ul.seller-info-wrapper li svg:last-child {
     top: 36px;
     left: 16px;
   }
-
+  .join-online{
+    margin-right: 33px;
+  }
 }
 
 @media screen and (min-width:1100px) {

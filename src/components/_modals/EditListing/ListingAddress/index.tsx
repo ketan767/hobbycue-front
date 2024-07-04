@@ -6,7 +6,7 @@ import {
   getMyProfileDetail,
   updateUserAddress,
 } from '@/services/user.service'
-import { isEmpty, isEmptyField } from '@/utils'
+import { isEmpty, isEmptyField, validateUrl } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
@@ -26,7 +26,6 @@ import BackIcon from '@/assets/svg/Previous.svg'
 import NextIcon from '@/assets/svg/Next.svg'
 import InfoIcon from '@/assets/svg/infoIcon.svg'
 import CustomizedTooltips2 from '@/components/Tooltip/Tooltip2'
-
 import {
   getAutocompleteAddressFromGoogle,
   getLatLongFromPlaceID,
@@ -54,6 +53,9 @@ type ListingAddressData = {
   country: InputData<string>
   latitude: InputData<string>
   longitude: InputData<string>
+  virtual: InputData<boolean>
+  url: InputData<string>
+  description: InputData<string>
 }
 
 type AddressObj = {
@@ -111,6 +113,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
   const pincodeRef = useRef<HTMLInputElement>(null)
   const postcodeRef = useRef<HTMLInputElement>(null)
   const streetRef = useRef<HTMLInputElement>(null)
+  const urlRef = useRef<HTMLInputElement>(null)
   const localityRef = useRef<HTMLInputElement>(null)
   const societyRef = useRef<HTMLInputElement>(null)
   const [initialData, setInitialData] = useState({})
@@ -134,6 +137,9 @@ const ListingAddressEditModal: React.FC<Props> = ({
     country: { value: '', error: null },
     latitude: { value: '', error: null },
     longitude: { value: '', error: null },
+    virtual: { value: false, error: null },
+    url: { value: '', error: null },
+    description: { value: '', error: null },
   })
 
   const handleInputChange = async (event: any) => {
@@ -151,7 +157,6 @@ const ListingAddressEditModal: React.FC<Props> = ({
           data.street.value,
         )
         const addressRes = res.data
-
         if (addressRes.predictions) {
           setSuggestions(
             addressRes.predictions.map((prediction: any) => ({
@@ -212,91 +217,115 @@ const ListingAddressEditModal: React.FC<Props> = ({
   }, [data, initialData, onStatusChange])
   const handleSubmit = async () => {
     // if (isChanged) {
-    if (listingModalData.type === listingTypes.PLACE) {
-      if (isEmptyField(data.street.value) || !data.street.value) {
-        streetRef.current?.focus()
+    if (data.virtual.value === false) {
+      if (listingModalData.type === listingTypes.PLACE) {
+        if (isEmptyField(data.street.value) || !data.street.value) {
+          streetRef.current?.focus()
+          return setData((prev) => {
+            return {
+              ...prev,
+              street: { ...prev.street, error: 'This field is required!' },
+            }
+          })
+        }
+        if (isEmptyField(data.society.value) || !data.society.value) {
+          societyRef.current?.focus()
+          return setData((prev) => {
+            return {
+              ...prev,
+              society: { ...prev.society, error: 'This field is required!' },
+            }
+          })
+        }
+        if (isEmptyField(data.locality.value) || !data.locality.value) {
+          localityRef.current?.focus()
+          return setData((prev) => {
+            return {
+              ...prev,
+              locality: { ...prev.locality, error: 'This field is required!' },
+            }
+          })
+        }
+      }
+      if (listingModalData.type === listingTypes.PLACE) {
+        if (isEmptyField(data.pin_code.value) || !data.pin_code.value) {
+          pincodeRef.current?.focus()
+          return setData((prev) => {
+            return {
+              ...prev,
+              pin_code: { ...prev.pin_code, error: 'This field is required!' },
+            }
+          })
+        }
+        if (isEmptyField(data.post_code.value) || !data.post_code.value) {
+          postcodeRef.current?.focus()
+          return setData((prev) => {
+            return {
+              ...prev,
+              post_code: {
+                ...prev.post_code,
+                error: 'This field is required!',
+              },
+            }
+          })
+        }
+      }
+      if (
+        isEmptyField(data.city.value) ||
+        !data.city.value ||
+        isEmptyField(data.state.value) ||
+        !data.state.value ||
+        isEmptyField(data.country.value) ||
+        !data.country.value
+      ) {
+        if (isEmptyField(data.city.value) || !data.city.value) {
+          cityRef.current?.focus()
+          setData((prev) => {
+            return {
+              ...prev,
+              city: { ...prev.city, error: 'This field is required!' },
+            }
+          })
+        }
+        if (isEmptyField(data.state.value) || !data.state.value) {
+          stateRef.current?.focus()
+          setData((prev) => {
+            return {
+              ...prev,
+              state: { ...prev.state, error: 'This field is required!' },
+            }
+          })
+        }
+        if (isEmptyField(data.country.value) || !data.country.value) {
+          countryRef.current?.focus()
+          setData((prev) => {
+            return {
+              ...prev,
+              country: { ...prev.country, error: 'This field is required!' },
+            }
+          })
+        }
+        return
+      }
+    } else {
+      if (isEmptyField(data.url.value) || !data.url.value) {
+        urlRef.current?.focus()
         return setData((prev) => {
           return {
             ...prev,
-            street: { ...prev.street, error: 'This field is required!' },
+            url: { ...prev.url, error: 'This field is required!' },
           }
         })
       }
-      if (isEmptyField(data.society.value) || !data.society.value) {
-        societyRef.current?.focus()
+      if (!validateUrl(data.url.value)) {
+        urlRef.current?.focus()
         return setData((prev) => {
           return {
             ...prev,
-            society: { ...prev.society, error: 'This field is required!' },
+            url: { ...prev.url, error: 'Enter a valid url!' },
           }
         })
       }
-      if (isEmptyField(data.locality.value) || !data.locality.value) {
-        localityRef.current?.focus()
-        return setData((prev) => {
-          return {
-            ...prev,
-            locality: { ...prev.locality, error: 'This field is required!' },
-          }
-        })
-      }
-    }
-    if (listingModalData.type === listingTypes.PLACE) {
-      if (isEmptyField(data.pin_code.value) || !data.pin_code.value) {
-        pincodeRef.current?.focus()
-        return setData((prev) => {
-          return {
-            ...prev,
-            pin_code: { ...prev.pin_code, error: 'This field is required!' },
-          }
-        })
-      }
-      if (isEmptyField(data.post_code.value) || !data.post_code.value) {
-        postcodeRef.current?.focus()
-        return setData((prev) => {
-          return {
-            ...prev,
-            post_code: { ...prev.post_code, error: 'This field is required!' },
-          }
-        })
-      }
-    }
-    if (
-      isEmptyField(data.city.value) ||
-      !data.city.value ||
-      isEmptyField(data.state.value) ||
-      !data.state.value ||
-      isEmptyField(data.country.value) ||
-      !data.country.value
-    ) {
-      if (isEmptyField(data.city.value) || !data.city.value) {
-        cityRef.current?.focus()
-        setData((prev) => {
-          return {
-            ...prev,
-            city: { ...prev.city, error: 'This field is required!' },
-          }
-        })
-      }
-      if (isEmptyField(data.state.value) || !data.state.value) {
-        stateRef.current?.focus()
-        setData((prev) => {
-          return {
-            ...prev,
-            state: { ...prev.state, error: 'This field is required!' },
-          }
-        })
-      }
-      if (isEmptyField(data.country.value) || !data.country.value) {
-        countryRef.current?.focus()
-        setData((prev) => {
-          return {
-            ...prev,
-            country: { ...prev.country, error: 'This field is required!' },
-          }
-        })
-      }
-      return
     }
     const jsonData = {
       street: data.street.value,
@@ -309,6 +338,9 @@ const ListingAddressEditModal: React.FC<Props> = ({
       country: data.country.value,
       latitude: data.latitude.value,
       longitude: data.longitude.value,
+      url: data.url.value,
+      description: data.description.value,
+      virtual: data.virtual.value
     }
     setSubmitBtnLoading(true)
     const { err, res } = await updateListingAddress(
@@ -346,6 +378,9 @@ const ListingAddressEditModal: React.FC<Props> = ({
       country: { value: res?.data.data.address.country, error: null },
       latitude: { value: res?.data.data.address.latitude, error: null },
       longitude: { value: res?.data.data.address.longitude, error: null },
+      virtual: { value: res?.data.data.address.virtual, error: null },
+      url: { value: res?.data.data.address.url, error: null },
+      description: { value: res?.data.data.address.description, error: null },
     })
     setInitialData({
       street: { value: res?.data.data.address.street, error: null },
@@ -358,6 +393,9 @@ const ListingAddressEditModal: React.FC<Props> = ({
       country: { value: res?.data.data.address.country, error: null },
       latitude: { value: res?.data.data.address.latitude, error: null },
       longitude: { value: res?.data.data.address.longitude, error: null },
+      virtual: { value: res?.data.data.address.virtual, error: null },
+      url: { value: res?.data.data.address.url, error: null },
+      description: { value: res?.data.data.address.description, error: null },
     })
     setDataLoaded(true)
   }
@@ -682,6 +720,60 @@ const ListingAddressEditModal: React.FC<Props> = ({
     setShowAutoAddress(false)
   }
 
+  const closedVirtualIcon = (
+    <svg
+      onClick={() => {
+        setData((prev) => ({
+          ...prev,
+          virtual: { ...prev.virtual, value: !prev.virtual.value },
+        }))
+      }}
+      xmlns="http://www.w3.org/2000/svg"
+      cursor={'pointer'}
+      width="39"
+      height="21"
+      viewBox="0 0 39 21"
+      fill="none"
+    >
+      <rect
+        x="0.0703125"
+        y="0.614746"
+        width="38"
+        height="20"
+        rx="10"
+        fill="#CED4DA"
+      />
+      <circle cx="10.0703" cy="10.6147" r="8" fill="white" />
+    </svg>
+  )
+
+  const openVirtualIcon = (
+    <svg
+      onClick={() => {
+        setData((prev) => ({
+          ...prev,
+          virtual: { ...prev.virtual, value: !prev.virtual.value },
+        }))
+      }}
+      xmlns="http://www.w3.org/2000/svg"
+      cursor={'pointer'}
+      width="39"
+      height="21"
+      viewBox="0 0 39 21"
+      fill="none"
+    >
+      <rect
+        x="0.0703125"
+        y="0.614746"
+        width="38"
+        height="20"
+        rx="10"
+        fill="#8064A2"
+      />
+      <circle cx="28.0703" cy="10.6147" r="8" fill="white" />
+    </svg>
+  )
+
   if (confirmationModal) {
     return (
       <SaveModal
@@ -703,183 +795,149 @@ const ListingAddressEditModal: React.FC<Props> = ({
         {/* Modal Header */}
         <header className={styles['header']}>
           <h4 className={styles['heading']}>{'Location'}</h4>
+          <div
+            className={
+              styles['virtual-container'] +
+              ` ${!onBoarding && styles['at-center-and-reverse']}`
+            }
+          >
+            <p>Virtual</p>
+            {data.virtual.value ? openVirtualIcon : closedVirtualIcon}
+          </div>
         </header>
 
         <hr className={styles['modal-hr']} />
 
         <section className={styles['body']}>
-          <>
-            {/* Street Address */}
-            <div className={styles['input-box']}>
-              <label>Street Address</label>
-              <div
-                className={` ${styles['street-input-container']}  ${
-                  data.street.error ? styles['input-box-error'] : ''
-                }`}
-              >
-                <input
-                  type="text"
-                  placeholder={`Enter address or click on GPS icon to the right`}
-                  value={data.street.value}
-                  name="street"
-                  required={listingModalData.type === listingTypes.PLACE}
-                  onChange={handleInputChange}
-                  ref={streetRef}
-                />
-                <Image
-                  src={LocationIcon}
-                  alt="location"
-                  className={styles.locationImg}
-                  onClick={() => {
-                    getLocation()
-                    streetRef?.current?.focus()
-                  }}
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault()
-                      e.stopPropagation()
-                      getLocation()
-                      setTimeout(() => {
-                        streetRef?.current?.focus()
-                      }, 50)
-                    }
-                  }}
-                />
-              </div>
-              <div>
-                {ShowAutoAddress && (
-                  <div className={styles['dropdown']}>
-                    {suggestions.map((suggestion, index) => (
-                      <p
-                        onClick={() =>
-                          handleSelectAddressTwo(
-                            suggestion.description,
-                            suggestion.place_id,
-                          )
-                        }
-                        key={index}
-                      >
-                        {suggestion.description}
-                      </p>
-                    ))}
-                  </div>
-                )}
-              </div>
-              {ShowDropdown && dropdownList.length !== 0 && (
-                <div className={styles['dropdown']}>
-                  {dropdownList.map((location) => {
-                    return location.formatted_address ? (
-                      <p
-                        onClick={() => {
-                          handleSelectAddress(location)
-                        }}
-                        key={location.place_id}
-                      >
-                        {location.formatted_address}
-                      </p>
-                    ) : null
-                  })}
-                </div>
-              )}
-              <p className={styles['helper-text']}>{data.street.error}</p>
-            </div>
-            <section className={styles['two-column-grid']}>
-              <div
-                className={`${styles['input-box']} ${
-                  data.society.error ? styles['input-box-error'] : ''
-                }`}
-              >
-                <label className={styles['info-container']}>
-                  <span>Society</span>
-
-                  <CustomizedTooltips2
-                    width={273}
-                    placement="right"
-                    title="Society is where community events are organized.  It could be an apartment complex, row of houses or neighbourhood, typically within walking distance.  It should ideally be between 20 and 2000 individual addresses."
-                  >
-                    <Image
-                      height={18}
-                      width={18}
-                      src={InfoIcon}
-                      alt="info-icon"
-                    />
-                  </CustomizedTooltips2>
-                </label>
-
-                <input
-                  type="text"
-                  placeholder={`Building Name`}
-                  value={data.society.value}
-                  required={listingModalData.type === listingTypes.PLACE}
-                  name="society"
-                  onChange={handleInputChange}
-                  ref={societyRef}
-                />
-                <p className={styles['helper-text']}>{data.society.error}</p>
-              </div>
-              <div
-                className={`${styles['input-box']} ${
-                  data.locality.error ? styles['input-box-error'] : ''
-                }`}
-              >
-                <label>Locality</label>
-                <input
-                  type="text"
-                  placeholder={`Locality`}
-                  value={data.locality.value}
-                  required={listingModalData.type === listingTypes.PLACE}
-                  name="locality"
-                  onChange={handleInputChange}
-                  ref={localityRef}
-                />
-                <p className={styles['helper-text']}>{data.locality.error}</p>
-              </div>
-            </section>
-            <section className={styles['two-column-grid']}>
-              <div
-                className={`${styles['input-box']} ${
-                  data.city.error ? styles['input-box-error'] : ''
-                }`}
-              >
-                <label>City</label>
-                <input
-                  type="text"
-                  placeholder={`City Name`}
-                  required
-                  value={data.city.value}
-                  name="city"
-                  ref={cityRef}
-                  onChange={handleInputChange}
-                />
-                <p className={styles['helper-text']}>{data.city.error}</p>
-              </div>
-
-              <div className={styles['pincode-input-box']}>
-                <div className={styles['input-box']}>
-                  <label>Postal Code</label>
+          {data.virtual.value === true ? (
+            <>
+              <div className={styles['input-box']}>
+                <label>URL</label>
+                <div
+                  className={` ${styles['street-input-container']}  ${
+                    data.url.error ? styles['input-box-error'] : ''
+                  }`}
+                >
                   <input
                     type="text"
-                    placeholder={`Postal Code`}
-                    value={data.post_code.value}
-                    required={listingModalData.type === listingTypes.PLACE}
-                    name="post_code"
+                    placeholder={`Zoom, YouTube Live, Facebook Live, etc.`}
+                    value={data.url.value}
+                    name="url"
+                    required
                     onChange={handleInputChange}
-                    ref={postcodeRef}
+                    ref={urlRef}
                   />
-                  <p className={styles['helper-text']}>
-                    {data.post_code.error}
-                  </p>
                 </div>
-
-                <div className={styles['input-box']}>
+                <p className={styles['helper-text']}>{data.url.error}</p>
+              </div>
+              <div className={styles['input-box']}>
+                <label>Description</label>
+                <div
+                  className={` ${styles['street-input-container']}  ${
+                    data.description.error ? styles['input-box-error'] : ''
+                  }`}
+                >
+                  <textarea
+                    placeholder={`This could be sent out to registered participants.  You may include instructions to access, etc.`}
+                    value={data.description.value}
+                    name="description"
+                    required
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <p className={styles['helper-text']}>{data.description.error}</p>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Street Address */}
+              <div className={styles['input-box']}>
+                <label>Street Address</label>
+                <div
+                  className={` ${styles['street-input-container']}  ${
+                    data.street.error ? styles['input-box-error'] : ''
+                  }`}
+                >
+                  <input
+                    type="text"
+                    placeholder={`Enter address or click on GPS icon to the right`}
+                    value={data.street.value}
+                    name="street"
+                    required={listingModalData.type === listingTypes.PLACE}
+                    onChange={handleInputChange}
+                    ref={streetRef}
+                  />
+                  <Image
+                    src={LocationIcon}
+                    alt="location"
+                    className={styles.locationImg}
+                    onClick={() => {
+                      getLocation()
+                      streetRef?.current?.focus()
+                    }}
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        getLocation()
+                        setTimeout(() => {
+                          streetRef?.current?.focus()
+                        }, 50)
+                      }
+                    }}
+                  />
+                </div>
+                <div>
+                  {ShowAutoAddress && (
+                    <div className={styles['dropdown']}>
+                      {suggestions.map((suggestion, index) => (
+                        <p
+                          onClick={() =>
+                            handleSelectAddressTwo(
+                              suggestion.description,
+                              suggestion.place_id,
+                            )
+                          }
+                          key={index}
+                        >
+                          {suggestion.description}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                {ShowDropdown && dropdownList.length !== 0 && (
+                  <div className={styles['dropdown']}>
+                    {dropdownList.map((location) => {
+                      return location.formatted_address ? (
+                        <p
+                          onClick={() => {
+                            handleSelectAddress(location)
+                          }}
+                          key={location.place_id}
+                        >
+                          {location.formatted_address}
+                        </p>
+                      ) : null
+                    })}
+                  </div>
+                )}
+                <p className={styles['helper-text']}>{data.street.error}</p>
+              </div>
+              <section className={styles['two-column-grid']}>
+                <div
+                  className={`${styles['input-box']} ${
+                    data.society.error ? styles['input-box-error'] : ''
+                  }`}
+                >
                   <label className={styles['info-container']}>
-                    <span>GPS PIN</span>
+                    <span>Society</span>
 
                     <CustomizedTooltips2
-                      width={287}
-                      placement="bottom-end"
-                      title="GPS PIN Code is the mapping as per Google Maps.  Postal Code is the Post Office that delivers to this address.  In some cases, these two may be different.  Clicking on the GPS icon updates only the GPS PIN Code, not the Postal Code."
+                      width={273}
+                      placement="right"
+                      title="Society is where community events are organized.  It could be an apartment complex, row of houses or neighbourhood, typically within walking distance.  It should ideally be between 20 and 2000 individual addresses."
                     >
                       <Image
                         height={18}
@@ -889,56 +947,142 @@ const ListingAddressEditModal: React.FC<Props> = ({
                       />
                     </CustomizedTooltips2>
                   </label>
+
                   <input
                     type="text"
-                    placeholder={`GPS PIN Code`}
-                    value={data.pin_code.value}
+                    placeholder={`Building Name`}
+                    value={data.society.value}
                     required={listingModalData.type === listingTypes.PLACE}
-                    name="pin_code"
+                    name="society"
                     onChange={handleInputChange}
-                    ref={pincodeRef}
+                    ref={societyRef}
                   />
-                  <p className={styles['helper-text']}>{data.pin_code.error}</p>
+                  <p className={styles['helper-text']}>{data.society.error}</p>
                 </div>
-              </div>
-            </section>
-            <section className={styles['two-column-grid']}>
-              <div
-                className={`${styles['input-box']} ${
-                  data.state.error ? styles['input-box-error'] : ''
-                }`}
-              >
-                <label>State</label>
-                <input
-                  type="text"
-                  placeholder={`State Name`}
-                  required
-                  value={data.state.value}
-                  name="state"
-                  ref={stateRef}
-                  onChange={handleInputChange}
-                />
-                <p className={styles['helper-text']}>{data.state.error}</p>
-              </div>
-              <div
-                className={`${styles['input-box']} ${
-                  data.country.error ? styles['input-box-error'] : ''
-                }`}
-              >
-                <label>Country</label>
-                <input
-                  type="text"
-                  placeholder={`Country Name`}
-                  required
-                  value={data.country.value}
-                  ref={countryRef}
-                  name="country"
-                  onChange={handleInputChange}
-                />
-                <p className={styles['helper-text']}>{data.country.error}</p>
-              </div>
-            </section>
-          </>
+                <div
+                  className={`${styles['input-box']} ${
+                    data.locality.error ? styles['input-box-error'] : ''
+                  }`}
+                >
+                  <label>Locality</label>
+                  <input
+                    type="text"
+                    placeholder={`Locality`}
+                    value={data.locality.value}
+                    required={listingModalData.type === listingTypes.PLACE}
+                    name="locality"
+                    onChange={handleInputChange}
+                    ref={localityRef}
+                  />
+                  <p className={styles['helper-text']}>{data.locality.error}</p>
+                </div>
+              </section>
+              <section className={styles['two-column-grid']}>
+                <div
+                  className={`${styles['input-box']} ${
+                    data.city.error ? styles['input-box-error'] : ''
+                  }`}
+                >
+                  <label>City</label>
+                  <input
+                    type="text"
+                    placeholder={`City Name`}
+                    required
+                    value={data.city.value}
+                    name="city"
+                    ref={cityRef}
+                    onChange={handleInputChange}
+                  />
+                  <p className={styles['helper-text']}>{data.city.error}</p>
+                </div>
+
+                <div className={styles['pincode-input-box']}>
+                  <div className={styles['input-box']}>
+                    <label>Postal Code</label>
+                    <input
+                      type="text"
+                      placeholder={`Postal Code`}
+                      value={data.post_code.value}
+                      required={listingModalData.type === listingTypes.PLACE}
+                      name="post_code"
+                      onChange={handleInputChange}
+                      ref={postcodeRef}
+                    />
+                    <p className={styles['helper-text']}>
+                      {data.post_code.error}
+                    </p>
+                  </div>
+
+                  <div className={styles['input-box']}>
+                    <label className={styles['info-container']}>
+                      <span>GPS PIN</span>
+
+                      <CustomizedTooltips2
+                        width={287}
+                        placement="bottom-end"
+                        title="GPS PIN Code is the mapping as per Google Maps.  Postal Code is the Post Office that delivers to this address.  In some cases, these two may be different.  Clicking on the GPS icon updates only the GPS PIN Code, not the Postal Code."
+                      >
+                        <Image
+                          height={18}
+                          width={18}
+                          src={InfoIcon}
+                          alt="info-icon"
+                        />
+                      </CustomizedTooltips2>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder={`GPS PIN Code`}
+                      value={data.pin_code.value}
+                      required={listingModalData.type === listingTypes.PLACE}
+                      name="pin_code"
+                      onChange={handleInputChange}
+                      ref={pincodeRef}
+                    />
+                    <p className={styles['helper-text']}>
+                      {data.pin_code.error}
+                    </p>
+                  </div>
+                </div>
+              </section>
+              <section className={styles['two-column-grid']}>
+                <div
+                  className={`${styles['input-box']} ${
+                    data.state.error ? styles['input-box-error'] : ''
+                  }`}
+                >
+                  <label>State</label>
+                  <input
+                    type="text"
+                    placeholder={`State Name`}
+                    required
+                    value={data.state.value}
+                    name="state"
+                    ref={stateRef}
+                    onChange={handleInputChange}
+                  />
+                  <p className={styles['helper-text']}>{data.state.error}</p>
+                </div>
+                <div
+                  className={`${styles['input-box']} ${
+                    data.country.error ? styles['input-box-error'] : ''
+                  }`}
+                >
+                  <label>Country</label>
+                  <input
+                    type="text"
+                    placeholder={`Country Name`}
+                    required
+                    value={data.country.value}
+                    ref={countryRef}
+                    name="country"
+                    onChange={handleInputChange}
+                  />
+                  <p className={styles['helper-text']}>{data.country.error}</p>
+                </div>
+              </section>
+            </>
+          )}
         </section>
 
         <footer className={styles['footer']}>

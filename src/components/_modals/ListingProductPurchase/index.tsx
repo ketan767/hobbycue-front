@@ -62,7 +62,8 @@ const ListingProductPurchase: React.FC<Props> = ({
     _id?: string
     variant_tag: string
     variations: { name: string; value: string; quantity: number }[]
-  }>({ variant_tag: '', variations: [] })
+    note: string
+  }>({ variant_tag: '', variations: [], note: '' })
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -117,6 +118,10 @@ const ListingProductPurchase: React.FC<Props> = ({
       })
     }
     console.log('res', res?.data.data.listing)
+
+    if(listingModalData&&listingModalData.click_url){
+      window.open(listingModalData.click_url, '_blank', 'noopener,noreferrer')
+    }
 
     if (onComplete) onComplete()
     else {
@@ -341,6 +346,16 @@ const ListingProductPurchase: React.FC<Props> = ({
 
         <footer className={styles['footer']}>
           <div className={styles['price']}>
+            <div className={styles['note']}>
+              <p>Note</p>
+              <textarea
+                value={data.note}
+                onChange={(e) =>
+                  setData((prev) => ({ ...prev, note: e.target.value }))
+                }
+                placeholder="This information will be sent to the Event Admin"
+              />
+            </div>
             <p>
               {
                 <Image
