@@ -119,6 +119,10 @@ const ListingProductPurchase: React.FC<Props> = ({
     }
     console.log('res', res?.data.data.listing)
 
+    if(listingModalData&&listingModalData.click_url){
+      window.open(listingModalData.click_url, '_blank', 'noopener,noreferrer')
+    }
+
     if (onComplete) onComplete()
     else {
       setSnackbar({

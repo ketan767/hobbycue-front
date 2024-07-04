@@ -258,6 +258,20 @@ const ListingHeader: React.FC<Props> = ({
     }
   }
 
+  const handleCtaText = (ctaText:string) => {
+    if(ctaText==='Buy Now'){
+      if(data.click_url){
+      window.open(data.click_url, '_blank', 'noopener,noreferrer')
+      }else{
+        setSnackbar({
+          type:'warning',
+          display:true,
+          message:'No Buy Now URL available'
+        })
+      }
+    }
+  }
+
   const handleShare = () => {
     dispatch(updateShareUrl(window.location.href))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
@@ -377,7 +391,7 @@ const ListingHeader: React.FC<Props> = ({
     button = (
       <FilledButton
         className={styles.contactBtn}
-        onClick={isEditMode ? handleUpdateCTA : handleRegister}
+        onClick={isEditMode ? handleUpdateCTA :()=> handleCtaText(ctaText)}
       >
         <p>{ctaText}</p>
         {isEditMode && (

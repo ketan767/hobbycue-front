@@ -14,6 +14,7 @@ import InputSelect from '@/components/_formElements/Select/Select'
 import { DropdownOption } from '../../CreatePost/Dropdown/DropdownOption'
 import DownArrow from '@/assets/svg/chevron-down.svg'
 import UpArrow from '@/assets/svg/chevron-up.svg'
+import { getMetadata } from '@/services/post.service'
 
 type Props = {
   onComplete?: () => void
@@ -45,6 +46,42 @@ const ListingCTAModal: React.FC<Props> = ({
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [cta, setCta] = useState('Contact')
+  const [url, setUrl] = useState('')
+  const [metaData, setMetaData] = useState({
+    title: '',
+    description: '',
+    image: '',
+    icon: '',
+    url: '',
+  })
+
+  console.log({ metaData })
+
+  useEffect(() => {
+    if (url) {
+      try {
+        const regex =
+          /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
+        const link = url.match(regex)
+        if (link) {
+          setUrl(link[0])
+        }
+        if (link) {
+          getMetadata(link[0])
+            .then((res: any) => {
+              setMetaData(res?.res?.data.data.data)
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+      } catch (error) {
+        console.log({ error })
+      }
+    }
+  }, [url])
+
+  // we may add the URL Y/N pagetypes in the list as well
   const [list, setList] = useState<{ name: string; description: string }[]>([
     { name: 'Contact', description: 'Opens a Contact or Message dialogue' },
     { name: 'Claim', description: 'Allows others to Claim this Page' },
@@ -64,22 +101,29 @@ const ListingCTAModal: React.FC<Props> = ({
   }
   useEffect(() => {
     if (
-      propData &&
-      propData.currentListing &&
-      propData.currentListing.cta_text
+      listingModalData &&
+      listingModalData.cta_text
     ) {
-      setCta(propData.currentListing.cta_text)
+      setCta(listingModalData.cta_text)
     }
-  }, [propData])
+    if (
+      listingModalData && 
+      listingModalData.click_url
+    ) {
+      setUrl(listingModalData.click_url)
+    }
+  }, [listingModalData]);
 
   const handleSubmit = async () => {
     setSubmitBtnLoading(true)
     const { err, res } = await updateListing(listingModalData._id, {
       cta_text: cta,
+      click_url: url,
     })
     const updatedData = {
       ...listingModalData,
       cta_text: res?.data.data.listing.cta_text,
+      click_url: res?.data.data.listing.click_url,
     }
     dispatch(updateListingModalData(updatedData))
     if (err) return console.log(err)
@@ -136,25 +180,6 @@ const ListingCTAModal: React.FC<Props> = ({
         <hr className={styles['modal-hr']} />
 
         <section className={styles['body']}>
-          {/* <InputSelect className={styles['cta-selector']} value={cta}>
-            {['Claim', 'Contact', listingModalData?.type === 3 && 'Register']
-              .filter(Boolean)
-              .map((str) => ({ value: str, display: str }))
-              .map((item: any, idx) => {
-                return (
-                  <>
-                    <DropdownOption
-                      type={'text'}
-                      className={styles['option']}
-                      {...item}
-                      key={idx}
-                      currentValue={cta}
-                      onChange={(val: any) => updateCta(val)}
-                    />
-                  </>
-                )
-              })}
-          </InputSelect> */}
           <div
             className={styles['input-box']}
             style={value?.length === 0 || !value ? { marginTop: '1rem' } : {}}
@@ -270,6 +295,27 @@ const ListingCTAModal: React.FC<Props> = ({
               <p className={styles.error}>{error}</p>
             </FormControl>
           </div>
+          {(cta === 'Register' || cta === 'Buy Now') && (
+            <div className={styles['input-box']}>
+              <label>Click URL</label>
+              <input
+                value={url}
+                onChange={(e) => {
+                  setUrl(e.target.value)
+                }}
+                type="text"
+              />
+            </div>
+          )}
+          {(cta === 'Register' || cta === 'Buy Now') && (metaData.title && metaData.title!=='') && (
+            <div className={styles['metadata']}>
+              <img src={metaData.image ?? metaData.icon ?? ''} alt="" />
+              <div>
+                <h5>{metaData.title}</h5>
+                <p>{metaData.description}</p>
+              </div>
+            </div>
+          )}
         </section>
 
         <footer className={styles['footer']}>
