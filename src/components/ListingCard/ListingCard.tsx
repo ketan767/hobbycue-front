@@ -9,12 +9,10 @@ import People from '@/assets/svg/People.svg'
 import Place from '@/assets/svg/Place.svg'
 import Program from '@/assets/svg/Program.svg'
 import { useMediaQuery } from '@mui/material'
-import {useSelector} from 'react-redux'
+import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { Height } from '@mui/icons-material'
 import { updateListingLayoutMode } from '@/redux/slices/site'
-// import { useSelector } from 'react-redux'
-// import { RootState } from '@/redux/store'
 
 type Props = {
   data: any

@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton'
 // import SearchIcon from '@mui/icons-material/Search'
 
 import Image from 'next/image'
-import { searchPages } from '@/services/listing.service'
+import { getListingPages, searchPages } from '@/services/listing.service'
 import {
   setUserSearchResults,
   setTypeResultOne,
@@ -333,6 +333,23 @@ export const Navbar: React.FC<Props> = ({}) => {
     }
   }
 
+  const ExploreEvents = async () => {
+    const { res: EventRes, err: EventErr } = await getListingPages(
+      `type=3&sort=-createdAt`,
+    )
+
+    const EventPages = EventRes?.data.data?.listings
+    console.warn('EventPagesssssssssssssss', EventPages)
+
+    dispatch(
+      setTypeResultThree({
+        data: EventPages,
+        message: 'Search completed successfully.',
+        success: true,
+      }),
+    )
+  }
+
   const handleOutsideClick = (event: MouseEvent) => {
     if (
       mobileSearchRef.current &&
@@ -623,10 +640,8 @@ export const Navbar: React.FC<Props> = ({}) => {
                         <Link
                           href={'/search'}
                           className={styles['hobbiescategory']}
-                          onClick={(e) => {
+                          onClick={async (e) => {
                             e.preventDefault()
-                            dispatch(resetSearch())
-                            setShowDropdown(null)
                             setData((prevData) => ({
                               ...prevData,
                               search: {
@@ -634,6 +649,10 @@ export const Navbar: React.FC<Props> = ({}) => {
                                 value: '',
                               },
                             }))
+                            dispatch(resetSearch())
+                            await ExploreEvents()
+                            setShowDropdown(null)
+
                             dispatch(showAllEventTrue())
                             dispatch(setExplore(true))
                             router.push('/search')

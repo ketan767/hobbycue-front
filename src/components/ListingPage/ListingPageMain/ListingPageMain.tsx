@@ -517,7 +517,7 @@ const ListingPageMain: React.FC<Props> = ({
                 styles['heading'] + ` ${hobbyError && styles['error-label']}`
               }
             >
-              Hobbies
+              Interests
             </h4>
             {hobbyError && showHobbies && (
               <p

@@ -233,9 +233,9 @@ const ListingPageLayout: React.FC<Props> = ({
   const tabs: ListingPageTabs[] = [
     'home',
     'posts',
+    'events',
     'media',
     'reviews',
-    'events',
     'store',
     'orders',
   ]
