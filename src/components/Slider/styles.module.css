@@ -13,7 +13,7 @@
   object-fit: contain;
   transition: 0.3s ease-in-out;
   position: relative; 
-  
+  background-color: #1e1e1e;
   top: 0;
   left: 0;
 }
