@@ -27,7 +27,7 @@ type Props = {
 
 const CommunityLayout: React.FC<Props> = ({ data }) => {
   console.warn('dataaaaaaaaaaaaaaaaaaaaaadaata', data.metadata)
-
+  console.warn('postdata with contentttt', data.postsData?.content)
   const router = useRouter()
   const [postId, setPostId] = useState<string | null>(null)
 
@@ -77,7 +77,6 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
 
   const convertHtmlToPlainText = (htmlContent: string): string => {
     if (typeof document === 'undefined') {
-      // If document is not available (e.g., during SSR), return the original HTML content or handle appropriately
       return htmlContent
     }
 
@@ -90,11 +89,10 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
       links[i].innerText = links[i].href
     }
 
-    // Strip HTML tags but keep the URLs
     return tempElement.innerText
   }
 
-  const post_descripton = convertHtmlToPlainText(postData?.content)
+  const post_descripton = convertHtmlToPlainText(data.postsData?.content)
 
   console.warn('postdesccccccccccccccccc', post_descripton)
   useEffect(() => {
@@ -131,7 +129,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
           content={`${
             data.metadata?.data?.description
               ? data.metadata?.data?.description
-              : postData?.content
+              : data.postsData?.content
               ? post_descripton
               : ''
           }`}
@@ -201,7 +199,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     props: {
       data: {
         pageData: null,
-        postsData: res.data.data.posts[0],
+        postsData: res?.data?.data?.posts[0],
         mediaData: null,
         reviewsData: null,
         eventsData: null,

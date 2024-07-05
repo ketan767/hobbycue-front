@@ -317,15 +317,6 @@ const ListingAddressEditModal: React.FC<Props> = ({
           }
         })
       }
-      if (!validateUrl(data.url.value)) {
-        urlRef.current?.focus()
-        return setData((prev) => {
-          return {
-            ...prev,
-            url: { ...prev.url, error: 'Enter a valid url!' },
-          }
-        })
-      }
     }
     const jsonData = {
       street: data.street.value,
@@ -340,7 +331,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
       longitude: data.longitude.value,
       url: data.url.value,
       description: data.description.value,
-      virtual: data.virtual.value
+      virtual: data.virtual.value,
     }
     setSubmitBtnLoading(true)
     const { err, res } = await updateListingAddress(
@@ -795,15 +786,17 @@ const ListingAddressEditModal: React.FC<Props> = ({
         {/* Modal Header */}
         <header className={styles['header']}>
           <h4 className={styles['heading']}>{'Location'}</h4>
-          <div
-            className={
-              styles['virtual-container'] +
-              ` ${!onBoarding && styles['at-center-and-reverse']}`
-            }
-          >
-            <p>Virtual</p>
-            {data.virtual.value ? openVirtualIcon : closedVirtualIcon}
-          </div>
+          {(listingModalData?.type === 3 || listingModalData?.type === 4) && (
+            <div
+              className={
+                styles['virtual-container'] +
+                ` ${!onBoarding && styles['at-center-and-reverse']}`
+              }
+            >
+              <p>Virtual</p>
+              {data.virtual.value ? openVirtualIcon : closedVirtualIcon}
+            </div>
+          )}
         </header>
 
         <hr className={styles['modal-hr']} />
@@ -845,7 +838,9 @@ const ListingAddressEditModal: React.FC<Props> = ({
                     onChange={handleInputChange}
                   />
                 </div>
-                <p className={styles['helper-text']}>{data.description.error}</p>
+                <p className={styles['helper-text']}>
+                  {data.description.error}
+                </p>
               </div>
             </>
           ) : (

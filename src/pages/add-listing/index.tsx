@@ -29,10 +29,7 @@ const AddListing: React.FC<Props> = (props) => {
   const [data, setData] = useState<any[]>([])
   const handleClick = (type: ListingPages) => {
     console.warn('lisrihhnr', type)
-    if (type === 4) {
-      showFeatureUnderDevelopment()
-      return
-    }
+
     if (isLoggedIn && user.is_onboarded) {
       dispatch(updateListingModalData({ type }))
       dispatch(openModal({ type: 'listing-type-edit', closable: true }))
@@ -101,7 +98,7 @@ const AddListing: React.FC<Props> = (props) => {
               </clipPath>
             </defs>
           </svg>
-          <span>Add Your Listing</span>
+          <span>Add Listing</span>
         </h1>
         <p className={styles['select-text']}>Select Page type</p>
         <div className={styles['cards-wrapper']}>
