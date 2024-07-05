@@ -189,10 +189,11 @@ const ListingHeader: React.FC<Props> = ({
         hasError = true
         setContactInfoErr?.(true)
       }
-      if (!data._address.city) {
-        hasError = true
+      if (!data?._address?.url && !data?._address?.city) {
         setLocationErr?.(true)
+        hasError = true
       }
+
       if (hasError) {
         setSnackbar({
           display: true,
@@ -258,15 +259,15 @@ const ListingHeader: React.FC<Props> = ({
     }
   }
 
-  const handleCtaText = (ctaText:string) => {
-    if(ctaText==='Buy Now'){
-      if(data.click_url){
-      window.open(data.click_url, '_blank', 'noopener,noreferrer')
-      }else{
+  const handleCtaText = (ctaText: string) => {
+    if (ctaText === 'Buy Now') {
+      if (data.click_url) {
+        window.open(data.click_url, '_blank', 'noopener,noreferrer')
+      } else {
         setSnackbar({
-          type:'warning',
-          display:true,
-          message:'No Buy Now URL available'
+          type: 'warning',
+          display: true,
+          message: 'No Buy Now URL available',
         })
       }
     }
@@ -391,7 +392,7 @@ const ListingHeader: React.FC<Props> = ({
     button = (
       <FilledButton
         className={styles.contactBtn}
-        onClick={isEditMode ? handleUpdateCTA :()=> handleCtaText(ctaText)}
+        onClick={isEditMode ? handleUpdateCTA : () => handleCtaText(ctaText)}
       >
         <p>{ctaText}</p>
         {isEditMode && (
@@ -651,51 +652,53 @@ const ListingHeader: React.FC<Props> = ({
                       data?.event_weekdays?.length > 0 ? (
                         data.event_weekdays.map(
                           (obj: any, i: number, arr: any[]) =>
-                            i>0&&!showDays?null:
-                            (
-                            <p
-                              key={i}
-                              className={
-                                isEditMode
-                                  ? styles.time
-                                  : styles.editTime +
-                                    ` ${
-                                      i !== 0 && showDays === false
-                                        ? styles['hide']
-                                        : ''
-                                    }`
-                              }
-                            >
-                              {obj?.from_day} - {obj?.to_day}, {obj?.from_time}
-                              {isMobile && showDays === false ? (
-                                <>
-                                  ...{' '}
-                                  <span
-                                    onClick={() => setShowDays((prev) => !prev)}
-                                  >
-                                    more
-                                  </span>
-                                </>
-                              ) : (
-                                <>
-                                  {' '}
-                                  - {obj?.to_time}
-                                  {arr.length - 1 === i && isMobile && (
-                                    <>
-                                      {' '}
-                                      <span
-                                        onClick={() =>
-                                          setShowDays((prev) => !prev)
-                                        }
-                                      >
-                                        Less
-                                      </span>
-                                    </>
-                                  )}
-                                </>
-                              )}
-                            </p>
-                          ),
+                            i > 0 && !showDays ? null : (
+                              <p
+                                key={i}
+                                className={
+                                  isEditMode
+                                    ? styles.time
+                                    : styles.editTime +
+                                      ` ${
+                                        i !== 0 && showDays === false
+                                          ? styles['hide']
+                                          : ''
+                                      }`
+                                }
+                              >
+                                {obj?.from_day} - {obj?.to_day},{' '}
+                                {obj?.from_time}
+                                {isMobile && showDays === false ? (
+                                  <>
+                                    ...{' '}
+                                    <span
+                                      onClick={() =>
+                                        setShowDays((prev) => !prev)
+                                      }
+                                    >
+                                      more
+                                    </span>
+                                  </>
+                                ) : (
+                                  <>
+                                    {' '}
+                                    - {obj?.to_time}
+                                    {arr.length - 1 === i && isMobile && (
+                                      <>
+                                        {' '}
+                                        <span
+                                          onClick={() =>
+                                            setShowDays((prev) => !prev)
+                                          }
+                                        >
+                                          Less
+                                        </span>
+                                      </>
+                                    )}
+                                  </>
+                                )}
+                              </p>
+                            ),
                         )
                       ) : (
                         <p

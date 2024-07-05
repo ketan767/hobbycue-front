@@ -117,7 +117,10 @@ const ListingPageLayout: React.FC<Props> = ({
         setContactInfoErr(true)
         hasError = true
       }
-      if (!data.pageData._address.city) {
+      if (
+        data.pageData._address?.url?.length === 0 ||
+        !data.pageData._address?.city
+      ) {
         setLocationErr(true)
         hasError = true
       }
@@ -158,8 +161,6 @@ const ListingPageLayout: React.FC<Props> = ({
       dispatch(updateListingLayoutMode('view'))
     }
   }
-
-  console.log('dataa', data)
 
   useEffect(() => {
     const fetchData = async () => {
