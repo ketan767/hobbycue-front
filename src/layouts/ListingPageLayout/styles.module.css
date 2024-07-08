@@ -126,6 +126,32 @@
   cursor: default;
 }
 
+.event-tab{
+  position: relative;
+}
+
+.event-count{
+  display: flex;
+min-width: 19px;
+padding: 3px;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+gap: 10px;
+position: absolute;
+border-radius: 2px;
+background: var(--Primary-Full, #8064A2);
+color: var(--background-white, #FFF);
+font-size: 11px;
+font-style: normal;
+font-weight: 500;
+line-height: 12px; /* 109.091% */
+outline: none;
+border: none;
+right: 4px;
+top: -2px;
+}
+
 @media screen and (max-width: 1100px) {
   .other-data-wrapper-mobile {
     display: flex !important;
@@ -186,6 +212,29 @@
   .mobile-mt-0{
     margin-top: 0;
   }
+
+  .event-count{
+    color: var(--background-white, #FFF);
+font-family: Inter;
+font-size: 10px;
+font-style: normal;
+font-weight: 500;
+line-height: 12px; /* 120% */
+display: flex;
+min-width: 15px;
+height: 15px;
+padding: 2px;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+gap: 10px;
+flex-shrink: 0;
+right: -8px;
+}
+.navigation-tabs{
+  margin-top: 0;
+  padding-top: 14px;
+}
 }
 .customSnackbar {
   border-radius: 8px;

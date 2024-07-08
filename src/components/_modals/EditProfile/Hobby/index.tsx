@@ -1037,7 +1037,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
 
         <hr className={styles['modal-hr']} />
 
-        <section ref={bodyRef} className={`${styles['body']}`}>
+        <section ref={bodyRef} className={`${styles['body']} custom-scrollbar`}>
           <>
             <section className={styles['add-hobbies-wrapper']}>
               <section className={styles['added-hobby-list']}>

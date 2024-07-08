@@ -13,10 +13,11 @@ import ListingHomeTab from '@/components/ListingPage/ListingHomeTab/ListingHomeT
 import {
   updateListingLayoutMode,
   updateListingTypeModalMode,
+  updateTotalEvents,
 } from '@/redux/slices/site'
 import ListingHeaderSmall from '@/components/ListingPage/ListingHeader/ListingHeaderSmall'
 import { error } from 'console'
-import { getListingPages } from '@/services/listing.service'
+import { GetListingEvents, getListingPages } from '@/services/listing.service'
 import Snackbar from '@mui/material/Snackbar'
 import SnackbarContent from '@mui/material/SnackbarContent'
 import IconButton from '@mui/material/IconButton'
@@ -59,6 +60,7 @@ const ListingPageLayout: React.FC<Props> = ({
 
   const router = useRouter()
   const dispatch = useDispatch()
+  const [eventData, setEventData] = useState<any>(null)
   const [showSmallHeader, setShowSmallHeader] = useState(false)
   const [pageTypeErr, setpageTypeErr] = useState(false)
   const [hobbyError, setHobbyError] = useState(false)
@@ -67,7 +69,7 @@ const ListingPageLayout: React.FC<Props> = ({
   const [LocationErr, setLocationErr] = useState(false)
   const [snackBarOpen, setSnackBarOpen] = useState(false)
 
-  const { listingModalData, listingLayoutMode } = useSelector(
+  const { listingModalData, listingLayoutMode, totalEvents } = useSelector(
     (state: RootState) => state.site,
   )
 
@@ -160,6 +162,63 @@ const ListingPageLayout: React.FC<Props> = ({
   console.log('dataa', data)
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (data.pageData && data.pageData._id) {
+          const params = {
+            search_id: data.pageData._id.toString(),
+          }
+
+          const res = await GetListingEvents(params.search_id)
+
+          setEventData(res)
+          console.log('eventres', res)
+        }
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    fetchData()
+  }, [data])
+
+
+  const allListings = [
+    ...(eventData?.res?.data?.result ?? []).map(
+      (listings: any) => listings.listings,
+    ),
+    ...(eventData?.res?.data?.listingMap ?? []),
+  ];
+  
+
+  // Filter out duplicates based on the _id
+  const uniqueListings = allListings.filter(
+    (listing, index, self) =>
+      index === self.findIndex((t) => t._id === listing._id),
+  )
+
+  useEffect(()=>{
+  const now = new Date();
+  const sevenDaysFromNow = new Date(now);
+  sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
+  
+  const listingsWithin7Days = uniqueListings.filter(listing => {
+    if (!listing?.event_date_time?.to_date) return false;
+    let toDate;
+    if (listing?.event_date_time?.to_date.includes('T')) {
+      toDate = new Date(listing?.event_date_time?.to_date);
+    } else {
+      toDate = new Date(`${listing?.event_date_time?.to_date}T00:00:00`);
+    }
+    if (isNaN(toDate.getTime())) return false;
+    return toDate >= now && toDate <= sevenDaysFromNow;
+  });
+
+  dispatch(updateTotalEvents(listingsWithin7Days.length))
+
+  },[uniqueListings])
+
+  useEffect(() => {
     window.addEventListener('scroll', checkScroll)
 
     return () => window.removeEventListener('scroll', checkScroll)
@@ -218,8 +277,9 @@ const ListingPageLayout: React.FC<Props> = ({
                   <a
                     key={tab}
                     onClick={() => navigationTabs(tab)}
-                    className={activeTab === tab ? styles['active'] : ''}
+                    className={activeTab === tab ? styles['active'] : ''+` ${styles['event-tab']}`}
                   >
+                    {totalEvents>0&&<button className={styles['event-count']}>{totalEvents}</button>}
                     {tab.charAt(0).toUpperCase() + tab.slice(1)}
                   </a>
                 )
@@ -337,8 +397,9 @@ const ListingPageLayout: React.FC<Props> = ({
                     <a
                       key={tab}
                       onClick={() => navigationTabs(tab)}
-                      className={activeTab === tab ? styles['active'] : ''}
+                      className={activeTab === tab ? styles['active'] : ''+` ${styles['event-tab']}`}
                     >
+                    {totalEvents>0&&<button className={styles['event-count']}>{totalEvents}</button>}
                       {tab.charAt(0).toUpperCase() + tab.slice(1)}
                     </a>
                   )

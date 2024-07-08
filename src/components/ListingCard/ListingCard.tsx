@@ -13,8 +13,8 @@ import {useSelector} from 'react-redux'
 import { RootState } from '@/redux/store'
 import { Height } from '@mui/icons-material'
 import { updateListingLayoutMode } from '@/redux/slices/site'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/redux/store'
+// import { useSelector } from 'react-redux'
+// import { RootState } from '@/redux/store'
 
 type Props = {
   data: any
