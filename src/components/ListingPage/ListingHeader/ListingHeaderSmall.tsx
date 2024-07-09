@@ -55,7 +55,7 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
   const dispatch = useDispatch()
   const router = useRouter()
 
-  const { listingLayoutMode } = useSelector((state: any) => state.site)
+  const { listingLayoutMode,totalEvents } = useSelector((state: any) => state.site)
   const { isLoggedIn, user, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
   )
@@ -686,8 +686,9 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                     <Link
                       key={tab}
                       href={`/page/${router.query.page_url}/${tab}`}
-                      className={activeTab === tab ? styles['active'] : ''}
+                      className={activeTab === tab ? styles['active'] : ''+` ${styles['event-tab']}`}
                     >
+                      {totalEvents>0&&<button className={styles['event-count']}>{totalEvents}</button>}
                       {tab.charAt(0).toUpperCase() + tab.slice(1)}
                     </Link>
                   )

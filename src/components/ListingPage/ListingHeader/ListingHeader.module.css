@@ -564,8 +564,38 @@
   box-shadow: 0px 8px 12px 0px rgba(147, 156, 163, 0.12), 0px 0px 2px 0px rgba(147, 156, 163, 0.36);
   padding-top: 2px;
 }
+
+.eventDate .date,
+.eventDate .time{
+  min-width: max-content;
+}
 }
 
+.event-tab{
+  position: relative;
+}
+
+.event-count{
+  display: flex;
+min-width: 19px;
+padding: 3px;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+gap: 10px;
+position: absolute;
+border-radius: 2px;
+background: var(--Primary-Full, #8064A2);
+color: var(--background-white, #FFF);
+font-size: 11px;
+font-style: normal;
+font-weight: 500;
+line-height: 12px; /* 109.091% */
+outline: none;
+border: none;
+right: 4px;
+top: -2px;
+}
 
 @media screen and (min-width: 1440px) {
   .container:has(.header).small .navigation-tabs{

@@ -98,6 +98,20 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
     }
   }
 
+  const allListings = [
+    ...(eventData?.res?.data?.result ?? []).map(
+      (listings: any) => listings.listings,
+    ),
+    ...(eventData?.res?.data?.listingMap ?? []),
+  ];
+  
+
+  // Filter out duplicates based on the _id
+  const uniqueListings = allListings.filter(
+    (listing, index, self) =>
+      index === self.findIndex((t) => t._id === listing._id),
+  )
+
   const plusIcon = (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -146,27 +160,10 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
             </div>
 
             {/* Combine both data sources */}
-            {(() => {
-              const allListings = [
-                ...eventData?.res?.data?.result.map(
-                  (listings: any) => listings.listings,
-                ),
-                ...eventData?.res?.data?.listingMap.map(
-                  (listings: any) => listings,
-                ),
-              ]
-
-              // Filter out duplicates based on the _id
-              const uniqueListings = allListings.filter(
-                (listing, index, self) =>
-                  index === self.findIndex((t) => t._id === listing._id),
-              )
-
-              // Map unique listings to ListingCard components
-              return uniqueListings.map((listing) => (
+            {uniqueListings.map((listing) => (
                 <ListingCard key={listing._id} data={listing} />
               ))
-            })()}
+            }
           </div>
         )}
       </main>
