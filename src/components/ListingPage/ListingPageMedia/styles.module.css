@@ -2,7 +2,6 @@
   display: flex;
   width: 100%;
   flex-direction: column;
-  gap: 12px;
 }
 
 .uploadContainer {
@@ -27,10 +26,12 @@
   display: grid;
   gap: 24px;
   grid-template-columns: 50% 50%;
+  
 }
 
 .uploadContainer>div {
   flex: 1;
+  margin-bottom: 12px;
 }
 
 .uploadButton {
@@ -212,7 +213,7 @@
 
 .medias{
   width: 100%;
-  aspect-ratio: 16 / 9;
+
   border-radius: 0px 0px 8px 8px;
 
 }

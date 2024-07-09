@@ -180,3 +180,26 @@ export const isVideoLink = (url: string) => {
   ];
   return videoRegex.some((regex) => regex.test(url));
 };
+
+export const convertDateToString = (date: string): string => {
+  const dateString = new Date(date).toString();
+  const day = dateString.slice(8, 10);
+  const month = dateString.slice(4, 7);
+  const year = dateString.slice(11, 15);
+  const monthNames: { [key: string]: string } = {
+    Jan: 'Jan',
+    Feb: 'Feb',
+    Mar: 'Mar',
+    Apr: 'Apr',
+    May: 'May',
+    Jun: 'Jun',
+    Jul: 'Jul',
+    Aug: 'Aug',
+    Sep: 'Sep',
+    Oct: 'Oct',
+    Nov: 'Nov',
+    Dec: 'Dec',
+  };
+  const monthName = monthNames[month];
+  return `${day} ${monthName} ${year}`;
+};

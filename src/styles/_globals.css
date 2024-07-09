@@ -497,6 +497,24 @@ select:-webkit-autofill {
   }
 }
 
+.custom-scrollbar-two {
+  transition: 0.6s;
+ 
+}
+.custom-scrollbar-two::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar-two::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.custom-scrollbar-two::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+
+
 .custom-scrollbar {
   transition: 0.6s;
 }

@@ -293,7 +293,7 @@
 
 .add-other {
   display: inline-flex;
-  padding: 12px 13px;
+  padding: 11px 13px;
   justify-content: center;
   align-items: center;
   border-radius: 8px;
@@ -305,12 +305,20 @@
   font-style: normal;
   font-weight: 600;
   line-height: 16px;
+  height: 40px;
   /* 114.286% */
   cursor: pointer;
 }
 
 .add-other:hover {
   filter: brightness(0.95);
+}
+
+.modal-hr {
+  height: 1px;
+  width: 100%;
+  flex-shrink: 0;
+  background-color: #CED4DA;
 }
 
 @media screen and (max-width: 1100px) {

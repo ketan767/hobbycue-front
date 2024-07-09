@@ -119,7 +119,7 @@ const ListingAddEvent: React.FC<Props> = ({
           />
         </header>
 
-        <hr className={styles['modal-hr']} />
+        <div className={styles['modal-hr']} />
 
         <section className={styles['body']}>
           <p className={styles['description']}>

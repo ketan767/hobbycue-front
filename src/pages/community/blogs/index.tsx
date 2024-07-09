@@ -4,44 +4,94 @@ import styles from '@/styles/Community.module.css'
 import { useSelector } from 'react-redux'
 import store, { RootState } from '@/redux/store'
 import { getAllPosts } from '@/services/post.service'
-import { updatePages, updatePosts } from '@/redux/slices/post'
+import { updateBlogs, updatePages, updatePosts } from '@/redux/slices/post'
 import PostCard from '@/components/PostCard/PostCard'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
 import { getListingPages } from '@/services/listing.service'
 import ListingCard from '@/components/ListingCard/ListingCard'
 import { useMediaQuery } from '@mui/material'
+import { getAllBlogs } from '@/services/blog.services'
+import BlogCard from '@/components/BlogCard/BlogCard'
 
 type Props = {}
 
 const CommunityBlogs: React.FC<Props> = ({}) => {
   const { activeProfile } = useSelector((state: any) => state.user)
-  const { allPages, pagesLoading } = useSelector(
-    (state: RootState) => state.post,
-  )
-  const isMobile = useMediaQuery('(max-width:1100px)');
+  const { allBlogs } = useSelector((state: RootState) => state.post)
+
+  function filterBlogsByHobbyDisplayNames(blogs: any, hobbyDisplayNames: any) {
+    return blogs.filter((blog: any) =>
+      blog._hobbies.some((hobby: any) =>
+        hobbyDisplayNames.includes(hobby.hobby.display),
+      ),
+    )
+  }
+
+  const getPost = async () => {
+    const params = new URLSearchParams(`populate=_hobbies,author`)
+
+    if (
+      !activeProfile?.data?._hobbies ||
+      activeProfile?.data?._hobbies.length === 0
+    )
+      return
+
+    const { err, res } = await getAllBlogs(`${params}`)
+    if (err) return console.log(err)
+    if (res?.data.success) {
+      const hobbyDisplayNames = activeProfile.data._hobbies.map(
+        (hobby: any) => hobby.hobby.display,
+      )
+
+      const filteredBlogs = filterBlogsByHobbyDisplayNames(
+        res.data.data.blog,
+        hobbyDisplayNames,
+      )
+      console.warn('filteredblogsssssssss', filteredBlogs)
+      store.dispatch(updateBlogs(filteredBlogs))
+    }
+  }
+
+  useEffect(() => {
+    getPost()
+  })
+
+  const isMobile = useMediaQuery('(max-width:1100px)')
 
   return (
     <>
       <CommunityPageLayout activeTab="blogs">
-        {/* <section className={styles['pages-container']}> */}
-        <main
-          className={`${styles['dual-section-wrapper']}`}
-        >
-          <div className={styles['no-posts-container']}>
-            <p>
-              This feature is under development. Come back soon to view this
-            </p>
-          </div>
-          {isMobile ? null : (
+        <section className={styles['blog-container']}>
+          {allBlogs?.length === 0 ? (
             <>
-              <div className={styles['no-posts-container']}></div>
-              <div className={styles['no-posts-container']}></div>
+              <div className={styles['no-posts-div']}>
+                <p className={styles['no-posts-text']}>No Blogs available</p>
+                <div
+                  style={{
+                    display: 'flex',
+                    flex: 1,
+                    justifyContent: 'center',
+                  }}
+                ></div>
+              </div>
+              <div className={styles['no-posts-div']}>
+                <p className={styles['no-posts-text']}>No Blogs available</p>
+                <div
+                  style={{
+                    display: 'flex',
+                    flex: 1,
+                    justifyContent: 'center',
+                  }}
+                ></div>
+              </div>
             </>
+          ) : (
+            allBlogs?.map((post: any) => {
+              return <BlogCard key={post._id} data={post} />
+            })
           )}
-        </main>
-
-        {/* </section> */}
+        </section>
       </CommunityPageLayout>
     </>
   )

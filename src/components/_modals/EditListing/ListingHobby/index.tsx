@@ -821,7 +821,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
 
         <hr className={styles['modal-hr']} />
 
-        <section ref={bodyRef} className={`${styles['body']} custom-scrollbar`}>
+        <section ref={bodyRef} className={`${styles['body']} `}>
           <>
             <section className={styles['add-hobbies-wrapper']}>
               {/* Hobbies List, that are already Added */}
