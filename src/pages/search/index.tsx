@@ -58,6 +58,14 @@ type EventData = {
   page_url: string
   page_type: []
 }
+type ProductData = {
+  profile_image: string
+  title: string
+  tagline: string
+  _address: { city: string }
+  page_url: string
+  page_type: []
+}
 type hobby = {
   _id: string
   profile_image: string | null
@@ -75,6 +83,7 @@ type SearchResultsProps = {
   placeResults: PlaceData[]
   EventResults: EventData[]
   hobbyResults: hobby[]
+  ProductResults: ProductData[]
 }
 
 const ExploreSidebar = () => {
@@ -93,6 +102,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
   placeResults,
   EventResults,
   hobbyResults,
+  ProductResults,
 }) => {
   const showAll = useSelector((state: RootState) => state.search.showAll)
   const showAllUsers = useSelector(
@@ -110,6 +120,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const showAllProducts = useSelector(
     (state: RootState) => state.search.showAllProducts,
   )
+  console.warn('productDataaaa', ProductResults)
   const showAllhobbies = useSelector(
     (state: RootState) => state.search.showAllHobbies,
   )
@@ -139,7 +150,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHidePlace(false)
       setHideEvent(false)
       setHideHobbies(false)
-      setHideProduct(true)
+      setHideProduct(false)
     } else if (showAllUsers === true) {
       setHideHobbies(true)
       setHidePeople(true)
@@ -191,6 +202,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
     showAllProducts,
     showAllUsers,
     showAllhobbies,
+    showAllProducts,
   ])
 
   const toggleShowAllusers = () => {
@@ -239,13 +251,14 @@ const MainContent: React.FC<SearchResultsProps> = ({
       peopleResults.length === 0 &&
       placeResults.length === 0 &&
       EventResults.length === 0 &&
+      ProductResults.length === 0 &&
       showAll) ||
       (searchResults.length === 0 && showAllUsers) ||
       (hobbyResults.length === 0 && showAllhobbies) ||
       (peopleResults.length === 0 && showAllPeople) ||
       (placeResults.length === 0 && showAllPlace) ||
       (EventResults.length === 0 && showAllEvent) ||
-      showAllProducts) &&
+      (ProductResults.length === 0 && showAllProducts)) &&
     searchLoading === false
 
   return (
@@ -619,6 +632,67 @@ const MainContent: React.FC<SearchResultsProps> = ({
               </div>
             </section>
           )}
+          {/* Product  */}
+          {!HideProduct &&
+            ProductResults.length > 0 &&
+            searchLoading === false && (
+              <section className={styles.userSection}>
+                <div className={styles.peopleItemsContainer}>
+                  <div className={styles.resultHeading}>products</div>
+                  {ProductResults.slice(0, showAllProducts ? undefined : 3).map(
+                    (page, index) => (
+                      <div
+                        className={styles.peopleItem}
+                        key={index}
+                        onClick={() => navigateToPage(page.page_url)}
+                      >
+                        <div className={styles.peopleAvatar}>
+                          {page.profile_image ? (
+                            <img
+                              src={page.profile_image}
+                              alt={`${page.title}'s `}
+                              width={64}
+                              height={64}
+                              className={styles.peopleavatarImage}
+                            />
+                          ) : (
+                            <div
+                              className={`${styles['people-img']} default-product-listing-icon`}
+                            ></div>
+                          )}
+                        </div>
+                        <div className={styles.userDetails}>
+                          <div className={styles.userName}>{page?.title}</div>
+                          <div className={styles.userTagline}>
+                            {page?.tagline || '\u00a0'}
+                          </div>
+                          <div className={styles.userLocation}>
+                            {page.page_type +
+                              (page._address?.city
+                                ? ` | ${page._address?.city}`
+                                : '') || '\u00a0'}
+                          </div>
+                        </div>
+                      </div>
+                    ),
+                  )}
+                  <div className={styles['view-more-btn-container']}>
+                    {showAllProducts
+                      ? undefined
+                      : (ProductResults.length > 3 ? (
+                          <button
+                            onClick={toggleShowAllproducts}
+                            className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                          >
+                            View More
+                          </button>
+                        ) : (
+                          ''
+                        )) || ''}
+                  </div>
+                </div>
+              </section>
+            )}
         </div>
       )}
     </main>
@@ -751,6 +825,9 @@ const Search: React.FC<Props> = ({ data, children }) => {
   const EventSearch = useSelector(
     (state: RootState) => state.search.typeResultThree.data,
   )
+  const ProductSearch = useSelector(
+    (state: RootState) => state.search.typeResultFour.data,
+  )
   const searchString = useSelector(
     (state: RootState) => state.search.searchString,
   )
@@ -788,6 +865,7 @@ const Search: React.FC<Props> = ({ data, children }) => {
           placeResults={PlaceSearch || []}
           EventResults={EventSearch || []}
           hobbyResults={hobbySearchResults || []}
+          ProductResults={ProductSearch || []}
         />
       </main>
       <aside className={styles['aside-two']}>

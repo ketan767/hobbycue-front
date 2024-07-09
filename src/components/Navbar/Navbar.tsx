@@ -25,6 +25,7 @@ import {
   resetSearch,
   setExplore,
   setSearchLoading,
+  setTypeResultFour,
 } from '@/redux/slices/search'
 import LogoFull from '@/assets/image/logo-full.svg'
 import LogoSmall from '@/assets/image/logo-small.png'
@@ -332,6 +333,37 @@ export const Navbar: React.FC<Props> = ({}) => {
       console.error('An error occurred during the combined search:', error)
     }
   }
+  const ExplorePeople = async () => {
+    const { res: PeopleRes, err: PeopleErr } = await getListingPages(
+      `type=1&sort=-createdAt`,
+    )
+
+    const PeoplePages = PeopleRes?.data.data?.listings
+
+    dispatch(
+      setTypeResultOne({
+        data: PeoplePages,
+        message: 'Search completed successfully.',
+        success: true,
+      }),
+    )
+  }
+
+  const ExplorePlaces = async () => {
+    const { res: PlacesRes, err: PlacesErr } = await getListingPages(
+      `type=2&sort=-createdAt`,
+    )
+
+    const PlacesPages = PlacesRes?.data.data?.listings
+
+    dispatch(
+      setTypeResultTwo({
+        data: PlacesPages,
+        message: 'Search completed successfully.',
+        success: true,
+      }),
+    )
+  }
 
   const ExploreEvents = async () => {
     const { res: EventRes, err: EventErr } = await getListingPages(
@@ -344,6 +376,22 @@ export const Navbar: React.FC<Props> = ({}) => {
     dispatch(
       setTypeResultThree({
         data: EventPages,
+        message: 'Search completed successfully.',
+        success: true,
+      }),
+    )
+  }
+
+  const ExploreProducts = async () => {
+    const { res: ProductsRes, err: ProductsErr } = await getListingPages(
+      `type=4&sort=-createdAt`,
+    )
+
+    const ProductsPages = ProductsRes?.data.data?.listings
+
+    dispatch(
+      setTypeResultFour({
+        data: ProductsPages,
         message: 'Search completed successfully.',
         success: true,
       }),
@@ -584,9 +632,9 @@ export const Navbar: React.FC<Props> = ({}) => {
                         <Link
                           href={'/search'}
                           className={styles['hobbiescategory']}
-                          onClick={(e) => {
+                          onClick={async (e) => {
                             e.preventDefault()
-                            dispatch(resetSearch())
+
                             setData((prevData) => ({
                               ...prevData,
                               search: {
@@ -594,14 +642,17 @@ export const Navbar: React.FC<Props> = ({}) => {
                                 value: '',
                               },
                             }))
+                            dispatch(resetSearch())
+                            await ExplorePeople()
+                            setShowDropdown(null)
+
                             dispatch(showAllPeopleTrue())
                             dispatch(setExplore(true))
-                            setShowDropdown(null)
 
                             router.push('/search')
                           }}
                         >
-                          People - Community
+                          People - Expertise
                         </Link>
                       </h4>
                       {/* <ul>
@@ -615,9 +666,9 @@ export const Navbar: React.FC<Props> = ({}) => {
                         <Link
                           href={'/search'}
                           className={styles['hobbiescategory']}
-                          onClick={(e) => {
+                          onClick={async (e) => {
                             e.preventDefault()
-                            dispatch(resetSearch())
+
                             setData((prevData) => ({
                               ...prevData,
                               search: {
@@ -625,7 +676,10 @@ export const Navbar: React.FC<Props> = ({}) => {
                                 value: '',
                               },
                             }))
+                            dispatch(resetSearch())
+                            await ExplorePlaces()
                             setShowDropdown(null)
+
                             dispatch(showAllPlaceTrue())
                             dispatch(setExplore(true))
                             router.push('/search')
@@ -667,10 +721,9 @@ export const Navbar: React.FC<Props> = ({}) => {
                         <Link
                           href={'/search'}
                           className={styles['hobbiescategory']}
-                          onClick={(e) => {
+                          onClick={async (e) => {
                             e.preventDefault()
-                            dispatch(resetSearch())
-                            setShowDropdown(null)
+
                             setData((prevData) => ({
                               ...prevData,
                               search: {
@@ -678,6 +731,10 @@ export const Navbar: React.FC<Props> = ({}) => {
                                 value: '',
                               },
                             }))
+                            dispatch(resetSearch())
+                            await ExploreProducts()
+
+                            setShowDropdown(null)
                             dispatch(showAllProductsTrue())
                             dispatch(setExplore(true))
                             router.push('/search')
@@ -696,7 +753,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                             setShowDropdown(null)
                           }}
                         >
-                          Posts - Write-ups
+                          Posts - Community
                         </a>
                       </h4>
                     </section>

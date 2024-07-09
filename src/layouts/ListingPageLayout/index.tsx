@@ -34,6 +34,9 @@ import { openModal } from '@/redux/slices/modal'
 import EditIcon from '@/assets/svg/edit-colored.svg'
 import { SetLinkviaAuth } from '@/redux/slices/user'
 import ListingOrdersTab from '@/components/ListingPage/ListingOrdersTab/ListingOrdersTab'
+import peopleSvg from '@/assets/svg/People.svg'
+import placeSvg from '@/assets/svg/Place.svg'
+import programSvg from '@/assets/svg/Program.svg'
 
 interface Props {
   activeTab: ListingPageTabs
@@ -327,30 +330,38 @@ const ListingPageLayout: React.FC<Props> = ({
             }
           }}
         >
+          <div>
+            <img
+              width={20}
+              height={20}
+              src={
+                data.pageData.type === 1
+                  ? peopleSvg.src
+                  : data.pageData.type === 2
+                  ? placeSvg.src
+                  : data.pageData.type === 3
+                  ? programSvg.src
+                  : peopleSvg
+              }
+            />
+          </div>
           {data.pageData.page_type.map((type: any, idx: any) => {
             return (
-              <div key={idx}>
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <g clip-path="url(#clip0_173_56244)">
-                    <path
-                      d="M17 10.43V2H7V10.43C7 10.78 7.18 11.11 7.49 11.29L11.67 13.8L10.68 16.14L7.27 16.43L9.86 18.67L9.07 22L12 20.23L14.93 22L14.15 18.67L16.74 16.43L13.33 16.14L12.34 13.8L16.52 11.29C16.82 11.11 17 10.79 17 10.43ZM13 12.23L12 12.83L11 12.23V3H13V12.23Z"
-                      fill="#0096C8"
-                    />
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_173_56244">
-                      <rect width="24" height="24" fill="white" />
-                    </clipPath>
-                  </defs>
-                </svg>
-                <p>{type}</p>
-              </div>
+              <p
+                className={
+                  data.pageData.type === 1
+                    ? styles.peopleColor
+                    : data.pageData.type === 2
+                    ? styles.placeColor
+                    : data.pageData.type === 3
+                    ? styles.programColor
+                    : data.pageData.type === 4
+                    ? styles.ProductColor
+                    : ''
+                }
+              >
+                {type}
+              </p>
             )
           })}
           {listingLayoutMode === 'edit' && <Image src={EditIcon} alt="" />}

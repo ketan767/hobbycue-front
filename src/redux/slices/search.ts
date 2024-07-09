@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Search } from 'react-router-dom';
 
 interface Address {
   city: string;
@@ -46,6 +47,7 @@ interface SearchState {
   typeResultOne: SearchResults<Page>;
   typeResultTwo: SearchResults<Page>;
   typeResultThree: SearchResults<Page>;
+  typeResultFour : SearchResults<Page>
   searchString: string;
   hobbiesSearchResults: SearchResults<hobbies>;
   showAll:boolean
@@ -76,6 +78,11 @@ const initialState: SearchState = {
     success: false,
   },
   typeResultThree: {
+    data: [],
+    message: '',
+    success: false,
+  },
+  typeResultFour: {
     data: [],
     message: '',
     success: false,
@@ -114,6 +121,9 @@ export const searchSlice = createSlice({
     },
     setTypeResultThree: (state, action: PayloadAction<SearchResults<Page>>) => {
       state.typeResultThree = action.payload;
+    },
+    setTypeResultFour: (state, action: PayloadAction<SearchResults<Page>>) => {
+      state.typeResultFour = action.payload;
     },
     setSearchString: (state, action: PayloadAction<string>) => {
       state.searchString = action.payload;
@@ -290,7 +300,7 @@ export const searchSlice = createSlice({
   },
 });
 
-export const { setUserSearchResults, setTypeResultOne,setTypeResultTwo, setTypeResultThree, setSearchString,
+export const { setUserSearchResults, setTypeResultOne,setTypeResultTwo, setTypeResultThree, setTypeResultFour, setSearchString,
    setHobbiesSearchResult,toggleShowAll, toggleShowAllUsers, toggleShowAllPeople, toggleShowAllPlace, toggleShowAllEvent,toggleShowAllProducts,
   showAllEventTrue,showAllPeopleTrue,showAllPlaceTrue,showAllUsersTrue,showAllProductsTrue, showAllTrue, toggleShowAllHobbies, resetSearch, setExplore, setSearchLoading
   } = searchSlice.actions;

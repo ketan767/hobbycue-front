@@ -90,10 +90,24 @@
   margin: 0;
 }
 .listing-page-type-wrapper > div > p {
-  color: rgba(0, 150, 200, 1);
+
   font-weight: 600;
   line-height: 20px;
   font-size: 14px;
+}
+
+.peopleColor {
+  color: #8064A2;
+}
+.placeColor {
+  color: #77933c;
+}
+.programColor {
+  color: #0096C8;
+}
+
+.ProductColor {
+  color:#ffbec0
 }
 
 .expand-all-page-type-wrapper {
@@ -214,6 +228,9 @@ top: -2px;
   .display-mobile-main {
     height: 90vh;
   }
+  .listing-page-type-wrapper {
+    justify-content: flex-start;
+  }
 
   .expand-all {
     display: flex;
@@ -284,8 +301,9 @@ right: -8px;
     padding: var(--spacing-8);
   }
   .listing-page-type-wrapper > div {
-    gap: 2px;
+    gap: 8px;
   }
+
 }
 
 

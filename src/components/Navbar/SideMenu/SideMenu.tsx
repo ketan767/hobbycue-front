@@ -46,7 +46,7 @@ type SearchInput = {
 
 const exploreOptions = [
   {
-    text: 'People - Community',
+    text: 'People - Expertise',
   },
   {
     text: 'Places - Venues',
@@ -58,7 +58,7 @@ const exploreOptions = [
     text: 'Products - Store',
   },
   {
-    text: 'Posts - Write-ups',
+    text: 'Posts - Community',
   },
 ]
 
@@ -95,7 +95,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
     dispatch(resetSearch())
     dispatch(setExplore(true))
     switch (option.text) {
-      case 'People - Community':
+      case 'People - Expertise':
         dispatch(showAllPeopleTrue())
         router.push('/search')
         handleClose()
@@ -115,7 +115,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         router.push('/search')
         handleClose()
         break
-      case 'Posts - Write-ups':
+      case 'Posts - Community':
         showFeatureUnderDevelopment()
         handleClose()
         break
