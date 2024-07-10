@@ -16,6 +16,8 @@ type ProfilePageData = {
   mediaData: any //{ [key: string]: any }
   listingsData: any //{ [key: string]: any }
   blogsData: any //{ [key: string]: any }
+  hobbyData?: any
+
 }
 
 type LocalStorageActiveProfile = {

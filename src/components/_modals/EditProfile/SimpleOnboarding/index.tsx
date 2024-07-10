@@ -330,11 +330,8 @@ const SimpleOnboarding: React.FC<Props> = ({
     (window.location.port ? ':' + window.location.port : '')
 
   const handleSubmit = async () => {
-    if (isError) {
-      if (confirmationModal) setConfirmationModal(false)
-    }
     let hasErrors = false
-
+    setIsError(false)
     if (selectedHobbies.length === 0) {
       if (hobbyInputValue) {
         const matchedHobby = hobbyDropdownList.find(
@@ -382,8 +379,10 @@ const SimpleOnboarding: React.FC<Props> = ({
     }
 
     if (hasErrors === true) {
+      if (confirmationModal) setConfirmationModal(false)
       return
     }
+
     setSubmitBtnLoading(true)
     const { err, res } = await updateMyProfileDetail({
       ...data,
@@ -417,12 +416,12 @@ const SimpleOnboarding: React.FC<Props> = ({
 
         if (err) {
           setSubmitBtnLoading(false)
-          setConfirmationModal(false)
+
           return console.log(err)
         }
         if (!res.data.success) {
           setSubmitBtnLoading(false)
-          setConfirmationModal(false)
+
           return alert('Something went wrong!')
         }
       })
@@ -840,6 +839,7 @@ const SimpleOnboarding: React.FC<Props> = ({
       prev.filter((hobby) => hobby.display !== hobbyToRemove.display),
     )
   }
+
   const handleHobbyInputChange = async (e: any) => {
     setShowHobbyDowpdown(true)
     setHobbyInputValue(e.target.value)
@@ -1214,6 +1214,27 @@ const SimpleOnboarding: React.FC<Props> = ({
                 }`}
               >
                 <label className={styles['label-required']}>Hobbies</label>
+                <ul className={`${styles['hobby-list']}`}>
+                  {selectedHobbies?.map((item: any) => {
+                    if (typeof item === 'string') return
+                    return (
+                      <div key={item._id}>
+                        <li>
+                          {item?.display}
+
+                          <Image
+                            src={CrossIcon}
+                            style={{ cursor: 'pointer' }}
+                            width={18}
+                            height={18}
+                            alt="cancel"
+                            onClick={() => removeSelectedHobby(item)}
+                          />
+                        </li>
+                      </div>
+                    )
+                  })}
+                </ul>
                 <input
                   type="text"
                   placeholder="Type and select..."
@@ -1268,32 +1289,13 @@ const SimpleOnboarding: React.FC<Props> = ({
                     ))}
                   </div>
                 )}
-                <ul className={`${styles['hobby-list']}`}>
-                  {selectedHobbies?.map((item: any) => {
-                    if (typeof item === 'string') return
-                    return (
-                      <div key={item._id}>
-                        <li>
-                          {item?.display}
-
-                          <Image
-                            src={CrossIcon}
-                            style={{ cursor: 'pointer' }}
-                            width={18}
-                            height={18}
-                            alt="cancel"
-                            onClick={() => removeSelectedHobby(item)}
-                          />
-                        </li>
-                      </div>
-                    )
-                  })}
-                </ul>
               </div>
             </div>
             <label className={styles['label']}>Trending</label>
 
-            <ul className={`${styles['hobby-list']}`}>
+            <ul
+              className={`${styles['hobby-list']} ${styles['trending-hobbies-list']}`}
+            >
               {trendingHobbies?.map((item: any) => {
                 if (typeof item === 'string') return
 
@@ -1305,7 +1307,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                   if (isAlreadySelected) {
                     setInputErrs((prev) => ({
                       ...prev,
-                      hobbies: 'Same hobby detected in the hobbies list',
+                      hobbies: 'Hobby already exists in your list',
                     }))
                   } else {
                     setselectedHobbies((prev) => [...prev, item])

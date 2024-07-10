@@ -338,10 +338,10 @@
 }
 .container:has(.header).small .navigation-tabs {
   display: flex;
-  padding-top: 4px;
+
   gap: 38px;
   justify-content: flex-start;
-  padding-left: 20vw;
+  margin: 4px 0 0 23.96%;
   position: sticky;
   min-height: 40px;
 }
@@ -598,8 +598,3 @@ right: 4px;
 top: -2px;
 }
 
-@media screen and (min-width: 1440px) {
-  .container:has(.header).small .navigation-tabs{
-    padding-left: calc(50vw - 720px + 288px);
-  }
-}

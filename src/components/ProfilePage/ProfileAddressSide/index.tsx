@@ -60,6 +60,7 @@ const ProfileAddressSide = ({ data, expandData, addressError }: Props) => {
             return !prev
           })
         }}
+        setExpandData={addressError ? true : false}
         expandData={displayData}
         className={addressError === true ? styles['error'] : ''}
       >
@@ -72,7 +73,7 @@ const ProfileAddressSide = ({ data, expandData, addressError }: Props) => {
         </h4>
         {addressError && displayData && (
           <p className={styles['error-text'] + ` ${styles['absolute-text']}`}>
-            City is mandatory
+            At least city is required
           </p>
         )}
         <ul

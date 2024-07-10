@@ -105,8 +105,8 @@ const ListingPageMain: React.FC<Props> = ({
   const [relation, setRelation] = useState('')
   const [relationRight, setRelationRight] = useState('')
   const [PageAdmin, setPageAdmin] = useState(null)
-  const lat = parseFloat(data._address.latitude)
-  const lng = parseFloat(data._address.longitude)
+  const lat = parseFloat(data._address?.latitude)
+  const lng = parseFloat(data._address?.longitude)
 
   const [showHobbies, setShowHobbies] = useState(true)
   const [showTags, setShowTags] = useState(false)

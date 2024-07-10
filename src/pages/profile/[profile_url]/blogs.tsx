@@ -18,6 +18,9 @@ import { RootState } from '@/redux/store'
 import { updateProfileMenuExpandAll } from '@/redux/slices/site'
 import ErrorPage from '@/components/ErrorPage'
 import { useMediaQuery } from '@mui/material'
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
+import { getAllBlogs } from '@/services/blog.services'
+import BlogCard from '@/components/BlogCard/BlogCard'
 
 interface Props {
   data: ProfilePageData
@@ -62,13 +65,6 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
     }
   }, [])
 
-  useEffect(() => {
-    if (user.id) {
-      const userIsAuthorized =
-        data.pageData.is_published || user._id === data.pageData.admin
-      if (!userIsAuthorized) router.push('/404')
-    }
-  }, [user._id, data.pageData, router])
   // if (!user.is_onboarded && data?.pageData?.email !== user?.email) {
   //   return <ErrorPage />
   // }
@@ -104,24 +100,38 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
               <ProfileSocialMediaSide data={data.pageData} />
             </div>
           </aside>
+          <main>
+            {data?.blogsData.length !== 0 ? (
+              // <div className={styles['card-container']}>
+              <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 1100: 3 }}>
+                <Masonry
+                  gutter="12px"
+                  style={{ columnGap: '24px', rowGap: '12px' }}
+                >
+                  {data?.blogsData.map((blog: any) => {
+                    return <BlogCard key={blog._id} data={blog} />
+                  })}
+                </Masonry>
+              </ResponsiveMasonry>
+            ) : (
+              <section
+                className={`${styles['dual-section-wrapper']} ${styles['mob-min-height']} ${styles['mob-h-auto']}`}
+              >
+                <div className={styles['no-posts-div']}>
+                  <p className={styles['no-posts-text']}>No Blogs Available</p>
+                </div>
+                {isMobile ? null : (
+                  <>
+                    <div className={styles['no-posts-div']}></div>
+                    <div className={styles['no-posts-div']}></div>
+                  </>
+                )}
+              </section>
+            )}
+          </main>
           <div className={styles['nav-mobile']}>
             <ProfileNavigationLinks activeTab={'blogs'} />
           </div>
-          <section
-            className={`${styles['dual-section-wrapper']} ${styles['mob-min-height']} ${styles['mob-h-auto']}`}
-          >
-            <div className={styles['no-posts-div']}>
-              <p className={styles['no-posts-text']}>
-                This feature is under development. Come back soon to view this
-              </p>
-            </div>
-            {isMobile ? null : (
-              <>
-                <div className={styles['no-posts-div']}></div>
-                <div className={styles['no-posts-div']}></div>
-              </>
-            )}
-          </section>
         </PageGridLayout>
       </ProfileLayout>
     </>
@@ -144,16 +154,17 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   if (res?.data.success && res.data.data.no_of_users === 0)
     return { notFound: true }
 
-  const { err: error, res: response } = await getListingPages(
-    `populate=_hobbies,_address&admin=${user._id}`,
+  const { err: error, res: response } = await getAllBlogs(
+    `populate=_hobbies,author&author=${user?._id}`,
   )
+  console.warn('blogdataaaaaa', response)
 
   const data = {
     pageData: res.data.data.users[0],
     postsData: null,
     mediaData: null,
-    listingsData: response?.data.data.listings,
-    blogsData: null,
+    listingsData: null,
+    blogsData: response?.data?.data?.blog,
   }
   return {
     props: {

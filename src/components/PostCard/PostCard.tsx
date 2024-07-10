@@ -57,8 +57,6 @@ const PostCard: React.FC<Props> = (props) => {
   const [showComments, setShowComments] = useState(
     props.currentSection === 'links'
       ? false
-      : props.postData.has_link
-      ? false
       : comments.length > 0
       ? true
       : false,
@@ -192,13 +190,7 @@ const PostCard: React.FC<Props> = (props) => {
       setComments(res?.data?.data?.comments)
       console.error({ comments: res?.data?.data?.comments })
       if (res?.data?.data?.comments && res?.data?.data?.comments?.length > 0) {
-        setShowComments(
-          props.currentSection === 'links'
-            ? false
-            : props.postData.has_link
-            ? false
-            : true,
-        )
+        setShowComments(props.currentSection === 'links' ? false : true)
       }
     }
     if (props.currentSection !== 'links') {

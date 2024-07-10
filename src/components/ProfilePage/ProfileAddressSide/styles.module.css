@@ -48,6 +48,9 @@ ul.contact-wrapper svg {
   border: 1px solid #C0504D !important;
   position: relative;
 }
+.absolute-text{
+  display: none;
+}
 
 @media screen and (max-width:1100px) {
   .location-wrapper{
@@ -88,6 +91,7 @@ ul.contact-wrapper svg {
     position: absolute;
     top: 36px;
     left: 16px;
+    display: block;
   }
   .error::after{
     content: '';

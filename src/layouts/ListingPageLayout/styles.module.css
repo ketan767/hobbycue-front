@@ -2,8 +2,8 @@
   display: flex;
   gap: 38px;
   justify-content: start;
-  padding-left: 20vw;
-  margin-top: 14px;
+ 
+  margin: 14px 0 0 24.05%;
   position: -webkit-sticky;
   position: sticky;
   min-height: 40px;
@@ -266,6 +266,7 @@ flex-shrink: 0;
 right: -8px;
 }
 .navigation-tabs{
+  margin-left: 0;
   margin-top: 0;
   padding-top: 14px;
 }
@@ -307,8 +308,3 @@ right: -8px;
 }
 
 
-@media screen and (min-width:1440px) {
-  .navigation-tabs{
-    padding-left: calc(50vw - 720px + 288px);
-  }
-}

@@ -135,10 +135,12 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [isSelectingStartDate, setIsSelectingStartDate] = useState(true)
-  const [eventData, setEventData] = useState(initialEventHour)
+  const [eventData, setEventData] = useState<
+    { from_time: string; to_time: string; from_date: string; to_date: string }[]
+  >([])
   const [weekdays, setWeekdays] = useState<
     { from_time: string; to_time: string; from_day: string; to_day: string }[]
-  >([]);
+  >([])
   const today = new Date().toISOString().split('T')[0]
   const [initialData, setInitialData] = useState({})
   const [isChanged, setIsChanged] = useState(false)
@@ -164,31 +166,46 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     }
     return new Date(date).toLocaleDateString('en-GB', options)
   }
-  const handleDateSelection = (selectedDate: string, isFromDate: boolean) => {
-    const date = selectedDate?.split('-')
+  const handleDateSelection = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    key: string,
+    index: number,
+  ) => {
+    const updatedItem = event.target.value // Extract the date string from the input event
+    const date = updatedItem?.split('-')
     const month = months[Number(date[1]) - 1]
-    const newDate = `${date[0]}/${month}/${date[2]}`
+    const newDate = `${date[0]}/${month}/${date[2]}` // MM/DD/YYYY format
 
-    if (isFromDate) {
-      setEventData((prevData) => ({ ...prevData, from_date: selectedDate }))
+    if (key === 'from_date') {
+      setEventData((prevData) =>
+        prevData.map(
+          (event, i) =>
+            i === index ? { ...event, [key]: updatedItem } : event, // store the formatted date
+        ),
+      )
       setIsSelectingStartDate(false)
     } else {
-      if (new Date(selectedDate) < new Date(eventData.from_date)) {
+      if (new Date(newDate) < new Date(eventData[index].from_date)) {
         alert('To Date cannot be before From Date')
         return
       }
-      setEventData((prevData) => ({ ...prevData, to_date: selectedDate }))
+      setEventData((prevData) =>
+        prevData.map(
+          (event, i) =>
+            i === index ? { ...event, to_date: updatedItem } : event, // store the formatted date
+        ),
+      )
       setIsSelectingStartDate(true)
     }
   }
 
-  useEffect(() => {
-    if (new Date(eventData.to_date) < new Date(eventData.from_date))
-      setEventData((prevData) => ({
-        ...prevData,
-        to_date: eventData.from_date,
-      }))
-  }, [eventData.from_date])
+  // useEffect(() => {
+  //   if (new Date(eventData.to_date) < new Date(eventData.from_date))
+  //     setEventData((prevData) => ({
+  //       ...prevData,
+  //       to_date: eventData.from_date,
+  //     }))
+  // }, [eventData.from_date])
 
   const handleSubmit = async () => {
     const jsonData = {
@@ -197,12 +214,12 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     console.log({ jsonData })
     setSubmitBtnLoading(true)
     const { err, res } = await updateListing(listingModalData._id, {
-      event_date_time: jsonData,
+      event_date_time: eventData,
       event_weekdays: weekdays,
     })
     const updatedData = {
       ...listingModalData,
-      event_date_time: res?.data.data.listing.event_date_time,
+      event_date_time: eventData,
       event_weekdays: weekdays,
     }
     dispatch(updateListingModalData(updatedData))
@@ -223,12 +240,12 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     console.log({ jsonData })
     setBackBtnLoading(true)
     const { err, res } = await updateListing(listingModalData._id, {
-      event_date_time: jsonData,
+      event_date_time: eventData,
       event_weekdays: weekdays,
     })
     const updatedData = {
       ...listingModalData,
-      event_date_time: res?.data.data.listing.event_date_time,
+      event_date_time: eventData,
       event_weekdays: weekdays,
     }
     dispatch(updateListingModalData(updatedData))
@@ -239,15 +256,13 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
 
   useEffect(() => {
     if (listingModalData.event_date_time) {
-      const { from_time, to_time, from_date, to_date } =
-        listingModalData.event_date_time
-      setEventData({ from_time, to_time, from_date, to_date })
-      setInitialData({ from_time, to_time, from_date, to_date })
+      setEventData(listingModalData.event_date_time)
+      setInitialData(listingModalData.event_date_time)
     }
-      if (listingModalData.event_weekdays) {
-        setWeekdays(listingModalData.event_weekdays)
-      }
-      console.log({listingModalData})
+    if (listingModalData.event_weekdays) {
+      setWeekdays(listingModalData.event_weekdays)
+    }
+    console.log({ listingModalData })
   }, [listingModalData])
 
   // const updateEventHours = async () => {
@@ -277,13 +292,18 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     }
   }, [])
 
-  const onChangeFromday = (updatedItem: any, key: any) => {
-    const updated = {
-      ...eventData,
-      [key]: updatedItem,
-    }
-    setEventData(updated)
-    console.log(updated)
+  const onChangeFromday = (updatedItem: any, key: any, index: number) => {
+    setEventData((prevData) =>
+      prevData.map((event, i) =>
+        i === index ? { ...event, [key]: updatedItem } : event,
+      ),
+    )
+    // const updated = {
+    //   ...eventData,
+    //   [key]: updatedItem,
+    // }
+    // setEventData(updated)
+    // console.log(updated)
 
     // setWorkingHoursData(updated)
   }
@@ -299,15 +319,15 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
 
   const addWeekday = () => {
     if (weekdays.length === 0) {
-      const fromDay = days[new Date(eventData.from_date).getDay()]
-      const toDay = days[new Date(eventData.to_date).getDay()]
+      const fromDay = days[new Date(initialEventHour.from_date).getDay()]
+      const toDay = days[new Date(initialEventHour.to_date).getDay()]
 
       setWeekdays([
         {
           from_day: fromDay,
           to_day: toDay,
-          from_time: eventData.from_time,
-          to_time: eventData.to_time,
+          from_time: initialEventHour.from_time,
+          to_time: initialEventHour.to_time,
         },
       ])
     } else {
@@ -316,6 +336,32 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
         {
           from_day: 'Mon',
           to_day: 'Fri',
+          from_time: '8:00 am',
+          to_time: '9:00 pm',
+        },
+      ])
+    }
+  }
+
+  const addDateAndTime = () => {
+    if (eventData.length === 0) {
+      const fromDay = days[new Date(initialEventHour.from_date).getDay()]
+      const toDay = days[new Date(initialEventHour.to_date).getDay()]
+
+      setEventData([
+        {
+          from_date: initialEventHour.from_date,
+          to_date: initialEventHour.to_date,
+          from_time: initialEventHour.from_time,
+          to_time: initialEventHour.to_time,
+        },
+      ])
+    } else {
+      setEventData((prevdateTime) => [
+        ...prevdateTime,
+        {
+          from_date: 'Mon',
+          to_date: 'Fri',
           from_time: '8:00 am',
           to_time: '9:00 pm',
         },
@@ -453,75 +499,96 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
 
         <section className={styles['body']}>
           <div className={styles.sectionHead}></div>
-          <div className={styles.listContainer}>
-            <div className={styles.listItem}>
-              <div className={styles['subitem-group']}>
-                <div className={styles.listSubItem}>
-                  <label> From Date </label>
-
-                  <input
-                    value={eventData.from_date}
-                    className={styles.inputField}
-                    type="date"
-                    min={today}
-                    onChange={(e: any) =>
-                      handleDateSelection(e.target.value, true)
-                    }
-                  />
-                  <p className={styles['formatted-date']}>
-                    {formatDateFunc(eventData.from_date)}
-                  </p>
-                </div>
-                <div className={styles['breaker']} />
-                <div className={styles.listSubItem}>
-                  <label> To Date </label>
-
-                  <input
-                    value={eventData.to_date}
-                    className={styles.inputField}
-                    type="date"
-                    min={eventData.from_date}
-                    onChange={(e: any) =>
-                      handleDateSelection(e.target.value, false)
-                    }
-                  />
-                  <p
+          <div className={styles.listContainer + ` ${styles['mt-32']}`}>
+            <div onClick={addDateAndTime} className={styles['adder']}>
+              <PlusIcon />
+              <p>Add Date</p>
+            </div>
+            {eventData?.map((obj, i) => (
+              <div
+                key={i}
+                className={styles.listItem + ` ${styles['no-wrap']}`}
+              >
+                <div
+                  className={
+                    styles['subitem-group'] + ` ${styles['mobile-group']}`
+                  }
+                >
+                  <div
                     className={
-                      styles['formatted-date']
-                      // + ` ${styles['left-more']}`
+                      styles.listSubItem + ` ${styles['mobile-w-auto']}`
                     }
                   >
-                    {formatDateFunc(eventData.to_date)}
-                  </p>
+                    {i === 0 && <label> From Date </label>}
+
+                    <input
+                      value={obj.from_date}
+                      className={styles.inputField}
+                      type="date"
+                      min={today}
+                      onChange={(item) =>
+                        handleDateSelection(item, 'from_date', i)
+                      }
+                    />
+                    <p className={styles['formatted-date']}>
+                      {formatDateFunc(obj.from_date)}
+                    </p>
+                  </div>
+                  <div className={styles['breaker']} />
+                  <div className={styles.listSubItem}>
+                    <label> To Date </label>
+
+                    <input
+                      value={obj.to_date}
+                      className={styles.inputField}
+                      type="date"
+                      min={obj.from_date}
+                      onChange={(e: any) =>
+                        handleDateSelection(e, 'to_date', i)
+                      }
+                    />
+                    <p
+                      className={
+                        styles['formatted-date']
+                        // + ` ${styles['left-more']}`
+                      }
+                    >
+                      {formatDateFunc(obj.to_date)}
+                    </p>
+                  </div>
+                </div>
+                <p className={styles['comma']}>,</p>
+                <div className={styles['subitem-group']}>
+                  <div className={styles.listSubItem}>
+                    <label> From Time </label>
+                    <InputSelect
+                      options={timings}
+                      value={obj.from_time}
+                      onChange={(item: any) =>
+                        onChangeFromday(item, 'from_time', i)
+                      }
+                      className={styles['time-input']}
+                      iconClass={styles['input-icon']}
+                    />
+                  </div>
+                  <div className={styles['breaker']} />
+                  <div className={styles.listSubItem}>
+                    <label> To Time </label>
+                    <InputSelect
+                      value={obj.to_time}
+                      options={timings.slice(
+                        timings.indexOf(obj.from_time) + 1,
+                      )}
+                      onChange={(item: any) =>
+                        onChangeFromday(item, 'to_time', i)
+                      }
+                      className={styles['time-input']}
+                      iconClass={styles['input-icon']}
+                    />
+                  </div>
                 </div>
               </div>
-              <p className={styles['comma']}>,</p>
-              <div className={styles['subitem-group']}>
-                <div className={styles.listSubItem}>
-                  <label> From Time </label>
-                  <InputSelect
-                    options={timings}
-                    value={eventData.from_time}
-                    onChange={(item: any) => onChangeFromday(item, 'from_time')}
-                    className={styles['time-input']}
-                    iconClass={styles['input-icon']}
-                  />
-                </div>
-                <div className={styles['breaker']} />
-                <div className={styles.listSubItem}>
-                  <label> To Time </label>
-                  <InputSelect
-                    value={eventData.to_time}
-                    options={timings.slice(
-                      timings.indexOf(eventData.from_time) + 1,
-                    )}
-                    onChange={(item: any) => onChangeFromday(item, 'to_time')}
-                    className={styles['time-input']}
-                    iconClass={styles['input-icon']}
-                  />
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
           {/* weekdays */}
           <div className={styles.listContainer + ` ${styles['mt-32']}`}>

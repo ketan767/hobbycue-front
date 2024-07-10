@@ -12,25 +12,22 @@ type Props = {
   handleClose?: any
   handleSubmit?: any
   propData?: any
+  HobbyValue?: any
 }
 
-const AddGenre: React.FC<Props> = ({ handleClose, handleSubmit, propData }) => {
+const AddGenre: React.FC<Props> = ({
+  handleClose,
+  handleSubmit,
+  propData,
+  HobbyValue,
+}) => {
   const dispatch = useDispatch()
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
     message: '',
   })
-  const showFeatureUnderDevelopment = () => {
-    setSnackbar({
-      display: true,
-      type: 'warning',
-      message: 'This feature is under development',
-    })
-    setTimeout(() => {
-      handleClose()
-    }, 2500)
-  }
+
   return (
     <>
       <div className={`${styles['add-hobby']}`}>
@@ -47,8 +44,9 @@ const AddGenre: React.FC<Props> = ({ handleClose, handleSubmit, propData }) => {
         <div className={styles['content']}>
           <p>
             Request HobbyCue Admin to add{' '}
-            <span>{propData?.defaultValue ?? 'genre'}</span> as a Genre/Style so
-            that we can grow this as a community
+            <span>{propData?.defaultValue ?? 'genre'}</span> as a Genre/Style
+            under <span>{HobbyValue?.defaultValue ?? 'Hobby'}</span> so that we
+            can grow this as a community
           </p>
           <div className={styles['buttons']}>
             <FilledButton

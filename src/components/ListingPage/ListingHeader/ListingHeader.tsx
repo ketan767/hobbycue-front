@@ -640,13 +640,18 @@ const ListingHeader: React.FC<Props> = ({
                       src={Calendar}
                       alt="calendar"
                     />
-                    <p className={styles.date}>
-                      {formatDateRange(
-                        data?.event_date_time.from_date,
-                        data?.event_date_time.to_date,
-                      )}
-                    </p>
-                    <Image className={styles['im']} src={Time} alt="Time" />{' '}
+                    {data.event_date_time && data?.event_date_time?.length > 0
+                      ? data.event_date_time.map(
+                          (obj: any, i: number, arr: any[]) => (
+                            <p key={i} className={styles.date}>
+                              {formatDateRange(obj?.from_date, obj?.to_date)}
+                            </p>
+                          ),
+                        )
+                      : ''}
+                    {data.event_weekdays.length > 0 && (
+                      <Image className={styles['im']} src={Time} alt="Time" />
+                    )}
                     <div className={styles['flex-col-4']}>
                       {data.event_weekdays &&
                       data?.event_weekdays?.length > 0 ? (

@@ -335,7 +335,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   }
   const ExplorePeople = async () => {
     const { res: PeopleRes, err: PeopleErr } = await getListingPages(
-      `type=1&sort=-createdAt`,
+      `type=1&sort=-createdAt&is_published=true`,
     )
 
     const PeoplePages = PeopleRes?.data.data?.listings
@@ -351,7 +351,7 @@ export const Navbar: React.FC<Props> = ({}) => {
 
   const ExplorePlaces = async () => {
     const { res: PlacesRes, err: PlacesErr } = await getListingPages(
-      `type=2&sort=-createdAt`,
+      `type=2&sort=-createdAt&is_published=true`,
     )
 
     const PlacesPages = PlacesRes?.data.data?.listings
@@ -367,7 +367,7 @@ export const Navbar: React.FC<Props> = ({}) => {
 
   const ExploreEvents = async () => {
     const { res: EventRes, err: EventErr } = await getListingPages(
-      `type=3&sort=-createdAt`,
+      `type=3&sort=-createdAt&is_published=true`,
     )
 
     const EventPages = EventRes?.data.data?.listings
@@ -384,7 +384,7 @@ export const Navbar: React.FC<Props> = ({}) => {
 
   const ExploreProducts = async () => {
     const { res: ProductsRes, err: ProductsErr } = await getListingPages(
-      `type=4&sort=-createdAt`,
+      `type=4&sort=-createdAt&is_published=true`,
     )
 
     const ProductsPages = ProductsRes?.data.data?.listings

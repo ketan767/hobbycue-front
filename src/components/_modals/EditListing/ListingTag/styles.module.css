@@ -363,6 +363,9 @@ background: var(--Purple-3, #F7F5F9);
     width: 100%;
     z-index: 1000;
   }
+  .modal-wrapper .header {
+    padding: var(--spacing-16) var(--spacing-16);
+  }
   .modal-hr {
     display: none;
   }

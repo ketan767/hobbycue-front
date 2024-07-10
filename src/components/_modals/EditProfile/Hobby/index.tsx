@@ -993,7 +993,9 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
             }
           }}
           propData={{ defaultValue: genreInputValue }}
+          HobbyValue={{ defaultValue: hobbyInputValue }}
         />
+
         <CustomSnackbar
           message={showSnackbar.message}
           type={showSnackbar.type}

@@ -14,6 +14,7 @@ import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { updateHobbyMenuExpandAll } from '@/redux/slices/site'
+import { getAllUserDetail } from '@/services/user.service'
 
 type Props = { data: { hobbyData: any } }
 
@@ -281,6 +282,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     return { notFound: true }
 
   const data = {
+    pageData: null,
+    postsData: null,
+    mediaData: null,
+    listingsData: null,
+    blogsData: null,
     hobbyData: res.data?.hobbies?.[0] ?? [],
   }
   return {

@@ -213,12 +213,16 @@ outline: none;
 .hobby-list {
  
   list-style: none;
-  padding: 0;
+  padding-bottom: 8px;
   display: flex;
   flex-wrap: wrap;
   row-gap: var(--spacing-16);
   column-gap: var(--spacing-8);
   animation: fadeDown 0.3s ease forwards;
+  
+}
+.trending-hobbies-list {
+  padding-top: 14px;
 }
 
 .hobby-list li {

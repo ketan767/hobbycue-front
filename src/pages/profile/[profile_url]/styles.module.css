@@ -61,6 +61,14 @@ width: 100%;
   align-items: start;
 }
 
+.three-section-wrapper {
+  display: flex;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+  row-gap: 12px;
+}
+
 .uploadContainer {
   display: grid;
   gap: 24px;

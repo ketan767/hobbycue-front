@@ -41,8 +41,8 @@ const ListingCard: React.FC<Props> = ({ data }) => {
     }
 
     // Parse the dates and remove time component
-    const fromDateObj = new Date(prop.from_date.split('T')[0])
-    const toDateObj = new Date(prop.to_date.split('T')[0])
+    const fromDateObj = new Date(prop?.from_date?.split('T')[0])
+    const toDateObj = new Date(prop?.to_date?.split('T')[0])
 
     // Format the dates
     const formattedFromDate = formatDate(fromDateObj)
@@ -50,7 +50,7 @@ const ListingCard: React.FC<Props> = ({ data }) => {
 
     // Format the result
     let result = `${formattedFromDate}`
-    if (prop.from_date !== prop.to_date) {
+    if (prop?.from_date !== prop?.to_date) {
       result += ` - ${formattedToDate}`
     }
 
@@ -221,19 +221,25 @@ const ListingCard: React.FC<Props> = ({ data }) => {
                 </p>
                 {data?.event_date_time ? (
                   <div className={styles['date-time']}>
-                    <section>
-                      {calendarIcon}{' '}
-                      <p>{formatDateRange(data?.event_date_time)}</p>
-                    </section>
-                    {!isMobile && (
+                    {data?.event_date_time.length !== 0 && (
                       <section>
-                        {clockIcon}{' '}
-                        <p>
-                          {data?.event_date_time?.from_time +
-                            ' - ' +
-                            data?.event_date_time?.to_time}
-                        </p>
+                        {calendarIcon}{' '}
+                        <p>{formatDateRange(data?.event_date_time[0])}</p>
                       </section>
+                    )}
+                    {!isMobile && (
+                      <>
+                        {data?.event_date_time.length !== 0 && (
+                          <section>
+                            {clockIcon}{' '}
+                            <p>
+                              {data?.event_date_time[0]?.from_time +
+                                ' - ' +
+                                data?.event_date_time[0]?.to_time}
+                            </p>
+                          </section>
+                        )}
+                      </>
                     )}
                   </div>
                 ) : (

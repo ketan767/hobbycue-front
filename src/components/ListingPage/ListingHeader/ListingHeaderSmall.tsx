@@ -55,7 +55,9 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
   const dispatch = useDispatch()
   const router = useRouter()
 
-  const { listingLayoutMode,totalEvents } = useSelector((state: any) => state.site)
+  const { listingLayoutMode, totalEvents } = useSelector(
+    (state: any) => state.site,
+  )
   const { isLoggedIn, user, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
   )
@@ -518,12 +520,16 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                       src={Calendar}
                       alt="calendar"
                     />
-                    <p className={styles.date}>
-                      {formatDateRange(
-                        data?.event_date_time.from_date,
-                        data?.event_date_time.to_date,
-                      )}
-                    </p>
+                    {data.event_date_time && data?.event_date_time?.length > 0
+                      ? data.event_date_time.map(
+                          (obj: any, i: number, arr: any[]) => (
+                            <p key={i} className={styles.date}>
+                              {obj.from_date &&
+                                formatDateRange(obj?.from_date, obj?.to_date)}
+                            </p>
+                          ),
+                        )
+                      : ''}
                     <Image className={styles['im']} src={Time} alt="Time" />{' '}
                     <div className={styles['flex-col-4']}>
                       {data.event_weekdays &&
@@ -686,9 +692,28 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                     <Link
                       key={tab}
                       href={`/page/${router.query.page_url}/${tab}`}
-                      className={activeTab === tab ? styles['active'] : ''+` ${styles['event-tab']}`}
+                      className={
+                        activeTab === tab
+                          ? styles['active']
+                          : '' + ` ${styles['event-tab']}`
+                      }
                     >
-                      {totalEvents>0&&<button className={styles['event-count']}>{totalEvents}</button>}
+                      {totalEvents > 0 && (
+                        <button className={styles['event-count']}>
+                          {totalEvents}
+                        </button>
+                      )}
+                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    </Link>
+                  )
+              } else if (tab === 'orders') {
+                if (data.type === 3 && listingLayoutMode === 'edit')
+                  return (
+                    <Link
+                      key={tab}
+                      href={`/page/${router.query.page_url}/${tab}`}
+                      className={activeTab === tab ? styles['active'] : ''}
+                    >
                       {tab.charAt(0).toUpperCase() + tab.slice(1)}
                     </Link>
                   )

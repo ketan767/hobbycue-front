@@ -13,7 +13,8 @@ type Props = {
   className?: string
   setDisplayData?: any
   expandData?: boolean
-  initialShowDropdown?:boolean
+  setExpandData?: boolean
+  initialShowDropdown?: boolean
 }
 
 const PageContentBox: React.FC<Props> = ({
@@ -23,9 +24,10 @@ const PageContentBox: React.FC<Props> = ({
   className,
   setDisplayData,
   expandData,
-  initialShowDropdown
+  setExpandData,
+  initialShowDropdown,
 }) => {
-  const [showDropdown, setShowDropdown] = useState(initialShowDropdown??false)
+  const [showDropdown, setShowDropdown] = useState(initialShowDropdown ?? false)
   const { listingLayoutMode } = useSelector((state: RootState) => state.site)
 
   const onDropdownClick = () => {
@@ -37,26 +39,37 @@ const PageContentBox: React.FC<Props> = ({
   useEffect(() => {
     if (expandData !== undefined) setShowDropdown(expandData)
   }, [expandData])
+  useEffect(() => {
+    if (setExpandData) {
+      setShowDropdown((prevValue) => !prevValue)
+      if (typeof setDisplayData !== 'undefined')
+        setDisplayData((prevValue: boolean) => !prevValue)
+    }
+  }, [setExpandData])
 
   return (
     <div className={`${styles['wrapper']}${className ? ' ' + className : ''}`}>
       {children}
 
-      {(typeof setDisplayData !== 'undefined') &&
+      {typeof setDisplayData !== 'undefined' && (
         <Image
           src={ChevronDown}
           alt=""
           onClick={onDropdownClick}
-          className={`${styles['dropdown-icon']} ${showDropdown && styles['rotate-180deg']
-            }`}
+          className={`${styles['dropdown-icon']} ${
+            showDropdown && styles['rotate-180deg']
+          }`}
         />
-      }
+      )}
 
       {showEditButton && (
         <svg
           onClick={onEditBtnClick}
-          className={`${styles['edit-btn']}${(typeof setDisplayData==='undefined')?" "+ styles['edit-icon-without-dropdown']:""} ${showDropdown && styles['display-initial']
-            }`}
+          className={`${styles['edit-btn']}${
+            typeof setDisplayData === 'undefined'
+              ? ' ' + styles['edit-icon-without-dropdown']
+              : ''
+          } ${showDropdown && styles['display-initial']}`}
           width="17"
           height="16"
           viewBox="0 0 17 16"
