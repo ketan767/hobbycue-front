@@ -56,7 +56,9 @@ const ListingProductPurchase: React.FC<Props> = ({
   const { listingModalData } = useSelector((state: RootState) => state.site)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   console.log('listingModalData:', listingModalData)
-  const [eventData, setEventData] = useState(initialEventHour)
+  const [eventData, setEventData] = useState<
+    { from_time: string; to_time: string; from_date: string; to_date: string }[]
+  >([])
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [data, setData] = useState<{
     _id?: string
@@ -72,9 +74,7 @@ const ListingProductPurchase: React.FC<Props> = ({
 
   useEffect(() => {
     if (listingModalData.event_date_time) {
-      const { from_time, to_time, from_date, to_date } =
-        listingModalData.event_date_time
-      setEventData({ from_time, to_time, from_date, to_date })
+      setEventData(listingModalData.event_date_time)
     }
   }, [])
 
@@ -119,7 +119,7 @@ const ListingProductPurchase: React.FC<Props> = ({
     }
     console.log('res', res?.data.data.listing)
 
-    if(listingModalData&&listingModalData.click_url){
+    if (listingModalData && listingModalData.click_url) {
       window.open(listingModalData.click_url, '_blank', 'noopener,noreferrer')
     }
 
@@ -289,13 +289,21 @@ const ListingProductPurchase: React.FC<Props> = ({
             <div className={styles['display-time-container']}>
               <div className={styles['display-time']}>
                 <Image className={styles['im']} src={Calendar} alt="calendar" />
-                <p className={styles.date}>
-                  {formatDateRange(eventData?.from_date, eventData?.to_date)}
-                </p>
+                {eventData && eventData?.length > 0
+                  ? eventData.map((obj: any, i: number, arr: any[]) => (
+                      <p key={i} className={styles.date}>
+                        {formatDateRange(obj?.from_date, obj?.to_date)}
+                      </p>
+                    ))
+                  : ''}
                 <Image className={styles['im']} src={Time} alt="Time" />{' '}
-                <p className={styles.time}>
-                  {eventData?.from_time} - {eventData?.to_time}
-                </p>
+                {eventData && eventData?.length > 0
+                  ? eventData.map((obj: any, i: number, arr: any[]) => (
+                      <p key={i} className={styles.date}>
+                        {formatDateRange(obj?.from_time, obj?.to_time)}
+                      </p>
+                    ))
+                  : ''}
               </div>
             </div>
 
