@@ -672,7 +672,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                 <label> Page Admin </label>
                 <input
                   type="text"
-                  placeholder={`Page Admin`}
+                  placeholder={`Type and Select...`}
                   value={
                     isTransferModal ? pageInputValue : data.page_admin.value
                   }
@@ -739,7 +739,9 @@ const ListingContactEditModal: React.FC<Props> = ({
                   data.public_email.error ? styles['input-box-error'] : ''
                 }`}
               >
-                <label>Email ID if different </label>
+                <label>
+                  {isTransferModal ? `Email ID` : `Email ID if different`}{' '}
+                </label>
                 <input
                   type="text"
                   placeholder={`Alternate email ID`}
@@ -798,7 +800,7 @@ const ListingContactEditModal: React.FC<Props> = ({
                 }`}
               >
                 <label className={styles['whatsapp-label']}>
-                  WhatsApp
+                  WhatsApp Number
                   <CustomTooltip title="Use same">
                     <div>
                       <Checkbox

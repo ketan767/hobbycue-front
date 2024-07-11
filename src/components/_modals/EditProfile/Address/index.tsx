@@ -993,6 +993,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
       society: details.society || '',
       latitude: latlongObj.lat || '',
       longitude: latlongObj.lng || '',
+      pin_code: latlongObj.zipcode || '',
+      post_code: latlongObj.zipcode || '',
     }))
     setShowAutoAddress(false)
   }
