@@ -336,7 +336,7 @@
 .modal-close-icon{
   position: fixed;
     top: 24px;
-    left: calc(50vw + 288px);
+    left: calc(50vw + 280px);
     cursor: pointer;
     z-index: 1000;
 
