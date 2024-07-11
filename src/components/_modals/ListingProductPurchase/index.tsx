@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styles from './style.module.css'
-import { CircularProgress, TextField } from '@mui/material'
+import { CircularProgress, TextField, useMediaQuery } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from '@/redux/slices/modal'
 import { RootState } from '@/redux/store'
@@ -56,10 +56,8 @@ const ListingProductPurchase: React.FC<Props> = ({
   const { listingModalData } = useSelector((state: RootState) => state.site)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   console.log('listingModalData:', listingModalData)
-  const [eventData, setEventData] = useState<
-    { from_time: string; to_time: string; from_date: string; to_date: string }[]
-  >([])
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
+  const [showDays, setShowDays] = useState(false)
   const [data, setData] = useState<{
     _id?: string
     variant_tag: string
@@ -71,12 +69,6 @@ const ListingProductPurchase: React.FC<Props> = ({
     display: false,
     message: '',
   })
-
-  useEffect(() => {
-    if (listingModalData.event_date_time) {
-      setEventData(listingModalData.event_date_time)
-    }
-  }, [])
 
   useEffect(() => {
     if (propData && propData.currentListing && propData.currentListing._id) {
@@ -137,6 +129,7 @@ const ListingProductPurchase: React.FC<Props> = ({
   }
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
+  const isMobile = useMediaQuery('(max-width:1100px)')
 
   const plusIcon = (
     <svg
@@ -219,6 +212,7 @@ const ListingProductPurchase: React.FC<Props> = ({
     fromDate: string | number | Date,
     toDate: string | number | Date,
   ): string {
+    console.log({fromDate,toDate})
     const dayOptions: Intl.DateTimeFormatOptions = { day: 'numeric' }
     const monthYearOptions: Intl.DateTimeFormatOptions = {
       year: 'numeric',
@@ -255,7 +249,21 @@ const ListingProductPurchase: React.FC<Props> = ({
       return `${fromDay} ${fromMonthYear} - ${toDay} ${toMonthYear}`
     }
   }
-
+  const dropdownIcon = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="17"
+      height="17"
+      viewBox="0 0 17 17"
+      fill="none"
+      cursor={'pointer'}
+    >
+      <path
+        d="M2.7313 13.0784H13.5506C13.6601 13.078 13.7675 13.0478 13.8612 12.991C13.9548 12.9341 14.0312 12.8529 14.0821 12.7558C14.1329 12.6588 14.1564 12.5498 14.1499 12.4404C14.1434 12.3311 14.1073 12.2256 14.0453 12.1353L8.63563 4.32134C8.41143 3.99736 7.87167 3.99736 7.64687 4.32134L2.23722 12.1353C2.1746 12.2254 2.13788 12.331 2.13105 12.4405C2.12421 12.55 2.14753 12.6593 2.19846 12.7565C2.24939 12.8538 2.32598 12.9351 2.41992 12.9919C2.51386 13.0486 2.62156 13.0785 2.7313 13.0784Z"
+        fill="#6D747A"
+      />
+    </svg>
+  )
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -286,25 +294,123 @@ const ListingProductPurchase: React.FC<Props> = ({
               </div>
             </div>
 
-            <div className={styles['display-time-container']}>
-              <div className={styles['display-time']}>
-                <Image className={styles['im']} src={Calendar} alt="calendar" />
-                {eventData && eventData?.length > 0
-                  ? eventData.map((obj: any, i: number, arr: any[]) => (
-                      <p key={i} className={styles.date}>
-                        {formatDateRange(obj?.from_date, obj?.to_date)}
-                      </p>
-                    ))
-                  : ''}
-                <Image className={styles['im']} src={Time} alt="Time" />{' '}
-                {eventData && eventData?.length > 0
-                  ? eventData.map((obj: any, i: number, arr: any[]) => (
-                      <p key={i} className={styles.date}>
-                        {formatDateRange(obj?.from_time, obj?.to_time)}
-                      </p>
-                    ))
-                  : ''}
-              </div>
+          
+            <div className={styles['event-date-container']}>
+              {listingModalData?.type === 3 && listingModalData?.event_date_time ? (
+                <div className={styles['eventDate-parent']}>
+                  <div
+                    className={
+                      styles.eventDate +
+                      ` ${showDays && styles['eventDate-open']}`
+                    }
+                  >
+                    <Image
+                      className={styles['im']}
+                      src={Calendar}
+                      alt="calendar"
+                    />
+                    <div className={styles['event-dates']}>
+                    {listingModalData.event_date_time && listingModalData?.event_date_time?.length > 0
+                      ? listingModalData.event_date_time.map(
+                          (obj: any, i: number, arr: any[]) => (
+                            <p key={i} className={styles.date}>
+                              {formatDateRange(obj?.from_date, obj?.to_date)}
+                            </p>
+                          ),
+                        )
+                      : ''}</div>
+                    {(listingModalData.event_weekdays && listingModalData.event_weekdays.length > 0)||(listingModalData.event_date_time && listingModalData?.event_date_time?.length > 0) && (
+                      <Image className={styles['im']} src={Time} alt="Time" />
+                    )}
+                    <div className={styles['flex-col-4']}>
+                      {listingModalData.event_weekdays &&
+                      listingModalData?.event_weekdays?.length > 0 ? (
+                        listingModalData.event_weekdays.map(
+                          (obj: any, i: number, arr: any[]) =>
+                            i > 0 && !showDays ? null : (
+                              <p
+                                key={i}
+                                className={ styles.editTime +
+                                      ` ${
+                                        i !== 0 && showDays === false
+                                          ? styles['hide']
+                                          : ''
+                                      }`
+                                }
+                              >
+                                {obj?.from_day} - {obj?.to_day},{' '}
+                                {obj?.from_time}
+                                {isMobile && showDays === false ? (
+                                  <>
+                                    ...{' '}
+                                    <span
+                                      onClick={() =>
+                                        setShowDays((prev) => !prev)
+                                      }
+                                    >
+                                      more
+                                    </span>
+                                  </>
+                                ) : (
+                                  <>
+                                    {' '}
+                                    - 
+                                    {
+                                    showDays===false && !isMobile && arr.length>1?<>{" ... "}
+                                    <span onClick={() =>
+                                        setShowDays((prev) => !prev)
+                                      }
+                                      className={styles['purpleText']}
+                                      >more</span></>
+                                    :
+                                    obj?.to_time}
+                                    {arr.length - 1 === i && isMobile && (
+                                      <>
+                                        {' '}
+                                        <span
+                                          onClick={() =>
+                                            setShowDays((prev) => !prev)
+                                          }
+                                        >
+                                          Less
+                                        </span>
+                                      </>
+                                    )}
+                                  </>
+                                )}
+                              </p>
+                            ),
+                        )
+                      ) :
+                      (listingModalData.event_date_time && listingModalData?.event_date_time?.length > 0)&&
+                      (
+                        <p
+                          className={styles.editTime}
+                        >
+                          {listingModalData?.event_date_time[0]?.from_time} -{' '}
+                          {listingModalData?.event_date_time[0]?.to_time}
+                        </p>
+                      )}
+                    </div>
+                    {
+                      listingModalData.event_weekdays &&
+                      listingModalData?.event_weekdays?.length > 0 &&
+                      !isMobile && (
+                        <div
+                          onClick={() => setShowDays((prev) => !prev)}
+                          className={`${showDays ? '' : styles['rotate']} ${
+                            styles['flex-col-start']
+                          }`}
+                        >
+                          {dropdownIcon}
+                        </div>
+                      )
+                    }
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )}
             </div>
 
             <div className={styles['variations']}>

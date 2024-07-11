@@ -509,83 +509,103 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
 
           {/* Action Buttons */}
           <div className={styles['action-btn-wrapper']}>
-            <div className={styles['event-date-container']}>
+          <div className={styles['event-date-container']}>
               {data?.type === listingTypes.PROGRAM && data?.event_date_time ? (
-                <div>
+                <div className={styles['eventDate-parent']}>
                   <div
-                    className={`${styles.eventDateSmall} ${styles.eventDate}`}
+                    className={
+                      styles.eventDate +
+                      ` ${showDays && styles['eventDate-open']}`
+                    }
                   >
                     <Image
                       className={styles['im']}
                       src={Calendar}
                       alt="calendar"
                     />
+                    <div className={styles['event-dates']}>
                     {data.event_date_time && data?.event_date_time?.length > 0
                       ? data.event_date_time.map(
                           (obj: any, i: number, arr: any[]) => (
                             <p key={i} className={styles.date}>
-                              {obj.from_date &&
-                                formatDateRange(obj?.from_date, obj?.to_date)}
+                              {formatDateRange(obj?.from_date, obj?.to_date)}
                             </p>
                           ),
                         )
-                      : ''}
-                    <Image className={styles['im']} src={Time} alt="Time" />{' '}
+                      : ''}</div>
+                    {(data.event_weekdays && data.event_weekdays.length > 0)||(data.event_date_time && data?.event_date_time?.length > 0) && (
+                      <Image className={styles['im']} src={Time} alt="Time" />
+                    )}
                     <div className={styles['flex-col-4']}>
                       {data.event_weekdays &&
                       data?.event_weekdays?.length > 0 ? (
                         data.event_weekdays.map(
-                          (obj: any, i: number, arr: any[]) => (
-                            <p
-                              key={i}
-                              className={
-                                isEditMode
-                                  ? styles.time
-                                  : styles.editTime +
-                                    ` ${
-                                      i !== 0 && showDays === false
-                                        ? styles['hide']
-                                        : ''
-                                    }`
-                              }
-                            >
-                              {obj?.from_day} - {obj?.to_day}, {obj?.from_time}
-                              {isMobile && showDays === false ? (
-                                <>
-                                  ...{' '}
-                                  <span
-                                    onClick={() => setShowDays((prev) => !prev)}
-                                  >
-                                    more
-                                  </span>
-                                </>
-                              ) : (
-                                <>
-                                  {' '}
-                                  - {obj?.to_time}
-                                  {arr.length - 1 === i && isMobile && (
-                                    <>
-                                      {' '}
-                                      <span
-                                        onClick={() =>
-                                          setShowDays((prev) => !prev)
-                                        }
-                                      >
-                                        Less
-                                      </span>
-                                    </>
-                                  )}
-                                </>
-                              )}
-                            </p>
-                          ),
+                          (obj: any, i: number, arr: any[]) =>
+                            i > 0 && !showDays ? null : (
+                              <p
+                                key={i}
+                                className={
+                                  isEditMode
+                                    ? styles.time
+                                    : styles.editTime +
+                                      ` ${
+                                        i !== 0 && showDays === false
+                                          ? styles['hide']
+                                          : ''
+                                      }`
+                                }
+                              >
+                                {obj?.from_day} - {obj?.to_day},{' '}
+                                {obj?.from_time}
+                                {isMobile && showDays === false ? (
+                                  <>
+                                    ...{' '}
+                                    <span
+                                      onClick={() =>
+                                        setShowDays((prev) => !prev)
+                                      }
+                                    >
+                                      more
+                                    </span>
+                                  </>
+                                ) : (
+                                  <>
+                                    {' '}
+                                    - 
+                                    {
+                                    showDays===false && !isMobile && arr.length>1?<>{" ... "}
+                                    <span onClick={() =>
+                                        setShowDays((prev) => !prev)
+                                      }
+                                      className={styles['purpleText']}
+                                      >more</span></>
+                                    :
+                                    obj?.to_time}
+                                    {arr.length - 1 === i && isMobile && (
+                                      <>
+                                        {' '}
+                                        <span
+                                          onClick={() =>
+                                            setShowDays((prev) => !prev)
+                                          }
+                                        >
+                                          Less
+                                        </span>
+                                      </>
+                                    )}
+                                  </>
+                                )}
+                              </p>
+                            ),
                         )
-                      ) : (
+                      ) :
+                      (data.event_date_time && data?.event_date_time?.length > 0)&&
+                      (
                         <p
                           className={isEditMode ? styles.time : styles.editTime}
                         >
-                          {data?.event_date_time.from_time} -{' '}
-                          {data?.event_date_time.to_time}
+                          {data?.event_date_time[0]?.from_time} -{' '}
+                          {data?.event_date_time[0]?.to_time}
                         </p>
                       )}
                     </div>
@@ -600,7 +620,9 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                         {data?.event_weekdays?.length > 0 && (
                           <div
                             onClick={() => setShowDays((prev) => !prev)}
-                            className={showDays ? '' : styles['rotate']}
+                            className={`${showDays ? '' : styles['rotate']} ${
+                              styles['flex-col-start']
+                            }`}
                           >
                             {dropdownIcon}
                           </div>
@@ -613,7 +635,9 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                       !isMobile && (
                         <div
                           onClick={() => setShowDays((prev) => !prev)}
-                          className={showDays ? '' : styles['rotate']}
+                          className={`${showDays ? '' : styles['rotate']} ${
+                            styles['flex-col-start']
+                          }`}
                         >
                           {dropdownIcon}
                         </div>
@@ -624,7 +648,7 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
               ) : (
                 <></>
               )}
-              {button}
+              <div className={styles['display-desktop']}>{button}</div>
             </div>
 
             {/* Send Email Button  */}

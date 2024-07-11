@@ -399,7 +399,67 @@ font-weight: 400;
 line-height: 16px;
 }
 
+.rotate{
+  display: flex;
+  align-items: flex-end;
+  rotate: 180deg;
+}
+
+.eventDate-parent{
+  position: relative;
+  min-height: 30px;
+  min-width: 100px;
+}
+
+.event-dates{
+  display: flex;
+  flex-direction: column;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+}
+
+.eventDate {
+  display: flex;
+
+  margin-bottom: 10px;
+}
+.event-date-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.eventDate p {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #6d747a;
+}
+.eventDate img {
+  margin-right: 6px;
+}
+.eventDate .date {
+  margin-right: 17px;
+}
+.eventDate .time {
+  margin-right: 14px;
+}
+.eventDate .edit-icon {
+  cursor: pointer;
+}
+
 @media screen and (max-width: 1100px) {
+
+  .eventDate-parent{
+    margin-top: 5px;
+    min-width: 92vw;
+  }
+  .eventDate{
+    max-height: 20px;
+    overflow: clip;
+  }
   .modal-wrapper {
     max-width: 1100px;
     width: 100%;
@@ -466,4 +526,45 @@ line-height: 16px;
   .note{
     width: 100%;
   }
+}
+
+@media screen and (min-width:1100px) {
+  .eventDate-parent{
+    min-width: 413px;
+  }
+  .eventDate{
+    position: absolute;
+    
+    z-index: 1;
+    background: white;
+    height: max-content;
+    right: 0;
+   padding: 0 0 0 5px;
+   border-radius: 8px;
+   left: auto !important;
+   max-height: 18px;
+   overflow: clip;
+}
+.eventDateSmall {
+  position: relative;
+}
+
+
+
+.eventDate .date,
+.eventDate .time{
+  min-width: max-content;
+}
+}
+
+.eventDate-open{
+  box-shadow: 0px 8px 12px 0px rgba(147, 156, 163, 0.12), 0px 0px 2px 0px rgba(147, 156, 163, 0.36);
+  padding-top: 2px;
+  max-height: unset;
+  background: white;
+}
+
+.purpleText{
+  color: #8064A2;
+  cursor: pointer;
 }
