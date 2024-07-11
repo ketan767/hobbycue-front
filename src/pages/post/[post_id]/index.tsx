@@ -115,11 +115,9 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
   return (
     <>
       <Head>
-        <meta property="og:image" content={String(getPreviewimage)} />
-        <meta
-          property="og:image:secure_url"
-          content={String(getPreviewimage)}
-        />
+        <meta property="og:image" content={getPreviewimage()} />
+        <meta property="og:image:secure_url" content={getPreviewimage()} />
+
         <meta
           property="og:description"
           content={`${
