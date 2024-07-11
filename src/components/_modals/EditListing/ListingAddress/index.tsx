@@ -707,6 +707,14 @@ const ListingAddressEditModal: React.FC<Props> = ({
         value: latlongObj.lng || '',
         error: null,
       },
+      pin_code: {
+        value: latlongObj.zipcode || '',
+        error: null,
+      },
+      post_code: {
+        value: latlongObj.zipcode || '',
+        error: null,
+      },
     }))
     setShowAutoAddress(false)
   }
