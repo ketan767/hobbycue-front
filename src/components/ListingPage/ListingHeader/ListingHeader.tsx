@@ -448,7 +448,7 @@ const ListingHeader: React.FC<Props> = ({
       return `${fromDay} ${fromMonthYear} - ${toDay} ${toMonthYear}`
     }
     } catch (error) {
-      return 'Undefined'
+      return ''
     }
   }
   const location = typeof window !== 'undefined' ? window.location.href : ''
@@ -650,6 +650,31 @@ const ListingHeader: React.FC<Props> = ({
                           (obj: any, i: number, arr: any[]) => (
                             <p key={i} className={styles.date}>
                               {formatDateRange(obj?.from_date, obj?.to_date)}
+                              
+                              {isMobile && showDays === false && data.event_date_time?.length>1 && (!data.event_weekdays||data.event_weekdays.length<=1) ? (
+                                  <>
+                                    ...{' '}
+                                    <span
+                                      onClick={() =>
+                                        setShowDays((prev) => !prev)
+                                      }
+                                    >
+                                      more
+                                    </span>
+                                  </>
+                                ):null}
+                                {isMobile && showDays && (data.event_date_time.length - 1 === i)  && (
+                                      <>
+                                        {' '}
+                                        <span
+                                          onClick={() =>
+                                            setShowDays((prev) => !prev)
+                                          }
+                                        >
+                                          Less
+                                        </span>
+                                      </>
+                                    )}
                             </p>
                           ),
                         )
@@ -751,8 +776,10 @@ const ListingHeader: React.FC<Props> = ({
                       </>
                     ) : (
                       listingLayoutMode !== 'edit' &&
-                      data.event_weekdays &&
-                      data?.event_weekdays?.length > 0 &&
+                      ((data.event_weekdays &&
+                      data?.event_weekdays?.length > 1)
+                    ||(data?.event_date_time&&data?.event_date_time?.length>1)
+                    ) &&
                       !isMobile && (
                         <div
                           onClick={() => setShowDays((prev) => !prev)}

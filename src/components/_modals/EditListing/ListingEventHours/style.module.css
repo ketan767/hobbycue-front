@@ -456,6 +456,10 @@ font-weight: 400;
 line-height: 24px; /* 171.429% */
   }
 
+  .listContainer hr{
+    border-color: #ddd;
+  }
+
   .listItem {
     flex-wrap: wrap;
     row-gap: 2vw;
