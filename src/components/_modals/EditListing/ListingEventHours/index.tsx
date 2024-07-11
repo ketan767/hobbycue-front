@@ -362,8 +362,8 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
         {
           from_date: '',
           to_date: '',
-          from_time: '8:00 am',
-          to_time: '9:00 pm',
+          from_time: '8:00am',
+          to_time: '9:00pm',
         },
       ])
     // }
@@ -571,6 +571,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                       }
                       className={styles['time-input']}
                       iconClass={styles['input-icon']}
+                      disabled={weekdays.length>0}
                     />
                   </div>
                   <div className={styles['breaker']+` ${i!==0&&!isMobile&&styles['no-margin']}`} />
@@ -586,6 +587,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                       }
                       className={styles['time-input']}
                       iconClass={styles['input-icon']}
+                      disabled={weekdays.length>0}
                     />
                   </div>
                 </div>
