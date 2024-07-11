@@ -336,10 +336,14 @@
 .modal-close-icon{
   position: fixed;
     top: 24px;
-    left: calc(50vw + 288px);
+    left: calc(50vw + 286px);
     cursor: pointer;
     z-index: 1000;
+border-radius: 50%;
+}
 
+.modal-close-icon:hover{
+  background: #ddd;
 }
 .profile-img {
   border-radius: 100%;
