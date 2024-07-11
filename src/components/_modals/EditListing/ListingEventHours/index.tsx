@@ -506,7 +506,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
               <PlusIcon />
               <p>Add Date</p>
             </div>
-            {eventData?.map((obj, i) => (
+            {eventData?.map((obj, i, arr) => (<>
               <div
                 key={i}
                 className={styles.listItem + ` ${styles['no-wrap']}`}
@@ -596,7 +596,8 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                   <DeleteIcon />
                 </div>
               </div>
-            ))}
+              {isMobile&&i<arr.length-1&&<hr/>}
+            </>))}
           </div>
           {/* weekdays */}
           <div className={styles.listContainer + ` ${styles['mt-32']}`}>

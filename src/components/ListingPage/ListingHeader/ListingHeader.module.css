@@ -552,6 +552,10 @@
     max-height: 22px;
     overflow: clip;
   }
+  .event-date-container{
+    max-height: 24px;
+    z-index: 1;
+  }
 }
 
 /* Desktop only */
@@ -562,7 +566,7 @@
   }
   .eventDate{
     position: absolute;
-    
+    padding-top: 2px;
     z-index: 1;
     background: white;
     height: max-content;
@@ -581,6 +585,10 @@
 
 .eventDate .date,
 .eventDate .time{
+  min-width: max-content;
+}
+
+.eventDate p{
   min-width: max-content;
 }
 }

@@ -294,7 +294,6 @@ const ListingProductPurchase: React.FC<Props> = ({
               </div>
             </div>
 
-          
             <div className={styles['event-date-container']}>
               {listingModalData?.type === 3 && listingModalData?.event_date_time ? (
                 <div className={styles['eventDate-parent']}>
@@ -311,10 +310,34 @@ const ListingProductPurchase: React.FC<Props> = ({
                     />
                     <div className={styles['event-dates']}>
                     {listingModalData.event_date_time && listingModalData?.event_date_time?.length > 0
-                      ? listingModalData.event_date_time.map(
+                      ? (showDays ? listingModalData.event_date_time : listingModalData.event_date_time.slice(0, 1)).map(
                           (obj: any, i: number, arr: any[]) => (
                             <p key={i} className={styles.date}>
                               {formatDateRange(obj?.from_date, obj?.to_date)}
+                              {isMobile && showDays === false && (listingModalData?.event_date_time&&listingModalData?.event_date_time?.length>1) && (!listingModalData?.event_weekdays||listingModalData?.event_weekdays?.length<=1) ? (
+                                  <>
+                                    ...{' '}
+                                    <span
+                                      onClick={() =>
+                                        setShowDays((prev) => !prev)
+                                      }
+                                    >
+                                      more
+                                    </span>
+                                  </>
+                                ):null}
+                                {isMobile && showDays && (listingModalData?.event_date_time&&listingModalData?.event_date_time?.length - 1 === i)  && (
+                                      <>
+                                        {' '}
+                                        <span
+                                          onClick={() =>
+                                            setShowDays((prev) => !prev)
+                                          }
+                                        >
+                                          Less
+                                        </span>
+                                      </>
+                                    )}
                             </p>
                           ),
                         )
@@ -325,7 +348,7 @@ const ListingProductPurchase: React.FC<Props> = ({
                     <div className={styles['flex-col-4']}>
                       {listingModalData.event_weekdays &&
                       listingModalData?.event_weekdays?.length > 0 ? (
-                        listingModalData.event_weekdays.map(
+                        (showDays ? listingModalData.event_weekdays : listingModalData.event_weekdays.slice(0, 1)).map(
                           (obj: any, i: number, arr: any[]) =>
                             i > 0 && !showDays ? null : (
                               <p
@@ -356,7 +379,7 @@ const ListingProductPurchase: React.FC<Props> = ({
                                     {' '}
                                     - 
                                     {
-                                    showDays===false && !isMobile && arr.length>1?<>{" ... "}
+                                    showDays===false && !isMobile && listingModalData?.event_weekdays && listingModalData?.event_weekdays?.length>1?<>{" ... "}
                                     <span onClick={() =>
                                         setShowDays((prev) => !prev)
                                       }
@@ -364,7 +387,7 @@ const ListingProductPurchase: React.FC<Props> = ({
                                       >more</span></>
                                     :
                                     obj?.to_time}
-                                    {arr.length - 1 === i && isMobile && (
+                                    {listingModalData?.event_weekdays&&listingModalData?.event_weekdays?.length - 1 === i && isMobile && (
                                       <>
                                         {' '}
                                         <span
@@ -393,8 +416,9 @@ const ListingProductPurchase: React.FC<Props> = ({
                       )}
                     </div>
                     {
-                      listingModalData.event_weekdays &&
-                      listingModalData?.event_weekdays?.length > 0 &&
+                      ((listingModalData.event_weekdays &&
+                      listingModalData?.event_weekdays?.length >0)
+                      ||(listingModalData?.event_date_time&&listingModalData?.event_date_time?.length>1))&&
                       !isMobile && (
                         <div
                           onClick={() => setShowDays((prev) => !prev)}
@@ -404,14 +428,14 @@ const ListingProductPurchase: React.FC<Props> = ({
                         >
                           {dropdownIcon}
                         </div>
-                      )
-                    }
+                      )}
                   </div>
                 </div>
               ) : (
                 <></>
               )}
             </div>
+
 
             <div className={styles['variations']}>
               <div className={styles['variations-list']}>
