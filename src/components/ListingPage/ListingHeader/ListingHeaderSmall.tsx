@@ -525,7 +525,7 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                     />
                     <div className={styles['event-dates']}>
                     {data.event_date_time && data?.event_date_time?.length > 0
-                      ? data.event_date_time.map(
+                      ? (showDays ? data.event_date_time : data.event_date_time.slice(0, 1)).map(
                           (obj: any, i: number, arr: any[]) => (
                             <p key={i} className={styles.date}>
                               {formatDateRange(obj?.from_date, obj?.to_date)}
@@ -539,7 +539,7 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                     <div className={styles['flex-col-4']}>
                       {data.event_weekdays &&
                       data?.event_weekdays?.length > 0 ? (
-                        data.event_weekdays.map(
+                        (showDays ? data.event_weekdays : data.event_weekdays.slice(0, 1)).map(
                           (obj: any, i: number, arr: any[]) =>
                             i > 0 && !showDays ? null : (
                               <p
@@ -573,7 +573,7 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                                     {' '}
                                     - 
                                     {
-                                    showDays===false && !isMobile && arr.length>1?<>{" ... "}
+                                    showDays===false && !isMobile && data.event_weekdays.length>1?<>{" ... "}
                                     <span onClick={() =>
                                         setShowDays((prev) => !prev)
                                       }
@@ -581,7 +581,7 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                                       >more</span></>
                                     :
                                     obj?.to_time}
-                                    {arr.length - 1 === i && isMobile && (
+                                    {data.event_weekdays.length - 1 === i && isMobile && (
                                       <>
                                         {' '}
                                         <span
