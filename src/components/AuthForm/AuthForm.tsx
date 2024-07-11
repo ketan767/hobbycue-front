@@ -69,6 +69,8 @@ function validatePasswordConditions(password: string) {
   return validation
 }
 
+const redirectURI = process.env.NEXT_PUBLIC_BASE_URL
+
 const AuthForm: React.FC<Props> = (props) => {
   const { isModal } = props
   const router = useRouter()
@@ -459,6 +461,7 @@ const AuthForm: React.FC<Props> = (props) => {
             // App Secret: a4839f4438a6b3527ca60636cc5d76a6
             appId="1614660215286765"
             callback={handleFacebookAuth}
+            redirectUri={redirectURI}
             render={(renderProps: any) => (
               <Button
                 className={`${styles['social-login-btn']} ${styles['facebook']}`}
