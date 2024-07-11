@@ -54,8 +54,8 @@ type ListingAddressData = {
 const initialEventHour = {
   from_date: new Date().toISOString(),
   to_date: new Date().toISOString(),
-  from_time: '8:00 am',
-  to_time: '9:00 pm',
+  from_time: '8:00am',
+  to_time: '9:00pm',
 }
 
 const timings = [
@@ -336,41 +336,44 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
         {
           from_day: 'Mon',
           to_day: 'Fri',
-          from_time: '8:00 am',
-          to_time: '9:00 pm',
+          from_time: '8:00am',
+          to_time: '9:00pm',
         },
       ])
     }
   }
 
   const addDateAndTime = () => {
-    if (eventData.length === 0) {
-      const fromDay = days[new Date(initialEventHour.from_date).getDay()]
-      const toDay = days[new Date(initialEventHour.to_date).getDay()]
+    // if (eventData.length === 0) {
+    //   const fromDay = days[new Date(initialEventHour.from_date).getDay()]
+    //   const toDay = days[new Date(initialEventHour.to_date).getDay()]
 
-      setEventData([
-        {
-          from_date: initialEventHour.from_date,
-          to_date: initialEventHour.to_date,
-          from_time: initialEventHour.from_time,
-          to_time: initialEventHour.to_time,
-        },
-      ])
-    } else {
+    //   setEventData([
+    //     {
+    //       from_date: initialEventHour.from_date,
+    //       to_date: initialEventHour.to_date,
+    //       from_time: initialEventHour.from_time,
+    //       to_time: initialEventHour.to_time,
+    //     },
+    //   ])
+    // } else {
       setEventData((prevdateTime) => [
         ...prevdateTime,
         {
-          from_date: 'Mon',
-          to_date: 'Fri',
+          from_date: '',
+          to_date: '',
           from_time: '8:00 am',
           to_time: '9:00 pm',
         },
       ])
-    }
+    // }
   }
 
   const deleteWeekday = (index: number) => {
     setWeekdays((prevWeekdays) => prevWeekdays.filter((_, i) => i !== index))
+  }
+  const deleteDate = (index: number) => {
+    setEventData((prevWeekdays) => prevWeekdays.filter((_, i) => i !== index))
   }
 
   useEffect(() => {
@@ -498,7 +501,6 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
         <hr className={styles['modal-hr']} />
 
         <section className={styles['body']}>
-          <div className={styles.sectionHead}></div>
           <div className={styles.listContainer + ` ${styles['mt-32']}`}>
             <div onClick={addDateAndTime} className={styles['adder']}>
               <PlusIcon />
@@ -519,7 +521,7 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                       styles.listSubItem + ` ${styles['mobile-w-auto']}`
                     }
                   >
-                    {i === 0 && <label> From Date </label>}
+                    <label className={`${i!==0&&styles['desktop-hidden']}`}> From Date </label>
 
                     <input
                       value={obj.from_date}
@@ -534,9 +536,9 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                       {formatDateFunc(obj.from_date)}
                     </p>
                   </div>
-                  <div className={styles['breaker']} />
+                  <div className={styles['breaker']+` ${i!==0&&!isMobile&&styles['no-margin']}`} />
                   <div className={styles.listSubItem}>
-                    <label> To Date </label>
+                   <label className={`${i!==0&&styles['desktop-hidden']}`}> To Date </label>
 
                     <input
                       value={obj.to_date}
@@ -559,8 +561,8 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                 </div>
                 <p className={styles['comma']}>,</p>
                 <div className={styles['subitem-group']}>
-                  <div className={styles.listSubItem}>
-                    <label> From Time </label>
+                  <div className={styles.listSubItem+` ${styles['mob-w-132']}`}>
+                 <label className={`${i!==0&&styles['desktop-hidden']}`}> From Time </label>
                     <InputSelect
                       options={timings}
                       value={obj.from_time}
@@ -571,9 +573,9 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                       iconClass={styles['input-icon']}
                     />
                   </div>
-                  <div className={styles['breaker']} />
-                  <div className={styles.listSubItem}>
-                    <label> To Time </label>
+                  <div className={styles['breaker']+` ${i!==0&&!isMobile&&styles['no-margin']}`} />
+                  <div className={styles.listSubItem+` ${styles['mob-w-132']}`}>
+                <label className={`${i!==0&&styles['desktop-hidden']}`}> To Time </label>
                     <InputSelect
                       value={obj.to_time}
                       options={timings.slice(
@@ -586,6 +588,12 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
                       iconClass={styles['input-icon']}
                     />
                   </div>
+                </div>
+                <div
+                  onClick={() => deleteDate(i)}
+                  className={styles['self-left']+` ${styles['centered']}`}
+                >
+                  <DeleteIcon />
                 </div>
               </div>
             ))}

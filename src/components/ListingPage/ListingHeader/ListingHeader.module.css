@@ -216,6 +216,14 @@
   min-width: 100px;
 }
 
+.event-dates{
+  display: flex;
+  flex-direction: column;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+}
+
 .eventDate {
   display: flex;
 
@@ -537,6 +545,13 @@
   .time span{
     color: #8064a2;
   }
+  .eventDate-parent{
+    min-width: 92vw;
+  }
+  .eventDate {
+    max-height: 22px;
+    overflow: clip;
+  }
 }
 
 /* Desktop only */
@@ -555,16 +570,14 @@
    padding: 0 0 0 5px;
    border-radius: 8px;
    left: auto !important;
+   max-height: 18px;
+   overflow: clip;
 }
 .eventDateSmall {
   position: relative;
 }
 
 
-.eventDate-open{
-  box-shadow: 0px 8px 12px 0px rgba(147, 156, 163, 0.12), 0px 0px 2px 0px rgba(147, 156, 163, 0.36);
-  padding-top: 2px;
-}
 
 .eventDate .date,
 .eventDate .time{
@@ -572,6 +585,12 @@
 }
 }
 
+.eventDate-open{
+  box-shadow: 0px 8px 12px 0px rgba(147, 156, 163, 0.12), 0px 0px 2px 0px rgba(147, 156, 163, 0.36);
+  padding-top: 2px;
+  max-height: unset;
+  background: white;
+}
 .event-tab{
   position: relative;
 }
@@ -598,3 +617,7 @@ right: 4px;
 top: -2px;
 }
 
+.purpleText{
+  color: #8064A2;
+  cursor: pointer;
+}

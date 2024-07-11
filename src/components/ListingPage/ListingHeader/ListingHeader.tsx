@@ -411,6 +411,7 @@ const ListingHeader: React.FC<Props> = ({
     fromDate: string | number | Date,
     toDate: string | number | Date,
   ): string {
+    try {
     const dayOptions: Intl.DateTimeFormatOptions = { day: 'numeric' }
     const monthYearOptions: Intl.DateTimeFormatOptions = {
       year: 'numeric',
@@ -445,6 +446,9 @@ const ListingHeader: React.FC<Props> = ({
       return `${fromDay} ${fromMonthYear}`
     } else {
       return `${fromDay} ${fromMonthYear} - ${toDay} ${toMonthYear}`
+    }
+    } catch (error) {
+      return 'Undefined'
     }
   }
   const location = typeof window !== 'undefined' ? window.location.href : ''
@@ -640,6 +644,7 @@ const ListingHeader: React.FC<Props> = ({
                       src={Calendar}
                       alt="calendar"
                     />
+                    <div className={styles['event-dates']}>
                     {data.event_date_time && data?.event_date_time?.length > 0
                       ? data.event_date_time.map(
                           (obj: any, i: number, arr: any[]) => (
@@ -648,8 +653,8 @@ const ListingHeader: React.FC<Props> = ({
                             </p>
                           ),
                         )
-                      : ''}
-                    {data.event_weekdays.length > 0 && (
+                      : ''}</div>
+                    {(data.event_weekdays && data.event_weekdays.length > 0)||(data.event_date_time && data?.event_date_time?.length > 0) && (
                       <Image className={styles['im']} src={Time} alt="Time" />
                     )}
                     <div className={styles['flex-col-4']}>
@@ -687,7 +692,16 @@ const ListingHeader: React.FC<Props> = ({
                                 ) : (
                                   <>
                                     {' '}
-                                    - {obj?.to_time}
+                                    - 
+                                    {
+                                    showDays===false && !isMobile && arr.length>1?<>{" ... "}
+                                    <span onClick={() =>
+                                        setShowDays((prev) => !prev)
+                                      }
+                                      className={styles['purpleText']}
+                                      >more</span></>
+                                    :
+                                    obj?.to_time}
                                     {arr.length - 1 === i && isMobile && (
                                       <>
                                         {' '}
@@ -705,12 +719,14 @@ const ListingHeader: React.FC<Props> = ({
                               </p>
                             ),
                         )
-                      ) : (
+                      ) :
+                      (data.event_date_time && data?.event_date_time?.length > 0)&&
+                      (
                         <p
                           className={isEditMode ? styles.time : styles.editTime}
                         >
-                          {data?.event_date_time.from_time} -{' '}
-                          {data?.event_date_time.to_time}
+                          {data?.event_date_time[0]?.from_time} -{' '}
+                          {data?.event_date_time[0]?.to_time}
                         </p>
                       )}
                     </div>
