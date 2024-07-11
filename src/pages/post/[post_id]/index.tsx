@@ -102,6 +102,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
       }
     }
   }
+  console.warn('data.postdataaaaaaaaaaaaa', data.postsData)
 
   const post_descripton = convertHtmlToPlainText(data.postsData?.content)
 
@@ -134,8 +135,14 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
 
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${
-          data?.metadata?.data?.title ? data?.metadata?.data?.title : 'Post'
-        } | HobbyCue`}</title>
+          data?.metadata?.data?.title
+            ? data?.metadata?.data?.title
+            : data.postsData?._author?.full_name +
+              ' - ' +
+              data.postsData?._hobby?.display +
+              ' at ' +
+              data?.postsData?.visibility
+        } `}</title>
       </Head>
       <CommunityPageLayout activeTab="posts" singlePostPage={true}>
         <main>
@@ -168,7 +175,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   // Extract postId and query parameters
   const postId = new URL(url).pathname.split('/').pop()
   const queryParams = new URLSearchParams(
-    `populate=_genre,_hobby&_id=${postId}`,
+    `populate=_author,_genre,_hobby&_id=${postId}`,
   )
   const { err, res } = await getAllPosts(queryParams.toString())
 
