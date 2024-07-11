@@ -67,7 +67,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
       setPostData(res.data.data.posts?.[0])
     }
     setIsLoadingPosts(false)
-    // router.push('/community')
+    router.push('/community')
   }
 
   const openPostmodal = () => {
@@ -92,16 +92,19 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
     return tempElement.innerText
   }
   const getPreviewimage = () => {
-    if (data.metadata.data.image) {
+    if (data?.metadata?.data?.image) {
       return data?.metadata?.data?.image
     } else {
-      return data?.postsData?.media[0]
+      if (data?.postsData?.media[0]) {
+        return data?.postsData?.media[0]
+      } else {
+        return ''
+      }
     }
   }
 
   const post_descripton = convertHtmlToPlainText(data.postsData?.content)
 
-  console.warn('postdesccccccccccccccccc', post_descripton)
   useEffect(() => {
     if (postId) {
       getPost()
