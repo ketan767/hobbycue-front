@@ -335,6 +335,7 @@
 }
 
 .modal-close-icon{
+
   position: absolute;
   right: 6px;
   top: 6px;
@@ -345,6 +346,7 @@
   height: 30px;
 
 }
+
 
 .modal-close-icon:hover{
   background: #ddd;
