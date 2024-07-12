@@ -218,7 +218,7 @@ top: -2px;
   .navigation-tabs a {
     min-width: 50px;
     font-size: 12px;
-    padding: 10px 0;
+    padding: 12px 0;
   }
 
   .display-mobile {
@@ -266,6 +266,7 @@ align-items: center;
 gap: 10px;
 flex-shrink: 0;
 right: -8px;
+top: 0;
 }
 .navigation-tabs{
   margin-left: 0;

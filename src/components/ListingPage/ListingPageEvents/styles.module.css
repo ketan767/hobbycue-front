@@ -50,8 +50,8 @@ border-radius: 50%;
 .new-tag{
   border: 2px solid #0096C8;
   display: inline-flex;
-padding: 4px 10px;
-align-items: flex-start;
+padding: 2.4px 10px;
+align-items: center;
 gap: 10px;
 color: #0096C8;
 font-family: 'Poppins';

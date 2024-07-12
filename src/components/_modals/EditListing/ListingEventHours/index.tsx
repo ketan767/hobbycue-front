@@ -185,10 +185,6 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
       )
       setIsSelectingStartDate(false)
     } else {
-      if (new Date(newDate) < new Date(eventData[index].from_date)) {
-        alert('To Date cannot be before From Date')
-        return
-      }
       setEventData((prevData) =>
         prevData.map(
           (event, i) =>
@@ -208,21 +204,33 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
   // }, [eventData.from_date])
 
   const handleSubmit = async () => {
+    const modifiedEventData = eventData.map((event) => {
+      if (event.from_date && !event.to_date) {
+        return { ...event, to_date: event.from_date }
+      } else if (!event.from_date && event.to_date) {
+        return { ...event, from_date: event.to_date }
+      }
+      return event
+    })
+
     const jsonData = {
-      ...eventData,
+      ...modifiedEventData,
     }
     console.log({ jsonData })
     setSubmitBtnLoading(true)
+
     const { err, res } = await updateListing(listingModalData._id, {
-      event_date_time: eventData,
+      event_date_time: modifiedEventData,
       event_weekdays: weekdays,
     })
+
     const updatedData = {
       ...listingModalData,
-      event_date_time: eventData,
+      event_date_time: modifiedEventData,
       event_weekdays: weekdays,
     }
     dispatch(updateListingModalData(updatedData))
+
     if (err) return console.log(err)
     console.log('res', res?.data.data.listing)
 
@@ -234,18 +242,27 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
   }
 
   const handleBack = async () => {
+    const modifiedEventData = eventData.map((event) => {
+      if (event.from_date && !event.to_date) {
+        return { ...event, to_date: event.from_date }
+      } else if (!event.from_date && event.to_date) {
+        return { ...event, from_date: event.to_date }
+      }
+      return event
+    })
+
     const jsonData = {
-      ...eventData,
+      ...modifiedEventData,
     }
     console.log({ jsonData })
     setBackBtnLoading(true)
     const { err, res } = await updateListing(listingModalData._id, {
-      event_date_time: eventData,
+      event_date_time: modifiedEventData,
       event_weekdays: weekdays,
     })
     const updatedData = {
       ...listingModalData,
-      event_date_time: eventData,
+      event_date_time: modifiedEventData,
       event_weekdays: weekdays,
     }
     dispatch(updateListingModalData(updatedData))
@@ -357,15 +374,15 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
     //     },
     //   ])
     // } else {
-      setEventData((prevdateTime) => [
-        ...prevdateTime,
-        {
-          from_date: '',
-          to_date: '',
-          from_time: '8:00am',
-          to_time: '9:00pm',
-        },
-      ])
+    setEventData((prevdateTime) => [
+      ...prevdateTime,
+      {
+        from_date: '',
+        to_date: '',
+        from_time: '8:00am',
+        to_time: '9:00pm',
+      },
+    ])
     // }
   }
 
@@ -506,100 +523,136 @@ const ListingEventHoursEditModal: React.FC<Props> = ({
               <PlusIcon />
               <p>Add Date</p>
             </div>
-            {eventData?.map((obj, i, arr) => (<>
-              <div
-                key={i}
-                className={styles.listItem + ` ${styles['no-wrap']}`}
-              >
+            {eventData?.map((obj, i, arr) => (
+              <>
                 <div
-                  className={
-                    styles['subitem-group'] + ` ${styles['mobile-group']}`
-                  }
+                  key={i}
+                  className={styles.listItem + ` ${styles['no-wrap']}`}
                 >
                   <div
                     className={
-                      styles.listSubItem + ` ${styles['mobile-w-auto']}`
+                      styles['subitem-group'] + ` ${styles['mobile-group']}`
                     }
                   >
-                    <label className={`${i!==0&&styles['desktop-hidden']}`}> From Date </label>
-
-                    <input
-                      value={obj.from_date}
-                      className={styles.inputField}
-                      type="date"
-                      min={today}
-                      onChange={(item) =>
-                        handleDateSelection(item, 'from_date', i)
-                      }
-                    />
-                    <p className={styles['formatted-date']}>
-                      {formatDateFunc(obj.from_date)}
-                    </p>
-                  </div>
-                  <div className={styles['breaker']+` ${i!==0&&!isMobile&&styles['no-margin']}`} />
-                  <div className={styles.listSubItem}>
-                   <label className={`${i!==0&&styles['desktop-hidden']}`}> To Date </label>
-
-                    <input
-                      value={obj.to_date}
-                      className={styles.inputField}
-                      type="date"
-                      min={obj.from_date}
-                      onChange={(e: any) =>
-                        handleDateSelection(e, 'to_date', i)
-                      }
-                    />
-                    <p
+                    <div
                       className={
-                        styles['formatted-date']
-                        // + ` ${styles['left-more']}`
+                        styles.listSubItem + ` ${styles['mobile-w-auto']}`
                       }
                     >
-                      {formatDateFunc(obj.to_date)}
-                    </p>
-                  </div>
-                </div>
-                <p className={styles['comma']}>,</p>
-                <div className={styles['subitem-group']}>
-                  <div className={styles.listSubItem+` ${styles['mob-w-132']}`}>
-                 <label className={`${i!==0&&styles['desktop-hidden']}`}> From Time </label>
-                    <InputSelect
-                      options={timings}
-                      value={obj.from_time}
-                      onChange={(item: any) =>
-                        onChangeFromday(item, 'from_time', i)
+                      <label
+                        className={`${i !== 0 && styles['desktop-hidden']}`}
+                      >
+                        {' '}
+                        From Date{' '}
+                      </label>
+
+                      <input
+                        value={obj.from_date}
+                        className={styles.inputField}
+                        type="date"
+                        min={today}
+                        onChange={(item) =>
+                          handleDateSelection(item, 'from_date', i)
+                        }
+                      />
+                      <p className={styles['formatted-date']}>
+                        {formatDateFunc(obj.from_date)}
+                      </p>
+                    </div>
+                    <div
+                      className={
+                        styles['breaker'] +
+                        ` ${i !== 0 && !isMobile && styles['no-margin']}`
                       }
-                      className={styles['time-input']}
-                      iconClass={styles['input-icon']}
-                      disabled={weekdays.length>0}
                     />
+                    <div className={styles.listSubItem}>
+                      <label
+                        className={`${i !== 0 && styles['desktop-hidden']}`}
+                      >
+                        {' '}
+                        To Date{' '}
+                      </label>
+
+                      <input
+                        value={obj.to_date}
+                        className={styles.inputField}
+                        type="date"
+                        min={obj.from_date}
+                        onChange={(e: any) =>
+                          handleDateSelection(e, 'to_date', i)
+                        }
+                      />
+                      <p
+                        className={
+                          styles['formatted-date']
+                          // + ` ${styles['left-more']}`
+                        }
+                      >
+                        {formatDateFunc(obj.to_date)}
+                      </p>
+                    </div>
                   </div>
-                  <div className={styles['breaker']+` ${i!==0&&!isMobile&&styles['no-margin']}`} />
-                  <div className={styles.listSubItem+` ${styles['mob-w-132']}`}>
-                <label className={`${i!==0&&styles['desktop-hidden']}`}> To Time </label>
-                    <InputSelect
-                      value={obj.to_time}
-                      options={timings.slice(
-                        timings.indexOf(obj.from_time) + 1,
-                      )}
-                      onChange={(item: any) =>
-                        onChangeFromday(item, 'to_time', i)
+                  <p className={styles['comma']}>,</p>
+                  <div className={styles['subitem-group']}>
+                    <div
+                      className={styles.listSubItem + ` ${styles['mob-w-132']}`}
+                    >
+                      <label
+                        className={`${i !== 0 && styles['desktop-hidden']}`}
+                      >
+                        {' '}
+                        From Time{' '}
+                      </label>
+                      <InputSelect
+                        options={timings}
+                        value={obj.from_time}
+                        onChange={(item: any) =>
+                          onChangeFromday(item, 'from_time', i)
+                        }
+                        className={styles['time-input']}
+                        iconClass={styles['input-icon']}
+                        disabled={weekdays.length > 0}
+                      />
+                    </div>
+                    <div
+                      className={
+                        styles['breaker'] +
+                        ` ${i !== 0 && !isMobile && styles['no-margin']}`
                       }
-                      className={styles['time-input']}
-                      iconClass={styles['input-icon']}
-                      disabled={weekdays.length>0}
                     />
+                    <div
+                      className={styles.listSubItem + ` ${styles['mob-w-132']}`}
+                    >
+                      <label
+                        className={`${i !== 0 && styles['desktop-hidden']}`}
+                      >
+                        {' '}
+                        To Time{' '}
+                      </label>
+                      <InputSelect
+                        value={obj.to_time}
+                        options={timings.slice(
+                          timings.indexOf(obj.from_time) + 1,
+                        )}
+                        onChange={(item: any) =>
+                          onChangeFromday(item, 'to_time', i)
+                        }
+                        className={styles['time-input']}
+                        iconClass={styles['input-icon']}
+                        disabled={weekdays.length > 0}
+                      />
+                    </div>
+                  </div>
+                  <div
+                    onClick={() => deleteDate(i)}
+                    className={styles['self-left'] + ` ${styles['centered']}`}
+                  >
+                    <DeleteIcon />
                   </div>
                 </div>
-                <div
-                  onClick={() => deleteDate(i)}
-                  className={styles['self-left']+` ${styles['centered']}`}
-                >
-                  <DeleteIcon />
-                </div>
-              </div>
-              {isMobile&&i<arr.length-1&&<hr/>}
-            </>))}
+                {isMobile && i < arr.length - 1 && <hr />}
+              </>
+            ))}
           </div>
           {/* weekdays */}
           <div className={styles.listContainer + ` ${styles['mt-32']}`}>

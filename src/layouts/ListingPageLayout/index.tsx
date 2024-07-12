@@ -76,8 +76,6 @@ const ListingPageLayout: React.FC<Props> = ({
     (state: RootState) => state.site,
   )
 
-  console.log(activeTab, 'activeTab')
-
   function checkScroll() {
     const scrollValue = window.scrollY || document.documentElement.scrollTop
 
@@ -95,7 +93,6 @@ const ListingPageLayout: React.FC<Props> = ({
       return
     }
     let hasError = false
-    console.log('layutmode', listingLayoutMode)
 
     if (listingLayoutMode === 'edit') {
       setHobbyError(false)
@@ -200,26 +197,6 @@ const ListingPageLayout: React.FC<Props> = ({
   )
 
   useEffect(() => {
-    const now = new Date()
-    const sevenDaysFromNow = new Date(now)
-    sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7)
-
-    const listingsWithin7Days = uniqueListings.filter((listing) => {
-      if (!listing?.event_date_time?.to_date) return false
-      let toDate
-      if (listing?.event_date_time?.to_date.includes('T')) {
-        toDate = new Date(listing?.event_date_time?.to_date)
-      } else {
-        toDate = new Date(`${listing?.event_date_time?.to_date}T00:00:00`)
-      }
-      if (isNaN(toDate.getTime())) return false
-      return toDate >= now && toDate <= sevenDaysFromNow
-    })
-
-    dispatch(updateTotalEvents(listingsWithin7Days.length))
-  }, [uniqueListings])
-
-  useEffect(() => {
     window.addEventListener('scroll', checkScroll)
 
     return () => window.removeEventListener('scroll', checkScroll)
@@ -253,6 +230,8 @@ const ListingPageLayout: React.FC<Props> = ({
   } else {
     content = children
   }
+
+  console.warn('totalEventssssssssssssss', totalEvents)
   return (
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
@@ -433,7 +412,7 @@ const ListingPageLayout: React.FC<Props> = ({
             }}
             className={styles['expand-all']}
           >
-            {expandAll ? <p>See more</p> : <p>See less</p>}
+            {expandAll ? <p>See less</p> : <p>See more</p>}
             <Image
               src={ChevronDown}
               style={{ transition: 'all 0.3s ease' }}

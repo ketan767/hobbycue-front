@@ -10,7 +10,11 @@ import Tooltip from '@/components/Tooltip/ToolTip'
 import styles from './styles.module.css'
 import AdminSvg from '@/assets/svg/adminSvg.svg'
 import ListingPageLayout from '../../../layouts/ListingPageLayout'
-import { getListingPages, getListingTags } from '@/services/listing.service'
+import {
+  GetListingEvents,
+  getListingPages,
+  getListingTags,
+} from '@/services/listing.service'
 import { getAllUserDetail } from '@/services/user.service'
 import { dateFormat } from '@/utils'
 import {
@@ -23,6 +27,7 @@ import {
   updateTagsOpenStates,
   updateWorkingHoursOpenStates,
   updateRelatedListingsOpenStates2,
+  updateTotalEvents,
 } from '@/redux/slices/site'
 import WhatsappIcon from '@/assets/svg/whatsapp.svg'
 import { listingTypes } from '@/constants/constant'
@@ -345,7 +350,17 @@ const ListingPageMain: React.FC<Props> = ({
       setShowHobbies(true)
     }
   }
+  const updateEventBadge = async () => {
+    const response = await GetListingEvents(data?._id)
 
+    if (response.res) {
+      dispatch(updateTotalEvents(response.res.data?.event_count ?? 0))
+      console.warn('event_COuntssssssssss', response.res.data?.event_count)
+    }
+  }
+  useEffect(() => {
+    updateEventBadge()
+  }, [])
   const socialMediaIcons: Record<SocialMediaOption, any> = {
     Facebook:
       'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/facebook.svg',

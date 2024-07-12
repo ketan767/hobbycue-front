@@ -106,7 +106,7 @@ const ListingHomeTab: React.FC<Props> = ({ data, AboutErr, expandAll }) => {
                 showOthers ? ' ' + styles['other-data-wrapper-mobile'] : ''
               }`}
             >
-              <h4>Profile URL</h4>
+              <h4>Page URL</h4>
               <div className={styles.textGray}>{data?.page_url}</div>
               {data?.gender && (
                 <>

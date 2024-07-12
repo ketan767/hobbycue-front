@@ -11,6 +11,7 @@ import {
   updateListingModalData,
   updateListingTypeModalMode,
   updatePageDataForEvent,
+  updateTotalEvents,
 } from '@/redux/slices/site'
 import { useRouter } from 'next/router'
 
@@ -38,6 +39,7 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
           const res = await GetListingEvents(params.search_id)
 
           setEventData(res)
+
           console.log('eventres', res)
         }
       } catch (err) {
@@ -47,7 +49,8 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
 
     fetchData()
   }, [data])
-  console.log('eventdata', eventData?.res?.data)
+
+  console.warn('eventdataaaaaaaaaaaa', eventData?.res?.data)
   const isMobile = useMediaQuery('(max-width:1100px)')
 
   const router = useRouter()
@@ -103,15 +106,15 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
       (listings: any) => listings.listings,
     ),
     ...(eventData?.res?.data?.listingMap ?? []),
-  ];
-  
+  ]
 
-  // Filter out duplicates based on the _id
   const uniqueListings = allListings.filter(
     (listing, index, self) =>
       index === self.findIndex((t) => t._id === listing._id),
   )
-
+  const sortedListings = uniqueListings.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  )
   const plusIcon = (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -160,10 +163,9 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
             </div>
 
             {/* Combine both data sources */}
-            {uniqueListings.map((listing) => (
-                <ListingCard key={listing._id} data={listing} />
-              ))
-            }
+            {sortedListings.map((listing) => (
+              <ListingCard key={listing._id} data={listing} />
+            ))}
           </div>
         )}
       </main>

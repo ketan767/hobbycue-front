@@ -212,7 +212,7 @@ const ListingProductPurchase: React.FC<Props> = ({
     fromDate: string | number | Date,
     toDate: string | number | Date,
   ): string {
-    console.log({fromDate,toDate})
+    console.log({ fromDate, toDate })
     const dayOptions: Intl.DateTimeFormatOptions = { day: 'numeric' }
     const monthYearOptions: Intl.DateTimeFormatOptions = {
       year: 'numeric',
@@ -272,11 +272,6 @@ const ListingProductPurchase: React.FC<Props> = ({
           onClick={handleClose}
         />
         {/* Modal Header */}
-        <header className={styles['header']}>
-          <h4 className={styles['heading']}>{'Variants'}</h4>
-        </header>
-
-        <hr className={styles['modal-hr']} />
 
         <section className={styles['body']}>
           <div className={styles['container']}>
@@ -295,7 +290,8 @@ const ListingProductPurchase: React.FC<Props> = ({
             </div>
 
             <div className={styles['event-date-container']}>
-              {listingModalData?.type === 3 && listingModalData?.event_date_time ? (
+              {listingModalData?.type === 3 &&
+              listingModalData?.event_date_time ? (
                 <div className={styles['eventDate-parent']}>
                   <div
                     className={
@@ -309,56 +305,78 @@ const ListingProductPurchase: React.FC<Props> = ({
                       alt="calendar"
                     />
                     <div className={styles['event-dates']}>
-                    {listingModalData.event_date_time && listingModalData?.event_date_time?.length > 0
-                      ? (showDays ? listingModalData.event_date_time : listingModalData.event_date_time.slice(0, 1)).map(
-                          (obj: any, i: number, arr: any[]) => (
+                      {listingModalData.event_date_time &&
+                      listingModalData?.event_date_time?.length > 0
+                        ? (showDays
+                            ? listingModalData.event_date_time
+                            : listingModalData.event_date_time.slice(0, 1)
+                          ).map((obj: any, i: number, arr: any[]) => (
                             <p key={i} className={styles.date}>
                               {formatDateRange(obj?.from_date, obj?.to_date)}
-                              {isMobile && showDays === false && (listingModalData?.event_date_time&&listingModalData?.event_date_time?.length>1) && (!listingModalData?.event_weekdays||listingModalData?.event_weekdays?.length<=1) ? (
+                              {isMobile &&
+                              showDays === false &&
+                              listingModalData?.event_date_time &&
+                              listingModalData?.event_date_time?.length > 1 &&
+                              (!listingModalData?.event_weekdays ||
+                                listingModalData?.event_weekdays?.length <=
+                                  1) ? (
+                                <>
+                                  ...{' '}
+                                  <span
+                                    onClick={() => setShowDays((prev) => !prev)}
+                                  >
+                                    more
+                                  </span>
+                                </>
+                              ) : null}
+                              {isMobile &&
+                                showDays &&
+                                listingModalData?.event_date_time &&
+                                listingModalData?.event_date_time?.length -
+                                  1 ===
+                                  i && (
                                   <>
-                                    ...{' '}
+                                    {' '}
                                     <span
                                       onClick={() =>
                                         setShowDays((prev) => !prev)
                                       }
                                     >
-                                      more
+                                      Less
                                     </span>
                                   </>
-                                ):null}
-                                {isMobile && showDays && (listingModalData?.event_date_time&&listingModalData?.event_date_time?.length - 1 === i)  && (
-                                      <>
-                                        {' '}
-                                        <span
-                                          onClick={() =>
-                                            setShowDays((prev) => !prev)
-                                          }
-                                        >
-                                          Less
-                                        </span>
-                                      </>
-                                    )}
+                                )}
                             </p>
-                          ),
-                        )
-                      : ''}</div>
-                    {(listingModalData.event_weekdays && listingModalData.event_weekdays.length > 0)||(listingModalData.event_date_time && listingModalData?.event_date_time?.length > 0) && (
-                      <Image className={styles['im']} src={Time} alt="Time" />
-                    )}
+                          ))
+                        : ''}
+                    </div>
+                    {(listingModalData.event_weekdays &&
+                      listingModalData.event_weekdays.length > 0) ||
+                      (listingModalData.event_date_time &&
+                        listingModalData?.event_date_time?.length > 0 && (
+                          <Image
+                            className={styles['im']}
+                            src={Time}
+                            alt="Time"
+                          />
+                        ))}
                     <div className={styles['flex-col-4']}>
                       {listingModalData.event_weekdays &&
-                      listingModalData?.event_weekdays?.length > 0 ? (
-                        (showDays ? listingModalData.event_weekdays : listingModalData.event_weekdays.slice(0, 1)).map(
-                          (obj: any, i: number, arr: any[]) =>
+                      listingModalData?.event_weekdays?.length > 0
+                        ? (showDays
+                            ? listingModalData.event_weekdays
+                            : listingModalData.event_weekdays.slice(0, 1)
+                          ).map((obj: any, i: number, arr: any[]) =>
                             i > 0 && !showDays ? null : (
                               <p
                                 key={i}
-                                className={ styles.editTime +
-                                      ` ${
-                                        i !== 0 && showDays === false
-                                          ? styles['hide']
-                                          : ''
-                                      }`
+                                className={
+                                  styles.editTime +
+                                  ` ${
+                                    i !== 0 && showDays === false
+                                      ? styles['hide']
+                                      : ''
+                                  }`
                                 }
                               >
                                 {obj?.from_day} - {obj?.to_day},{' '}
@@ -377,51 +395,65 @@ const ListingProductPurchase: React.FC<Props> = ({
                                 ) : (
                                   <>
                                     {' '}
-                                    - 
-                                    {
-                                    showDays===false && !isMobile && listingModalData?.event_weekdays && listingModalData?.event_weekdays?.length>1?<>{" ... "}
-                                    <span onClick={() =>
-                                        setShowDays((prev) => !prev)
-                                      }
-                                      className={styles['purpleText']}
-                                      >more</span></>
-                                    :
-                                    obj?.to_time}
-                                    {listingModalData?.event_weekdays&&listingModalData?.event_weekdays?.length - 1 === i && isMobile && (
+                                    -
+                                    {showDays === false &&
+                                    !isMobile &&
+                                    listingModalData?.event_weekdays &&
+                                    listingModalData?.event_weekdays?.length >
+                                      1 ? (
                                       <>
-                                        {' '}
+                                        {' ... '}
                                         <span
                                           onClick={() =>
                                             setShowDays((prev) => !prev)
                                           }
+                                          className={styles['purpleText']}
                                         >
-                                          Less
+                                          more
                                         </span>
                                       </>
+                                    ) : (
+                                      obj?.to_time
                                     )}
+                                    {listingModalData?.event_weekdays &&
+                                      listingModalData?.event_weekdays?.length -
+                                        1 ===
+                                        i &&
+                                      isMobile && (
+                                        <>
+                                          {' '}
+                                          <span
+                                            onClick={() =>
+                                              setShowDays((prev) => !prev)
+                                            }
+                                          >
+                                            Less
+                                          </span>
+                                        </>
+                                      )}
                                   </>
                                 )}
                               </p>
                             ),
-                        )
-                      ) :
-                      (listingModalData.event_date_time && listingModalData?.event_date_time?.length > 0)&&
-                      <>
-                      {(showDays ? listingModalData.event_date_time : listingModalData.event_date_time.slice(0, 1)).map((obj:any,i:number)=>(
-                        <p
-                        key={i}
-                          className={styles.editTime}
-                        >
-                          {obj?.from_time} -{' '}
-                          {obj?.to_time}
-                        </p>))
-                        }
-                        </>}
+                          )
+                        : listingModalData.event_date_time &&
+                          listingModalData?.event_date_time?.length > 0 && (
+                            <>
+                              {(showDays
+                                ? listingModalData.event_date_time
+                                : listingModalData.event_date_time.slice(0, 1)
+                              ).map((obj: any, i: number) => (
+                                <p key={i} className={styles.editTime}>
+                                  {obj?.from_time} - {obj?.to_time}
+                                </p>
+                              ))}
+                            </>
+                          )}
                     </div>
-                    {
-                      ((listingModalData.event_weekdays &&
-                      listingModalData?.event_weekdays?.length >1)
-                      ||(listingModalData?.event_date_time&&listingModalData?.event_date_time?.length>1))&&
+                    {((listingModalData.event_weekdays &&
+                      listingModalData?.event_weekdays?.length > 1) ||
+                      (listingModalData?.event_date_time &&
+                        listingModalData?.event_date_time?.length > 1)) &&
                       !isMobile && (
                         <div
                           onClick={() => setShowDays((prev) => !prev)}
@@ -438,7 +470,6 @@ const ListingProductPurchase: React.FC<Props> = ({
                 <></>
               )}
             </div>
-
 
             <div className={styles['variations']}>
               <div className={styles['variations-list']}>
