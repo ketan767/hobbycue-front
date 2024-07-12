@@ -406,18 +406,21 @@ const ListingProductPurchase: React.FC<Props> = ({
                         )
                       ) :
                       (listingModalData.event_date_time && listingModalData?.event_date_time?.length > 0)&&
-                      (
+                      <>
+                      {(showDays ? listingModalData.event_date_time : listingModalData.event_date_time.slice(0, 1)).map((obj:any,i:number)=>(
                         <p
+                        key={i}
                           className={styles.editTime}
                         >
-                          {listingModalData?.event_date_time[0]?.from_time} -{' '}
-                          {listingModalData?.event_date_time[0]?.to_time}
-                        </p>
-                      )}
+                          {obj?.from_time} -{' '}
+                          {obj?.to_time}
+                        </p>))
+                        }
+                        </>}
                     </div>
                     {
                       ((listingModalData.event_weekdays &&
-                      listingModalData?.event_weekdays?.length >0)
+                      listingModalData?.event_weekdays?.length >1)
                       ||(listingModalData?.event_date_time&&listingModalData?.event_date_time?.length>1))&&
                       !isMobile && (
                         <div

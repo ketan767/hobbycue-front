@@ -246,6 +246,11 @@
   position: relative;
 }
 
+.listSubItem select:disabled{
+  filter: brightness(0.85);
+  cursor: not-allowed;
+}
+
 .formatted-date {
   position: absolute;
   bottom: 5px;

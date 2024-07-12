@@ -746,14 +746,18 @@ const ListingHeader: React.FC<Props> = ({
                         )
                       ) :
                       (data.event_date_time && data?.event_date_time?.length > 0)&&
-                      (
+                      <>
+                      {(showDays ? data.event_date_time : data.event_date_time.slice(0, 1)).map((obj:any,i:number)=>(
                         <p
+                        key={i}
                           className={isEditMode ? styles.time : styles.editTime}
                         >
-                          {data?.event_date_time[0]?.from_time} -{' '}
-                          {data?.event_date_time[0]?.to_time}
-                        </p>
-                      )}
+                          {obj?.from_time} -{' '}
+                          {obj?.to_time}
+                        </p>))
+                        }
+                        </>
+                      }
                     </div>
                     {listingLayoutMode === 'edit' ? (
                       <>
@@ -763,7 +767,9 @@ const ListingHeader: React.FC<Props> = ({
                           alt="edit"
                           onClick={handleEventEditClick}
                         />
-                        {data?.event_weekdays?.length > 0 && (
+                        {((data.event_weekdays &&
+                      data?.event_weekdays?.length > 1)
+                    ||(data?.event_date_time&&data?.event_date_time?.length>1)) > 0 && (
                           <div
                             onClick={() => setShowDays((prev) => !prev)}
                             className={`${showDays ? '' : styles['rotate']} ${
