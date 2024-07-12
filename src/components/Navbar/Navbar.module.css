@@ -400,6 +400,12 @@
   line-height: 16px;
   font-weight: 600;
 }
+.logo-full-responsive {
+  display: none;
+}
+.logo-small-responsive {
+  display: none;
+}
 
 @media screen and (max-width: 1100px) {
 .search-icon-container {
@@ -447,11 +453,24 @@
     display: none;
   }
 
+  .logo-full-responsive {
+    display: initial;
+    width: 156.404px;
+    height: 32px;
+    flex-shrink: 0;
+  }
+
   .logo-small {
     display: inline-block;
     width: 32px;
     height: 32px;
   }
+.logo-small-responsive {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+}
+  
 
   .right-listing-expanded {
     display: none !important;

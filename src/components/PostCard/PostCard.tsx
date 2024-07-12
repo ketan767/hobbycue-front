@@ -637,7 +637,6 @@ const PostCard: React.FC<Props> = (props) => {
                 styles={styles}
                 updatePost={updatePost}
               />
-
               {/* Comment Icon */}
               <svg
                 onClick={() => setShowComments(!showComments)}
@@ -654,7 +653,6 @@ const PostCard: React.FC<Props> = (props) => {
                   stroke-width="2"
                 />
               </svg>
-
               {/* Share Icon */}
               <svg
                 className={styles['share-icon']}
@@ -690,26 +688,28 @@ const PostCard: React.FC<Props> = (props) => {
                   </clipPath>
                 </defs>
               </svg>
-
               {/* Bookmark Icon */}
               {/* <CustomizedTooltips title='This feature is under development'> */}
+
               <svg
                 onClick={showFeatureUnderDevelopment}
                 className={styles['bookmark-icon']}
+                xmlns="http://www.w3.org/2000/svg"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
                 fill="none"
-                xmlns="http://www.w3.org/2000/svg"
               >
-                <g clip-path="url(#clip0_173_72894)">
+                <g clip-path="url(#clip0_17731_45668)">
                   <path
-                    d="M17 3H7C5.9 3 5 3.9 5 5V21L12 18L19 21V5C19 3.9 18.1 3 17 3ZM17 18L12 15.82L7 18V6C7 5.45 7.45 5 8 5H16C16.55 5 17 5.45 17 6V18Z"
+                    d="M12.0481 18.4861L12.0002 18.4662L11.9523 18.4861L4.17871 21.7143V4.30156C4.17871 3.16428 5.1407 2.22656 6.32414 2.22656H17.6763C18.8597 2.22656 19.8217 3.16428 19.8217 4.30156V21.7143L12.0481 18.4861ZM17.6276 18.7167L17.8013 18.7901V18.6016V5.40156C17.8013 4.72384 17.2307 4.17656 16.541 4.17656H7.45935C6.76969 4.17656 6.19914 4.72384 6.19914 5.40156V18.6016V18.7901L6.37278 18.7167L12.0002 16.3393L17.6276 18.7167Z"
                     fill="#8064A2"
+                    stroke="white"
+                    stroke-width="0.25"
                   />
                 </g>
                 <defs>
-                  <clipPath id="clip0_173_72894">
+                  <clipPath id="clip0_17731_45668">
                     <rect width="24" height="24" fill="white" />
                   </clipPath>
                 </defs>

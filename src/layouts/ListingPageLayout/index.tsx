@@ -186,14 +186,12 @@ const ListingPageLayout: React.FC<Props> = ({
     fetchData()
   }, [data])
 
-
   const allListings = [
     ...(eventData?.res?.data?.result ?? []).map(
       (listings: any) => listings.listings,
     ),
     ...(eventData?.res?.data?.listingMap ?? []),
-  ];
-  
+  ]
 
   // Filter out duplicates based on the _id
   const uniqueListings = allListings.filter(
@@ -201,26 +199,25 @@ const ListingPageLayout: React.FC<Props> = ({
       index === self.findIndex((t) => t._id === listing._id),
   )
 
-  useEffect(()=>{
-  const now = new Date();
-  const sevenDaysFromNow = new Date(now);
-  sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
-  
-  const listingsWithin7Days = uniqueListings.filter(listing => {
-    if (!listing?.event_date_time?.to_date) return false;
-    let toDate;
-    if (listing?.event_date_time?.to_date.includes('T')) {
-      toDate = new Date(listing?.event_date_time?.to_date);
-    } else {
-      toDate = new Date(`${listing?.event_date_time?.to_date}T00:00:00`);
-    }
-    if (isNaN(toDate.getTime())) return false;
-    return toDate >= now && toDate <= sevenDaysFromNow;
-  });
+  useEffect(() => {
+    const now = new Date()
+    const sevenDaysFromNow = new Date(now)
+    sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7)
 
-  dispatch(updateTotalEvents(listingsWithin7Days.length))
+    const listingsWithin7Days = uniqueListings.filter((listing) => {
+      if (!listing?.event_date_time?.to_date) return false
+      let toDate
+      if (listing?.event_date_time?.to_date.includes('T')) {
+        toDate = new Date(listing?.event_date_time?.to_date)
+      } else {
+        toDate = new Date(`${listing?.event_date_time?.to_date}T00:00:00`)
+      }
+      if (isNaN(toDate.getTime())) return false
+      return toDate >= now && toDate <= sevenDaysFromNow
+    })
 
-  },[uniqueListings])
+    dispatch(updateTotalEvents(listingsWithin7Days.length))
+  }, [uniqueListings])
 
   useEffect(() => {
     window.addEventListener('scroll', checkScroll)
@@ -281,9 +278,17 @@ const ListingPageLayout: React.FC<Props> = ({
                   <a
                     key={tab}
                     onClick={() => navigationTabs(tab)}
-                    className={activeTab === tab ? styles['active'] : ''+` ${styles['event-tab']}`}
+                    className={
+                      activeTab === tab
+                        ? styles['active']
+                        : '' + ` ${styles['event-tab']}`
+                    }
                   >
-                    {totalEvents>0&&<button className={styles['event-count']}>{totalEvents}</button>}
+                    {totalEvents > 0 && (
+                      <button className={styles['event-count']}>
+                        {totalEvents}
+                      </button>
+                    )}
                     {tab.charAt(0).toUpperCase() + tab.slice(1)}
                   </a>
                 )
@@ -318,72 +323,128 @@ const ListingPageLayout: React.FC<Props> = ({
           )}
         </div>
       </nav>
-      <div
-        className={`${styles['expand-all-page-type-wrapper']} ${styles['display-flex-mobile']}`}
-      >
+      <nav className={styles['nav-mobile']}>
         <div
-          className={`${styles['display-flex-mobile']} ${styles['listing-page-type-wrapper']}`}
-          onClick={() => {
-            if (listingLayoutMode === 'edit') {
-              dispatch(openModal({ type: 'listing-type-edit', closable: true }))
-              dispatch(updateListingTypeModalMode({ mode: 'edit' }))
-            }
-          }}
+          className={`${styles['navigation-tabs']} ${
+            !expandAll ? styles['mobile-mt-0'] : ''
+          }`}
         >
-          <div>
-            <img
-              width={20}
-              height={20}
-              src={
-                data.pageData.type === 1
-                  ? peopleSvg.src
-                  : data.pageData.type === 2
-                  ? placeSvg.src
-                  : data.pageData.type === 3
-                  ? programSvg.src
-                  : peopleSvg
+          {tabs.map((tab) => {
+            if (tab === 'events') {
+              if (data.pageData.type !== 3)
+                return (
+                  <a
+                    key={tab}
+                    onClick={() => navigationTabs(tab)}
+                    className={
+                      activeTab === tab
+                        ? styles['active']
+                        : '' + ` ${styles['event-tab']}`
+                    }
+                  >
+                    {totalEvents > 0 && (
+                      <button className={styles['event-count']}>
+                        {totalEvents}
+                      </button>
+                    )}
+                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  </a>
+                )
+            } else if (tab === 'orders') {
+              if (data.pageData.type === 3 && listingLayoutMode === 'edit')
+                return (
+                  <a
+                    key={tab}
+                    onClick={() => navigationTabs(tab)}
+                    className={activeTab === tab ? styles['active'] : ''}
+                  >
+                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  </a>
+                )
+            } else {
+              return (
+                <a
+                  key={tab}
+                  onClick={() => navigationTabs(tab)}
+                  className={activeTab === tab ? styles['active'] : ''}
+                >
+                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                </a>
+              )
+            }
+          })}
+        </div>
+      </nav>
+      {activeTab === 'home' && (
+        <div
+          className={`${styles['expand-all-page-type-wrapper']} ${styles['display-flex-mobile']}`}
+        >
+          <div
+            className={`${styles['display-flex-mobile']} ${styles['listing-page-type-wrapper']}`}
+            onClick={() => {
+              if (listingLayoutMode === 'edit') {
+                dispatch(
+                  openModal({ type: 'listing-type-edit', closable: true }),
+                )
+                dispatch(updateListingTypeModalMode({ mode: 'edit' }))
               }
+            }}
+          >
+            <div>
+              <img
+                width={20}
+                height={20}
+                src={
+                  data.pageData.type === 1
+                    ? peopleSvg.src
+                    : data.pageData.type === 2
+                    ? placeSvg.src
+                    : data.pageData.type === 3
+                    ? programSvg.src
+                    : peopleSvg
+                }
+              />
+            </div>
+            {data.pageData.page_type.map((type: any, idx: any) => {
+              return (
+                <p
+                  className={
+                    data.pageData.type === 1
+                      ? styles.peopleColor
+                      : data.pageData.type === 2
+                      ? styles.placeColor
+                      : data.pageData.type === 3
+                      ? styles.programColor
+                      : data.pageData.type === 4
+                      ? styles.ProductColor
+                      : ''
+                  }
+                >
+                  {type}
+                </p>
+              )
+            })}
+            {listingLayoutMode === 'edit' && <Image src={EditIcon} alt="" />}
+          </div>
+
+          <div
+            onClick={() => {
+              if (setExpandAll !== undefined) setExpandAll(!expandAll)
+            }}
+            className={styles['expand-all']}
+          >
+            {expandAll ? <p>See more</p> : <p>See less</p>}
+            <Image
+              src={ChevronDown}
+              style={{ transition: 'all 0.3s ease' }}
+              className={`${
+                expandAll ? styles['rotate-180'] : styles['rotate-0']
+              }`}
+              alt=""
             />
           </div>
-          {data.pageData.page_type.map((type: any, idx: any) => {
-            return (
-              <p
-                className={
-                  data.pageData.type === 1
-                    ? styles.peopleColor
-                    : data.pageData.type === 2
-                    ? styles.placeColor
-                    : data.pageData.type === 3
-                    ? styles.programColor
-                    : data.pageData.type === 4
-                    ? styles.ProductColor
-                    : ''
-                }
-              >
-                {type}
-              </p>
-            )
-          })}
-          {listingLayoutMode === 'edit' && <Image src={EditIcon} alt="" />}
         </div>
-
-        <div
-          onClick={() => {
-            if (setExpandAll !== undefined) setExpandAll(!expandAll)
-          }}
-          className={styles['expand-all']}
-        >
-          {expandAll ? <p>Collapse All</p> : <p>Expand All</p>}
-          <Image
-            src={ChevronDown}
-            style={{ transition: 'all 0.3s ease' }}
-            className={`${
-              expandAll ? styles['rotate-180'] : styles['rotate-0']
-            }`}
-            alt=""
-          />
-        </div>
-      </div>
+      )}
 
       {/* Profile Page Body, where all contents of different tabs appears. */}
       <main>
@@ -396,50 +457,6 @@ const ListingPageLayout: React.FC<Props> = ({
         })}
       </main>
       <div style={{ backgroundColor: '#f8f9fa' }}>
-        <nav className={styles['nav-mobile']}>
-          <div
-            className={`${styles['navigation-tabs']} ${
-              !expandAll ? styles['mobile-mt-0'] : ''
-            }`}
-          >
-            {tabs.map((tab) => {
-              if (tab === 'events') {
-                if (data.pageData.type !== 3)
-                  return (
-                    <a
-                      key={tab}
-                      onClick={() => navigationTabs(tab)}
-                      className={activeTab === tab ? styles['active'] : ''+` ${styles['event-tab']}`}
-                    >
-                    {totalEvents>0&&<button className={styles['event-count']}>{totalEvents}</button>}
-                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                    </a>
-                  )
-              } else if (tab === 'orders') {
-                if (data.pageData.type === 3 && listingLayoutMode === 'edit')
-                  return (
-                    <a
-                      key={tab}
-                      onClick={() => navigationTabs(tab)}
-                      className={activeTab === tab ? styles['active'] : ''}
-                    >
-                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                    </a>
-                  )
-              } else {
-                return (
-                  <a
-                    key={tab}
-                    onClick={() => navigationTabs(tab)}
-                    className={activeTab === tab ? styles['active'] : ''}
-                  >
-                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                  </a>
-                )
-              }
-            })}
-          </div>
-        </nav>
         <div className={styles['display-mobile-main']}>
           {activeTab === 'home' && (
             <div className={styles['display-mobile']}>

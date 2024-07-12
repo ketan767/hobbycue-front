@@ -518,14 +518,25 @@ export const Navbar: React.FC<Props> = ({}) => {
                   priority
                 />
               )}
-              <Image
-                src={LogoSmall}
-                alt="HobbyCue Logo"
-                className={styles['logo-small']}
-                // placeholder="blur" // Optional blur-up while loading
-                height={40}
-                priority
-              />
+              {!isLoggedIn ? (
+                <Image
+                  src={LogoFull}
+                  alt="HobbyCue Logo"
+                  width={293.258}
+                  height={60}
+                  className={styles['logo-full-responsive']}
+                  // placeholder="blur" // Optional blur-up while loading
+
+                  priority
+                />
+              ) : (
+                <Image
+                  src={LogoSmall}
+                  alt="HobbyCue Logo"
+                  className={styles['logo-small-responsive']}
+                  priority
+                />
+              )}
             </Link>
 
             <TextField
