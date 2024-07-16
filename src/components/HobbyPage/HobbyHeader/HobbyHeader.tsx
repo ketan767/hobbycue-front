@@ -8,7 +8,7 @@ import ShareIcon from '@/assets/svg/share-outlined.svg'
 import DefaultProfile from '@/assets/svg/default-images/default-hobbies.svg'
 import MailIcon from '@/assets/svg/mailicon.svg'
 import { useDispatch, useSelector } from 'react-redux'
-import { openModal, updateShareUrl } from '@/redux/slices/modal'
+import { openModal, updateImageUrl, updateShareUrl } from '@/redux/slices/modal'
 import HobbyNavigationLinks from './HobbyNavigationLinks'
 import FilledButton from '@/components/_buttons/FilledButton'
 import { RootState } from '@/redux/store'
@@ -23,6 +23,10 @@ import {
   updateMyProfileDetail,
 } from '@/services/user.service'
 import { CircularProgress } from '@mui/material'
+import { updateHobbyCover, updateHobbyProfile } from '@/services/admin.service'
+import { updatePhotoEditModalData } from '@/redux/slices/site'
+import CameraIcon from '@/assets/icons/CameraIcon'
+import EditIcon from '@/assets/svg/edit-colored.svg'
 
 type Props = {
   activeTab: HobbyPageTabs
@@ -33,7 +37,7 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
   // console.log('🚀 ~ file: HobbyHeader.tsx:22 ~ HobbyPageHeader ~ data:', data)
   const dispatch = useDispatch()
   const router = useRouter()
-  const [addBtnLoading, setAddHobbyBtnLoading] = useState(false);
+  const [addBtnLoading, setAddHobbyBtnLoading] = useState(false)
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -43,15 +47,120 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
     (state: RootState) => state.user,
   )
 
+  const onInputChange = (e: any, type: 'profile' | 'cover') => {
+    e.preventDefault()
+    let files = e.target.files
+    if (files.length === 0) return
+    // const fileTobeUploaded = files[0]
+    // if (fileTobeUploaded) {
+    //   const fileSize = fileTobeUploaded.size
+    //   const fileSizeKB = fileSize / 1024
+    //   if (fileSizeKB > 2048) {
+    //     setSnackbar({
+    //       display: true,
+    //       type: 'warning',
+    //       message: 'Image size should not be greater than 2MB',
+    //     })
+    //     return
+    //   }
+    // }
+
+    const reader = new FileReader()
+    reader.onload = () => {
+      dispatch(
+        updatePhotoEditModalData({
+          type,
+          image: reader.result,
+          onComplete:
+            type === 'profile'
+              ? handleHobbyProfileUpload
+              : type === 'cover'
+              ? handleHobbyCoverUpload
+              : () => {},
+        }),
+      )
+      dispatch(
+        openModal({
+          type: 'upload-image',
+          closable: true,
+          // onModalClose: () =>
+          //   updatePhotoEditModalData({
+          //     type: null,
+          //     image: null,
+          //     onComplete: null,
+          //   }),
+        }),
+      )
+    }
+    reader.readAsDataURL(files[0])
+  }
+
+  const handleHobbyProfileUpload = async (image: any) => {
+    const response = await fetch(image)
+    const blob = await response.blob()
+
+    const formData = new FormData()
+    formData.append('hobby-profile', blob)
+    const { err, res } = await updateHobbyProfile(data?._id, formData)
+    if (err) return console.log(err)
+    if (res?.data.success) {
+      window.location.reload()
+      // dispatch(closeModal())
+    }
+  }
+
+  const handleHobbyCoverUpload = async (image: any) => {
+    const response = await fetch(image)
+    const blob = await response.blob()
+
+    const formData = new FormData()
+    formData.append('hobby-cover', blob)
+    const { err, res } = await updateHobbyCover(data?._id, formData)
+    if (err) return console.log(err)
+    if (res?.data.success) {
+      window.location.reload()
+      // dispatch(closeModal())
+    }
+  }
+
+  const OpenProfileImage = () => {
+    console.log('pro', data.profile_image)
+    dispatch(updateImageUrl(data?.profile_image))
+    dispatch(
+      openModal({
+        type: 'View-Image-Modal',
+        closable: false,
+        imageurl: data?.profile_image,
+      }),
+    )
+  }
+
+  const OpenCoverImage = () => {
+    dispatch(updateImageUrl(data?.cover_image))
+    dispatch(
+      openModal({
+        type: 'View-Image-Modal',
+        closable: false,
+        imageurl: data?.cover_image,
+      }),
+    )
+  }
+
   const handleShare = () => {
     dispatch(updateShareUrl(window.location.href))
     dispatch(openModal({ type: 'social-media-share', closable: true }))
   }
   const handleAddhobby = () => {
     if (isLoggedIn) {
-      dispatch(openModal({type:'profile-hobby-edit',closable:true, propData:{selectedHobbyToAdd:data}} ))
+      dispatch(
+        openModal({
+          type: 'profile-hobby-edit',
+          closable: true,
+          propData: { selectedHobbyToAdd: data },
+        }),
+      )
     } else {
-      dispatch(openModal({ type: 'auth', closable: true}))
+      dispatch(openModal({ type: 'auth', closable: true }))
     }
   }
   const location = typeof window !== 'undefined' ? window.location.href : ''
@@ -90,6 +199,7 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
       )
     }
   }
+  console.warn('hobby page data', data)
 
   return (
     <>
@@ -97,75 +207,119 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
       <header
         className={`site-container ${styles['header']} ${styles['expanded']} `}
       >
-        {data?.profile_image ? (
-          <div className={styles['title-mobile']}>
-            <img
-              className={styles['profile-img']}
-              src={data.profile_image}
-              alt=""
-              width={160}
-              height={160}
-            />
-            <div className={styles['name-container-mobile']}>
-              <h1 className={styles['name']}>{data?.display}</h1>
-              <p className={styles['category']}>
-                {data?.level === 0
-                  ? 'Category'
-                  : data?.level === 1
-                  ? 'Sub-Category'
-                  : data?.level === 2
-                  ? 'Hobby Tag'
-                  : data?.level === 3
-                  ? 'Hobby'
-                  : data?.level === 5
-                  ? 'Genre/Style'
-                  : 'Hobby'}
-              </p>
-            </div>
+        <div className={styles['profile-img-wrapper']}>
+          <div className={styles['relative']}>
+            {data?.profile_image ? (
+              <div className={styles['title-mobile']}>
+                <img
+                  onClick={OpenProfileImage}
+                  className={styles['profile-img']}
+                  src={data.profile_image}
+                  alt=""
+                  width={160}
+                  height={160}
+                />
+                <div className={styles['name-container-mobile']}>
+                  <h1 className={styles['name']}>{data?.display}</h1>
+                  <p className={styles['category']}>
+                    {data?.level === 0
+                      ? 'Category'
+                      : data?.level === 1
+                      ? 'Sub-Category'
+                      : data?.level === 2
+                      ? 'Hobby Tag'
+                      : data?.level === 3
+                      ? 'Hobby'
+                      : data?.level === 5
+                      ? 'Genre/Style'
+                      : 'Hobby'}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className={styles['title-mobile']}>
+                <Image
+                  className={styles['profile-img-icon']}
+                  src={DefaultProfile}
+                  alt=""
+                  width={160}
+                  height={160}
+                />
+                <div className={styles['name-container-mobile']}>
+                  <h1 className={styles['name']}>{data?.display}</h1>
+                  <p className={styles['category']}>
+                    {data?.level === 0
+                      ? 'Category'
+                      : data?.level === 1
+                      ? 'Sub-Category'
+                      : data?.level === 2
+                      ? 'Hobby Tag'
+                      : data?.level === 3
+                      ? 'Hobby'
+                      : data?.level === 5
+                      ? 'Genre/Style'
+                      : 'Hobby'}
+                  </p>
+                </div>
+              </div>
+            )}
+            {user?.is_admin && (
+              <label className={styles['edit-btn']}>
+                <input
+                  type="file"
+                  hidden
+                  accept="image/*"
+                  onChange={(e) => onInputChange(e, 'profile')}
+                />
+                <CameraIcon />
+              </label>
+            )}
           </div>
-        ) : (
-          <div className={styles['title-mobile']}>
-            <Image
-              className={styles['profile-img']}
-              src={DefaultProfile}
-              alt=""
-              width={160}
-              height={160}
-            />
-            <div className={styles['name-container-mobile']}>
-              <h1 className={styles['name']}>{data?.display}</h1>
-              <p className={styles['category']}>
-                {data?.level === 0
-                  ? 'Category'
-                  : data?.level === 1
-                  ? 'Sub-Category'
-                  : data?.level === 2
-                  ? 'Hobby Tag'
-                  : data?.level === 3
-                  ? 'Hobby'
-                  : data?.level === 5
-                  ? 'Genre/Style'
-                  : 'Hobby'}
-              </p>
-            </div>
-          </div>
-        )}
+        </div>
 
         <section className={styles['center-container']}>
-          {data?.cover_image ? (
-            <img
-              className={styles['cover-img']}
-              src={data.cover_image}
-              alt=""
-              height={296}
-              width={1000}
-            />
-          ) : (
-            <div className={`${styles['cover-img']} default-user-cover`}></div>
-          )}
+          <div className={styles['cover-img-wrapper']}>
+            {data?.cover_image ? (
+              <img
+                onClick={OpenCoverImage}
+                className={styles['cover-img']}
+                src={data.cover_image}
+                alt=""
+                height={296}
+                width={1000}
+              />
+            ) : (
+              <div
+                className={`${styles['cover-img']} default-user-cover`}
+              ></div>
+            )}
+            {user?.is_admin && (
+              <label className={styles['edit-btn']}>
+                <input
+                  type="file"
+                  hidden
+                  accept="image/*"
+                  onChange={(e) => onInputChange(e, 'cover')}
+                />
+                <CameraIcon />
+              </label>
+            )}
+          </div>
+
           <div className={styles['name-container-desktop']}>
             <div>
-              <h1 className={styles['name']}>{data?.display}</h1>
+              <h1 className={styles['name']}>
+                {data?.display}{' '}
+                {user?.is_admin && (
+                  <Image
+                    src={EditIcon}
+                    alt="edit"
+                    onClick={() =>
+                      router.push(`/admin/hobby/edit/${data?.slug}`)
+                    }
+                  />
+                )}
+              </h1>{' '}
               <p className={styles['category']}>
                 {data?.level === 0
                   ? 'Category'

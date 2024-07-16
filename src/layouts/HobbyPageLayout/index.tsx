@@ -25,6 +25,8 @@ import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
 import { openModal } from '@/redux/slices/modal'
 import { SetLinkviaAuth } from '@/redux/slices/user'
 import { useMediaQuery } from '@mui/material'
+import EditIcon from '@/assets/svg/edit-colored.svg'
+
 type Props = {
   activeTab: HobbyPageTabs
   data: any
@@ -55,6 +57,8 @@ const HobbyPageLayout: React.FC<Props> = ({
   const [showMembers, setShowMembers] = useState(false)
   const [showHobbiesClassification, setShowHobbiesClassification] =
     useState(true)
+
+  const { user } = useSelector((state: RootState) => state.user)
 
   useEffect(() => {
     if (window.innerWidth >= 1300) setShowHobbiesClassification(false)
@@ -173,7 +177,17 @@ const HobbyPageLayout: React.FC<Props> = ({
             }}
             expandData={showHobbiesClassification}
           >
-            <h4 className={styles['heading']}>Hobbies Classification</h4>
+            <h4 className={styles['heading']}>
+              {'Hobbies Classification'}
+              {user?.is_admin && (
+                <Image
+                  className={styles['pencil-edit']}
+                  src={EditIcon}
+                  alt="edit"
+                  onClick={() => router.push(`/admin/hobby/edit/${data?.slug}`)}
+                />
+              )}
+            </h4>
             <div
               className={`${styles['display-desktop']}${
                 showHobbiesClassification ? ' ' + styles['display-mobile'] : ''

@@ -73,6 +73,10 @@
   place-items: center;
 }
 
+.pencil-edit {
+  margin-left: 6px;
+}
+
 .navigation-links {
   display: flex;
   gap: 60px;

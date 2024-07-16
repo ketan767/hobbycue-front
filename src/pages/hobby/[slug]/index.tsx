@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import styles from '@/styles/HobbyDetail.module.css'
 import Head from 'next/head'
 import { getAllHobbies } from '@/services/hobby.service'
-
+import Image from 'next/image'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import PageContentBox from '@/layouts/PageContentBox'
@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { updateHobbyMenuExpandAll } from '@/redux/slices/site'
 import { getAllUserDetail } from '@/services/user.service'
+import EditIcon from '@/assets/svg/edit-colored.svg'
 
 type Props = { data: { hobbyData: any } }
 
@@ -28,7 +29,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
   const [expandAll, setExpandAll] = useState(hobby)
   const dispatch = useDispatch()
 
-  const { isLoggedIn, isAuthenticated } = useSelector(
+  const { user, isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
   )
 
@@ -160,7 +161,17 @@ const HobbyDetail: React.FC<Props> = (props) => {
           {/* About Section */}
           {/* <PageContentBox showEditButton={false} setDisplayData={setShowAbout}> */}
           <PageContentBox>
-            <h4>About</h4>
+            <h4>
+              {'About'}{' '}
+              {user?.is_admin && (
+                <Image
+                  className={styles['pencil-edit']}
+                  src={EditIcon}
+                  alt="edit"
+                  onClick={() => router.push(`/admin/hobby/edit/${data?.slug}`)}
+                />
+              )}
+            </h4>
             <div
             // className={`${styles['display-desktop']}${
             //   showAbout ? ' ' + styles['display-mobile'] : ''

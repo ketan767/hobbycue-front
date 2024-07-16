@@ -311,14 +311,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         key={index}
                         onClick={() => navigateToHobby(hobby.slug)}
                       >
-                        <div
-                          className={styles.hobbyAvtar}
-                          style={{
-                            position: 'relative',
-                            width: '64px',
-                            height: '64px',
-                          }}
-                        >
+                        <div className={styles.hobbyAvtar}>
                           {/* Render the image */}
                           {hobby.profile_image ? (
                             <img
@@ -326,29 +319,30 @@ const MainContent: React.FC<SearchResultsProps> = ({
                               alt={`${hobby.display}'s `}
                               width={64}
                               height={64}
-                              className={styles.avatarImage}
                             />
                           ) : (
-                            <div className={`${styles['img-polygon']} `}></div>
+                            <>
+                              <div
+                                className={`${styles['img-polygon']} `}
+                              ></div>
+                              <svg
+                                className={styles.polygonOverlay}
+                                viewBox="0 0 160 160"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M80 0L149.282 40V120L80 160L10.718 120V40L80 0Z"
+                                  fill="#969696"
+                                  fill-opacity="0.5"
+                                />
+                                <path
+                                  d="M79.6206 46.1372C79.7422 45.7727 80.2578 45.7727 80.3794 46.1372L87.9122 68.7141C87.9663 68.8763 88.1176 68.9861 88.2885 68.9875L112.088 69.175C112.472 69.178 112.632 69.6684 112.323 69.8967L93.1785 84.0374C93.041 84.139 92.9833 84.3168 93.0348 84.4798L100.211 107.173C100.327 107.539 99.9097 107.842 99.5971 107.619L80.2326 93.7812C80.0935 93.6818 79.9065 93.6818 79.7674 93.7812L60.4029 107.619C60.0903 107.842 59.6731 107.539 59.789 107.173L66.9652 84.4798C67.0167 84.3168 66.959 84.139 66.8215 84.0374L47.6773 69.8967C47.3682 69.6684 47.5276 69.178 47.9118 69.175L71.7115 68.9875C71.8824 68.9861 72.0337 68.8763 72.0878 68.7141L79.6206 46.1372Z"
+                                  fill="white"
+                                />
+                              </svg>
+                            </>
                           )}
-                          {/* Render the polygon overlay */}
-
-                          <svg
-                            className={styles.polygonOverlay}
-                            viewBox="0 0 160 160"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M80 0L149.282 40V120L80 160L10.718 120V40L80 0Z"
-                              fill="#969696"
-                              fill-opacity="0.5"
-                            />
-                            <path
-                              d="M79.6206 46.1372C79.7422 45.7727 80.2578 45.7727 80.3794 46.1372L87.9122 68.7141C87.9663 68.8763 88.1176 68.9861 88.2885 68.9875L112.088 69.175C112.472 69.178 112.632 69.6684 112.323 69.8967L93.1785 84.0374C93.041 84.139 92.9833 84.3168 93.0348 84.4798L100.211 107.173C100.327 107.539 99.9097 107.842 99.5971 107.619L80.2326 93.7812C80.0935 93.6818 79.9065 93.6818 79.7674 93.7812L60.4029 107.619C60.0903 107.842 59.6731 107.539 59.789 107.173L66.9652 84.4798C67.0167 84.3168 66.959 84.139 66.8215 84.0374L47.6773 69.8967C47.3682 69.6684 47.5276 69.178 47.9118 69.175L71.7115 68.9875C71.8824 68.9861 72.0337 68.8763 72.0878 68.7141L79.6206 46.1372Z"
-                              fill="white"
-                            />
-                          </svg>
                         </div>
 
                         <div className={styles.userDetails}>

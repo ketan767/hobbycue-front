@@ -254,3 +254,37 @@ export const UpdateHobbyreq = async (data:any): Promise<ApiReturnObject> => {
     return { err: error, res: null }
   }
 }
+
+export const updateHobbyProfile = async (hobbyId:any, formData: FormData) => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(`/admin/hobby/profile-image`, formData, {
+      headers,
+      params: { hobbyId },
+    })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+/** Update User Cover  `POST /user/me/cover-image`
+ * - FormData Required Key: `user-cover` */
+export const updateHobbyCover = async (hobbyId:any,formData: FormData) => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+    formData.append('hobbyId', hobbyId);
+  try {
+    const res = await axiosInstance.post(`/admin/hobby/cover-image`, formData, {
+      headers,
+      params: { hobbyId },
+    })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
