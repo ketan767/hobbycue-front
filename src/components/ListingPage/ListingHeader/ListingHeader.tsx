@@ -570,6 +570,195 @@ const ListingHeader: React.FC<Props> = ({
             )}
           </div>
         </div>
+        <div className={styles['event-date-container-responsive']}>
+          {data?.type === listingTypes.PROGRAM && data?.event_date_time ? (
+            <div className={styles['eventDate-parent']}>
+              <div
+                className={
+                  styles.eventDate + ` ${showDays && styles['eventDate-open']}`
+                }
+              >
+                <Image className={styles['im']} src={Calendar} alt="calendar" />
+                <div className={styles['event-dates']}>
+                  {data.event_date_time && data?.event_date_time?.length > 0
+                    ? (showDays
+                        ? data.event_date_time
+                        : data.event_date_time.slice(0, 1)
+                      ).map((obj: any, i: number, arr: any[]) => (
+                        <p key={i} className={styles.date}>
+                          {formatDateRange(obj?.from_date, obj?.to_date)}
+
+                          {isMobile &&
+                          showDays === false &&
+                          data.event_date_time?.length > 1 &&
+                          (!data.event_weekdays ||
+                            data.event_weekdays.length <= 1) ? (
+                            <>
+                              ...{' '}
+                              <span
+                                onClick={() => setShowDays((prev) => !prev)}
+                              >
+                                more
+                              </span>
+                            </>
+                          ) : null}
+                          {isMobile &&
+                            showDays &&
+                            data.event_date_time.length - 1 === i && (
+                              <>
+                                {' '}
+                                <span
+                                  onClick={() => setShowDays((prev) => !prev)}
+                                >
+                                  Less
+                                </span>
+                              </>
+                            )}
+                        </p>
+                      ))
+                    : ''}
+                </div>
+                {(data.event_weekdays && data.event_weekdays.length > 0) ||
+                  (data.event_date_time &&
+                    data?.event_date_time?.length > 0 && (
+                      <Image className={styles['im']} src={Time} alt="Time" />
+                    ))}
+                <div className={styles['flex-col-4']}>
+                  {data.event_weekdays && data?.event_weekdays?.length > 0
+                    ? (showDays
+                        ? data.event_weekdays
+                        : data.event_weekdays.slice(0, 1)
+                      ).map((obj: any, i: number, arr: any[]) =>
+                        i > 0 && !showDays ? null : (
+                          <p
+                            key={i}
+                            className={
+                              isEditMode
+                                ? styles.time
+                                : styles.editTime +
+                                  ` ${
+                                    i !== 0 && showDays === false
+                                      ? styles['hide']
+                                      : ''
+                                  }`
+                            }
+                          >
+                            {obj?.from_day}{' '}
+                            {obj?.to_day !== obj?.from_day &&
+                              ' - ' + obj?.to_day}
+                            , {obj?.from_time}
+                            {isMobile && showDays === false ? (
+                              <>
+                                ...{' '}
+                                <span
+                                  onClick={() => setShowDays((prev) => !prev)}
+                                >
+                                  more
+                                </span>
+                              </>
+                            ) : (
+                              <>
+                                {' '}
+                                -
+                                {showDays === false &&
+                                !isMobile &&
+                                data.event_weekdays.length > 1 ? (
+                                  <>
+                                    {' ... '}
+                                    <span
+                                      onClick={() =>
+                                        setShowDays((prev) => !prev)
+                                      }
+                                      className={styles['purpleText']}
+                                    >
+                                      more
+                                    </span>
+                                  </>
+                                ) : (
+                                  obj?.to_time
+                                )}
+                                {data.event_weekdays.length - 1 === i &&
+                                  isMobile && (
+                                    <>
+                                      {' '}
+                                      <span
+                                        onClick={() =>
+                                          setShowDays((prev) => !prev)
+                                        }
+                                      >
+                                        Less
+                                      </span>
+                                    </>
+                                  )}
+                              </>
+                            )}
+                          </p>
+                        ),
+                      )
+                    : data.event_date_time &&
+                      data?.event_date_time?.length > 0 && (
+                        <>
+                          {(showDays
+                            ? data.event_date_time
+                            : data.event_date_time.slice(0, 1)
+                          ).map((obj: any, i: number) => (
+                            <p
+                              key={i}
+                              className={
+                                isEditMode ? styles.time : styles.editTime
+                              }
+                            >
+                              {obj?.from_time} - {obj?.to_time}
+                            </p>
+                          ))}
+                        </>
+                      )}
+                </div>
+                {listingLayoutMode === 'edit' ? (
+                  <>
+                    <Image
+                      className={styles['edit-icon']}
+                      src={EditIcon}
+                      alt="edit"
+                      onClick={handleEventEditClick}
+                    />
+                    {((data.event_weekdays &&
+                      data?.event_weekdays?.length > 1) ||
+                      (data?.event_date_time &&
+                        data?.event_date_time?.length > 1)) > 0 && (
+                      <div
+                        onClick={() => setShowDays((prev) => !prev)}
+                        className={`${showDays ? '' : styles['rotate']} ${
+                          styles['flex-col-start']
+                        }`}
+                      >
+                        {dropdownIcon}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  listingLayoutMode !== 'edit' &&
+                  ((data.event_weekdays && data?.event_weekdays?.length > 1) ||
+                    (data?.event_date_time &&
+                      data?.event_date_time?.length > 1)) &&
+                  !isMobile && (
+                    <div
+                      onClick={() => setShowDays((prev) => !prev)}
+                      className={`${showDays ? '' : styles['rotate']} ${
+                        styles['flex-col-start']
+                      }`}
+                    >
+                      {dropdownIcon}
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+          ) : (
+            <></>
+          )}
+          <div className={styles['display-desktop']}>{button}</div>
+        </div>
 
         {/* Center Elements */}
         <section className={styles['center-container']}>
@@ -914,14 +1103,16 @@ const ListingHeader: React.FC<Props> = ({
       </header>
       <div className={styles['actions-container-mobile']}>
         {listingLayoutMode === 'edit' && (
-          <FilledButton
-            className={
-              data.is_published ? styles.unpublishBtn : styles.publishBtn
-            }
-            onClick={handlePublish}
-          >
-            {data.is_published ? 'Unpublish' : 'Publish'}
-          </FilledButton>
+          <div className={styles['publish-btn-container']}>
+            <FilledButton
+              className={
+                data.is_published ? styles.unpublishBtn : styles.publishBtn
+              }
+              onClick={handlePublish}
+            >
+              {data.is_published ? 'Unpublish' : 'Publish'}
+            </FilledButton>
+          </div>
         )}
         {/* Action Buttons */}
         <div className={styles['action-btn-wrapper']}>

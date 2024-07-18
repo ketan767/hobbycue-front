@@ -26,51 +26,56 @@ const ListingCard: React.FC<Props> = ({ data }) => {
   const type = getListingTypeName(data?.type)
 
   console.warn({ data })
-  function formatDateRange(prop: { from_date: string; to_date: string }): string {
+  function formatDateRange(prop: {
+    from_date: string
+    to_date: string
+  }): string {
     // Helper function to format date to "DD MMM YYYY"
     function formatDate(date: Date): string {
       const options: Intl.DateTimeFormatOptions = {
         day: '2-digit',
         month: 'short',
         year: 'numeric',
-      };
-      return date.toLocaleDateString('en-US', options).replace(',', '');
+      }
+      return date.toLocaleDateString('en-US', options).replace(',', '')
     }
-  
+
     // Helper function to get parts of the date
     function getDateParts(date: Date) {
       const options: Intl.DateTimeFormatOptions = {
         day: '2-digit',
         month: 'short',
         year: 'numeric',
-      };
-      const dateString = date.toLocaleDateString('en-US', options).replace(',', '');
-      const [month, day, year] = dateString.split(' ');
-      return { day, month, year };
+      }
+      const dateString = date
+        .toLocaleDateString('en-US', options)
+        .replace(',', '')
+      const [month, day, year] = dateString.split(' ')
+      return { day, month, year }
     }
-  
+
     // Parse the dates and remove time component
-    const fromDateObj = new Date(prop?.from_date?.split('T')[0]);
-    const toDateObj = new Date(prop?.to_date?.split('T')[0]);
-  
+    const fromDateObj = new Date(prop?.from_date?.split('T')[0])
+    const toDateObj = new Date(prop?.to_date?.split('T')[0])
+
     // Get date parts
-    const fromDateParts = getDateParts(fromDateObj);
-    const toDateParts = getDateParts(toDateObj);
-  
+    const fromDateParts = getDateParts(fromDateObj)
+    const toDateParts = getDateParts(toDateObj)
+
     // Construct the result based on parts comparison
-    let result = '';
+    let result = ''
     if (fromDateParts.year !== toDateParts.year) {
-      result = `${fromDateParts.day} ${fromDateParts.month} ${fromDateParts.year} - ${toDateParts.day} ${toDateParts.month} ${toDateParts.year}`;
+      result = `${fromDateParts.day} ${fromDateParts.month} ${fromDateParts.year} - ${toDateParts.day} ${toDateParts.month} ${toDateParts.year}`
     } else if (fromDateParts.month !== toDateParts.month) {
-      result = `${fromDateParts.day} ${fromDateParts.month} - ${toDateParts.day} ${toDateParts.month} ${fromDateParts.year}`;
-    } else if(fromDateParts.day !== toDateParts.day) {
-      result = `${fromDateParts.day} - ${toDateParts.day} ${fromDateParts.month} ${fromDateParts.year}`;
+      result = `${fromDateParts.day} ${fromDateParts.month} - ${toDateParts.day} ${toDateParts.month} ${fromDateParts.year}`
+    } else if (fromDateParts.day !== toDateParts.day) {
+      result = `${fromDateParts.day} - ${toDateParts.day} ${fromDateParts.month} ${fromDateParts.year}`
     } else {
-      result = `${toDateParts.day} ${fromDateParts.month} ${fromDateParts.year}`;
+      result = `${toDateParts.day} ${fromDateParts.month} ${fromDateParts.year}`
     }
-    return result;
+    return result
   }
-  
+
   const calendarIcon = (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -137,19 +142,28 @@ const ListingCard: React.FC<Props> = ({ data }) => {
         )}
 
         <div className={styles.imgContainer}>
-          <div
-            className={styles['background']}
-            style={{ backgroundImage: `url(${data?.cover_image})` }}
-          ></div>
-
           {data?.cover_image ? (
-            <img
-              src={data?.cover_image}
-              width={300}
-              height={100}
-              alt="cover"
-              className={styles.coverImage}
-            />
+            <>
+              <div
+                className={styles['background']}
+                style={{ backgroundImage: `url(${data?.cover_image})` }}
+              ></div>
+              <img
+                src={data?.cover_image}
+                width={300}
+                height={100}
+                alt="cover"
+                className={styles.coverImage}
+                style={{ marginBottom: '-6px' }}
+              />
+              <div
+                style={{
+                  width: '100%',
+                  height: '1px',
+                  background: '#939ca3',
+                }}
+              ></div>
+            </>
           ) : (
             <div
               className={
@@ -163,13 +177,19 @@ const ListingCard: React.FC<Props> = ({ data }) => {
                   ? `${styles['coverImage']} default-product-listing-cover`
                   : `${styles['coverImage']} default-people-listing-cover`
               }
-            ></div>
+            >
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  width: '100%',
+                  height: '1px',
+                  background: '#939ca3',
+                }}
+              ></div>{' '}
+            </div>
           )}
         </div>
-
-        <div
-          style={{ width: '100%', height: '1px', background: '#939ca3' }}
-        ></div>
 
         <div className={styles.content}>
           <div className={styles.contentHead}>
@@ -248,15 +268,17 @@ const ListingCard: React.FC<Props> = ({ data }) => {
                           <section>
                             {clockIcon}{' '}
                             <p>
-                              {data?.event_date_time[0]?.from_time +
-                                ' - '}
-                                {data?.event_weekdays?.length>0?
+                              {data?.event_date_time[0]?.from_time + ' - '}
+                              {data?.event_weekdays?.length > 0 ? (
                                 <>
-                                ...
-                                <span className={styles['purpleText']}>more</span>
+                                  ...
+                                  <span className={styles['purpleText']}>
+                                    more
+                                  </span>
                                 </>
-                                :
-                                data?.event_date_time[0]?.to_time}
+                              ) : (
+                                data?.event_date_time[0]?.to_time
+                              )}
                             </p>
                           </section>
                         )}

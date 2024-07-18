@@ -425,6 +425,7 @@
     min-width: max-content;
   }
   
+  
 }
 .publishBtn {
   width: 100%;
@@ -450,6 +451,9 @@
 .actions-container-mobile {
   display: none;
 }
+.event-date-container-responsive {
+  display: none;
+}
 
 @media screen and (max-width: 1100px) {
   .display-desktop {
@@ -462,6 +466,9 @@
     display: flex;
     flex-direction: column;
     margin: 6px 0 2px 0;
+  }
+  .publish-btn-container {
+    padding: 0 16px;
   }
 
   .action-btn-wrapper {
@@ -546,15 +553,24 @@
     color: #8064a2;
   }
   .eventDate-parent{
-    min-width: 92vw;
+    min-width: 91vw;
   }
   .eventDate {
     max-height: 22px;
     overflow: clip;
   }
-  .event-date-container{
+  .event-date-container {
+    display: none;
+
+  }
+  .event-date-container-responsive{
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
     max-height: 24px;
     z-index: 1;
+    order: 3;
   }
 }
 

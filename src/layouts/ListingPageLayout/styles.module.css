@@ -251,11 +251,11 @@ top: -2px;
 
   .event-count{
     color: var(--background-white, #FFF);
-font-family: Inter;
-font-size: 10px;
+font-family: 'Inter';
+font-size: 11px;
 font-style: normal;
 font-weight: 500;
-line-height: 12px; /* 120% */
+line-height: 12px;
 display: flex;
 min-width: 15px;
 height: 15px;

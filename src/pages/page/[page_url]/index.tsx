@@ -16,6 +16,8 @@ import {
 import ListingHomeTab from '@/components/ListingPage/ListingHomeTab/ListingHomeTab'
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
 
+import { useMediaQuery } from '@mui/material'
+
 type Props = { data: ListingPageData }
 
 const ListingHome: React.FC<Props> = (props) => {
@@ -40,6 +42,10 @@ const ListingHome: React.FC<Props> = (props) => {
   const [isDataLoaded, setIsDataLoaded] = useState(false)
   const router = useRouter()
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null)
+  const isMobile = useMediaQuery('(max-width:1100px)')
+  useEffect(() => {
+    setExpandAll(!isMobile)
+  }, [props?.data?.pageData?.page_url])
 
   useEffect(() => {
     if (user._id) {

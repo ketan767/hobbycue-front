@@ -20,6 +20,8 @@ import { formatPrice } from '@/utils'
 import Calendar from '@/assets/svg/calendar-light.svg'
 import Time from '@/assets/svg/clock-light.svg'
 import rupeesIcon from '@/assets/svg/rupees.svg'
+import RadioUnselected from '../../../assets/svg/radio-unselected.svg'
+import RadioSelected from '../../../assets/svg/radio-selected.svg'
 
 type Props = {
   onComplete?: () => void
@@ -52,7 +54,9 @@ const ListingProductPurchase: React.FC<Props> = ({
   console.log({ propData })
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
-
+  const [submitBtnTxt, setSubmitBtnTxt] = useState('Register')
+  const [showConfirmRegister, setshowConfirmRegister] = useState(false)
+  const [RegisterCheck, SetRegisterCheck] = useState<any>('')
   const { listingModalData } = useSelector((state: RootState) => state.site)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   console.log('listingModalData:', listingModalData)
@@ -97,6 +101,14 @@ const ListingProductPurchase: React.FC<Props> = ({
   }, [propData])
 
   const handleSubmit = async () => {
+    if (!showConfirmRegister) {
+      setshowConfirmRegister(true)
+      setSubmitBtnTxt('Confirm')
+      if (listingModalData && listingModalData.click_url) {
+        window.open(listingModalData.click_url, '_blank', 'noopener,noreferrer')
+      }
+      return
+    }
     const apiFunc = purchaseProduct
     setSubmitBtnLoading(true)
     const { err, res } = await apiFunc(data._id as string, {
@@ -110,10 +122,6 @@ const ListingProductPurchase: React.FC<Props> = ({
       })
     }
     console.log('res', res?.data.data.listing)
-
-    if (listingModalData && listingModalData.click_url) {
-      window.open(listingModalData.click_url, '_blank', 'noopener,noreferrer')
-    }
 
     if (onComplete) onComplete()
     else {
@@ -525,7 +533,7 @@ const ListingProductPurchase: React.FC<Props> = ({
                 onChange={(e) =>
                   setData((prev) => ({ ...prev, note: e.target.value }))
                 }
-                placeholder="This information will be sent to the Event Admin"
+                placeholder="You may include Payment Info, Transaction ID, Registration ID, Special Requests, etc"
               />
             </div>
             <p>
@@ -539,6 +547,35 @@ const ListingProductPurchase: React.FC<Props> = ({
               {formatPrice(totalPrice)}
             </p>
           </div>
+          {showConfirmRegister && (
+            <div className={styles['register-confirmation-wrapper']}>
+              <p>Did you register?</p>
+              <div>
+                <span>
+                  <Image
+                    src={RegisterCheck ? RadioSelected : RadioUnselected}
+                    width={16}
+                    height={16}
+                    alt="radio"
+                    className={styles.addIcon}
+                    onClick={() => SetRegisterCheck(true)}
+                  />{' '}
+                  Yes
+                </span>
+                <span>
+                  <Image
+                    src={RegisterCheck ? RadioUnselected : RadioSelected}
+                    width={16}
+                    height={16}
+                    alt="radio"
+                    className={styles.addIcon}
+                    onClick={() => SetRegisterCheck(false)}
+                  />{' '}
+                  No
+                </span>
+              </div>
+            </div>
+          )}
           <button
             ref={nextButtonRef}
             className="modal-footer-btn submit"
@@ -549,9 +586,10 @@ const ListingProductPurchase: React.FC<Props> = ({
             ) : onComplete ? (
               'Next'
             ) : (
-              'Checkout'
+              submitBtnTxt
             )}
           </button>
+
           {/* SVG Button for Mobile */}
           {onComplete ? (
             <div onClick={handleSubmit}>
@@ -564,13 +602,13 @@ const ListingProductPurchase: React.FC<Props> = ({
           ) : (
             <button
               ref={nextButtonRef}
-              className="modal-mob-btn-save"
+              className={`modal-footer-btn ${styles['footer-submit-mob']}`}
               onClick={handleSubmit}
             >
               {submitBtnLoading ? (
                 <CircularProgress color="inherit" size={'14px'} />
               ) : (
-                'Checkout'
+                submitBtnTxt
               )}
             </button>
           )}

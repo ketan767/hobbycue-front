@@ -1,3 +1,5 @@
+import { useMediaQuery } from '@mui/material';
+
 export const validateEmail = (email: string) => {
   let a = String(email)
     .toLowerCase()
@@ -203,3 +205,7 @@ export const convertDateToString = (date: string): string => {
   const monthName = monthNames[month];
   return `${day} ${monthName} ${year}`;
 };
+
+
+
+export const isMobile = () => useMediaQuery('(max-width:1100px)');

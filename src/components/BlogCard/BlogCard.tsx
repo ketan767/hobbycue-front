@@ -122,27 +122,42 @@ const BlogCard: React.FC<Props> = ({ data }) => {
         )}
 
         <div className={styles.imgContainer}>
-          <div
-            className={styles['background']}
-            style={{ backgroundImage: `url(${data?.cover_image})` }}
-          ></div>
-
           {data?.cover_pic ? (
-            <img
-              src={data?.cover_pic}
-              width={300}
-              height={100}
-              alt="cover"
-              className={styles.coverImage}
-            />
+            <>
+              <div
+                className={styles['background']}
+                style={{ backgroundImage: `url(${data?.cover_pic})` }}
+              ></div>
+              <img
+                src={data?.cover_pic}
+                width={300}
+                height={100}
+                alt="cover"
+                className={styles.coverImage}
+                style={{ marginBottom: '-6px' }}
+              />
+              <div
+                style={{
+                  width: '100%',
+                  height: '1px',
+                  background: '#939ca3',
+                }}
+              ></div>
+            </>
           ) : (
-            <div className={`${styles['coverImage']} default-user-cover`}></div>
+            <div className={`${styles['coverImage']} default-user-cover`}>
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  width: '100%',
+                  height: '1px',
+                  background: '#939ca3',
+                }}
+              ></div>{' '}
+            </div>
           )}
         </div>
-
-        <div
-          style={{ width: '100%', height: '1px', background: '#939ca3' }}
-        ></div>
 
         <div className={styles.content}>
           <div className={styles.contentHead}>
@@ -153,15 +168,16 @@ const BlogCard: React.FC<Props> = ({ data }) => {
           <div className={styles.contentTitle}>
             <p className={styles.tagline}>
               {' '}
-              {data?.tagline ? data?.tagline : '\u00A0'}
+              {data?.description ? data?.description : '\u00A0'}
             </p>
           </div>
 
           <div>
             <span className={styles.authorAndDate}>
-              {data.author?.full_name +
-                ' | ' +
-                convertDateToString(data?.createdAt)}
+              {data.author?.full_name + ' | '}
+              <span className={styles.date}>
+                {convertDateToString(data?.createdAt)}
+              </span>
             </span>
           </div>
           <div className={styles.bottom}>

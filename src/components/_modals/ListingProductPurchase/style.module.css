@@ -26,10 +26,50 @@
   border: 1px solid #8064A2;
   border-radius: 8px;
 }
+
+.register-confirmation-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.register-confirmation-wrapper div{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.register-confirmation-wrapper p {
+color: #6D747A;
+font-family: 'Poppins';
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 24px;
+width: 115%;
+
+}
+
+.register-confirmation-wrapper div span {
+  padding: 0 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  color: #8064A2;
+}
+
+.register-confirmation-wrapper p::after {
+  content: '*';
+  color: rgba(192, 80, 77, 1);
+  
+}
+
+
 @media screen and (min-width: 1100px) {
   .modal-wrapper {
     max-height: 50rem;
-    height: calc(100vh - 6rem);
+    height: calc(100vh - 2rem);
   }
 
   .modal-wrapper .body {
@@ -212,10 +252,10 @@ width: 100%;
 
 .variations-list .variant{
   display: grid;
-  grid-template-columns: 62.02% 16.04% 17.48%;
+  grid-template-columns: 67.02% 15.04% 17.95%;
   justify-content: center;
   align-items: center;
-  gap: 12px;
+
   width: 100%;
 }
 
@@ -299,9 +339,9 @@ line-height: 22px; /* 157.143% */
 
 .show-value{
   display: flex;
-width: 107px;
+
 height: 40px;
-padding: 12px;
+padding: 12px 0;
 justify-content: flex-end;
 align-items: center;
 gap: 10px;
@@ -325,6 +365,7 @@ font-weight: 600;
 line-height: 24px; /* 100% */
 position: absolute;
 bottom: 100%;
+padding-bottom: 53px;
 left: 24px;
 right: 24px;
 display: flex;
@@ -426,7 +467,8 @@ line-height: 16px;
 .event-date-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
+  width: 100%;
 }
 .eventDate p {
   font-family: 'Poppins';
@@ -447,6 +489,10 @@ line-height: 16px;
 }
 .eventDate .edit-icon {
   cursor: pointer;
+}
+
+.footer-submit-mob {
+  display: none;
 }
 
 @media screen and (max-width: 1100px) {
@@ -512,18 +558,29 @@ line-height: 16px;
 
   .variations-list .variant{
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 2.2fr 1fr 1fr;
     justify-content: center;
     align-items: center;
-    gap: 12px;
+   
     width: 100%;
   }
   .price{
+
+    padding-bottom: 24px ;
     flex-direction: column;
     gap: 20px;
   }
   .note{
     width: 100%;
+  }
+  .register-confirmation-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .footer-submit-mob {
+    display: block;
+    margin-left: auto;
   }
 }
 
@@ -537,10 +594,10 @@ line-height: 16px;
     z-index: 1;
     background: white;
     height: max-content;
-    right: 0;
+    left: 0;
    padding: 0 0 0 5px;
    border-radius: 8px;
-   left: auto !important;
+
    max-height: 18px;
    overflow: clip;
 }
