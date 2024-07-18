@@ -60,6 +60,7 @@
   max-height: 310px;
   overflow: hidden;
   border-radius: 8px;
+  aspect-ratio: 3 / 1;
 }
 .background {
   position: absolute;

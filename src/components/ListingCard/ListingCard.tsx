@@ -154,7 +154,7 @@ const ListingCard: React.FC<Props> = ({ data }) => {
                 height={100}
                 alt="cover"
                 className={styles.coverImage}
-                style={{ marginBottom: '-6px' }}
+                style={{ marginBottom: '-7px' }}
               />
               <div
                 style={{
