@@ -44,8 +44,10 @@ const ListingHome: React.FC<Props> = (props) => {
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null)
   const isMobile = useMediaQuery('(max-width:1100px)')
   useEffect(() => {
-    setExpandAll(!isMobile)
-  }, [props?.data?.pageData?.page_url])
+    if (isMobile) {
+      setExpandAll(!isMobile)
+    }
+  }, [])
 
   useEffect(() => {
     if (user._id) {

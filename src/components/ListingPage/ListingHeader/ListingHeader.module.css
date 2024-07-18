@@ -347,7 +347,7 @@
 .container:has(.header).small .navigation-tabs {
   display: flex;
 
-  gap: 38px;
+  gap: 20px;
   justify-content: flex-start;
   margin: 4px 0 0 23.96%;
   position: sticky;

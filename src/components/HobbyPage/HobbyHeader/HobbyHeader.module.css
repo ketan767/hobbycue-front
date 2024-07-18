@@ -124,14 +124,12 @@
 }
 
 .navigation-links {
-  padding: 0 16px;
   display: flex;
-
-  gap: 38px;
-  justify-content: center;
-  margin-top: 14px;
-
-  background-color: white;
+  gap: 20px;
+  justify-content: start;
+ 
+  margin: 14px 0 0 24.05%;
+  position: -webkit-sticky;
   position: sticky;
   min-height: 40px;
   z-index: 1;

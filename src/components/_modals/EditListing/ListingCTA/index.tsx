@@ -100,19 +100,13 @@ const ListingCTAModal: React.FC<Props> = ({
     setCta(name)
   }
   useEffect(() => {
-    if (
-      listingModalData &&
-      listingModalData.cta_text
-    ) {
+    if (listingModalData && listingModalData.cta_text) {
       setCta(listingModalData.cta_text)
     }
-    if (
-      listingModalData && 
-      listingModalData.click_url
-    ) {
+    if (listingModalData && listingModalData.click_url) {
       setUrl(listingModalData.click_url)
     }
-  }, [listingModalData]);
+  }, [listingModalData])
 
   const handleSubmit = async () => {
     setSubmitBtnLoading(true)
@@ -307,15 +301,17 @@ const ListingCTAModal: React.FC<Props> = ({
               />
             </div>
           )}
-          {(cta === 'Register' || cta === 'Buy Now') && (metaData.title && metaData.title!=='') && (
-            <div className={styles['metadata']}>
-              <img src={metaData.image ?? metaData.icon ?? ''} alt="" />
-              <div>
-                <h5>{metaData.title}</h5>
-                <p>{metaData.description}</p>
+          {(cta === 'Register' || cta === 'Buy Now') &&
+            metaData.title &&
+            metaData.title !== '' && (
+              <div className={styles['metadata']}>
+                <img src={metaData.image ?? metaData.icon ?? ''} alt="" />
+                <div>
+                  <h5>{metaData.title}</h5>
+                  <p>{metaData.description}</p>
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </section>
 
         <footer className={styles['footer']}>

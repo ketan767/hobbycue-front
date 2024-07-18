@@ -56,12 +56,13 @@ const ListingProductPurchase: React.FC<Props> = ({
   const { user } = useSelector((state: RootState) => state.user)
   const [submitBtnTxt, setSubmitBtnTxt] = useState('Register')
   const [showConfirmRegister, setshowConfirmRegister] = useState(false)
-  const [RegisterCheck, SetRegisterCheck] = useState<any>('')
+  const [RegisterCheck, SetRegisterCheck] = useState<any>(null)
+  const [RegisterError, SetRegisterError] = useState<boolean>(false)
   const { listingModalData } = useSelector((state: RootState) => state.site)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   console.log('listingModalData:', listingModalData)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
-  const [showDays, setShowDays] = useState(false)
+  const [showDays, setShowDays] = useState(true)
   const [data, setData] = useState<{
     _id?: string
     variant_tag: string
@@ -109,30 +110,42 @@ const ListingProductPurchase: React.FC<Props> = ({
       }
       return
     }
-    const apiFunc = purchaseProduct
-    setSubmitBtnLoading(true)
-    const { err, res } = await apiFunc(data._id as string, {
-      ...data,
-    })
-    if (err) {
-      return setSnackbar({
-        display: true,
-        type: 'warning',
-        message: 'Some error occured during purchase',
-      })
-    }
-    console.log('res', res?.data.data.listing)
 
-    if (onComplete) onComplete()
-    else {
-      setSnackbar({
-        display: true,
-        type: 'success',
-        message: 'Registered Successfully',
+    if (showConfirmRegister) {
+      if (RegisterCheck === null) {
+        SetRegisterError(true)
+        return
+      }
+    }
+
+    if (RegisterCheck) {
+      const apiFunc = purchaseProduct
+      setSubmitBtnLoading(true)
+      const { err, res } = await apiFunc(data._id as string, {
+        ...data,
       })
-      setTimeout(() => {
-        dispatch(closeModal())
-      }, 2000)
+      if (err) {
+        return setSnackbar({
+          display: true,
+          type: 'warning',
+          message: 'Some error occured during purchase',
+        })
+      }
+      console.log('res', res?.data.data.listing)
+
+      if (onComplete) onComplete()
+      else {
+        setSnackbar({
+          display: true,
+          type: 'success',
+          message: 'Registered Successfully',
+        })
+        setTimeout(() => {
+          dispatch(closeModal())
+        }, 2000)
+      }
+    } else {
+      dispatch(closeModal())
     }
   }
 
@@ -328,32 +341,14 @@ const ListingProductPurchase: React.FC<Props> = ({
                               (!listingModalData?.event_weekdays ||
                                 listingModalData?.event_weekdays?.length <=
                                   1) ? (
-                                <>
-                                  ...{' '}
-                                  <span
-                                    onClick={() => setShowDays((prev) => !prev)}
-                                  >
-                                    more
-                                  </span>
-                                </>
+                                <>... </>
                               ) : null}
                               {isMobile &&
                                 showDays &&
                                 listingModalData?.event_date_time &&
                                 listingModalData?.event_date_time?.length -
                                   1 ===
-                                  i && (
-                                  <>
-                                    {' '}
-                                    <span
-                                      onClick={() =>
-                                        setShowDays((prev) => !prev)
-                                      }
-                                    >
-                                      Less
-                                    </span>
-                                  </>
-                                )}
+                                  i && <> </>}
                             </p>
                           ))
                         : ''}
@@ -387,19 +382,12 @@ const ListingProductPurchase: React.FC<Props> = ({
                                   }`
                                 }
                               >
-                                {obj?.from_day} - {obj?.to_day},{' '}
-                                {obj?.from_time}
+                                {obj?.from_day}
+                                {obj?.to_day !== obj?.from_day &&
+                                  ' - ' + obj?.to_day}
+                                , {obj?.from_time}
                                 {isMobile && showDays === false ? (
-                                  <>
-                                    ...{' '}
-                                    <span
-                                      onClick={() =>
-                                        setShowDays((prev) => !prev)
-                                      }
-                                    >
-                                      more
-                                    </span>
-                                  </>
+                                  <>... </>
                                 ) : (
                                   <>
                                     {' '}
@@ -409,36 +397,10 @@ const ListingProductPurchase: React.FC<Props> = ({
                                     listingModalData?.event_weekdays &&
                                     listingModalData?.event_weekdays?.length >
                                       1 ? (
-                                      <>
-                                        {' ... '}
-                                        <span
-                                          onClick={() =>
-                                            setShowDays((prev) => !prev)
-                                          }
-                                          className={styles['purpleText']}
-                                        >
-                                          more
-                                        </span>
-                                      </>
+                                      <>{' ... '}</>
                                     ) : (
                                       obj?.to_time
                                     )}
-                                    {listingModalData?.event_weekdays &&
-                                      listingModalData?.event_weekdays?.length -
-                                        1 ===
-                                        i &&
-                                      isMobile && (
-                                        <>
-                                          {' '}
-                                          <span
-                                            onClick={() =>
-                                              setShowDays((prev) => !prev)
-                                            }
-                                          >
-                                            Less
-                                          </span>
-                                        </>
-                                      )}
                                   </>
                                 )}
                               </p>
@@ -458,20 +420,6 @@ const ListingProductPurchase: React.FC<Props> = ({
                             </>
                           )}
                     </div>
-                    {((listingModalData.event_weekdays &&
-                      listingModalData?.event_weekdays?.length > 1) ||
-                      (listingModalData?.event_date_time &&
-                        listingModalData?.event_date_time?.length > 1)) &&
-                      !isMobile && (
-                        <div
-                          onClick={() => setShowDays((prev) => !prev)}
-                          className={`${showDays ? '' : styles['rotate']} ${
-                            styles['flex-col-start']
-                          }`}
-                        >
-                          {dropdownIcon}
-                        </div>
-                      )}
                   </div>
                 </div>
               ) : (
@@ -549,11 +497,21 @@ const ListingProductPurchase: React.FC<Props> = ({
           </div>
           {showConfirmRegister && (
             <div className={styles['register-confirmation-wrapper']}>
-              <p>Did you register?</p>
+              <p
+                className={RegisterError ? styles['register-error'] : 'ignore'}
+              >
+                Did you register?
+              </p>
               <div>
                 <span>
                   <Image
-                    src={RegisterCheck ? RadioSelected : RadioUnselected}
+                    src={
+                      RegisterCheck === null
+                        ? RadioUnselected
+                        : RegisterCheck
+                        ? RadioSelected
+                        : RadioUnselected
+                    }
                     width={16}
                     height={16}
                     alt="radio"
@@ -564,7 +522,13 @@ const ListingProductPurchase: React.FC<Props> = ({
                 </span>
                 <span>
                   <Image
-                    src={RegisterCheck ? RadioUnselected : RadioSelected}
+                    src={
+                      RegisterCheck === null
+                        ? RadioUnselected
+                        : RegisterCheck
+                        ? RadioUnselected
+                        : RadioSelected
+                    }
                     width={16}
                     height={16}
                     alt="radio"

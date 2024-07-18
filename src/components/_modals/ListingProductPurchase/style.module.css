@@ -49,6 +49,9 @@ line-height: 24px;
 width: 115%;
 
 }
+.register-error {
+  color: rgba(192, 80, 77, 1) !important;
+}
 
 .register-confirmation-wrapper div span {
   padding: 0 8px;
