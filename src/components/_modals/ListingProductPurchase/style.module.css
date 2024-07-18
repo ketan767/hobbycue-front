@@ -617,7 +617,7 @@ line-height: 16px;
 }
 
 .eventDate-open{
-  box-shadow: 0px 8px 12px 0px rgba(147, 156, 163, 0.12), 0px 0px 2px 0px rgba(147, 156, 163, 0.36);
+
   padding-top: 2px;
   max-height: unset;
   background: white;

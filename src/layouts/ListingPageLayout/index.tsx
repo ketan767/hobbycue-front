@@ -380,7 +380,7 @@ const ListingPageLayout: React.FC<Props> = ({
                     ? placeSvg.src
                     : data.pageData.type === 3
                     ? programSvg.src
-                    : peopleSvg
+                    : peopleSvg.src
                 }
               />
             </div>

@@ -34,6 +34,9 @@ import { listingTypes } from '@/constants/constant'
 import Link from 'next/link'
 import DirectionIcon from '@/assets/svg/direction.svg'
 import DefaultPageImage from '@/assets/svg/default-images/default-people-listing-icon.svg'
+import peopleSvg from '@/assets/svg/People.svg'
+import placeSvg from '@/assets/svg/Place.svg'
+import programSvg from '@/assets/svg/Program.svg'
 
 import dynamic from 'next/dynamic'
 import MapComponent from '@/components/Gmap'
@@ -493,26 +496,33 @@ const ListingPageMain: React.FC<Props> = ({
                 {data.page_type.map((type: any, idx: any) => {
                   return (
                     <div className={styles['listing-page-type']} key={idx}>
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
+                      <Image
+                        alt="page type icon"
+                        width={24}
+                        height={24}
+                        src={
+                          data.type === 1
+                            ? peopleSvg
+                            : data.type === 2
+                            ? placeSvg
+                            : data.type === 3
+                            ? programSvg
+                            : peopleSvg
+                        }
+                      />
+                      <p
+                        className={
+                          data.type === 1
+                            ? styles['people-color']
+                            : data.type === 2
+                            ? styles['place-color']
+                            : data.type === 3
+                            ? styles['program-color']
+                            : styles['abv-color']
+                        }
                       >
-                        <g clip-path="url(#clip0_173_56244)">
-                          <path
-                            d="M17 10.43V2H7V10.43C7 10.78 7.18 11.11 7.49 11.29L11.67 13.8L10.68 16.14L7.27 16.43L9.86 18.67L9.07 22L12 20.23L14.93 22L14.15 18.67L16.74 16.43L13.33 16.14L12.34 13.8L16.52 11.29C16.82 11.11 17 10.79 17 10.43ZM13 12.23L12 12.83L11 12.23V3H13V12.23Z"
-                            fill="#0096C8"
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_173_56244">
-                            <rect width="24" height="24" fill="white" />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                      <p>{type}</p>
+                        {type}
+                      </p>
                     </div>
                   )
                 })}

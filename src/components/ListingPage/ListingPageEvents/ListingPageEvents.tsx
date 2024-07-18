@@ -14,6 +14,7 @@ import {
   updateTotalEvents,
 } from '@/redux/slices/site'
 import { useRouter } from 'next/router'
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -144,7 +145,20 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
   return (
     <>
       <main>
-        {!eventData?.res ? (
+        <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 1100: 2 }}>
+          <Masonry gutter="12px" style={{ columnGap: '24px', rowGap: '12px' }}>
+            {itsMe && (
+              <div onClick={handleAddEvent} className={styles['add-event']}>
+                <div className={styles['new-tag']}>ADD NEW</div>
+                <button>{plusIcon}</button>
+              </div>
+            )}
+            {sortedListings.map((listing: any) => {
+              return <ListingCard key={listing._id} data={listing} />
+            })}
+          </Masonry>
+        </ResponsiveMasonry>
+        {/* {!eventData?.res ? (
           <section className={styles['data-container']}>
             <div onClick={handleAddEvent} className={styles['add-event']}>
               <div className={styles['new-tag']}>ADD NEW</div>
@@ -162,12 +176,12 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
               <button>{plusIcon}</button>
             </div>
 
-            {/* Combine both data sources */}
+         
             {sortedListings.map((listing) => (
               <ListingCard key={listing._id} data={listing} />
             ))}
           </div>
-        )}
+        )} */}
       </main>
     </>
   )

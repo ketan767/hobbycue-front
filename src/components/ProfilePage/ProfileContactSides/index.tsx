@@ -15,7 +15,9 @@ type Props = {
 }
 
 const ProfileContactSide = ({ data, expandData, contactError }: Props) => {
-  const { profileLayoutMode, contactStates } = useSelector((state: RootState) => state.site)
+  const { profileLayoutMode, contactStates } = useSelector(
+    (state: RootState) => state.site,
+  )
   const { user } = useSelector((state: RootState) => state.user)
   const ulRef = useRef(null)
   const dispatch = useDispatch()
@@ -32,13 +34,13 @@ const ProfileContactSide = ({ data, expandData, contactError }: Props) => {
     }
   }, [data])
 
-  useEffect(()=>{
-    if(contactStates && typeof contactStates[data?._id] === 'boolean'){
+  useEffect(() => {
+    if (contactStates && typeof contactStates[data?._id] === 'boolean') {
       setDisplayData(contactStates[data?._id])
-    }else if(data._id){
-      dispatch(updateContactOpenStates({[data._id]:displayData}))
+    } else if (data._id) {
+      dispatch(updateContactOpenStates({ [data._id]: displayData }))
     }
-  },[data._id, contactStates])
+  }, [data._id, contactStates])
 
   useEffect(() => {
     if (expandData !== undefined) setDisplayData(expandData)
@@ -55,10 +57,12 @@ const ProfileContactSide = ({ data, expandData, contactError }: Props) => {
         onEditBtnClick={() =>
           dispatch(openModal({ type: 'profile-contact-edit', closable: true }))
         }
-        setDisplayData={(arg0:boolean)=>{setDisplayData(prev=>{
-          dispatch(updateContactOpenStates({[data._id]:!prev}))
-          return !prev
-        })}}
+        setDisplayData={(arg0: boolean) => {
+          setDisplayData((prev) => {
+            dispatch(updateContactOpenStates({ [data._id]: !prev }))
+            return !prev
+          })
+        }}
         expandData={displayData}
         className={contactError ? styles['error'] : ''}
       >

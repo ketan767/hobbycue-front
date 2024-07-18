@@ -302,13 +302,13 @@ const ListingCTAModal: React.FC<Props> = ({
             </div>
           )}
           {(cta === 'Register' || cta === 'Buy Now') &&
-            metaData.title &&
-            metaData.title !== '' && (
+            metaData?.title &&
+            metaData?.title !== '' && (
               <div className={styles['metadata']}>
                 <img src={metaData.image ?? metaData.icon ?? ''} alt="" />
                 <div>
-                  <h5>{metaData.title}</h5>
-                  <p>{metaData.description}</p>
+                  <h5>{metaData?.title}</h5>
+                  <p>{metaData?.description}</p>
                 </div>
               </div>
             )}

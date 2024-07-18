@@ -187,7 +187,7 @@ width: 100%;
   background: #FFF;
   display: flex;
   /* width: 482px; */
-  height: 88px;
+  height: 100px;
   justify-content: center;
   align-items: center;
   gap: 4px;
@@ -335,6 +335,12 @@ width: 100%;
   }
   .dual-section-wrapper {
     height: 90vh;
+  }
+  .uploadContainer {
+    display: flex;
+    gap: 24px;
+    flex-direction: column;
+
   }
  
 }

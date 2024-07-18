@@ -102,19 +102,51 @@ const ListingProductPurchase: React.FC<Props> = ({
   }, [propData])
 
   const handleSubmit = async () => {
-    if (!showConfirmRegister) {
-      setshowConfirmRegister(true)
-      setSubmitBtnTxt('Confirm')
-      if (listingModalData && listingModalData.click_url) {
-        window.open(listingModalData.click_url, '_blank', 'noopener,noreferrer')
-      }
-      return
-    }
-
-    if (showConfirmRegister) {
-      if (RegisterCheck === null) {
-        SetRegisterError(true)
+    if (listingModalData?.click_url) {
+      if (!showConfirmRegister) {
+        setshowConfirmRegister(true)
+        setSubmitBtnTxt('Confirm')
+        if (listingModalData && listingModalData.click_url) {
+          window.open(
+            listingModalData.click_url,
+            '_blank',
+            'noopener,noreferrer',
+          )
+        }
         return
+      }
+
+      if (showConfirmRegister) {
+        if (RegisterCheck === null) {
+          SetRegisterError(true)
+          return
+        }
+      }
+    } else {
+      const apiFunc = purchaseProduct
+      setSubmitBtnLoading(true)
+      const { err, res } = await apiFunc(data._id as string, {
+        ...data,
+      })
+      if (err) {
+        return setSnackbar({
+          display: true,
+          type: 'warning',
+          message: 'Some error occured during purchase',
+        })
+      }
+      console.log('res', res?.data.data.listing)
+
+      if (onComplete) onComplete()
+      else {
+        setSnackbar({
+          display: true,
+          type: 'success',
+          message: 'Registered Successfully',
+        })
+        setTimeout(() => {
+          dispatch(closeModal())
+        }, 2000)
       }
     }
 

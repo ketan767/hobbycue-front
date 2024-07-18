@@ -187,14 +187,15 @@ ul.contact-wrapper svg {
     align-items: start;
     padding-bottom: 16px;
   }
-  .mob-min-height{
-    /* min-height: calc(100vh - 107px); */
-  }
+ 
   .no-posts-div {
     border-radius: 0;
   }
   .profile-left-aside{
     height: auto;
     position: static;
+  }
+  .add-event{ 
+    height: 88px;
   }
 }

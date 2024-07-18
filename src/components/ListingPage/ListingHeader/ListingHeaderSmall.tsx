@@ -716,7 +716,11 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
             {/* Send Email Button  */}
             <Tooltip title="Repost">
               <div onClick={handleRepost} className={styles['action-btn']}>
-                <Image src={MailIcon} alt="share" />
+                <Image
+                  style={{ borderRadius: '8px' }}
+                  src={MailIcon}
+                  alt="share"
+                />
               </div>
             </Tooltip>
 
