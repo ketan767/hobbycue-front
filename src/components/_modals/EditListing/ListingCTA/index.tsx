@@ -39,6 +39,7 @@ const ListingCTAModal: React.FC<Props> = ({
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
+  const [list, setList] = useState<{ name: string; description: string }[]>([])
 
   const { listingModalData } = useSelector((state: RootState) => state.site)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
@@ -81,16 +82,47 @@ const ListingCTAModal: React.FC<Props> = ({
     }
   }, [url])
 
-  // we may add the URL Y/N pagetypes in the list as well
-  const [list, setList] = useState<{ name: string; description: string }[]>([
+  const [listOne, setListOne] = useState<
+    { name: string; description: string }[]
+  >([
+    { name: 'Contact', description: 'Opens a Contact or Message dialogue' },
+    { name: 'Claim', description: 'Allows others to Claim this Page' },
+  ])
+
+  const [listTwo, setListTwo] = useState<
+    { name: string; description: string }[]
+  >([
     { name: 'Contact', description: 'Opens a Contact or Message dialogue' },
     { name: 'Claim', description: 'Allows others to Claim this Page' },
     { name: 'Register', description: 'Allows to Register for the Program' },
+  ])
+
+  const [listThree, setListThree] = useState<
+    { name: string; description: string }[]
+  >([
+    { name: 'Contact', description: 'Opens a Contact or Message dialogue' },
+    { name: 'Claim', description: 'Allows others to Claim this Page' },
+
     {
       name: 'Buy Now',
       description: 'External Page for Online Shop (eg: Amazon)',
     },
   ])
+
+  useEffect(() => {
+    if (listingModalData.type === 1) {
+      setList(listOne)
+    }
+    if (listingModalData.type === 2) {
+      setList(listOne)
+    }
+    if (listingModalData.type === 3) {
+      setList(listTwo)
+    }
+    if (listingModalData.type === 4) {
+      setList(listThree)
+    }
+  }, [])
   const [value, setValue] = useState<any>([])
   const [hoveredValue, setHoveredValue] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)

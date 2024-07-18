@@ -313,6 +313,9 @@ const AuthForm: React.FC<Props> = (props) => {
       }
       const { err: error, res: response } = await getMyProfileDetail()
       if (router.pathname === '/') {
+        if (response?.data?.data?.user.is_admin) {
+          router.push('/admin')
+        }
         if (response?.data?.data?.user?.is_onboarded) {
           console.warn('push to community')
           router.push('/community')

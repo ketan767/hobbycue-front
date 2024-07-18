@@ -165,9 +165,17 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
                         <button>{plusIcon}</button>
                       </div>
                     )}
-                    {data.listingsData.map((listing: any) => {
-                      return <ListingCard key={listing._id} data={listing} />
-                    })}
+                    {itsMe
+                      ? data.listingsData.map((listing: any) => {
+                          return (
+                            <ListingCard key={listing._id} data={listing} />
+                          )
+                        })
+                      : data.listingsData
+                          .filter((listing: any) => listing?.is_published)
+                          .map((listing: any) => (
+                            <ListingCard key={listing._id} data={listing} />
+                          ))}
                   </Masonry>
                 </ResponsiveMasonry>
               ) : (
