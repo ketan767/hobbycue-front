@@ -145,20 +145,23 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
   return (
     <>
       <main>
-        <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 1100: 2 }}>
-          <Masonry gutter="12px" style={{ columnGap: '24px', rowGap: '12px' }}>
-            {itsMe && (
+        {eventData?.res ? (
+          <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 1100: 2 }}>
+            <Masonry
+              gutter="12px"
+              style={{ columnGap: '24px', rowGap: '12px' }}
+            >
               <div onClick={handleAddEvent} className={styles['add-event']}>
                 <div className={styles['new-tag']}>ADD NEW</div>
                 <button>{plusIcon}</button>
               </div>
-            )}
-            {sortedListings.map((listing: any) => {
-              return <ListingCard key={listing._id} data={listing} />
-            })}
-          </Masonry>
-        </ResponsiveMasonry>
-        {/* {!eventData?.res ? (
+
+              {sortedListings.map((listing: any) => {
+                return <ListingCard key={listing._id} data={listing} />
+              })}
+            </Masonry>
+          </ResponsiveMasonry>
+        ) : (
           <section className={styles['data-container']}>
             <div onClick={handleAddEvent} className={styles['add-event']}>
               <div className={styles['new-tag']}>ADD NEW</div>
@@ -169,19 +172,21 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
               <p className={styles['no-data-text']}>No events available</p>
             </div>
           </section>
-        ) : (
-          <div className={styles['card-container']}>
-            <div onClick={handleAddEvent} className={styles['add-event']}>
-              <div className={styles['new-tag']}>ADD NEW</div>
-              <button>{plusIcon}</button>
-            </div>
+        )}
+
+        {/* //   (
+        //   <div className={styles['card-container']}>
+        //     <div onClick={handleAddEvent} className={styles['add-event']}>
+        //       <div className={styles['new-tag']}>ADD NEW</div>
+        //       <button>{plusIcon}</button>
+        //     </div>
 
          
-            {sortedListings.map((listing) => (
-              <ListingCard key={listing._id} data={listing} />
-            ))}
-          </div>
-        )} */}
+        //     {sortedListings.map((listing) => (
+        //       <ListingCard key={listing._id} data={listing} />
+        //     ))}
+        //   </div>
+        // )}  */}
       </main>
     </>
   )

@@ -49,6 +49,7 @@ import CommunityTopDropdown from '@/components/_formElements/CommunityTopDropdow
 import { CommunityDropdownOption } from '@/components/_formElements/CommunityDropdownOption/CommunityDropdownOption'
 import PanelDropdownList from './PanelDropdownList'
 import { showProfileError } from '@/redux/slices/user'
+import { TrendingHobbiesByUser } from '@/services/user.service'
 
 type Props = {
   activeTab: CommunityPageTabs
@@ -391,12 +392,13 @@ const CommunityLayout: React.FC<Props> = ({
     }
   }, [filters.genre, filters.hobby, activeProfile])
   const fetchTrendingHobbies = async () => {
-    const { err, res } = await getTrendingHobbies(``)
+    const { err, res } = await TrendingHobbiesByUser()
+    console.warn('trendinghpbbiessssss', res?.data?.data)
 
     if (err) {
       return console.log('err', err)
     }
-    setTrendingHobbies(res.data?.hobbies)
+    setTrendingHobbies(res.data?.data)
   }
 
   useEffect(() => {

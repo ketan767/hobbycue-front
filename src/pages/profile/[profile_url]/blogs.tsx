@@ -41,16 +41,18 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
   const isMobile = useMediaQuery('(max-width:1100px)')
 
   useEffect(() => {
-    // Save scroll position when navigating away from the page
     const handleRouteChange = () => {
-      sessionStorage.setItem('scrollPositionProfile', window.scrollY.toString())
+      sessionStorage.setItem(
+        'scrollPositionProfile',
+        window?.scrollY?.toString(),
+      )
     }
 
     // Restore scroll position when navigating back to the page
     const handleScrollRestoration = () => {
       const scrollPosition = sessionStorage.getItem('scrollPositionProfile')
       if (scrollPosition) {
-        window.scrollTo(0, parseInt(scrollPosition, 10))
+        window?.scrollTo(0, parseInt(scrollPosition, 10))
         sessionStorage.removeItem('scrollPositionProfile')
       }
     }
@@ -65,9 +67,6 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
     }
   }, [])
 
-  // if (!user.is_onboarded && data?.pageData?.email !== user?.email) {
-  //   return <ErrorPage />
-  // }
   return (
     <>
       <Head>

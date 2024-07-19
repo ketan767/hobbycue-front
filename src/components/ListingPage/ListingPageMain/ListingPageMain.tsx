@@ -586,7 +586,8 @@ const ListingPageMain: React.FC<Props> = ({
               </div>
             </PageContentBox>
             {/* Tags */}
-            {data?.social_media_urls || listingLayoutMode === 'edit' ? (
+            {(data?._tags?.length > 0 && listingLayoutMode !== 'edit') ||
+            listingLayoutMode === 'edit' ? (
               <PageContentBox
                 showEditButton={listingLayoutMode === 'edit'}
                 onEditBtnClick={() =>
