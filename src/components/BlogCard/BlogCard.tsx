@@ -104,7 +104,7 @@ const BlogCard: React.FC<Props> = ({ data }) => {
     <>
       <Link
         key={data?._id}
-        href={`https://blog.hobbycue.com/blog/${data?.url}`}
+        href={`${process.env.NEXT_PUBLIC_TEST_URL}/blog/${data?.url}`}
         className={styles.container}
       >
         {itsMe ? (

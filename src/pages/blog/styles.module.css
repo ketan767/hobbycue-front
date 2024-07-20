@@ -1,0 +1,16 @@
+/* BlogPage.module.css */
+.iframe-container {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* or 100% if inside a parent with set height */
+  }
+  
+  .iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none; /* Optional: Remove iframe border */
+  }
+  

@@ -18,7 +18,7 @@ import { RootState } from '@/redux/store'
 import { updateProfileMenuExpandAll } from '@/redux/slices/site'
 import ErrorPage from '@/components/ErrorPage'
 import { useMediaQuery } from '@mui/material'
-import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
+
 import { getAllBlogs } from '@/services/blog.services'
 import BlogCard from '@/components/BlogCard/BlogCard'
 
@@ -101,17 +101,11 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
           </aside>
           <main>
             {data?.blogsData.length !== 0 ? (
-              // <div className={styles['card-container']}>
-              <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 1100: 3 }}>
-                <Masonry
-                  gutter="12px"
-                  style={{ columnGap: '24px', rowGap: '12px' }}
-                >
-                  {data?.blogsData.map((blog: any) => {
-                    return <BlogCard key={blog._id} data={blog} />
-                  })}
-                </Masonry>
-              </ResponsiveMasonry>
+              <div className={styles['three-column-grid']}>
+                {data?.blogsData.map((blog: any) => {
+                  return <BlogCard key={blog._id} data={blog} />
+                })}
+              </div>
             ) : (
               <section
                 className={`${styles['dual-section-wrapper']} ${styles['mob-min-height']} ${styles['mob-h-auto']}`}
