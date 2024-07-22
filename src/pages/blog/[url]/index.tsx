@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next'
 import { getAllBlogs } from '@/services/blog.services'
 import styles from './../styles.module.css'
+import BlogComments from './Comments'
 type Props = {
   data: {
     blog_url?: any
@@ -18,6 +19,9 @@ const BlogPage: React.FC<Props> = ({ data }) => {
           src={`https://blog.hobbycue.com/blog/${blogUrl}`}
         ></iframe>
       </div>
+      <div>
+        <BlogComments data={data.blog_url} />
+      </div>
     </>
   )
 }
@@ -34,7 +38,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       notFound: true,
     }
   }
-  console.warn('blogggggggggggghhhh', res)
 
   const data = {
     blog_url: res.data.data.blog[0],
