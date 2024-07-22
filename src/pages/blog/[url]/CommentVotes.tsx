@@ -9,16 +9,14 @@ import {
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-
+import styles from './BlogCard.module.css'
 type Props = {
-  styles: any
   comment: any
   postData: any
   updateComments?: () => void
 }
 
 const PostCommentVotes: React.FC<Props> = ({
-  styles,
   comment,
   postData,
   updateComments,
@@ -33,12 +31,12 @@ const PostCommentVotes: React.FC<Props> = ({
   const updateVoteStatus = () => {
     if (activeProfile.type === 'user') {
       const isUpVoted = Boolean(
-        comment.up_votes._users.find(
+        comment.up_votes?._users.find(
           (item: any) => item.toString() === activeProfile.data?._id,
         ),
       )
       const isDownVoted = Boolean(
-        comment.down_votes._users.find(
+        comment.down_votes?._users.find(
           (item: any) => item.toString() === activeProfile.data?._id,
         ),
       )
@@ -46,12 +44,12 @@ const PostCommentVotes: React.FC<Props> = ({
       if (isDownVoted) setVoteStatus('down')
     } else if (activeProfile.type === 'listing') {
       const isUpVoted = Boolean(
-        comment.up_votes._listings.find(
+        comment.up_votes?._listings.find(
           (item: any) => item.toString() === activeProfile?.data?._id,
         ),
       )
       const isDownVoted = Boolean(
-        comment.down_votes._listings.find(
+        comment.down_votes?._listings.find(
           (item: any) => item.toString() === activeProfile?.data?._id,
         ),
       )
@@ -169,7 +167,7 @@ const PostCommentVotes: React.FC<Props> = ({
           onClick={() => {
             if (isLoggedIn) {
               if (user.is_onboarded) {
-                handleUpVote
+                handleUpVote()
               } else HandleNotOnboard()
             } else {
               dispatch(openModal({ type: 'auth', closable: true }))
@@ -198,7 +196,7 @@ const PostCommentVotes: React.FC<Props> = ({
           onClick={() => {
             if (isLoggedIn) {
               if (user.is_onboarded) {
-                handleDownVote
+                handleDownVote()
               } else HandleNotOnboard()
             } else {
               dispatch(openModal({ type: 'auth', closable: true }))

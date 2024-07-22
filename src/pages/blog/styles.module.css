@@ -14,3 +14,10 @@
     border: none; /* Optional: Remove iframe border */
   }
   
+  .comment-container {
+    width: 53%;
+    margin-left: auto;
+    margin-right: auto;
+    
+  }
+

@@ -12,8 +12,11 @@ import { openModal } from '@/redux/slices/modal'
 import { getAllPosts } from '@/services/post.service'
 import { GetServerSideProps } from 'next'
 import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
-import {
+import post, {
+  appendPosts,
   setFilters,
+  updateCurrentPage,
+  updateHasMore,
   updateLoading,
   updatePages,
   updatePagesLoading,
@@ -89,7 +92,9 @@ const CommunityLayout: React.FC<Props> = ({
   const whatsNewContainerRef = useRef<HTMLElement>(null)
   const inviteBtnRef = useRef<HTMLButtonElement>(null)
   const { activeProfile, user } = useSelector((state: RootState) => state.user)
-  const { allPosts, filters } = useSelector((state: RootState) => state.post)
+  const { allPosts, filters, post_pagination } = useSelector(
+    (state: RootState) => state.post,
+  )
   const [showPanel, setShowPanel] = useState(false)
   const [hobbyGroup, setHobbyGroup] = useState({
     profile_image: null,
@@ -236,12 +241,14 @@ const CommunityLayout: React.FC<Props> = ({
       return 'default-people-listing-icon'
     }
   }
-
-  const fetchPosts = async () => {
+  const fetchPosts = async (page = 1) => {
     if (showPageLoader) {
       dispatch(setShowPageLoader(false))
     }
-    let params: any = ''
+    let params = new URLSearchParams(
+      `page=${page}&limit=10&populate=_author,_genre,_hobby`,
+    )
+
     if (activeProfile?.data?._hobbies.length === 0) {
       dispatch(setShowPageLoader(true))
       store.dispatch(updatePosts(''))
@@ -251,11 +258,7 @@ const CommunityLayout: React.FC<Props> = ({
 
     if (selectedLocation === '' && selectedHobby === '') return
     if (activeTab === 'links') {
-      params = new URLSearchParams(
-        `has_link=true&populate=_author,_genre,_hobby`,
-      )
-    } else {
-      params = new URLSearchParams(`populate=_author,_genre,_hobby`)
+      params.append('has_link', 'true')
     }
     if (
       selectedGenre &&
@@ -266,27 +269,19 @@ const CommunityLayout: React.FC<Props> = ({
     }
     if (selectedHobby !== '') {
       params.append('_hobby', selectedHobby)
-    }
-    // if (selectedGenre !== '') {
-    //   // don't remove it, somehow it is helping in fetching correct things according to hobby and genre
-    // }
-    else {
+    } else {
       activeProfile?.data?._hobbies.forEach((item: any) => {
         params.append('_hobby', item?.hobby?._id)
       })
     }
-    let selectedPinCode = ''
-    let selectedLocality = ''
-    let selectedSociety = ''
 
     const localSelectedLocation = filters.location
-
     const addresses = activeProfile.data?._addresses || []
     const matchingAddress = [
       ...addresses,
       activeProfile.data?.primary_address ?? {},
     ].find(
-      (address: any) =>
+      (address) =>
         address.city === (selectedLocation || localSelectedLocation) ||
         address.pin_code === (selectedLocation || localSelectedLocation) ||
         address.locality === (selectedLocation || localSelectedLocation) ||
@@ -313,19 +308,26 @@ const CommunityLayout: React.FC<Props> = ({
         params.append('visibility', matchingAddress.society)
       }
     }
-
-    dispatch(updateLoading(true))
+    if (page === 1) dispatch(updateLoading(true))
 
     const { err, res } = await getAllPosts(params.toString())
     if (err) return console.log(err)
     if (res?.data?.success) {
-      console.warn({ res })
       let posts = res.data.data.posts.map((post: any) => {
         let content = post.content.replace(/<img .*?>/g, '')
         return { ...post, content }
       })
-      store.dispatch(updatePosts(posts))
-      if (posts?.length === 0) {
+
+      if (page === 1) {
+        dispatch(updatePosts(posts))
+      } else {
+        dispatch(appendPosts(posts))
+      }
+
+      dispatch(updateHasMore(posts.length === 10))
+      dispatch(updateCurrentPage(page))
+
+      if (posts.length === 0) {
         setShowPanel(true)
       } else {
         setShowPanel(false)
@@ -333,6 +335,10 @@ const CommunityLayout: React.FC<Props> = ({
     }
     dispatch(updateLoading(false))
   }
+
+  useEffect(() => {
+    fetchPosts(post_pagination)
+  }, [post_pagination])
 
   const fetchHobbyMembers = async (hobbies?: HobbyEntry[]) => {
     try {

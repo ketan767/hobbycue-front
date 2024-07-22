@@ -19,8 +19,10 @@ const BlogPage: React.FC<Props> = ({ data }) => {
           src={`https://blog.hobbycue.com/blog/${blogUrl}`}
         ></iframe>
       </div>
-      <div>
-        <BlogComments data={data.blog_url} />
+      <div className={styles['comment-container']}>
+        <div className={styles['comment']}>
+          <BlogComments data={data.blog_url} />
+        </div>
       </div>
     </>
   )

@@ -107,7 +107,7 @@ const BlogCard: React.FC<Props> = ({ data }) => {
         href={`${process.env.NEXT_PUBLIC_TEST_URL}/blog/${data?.url}`}
         className={styles.container}
       >
-        {itsMe ? (
+        {/* {itsMe ? (
           <div
             className={`${
               data.is_published
@@ -119,7 +119,7 @@ const BlogCard: React.FC<Props> = ({ data }) => {
           </div>
         ) : (
           ''
-        )}
+        )} */}
 
         <div className={styles.imgContainer}>
           {data?.cover_pic ? (

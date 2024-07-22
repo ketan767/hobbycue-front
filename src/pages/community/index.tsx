@@ -3,19 +3,26 @@ import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
 import { withAuth } from '@/navigation/withAuth'
 import { openModal } from '@/redux/slices/modal'
-import { updateLoading, updatePosts } from '@/redux/slices/post'
+import {
+  UpdatePostCount,
+  updateLoading,
+  updatePosts,
+} from '@/redux/slices/post'
 import { RootState } from '@/redux/store'
 import { getMyProfileDetail } from '@/services/user.service'
 import styles from '@/styles/Community.module.css'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 type Props = {}
 
 const CommunityHome: React.FC<Props> = ({}) => {
   const { activeProfile, user } = useSelector((state: RootState) => state.user)
-  const { allPosts, loading } = useSelector((state: RootState) => state.post)
+  const { allPosts, loading, currentPage, hasMore } = useSelector(
+    (state: RootState) => state.post,
+  )
+  const observer = useRef<IntersectionObserver | null>(null)
   const router = useRouter()
   const dispatch = useDispatch()
 
@@ -35,6 +42,24 @@ const CommunityHome: React.FC<Props> = ({}) => {
     }
   }, [user.profile_url])
 
+  const lastPostElementRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (loading) return
+      if (observer.current) observer.current.disconnect()
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          dispatch(UpdatePostCount(currentPage + 1) as any)
+        }
+      })
+      if (node) observer.current.observe(node)
+    },
+    [loading, hasMore, currentPage, dispatch],
+  )
+
+  useEffect(() => {
+    dispatch(UpdatePostCount(1) as any)
+  }, [dispatch])
+
   return (
     <>
       <CommunityPageLayout activeTab="posts">
@@ -48,11 +73,13 @@ const CommunityHome: React.FC<Props> = ({}) => {
           ) : allPosts.length > 0 ? (
             allPosts.map((post: any) => {
               return (
-                <PostCard
-                  key={post._id}
-                  postData={post}
-                  currentSection="posts"
-                />
+                <div ref={lastPostElementRef}>
+                  <PostCard
+                    key={post._id}
+                    postData={post}
+                    currentSection="posts"
+                  />
+                </div>
               )
             })
           ) : allPosts.length === 0 ? (

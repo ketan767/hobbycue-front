@@ -201,18 +201,14 @@ export const PostModal: React.FC<Props> = ({
   return (
     <>
       <div className={`${styles['modal-wrapper']}`}>
-        {!displayMoreComments && (
-          <CloseIcon
-            className={styles['modal-close-icon']}
-            onClick={() =>
-              isChanged ? setConfirmationModal(true) : handleClose()
-            }
-          />
-        )}
-        <div
-          className={`${styles['header']}`}
-          style={displayMoreComments ? { display: 'none' } : {}}
-        >
+        <CloseIcon
+          className={styles['modal-close-icon']}
+          onClick={() =>
+            isChanged ? setConfirmationModal(true) : handleClose()
+          }
+        />
+
+        <div className={`${styles['header']}`}>
           <Link
             href={
               activePost?.author_type === 'User'
@@ -281,11 +277,8 @@ export const PostModal: React.FC<Props> = ({
             </svg> */}
           </div>
         </div>
-        <div className={`custom-scrollbar ${styles['body-wrapper']}`}>
-          <div
-            className={`${styles['body']}`}
-            style={displayMoreComments ? { display: 'none' } : {}}
-          >
+        <div className={`${styles['body-wrapper']}`}>
+          <div className={`${styles['body']}`}>
             <div
               className={styles['post-content'] + ' ql-editor'}
               dangerouslySetInnerHTML={{

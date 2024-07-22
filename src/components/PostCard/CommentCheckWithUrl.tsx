@@ -19,7 +19,12 @@ const CommentCheckWithUrl: FC<CommentCheckWithUrlProps> = ({ children }) => {
     }
     checkUrl()
   }, [children])
-  if (typeof url === 'string') return <a href={url} className={pageUrlClass} target="_blank">{children}</a>
+  if (typeof url === 'string')
+    return (
+      <a href={url} className={pageUrlClass} target="_blank">
+        {children}
+      </a>
+    )
   else return <p className={styles['content']}>{children}</p>
 }
 

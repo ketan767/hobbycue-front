@@ -223,7 +223,6 @@ const BlogComments = ({
                         <PostCommentVotes
                           comment={comment}
                           postData={data}
-                          styles={styles}
                           updateComments={fetchComments}
                         />
 
@@ -304,7 +303,6 @@ const BlogComments = ({
                       <PostCommentVotes
                         comment={comments[0]}
                         postData={data}
-                        styles={styles}
                         updateComments={fetchComments}
                       />
 
