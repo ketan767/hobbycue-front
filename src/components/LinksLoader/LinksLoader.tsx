@@ -143,9 +143,9 @@ const LinksLoader: FC<LinksLoaderProps> = ({}) => {
             />
           </ContentLoader>
           <div className={styles.iconsContainer}>
-            {upArrow}
-            {downArrow}
-            {commentIcon}
+            <div className={styles.upArrow}>{upArrow}</div>
+            <div className={styles.downArrow}>{downArrow}</div>
+            <div>{commentIcon}</div>
           </div>
         </div>
       </div>

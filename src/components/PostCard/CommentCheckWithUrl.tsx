@@ -25,7 +25,7 @@ const CommentCheckWithUrl: FC<CommentCheckWithUrlProps> = ({ children }) => {
         {children}
       </a>
     )
-  else return <p className={styles['content']}>{children}</p>
+  else return <p className={styles['comment-content']}>{children}</p>
 }
 
 export default CommentCheckWithUrl

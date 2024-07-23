@@ -42,14 +42,14 @@
   gap: 8px;
 }
 .header-user > .title > p:first-child {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   line-height: 20px;
   letter-spacing: 0em;
   text-align: left;
 }
 .header-user > .title > p:last-child {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 400;
   line-height: 18px;
   letter-spacing: 0em;
@@ -132,7 +132,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 0 12px 12px;
+  padding: 12px 12px 12px;
 }
 .likes-comments {
   display: flex;
@@ -152,9 +152,7 @@
   cursor: pointer;
 }
 
-.posts-meta-parent{
-  margin-bottom: 10px;
-}
+
 
 .posts-meta-data-container {
   display: flex;
@@ -218,7 +216,7 @@
 
 .inputContainer {
   display: flex;
-  padding: 6px 12px 12px;
+  padding: 6px 12px 6px;
   align-items: center;
 }
 
@@ -234,7 +232,7 @@
   position: relative;
   width: 100%;
   display: flex;
-  padding-bottom: 8px;
+  padding-bottom: 10px;
 }
 .comment-input-wrapper form {
   display: flex;
@@ -242,7 +240,7 @@
 }
 .comment-input-wrapper .submit-btn {
   position: absolute;
-  top: 50%;
+  top: 42%;
   right: 8px;
   transform: translateY(-50%);
   border: none;
@@ -251,6 +249,16 @@
   border-radius: 100%;
   cursor: pointer;
 }
+.comment-input-wrapper .submit-btn:focus,
+.comment-input-wrapper .submit-btn:focus-visible {
+  outline:none;
+  background-color: rgba(var(--primary-100-rgb));
+  box-shadow: none;
+}
+.comment-input-wrapper .submit-btn:focus>svg>path,
+.comment-input-wrapper .submit-btn:focus-visible>svg>path {
+  fill: #ffffff;
+  }
 .comment-input-wrapper .submit-btn:hover {
   background-color: rgba(var(--primary-100-rgb), 0.2);
 }
@@ -280,10 +288,12 @@
   font-size: 12px;
 }
 .all-comment-container {
+
   padding: var(--spacing-12);
+  padding-top: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-12);
+  gap: var(--spacing-8);
   max-height: 75vh;
   
 }

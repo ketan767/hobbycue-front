@@ -22,7 +22,9 @@ background: var(--Base-White, #FFF);
     align-items: center;
     gap: 12px;
 }
-
+.upArrow {
+    margin-right: 46px;
+}
 .box{
     width: 195px;
 min-height: 178px;

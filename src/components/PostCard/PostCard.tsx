@@ -192,6 +192,7 @@ const PostCard: React.FC<Props> = (props) => {
       if (res?.data?.data?.comments && res?.data?.data?.comments?.length > 0) {
         setShowComments(props.currentSection === 'links' ? false : true)
       }
+      console.warn('commentssss', res.data.data)
     }
     if (props.currentSection !== 'links') {
       fetchCommentsInUseeffect()
@@ -238,7 +239,6 @@ const PostCard: React.FC<Props> = (props) => {
       },
     )
 
-  console.warn('postdataaaa', postData)
   return (
     <>
       <div className={styles['post-card-wrapper']} onClick={handleCardClick}>
@@ -696,8 +696,8 @@ const PostCard: React.FC<Props> = (props) => {
                 onClick={showFeatureUnderDevelopment}
                 className={styles['bookmark-icon']}
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="28"
+                height="28"
                 viewBox="0 0 24 24"
                 fill="none"
               >

@@ -469,7 +469,7 @@ line-height: 20px; /* 142.857% */
 .navigation-links ul {
   list-style: none;
   display: flex;
-  gap: 27.5px;
+  gap: 12px;
   padding: 0 0px;
 }
 .navigation-links a {

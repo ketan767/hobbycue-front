@@ -166,7 +166,11 @@ const PostVotes: React.FC<Props> = ({
               fill={voteStatus === 'up' ? '#8064A2' : ''}
             />
           </svg>
-          <p className={styles['count']}>{data?.up_votes?.count}</p>
+          <p className={styles['count']}>
+            {data?.up_votes?.count > 999
+              ? `${Math.floor(data.up_votes.count / 1000)}k`
+              : data?.up_votes?.count}
+          </p>
         </div>
         <span className={styles['divider']}></span>
 
