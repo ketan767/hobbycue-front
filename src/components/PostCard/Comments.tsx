@@ -353,7 +353,8 @@ const PostComments = ({
                       }
                     }}
                   >
-                    See {comments?.length} more comments
+                    See {comments?.length > 1 ? comments?.length - 1 : ''} more
+                    comments
                   </p>
                 )}
               </>

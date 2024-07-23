@@ -10,7 +10,7 @@
 .box {
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
-    height: 180px;
+    height: 168px;
     background: var(--Purple-3, #F7F5F9);
     width: 100%;
 }

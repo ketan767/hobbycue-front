@@ -53,6 +53,11 @@ export const dateFormatShort = new Intl.DateTimeFormat('en-US', {
   month: 'short',
   day: 'numeric',
 })
+export const dateFormatwithYear = new Intl.DateTimeFormat('en-GB', {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric'
+})
 
 export const checkIfUrlExists = (str: any) => {
   const regex = /(http|https|ftp):\/\/[^\s/$.?#].[^\s]*/g;
@@ -204,6 +209,13 @@ export const convertDateToString = (date: string): string => {
   };
   const monthName = monthNames[month];
   return `${day} ${monthName} ${year}`;
+};
+
+export const calculateReadingTime = (content: string) => {
+  const wordsPerMinute = 200; 
+  const wordCount = content.split(' ').length;
+  const minutes = Math.round(wordCount / wordsPerMinute);
+  return minutes;
 };
 
 

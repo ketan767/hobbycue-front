@@ -51,7 +51,10 @@
   margin-left: auto;
   cursor: pointer;
 }
-
+.separator {
+  margin-left: 4px;
+  color: #6D747A ;
+}
 .post-card-wrapper .body .content {
   padding: var(--spacing-8) var(--spacing-12);
   font-weight: 400;
@@ -294,8 +297,13 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 12px;
+  gap: 16px;
+  height: 100%;
   width: 100%;
+}
+
+.meta-author .date {
+color: #939CA3;
 }
 
 .posts-meta-content .contentHead {
@@ -320,26 +328,29 @@
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: 20px;
-  /* 125% */
+  line-height: 26px; /* 14px font size + 12px gap */
   max-width: 559px;
   margin: 0;
   padding: 0;
-  white-space: nowrap;
+  white-space: normal; /* Allow wrapping */
   text-overflow: ellipsis;
   overflow: hidden;
-  display: inline-block;
+  display: -webkit-box; /* Enable line clamping */
+  -webkit-line-clamp: 2; /* Show only 2 lines */
+  -webkit-box-orient: vertical; /* Set the box orientation to vertical */
 }
+
+
 .metaImgContainer {
   display: flex;
   align-self: stretch;
-  width: 195px;
+  width: 178px;
   max-height: 178px;
 }
 .metaImgContainer img {
-  width: 195px;
+  width: 178px;
   
-  height: 100%;
+  height: 178px;
   object-fit: cover;
 }
 .metaContent {
@@ -359,7 +370,7 @@
   font-family: Poppins;
   font-style: normal;
   font-weight: 500;
-  margin-bottom: 4px;
+  margin-bottom: 16px;
   display: -webkit-box; /* For iOS and Safari */
   -webkit-line-clamp: 2; /* Limit the number of lines */
   -webkit-box-orient: vertical; /* Set the orientation to vertical */
@@ -383,6 +394,8 @@
   max-width: 200px;
 }
 .meta-author {
+  display: flex;
+  flex-direction: row;
   font-size: 12px;
   font-family: Poppins;
   font-weight: 500;

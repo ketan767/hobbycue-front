@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import CustomizedTooltips from '../Tooltip/ToolTip'
 import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import { RootState } from '@/redux/store'
-import { setActivePost } from '@/redux/slices/post'
+import post, { setActivePost } from '@/redux/slices/post'
 import defaultImg from '@/assets/svg/default-images/default-user-icon.svg'
 
 import 'react-quill/dist/quill.snow.css'
@@ -237,6 +237,8 @@ const PostCard: React.FC<Props> = (props) => {
         return `<a href="${href}" class="${pageUrlClass}" target="_blank">${url}</a>`
       },
     )
+
+  console.warn('postdataaaa', postData)
   return (
     <>
       <div className={styles['post-card-wrapper']} onClick={handleCardClick}>
@@ -531,29 +533,28 @@ const PostCard: React.FC<Props> = (props) => {
                   {' '}
                   {metaData?.title}{' '}
                 </a>
-                <a href={url} target="_blank" className={styles.contentUrl}>
-                  {' '}
-                  {displayDomain}{' '}
-                </a>
                 <div className={styles['meta-author']}>
                   <p className={styles['author-name']}>
-                    {'Shared by '}
                     {postData?.author_type === 'User'
                       ? postData?._author?.full_name
                       : postData?.author_type === 'Listing'
                       ? postData?._author?.title
-                      : ''}{' '}
+                      : ' '}
                   </p>
                   <p className={styles['date']}>
-                    {'Date - '}
-                    {dateFormat.format(new Date(postData.createdAt))}
+                    <span className={styles['separator']}>|</span>
+                    {' ' + dateFormat.format(new Date(postData.createdAt))}
                   </p>
                 </div>
-                {/* <p className={styles.metaContentText}>
-                  {metaData.description?.length > 150
-                    ? metaData.description.slice(0, 150 - 3) + '...'
-                    : metaData.description}
-                </p> */}
+                <div className={styles['meta-author']}>
+                  <p className={styles['date']}>{postData?._hobby?.display}</p>
+
+                  <p className={styles['date']}>
+                    <span className={styles['separator']}>|</span>
+                    {' ' + postData?.visibility}
+                  </p>
+                </div>
+
                 <section
                   className={styles['meta-actions'] + ` ${styles['links']}`}
                 >
