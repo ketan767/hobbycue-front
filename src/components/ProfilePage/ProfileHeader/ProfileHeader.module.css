@@ -48,6 +48,7 @@
   position: relative;
   max-height: 310px;
   overflow: hidden;
+  border-radius: 8px;
 }
 .center-container .cover-img-wrapper .img {
   width: 100%;
@@ -90,6 +91,7 @@
   background-position: center;
   filter: blur(10px);
   z-index: -1;
+  border-radius: 8px;
 }
 
 .center-container .cover-img-wrapper .img {

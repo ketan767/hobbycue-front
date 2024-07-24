@@ -70,10 +70,41 @@ const CommunityPages: React.FC<Props> = ({}) => {
     <>
       <CommunityPageLayout activeTab="pages">
         <section className={styles['pages-container']}>
-          <PagesLoader />
-          <PagesLoader />
-          <PagesLoader />
-          <PagesLoader />
+          {pagesLoading ? (
+            <>
+              <PagesLoader />
+              <PagesLoader />
+              <PagesLoader />
+              <PagesLoader />
+            </>
+          ) : allPages?.length === 0 ? (
+            <>
+              <div className={styles['no-posts-div']}>
+                <p className={styles['no-posts-text']}>No pages available</p>
+                <div
+                  style={{
+                    display: 'flex',
+                    flex: 1,
+                    justifyContent: 'center',
+                  }}
+                ></div>
+              </div>
+              <div className={styles['no-posts-div']}>
+                <p className={styles['no-posts-text']}>No pages available</p>
+                <div
+                  style={{
+                    display: 'flex',
+                    flex: 1,
+                    justifyContent: 'center',
+                  }}
+                ></div>
+              </div>
+            </>
+          ) : (
+            allPages.map((post: any) => {
+              return <ListingCard key={post._id} data={post} />
+            })
+          )}
         </section>
       </CommunityPageLayout>
     </>

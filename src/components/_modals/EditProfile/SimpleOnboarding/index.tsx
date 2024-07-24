@@ -1019,7 +1019,9 @@ const SimpleOnboarding: React.FC<Props> = ({
             const { err, res } = await SendHobbyRequest(jsonData)
             if (res?.data.success) {
               setShowAddHobbyModal(false)
-              setErrorOrmsg('Request sent!')
+              setErrorOrmsg(
+                'Your request has been sent.  You can add the hobby once it is approved.',
+              )
               setHobbyInputValue('')
             } else if (err) {
               setShowSnackbar({

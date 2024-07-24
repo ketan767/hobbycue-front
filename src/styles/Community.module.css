@@ -293,6 +293,8 @@
   .pages-container {
     grid-template-columns: 1fr;
     width: unset;
+    position: relative;
+    top: 10px;
   }
   .blog-container {
     grid-template-columns: 1fr;

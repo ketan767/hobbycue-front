@@ -551,6 +551,12 @@
     justify-content: center;
     align-items: center;
   }
+  .contactBtnpublic { 
+    width: 96px !important;
+    padding: 0 12px;
+    height: 40px;
+    
+  }
   .time span{
     color: #8064a2;
   }

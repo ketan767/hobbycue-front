@@ -4,7 +4,12 @@ import styles from '@/styles/Community.module.css'
 import { useSelector } from 'react-redux'
 import store, { RootState } from '@/redux/store'
 import { getAllPosts } from '@/services/post.service'
-import { updateBlogs, updatePages, updatePosts } from '@/redux/slices/post'
+import {
+  updateBlogs,
+  updatePages,
+  updatePagesLoading,
+  updatePosts,
+} from '@/redux/slices/post'
 import PostCard from '@/components/PostCard/PostCard'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
@@ -13,12 +18,15 @@ import ListingCard from '@/components/ListingCard/ListingCard'
 import { useMediaQuery } from '@mui/material'
 import { getAllBlogs } from '@/services/blog.services'
 import BlogCard from '@/components/BlogCard/BlogCard'
+import BlogLoader from '@/components/BlogsLoader/BlogLoader'
 
 type Props = {}
 
 const CommunityBlogs: React.FC<Props> = ({}) => {
   const { activeProfile } = useSelector((state: any) => state.user)
-  const { allBlogs } = useSelector((state: RootState) => state.post)
+  const { allBlogs, pagesLoading } = useSelector(
+    (state: RootState) => state.post,
+  )
 
   function filterBlogsByHobbyDisplayNames(blogs: any, hobbyDisplayNames: any) {
     return blogs.filter((blog: any) =>
@@ -50,6 +58,7 @@ const CommunityBlogs: React.FC<Props> = ({}) => {
       )
       console.warn('filteredblogsssssssss', filteredBlogs)
       store.dispatch(updateBlogs(filteredBlogs))
+      store.dispatch(updatePagesLoading(false))
     }
   }
 
@@ -63,7 +72,16 @@ const CommunityBlogs: React.FC<Props> = ({}) => {
     <>
       <CommunityPageLayout activeTab="blogs">
         <section className={styles['blog-container']}>
-          {allBlogs?.length === 0 ? (
+          {pagesLoading ? (
+            <>
+              <BlogLoader />
+              <BlogLoader />
+              <BlogLoader />
+              <BlogLoader />
+              <BlogLoader />
+              <BlogLoader />
+            </>
+          ) : allBlogs?.length === 0 ? (
             <>
               <div className={styles['no-posts-div']}>
                 <p className={styles['no-posts-text']}>No Blogs available</p>
