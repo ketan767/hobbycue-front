@@ -349,13 +349,14 @@
 
 .modal-close-icon{
   position: absolute;
-  right: 6px;
-  top: 6px;
+  right: 12px;
+  top: 12px;
   cursor: pointer;
   z-index: 1000;
   border-radius: 50%;
   width: 30px;
   height: 30px;
+  padding: 2px;
 
 }
 
@@ -366,6 +367,7 @@
   border-radius: 100%;
   border: 1px solid rgba(var(--primary-100-rgb));
 }
+
 
 @media screen and (max-width: 1100px) {
   .modal-wrapper {
