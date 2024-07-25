@@ -296,8 +296,14 @@
 
 .pages-container {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Two equal-width columns */
-  gap: var(--spacing-16); /* Gap between grid items */
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-16);
+}
+
+.blogs-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr; 
+  gap: var(--spacing-16); 
 }
 .pages-container > a {
   overflow: hidden;

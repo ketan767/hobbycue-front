@@ -19,6 +19,7 @@ import PostCard from '@/components/PostCard/PostCard'
 import { openModal } from '@/redux/slices/modal'
 import { updateHobbyMenuExpandAll } from '@/redux/slices/site'
 import { useMediaQuery } from '@mui/material'
+import { getAllBlogs } from '@/services/blog.services'
 
 type Props = { data: { hobbyData: any } }
 
@@ -31,6 +32,7 @@ const HobbyBlogsPage: React.FC<Props> = (props) => {
   const { isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
   )
+  const [loadingPosts, setLoadingPosts] = useState(false)
 
   const handleExpandAll: (value: boolean) => void = (value) => {
     setExpandAll(value)
@@ -62,8 +64,8 @@ const HobbyBlogsPage: React.FC<Props> = (props) => {
       router.events.off('routeChangeStart', handleRouteChange)
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
-  }, []);
-  const isMobile = useMediaQuery("(max-width:1100px)");
+  }, [])
+  const isMobile = useMediaQuery('(max-width:1100px)')
 
   return (
     <>
@@ -73,9 +75,7 @@ const HobbyBlogsPage: React.FC<Props> = (props) => {
         expandAll={expandAll}
         setExpandAll={handleExpandAll}
       >
-        <main
-          className={`${styles['dual-section-wrapper']}`}
-        >
+        <main className={`${styles['dual-section-wrapper']}`}>
           <div className={styles['no-posts-container']}>
             <p>
               This feature is under development. Come back soon to view this

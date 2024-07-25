@@ -53,7 +53,7 @@ export const getHobbyPages = async (display: string | null): Promise<ApiReturnOb
 
 export const getHobbyBlogs = async (display: string | null): Promise<ApiReturnObject> => {
   try {
-    const res = await axiosInstance.get(`/hobby/pages?display=${display}`)
+    const res = await axiosInstance.get(`/hobby/blogs?display=${display}`)
     return { res: res, err: null }
   } catch (error) {
     console.error(error)
