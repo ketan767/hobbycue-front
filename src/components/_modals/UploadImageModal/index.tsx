@@ -20,7 +20,9 @@ export const UploadImageModal: React.FC<Props> = (props) => {
 
   const handleUpload = async () => {
     if (typeof cropperRef.current?.cropper !== 'undefined') {
-      const image = cropperRef.current?.cropper.getCroppedCanvas().toDataURL()
+      const image = cropperRef.current?.cropper
+        .getCroppedCanvas()
+        .toDataURL('image/jpeg')
 
       setLoading(true)
       await editPhotoModalData.onComplete(image)
@@ -36,7 +38,7 @@ export const UploadImageModal: React.FC<Props> = (props) => {
         <h3 className={styles['modal-heading']}>Crop Image</h3>
         <div className={styles['cropper-wrapper']}>
           <Cropper
-            style={{width:isMobile?"":"100%"}}
+            style={{ width: isMobile ? '' : '100%' }}
             ref={cropperRef}
             zoomTo={0.2}
             className={styles['cropper']}
