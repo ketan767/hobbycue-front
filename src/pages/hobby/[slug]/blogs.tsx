@@ -3,7 +3,7 @@ import { GetServerSideProps } from 'next'
 
 import styles from '@/styles/HobbyDetail.module.css'
 
-import { getAllHobbies } from '@/services/hobby.service'
+import { getAllHobbies, getHobbyBlogs } from '@/services/hobby.service'
 
 import { useRouter } from 'next/router'
 import Link from 'next/link'
@@ -20,6 +20,8 @@ import { openModal } from '@/redux/slices/modal'
 import { updateHobbyMenuExpandAll } from '@/redux/slices/site'
 import { useMediaQuery } from '@mui/material'
 import { getAllBlogs } from '@/services/blog.services'
+import BlogLoader from '@/components/BlogsLoader/BlogLoader'
+import BlogCard from '@/components/BlogCard/BlogCard'
 
 type Props = { data: { hobbyData: any } }
 
@@ -33,7 +35,7 @@ const HobbyBlogsPage: React.FC<Props> = (props) => {
     (state: RootState) => state.user,
   )
   const [loadingPosts, setLoadingPosts] = useState(false)
-
+  const [blogs, setBlogs] = useState([])
   const handleExpandAll: (value: boolean) => void = (value) => {
     setExpandAll(value)
     dispatch(updateHobbyMenuExpandAll(value))
@@ -41,13 +43,30 @@ const HobbyBlogsPage: React.FC<Props> = (props) => {
 
   const router = useRouter()
 
+  const getPost = async () => {
+    setLoadingPosts(true)
+    const { err, res } = await getHobbyBlogs(`${data.display}`)
+    console.warn('blogsssss', res?.data)
+    if (err) {
+      setLoadingPosts(false)
+      return console.log(err)
+    }
+    if (res.data.success) {
+      setLoadingPosts(false)
+
+      setBlogs(res?.data?.data)
+    }
+  }
+
   useEffect(() => {
-    // Save scroll position when navigating away from the page
+    getPost()
+  }, [])
+
+  useEffect(() => {
     const handleRouteChange = () => {
       sessionStorage.setItem('scrollPositionhobby', window.scrollY.toString())
     }
 
-    // Restore scroll position when navigating back to the page
     const handleScrollRestoration = () => {
       const scrollPosition = sessionStorage.getItem('scrollPositionhobby')
       if (scrollPosition) {
@@ -76,17 +95,26 @@ const HobbyBlogsPage: React.FC<Props> = (props) => {
         setExpandAll={handleExpandAll}
       >
         <main className={`${styles['dual-section-wrapper']}`}>
-          <div className={styles['no-posts-container']}>
-            <p>
-              This feature is under development. Come back soon to view this
-            </p>
-          </div>
-          {isMobile ? null : (
-            <>
-              {' '}
-              <div className={styles['no-posts-container']}></div>
-              <div className={styles['no-posts-container']}></div>
-            </>
+          <section className={styles['blogs-container']}>
+            {loadingPosts && (
+              <>
+                <BlogLoader /> <BlogLoader /> <BlogLoader />{' '}
+              </>
+            )}
+            {blogs.length !== 0 &&
+              blogs.map((post: any, idx: number) => {
+                return <BlogCard key={idx} data={post} />
+              })}
+          </section>
+          {blogs.length === 0 && !loadingPosts && (
+            <div className={styles['dual-section-wrapper']}>
+              <div className={styles['no-posts-container']}>
+                <p>No Blogs available</p>
+              </div>
+              {!isMobile && (
+                <div className={styles['no-posts-container']}></div>
+              )}
+            </div>
           )}
         </main>
       </HobbyPageLayout>

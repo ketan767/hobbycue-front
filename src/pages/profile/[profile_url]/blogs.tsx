@@ -36,9 +36,14 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
     setExpandAll(value)
     dispatch(updateProfileMenuExpandAll(value))
   }
+  const isMobile = useMediaQuery('(max-width:1100px)')
+  useEffect(() => {
+    if (isMobile) {
+      setExpandAll(false)
+    }
+  }, [isMobile])
 
   const router = useRouter()
-  const isMobile = useMediaQuery('(max-width:1100px)')
 
   useEffect(() => {
     const handleRouteChange = () => {
@@ -99,6 +104,9 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
               <ProfileSocialMediaSide data={data.pageData} />
             </div>
           </aside>
+          <div className={styles['nav-mobile']}>
+            <ProfileNavigationLinks activeTab={'blogs'} />
+          </div>
           <main>
             {data?.blogsData.length !== 0 ? (
               <div className={styles['three-column-grid']}>
@@ -122,9 +130,6 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
               </section>
             )}
           </main>
-          <div className={styles['nav-mobile']}>
-            <ProfileNavigationLinks activeTab={'blogs'} />
-          </div>
         </PageGridLayout>
       </ProfileLayout>
     </>

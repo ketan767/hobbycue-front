@@ -48,6 +48,12 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
     display: false,
     message: '',
   })
+  const isMobile = useMediaQuery('(max-width:1100px)')
+  useEffect(() => {
+    if (isMobile) {
+      setExpandAll(false)
+    }
+  }, [isMobile])
   const dispatch = useDispatch()
 
   const getPost = async () => {
@@ -229,7 +235,7 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
       </defs>
     </svg>
   )
-  const isMobile = useMediaQuery('(max-width:1100px)')
+
   // if (!user.is_onboarded && data?.pageData?.email !== user?.email) {
   //   return <ErrorPage />
   // }

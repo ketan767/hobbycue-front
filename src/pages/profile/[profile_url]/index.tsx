@@ -36,6 +36,7 @@ import {
 } from '@/redux/slices/site'
 import ErrorPage from '@/components/ErrorPage'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import { useMediaQuery } from '@mui/material'
 
 interface Props {
   data: ProfilePageData
@@ -68,6 +69,12 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
+  const isMobile = useMediaQuery('(max-width:1100px)')
+  useEffect(() => {
+    if (isMobile) {
+      setExpandAll(false)
+    }
+  }, [isMobile])
   const getPost = async () => {
     setLoadingPosts(true)
     const { err, res } = await getAllPosts(

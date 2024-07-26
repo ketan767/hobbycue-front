@@ -494,4 +494,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  .name-container {
+    margin: 0;
+  }
 }

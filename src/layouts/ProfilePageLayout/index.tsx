@@ -62,7 +62,7 @@ const ProfileLayout: React.FC<Props> = ({
   ])
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (activeTab !== 'blogs' && !isLoggedIn) {
       dispatch(openModal({ type: 'auth', closable: true }))
     } else if (activeModal !== 'SimpleOnboarding') {
       dispatch(closeModal())
@@ -111,7 +111,7 @@ const ProfileLayout: React.FC<Props> = ({
         }}
         className={styles['expand-all']}
       >
-        {expandAll ? <p>Collapse All</p> : <p>Expand All</p>}
+        {expandAll ? <p>See less</p> : <p>See more</p>}
         <Image
           src={ChevronDown}
           className={`${expandAll ? styles['rotate-180'] : styles['rotate-0']}`}

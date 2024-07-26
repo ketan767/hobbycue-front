@@ -28,6 +28,7 @@ import ProfileSocialMediaSide from '@/components/ProfilePage/ProfileSocialMedia/
 import { RootState } from '@/redux/store'
 import { updateProfileMenuExpandAll } from '@/redux/slices/site'
 import ErrorPage from '@/components/ErrorPage'
+import { useMediaQuery } from '@mui/material'
 
 interface Props {
   data: ProfilePageData
@@ -43,7 +44,12 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
   const { profile } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(profile)
   const router = useRouter()
-
+  const isMobile = useMediaQuery('(max-width:1100px)')
+  useEffect(() => {
+    if (isMobile) {
+      setExpandAll(false)
+    }
+  }, [isMobile])
   const getPost = async () => {
     setLoadingPosts(true)
     const { err, res } = await getAllPosts(
@@ -254,16 +260,17 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
                 )}
               </section>
             ) : (
-              <div className={styles['no-posts-container']}>
-                <p
-                  className="cursor-pointer"
-                  onClick={() => {
-                    dispatch(openModal({ type: 'auth', closable: true }))
-                  }}
-                >
-                  Login to see the posts
-                </p>
-              </div>
+              ''
+              // <div className={styles['no-posts-container']}>
+              //   <p
+              //     className="cursor-pointer"
+              //     onClick={() => {
+              //       dispatch(openModal({ type: 'auth', closable: true }))
+              //     }}
+              //   >
+              //     Login to see the posts
+              //   </p>
+              // </div>
             )}
           </main>
           <aside className={styles['display-desktop']}>

@@ -147,7 +147,9 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
                 <ProfileSocialMediaSide data={data.pageData} />
               </div>
             </aside>
-
+            <div className={styles['nav-mobile']}>
+              <ProfileNavigationLinks activeTab={'pages'} />
+            </div>
             <main>
               {data.listingsData.length !== 0 && mounted ? (
                 // <div className={styles['card-container']}>
@@ -202,9 +204,6 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
               )}
             </main>
 
-            <div className={styles['nav-mobile']}>
-              <ProfileNavigationLinks activeTab={'pages'} />
-            </div>
             {data.listingsData.length !== 0 ? (
               <div className={styles['card-container-mobile']}>
                 {data.listingsData.map((listing: any) => {
