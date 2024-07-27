@@ -31,7 +31,12 @@ const HobbyStorePage: React.FC<Props> = (props) => {
   const { isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
   )
-
+  const isMobile = useMediaQuery('(max-width:1100px)')
+  useEffect(() => {
+    if (isMobile) {
+      setExpandAll(false)
+    }
+  }, [isMobile])
   const router = useRouter()
 
   useEffect(() => {
@@ -64,8 +69,6 @@ const HobbyStorePage: React.FC<Props> = (props) => {
     dispatch(updateHobbyMenuExpandAll(value))
   }
 
-  const isMobile = useMediaQuery("(max-width:1100px)");
-
   return (
     <>
       <HobbyPageLayout
@@ -74,9 +77,7 @@ const HobbyStorePage: React.FC<Props> = (props) => {
         expandAll={expandAll}
         setExpandAll={handleExpandAll}
       >
-        <main
-          className={`${styles['dual-section-wrapper']}`}
-        >
+        <main className={`${styles['dual-section-wrapper']}`}>
           <div className={styles['no-posts-container']}>
             <p>
               This feature is under development. Come back soon to view this

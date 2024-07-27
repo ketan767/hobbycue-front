@@ -16,6 +16,7 @@ import { RootState } from '@/redux/store'
 import { updateHobbyMenuExpandAll } from '@/redux/slices/site'
 import { getAllUserDetail } from '@/services/user.service'
 import EditIcon from '@/assets/svg/edit-colored.svg'
+import { useMediaQuery } from '@mui/material'
 
 type Props = { data: { hobbyData: any } }
 

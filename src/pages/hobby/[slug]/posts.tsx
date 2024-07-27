@@ -18,6 +18,7 @@ import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
 import PostCard from '@/components/PostCard/PostCard'
 import { openModal } from '@/redux/slices/modal'
 import { updateHobbyMenuExpandAll } from '@/redux/slices/site'
+import { useMediaQuery } from '@mui/material'
 
 type Props = { data: { hobbyData: any } }
 
@@ -30,6 +31,12 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
   const { isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
   )
+  const isMobile = useMediaQuery('(max-width:1100px)')
+  useEffect(() => {
+    if (isMobile) {
+      setExpandAll(false)
+    }
+  }, [isMobile])
 
   const [loadingPosts, setLoadingPosts] = useState(false)
   const [posts, setPosts] = useState([])

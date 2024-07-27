@@ -34,6 +34,13 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
     (state: RootState) => state.user,
   )
 
+  const isMobile = useMediaQuery('(max-width:1100px)')
+  useEffect(() => {
+    if (isMobile) {
+      setExpandAll(false)
+    }
+  }, [isMobile])
+
   const [loadingPosts, setLoadingPosts] = useState(false)
   const [pages, setPages] = useState([])
 
@@ -89,7 +96,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
   }
   console.log('hobby', data)
   console.log('pages', pages)
-  const isMobile = useMediaQuery('(max-width:1100px)')
+
   return (
     <>
       {' '}
@@ -103,8 +110,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
           <section className={styles['pages-container']}>
             {loadingPosts && (
               <>
-                <PagesLoader /> <PagesLoader />{' '}
-                <PagesLoader />{' '}<PagesLoader/>{' '}
+                <PagesLoader /> <PagesLoader /> <PagesLoader /> <PagesLoader />{' '}
               </>
             )}
             {pages.length !== 0 &&

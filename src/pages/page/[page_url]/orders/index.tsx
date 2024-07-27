@@ -17,6 +17,7 @@ import ListingHomeTab from '@/components/ListingPage/ListingHomeTab/ListingHomeT
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
 import ListingOrdersTab from '@/components/ListingPage/ListingOrdersTab/ListingOrdersTab'
 import styles from '@/styles/Page.module.css'
+import { useMediaQuery } from '@mui/material'
 
 type Props = { data: ListingPageData }
 
@@ -33,6 +34,12 @@ const ListingHome: React.FC<Props> = (props) => {
   const [expandAll, setExpandAll] = useState(listing)
   const { user } = useSelector((state: RootState) => state.user)
   const { listingLayoutMode } = useSelector((state: any) => state.site)
+  const isMobile = useMediaQuery('(max-width:1100px)')
+  useEffect(() => {
+    if (isMobile) {
+      setExpandAll(false)
+    }
+  }, [isMobile])
   console.warn('data', props.data)
   useEffect(() => {
     dispatch(updateListingPageData(props.data.pageData))

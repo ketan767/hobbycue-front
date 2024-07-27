@@ -17,6 +17,7 @@ import {
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
 import ListingReviewsTab from '@/components/ListingPage/ListingPageReviews/ListingPageReviews'
 import ErrorPage from '@/components/ErrorPage'
+import { useMediaQuery } from '@mui/material'
 
 type Props = { data: ListingPageData }
 
@@ -27,6 +28,12 @@ const ListingReviews: React.FC<Props> = (props) => {
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
+  const isMobile = useMediaQuery('(max-width:1100px)')
+  useEffect(() => {
+    if (isMobile) {
+      setExpandAll(false)
+    }
+  }, [isMobile])
   // const { listingPageData } = useSelector((state: RootState) => state.site)
   console.log('posts data', props.data)
   useEffect(() => {

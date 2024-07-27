@@ -151,7 +151,7 @@ const HobbyPageLayout: React.FC<Props> = ({
         }}
         className={styles['expand-all']}
       >
-        {expandAll ? <p>Collapse All</p> : <p>Expand All</p>}
+        {expandAll ? <p>See less</p> : <p>See more</p>}
         <Image
           src={ChevronDown}
           className={`${expandAll ? styles['rotate-180'] : ''}`}

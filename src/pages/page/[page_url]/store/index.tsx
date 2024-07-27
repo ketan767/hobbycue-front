@@ -17,6 +17,7 @@ import {
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
 import ListingStoreTab from '@/components/ListingPage/ListingPageStore/ListingPageStore'
 import ErrorPage from '@/components/ErrorPage'
+import { useMediaQuery } from '@mui/material'
 
 type Props = { data: ListingPageData }
 
@@ -33,6 +34,12 @@ const ListingStore: React.FC<Props> = (props) => {
     dispatch(updateListingPageData(props.data.pageData))
     dispatch(updateListingModalData(props.data.pageData))
   }, [])
+  const isMobile = useMediaQuery('(max-width:1100px)')
+  useEffect(() => {
+    if (isMobile) {
+      setExpandAll(false)
+    }
+  }, [isMobile])
 
   const handleExpandAll: (value: boolean) => void = (value) => {
     setExpandAll(value)

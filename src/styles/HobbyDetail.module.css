@@ -484,6 +484,11 @@ line-height: 20px;
   .classification-items{
     animation: fadeDown 0.3s ease forwards;
   }
+  .blogs-container {
+    display: grid;
+    grid-template-columns: 1fr ; 
+    gap: var(--spacing-16); 
+  }
 }
 
 @media screen and (min-width: 1100px) {

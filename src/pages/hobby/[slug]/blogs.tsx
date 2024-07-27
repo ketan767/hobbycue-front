@@ -40,7 +40,12 @@ const HobbyBlogsPage: React.FC<Props> = (props) => {
     setExpandAll(value)
     dispatch(updateHobbyMenuExpandAll(value))
   }
-
+  const isMobile = useMediaQuery('(max-width:1100px)')
+  useEffect(() => {
+    if (isMobile) {
+      setExpandAll(false)
+    }
+  }, [isMobile])
   const router = useRouter()
 
   const getPost = async () => {
@@ -84,7 +89,6 @@ const HobbyBlogsPage: React.FC<Props> = (props) => {
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
   }, [])
-  const isMobile = useMediaQuery('(max-width:1100px)')
 
   return (
     <>

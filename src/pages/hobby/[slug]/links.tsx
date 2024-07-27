@@ -32,6 +32,12 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
   const { isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
   )
+  const isMobile = useMediaQuery('(max-width:1100px)')
+  useEffect(() => {
+    if (isMobile) {
+      setExpandAll(false)
+    }
+  }, [isMobile])
 
   const [loadingPosts, setLoadingPosts] = useState(false)
   const [posts, setPosts] = useState([])
@@ -85,7 +91,6 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
   }, [])
-  const isMobile = useMediaQuery('(max-width:1100px)')
 
   return (
     <>
@@ -119,10 +124,10 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
           <section className={styles['links-container']}>
             {loadingPosts ? (
               <>
-                <LinksLoader/>
-                <LinksLoader/>
-                <LinksLoader/>
-                <LinksLoader/>
+                <LinksLoader />
+                <LinksLoader />
+                <LinksLoader />
+                <LinksLoader />
               </>
             ) : (
               posts.length === 0 &&
