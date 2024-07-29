@@ -74,6 +74,8 @@ type ListingModalData = {
   }[]
   click_url?:string|null
   cta_text?:string|null
+  product_category?:string|null
+  parent_page?:string|null
 }
 
 interface AuthState {
@@ -109,6 +111,9 @@ interface AuthState {
     [key:string]:boolean
   }
   socialMediaStates?: {
+    [key:string]:boolean
+  }
+  saleStates?: {
     [key:string]:boolean
   }
   tagsStates?: {
@@ -152,6 +157,7 @@ const initialState: AuthState = {
     type: null,
     onComplete: null,
   },
+  
   showPageLoader: false,
   listingTypeModalMode: 'create',
   admin_nav:true,
@@ -284,6 +290,14 @@ const siteSlice = createSlice({
       state.hobbyStates[objKey[0]] = payload[objKey[0]];
       }
     },
+    updateSaleOpenStates: (state,{payload}:{payload:{
+      [key:string]:boolean
+    }})=>{
+      const objKey = Object.keys(payload);
+      if(objKey[0] && state.saleStates){
+      state.saleStates[objKey[0]] = payload[objKey[0]];
+      }
+    },
     updatePagesOpenState: (state,{payload}:{payload:{
       [key:string]:boolean
     }})=>{
@@ -369,6 +383,7 @@ const siteSlice = createSlice({
 })
 
 export const {
+  updateSaleOpenStates,
   updateListingLayoutMode,
   updateProfileLayoutMode,
   updateListingPageData,

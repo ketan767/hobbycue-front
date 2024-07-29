@@ -39,6 +39,8 @@ import { showProfileError } from '@/redux/slices/user'
 import { useRouter } from 'next/router'
 import smallPencilSvg from '@/assets/svg/small-pencil.svg'
 import { useMediaQuery } from '@mui/material'
+import VerticalSlider from './VerticalSlider'
+import { uploadImage } from '@/services/post.service'
 
 type Props = {
   data: ListingPageData['pageData']
@@ -68,6 +70,7 @@ const ListingHeader: React.FC<Props> = ({
   })
   const { listingLayoutMode } = useSelector((state: any) => state.site)
   const [showDays, setShowDays] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
@@ -84,19 +87,7 @@ const ListingHeader: React.FC<Props> = ({
     let files = e.target.files
 
     if (files.length === 0) return
-    // const fileTobeUploaded = files[0]
-    // if (fileTobeUploaded) {
-    //   const fileSize = fileTobeUploaded.size
-    //   const fileSizeKB = fileSize / 1024
-    //   if (fileSizeKB > 2048) {
-    //     setSnackbar({
-    //       display: true,
-    //       type: 'warning',
-    //       message: 'Image size should not be greater than 2MB',
-    //     })
-    //     return
-    //   }
-    // }
+
     console.log('data', data?.pageData)
     const reader = new FileReader()
     reader.onload = () => {
@@ -116,12 +107,6 @@ const ListingHeader: React.FC<Props> = ({
         openModal({
           type: 'upload-image',
           closable: true,
-          // onModalClose: () =>
-          //   updatePhotoEditModalData({
-          //     type: null,
-          //     image: null,
-          //     onComplete: null,
-          //   }),
         }),
       )
     }
@@ -169,6 +154,15 @@ const ListingHeader: React.FC<Props> = ({
     dispatch(
       openModal({
         type: 'listing-general-edit',
+        closable: true,
+      }),
+    )
+  }
+
+  const openAboutEditModal = () => {
+    dispatch(
+      openModal({
+        type: 'listing-about-edit',
         closable: true,
       }),
     )
@@ -497,6 +491,79 @@ const ListingHeader: React.FC<Props> = ({
     }
   }, [Dropdownref])
 
+  const handleImageChange = (e: any) => {
+    const images = [...e?.target?.files]
+    const image = e?.target?.files[0]
+    handleImageUpload(image, false)
+  }
+
+  const handleImageUpload = async (image: any, isVideo: boolean) => {
+    // const fileTobeUploaded = image
+    // if (fileTobeUploaded) {
+    //   const fileSize = fileTobeUploaded.size
+    //   const fileSizeKB = fileSize / 1024
+    //   if (fileSizeKB > 2048) {
+    //     setSnackbar({
+    //       display: true,
+    //       type: 'warning',
+    //       message: 'Image size should not be greater than 2MB',
+    //     })
+    //     return
+    //   }
+    // }
+    const formData = new FormData()
+    formData.append('post', image)
+    console.log('formData', formData)
+    const { err, res } = await uploadImage(formData)
+    if (err) return console.log(err)
+    if (res?.data.success) {
+      console.log(res.data)
+      const img = res.data.data.url
+      updateListingPage(img)
+      // dispatch(closeModal())
+    }
+  }
+  const updateListingPage = async (url: string) => {
+    let arr: any = []
+    if (data?.images) {
+      arr = data.images
+    }
+    const { err, res } = await updateListing(data._id, {
+      images: [...arr, url],
+    })
+    if (err) return console.log(err)
+    window.location.reload()
+    console.log(res)
+  }
+
+  const uploadIcon = (
+    <svg
+      width="23"
+      height="23"
+      viewBox="0 0 23 23"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle cx="11.0811" cy="11.3848" r="11" fill="#8064A2" />
+      <g clip-path="url(#clip0_16381_26510)">
+        <path
+          d="M15.293 10.2553C14.9034 8.27878 13.1674 6.79492 11.082 6.79492C9.4263 6.79492 7.98828 7.7345 7.27214 9.1095C5.54766 9.29284 4.20703 10.7538 4.20703 12.5241C4.20703 14.4204 5.74818 15.9616 7.64453 15.9616H15.0924C16.6737 15.9616 17.957 14.6783 17.957 13.097C17.957 11.5845 16.7826 10.3585 15.293 10.2553ZM12.2279 11.9512V14.2428H9.9362V11.9512H8.21745L11.082 9.08659L13.9466 11.9512H12.2279Z"
+          fill="white"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_16381_26510">
+          <rect
+            width="13.75"
+            height="13.75"
+            fill="white"
+            transform="translate(4.20703 4.50488)"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+
   const dropdownIcon = (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -515,16 +582,23 @@ const ListingHeader: React.FC<Props> = ({
 
   return (
     <>
-      <header className={`site-container ${styles['header']}`}>
+      <header
+        className={`site-container ${styles['header']} ${
+          data.type === 4 && styles['product-header']
+        }`}
+      >
         {/* Profile Picture */}
         <div className={styles['profile-img-wrapper']}>
           <div className={styles['relative']}>
-            {data?.profile_image ? (
-              <img
-                onClick={OpenProfileImage}
-                className={`${styles['img']} imageclick`}
-                src={data?.profile_image}
-                alt=""
+            {data.type === 4 ? (
+              <VerticalSlider data={data} />
+            ) : data?.profile_image ? (
+              <input
+                type="file"
+                accept="image/png, image/gif, image/jpeg"
+                className={styles.hidden}
+                onChange={(e) => handleImageChange(e)}
+                ref={inputRef}
                 width={160}
                 height={160}
               />
@@ -539,7 +613,7 @@ const ListingHeader: React.FC<Props> = ({
               </div>
             )}
 
-            {listingLayoutMode === 'edit' && (
+            {listingLayoutMode === 'edit' && data.type !== 4 && (
               <label className={styles['edit-btn']}>
                 <input
                   type="file"
@@ -551,24 +625,28 @@ const ListingHeader: React.FC<Props> = ({
               </label>
             )}
           </div>
-          <div className={styles['name-container']}>
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-              <h1 className={styles['name']}>{data?.title} </h1>
-              {listingLayoutMode === 'edit' && (
-                <Image
-                  className={styles['edit-icon']}
-                  src={EditIcon}
-                  alt="edit"
-                  onClick={openTitleEditModal}
-                />
+          {data.type !== 4 && (
+            <div className={styles['name-container']}>
+              <div
+                style={{ display: 'flex', gap: '8px', alignItems: 'center' }}
+              >
+                <h1 className={styles['name']}>{data?.title} </h1>
+                {listingLayoutMode === 'edit' && (
+                  <Image
+                    className={styles['edit-icon']}
+                    src={EditIcon}
+                    alt="edit"
+                    onClick={openTitleEditModal}
+                  />
+                )}
+              </div>
+              {data?.tagline ? (
+                <p className={styles['tagline']}>{data?.tagline}</p>
+              ) : (
+                <p className={styles['tagline']}>&nbsp;</p>
               )}
             </div>
-            {data?.tagline ? (
-              <p className={styles['tagline']}>{data?.tagline}</p>
-            ) : (
-              <p className={styles['tagline']}>&nbsp;</p>
-            )}
-          </div>
+          )}
         </div>
         <div className={styles['event-date-container-responsive']}>
           {data?.type === listingTypes.PROGRAM && data?.event_date_time ? (
@@ -761,46 +839,298 @@ const ListingHeader: React.FC<Props> = ({
         </div>
 
         {/* Center Elements */}
-        <section className={styles['center-container']}>
-          <div className={styles['cover-img-wrapper']}>
-            <div
-              className={styles['background']}
-              style={{ backgroundImage: `url(${data?.cover_image})` }}
-            ></div>
-            {data?.cover_image ? (
-              <img
-                onClick={OpenCoverImage}
-                className={`${styles['img']} imageclick`}
-                src={data?.cover_image}
-                alt=""
-                height={296}
-                width={1000}
-              />
+        {data.type !== 4 ? (
+          <section className={styles['center-container']}>
+            <div className={styles['cover-img-wrapper']}>
+              <div
+                className={styles['background']}
+                style={{ backgroundImage: `url(${data?.cover_image})` }}
+              ></div>
+              {data?.cover_image ? (
+                <img
+                  onClick={OpenCoverImage}
+                  className={`${styles['img']} imageclick`}
+                  src={data?.cover_image}
+                  alt=""
+                  height={296}
+                  width={1000}
+                />
+              ) : (
+                <div className={styles['img']}>
+                  <CoverPhotoLayout
+                    type="page"
+                    onChange={(e: any) => onInputChange(e, 'cover')}
+                    profileLayoutMode={listingLayoutMode}
+                    typeId={data?.type}
+                  ></CoverPhotoLayout>
+                </div>
+              )}
+
+              {listingLayoutMode === 'edit' && (
+                <label className={styles['edit-btn']}>
+                  <input
+                    type="file"
+                    hidden
+                    accept="image/*"
+                    onChange={(e) => onInputChange(e, 'cover')}
+                  />
+                  <CameraIcon />
+                </label>
+              )}
+            </div>
+            <div className={styles['content-container']}>
+              <div className={styles['name-container']}>
+                <h1 className={styles['name']}>
+                  {data?.title}
+                  {data?.is_verified ? (
+                    <Image alt="claim" src={claimSvg} />
+                  ) : (
+                    ''
+                  )}
+                  {listingLayoutMode === 'edit' && (
+                    <Image
+                      className={styles['edit-icon']}
+                      src={EditIcon}
+                      alt="edit"
+                      onClick={openTitleEditModal}
+                    />
+                  )}
+                </h1>
+                {data?.tagline ? (
+                  <p className={styles['tagline']}>{data?.tagline}</p>
+                ) : (
+                  <p className={styles['tagline']}>&nbsp;</p>
+                )}
+              </div>
+              <div className={styles['event-date-container']}>
+                {data?.type === listingTypes.PROGRAM &&
+                data?.event_date_time ? (
+                  <div className={styles['eventDate-parent']}>
+                    <div
+                      className={
+                        styles.eventDate +
+                        ` ${showDays && styles['eventDate-open']}`
+                      }
+                    >
+                      <Image
+                        className={styles['im']}
+                        src={Calendar}
+                        alt="calendar"
+                      />
+                      <div className={styles['event-dates']}>
+                        {data.event_date_time &&
+                        data?.event_date_time?.length > 0
+                          ? (showDays
+                              ? data.event_date_time
+                              : data.event_date_time.slice(0, 1)
+                            ).map((obj: any, i: number, arr: any[]) => (
+                              <p key={i} className={styles.date}>
+                                {formatDateRange(obj?.from_date, obj?.to_date)}
+
+                                {isMobile &&
+                                showDays === false &&
+                                data.event_date_time?.length > 1 &&
+                                (!data.event_weekdays ||
+                                  data.event_weekdays.length <= 1) ? (
+                                  <>
+                                    ...{' '}
+                                    <span
+                                      onClick={() =>
+                                        setShowDays((prev) => !prev)
+                                      }
+                                    >
+                                      more
+                                    </span>
+                                  </>
+                                ) : null}
+                                {isMobile &&
+                                  showDays &&
+                                  data.event_date_time.length - 1 === i && (
+                                    <>
+                                      {' '}
+                                      <span
+                                        onClick={() =>
+                                          setShowDays((prev) => !prev)
+                                        }
+                                      >
+                                        Less
+                                      </span>
+                                    </>
+                                  )}
+                              </p>
+                            ))
+                          : ''}
+                      </div>
+                      {(data.event_weekdays &&
+                        data.event_weekdays.length > 0) ||
+                        (data.event_date_time &&
+                          data?.event_date_time?.length > 0 && (
+                            <Image
+                              className={styles['im']}
+                              src={Time}
+                              alt="Time"
+                            />
+                          ))}
+                      <div className={styles['flex-col-4']}>
+                        {data.event_weekdays && data?.event_weekdays?.length > 0
+                          ? (showDays
+                              ? data.event_weekdays
+                              : data.event_weekdays.slice(0, 1)
+                            ).map((obj: any, i: number, arr: any[]) =>
+                              i > 0 && !showDays ? null : (
+                                <p
+                                  key={i}
+                                  className={
+                                    isEditMode
+                                      ? styles.time
+                                      : styles.editTime +
+                                        ` ${
+                                          i !== 0 && showDays === false
+                                            ? styles['hide']
+                                            : ''
+                                        }`
+                                  }
+                                >
+                                  {obj?.from_day}{' '}
+                                  {obj?.to_day !== obj?.from_day &&
+                                    ' - ' + obj?.to_day}
+                                  , {obj?.from_time}
+                                  {isMobile && showDays === false ? (
+                                    <>
+                                      ...{' '}
+                                      <span
+                                        onClick={() =>
+                                          setShowDays((prev) => !prev)
+                                        }
+                                      >
+                                        more
+                                      </span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      {' '}
+                                      -
+                                      {showDays === false &&
+                                      !isMobile &&
+                                      data.event_weekdays.length > 1 ? (
+                                        <>
+                                          {' ... '}
+                                          <span
+                                            onClick={() =>
+                                              setShowDays((prev) => !prev)
+                                            }
+                                            className={styles['purpleText']}
+                                          >
+                                            more
+                                          </span>
+                                        </>
+                                      ) : (
+                                        obj?.to_time
+                                      )}
+                                      {data.event_weekdays.length - 1 === i &&
+                                        isMobile && (
+                                          <>
+                                            {' '}
+                                            <span
+                                              onClick={() =>
+                                                setShowDays((prev) => !prev)
+                                              }
+                                            >
+                                              Less
+                                            </span>
+                                          </>
+                                        )}
+                                    </>
+                                  )}
+                                </p>
+                              ),
+                            )
+                          : data.event_date_time &&
+                            data?.event_date_time?.length > 0 && (
+                              <>
+                                {(showDays
+                                  ? data.event_date_time
+                                  : data.event_date_time.slice(0, 1)
+                                ).map((obj: any, i: number) => (
+                                  <p
+                                    key={i}
+                                    className={
+                                      isEditMode ? styles.time : styles.editTime
+                                    }
+                                  >
+                                    {obj?.from_time} - {obj?.to_time}
+                                  </p>
+                                ))}
+                              </>
+                            )}
+                      </div>
+                      {listingLayoutMode === 'edit' ? (
+                        <>
+                          <Image
+                            className={styles['edit-icon']}
+                            src={EditIcon}
+                            alt="edit"
+                            onClick={handleEventEditClick}
+                          />
+                          {((data.event_weekdays &&
+                            data?.event_weekdays?.length > 1) ||
+                            (data?.event_date_time &&
+                              data?.event_date_time?.length > 1)) > 0 && (
+                            <div
+                              onClick={() => setShowDays((prev) => !prev)}
+                              className={`${showDays ? '' : styles['rotate']} ${
+                                styles['flex-col-start']
+                              }`}
+                            >
+                              {dropdownIcon}
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        listingLayoutMode !== 'edit' &&
+                        ((data.event_weekdays &&
+                          data?.event_weekdays?.length > 1) ||
+                          (data?.event_date_time &&
+                            data?.event_date_time?.length > 1)) &&
+                        !isMobile && (
+                          <div
+                            onClick={() => setShowDays((prev) => !prev)}
+                            className={`${showDays ? '' : styles['rotate']} ${
+                              styles['flex-col-start']
+                            }`}
+                          >
+                            {dropdownIcon}
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <></>
+                )}
+                <div className={styles['display-desktop']}>{button}</div>
+              </div>
+            </div>
+          </section>
+        ) : (
+          <section className={styles['product-header-content']}>
+            {data?.images[0] ? (
+              <img className={styles.item} src={data?.images[0]} />
             ) : (
-              <div className={styles['img']}>
-                <CoverPhotoLayout
-                  type="page"
-                  onChange={(e: any) => onInputChange(e, 'cover')}
-                  profileLayoutMode={listingLayoutMode}
-                  typeId={data?.type}
-                ></CoverPhotoLayout>
+              <div className={styles.item}>
+                <input
+                  type="file"
+                  accept="image/png, image/gif, image/jpeg"
+                  className={styles.hidden}
+                  onChange={(e) => handleImageChange(e)}
+                  ref={inputRef}
+                />
+                {uploadIcon}
+                <p>Add Image</p>
               </div>
             )}
 
-            {listingLayoutMode === 'edit' && (
-              <label className={styles['edit-btn']}>
-                <input
-                  type="file"
-                  hidden
-                  accept="image/*"
-                  onChange={(e) => onInputChange(e, 'cover')}
-                />
-                <CameraIcon />
-              </label>
-            )}
-          </div>
-          <div className={styles['content-container']}>
-            <div className={styles['name-container']}>
+            <div className={styles['product-name-container']}>
               <h1 className={styles['name']}>
                 {data?.title}
                 {data?.is_verified ? <Image alt="claim" src={claimSvg} /> : ''}
@@ -818,212 +1148,25 @@ const ListingHeader: React.FC<Props> = ({
               ) : (
                 <p className={styles['tagline']}>&nbsp;</p>
               )}
-            </div>
-            <div className={styles['event-date-container']}>
-              {data?.type === listingTypes.PROGRAM && data?.event_date_time ? (
-                <div className={styles['eventDate-parent']}>
-                  <div
-                    className={
-                      styles.eventDate +
-                      ` ${showDays && styles['eventDate-open']}`
-                    }
-                  >
-                    <Image
-                      className={styles['im']}
-                      src={Calendar}
-                      alt="calendar"
-                    />
-                    <div className={styles['event-dates']}>
-                      {data.event_date_time && data?.event_date_time?.length > 0
-                        ? (showDays
-                            ? data.event_date_time
-                            : data.event_date_time.slice(0, 1)
-                          ).map((obj: any, i: number, arr: any[]) => (
-                            <p key={i} className={styles.date}>
-                              {formatDateRange(obj?.from_date, obj?.to_date)}
-
-                              {isMobile &&
-                              showDays === false &&
-                              data.event_date_time?.length > 1 &&
-                              (!data.event_weekdays ||
-                                data.event_weekdays.length <= 1) ? (
-                                <>
-                                  ...{' '}
-                                  <span
-                                    onClick={() => setShowDays((prev) => !prev)}
-                                  >
-                                    more
-                                  </span>
-                                </>
-                              ) : null}
-                              {isMobile &&
-                                showDays &&
-                                data.event_date_time.length - 1 === i && (
-                                  <>
-                                    {' '}
-                                    <span
-                                      onClick={() =>
-                                        setShowDays((prev) => !prev)
-                                      }
-                                    >
-                                      Less
-                                    </span>
-                                  </>
-                                )}
-                            </p>
-                          ))
-                        : ''}
-                    </div>
-                    {(data.event_weekdays && data.event_weekdays.length > 0) ||
-                      (data.event_date_time &&
-                        data?.event_date_time?.length > 0 && (
-                          <Image
-                            className={styles['im']}
-                            src={Time}
-                            alt="Time"
-                          />
-                        ))}
-                    <div className={styles['flex-col-4']}>
-                      {data.event_weekdays && data?.event_weekdays?.length > 0
-                        ? (showDays
-                            ? data.event_weekdays
-                            : data.event_weekdays.slice(0, 1)
-                          ).map((obj: any, i: number, arr: any[]) =>
-                            i > 0 && !showDays ? null : (
-                              <p
-                                key={i}
-                                className={
-                                  isEditMode
-                                    ? styles.time
-                                    : styles.editTime +
-                                      ` ${
-                                        i !== 0 && showDays === false
-                                          ? styles['hide']
-                                          : ''
-                                      }`
-                                }
-                              >
-                                {obj?.from_day}{' '}
-                                {obj?.to_day !== obj?.from_day &&
-                                  ' - ' + obj?.to_day}
-                                , {obj?.from_time}
-                                {isMobile && showDays === false ? (
-                                  <>
-                                    ...{' '}
-                                    <span
-                                      onClick={() =>
-                                        setShowDays((prev) => !prev)
-                                      }
-                                    >
-                                      more
-                                    </span>
-                                  </>
-                                ) : (
-                                  <>
-                                    {' '}
-                                    -
-                                    {showDays === false &&
-                                    !isMobile &&
-                                    data.event_weekdays.length > 1 ? (
-                                      <>
-                                        {' ... '}
-                                        <span
-                                          onClick={() =>
-                                            setShowDays((prev) => !prev)
-                                          }
-                                          className={styles['purpleText']}
-                                        >
-                                          more
-                                        </span>
-                                      </>
-                                    ) : (
-                                      obj?.to_time
-                                    )}
-                                    {data.event_weekdays.length - 1 === i &&
-                                      isMobile && (
-                                        <>
-                                          {' '}
-                                          <span
-                                            onClick={() =>
-                                              setShowDays((prev) => !prev)
-                                            }
-                                          >
-                                            Less
-                                          </span>
-                                        </>
-                                      )}
-                                  </>
-                                )}
-                              </p>
-                            ),
-                          )
-                        : data.event_date_time &&
-                          data?.event_date_time?.length > 0 && (
-                            <>
-                              {(showDays
-                                ? data.event_date_time
-                                : data.event_date_time.slice(0, 1)
-                              ).map((obj: any, i: number) => (
-                                <p
-                                  key={i}
-                                  className={
-                                    isEditMode ? styles.time : styles.editTime
-                                  }
-                                >
-                                  {obj?.from_time} - {obj?.to_time}
-                                </p>
-                              ))}
-                            </>
-                          )}
-                    </div>
-                    {listingLayoutMode === 'edit' ? (
-                      <>
-                        <Image
-                          className={styles['edit-icon']}
-                          src={EditIcon}
-                          alt="edit"
-                          onClick={handleEventEditClick}
-                        />
-                        {((data.event_weekdays &&
-                          data?.event_weekdays?.length > 1) ||
-                          (data?.event_date_time &&
-                            data?.event_date_time?.length > 1)) > 0 && (
-                          <div
-                            onClick={() => setShowDays((prev) => !prev)}
-                            className={`${showDays ? '' : styles['rotate']} ${
-                              styles['flex-col-start']
-                            }`}
-                          >
-                            {dropdownIcon}
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      listingLayoutMode !== 'edit' &&
-                      ((data.event_weekdays &&
-                        data?.event_weekdays?.length > 1) ||
-                        (data?.event_date_time &&
-                          data?.event_date_time?.length > 1)) &&
-                      !isMobile && (
-                        <div
-                          onClick={() => setShowDays((prev) => !prev)}
-                          className={`${showDays ? '' : styles['rotate']} ${
-                            styles['flex-col-start']
-                          }`}
-                        >
-                          {dropdownIcon}
-                        </div>
-                      )
-                    )}
-                  </div>
-                </div>
+              {data?.description ? (
+                <div
+                  className={`${styles['about-text']}`}
+                  dangerouslySetInnerHTML={{ __html: data?.description }}
+                ></div>
               ) : (
-                <></>
+                'About'
               )}
-              <div className={styles['display-desktop']}>{button}</div>
+              {listingLayoutMode === 'edit' && (
+                <Image
+                  className={styles['edit-icon']}
+                  src={EditIcon}
+                  alt="edit"
+                  onClick={openAboutEditModal}
+                />
+              )}
             </div>
-          </div>
-        </section>
+          </section>
+        )}
         <div className={styles['actions-container-desktop']}>
           {listingLayoutMode === 'edit' && (
             <FilledButton

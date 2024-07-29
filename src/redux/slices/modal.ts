@@ -63,6 +63,7 @@ export type ModalType =
   | 'HandleAdminAction'
   | 'add-event'
   | 'SimpleOnboarding'
+  | 'product-category'
 
 
   interface ModalState {

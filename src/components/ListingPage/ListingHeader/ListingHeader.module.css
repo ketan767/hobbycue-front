@@ -398,6 +398,78 @@
 .disabledtab {
   cursor: default;
 }
+
+.product-header{
+  grid-template-columns: 88px auto 160px;
+}
+
+.item {
+  width: 472px;
+  height: 472px;
+  display: flex;
+  padding: 21px 9.5px 21px 9.5px;
+  flex-direction: column;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  border: 1px dashed var(--Primary-Full, #8064A2);
+  background: var(--Purple-3, #F7F5F9);
+  cursor: pointer;
+  position: relative;
+}
+
+.item p {
+  color: var(--Purple-1, #8064A2);
+  font-family: 'Poppins';
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  /* 166.667% */
+}
+.product-header-content {
+  display: flex;
+  flex-direction: row;
+  
+}
+
+.product-name-container {
+  padding-left: 24px;
+}
+
+.product-name-container .name {
+color: #939CA3;
+font-size: 20px;
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 600;
+
+}
+.product-name-container .tagline {
+padding-top: 12px;
+font-size: 16px;
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+line-height: 20px;
+}
+
+.about-text {
+  padding-top: 32px;
+  margin-left: 24px;
+}
+
+.item .hidden {
+  opacity: 0;
+  inset: 0;
+  z-index: 2;
+  position: absolute;
+  display: block;
+  cursor: pointer;
+}
+
+
 @media screen and (max-width: 1100px) {
   .nav {
     display: flex;

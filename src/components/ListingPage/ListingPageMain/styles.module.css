@@ -1,3 +1,20 @@
+.heading{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+}
+
+.heading p{
+  color: var(--mandatory, #C0504D);
+font-family: 'Poppins';
+font-size: 16px;
+font-style: normal;
+font-weight: 600;
+line-height: normal;
+}
+
+
 @keyframes fadeDown {
   from {
     opacity: 0;

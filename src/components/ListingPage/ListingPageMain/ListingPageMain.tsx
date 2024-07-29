@@ -23,6 +23,7 @@ import {
   updateListingTypeModalMode,
   updateLocationOpenStates,
   updateSocialMediaOpenStates,
+  updateSaleOpenStates,
   updateRelatedListingsOpenStates,
   updateTagsOpenStates,
   updateWorkingHoursOpenStates,
@@ -83,6 +84,7 @@ const ListingPageMain: React.FC<Props> = ({
   data,
   children,
   hobbyError,
+
   pageTypeErr,
   AboutErr,
   ContactInfoErr,
@@ -97,6 +99,7 @@ const ListingPageMain: React.FC<Props> = ({
     hobbyStates,
     contactStates,
     socialMediaStates,
+    saleStates,
     locationStates,
     relatedListingsStates,
     relatedListingsStates2,
@@ -108,6 +111,7 @@ const ListingPageMain: React.FC<Props> = ({
   )
 
   console.log('page', data)
+  const [showSale, setShowSale] = useState(true)
   const [selectedTags, setSelectedTags] = useState([])
   const [listingPagesLeft, setListingPagesLeft] = useState([])
   const [listingPagesRight, setListingPagesRight] = useState([])
@@ -164,6 +168,14 @@ const ListingPageMain: React.FC<Props> = ({
     const admin: any = await getAllUserDetail(`_id=${adminId}`)
     setPageAdmin(admin.res?.data.data.users[0])
   }
+
+  useEffect(() => {
+    if (saleStates && typeof saleStates[data?._id] === 'boolean') {
+      setShowHobbies(saleStates[data?._id])
+    } else if (data._id) {
+      dispatch(updateSaleOpenStates({ [data._id]: showSale }))
+    }
+  }, [data._id, saleStates])
 
   console.warn({ showHobbies })
 
@@ -317,6 +329,14 @@ const ListingPageMain: React.FC<Props> = ({
   }, [data?.related_listings_left?.listings])
 
   useEffect(() => {
+    if (data?.type === 4) {
+      if (!data?.parent_page || !data?.product_category) {
+        dispatch(openModal({ type: 'product-category', closable: true }))
+      }
+    }
+  }, [data?.type, data?.parent_page, data?.product_category])
+
+  useEffect(() => {
     if (expandAll !== undefined) {
       setShowAside(expandAll)
     }
@@ -467,6 +487,29 @@ const ListingPageMain: React.FC<Props> = ({
     </svg>
   )
 
+  const redCartIcon = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="25"
+      height="25"
+      viewBox="0 0 25 25"
+      fill="none"
+    >
+      <path
+        d="M22.5011 7.63479V7.76479L21.0411 13.1648C20.8685 13.8057 20.4883 14.3713 19.9599 14.773C19.4315 15.1748 18.7848 15.3899 18.1211 15.3848H10.4711C9.72006 15.3878 8.99522 15.1091 8.43977 14.6036C7.88431 14.0982 7.53865 13.4028 7.47106 12.6548L6.82106 5.29479C6.79853 5.04547 6.68331 4.81366 6.49816 4.64518C6.31301 4.47669 6.0714 4.38377 5.82106 4.38479H3.65106C3.38585 4.38479 3.13149 4.27943 2.94396 4.0919C2.75642 3.90436 2.65106 3.65001 2.65106 3.38479C2.65106 3.11957 2.75642 2.86522 2.94396 2.67768C3.13149 2.49015 3.38585 2.38479 3.65106 2.38479H5.82106C6.57207 2.38174 7.2969 2.66049 7.85236 3.16595C8.40781 3.67141 8.75348 4.36682 8.82106 5.11479V5.38479H20.5111C20.7961 5.38255 21.0784 5.44128 21.3389 5.55705C21.5994 5.67281 21.8322 5.84293 22.0216 6.056C22.211 6.26907 22.3526 6.52017 22.437 6.79246C22.5215 7.06475 22.5467 7.35195 22.5111 7.63479H22.5011Z"
+        fill="#C0504D"
+      />
+      <path
+        d="M9.65106 22.3848C11.0318 22.3848 12.1511 21.2655 12.1511 19.8848C12.1511 18.5041 11.0318 17.3848 9.65106 17.3848C8.27035 17.3848 7.15106 18.5041 7.15106 19.8848C7.15106 21.2655 8.27035 22.3848 9.65106 22.3848Z"
+        fill="#C0504D"
+      />
+      <path
+        d="M17.6511 22.3848C19.0318 22.3848 20.1511 21.2655 20.1511 19.8848C20.1511 18.5041 19.0318 17.3848 17.6511 17.3848C16.2704 17.3848 15.1511 18.5041 15.1511 19.8848C15.1511 21.2655 16.2704 22.3848 17.6511 22.3848Z"
+        fill="#C0504D"
+      />
+    </svg>
+  )
+
   return (
     <>
       <PageGridLayout
@@ -528,6 +571,51 @@ const ListingPageMain: React.FC<Props> = ({
                 })}
               </PageContentBox>
             </div>
+
+            <PageContentBox
+              className={hobbyError ? styles.error : ''}
+              showEditButton={listingLayoutMode === 'edit'}
+              onEditBtnClick={() =>
+                dispatch(
+                  openModal({ type: 'listing-hobby-edit', closable: true }),
+                )
+              }
+              initialShowDropdown
+              setDisplayData={(arg0: boolean) => {
+                dispatch(updateSaleOpenStates({ [data._id]: !showSale }))
+              }}
+              expandData={showSale}
+            >
+              <h4
+                className={
+                  styles['heading'] + ` ${hobbyError && styles['error-label']}`
+                }
+              >
+                {redCartIcon}
+                <p>Item Sale</p>
+              </h4>
+              <div className={`${styles['display-desktop']}`}>
+                {/* {
+                <ul className={styles['hobby-list']}>
+                  {data?._hobbies?.map((item: any) => {
+                    if (typeof item === 'string') return
+                    return (
+                      <Link
+                        href={`/hobby/${
+                          item?.genre?.slug ?? item?.hobby?.slug
+                        }`}
+                        className={styles.textGray}
+                        key={item._id}
+                      >
+                        {item?.hobby?.display}
+                        {item?.genre && ` - ${item?.genre?.display} `}
+                      </Link>
+                    )
+                  })}
+                </ul>
+              } */}
+              </div>
+            </PageContentBox>
             {/* Listing Hobbies */}
             <PageContentBox
               className={hobbyError ? styles.error : ''}
@@ -715,7 +803,9 @@ const ListingPageMain: React.FC<Props> = ({
                 }}
                 expandData={showContact}
               >
-                <h4 className={styles['heading']}>Contact Information</h4>
+                <h4 className={styles['heading']}>
+                  {data?.type === 4 ? 'Contact Seller' : 'Contact Information'}
+                </h4>
                 <ul
                   className={`${styles['contact-wrapper']} ${
                     styles['display-desktop']
@@ -732,6 +822,179 @@ const ListingPageMain: React.FC<Props> = ({
                     >
                       Sign in to view full contact details
                     </li>
+                  )}
+                  {data?.type === 4 ? (
+                    <>
+                      {/* Page Admin */}
+                      {(PageAdmin as any)?.full_name && isLoggedIn && (
+                        <Link
+                          href={`/profile/${(PageAdmin as any)?.profile_url}`}
+                        >
+                          <Image
+                            src={AdminSvg}
+                            alt="whatsapp"
+                            width={24}
+                            height={24}
+                          />
+                          <span className={styles.textdefault}>
+                            {(PageAdmin as any)?.full_name}
+                          </span>
+                        </Link>
+                      )}
+                      {(PageAdmin as any)?.full_name && !isLoggedIn && (
+                        <a
+                          onClick={(e) => {
+                            dispatch(
+                              SetLinkviaAuth(
+                                `/profile/${(PageAdmin as any)?.profile_url}`,
+                              ),
+                            )
+                            dispatch(
+                              openModal({ type: 'auth', closable: true }),
+                            )
+                          }}
+                        >
+                          <Image
+                            src={AdminSvg}
+                            alt="whatsapp"
+                            width={24}
+                            height={24}
+                          />
+                          <span className={styles.textdefault}>
+                            {(PageAdmin as any)?.full_name}
+                          </span>
+                        </a>
+                      )}
+                      {/* Phone */}
+                      {data?.parent_page?.name && isLoggedIn && (
+                        <Link href={`tel:${data?.name}`}>
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <g clipPath="url(#clip0_230_34018)">
+                              <path
+                                d="M19.23 15.2578L16.69 14.9678C16.08 14.8978 15.48 15.1078 15.05 15.5378L13.21 17.3778C10.38 15.9378 8.06004 13.6278 6.62004 10.7878L8.47004 8.93781C8.90004 8.50781 9.11004 7.90781 9.04004 7.29781L8.75004 4.77781C8.63004 3.76781 7.78004 3.00781 6.76004 3.00781H5.03004C3.90004 3.00781 2.96004 3.94781 3.03004 5.07781C3.56004 13.6178 10.39 20.4378 18.92 20.9678C20.05 21.0378 20.99 20.0978 20.99 18.9678V17.2378C21 16.2278 20.24 15.3778 19.23 15.2578Z"
+                                fill="#8064A2"
+                              />
+                            </g>
+                            <defs>
+                              <clipPath id="clip0_230_34018">
+                                <rect width="24" height="24" fill="white" />
+                              </clipPath>
+                            </defs>
+                          </svg>
+
+                          <span className={styles.textdefault}>
+                            {data?.parent_page?.name}{' '}
+                          </span>
+                        </Link>
+                      )}
+                      {data?.parent_page?.phone?.number && isLoggedIn && (
+                        <Link href={`tel:${data?.parent_page?.phone?.number}`}>
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <g clipPath="url(#clip0_230_34018)">
+                              <path
+                                d="M19.23 15.2578L16.69 14.9678C16.08 14.8978 15.48 15.1078 15.05 15.5378L13.21 17.3778C10.38 15.9378 8.06004 13.6278 6.62004 10.7878L8.47004 8.93781C8.90004 8.50781 9.11004 7.90781 9.04004 7.29781L8.75004 4.77781C8.63004 3.76781 7.78004 3.00781 6.76004 3.00781H5.03004C3.90004 3.00781 2.96004 3.94781 3.03004 5.07781C3.56004 13.6178 10.39 20.4378 18.92 20.9678C20.05 21.0378 20.99 20.0978 20.99 18.9678V17.2378C21 16.2278 20.24 15.3778 19.23 15.2578Z"
+                                fill="#8064A2"
+                              />
+                            </g>
+                            <defs>
+                              <clipPath id="clip0_230_34018">
+                                <rect width="24" height="24" fill="white" />
+                              </clipPath>
+                            </defs>
+                          </svg>
+
+                          <span className={styles.textdefault}>
+                            {`${data?.parent_page?.phone?.prefix} ${data?.parent_page?.phone.number}`}{' '}
+                          </span>
+                        </Link>
+                      )}
+
+                      {/* WhatsApp Number */}
+                      {data?.parent_page?.whatsapp_number?.number &&
+                        isLoggedIn && (
+                          <Link
+                            href={`https://wa.me/${data?.whatsapp_number.number}`}
+                          >
+                            <Image
+                              src={WhatsappIcon}
+                              alt="whatsapp11"
+                              width={24}
+                              height={24}
+                            />
+                            <span className={styles.textdefault}>
+                              {`${data?.parent_page?.whatsapp_number.prefix}+' '+${data?.parent_page?.whatsapp_number.number}`}{' '}
+                            </span>
+                          </Link>
+                        )}
+
+                      {/* Email */}
+                      {data?.parent_page?.public_email && isLoggedIn && (
+                        <Link
+                          href={`mailto:${data?.parent_page?.public_email}`}
+                        >
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <g clipPath="url(#clip0_230_34011)">
+                              <path
+                                d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM19.6 8.25L12.53 12.67C12.21 12.87 11.79 12.87 11.47 12.67L4.4 8.25C4.15 8.09 4 7.82 4 7.53C4 6.86 4.73 6.46 5.3 6.81L12 11L18.7 6.81C19.27 6.46 20 6.86 20 7.53C20 7.82 19.85 8.09 19.6 8.25Z"
+                                fill="#8064A2"
+                              />
+                            </g>
+                            <defs>
+                              <clipPath id="clip0_230_34011">
+                                <rect width="24" height="24" fill="white" />
+                              </clipPath>
+                            </defs>
+                          </svg>
+
+                          <span className={styles.textdefault}>
+                            {data?.parent_page?.public_email}{' '}
+                          </span>
+                        </Link>
+                      )}
+
+                      {/* Website */}
+                      {data?.parent_page?.website && (
+                        <Link href={data?.parent_page?.website}>
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <circle cx="12" cy="12" r="12" fill="#8064A2" />
+                            <path
+                              d="M17.3333 15.9974C18.0667 15.9974 18.6667 15.3974 18.6667 14.6641V7.9974C18.6667 7.26406 18.0667 6.66406 17.3333 6.66406H6.66667C5.93333 6.66406 5.33333 7.26406 5.33333 7.9974V14.6641C5.33333 15.3974 5.93333 15.9974 6.66667 15.9974H4.66667C4.3 15.9974 4 16.2974 4 16.6641C4 17.0307 4.3 17.3307 4.66667 17.3307H19.3333C19.7 17.3307 20 17.0307 20 16.6641C20 16.2974 19.7 15.9974 19.3333 15.9974H17.3333ZM7.33333 7.9974H16.6667C17.0333 7.9974 17.3333 8.2974 17.3333 8.66406V13.9974C17.3333 14.3641 17.0333 14.6641 16.6667 14.6641H7.33333C6.96667 14.6641 6.66667 14.3641 6.66667 13.9974V8.66406C6.66667 8.2974 6.96667 7.9974 7.33333 7.9974Z"
+                              fill="white"
+                            />
+                          </svg>
+
+                          <span className={styles.textdefault}>
+                            {data?.parent_page?.website}{' '}
+                          </span>
+                        </Link>
+                      )}
+                    </>
+                  ) : (
+                    <></>
                   )}
                   {/* Page Admin */}
                   {(PageAdmin as any)?.full_name && isLoggedIn && (
@@ -1497,7 +1760,9 @@ const ListingPageMain: React.FC<Props> = ({
             }
             setDisplayData={setShowContact}
           >
-            <h4 className={styles['heading']}>Contact Information</h4>
+            <h4 className={styles['heading']}>
+              {data?.type === 4 ? 'Contact Seller' : 'Contact Information'}
+            </h4>
             <ul
               className={`${styles['contact-wrapper']} ${
                 styles['display-desktop']
@@ -1507,6 +1772,177 @@ const ListingPageMain: React.FC<Props> = ({
                 <li onClick={openAuthModal} className={styles['signInText']}>
                   Sign in to view full contact details
                 </li>
+              )}
+              {data?.type === 4 ? (
+                <>
+                  {/* Page Admin */}
+                  {(PageAdmin as any)?.full_name && isLoggedIn && (
+                    <Link href={`/profile/${(PageAdmin as any)?.profile_url}`}>
+                      <Image
+                        src={AdminSvg}
+                        alt="page admin"
+                        width={24}
+                        height={24}
+                      />
+                      <span className={styles.textdefault}>
+                        {(PageAdmin as any)?.full_name}
+                      </span>
+                    </Link>
+                  )}
+                  {(PageAdmin as any)?.full_name && !isLoggedIn && (
+                    <a
+                      onClick={(e) => {
+                        dispatch(
+                          SetLinkviaAuth(
+                            `/profile/${(PageAdmin as any)?.profile_url}`,
+                          ),
+                        )
+                        dispatch(openModal({ type: 'auth', closable: true }))
+                      }}
+                    >
+                      <Image
+                        src={AdminSvg}
+                        alt="whatsapp"
+                        width={24}
+                        height={24}
+                      />
+                      <span className={styles.textdefault}>
+                        {(PageAdmin as any)?.full_name}
+                      </span>
+                    </a>
+                  )}
+                  {/* Phone */}
+                  {data?.parent_page?.name && isLoggedIn && (
+                    <Link href={`tel:${data?.parent_page?.name}`}>
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g clipPath="url(#clip0_230_34018)">
+                          <path
+                            d="M19.23 15.2578L16.69 14.9678C16.08 14.8978 15.48 15.1078 15.05 15.5378L13.21 17.3778C10.38 15.9378 8.06004 13.6278 6.62004 10.7878L8.47004 8.93781C8.90004 8.50781 9.11004 7.90781 9.04004 7.29781L8.75004 4.77781C8.63004 3.76781 7.78004 3.00781 6.76004 3.00781H5.03004C3.90004 3.00781 2.96004 3.94781 3.03004 5.07781C3.56004 13.6178 10.39 20.4378 18.92 20.9678C20.05 21.0378 20.99 20.0978 20.99 18.9678V17.2378C21 16.2278 20.24 15.3778 19.23 15.2578Z"
+                            fill="#8064A2"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_230_34018">
+                            <rect width="24" height="24" fill="white" />
+                          </clipPath>
+                        </defs>
+                      </svg>
+
+                      <span className={styles.textdefault}>
+                        {data?.parent_page?.name}{' '}
+                      </span>
+                    </Link>
+                  )}
+                  {data?.parent_page?.number && isLoggedIn && (
+                    <Link
+                      href={`tel:${data.phone.prefix + data?.phone?.number}`}
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g clipPath="url(#clip0_230_34018)">
+                          <path
+                            d="M19.23 15.2578L16.69 14.9678C16.08 14.8978 15.48 15.1078 15.05 15.5378L13.21 17.3778C10.38 15.9378 8.06004 13.6278 6.62004 10.7878L8.47004 8.93781C8.90004 8.50781 9.11004 7.90781 9.04004 7.29781L8.75004 4.77781C8.63004 3.76781 7.78004 3.00781 6.76004 3.00781H5.03004C3.90004 3.00781 2.96004 3.94781 3.03004 5.07781C3.56004 13.6178 10.39 20.4378 18.92 20.9678C20.05 21.0378 20.99 20.0978 20.99 18.9678V17.2378C21 16.2278 20.24 15.3778 19.23 15.2578Z"
+                            fill="#8064A2"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_230_34018">
+                            <rect width="24" height="24" fill="white" />
+                          </clipPath>
+                        </defs>
+                      </svg>
+
+                      <span className={styles.textdefault}>
+                        {`${data?.parent_page?.prefix} ${data?.parent_page?.number}`}
+                      </span>
+                    </Link>
+                  )}
+
+                  {/* WhatsApp Number */}
+                  {data?.parent_page?.whatsapp_number?.number && isLoggedIn && (
+                    <Link
+                      href={`https://wa.me/${
+                        data?.parent_page?.whatsapp_number?.prefix +
+                        data?.parent_page?.whatsapp_number?.number
+                      }`}
+                    >
+                      <Image
+                        src={WhatsappIcon}
+                        alt="whatsapp11"
+                        width={24}
+                        height={24}
+                      />
+                      <span className={styles.textdefault}>
+                        {`${data?.parent_page?.whatsapp_number?.prefix} ${data?.parent_page?.whatsapp_number?.number}`}
+                      </span>
+                    </Link>
+                  )}
+
+                  {/* Email */}
+                  {data?.parent_page?.public_email && isLoggedIn && (
+                    <Link href={`mailto:${data?.public_email}`}>
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g clipPath="url(#clip0_230_34011)">
+                          <path
+                            d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM19.6 8.25L12.53 12.67C12.21 12.87 11.79 12.87 11.47 12.67L4.4 8.25C4.15 8.09 4 7.82 4 7.53C4 6.86 4.73 6.46 5.3 6.81L12 11L18.7 6.81C19.27 6.46 20 6.86 20 7.53C20 7.82 19.85 8.09 19.6 8.25Z"
+                            fill="#8064A2"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_230_34011">
+                            <rect width="24" height="24" fill="white" />
+                          </clipPath>
+                        </defs>
+                      </svg>
+
+                      <span className={styles.textdefault}>
+                        {data?.parent_page?.public_email}{' '}
+                      </span>
+                    </Link>
+                  )}
+
+                  {/* Website */}
+                  {data?.parent_page?.website && (
+                    <Link href={data.website}>
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <circle cx="12" cy="12" r="12" fill="#8064A2" />
+                        <path
+                          d="M17.3333 15.9974C18.0667 15.9974 18.6667 15.3974 18.6667 14.6641V7.9974C18.6667 7.26406 18.0667 6.66406 17.3333 6.66406H6.66667C5.93333 6.66406 5.33333 7.26406 5.33333 7.9974V14.6641C5.33333 15.3974 5.93333 15.9974 6.66667 15.9974H4.66667C4.3 15.9974 4 16.2974 4 16.6641C4 17.0307 4.3 17.3307 4.66667 17.3307H19.3333C19.7 17.3307 20 17.0307 20 16.6641C20 16.2974 19.7 15.9974 19.3333 15.9974H17.3333ZM7.33333 7.9974H16.6667C17.0333 7.9974 17.3333 8.2974 17.3333 8.66406V13.9974C17.3333 14.3641 17.0333 14.6641 16.6667 14.6641H7.33333C6.96667 14.6641 6.66667 14.3641 6.66667 13.9974V8.66406C6.66667 8.2974 6.96667 7.9974 7.33333 7.9974Z"
+                          fill="white"
+                        />
+                      </svg>
+
+                      <span className={styles.textdefault}>
+                        {data?.parent_page?.website}{' '}
+                      </span>
+                    </Link>
+                  )}
+                </>
+              ) : (
+                <></>
               )}
               {/* Page Admin */}
               {(PageAdmin as any)?.full_name && isLoggedIn && (

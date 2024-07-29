@@ -88,6 +88,7 @@ import HandleAdminAction from './AdminModals/ActionModal'
 import AdminActionModal from './AdminModals/ActionModal'
 import ListingAddEvent from './EditListing/ListingAddEvent'
 import SimpleOnboarding from './EditProfile/SimpleOnboarding'
+import ProductCategoryModal from './EditListing/ProductCategory/ProductCategory'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -509,6 +510,9 @@ const ModalManager: React.FC = () => {
                 <UserContactToOwner {...props} />
               )}
               {activeModal === 'save-Modal' && <SaveModal {...props} />}
+              {activeModal === 'product-category' && (
+                <ProductCategoryModal {...props} />
+              )}
 
               {/* 
               On user-onboarding-welcome, UserOnboardingWelcomeModal is shown via navbar component for some functionalities

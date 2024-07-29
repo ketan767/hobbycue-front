@@ -11,7 +11,12 @@ import store, { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
 import { showProfileError } from '@/redux/slices/user'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
-import { getAllListingPageTypes } from '@/services/listing.service'
+
+import {
+  createNewListing,
+  getAllListingPageTypes,
+} from '@/services/listing.service'
+import { getMyProfileDetail } from '@/services/user.service'
 
 type Props = {}
 
@@ -27,8 +32,33 @@ const AddListing: React.FC<Props> = (props) => {
   })
   const [hoveredIndex, setHoveredIndex] = useState<any>(null)
   const [data, setData] = useState<any[]>([])
-  const handleClick = (type: ListingPages) => {
-    console.warn('lisrihhnr', type)
+
+  const handleClick = async (type: ListingPages) => {
+    if (type === 4) {
+      const { res, err } = await getMyProfileDetail()
+      const totalPages = res?.data?.data?.user?._listings?.length || 0
+      if (totalPages > 0) {
+        const { res, err } = await createNewListing({ type: 4 })
+        const link = res?.data?.data?.listing?.page_url || null
+        if (link === null || err) {
+          setSnackbar({
+            type: 'warning',
+            display: true,
+            message: 'Some error occurred during product creation',
+          })
+        } else {
+          router.push(`page/${link}`)
+        }
+      } else {
+        setSnackbar({
+          type: 'warning',
+          display: true,
+          message:
+            'Please create at least one listing page before creating a product',
+        })
+      }
+      return
+    }
 
     if (isLoggedIn && user.is_onboarded) {
       dispatch(updateListingModalData({ type }))
