@@ -2,6 +2,7 @@ import { GetServerSideProps } from 'next'
 import { ISitemapField } from 'next-sitemap'
 import { getAllListingUrls } from '@/services/listing.service'
 import styles from '../styles.module.css'
+import { pageType } from '@/utils'
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
@@ -18,7 +19,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const pagesData: any[] = pagesRes?.data?.data || []
 
   const pages: ISitemapField[] = pagesData.map((page) => ({
-    loc: `${baseUrl}/page/${encodeURIComponent(page.page_url)}`,
+    loc: `${baseUrl}/${pageType(page?.type)}/${encodeURIComponent(
+      page.page_url,
+    )}`,
     lastmod: page?.updatedAt,
   }))
   return {

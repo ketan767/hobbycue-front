@@ -18,7 +18,7 @@ import {
 } from '@/services/listing.service'
 import { updatePhotoEditModalData } from '@/redux/slices/site'
 import { openModal, updateShareUrl } from '@/redux/slices/modal'
-import { dateFormat } from '@/utils'
+import { dateFormat, pageType } from '@/utils'
 import Calendar from '@/assets/svg/calendar-light.svg'
 import MailIcon from '@/assets/svg/mailicon.svg'
 import Time from '@/assets/svg/clock-light.svg'
@@ -781,7 +781,9 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                   return (
                     <Link
                       key={tab}
-                      href={`/page/${router.query.page_url}/${tab}`}
+                      href={`/${pageType(router.query.type)}/${
+                        router.query.page_url
+                      }/${tab}`}
                       className={
                         activeTab === tab
                           ? styles['active']
@@ -801,7 +803,9 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                   return (
                     <Link
                       key={tab}
-                      href={`/page/${router.query.page_url}/${tab}`}
+                      href={`/${pageType(router.query.type)}/${
+                        router.query.page_url
+                      }/${tab}`}
                       className={activeTab === tab ? styles['active'] : ''}
                     >
                       {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -811,9 +815,9 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                 return (
                   <Link
                     key={tab}
-                    href={`/page/${router.query.page_url}/${
-                      tab !== 'home' ? tab : ''
-                    }`}
+                    href={`/${pageType(router.query.type)}/${
+                      router.query.page_url
+                    }/${tab !== 'home' ? tab : ''}`}
                     className={activeTab === tab ? styles['active'] : ''}
                   >
                     {tab.charAt(0).toUpperCase() + tab.slice(1)}

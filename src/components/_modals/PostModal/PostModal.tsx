@@ -9,6 +9,7 @@ import {
   dateFormat,
   isEmptyField,
   isVideoLink,
+  pageType,
 } from '@/utils'
 import { getAllHobbies } from '@/services/hobby.service'
 import {
@@ -213,7 +214,9 @@ export const PostModal: React.FC<Props> = ({
             href={
               activePost?.author_type === 'User'
                 ? `/profile/${activePost?._author?.profile_url}`
-                : `/page/${activePost?._author?.page_url}`
+                : `/${pageType(activePost?._author?.type)}/${
+                    activePost?._author?.page_url
+                  }`
             }
           >
             <div className={`${styles['header-user']}`}>

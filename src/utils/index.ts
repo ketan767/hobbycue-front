@@ -218,6 +218,20 @@ export const calculateReadingTime = (content: string) => {
   return minutes;
 };
 
+export const pageType= (type: any) => {
+  if (type ===1){
+    return 'people'
+  
+  }
+  else if (type === 2)
+    return 'place'
+  else if (type ===3)
+    return 'program'
+  else if (type === 4)
+    return 'product'
+  else 
+  return 'page'
+}
 
 
 export const isMobile = () => useMediaQuery('(max-width:1100px)');

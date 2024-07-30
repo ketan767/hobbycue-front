@@ -5,6 +5,7 @@ import FilledButton from '@/components/_buttons/FilledButton'
 import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
 import Link from 'next/link'
 import Image from 'next/image'
+import { pageType } from '@/utils'
 interface PanelDropdownListProps {
   name: string
   options: any[]
@@ -162,7 +163,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                   <div key={idx} className={styles['option']}>
                     <div className={styles['member-container']}>
                       <Link
-                        href={`/page/${obj?.page_url}`}
+                        href={`/${pageType(obj?.type)}/${obj?.page_url}`}
                         className={styles['img-name']}
                       >
                         {obj?.profile_image ? (

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import styles from './PostCard.module.css'
-import { dateFormat, isVideoLink } from '@/utils'
+import { dateFormat, isVideoLink, pageType } from '@/utils'
 import Link from 'next/link'
 import BarsIcon from '../../assets/svg/vertical-bars.svg'
 import PostVotes from './Votes'
@@ -249,7 +249,9 @@ const PostCard: React.FC<Props> = (props) => {
               href={
                 postData?.author_type === 'User'
                   ? `/profile/${postData?._author?.profile_url}`
-                  : `/page/${postData?._author?.page_url}`
+                  : `/${pageType(postData?._author.type)}/${
+                      postData?._author?.page_url
+                    }`
               }
             >
               {postData?.author_type === 'Listing' ? (
@@ -295,7 +297,9 @@ const PostCard: React.FC<Props> = (props) => {
                 href={
                   postData?.author_type === 'User'
                     ? `/profile/${postData?._author?.profile_url}`
-                    : `/page/${postData?._author?.page_url}`
+                    : `/${pageType(postData?._author?.type)}/${
+                        postData?._author?.page_url
+                      }`
                 }
               >
                 <p className={styles['author-name']}>

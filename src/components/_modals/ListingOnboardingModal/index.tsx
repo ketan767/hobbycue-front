@@ -25,6 +25,7 @@ import { listingTypes } from '@/constants/constant'
 import { updateUserListing } from '@/redux/slices/user'
 import ListingCopyModal from '../EditListing/ListingCopyModal'
 import SaveModal from '../SaveModal/saveModal'
+import { pageType } from '@/utils'
 
 // type OnboardingData = {
 //   full_name: string
@@ -139,7 +140,9 @@ export const ListingOnboardingModal: React.FC<PropTypes> = ({
       dispatch(closeModal())
       console.log(res)
 
-      window.location.href = `/page/${res.data.data.listing.page_url}`
+      window.location.href = `/${pageType(res.data.data.listing?.type)}/${
+        res.data.data.listing.page_url
+      }`
     }
   }
   const handleOutsideClick = (event: MouseEvent) => {

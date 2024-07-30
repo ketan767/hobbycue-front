@@ -12,6 +12,7 @@ import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { addListingReview } from '@/services/listing.service'
 import { closeModal } from '@/redux/slices/modal'
 import { useRouter } from 'next/router'
+import { pageType } from '@/utils'
 
 type Props = {
   onComplete?: () => void
@@ -50,7 +51,9 @@ const ListingReview: React.FC<Props> = ({
   const listingPageData = useSelector(
     (state: RootState) => state.site.listingPageData,
   )
-  const currentUrl = `${process.env.NEXT_PUBLIC_VERCEL_URL}/page/${listingPageData.page_url}`
+  const currentUrl = `${process.env.NEXT_PUBLIC_VERCEL_URL}/${pageType(
+    listingPageData?.type,
+  )}/${listingPageData.page_url}`
   const [inputErrs, setInputErrs] = useState<{ error: string | null }>({
     error: null,
   })
@@ -134,10 +137,10 @@ const ListingReview: React.FC<Props> = ({
   const nextButtonRef = useRef<HTMLButtonElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   useEffect(() => {
-    if(textareaRef.current){
+    if (textareaRef.current) {
       setTimeout(() => {
-      textareaRef.current?.focus()
-      }, 50);
+        textareaRef.current?.focus()
+      }, 50)
     }
   }, [textareaRef.current])
 

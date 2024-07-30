@@ -16,7 +16,7 @@ import {
   getListingTags,
 } from '@/services/listing.service'
 import { getAllUserDetail } from '@/services/user.service'
-import { dateFormat } from '@/utils'
+import { dateFormat, pageType } from '@/utils'
 import {
   updateContactOpenStates,
   updateHobbyOpenState,
@@ -329,14 +329,6 @@ const ListingPageMain: React.FC<Props> = ({
   }, [data?.related_listings_left?.listings])
 
   useEffect(() => {
-    if (data?.type === 4) {
-      if (!data?.parent_page || !data?.product_category) {
-        dispatch(openModal({ type: 'product-category', closable: true }))
-      }
-    }
-  }, [data?.type, data?.parent_page, data?.product_category])
-
-  useEffect(() => {
     if (expandAll !== undefined) {
       setShowAside(expandAll)
     }
@@ -572,7 +564,7 @@ const ListingPageMain: React.FC<Props> = ({
               </PageContentBox>
             </div>
 
-            <PageContentBox
+            {/* <PageContentBox
               className={hobbyError ? styles.error : ''}
               showEditButton={listingLayoutMode === 'edit'}
               onEditBtnClick={() =>
@@ -594,28 +586,8 @@ const ListingPageMain: React.FC<Props> = ({
                 {redCartIcon}
                 <p>Item Sale</p>
               </h4>
-              <div className={`${styles['display-desktop']}`}>
-                {/* {
-                <ul className={styles['hobby-list']}>
-                  {data?._hobbies?.map((item: any) => {
-                    if (typeof item === 'string') return
-                    return (
-                      <Link
-                        href={`/hobby/${
-                          item?.genre?.slug ?? item?.hobby?.slug
-                        }`}
-                        className={styles.textGray}
-                        key={item._id}
-                      >
-                        {item?.hobby?.display}
-                        {item?.genre && ` - ${item?.genre?.display} `}
-                      </Link>
-                    )
-                  })}
-                </ul>
-              } */}
-              </div>
-            </PageContentBox>
+              <div className={`${styles['display-desktop']}`}></div>
+            </PageContentBox> */}
             {/* Listing Hobbies */}
             <PageContentBox
               className={hobbyError ? styles.error : ''}
@@ -751,7 +723,9 @@ const ListingPageMain: React.FC<Props> = ({
                           <li key={item?._id}>
                             <Link
                               className={styles.textGray}
-                              href={`/page/${item?.page_url}`}
+                              href={`/${pageType(item?.type)}/${
+                                item?.page_url
+                              }`}
                             >
                               <div className={styles['related']}>
                                 {item?.profile_image ? (
@@ -1563,7 +1537,9 @@ const ListingPageMain: React.FC<Props> = ({
                             <li key={item._id}>
                               <Link
                                 className={styles.textGray}
-                                href={`/page/${item.page_url}`}
+                                href={`/${pageType(item?.type)}/${
+                                  item.page_url
+                                }`}
                               >
                                 <div className={styles['related']}>
                                   {item.profile_image ? (
@@ -1776,8 +1752,12 @@ const ListingPageMain: React.FC<Props> = ({
               {data?.type === 4 ? (
                 <>
                   {/* Page Admin */}
-                  {(PageAdmin as any)?.full_name && isLoggedIn && (
-                    <Link href={`/profile/${(PageAdmin as any)?.profile_url}`}>
+                  {data?.seller?.title && isLoggedIn && (
+                    <Link
+                      href={`/${pageType(data?.seller?.type)}/${
+                        data.seller?.page_url
+                      }`}
+                    >
                       <Image
                         src={AdminSvg}
                         alt="page admin"
@@ -1785,16 +1765,18 @@ const ListingPageMain: React.FC<Props> = ({
                         height={24}
                       />
                       <span className={styles.textdefault}>
-                        {(PageAdmin as any)?.full_name}
+                        {data?.seller?.title}
                       </span>
                     </Link>
                   )}
-                  {(PageAdmin as any)?.full_name && !isLoggedIn && (
+                  {data?.seller?.title && !isLoggedIn && (
                     <a
                       onClick={(e) => {
                         dispatch(
                           SetLinkviaAuth(
-                            `/profile/${(PageAdmin as any)?.profile_url}`,
+                            `/${pageType(data?.seller?.type)}/${
+                              data?.seller?.profile_url
+                            }`,
                           ),
                         )
                         dispatch(openModal({ type: 'auth', closable: true }))
@@ -1807,13 +1789,13 @@ const ListingPageMain: React.FC<Props> = ({
                         height={24}
                       />
                       <span className={styles.textdefault}>
-                        {(PageAdmin as any)?.full_name}
+                        {data?.seller?.title}
                       </span>
                     </a>
                   )}
                   {/* Phone */}
-                  {data?.parent_page?.name && isLoggedIn && (
-                    <Link href={`tel:${data?.parent_page?.name}`}>
+                  {data?.seller?.phone.number && isLoggedIn && (
+                    <Link href={`tel:${data?.seller?.phone.number}`}>
                       <svg
                         width="24"
                         height="24"
@@ -1870,11 +1852,11 @@ const ListingPageMain: React.FC<Props> = ({
                   )}
 
                   {/* WhatsApp Number */}
-                  {data?.parent_page?.whatsapp_number?.number && isLoggedIn && (
+                  {data?.seller?.whatsapp_number?.number && isLoggedIn && (
                     <Link
                       href={`https://wa.me/${
-                        data?.parent_page?.whatsapp_number?.prefix +
-                        data?.parent_page?.whatsapp_number?.number
+                        data?.seller?.whatsapp_number?.prefix +
+                        data?.seller?.whatsapp_number?.number
                       }`}
                     >
                       <Image
@@ -1884,14 +1866,14 @@ const ListingPageMain: React.FC<Props> = ({
                         height={24}
                       />
                       <span className={styles.textdefault}>
-                        {`${data?.parent_page?.whatsapp_number?.prefix} ${data?.parent_page?.whatsapp_number?.number}`}
+                        {`${data?.seller?.whatsapp_number?.prefix} ${data?.seller?.whatsapp_number?.number}`}
                       </span>
                     </Link>
                   )}
 
                   {/* Email */}
-                  {data?.parent_page?.public_email && isLoggedIn && (
-                    <Link href={`mailto:${data?.public_email}`}>
+                  {data?.seller?.public_email && isLoggedIn && (
+                    <Link href={`mailto:${data?.seller?.public_email}`}>
                       <svg
                         width="24"
                         height="24"
@@ -1913,14 +1895,14 @@ const ListingPageMain: React.FC<Props> = ({
                       </svg>
 
                       <span className={styles.textdefault}>
-                        {data?.parent_page?.public_email}{' '}
+                        {data?.seller?.public_email}{' '}
                       </span>
                     </Link>
                   )}
 
                   {/* Website */}
-                  {data?.parent_page?.website && (
-                    <Link href={data.website}>
+                  {data?.seller?.website && (
+                    <Link href={data?.seller?.website}>
                       <svg
                         width="24"
                         height="24"
@@ -1936,7 +1918,7 @@ const ListingPageMain: React.FC<Props> = ({
                       </svg>
 
                       <span className={styles.textdefault}>
-                        {data?.parent_page?.website}{' '}
+                        {data?.seller?.website}{' '}
                       </span>
                     </Link>
                   )}
@@ -2471,7 +2453,7 @@ const ListingPageMain: React.FC<Props> = ({
                         <li key={item._id}>
                           <Link
                             className={styles.textGray}
-                            href={`/page/${item.page_url}`}
+                            href={`/${pageType(item?.type)}/${item.page_url}`}
                           >
                             <div className={styles['related']}>
                               {item.profile_image ? (

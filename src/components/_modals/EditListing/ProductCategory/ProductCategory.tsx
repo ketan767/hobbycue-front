@@ -20,6 +20,7 @@ import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import {
+  createNewListing,
   getListingPages,
   getListingTags,
   getPages,
@@ -73,8 +74,10 @@ const ProductCategoryModal: React.FC<Props> = ({
     { name: 'Item Rental', description: 'Equipment on rent' },
     { name: 'Space Rental', description: 'A court or studio' },
   ]
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-  const [selectedPage, setSelectedPage] = useState<string | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<any>([])
+  const [selectedCategoryError, setSelectedCategoryError] = useState(false)
+  const [selectedPage, setSelectedPage] = useState<any | []>([])
+  const [selectedPageError, setSelectedPageError] = useState(false)
   const [myPages, setMyPages] = useState<any[]>([])
   const [showDropdown, setShowDropdown] = useState(false)
   const dropdownRef: any = useRef()
@@ -83,34 +86,42 @@ const ProductCategoryModal: React.FC<Props> = ({
   })
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   useOutsideAlerter(dropdownRef, () => setShowDropdown(false))
-  const [initialData, setInitialData] = useState<string | null>(null)
+  const [initialData, setInitialData] = useState<any | null>(null)
   const [isChanged, setIsChanged] = useState(false)
 
   const handleSubmit = async () => {
+    if (selectedCategory.length === 0) {
+      setSelectedCategoryError(true)
+    }
+    if (selectedPage.length === 0) {
+      setSelectedPageError(true)
+      return
+    }
     const jsonData = {
-      parent_page: selectedPage,
-      product_category: selectedCategory,
+      seller: selectedPage,
+      page_type: selectedCategory,
+      type: 4,
     }
     setSubmitBtnLoading(true)
-    const { err, res } = await updateListing(listingModalData._id, jsonData)
+    const { err, res } = await createNewListing(jsonData)
     if (err) return console.log(err)
     console.log('res', res?.data.data.listing)
     if (onComplete) onComplete()
     else {
-      window.location.reload()
+      router.push(`/product/${res?.data?.data?.listing?.page_url}`)
       dispatch(closeModal())
     }
   }
 
-  useEffect(() => {
-    if (listingModalData?.product_category) {
-      setSelectedCategory(listingModalData?.product_category)
-      setInitialData(listingModalData?.product_category)
-    }
-    if (listingModalData?.parent_page) {
-      setSelectedPage(listingModalData?.parent_page)
-    }
-  }, [listingModalData?.product_category, listingModalData?.parent_page])
+  // useEffect(() => {
+  //   if (listingModalData?.page_type) {
+  //     setSelectedCategory(listingModalData?.page_type)
+  //     setInitialData(listingModalData?.page_type)
+  //   }
+  //   if (listingModalData?.seller) {
+  //     setSelectedPage(listingModalData?.seller)
+  //   }
+  // }, [listingModalData?.page_type, listingModalData?.seller])
 
   useEffect(() => {
     setData((prev) => {
@@ -154,7 +165,7 @@ const ProductCategoryModal: React.FC<Props> = ({
 
   const handleAddListing = () => {
     dispatch(closeModal())
-    router.push('add-listing')
+    router.push('/add-listing')
   }
 
   const handlePageChange = (id: string) => {
@@ -178,7 +189,7 @@ const ProductCategoryModal: React.FC<Props> = ({
     }
   }, [])
 
-  console.log({ parentPage })
+  console.warn('selectedcategoryyyy', selectedCategory)
 
   const plusIcon = (
     <svg
@@ -255,7 +266,12 @@ const ProductCategoryModal: React.FC<Props> = ({
                 className={styles['select-input']}
                 onClick={() => setShowDropdown(true)}
               >
-                <p> {selectedCategory ?? 'Services or Facilities'}</p>
+                <p>
+                  {' '}
+                  {selectedCategory.length === 0
+                    ? 'Select Category'
+                    : selectedCategory}
+                </p>
                 <Image src={DownArrow} alt="down" />
               </div>
               {showDropdown && (

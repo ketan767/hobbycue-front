@@ -35,28 +35,18 @@ const AddListing: React.FC<Props> = (props) => {
 
   const handleClick = async (type: ListingPages) => {
     if (type === 4) {
-      const { res, err } = await getMyProfileDetail()
-      const totalPages = res?.data?.data?.user?._listings?.length || 0
-      if (totalPages > 0) {
-        const { res, err } = await createNewListing({ type: 4 })
-        const link = res?.data?.data?.listing?.page_url || null
-        if (link === null || err) {
-          setSnackbar({
-            type: 'warning',
-            display: true,
-            message: 'Some error occurred during product creation',
-          })
-        } else {
-          router.push(`page/${link}`)
-        }
-      } else {
-        setSnackbar({
-          type: 'warning',
-          display: true,
-          message:
-            'Please create at least one listing page before creating a product',
-        })
-      }
+      dispatch(openModal({ type: 'product-category', closable: true }))
+      // const { res, err } = await createNewListing({ type: 4 })
+      // const link = res?.data?.data?.listing?.page_url || null
+      // if (link === null || err) {
+      //   setSnackbar({
+      //     type: 'warning',
+      //     display: true,
+      //     message: 'Some error occurred during product creation',
+      //   })
+      // } else {
+      //   router.push(`page/${link}`)
+      // }
       return
     }
 

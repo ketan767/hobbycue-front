@@ -15,39 +15,37 @@ import {
 } from '@/redux/slices/site'
 
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
-import ListingReviewsTab from '@/components/ListingPage/ListingPageReviews/ListingPageReviews'
+import ListingEventsTab from '@/components/ListingPage/ListingPageEvents/ListingPageEvents'
 import ErrorPage from '@/components/ErrorPage'
 import { useMediaQuery } from '@mui/material'
 
 type Props = { data: ListingPageData }
 
-const ListingReviews: React.FC<Props> = (props) => {
+const ListingEvents: React.FC<Props> = (props) => {
   const dispatch = useDispatch()
   const { listing } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(listing)
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
-  const isMobile = useMediaQuery('(max-width:1100px)')
-  useEffect(() => {
-    if (isMobile) {
-      setExpandAll(false)
-    }
-  }, [isMobile])
   // const { listingPageData } = useSelector((state: RootState) => state.site)
   console.log('posts data', props.data)
   useEffect(() => {
     dispatch(updateListingPageData(props.data.pageData))
     dispatch(updateListingModalData(props.data.pageData))
   }, [])
-
+  const isMobile = useMediaQuery('(max-width:1100px)')
+  useEffect(() => {
+    if (isMobile) {
+      setExpandAll(false)
+    }
+  }, [isMobile])
   const handleExpandAll: (value: boolean) => void = (value) => {
     setExpandAll(value)
     dispatch(updateListingMenuExpandAll(value))
   }
   const router = useRouter()
   useEffect(() => {
-    // Save scroll position when navigating away from the page
     const handleRouteChange = () => {
       sessionStorage.setItem('scrollPositionlisting', window.scrollY.toString())
     }
@@ -60,16 +58,14 @@ const ListingReviews: React.FC<Props> = (props) => {
         sessionStorage.removeItem('scrollPositionlisting')
       }
     }
-
     router.events.on('routeChangeStart', handleRouteChange)
-
     router.events.on('routeChangeComplete', handleScrollRestoration)
 
     return () => {
       router.events.off('routeChangeStart', handleRouteChange)
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
-  }, [])
+  }, [router.events])
   if (
     props?.data?.pageData?.admin !== user?._id &&
     props?.data?.pageData?.is_published !== true
@@ -94,23 +90,30 @@ const ListingReviews: React.FC<Props> = (props) => {
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${props.data.pageData?.title} | HobbyCue`}</title>
       </Head>
-
-      <ListingPageLayout
-        activeTab={'reviews'}
-        data={props.data}
-        expandAll={expandAll}
-        setExpandAll={handleExpandAll}
-      >
-        <ListingPageMain
-          data={props.data.pageData}
-          expandAll={expandAll}
-          activeTab={'reviews'}
-        >
-          <div className={styles['display-desktop']}>
-            <ListingReviewsTab pageData={props?.data?.pageData} />
-          </div>
-        </ListingPageMain>
-      </ListingPageLayout>
+      {props.data.pageData.type === 3 ? (
+        <div className={styles['no-events-wrapper']}>
+          No events for page type Program
+        </div>
+      ) : (
+        <div>
+          <ListingPageLayout
+            activeTab={'events'}
+            data={props.data}
+            expandAll={expandAll}
+            setExpandAll={handleExpandAll}
+          >
+            <ListingPageMain
+              data={props.data.pageData}
+              expandAll={expandAll}
+              activeTab={'events'}
+            >
+              <div className={styles['display-desktop']}>
+                <ListingEventsTab data={props.data.pageData} />
+              </div>
+            </ListingPageMain>
+          </ListingPageLayout>
+        </div>
+      )}
     </>
   )
 }
@@ -119,9 +122,28 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   context,
 ) => {
   const { query } = context
+  const { page_url, type } = query
+
+  let typeId
+  switch (type) {
+    case 'people':
+      typeId = '1'
+      break
+    case 'person':
+      typeId = '2'
+      break
+    case 'program':
+      typeId = '3'
+      break
+    case 'product':
+      typeId = '4'
+      break
+    default:
+      return { notFound: true }
+  }
 
   const { err, res } = await getListingPages(
-    `page_url=${query['page_url']}&populate=_hobbies,_address,_reviews`,
+    `page_url=${query['page_url']}&populate=_hobbies,_address,seller`,
   )
 
   if (res?.data.success && res.data.data.no_of_listings === 0) {
@@ -145,4 +167,4 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   }
 }
 
-export default ListingReviews
+export default ListingEvents

@@ -37,6 +37,7 @@ import ListingOrdersTab from '@/components/ListingPage/ListingOrdersTab/ListingO
 import peopleSvg from '@/assets/svg/People.svg'
 import placeSvg from '@/assets/svg/Place.svg'
 import programSvg from '@/assets/svg/Program.svg'
+import { pageType } from '@/utils'
 
 interface Props {
   activeTab: ListingPageTabs
@@ -86,7 +87,9 @@ const ListingPageLayout: React.FC<Props> = ({
     if (!isLoggedIn && tab === 'posts') {
       dispatch(
         SetLinkviaAuth(
-          `/page/${router.query.page_url}/${tab !== 'home' ? tab : ''}`,
+          `/${pageType(router?.query?.type)}/${router.query.page_url}/${
+            tab !== 'home' ? tab : ''
+          }`,
         ),
       )
       dispatch(openModal({ type: 'auth', closable: true }))
@@ -127,13 +130,19 @@ const ListingPageLayout: React.FC<Props> = ({
 
       if (!hasError) {
         router.push(
-          `/page/${router.query.page_url}/${tab !== 'home' ? tab : ''}`,
+          `/${pageType(router?.query?.type)}/${router.query.page_url}/${
+            tab !== 'home' ? tab : ''
+          }`,
         )
       } else {
         setSnackBarOpen(true)
       }
     } else {
-      router.push(`/page/${router.query.page_url}/${tab !== 'home' ? tab : ''}`)
+      router.push(
+        `/${pageType(router?.query?.type)}/${router.query.page_url}/${
+          tab !== 'home' ? tab : ''
+        }`,
+      )
     }
   }
 

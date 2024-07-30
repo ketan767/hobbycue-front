@@ -23,7 +23,7 @@ import {
   getClaimRequests,
   getHobbyRequests,
 } from '@/services/admin.service'
-import { formatDateTime } from '@/utils'
+import { formatDateTime, pageType } from '@/utils'
 import StatusDropdown from '@/components/_formElements/StatusDropdown'
 import HandleAdminAction from '@/components/_modals/AdminModals/ActionModal'
 import AdminActionModal from '@/components/_modals/AdminModals/ActionModal'
@@ -345,16 +345,27 @@ const ClaimsPage: React.FC = () => {
                     <td>
                       <div className={styles.resultItem}>
                         <div className={styles.detailsContainer}>
-                         {hobbyreq?.user_id?.profile_url?<Link href={`/profile/${hobbyreq?.user_id?.profile_url}`} className={styles.userName}>
-                            {hobbyreq?.name}
-                          </Link>:<p className={styles.userName}>
-                            {hobbyreq?.name}
-                          </p>}
+                          {hobbyreq?.user_id?.profile_url ? (
+                            <Link
+                              href={`/profile/${hobbyreq?.user_id?.profile_url}`}
+                              className={styles.userName}
+                            >
+                              {hobbyreq?.name}
+                            </Link>
+                          ) : (
+                            <p className={styles.userName}>{hobbyreq?.name}</p>
+                          )}
                         </div>
                       </div>
                     </td>
                     <td className={styles.userName}>
-                      <Link href={`/page/${hobbyreq?.pageUrl}`}>{hobbyreq?.pageUrl}</Link>
+                      <Link
+                        href={`/${pageType(hobbyreq?.type)}/${
+                          hobbyreq?.pageUrl
+                        }`}
+                      >
+                        {hobbyreq?.pageUrl}
+                      </Link>
                     </td>
 
                     <td className={styles.lastLoggedIn}>

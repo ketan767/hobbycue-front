@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import LocationIcon from '../../assets/svg/location.svg'
 import HobbyIcon from '../../assets/svg/hobby.svg'
-import { getListingTypeName } from '@/utils'
+import { getListingTypeName, pageType } from '@/utils'
 import People from '@/assets/svg/People.svg'
 import Place from '@/assets/svg/Place.svg'
 import Program from '@/assets/svg/Program.svg'
@@ -124,7 +124,7 @@ const ListingCard: React.FC<Props> = ({ data }) => {
     <>
       <Link
         key={data?._id}
-        href={`/page/${data?.page_url}`}
+        href={`/${pageType(data?.type)}/${data?.page_url}`}
         className={styles.container}
       >
         {itsMe ? (

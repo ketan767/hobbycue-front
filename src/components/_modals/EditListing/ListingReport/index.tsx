@@ -9,7 +9,7 @@ import {
 } from '@/services/user.service'
 
 import styles from './styles.module.css'
-import { isEmpty, isEmptyField } from '@/utils'
+import { isEmpty, isEmptyField, pageType } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { closeModal } from '@/redux/slices/modal'
@@ -74,7 +74,9 @@ const ListingReport: React.FC<Props> = ({
   const listingPageData = useSelector(
     (state: RootState) => state.site.listingPageData,
   )
-  const currentUrl = `${process.env.NEXT_PUBLIC_VERCEL_URL}/page/${listingPageData.page_url}`
+  const currentUrl = `${process.env.NEXT_PUBLIC_VERCEL_URL}/${pageType(
+    listingPageData?.type,
+  )}/${listingPageData.page_url}`
   const [inputErrs, setInputErrs] = useState<{ error: string | null }>({
     error: null,
   })

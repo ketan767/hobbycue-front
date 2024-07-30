@@ -139,8 +139,28 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 ) => {
   const { query } = context
 
+  const { page_url, type } = query
+
+  let typeId
+  switch (type) {
+    case 'people':
+      typeId = '1'
+      break
+    case 'person':
+      typeId = '2'
+      break
+    case 'program':
+      typeId = '3'
+      break
+    case 'product':
+      typeId = '4'
+      break
+    default:
+      return { notFound: true }
+  }
+
   const { err, res } = await getListingPages(
-    `page_url=${query['page_url']}&populate=_hobbies,_address`,
+    `page_url=${query['page_url']}&populate=_hobbies,_address,seller`,
   )
 
   if (res?.data.success && res.data.data.no_of_listings === 0) {

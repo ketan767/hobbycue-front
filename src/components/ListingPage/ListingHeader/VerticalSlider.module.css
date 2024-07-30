@@ -53,6 +53,14 @@
     cursor: pointer;
 }
 
+.item-img {
+    border: 1px solid #8064A2;
+    object-fit: contain;
+    width: 88px;
+    height: 88px;
+    border-radius: 8px;
+}
+
 .item p {
     color: var(--Purple-1, #8064A2);
     font-family: 'Poppins';
@@ -62,3 +70,13 @@
     line-height: 20px;
     /* 166.667% */
 }
+
+.item .hidden {
+    opacity: 0;
+    inset: 0;
+    z-index: 2;
+    position: absolute;
+    display: block;
+    cursor: pointer;
+  }
+  

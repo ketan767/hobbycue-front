@@ -419,6 +419,14 @@
   position: relative;
 }
 
+.active-image {
+  object-fit: contain;
+  border-radius: 8px;
+  width: 472px;
+  height: 472px;
+  border: 1px solid #8064A2;
+}
+
 .item p {
   color: var(--Purple-1, #8064A2);
   font-family: 'Poppins';
@@ -439,7 +447,7 @@
 }
 
 .product-name-container .name {
-color: #939CA3;
+color: #08090A;
 font-size: 20px;
 font-family: 'Poppins';
 font-style: normal;

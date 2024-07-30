@@ -10,6 +10,7 @@ import { listingTypes } from '@/constants/constant'
 import { listingData } from '@/components/_modals/EditListing/ListingRelated/data'
 import { updatePagesOpenState } from '@/redux/slices/site'
 import { profile } from 'console'
+import { pageType } from '@/utils'
 
 type Props = {
   data: ProfilePageData['pageData']
@@ -79,7 +80,9 @@ const ProfilePagesList = ({ data, expandData }: Props) => {
                 return (
                   <li
                     key={item._id}
-                    onClick={() => router.push(`/page/${item.page_url}`)}
+                    onClick={() =>
+                      router.push(`/${pageType(item?.type)}/${item.page_url}`)
+                    }
                   >
                     {item.profile_image ? (
                       <div className={styles.listingIcon}>
@@ -106,7 +109,9 @@ const ProfilePagesList = ({ data, expandData }: Props) => {
               return (
                 <li
                   key={item._id}
-                  onClick={() => router.push(`/page/${item.page_url}`)}
+                  onClick={() =>
+                    router.push(`/${pageType(item?.type)}/${item.page_url}`)
+                  }
                 >
                   {item.profile_image ? (
                     <div className={styles.listingIcon}>

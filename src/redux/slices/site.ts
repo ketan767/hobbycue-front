@@ -8,6 +8,7 @@ type ListingModalData = {
    * * `4 -> PRODUCT`
    */
   admin?: string 
+  seller?: any
   type?: ListingPages | null
   page_type?: string | string[]
   title?: string
@@ -131,6 +132,10 @@ interface AuthState {
   membersStates?:{
     [key:string]:boolean
   }
+  active_img_product?:{
+    idx: number,
+    type: string
+  }
   eventflowRunning:boolean
   pageDataForEvent:null|any
   totalEvents:number
@@ -180,7 +185,11 @@ const initialState: AuthState = {
   membersStates:{},
   eventflowRunning:false,
   pageDataForEvent:null,
-  totalEvents:0
+  totalEvents:0,
+  active_img_product: {
+    idx: 0,
+    type: 'image'
+  }
 }
 
 /** Template Listing Data 
@@ -378,11 +387,15 @@ const siteSlice = createSlice({
     },
     updateTotalEvents: (state,{payload}:{payload:number}) => {
       state.totalEvents = payload;
+    },
+    updateActiveProductImg: (state,{payload}:{payload:any}) => {
+      state.active_img_product = payload;
     }
   },
 })
 
 export const {
+  updateActiveProductImg,
   updateSaleOpenStates,
   updateListingLayoutMode,
   updateProfileLayoutMode,

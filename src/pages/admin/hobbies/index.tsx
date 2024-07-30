@@ -22,7 +22,7 @@ import {
   deleteUserByAdmin,
   getHobbyRequests,
 } from '@/services/admin.service'
-import { formatDateTime } from '@/utils'
+import { formatDateTime, pageType } from '@/utils'
 import StatusDropdown from '@/components/_formElements/StatusDropdown'
 import selectIcon from '@/assets/svg/select_icon.svg'
 import InProgressIcon from '@/assets/svg/In_progress_icon.svg'
@@ -387,7 +387,9 @@ const HobbiesRequest: React.FC = () => {
                         href={
                           hobbyreq.user_type == 'user'
                             ? `/profile/${hobbyreq.user_id?.profile_url}`
-                            : `/page/${hobbyreq.listing_id?.page_url}`
+                            : `/${pageType(hobbyreq?.listing_id?.type)}/${
+                                hobbyreq.listing_id?.page_url
+                              }`
                         }
                       >
                         {hobbyreq.user_type == 'user'

@@ -1,5 +1,9 @@
 import React, { useRef } from 'react'
 import styles from './VerticalSlider.module.css'
+import { updateListing } from '@/services/listing.service'
+import { uploadImage } from '@/services/post.service'
+import { useDispatch } from 'react-redux'
+import { updateActiveProductImg } from '@/redux/slices/site'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -13,11 +17,53 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
       containerRef.current.scrollBy({ top: -100, behavior: 'smooth' })
     }
   }
+  const dispatch = useDispatch()
 
   const scrollDown = () => {
     if (containerRef.current) {
       containerRef.current.scrollBy({ top: 100, behavior: 'smooth' })
     }
+  }
+  const handleImageChange = (e: any, index: any) => {
+    const images = [...e?.target?.files]
+    const image = e?.target?.files[0]
+    if (data.images.length === 0) index = 0
+    handleImageUpload(image, index, false)
+  }
+
+  const handleImageUpload = async (
+    image: any,
+    index: any,
+    isVideo: boolean,
+  ) => {
+    const formData = new FormData()
+    formData.append('post', image)
+    console.log('formData', formData)
+    const { err, res } = await uploadImage(formData)
+    if (err) return console.log(err)
+    if (res?.data.success) {
+      console.log(res.data)
+      const img = res.data.data.url
+      updateListingPage(img, index)
+      // dispatch(closeModal())
+    }
+  }
+  const updateListingPage = async (url: string, index: any) => {
+    let arr: any = []
+    if (data?.images) {
+      arr = [...data.images]
+    }
+    arr[index] = url + 1
+    const { err, res } = await updateListing(data._id, {
+      images: arr,
+    })
+    if (err) return console.log(err)
+    window.location.reload()
+    console.log(res)
+  }
+
+  const updateActiveImgIndex = (idx: number) => {
+    dispatch(updateActiveProductImg({ idx, type: 'image' }))
   }
 
   const uploadIcon = (
@@ -102,9 +148,15 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
       </button>
       <div ref={containerRef} className={styles.itemsContainer}>
         {data.images[0] ? (
-          <img className={styles.item} src={data?.images[0]} />
+          <img className={styles['item-img']} src={data?.images[0]} />
         ) : (
           <div className={styles.item}>
+            <input
+              type="file"
+              accept="image/png, image/gif, image/jpeg"
+              className={styles.hidden}
+              onChange={(e) => handleImageChange(e, 0)}
+            />
             {uploadIcon}
             <p>Add Image</p>
           </div>
@@ -113,18 +165,35 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
           {uploadIcon}
           <p>Add Video</p>
         </div>
-        <div className={styles.item}>
-          {uploadIcon}
-          <p>Add Image</p>
-        </div>
-        <div className={styles.item}>
-          {uploadIcon}
-          <p>Add Image</p>
-        </div>
-        <div className={styles.item}>
-          {uploadIcon}
-          <p>Add Image</p>
-        </div>
+        {[...Array(3)].map((_, index) => (
+          <div key={index} className={styles.item}>
+            {data.images[index] ? (
+              <img
+                className={styles['item-img']}
+                src={data.images[index]}
+                onClick={() => {
+                  updateActiveImgIndex(index)
+                }}
+              />
+            ) : (
+              <input
+                type="file"
+                accept="image/png, image/gif, image/jpeg"
+                className={styles.hidden}
+                onChange={(e) => {
+                  console.warn('imageeeeeeee', data.images[index])
+                  handleImageChange(e, index)
+                }}
+              />
+            )}
+            {!data.images[index] && (
+              <>
+                {uploadIcon}
+                <p>Add Image</p>
+              </>
+            )}
+          </div>
+        ))}
       </div>
       <button className={styles.navButton} onClick={scrollDown}>
         {upArrow}

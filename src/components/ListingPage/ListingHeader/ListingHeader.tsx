@@ -74,6 +74,7 @@ const ListingHeader: React.FC<Props> = ({
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
+  const { active_img_product } = useSelector((state: RootState) => state.site)
   const showFeatureUnderDevelopment = () => {
     setSnackbar({
       display: true,
@@ -498,19 +499,6 @@ const ListingHeader: React.FC<Props> = ({
   }
 
   const handleImageUpload = async (image: any, isVideo: boolean) => {
-    // const fileTobeUploaded = image
-    // if (fileTobeUploaded) {
-    //   const fileSize = fileTobeUploaded.size
-    //   const fileSizeKB = fileSize / 1024
-    //   if (fileSizeKB > 2048) {
-    //     setSnackbar({
-    //       display: true,
-    //       type: 'warning',
-    //       message: 'Image size should not be greater than 2MB',
-    //     })
-    //     return
-    //   }
-    // }
     const formData = new FormData()
     formData.append('post', image)
     console.log('formData', formData)
@@ -520,7 +508,6 @@ const ListingHeader: React.FC<Props> = ({
       console.log(res.data)
       const img = res.data.data.url
       updateListingPage(img)
-      // dispatch(closeModal())
     }
   }
   const updateListingPage = async (url: string) => {
@@ -535,6 +522,8 @@ const ListingHeader: React.FC<Props> = ({
     window.location.reload()
     console.log(res)
   }
+
+  const idx = active_img_product?.idx ?? 0
 
   const uploadIcon = (
     <svg
@@ -1114,8 +1103,8 @@ const ListingHeader: React.FC<Props> = ({
           </section>
         ) : (
           <section className={styles['product-header-content']}>
-            {data?.images[0] ? (
-              <img className={styles.item} src={data?.images[0]} />
+            {data?.images[idx] ? (
+              <img className={styles['active-image']} src={data?.images[idx]} />
             ) : (
               <div className={styles.item}>
                 <input

@@ -18,7 +18,7 @@ import AdminLayout from '@/layouts/AdminLayout/AdminLayout'
 import { deleteListingByAdmin } from '@/services/admin.service'
 import DeletePrompt from '@/components/DeletePrompt/DeletePrompt'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
-import { formatDateTime } from '@/utils'
+import { formatDateTime, pageType } from '@/utils'
 
 type PagesProps = {
   _id: string
@@ -324,12 +324,19 @@ const AdminPages: React.FC = () => {
                           )}
                         </div>
                         <div className={styles.detailsContainer}>
-                          <Link href={`/page/${page?.page_url}`} className={styles.userName}>{page?.title}</Link>
+                          <Link
+                            href={`/${pageType(page?.type)}/${page?.page_url}`}
+                            className={styles.userName}
+                          >
+                            {page?.title}
+                          </Link>
                         </div>
                       </div>
                     </td>
                     <td className={styles.userName}>
-                      <Link href={`/profile/${page?.admin?.profile_url}`}>{page?.admin?.full_name}</Link>
+                      <Link href={`/profile/${page?.admin?.profile_url}`}>
+                        {page?.admin?.full_name}
+                      </Link>
                     </td>
                     <td className={styles.userPhone}>
                       {page.is_published ? 'Published' : 'Unpublished'}

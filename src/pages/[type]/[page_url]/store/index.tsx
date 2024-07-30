@@ -14,34 +14,32 @@ import {
   updateListingPageData,
 } from '@/redux/slices/site'
 
-import ListingHomeTab from '@/components/ListingPage/ListingHomeTab/ListingHomeTab'
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
-import ListingPostsTab from '@/components/ListingPage/ListingPagePosts/ListingPagePosts'
-import ListingMediaTab from '@/components/ListingPage/ListingPageMedia'
+import ListingStoreTab from '@/components/ListingPage/ListingPageStore/ListingPageStore'
 import ErrorPage from '@/components/ErrorPage'
 import { useMediaQuery } from '@mui/material'
 
 type Props = { data: ListingPageData }
 
-const ListingMedia: React.FC<Props> = (props) => {
+const ListingStore: React.FC<Props> = (props) => {
   const dispatch = useDispatch()
   const { listing } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(listing)
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
-  const isMobile = useMediaQuery('(max-width:1100px)')
-  useEffect(() => {
-    if (isMobile) {
-      setExpandAll(false)
-    }
-  }, [isMobile])
   // const { listingPageData } = useSelector((state: RootState) => state.site)
   console.log('posts data', props.data)
   useEffect(() => {
     dispatch(updateListingPageData(props.data.pageData))
     dispatch(updateListingModalData(props.data.pageData))
   }, [])
+  const isMobile = useMediaQuery('(max-width:1100px)')
+  useEffect(() => {
+    if (isMobile) {
+      setExpandAll(false)
+    }
+  }, [isMobile])
 
   const handleExpandAll: (value: boolean) => void = (value) => {
     setExpandAll(value)
@@ -49,6 +47,7 @@ const ListingMedia: React.FC<Props> = (props) => {
   }
   const router = useRouter()
   useEffect(() => {
+    // Save scroll position when navigating away from the page
     const handleRouteChange = () => {
       sessionStorage.setItem('scrollPositionlisting', window.scrollY.toString())
     }
@@ -63,13 +62,14 @@ const ListingMedia: React.FC<Props> = (props) => {
     }
 
     router.events.on('routeChangeStart', handleRouteChange)
+
     router.events.on('routeChangeComplete', handleScrollRestoration)
 
     return () => {
       router.events.off('routeChangeStart', handleRouteChange)
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
-  }, [router.events])
+  }, [])
   if (
     props?.data?.pageData?.admin !== user?._id &&
     props?.data?.pageData?.is_published !== true
@@ -96,18 +96,18 @@ const ListingMedia: React.FC<Props> = (props) => {
       </Head>
 
       <ListingPageLayout
-        activeTab={'media'}
+        activeTab={'store'}
         data={props.data}
         expandAll={expandAll}
         setExpandAll={handleExpandAll}
       >
         <ListingPageMain
-          activeTab={'media'}
           data={props.data.pageData}
           expandAll={expandAll}
+          activeTab={'store'}
         >
           <div className={styles['display-desktop']}>
-            <ListingMediaTab data={props.data.pageData} />
+            <ListingStoreTab />
           </div>
         </ListingPageMain>
       </ListingPageLayout>
@@ -119,9 +119,28 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   context,
 ) => {
   const { query } = context
+  const { page_url, type } = query
+
+  let typeId
+  switch (type) {
+    case 'people':
+      typeId = '1'
+      break
+    case 'person':
+      typeId = '2'
+      break
+    case 'program':
+      typeId = '3'
+      break
+    case 'product':
+      typeId = '4'
+      break
+    default:
+      return { notFound: true }
+  }
 
   const { err, res } = await getListingPages(
-    `page_url=${query['page_url']}&populate=_hobbies,_address`,
+    `page_url=${query['page_url']}&populate=_hobbies,_address,seller`,
   )
 
   if (res?.data.success && res.data.data.no_of_listings === 0) {
@@ -145,4 +164,4 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   }
 }
 
-export default ListingMedia
+export default ListingStore

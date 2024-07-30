@@ -25,7 +25,7 @@ import post, {
 import PostCard from '@/components/PostCard/PostCard'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
-import { checkIfUrlExists, validateEmail } from '@/utils'
+import { checkIfUrlExists, pageType, validateEmail } from '@/utils'
 import Link from 'next/link'
 import {
   getAllHobbies,
@@ -1436,7 +1436,7 @@ const CommunityLayout: React.FC<Props> = ({
                 .map((obj: any, idx) => (
                   <div key={idx} className={styles['member']}>
                     <Link
-                      href={`/page/${obj.page_url}`}
+                      href={`/${pageType(obj?.type)}/${obj.page_url}`}
                       className={styles['img-name-listing']}
                     >
                       {obj?.profile_image ? (

@@ -7,7 +7,7 @@ import {
   updateMyProfileDetail,
 } from '@/services/user.service'
 import { checkListingUrl } from '@/services/listing.service'
-import { containOnlyNumbers, isEmpty, isEmptyField } from '@/utils'
+import { containOnlyNumbers, isEmpty, isEmptyField, pageType } from '@/utils'
 import { closeModal } from '@/redux/slices/modal'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
@@ -164,7 +164,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   }
 
   const handleSubmit = async () => {
-    let hasErrors = false;
+    let hasErrors = false
     if (isEmptyField(data.title.value) || !data.title.value) {
       fullNameRef.current?.focus()
       setData((prev) => {
@@ -173,7 +173,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
           title: { ...prev.title, error: 'This field is required!' },
         }
       })
-      hasErrors = true;
+      hasErrors = true
     }
     if (isEmptyField(data.page_url.value) || !data.page_url.value) {
       pageUrlRef.current?.focus()
@@ -183,7 +183,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
           page_url: { ...prev.page_url, error: 'This field is required!' },
         }
       })
-      hasErrors = true;
+      hasErrors = true
     }
     if (data?.year.value && data.year.value !== '') {
       const currentYear = new Date().getFullYear()
@@ -197,7 +197,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
             },
           }
         })
-        hasErrors = true;
+        hasErrors = true
       } else if (currentYear - Number(data.year.value) < 0) {
         setData((prev) => {
           return {
@@ -205,7 +205,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
             year: { ...prev.year, error: 'Enter a valid year' },
           }
         })
-        hasErrors = true;
+        hasErrors = true
       } else if (Number(data.year.value) <= 999) {
         setData((prev) => {
           return {
@@ -213,11 +213,11 @@ const ListingGeneralEditModal: React.FC<Props> = ({
             year: { ...prev.year, error: 'Enter a valid year' },
           }
         })
-        hasErrors = true;
+        hasErrors = true
       }
     }
-    if(hasErrors===true){
-      return;
+    if (hasErrors === true) {
+      return
     }
 
     // if(data.year.value && data.year.value?.trim() !== '' && !containOnlyNumbers(data.year.value)) {
@@ -251,7 +251,9 @@ const ListingGeneralEditModal: React.FC<Props> = ({
         dispatch(updateListingModalData(res.data.data.listing))
         if (onComplete) onComplete()
         else {
-          const newUrl = `/page/${data.page_url.value}`
+          const newUrl = `/${pageType(listingModalData?.type)}/${
+            data.page_url.value
+          }`
           window.location.href = newUrl
           dispatch(closeModal())
         }
@@ -351,10 +353,6 @@ const ListingGeneralEditModal: React.FC<Props> = ({
         })
       })
   }, [data.page_url.value])
-  console.log(
-    'url',
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/listing/check-page-url/${data.page_url.value}`,
-  )
 
   useEffect(() => {
     fullNameRef?.current?.focus()
@@ -365,7 +363,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
         ?.toLowerCase()
         .replace(/\s+/g, '-') // Replace consecutive spaces with a single hyphen
         .replace(/[^\w\s-]/g, '-') // Replace special characters with a single hyphen
-        .replace(/-+/g, '-'); // Replace consecutive hyphens with a single hyphen
+        .replace(/-+/g, '-') // Replace consecutive hyphens with a single hyphen
       setData((prev) => {
         return { ...prev, page_url: { value: pageUrl, error: null } }
       })
@@ -375,8 +373,8 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        if(event?.srcElement?.tagName === "svg"){
-          return;
+        if (event?.srcElement?.tagName === 'svg') {
+          return
         }
         nextButtonRef.current?.click()
       }
