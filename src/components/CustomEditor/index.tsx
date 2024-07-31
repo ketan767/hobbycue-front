@@ -144,9 +144,9 @@ const CustomEditor: React.FC<Props> = ({
             files: images,
           },
         }
-        // Call handleImageChange with the synthetic event
+
         handleImageChange(syntheticEvent)
-        // Prevent the default paste behavior in the editor
+
         e.preventDefault()
       }
     }

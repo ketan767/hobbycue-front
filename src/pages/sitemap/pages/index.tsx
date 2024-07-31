@@ -17,7 +17,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   }
 
   const pagesData: any[] = pagesRes?.data?.data || []
-
+  console.log(pagesData)
   const pages: ISitemapField[] = pagesData.map((page) => ({
     loc: `${baseUrl}/${pageType(page?.type)}/${encodeURIComponent(
       page.page_url,

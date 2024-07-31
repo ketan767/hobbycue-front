@@ -87,7 +87,7 @@ const ListingPageLayout: React.FC<Props> = ({
     if (!isLoggedIn && tab === 'posts') {
       dispatch(
         SetLinkviaAuth(
-          `/${pageType(router?.query?.type)}/${router.query.page_url}/${
+          `/${pageType(data?.pageData?.type)}/${router.query.page_url}/${
             tab !== 'home' ? tab : ''
           }`,
         ),
@@ -130,7 +130,7 @@ const ListingPageLayout: React.FC<Props> = ({
 
       if (!hasError) {
         router.push(
-          `/${pageType(router?.query?.type)}/${router.query.page_url}/${
+          `/${pageType(data?.pageData?.type)}/${router.query.page_url}/${
             tab !== 'home' ? tab : ''
           }`,
         )
@@ -139,12 +139,14 @@ const ListingPageLayout: React.FC<Props> = ({
       }
     } else {
       router.push(
-        `/${pageType(router?.query?.type)}/${router.query.page_url}/${
+        `/${pageType(data?.pageData?.type)}/${router.query.page_url}/${
           tab !== 'home' ? tab : ''
         }`,
       )
     }
   }
+
+  console.warn('dataaaaaaaaaaaa', data)
 
   const handleCloseSnackBar = () => {
     setSnackBarOpen(false)

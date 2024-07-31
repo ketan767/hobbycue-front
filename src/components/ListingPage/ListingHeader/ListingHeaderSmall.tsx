@@ -781,7 +781,7 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                   return (
                     <Link
                       key={tab}
-                      href={`/${pageType(router.query.type)}/${
+                      href={`/${pageType(data?.type)}/${
                         router.query.page_url
                       }/${tab}`}
                       className={
@@ -803,7 +803,7 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                   return (
                     <Link
                       key={tab}
-                      href={`/${pageType(router.query.type)}/${
+                      href={`/${pageType(data?.type)}/${
                         router.query.page_url
                       }/${tab}`}
                       className={activeTab === tab ? styles['active'] : ''}
@@ -815,9 +815,9 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                 return (
                   <Link
                     key={tab}
-                    href={`/${pageType(router.query.type)}/${
-                      router.query.page_url
-                    }/${tab !== 'home' ? tab : ''}`}
+                    href={`/${pageType(data?.type)}/${router.query.page_url}/${
+                      tab !== 'home' ? tab : ''
+                    }`}
                     className={activeTab === tab ? styles['active'] : ''}
                   >
                     {tab.charAt(0).toUpperCase() + tab.slice(1)}
