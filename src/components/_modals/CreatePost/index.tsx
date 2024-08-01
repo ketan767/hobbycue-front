@@ -988,11 +988,13 @@ export const CreatePost: React.FC<Props> = ({
               loading={submitBtnLoading}
             >
               {submitBtnLoading ? (
-                <CircularProgress color="inherit" size={'16px'} />
+                <CircularProgress color="inherit" size={'16px'}  />
+
               ) : (
                 'Post'
               )}
             </FilledButton>
+           
           </div>
         </div>
       </div>
