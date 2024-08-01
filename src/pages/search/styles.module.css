@@ -112,6 +112,7 @@
   width: 64px;
   height: 64px;
   border-radius: 50% #8064a2;
+  border: 50%;
   color: white;
   overflow: hidden;
 }
@@ -205,6 +206,7 @@
 .userLocation {
   font-size: 14px;
   color: #666;
+  
   
 }
 

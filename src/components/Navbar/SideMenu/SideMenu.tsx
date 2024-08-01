@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import styles from './SideMenu.module.css'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-
 import { openModal } from '@/redux/slices/modal'
 import {
   SetLinkviaAuth,
@@ -19,13 +18,19 @@ import ExploreIcon from '@/assets/svg/navbar-explore-icon.svg'
 import HobbyIcon from '@/assets/svg/navbar-hobby-icon.svg'
 import CloseIcon from '@/assets/svg/cross.svg'
 import DownIcon from '@/assets/svg/chevron-down.svg'
-
+import { Navbar } from '../Navbar'
 import { logout } from '@/helper'
 import { Data } from '@react-google-maps/api'
 import CustomizedTooltips from '@/components/Tooltip/ToolTip'
 import {
   resetSearch,
+  setBlogsSearchResult,
   setExplore,
+  setPostsSearchResult,
+  setTypeResultFour,
+  setTypeResultOne,
+  setTypeResultThree,
+  setTypeResultTwo,
   showAllEventTrue,
   showAllPeopleTrue,
   showAllPlaceTrue,
@@ -36,6 +41,9 @@ import { useMediaQuery } from '@mui/material'
 import { updateListingModalData } from '@/redux/slices/site'
 import addIcon from '@/assets/svg/add.svg'
 import { setFilters } from '@/redux/slices/post'
+import { getListingPages } from '@/services/listing.service'
+import { getAllPosts } from '@/services/post.service'
+import { getAllBlogs } from '@/services/blog.services'
 type Props = {
   handleClose: any
 }
@@ -91,38 +99,150 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
       message: 'This feature is under development',
     })
   }
-  const handleOptionClick = (option: any) => {
+  const handleOptionClick = async (option: any) => {
     dispatch(resetSearch())
     dispatch(setExplore(true))
     switch (option.text) {
       case 'People - Expertise':
+        dispatch(resetSearch())
+        await ExplorePeople()
         dispatch(showAllPeopleTrue())
         router.push('/search')
         handleClose()
         break
       case 'Places - Venues':
+        dispatch(resetSearch())
+        await ExplorePlaces()
         dispatch(showAllPlaceTrue())
         router.push('/search')
         handleClose()
         break
       case 'Programs - Events':
+        dispatch(resetSearch())
+        await ExploreEvents()
         dispatch(showAllEventTrue())
         router.push('/search')
         handleClose()
         break
       case 'Products - Store':
+        dispatch(resetSearch())
+        await ExploreProducts()
         dispatch(showAllProductsTrue())
         router.push('/search')
         handleClose()
         break
+      case 'Perspectives - Blogs':
+        dispatch(resetSearch())
+        await ExploreBlogs()
+        handleClose()
+        break
       case 'Posts - Community':
-        showFeatureUnderDevelopment()
+        dispatch(resetSearch())
+        await ExplorePosts()
         handleClose()
         break
       default:
         break
     }
   }
+
+  const ExplorePeople = async () => {
+    const { res: PeopleRes, err: PeopleErr } = await getListingPages(
+      `type=1&sort=-createdAt&is_published=true`,
+    )
+
+    const PeoplePages = PeopleRes?.data.data?.listings
+
+    dispatch(
+      setTypeResultOne({
+        data: PeoplePages,
+        message: 'Search completed successfully.',
+        success: true,
+      }),
+    )
+  }
+
+  const ExplorePlaces = async () => {
+    const { res: PlacesRes, err: PlacesErr } = await getListingPages(
+      `type=2&sort=-createdAt&is_published=true`,
+    )
+
+    const PlacesPages = PlacesRes?.data.data?.listings
+
+    dispatch(
+      setTypeResultTwo({
+        data: PlacesPages,
+        message: 'Search completed successfully.',
+        success: true,
+      }),
+    )
+  }
+
+  const ExploreEvents = async () => {
+    const { res: EventRes, err: EventErr } = await getListingPages(
+      `type=3&sort=-createdAt&is_published=true`,
+    )
+
+    const EventPages = EventRes?.data.data?.listings
+    console.warn('EventPagesssssssssssssss', EventPages)
+
+    dispatch(
+      setTypeResultThree({
+        data: EventPages,
+        message: 'Search completed successfully.',
+        success: true,
+      }),
+    )
+  }
+
+  const ExploreProducts = async () => {
+    const { res: ProductsRes, err: ProductsErr } = await getListingPages(
+      `type=4&sort=-createdAt&is_published=true`,
+    )
+
+    const ProductsPages = ProductsRes?.data.data?.listings
+
+    dispatch(
+      setTypeResultFour({
+        data: ProductsPages,
+        message: 'Search completed successfully.',
+        success: true,
+      }),
+    )
+  }
+
+  const ExplorePosts = async () => {
+    const { res: PostRes, err: PostErr } = await getAllPosts(
+      `sort=-createdAt&populate=_author,_hobby`,
+    )
+
+    const PostsPages = PostRes?.data.data?.posts
+
+    dispatch(
+      setPostsSearchResult({
+        data: PostsPages,
+        message: 'Search completed successfully.',
+        success: true,
+      }),
+    )
+  }
+
+  const ExploreBlogs = async () => {
+    const { res: BlogRes, err: PostErr } = await getAllBlogs(
+      `sort=-createdAt&populate=author&status=Published`,
+    )
+
+    const BlogsPages = BlogRes?.data.data?.blog
+
+    dispatch(
+      setBlogsSearchResult({
+        data: BlogsPages,
+        message: 'Search completed successfully.',
+        success: true,
+      }),
+    )
+  }
+
   const handleUpdateActiveProfile = (type: 'user' | 'listing', data: any) => {
     dispatch(updateActiveProfile({ type, data }))
     dispatch(
@@ -343,6 +463,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                         )
                       })}
                     </ul>
+
                     <button
                       onClick={() => {
                         handleClose()
@@ -677,11 +798,29 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                         <li>My Pages</li>
                       </Link>
                     </ul>
-                    <ul className={styles['add-listing-link']}>
-                      <Link href={`/add-listing`}>
-                        <li>Add Listing Page</li>
-                      </Link>
-                    </ul>
+
+                    <div
+                      className={`${styles['dropdown-container']} ${
+                        exploreActive ? styles['dropdown-active'] : ''
+                      } `}
+                    >
+                      <ul className={styles['add-listing-link']}>
+                        <Link href={`/add-listing`}>
+                          <li>Add Listing Page</li>
+                        </Link>
+                      </ul>
+                    </div>
+                    <div
+                      className={`${styles['dropdown-container']} ${
+                        exploreActive ? styles['dropdown-active'] : ''
+                      } `}
+                    >
+                      <ul className={styles['add-listing-link']}>
+                        <Link href={`/help`}>
+                          <li>Help Center</li>
+                        </Link>
+                      </ul>
+                    </div>
                   </section>
                 </div>
                 <div

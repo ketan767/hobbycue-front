@@ -9,6 +9,8 @@ import {
   toggleShowAllUsers,
   toggleShowAllProducts,
   toggleShowAllHobbies,
+  toggleShowAllPosts,
+  toggleShowAllBlogs,
 } from '@/redux/slices/search'
 import { RootState } from '@/redux/store'
 import { MenuItem, Select } from '@mui/material'
@@ -21,6 +23,7 @@ import styles from './styles.module.css'
 import { SetLinkviaAuth } from '@/redux/slices/user'
 import Link from 'next/link'
 import SearchLoader from '@/components/SearchLoader'
+import { convertDateToString } from '@/utils'
 
 type Props = {
   data?: any
@@ -66,6 +69,25 @@ type ProductData = {
   page_url: string
   page_type: []
 }
+
+type BlogData = {
+  _id: string
+  url: string
+  title: string
+  tagline: string
+  author: any
+  cover_pic: string
+  createdAt: any
+}
+type PostData = {
+  _id: string
+  _author: any
+  author_type: string
+  createdAt: any
+  _hobby: any
+  visibility: any
+  content: any
+}
 type hobby = {
   _id: string
   profile_image: string | null
@@ -84,6 +106,8 @@ type SearchResultsProps = {
   EventResults: EventData[]
   hobbyResults: hobby[]
   ProductResults: ProductData[]
+  BlogsResults: BlogData[]
+  PostsResults: PostData[]
 }
 
 const ExploreSidebar = () => {
@@ -103,6 +127,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
   EventResults,
   hobbyResults,
   ProductResults,
+  PostsResults,
+  BlogsResults,
 }) => {
   const showAll = useSelector((state: RootState) => state.search.showAll)
   const showAllUsers = useSelector(
@@ -120,7 +146,13 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const showAllProducts = useSelector(
     (state: RootState) => state.search.showAllProducts,
   )
-  console.warn('productDataaaa', ProductResults)
+  const showAllPosts = useSelector(
+    (state: RootState) => state.search.showAllPosts,
+  )
+  const showAllBlogs = useSelector(
+    (state: RootState) => state.search.showAllBlogs,
+  )
+
   const showAllhobbies = useSelector(
     (state: RootState) => state.search.showAllHobbies,
   )
@@ -139,6 +171,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const [HidePlace, setHidePlace] = useState(false)
   const [HideEvent, setHideEvent] = useState(false)
   const [HideProduct, setHideProduct] = useState(false)
+  const [HidePosts, setHidePosts] = useState(false)
+  const [HideBlogs, setHideBlogs] = useState(false)
   const [HideHobbies, setHideHobbies] = useState(false)
 
   const router = useRouter()
@@ -151,12 +185,16 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHideEvent(false)
       setHideHobbies(false)
       setHideProduct(false)
+      setHideBlogs(false)
+      setHidePosts(false)
     } else if (showAllUsers === true) {
       setHideHobbies(true)
       setHidePeople(true)
       setHidePlace(true)
       setHideEvent(true)
       setHideProduct(true)
+      setHideBlogs(true)
+      setHidePosts(true)
       setHideUser(false)
     } else if (showAllhobbies === true) {
       setHideUser(true)
@@ -164,6 +202,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHidePlace(true)
       setHideEvent(true)
       setHideProduct(true)
+      setHideBlogs(true)
+      setHidePosts(true)
       setHideHobbies(false)
     } else if (showAllPeople === true) {
       setHideUser(true)
@@ -171,6 +211,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHidePlace(true)
       setHideEvent(true)
       setHideProduct(true)
+      setHideBlogs(true)
+      setHidePosts(true)
       setHidePeople(false)
     } else if (showAllPlace === true) {
       setHideUser(true)
@@ -178,6 +220,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHidePeople(true)
       setHideEvent(true)
       setHideProduct(true)
+      setHideBlogs(true)
+      setHidePosts(true)
       setHidePlace(false)
     } else if (showAllEvent === true) {
       setHideUser(true)
@@ -185,6 +229,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHidePlace(true)
       setHideHobbies(true)
       setHideProduct(true)
+      setHideBlogs(true)
+      setHidePosts(true)
       setHideEvent(false)
     } else if (showAllProducts === true) {
       setHideUser(true)
@@ -192,7 +238,28 @@ const MainContent: React.FC<SearchResultsProps> = ({
       setHidePeople(true)
       setHidePlace(true)
       setHideEvent(true)
+      setHideBlogs(true)
+      setHidePosts(true)
       setHideProduct(false)
+    } else if (showAllBlogs === true) {
+      setHideUser(true)
+      setHideHobbies(true)
+      setHidePeople(true)
+      setHidePlace(true)
+      setHideEvent(true)
+      setHideBlogs(true)
+      setHidePosts(true)
+      setHideProduct(true)
+      setHideBlogs(false)
+    } else if (showAllPosts === true) {
+      setHideUser(true)
+      setHideHobbies(true)
+      setHidePeople(true)
+      setHidePlace(true)
+      setHideEvent(true)
+      setHideBlogs(true)
+      setHideProduct(true)
+      setHidePosts(false)
     }
   }, [
     showAll,
@@ -203,6 +270,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
     showAllUsers,
     showAllhobbies,
     showAllProducts,
+    showAllBlogs,
+    showAllPosts,
   ])
 
   const toggleShowAllusers = () => {
@@ -228,6 +297,12 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const toggleShowAllproducts = () => {
     dispatch(toggleShowAllProducts())
   }
+  const toggleShowAllblogs = () => {
+    dispatch(toggleShowAllBlogs())
+  }
+  const toggleShowAllposts = () => {
+    dispatch(toggleShowAllPosts())
+  }
 
   const navigateToHobby = (slug: string) => {
     router.push(`hobby/${slug}`)
@@ -241,25 +316,44 @@ const MainContent: React.FC<SearchResultsProps> = ({
       dispatch(openModal({ type: 'auth', closable: true }))
     }
   }
-  const navigateToPage = (pageUrl: string) => {
-    router.push(`page/${pageUrl}`)
+  const navigateToPeoplePage = (pageUrl: string) => {
+    router.push(`people/${pageUrl}`)
+  }
+  const navigateToPlacePage = (pageUrl: string) => {
+    router.push(`place/${pageUrl}`)
+  }
+  const navigateToProgramPage = (pageUrl: string) => {
+    router.push(`program/${pageUrl}`)
+  }
+  const navigateToProductPage = (pageUrl: string) => {
+    router.push(`product/${pageUrl}`)
+  }
+  const navigateToBlog = (pageUrl: string) => {
+    router.push(`blog/${pageUrl}`)
+  }
+
+  const navigateToPosts = (pageUrl: string) => {
+    router.push(`post/${pageUrl}`)
   }
 
   const noResultsFound =
-    ((searchResults.length === 0 &&
+    (searchResults.length === 0 &&
       hobbyResults.length === 0 &&
       peopleResults.length === 0 &&
       placeResults.length === 0 &&
       EventResults.length === 0 &&
       ProductResults.length === 0 &&
+      PostsResults.length === 0 &&
+      BlogsResults.length === 0 &&
       showAll) ||
-      (searchResults.length === 0 && showAllUsers) ||
-      (hobbyResults.length === 0 && showAllhobbies) ||
-      (peopleResults.length === 0 && showAllPeople) ||
-      (placeResults.length === 0 && showAllPlace) ||
-      (EventResults.length === 0 && showAllEvent) ||
-      (ProductResults.length === 0 && showAllProducts)) &&
-    searchLoading === false
+    (searchResults.length === 0 && showAllUsers) ||
+    (hobbyResults.length === 0 && showAllhobbies) ||
+    (peopleResults.length === 0 && showAllPeople) ||
+    (placeResults.length === 0 && showAllPlace) ||
+    (EventResults.length === 0 && showAllEvent) ||
+    (ProductResults.length === 0 && showAllProducts) ||
+    (PostsResults.length === 0 && showAllPosts) ||
+    (BlogsResults.length === 0 && showAllBlogs && searchLoading === false)
 
   return (
     <main className={styles.searchResults}>
@@ -453,7 +547,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       <div
                         className={styles.peopleItem}
                         key={index}
-                        onClick={() => navigateToPage(page.page_url)}
+                        onClick={() => navigateToPeoplePage(page.page_url)}
                       >
                         <div className={styles.peopleAvatar}>
                           {page.profile_image ? (
@@ -518,7 +612,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     <div
                       className={styles.peopleItem}
                       key={index}
-                      onClick={() => navigateToPage(page.page_url)}
+                      onClick={() => navigateToPlacePage(page.page_url)}
                     >
                       <div className={styles.peopleAvatar}>
                         {page.profile_image ? (
@@ -577,7 +671,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                     <div
                       className={styles.peopleItem}
                       key={index}
-                      onClick={() => navigateToPage(page.page_url)}
+                      onClick={() => navigateToProgramPage(page.page_url)}
                     >
                       <div className={styles.peopleAvatar}>
                         {page.profile_image ? (
@@ -638,7 +732,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       <div
                         className={styles.peopleItem}
                         key={index}
-                        onClick={() => navigateToPage(page.page_url)}
+                        onClick={() => navigateToProductPage(page.page_url)}
                       >
                         <div className={styles.peopleAvatar}>
                           {page.profile_image ? (
@@ -687,6 +781,133 @@ const MainContent: React.FC<SearchResultsProps> = ({
                 </div>
               </section>
             )}
+          {/* Posts  */}
+          {!HidePosts && PostsResults.length > 0 && searchLoading === false && (
+            <section className={styles.userSection}>
+              <div className={styles.peopleItemsContainer}>
+                <div className={styles.resultHeading}>Posts</div>
+                {PostsResults.slice(0, showAllPosts ? undefined : 3).map(
+                  (page, index) => (
+                    <div
+                      className={styles.peopleItem}
+                      key={index}
+                      onClick={() => navigateToPosts(page._id)}
+                    >
+                      <div
+                        className={
+                          page?.author_type === 'User'
+                            ? styles.userAvatar
+                            : styles.peopleAvatar
+                        }
+                      >
+                        {page?._author?.profile_image ? (
+                          <img
+                            src={page._author?.profile_image}
+                            alt={`${page._author?.full_name}'s `}
+                            width={64}
+                            height={64}
+                            className={
+                              page?.author_type === 'User'
+                                ? styles.avatarImage
+                                : styles.peopleAvatar
+                            }
+                          />
+                        ) : (
+                          <div
+                            className={`${styles['people-img']} default-product-listing-icon`}
+                          ></div>
+                        )}
+                      </div>
+                      <div className={styles.userDetails}>
+                        <div className={styles.userName}>
+                          {page?._author?.full_name}
+                        </div>
+                        <div className={styles.userTagline}>
+                          {convertDateToString(page?.createdAt) || '\u00a0'}{' '}
+                          {' | ' + page?._hobby.display || '\u00a0'}{' '}
+                          {' | ' + page.visibility}
+                        </div>
+                        <div className={styles.userLocation}>
+                          {page?.content}
+                        </div>
+                      </div>
+                    </div>
+                  ),
+                )}
+                <div className={styles['view-more-btn-container']}>
+                  {showAllPosts
+                    ? undefined
+                    : (PostsResults.length > 3 ? (
+                        <button
+                          onClick={toggleShowAllposts}
+                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                        >
+                          View More
+                        </button>
+                      ) : (
+                        ''
+                      )) || ''}
+                </div>
+              </div>
+            </section>
+          )}
+          {/* Blogs  */}
+          {!HideBlogs && BlogsResults.length > 0 && searchLoading === false && (
+            <section className={styles.userSection}>
+              <div className={styles.peopleItemsContainer}>
+                <div className={styles.resultHeading}>Blogs</div>
+                {BlogsResults.slice(0, showAllBlogs ? undefined : 3).map(
+                  (page, index) => (
+                    <div
+                      className={styles.peopleItem}
+                      key={index}
+                      onClick={() => navigateToBlog(page.url)}
+                    >
+                      <div className={styles.peopleAvatar}>
+                        {page.cover_pic ? (
+                          <img
+                            src={page.cover_pic}
+                            alt={`${page.title}'s `}
+                            width={64}
+                            height={64}
+                            className={styles.peopleavatarImage}
+                          />
+                        ) : (
+                          <div
+                            className={`${styles['people-img']} default-user-icon`}
+                          ></div>
+                        )}
+                      </div>
+                      <div className={styles.userDetails}>
+                        <div className={styles.userName}>{page?.title}</div>
+                        <div className={styles.userTagline}>
+                          {page?.tagline || '\u00a0'}
+                        </div>
+                        <div className={styles.userLocation}>
+                          {page?.author?.full_name}{' '}
+                          {page.createdAt ? ' | ' + page.createdAt : ''}
+                        </div>
+                      </div>
+                    </div>
+                  ),
+                )}
+                <div className={styles['view-more-btn-container']}>
+                  {showAllBlogs
+                    ? undefined
+                    : (BlogsResults.length > 3 ? (
+                        <button
+                          onClick={toggleShowAllblogs}
+                          className={`"modal-footer-btn submit" ${styles['view-more-btn']}`}
+                        >
+                          View More
+                        </button>
+                      ) : (
+                        ''
+                      )) || ''}
+                </div>
+              </div>
+            </section>
+          )}
         </div>
       )}
     </main>
@@ -708,6 +929,8 @@ const FilterDropdown: React.FC<Props> = () => {
   const showAllProducts = useSelector(
     (state: any) => state.search.showAllProducts,
   )
+  const showAllPosts = useSelector((state: any) => state.search.showAllPosts)
+  const showAllBlogs = useSelector((state: any) => state.search.showAllBlogs)
   useEffect(() => {
     if (showAll) {
       setActiveFilter('all')
@@ -743,6 +966,16 @@ const FilterDropdown: React.FC<Props> = () => {
       setActiveFilter('products')
     }
   }, [showAllProducts])
+  useEffect(() => {
+    if (showAllPosts) {
+      setActiveFilter('posts')
+    }
+  }, [showAllPosts])
+  useEffect(() => {
+    if (showAllBlogs) {
+      setActiveFilter('blogs')
+    }
+  }, [showAllBlogs])
   const handleFilterClick = (filterType: any) => {
     if (activeFilter === filterType) {
       setActiveFilter('all')
@@ -770,6 +1003,12 @@ const FilterDropdown: React.FC<Props> = () => {
           break
         case 'products':
           dispatch(toggleShowAllProducts())
+          break
+        case 'posts':
+          dispatch(toggleShowAllPosts())
+          break
+        case 'blogs':
+          dispatch(toggleShowAllBlogs())
           break
         default:
           break
@@ -800,6 +1039,12 @@ const FilterDropdown: React.FC<Props> = () => {
       <MenuItem onClick={() => handleFilterClick('products')} value="products">
         Products
       </MenuItem>
+      <MenuItem onClick={() => handleFilterClick('posts')} value="posts">
+        Posts
+      </MenuItem>
+      <MenuItem onClick={() => handleFilterClick('blogs')} value="blogs">
+        Blogs
+      </MenuItem>
     </Select>
   )
 }
@@ -821,6 +1066,12 @@ const Search: React.FC<Props> = ({ data, children }) => {
   )
   const ProductSearch = useSelector(
     (state: RootState) => state.search.typeResultFour.data,
+  )
+  const PostsSearch = useSelector(
+    (state: RootState) => state.search.postsSearchResults.data,
+  )
+  const BlogsSearch = useSelector(
+    (state: RootState) => state.search.blogsSearchResults.data,
   )
   const searchString = useSelector(
     (state: RootState) => state.search.searchString,
@@ -860,6 +1111,8 @@ const Search: React.FC<Props> = ({ data, children }) => {
           EventResults={EventSearch || []}
           hobbyResults={hobbySearchResults || []}
           ProductResults={ProductSearch || []}
+          PostsResults={PostsSearch || []}
+          BlogsResults={BlogsSearch || []}
         />
       </main>
       <aside className={styles['aside-two']}>

@@ -284,8 +284,15 @@
   row-gap: 0;
 }
 
-.add-listing-link {
-  color: #8064a2;
+.add-listing-link li {
+  padding-top: 12px;
+  color: var(--Purple-1, #8064A2);
+font-family: 'poppins';
+font-size: 14px;
+font-style: normal;
+font-weight: 500;
+line-height: 18px; /* 128.571% */
+letter-spacing: 0.07px;
 }
 
 .rotate180 {

@@ -141,7 +141,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   }
 
   const { err, res } = await getListingPages(
-    `page_url=${query['page_url']}&populate=_hobbies,_address,seller`,
+    `page_url=${query['page_url']}&populate=_hobbies,_address,seller,product_variant`,
   )
 
   if (res?.data.success && res.data.data.no_of_listings === 0) {

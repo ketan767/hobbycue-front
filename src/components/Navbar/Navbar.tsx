@@ -26,6 +26,10 @@ import {
   setExplore,
   setSearchLoading,
   setTypeResultFour,
+  setPostsSearchResult,
+  setBlogsSearchResult,
+  showAllBlogsTrue,
+  showAllPostsTrue,
 } from '@/redux/slices/search'
 import LogoFull from '@/assets/image/logo-full.svg'
 import LogoSmall from '@/assets/image/logo-small.png'
@@ -58,6 +62,8 @@ import { setShowPageLoader } from '@/redux/slices/site'
 import { usePathname } from 'next/navigation'
 import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import { useMediaQuery } from '@mui/material'
+import { getAllPosts } from '@/services/post.service'
+import { getAllBlogs } from '@/services/blog.services'
 
 type Props = {}
 
@@ -392,6 +398,38 @@ export const Navbar: React.FC<Props> = ({}) => {
     dispatch(
       setTypeResultFour({
         data: ProductsPages,
+        message: 'Search completed successfully.',
+        success: true,
+      }),
+    )
+  }
+
+  const ExplorePosts = async () => {
+    const { res: PostRes, err: PostErr } = await getAllPosts(
+      `sort=-createdAt&populate=_author,_hobby`,
+    )
+
+    const PostsPages = PostRes?.data.data?.posts
+
+    dispatch(
+      setPostsSearchResult({
+        data: PostsPages,
+        message: 'Search completed successfully.',
+        success: true,
+      }),
+    )
+  }
+
+  const ExploreBlogs = async () => {
+    const { res: BlogRes, err: PostErr } = await getAllBlogs(
+      `sort=-createdAt&populate=author&status=Published`,
+    )
+
+    const BlogsPages = BlogRes?.data.data?.blog
+
+    dispatch(
+      setBlogsSearchResult({
+        data: BlogsPages,
         message: 'Search completed successfully.',
         success: true,
       }),
@@ -759,9 +797,49 @@ export const Navbar: React.FC<Props> = ({}) => {
                       <h4>
                         <a
                           className={styles['hobbiescategory']}
-                          onClick={() => {
-                            showFeatureUnderDevelopment()
+                          onClick={async (e) => {
+                            e.preventDefault()
+
+                            setData((prevData) => ({
+                              ...prevData,
+                              search: {
+                                ...prevData.search,
+                                value: '',
+                              },
+                            }))
+                            dispatch(resetSearch())
+                            await ExploreBlogs()
                             setShowDropdown(null)
+                            dispatch(showAllBlogsTrue())
+                            dispatch(setExplore(true))
+                            router.push('/search')
+                          }}
+                        >
+                          Perspectives - Blogs
+                        </a>
+                      </h4>
+                    </section>
+                    <section className={styles['list']}>
+                      <h4>
+                        <a
+                          className={styles['hobbiescategory']}
+                          onClick={async (e) => {
+                            e.preventDefault()
+
+                            setData((prevData) => ({
+                              ...prevData,
+                              search: {
+                                ...prevData.search,
+                                value: '',
+                              },
+                            }))
+
+                            dispatch(resetSearch())
+                            await ExplorePosts()
+                            setShowDropdown(null)
+                            dispatch(showAllPostsTrue())
+                            dispatch(setExplore(true))
+                            router.push('/search')
                           }}
                         >
                           Posts - Community
