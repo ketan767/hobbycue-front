@@ -42,6 +42,7 @@ import { useMediaQuery } from '@mui/material'
 import VerticalSlider from './VerticalSlider'
 import { uploadImage } from '@/services/post.service'
 import ReactPlayer from 'react-player'
+import InputSelect from '@/components/InputSelect/inputSelect'
 
 type Props = {
   data: ListingPageData['pageData']
@@ -75,6 +76,12 @@ const ListingHeader: React.FC<Props> = ({
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
+  const [VarientData, setVarientData] = useState<{
+    _id?: string
+    variant_tag: string
+    variations: { name: string; value: string; quantity: number }[]
+    note: string
+  }>({ variant_tag: '', variations: [], note: '' })
   const { active_img_product } = useSelector((state: RootState) => state.site)
   const showFeatureUnderDevelopment = () => {
     setSnackbar({
@@ -526,6 +533,24 @@ const ListingHeader: React.FC<Props> = ({
 
   const idx = active_img_product?.idx ?? 0
 
+  const incQuantity = (i: number) => {
+    let newArr = [...data.variations]
+    if (Number(newArr[i].quantity) < 9) {
+      newArr[i] = { ...newArr[i], quantity: Number(newArr[i].quantity) + 1 }
+      setVarientData((prev) => ({ ...prev, variations: newArr }))
+    }
+  }
+
+  const decQuantity = (i: number) => {
+    let newArr = [...data.variations]
+    newArr[i] = {
+      ...newArr[i],
+      quantity:
+        Number(newArr[i].quantity) === 0 ? 0 : Number(newArr[i].quantity) - 1,
+    }
+    setVarientData((prev) => ({ ...prev, variations: newArr }))
+  }
+
   const uploadIcon = (
     <svg
       width="23"
@@ -566,6 +591,43 @@ const ListingHeader: React.FC<Props> = ({
       <path
         d="M2.7313 13.0784H13.5506C13.6601 13.078 13.7675 13.0478 13.8612 12.991C13.9548 12.9341 14.0312 12.8529 14.0821 12.7558C14.1329 12.6588 14.1564 12.5498 14.1499 12.4404C14.1434 12.3311 14.1073 12.2256 14.0453 12.1353L8.63563 4.32134C8.41143 3.99736 7.87167 3.99736 7.64687 4.32134L2.23722 12.1353C2.1746 12.2254 2.13788 12.331 2.13105 12.4405C2.12421 12.55 2.14753 12.6593 2.19846 12.7565C2.24939 12.8538 2.32598 12.9351 2.41992 12.9919C2.51386 13.0486 2.62156 13.0785 2.7313 13.0784Z"
         fill="#6D747A"
+      />
+    </svg>
+  )
+
+  const plusIcon = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+    >
+      <g clip-path="url(#clip0_14513_208561)">
+        <path
+          d="M13.1429 8.85714H8.85714V13.1429C8.85714 13.6143 8.47143 14 8 14C7.52857 14 7.14286 13.6143 7.14286 13.1429V8.85714H2.85714C2.38571 8.85714 2 8.47143 2 8C2 7.52857 2.38571 7.14286 2.85714 7.14286H7.14286V2.85714C7.14286 2.38571 7.52857 2 8 2C8.47143 2 8.85714 2.38571 8.85714 2.85714V7.14286H13.1429C13.6143 7.14286 14 7.52857 14 8C14 8.47143 13.6143 8.85714 13.1429 8.85714Z"
+          fill="#8064A2"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_14513_208561">
+          <rect width="16" height="16" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+
+  const minusIcon = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+    >
+      <path
+        d="M11.9997 8.61895H3.99967C3.63301 8.61895 3.33301 8.34038 3.33301 7.99991C3.33301 7.65943 3.63301 7.38086 3.99967 7.38086H11.9997C12.3663 7.38086 12.6663 7.65943 12.6663 7.99991C12.6663 8.34038 12.3663 8.61895 11.9997 8.61895Z"
+        fill="#8064A2"
       />
     </svg>
   )
@@ -1140,39 +1202,72 @@ const ListingHeader: React.FC<Props> = ({
             )}
 
             <div className={styles['product-name-container']}>
-              <h1 className={styles['name']}>
-                {data?.title}
-                {data?.is_verified ? <Image alt="claim" src={claimSvg} /> : ''}
+              <div>
+                <h1 className={styles['name']}>
+                  {data?.title}
+                  {data?.is_verified ? (
+                    <Image alt="claim" src={claimSvg} />
+                  ) : (
+                    ''
+                  )}
+                  {listingLayoutMode === 'edit' && (
+                    <Image
+                      className={styles['edit-icon']}
+                      src={EditIcon}
+                      alt="edit"
+                      onClick={openTitleEditModal}
+                    />
+                  )}
+                </h1>
+                {data?.tagline ? (
+                  <p className={styles['tagline']}>{data?.tagline}</p>
+                ) : (
+                  <p className={styles['tagline']}>&nbsp;</p>
+                )}
+                {data?.description ? (
+                  <div
+                    className={`${styles['about-text']}`}
+                    dangerouslySetInnerHTML={{ __html: data?.description }}
+                  ></div>
+                ) : (
+                  'About'
+                )}
                 {listingLayoutMode === 'edit' && (
                   <Image
                     className={styles['edit-icon']}
                     src={EditIcon}
                     alt="edit"
-                    onClick={openTitleEditModal}
+                    onClick={openAboutEditModal}
                   />
                 )}
-              </h1>
-              {data?.tagline ? (
-                <p className={styles['tagline']}>{data?.tagline}</p>
-              ) : (
-                <p className={styles['tagline']}>&nbsp;</p>
-              )}
-              {data?.description ? (
-                <div
-                  className={`${styles['about-text']}`}
-                  dangerouslySetInnerHTML={{ __html: data?.description }}
-                ></div>
-              ) : (
-                'About'
-              )}
-              {listingLayoutMode === 'edit' && (
-                <Image
-                  className={styles['edit-icon']}
-                  src={EditIcon}
-                  alt="edit"
-                  onClick={openAboutEditModal}
-                />
-              )}
+              </div>
+              <div className={styles['varient-price-container']}>
+                <div className={styles['price-and-qunaitity']}>
+                  <InputSelect options={VarientData.variations} value="abc" />
+
+                  <label>Quantity:</label>
+                  <div className={styles.varientpirce}>1600</div>
+                  <div className={styles['qunatity']}>
+                    <div className={styles['quantity']}>
+                      <button
+                        onClick={() => {
+                          decQuantity(i)
+                        }}
+                      >
+                        {minusIcon}
+                      </button>
+                      <p>{'12'}</p>
+                      <button
+                        onClick={() => {
+                          incQuantity(i)
+                        }}
+                      >
+                        {plusIcon}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
         )}
