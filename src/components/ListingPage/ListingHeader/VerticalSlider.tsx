@@ -1,9 +1,17 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styles from './VerticalSlider.module.css'
-import { updateListing } from '@/services/listing.service'
-import { uploadImage } from '@/services/post.service'
+import { updateListing, updateListingProfile } from '@/services/listing.service'
+import { getMetadata, uploadImage } from '@/services/post.service'
 import { useDispatch } from 'react-redux'
-import { updateActiveProductImg } from '@/redux/slices/site'
+import {
+  updateActiveProductImg,
+  updatePhotoEditModalData,
+} from '@/redux/slices/site'
+import { openModal } from '@/redux/slices/modal'
+import ReactPlayer from 'react-player'
+import Image from 'next/image'
+
+import PauseIcon from '@/assets/svg/play_arrow.svg'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -11,7 +19,7 @@ interface Props {
 
 const VerticalSlider: React.FC<Props> = ({ data }) => {
   const containerRef = useRef<HTMLDivElement>(null)
-
+  const [videoimg, setMetaDataImg] = useState('')
   const scrollUp = () => {
     if (containerRef.current) {
       containerRef.current.scrollBy({ top: -100, behavior: 'smooth' })
@@ -24,16 +32,15 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
       containerRef.current.scrollBy({ top: 100, behavior: 'smooth' })
     }
   }
-  const handleImageChange = (e: any, index: any) => {
-    const images = [...e?.target?.files]
-    const image = e?.target?.files[0]
-    if (data.images.length === 0) index = 0
-    handleImageUpload(image, index, false)
+  const handleImageChange = (e: any) => {
+    const images = [...e.target.files]
+    const image = e.target.files[0]
+    handleImageUpload(image, false)
   }
 
   const handleImageUpload = async (
     image: any,
-    index: any,
+
     isVideo: boolean,
   ) => {
     const formData = new FormData()
@@ -44,27 +51,76 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
     if (res?.data.success) {
       console.log(res.data)
       const img = res.data.data.url
-      updateListingPage(img, index)
+      updateListingPage(img)
       // dispatch(closeModal())
     }
   }
-  const updateListingPage = async (url: string, index: any) => {
+  const updateListingPage = async (url: string) => {
     let arr: any = []
     if (data?.images) {
-      arr = [...data.images]
+      arr = data.images
     }
-    arr[index] = url + 1
+
     const { err, res } = await updateListing(data._id, {
-      images: arr,
+      images: [...arr, url],
     })
     if (err) return console.log(err)
     window.location.reload()
     console.log(res)
   }
 
-  const updateActiveImgIndex = (idx: number) => {
-    dispatch(updateActiveProductImg({ idx, type: 'image' }))
+  const updateActiveImgIndex = (idx: number, activetype: string) => {
+    dispatch(updateActiveProductImg({ idx, type: activetype }))
   }
+
+  const UploadProfileImg = (e: any, type: 'profile') => {
+    e.preventDefault()
+    let files = e.target.files
+
+    if (files.length === 0) return
+
+    console.log('data', data?.pageData)
+    const reader = new FileReader()
+    reader.onload = () => {
+      dispatch(
+        updatePhotoEditModalData({
+          type,
+          image: reader.result,
+          onComplete: type === 'profile' ? handleUserProfileUpload : '',
+        }),
+      )
+      dispatch(
+        openModal({
+          type: 'upload-image',
+          closable: true,
+        }),
+      )
+    }
+    reader.readAsDataURL(files[0])
+  }
+
+  const handleUserProfileUpload = async (image: any) => {
+    const response = await fetch(image)
+    const blob = await response.blob()
+
+    const formData = new FormData()
+    formData.append('listing-profile', blob)
+    const { err, res } = await updateListingProfile(data._id, formData)
+    if (err) return console.log(err)
+    if (res?.data.success) {
+      window.location.reload()
+      // dispatch(closeModal())
+    }
+  }
+  const updatevideoThumbnail = async () => {
+    getMetadata(data.video_url).then((res: any) => {
+      setMetaDataImg(res?.res?.data.data.data?.image ?? '')
+    })
+  }
+
+  useEffect(() => {
+    updatevideoThumbnail()
+  })
 
   const uploadIcon = (
     <svg
@@ -147,53 +203,88 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
         {upArrow}
       </button>
       <div ref={containerRef} className={styles.itemsContainer}>
-        {data.images[0] ? (
-          <img className={styles['item-img']} src={data?.images[0]} />
+        {data.profile_image ? (
+          <div onClick={() => updateActiveImgIndex(0, 'image')}>
+            <img className={styles['item-img']} src={data?.profile_image} />
+          </div>
         ) : (
           <div className={styles.item}>
             <input
               type="file"
               accept="image/png, image/gif, image/jpeg"
               className={styles.hidden}
-              onChange={(e) => handleImageChange(e, 0)}
+              onChange={(e) => UploadProfileImg(e, 'profile')}
             />
             {uploadIcon}
             <p>Add Image</p>
           </div>
         )}
-        <div className={styles.item}>
-          {uploadIcon}
-          <p>Add Video</p>
-        </div>
-        {[...Array(3)].map((_, index) => (
+        {videoimg ? (
+          <div
+            onClick={() => updateActiveImgIndex(0, 'video')}
+            className={styles['item-video']}
+            style={{ position: 'relative' }} // Ensure relative positioning
+          >
+            <img src={videoimg} alt="Video" style={{ width: '100%' }} />
+            <Image
+              alt="Play video"
+              src={PauseIcon}
+              className={styles.playIcon}
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                height: '30px',
+                width: '30px',
+              }}
+            />
+          </div>
+        ) : (
+          <div
+            onClick={() => {
+              dispatch(
+                openModal({
+                  type: 'upload-video-page',
+                  closable: true,
+                }),
+              )
+            }}
+            className={styles.item}
+          >
+            {uploadIcon}
+            <p>Add Video</p>
+          </div>
+        )}
+        {data.images.map((image: any, index: any) => (
           <div key={index} className={styles.item}>
-            {data.images[index] ? (
+            {image && (
               <img
                 className={styles['item-img']}
-                src={data.images[index]}
+                src={image}
                 onClick={() => {
-                  updateActiveImgIndex(index)
+                  console.warn('data.imagessssss', image)
+                  updateActiveImgIndex(index + 1, 'image')
                 }}
               />
-            ) : (
-              <input
-                type="file"
-                accept="image/png, image/gif, image/jpeg"
-                className={styles.hidden}
-                onChange={(e) => {
-                  console.warn('imageeeeeeee', data.images[index])
-                  handleImageChange(e, index)
-                }}
-              />
-            )}
-            {!data.images[index] && (
-              <>
-                {uploadIcon}
-                <p>Add Image</p>
-              </>
             )}
           </div>
         ))}
+
+        <div className={styles['upload-item']}>
+          <>
+            <input
+              type="file"
+              accept="image/png, image/gif, image/jpeg"
+              className={styles.hidden}
+              onChange={(e) => {
+                handleImageChange(e)
+              }}
+            />
+            {uploadIcon}
+            <p>Add Image</p>
+          </>
+        </div>
       </div>
       <button className={styles.navButton} onClick={scrollDown}>
         {upArrow}

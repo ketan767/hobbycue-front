@@ -41,6 +41,7 @@ import smallPencilSvg from '@/assets/svg/small-pencil.svg'
 import { useMediaQuery } from '@mui/material'
 import VerticalSlider from './VerticalSlider'
 import { uploadImage } from '@/services/post.service'
+import ReactPlayer from 'react-player'
 
 type Props = {
   data: ListingPageData['pageData']
@@ -581,13 +582,12 @@ const ListingHeader: React.FC<Props> = ({
           <div className={styles['relative']}>
             {data.type === 4 ? (
               <VerticalSlider data={data} />
-            ) : data?.profile_image ? (
-              <input
-                type="file"
-                accept="image/png, image/gif, image/jpeg"
-                className={styles.hidden}
-                onChange={(e) => handleImageChange(e)}
-                ref={inputRef}
+            ) : data?.profile_image && data.type !== 4 ? (
+              <img
+                onClick={OpenProfileImage}
+                className={`${styles['img']} imageclick`}
+                src={data?.profile_image}
+                alt=""
                 width={160}
                 height={160}
               />
@@ -1103,15 +1103,35 @@ const ListingHeader: React.FC<Props> = ({
           </section>
         ) : (
           <section className={styles['product-header-content']}>
-            {data?.images[idx] ? (
-              <img className={styles['active-image']} src={data?.images[idx]} />
+            {active_img_product?.type === 'image' && data?.profile_image ? (
+              <img
+                className={styles['active-image']}
+                src={
+                  active_img_product?.idx === 0
+                    ? data?.profile_image
+                    : data.images[active_img_product?.idx - 1]
+                }
+              />
+            ) : active_img_product?.type === 'video' ? (
+              <div className={styles['active-image']}>
+                {data?.video_url && (
+                  <div className={styles['videos']}>
+                    <ReactPlayer
+                      width="100%"
+                      height="100%"
+                      url={data?.video_url}
+                      controls={true}
+                    />
+                  </div>
+                )}
+              </div>
             ) : (
               <div className={styles.item}>
                 <input
                   type="file"
                   accept="image/png, image/gif, image/jpeg"
                   className={styles.hidden}
-                  onChange={(e) => handleImageChange(e)}
+                  onChange={(e: any) => onInputChange(e, 'profile')}
                   ref={inputRef}
                 />
                 {uploadIcon}
