@@ -64,6 +64,7 @@ export type ModalType =
   | 'add-event'
   | 'SimpleOnboarding'
   | 'product-category'
+  | 'Hobby-about-edit'
 
 
   interface ModalState {

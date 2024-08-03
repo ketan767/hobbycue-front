@@ -17,6 +17,7 @@ import { updateHobbyMenuExpandAll } from '@/redux/slices/site'
 import { getAllUserDetail } from '@/services/user.service'
 import EditIcon from '@/assets/svg/edit-colored.svg'
 import { useMediaQuery } from '@mui/material'
+import { openModal } from '@/redux/slices/modal'
 
 type Props = { data: { hobbyData: any } }
 
@@ -169,17 +170,19 @@ const HobbyDetail: React.FC<Props> = (props) => {
                   className={styles['pencil-edit']}
                   src={EditIcon}
                   alt="edit"
-                  onClick={() => router.push(`/admin/hobby/edit/${data?.slug}`)}
+                  onClick={() =>
+                    dispatch(
+                      openModal({ type: 'Hobby-about-edit', closable: true }),
+                    )
+                  }
                 />
               )}
             </h4>
             <div
-            // className={`${styles['display-desktop']}${
-            //   showAbout ? ' ' + styles['display-mobile'] : ''
-            // }`}
-            >
-              {data?.description}
-            </div>
+              dangerouslySetInnerHTML={{
+                __html: data?.description,
+              }}
+            ></div>
           </PageContentBox>
 
           {/* Keywords Section */}

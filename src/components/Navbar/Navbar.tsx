@@ -556,7 +556,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                   priority
                 />
               )}
-              {!isLoggedIn ? (
+              {!isLoggedIn && data.search.value.length === 0 ? (
                 <Image
                   src={LogoFull}
                   alt="HobbyCue Logo"
@@ -567,13 +567,15 @@ export const Navbar: React.FC<Props> = ({}) => {
 
                   priority
                 />
-              ) : (
+              ) : !isLoggedIn && data.search.value.length > 0 ? (
                 <Image
                   src={LogoSmall}
                   alt="HobbyCue Logo"
                   className={styles['logo-small-responsive']}
                   priority
                 />
+              ) : (
+                ''
               )}
             </Link>
 
