@@ -146,7 +146,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     case 'people':
       typeId = '1'
       break
-    case 'person':
+    case 'place':
       typeId = '2'
       break
     case 'program':
