@@ -29,8 +29,8 @@ const SearchPageFilter = () => {
   const [activeFilter, setActiveFilter] = useState('all')
   const showAll = useSelector((state: any) => state.search.showAll)
   const showAllUsers = useSelector((state: any) => state.search.showAllUsers)
-  const showAllhobbies = useSelector(
-    (state: any) => state.search.showAllhobbies,
+  const showAllHobbies = useSelector(
+    (state: any) => state.search.showAllHobbies,
   )
   const showAllPeople = useSelector((state: any) => state.search.showAllPeople)
   const showAllPlace = useSelector((state: any) => state.search.showAllPlace)
@@ -45,7 +45,7 @@ const SearchPageFilter = () => {
       setActiveFilter('all')
     } else if (showAllUsers === true) {
       setActiveFilter('users')
-    } else if (showAllhobbies === true) {
+    } else if (showAllHobbies === true) {
       setActiveFilter('hobby')
     } else if (showAllPeople === true) {
       setActiveFilter('people')
@@ -67,7 +67,7 @@ const SearchPageFilter = () => {
     showAllPlace,
     showAllProducts,
     showAllUsers,
-    showAllhobbies,
+    showAllHobbies,
     showAllBlogs,
     showAllPosts,
   ])

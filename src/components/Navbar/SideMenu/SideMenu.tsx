@@ -31,9 +31,11 @@ import {
   setTypeResultOne,
   setTypeResultThree,
   setTypeResultTwo,
+  showAllBlogsTrue,
   showAllEventTrue,
   showAllPeopleTrue,
   showAllPlaceTrue,
+  showAllPostsTrue,
   showAllProductsTrue,
 } from '@/redux/slices/search'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
@@ -64,6 +66,9 @@ const exploreOptions = [
   },
   {
     text: 'Products - Store',
+  },
+  {
+    text: 'Perspectives - Blogs',
   },
   {
     text: 'Posts - Community',
@@ -134,11 +139,16 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
       case 'Perspectives - Blogs':
         dispatch(resetSearch())
         await ExploreBlogs()
+        dispatch(showAllBlogsTrue())
+        router.push('/search')
         handleClose()
         break
       case 'Posts - Community':
         dispatch(resetSearch())
         await ExplorePosts()
+        dispatch(showAllPostsTrue())
+        router.push('/search')
+
         handleClose()
         break
       default:
@@ -184,7 +194,6 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
     )
 
     const EventPages = EventRes?.data.data?.listings
-    console.warn('EventPagesssssssssssssss', EventPages)
 
     dispatch(
       setTypeResultThree({

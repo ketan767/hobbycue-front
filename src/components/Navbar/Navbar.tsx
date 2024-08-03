@@ -405,6 +405,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   }
 
   const ExplorePosts = async () => {
+    dispatch(setShowPageLoader(true))
     const { res: PostRes, err: PostErr } = await getAllPosts(
       `sort=-createdAt&populate=_author,_hobby`,
     )
@@ -418,6 +419,7 @@ export const Navbar: React.FC<Props> = ({}) => {
         success: true,
       }),
     )
+    dispatch(setShowPageLoader(false))
   }
 
   const ExploreBlogs = async () => {
@@ -556,7 +558,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                   priority
                 />
               )}
-              {!isLoggedIn && data.search.value.length === 0 ? (
+              {!isLoggedIn && !data.search.value ? (
                 <Image
                   src={LogoFull}
                   alt="HobbyCue Logo"
@@ -568,6 +570,20 @@ export const Navbar: React.FC<Props> = ({}) => {
                   priority
                 />
               ) : !isLoggedIn && data.search.value.length > 0 ? (
+                <Image
+                  src={LogoSmall}
+                  alt="HobbyCue Logo"
+                  className={styles['logo-small-responsive']}
+                  priority
+                />
+              ) : isLoggedIn && !data.search.value ? (
+                <Image
+                  src={LogoSmall}
+                  alt="HobbyCue Logo"
+                  className={styles['logo-small-responsive']}
+                  priority
+                />
+              ) : isLoggedIn && data.search.value ? (
                 <Image
                   src={LogoSmall}
                   alt="HobbyCue Logo"

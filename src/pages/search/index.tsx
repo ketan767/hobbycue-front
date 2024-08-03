@@ -827,9 +827,10 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           {' | ' + page?._hobby.display || '\u00a0'}{' '}
                           {' | ' + page.visibility}
                         </div>
-                        <div className={styles.userLocation}>
-                          {page?.content}
-                        </div>
+                        <div
+                          dangerouslySetInnerHTML={{ __html: page?.content }}
+                          className={styles.userLocation}
+                        ></div>
                       </div>
                     </div>
                   ),
