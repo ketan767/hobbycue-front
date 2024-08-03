@@ -35,19 +35,13 @@ const AddListing: React.FC<Props> = (props) => {
 
   const handleClick = async (type: ListingPages) => {
     if (type === 4) {
-      dispatch(openModal({ type: 'product-category', closable: true }))
-      // const { res, err } = await createNewListing({ type: 4 })
-      // const link = res?.data?.data?.listing?.page_url || null
-      // if (link === null || err) {
-      //   setSnackbar({
-      //     type: 'warning',
-      //     display: true,
-      //     message: 'Some error occurred during product creation',
-      //   })
-      // } else {
-      //   router.push(`page/${link}`)
-      // }
-      return
+      if (type === 4) {
+        showFeatureUnderDevelopment()
+        return
+      }
+      //   dispatch(openModal({ type: 'product-category', closable: true }))
+
+      //   return
     }
 
     if (isLoggedIn && user.is_onboarded) {
