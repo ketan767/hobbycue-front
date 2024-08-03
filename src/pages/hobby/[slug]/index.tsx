@@ -159,7 +159,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
         expandAll={expandAll}
         setExpandAll={handleExpandAll}
       >
-        <main className={expandAll ? '' : styles['display-none']}>
+        <main>
           {/* About Section */}
           {/* <PageContentBox showEditButton={false} setDisplayData={setShowAbout}> */}
           <PageContentBox>

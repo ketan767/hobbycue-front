@@ -40,7 +40,7 @@ import {
 } from '@/redux/slices/search'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { useMediaQuery } from '@mui/material'
-import { updateListingModalData } from '@/redux/slices/site'
+import { setShowPageLoader, updateListingModalData } from '@/redux/slices/site'
 import addIcon from '@/assets/svg/add.svg'
 import { setFilters } from '@/redux/slices/post'
 import { getListingPages } from '@/services/listing.service'
@@ -221,6 +221,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
   }
 
   const ExplorePosts = async () => {
+    dispatch(setShowPageLoader(true))
     const { res: PostRes, err: PostErr } = await getAllPosts(
       `sort=-createdAt&populate=_author,_hobby`,
     )
@@ -234,6 +235,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         success: true,
       }),
     )
+    dispatch(setShowPageLoader(false))
   }
 
   const ExploreBlogs = async () => {

@@ -30,6 +30,12 @@ import {
   setBlogsSearchResult,
   showAllBlogsTrue,
   showAllPostsTrue,
+  toggleShowAllBlogs,
+  toggleShowAllPosts,
+  toggleShowAllProducts,
+  toggleShowAllEvent,
+  toggleShowAllPlace,
+  toggleShowAllPeople,
 } from '@/redux/slices/search'
 import LogoFull from '@/assets/image/logo-full.svg'
 import LogoSmall from '@/assets/image/logo-small.png'
@@ -713,7 +719,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                             await ExplorePeople()
                             setShowDropdown(null)
 
-                            dispatch(showAllPeopleTrue())
+                            dispatch(toggleShowAllPeople())
                             dispatch(setExplore(true))
 
                             router.push('/search')
@@ -747,7 +753,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                             await ExplorePlaces()
                             setShowDropdown(null)
 
-                            dispatch(showAllPlaceTrue())
+                            dispatch(toggleShowAllPlace())
                             dispatch(setExplore(true))
                             router.push('/search')
                           }}
@@ -774,7 +780,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                             await ExploreEvents()
                             setShowDropdown(null)
 
-                            dispatch(showAllEventTrue())
+                            dispatch(toggleShowAllEvent())
                             dispatch(setExplore(true))
                             router.push('/search')
                           }}
@@ -802,7 +808,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                             await ExploreProducts()
 
                             setShowDropdown(null)
-                            dispatch(showAllProductsTrue())
+                            dispatch(toggleShowAllProducts())
                             dispatch(setExplore(true))
                             router.push('/search')
                           }}
@@ -828,7 +834,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                             dispatch(resetSearch())
                             await ExploreBlogs()
                             setShowDropdown(null)
-                            dispatch(showAllBlogsTrue())
+                            dispatch(toggleShowAllBlogs())
                             dispatch(setExplore(true))
                             router.push('/search')
                           }}
@@ -855,7 +861,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                             dispatch(resetSearch())
                             await ExplorePosts()
                             setShowDropdown(null)
-                            dispatch(showAllPostsTrue())
+                            dispatch(toggleShowAllPosts())
                             dispatch(setExplore(true))
                             router.push('/search')
                           }}

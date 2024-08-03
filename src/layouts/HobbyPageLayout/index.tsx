@@ -159,6 +159,9 @@ const HobbyPageLayout: React.FC<Props> = ({
           alt=""
         />
       </div>
+      <div className={`${styles['display-mobile']}`}>
+        <HobbyNavigationLinks activeTab={activeTab} />
+      </div>
 
       <PageGridLayout column={!hideLastColumn ? 3 : 2}>
         <aside
@@ -166,10 +169,6 @@ const HobbyPageLayout: React.FC<Props> = ({
             expandAll ? '' : styles['display-none']
           }`}
         >
-          <div className={`${styles['display-mobile']}`}>
-            <HobbyNavigationLinks activeTab={activeTab} />
-          </div>
-
           <PageContentBox
             showEditButton={false}
             initialShowDropdown

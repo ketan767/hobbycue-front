@@ -828,7 +828,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
                           {' | ' + page.visibility}
                         </div>
                         <div
-                          dangerouslySetInnerHTML={{ __html: page?.content }}
+                          dangerouslySetInnerHTML={{
+                            __html: page?.content.replace(/<img[^>]*>/g, ''),
+                          }}
                           className={styles.userLocation}
                         ></div>
                       </div>
