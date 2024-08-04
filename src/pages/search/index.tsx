@@ -820,7 +820,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
                       </div>
                       <div className={styles.userDetails}>
                         <div className={styles.userName}>
-                          {page?._author?.full_name}
+                          {page?.author_type === 'Listing'
+                            ? page?._author?.title
+                            : page?._author?.full_name}
                         </div>
                         <div className={styles.userTagline}>
                           {convertDateToString(page?.createdAt) || '\u00a0'}{' '}
