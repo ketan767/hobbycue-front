@@ -45,7 +45,7 @@ const ListingHome: React.FC<Props> = (props) => {
   const isMobile = useMediaQuery('(max-width:1100px)')
   useEffect(() => {
     if (isMobile) {
-      setExpandAll(false)
+      setExpandAll(true)
     }
   }, [isMobile])
   useEffect(() => {
