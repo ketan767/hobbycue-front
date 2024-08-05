@@ -184,7 +184,9 @@ const CommunityLayout: React.FC<Props> = ({
 
       // Fetch posts for the newly selected hobby
       const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
-      params.append('_hobby', hobbyId)
+      if (hobbyId !== 'all hobbies' || hobbyId !== 'my hobbies') {
+        params.append('_hobby', hobbyId)
+      }
       if (genreId !== 'undefined' && genreId !== '') {
         params.append('_genre', genreId)
       }
@@ -242,6 +244,17 @@ const CommunityLayout: React.FC<Props> = ({
       return 'default-people-listing-icon'
     }
   }
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
+  }
+  useEffect(() => {
+    scrollToTop()
+  }, [selectedHobby])
+
   const fetchPosts = async (page = 1) => {
     if (showPageLoader) {
       dispatch(setShowPageLoader(false))
@@ -268,18 +281,20 @@ const CommunityLayout: React.FC<Props> = ({
     ) {
       params.append('_genre', selectedGenre)
     }
-    if (selectedHobby !== '' && selectedHobby !== 'my hobbies') {
-      params.append('_hobby', selectedHobby)
-    }
     if (selectedHobby === 'my hobbies') {
       activeProfile?.data?._hobbies.forEach((item: any) => {
         params.append('_hobby', item?.hobby?._id)
       })
-    }
-    if (selectedHobby === 'all hobbies') {
+    } else if (selectedHobby === 'all hobbies') {
       params = new URLSearchParams(
         `page=${page}&limit=10&populate=_author,_genre,_hobby`,
       )
+    } else if (
+      selectedHobby !== '' &&
+      selectedHobby !== 'all hobbies' &&
+      selectedHobby !== 'my hobbies'
+    ) {
+      params.append('_hobby', selectedHobby)
     } else {
       activeProfile?.data?._hobbies.forEach((item: any) => {
         params.append('_hobby', item?.hobby?._id)
