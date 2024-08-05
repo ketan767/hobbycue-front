@@ -848,6 +848,12 @@ export const Navbar: React.FC<Props> = ({}) => {
                         <a
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
+                            if (!isLoggedIn) {
+                              dispatch(
+                                openModal({ type: 'auth', closable: true }),
+                              )
+                              return
+                            }
                             e.preventDefault()
 
                             setData((prevData) => ({

@@ -797,7 +797,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         className={
                           page?.author_type === 'User'
                             ? styles.userAvatar
-                            : styles.peopleAvatar
+                            : styles.peopleAvatarImage
                         }
                       >
                         {page?._author?.profile_image ? (
@@ -809,12 +809,22 @@ const MainContent: React.FC<SearchResultsProps> = ({
                             className={
                               page?.author_type === 'User'
                                 ? styles.avatarImage
-                                : styles.peopleAvatar
+                                : styles.peopleavatarImage
                             }
                           />
                         ) : (
                           <div
-                            className={`${styles['people-img']} default-product-listing-icon`}
+                            className={
+                              page?._author?.type == 1
+                                ? `${styles['people-img']} default-people-listing-icon`
+                                : page?._author?.type == 2
+                                ? `${styles['people-img']} default-place-listing-icon`
+                                : page?._author?.type == 3
+                                ? `${styles['people-img']} default-program-listing-icon`
+                                : page?._author?.type == 4
+                                ? `${styles['people-img']} default-product-listing-icon`
+                                : `${styles.avatarImage} default-user-icon`
+                            }
                           ></div>
                         )}
                       </div>

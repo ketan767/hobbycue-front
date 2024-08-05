@@ -144,6 +144,11 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         handleClose()
         break
       case 'Posts - Community':
+        if (!isLoggedIn) {
+          dispatch(openModal({ type: 'auth', closable: true }))
+          handleClose()
+          return
+        }
         dispatch(resetSearch())
         await ExplorePosts()
         dispatch(showAllPostsTrue())

@@ -103,7 +103,7 @@ const CommunityLayout: React.FC<Props> = ({
   })
   const [locations, setLocations] = useState([])
   const [email, setEmail] = useState('')
-  const [selectedHobby, setSelectedHobby] = useState('')
+  const [selectedHobby, setSelectedHobby] = useState('all hobbies')
   const [selectedGenre, setSelectedGenre] = useState<string | undefined>('')
   const [selectedLocation, setSelectedLocation] = useState('')
 
@@ -525,10 +525,11 @@ const CommunityLayout: React.FC<Props> = ({
       }
     }
   }
+  console.warn('filterrr hobby', filters.hobby)
 
   useEffect(() => {
     setSelectedGenre(filters.genre !== '' ? filters.genre : undefined)
-    setSelectedHobby(filters.hobby)
+    setSelectedHobby(!filters.hobby ? 'all hobbies' : filters.hobby)
     setSelectedLocation(filters.location ?? '')
   }, [filters.genre, filters.hobby, filters.location])
 
@@ -703,10 +704,12 @@ const CommunityLayout: React.FC<Props> = ({
         setSelectedLocation('All Locations')
       }
     }
-    if (filters.hobby === '' && filters.genre === '') {
-      setSelectedHobby('all hobbies')
-      setSelectedGenre('')
-    }
+  }, [activeProfile])
+  console.warn('activveprofileeeee', activeProfile.type)
+
+  useEffect(() => {
+    setSelectedHobby('all hobbies')
+    setSelectedGenre('')
   }, [activeProfile])
 
   const updateFilterLocation = (val: any) => {
