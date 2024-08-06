@@ -122,21 +122,22 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   context,
 ) => {
   const { query } = context
+
   const { page_url, type } = query
 
   let typeId
   switch (type) {
     case 'people':
-      typeId = '1'
+      typeId = 1
       break
     case 'place':
-      typeId = '2'
+      typeId = 2
       break
     case 'program':
-      typeId = '3'
+      typeId = 3
       break
     case 'product':
-      typeId = '4'
+      typeId = 4
       break
     default:
       return { notFound: true }
@@ -147,6 +148,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   )
 
   if (res?.data.success && res.data.data.no_of_listings === 0) {
+    return {
+      notFound: true,
+    }
+  }
+
+  if (res?.data.data.listings[0]?.type !== typeId) {
     return {
       notFound: true,
     }

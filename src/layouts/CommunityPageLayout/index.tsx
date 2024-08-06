@@ -103,7 +103,7 @@ const CommunityLayout: React.FC<Props> = ({
   })
   const [locations, setLocations] = useState([])
   const [email, setEmail] = useState('')
-  const [selectedHobby, setSelectedHobby] = useState('all hobbies')
+  const [selectedHobby, setSelectedHobby] = useState('All Hobbies')
   const [selectedGenre, setSelectedGenre] = useState<string | undefined>('')
   const [selectedLocation, setSelectedLocation] = useState('')
 
@@ -184,7 +184,7 @@ const CommunityLayout: React.FC<Props> = ({
 
       // Fetch posts for the newly selected hobby
       const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
-      if (hobbyId !== 'all hobbies' || hobbyId !== 'my hobbies') {
+      if (hobbyId !== 'All Hobbies' || hobbyId !== 'My Hobbies') {
         params.append('_hobby', hobbyId)
       }
       if (genreId !== 'undefined' && genreId !== '') {
@@ -281,18 +281,18 @@ const CommunityLayout: React.FC<Props> = ({
     ) {
       params.append('_genre', selectedGenre)
     }
-    if (selectedHobby === 'my hobbies') {
+    if (selectedHobby === 'My Hobbies') {
       activeProfile?.data?._hobbies.forEach((item: any) => {
         params.append('_hobby', item?.hobby?._id)
       })
-    } else if (selectedHobby === 'all hobbies') {
+    } else if (selectedHobby === 'All Hobbies') {
       params = new URLSearchParams(
         `page=${page}&limit=10&populate=_author,_genre,_hobby`,
       )
     } else if (
       selectedHobby !== '' &&
-      selectedHobby !== 'all hobbies' &&
-      selectedHobby !== 'my hobbies'
+      selectedHobby !== 'All Hobbies' &&
+      selectedHobby !== 'My Hobbies'
     ) {
       params.append('_hobby', selectedHobby)
     } else {
@@ -529,7 +529,7 @@ const CommunityLayout: React.FC<Props> = ({
 
   useEffect(() => {
     setSelectedGenre(filters.genre !== '' ? filters.genre : undefined)
-    setSelectedHobby(!filters.hobby ? 'all hobbies' : filters.hobby)
+    setSelectedHobby(!filters.hobby ? 'All Hobbies' : filters.hobby)
     setSelectedLocation(filters.location ?? '')
   }, [filters.genre, filters.hobby, filters.location])
 
@@ -708,7 +708,7 @@ const CommunityLayout: React.FC<Props> = ({
   console.warn('activveprofileeeee', activeProfile.type)
 
   useEffect(() => {
-    setSelectedHobby('all hobbies')
+    setSelectedHobby('All Hobbies')
     setSelectedGenre('')
   }, [activeProfile])
 
@@ -904,17 +904,17 @@ const CommunityLayout: React.FC<Props> = ({
               <section>
                 <ul>
                   <li
-                    onClick={() => handleHobbyClick('all hobbies', null)}
+                    onClick={() => handleHobbyClick('All Hobbies', null)}
                     className={
-                      selectedHobby === 'all hobbies' ? styles.selectedItem : ''
+                      selectedHobby === 'All Hobbies' ? styles.selectedItem : ''
                     }
                   >
                     All Hobbies
                   </li>
                   <li
-                    onClick={() => handleHobbyClick('my hobbies', null)}
+                    onClick={() => handleHobbyClick('My Hobbies', null)}
                     className={
-                      selectedHobby === 'my hobbies' && selectedGenre === null
+                      selectedHobby === 'My Hobbies' && selectedGenre === null
                         ? styles.selectedItem
                         : ''
                     }
@@ -1181,12 +1181,13 @@ const CommunityLayout: React.FC<Props> = ({
                       value={
                         hobbiesDropDownArr.find(
                           (obj: any) => obj?.value === selectedHobby,
-                        )?.display ?? 'All Hobbies'
+                        )?.display ?? selectedHobby
                       }
                       variant={selectedHobby === '' ? 'secondary' : 'primary'}
                     >
                       {[
-                        { display: 'All Hobbies', value: '' },
+                        { display: 'All Hobbies', value: 'All Hobbies' },
+                        { display: 'My Hobbies', value: 'My Hobbies' },
                         ...hobbiesDropDownArr,
                         {
                           display: 'Edit Hobbies',
