@@ -237,12 +237,10 @@ line-height: 16px; /* 114.286% */
 }
 
 .imgContainer {
-
+  width: 100%;
   display: flex;
   align-items: center;
   height: 210%;
-  column-gap: 12px;
-
 }
 .imgContainer>img {
   height: 100%;

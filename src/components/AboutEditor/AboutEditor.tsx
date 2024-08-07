@@ -1,7 +1,21 @@
+{/*
 import React, { useCallback, useRef, useEffect, FC } from 'react'
-import ReactQuill from 'react-quill'
+import ReactQuill, { Quill } from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import styles from './style.module.css'
+
+// Register a custom link format with a specific color
+const Link = Quill.import('formats/link')
+Link.sanitize = function (url: string) {
+  // Sanitize the URL if needed
+  return url
+}
+
+const CustomLink = Quill.import('blots/inline')
+CustomLink.tagName = 'A'
+CustomLink.blotName = 'link'
+CustomLink.className = 'custom-link'
+Quill.register(CustomLink, true)
 
 interface Props {
   value: string
@@ -37,6 +51,7 @@ const AboutEditor: FC<Props> = ({
         matches.forEach((url) => {
           const index = text.indexOf(url)
           quillEditor.formatText(index, url.length, 'link', url)
+          quillEditor.formatText(index, url.length, 'color', '#8064A2')
         })
       }
     }
@@ -87,8 +102,10 @@ const AboutEditor: FC<Props> = ({
 }
 
 export default AboutEditor
+*/}
 
-{/*import React, { useCallback, useRef, useState, useEffect, Ref } from 'react'
+
+import React, { useCallback, useRef, useState, useEffect, Ref } from 'react'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 // import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline'
@@ -179,4 +196,3 @@ const AboutEditor: React.FC<Props> = ({
 }
 
 export default AboutEditor
-*/}

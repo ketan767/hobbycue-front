@@ -11,25 +11,5 @@
 .quill .ql-container{
    border-top: 1px solid #ccc;
 }
-.postUrl{
-   color: #8064A2 !important;
-   word-break: break-all; 
-   white-space: normal;
- }
- .about-quill-container .ql-editor a {
-   color: #8064A2 !important; /* Replace this with your desired hyperlink color */
-   text-decoration: underline;
- }
- .custom-link a {
-   color: #1e90ff !important; /* Replace with your desired color */
-   text-decoration: underline !important;
- }
- .quill .ql-editor a {
-   color: #1a0dab; /* Change this color to your desired link color */
-   text-decoration: none; /* Optional: Remove underline from links */
- }
- 
- .quill .ql-editor a:hover {
-   text-decoration: underline; /* Optional: Add underline on hover */
- }
-  
+
+
