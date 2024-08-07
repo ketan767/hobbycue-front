@@ -2,8 +2,14 @@
     width: 100%;
     max-width: 100%;
 }
+.hobby-search{
+    margin-bottom: 24px;
+}
 .hobby-search:hover fieldset{
     border-width: 1px;
     border-style: solid;
     border-color: #8064a2 !important;
+}
+.divider{
+ color: azure;
 }

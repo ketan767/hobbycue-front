@@ -439,10 +439,24 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
 
             <div className={styles['filter-wrapper']}>
               <h2>Hobbies</h2>
-              <header>
-                <h4 className={styles['heading']}>Filter</h4>
-                {/* <button onClick={handleFilter}>Apply</button> */}
-              </header>
+              <div className={styles['select-filter']}>
+                <TextField
+                  className={hobbyStyles['hobby-search']}
+                  size="small"
+                  placeholder="Type and select..."
+                  id="outlined-basic"
+                  variant="outlined"
+                  value={hobbyInputValue}
+                  onFocus={() => setShowHobbyDropdown(true)}
+                  onBlur={() =>
+                    setTimeout(() => {
+                      setShowHobbyDropdown(false)
+                    }, 300)
+                  }
+                  onChange={handleHobbyInputChange}
+                />
+              </div>
+        <hr className={hobbyStyles['divider']}/>
 
               <div className={styles['select-filter']}>
                 <p>Category</p>
@@ -515,24 +529,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                   </Select>
                 </FormControl>
               </div>
-              <div className={styles['select-filter']}>
-                <p>Hobby</p>
-                <TextField
-                  className={hobbyStyles['hobby-search']}
-                  size="small"
-                  placeholder="Select Hobby"
-                  id="outlined-basic"
-                  variant="outlined"
-                  value={hobbyInputValue}
-                  onFocus={() => setShowHobbyDropdown(true)}
-                  onBlur={() =>
-                    setTimeout(() => {
-                      setShowHobbyDropdown(false)
-                    }, 300)
-                  }
-                  onChange={handleHobbyInputChange}
-                />
-              </div>
+
               {showHobbyDropdown && hobbyDropdownList.length !== 0 && (
                 <div className={styles['dropdown']}>
                   {hobbyDropdownList.map((hobby) => {
