@@ -465,6 +465,7 @@ line-height: 20px;
     min-height: calc(100vh - 270px + 170px);
   }
   .expand-all {
+    color: #8064a2;
     display: flex;
     flex-direction: row;
     align-items: center;

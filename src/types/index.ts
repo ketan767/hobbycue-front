@@ -26,3 +26,4 @@ type LocalStorageActiveProfile = {
 }
 
 type CommunityPageTabs = 'posts' | 'links' | 'pages' | 'store' | 'blogs'
+

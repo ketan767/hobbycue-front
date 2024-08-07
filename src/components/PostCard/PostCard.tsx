@@ -192,7 +192,6 @@ const PostCard: React.FC<Props> = (props) => {
       if (res?.data?.data?.comments && res?.data?.data?.comments?.length > 0) {
         setShowComments(props.currentSection === 'links' ? false : true)
       }
-      console.warn('commentssss', res.data.data)
     }
     if (props.currentSection !== 'links') {
       fetchCommentsInUseeffect()

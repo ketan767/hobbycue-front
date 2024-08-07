@@ -103,7 +103,7 @@ const CommunityLayout: React.FC<Props> = ({
   })
   const [locations, setLocations] = useState([])
   const [email, setEmail] = useState('')
-  const [selectedHobby, setSelectedHobby] = useState('')
+  const [selectedHobby, setSelectedHobby] = useState('All Hobbies')
   const [selectedGenre, setSelectedGenre] = useState<string | undefined>('')
   const [selectedLocation, setSelectedLocation] = useState('')
 
@@ -169,6 +169,7 @@ const CommunityLayout: React.FC<Props> = ({
 
   const handleHobbyClick = async (hobbyId: any, genreId: any) => {
     console.log('hobbyIDDDD', hobbyId, genreId)
+
     if (selectedHobby !== hobbyId || selectedGenre !== genreId) {
       dispatch(
         setFilters({
@@ -183,7 +184,9 @@ const CommunityLayout: React.FC<Props> = ({
 
       // Fetch posts for the newly selected hobby
       const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
-      params.append('_hobby', hobbyId)
+      if (hobbyId !== 'All Hobbies' || hobbyId !== 'My Hobbies') {
+        params.append('_hobby', hobbyId)
+      }
       if (genreId !== 'undefined' && genreId !== '') {
         params.append('_genre', genreId)
       }
@@ -241,6 +244,17 @@ const CommunityLayout: React.FC<Props> = ({
       return 'default-people-listing-icon'
     }
   }
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
+  }
+  useEffect(() => {
+    scrollToTop()
+  }, [selectedHobby])
+
   const fetchPosts = async (page = 1) => {
     if (showPageLoader) {
       dispatch(setShowPageLoader(false))
@@ -267,7 +281,19 @@ const CommunityLayout: React.FC<Props> = ({
     ) {
       params.append('_genre', selectedGenre)
     }
-    if (selectedHobby !== '') {
+    if (selectedHobby === 'My Hobbies') {
+      activeProfile?.data?._hobbies.forEach((item: any) => {
+        params.append('_hobby', item?.hobby?._id)
+      })
+    } else if (selectedHobby === 'All Hobbies') {
+      params = new URLSearchParams(
+        `page=${page}&limit=10&populate=_author,_genre,_hobby`,
+      )
+    } else if (
+      selectedHobby !== '' &&
+      selectedHobby !== 'All Hobbies' &&
+      selectedHobby !== 'My Hobbies'
+    ) {
       params.append('_hobby', selectedHobby)
     } else {
       activeProfile?.data?._hobbies.forEach((item: any) => {
@@ -481,7 +507,7 @@ const CommunityLayout: React.FC<Props> = ({
       fetchHobby()
     }
   }, [selectedHobby, selectedLocation])
-
+  console.warn('selectedhobbyyy', selectedHobby)
   const fetchHobby = async () => {
     // const query = `fields=display,sub_category&show=true&search=${selectedHobby}`
     const params = new URLSearchParams()
@@ -499,10 +525,11 @@ const CommunityLayout: React.FC<Props> = ({
       }
     }
   }
+  console.warn('filterrr hobby', filters.hobby)
 
   useEffect(() => {
     setSelectedGenre(filters.genre !== '' ? filters.genre : undefined)
-    setSelectedHobby(filters.hobby)
+    setSelectedHobby(!filters.hobby ? 'All Hobbies' : filters.hobby)
     setSelectedLocation(filters.location ?? '')
   }, [filters.genre, filters.hobby, filters.location])
 
@@ -677,10 +704,12 @@ const CommunityLayout: React.FC<Props> = ({
         setSelectedLocation('All Locations')
       }
     }
-    if (filters.hobby === '' && filters.genre === '') {
-      setSelectedHobby('')
-      setSelectedGenre('')
-    }
+  }, [activeProfile])
+  console.warn('activveprofileeeee', activeProfile.type)
+
+  useEffect(() => {
+    setSelectedHobby('All Hobbies')
+    setSelectedGenre('')
   }, [activeProfile])
 
   const updateFilterLocation = (val: any) => {
@@ -874,6 +903,24 @@ const CommunityLayout: React.FC<Props> = ({
               {/* <span className={styles['divider']}></span> */}
               <section>
                 <ul>
+                  <li
+                    onClick={() => handleHobbyClick('All Hobbies', null)}
+                    className={
+                      selectedHobby === 'All Hobbies' ? styles.selectedItem : ''
+                    }
+                  >
+                    All Hobbies
+                  </li>
+                  <li
+                    onClick={() => handleHobbyClick('My Hobbies', null)}
+                    className={
+                      selectedHobby === 'My Hobbies' && selectedGenre === null
+                        ? styles.selectedItem
+                        : ''
+                    }
+                  >
+                    My Hobbies
+                  </li>
                   {activeProfile.data?._hobbies
                     ?.slice(
                       0,
@@ -895,7 +942,7 @@ const CommunityLayout: React.FC<Props> = ({
                               : ''
                           }
                         >
-                          {hobby?.hobby?.display}
+                          {hobby?.hobby?.display}{' '}
                           {hobby?.genre && ` - ${hobby?.genre?.display} `}
                         </li>
                       )
@@ -1134,12 +1181,13 @@ const CommunityLayout: React.FC<Props> = ({
                       value={
                         hobbiesDropDownArr.find(
                           (obj: any) => obj?.value === selectedHobby,
-                        )?.display ?? 'All Hobbies'
+                        )?.display ?? selectedHobby
                       }
                       variant={selectedHobby === '' ? 'secondary' : 'primary'}
                     >
                       {[
-                        { display: 'All Hobbies', value: '' },
+                        { display: 'All Hobbies', value: 'All Hobbies' },
+                        { display: 'My Hobbies', value: 'My Hobbies' },
                         ...hobbiesDropDownArr,
                         {
                           display: 'Edit Hobbies',

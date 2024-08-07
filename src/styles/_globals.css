@@ -275,7 +275,7 @@ select:-webkit-autofill {
 }
 
 .ql-editor.ql-blank {
-  min-height: 17rem;
+  min-height: 15rem;
 }
 .quill > .ql-container > .ql-editor.ql-blank::before {
   font-family: 'Poppins';

@@ -6,6 +6,7 @@ import { dateFormat, dateFormatwithYear } from '@/utils'
 import Image from 'next/image'
 import defaultUserImage from '@/assets/svg/default-images/default-user-icon.svg'
 import Link from 'next/link'
+import Head from 'next/head'
 
 type Props = {
   data: {
@@ -19,6 +20,19 @@ const BlogPage: React.FC<Props> = ({ data }) => {
   console.warn('blogdataaaaaaaa', data)
   return (
     <>
+      <Head>
+        <meta property="og:image" content={`${data?.blog_url?.cover_pic}`} />
+        <meta
+          property="og:image:secure_url"
+          content={`${data?.blog_url?.cover_pic}`}
+        />
+        <meta
+          property="og:description"
+          content={`${data?.blog_url?.description ?? ''}`}
+        />
+        <meta property="og:image:alt" content="Profile picture" />
+        <title>{`${data?.blog_url?.title} | HobbyCue`}</title>
+      </Head>
       <div className={styles['iframe-container']}>
         <iframe
           className={styles['iframe']}

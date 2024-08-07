@@ -3,11 +3,13 @@ import Image from 'next/image'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   showAllTrue,
+  toggleShowAllBlogs,
   // toggleShowAll,
   toggleShowAllEvent,
   toggleShowAllHobbies,
   toggleShowAllPeople,
   toggleShowAllPlace,
+  toggleShowAllPosts,
   toggleShowAllProducts,
   toggleShowAllUsers,
 } from '@/redux/slices/search'
@@ -18,6 +20,8 @@ import Hobby from '../../assets/svg/Search/Hobbies.svg'
 import Place from '../../assets/svg/Search/Place.svg'
 import Program from '../../assets/svg/Search/Program.svg'
 import Product from '../../assets/svg/Search/Product.svg'
+import Blogs from '../../assets/svg/Search/blogs.svg'
+import Posts from '../../assets/svg/Search/Posts.svg'
 import styles from './styles.module.css'
 
 const SearchPageFilter = () => {
@@ -25,8 +29,8 @@ const SearchPageFilter = () => {
   const [activeFilter, setActiveFilter] = useState('all')
   const showAll = useSelector((state: any) => state.search.showAll)
   const showAllUsers = useSelector((state: any) => state.search.showAllUsers)
-  const showAllhobbies = useSelector(
-    (state: any) => state.search.showAllhobbies,
+  const showAllHobbies = useSelector(
+    (state: any) => state.search.showAllHobbies,
   )
   const showAllPeople = useSelector((state: any) => state.search.showAllPeople)
   const showAllPlace = useSelector((state: any) => state.search.showAllPlace)
@@ -34,29 +38,39 @@ const SearchPageFilter = () => {
   const showAllProducts = useSelector(
     (state: any) => state.search.showAllProducts,
   )
+  const showAllPosts = useSelector((state: any) => state.search.showAllPosts)
+  const showAllBlogs = useSelector((state: any) => state.search.showAllBlogs)
   useEffect(() => {
-    if (showAll===true) {
+    if (showAll === true) {
       setActiveFilter('all')
-    }
-    else if (showAllUsers===true) {
+    } else if (showAllUsers === true) {
       setActiveFilter('users')
-    }
-    else if (showAllhobbies===true) {
+    } else if (showAllHobbies === true) {
       setActiveFilter('hobby')
-    }
-    else if (showAllPeople===true) {
+    } else if (showAllPeople === true) {
       setActiveFilter('people')
-    }
-    else if (showAllPlace===true) {
+    } else if (showAllPlace === true) {
       setActiveFilter('places')
-    }
-    else if (showAllEvent===true) {
+    } else if (showAllEvent === true) {
       setActiveFilter('events')
-    }
-    else if (showAllProducts===true) {
+    } else if (showAllProducts === true) {
       setActiveFilter('products')
+    } else if (showAllBlogs === true) {
+      setActiveFilter('blogs')
+    } else if (showAllPosts === true) {
+      setActiveFilter('posts')
     }
-  }, [showAll, showAllEvent, showAllPeople, showAllPlace, showAllProducts, showAllUsers, showAllhobbies])
+  }, [
+    showAll,
+    showAllEvent,
+    showAllPeople,
+    showAllPlace,
+    showAllProducts,
+    showAllUsers,
+    showAllHobbies,
+    showAllBlogs,
+    showAllPosts,
+  ])
 
   const handleFilterClick = (filterType: any) => {
     if (activeFilter === filterType) {
@@ -85,6 +99,12 @@ const SearchPageFilter = () => {
           break
         case 'products':
           dispatch(toggleShowAllProducts())
+          break
+        case 'blogs':
+          dispatch(toggleShowAllBlogs())
+          break
+        case 'posts':
+          dispatch(toggleShowAllPosts())
           break
         default:
           break
@@ -160,6 +180,20 @@ const SearchPageFilter = () => {
           >
             <Image src={Product} alt="Product" />
             Products
+          </div>
+          <div
+            className={getFilterItemClass('posts')}
+            onClick={() => handleFilterClick('posts')}
+          >
+            <Image src={Posts} alt="Posts" />
+            Posts
+          </div>
+          <div
+            className={getFilterItemClass('blogs')}
+            onClick={() => handleFilterClick('blogs')}
+          >
+            <Image src={Blogs} alt="Blogs" />
+            Blogs
           </div>
         </div>
       </div>

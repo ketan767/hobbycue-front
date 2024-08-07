@@ -12,6 +12,9 @@ import quillEmoji from 'quill-emoji'
 import 'react-quill/dist/quill.snow.css'
 import 'quill-emoji/dist/quill-emoji.css'
 import Tooltip from '@/components/Tooltip/ToolTip'
+import PageLoader from '../PageLoader'
+import { useDispatch } from 'react-redux'
+import { setShowPageLoader } from '@/redux/slices/site'
 
 const { EmojiBlot, ShortNameEmoji, ToolbarEmoji, TextAreaEmoji } = quillEmoji
 
@@ -56,6 +59,7 @@ const CustomEditor: React.FC<Props> = ({
     },
     [onChange],
   )
+  const dispatch = useDispatch()
   const onReady = () => {
     if (image && !imageIconAdded) {
       const toolbar = document.querySelector('.ql-toolbar.ql-snow')
@@ -153,12 +157,14 @@ const CustomEditor: React.FC<Props> = ({
   }
 
   const handleImageUpload = async (image: any, isVideo: boolean) => {
+    dispatch(setShowPageLoader(true))
     const formData = new FormData()
     formData.append('post', image)
     console.log('formData', formData)
     const { err, res } = await uploadImage(formData)
     if (err) return console.log(err)
     if (res?.data.success) {
+      dispatch(setShowPageLoader(false))
       console.log(res.data)
       const img = res.data.data.url
       if (isVideo) {

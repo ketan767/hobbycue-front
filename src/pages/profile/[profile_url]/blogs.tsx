@@ -153,7 +153,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     return { notFound: true }
 
   const { err: error, res: response } = await getAllBlogs(
-    `populate=_hobbies,author&author=${user?._id}`,
+    `populate=_hobbies,author&author=${user?._id}&status=Published`,
   )
   console.warn('blogdataaaaaa', response)
 

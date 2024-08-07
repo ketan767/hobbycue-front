@@ -159,6 +159,9 @@ const HobbyPageLayout: React.FC<Props> = ({
           alt=""
         />
       </div>
+      <div className={`${styles['display-mobile']}`}>
+        <HobbyNavigationLinks activeTab={activeTab} />
+      </div>
 
       <PageGridLayout column={!hideLastColumn ? 3 : 2}>
         <aside
@@ -223,86 +226,86 @@ const HobbyPageLayout: React.FC<Props> = ({
 
         {/* {!hideLastColumn && ( */}
         {(isMobile || !hideLastColumn) && (
-          <aside className={expandAll ? '' : styles['display-none']}>
-            <div className={styles['members']}>
-              <div className={styles['heading']}>
-                <h4>Members</h4>
-                <Image
-                  src={ChevronDown}
-                  alt=""
-                  onClick={() => {
-                    setShowMembers((prev) => {
-                      dispatch(updateMembersOpenStates({ [data._id]: !prev }))
-                      return !prev
-                    })
-                  }}
-                  className={`${styles['display-mobile']} ${
-                    showMembers ? styles['rotate-180'] : ''
-                  }`}
-                />
-              </div>
+          <>
+            <aside className={expandAll ? '' : styles['display-none']}>
+              <div className={styles['members']}>
+                <div className={styles['heading']}>
+                  <h4>Members</h4>
+                  <Image
+                    src={ChevronDown}
+                    alt=""
+                    onClick={() => {
+                      setShowMembers((prev) => {
+                        dispatch(updateMembersOpenStates({ [data._id]: !prev }))
+                        return !prev
+                      })
+                    }}
+                    className={`${styles['display-mobile']} ${
+                      showMembers ? styles['rotate-180'] : ''
+                    }`}
+                  />
+                </div>
 
-              <div
-                className={`${styles['member-list']} ${
-                  styles['display-desktop']
-                }${showMembers ? ' ' + styles['display-flex-mobile'] : ''}`}
-              >
-                {loading ? (
-                  <p>Loading...</p>
-                ) : members.length > 0 ? (
-                  <>
-                    {members
-                      .slice(0, seeAll ? members.length : 5)
-                      .map((user: any, idx: number) => (
-                        <p key={idx}>
-                          <div
-                            onClick={() => {
-                              handleMemberClick(user)
-                            }}
-                          >
-                            <div className={styles['hobbies-members']}>
-                              {user.profile_image ? (
-                                <img
-                                  className={styles['member-img']}
-                                  width="24"
-                                  height="24"
-                                  src={user.profile_image}
-                                  alt=""
-                                />
-                              ) : (
-                                <Image
-                                  className={styles['member-img']}
-                                  width="24"
-                                  height="24"
-                                  src={defaultUserIcon}
-                                  alt=""
-                                />
-                              )}
-                              <div>{user.full_name}</div>
+                <div
+                  className={`${styles['member-list']} ${
+                    styles['display-desktop']
+                  }${showMembers ? ' ' + styles['display-flex-mobile'] : ''}`}
+                >
+                  {loading ? (
+                    <p>Loading...</p>
+                  ) : members.length > 0 ? (
+                    <>
+                      {members
+                        .slice(0, seeAll ? members.length : 5)
+                        .map((user: any, idx: number) => (
+                          <p key={idx}>
+                            <div
+                              onClick={() => {
+                                handleMemberClick(user)
+                              }}
+                            >
+                              <div className={styles['hobbies-members']}>
+                                {user.profile_image ? (
+                                  <img
+                                    className={styles['member-img']}
+                                    width="24"
+                                    height="24"
+                                    src={user.profile_image}
+                                    alt=""
+                                  />
+                                ) : (
+                                  <Image
+                                    className={styles['member-img']}
+                                    width="24"
+                                    height="24"
+                                    src={defaultUserIcon}
+                                    alt=""
+                                  />
+                                )}
+                                <div>{user.full_name}</div>
+                              </div>
                             </div>
-                          </div>
+                          </p>
+                        ))}
+                      {members.length > 5 && !seeAll && (
+                        <p className={styles.seeAllBtn} onClick={toggleMembers}>
+                          See All
                         </p>
-                      ))}
-                    {members.length > 5 && !seeAll && (
-                      <p className={styles.seeAllBtn} onClick={toggleMembers}>
-                        See All
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <p className={styles.noMembers}>
+                        No members for this hobby!
                       </p>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <p className={styles.noMembers}>
-                      No members for this hobby!
-                    </p>
-                  </>
-                )}
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
-          </aside>
+            </aside>
+          </>
         )}
-        <div className={`${styles['display-mobile']}`}>
-          <HobbyNavigationLinks activeTab={activeTab} />
-        </div>
+
         <main
           className={`${styles['display-mobile']} ${styles['mob-min-height']}`}
         >

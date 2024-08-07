@@ -89,6 +89,7 @@ import AdminActionModal from './AdminModals/ActionModal'
 import ListingAddEvent from './EditListing/ListingAddEvent'
 import SimpleOnboarding from './EditProfile/SimpleOnboarding'
 import ProductCategoryModal from './EditListing/ProductCategory/ProductCategory'
+import HobbyAboutEditModal from './EditHobby/About'
 
 const CustomBackdrop: React.FC = () => {
   return <div className={styles['custom-backdrop']}></div>
@@ -432,6 +433,9 @@ const ModalManager: React.FC = () => {
               )}
               {activeModal === 'profile-about-edit' && (
                 <ProfileAboutEditModal {...props} />
+              )}
+              {activeModal === 'Hobby-about-edit' && (
+                <HobbyAboutEditModal {...props} />
               )}
               {activeModal === 'profile-address-edit' && (
                 <ProfileAddressEditModal {...props} />

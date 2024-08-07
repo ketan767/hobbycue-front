@@ -26,6 +26,16 @@ import {
   setExplore,
   setSearchLoading,
   setTypeResultFour,
+  setPostsSearchResult,
+  setBlogsSearchResult,
+  showAllBlogsTrue,
+  showAllPostsTrue,
+  toggleShowAllBlogs,
+  toggleShowAllPosts,
+  toggleShowAllProducts,
+  toggleShowAllEvent,
+  toggleShowAllPlace,
+  toggleShowAllPeople,
 } from '@/redux/slices/search'
 import LogoFull from '@/assets/image/logo-full.svg'
 import LogoSmall from '@/assets/image/logo-small.png'
@@ -58,6 +68,8 @@ import { setShowPageLoader } from '@/redux/slices/site'
 import { usePathname } from 'next/navigation'
 import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import { useMediaQuery } from '@mui/material'
+import { getAllPosts } from '@/services/post.service'
+import { getAllBlogs } from '@/services/blog.services'
 
 type Props = {}
 
@@ -398,6 +410,40 @@ export const Navbar: React.FC<Props> = ({}) => {
     )
   }
 
+  const ExplorePosts = async () => {
+    dispatch(setShowPageLoader(true))
+    const { res: PostRes, err: PostErr } = await getAllPosts(
+      `sort=-createdAt&populate=_author,_hobby`,
+    )
+
+    const PostsPages = PostRes?.data.data?.posts
+
+    dispatch(
+      setPostsSearchResult({
+        data: PostsPages,
+        message: 'Search completed successfully.',
+        success: true,
+      }),
+    )
+    dispatch(setShowPageLoader(false))
+  }
+
+  const ExploreBlogs = async () => {
+    const { res: BlogRes, err: PostErr } = await getAllBlogs(
+      `sort=-createdAt&populate=author&status=Published`,
+    )
+
+    const BlogsPages = BlogRes?.data.data?.blog
+
+    dispatch(
+      setBlogsSearchResult({
+        data: BlogsPages,
+        message: 'Search completed successfully.',
+        success: true,
+      }),
+    )
+  }
+
   const handleOutsideClick = (event: MouseEvent) => {
     if (
       mobileSearchRef.current &&
@@ -518,7 +564,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                   priority
                 />
               )}
-              {!isLoggedIn ? (
+              {!isLoggedIn && !data.search.value ? (
                 <Image
                   src={LogoFull}
                   alt="HobbyCue Logo"
@@ -529,13 +575,29 @@ export const Navbar: React.FC<Props> = ({}) => {
 
                   priority
                 />
-              ) : (
+              ) : !isLoggedIn && data.search.value.length > 0 ? (
                 <Image
                   src={LogoSmall}
                   alt="HobbyCue Logo"
                   className={styles['logo-small-responsive']}
                   priority
                 />
+              ) : isLoggedIn && !data.search.value ? (
+                <Image
+                  src={LogoSmall}
+                  alt="HobbyCue Logo"
+                  className={styles['logo-small-responsive']}
+                  priority
+                />
+              ) : isLoggedIn && data.search.value ? (
+                <Image
+                  src={LogoSmall}
+                  alt="HobbyCue Logo"
+                  className={styles['logo-small-responsive']}
+                  priority
+                />
+              ) : (
+                ''
               )}
             </Link>
 
@@ -657,7 +719,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                             await ExplorePeople()
                             setShowDropdown(null)
 
-                            dispatch(showAllPeopleTrue())
+                            dispatch(toggleShowAllPeople())
                             dispatch(setExplore(true))
 
                             router.push('/search')
@@ -691,7 +753,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                             await ExplorePlaces()
                             setShowDropdown(null)
 
-                            dispatch(showAllPlaceTrue())
+                            dispatch(toggleShowAllPlace())
                             dispatch(setExplore(true))
                             router.push('/search')
                           }}
@@ -718,7 +780,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                             await ExploreEvents()
                             setShowDropdown(null)
 
-                            dispatch(showAllEventTrue())
+                            dispatch(toggleShowAllEvent())
                             dispatch(setExplore(true))
                             router.push('/search')
                           }}
@@ -746,7 +808,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                             await ExploreProducts()
 
                             setShowDropdown(null)
-                            dispatch(showAllProductsTrue())
+                            dispatch(toggleShowAllProducts())
                             dispatch(setExplore(true))
                             router.push('/search')
                           }}
@@ -759,9 +821,55 @@ export const Navbar: React.FC<Props> = ({}) => {
                       <h4>
                         <a
                           className={styles['hobbiescategory']}
-                          onClick={() => {
-                            showFeatureUnderDevelopment()
+                          onClick={async (e) => {
+                            e.preventDefault()
+
+                            setData((prevData) => ({
+                              ...prevData,
+                              search: {
+                                ...prevData.search,
+                                value: '',
+                              },
+                            }))
+                            dispatch(resetSearch())
+                            await ExploreBlogs()
                             setShowDropdown(null)
+                            dispatch(toggleShowAllBlogs())
+                            dispatch(setExplore(true))
+                            router.push('/search')
+                          }}
+                        >
+                          Perspectives - Blogs
+                        </a>
+                      </h4>
+                    </section>
+                    <section className={styles['list']}>
+                      <h4>
+                        <a
+                          className={styles['hobbiescategory']}
+                          onClick={async (e) => {
+                            if (!isLoggedIn) {
+                              dispatch(
+                                openModal({ type: 'auth', closable: true }),
+                              )
+                              return
+                            }
+                            e.preventDefault()
+
+                            setData((prevData) => ({
+                              ...prevData,
+                              search: {
+                                ...prevData.search,
+                                value: '',
+                              },
+                            }))
+
+                            dispatch(resetSearch())
+                            await ExplorePosts()
+                            setShowDropdown(null)
+                            dispatch(toggleShowAllPosts())
+                            dispatch(setExplore(true))
+                            router.push('/search')
                           }}
                         >
                           Posts - Community

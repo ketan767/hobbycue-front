@@ -72,7 +72,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
   const isMobile = useMediaQuery('(max-width:1100px)')
   useEffect(() => {
     if (isMobile) {
-      setExpandAll(false)
+      setExpandAll(true)
     }
   }, [isMobile])
   const getPost = async () => {

@@ -114,7 +114,7 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
         >
           {data?.profile_image ? (
             <img
-              className={styles['profile-img']}
+              className={styles['profile-img-small']}
               src={data.profile_image}
               alt=""
               width={160}

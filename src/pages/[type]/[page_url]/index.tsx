@@ -45,7 +45,7 @@ const ListingHome: React.FC<Props> = (props) => {
   const isMobile = useMediaQuery('(max-width:1100px)')
   useEffect(() => {
     if (isMobile) {
-      setExpandAll(false)
+      setExpandAll(true)
     }
   }, [isMobile])
   useEffect(() => {
@@ -144,26 +144,32 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   let typeId
   switch (type) {
     case 'people':
-      typeId = '1'
+      typeId = 1
       break
-    case 'person':
-      typeId = '2'
+    case 'place':
+      typeId = 2
       break
     case 'program':
-      typeId = '3'
+      typeId = 3
       break
     case 'product':
-      typeId = '4'
+      typeId = 4
       break
     default:
       return { notFound: true }
   }
 
   const { err, res } = await getListingPages(
-    `page_url=${query['page_url']}&populate=_hobbies,_address,seller`,
+    `page_url=${query['page_url']}&populate=_hobbies,_address,seller,product_variant`,
   )
 
   if (res?.data.success && res.data.data.no_of_listings === 0) {
+    return {
+      notFound: true,
+    }
+  }
+
+  if (res?.data.data.listings[0]?.type !== typeId) {
     return {
       notFound: true,
     }
