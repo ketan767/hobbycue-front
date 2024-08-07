@@ -37,7 +37,9 @@ const CommunityBlogs: React.FC<Props> = ({}) => {
   }
 
   const getPost = async () => {
-    const params = new URLSearchParams(`populate=_hobbies,author`)
+    const params = new URLSearchParams(
+      `populate=_hobbies,author&status=Published`,
+    )
 
     if (
       !activeProfile?.data?._hobbies ||
