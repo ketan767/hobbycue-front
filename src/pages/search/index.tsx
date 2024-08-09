@@ -365,9 +365,11 @@ const MainContent: React.FC<SearchResultsProps> = ({
         <div className={styles['no-results-wrapper']}>
           {searchString === '' ? (
             <p>
-              Use the Search box at the top to look up pages on your hobby by
-              other users. If you don&apos;t find any pages, you may Add Listing
-              Page from the menu at the top right corner.
+              Use the <strong> Search box</strong> at the top to look for
+              anything on your hobbies. If you feel we are missing a listing,
+              you may choose <strong>Add Listing Page</strong> from the menu at
+              the top right corner. If you need further help, visit the Help
+              Centre from the above menu.
             </p>
           ) : (
             <p>
@@ -951,7 +953,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
 const FilterDropdown: React.FC<Props> = () => {
   const [activeFilter, setActiveFilter] = useState('all')
   const dispatch = useDispatch()
-
+  const isExplore = useSelector((state: RootState) => state.search.explore)
   const showAll = useSelector((state: any) => state.search.showAll)
   const showAllUsers = useSelector((state: any) => state.search.showAllUsers)
   const showAllhobbies = useSelector(
@@ -1051,7 +1053,11 @@ const FilterDropdown: React.FC<Props> = () => {
   }
 
   return (
-    <Select className={styles.filterDropdown} value={activeFilter}>
+    <Select
+      disabled={isExplore}
+      className={styles.filterDropdown}
+      value={activeFilter}
+    >
       <MenuItem onClick={() => handleFilterClick('all')} value="all">
         All of HobbyCue
       </MenuItem>

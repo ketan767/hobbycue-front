@@ -23,9 +23,11 @@ import Product from '../../assets/svg/Search/Product.svg'
 import Blogs from '../../assets/svg/Search/blogs.svg'
 import Posts from '../../assets/svg/Search/Posts.svg'
 import styles from './styles.module.css'
+import { RootState } from '@/redux/store'
 
 const SearchPageFilter = () => {
   const dispatch = useDispatch()
+  const isExplore = useSelector((state: RootState) => state.search.explore)
   const [activeFilter, setActiveFilter] = useState('all')
   const showAll = useSelector((state: any) => state.search.showAll)
   const showAllUsers = useSelector((state: any) => state.search.showAllUsers)
@@ -73,6 +75,7 @@ const SearchPageFilter = () => {
   ])
 
   const handleFilterClick = (filterType: any) => {
+    if (isExplore) return
     if (activeFilter === filterType) {
       setActiveFilter('all')
       dispatch(showAllTrue())
@@ -115,7 +118,7 @@ const SearchPageFilter = () => {
   const getFilterItemClass = (filterType: any) => {
     return `${styles['filter-item']} ${
       activeFilter === filterType ? styles['active-filter'] : ''
-    }`
+    } ${isExplore && styles['filter-item-disabled']}`
   }
 
   return (

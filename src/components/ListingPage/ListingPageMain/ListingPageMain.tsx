@@ -528,39 +528,41 @@ const ListingPageMain: React.FC<Props> = ({
                   dispatch(updateListingTypeModalMode({ mode: 'edit' }))
                 }}
               >
-                {data.page_type.map((type: any, idx: any) => {
-                  return (
-                    <div className={styles['listing-page-type']} key={idx}>
-                      <Image
-                        alt="page type icon"
-                        width={24}
-                        height={24}
-                        src={
-                          data.type === 1
-                            ? peopleSvg
-                            : data.type === 2
-                            ? placeSvg
-                            : data.type === 3
-                            ? programSvg
-                            : peopleSvg
-                        }
-                      />
-                      <p
-                        className={
-                          data.type === 1
-                            ? styles['people-color']
-                            : data.type === 2
-                            ? styles['place-color']
-                            : data.type === 3
-                            ? styles['program-color']
-                            : styles['abv-color']
-                        }
-                      >
-                        {type}
-                      </p>
-                    </div>
-                  )
-                })}
+                <div className={styles['page-types']}>
+                  {data.page_type.map((type: any, idx: any) => {
+                    return (
+                      <div className={styles['listing-page-type']} key={idx}>
+                        <Image
+                          alt="page type icon"
+                          width={24}
+                          height={24}
+                          src={
+                            data.type === 1
+                              ? peopleSvg
+                              : data.type === 2
+                              ? placeSvg
+                              : data.type === 3
+                              ? programSvg
+                              : peopleSvg
+                          }
+                        />
+                        <p
+                          className={
+                            data.type === 1
+                              ? styles['people-color']
+                              : data.type === 2
+                              ? styles['place-color']
+                              : data.type === 3
+                              ? styles['program-color']
+                              : styles['abv-color']
+                          }
+                        >
+                          {type}
+                        </p>
+                      </div>
+                    )
+                  })}
+                </div>
               </PageContentBox>
             </div>
 

@@ -152,8 +152,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
     },
     {
       lastmod: new Date().toISOString(),
-      loc: 'https://blog.hobbycue.com/how-to',
-      name: `https://blog.hobbycue.com/how-to`,
+      loc: 'https://hobbycue.com/how-to',
+      name: `https://hobbycue.com/how-to`,
     },
     {
       lastmod: new Date().toISOString(),

@@ -113,12 +113,14 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         await ExplorePeople()
         dispatch(showAllPeopleTrue())
         router.push('/search')
+        dispatch(setExplore(true))
         handleClose()
         break
       case 'Places - Venues':
         dispatch(resetSearch())
         await ExplorePlaces()
         dispatch(showAllPlaceTrue())
+        dispatch(setExplore(true))
         router.push('/search')
         handleClose()
         break
@@ -126,6 +128,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         dispatch(resetSearch())
         await ExploreEvents()
         dispatch(showAllEventTrue())
+        dispatch(setExplore(true))
         router.push('/search')
         handleClose()
         break
@@ -133,6 +136,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         dispatch(resetSearch())
         await ExploreProducts()
         dispatch(showAllProductsTrue())
+        dispatch(setExplore(true))
         router.push('/search')
         handleClose()
         break
@@ -140,18 +144,21 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         dispatch(resetSearch())
         await ExploreBlogs()
         dispatch(showAllBlogsTrue())
+        dispatch(setExplore(true))
         router.push('/search')
         handleClose()
         break
       case 'Posts - Community':
         if (!isLoggedIn) {
           dispatch(openModal({ type: 'auth', closable: true }))
+
           handleClose()
           return
         }
         dispatch(resetSearch())
         await ExplorePosts()
         dispatch(showAllPostsTrue())
+        dispatch(setExplore(true))
         router.push('/search')
 
         handleClose()

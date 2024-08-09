@@ -325,6 +325,7 @@ const ListingCTAModal: React.FC<Props> = ({
             <div className={styles['input-box']}>
               <label>Click URL</label>
               <input
+                placeholder="External link if any to Register, Book, etc."
                 value={url}
                 onChange={(e) => {
                   setUrl(e.target.value)

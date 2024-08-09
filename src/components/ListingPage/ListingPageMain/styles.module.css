@@ -232,9 +232,15 @@ ul.seller-info-wrapper li svg:last-child {
   /* margin-bottom: 0; */
   padding: 0;
 }
+
+.page-types {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
 .page-type-container > div {
-  border-bottom: 1px solid #ebedf0;
   padding: 1rem;
+  gap: 12px;
 }
 .page-type-container:not(:last-child) {
   border-bottom: none;
