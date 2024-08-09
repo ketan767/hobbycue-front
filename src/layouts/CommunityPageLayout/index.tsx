@@ -91,7 +91,9 @@ const CommunityLayout: React.FC<Props> = ({
   const membersContainerRef = useRef<HTMLElement>(null)
   const whatsNewContainerRef = useRef<HTMLElement>(null)
   const inviteBtnRef = useRef<HTMLButtonElement>(null)
-  const { activeProfile, user } = useSelector((state: RootState) => state.user)
+  const { activeProfile, user, isLoggedIn } = useSelector(
+    (state: RootState) => state.user,
+  )
   const { allPosts, filters, post_pagination } = useSelector(
     (state: RootState) => state.post,
   )
@@ -135,7 +137,7 @@ const CommunityLayout: React.FC<Props> = ({
   const [hobbyMembers, setHobbymembers] = useState([])
   const [whatsNew, setWhatsNew] = useState([])
   const [SeeMorewhatsNew, setSeeMoreWhatsNew] = useState(true)
-  console.warn('hobbymembersssssssssssssssssss', hobbyMembers)
+
   const hideThirdColumnTabs = ['pages', 'links', 'store', 'blogs']
   const { showPageLoader } = useSelector((state: RootState) => state.site)
   const { refreshNum } = useSelector((state: RootState) => state.post)
@@ -145,30 +147,12 @@ const CommunityLayout: React.FC<Props> = ({
     setSeeMoreHobby(!seeMoreHobby)
     dispatch(setFilters({ seeMoreHobbies: !seeMoreHobby }))
   }
-  // const getPost = async () => {
-  //   const params = new URLSearchParams(`populate=_author,_genre,_hobby`)
-  //   activeProfile?.data?._hobbies.forEach((item: any) => {
-  //     params.append('_hobby', item.hobby?._id)
-  //   })
-  //   if (!activeProfile?.data?._hobbies) return
-
-  //   if (activeProfile?.data?._hobbies.length === 0) return
-  //   console.log('active', activeProfile.data._hobbies)
-  //   dispatch(updateLoading(true))
-  //   const { err, res } = await getAllPosts(params.toString())
-  //   if (err) return console.log(err)
-  //   if (res.data.success) {
-  //     store.dispatch(updatePosts(res.data.data.posts))
-  //   }
-  //   dispatch(updateLoading(false))
-  // }
-
-  // useEffect(() => {
-  //   fetchPosts()
-  // }, [activeProfile])
 
   const handleHobbyClick = async (hobbyId: any, genreId: any) => {
-    console.log('hobbyIDDDD', hobbyId, genreId)
+    if (!isLoggedIn) {
+      dispatch(openModal({ type: 'auth', closable: true }))
+      return
+    }
 
     if (selectedHobby !== hobbyId || selectedGenre !== genreId) {
       dispatch(
@@ -202,7 +186,11 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   const EditProfileLocation = () => {
-    console.log('activeprofile', activeProfile.type)
+    if (!isLoggedIn) {
+      dispatch(openModal({ type: 'auth', closable: true }))
+      return
+    }
+
     if (activeProfile?.type === 'user') {
       window.location.href = '/settings/localization-payments'
     } else {
@@ -211,6 +199,10 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   const editHobbiesClick = () => {
+    if (!isLoggedIn) {
+      dispatch(openModal({ type: 'auth', closable: true }))
+      return
+    }
     if (activeProfile?.type === 'user') {
       dispatch(
         openModal({
@@ -227,7 +219,6 @@ const CommunityLayout: React.FC<Props> = ({
       )
     }
   }
-  console.log('activeprofile', activeProfile)
 
   function getClassName(type: any) {
     if (type === 'user') {
@@ -713,6 +704,10 @@ const CommunityLayout: React.FC<Props> = ({
   }, [activeProfile])
 
   const updateFilterLocation = (val: any) => {
+    if (!isLoggedIn) {
+      dispatch(openModal({ type: 'auth', closable: true }))
+      return
+    }
     dispatch(
       setFilters({
         location: selectedLocation === val ? 'All Locations' : val,
@@ -743,6 +738,11 @@ const CommunityLayout: React.FC<Props> = ({
   // ,[selectedLocation,visibilityData])
 
   const Invitecommunity = async () => {
+    if (!isLoggedIn) {
+      dispatch(openModal({ type: 'auth', closable: true }))
+      return
+    }
+
     const to = email
     if (!to || to === '') {
       setErrorMessage('This field is required')
@@ -880,6 +880,11 @@ const CommunityLayout: React.FC<Props> = ({
                 <Image
                   src={EditIcon}
                   onClick={() => {
+                    if (!isLoggedIn) {
+                      dispatch(openModal({ type: 'auth', closable: true }))
+                      return
+                    }
+
                     if (activeProfile?.type === 'user') {
                       dispatch(
                         openModal({

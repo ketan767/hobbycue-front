@@ -92,8 +92,16 @@ import ProductCategoryModal from './EditListing/ProductCategory/ProductCategory'
 import HobbyAboutEditModal from './EditHobby/About'
 
 const CustomBackdrop: React.FC = () => {
-  return <div className={styles['custom-backdrop']}></div>
+  const { activeModal } = useSelector((state: RootState) => state.modal)
+
+  // Always return a valid React element
+  if (activeModal !== 'auth') {
+    return <div className={styles['custom-backdrop']}></div>
+  } else {
+    return <div className={styles['custom-backdrop-full']}></div>
+  }
 }
+
 export interface SnackbarState {
   show: boolean
   message: string
@@ -385,13 +393,18 @@ const ModalManager: React.FC = () => {
                       ? styles['create-post-postion']
                       : styles['pos-relative']
                     : ''
-                }` + ` ${activeModal === 'add-event' && styles['self-centre']}`
+                }` +
+                ` ${
+                  (activeModal === 'add-event' || activeModal === 'auth') &&
+                  styles['self-centre']
+                }`
               }
               ref={mainRef}
             >
               {activeModal !== 'listing-onboarding' &&
                 activeModal !== 'user-onboarding-welcome' &&
                 activeModal !== 'add-event' &&
+                activeModal !== 'auth' &&
                 activeModal !== 'user-onboarding' && (
                   <>
                     <header className={styles['header']}>
@@ -576,6 +589,7 @@ const ModalManager: React.FC = () => {
               {activeModal === 'add-event' && <ListingAddEvent {...propData} />}
               {/* Modal Close Icon */}
               {closable &&
+                activeModal !== 'auth' &&
                 activeModal !== 'user-onboarding-welcome' &&
                 activeModal !== 'add-event' &&
                 !showAddGenreModal &&

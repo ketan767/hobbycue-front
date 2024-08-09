@@ -67,12 +67,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
       setPostData(res.data.data.posts?.[0])
     }
     setIsLoadingPosts(false)
-    router.push('/community')
-  }
-
-  const openPostmodal = () => {
-    dispatch(setActivePost(postData))
-    dispatch(openModal({ type: 'post', closable: false }))
+    // router.push('/community')
   }
 
   const convertHtmlToPlainText = (htmlContent: string): string => {
@@ -111,10 +106,6 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
       getPost()
     }
   }, [activeProfile, postId])
-
-  useEffect(() => {
-    if (postData?.content) openPostmodal()
-  }, [[postData?.content]])
 
   return (
     <>

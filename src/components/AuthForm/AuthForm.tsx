@@ -422,6 +422,13 @@ const AuthForm: React.FC<Props> = (props) => {
         isModal ? styles['modal-form-contanier'] : ''
       }`}
     >
+      <div className={styles['header-text']}>
+        {isModal
+          ? selectedTab === 'sign-in'
+            ? 'To continue, please sign in...'
+            : 'To continue, please join in...'
+          : ''}
+      </div>
       {/* Tab Switcher (SignIn / JoinIn )  */}
       <Tabs
         className={styles['tab']}
