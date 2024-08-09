@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
 import {
+  updateAboutOpenState,
   updateHobbyOpenState,
   updateMembersOpenStates,
   updateProfileLayoutMode,
@@ -19,6 +20,7 @@ import PageContentBox from '../PageContentBox'
 import Link from 'next/link'
 import HobbyPageHeaderSmall from '@/components/HobbyPage/HobbyHeader/HobbyPageHeaderSmall'
 import ChevronDown from '@/assets/svg/chevron-down.svg'
+import DoubleChevron from '@/assets/svg/doubble_chevron.svg'
 import Image from 'next/image'
 import HobbyNavigationLinks from '@/components/HobbyPage/HobbyHeader/HobbyNavigationLinks'
 import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
@@ -44,7 +46,7 @@ const HobbyPageLayout: React.FC<Props> = ({
 }) => {
   console.warn({ tags: data.tags })
   const dispatch = useDispatch()
-  const { hobbyStates, membersStates } = useSelector(
+  const { AboutStates, hobbyStates, membersStates } = useSelector(
     (state: RootState) => state.site,
   )
   const [showSmallHeader, setShowSmallHeader] = useState(false)
@@ -54,6 +56,7 @@ const HobbyPageLayout: React.FC<Props> = ({
   const router = useRouter()
   const [seeAll, setSeeAll] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [showAbout, setShowAbout] = useState(true)
   const [showMembers, setShowMembers] = useState(false)
   const [showHobbiesClassification, setShowHobbiesClassification] =
     useState(true)
@@ -117,12 +120,28 @@ const HobbyPageLayout: React.FC<Props> = ({
   }, [data._id, hobbyStates])
 
   useEffect(() => {
+    if (expandAll !== undefined) {
+      setShowAbout(expandAll)
+      setShowHobbiesClassification(expandAll)
+      setShowMembers(expandAll)
+    }
+  }, [expandAll])
+
+  useEffect(() => {
     if (membersStates && typeof membersStates[data?._id] === 'boolean') {
       setShowMembers(membersStates[data?._id])
     } else if (data._id) {
       dispatch(updateMembersOpenStates({ [data._id]: showMembers }))
     }
   }, [data._id, membersStates])
+
+  useEffect(() => {
+    if (AboutStates && typeof AboutStates[data?._id] === 'boolean') {
+      setShowAbout(AboutStates[data?._id])
+    } else if (data._id) {
+      dispatch(updateAboutOpenState({ [data._id]: showAbout }))
+    }
+  }, [data._id, AboutStates])
 
   const toggleMembers = () => {
     setSeeAll(!seeAll)
@@ -145,164 +164,215 @@ const HobbyPageLayout: React.FC<Props> = ({
         <HobbyPageHeaderSmall data={data} activeTab={activeTab} />
       )}
 
-      <div
-        onClick={() => {
-          if (setExpandAll !== undefined) setExpandAll(!expandAll)
-        }}
-        className={styles['expand-all']}
-      >
-        {expandAll ? <p>See less</p> : <p>See more</p>}
-        <Image
-          src={ChevronDown}
-          className={`${expandAll ? styles['rotate-180'] : ''}`}
-          style={{ transition: 'all 0.3s ease' }}
-          alt=""
-        />
-      </div>
       <div className={`${styles['display-mobile']}`}>
         <HobbyNavigationLinks activeTab={activeTab} />
       </div>
+      {activeTab === 'home' && (
+        <>
+          <div
+            onClick={() => {
+              if (setExpandAll !== undefined) setExpandAll(!expandAll)
+            }}
+            className={styles['expand-all']}
+          >
+            {expandAll ? <p>See less</p> : <p>See more</p>}
+            <Image
+              width={15}
+              height={15}
+              src={DoubleChevron}
+              className={`${expandAll ? styles['rotate-180'] : ''}`}
+              style={{ transition: 'all 0.3s ease' }}
+              alt=""
+            />
+          </div>
+        </>
+      )}
 
       <PageGridLayout column={!hideLastColumn ? 3 : 2}>
-        <aside
-          className={`custom-scrollbar ${styles['hobby-left-aside']} ${
-            expandAll ? '' : styles['display-none']
-          }`}
-        >
-          <PageContentBox
-            showEditButton={false}
-            initialShowDropdown
-            setDisplayData={(arg0: boolean) => {
-              setShowHobbiesClassification((prev) => {
-                dispatch(updateHobbyOpenState({ [data._id]: !prev }))
-                return !prev
-              })
-            }}
-            expandData={showHobbiesClassification}
+        {activeTab === 'home' && (
+          <aside
+            className={`custom-scrollbar ${styles['hobby-left-aside']}
+            
+          `}
           >
-            <h4 className={styles['heading']}>
-              {'Hobbies Classification'}
-              {user?.is_admin && (
-                <Image
-                  className={styles['pencil-edit']}
-                  src={EditIcon}
-                  alt="edit"
-                  onClick={() => router.push(`/admin/hobby/edit/${data?.slug}`)}
-                />
+            <div className={styles['display-mobile']}>
+              {data?.description?.length > 0 && (
+                <PageContentBox
+                  showEditButton={false}
+                  setDisplayData={() => {
+                    setShowAbout((prev) => !prev)
+                    dispatch(updateAboutOpenState({ [data._id]: !showAbout }))
+                  }}
+                  expandData={showAbout}
+                >
+                  <h4 className={styles['heading']}>
+                    {'About'}
+                    {user?.is_admin && (
+                      <Image
+                        className={styles['pencil-edit']}
+                        src={EditIcon}
+                        alt="edit"
+                        onClick={() =>
+                          router.push(`/admin/hobby/edit/${data?.slug}`)
+                        }
+                      />
+                    )}
+                  </h4>
+                  {showAbout && (
+                    <div
+                      dangerouslySetInnerHTML={{ __html: data?.description }}
+                    ></div>
+                  )}
+                </PageContentBox>
               )}
-            </h4>
-            <div
-              className={`${styles['display-desktop']}${
-                showHobbiesClassification ? ' ' + styles['display-mobile'] : ''
-              }`}
-            >
-              <ul className={styles['classification-items']}>
-                {data?.category?.slug && (
-                  <Link href={`/hobby/${data?.category?.slug}`}>
-                    <li>{data?.category?.display}</li>
-                  </Link>
-                )}
-                {data?.sub_category?.slug && (
-                  <Link href={`/hobby/${data?.sub_category?.slug}`}>
-                    <li>{data?.sub_category?.display}</li>
-                  </Link>
-                )}
-                {data?.tags &&
-                  data?.tags.map((tag: any, idx: number) => {
-                    return tag.slug ? (
-                      <Link key={idx} href={`/hobby/${tag?.slug}`}>
-                        <li>{tag.display}</li>
-                      </Link>
-                    ) : null
-                  })}
-                <li className={styles['active']}>
-                  <p>{data?.display}</p>
-                </li>
-              </ul>
             </div>
-          </PageContentBox>
-        </aside>
+            <PageContentBox
+              showEditButton={false}
+              initialShowDropdown
+              setDisplayData={(arg0: boolean) => {
+                setShowHobbiesClassification((prev) => {
+                  dispatch(updateHobbyOpenState({ [data._id]: !prev }))
+                  return !prev
+                })
+              }}
+              expandData={showHobbiesClassification}
+            >
+              <h4 className={styles['heading']}>
+                {'Hobbies Classification'}
+                {user?.is_admin && (
+                  <Image
+                    className={styles['pencil-edit']}
+                    src={EditIcon}
+                    alt="edit"
+                    onClick={() =>
+                      router.push(`/admin/hobby/edit/${data?.slug}`)
+                    }
+                  />
+                )}
+              </h4>
+              <div
+                className={`${styles['display-desktop']}${
+                  showHobbiesClassification
+                    ? ' ' + styles['display-mobile']
+                    : ''
+                }`}
+              >
+                <ul className={styles['classification-items']}>
+                  {data?.category?.slug && (
+                    <Link href={`/hobby/${data?.category?.slug}`}>
+                      <li>{data?.category?.display}</li>
+                    </Link>
+                  )}
+                  {data?.sub_category?.slug && (
+                    <Link href={`/hobby/${data?.sub_category?.slug}`}>
+                      <li>{data?.sub_category?.display}</li>
+                    </Link>
+                  )}
+                  {data?.tags &&
+                    data?.tags.map((tag: any, idx: number) => {
+                      return tag.slug ? (
+                        <Link key={idx} href={`/hobby/${tag?.slug}`}>
+                          <li>{tag.display}</li>
+                        </Link>
+                      ) : null
+                    })}
+                  <li className={styles['active']}>
+                    <p>{data?.display}</p>
+                  </li>
+                </ul>
+              </div>
+            </PageContentBox>
+          </aside>
+        )}
+
         <main className={styles['display-desktop']}>{children}</main>
 
         {/* {!hideLastColumn && ( */}
         {(isMobile || !hideLastColumn) && (
           <>
-            <aside className={expandAll ? '' : styles['display-none']}>
-              <div className={styles['members']}>
-                <div className={styles['heading']}>
-                  <h4>Members</h4>
-                  <Image
-                    src={ChevronDown}
-                    alt=""
-                    onClick={() => {
-                      setShowMembers((prev) => {
-                        dispatch(updateMembersOpenStates({ [data._id]: !prev }))
-                        return !prev
-                      })
-                    }}
-                    className={`${styles['display-mobile']} ${
-                      showMembers ? styles['rotate-180'] : ''
-                    }`}
-                  />
-                </div>
+            {activeTab === 'home' && (
+              <aside>
+                <div className={styles['members']}>
+                  <div className={styles['heading']}>
+                    <h4>Members</h4>
+                    <Image
+                      src={ChevronDown}
+                      alt=""
+                      onClick={() => {
+                        setShowMembers((prev) => {
+                          dispatch(
+                            updateMembersOpenStates({ [data._id]: !prev }),
+                          )
+                          return !prev
+                        })
+                      }}
+                      className={`${styles['display-mobile']} ${
+                        showMembers ? styles['rotate-180'] : ''
+                      }`}
+                    />
+                  </div>
 
-                <div
-                  className={`${styles['member-list']} ${
-                    styles['display-desktop']
-                  }${showMembers ? ' ' + styles['display-flex-mobile'] : ''}`}
-                >
-                  {loading ? (
-                    <p>Loading...</p>
-                  ) : members.length > 0 ? (
-                    <>
-                      {members
-                        .slice(0, seeAll ? members.length : 5)
-                        .map((user: any, idx: number) => (
-                          <p key={idx}>
-                            <div
-                              onClick={() => {
-                                handleMemberClick(user)
-                              }}
-                            >
-                              <div className={styles['hobbies-members']}>
-                                {user.profile_image ? (
-                                  <img
-                                    className={styles['member-img']}
-                                    width="24"
-                                    height="24"
-                                    src={user.profile_image}
-                                    alt=""
-                                  />
-                                ) : (
-                                  <Image
-                                    className={styles['member-img']}
-                                    width="24"
-                                    height="24"
-                                    src={defaultUserIcon}
-                                    alt=""
-                                  />
-                                )}
-                                <div>{user.full_name}</div>
+                  <div
+                    className={`${styles['member-list']} ${
+                      styles['display-desktop']
+                    }${showMembers ? ' ' + styles['display-flex-mobile'] : ''}`}
+                  >
+                    {loading ? (
+                      <p>Loading...</p>
+                    ) : members.length > 0 ? (
+                      <>
+                        {members
+                          .slice(0, seeAll ? members.length : 5)
+                          .map((user: any, idx: number) => (
+                            <p key={idx}>
+                              <div
+                                onClick={() => {
+                                  handleMemberClick(user)
+                                }}
+                              >
+                                <div className={styles['hobbies-members']}>
+                                  {user.profile_image ? (
+                                    <img
+                                      className={styles['member-img']}
+                                      width="24"
+                                      height="24"
+                                      src={user.profile_image}
+                                      alt=""
+                                    />
+                                  ) : (
+                                    <Image
+                                      className={styles['member-img']}
+                                      width="24"
+                                      height="24"
+                                      src={defaultUserIcon}
+                                      alt=""
+                                    />
+                                  )}
+                                  <div>{user.full_name}</div>
+                                </div>
                               </div>
-                            </div>
+                            </p>
+                          ))}
+                        {members.length > 5 && !seeAll && (
+                          <p
+                            className={styles.seeAllBtn}
+                            onClick={toggleMembers}
+                          >
+                            See All
                           </p>
-                        ))}
-                      {members.length > 5 && !seeAll && (
-                        <p className={styles.seeAllBtn} onClick={toggleMembers}>
-                          See All
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <p className={styles.noMembers}>
+                          No members for this hobby!
                         </p>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      <p className={styles.noMembers}>
-                        No members for this hobby!
-                      </p>
-                    </>
-                  )}
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </aside>
+              </aside>
+            )}
           </>
         )}
 

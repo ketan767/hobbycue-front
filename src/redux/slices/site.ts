@@ -97,9 +97,12 @@ interface AuthState {
     listing: boolean
     profile: boolean
   },
-  sidemenuRefresh: number // added to add nav click feature on welcome mobile screen
-  searchToggleRefresh: number // added to show search popup from welcome search click
+  sidemenuRefresh: number
+  searchToggleRefresh: number 
   hobbyStates?: {
+    [key:string]:boolean
+  }
+  AboutStates?: {
     [key:string]:boolean
   }
   pagesStates?: {
@@ -167,13 +170,14 @@ const initialState: AuthState = {
   listingTypeModalMode: 'create',
   admin_nav:true,
   expandMenu: {
-    hobby: true,
-    listing: true,
-    profile: true
+    hobby: false,
+    listing: false,
+    profile: false
   },
   sidemenuRefresh: 0,
   searchToggleRefresh: 0,
   hobbyStates:{},
+  AboutStates: {},
   pagesStates:{},
   locationStates:{},
   contactStates:{},
@@ -290,6 +294,14 @@ const siteSlice = createSlice({
     },
     increaseSearchRefresh: (state)=> {
       state.searchToggleRefresh = state.searchToggleRefresh+1
+    },
+    updateAboutOpenState: (state,{payload}:{payload:{
+      [key:string]:boolean
+    }})=>{
+      const objKey = Object.keys(payload);
+      if(objKey[0] && state.AboutStates){
+      state.AboutStates[objKey[0]] = payload[objKey[0]];
+      }
     },
     updateHobbyOpenState: (state,{payload}:{payload:{
       [key:string]:boolean
@@ -424,7 +436,8 @@ export const {
   updateMembersOpenStates,
   updateEventFlow,
   updatePageDataForEvent,
-  updateTotalEvents
+  updateTotalEvents,
+  updateAboutOpenState
 } = siteSlice.actions
 
 export default siteSlice.reducer

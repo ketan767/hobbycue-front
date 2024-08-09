@@ -63,7 +63,7 @@ const ListingHomeTab: React.FC<Props> = ({ data, AboutErr, expandAll }) => {
   return (
     <>
       <main>
-        {/* User About */}
+        {/* Page About */}
         <div className={styles['display-desktop']}>
           <PageContentBox
             className={AboutErr ? styles.errorBorder : ''}

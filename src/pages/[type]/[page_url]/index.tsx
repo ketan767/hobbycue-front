@@ -43,11 +43,7 @@ const ListingHome: React.FC<Props> = (props) => {
   const router = useRouter()
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null)
   const isMobile = useMediaQuery('(max-width:1100px)')
-  useEffect(() => {
-    if (isMobile) {
-      setExpandAll(true)
-    }
-  }, [isMobile])
+
   useEffect(() => {
     if (user._id) {
       const userIsAuthorized =
@@ -125,6 +121,7 @@ const ListingHome: React.FC<Props> = (props) => {
         <ListingPageMain
           data={props.data.pageData}
           expandAll={expandAll}
+          setExpandAll={setExpandAll}
           activeTab={'home'}
         >
           <ListingHomeTab data={props.data.pageData} expandAll={expandAll} />

@@ -29,6 +29,7 @@ import {
   updateWorkingHoursOpenStates,
   updateRelatedListingsOpenStates2,
   updateTotalEvents,
+  updateAboutOpenState,
 } from '@/redux/slices/site'
 import WhatsappIcon from '@/assets/svg/whatsapp.svg'
 import { listingTypes } from '@/constants/constant'
@@ -58,6 +59,7 @@ interface Props {
   profile_url?: string
   activeTab?: any
   expandAll?: boolean
+  setExpandAll?: any
 }
 
 type SocialMediaOption =
@@ -84,13 +86,13 @@ const ListingPageMain: React.FC<Props> = ({
   data,
   children,
   hobbyError,
-
   pageTypeErr,
   AboutErr,
   ContactInfoErr,
   LocationErr,
   activeTab,
   expandAll,
+  setExpandAll,
 }) => {
   const dispatch = useDispatch()
   const [tags, setTags] = useState([])
@@ -104,6 +106,7 @@ const ListingPageMain: React.FC<Props> = ({
     relatedListingsStates,
     relatedListingsStates2,
     tagsStates,
+    AboutStates,
     workingHoursStates,
   } = useSelector((state: RootState) => state.site)
   const { isLoggedIn, isAuthenticated, user } = useSelector(
@@ -122,6 +125,7 @@ const ListingPageMain: React.FC<Props> = ({
   const lng = parseFloat(data._address?.longitude)
 
   const [showHobbies, setShowHobbies] = useState(true)
+  const [showAbout, setShowAbout] = useState(true)
   const [showTags, setShowTags] = useState(false)
   const [showRelatedListing1, setShowRelatedListing1] = useState(false)
   const [showContact, setShowContact] = useState(false)
@@ -249,6 +253,14 @@ const ListingPageMain: React.FC<Props> = ({
   }, [data._id, tagsStates])
 
   useEffect(() => {
+    if (AboutStates && typeof AboutStates[data?._id] === 'boolean') {
+      setShowAbout(AboutStates[data?._id])
+    } else if (data._id) {
+      dispatch(updateAboutOpenState({ [data._id]: showAbout }))
+    }
+  }, [data._id, AboutStates])
+
+  useEffect(() => {
     if (
       workingHoursStates &&
       typeof workingHoursStates[data?._id] === 'boolean'
@@ -327,13 +339,19 @@ const ListingPageMain: React.FC<Props> = ({
     })
     SetisRelatedLoading(false)
   }, [data?.related_listings_left?.listings])
-
   useEffect(() => {
     if (expandAll !== undefined) {
-      setShowAside(expandAll)
+      setShowHobbies(expandAll)
+      setShowAbout(expandAll)
+      setShowTags(expandAll)
+      setShowRelatedListing1(expandAll)
+      setShowContact(expandAll)
+      setShowLocation(expandAll)
+      setShowWorkingHours(expandAll)
+      setShowRelatedListing2(expandAll)
+      setShowSocialMedia(expandAll)
     }
   }, [expandAll])
-
   console.log('listingPagesRight', listingPagesRight)
   const openGoogleMaps = () => {
     let addressText = ''
@@ -590,6 +608,39 @@ const ListingPageMain: React.FC<Props> = ({
               </h4>
               <div className={`${styles['display-desktop']}`}></div>
             </PageContentBox> */}
+            <div className={styles['display-mobile-initial']}>
+              {data?.description?.length > 0 && (
+                <PageContentBox
+                  showEditButton={listingLayoutMode === 'edit'}
+                  onEditBtnClick={() =>
+                    dispatch(
+                      openModal({ type: 'listing-about-edit', closable: true }),
+                    )
+                  }
+                  setDisplayData={() => {
+                    setShowAbout((prev) => !prev)
+                    dispatch(updateAboutOpenState({ [data._id]: !showAbout }))
+                  }}
+                  expandData={showAbout}
+                >
+                  <div className={`${styles['location-heading']}`}>
+                    <h4 className={styles['heading']}>About</h4>
+                    <ul
+                      className={`${styles['hobby-list']} ${
+                        styles['tags-list']
+                      } ${styles['display-desktop']}${
+                        showAbout ? ' ' + styles['display-mobile'] : ''
+                      }`}
+                    ></ul>
+                  </div>
+                  {showAbout && (
+                    <div
+                      dangerouslySetInnerHTML={{ __html: data?.description }}
+                    ></div>
+                  )}
+                </PageContentBox>
+              )}
+            </div>
             {/* Listing Hobbies */}
             <PageContentBox
               className={hobbyError ? styles.error : ''}

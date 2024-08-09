@@ -5,6 +5,7 @@ import { ReactNode } from 'react'
 import Link from 'next/link'
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
 import ChevronDown from '@/assets/svg/chevron-down.svg'
+import DoubleChevron from '@/assets/svg/doubble_chevron.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import ListingHeader from '@/components/ListingPage/ListingHeader/ListingHeader'
@@ -425,7 +426,9 @@ const ListingPageLayout: React.FC<Props> = ({
           >
             {expandAll ? <p>See less</p> : <p>See more</p>}
             <Image
-              src={ChevronDown}
+              width={15}
+              height={15}
+              src={DoubleChevron}
               style={{ transition: 'all 0.3s ease' }}
               className={`${
                 expandAll ? styles['rotate-180'] : styles['rotate-0']
@@ -450,23 +453,6 @@ const ListingPageLayout: React.FC<Props> = ({
         <div className={styles['display-mobile-main']}>
           {activeTab === 'home' && (
             <div className={styles['display-mobile']}>
-              <PageContentBox
-                className={AboutErr ? styles.errorBorder : ''}
-                showEditButton={listingLayoutMode === 'edit'}
-                onEditBtnClick={() =>
-                  dispatch(
-                    openModal({ type: 'listing-about-edit', closable: true }),
-                  )
-                }
-              >
-                <h4>About</h4>
-                <div
-                  className={`${styles['about-text']} ${styles['display-mobile']}`}
-                  dangerouslySetInnerHTML={{
-                    __html: data.pageData?.description,
-                  }}
-                ></div>
-              </PageContentBox>
               {listingLayoutMode === 'edit' && (
                 <PageContentBox
                   showEditButton={listingLayoutMode === 'edit'}

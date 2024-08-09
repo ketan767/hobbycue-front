@@ -162,28 +162,30 @@ const HobbyDetail: React.FC<Props> = (props) => {
         <main>
           {/* About Section */}
           {/* <PageContentBox showEditButton={false} setDisplayData={setShowAbout}> */}
-          <PageContentBox>
-            <h4>
-              {'About'}{' '}
-              {user?.is_admin && (
-                <Image
-                  className={styles['pencil-edit']}
-                  src={EditIcon}
-                  alt="edit"
-                  onClick={() =>
-                    dispatch(
-                      openModal({ type: 'Hobby-about-edit', closable: true }),
-                    )
-                  }
-                />
-              )}
-            </h4>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: data?.description,
-              }}
-            ></div>
-          </PageContentBox>
+          <div className={styles['display-desktop']}>
+            <PageContentBox>
+              <h4>
+                {'About'}{' '}
+                {user?.is_admin && (
+                  <Image
+                    className={styles['pencil-edit']}
+                    src={EditIcon}
+                    alt="edit"
+                    onClick={() =>
+                      dispatch(
+                        openModal({ type: 'Hobby-about-edit', closable: true }),
+                      )
+                    }
+                  />
+                )}
+              </h4>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: data?.description,
+                }}
+              ></div>
+            </PageContentBox>
+          </div>
 
           {/* Keywords Section */}
           {data?.keywords?.length > 0 && (
