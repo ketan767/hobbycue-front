@@ -330,7 +330,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                   <div className={styles['profile-switcher-img']}>
                     {activeProfile.type === 'user' ? (
                       <>
-                        {activeProfile.data.profile_image ? (
+                        {activeProfile.data?.profile_image ? (
                           <img
                             className={styles['img']}
                             src={activeProfile?.data?.profile_image}
@@ -785,7 +785,20 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                 </section>
               </div>
             </div>
-            {isLoggedIn ? (
+            <div
+              className={`${styles['dropdown-container']} ${
+                exploreActive ? styles['dropdown-active'] : ''
+              } `}
+            >
+              <section className={styles['list-add-help']}>
+                <ul>
+                  <Link href={`/add-listing`}>
+                    <li>Add Listing Page</li>
+                  </Link>
+                </ul>
+              </section>
+            </div>
+            {isLoggedIn && (
               <div>
                 <div
                   className={`${styles['dropdown-container']} ${
@@ -798,11 +811,6 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                     </div>
                   </header>
                   <section className={styles['list']}>
-                    {/* <ul>
-                <Link href={'/hobby/music'}>
-                  <li>My orders</li>
-                </Link>
-              </ul> */}
                     <ul>
                       <Link href={`/activity`}>
                         <li>My Activity</li>
@@ -814,70 +822,57 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
                         <li>My Pages</li>
                       </Link>
                     </ul>
-
-                    <div
-                      className={`${styles['dropdown-container']} ${
-                        exploreActive ? styles['dropdown-active'] : ''
-                      } `}
-                    >
-                      <ul className={styles['add-listing-link']}>
-                        <Link href={`/add-listing`}>
-                          <li>Add Listing Page</li>
-                        </Link>
-                      </ul>
-                    </div>
-                    <div
-                      className={`${styles['dropdown-container']} ${
-                        exploreActive ? styles['dropdown-active'] : ''
-                      } `}
-                    >
-                      <ul className={styles['add-listing-link']}>
-                        <Link href={`/help`}>
-                          <li>Help Center</li>
-                        </Link>
-                      </ul>
-                    </div>
                   </section>
                 </div>
-                <div
-                  className={`${styles['dropdown-container']} ${
-                    exploreActive ? styles['dropdown-active'] : ''
-                  } `}
-                >
-                  <header>
-                    <div>
-                      <p>Account</p>
-                    </div>
-                  </header>
-                  <section className={styles['list']}>
-                    {/* <ul>
-                <Link href={'/hobby/music'}>
-                  <li>My orders</li>
-                </Link>
-              </ul> */}
-                    <ul>
-                      <Link
-                        href={`${
-                          isMobile ? '/settings' : '/settings/login-security'
-                        }`}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          e.preventDefault()
-                          if (isMobile) {
-                            router.push('/settings')
-                          } else {
-                            router.push('/settings/login-security')
-                          }
-                        }}
-                      >
-                        <li>Settings</li>
-                      </Link>
-                    </ul>
-                    <ul onClick={handleLogout}>
-                      <li>Sign Out</li>
-                    </ul>
-                  </section>
-                </div>
+              </div>
+            )}
+            <div
+              className={`${styles['dropdown-container']} ${
+                exploreActive ? styles['dropdown-active'] : ''
+              } `}
+            >
+              <section className={styles['list-add-help']}>
+                <ul>
+                  <Link href={`/help`}>
+                    <li>Help Center</li>
+                  </Link>
+                </ul>
+              </section>
+            </div>
+            {isLoggedIn ? (
+              <div
+                className={`${styles['dropdown-container']} ${
+                  exploreActive ? styles['dropdown-active'] : ''
+                } `}
+              >
+                <header>
+                  <div>
+                    <p>Account</p>
+                  </div>
+                </header>
+                <section className={styles['list']}>
+                  <ul>
+                    <Link
+                      href={`${
+                        isMobile ? '/settings' : '/settings/login-security'
+                      }`}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        e.preventDefault()
+                        if (isMobile) {
+                          router.push('/settings')
+                        } else {
+                          router.push('/settings/login-security')
+                        }
+                      }}
+                    >
+                      <li>Settings</li>
+                    </Link>
+                  </ul>
+                  <ul onClick={handleLogout}>
+                    <li>Sign Out</li>
+                  </ul>
+                </section>
               </div>
             ) : (
               ''

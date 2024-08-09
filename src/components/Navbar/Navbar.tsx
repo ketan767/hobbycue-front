@@ -178,7 +178,9 @@ export const Navbar: React.FC<Props> = ({}) => {
   }
 
   const searchResult = async () => {
+    dispatch(resetSearch())
     dispatch(setExplore(false))
+    dispatch(setSearchString(data.search.value.trim()))
     if (router.pathname !== '/search') {
       dispatch(showAllTrue())
       router.push('/search')

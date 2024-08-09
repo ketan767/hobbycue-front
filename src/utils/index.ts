@@ -235,3 +235,54 @@ export const pageType= (type: any) => {
 
 
 export const isMobile = () => useMediaQuery('(max-width:1100px)');
+
+
+export function formatDateRange(prop: {
+  from_date: string
+  to_date: string
+}): string {
+  // Helper function to format date to "DD MMM YYYY"
+  function formatDate(date: Date): string {
+    const options: Intl.DateTimeFormatOptions = {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    }
+    return date.toLocaleDateString('en-US', options).replace(',', '')
+  }
+
+  // Helper function to get parts of the date
+  function getDateParts(date: Date) {
+    const options: Intl.DateTimeFormatOptions = {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    }
+    const dateString = date
+      .toLocaleDateString('en-US', options)
+      .replace(',', '')
+    const [month, day, year] = dateString.split(' ')
+    return { day, month, year }
+  }
+
+  // Parse the dates and remove time component
+  const fromDateObj = new Date(prop?.from_date?.split('T')[0])
+  const toDateObj = new Date(prop?.to_date?.split('T')[0])
+
+  // Get date parts
+  const fromDateParts = getDateParts(fromDateObj)
+  const toDateParts = getDateParts(toDateObj)
+
+  // Construct the result based on parts comparison
+  let result = ''
+  if (fromDateParts.year !== toDateParts.year) {
+    result = `${fromDateParts.day} ${fromDateParts.month} ${fromDateParts.year} - ${toDateParts.day} ${toDateParts.month} ${toDateParts.year}`
+  } else if (fromDateParts.month !== toDateParts.month) {
+    result = `${fromDateParts.day} ${fromDateParts.month} - ${toDateParts.day} ${toDateParts.month} ${fromDateParts.year}`
+  } else if (fromDateParts.day !== toDateParts.day) {
+    result = `${fromDateParts.day} - ${toDateParts.day} ${fromDateParts.month} ${fromDateParts.year}`
+  } else {
+    result = `${toDateParts.day} ${fromDateParts.month} ${fromDateParts.year}`
+  }
+  return result
+}

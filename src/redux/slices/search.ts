@@ -22,6 +22,8 @@ export interface Page {
   _address: { city: string }
   page_url:string
   page_type: []
+  event_date_time: any
+  event_weekdays: any
 }
 
 interface hobbies {

@@ -13,7 +13,7 @@ import {
   toggleShowAllBlogs,
 } from '@/redux/slices/search'
 import { RootState } from '@/redux/store'
-import { MenuItem, Select } from '@mui/material'
+import { MenuItem, Select, useMediaQuery } from '@mui/material'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
@@ -23,7 +23,7 @@ import styles from './styles.module.css'
 import { SetLinkviaAuth } from '@/redux/slices/user'
 import Link from 'next/link'
 import SearchLoader from '@/components/SearchLoader'
-import { convertDateToString } from '@/utils'
+import { convertDateToString, formatDateRange } from '@/utils'
 
 type Props = {
   data?: any
@@ -60,6 +60,8 @@ type EventData = {
   _address: { city: string }
   page_url: string
   page_type: []
+  event_date_time: any
+  event_weekdays: any
 }
 type ProductData = {
   profile_image: string
@@ -355,25 +357,18 @@ const MainContent: React.FC<SearchResultsProps> = ({
     (PostsResults.length === 0 && showAllPosts) ||
     (BlogsResults.length === 0 && showAllBlogs && searchLoading === false)
 
+  const isMobile = useMediaQuery('(max-width:1100px)')
+
   return (
     <main className={styles.searchResults}>
       {noResultsFound ? (
         <div className={styles['no-results-wrapper']}>
           {searchString === '' ? (
-            isExplore ? (
-              <p>
-                The Explore functionality is under development. Use the Search
-                box at the top to look up pages on your hobby by other users. If
-                you don&apos;t find any pages, you may Add Listing Page from the
-                menu at the top right corner.
-              </p>
-            ) : (
-              <p>
-                Use the Search box at the top to look up pages on your hobby by
-                other users. If you don&apos;t find any pages, you may Add
-                Listing Page from the menu at the top right corner.
-              </p>
-            )
+            <p>
+              Use the Search box at the top to look up pages on your hobby by
+              other users. If you don&apos;t find any pages, you may Add Listing
+              Page from the menu at the top right corner.
+            </p>
           ) : (
             <p>
               {`No results for "${searchString}". `}Try shorter or alternate
@@ -698,6 +693,30 @@ const MainContent: React.FC<SearchResultsProps> = ({
                             (page._address?.city
                               ? ` | ${page._address?.city}`
                               : '') || '\u00a0'}
+                          {page?.event_date_time &&
+                            page?.event_date_time.length !== 0 && (
+                              <>
+                                {' | '}
+                                {formatDateRange(page?.event_date_time[0])}
+                                {!isMobile && (
+                                  <>
+                                    {', '}
+                                    {page?.event_date_time[0]?.from_time +
+                                      ' - '}
+                                    {page?.event_weekdays?.length > 0 ? (
+                                      <>
+                                        ...
+                                        <span className={styles['purpleText']}>
+                                          more
+                                        </span>
+                                      </>
+                                    ) : (
+                                      page?.event_date_time[0]?.to_time
+                                    )}
+                                  </>
+                                )}
+                              </>
+                            )}
                         </div>
                       </div>
                     </div>

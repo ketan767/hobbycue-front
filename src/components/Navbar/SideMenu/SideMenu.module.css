@@ -287,13 +287,13 @@
 .add-listing-link li {
   padding-top: 12px;
   color: var(--Purple-1, #8064A2);
-font-family: 'poppins';
-font-size: 14px;
-font-style: normal;
-font-weight: 500;
-line-height: 18px; /* 128.571% */
-letter-spacing: 0.07px;
-}
+  font-family: 'poppins';
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px; 
+  letter-spacing: 0.07px;
+  }
 
 .rotate180 {
   transform: rotate(180deg);
@@ -305,4 +305,19 @@ letter-spacing: 0.07px;
 
 .hobby-dropdown-options .list {
   padding: 9px 0;
+}
+
+.list-add-help {
+  padding: 12px 0 12px 0;
+}
+
+.list-add-help ul {
+  color: var(--Purple-1, #8064A2);
+  font-family: 'poppins';
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px; 
+  letter-spacing: 0.07px;
+  list-style: none;
 }
