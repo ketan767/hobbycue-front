@@ -31,6 +31,7 @@ import { updateProfileData, updateUser } from '@/redux/slices/user'
 import { withAuth } from '@/navigation/withAuth'
 import ProfileNavigationLinks from '@/components/ProfilePage/ProfileHeader/ProfileNavigationLinks'
 import {
+  updateAboutOpenState,
   updateProfileLayoutMode,
   updateProfileMenuExpandAll,
 } from '@/redux/slices/site'
@@ -58,6 +59,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
   const [titleError, setTitleError] = useState(false)
   const [locationError, setLocationError] = useState(false)
   const [contactError, setContactError] = useState(false)
+  const [showAbout, setShowAbout] = useState(true)
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -69,7 +71,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
-  const isMobile = useMediaQuery('(max-width:1100px)')
+  const isMobile = useMediaQuery('(min-width:1100px)')
   useEffect(() => {
     if (isMobile) {
       setExpandAll(true)
@@ -304,13 +306,55 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
         titleError={titleError}
         noDataChecker={noDataChecker}
       >
-        {data.pageData && (
+        {data?.pageData && (
           <PageGridLayout column={3}>
             <aside
               className={`custom-scrollbar ${styles['profile-left-aside']} ${
                 expandAll ? '' : styles['display-none']
               }`}
             >
+              <div className={styles['display-mobile-initial']}>
+                {data?.pageData?.description?.length > 0 && (
+                  <PageContentBox
+                    showEditButton={profileLayoutMode === 'edit'}
+                    onEditBtnClick={() =>
+                      dispatch(
+                        openModal({
+                          type: 'listing-about-edit',
+                          closable: true,
+                        }),
+                      )
+                    }
+                    setDisplayData={() => {
+                      setShowAbout((prev) => !prev)
+                      dispatch(
+                        updateAboutOpenState({
+                          [data?.pageData?._id]: !showAbout,
+                        }),
+                      )
+                    }}
+                    expandData={showAbout}
+                  >
+                    <div className={`${styles['location-heading']}`}>
+                      <h4 className={styles['heading']}>About</h4>
+                      <ul
+                        className={`${styles['hobby-list']} ${
+                          styles['tags-list']
+                        } ${styles['display-desktop']}${
+                          showAbout ? ' ' + styles['display-mobile'] : ''
+                        }`}
+                      ></ul>
+                    </div>
+                    {showAbout && (
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: data?.pageData?.description,
+                        }}
+                      ></div>
+                    )}
+                  </PageContentBox>
+                )}
+              </div>
               {/* User Hobbies */}
               <ProfileHobbySideList hobbyError={hobbyError} data={pageData} />
               <ProfilePagesList data={data} />
@@ -463,12 +507,6 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
               <ProfileSocialMediaSide data={pageData} />
             </aside>
 
-            <div className={styles['nav-mobile']}>
-              <ProfileNavigationLinks
-                navigationTabs={navigationTabs}
-                activeTab={'home'}
-              />
-            </div>
             {/* About for mobile view */}
             <div
               className={`${styles['display-mobile']} ${styles['mob-min-height']}`}

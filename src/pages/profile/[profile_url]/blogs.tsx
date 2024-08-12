@@ -104,9 +104,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
               <ProfileSocialMediaSide data={data.pageData} />
             </div>
           </aside>
-          <div className={styles['nav-mobile']}>
-            <ProfileNavigationLinks activeTab={'blogs'} />
-          </div>
+
           <main>
             {data?.blogsData.length !== 0 ? (
               <div className={styles['three-column-grid']}>

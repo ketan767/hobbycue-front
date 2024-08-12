@@ -272,9 +272,7 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
               <ProfileSocialMediaSide data={data.pageData} />
             </div>
           </aside>
-          <div className={styles['nav-mobile']}>
-            <ProfileNavigationLinks activeTab={'media'} />
-          </div>
+
           <div className={styles['main-media'] + ' margin-bottom-68vh'}>
             {profileLayoutMode === 'edit' && (
               <div className={styles.uploadContainer}>

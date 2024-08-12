@@ -284,10 +284,6 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
             <ProfileSocialMediaSide data={data.pageData} />
           </aside>
 
-          <div className={styles['nav-mobile']}>
-            <ProfileNavigationLinks activeTab={'posts'} />
-          </div>
-
           <section
             className={`content-box-wrapper ${styles['start-post-btn-container-mobile']}`}
           >

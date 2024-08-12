@@ -89,12 +89,6 @@ const ProfileLayout: React.FC<Props> = ({
         titleError={titleError}
         data={data.pageData}
       />
-      <div className={styles['nav']}>
-        <ProfileNavigationLinks
-          navigationTabs={navigationTabs}
-          activeTab={activeTab}
-        />
-      </div>
 
       {showSmallHeader && (
         <ProfileHeaderSmall
@@ -104,21 +98,30 @@ const ProfileLayout: React.FC<Props> = ({
           noDataChecker={noDataChecker}
         />
       )}
-
-      <div
-        onClick={() => {
-          if (setExpandAll !== undefined) setExpandAll(!expandAll)
-        }}
-        className={styles['expand-all']}
-      >
-        {expandAll ? <p>See less</p> : <p>See more</p>}
-        <Image
-          src={ChevronDown}
-          className={`${expandAll ? styles['rotate-180'] : styles['rotate-0']}`}
-          style={{ transition: 'all 0.3s ease' }}
-          alt=""
+      <div className={styles['nav-mobile']}>
+        <ProfileNavigationLinks
+          navigationTabs={navigationTabs}
+          activeTab={activeTab}
         />
       </div>
+      {activeTab === 'home' && (
+        <div
+          onClick={() => {
+            if (setExpandAll !== undefined) setExpandAll(!expandAll)
+          }}
+          className={styles['expand-all']}
+        >
+          {expandAll ? <p>See less</p> : <p>See more</p>}
+          <Image
+            src={ChevronDown}
+            className={`${
+              expandAll ? styles['rotate-180'] : styles['rotate-0']
+            }`}
+            style={{ transition: 'all 0.3s ease' }}
+            alt=""
+          />
+        </div>
+      )}
       {/* Profile Page Body, where all contents of different tabs appears. */}
       <main>{React.cloneElement(children, { expandAll })}</main>
     </>

@@ -147,9 +147,7 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
                 <ProfileSocialMediaSide data={data.pageData} />
               </div>
             </aside>
-            <div className={styles['nav-mobile']}>
-              <ProfileNavigationLinks activeTab={'pages'} />
-            </div>
+
             <main>
               {data.listingsData.length !== 0 && mounted ? (
                 // <div className={styles['card-container']}>
