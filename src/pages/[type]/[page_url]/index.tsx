@@ -33,7 +33,7 @@ const ListingHome: React.FC<Props> = (props) => {
   const [expandAll, setExpandAll] = useState(listing)
   const { user } = useSelector((state: RootState) => state.user)
   const { listingLayoutMode } = useSelector((state: any) => state.site)
-  console.warn('data', props.data)
+  console.warn('dataaaaaaaaaaaa', props.data)
   useEffect(() => {
     dispatch(updateListingPageData(props.data.pageData))
     dispatch(updateListingModalData(props.data.pageData))
