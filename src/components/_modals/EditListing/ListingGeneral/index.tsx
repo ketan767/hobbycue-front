@@ -550,11 +550,13 @@ const ListingGeneralEditModal: React.FC<Props> = ({
                     data.year.error ? styles['input-box-error'] : ''
                   }`}
                 >
-                  <label>
-                    {listingModalData.type === listingTypes.PEOPLE
-                      ? `Year Of Birth/${labelText}`
-                      : 'Year Of Establishment'}
-                  </label>
+                               <label>
+  {listingModalData.type === listingTypes.PEOPLE
+    ? `Year Of Birth/${labelText}`
+    : listingModalData.type === listingTypes.PRODUCT
+    ? 'Year Of Manufacture'
+    : 'Year Of Establishment'}
+</label>
                   <input
                     type="text"
                     placeholder="Year"
