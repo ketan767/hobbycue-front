@@ -3,6 +3,7 @@ import { ISitemapField } from 'next-sitemap'
 import { getAllUserUrls } from '@/services/user.service'
 import { getAllListingUrls } from '@/services/listing.service'
 import { getAllHobbies, getAllHobbiesUrls } from '@/services/hobby.service'
+import { pageType } from '@/utils'
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
@@ -30,7 +31,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   }))
 
   const pages: ISitemapField[] = pagesData.map((page) => ({
-    loc: `${baseUrl}/pages/${encodeURIComponent(page.page_url)}`,
+    loc: `${baseUrl}/${pageType(page?.type)}/${encodeURIComponent(
+      page.page_url,
+    )}`,
     lastmod: new Date().toISOString(),
   }))
 
