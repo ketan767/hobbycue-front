@@ -326,11 +326,11 @@ const AdminReport: React.FC = () => {
 
                     <td className={styles.LoginType}>
                       <a
-                        href={user.for_url}
+                        href={user?.for_url}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        {extractPath(user.for_url)}
+                        {extractPath(user?.for_url)}
                       </a>
                     </td>
                     <td className={styles.userPhone}>

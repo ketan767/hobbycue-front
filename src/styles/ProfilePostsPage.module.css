@@ -115,4 +115,7 @@
     position: static;
     height: auto;
   }
+  .display-none-responsive {
+    display: none !important;
+  }
 }

@@ -113,6 +113,8 @@ const PostCard: React.FC<Props> = (props) => {
       document.removeEventListener('click', handleClickOutside)
     }
   }, [])
+
+  console.warn('postdataaaaaaaaaaa', postData)
   const updatePost = async () => {
     const { err, res } = await getAllPosts(
       `_id=${postData._id}&populate=_author,_genre,_hobby`,
@@ -158,6 +160,8 @@ const PostCard: React.FC<Props> = (props) => {
     dispatch(openModal({ type: 'social-media-share', closable: true }))
   }
 
+  const postUrl = `${window.location.origin}/post/${postData._id}`
+
   const handleCardClick = async (e: any) => {
     // Check if the click is on the post-card-wrapper itself, not on its children
     // if (e.currentTarget === e.target) {
@@ -165,7 +169,11 @@ const PostCard: React.FC<Props> = (props) => {
     // }
     await fetchComments()
   }
-  const postedByMe = postData?._author?.email === user?.email
+  const postedByMe =
+    (postData.author_type === 'User' &&
+      postData?._author?.email === user?.email) ||
+    (postData?.author_type === 'Listing' &&
+      postData?._author.admin === user._id)
   const showFeatureUnderDevelopment = () => {
     setSnackbar({
       display: true,
@@ -359,7 +367,13 @@ const PostCard: React.FC<Props> = (props) => {
                   )}
                   <button
                     onClick={() => {
-                      showFeatureUnderDevelopment()
+                      dispatch(
+                        openModal({
+                          type: 'PostReportModal',
+                          closable: true,
+                          propData: { reported_url: postUrl },
+                        }),
+                      )
                       setOpenAction(false)
                     }}
                   >

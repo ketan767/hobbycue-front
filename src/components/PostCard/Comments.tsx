@@ -38,6 +38,8 @@ const PostComments = ({
   const { activeProfile, user, isLoggedIn } = useSelector(
     (state: RootState) => state.user,
   )
+  const [openAction, setOpenAction] = useState(false)
+  const [optionsActive, setOptionsActive] = useState(false)
   const [comments, setComments] = useState<any>([])
   const [loading, setLoading] = useState(false)
   const [inputValue, setInputValue] = useState('')
@@ -47,6 +49,13 @@ const PostComments = ({
     type: 'success',
     display: false,
     message: '',
+  })
+  const [deleteData, setDeleteData] = useState<{
+    open: boolean
+    _id: string | undefined
+  }>({
+    open: false,
+    _id: undefined,
   })
   const { activeModal, closable } = useSelector(
     (state: RootState) => state.modal,
@@ -96,7 +105,35 @@ const PostComments = ({
       dispatch(openModal({ type: 'auth', closable: true }))
     }
   }
+  const editReportDeleteRef: any = useRef(null)
+  useEffect(() => {
+    function handleClickOutside(event: Event) {
+      if (
+        editReportDeleteRef.current &&
+        !editReportDeleteRef.current.contains(event.target)
+      ) {
+        setOpenAction(false)
+      }
+    }
 
+    // Bind the event listener
+    document.addEventListener('click', handleClickOutside)
+
+    // Unbind the event listener on cleanup
+    return () => {
+      document.removeEventListener('click', handleClickOutside)
+    }
+  }, [])
+
+  console.warn('comments ddataaa', data)
+  const postedByMe =
+    (data.author_type === 'User' && data?._author?.email === user?.email) ||
+    (data?.author_type === 'Listing' && data?._author.admin === user._id)
+  const handleShowDelete = (postid: string) => {
+    setDeleteData({ open: true, _id: postid })
+  }
+
+  const postUrl = `${window.location.origin}/post/${data?._id}`
   const showFeatureUnderDevelopment = () => {
     setSnackbar({
       display: true,
@@ -234,7 +271,11 @@ const PostComments = ({
                           viewBox="0 0 24 24"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
-                          onClick={showFeatureUnderDevelopment}
+                          onClick={() => {
+                            if (postedByMe) {
+                              setOpenAction(true)
+                            }
+                          }}
                           cursor={'pointer'}
                         >
                           <g clip-path="url(#clip0_173_72884)">
@@ -249,6 +290,55 @@ const PostComments = ({
                             </clipPath>
                           </defs>
                         </svg>
+                        <div
+                          ref={editReportDeleteRef}
+                          className={styles.actionIcon}
+                        >
+                          {openAction === true && (
+                            <div className={styles.editReportDelete}>
+                              {postedByMe && (
+                                <>
+                                  <button
+                                    onClick={() => {
+                                      dispatch(
+                                        openModal({
+                                          type: 'update-post',
+                                          closable: true,
+                                          propData: data,
+                                        }),
+                                      )
+                                      setOpenAction(false)
+                                    }}
+                                  >
+                                    Edit
+                                  </button>
+                                  <button
+                                    onClick={() => {
+                                      handleShowDelete(data?._id)
+                                      setOpenAction(false)
+                                    }}
+                                  >
+                                    Delete
+                                  </button>
+                                </>
+                              )}
+                              <button
+                                onClick={() => {
+                                  dispatch(
+                                    openModal({
+                                      type: 'PostReportModal',
+                                      closable: true,
+                                      propData: { reported_url: postUrl },
+                                    }),
+                                  )
+                                  setOpenAction(false)
+                                }}
+                              >
+                                Report
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       </footer>
                     </section>
                   </div>
@@ -315,7 +405,11 @@ const PostComments = ({
                         viewBox="0 0 24 24"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
-                        onClick={showFeatureUnderDevelopment}
+                        onClick={() => {
+                          if (postedByMe) {
+                            setOptionsActive(true)
+                          } else setOpenAction(true)
+                        }}
                         cursor={'pointer'}
                       >
                         <g clip-path="url(#clip0_173_72884)">

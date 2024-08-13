@@ -438,6 +438,9 @@ margin-top: 16px;
   .join-online{
     margin-right: 33px;
   }
+  .display-none-responsive {
+    display: none !important;
+  }
 }
 
 @media screen and (min-width:1100px) {

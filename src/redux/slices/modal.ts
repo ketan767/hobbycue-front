@@ -65,6 +65,7 @@ export type ModalType =
   | 'SimpleOnboarding'
   | 'product-category'
   | 'Hobby-about-edit'
+  | 'PostReportModal'
 
 
   interface ModalState {

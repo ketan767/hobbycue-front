@@ -514,6 +514,7 @@ const ModalManager: React.FC = () => {
                 <SupportUserModal {...props} />
               )}
               {activeModal === 'UserReportModal' && <UserReport {...props} />}
+              {activeModal === 'PostReportModal' && <UserReport {...props} />}
               {activeModal === 'ListingReportModal' && (
                 <ListingReport {...props} />
               )}

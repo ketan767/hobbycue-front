@@ -44,7 +44,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
   const { profile } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(profile)
   const router = useRouter()
-  const isMobile = useMediaQuery('(max-width:1100px)')
+  const isMobile = useMediaQuery('(min-width:1100px)')
   useEffect(() => {
     if (isMobile) {
       setExpandAll(false)
@@ -159,7 +159,7 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
         <PageGridLayout column={3}>
           <aside
             className={`custom-scrollbar ${styles['profile-left-aside']} ${
-              expandAll ? '' : styles['display-none']
+              expandAll ? '' : styles['display-none-responsive']
             }`}
           >
             <ProfileHobbySideList data={data.pageData} />

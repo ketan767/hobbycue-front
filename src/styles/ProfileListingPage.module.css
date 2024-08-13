@@ -198,4 +198,7 @@ ul.contact-wrapper svg {
   .add-event{ 
     height: 88px;
   }
+  .display-none-responsive {
+    display: none !important;
+  }
 }

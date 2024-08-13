@@ -530,7 +530,9 @@ const ListingPageMain: React.FC<Props> = ({
         ) : (
           <aside
             className={`custom-scrollbar ${styles['page-left-aside']} ${
-              showAside ? styles['display-initial'] : styles['display-none']
+              showAside
+                ? styles['display-initial']
+                : styles['display-none-responsive']
             }`}
           >
             <div className={styles['display-desktop']}>

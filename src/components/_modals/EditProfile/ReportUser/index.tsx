@@ -30,6 +30,7 @@ type Props = {
   handleClose?: any
   isError?: boolean
   onStatusChange?: (isChanged: boolean) => void
+  propData?: any
 }
 
 type reportData = {
@@ -51,6 +52,7 @@ const UserReport: React.FC<Props> = ({
   setConfirmationModal,
   handleClose,
   onStatusChange,
+  propData,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
@@ -86,7 +88,7 @@ const UserReport: React.FC<Props> = ({
     reported_user_id: currprofile?._id,
     reported_user_name: currprofile?.full_name,
     reported_user_email: currprofile?.public_email,
-    for_url: currentUrl,
+    for_url: propData?.reported_url ? propData?.reported_url : currentUrl,
   })
   const [isChanged, setIsChanged] = useState(false)
   const [snackbar, setSnackbar] = useState({
@@ -104,7 +106,7 @@ const UserReport: React.FC<Props> = ({
       reported_user_id: currprofile?._id,
       reported_user_name: currprofile?.full_name,
       reported_user_email: currprofile?.public_email,
-      for_url: currentUrl,
+      for_url: propData?.reported_url ? propData?.reported_url : currentUrl,
     })
   }, [user])
 
@@ -181,7 +183,7 @@ const UserReport: React.FC<Props> = ({
       reported_user_id: currprofile?._id,
       reported_user_name: currprofile?.full_name,
       reported_user_email: currprofile?.public_email,
-      for_url: currentUrl,
+      for_url: propData?.reported_url ? propData?.reported_url : currentUrl,
     })
   }, [user])
 

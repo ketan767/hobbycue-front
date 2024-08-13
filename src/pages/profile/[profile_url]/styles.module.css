@@ -358,4 +358,7 @@ width: 100%;
  .display-mobile-initial {
   display: block !important;
  }
+ .display-none-responsive {
+  display: none !important;
+}
 }

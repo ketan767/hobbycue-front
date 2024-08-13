@@ -121,6 +121,9 @@ export const CreatePost: React.FC<Props> = ({
     if (propData && propData.visibility) {
       setData((prev) => ({ ...prev, visibility: propData.visibility }))
     }
+    if (propData && propData?.media.length !== 0) {
+      setData((prev) => ({ ...prev, media: propData.media }))
+    }
     if (propData && propData._id) {
       setEditing(true)
     }
@@ -560,14 +563,6 @@ export const CreatePost: React.FC<Props> = ({
     console.log('jsonData genreId', jsonData.genreId)
     setSubmitBtnLoading(true)
 
-    if (editing || (propData && propData._id)) {
-      showFeatureUnderDevelopment()
-      await setTimeout(() => {
-        return
-      }, 2500)
-      return
-    }
-
     if (data.type === 'listing') {
       jsonData.listingId = data.data._id
       const { err, res } = await createListingPost(jsonData)
@@ -988,13 +983,11 @@ export const CreatePost: React.FC<Props> = ({
               loading={submitBtnLoading}
             >
               {submitBtnLoading ? (
-                <CircularProgress color="inherit" size={'16px'}  />
-
+                <CircularProgress color="inherit" size={'16px'} />
               ) : (
                 'Post'
               )}
             </FilledButton>
-           
           </div>
         </div>
       </div>

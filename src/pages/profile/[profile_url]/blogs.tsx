@@ -87,7 +87,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
         <PageGridLayout column={2}>
           <aside
             className={`custom-scrollbar ${styles['profile-left-aside']} ${
-              expandAll ? '' : styles['display-none']
+              expandAll ? '' : styles['display-none-responsive']
             }`}
           >
             {/* User Hobbies */}

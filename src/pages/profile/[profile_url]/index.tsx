@@ -310,7 +310,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
           <PageGridLayout column={3}>
             <aside
               className={`custom-scrollbar ${styles['profile-left-aside']} ${
-                expandAll ? '' : styles['display-none']
+                expandAll ? '' : styles['display-none-responsive']
               }`}
             >
               <div className={styles['display-mobile-initial']}>

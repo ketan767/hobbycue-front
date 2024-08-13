@@ -189,14 +189,14 @@ const HobbyPageLayout: React.FC<Props> = ({
       )}
 
       <PageGridLayout column={!hideLastColumn ? 3 : 2}>
-        {activeTab === 'home' && (
+        {activeTab === activeTab && (
           <aside
             className={`custom-scrollbar ${styles['hobby-left-aside']}
             
           `}
           >
             <div className={styles['display-mobile']}>
-              {data?.description?.length > 0 && (
+              {activeTab == 'home' && data?.description?.length > 0 && (
                 <PageContentBox
                   showEditButton={false}
                   setDisplayData={() => {
@@ -226,62 +226,64 @@ const HobbyPageLayout: React.FC<Props> = ({
                 </PageContentBox>
               )}
             </div>
-            <PageContentBox
-              showEditButton={false}
-              initialShowDropdown
-              setDisplayData={(arg0: boolean) => {
-                setShowHobbiesClassification((prev) => {
-                  dispatch(updateHobbyOpenState({ [data._id]: !prev }))
-                  return !prev
-                })
-              }}
-              expandData={showHobbiesClassification}
-            >
-              <h4 className={styles['heading']}>
-                {'Hobbies Classification'}
-                {user?.is_admin && (
-                  <Image
-                    className={styles['pencil-edit']}
-                    src={EditIcon}
-                    alt="edit"
-                    onClick={() =>
-                      router.push(`/admin/hobby/edit/${data?.slug}`)
-                    }
-                  />
-                )}
-              </h4>
-              <div
-                className={`${styles['display-desktop']}${
-                  showHobbiesClassification
-                    ? ' ' + styles['display-mobile']
-                    : ''
-                }`}
+            {(!isMobile || (isMobile && activeTab === 'home')) && (
+              <PageContentBox
+                showEditButton={false}
+                initialShowDropdown
+                setDisplayData={(arg0: boolean) => {
+                  setShowHobbiesClassification((prev) => {
+                    dispatch(updateHobbyOpenState({ [data._id]: !prev }))
+                    return !prev
+                  })
+                }}
+                expandData={showHobbiesClassification}
               >
-                <ul className={styles['classification-items']}>
-                  {data?.category?.slug && (
-                    <Link href={`/hobby/${data?.category?.slug}`}>
-                      <li>{data?.category?.display}</li>
-                    </Link>
+                <h4 className={styles['heading']}>
+                  {'Hobbies Classification'}
+                  {user?.is_admin && (
+                    <Image
+                      className={styles['pencil-edit']}
+                      src={EditIcon}
+                      alt="edit"
+                      onClick={() =>
+                        router.push(`/admin/hobby/edit/${data?.slug}`)
+                      }
+                    />
                   )}
-                  {data?.sub_category?.slug && (
-                    <Link href={`/hobby/${data?.sub_category?.slug}`}>
-                      <li>{data?.sub_category?.display}</li>
-                    </Link>
-                  )}
-                  {data?.tags &&
-                    data?.tags.map((tag: any, idx: number) => {
-                      return tag.slug ? (
-                        <Link key={idx} href={`/hobby/${tag?.slug}`}>
-                          <li>{tag.display}</li>
-                        </Link>
-                      ) : null
-                    })}
-                  <li className={styles['active']}>
-                    <p>{data?.display}</p>
-                  </li>
-                </ul>
-              </div>
-            </PageContentBox>
+                </h4>
+                <div
+                  className={`${styles['display-desktop']}${
+                    showHobbiesClassification
+                      ? ' ' + styles['display-mobile']
+                      : ''
+                  }`}
+                >
+                  <ul className={styles['classification-items']}>
+                    {data?.category?.slug && (
+                      <Link href={`/hobby/${data?.category?.slug}`}>
+                        <li>{data?.category?.display}</li>
+                      </Link>
+                    )}
+                    {data?.sub_category?.slug && (
+                      <Link href={`/hobby/${data?.sub_category?.slug}`}>
+                        <li>{data?.sub_category?.display}</li>
+                      </Link>
+                    )}
+                    {data?.tags &&
+                      data?.tags.map((tag: any, idx: number) => {
+                        return tag.slug ? (
+                          <Link key={idx} href={`/hobby/${tag?.slug}`}>
+                            <li>{tag.display}</li>
+                          </Link>
+                        ) : null
+                      })}
+                    <li className={styles['active']}>
+                      <p>{data?.display}</p>
+                    </li>
+                  </ul>
+                </div>
+              </PageContentBox>
+            )}
           </aside>
         )}
 
