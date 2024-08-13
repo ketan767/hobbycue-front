@@ -48,6 +48,7 @@ const tabs: ListingPageTabs[] = [
   'media',
   'reviews',
   'store',
+  'related',
   'orders',
 ]
 
@@ -776,8 +777,20 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
         <nav>
           <div className={styles['navigation-tabs']}>
             {tabs.map((tab) => {
+              if (['posts', 'store'].includes(tab)) {
+                if (data.type === 4) {
+                  return
+                }
+              }
+
+              if (tab === 'related') {
+                if (data.type !== 4) {
+                  return
+                }
+              }
+
               if (tab === 'events') {
-                if (data.type !== 3)
+                if (![3, 4].includes(data.type))
                   return (
                     <Link
                       key={tab}
@@ -799,7 +812,7 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                     </Link>
                   )
               } else if (tab === 'orders') {
-                if (data.type === 3 && listingLayoutMode === 'edit')
+                if ([3, 4].includes(data.type) && listingLayoutMode === 'edit')
                   return (
                     <Link
                       key={tab}

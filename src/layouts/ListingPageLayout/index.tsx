@@ -227,6 +227,7 @@ const ListingPageLayout: React.FC<Props> = ({
     'media',
     'reviews',
     'store',
+    'related',
     'orders',
   ]
   let content
@@ -263,8 +264,20 @@ const ListingPageLayout: React.FC<Props> = ({
       <nav className={styles['nav']}>
         <div className={`${styles['navigation-tabs']}`}>
           {tabs.map((tab) => {
+            if (['posts', 'store'].includes(tab)) {
+              if (data.pageData.type === 4) {
+                return
+              }
+            }
+
+            if (tab === 'related') {
+              if (data.pageData.type !== 4) {
+                return
+              }
+            }
+
             if (tab === 'events') {
-              if (data.pageData.type !== 3)
+              if (![3, 4].includes(data.pageData.type))
                 return (
                   <a
                     key={tab}
@@ -284,7 +297,10 @@ const ListingPageLayout: React.FC<Props> = ({
                   </a>
                 )
             } else if (tab === 'orders') {
-              if (data.pageData.type === 3 && listingLayoutMode === 'edit')
+              if (
+                [3, 4].includes(data.pageData.type) &&
+                listingLayoutMode === 'edit'
+              )
                 return (
                   <a
                     key={tab}
@@ -321,8 +337,20 @@ const ListingPageLayout: React.FC<Props> = ({
           }`}
         >
           {tabs.map((tab) => {
+            if (['posts', 'store'].includes(tab)) {
+              if (data.pageData.type === 4) {
+                return
+              }
+            }
+
+            if (tab === 'related') {
+              if (data.pageData.type !== 4) {
+                return
+              }
+            }
+
             if (tab === 'events') {
-              if (data.pageData.type !== 3)
+              if (![3, 4].includes(data.pageData.type))
                 return (
                   <a
                     key={tab}
@@ -342,7 +370,10 @@ const ListingPageLayout: React.FC<Props> = ({
                   </a>
                 )
             } else if (tab === 'orders') {
-              if (data.pageData.type === 3 && listingLayoutMode === 'edit')
+              if (
+                [3, 4].includes(data.pageData.type) &&
+                listingLayoutMode === 'edit'
+              )
                 return (
                   <a
                     key={tab}
