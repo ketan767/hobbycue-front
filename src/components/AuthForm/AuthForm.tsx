@@ -499,6 +499,9 @@ const AuthForm: React.FC<Props> = (props) => {
               variant="outlined"
               size="small"
               name="email"
+              sx={{
+                '& .MuiOutlinedInput-root': { touchAction: 'manipulation' },
+              }}
               value={authFormData.email}
               onChange={(e) => handleInputChange(e.target.name, e.target.value)}
               error={Boolean(inputErrors.email)}
@@ -519,7 +522,11 @@ const AuthForm: React.FC<Props> = (props) => {
               label="Password"
               type={showPassword ? 'text' : 'password'}
               sx={{
-                '& .MuiOutlinedInput-root': { padding: 0, background: 'white' },
+                '& .MuiOutlinedInput-root': {
+                  padding: 0,
+                  background: 'white',
+                  touchAction: 'manipulation',
+                },
               }}
               variant="outlined"
               autoComplete={
