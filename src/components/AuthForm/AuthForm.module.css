@@ -143,6 +143,10 @@
   font-size: 12px;
   line-height: 20px;
 }
+.email-field {
+  touch-action: manipulation;
+}
+
 .password-field .show-pass-icon {
   all: unset;
   height: -webkit-fill-available;

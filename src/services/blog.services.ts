@@ -46,3 +46,17 @@ export const addBlogComment = async (data: {
     return { err: error, res: null }
   }
 }
+
+export const searchBlogs = async (searchCriteria:any) => {
+  try {
+    const queryParams = new URLSearchParams();
+    for (const key in searchCriteria) {
+      queryParams.append(key, searchCriteria[key]);
+    }
+    const response = await axiosInstance.get(`/blogs/blog-search?${queryParams}`);
+    return { res: response.data, err: null };
+  } catch (error) {
+    console.error('Error searching for pages:', error);
+    return { res: null, err: error };
+  }
+};

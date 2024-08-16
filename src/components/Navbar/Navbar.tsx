@@ -69,7 +69,7 @@ import { usePathname } from 'next/navigation'
 import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import { useMediaQuery } from '@mui/material'
 import { getAllPosts } from '@/services/post.service'
-import { getAllBlogs } from '@/services/blog.services'
+import { getAllBlogs, searchBlogs } from '@/services/blog.services'
 
 type Props = {}
 
@@ -332,6 +332,38 @@ export const Navbar: React.FC<Props> = ({}) => {
         dispatch(
           setHobbiesSearchResult({
             data: sortedHobbies,
+            message: 'Search completed successfully.',
+            success: true,
+          }),
+        )
+      }
+
+      dispatch(setShowPageLoader(true))
+      const { res: blogRes, err: BlogErr } = await searchBlogs({
+        title: searchValue,
+      })
+      if (BlogErr) {
+        console.error('An error occurred during the page search:', BlogErr)
+      } else {
+        const sortedblog = blogRes?.data?.sort((a: any, b: any) => {
+          const indexA = a.display
+            .toLowerCase()
+            .indexOf(searchValue.toLowerCase())
+          const indexB = b.display
+            .toLowerCase()
+            .indexOf(searchValue.toLowerCase())
+
+          if (indexA === 0 && indexB !== 0) {
+            return -1
+          } else if (indexB === 0 && indexA !== 0) {
+            return 1
+          }
+          return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
+        })
+        console.log('blog search results:', blogRes?.data)
+        dispatch(
+          setBlogsSearchResult({
+            data: sortedblog,
             message: 'Search completed successfully.',
             success: true,
           }),

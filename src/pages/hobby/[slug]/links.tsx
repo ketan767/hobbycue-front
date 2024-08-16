@@ -20,6 +20,7 @@ import { openModal } from '@/redux/slices/modal'
 import { updateHobbyMenuExpandAll } from '@/redux/slices/site'
 import { useMediaQuery } from '@mui/material'
 import LinksLoader from '@/components/LinksLoader/LinksLoader'
+import Head from 'next/head'
 
 type Props = { data: { hobbyData: any } }
 
@@ -94,6 +95,12 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
 
   return (
     <>
+      <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
+      </Head>
       <HobbyPageLayout
         activeTab="links"
         data={data}
