@@ -1120,7 +1120,7 @@ const Search: React.FC<Props> = ({ data, children }) => {
     (state: RootState) => state.search.hobbiesSearchResults.data,
   )
 
-  console.log('hobbyyyy', hobbySearchResults)
+  console.log('bloggggg', BlogsSearch)
   console.log('placeee', PlaceSearch)
 
   useEffect(() => {
