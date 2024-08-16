@@ -68,7 +68,7 @@ import { setShowPageLoader } from '@/redux/slices/site'
 import { usePathname } from 'next/navigation'
 import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import { useMediaQuery } from '@mui/material'
-import { getAllPosts } from '@/services/post.service'
+import { getAllPosts, searchPosts } from '@/services/post.service'
 import { getAllBlogs, searchBlogs } from '@/services/blog.services'
 
 type Props = {}
@@ -363,6 +363,37 @@ export const Navbar: React.FC<Props> = ({}) => {
         console.log('blog search results:', blogRes?.data)
         dispatch(
           setBlogsSearchResult({
+            data: sortedblog,
+            message: 'Search completed successfully.',
+            success: true,
+          }),
+        )
+      }
+
+      const { res: PostRes, err: PostErr } = await searchPosts({
+        title: searchValue,
+      })
+      if (PostErr) {
+        console.error('An error occurred during the page search:', PostErr)
+      } else {
+        const sortedblog = PostRes?.data?.sort((a: any, b: any) => {
+          const indexA = a.display
+            .toLowerCase()
+            .indexOf(searchValue.toLowerCase())
+          const indexB = b.display
+            .toLowerCase()
+            .indexOf(searchValue.toLowerCase())
+
+          if (indexA === 0 && indexB !== 0) {
+            return -1
+          } else if (indexB === 0 && indexA !== 0) {
+            return 1
+          }
+          return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
+        })
+        console.log('blog search results:', PostRes?.data)
+        dispatch(
+          setPostsSearchResult({
             data: sortedblog,
             message: 'Search completed successfully.',
             success: true,
