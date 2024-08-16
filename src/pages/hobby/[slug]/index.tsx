@@ -138,6 +138,11 @@ const HobbyDetail: React.FC<Props> = (props) => {
       <Head>
         {data?.profile_image ? (
           <>
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+            />
+
             <meta property="og:image" content={`${data?.profile_image}`} />
 
             <meta

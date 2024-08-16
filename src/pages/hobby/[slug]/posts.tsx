@@ -19,6 +19,7 @@ import PostCard from '@/components/PostCard/PostCard'
 import { openModal } from '@/redux/slices/modal'
 import { updateHobbyMenuExpandAll } from '@/redux/slices/site'
 import { useMediaQuery } from '@mui/material'
+import Head from 'next/head'
 
 type Props = { data: { hobbyData: any } }
 
@@ -91,15 +92,22 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
   }
 
   return (
-    <div>
-      <HobbyPageLayout
-        activeTab="posts"
-        data={data}
-        expandAll={expandAll}
-        setExpandAll={handleExpandAll}
-      >
-        <main className={`${styles['display-desktop']}`}>
-          {/* {isLoggedIn && (
+    <>
+      <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
+      </Head>
+      <div>
+        <HobbyPageLayout
+          activeTab="posts"
+          data={data}
+          expandAll={expandAll}
+          setExpandAll={handleExpandAll}
+        >
+          <main className={`${styles['display-desktop']}`}>
+            {/* {isLoggedIn && (
             <div className={styles['start-post-btn']}>
               <button
                 onClick={() => {
@@ -119,67 +127,68 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
             </div>
           )} */}
 
-          <section className={`${styles['posts-container']}`}>
-            {loadingPosts ? (
-              <>
-                <PostCardSkeletonLoading />
-                <PostCardSkeletonLoading />
-                <PostCardSkeletonLoading />
-              </>
-            ) : (
-              posts.length === 0 &&
-              isLoggedIn && (
-                <div className={styles['no-posts-container']}>
-                  <p>No posts available</p>
-                </div>
-              )
-            )}
-            {isLoggedIn ? (
-              posts.map((post: any) => {
-                return (
-                  <PostCard
-                    key={post._id}
-                    postData={post}
-                    currentSection="posts"
-                  />
+            <section className={`${styles['posts-container']}`}>
+              {loadingPosts ? (
+                <>
+                  <PostCardSkeletonLoading />
+                  <PostCardSkeletonLoading />
+                  <PostCardSkeletonLoading />
+                </>
+              ) : (
+                posts.length === 0 &&
+                isLoggedIn && (
+                  <div className={styles['no-posts-container']}>
+                    <p>No posts available</p>
+                  </div>
                 )
-              })
-            ) : (
-              <div className={styles['no-posts-container']}>
-                <p
-                  className="cursor-pointer"
-                  onClick={() => {
-                    dispatch(openModal({ type: 'auth', closable: true }))
-                  }}
-                >
-                  Login to see the posts
-                </p>
-              </div>
-            )}
-          </section>
-        </main>
-        <main className={`${styles['display-mobile']}`}>
-          <section className={`${styles['posts-container']}}`}>
-            {loadingPosts ? (
-              <>
-                <PostCardSkeletonLoading />
-                <PostCardSkeletonLoading />
-                <PostCardSkeletonLoading />
-              </>
-            ) : (
-              posts.length === 0 && (
+              )}
+              {isLoggedIn ? (
+                posts.map((post: any) => {
+                  return (
+                    <PostCard
+                      key={post._id}
+                      postData={post}
+                      currentSection="posts"
+                    />
+                  )
+                })
+              ) : (
                 <div className={styles['no-posts-container']}>
-                  <p>No posts available</p>
+                  <p
+                    className="cursor-pointer"
+                    onClick={() => {
+                      dispatch(openModal({ type: 'auth', closable: true }))
+                    }}
+                  >
+                    Login to see the posts
+                  </p>
                 </div>
-              )
-            )}
-            {posts.map((post: any) => {
-              return <PostCard key={post._id} postData={post} />
-            })}
-          </section>
-        </main>
-      </HobbyPageLayout>
-    </div>
+              )}
+            </section>
+          </main>
+          <main className={`${styles['display-mobile']}`}>
+            <section className={`${styles['posts-container']}}`}>
+              {loadingPosts ? (
+                <>
+                  <PostCardSkeletonLoading />
+                  <PostCardSkeletonLoading />
+                  <PostCardSkeletonLoading />
+                </>
+              ) : (
+                posts.length === 0 && (
+                  <div className={styles['no-posts-container']}>
+                    <p>No posts available</p>
+                  </div>
+                )
+              )}
+              {posts.map((post: any) => {
+                return <PostCard key={post._id} postData={post} />
+              })}
+            </section>
+          </main>
+        </HobbyPageLayout>
+      </div>
+    </>
   )
 }
 

@@ -221,6 +221,7 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
                     : {}
                 }
                 required
+                inputProps={{ inputMode: 'text' }}
                 placeholder="Current Password"
                 type={showcurrPassword ? 'text' : 'password'}
                 onChange={(e) => setCurrentPassword(e.target.value)}

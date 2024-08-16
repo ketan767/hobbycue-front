@@ -74,6 +74,7 @@
 }
 
 .pencil-edit {
+  cursor: pointer;
   margin-left: 6px;
 }
 

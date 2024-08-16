@@ -64,6 +64,10 @@ function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
         <title>HobbyCue - Your Hobby, Your Community</title>
       </Head>
       <StyledEngineProvider injectFirst>

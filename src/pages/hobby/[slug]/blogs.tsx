@@ -22,6 +22,7 @@ import { useMediaQuery } from '@mui/material'
 import { getAllBlogs } from '@/services/blog.services'
 import BlogLoader from '@/components/BlogsLoader/BlogLoader'
 import BlogCard from '@/components/BlogCard/BlogCard'
+import Head from 'next/head'
 
 type Props = { data: { hobbyData: any } }
 
@@ -92,6 +93,12 @@ const HobbyBlogsPage: React.FC<Props> = (props) => {
 
   return (
     <>
+      <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
+      </Head>
       <HobbyPageLayout
         activeTab="blogs"
         data={data}
