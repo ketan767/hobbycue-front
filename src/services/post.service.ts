@@ -310,7 +310,7 @@ export const searchPosts = async (searchCriteria:any) => {
     for (const key in searchCriteria) {
       queryParams.append(key, searchCriteria[key]);
     }
-    const response = await axiosInstance.get(`/blogs/posts-search?${queryParams}`);
+    const response = await axiosInstance.get(`/post/post-search?${queryParams}`);
     return { res: response.data, err: null };
   } catch (error) {
     console.error('Error searching for pages:', error);

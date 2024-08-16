@@ -1120,9 +1120,6 @@ const Search: React.FC<Props> = ({ data, children }) => {
     (state: RootState) => state.search.hobbiesSearchResults.data,
   )
 
-  console.log('bloggggg', BlogsSearch)
-  console.log('placeee', PlaceSearch)
-
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 1100)

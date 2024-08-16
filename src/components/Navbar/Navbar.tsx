@@ -342,28 +342,28 @@ export const Navbar: React.FC<Props> = ({}) => {
       const { res: blogRes, err: BlogErr } = await searchBlogs({
         title: searchValue,
       })
+
       if (BlogErr) {
         console.error('An error occurred during the page search:', BlogErr)
       } else {
-        const sortedblog = blogRes?.data?.sort((a: any, b: any) => {
-          const indexA = a.display
-            .toLowerCase()
-            .indexOf(searchValue.toLowerCase())
-          const indexB = b.display
-            .toLowerCase()
-            .indexOf(searchValue.toLowerCase())
+        const sortedBlog = blogRes?.data?.sort((a: any, b: any) => {
+          const titleA = a.title?.toLowerCase()
+          const titleB = b.title?.toLowerCase()
+          const indexA = titleA.indexOf(searchValue?.toLowerCase())
+          const indexB = titleB.indexOf(searchValue?.toLowerCase())
 
           if (indexA === 0 && indexB !== 0) {
             return -1
           } else if (indexB === 0 && indexA !== 0) {
             return 1
           }
-          return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
+          return titleA.localeCompare(titleB)
         })
-        console.log('blog search results:', blogRes?.data)
+
+        console.log('blog search results:', sortedBlog)
         dispatch(
           setBlogsSearchResult({
-            data: sortedblog,
+            data: sortedBlog,
             message: 'Search completed successfully.',
             success: true,
           }),
@@ -371,16 +371,16 @@ export const Navbar: React.FC<Props> = ({}) => {
       }
 
       const { res: PostRes, err: PostErr } = await searchPosts({
-        title: searchValue,
+        content: searchValue,
       })
       if (PostErr) {
         console.error('An error occurred during the page search:', PostErr)
       } else {
-        const sortedblog = PostRes?.data?.sort((a: any, b: any) => {
-          const indexA = a.display
+        const sortedposts = PostRes?.data?.sort((a: any, b: any) => {
+          const indexA = a?.content
             .toLowerCase()
             .indexOf(searchValue.toLowerCase())
-          const indexB = b.display
+          const indexB = b?.content
             .toLowerCase()
             .indexOf(searchValue.toLowerCase())
 
@@ -389,12 +389,14 @@ export const Navbar: React.FC<Props> = ({}) => {
           } else if (indexB === 0 && indexA !== 0) {
             return 1
           }
-          return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
+          return a?.content
+            ?.toLowerCase()
+            ?.localeCompare(b?.content?.toLowerCase())
         })
-        console.log('blog search results:', PostRes?.data)
+        console.warn('posts search results:', PostRes?.data)
         dispatch(
           setPostsSearchResult({
-            data: sortedblog,
+            data: sortedposts,
             message: 'Search completed successfully.',
             success: true,
           }),
