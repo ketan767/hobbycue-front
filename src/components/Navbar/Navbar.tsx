@@ -7,7 +7,11 @@ import IconButton from '@mui/material/IconButton'
 // import SearchIcon from '@mui/icons-material/Search'
 
 import Image from 'next/image'
-import { getListingPages, searchPages } from '@/services/listing.service'
+import {
+  getAllEvents,
+  getListingPages,
+  searchPages,
+} from '@/services/listing.service'
 import {
   setUserSearchResults,
   setTypeResultOne,
@@ -445,12 +449,9 @@ export const Navbar: React.FC<Props> = ({}) => {
   }
 
   const ExploreEvents = async () => {
-    const { res: EventRes, err: EventErr } = await getListingPages(
-      `type=3&sort=-createdAt&is_published=true`,
-    )
+    const { res: EventRes, err: EventErr } = await getAllEvents()
 
-    const EventPages = EventRes?.data.data?.listings
-    console.warn('EventPagesssssssssssssss', EventPages)
+    const EventPages = EventRes?.data?.data
 
     dispatch(
       setTypeResultThree({

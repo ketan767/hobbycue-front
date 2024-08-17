@@ -537,7 +537,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
             searchLoading === false && (
               <section className={styles.userSection}>
                 <div className={styles.peopleItemsContainer}>
-                  <div className={styles.resultHeading}>People</div>
+                  {!isExplore && (
+                    <div className={styles.resultHeading}>People</div>
+                  )}
                   {peopleResults
                     .slice(0, showAllPeople ? undefined : 3)
                     .map((page, index) => (
@@ -602,7 +604,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
           {!HidePlace && placeResults.length > 0 && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
-                <div className={styles.resultHeading}>Places</div>
+                {!isExplore && (
+                  <div className={styles.resultHeading}>Places</div>
+                )}
                 {placeResults
                   .slice(0, showAllPlace ? undefined : 3)
                   .map((page, index) => (
@@ -662,7 +666,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
           {!HideEvent && EventResults.length > 0 && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
-                <div className={styles.resultHeading}>Programs</div>
+                {!isExplore && (
+                  <div className={styles.resultHeading}>Programs</div>
+                )}
                 {EventResults.slice(0, showAllEvent ? undefined : 3).map(
                   (page, index) => (
                     <div
@@ -747,7 +753,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
             searchLoading === false && (
               <section className={styles.userSection}>
                 <div className={styles.peopleItemsContainer}>
-                  <div className={styles.resultHeading}>products</div>
+                  {!isExplore && (
+                    <div className={styles.resultHeading}>products</div>
+                  )}
                   {ProductResults.slice(0, showAllProducts ? undefined : 3).map(
                     (page, index) => (
                       <div
@@ -806,7 +814,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
           {!HidePosts && PostsResults.length > 0 && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
-                <div className={styles.resultHeading}>Posts</div>
+                {!isExplore && (
+                  <div className={styles.resultHeading}>Posts</div>
+                )}
                 {PostsResults.slice(0, showAllPosts ? undefined : 3).map(
                   (page, index) => (
                     <div
@@ -891,7 +901,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
           {!HideBlogs && BlogsResults.length > 0 && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
-                <div className={styles.resultHeading}>Blogs</div>
+                {!isExplore && (
+                  <div className={styles.resultHeading}>Blogs</div>
+                )}
                 {BlogsResults.slice(0, showAllBlogs ? undefined : 3).map(
                   (page, index) => (
                     <div
