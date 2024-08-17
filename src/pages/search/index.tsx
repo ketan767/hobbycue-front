@@ -23,7 +23,13 @@ import styles from './styles.module.css'
 import { SetLinkviaAuth } from '@/redux/slices/user'
 import Link from 'next/link'
 import SearchLoader from '@/components/SearchLoader'
-import { convertDateToString, formatDateRange } from '@/utils'
+import {
+  convertDateToString,
+  formatDateRange,
+  formatDateTime,
+  formatDateTimeThree,
+  formatDateTimeTwo,
+} from '@/utils'
 
 type Props = {
   data?: any
@@ -933,7 +939,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         </div>
                         <div className={styles.userLocation}>
                           {page?.author?.full_name}{' '}
-                          {page.createdAt ? ' | ' + page.createdAt : ''}
+                          {page.createdAt
+                            ? ' | ' + formatDateTimeThree(page.createdAt)
+                            : ''}
                         </div>
                       </div>
                     </div>

@@ -373,38 +373,39 @@ export const Navbar: React.FC<Props> = ({}) => {
           }),
         )
       }
-
-      const { res: PostRes, err: PostErr } = await searchPosts({
-        content: searchValue,
-      })
-      if (PostErr) {
-        console.error('An error occurred during the page search:', PostErr)
-      } else {
-        const sortedposts = PostRes?.data?.sort((a: any, b: any) => {
-          const indexA = a?.content
-            .toLowerCase()
-            .indexOf(searchValue.toLowerCase())
-          const indexB = b?.content
-            .toLowerCase()
-            .indexOf(searchValue.toLowerCase())
-
-          if (indexA === 0 && indexB !== 0) {
-            return -1
-          } else if (indexB === 0 && indexA !== 0) {
-            return 1
-          }
-          return a?.content
-            ?.toLowerCase()
-            ?.localeCompare(b?.content?.toLowerCase())
+      if (isLoggedIn) {
+        const { res: PostRes, err: PostErr } = await searchPosts({
+          content: searchValue,
         })
-        console.warn('posts search results:', PostRes?.data)
-        dispatch(
-          setPostsSearchResult({
-            data: sortedposts,
-            message: 'Search completed successfully.',
-            success: true,
-          }),
-        )
+        if (PostErr) {
+          console.error('An error occurred during the page search:', PostErr)
+        } else {
+          const sortedposts = PostRes?.data?.sort((a: any, b: any) => {
+            const indexA = a?.content
+              .toLowerCase()
+              .indexOf(searchValue.toLowerCase())
+            const indexB = b?.content
+              .toLowerCase()
+              .indexOf(searchValue.toLowerCase())
+
+            if (indexA === 0 && indexB !== 0) {
+              return -1
+            } else if (indexB === 0 && indexA !== 0) {
+              return 1
+            }
+            return a?.content
+              ?.toLowerCase()
+              ?.localeCompare(b?.content?.toLowerCase())
+          })
+          console.warn('posts search results:', PostRes?.data)
+          dispatch(
+            setPostsSearchResult({
+              data: sortedposts,
+              message: 'Search completed successfully.',
+              success: true,
+            }),
+          )
+        }
       }
 
       dispatch(setSearchLoading(false))

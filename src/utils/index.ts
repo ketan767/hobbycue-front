@@ -148,6 +148,35 @@ export const formatDateTimeTwo = (dateString: any) => {
   return `${day}-${month}, ${hours}:${minutes}`
 }
 
+
+export const formatDateTimeThree = (dateString: any) => {
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ]
+  const date = new Date(dateString)
+
+  const day = date.getDate()
+  const month = months[date.getMonth()]
+  const year = date.getFullYear().toString().slice(-2)
+  let hours = date.getHours()
+  const minutes = date.getMinutes().toString().padStart(2, '0')
+  const ampm = hours >= 12 ? 'PM' : 'AM'
+
+  hours = hours % 12 || 12 // Convert 0 to 12 for 12 AM/PM
+  return `${day}-${month}, ${hours}:${minutes} ${ampm}`
+}
+
 export const extractPlatform = (deviceString:any) => {
   if (!deviceString) {
     return null;
