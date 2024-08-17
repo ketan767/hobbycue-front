@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import SettingsDropdownLayout from '@/layouts/SettingsDropdownLayout'
 import { openModal } from '@/redux/slices/modal'
+import { withAuth } from '@/navigation/withAuth'
 
 type Props = {}
 
@@ -203,4 +204,4 @@ const DataAndOthers: React.FC<Props> = ({}) => {
   )
 }
 
-export default DataAndOthers
+export default withAuth(DataAndOthers)

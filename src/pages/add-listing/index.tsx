@@ -35,7 +35,8 @@ const AddListing: React.FC<Props> = (props) => {
 
   const handleClick = async (type: ListingPages) => {
     if (type === 4) {
-      dispatch(openModal({ type: 'product-category', closable: true }))
+      showFeatureUnderDevelopment()
+      // dispatch(openModal({ type: 'product-category', closable: true }))
 
       return
     }
