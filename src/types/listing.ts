@@ -6,27 +6,35 @@
  */
 type ListingPages = 1 | 2 | 3 | 4 | 5
 
-type PeoplePageType =  {
-  name: string;
-  description: string;
-}[];
+type PeoplePageType = {
+  name: string
+  description: string
+}[]
 
-type PlacePageType =  {
-  name: string;
-  description: string;
-}[];
+type PlacePageType = {
+  name: string
+  description: string
+}[]
 
-type ProgramPageType =  {
-  name: string;
-  description: string;
-}[];
+type ProgramPageType = {
+  name: string
+  description: string
+}[]
 
 type ProductPageType = {
-  name: string;
-  description: string;
-}[];
+  name: string
+  description: string
+}[]
 // Listing Page
-type ListingPageTabs = 'home' | 'posts' |'events' | 'media' | 'reviews' | 'store' | 'orders'
+type ListingPageTabs =
+  | 'home'
+  | 'posts'
+  | 'events'
+  | 'media'
+  | 'reviews'
+  | 'store'
+  | 'related'
+  | 'orders'
 
 type ListingLayoutMode = 'view' | 'edit'
 
@@ -37,5 +45,5 @@ type ListingPageData = {
   reviewsData: any //{ [key: string]: any }
   eventsData: any //{ [key: string]: any }
   storeData: any //{ [key: string]: any }
-  metadata?:any
+  metadata?: any
 }

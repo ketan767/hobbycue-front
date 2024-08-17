@@ -129,7 +129,7 @@ const ProductCategoryModal: React.FC<Props> = ({
       return {
         description: {
           ...prev.description,
-          value: listingModalData.description as string,
+          value: listingModalData?.description as string,
         },
       }
     })
@@ -236,23 +236,21 @@ const ProductCategoryModal: React.FC<Props> = ({
               value={parentPage?.title}
             >
               {myPages?.map((obj, i) => {
-              
                 if (!obj?.title) return <></>
-                const profileImage = obj?.profile_image || default_image;
+                const profileImage = obj?.profile_image || default_image
                 return (
                   <>
-                 
-                  <DropdownOption
-                    key={i}
-                    type={'hobby'}
-                    value={obj._id}
-                    display={obj.title}
-                    image={profileImage}   
-                    options={null}
-                    onChange={handlePageChange}
-                    item={obj._id}
-                    _id={obj._id}
-                  />
+                    <DropdownOption
+                      key={i}
+                      type={'hobby'}
+                      value={obj._id}
+                      display={obj.title}
+                      image={profileImage}
+                      options={null}
+                      onChange={handlePageChange}
+                      item={obj._id}
+                      _id={obj._id}
+                    />
                   </>
                 )
               })}
