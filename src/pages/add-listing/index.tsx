@@ -113,40 +113,111 @@ const AddListing: React.FC<Props> = (props) => {
         </h1>
         <p className={styles['select-text']}>Select Page type</p>
         <div className={styles['cards-wrapper']}>
-          {data?.map((obj, i: number) => (
+          {data?.find((obj) => obj.pageType === 'People') && (
             <section
-              key={i}
-              onMouseEnter={() => setHoveredIndex(i)}
+              onMouseEnter={() => setHoveredIndex('People')}
               onMouseLeave={() => setHoveredIndex(null)}
-              onClick={() => handleClick((i + 1) as ListingPages)}
-              className={`${styles['card']} ${
-                obj?.pageType === 'People' && styles['people']
-              } ${obj?.pageType === 'Program' && styles['program']} ${
-                obj?.pageType === 'Product' && styles['product']
-              } ${obj?.pageType === 'Place' && styles['place']}`}
+              onClick={() => handleClick(1 as ListingPages)}
+              className={`${styles['card']} ${styles['people']}`}
             >
               <h3>
                 <img
-                  src={hoveredIndex === i ? obj?.hoverImg : obj?.img}
+                  src={
+                    hoveredIndex === 'People'
+                      ? data.find((obj) => obj.pageType === 'People')?.hoverImg
+                      : data.find((obj) => obj.pageType === 'People')?.img
+                  }
                   alt=""
                 />
-                <span>{obj?.pageType}</span>
+                <span>People</span>
               </h3>
-              <p>{obj?.Description}</p>
+              <p>
+                {data.find((obj) => obj.pageType === 'People')?.Description}
+              </p>
             </section>
-          ))}
+          )}
+
+          {data?.find((obj) => obj.pageType === 'Place') && (
+            <section
+              onMouseEnter={() => setHoveredIndex('Place')}
+              onMouseLeave={() => setHoveredIndex(null)}
+              onClick={() => handleClick(2 as ListingPages)}
+              className={`${styles['card']} ${styles['place']}`}
+            >
+              <h3>
+                <img
+                  src={
+                    hoveredIndex === 'Place'
+                      ? data.find((obj) => obj.pageType === 'Place')?.hoverImg
+                      : data.find((obj) => obj.pageType === 'Place')?.img
+                  }
+                  alt=""
+                />
+                <span>Place</span>
+              </h3>
+              <p>{data.find((obj) => obj.pageType === 'Place')?.Description}</p>
+            </section>
+          )}
+
+          {data?.find((obj) => obj.pageType === 'Program') && (
+            <section
+              onMouseEnter={() => setHoveredIndex('Program')}
+              onMouseLeave={() => setHoveredIndex(null)}
+              onClick={() => handleClick(3 as ListingPages)}
+              className={`${styles['card']} ${styles['program']}`}
+            >
+              <h3>
+                <img
+                  src={
+                    hoveredIndex === 'Program'
+                      ? data.find((obj) => obj.pageType === 'Program')?.hoverImg
+                      : data.find((obj) => obj.pageType === 'Program')?.img
+                  }
+                  alt=""
+                />
+                <span>Program</span>
+              </h3>
+              <p>
+                {data.find((obj) => obj.pageType === 'Program')?.Description}
+              </p>
+            </section>
+          )}
+
+          {data?.find((obj) => obj.pageType === 'Product') && (
+            <section
+              onMouseEnter={() => setHoveredIndex('Product')}
+              onMouseLeave={() => setHoveredIndex(null)}
+              onClick={() => handleClick(4 as ListingPages)}
+              className={`${styles['card']} ${styles['product']}`}
+            >
+              <h3>
+                <img
+                  src={
+                    hoveredIndex === 'Product'
+                      ? data.find((obj) => obj.pageType === 'Product')?.hoverImg
+                      : data.find((obj) => obj.pageType === 'Product')?.img
+                  }
+                  alt=""
+                />
+                <span>Product</span>
+              </h3>
+              <p>
+                {data.find((obj) => obj.pageType === 'Product')?.Description}
+              </p>
+            </section>
+          )}
         </div>
+        {
+          <CustomSnackbar
+            message={snackbar?.message}
+            triggerOpen={snackbar?.display}
+            type={snackbar.type === 'success' ? 'success' : 'error'}
+            closeSnackbar={() => {
+              setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+            }}
+          />
+        }
       </section>
-      {
-        <CustomSnackbar
-          message={snackbar?.message}
-          triggerOpen={snackbar?.display}
-          type={snackbar.type === 'success' ? 'success' : 'error'}
-          closeSnackbar={() => {
-            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
-          }}
-        />
-      }
     </>
   )
 }

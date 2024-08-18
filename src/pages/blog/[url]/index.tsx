@@ -33,18 +33,18 @@ const BlogPage: React.FC<Props> = ({ data }) => {
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${data?.blog_url?.title} | HobbyCue`}</title>
       </Head>
-      {/* <div className={styles['iframe-container']}>
+      <div className={styles['iframe-container']}>
         <iframe
           className={styles['iframe']}
           src={`https://blog.hobbycue.com/blog/${blogUrl}`}
         ></iframe>
-      </div> */}
-      <div className={styles['iframe-container']}>
+      </div>
+      {/* <div className={styles['iframe-container']}>
         <div
           className={styles['iframe']}
           dangerouslySetInnerHTML={{ __html: data.blog_url?.content }}
         ></div>
-      </div>
+      </div> */}
 
       <div className={styles['profile-wrapper']}>
         <div className={`${styles['header-user']}`}>
