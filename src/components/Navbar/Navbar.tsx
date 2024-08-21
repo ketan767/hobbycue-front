@@ -341,70 +341,70 @@ export const Navbar: React.FC<Props> = ({}) => {
       }
 
       dispatch(setShowPageLoader(true))
-      // const { res: blogRes, err: BlogErr } = await searchBlogs({
-      //   title: searchValue,
-      // })
+      const { res: blogRes, err: BlogErr } = await searchBlogs({
+        search: searchValue,
+      })
 
-      // if (BlogErr) {
-      //   console.error('An error occurred during the page search:', BlogErr)
-      // } else {
-      //   const sortedBlog = blogRes?.data?.sort((a: any, b: any) => {
-      //     const titleA = a.title?.toLowerCase()
-      //     const titleB = b.title?.toLowerCase()
-      //     const indexA = titleA.indexOf(searchValue?.toLowerCase())
-      //     const indexB = titleB.indexOf(searchValue?.toLowerCase())
+      if (BlogErr) {
+        console.error('An error occurred during the page search:', BlogErr)
+      } else {
+        const sortedBlog = blogRes?.data?.sort((a: any, b: any) => {
+          const titleA = a.title?.toLowerCase()
+          const titleB = b.title?.toLowerCase()
+          const indexA = titleA.indexOf(searchValue?.toLowerCase())
+          const indexB = titleB.indexOf(searchValue?.toLowerCase())
 
-      //     if (indexA === 0 && indexB !== 0) {
-      //       return -1
-      //     } else if (indexB === 0 && indexA !== 0) {
-      //       return 1
-      //     }
-      //     return titleA.localeCompare(titleB)
-      //   })
+          if (indexA === 0 && indexB !== 0) {
+            return -1
+          } else if (indexB === 0 && indexA !== 0) {
+            return 1
+          }
+          return titleA.localeCompare(titleB)
+        })
 
-      //   console.log('blog search results:', sortedBlog)
-      //   dispatch(
-      //     setBlogsSearchResult({
-      //       data: sortedBlog,
-      //       message: 'Search completed successfully.',
-      //       success: true,
-      //     }),
-      //   )
-      // }
-      // if (isLoggedIn) {
-      //   const { res: PostRes, err: PostErr } = await searchPosts({
-      //     content: searchValue,
-      //   })
-      //   if (PostErr) {
-      //     console.error('An error occurred during the page search:', PostErr)
-      //   } else {
-      //     const sortedposts = PostRes?.data?.sort((a: any, b: any) => {
-      //       const indexA = a?.content
-      //         .toLowerCase()
-      //         .indexOf(searchValue.toLowerCase())
-      //       const indexB = b?.content
-      //         .toLowerCase()
-      //         .indexOf(searchValue.toLowerCase())
+        console.log('blog search results:', sortedBlog)
+        dispatch(
+          setBlogsSearchResult({
+            data: sortedBlog,
+            message: 'Search completed successfully.',
+            success: true,
+          }),
+        )
+      }
+      if (isLoggedIn) {
+        const { res: PostRes, err: PostErr } = await searchPosts({
+          content: searchValue,
+        })
+        if (PostErr) {
+          console.error('An error occurred during the page search:', PostErr)
+        } else {
+          const sortedposts = PostRes?.data?.sort((a: any, b: any) => {
+            const indexA = a?.content
+              .toLowerCase()
+              .indexOf(searchValue.toLowerCase())
+            const indexB = b?.content
+              .toLowerCase()
+              .indexOf(searchValue.toLowerCase())
 
-      //       if (indexA === 0 && indexB !== 0) {
-      //         return -1
-      //       } else if (indexB === 0 && indexA !== 0) {
-      //         return 1
-      //       }
-      //       return a?.content
-      //         ?.toLowerCase()
-      //         ?.localeCompare(b?.content?.toLowerCase())
-      //     })
-      //     console.warn('posts search results:', PostRes?.data)
-      //     dispatch(
-      //       setPostsSearchResult({
-      //         data: sortedposts,
-      //         message: 'Search completed successfully.',
-      //         success: true,
-      //       }),
-      //     )
-      //   }
-      // }
+            if (indexA === 0 && indexB !== 0) {
+              return -1
+            } else if (indexB === 0 && indexA !== 0) {
+              return 1
+            }
+            return a?.content
+              ?.toLowerCase()
+              ?.localeCompare(b?.content?.toLowerCase())
+          })
+          console.warn('posts search results:', PostRes?.data)
+          dispatch(
+            setPostsSearchResult({
+              data: sortedposts,
+              message: 'Search completed successfully.',
+              success: true,
+            }),
+          )
+        }
+      }
 
       dispatch(setSearchLoading(false))
       dispatch(setShowPageLoader(false))

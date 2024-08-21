@@ -202,13 +202,13 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
               )}
             </main>
 
-            {data.listingsData.length !== 0 ? (
+            {!itsMe && data.listingsData.length !== 0 ? (
               <div className={styles['card-container-mobile']}>
                 {data.listingsData.map((listing: any) => {
                   return <ListingCard key={listing._id} data={listing} />
                 })}
               </div>
-            ) : (
+            ) : data.listingsData.length === 0 ? (
               <section
                 className={`${styles['dual-section-wrapper-mobile']} ${styles['mob-min-height']}`}
               >
@@ -216,6 +216,8 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
                   <p className={styles['no-posts-text']}>No pages available</p>
                 </div>
               </section>
+            ) : (
+              ''
             )}
           </PageGridLayout>
         )}

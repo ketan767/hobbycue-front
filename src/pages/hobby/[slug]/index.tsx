@@ -30,7 +30,8 @@ const HobbyDetail: React.FC<Props> = (props) => {
   const { hobby } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(hobby)
   const dispatch = useDispatch()
-
+  const [showHobby, setShowHobby] = useState(false)
+  const [showRelated, setShowRelated] = useState(true)
   const { user, isLoggedIn, isAuthenticated } = useSelector(
     (state: RootState) => state.user,
   )
@@ -131,7 +132,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
   }, [])
-
+  const isMobile = useMediaQuery('(max-width:1100px)')
   console.log('hobbydata', data)
   return (
     <>
@@ -193,7 +194,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
           </div>
 
           {/* Keywords Section */}
-          {data?.keywords?.length > 0 && (
+          {!isMobile && data?.keywords?.length > 0 && (
             <PageContentBox
             // showEditButton={false}
             // setDisplayData={setShowKeywords}
@@ -214,74 +215,133 @@ const HobbyDetail: React.FC<Props> = (props) => {
           {/* Next Levels and Related Hobbies */}
           <section style={{}} className={styles['dual-section-wrapper']}>
             {/* Next Levels */}
-            <PageContentBox
-            // showEditButton={false}
-            // setDisplayData={setShowNextLevels}
-            >
-              <h4>
-                {data?.level === 0
-                  ? 'Sub-Categories'
-                  : data?.level === 1
-                  ? 'Hobbies'
-                  : data?.level === 2
-                  ? 'Hobbies'
-                  : data?.level === 3
-                  ? 'Genre/Styles'
-                  : data?.level === 5
-                  ? 'Next Level'
-                  : 'Next Level'}
-              </h4>
-              <div
-              // className={`${styles['display-desktop']}${
-              //   showNextLevels ? ' ' + styles['display-mobile'] : ''
-              // }`}
-              >
-                {data.level !== 5 && nextLevels?.length > 0 ? (
-                  <>
-                    <ul className={styles['next-level-items']}>
-                      {nextLevels.map((item: any, idx: number) => {
-                        return (
-                          <Link href={`/hobby/${item.slug}`} key={idx}>
-                            <li>{item.display}</li>
-                          </Link>
-                        )
-                      })}
-                    </ul>
-                  </>
-                ) : (
-                  <span>No further sub-classification.</span>
-                )}
-              </div>
-            </PageContentBox>
+            {!isMobile && (
+              <>
+                <PageContentBox
+                // showEditButton={false}
+                // setDisplayData={setShowNextLevels}
+                >
+                  <h4>
+                    {data?.level === 0
+                      ? 'Sub-Categories'
+                      : data?.level === 1
+                      ? 'Hobbies'
+                      : data?.level === 2
+                      ? 'Hobbies'
+                      : data?.level === 3
+                      ? 'Genre/Styles'
+                      : data?.level === 5
+                      ? 'Next Level'
+                      : 'Next Level'}
+                  </h4>
+                  <div
+                  // className={`${styles['display-desktop']}${
+                  //   showNextLevels ? ' ' + styles['display-mobile'] : ''
+                  // }`}
+                  >
+                    {data.level !== 5 && nextLevels?.length > 0 ? (
+                      <>
+                        <ul className={styles['next-level-items']}>
+                          {nextLevels.map((item: any, idx: number) => {
+                            return (
+                              <Link href={`/hobby/${item.slug}`} key={idx}>
+                                <li>{item.display}</li>
+                              </Link>
+                            )
+                          })}
+                        </ul>
+                      </>
+                    ) : (
+                      <span>No further sub-classification.</span>
+                    )}
+                  </div>
+                </PageContentBox>
 
-            {/* Related Hobbies */}
-            <PageContentBox
-            // showEditButton={false}
-            // setDisplayData={setShowRelatedHobbies}
-            >
-              <h4>Related</h4>
-              <div
-              // className={`${styles['display-desktop']}${
-              //   showRelatedHobbies ? ' ' + styles['display-mobile'] : ''
-              // }`}
-              >
-                {data?.related_hobbies?.length > 0 ? (
-                  <>
-                    <ul className={styles['items']}>
-                      {data?.related_hobbies?.map((item: any, idx: number) => {
-                        return (
-                          <Link href={`/hobby/${item.slug}`} key={idx}>
-                            <li>{item.display}</li>
-                          </Link>
-                        )
-                      })}
+                {/* Related Hobbies */}
+                <PageContentBox
+                // showEditButton={false}
+                // setDisplayData={setShowRelatedHobbies}
+                >
+                  <h4>Related</h4>
+                  <div
+                  // className={`${styles['display-desktop']}${
+                  //   showRelatedHobbies ? ' ' + styles['display-mobile'] : ''
+                  // }`}
+                  >
+                    {data?.related_hobbies?.length > 0 ? (
+                      <>
+                        <ul className={styles['items']}>
+                          {data?.related_hobbies?.map(
+                            (item: any, idx: number) => {
+                              return (
+                                <Link href={`/hobby/${item.slug}`} key={idx}>
+                                  <li>{item.display}</li>
+                                </Link>
+                              )
+                            },
+                          )}
+                        </ul>
+                      </>
+                    ) : (
+                      <span>No further information.</span>
+                    )}
+                  </div>
+                </PageContentBox>
+              </>
+            )}
+            {isMobile && (
+              <>
+                {/* Hobbies */}
+                <PageContentBox
+                  showEditButton={false}
+                  initialShowDropdown
+                  setDisplayData={(arg0: boolean) => {
+                    setShowHobby((prev) => {
+                      return !prev
+                    })
+                  }}
+                  expandData={showHobby}
+                >
+                  <h4 className={styles['heading']}>
+                    {'Hobbies'}
+                    {user?.is_admin && (
+                      <Image
+                        className={styles['pencil-edit']}
+                        src={EditIcon}
+                        alt="edit"
+                        onClick={() =>
+                          router.push(`/admin/hobby/edit/${data?.slug}`)
+                        }
+                      />
+                    )}
+                  </h4>
+                  <div
+                    className={`${styles['display-desktop']}${
+                      showHobby ? ' ' + styles['display-mobile'] : ''
+                    }`}
+                  >
+                    <ul className={styles['classification-items']}>
+                      {data.level !== 5 && nextLevels?.length > 0 ? (
+                        <>
+                          <ul className={styles['next-level-items']}>
+                            {nextLevels.map((item: any, idx: number) => {
+                              return (
+                                <Link href={`/hobby/${item.slug}`} key={idx}>
+                                  <li>{item.display}</li>
+                                </Link>
+                              )
+                            })}
+                          </ul>
+                        </>
+                      ) : (
+                        <span>No further sub-classification.</span>
+                      )}
+                      <li className={styles['active']}></li>
                     </ul>
-                  </>
-                ) : (
-                  <span>No further information.</span>
-                )}
-              </div>
-            </PageContentBox>
+                  </div>
+                </PageContentBox>
+              </>
+            )}
           </section>
         </main>
       </HobbyPageLayout>

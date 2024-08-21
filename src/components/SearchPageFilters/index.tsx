@@ -184,7 +184,7 @@ const SearchPageFilter = () => {
             <Image src={Product} alt="Product" />
             Products
           </div>
-          {/* <div
+          <div
             className={getFilterItemClass('posts')}
             onClick={() => handleFilterClick('posts')}
           >
@@ -197,7 +197,7 @@ const SearchPageFilter = () => {
           >
             <Image src={Blogs} alt="Blogs" />
             Blogs
-          </div> */}
+          </div>
         </div>
       </div>
     </section>

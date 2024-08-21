@@ -906,7 +906,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   const l2hobbies = await getAllHobbies(
     `level=2&populate=category,sub_category,tags`,
   )
-  // const l4hobbies = await getAllHobbies(`level=4&populate=category,sub_category,tags`);
+  const l4hobbies = await getAllHobbies(
+    `level=4&populate=category,sub_category,tags`,
+  )
   const l5hobbies = await getAllHobbies(
     `level=5&populate=category,sub_category,genre,tags`,
   )
@@ -918,7 +920,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
         sub_categories: subCategory.res?.data.hobbies,
         hobbies: hobby.res?.data.hobbies,
         l2hobbies: l2hobbies.res?.data?.hobbies,
-        // l4hobbies:l4hobbies.res?.data,
+        l4hobbies: l4hobbies.res?.data,
         genre: l5hobbies.res?.data?.hobbies,
         allTagsAndGenres: allTagsAndGenres,
       },

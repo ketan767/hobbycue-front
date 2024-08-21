@@ -60,6 +60,7 @@ const HobbyPageLayout: React.FC<Props> = ({
   const [showMembers, setShowMembers] = useState(false)
   const [showHobbiesClassification, setShowHobbiesClassification] =
     useState(true)
+  const [showkeywords, setShowKeywords] = useState(false)
 
   const { user } = useSelector((state: RootState) => state.user)
 
@@ -227,19 +228,79 @@ const HobbyPageLayout: React.FC<Props> = ({
               )}
             </div>
             {(!isMobile || (isMobile && activeTab === 'home')) && (
+              <>
+                <PageContentBox
+                  showEditButton={false}
+                  initialShowDropdown
+                  setDisplayData={(arg0: boolean) => {
+                    setShowHobbiesClassification((prev) => {
+                      dispatch(updateHobbyOpenState({ [data._id]: !prev }))
+                      return !prev
+                    })
+                  }}
+                  expandData={showHobbiesClassification}
+                >
+                  <h4 className={styles['heading']}>
+                    {'Hobbies Classification'}
+                    {user?.is_admin && (
+                      <Image
+                        className={styles['pencil-edit']}
+                        src={EditIcon}
+                        alt="edit"
+                        onClick={() =>
+                          router.push(`/admin/hobby/edit/${data?.slug}`)
+                        }
+                      />
+                    )}
+                  </h4>
+                  <div
+                    className={`${styles['display-desktop']}${
+                      showHobbiesClassification
+                        ? ' ' + styles['display-mobile']
+                        : ''
+                    }`}
+                  >
+                    <ul className={styles['classification-items']}>
+                      {data?.category?.slug && (
+                        <Link href={`/hobby/${data?.category?.slug}`}>
+                          <li>{data?.category?.display}</li>
+                        </Link>
+                      )}
+                      {data?.sub_category?.slug && (
+                        <Link href={`/hobby/${data?.sub_category?.slug}`}>
+                          <li>{data?.sub_category?.display}</li>
+                        </Link>
+                      )}
+                      {data?.tags &&
+                        data?.tags.map((tag: any, idx: number) => {
+                          return tag.slug ? (
+                            <Link key={idx} href={`/hobby/${tag?.slug}`}>
+                              <li>{tag.display}</li>
+                            </Link>
+                          ) : null
+                        })}
+                      <li className={styles['active']}>
+                        <p>{data?.display}</p>
+                      </li>
+                    </ul>
+                  </div>
+                </PageContentBox>
+              </>
+            )}
+            {/* Keywords */}
+            {isMobile && activeTab == 'home' && (
               <PageContentBox
                 showEditButton={false}
                 initialShowDropdown
                 setDisplayData={(arg0: boolean) => {
-                  setShowHobbiesClassification((prev) => {
-                    dispatch(updateHobbyOpenState({ [data._id]: !prev }))
+                  setShowKeywords((prev) => {
                     return !prev
                   })
                 }}
-                expandData={showHobbiesClassification}
+                expandData={showkeywords}
               >
                 <h4 className={styles['heading']}>
-                  {'Hobbies Classification'}
+                  {'keywords'}
                   {user?.is_admin && (
                     <Image
                       className={styles['pencil-edit']}
@@ -253,33 +314,15 @@ const HobbyPageLayout: React.FC<Props> = ({
                 </h4>
                 <div
                   className={`${styles['display-desktop']}${
-                    showHobbiesClassification
-                      ? ' ' + styles['display-mobile']
-                      : ''
+                    showkeywords ? ' ' + styles['display-mobile'] : ''
                   }`}
                 >
                   <ul className={styles['classification-items']}>
-                    {data?.category?.slug && (
-                      <Link href={`/hobby/${data?.category?.slug}`}>
-                        <li>{data?.category?.display}</li>
-                      </Link>
-                    )}
-                    {data?.sub_category?.slug && (
-                      <Link href={`/hobby/${data?.sub_category?.slug}`}>
-                        <li>{data?.sub_category?.display}</li>
-                      </Link>
-                    )}
-                    {data?.tags &&
-                      data?.tags.map((tag: any, idx: number) => {
-                        return tag.slug ? (
-                          <Link key={idx} href={`/hobby/${tag?.slug}`}>
-                            <li>{tag.display}</li>
-                          </Link>
-                        ) : null
+                    {data?.keywords &&
+                      data?.keywords.map((tag: any, idx: number) => {
+                        return tag.slug ? <li>{tag.display}</li> : null
                       })}
-                    <li className={styles['active']}>
-                      <p>{data?.display}</p>
-                    </li>
+                    <li className={styles['active']}></li>
                   </ul>
                 </div>
               </PageContentBox>
