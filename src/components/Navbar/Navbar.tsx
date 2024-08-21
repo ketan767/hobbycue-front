@@ -90,7 +90,6 @@ export const Navbar: React.FC<Props> = ({}) => {
   const [menuActive, setMenuActive] = useState(false)
   const [isWriting, setIsWriting] = useState(false)
   const pathname = usePathname()
-  console.log({ pathname })
 
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
@@ -177,7 +176,7 @@ export const Navbar: React.FC<Props> = ({}) => {
     setMenuActive(!menuActive)
   }
 
-  const searchResult = async () => {
+  const searchResult = async (page = 1) => {
     dispatch(resetSearch())
     dispatch(setExplore(false))
     dispatch(setSearchString(data.search.value.trim()))
@@ -307,7 +306,7 @@ export const Navbar: React.FC<Props> = ({}) => {
 
       dispatch(setShowPageLoader(false))
 
-      const query = `level=1&level=2&level=3&level=4&level=5&search=${searchValue}`
+      const query = `level=1&level=2&level=3&level=4&level=5&search=${searchValue}&page=${page}&limit=15`
       dispatch(setShowPageLoader(true))
       const { res: hobbyRes, err: hobbyErr } = await getAllHobbies(query)
       if (hobbyErr) {
@@ -328,7 +327,6 @@ export const Navbar: React.FC<Props> = ({}) => {
           }
           return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
         })
-        console.log('hobbies search results:', hobbyRes.data.hobbies)
         dispatch(
           setHobbiesSearchResult({
             data: sortedHobbies,
@@ -379,6 +377,7 @@ export const Navbar: React.FC<Props> = ({}) => {
       console.error('An error occurred during the combined search:', error)
     }
   }
+
   const ExplorePeople = async () => {
     const { res: PeopleRes, err: PeopleErr } = await getListingPages(
       `type=1&sort=-createdAt&is_published=true`,
@@ -694,7 +693,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                       </div>
                     )}
                     <IconButton
-                      onClick={searchResult}
+                      onClick={() => searchResult()}
                       sx={{
                         height: '40px',
                         bgcolor: 'primary.main',
