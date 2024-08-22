@@ -30,7 +30,6 @@ import { SetLinkviaAuth } from '@/redux/slices/user'
 import Link from 'next/link'
 import SearchLoader from '@/components/SearchLoader'
 
-import { convertDateToString, formatDateRange } from '@/utils'
 import { searchUsers } from '@/services/user.service'
 import { getAllHobbies } from '@/services/hobby.service'
 
@@ -41,7 +40,6 @@ import {
   formatDateTimeThree,
   formatDateTimeTwo,
 } from '@/utils'
-
 
 type Props = {
   data?: any
