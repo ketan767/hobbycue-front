@@ -51,8 +51,6 @@ type ExtendedDropdownListItem = DropdownListItem & {
 }
 
 const ALlHobbies: React.FC<Props> = ({ data }) => {
-  console.warn({ data })
-
   const [categories, setCategories] = useState([])
   const [subCategories, setSubCategories] = useState([])
   const [hobbyData, setHobbyData] = useState<HobbyType[]>([])
@@ -428,8 +426,6 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
   }, [filterData.category])
 
   const isMobile = useMediaQuery('(max-width:1100px)')
-
-  console.log({ categories, subCategories, hobbyData })
 
   return (
     <>
@@ -884,7 +880,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 
   const executeAPI = async (object: any) => {
     const categoryID = object.category._id
-    const subCategoryID = object.sub_category ? object.sub_category._id : null
+    // const subCategoryID = object.sub_category ? object.sub_category._id : null
+    const subCategoryID = object._id  // because object is the sub-category itself
 
     const { res } = await getAllHobbies(
       `category=${categoryID}${

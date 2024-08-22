@@ -11,18 +11,29 @@ import {
   toggleShowAllHobbies,
   toggleShowAllPosts,
   toggleShowAllBlogs,
+  setSearchLoading,
+  setHobbiesSearchResult,
+  setResultPagination,
+  appendHobbiesSearchResult,
+  setCurrentPage,
+  setHasMore,
 } from '@/redux/slices/search'
 import { RootState } from '@/redux/store'
 import { MenuItem, Select, useMediaQuery } from '@mui/material'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import User from '../../assets/svg/Search/User.svg'
 import styles from './styles.module.css'
 import { SetLinkviaAuth } from '@/redux/slices/user'
 import Link from 'next/link'
 import SearchLoader from '@/components/SearchLoader'
+
+import { convertDateToString, formatDateRange } from '@/utils'
+import { searchUsers } from '@/services/user.service'
+import { getAllHobbies } from '@/services/hobby.service'
+
 import {
   convertDateToString,
   formatDateRange,
@@ -30,6 +41,7 @@ import {
   formatDateTimeThree,
   formatDateTimeTwo,
 } from '@/utils'
+
 
 type Props = {
   data?: any
@@ -173,6 +185,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
   )
+  const { hobbiesSearchResults, hasMore, currentPage, result_pagination } =
+    useSelector((state: RootState) => state.search)
 
   const [HideUser, setHideUser] = useState(false)
   const [HidePeople, setHidePeople] = useState(false)
@@ -182,8 +196,77 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const [HidePosts, setHidePosts] = useState(false)
   const [HideBlogs, setHideBlogs] = useState(false)
   const [HideHobbies, setHideHobbies] = useState(false)
+  const [moreLoading, setMoreLoading] = useState(false)
+  const [page, setPage] = useState(1)
 
   const router = useRouter()
+
+  const observer = useRef<IntersectionObserver | null>(null)
+
+  const callForData = async (page: number) => {
+    if (page === 1) return
+    setMoreLoading(true)
+    try {
+      // Hobbies
+      const query = `level=1&level=2&level=3&level=4&level=5&search=${searchString}&page=${page}&limit=15`
+      const { res: hobbyRes, err: hobbyErr } = await getAllHobbies(query)
+      if (hobbyErr) {
+        console.error('An error occurred during the page search:', hobbyErr)
+      } else {
+        const sortedHobbies = hobbyRes.data.hobbies.sort((a: any, b: any) => {
+          const indexA = a.display
+            .toLowerCase()
+            .indexOf(searchString.toLowerCase())
+          const indexB = b.display
+            .toLowerCase()
+            .indexOf(searchString.toLowerCase())
+
+          if (indexA === 0 && indexB !== 0) {
+            return -1
+          } else if (indexB === 0 && indexA !== 0) {
+            return 1
+          }
+          return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
+        })
+        dispatch(
+          appendHobbiesSearchResult({
+            data: sortedHobbies,
+            message: 'Search completed successfully.',
+            success: true,
+          }),
+        )
+        dispatch(setHasMore(sortedHobbies.length === 15))
+        dispatch(setCurrentPage(page))
+      }
+    } catch (error) {
+    } finally {
+      setMoreLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    callForData(result_pagination)
+  }, [result_pagination])
+
+  console.log('asifs hobbies', hobbiesSearchResults)
+  console.log('asifs page', page)
+
+  const lastPostElementRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (searchLoading) return
+      if (observer.current) observer.current.disconnect()
+      observer.current = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && hasMore) {
+            dispatch(setResultPagination(currentPage + 1))
+          }
+        },
+        { rootMargin: '100px' },
+      )
+      if (node) observer.current.observe(node)
+    },
+    [searchLoading, hasMore, currentPage, dispatch],
+  )
 
   useEffect(() => {
     if (showAll === true) {
@@ -394,6 +477,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
               <SearchLoader showBox />
             </div>
           )}
+
+          {/* Hobbies */}
           {!HideHobbies &&
             hobbyResults.length > 0 &&
             searchLoading === false && (
@@ -407,6 +492,12 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         className={styles.peopleItem}
                         key={index}
                         onClick={() => navigateToHobby(hobby.slug)}
+                        ref={
+                          index === hobbyResults.length - 1
+                            ? lastPostElementRef
+                            : null
+                          // lastPostElementRef
+                        }
                       >
                         <div className={styles.hobbyAvtar}>
                           {/* Render the image */}
@@ -431,7 +522,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
                                 <path
                                   d="M80 0L149.282 40V120L80 160L10.718 120V40L80 0Z"
                                   fill="#969696"
-                                  fill-opacity="0.5"
+                                  fillOpacity="0.5"
                                 />
                                 <path
                                   d="M79.6206 46.1372C79.7422 45.7727 80.2578 45.7727 80.3794 46.1372L87.9122 68.7141C87.9663 68.8763 88.1176 68.9861 88.2885 68.9875L112.088 69.175C112.472 69.178 112.632 69.6684 112.323 69.8967L93.1785 84.0374C93.041 84.139 92.9833 84.3168 93.0348 84.4798L100.211 107.173C100.327 107.539 99.9097 107.842 99.5971 107.619L80.2326 93.7812C80.0935 93.6818 79.9065 93.6818 79.7674 93.7812L60.4029 107.619C60.0903 107.842 59.6731 107.539 59.789 107.173L66.9652 84.4798C67.0167 84.3168 66.959 84.139 66.8215 84.0374L47.6773 69.8967C47.3682 69.6684 47.5276 69.178 47.9118 69.175L71.7115 68.9875C71.8824 68.9861 72.0337 68.8763 72.0878 68.7141L79.6206 46.1372Z"
@@ -480,8 +571,8 @@ const MainContent: React.FC<SearchResultsProps> = ({
                 </div>
               </section>
             )}
-          {/* User  */}
 
+          {/* User  */}
           {!HideUser && searchResults.length > 0 && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
@@ -963,6 +1054,13 @@ const MainContent: React.FC<SearchResultsProps> = ({
                 </div>
               </div>
             </section>
+          )}
+          {/* More Loading */}
+          {moreLoading && (
+            <div className={styles.loaders}>
+              <SearchLoader />
+              <SearchLoader showBox />
+            </div>
           )}
         </div>
       )}
