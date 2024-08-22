@@ -7,7 +7,11 @@ import IconButton from '@mui/material/IconButton'
 // import SearchIcon from '@mui/icons-material/Search'
 
 import Image from 'next/image'
-import { getListingPages, searchPages } from '@/services/listing.service'
+import {
+  getAllEvents,
+  getListingPages,
+  searchPages,
+} from '@/services/listing.service'
 import {
   setUserSearchResults,
   setTypeResultOne,
@@ -68,7 +72,7 @@ import { setShowPageLoader } from '@/redux/slices/site'
 import { usePathname } from 'next/navigation'
 import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import { useMediaQuery } from '@mui/material'
-import { getAllPosts } from '@/services/post.service'
+import { getAllPosts, searchPosts } from '@/services/post.service'
 import { getAllBlogs, searchBlogs } from '@/services/blog.services'
 
 type Props = {}
@@ -337,36 +341,70 @@ export const Navbar: React.FC<Props> = ({}) => {
       }
 
       dispatch(setShowPageLoader(true))
-      const { res: blogRes, err: BlogErr } = await searchBlogs({
-        title: searchValue,
-      })
-      if (BlogErr) {
-        console.error('An error occurred during the page search:', BlogErr)
-      } else {
-        const sortedblog = blogRes?.data?.sort((a: any, b: any) => {
-          const indexA = a.display
-            .toLowerCase()
-            .indexOf(searchValue.toLowerCase())
-          const indexB = b.display
-            .toLowerCase()
-            .indexOf(searchValue.toLowerCase())
+      // const { res: blogRes, err: BlogErr } = await searchBlogs({
+      //   title: searchValue,
+      // })
 
-          if (indexA === 0 && indexB !== 0) {
-            return -1
-          } else if (indexB === 0 && indexA !== 0) {
-            return 1
-          }
-          return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
-        })
-        console.log('blog search results:', blogRes?.data)
-        dispatch(
-          setBlogsSearchResult({
-            data: sortedblog,
-            message: 'Search completed successfully.',
-            success: true,
-          }),
-        )
-      }
+      // if (BlogErr) {
+      //   console.error('An error occurred during the page search:', BlogErr)
+      // } else {
+      //   const sortedBlog = blogRes?.data?.sort((a: any, b: any) => {
+      //     const titleA = a.title?.toLowerCase()
+      //     const titleB = b.title?.toLowerCase()
+      //     const indexA = titleA.indexOf(searchValue?.toLowerCase())
+      //     const indexB = titleB.indexOf(searchValue?.toLowerCase())
+
+      //     if (indexA === 0 && indexB !== 0) {
+      //       return -1
+      //     } else if (indexB === 0 && indexA !== 0) {
+      //       return 1
+      //     }
+      //     return titleA.localeCompare(titleB)
+      //   })
+
+      //   console.log('blog search results:', sortedBlog)
+      //   dispatch(
+      //     setBlogsSearchResult({
+      //       data: sortedBlog,
+      //       message: 'Search completed successfully.',
+      //       success: true,
+      //     }),
+      //   )
+      // }
+      // if (isLoggedIn) {
+      //   const { res: PostRes, err: PostErr } = await searchPosts({
+      //     content: searchValue,
+      //   })
+      //   if (PostErr) {
+      //     console.error('An error occurred during the page search:', PostErr)
+      //   } else {
+      //     const sortedposts = PostRes?.data?.sort((a: any, b: any) => {
+      //       const indexA = a?.content
+      //         .toLowerCase()
+      //         .indexOf(searchValue.toLowerCase())
+      //       const indexB = b?.content
+      //         .toLowerCase()
+      //         .indexOf(searchValue.toLowerCase())
+
+      //       if (indexA === 0 && indexB !== 0) {
+      //         return -1
+      //       } else if (indexB === 0 && indexA !== 0) {
+      //         return 1
+      //       }
+      //       return a?.content
+      //         ?.toLowerCase()
+      //         ?.localeCompare(b?.content?.toLowerCase())
+      //     })
+      //     console.warn('posts search results:', PostRes?.data)
+      //     dispatch(
+      //       setPostsSearchResult({
+      //         data: sortedposts,
+      //         message: 'Search completed successfully.',
+      //         success: true,
+      //       }),
+      //     )
+      //   }
+      // }
 
       dispatch(setSearchLoading(false))
       dispatch(setShowPageLoader(false))
@@ -411,12 +449,9 @@ export const Navbar: React.FC<Props> = ({}) => {
   }
 
   const ExploreEvents = async () => {
-    const { res: EventRes, err: EventErr } = await getListingPages(
-      `type=3&sort=-createdAt&is_published=true`,
-    )
+    const { res: EventRes, err: EventErr } = await getAllEvents()
 
-    const EventPages = EventRes?.data.data?.listings
-    console.warn('EventPagesssssssssssssss', EventPages)
+    const EventPages = EventRes?.data?.data
 
     dispatch(
       setTypeResultThree({

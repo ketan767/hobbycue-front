@@ -446,3 +446,15 @@ export const getAllListingUrls = async (
       return { err: error, res: null };
     }
   };
+
+ 
+
+  export const getAllEvents = async (): Promise<ApiReturnObject> => {
+
+    try {
+      const res = await axiosInstance.get(`/listing/all-events-ascending`,);
+      return { res: res, err: null };
+    } catch (error: any) {
+      return { err: error, res: null };
+    }
+  };

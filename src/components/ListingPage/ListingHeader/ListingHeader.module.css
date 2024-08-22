@@ -400,7 +400,12 @@
 }
 
 .product-header{
+  align-items: flex-start;
   grid-template-columns: 88px auto 160px;
+}
+
+.product-header > :nth-child(4) {
+  margin-top: auto;
 }
 
 .item {

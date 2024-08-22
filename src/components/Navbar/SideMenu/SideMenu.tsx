@@ -43,7 +43,7 @@ import { useMediaQuery } from '@mui/material'
 import { setShowPageLoader, updateListingModalData } from '@/redux/slices/site'
 import addIcon from '@/assets/svg/add.svg'
 import { setFilters } from '@/redux/slices/post'
-import { getListingPages } from '@/services/listing.service'
+import { getAllEvents, getListingPages } from '@/services/listing.service'
 import { getAllPosts } from '@/services/post.service'
 import { getAllBlogs } from '@/services/blog.services'
 type Props = {
@@ -201,11 +201,8 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
   }
 
   const ExploreEvents = async () => {
-    const { res: EventRes, err: EventErr } = await getListingPages(
-      `type=3&sort=-createdAt&is_published=true`,
-    )
-
-    const EventPages = EventRes?.data.data?.listings
+    const { res: EventRes, err: EventErr } = await getAllEvents()
+    const EventPages = EventRes?.data?.data
 
     dispatch(
       setTypeResultThree({

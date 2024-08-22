@@ -4,6 +4,11 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
+
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -18,8 +23,7 @@ export default function Document() {
           href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
           rel="stylesheet"
         />
-          <link rel="icon" type="image/x-icon" href="/logo-small.png" />
-
+        <link rel="icon" type="image/x-icon" href="/logo-small.png" />
       </Head>
       <body>
         <Main />

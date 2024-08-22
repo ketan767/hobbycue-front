@@ -160,7 +160,8 @@ left: 12px;
     padding-top: 8px;
     grid-template-columns: 1fr
   }
-  .add-event{ 
+  .add-event{
+
     height: 88px;
   }
 

@@ -279,7 +279,8 @@ margin-bottom: 24px;
 }
 
 .dropdown {
-  max-width: 196px;
+  top: 115px;
+  max-width: 210px;
   width: 100%;
   position: absolute;
   max-height: 280px;
@@ -445,6 +446,7 @@ letter-spacing: 0.48px;
   .dropdown {
     position: relative;
     top: 10px;
+    z-index: 500;
 
 
   }

@@ -29,9 +29,19 @@ import styles from './styles.module.css'
 import { SetLinkviaAuth } from '@/redux/slices/user'
 import Link from 'next/link'
 import SearchLoader from '@/components/SearchLoader'
+
 import { convertDateToString, formatDateRange } from '@/utils'
 import { searchUsers } from '@/services/user.service'
 import { getAllHobbies } from '@/services/hobby.service'
+
+import {
+  convertDateToString,
+  formatDateRange,
+  formatDateTime,
+  formatDateTimeThree,
+  formatDateTimeTwo,
+} from '@/utils'
+
 
 type Props = {
   data?: any
@@ -624,7 +634,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
             searchLoading === false && (
               <section className={styles.userSection}>
                 <div className={styles.peopleItemsContainer}>
-                  <div className={styles.resultHeading}>People</div>
+                  {!isExplore && (
+                    <div className={styles.resultHeading}>People</div>
+                  )}
                   {peopleResults
                     .slice(0, showAllPeople ? undefined : 3)
                     .map((page, index) => (
@@ -689,7 +701,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
           {!HidePlace && placeResults.length > 0 && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
-                <div className={styles.resultHeading}>Places</div>
+                {!isExplore && (
+                  <div className={styles.resultHeading}>Places</div>
+                )}
                 {placeResults
                   .slice(0, showAllPlace ? undefined : 3)
                   .map((page, index) => (
@@ -749,7 +763,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
           {!HideEvent && EventResults.length > 0 && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
-                <div className={styles.resultHeading}>Programs</div>
+                {!isExplore && (
+                  <div className={styles.resultHeading}>Programs</div>
+                )}
                 {EventResults.slice(0, showAllEvent ? undefined : 3).map(
                   (page, index) => (
                     <div
@@ -834,7 +850,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
             searchLoading === false && (
               <section className={styles.userSection}>
                 <div className={styles.peopleItemsContainer}>
-                  <div className={styles.resultHeading}>products</div>
+                  {!isExplore && (
+                    <div className={styles.resultHeading}>products</div>
+                  )}
                   {ProductResults.slice(0, showAllProducts ? undefined : 3).map(
                     (page, index) => (
                       <div
@@ -893,7 +911,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
           {!HidePosts && PostsResults.length > 0 && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
-                <div className={styles.resultHeading}>Posts</div>
+                {!isExplore && (
+                  <div className={styles.resultHeading}>Posts</div>
+                )}
                 {PostsResults.slice(0, showAllPosts ? undefined : 3).map(
                   (page, index) => (
                     <div
@@ -978,7 +998,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
           {!HideBlogs && BlogsResults.length > 0 && searchLoading === false && (
             <section className={styles.userSection}>
               <div className={styles.peopleItemsContainer}>
-                <div className={styles.resultHeading}>Blogs</div>
+                {!isExplore && (
+                  <div className={styles.resultHeading}>Blogs</div>
+                )}
                 {BlogsResults.slice(0, showAllBlogs ? undefined : 3).map(
                   (page, index) => (
                     <div
@@ -1008,7 +1030,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         </div>
                         <div className={styles.userLocation}>
                           {page?.author?.full_name}{' '}
-                          {page.createdAt ? ' | ' + page.createdAt : ''}
+                          {page.createdAt
+                            ? ' | ' + formatDateTimeThree(page.createdAt)
+                            : ''}
                         </div>
                       </div>
                     </div>
@@ -1173,12 +1197,12 @@ const FilterDropdown: React.FC<Props> = () => {
       <MenuItem onClick={() => handleFilterClick('products')} value="products">
         Products
       </MenuItem>
-      <MenuItem onClick={() => handleFilterClick('posts')} value="posts">
+      {/* <MenuItem onClick={() => handleFilterClick('posts')} value="posts">
         Posts
       </MenuItem>
       <MenuItem onClick={() => handleFilterClick('blogs')} value="blogs">
         Blogs
-      </MenuItem>
+      </MenuItem> */}
     </Select>
   )
 }

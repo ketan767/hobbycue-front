@@ -337,6 +337,7 @@ width: 100%;
     padding: 0;
   }
   .no-posts-div{
+  
     border-radius: 0;
   }
   .profile-left-aside{
@@ -344,6 +345,7 @@ width: 100%;
     height: auto;
   }
   .dual-section-wrapper {
+    
     height: 90vh;
   }
   .uploadContainer {
