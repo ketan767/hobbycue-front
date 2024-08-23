@@ -121,7 +121,7 @@ export const CreatePost: React.FC<Props> = ({
     if (propData && propData.visibility) {
       setData((prev) => ({ ...prev, visibility: propData.visibility }))
     }
-    if (propData && propData?.media.length !== 0) {
+    if (propData && propData?.media?.length !== 0) {
       setData((prev) => ({ ...prev, media: propData.media }))
     }
     if (propData && propData._id) {

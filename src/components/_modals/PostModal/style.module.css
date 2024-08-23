@@ -249,6 +249,16 @@
   border-radius: 100%;
   cursor: pointer;
 }
+
+.comment-input-wrapper .submit-btn:focus-visible {
+  color: #8064A2 !important;
+
+}
+
+.comment-input-wrapper .submit-btn:focus {
+  color: #8064A2 !important;
+
+}
 .comment-input-wrapper .submit-btn:focus,
 .comment-input-wrapper .submit-btn:focus-visible {
   outline:none;

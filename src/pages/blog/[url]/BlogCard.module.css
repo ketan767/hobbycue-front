@@ -158,6 +158,16 @@
   align-items: center;
 }
 
+.comment-input-wrapper .submit-btn:focus-visible {
+  color: #8064A2 !important;
+
+}
+
+.comment-input-wrapper .submit-btn:focus {
+  color: #8064A2 !important;
+
+}
+
 .submit-btn-svg{
   margin-left: 3px;
 }

@@ -3,11 +3,11 @@ import styles from './OutlinedButton.module.css'
 
 interface OutlinedButtonProps {
   children: React.ReactNode
-  onClick?: () => void
+  onClick?: any
   type?: 'button' | 'submit' | 'reset'
   disabled?: boolean
   className?: string
-  onKeyDown?:KeyboardEventHandler<HTMLButtonElement>
+  onKeyDown?: KeyboardEventHandler<HTMLButtonElement>
 }
 
 const OutlinedButton: React.FC<OutlinedButtonProps> = ({
@@ -16,7 +16,7 @@ const OutlinedButton: React.FC<OutlinedButtonProps> = ({
   type = 'button',
   disabled = false,
   className = '',
-  onKeyDown
+  onKeyDown,
 }) => {
   return (
     <button
