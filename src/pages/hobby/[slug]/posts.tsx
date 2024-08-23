@@ -167,7 +167,10 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
             </section>
           </main>
           <main className={`${styles['display-mobile']}`}>
-            <section className={`${styles['posts-container']}}`}>
+            <section
+              style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}
+              className={`${styles['posts-container']}}`}
+            >
               {loadingPosts ? (
                 <>
                   <PostCardSkeletonLoading />
