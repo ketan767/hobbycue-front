@@ -310,7 +310,7 @@ export const Navbar: React.FC<Props> = ({}) => {
 
       dispatch(setShowPageLoader(false))
 
-      const query = `level=1&level=2&level=3&level=4&level=5&search=${searchValue}&page=${page}&limit=15`
+      const query = `level=1&level=2&level=3&level=4&level=5&search=${searchValue}`
       dispatch(setShowPageLoader(true))
       const { res: hobbyRes, err: hobbyErr } = await getAllHobbies(query)
       if (hobbyErr) {

@@ -201,70 +201,70 @@ const MainContent: React.FC<SearchResultsProps> = ({
 
   const observer = useRef<IntersectionObserver | null>(null)
 
-  const callForData = async (page: number) => {
-    if (page === 1) return
-    setMoreLoading(true)
-    try {
-      // Hobbies
-      const query = `level=1&level=2&level=3&level=4&level=5&search=${searchString}&page=${page}&limit=15`
-      const { res: hobbyRes, err: hobbyErr } = await getAllHobbies(query)
-      if (hobbyErr) {
-        console.error('An error occurred during the page search:', hobbyErr)
-      } else {
-        const sortedHobbies = hobbyRes.data.hobbies.sort((a: any, b: any) => {
-          const indexA = a.display
-            .toLowerCase()
-            .indexOf(searchString.toLowerCase())
-          const indexB = b.display
-            .toLowerCase()
-            .indexOf(searchString.toLowerCase())
+  // const callForData = async (page: number) => {
+  //   if (page === 1) return
+  //   setMoreLoading(true)
+  //   try {
+  //     // Hobbies
+  //     const query = `level=1&level=2&level=3&level=4&level=5&search=${searchString}&page=${page}&limit=15`
+  //     const { res: hobbyRes, err: hobbyErr } = await getAllHobbies(query)
+  //     if (hobbyErr) {
+  //       console.error('An error occurred during the page search:', hobbyErr)
+  //     } else {
+  //       const sortedHobbies = hobbyRes.data.hobbies.sort((a: any, b: any) => {
+  //         const indexA = a.display
+  //           .toLowerCase()
+  //           .indexOf(searchString.toLowerCase())
+  //         const indexB = b.display
+  //           .toLowerCase()
+  //           .indexOf(searchString.toLowerCase())
 
-          if (indexA === 0 && indexB !== 0) {
-            return -1
-          } else if (indexB === 0 && indexA !== 0) {
-            return 1
-          }
-          return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
-        })
-        dispatch(
-          appendHobbiesSearchResult({
-            data: sortedHobbies,
-            message: 'Search completed successfully.',
-            success: true,
-          }),
-        )
-        dispatch(setHasMore(sortedHobbies.length === 15))
-        dispatch(setCurrentPage(page))
-      }
-    } catch (error) {
-    } finally {
-      setMoreLoading(false)
-    }
-  }
+  //         if (indexA === 0 && indexB !== 0) {
+  //           return -1
+  //         } else if (indexB === 0 && indexA !== 0) {
+  //           return 1
+  //         }
+  //         return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
+  //       })
+  //       dispatch(
+  //         appendHobbiesSearchResult({
+  //           data: sortedHobbies,
+  //           message: 'Search completed successfully.',
+  //           success: true,
+  //         }),
+  //       )
+  //       dispatch(setHasMore(sortedHobbies.length === 15))
+  //       dispatch(setCurrentPage(page))
+  //     }
+  //   } catch (error) {
+  //   } finally {
+  //     setMoreLoading(false)
+  //   }
+  // }
 
-  useEffect(() => {
-    callForData(result_pagination)
-  }, [result_pagination])
+  // useEffect(() => {
+  //   callForData(result_pagination)
+  // }, [result_pagination])
 
-  console.log('asifs hobbies', hobbiesSearchResults)
-  console.log('asifs page', page)
+  // console.log('asifs hobbies', hobbiesSearchResults)
+  // console.log('asifs page', page)
 
-  const lastPostElementRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (searchLoading) return
-      if (observer.current) observer.current.disconnect()
-      observer.current = new IntersectionObserver(
-        (entries) => {
-          if (entries[0].isIntersecting && hasMore) {
-            dispatch(setResultPagination(currentPage + 1))
-          }
-        },
-        { rootMargin: '100px' },
-      )
-      if (node) observer.current.observe(node)
-    },
-    [searchLoading, hasMore, currentPage, dispatch],
-  )
+  // const lastPostElementRef = useCallback(
+  //   (node: HTMLDivElement | null) => {
+  //     if (searchLoading) return
+  //     if (observer.current) observer.current.disconnect()
+  //     observer.current = new IntersectionObserver(
+  //       (entries) => {
+  //         if (entries[0].isIntersecting && hasMore) {
+  //           dispatch(setResultPagination(currentPage + 1))
+  //         }
+  //       },
+  //       { rootMargin: '100px' },
+  //     )
+  //     if (node) observer.current.observe(node)
+  //   },
+  //   [searchLoading, hasMore, currentPage, dispatch],
+  // )
 
   useEffect(() => {
     if (showAll === true) {
@@ -490,12 +490,12 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         className={styles.peopleItem}
                         key={index}
                         onClick={() => navigateToHobby(hobby.slug)}
-                        ref={
-                          index === hobbyResults.length - 1
-                            ? lastPostElementRef
-                            : null
-                          // lastPostElementRef
-                        }
+                        // ref={
+                        //   index === hobbyResults.length - 1
+                        //     ? lastPostElementRef
+                        //     : null
+
+                        // }
                       >
                         <div className={styles.hobbyAvtar}>
                           {/* Render the image */}
