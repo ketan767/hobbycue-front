@@ -590,82 +590,6 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                 {/* Filters */}
 
                 <div className={styles['filter-wrapper']}>
-                  <header>
-                    <h4 className={styles['heading']}>Filter</h4>
-                    {/* <button onClick={handleFilter}>Apply</button> */}
-                  </header>
-
-                  <div className={styles['select-filter']}>
-                    <p>Category</p>
-                    <FormControl variant="outlined" fullWidth size="small">
-                      <Select
-                        value={filterData.category}
-                        onChange={(e) =>
-                          setFilterData((prev) => {
-                            if (e.target.value !== prev.category) {
-                              setHobbyInputValue('')
-                              return {
-                                category: e.target.value,
-                                subCategory: '',
-                                hobby: '',
-                              }
-                            }
-                            if (e.target.value === '') {
-                              return {
-                                category: e.target.value,
-                                subCategory: '',
-                                hobby: '',
-                              }
-                            }
-                            return { ...prev, category: e.target.value }
-                          })
-                        }
-                        displayEmpty
-                        // inputProps={{ "aria-label": "Without label" }}
-                      >
-                        <MenuItem value="">All Categories</MenuItem>
-                        {filtercategories.map((cat: any, idx) => {
-                          return (
-                            <MenuItem key={idx} value={cat._id}>
-                              {cat.display}
-                            </MenuItem>
-                          )
-                        })}
-                      </Select>
-                    </FormControl>
-                  </div>
-                  <div className={styles['select-filter']}>
-                    <p>Sub-Category</p>
-                    <FormControl variant="outlined" fullWidth size="small">
-                      <Select
-                        value={filterData.subCategory}
-                        onChange={(e) =>
-                          setFilterData((prev) => {
-                            if (e.target.value !== prev.subCategory) {
-                              setHobbyInputValue('')
-                              return {
-                                ...prev,
-                                subCategory: e.target.value,
-                                hobby: '',
-                              }
-                            }
-                            return { ...prev, subCategory: e.target.value }
-                          })
-                        }
-                        displayEmpty
-                        inputProps={{ 'aria-label': 'Without label' }}
-                      >
-                        <MenuItem value="">All Sub-Categories</MenuItem>
-                        {filtersubCategories.map((cat: any, idx) => {
-                          return (
-                            <MenuItem key={idx} value={cat._id}>
-                              {cat.display}
-                            </MenuItem>
-                          )
-                        })}
-                      </Select>
-                    </FormControl>
-                  </div>
                   <div className={styles['select-filter']}>
                     <p>Hobby</p>
                     <TextField
@@ -683,6 +607,84 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
                       }
                       onChange={handleHobbyInputChange}
                     />
+                  </div>
+                  <header>
+                    <h4 className={styles['heading']}>Filter</h4>
+                    {/* <button onClick={handleFilter}>Apply</button> */}
+                  </header>
+                  <div className={styles['cat-and-sub-cat-filters']}>
+                    <div className={styles['select-filter']}>
+                      <p>Category</p>
+                      <FormControl variant="outlined" fullWidth size="small">
+                        <Select
+                          value={filterData.category}
+                          onChange={(e) =>
+                            setFilterData((prev) => {
+                              if (e.target.value !== prev.category) {
+                                setHobbyInputValue('')
+                                return {
+                                  category: e.target.value,
+                                  subCategory: '',
+                                  hobby: '',
+                                }
+                              }
+                              if (e.target.value === '') {
+                                return {
+                                  category: e.target.value,
+                                  subCategory: '',
+                                  hobby: '',
+                                }
+                              }
+                              return { ...prev, category: e.target.value }
+                            })
+                          }
+                          displayEmpty
+                          // inputProps={{ "aria-label": "Without label" }}
+                        >
+                          <MenuItem value="">All Categories</MenuItem>
+                          {filtercategories.map((cat: any, idx) => {
+                            return (
+                              <MenuItem key={idx} value={cat._id}>
+                                {cat.display}
+                              </MenuItem>
+                            )
+                          })}
+                        </Select>
+                      </FormControl>
+                    </div>
+
+                    <div className={styles['select-filter']}>
+                      <p>Sub-Category</p>
+                      <FormControl variant="outlined" fullWidth size="small">
+                        <Select
+                          value={filterData.subCategory}
+                          onChange={(e) =>
+                            setFilterData((prev) => {
+                              if (e.target.value !== prev.subCategory) {
+                                setHobbyInputValue('')
+                                return {
+                                  ...prev,
+                                  subCategory: e.target.value,
+                                  hobby: '',
+                                }
+                              }
+                              return { ...prev, subCategory: e.target.value }
+                            })
+                          }
+                          displayEmpty
+                          inputProps={{ 'aria-label': 'Without label' }}
+                        >
+                          <MenuItem value="">All Sub-Categories</MenuItem>
+                          {filtersubCategories.map((cat: any, idx) => {
+                            return (
+                              <MenuItem key={idx} value={cat._id}>
+                                {cat.display}
+                              </MenuItem>
+                            )
+                          })}
+                        </Select>
+                      </FormControl>
+                    </div>
                   </div>
                   {showHobbyDropdown && hobbyDropdownList.length !== 0 && (
                     <div className={styles['dropdown']}>
@@ -881,7 +883,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   const executeAPI = async (object: any) => {
     const categoryID = object.category._id
     // const subCategoryID = object.sub_category ? object.sub_category._id : null
-    const subCategoryID = object._id  // because object is the sub-category itself
+    const subCategoryID = object._id // because object is the sub-category itself
 
     const { res } = await getAllHobbies(
       `category=${categoryID}${

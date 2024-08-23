@@ -155,18 +155,20 @@
   height: 30px;
   border-radius: 100%;
   cursor: pointer;
-
+  background: #F7F5F9;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .comment-input-wrapper .submit-btn:focus-visible {
+  background-color: #8064A2 !important;
   color: #8064A2 !important;
 
 }
 
 .comment-input-wrapper .submit-btn:focus {
   color: #8064A2 !important;
+  background-color: #8064A2 !important;
 
 }
 .submit-btn-svg{
