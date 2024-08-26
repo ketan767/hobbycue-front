@@ -211,14 +211,16 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
           <div className={styles['relative']}>
             {data?.profile_image ? (
               <div className={styles['title-mobile']}>
-                <img
-                  onClick={OpenProfileImage}
-                  className={styles['profile-img']}
-                  src={data.profile_image}
-                  alt=""
-                  width={160}
-                  height={160}
-                />
+                <div className={styles['border-div']}>
+                  <img
+                    onClick={OpenProfileImage}
+                    className={styles['profile-img']}
+                    src={data.profile_image}
+                    alt=""
+                    width={160}
+                    height={160}
+                  />
+                </div>
                 <div className={styles['name-container-mobile']}>
                   <h1 className={styles['name']}>{data?.display}</h1>
                   <p className={styles['category']}>
