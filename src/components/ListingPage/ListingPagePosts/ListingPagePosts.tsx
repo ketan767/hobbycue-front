@@ -91,8 +91,8 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
     }
   }
 
-  const pinnedPosts = pagesData.filter((item: any) => item.isPinned === true)
-  const unpinnnedPosts = pagesData.filter((item: any) => item.isPinned !== true)
+  let pinnedPosts = pagesData.filter((item: any) => item.isPinned === true)
+  let unpinnnedPosts = pagesData.filter((item: any) => item.isPinned !== true)
 
   return (
     <>

@@ -534,11 +534,11 @@ const ListingPageLayout: React.FC<Props> = ({
             </div>
           )}
 
-          {activeTab === 'posts' && (
+          {/* {activeTab === 'posts' && (
             <div className={styles['display-mobile']}>
               <ListingPostsTab data={data} hideStartPost={true} />
             </div>
-          )}
+          )} */}
           {activeTab === 'media' && (
             <div className={styles['display-mobile']}>
               <ListingMediaTab data={data?.pageData} />
