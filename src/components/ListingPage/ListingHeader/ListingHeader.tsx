@@ -63,6 +63,8 @@ const ListingHeader: React.FC<Props> = ({
   setLocationErr,
   setpageTypeErr,
 }) => {
+  console.log('asifs product data', data)
+
   const dispatch = useDispatch()
   const router = useRouter()
   const [snackbar, setSnackbar] = useState({
@@ -549,8 +551,13 @@ const ListingHeader: React.FC<Props> = ({
 
   const incQuantity = (i: number) => {
     let newArr = [...data?.product_variant?.variations]
-    if (Number(newArr[i].quantity) < 9) {
-      newArr[i] = { ...newArr[i], quantity: Number(newArr[i].quantity) + 1 }
+    console.log('asifs newArr', newArr)
+
+    if (newArr[i]?.quantity || Number(newArr[i]?.quantity) < 9) {
+      newArr[i] = {
+        ...newArr[i],
+        quantity: newArr[i]?.quantity ? Number(newArr[i]?.quantity) + 1 : 1,
+      }
       setVarientData((prev) => ({ ...prev, variations: newArr }))
     }
   }
@@ -1310,7 +1317,7 @@ const ListingHeader: React.FC<Props> = ({
                       <button
                         disabled
                         onClick={() => {
-                          incQuantity(2)
+                          incQuantity(1)
                         }}
                       >
                         {plusIcon}

@@ -208,7 +208,7 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
             <img className={styles['item-img']} src={data?.profile_image} />
           </div>
         ) : (
-          <div className={styles.item}>
+          <div className={styles["upload-item"]}>
             <input
               type="file"
               accept="image/png, image/gif, image/jpeg"
@@ -272,18 +272,16 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
         ))}
 
         <div className={styles['upload-item']}>
-          <>
-            <input
-              type="file"
-              accept="image/png, image/gif, image/jpeg"
-              className={styles.hidden}
-              onChange={(e) => {
-                handleImageChange(e)
-              }}
-            />
-            {uploadIcon}
-            <p>Add Image</p>
-          </>
+          <input
+            type="file"
+            accept="image/png, image/gif, image/jpeg"
+            className={styles.hidden}
+            onChange={(e) => {
+              handleImageChange(e)
+            }}
+          />
+          {uploadIcon}
+          <p>Add Image</p>
         </div>
       </div>
       <button className={styles.navButton} onClick={scrollDown}>
