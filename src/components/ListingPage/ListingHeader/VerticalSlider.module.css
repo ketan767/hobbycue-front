@@ -57,7 +57,7 @@
     width: 88px;
     height: 88px;
     display: flex;
-    padding: 21px 9.5px 21px 9.5px;
+    /* padding: 21px 9.5px 21px 9.5px; */
     flex-direction: column;
     gap: 4px;
     justify-content: center;

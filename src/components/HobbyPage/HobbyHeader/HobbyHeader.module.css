@@ -13,7 +13,6 @@
   max-height: 310px;
 }
 .profile-img {
-  margin-left: 10px;
   border-radius: 8px;
   width: 140px;
   height: 160px;
@@ -25,10 +24,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: white;
+}
+.border-div {
+  background-color: #8064a2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 142px;
+  height: 162px;
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  z-index: -1;
 }
 
 .profile-img-small {
-
   border-radius: 8px;
   width: 60px;
   height: 68.5px;
@@ -72,7 +81,6 @@
   position: sticky;
   bottom: 0;
   z-index: 3;
-  
 }
 
 .profile-img img {
@@ -142,7 +150,7 @@
   display: flex;
   gap: 20px;
   justify-content: start;
- 
+
   margin: 14px 0 0 24.05%;
   position: -webkit-sticky;
   position: sticky;
@@ -269,26 +277,27 @@
   display: none !important;
 }
 .add-mine {
-
-    font-size: 14px;
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 600;
-    line-height: 16px;
-    padding: 0 10px;
-    height: 32px;
-    width: 157px;
-  
+  font-size: 14px;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  line-height: 16px;
+  padding: 0 10px;
+  height: 32px;
+  width: 157px;
 }
 
-.name-container-desktop{
-
-    display: flex;
-    column-gap: 12px;
-    align-items: flex-end;
-    justify-content: space-between;
+.name-container-desktop {
+  display: flex;
+  column-gap: 12px;
+  align-items: flex-end;
+  justify-content: space-between;
 }
 @media screen and (max-width: 1100px) {
+  .border-div {
+    width: 62px;
+    height: 70.5px;
+  }
   .display-desktop {
     display: none !important;
   }
@@ -345,33 +354,33 @@
     display: none;
   }
 
-.action-btn-wrapper{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  height: auto;
-  margin: 0 0 10px 0;
-  padding: 16px;
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.12);
-}
+  .action-btn-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: auto;
+    margin: 0 0 10px 0;
+    padding: 16px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.12);
+  }
 
-.add-mine{
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 600;
-  line-height: 0;
-  padding: 0px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 110px;
-}
+  .add-mine {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    line-height: 0;
+    padding: 0px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 110px;
+  }
 
   .header {
     padding: 8px 16px 8px 16px;
@@ -421,13 +430,10 @@
     cursor: pointer;
     position: absolute;
     bottom: -6px;
-   
+
     z-index: 3;
-    
   }
   .profile-img-wrapper .edit-btn {
-   
     left: 0;
-
   }
 }
