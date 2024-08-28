@@ -74,6 +74,7 @@ const ListingHeader: React.FC<Props> = ({
   })
   const { listingLayoutMode } = useSelector((state: any) => state.site)
   const [showDays, setShowDays] = useState(false)
+  const [quantity, setQuantity] = useState(1)
   const inputRef = useRef<HTMLInputElement>(null)
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
@@ -83,8 +84,17 @@ const ListingHeader: React.FC<Props> = ({
     variant_tag?: string
     variations?: { name: string; value: string; quantity: number }[]
     note?: string
-  }>({ variant_tag: '', variations: [], note: '' })
-  const [inpSelectValues, setInpSelectValues] = useState<any>([])
+  }>({
+    variant_tag: '',
+    variations: [],
+    note: '',
+  })
+
+  const [inpSelectValues, setInpSelectValues] = useState<{
+    name?: string
+    value?: any
+  }>({})
+  console.warn('inputselect', inpSelectValues)
   const { active_img_product } = useSelector((state: RootState) => state.site)
   const showFeatureUnderDevelopment = () => {
     setSnackbar({
@@ -514,6 +524,7 @@ const ListingHeader: React.FC<Props> = ({
 
   useEffect(() => {
     setVarientData(data.product_variant)
+    setInpSelectValues(data.product_variant)
   }, [])
 
   const handleImageChange = (e: any) => {
@@ -549,27 +560,12 @@ const ListingHeader: React.FC<Props> = ({
 
   const idx = active_img_product?.idx ?? 0
 
-  const incQuantity = (i: number) => {
-    let newArr = [...data?.product_variant?.variations]
-    console.log('asifs newArr', newArr)
-
-    if (newArr[i]?.quantity || Number(newArr[i]?.quantity) < 9) {
-      newArr[i] = {
-        ...newArr[i],
-        quantity: newArr[i]?.quantity ? Number(newArr[i]?.quantity) + 1 : 1,
-      }
-      setVarientData((prev) => ({ ...prev, variations: newArr }))
-    }
+  const incQuantity = () => {
+    setQuantity(quantity + 1)
   }
 
-  const decQuantity = (i: number) => {
-    let newArr = [...data?.product_variant?.variations]
-    newArr[i] = {
-      ...newArr[i],
-      quantity:
-        Number(newArr[i].quantity) === 0 ? 0 : Number(newArr[i].quantity) - 1,
-    }
-    setVarientData((prev) => ({ ...prev, variations: newArr }))
+  const decQuantity = () => {
+    setQuantity(quantity - 1)
   }
 
   const uploadIcon = (
@@ -1286,39 +1282,44 @@ const ListingHeader: React.FC<Props> = ({
                 )}
                 <div className={styles['price-and-qunaitity']}>
                   <InputSelect
-                    options={VarientData?.variations?.map(
-                      (value) => value.name,
-                    )}
+                    options={
+                      VarientData?.variations?.map((item) => item.name) || []
+                    }
                     value={inpSelectValues['name'] || ''}
-                    onChange={(e: any) => {
-                      setInpSelectValues((prevValue: any) => ({
-                        ...prevValue,
-                        name: e,
-                      }))
+                    onChange={(selectedName: string) => {
+                      if (VarientData) {
+                        setInpSelectValues({
+                          name: VarientData?.variations?.[0].name,
+                          value: VarientData?.variations?.[0].value,
+                        })
+                      }
                     }}
                   />
-
                   <label>Quantity:</label>
                   <div className={styles.varientpirce}>
                     {rupeesIcon}
-                    1600
+                    {quantity !== 0
+                      ? inpSelectValues['value'] * quantity
+                      : quantity == 0
+                      ? inpSelectValues['value']
+                      : 0}
                   </div>
                   <div className={styles['qunatity']}>
                     <div className={styles['quantity']}>
                       <button
-                        disabled
                         onClick={() => {
-                          decQuantity(1)
+                          decQuantity()
                         }}
+                        disabled={quantity == 0}
                       >
                         {minusIcon}
                       </button>
-                      {/* <p>{obj.quantity}</p> */}
+                      <p>{quantity}</p>
                       <button
-                        disabled
                         onClick={() => {
-                          incQuantity(1)
+                          incQuantity()
                         }}
+                        disabled={quantity > 10}
                       >
                         {plusIcon}
                       </button>
