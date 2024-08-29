@@ -32,6 +32,7 @@ type Props = {
   onStatusChange?: (isChanged: boolean) => void
   onBoarding?: boolean
   propData?: any
+  modalType?: any
 }
 
 const initialEventHour = {
@@ -50,15 +51,20 @@ const ListingProductPurchase: React.FC<Props> = ({
   onStatusChange,
   onBoarding,
   propData,
+  modalType,
 }) => {
   console.log({ propData })
   const dispatch = useDispatch()
+  const { listingModalData } = useSelector((state: RootState) => state.site)
   const { user } = useSelector((state: RootState) => state.user)
-  const [submitBtnTxt, setSubmitBtnTxt] = useState('Register')
+  const [submitBtnTxt, setSubmitBtnTxt] = useState(
+    listingModalData.type === 4 ? 'Buy' : 'Register',
+  )
+
   const [showConfirmRegister, setshowConfirmRegister] = useState(false)
   const [RegisterCheck, SetRegisterCheck] = useState<any>(null)
   const [RegisterError, SetRegisterError] = useState<boolean>(false)
-  const { listingModalData } = useSelector((state: RootState) => state.site)
+
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
   console.log('listingModalData:', listingModalData)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
@@ -532,7 +538,7 @@ const ListingProductPurchase: React.FC<Props> = ({
               <p
                 className={RegisterError ? styles['register-error'] : 'ignore'}
               >
-                Did you register?
+                Did you {listingModalData.type === 4 ? 'Buy' : 'register'}
               </p>
               <div>
                 <span>

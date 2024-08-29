@@ -397,13 +397,13 @@ const ListingHeader: React.FC<Props> = ({
         )}
       </FilledButton>
     )
-  } else if (ctaText === 'Register') {
+  } else if (ctaText === 'Register' || ctaText === 'Buy Now') {
     button = (
       <FilledButton
         className={styles.contactBtn}
         onClick={isEditMode ? handleUpdateCTA : handleRegister}
       >
-        <p>Register</p>
+        <p>{ctaText}</p>
         {isEditMode && (
           <img
             width={16}
@@ -1246,12 +1246,18 @@ const ListingHeader: React.FC<Props> = ({
             <div className={styles['product-name-container']}>
               <div>
                 <h1 className={styles['name']}>
-                  {data?.title}
-                  {data?.is_verified ? (
-                    <Image alt="claim" src={claimSvg} />
-                  ) : (
-                    ''
-                  )}
+                  <div className={!data?.title ? styles['default-text'] : ''}>
+                    {data?.title || 'Title of the Product'}
+                    {!data?.title && (
+                      <span className={styles['required-asterisk']}>*</span>
+                    )}
+                    {data?.is_verified ? (
+                      <Image alt="claim" src={claimSvg} />
+                    ) : (
+                      ''
+                    )}
+                  </div>
+
                   {listingLayoutMode === 'edit' && (
                     <Image
                       className={styles['edit-icon']}
@@ -1266,22 +1272,29 @@ const ListingHeader: React.FC<Props> = ({
                 ) : (
                   <p className={styles['tagline']}>&nbsp;</p>
                 )}
-                {data?.description ? (
-                  <div
-                    className={`${styles['about-text']}`}
-                    dangerouslySetInnerHTML={{ __html: data?.description }}
-                  ></div>
-                ) : (
-                  'About'
-                )}
-                {listingLayoutMode === 'edit' && (
-                  <Image
-                    className={styles['edit-icon']}
-                    src={EditIcon}
-                    alt="edit"
-                    onClick={openAboutEditModal}
-                  />
-                )}
+                <div className={styles['edit-field-wrapper']}>
+                  {data?.description ? (
+                    <div className={styles['about-text']}>
+                      <div
+                        dangerouslySetInnerHTML={{ __html: data?.description }}
+                      />
+                      <span className={styles['required-asterisk']}>*</span>
+                    </div>
+                  ) : (
+                    <div className={styles['about-text']}>
+                      About
+                      <span className={styles['required-asterisk']}>*</span>
+                    </div>
+                  )}
+                  {listingLayoutMode === 'edit' && (
+                    <Image
+                      className={styles['edit-icon']}
+                      src={EditIcon}
+                      alt="edit"
+                      onClick={openAboutEditModal}
+                    />
+                  )}
+                </div>
               </div>
               <div className={styles['varient-price-container']}>
                 {listingLayoutMode === 'edit' && (

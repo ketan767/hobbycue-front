@@ -109,7 +109,7 @@ const ProductCategoryModal: React.FC<Props> = ({
     console.log('res', res?.data.data.listing)
     if (onComplete) onComplete()
     else {
-      router.push(`/product/${res?.data?.data?.listing?.page_url}`)
+      window.location.href = `/product/${res?.data?.data?.listing?.page_url}`
       dispatch(closeModal())
     }
   }

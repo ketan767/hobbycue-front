@@ -112,6 +112,7 @@ export type ModalType =
           onVerify?: () => void;
           imageurl?: string | undefined
           propData?:object
+          modalType?: any
         }>
       ) {
         state.activeModal = action.payload.type

@@ -253,9 +253,26 @@
 .eventDate .time {
   margin-right: 14px;
 }
-.eventDate .edit-icon {
-  cursor: pointer;
+.edit-field-wrapper {
+  display: flex;
+  gap: 12px;
 }
+.default-text {
+  color: #939CA3;
+}
+.required-asterisk {
+  color: red;
+}
+
+
+.default-text::after {
+  content: "*";
+  color: red;
+  position: absolute;
+  left: 100%;
+  top: 0;
+}
+
 .contactBtn {
   font-size: 14px;
   font-family: 'Poppins';
@@ -457,6 +474,7 @@
   display: flex;
   flex-direction: column;
   padding-left: 24px;
+  width: 500px;
 }
 
 .product-name-container .name {
@@ -465,6 +483,8 @@ font-size: 20px;
 font-family: 'Poppins';
 font-style: normal;
 font-weight: 600;
+display: flex;
+gap: 8px;
 
 }
 .product-name-container .tagline {
@@ -476,10 +496,7 @@ font-weight: 400;
 line-height: 20px;
 }
 
-.about-text {
-  padding-top: 32px;
-  margin-left: 24px;
-}
+
 
 .item .hidden {
   opacity: 0;
@@ -527,12 +544,13 @@ font-weight: 600;
 line-height: normal;
 }
 .quantity{
-  display: flex;
+display: flex;
 justify-content: space-between;
 align-items: center;
 gap: 10px;
 border-radius: 4px;
 border: 1px solid var(--Primary-Full, #8064A2);
+width: 85px;
 }
 
 .quantity p{

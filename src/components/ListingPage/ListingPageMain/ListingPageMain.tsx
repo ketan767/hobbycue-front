@@ -45,6 +45,7 @@ import MapComponent from '@/components/Gmap'
 import { RootState } from '@/redux/store'
 import { SetLinkviaAuth } from '@/redux/slices/user'
 import { useMediaQuery } from '@mui/material'
+import { useRouter } from 'next/router'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -113,7 +114,6 @@ const ListingPageMain: React.FC<Props> = ({
     (state: RootState) => state.user,
   )
 
-  console.log('page', data)
   const [showSale, setShowSale] = useState(true)
   const [selectedTags, setSelectedTags] = useState([])
   const [listingPagesLeft, setListingPagesLeft] = useState([])
@@ -135,7 +135,7 @@ const ListingPageMain: React.FC<Props> = ({
   const [showSocialMedia, setShowSocialMedia] = useState(false)
   const [showAside, setShowAside] = useState(true)
   const [isRelatedLoading, SetisRelatedLoading] = useState(true)
-
+  const router = useRouter()
   function renderSocialLink(url: any, iconSrc: any, altText: any) {
     if (!url) return null
     return (
@@ -817,14 +817,20 @@ const ListingPageMain: React.FC<Props> = ({
               <PageContentBox
                 className={ContactInfoErr ? styles.errorBorder : ''}
                 showEditButton={listingLayoutMode === 'edit'}
-                onEditBtnClick={() =>
-                  dispatch(
-                    openModal({
-                      type: 'listing-contact-edit',
-                      closable: true,
-                    }),
-                  )
-                }
+                onEditBtnClick={() => {
+                  if (data.type === 4) {
+                    router.push(
+                      `/${pageType(data.seller.type)}/${data.seller.page_url}`,
+                    )
+                  } else {
+                    dispatch(
+                      openModal({
+                        type: 'listing-contact-edit',
+                        closable: true,
+                      }),
+                    )
+                  }
+                }}
                 setDisplayData={(arg0: boolean) => {
                   dispatch(
                     updateContactOpenStates({ [data._id]: !showContact }),
@@ -1781,14 +1787,20 @@ const ListingPageMain: React.FC<Props> = ({
           <PageContentBox
             className={ContactInfoErr ? styles.errorBorder : ''}
             showEditButton={listingLayoutMode === 'edit'}
-            onEditBtnClick={() =>
-              dispatch(
-                openModal({
-                  type: 'listing-contact-edit',
-                  closable: true,
-                }),
-              )
-            }
+            onEditBtnClick={() => {
+              if (data.type === 4) {
+                router.push(
+                  `/${pageType(data.seller.type)}/${data.seller.page_url}`,
+                )
+              } else {
+                dispatch(
+                  openModal({
+                    type: 'listing-contact-edit',
+                    closable: true,
+                  }),
+                )
+              }
+            }}
             setDisplayData={setShowContact}
           >
             <h4 className={styles['heading']}>
@@ -1814,7 +1826,7 @@ const ListingPageMain: React.FC<Props> = ({
                       }`}
                     >
                       <Image
-                        src={AdminSvg}
+                        src={data?.seller?.profile_image || AdminSvg}
                         alt="page admin"
                         width={24}
                         height={24}
