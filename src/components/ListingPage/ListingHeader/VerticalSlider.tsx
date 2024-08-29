@@ -2,9 +2,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import styles from './VerticalSlider.module.css'
 import { updateListing, updateListingProfile } from '@/services/listing.service'
 import { getMetadata, uploadImage } from '@/services/post.service'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   updateActiveProductImg,
+  updateListingLayoutMode,
   updatePhotoEditModalData,
 } from '@/redux/slices/site'
 import { openModal } from '@/redux/slices/modal'
@@ -25,6 +26,7 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
       containerRef.current.scrollBy({ top: -100, behavior: 'smooth' })
     }
   }
+  const { listingLayoutMode } = useSelector((state: any) => state.site)
   const dispatch = useDispatch()
 
   const scrollDown = () => {
@@ -208,22 +210,32 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
             <img className={styles['item-img']} src={data?.profile_image} />
           </div>
         ) : (
-          <div className={styles["upload-item"]}>
-            <input
-              type="file"
-              accept="image/png, image/gif, image/jpeg"
-              className={styles.hidden}
-              onChange={(e) => UploadProfileImg(e, 'profile')}
-            />
-            {uploadIcon}
-            <p>Add Image</p>
+          <div
+            className={`${styles['upload-item']} ${
+              listingLayoutMode === 'view' ? styles['item-view'] : ''
+            }`}
+          >
+            {listingLayoutMode === 'edit' ? (
+              <>
+                <input
+                  type="file"
+                  accept="image/png, image/gif, image/jpeg"
+                  className={styles.hidden}
+                  onChange={(e) => UploadProfileImg(e, 'profile')}
+                />
+                {uploadIcon}
+                <p>Add Image</p>
+              </>
+            ) : (
+              ''
+            )}
           </div>
         )}
         {videoimg ? (
           <div
             onClick={() => updateActiveImgIndex(0, 'video')}
             className={styles['item-video']}
-            style={{ position: 'relative' }} // Ensure relative positioning
+            style={{ position: 'relative' }}
           >
             <img src={videoimg} alt="Video" style={{ width: '100%' }} />
             <Image
@@ -241,23 +253,32 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
             />
           </div>
         ) : (
-          <div
-            onClick={() => {
-              dispatch(
-                openModal({
-                  type: 'upload-video-page',
-                  closable: true,
-                }),
-              )
-            }}
-            className={styles.item}
-          >
-            {uploadIcon}
-            <p>Add Video</p>
-          </div>
+          listingLayoutMode === 'edit' && (
+            <div
+              onClick={() => {
+                dispatch(
+                  openModal({
+                    type: 'upload-video-page',
+                    closable: true,
+                  }),
+                )
+              }}
+              className={`${styles['item']} ${
+                listingLayoutMode === 'view' ? styles['item-view'] : ''
+              }`}
+            >
+              {uploadIcon}
+              <p>Add Video</p>
+            </div>
+          )
         )}
         {data.images.map((image: any, index: any) => (
-          <div key={index} className={styles.item}>
+          <div
+            key={index}
+            className={`${styles.item} ${
+              listingLayoutMode === 'view' ? styles['item-view'] : ''
+            }`}
+          >
             {image && (
               <img
                 className={styles['item-img']}
@@ -271,18 +292,24 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
           </div>
         ))}
 
-        <div className={styles['upload-item']}>
-          <input
-            type="file"
-            accept="image/png, image/gif, image/jpeg"
-            className={styles.hidden}
-            onChange={(e) => {
-              handleImageChange(e)
-            }}
-          />
-          {uploadIcon}
-          <p>Add Image</p>
-        </div>
+        {listingLayoutMode === 'edit' && (
+          <div
+            className={`${styles['upload-item']} ${
+              listingLayoutMode === 'view' ? styles['item-view'] : ''
+            }`}
+          >
+            <input
+              type="file"
+              accept="image/png, image/gif, image/jpeg"
+              className={styles.hidden}
+              onChange={(e) => {
+                handleImageChange(e)
+              }}
+            />
+            {uploadIcon}
+            <p>Add Image</p>
+          </div>
+        )}
       </div>
       <button className={styles.navButton} onClick={scrollDown}>
         {upArrow}

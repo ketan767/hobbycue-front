@@ -53,6 +53,10 @@
     cursor: pointer;
 }
 
+.item-view {
+    border: 1px solid #8064A2 !important;
+  }
+
 .upload-item {
     width: 88px;
     height: 88px;

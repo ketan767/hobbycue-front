@@ -67,7 +67,6 @@ const ListingHome: React.FC<Props> = (props) => {
     setExpandAll(value)
     dispatch(updateListingMenuExpandAll(value))
   }
-  console.warn('warnnnnnnnnnnn', router)
 
   useEffect(() => {
     const handleRouteChange = () => {

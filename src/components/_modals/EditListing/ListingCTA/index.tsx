@@ -100,9 +100,6 @@ const ListingCTAModal: React.FC<Props> = ({
   const [listThree, setListThree] = useState<
     { name: string; description: string }[]
   >([
-    { name: 'Contact', description: 'Opens a Contact or Message dialogue' },
-    { name: 'Claim', description: 'Allows others to Claim this Page' },
-
     {
       name: 'Buy Now',
       description: 'External Page for Online Shop (eg: Amazon)',
@@ -157,7 +154,7 @@ const ListingCTAModal: React.FC<Props> = ({
 
     if (onComplete) onComplete()
     else {
-      if (cta === 'Register') {
+      if (cta === 'Register' || cta === 'Buy Now') {
         dispatch(
           openModal({
             type: 'listing-product-variants-edit',
@@ -377,7 +374,7 @@ const ListingCTAModal: React.FC<Props> = ({
           >
             {submitBtnLoading ? (
               <CircularProgress color="inherit" size={'24px'} />
-            ) : onComplete || cta === 'Register' ? (
+            ) : onComplete || cta === 'Register' || cta === 'Buy Now' ? (
               'Next'
             ) : (
               'Save'

@@ -195,6 +195,7 @@ const ListingHeader: React.FC<Props> = ({
       openModal({
         type: 'listing-product-variants-edit',
         closable: true,
+        propData: { currentListing: data },
       }),
     )
   }
@@ -524,9 +525,10 @@ const ListingHeader: React.FC<Props> = ({
 
   useEffect(() => {
     setVarientData(data.product_variant)
-    setInpSelectValues(data.product_variant)
-  }, [])
 
+    setInpSelectValues(data?.product_variant?.variations?.[0])
+  }, [])
+  console.warn('variendata', VarientData)
   const handleImageChange = (e: any) => {
     const images = [...e?.target?.files]
     const image = e?.target?.files[0]
@@ -1218,16 +1220,26 @@ const ListingHeader: React.FC<Props> = ({
                 )}
               </div>
             ) : (
-              <div className={styles.item}>
-                <input
-                  type="file"
-                  accept="image/png, image/gif, image/jpeg"
-                  className={styles.hidden}
-                  onChange={(e: any) => onInputChange(e, 'profile')}
-                  ref={inputRef}
-                />
-                {uploadIcon}
-                <p>Add Image</p>
+              <div
+                className={`${styles.item} ${
+                  !isEditMode ? styles['item-view'] : ''
+                }`}
+              >
+                {listingLayoutMode === 'edit' ? (
+                  <>
+                    <input
+                      type="file"
+                      accept="image/png, image/gif, image/jpeg"
+                      className={styles.hidden}
+                      onChange={(e: any) => onInputChange(e, 'profile')}
+                      ref={inputRef}
+                    />
+                    {uploadIcon}
+                    <p>Add Image</p>
+                  </>
+                ) : (
+                  ''
+                )}
               </div>
             )}
 
@@ -1285,24 +1297,28 @@ const ListingHeader: React.FC<Props> = ({
                     options={
                       VarientData?.variations?.map((item) => item.name) || []
                     }
-                    value={inpSelectValues['name'] || ''}
+                    value={inpSelectValues?.['name'] || ''}
                     onChange={(selectedName: string) => {
                       if (VarientData) {
+                        const selectedVariation = VarientData?.variations?.find(
+                          (item) => item.name === selectedName,
+                        )
                         setInpSelectValues({
-                          name: VarientData?.variations?.[0].name,
-                          value: VarientData?.variations?.[0].value,
+                          name: selectedName,
+                          value: selectedVariation?.value || '',
                         })
                       }
                     }}
                   />
+
                   <label>Quantity:</label>
                   <div className={styles.varientpirce}>
                     {rupeesIcon}
                     {quantity !== 0
-                      ? inpSelectValues['value'] * quantity
+                      ? inpSelectValues?.['value'] * quantity
                       : quantity == 0
-                      ? inpSelectValues['value']
-                      : 0}
+                      ? inpSelectValues?.['value']
+                      : 0 || 0}
                   </div>
                   <div className={styles['qunatity']}>
                     <div className={styles['quantity']}>
@@ -1310,7 +1326,7 @@ const ListingHeader: React.FC<Props> = ({
                         onClick={() => {
                           decQuantity()
                         }}
-                        disabled={quantity == 0}
+                        disabled={quantity == 1}
                       >
                         {minusIcon}
                       </button>

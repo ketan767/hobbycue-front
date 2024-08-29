@@ -408,6 +408,10 @@
   margin-top: auto;
 }
 
+.item-view {
+  border: 1px solid #8064A2 !important;
+}
+
 .item {
   width: 472px;
   height: 472px;
