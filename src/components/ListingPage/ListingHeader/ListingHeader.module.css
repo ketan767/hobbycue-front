@@ -265,13 +265,7 @@
 }
 
 
-.default-text::after {
-  content: "*";
-  color: red;
-  position: absolute;
-  left: 100%;
-  top: 0;
-}
+
 
 .contactBtn {
   font-size: 14px;
