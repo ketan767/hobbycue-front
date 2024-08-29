@@ -284,6 +284,10 @@ export const Navbar: React.FC<Props> = ({}) => {
           (page) => page.type === 3 && page.is_published,
         )
 
+        const typeResultFour = uniquePages.filter(
+          (page) => page.type === 4 && page.is_published,
+        )
+
         // Dispatch the unique results to the appropriate actions
         dispatch(
           setTypeResultOne({
@@ -302,6 +306,14 @@ export const Navbar: React.FC<Props> = ({}) => {
         dispatch(
           setTypeResultThree({
             data: typeResultThree,
+            message: 'Search completed successfully.',
+            success: true,
+          }),
+        )
+
+        dispatch(
+          setTypeResultFour({
+            data: typeResultFour,
             message: 'Search completed successfully.',
             success: true,
           }),

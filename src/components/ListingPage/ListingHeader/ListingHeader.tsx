@@ -1278,7 +1278,6 @@ const ListingHeader: React.FC<Props> = ({
                       <div
                         dangerouslySetInnerHTML={{ __html: data?.description }}
                       />
-                      <span className={styles['required-asterisk']}>*</span>
                     </div>
                   ) : (
                     <div className={styles['about-text']}>
@@ -1328,7 +1327,7 @@ const ListingHeader: React.FC<Props> = ({
                   <div className={styles.varientpirce}>
                     {rupeesIcon}
                     {quantity !== 0
-                      ? inpSelectValues?.['value'] * quantity
+                      ? inpSelectValues?.['value'] * quantity || 0
                       : quantity == 0
                       ? inpSelectValues?.['value']
                       : 0 || 0}

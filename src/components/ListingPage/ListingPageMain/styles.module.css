@@ -41,7 +41,9 @@ line-height: normal;
 
   color: #0096c8;
 }
-
+.product-color {
+  color: #C0504D !important;
+  }
 .people-color {
 color: #8064A2 !important;
 }

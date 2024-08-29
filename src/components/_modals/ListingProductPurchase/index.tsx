@@ -22,6 +22,7 @@ import Time from '@/assets/svg/clock-light.svg'
 import rupeesIcon from '@/assets/svg/rupees.svg'
 import RadioUnselected from '../../../assets/svg/radio-unselected.svg'
 import RadioSelected from '../../../assets/svg/radio-selected.svg'
+import bhaskarQr from '../../../assets/image/bhaskarQr.jpeg'
 
 type Props = {
   onComplete?: () => void
@@ -145,14 +146,16 @@ const ListingProductPurchase: React.FC<Props> = ({
 
       if (onComplete) onComplete()
       else {
-        setSnackbar({
-          display: true,
-          type: 'success',
-          message: 'Registered Successfully',
-        })
-        setTimeout(() => {
-          dispatch(closeModal())
-        }, 2000)
+        if (listingModalData.type !== 4) {
+          setSnackbar({
+            display: true,
+            type: 'success',
+            message: 'Registered Successfully',
+          })
+          setTimeout(() => {
+            dispatch(closeModal())
+          }, 2000)
+        }
       }
     }
 
@@ -172,7 +175,7 @@ const ListingProductPurchase: React.FC<Props> = ({
       console.log('res', res?.data.data.listing)
 
       if (onComplete) onComplete()
-      else {
+      if (listingModalData.type !== 4) {
         setSnackbar({
           display: true,
           type: 'success',
@@ -186,7 +189,6 @@ const ListingProductPurchase: React.FC<Props> = ({
       dispatch(closeModal())
     }
   }
-
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   const isMobile = useMediaQuery('(max-width:1100px)')
 
@@ -333,7 +335,12 @@ const ListingProductPurchase: React.FC<Props> = ({
         {/* Modal Header */}
 
         <section className={styles['body']}>
-          <div className={styles['container']}>
+          <div
+            className={`${styles['container']} ${
+              listingModalData?.page_type?.includes('Online Access') &&
+              styles['container-qr']
+            }`}
+          >
             <div className={styles['img-and-label']}>
               {listingModalData.profile_image ? (
                 <img src={listingModalData?.profile_image} alt="" />
@@ -464,49 +471,54 @@ const ListingProductPurchase: React.FC<Props> = ({
                 <></>
               )}
             </div>
+            {listingModalData?.page_type?.includes('Online Access') ? (
+              <Image src={bhaskarQr} alt="Qr" />
+            ) : (
+              <div className={styles['variations']}>
+                <div className={styles['variations-list']}>
+                  {data.variations.map((obj, i) => (
+                    <div key={i} className={styles['variant']}>
+                      <div>
+                        {obj.name === 'No value' ? 'Quantity' : obj.name}
+                      </div>
 
-            <div className={styles['variations']}>
-              <div className={styles['variations-list']}>
-                {data.variations.map((obj, i) => (
-                  <div key={i} className={styles['variant']}>
-                    <div>{obj.name === 'No value' ? 'Quantity' : obj.name}</div>
-
-                    <div className={styles['quantity']}>
-                      <button
-                        onClick={() => {
-                          decQuantity(i)
-                        }}
+                      <div className={styles['quantity']}>
+                        <button
+                          onClick={() => {
+                            decQuantity(i)
+                          }}
+                        >
+                          {minusIcon}
+                        </button>
+                        <p>{obj.quantity}</p>
+                        <button
+                          onClick={() => {
+                            incQuantity(i)
+                          }}
+                        >
+                          {plusIcon}
+                        </button>
+                      </div>
+                      <div
+                        className={styles['show-value']}
+                        // onChange={(e)=>{handleVariationChange(e.target.value,'value',i)}}
                       >
-                        {minusIcon}
-                      </button>
-                      <p>{obj.quantity}</p>
-                      <button
-                        onClick={() => {
-                          incQuantity(i)
-                        }}
-                      >
-                        {plusIcon}
-                      </button>
+                        <p>
+                          {
+                            <Image
+                              className={styles['rupees-icon']}
+                              src={rupeesIcon}
+                              alt="rupeesIcon"
+                            />
+                          }{' '}
+                          {formatPrice(obj.value)}
+                        </p>
+                      </div>
                     </div>
-                    <div
-                      className={styles['show-value']}
-                      // onChange={(e)=>{handleVariationChange(e.target.value,'value',i)}}
-                    >
-                      <p>
-                        {
-                          <Image
-                            className={styles['rupees-icon']}
-                            src={rupeesIcon}
-                            alt="rupeesIcon"
-                          />
-                        }{' '}
-                        {formatPrice(obj.value)}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </section>
 

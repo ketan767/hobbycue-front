@@ -124,6 +124,10 @@ width: 115%;
   width: 100%;
 }
 
+.container-qr {
+  align-items: center !important;
+}
+
 .img-and-label {
   display: flex;
   align-items: flex-start;

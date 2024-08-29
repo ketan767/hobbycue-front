@@ -201,9 +201,11 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
 
   return (
     <div className={styles.sliderContainer}>
-      <button className={styles.navButton} onClick={scrollUp}>
-        {upArrow}
-      </button>
+      {data.images.length > 3 && (
+        <button className={styles.navButton} onClick={scrollUp}>
+          {upArrow}
+        </button>
+      )}
       <div ref={containerRef} className={styles.itemsContainer}>
         {data.profile_image ? (
           <div onClick={() => updateActiveImgIndex(0, 'image')}>
@@ -311,9 +313,11 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
           </div>
         )}
       </div>
-      <button className={styles.navButton} onClick={scrollDown}>
-        {upArrow}
-      </button>
+      {data.images.length > 3 && (
+        <button className={styles.navButton} onClick={scrollDown}>
+          {upArrow}
+        </button>
+      )}
     </div>
   )
 }

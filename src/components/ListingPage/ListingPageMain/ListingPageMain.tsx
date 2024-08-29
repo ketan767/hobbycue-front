@@ -574,6 +574,8 @@ const ListingPageMain: React.FC<Props> = ({
                               ? styles['place-color']
                               : data.type === 3
                               ? styles['program-color']
+                              : data.type === 4
+                              ? styles['product-color']
                               : styles['abv-color']
                           }
                         >
