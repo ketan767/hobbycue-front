@@ -13,6 +13,8 @@ import ReactPlayer from 'react-player'
 import Image from 'next/image'
 
 import PauseIcon from '@/assets/svg/play_arrow.svg'
+import { isMobile } from '@/utils'
+import ProductImageSlider from './ProductImageSlider'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -81,7 +83,6 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
 
     if (files.length === 0) return
 
-    console.log('data', data?.pageData)
     const reader = new FileReader()
     reader.onload = () => {
       dispatch(
@@ -198,6 +199,18 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
       </defs>
     </svg>
   )
+
+  if (isMobile()) {
+    return (
+      <ProductImageSlider
+        data={data}
+        UploadProfileImg={UploadProfileImg}
+        uploadIcon={uploadIcon}
+        videoimg={videoimg}
+        handleImageChange={handleImageChange}
+      />
+    )
+  }
 
   return (
     <div className={styles.sliderContainer}>

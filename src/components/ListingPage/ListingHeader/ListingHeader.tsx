@@ -43,6 +43,7 @@ import VerticalSlider from './VerticalSlider'
 import { uploadImage } from '@/services/post.service'
 import ReactPlayer from 'react-player'
 import InputSelect from '@/components/InputSelect/inputSelect'
+import ProductImageSlider from './ProductImageSlider'
 
 type Props = {
   data: ListingPageData['pageData']
@@ -726,7 +727,7 @@ const ListingHeader: React.FC<Props> = ({
         <div className={styles['profile-img-wrapper']}>
           <div className={styles['relative']}>
             {data.type === 4 ? (
-              <VerticalSlider data={data} />
+              !isMobile && <VerticalSlider data={data} />
             ) : data?.profile_image && data.type !== 4 ? (
               <img
                 onClick={OpenProfileImage}
@@ -1248,7 +1249,9 @@ const ListingHeader: React.FC<Props> = ({
           </section>
         ) : (
           <section className={styles['product-header-content']}>
-            {active_img_product?.type === 'image' && data?.profile_image ? (
+            {isMobile ? (
+              <VerticalSlider data={data} />
+            ) : active_img_product?.type === 'image' && data?.profile_image ? (
               <img
                 className={styles['active-image']}
                 src={
@@ -1324,7 +1327,7 @@ const ListingHeader: React.FC<Props> = ({
                 {data?.tagline ? (
                   <p className={styles['tagline']}>{data?.tagline}</p>
                 ) : (
-                  <p className={styles['tagline']}>&nbsp;</p>
+                  !isMobile && <p className={styles['tagline']}>&nbsp;</p>
                 )}
                 <div className={styles['edit-field-wrapper']}>
                   {data?.description ? (
@@ -1361,55 +1364,71 @@ const ListingHeader: React.FC<Props> = ({
                   />
                 )}
                 <div className={styles['price-and-qunaitity']}>
-                  <InputSelect
-                    options={
-                      VarientData?.variations?.map((item) => item.name) || []
-                    }
-                    value={inpSelectValues?.['name'] || ''}
-                    onChange={(selectedName: string) => {
-                      if (VarientData) {
-                        const selectedVariation = VarientData?.variations?.find(
-                          (item) => item.name === selectedName,
-                        )
-                        setInpSelectValues({
-                          name: selectedName,
-                          value: selectedVariation?.value || '',
-                        })
+                  <div className="">
+                    <InputSelect
+                      options={
+                        VarientData?.variations?.map((item) => item.name) || []
                       }
-                    }}
-                  />
-
-                  <label>Quantity:</label>
-                  <div className={styles.varientpirce}>
-                    {rupeesIcon}
-                    {quantity !== 0
-                      ? inpSelectValues?.['value'] * quantity || 0
-                      : quantity == 0
-                      ? inpSelectValues?.['value']
-                      : 0 || 0}
+                      value={inpSelectValues?.['name'] || ''}
+                      onChange={(selectedName: string) => {
+                        if (VarientData) {
+                          const selectedVariation =
+                            VarientData?.variations?.find(
+                              (item) => item.name === selectedName,
+                            )
+                          setInpSelectValues({
+                            name: selectedName,
+                            value: selectedVariation?.value || '',
+                          })
+                        }
+                      }}
+                    />
+                    <div
+                      className={styles.varientpirce}
+                      style={{ marginTop: 20 }}
+                    >
+                      {rupeesIcon}
+                      {quantity !== 0
+                        ? inpSelectValues?.['value'] * quantity || 0
+                        : quantity == 0
+                        ? inpSelectValues?.['value']
+                        : 0 || 0}
+                    </div>
                   </div>
-                  <div className={styles['qunatity']}>
-                    <div className={styles['quantity']}>
-                      <button
-                        onClick={() => {
-                          decQuantity()
-                        }}
-                      >
-                        {minusIcon}
-                      </button>
-                      <p>{quantity}</p>
-                      <button
-                        onClick={() => {
-                          incQuantity()
-                        }}
-                      >
-                        {plusIcon}
-                      </button>
+                  <div
+                    className=""
+                    style={{
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: 10,
+                    }}
+                  >
+                    <label>Quantity:</label>
+                    <div className={styles['qunatity']}>
+                      <div className={styles['quantity']}>
+                        <button
+                          onClick={() => {
+                            decQuantity()
+                          }}
+                        >
+                          {minusIcon}
+                        </button>
+                        <p>{quantity}</p>
+                        <button
+                          onClick={() => {
+                            incQuantity()
+                          }}
+                        >
+                          {plusIcon}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className={styles['cta-product-btn']}>{button}</div>
+              {!isMobile && (
+                <div className={styles['cta-product-btn']}>{button}</div>
+              )}
             </div>
           </section>
         )}
