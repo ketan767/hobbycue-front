@@ -7,6 +7,7 @@ import {
   FormControl,
   MenuItem,
   Select,
+  colors,
 } from '@mui/material'
 
 import {
@@ -72,8 +73,10 @@ const ProductCategoryModal: React.FC<Props> = ({
 
   const categories = [
     { name: 'Item Sale', description: 'Shippable Product' },
-    { name: 'Item Rental', description: 'Equipment on rent' },
-    { name: 'Space Rental', description: 'A court or studio' },
+    {
+      name: 'Online Access',
+      description: 'To view or download digital content',
+    },
   ]
   const [selectedCategory, setSelectedCategory] = useState<any>([])
   const [selectedCategoryError, setSelectedCategoryError] = useState(false)
@@ -158,11 +161,7 @@ const ProductCategoryModal: React.FC<Props> = ({
   }, [selectedCategory, initialData, onStatusChange])
 
   const handleCategoryChange = (idToChange: any) => {
-    if (selectedCategory === idToChange) {
-      setSelectedCategory(null)
-    } else {
-      setSelectedCategory(idToChange)
-    }
+    setSelectedCategory(idToChange)
   }
 
   const handleAddListing = () => {
@@ -218,6 +217,7 @@ const ProductCategoryModal: React.FC<Props> = ({
       />
     )
   }
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -273,7 +273,11 @@ const ProductCategoryModal: React.FC<Props> = ({
                 className={styles['select-input']}
                 onClick={() => setShowDropdown(true)}
               >
-                <p>
+                <p
+                  className={
+                    selectedCategory.length !== 0 ? styles['color-black'] : ''
+                  }
+                >
                   {' '}
                   {selectedCategory?.length === 0
                     ? 'Select Category'

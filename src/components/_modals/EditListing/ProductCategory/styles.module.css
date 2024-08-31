@@ -384,6 +384,9 @@
     border: none !important;
   }
   
+  .color-black {
+    color: var(--Grey-Darkest, #08090A) !important;
+  }
   .parent-page>header{
     padding: 8px 12px;
     background: var(--Grey-Hover, #F8F9FA);

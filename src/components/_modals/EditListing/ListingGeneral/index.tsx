@@ -537,7 +537,9 @@ const ListingGeneralEditModal: React.FC<Props> = ({
                     paddingTop: '13px',
                   }}
                 />
-                <span ref={urlSpanRef}>{'/page/'}</span>
+                <span ref={urlSpanRef}>{`/${pageType(
+                  listingModalData?.type,
+                )}/`}</span>
               </div>
               <p className={styles['helper-text']}>{data.page_url.error}</p>
             </div>
@@ -550,13 +552,13 @@ const ListingGeneralEditModal: React.FC<Props> = ({
                     data.year.error ? styles['input-box-error'] : ''
                   }`}
                 >
-                               <label>
-  {listingModalData.type === listingTypes.PEOPLE
-    ? `Year Of Birth/${labelText}`
-    : listingModalData.type === listingTypes.PRODUCT
-    ? 'Year Of Manufacture'
-    : 'Year Of Establishment'}
-</label>
+                  <label>
+                    {listingModalData.type === listingTypes.PEOPLE
+                      ? `Year Of Birth/${labelText}`
+                      : listingModalData.type === listingTypes.PRODUCT
+                      ? 'Year Of Manufacture'
+                      : 'Year Of Establishment'}
+                  </label>
                   <input
                     type="text"
                     placeholder="Year"

@@ -158,6 +158,29 @@ const AddListing: React.FC<Props> = (props) => {
               <p>{data.find((obj) => obj.pageType === 'Place')?.Description}</p>
             </section>
           )}
+          {data?.find((obj) => obj.pageType === 'Product') && (
+            <section
+              onMouseEnter={() => setHoveredIndex('Product')}
+              onMouseLeave={() => setHoveredIndex(null)}
+              onClick={() => handleClick(4 as ListingPages)}
+              className={`${styles['card']} ${styles['product']}`}
+            >
+              <h3>
+                <img
+                  src={
+                    hoveredIndex === 'Product'
+                      ? data.find((obj) => obj.pageType === 'Product')?.hoverImg
+                      : data.find((obj) => obj.pageType === 'Product')?.img
+                  }
+                  alt=""
+                />
+                <span>Product</span>
+              </h3>
+              <p>
+                {data.find((obj) => obj.pageType === 'Product')?.Description}
+              </p>
+            </section>
+          )}
 
           {data?.find((obj) => obj.pageType === 'Program') && (
             <section
@@ -179,30 +202,6 @@ const AddListing: React.FC<Props> = (props) => {
               </h3>
               <p>
                 {data.find((obj) => obj.pageType === 'Program')?.Description}
-              </p>
-            </section>
-          )}
-
-          {data?.find((obj) => obj.pageType === 'Product') && (
-            <section
-              onMouseEnter={() => setHoveredIndex('Product')}
-              onMouseLeave={() => setHoveredIndex(null)}
-              onClick={() => handleClick(4 as ListingPages)}
-              className={`${styles['card']} ${styles['product']}`}
-            >
-              <h3>
-                <img
-                  src={
-                    hoveredIndex === 'Product'
-                      ? data.find((obj) => obj.pageType === 'Product')?.hoverImg
-                      : data.find((obj) => obj.pageType === 'Product')?.img
-                  }
-                  alt=""
-                />
-                <span>Product</span>
-              </h3>
-              <p>
-                {data.find((obj) => obj.pageType === 'Product')?.Description}
               </p>
             </section>
           )}
