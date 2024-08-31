@@ -44,8 +44,8 @@ function formatDate(dateStr: string): string {
 }
 
 const ListingOrdersTab: FC<ListingOrdersTabProps> = ({ data }) => {
-  console.warn({data});
-  
+  console.warn('ordertabdata', data)
+
   const { listingLayoutMode } = useSelector((state: RootState) => state.site)
   return (
     <div className={styles['container']}>
@@ -91,10 +91,10 @@ const ListingOrdersTab: FC<ListingOrdersTabProps> = ({ data }) => {
                 <td>
                   <div>
                     <img
-                      src={obj.user_id.profile_image ?? defaultUserImage.src}
+                      src={obj?.user_id?.profile_image ?? defaultUserImage.src}
                       alt="user"
                     />
-                    <p>{obj.user_id.full_name}</p>
+                    <p>{obj.user_id?.full_name}</p>
                   </div>
                 </td>
                 <td>

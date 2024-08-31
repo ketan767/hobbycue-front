@@ -38,6 +38,7 @@ import ListingOrdersTab from '@/components/ListingPage/ListingOrdersTab/ListingO
 import peopleSvg from '@/assets/svg/People.svg'
 import placeSvg from '@/assets/svg/Place.svg'
 import programSvg from '@/assets/svg/Program.svg'
+import productIcon from '@/assets/svg/Cart.svg'
 import { pageType } from '@/utils'
 
 interface Props {
@@ -68,6 +69,7 @@ const ListingPageLayout: React.FC<Props> = ({
   const [eventData, setEventData] = useState<any>(null)
   const [showSmallHeader, setShowSmallHeader] = useState(false)
   const [pageTypeErr, setpageTypeErr] = useState(false)
+  const [titleError, setTitleError] = useState(false)
   const [hobbyError, setHobbyError] = useState(false)
   const [AboutErr, setHAboutErr] = useState(false)
   const [ContactInfoErr, setContactInfoErr] = useState(false)
@@ -104,6 +106,7 @@ const ListingPageLayout: React.FC<Props> = ({
       setHAboutErr(false)
       setContactInfoErr(false)
       setLocationErr(false)
+      setTitleError(false)
 
       if (data.pageData._hobbies.length === 0) {
         setHobbyError(true)
@@ -117,16 +120,22 @@ const ListingPageLayout: React.FC<Props> = ({
         setHAboutErr(true)
         hasError = true
       }
+      if (data.pageData.title.length === 0) {
+        setTitleError(true)
+        hasError = true
+      }
       if (!data.pageData.phone && !data.pageData.public_email) {
         setContactInfoErr(true)
         hasError = true
       }
-      if (
-        data.pageData._address?.url?.length === 0 ||
-        !data.pageData._address?.city
-      ) {
-        setLocationErr(true)
-        hasError = true
+      if (data.pageData.type !== 4) {
+        if (
+          data.pageData._address?.url?.length === 0 ||
+          !data.pageData._address?.city
+        ) {
+          setLocationErr(true)
+          hasError = true
+        }
       }
 
       if (!hasError) {
@@ -146,8 +155,6 @@ const ListingPageLayout: React.FC<Props> = ({
       )
     }
   }
-
-  console.warn('dataaaaaaaaaaaa', data)
 
   const handleCloseSnackBar = () => {
     setSnackBarOpen(false)
@@ -244,7 +251,6 @@ const ListingPageLayout: React.FC<Props> = ({
     content = children
   }
 
-  console.warn('totalEventssssssssssssss', totalEvents)
   return (
     <>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
@@ -254,6 +260,7 @@ const ListingPageLayout: React.FC<Props> = ({
         setHobbyError={setHobbyError}
         setLocationErr={setLocationErr}
         setpageTypeErr={setpageTypeErr}
+        setTitleError={setTitleError}
         data={data.pageData}
         activeTab={activeTab}
       />
@@ -423,6 +430,8 @@ const ListingPageLayout: React.FC<Props> = ({
                     ? placeSvg.src
                     : data.pageData.type === 3
                     ? programSvg.src
+                    : data.pageData.type === 4
+                    ? productIcon.src
                     : peopleSvg.src
                 }
               />

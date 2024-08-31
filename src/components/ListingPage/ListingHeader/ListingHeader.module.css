@@ -254,6 +254,7 @@
   margin-right: 14px;
 }
 .edit-field-wrapper {
+  padding-top: 32px;
   display: flex;
   gap: 12px;
 }
@@ -264,7 +265,9 @@
   color: red;
 }
 
-
+.error-red {
+  color: #C0504D !important;
+}
 
 
 .contactBtn {
@@ -548,7 +551,7 @@ width: 85px;
 }
 
 .quantity p{
-  color: var(--Grey-Darkest, #08090A);
+  /* color: var(--Grey-Darkest, #08090A); */
 text-align: center;
 
 /* Text sm/Medium */
@@ -565,8 +568,9 @@ line-height: 22px; /* 157.143% */
 }
 
 .quantity button:first-of-type{
+  border: none;
   border-radius: 4px 0px 0px 4px;
-background: var(--Purple-3, #F7F5F9);
+
 width: 26px;
 height: 26px;
 flex-shrink: 0;
@@ -576,8 +580,8 @@ align-items: center;
 }
 
 .quantity button:last-of-type{
-  border-radius: 0px 4px 4px 0px;
-background: var(--Purple-3, #F7F5F9);
+border: none;
+border-radius: 0px 4px 4px 0px;
 width: 26px;
 height: 26px;
 flex-shrink: 0;

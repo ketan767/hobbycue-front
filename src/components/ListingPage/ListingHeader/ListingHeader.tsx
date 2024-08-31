@@ -52,6 +52,7 @@ type Props = {
   setHAboutErr?: React.Dispatch<React.SetStateAction<boolean>>
   setContactInfoErr?: React.Dispatch<React.SetStateAction<boolean>>
   setLocationErr?: React.Dispatch<React.SetStateAction<boolean>>
+  setTitleError?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const ListingHeader: React.FC<Props> = ({
@@ -62,6 +63,7 @@ const ListingHeader: React.FC<Props> = ({
   setHobbyError,
   setLocationErr,
   setpageTypeErr,
+  setTitleError,
 }) => {
   console.log('asifs product data', data)
 
@@ -75,6 +77,7 @@ const ListingHeader: React.FC<Props> = ({
   const { listingLayoutMode } = useSelector((state: any) => state.site)
   const [showDays, setShowDays] = useState(false)
   const [quantity, setQuantity] = useState(1)
+  const [HighlightRed, SetHiglightRed] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const { isLoggedIn, isAuthenticated, user } = useSelector(
     (state: RootState) => state.user,
@@ -215,9 +218,18 @@ const ListingHeader: React.FC<Props> = ({
         hasError = true
         setContactInfoErr?.(true)
       }
-      if (!data?._address?.url && !data?._address?.city) {
-        setLocationErr?.(true)
-        hasError = true
+      if (data.type !== 4) {
+        if (!data?._address?.url && !data?._address?.city) {
+          setLocationErr?.(true)
+          hasError = true
+        }
+      }
+      if (data.type === 4) {
+        if (!data.title) {
+          setTitleError?.(true)
+          SetHiglightRed(true)
+          hasError = true
+        }
       }
 
       if (hasError) {
@@ -276,6 +288,28 @@ const ListingHeader: React.FC<Props> = ({
             propData: { currentListing: data },
           }),
         )
+      } else {
+        router.push(`/profile/${user.profile_url}`)
+        dispatch(showProfileError(true))
+      }
+    } else {
+      dispatch(openModal({ type: 'auth', closable: true }))
+    }
+  }
+
+  const handleBuy = async () => {
+    if (isLoggedIn) {
+      if (user.is_onboarded) {
+        dispatch(
+          openModal({
+            type: 'listing-product-purchase',
+            closable: true,
+            propData: { currentListing: data },
+          }),
+        )
+        if (data.click_url) {
+          window.open(data.click_url, '_blank', 'noopener,noreferrer')
+        }
       } else {
         router.push(`/profile/${user.profile_url}`)
         dispatch(showProfileError(true))
@@ -397,11 +431,28 @@ const ListingHeader: React.FC<Props> = ({
         )}
       </FilledButton>
     )
-  } else if (ctaText === 'Register' || ctaText === 'Buy Now') {
+  } else if (ctaText === 'Register') {
     button = (
       <FilledButton
         className={styles.contactBtn}
         onClick={isEditMode ? handleUpdateCTA : handleRegister}
+      >
+        <p>{ctaText}</p>
+        {isEditMode && (
+          <img
+            width={16}
+            height={16}
+            src={smallPencilSvg.src}
+            alt="small pencil"
+          />
+        )}
+      </FilledButton>
+    )
+  } else if (ctaText === 'Buy Now') {
+    button = (
+      <FilledButton
+        className={styles.contactBtn}
+        onClick={isEditMode ? handleUpdateCTA : handleBuy}
       >
         <p>{ctaText}</p>
         {isEditMode && (
@@ -567,7 +618,7 @@ const ListingHeader: React.FC<Props> = ({
   }
 
   const decQuantity = () => {
-    setQuantity(quantity - 1)
+    if (quantity !== 0) setQuantity(quantity - 1)
   }
 
   const uploadIcon = (
@@ -1246,7 +1297,10 @@ const ListingHeader: React.FC<Props> = ({
             <div className={styles['product-name-container']}>
               <div>
                 <h1 className={styles['name']}>
-                  <div className={!data?.title ? styles['default-text'] : ''}>
+                  <div
+                    className={`${!data?.title && styles['default-text']}
+                        ${HighlightRed && styles['error-red']}`}
+                  >
                     {data?.title || 'Title of the Product'}
                     {!data?.title && (
                       <span className={styles['required-asterisk']}>*</span>
@@ -1279,11 +1333,13 @@ const ListingHeader: React.FC<Props> = ({
                         dangerouslySetInnerHTML={{ __html: data?.description }}
                       />
                     </div>
-                  ) : (
+                  ) : listingLayoutMode === 'edit' ? (
                     <div className={styles['about-text']}>
                       About
                       <span className={styles['required-asterisk']}>*</span>
                     </div>
+                  ) : (
+                    ''
                   )}
                   {listingLayoutMode === 'edit' && (
                     <Image
@@ -1338,7 +1394,6 @@ const ListingHeader: React.FC<Props> = ({
                         onClick={() => {
                           decQuantity()
                         }}
-                        disabled={quantity == 1}
                       >
                         {minusIcon}
                       </button>
@@ -1347,7 +1402,6 @@ const ListingHeader: React.FC<Props> = ({
                         onClick={() => {
                           incQuantity()
                         }}
-                        disabled={quantity > 10}
                       >
                         {plusIcon}
                       </button>

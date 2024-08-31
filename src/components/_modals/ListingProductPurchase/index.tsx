@@ -108,6 +108,15 @@ const ListingProductPurchase: React.FC<Props> = ({
     }
   }, [propData])
 
+  useEffect(() => {
+    if (
+      listingModalData.type == 4 &&
+      !listingModalData?.page_type?.includes('Online Access')
+    ) {
+      setshowConfirmRegister(true)
+    }
+  }, [])
+
   const handleSubmit = async () => {
     if (listingModalData?.click_url) {
       if (!showConfirmRegister) {

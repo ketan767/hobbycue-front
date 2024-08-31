@@ -13,7 +13,7 @@ type Props = {
   currentValue?: String
   selected?: boolean
   display: String
-  image?: string 
+  image?: string
   options: any
   onChange: any
   _id: any
@@ -26,7 +26,7 @@ export const DropdownOption: React.FC<Props> = (props) => {
     value,
     type,
     display,
-    image, 
+    image,
     options,
     onChange,
     currentValue,
@@ -49,18 +49,21 @@ export const DropdownOption: React.FC<Props> = (props) => {
   if (type === 'hobby') {
     return (
       <div className={styles['value-container'] + ' ' + styles['no-border']}>
-        
-        
         <p
           className={`${styles['dropdown-value']} ${
             selected ? styles['dropdown-value-active'] : ''
           }`}
           onClick={() => onChange(item)}
         >
-          
-        {image && (
-          <Image src={image} alt='' className={styles['dropdown-image']} />
-        )}
+          {image && (
+            <Image
+              src={image}
+              width={100}
+              height={100}
+              alt=""
+              className={styles['dropdown-image']}
+            />
+          )}
           {display}
         </p>
       </div>

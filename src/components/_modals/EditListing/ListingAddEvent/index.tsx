@@ -10,6 +10,7 @@ import styles from './styles.module.css'
 import Image from 'next/image'
 import peopleSvg from '@/assets/svg/People.svg'
 import placeSvg from '@/assets/svg/Place.svg'
+
 import InputSelect from '@/components/_formElements/Select/Select'
 import { DropdownOption } from '../../CreatePost/Dropdown/DropdownOption'
 import {

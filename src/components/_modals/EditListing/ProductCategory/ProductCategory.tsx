@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import default_image from '../../../../assets/temp/default-profile.png'
+import default_image from '../../../../assets/svg/default-images/default-people-listing-icon.svg'
 import dynamic from 'next/dynamic'
 import {
   Button,
@@ -139,7 +139,8 @@ const ProductCategoryModal: React.FC<Props> = ({
     if (user?._id) {
       const getAllPages = async () => {
         const { res, err } = await getListingPages(`admin=${user?._id}`)
-        const totalPages = res?.data?.data?.listings || []
+        const totalPages =
+          res?.data?.data?.listings.filter((data: any) => data.type !== 4) || []
         setMyPages(totalPages)
       }
       getAllPages()
@@ -174,6 +175,7 @@ const ProductCategoryModal: React.FC<Props> = ({
   }
 
   const parentPage = myPages?.find((obj) => obj?._id === selectedPage)
+  console.warn('parentpage', parentPage)
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
@@ -232,7 +234,7 @@ const ProductCategoryModal: React.FC<Props> = ({
               selectText="Select Page"
               type="page"
               className={styles['parent-page']}
-              img={parentPage?.image}
+              img={parentPage?.profile_image}
               value={parentPage?.title}
             >
               {myPages?.map((obj, i) => {
@@ -273,7 +275,7 @@ const ProductCategoryModal: React.FC<Props> = ({
               >
                 <p>
                   {' '}
-                  {selectedCategory.length === 0
+                  {selectedCategory?.length === 0
                     ? 'Select Category'
                     : selectedCategory}
                 </p>
