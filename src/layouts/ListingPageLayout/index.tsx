@@ -450,6 +450,7 @@ const ListingPageLayout: React.FC<Props> = ({
                       ? styles.ProductColor
                       : ''
                   }
+                  key={idx}
                 >
                   {type}
                 </p>
@@ -464,7 +465,7 @@ const ListingPageLayout: React.FC<Props> = ({
             }}
             className={styles['expand-all']}
           >
-            {expandAll ? <p>See less</p> : <p>See more</p>}
+            <p>{expandAll ? 'See less' : 'See more'}</p>
             <Image
               width={15}
               height={15}

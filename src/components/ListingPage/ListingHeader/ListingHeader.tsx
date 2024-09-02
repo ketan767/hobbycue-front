@@ -66,8 +66,6 @@ const ListingHeader: React.FC<Props> = ({
   setpageTypeErr,
   setTitleError,
 }) => {
-  console.log('asifs product data', data)
-
   const dispatch = useDispatch()
   const router = useRouter()
   const [snackbar, setSnackbar] = useState({
