@@ -1395,14 +1395,7 @@ const ListingHeader: React.FC<Props> = ({
                         : 0 || 0}
                     </div>
                   </div>
-                  <div
-                    className=""
-                    style={{
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      gap: 10,
-                    }}
-                  >
+                  <div className={styles['flex-container']}>
                     <label>Quantity:</label>
                     <div className={styles['qunatity']}>
                       <div className={styles['quantity']}>

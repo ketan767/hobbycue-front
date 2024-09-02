@@ -844,3 +844,9 @@
   color: #8064a2;
   cursor: pointer;
 }
+
+.flex-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
