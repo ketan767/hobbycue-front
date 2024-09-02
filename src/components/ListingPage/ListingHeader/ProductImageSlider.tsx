@@ -104,10 +104,7 @@ const ProductImageSlider: React.FC<PropType> = ({
         {/* 1st slide - image*/}
         {data.profile_image ? (
           <Box>
-            <img
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              src={data?.profile_image}
-            />
+            <img className={styles.image} src={data?.profile_image} />
           </Box>
         ) : (
           <Box
@@ -139,15 +136,7 @@ const ProductImageSlider: React.FC<PropType> = ({
             <Image
               alt="Play video"
               src={PauseIcon}
-              className={styles.playIcon}
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                height: '30px',
-                width: '30px',
-              }}
+              className={styles.playIcon + ' ' + styles['centered-element']}
             />
           </Box>
         ) : (
@@ -174,12 +163,7 @@ const ProductImageSlider: React.FC<PropType> = ({
         {/* slides for array of images */}
         {data.images.map((image: any, index: any) => (
           <Box key={index}>
-            {image && (
-              <img
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                src={image}
-              />
-            )}
+            {image && <img className={styles.image} src={image} />}
           </Box>
         ))}
 
@@ -219,17 +203,7 @@ function Box({
 }) {
   return (
     <div style={{ padding: 3 }}>
-      <div
-        style={{
-          width: '90vw',
-          height: 400,
-          borderRadius: 7,
-          overflow: 'hidden',
-          position: 'relative',
-        }}
-        className={className}
-        onClick={onClick}
-      >
+      <div className={className + ' ' + styles.box} onClick={onClick}>
         {children}
       </div>
     </div>
