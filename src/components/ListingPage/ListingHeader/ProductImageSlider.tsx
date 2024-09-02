@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Image from 'next/image'
 import PauseIcon from '@/assets/svg/play_arrow.svg'
 import { openModal } from '@/redux/slices/modal'
+import ReactPlayer from 'react-player'
 
 type PropType = {
   data: ListingPageData['pageData']
@@ -130,13 +131,13 @@ const ProductImageSlider: React.FC<PropType> = ({
         )}
 
         {/* 2nd slide - video */}
-        {videoimg ? (
-          <Box className={styles['item-video']}>
-            <img src={videoimg} alt="Video" style={{ width: '100%' }} />
-            <Image
-              alt="Play video"
-              src={PauseIcon}
-              className={styles.playIcon + ' ' + styles['centered-element']}
+        {data?.video_url ? (
+          <Box className={styles['active-image']}>
+            <ReactPlayer
+              width="100%"
+              height="100%"
+              url={data?.video_url}
+              controls={true}
             />
           </Box>
         ) : (
