@@ -500,6 +500,7 @@
 .videos {
   height: 100%;
   border-radius: 8px;
+  overflow: hidden;
 }
 
 .varient-price-container {
