@@ -161,3 +161,15 @@
   overflow: hidden;
   position: relative;
 }
+
+@media screen and (max-width: 1100px) {
+  .playIcon {
+    width: 20% !important;
+    height: 20% !important;
+  }
+  
+  .box {
+    width: 90vw;
+    height: 90vw !important;
+  }
+}
