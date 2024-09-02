@@ -543,10 +543,16 @@ const ListingPageMain: React.FC<Props> = ({
                 }`}
                 showEditButton={listingLayoutMode === 'edit'}
                 onEditBtnClick={() => {
-                  dispatch(
-                    openModal({ type: 'listing-type-edit', closable: true }),
-                  )
-                  dispatch(updateListingTypeModalMode({ mode: 'edit' }))
+                  if (data.type === 4) {
+                    dispatch(
+                      openModal({ type: 'product-category', closable: true }),
+                    )
+                  } else {
+                    dispatch(
+                      openModal({ type: 'listing-type-edit', closable: true }),
+                    )
+                    dispatch(updateListingTypeModalMode({ mode: 'edit' }))
+                  }
                 }}
               >
                 <div className={styles['page-types']}>
