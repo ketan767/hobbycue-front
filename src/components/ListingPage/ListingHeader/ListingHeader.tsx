@@ -1324,11 +1324,14 @@ const ListingHeader: React.FC<Props> = ({
                     />
                   )}
                 </h1>
-                {data?.tagline ? (
-                  <p className={styles['tagline']}>{data?.tagline}</p>
-                ) : (
-                  !isMobile && <p className={styles['tagline']}>&nbsp;</p>
-                )}
+                {
+                  data?.tagline && (
+                    <p className={styles['tagline']}>{data?.tagline}</p>
+                  )
+                  // : (
+                  //   !isMobile && <p className={styles['tagline']}>&nbsp;</p>
+                  // )
+                }
                 <div className={styles['edit-field-wrapper']}>
                   {data?.description ? (
                     <div className={styles['about-text']}>
