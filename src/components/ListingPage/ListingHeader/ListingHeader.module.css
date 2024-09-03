@@ -253,7 +253,7 @@
   margin-right: 14px;
 }
 .edit-field-wrapper {
-  padding-top: 32px;
+  padding-top: 12px;
   display: flex;
   gap: 12px;
 }
@@ -500,6 +500,7 @@
 .videos {
   height: 100%;
   border-radius: 8px;
+  overflow: hidden;
 }
 
 .varient-price-container {
@@ -587,7 +588,8 @@
     padding-left: 0;
   }
   .edit-field-wrapper {
-    padding-top: 0px;
+    padding-top: 12px;
+    margin-bottom: 12px;
     display: flex;
     gap: 12px;
   }
@@ -847,6 +849,6 @@
 
 .flex-container {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
 }

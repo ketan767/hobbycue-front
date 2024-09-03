@@ -66,8 +66,6 @@ const ListingHeader: React.FC<Props> = ({
   setpageTypeErr,
   setTitleError,
 }) => {
-  console.log('asifs product data', data)
-
   const dispatch = useDispatch()
   const router = useRouter()
   const [snackbar, setSnackbar] = useState({
@@ -619,7 +617,7 @@ const ListingHeader: React.FC<Props> = ({
   }
 
   const decQuantity = () => {
-    if (quantity !== 0) setQuantity(quantity - 1)
+    if (quantity !== 1) setQuantity(quantity - 1)
   }
 
   const uploadIcon = (
@@ -1324,11 +1322,14 @@ const ListingHeader: React.FC<Props> = ({
                     />
                   )}
                 </h1>
-                {data?.tagline ? (
-                  <p className={styles['tagline']}>{data?.tagline}</p>
-                ) : (
-                  !isMobile && <p className={styles['tagline']}>&nbsp;</p>
-                )}
+                {
+                  data?.tagline && (
+                    <p className={styles['tagline']}>{data?.tagline}</p>
+                  )
+                  // : (
+                  //   !isMobile && <p className={styles['tagline']}>&nbsp;</p>
+                  // )
+                }
                 <div className={styles['edit-field-wrapper']}>
                   {data?.description ? (
                     <div className={styles['about-text']}>
@@ -1355,67 +1356,82 @@ const ListingHeader: React.FC<Props> = ({
                 </div>
               </div>
               <div className={styles['varient-price-container']}>
-                {listingLayoutMode === 'edit' && (
-                  <Image
-                    className={styles['edit-icon']}
-                    src={EditIcon}
-                    alt="edit"
-                    onClick={OpenProductPurchaseModal}
-                  />
-                )}
                 <div className={styles['price-and-qunaitity']}>
                   <div className="">
-                    <InputSelect
-                      options={
-                        VarientData?.variations?.map((item) => item.name) || []
-                      }
-                      value={inpSelectValues?.['name'] || ''}
-                      onChange={(selectedName: string) => {
-                        if (VarientData) {
-                          const selectedVariation =
-                            VarientData?.variations?.find(
-                              (item) => item.name === selectedName,
-                            )
-                          setInpSelectValues({
-                            name: selectedName,
-                            value: selectedVariation?.value || '',
-                          })
-                        }
-                      }}
-                    />
+                    <div className={styles['flex-container']}>
+                      {inpSelectValues && (
+                        <div style={{ width: '100%' }}>
+                          <InputSelect
+                            options={
+                              VarientData?.variations?.map(
+                                (item) => item.name,
+                              ) || []
+                            }
+                            value={inpSelectValues?.['name'] || ''}
+                            onChange={(selectedName: string) => {
+                              if (VarientData) {
+                                const selectedVariation =
+                                  VarientData?.variations?.find(
+                                    (item) => item.name === selectedName,
+                                  )
+                                setInpSelectValues({
+                                  name: selectedName,
+                                  value: selectedVariation?.value || '',
+                                })
+                              }
+                            }}
+                          />
+                        </div>
+                      )}
+                      {listingLayoutMode === 'edit' && (
+                        <Image
+                          className={styles['edit-icon']}
+                          src={EditIcon}
+                          alt="edit"
+                          onClick={OpenProductPurchaseModal}
+                        />
+                      )}
+                    </div>
+
                     <div
                       className={styles.varientpirce}
                       style={{ marginTop: 20 }}
                     >
                       {rupeesIcon}
                       {quantity !== 0
-                        ? inpSelectValues?.['value'] * quantity || 0
+                        ? (
+                            inpSelectValues?.['value'] * quantity
+                          ).toLocaleString('en-IN') || 0
                         : quantity == 0
                         ? inpSelectValues?.['value']
                         : 0 || 0}
                     </div>
                   </div>
-                  <div className={styles['flex-container']}>
-                    <label>Quantity:</label>
-                    <div className={styles['qunatity']}>
-                      <div className={styles['quantity']}>
-                        <button
-                          onClick={() => {
-                            decQuantity()
-                          }}
-                        >
-                          {minusIcon}
-                        </button>
-                        <p>{quantity}</p>
-                        <button
-                          onClick={() => {
-                            incQuantity()
-                          }}
-                        >
-                          {plusIcon}
-                        </button>
+                  <div className="">
+                    {inpSelectValues && (
+                      <div className={styles['flex-container']}>
+                        <label>Quantity:</label>
+                        <div className={styles['qunatity']}>
+                          <div className={styles['quantity']}>
+                            <button
+                              onClick={() => {
+                                decQuantity()
+                              }}
+                            >
+                              {minusIcon}
+                            </button>
+                            <p>{quantity}</p>
+                            <button
+                              onClick={() => {
+                                incQuantity()
+                              }}
+                            >
+                              {plusIcon}
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>
