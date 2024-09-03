@@ -17,6 +17,7 @@ import { getPages } from '@/services/listing.service'
 import ListingPageCard from '@/components/ListingPageCard/ListingPageCard'
 import PostCard from '@/components/PostCard/PostCard'
 import ListingPagePosts from '../ListingPagePosts/ListingPagePosts'
+import { listingData } from '@/components/_modals/EditListing/ListingRelated/data'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -70,14 +71,26 @@ const ListingHomeTab: React.FC<Props> = ({ data, AboutErr, expandAll }) => {
             showEditButton={listingLayoutMode === 'edit'}
             onEditBtnClick={() =>
               dispatch(
-                openModal({ type: 'listing-about-edit', closable: true }),
+                openModal(
+                  data.type === 4
+                    ? {
+                        type: 'listing-about-edit',
+                        closable: true,
+                        propData: 'productDescription',
+                      }
+                    : { type: 'listing-about-edit', closable: true },
+                ),
               )
             }
           >
-            <h4>About</h4>
+            <h4>{data.type === 4 ? 'Description' : 'About'}</h4>
             <div
               className={`${styles['about-text']}`}
-              dangerouslySetInnerHTML={{ __html: data?.description }}
+              dangerouslySetInnerHTML={
+                data.type === 4
+                  ? { __html: data?.about }
+                  : { __html: data?.description }
+              }
             ></div>
           </PageContentBox>
         </div>

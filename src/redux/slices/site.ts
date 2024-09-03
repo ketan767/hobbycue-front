@@ -77,6 +77,7 @@ type ListingModalData = {
   cta_text?:string|null
   product_category?:string|null
   parent_page?:string|null
+  about?:string|null
 }
 
 interface AuthState {
@@ -85,7 +86,7 @@ interface AuthState {
   listingPageData: any
   listingModalData: ListingModalData
   editPhotoModalData: {
-    type: 'profile' | 'cover' | null
+    type: 'profile' | 'cover' | 'array' | null
     image: any
     onComplete: any
   }
@@ -258,7 +259,7 @@ const siteSlice = createSlice({
       {
         payload,
       }: PayloadAction<{
-        type: 'profile' | 'cover' | null
+        type: 'profile' | 'cover' | 'array' | null
         image: any
         onComplete: any
       }>,

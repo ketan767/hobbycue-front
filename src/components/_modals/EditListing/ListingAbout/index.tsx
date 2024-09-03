@@ -41,10 +41,12 @@ type Props = {
   isError?: boolean
   onStatusChange?: (isChanged: boolean) => void
   onBoarding?: boolean
+  propData?: any
 }
 
 type ListingAboutData = {
   description: InputData<string>
+  about?: InputData<string>
 }
 
 const ListingAboutEditModal: React.FC<Props> = ({
@@ -55,13 +57,15 @@ const ListingAboutEditModal: React.FC<Props> = ({
   handleClose,
   onStatusChange,
   onBoarding,
+  propData,
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
   const { listingModalData } = useSelector((state: RootState) => state.site)
-
+  console.warn('propsdata', propData)
   const [data, setData] = useState<ListingAboutData>({
     description: { value: '', error: null },
+    about: { value: '', error: null },
   })
   const [nextDisabled, setNextDisabled] = useState(false)
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
@@ -72,15 +76,29 @@ const ListingAboutEditModal: React.FC<Props> = ({
   const [isChanged, setIsChanged] = useState(false)
 
   useEffect(() => {
-    const initialValue = listingModalData.description as string
+    const initialValue =
+      (propData === 'productDescription'
+        ? listingModalData?.about
+        : listingModalData?.description) || ''
+
     setInitialData(initialValue)
-    setData({
-      description: { value: initialValue, error: null },
-    })
-  }, [listingModalData.description])
+    setData((prev) => ({
+      ...prev,
+      [propData === 'productDescription' ? 'about' : 'description']: {
+        value: initialValue,
+        error: null,
+      },
+    }))
+  }, [listingModalData.description, listingModalData.about, propData])
 
   const handleInputChange = (value: string) => {
-    setData((prev) => ({ ...prev, description: { value, error: null } }))
+    setData((prev) => ({
+      ...prev,
+      [propData === 'productDescription' ? 'about' : 'description']: {
+        value,
+        error: null,
+      },
+    }))
     setIsChanged(value !== initialData)
     if (onStatusChange) {
       onStatusChange(value !== initialData)
@@ -88,18 +106,17 @@ const ListingAboutEditModal: React.FC<Props> = ({
   }
 
   const handleBack = async () => {
-    if (
-      !data.description.value ||
-      data.description.value === '' ||
-      data.description.value === '<p><br></p>'
-    ) {
+    const key = propData === 'productDescription' ? 'about' : 'description'
+    const fieldValue = data[key]?.value
+
+    if (!fieldValue || fieldValue === '' || fieldValue === '<p><br></p>') {
       if (onBackBtnClick) onBackBtnClick()
       return
     }
 
     setBackBtnLoading(true)
     const { err, res } = await updateListing(listingModalData._id, {
-      description: data.description.value,
+      [key]: fieldValue,
     })
     setBackBtnLoading(false)
     if (err) {
@@ -124,11 +141,14 @@ const ListingAboutEditModal: React.FC<Props> = ({
   }, [data, listingModalData])
 
   const handleSubmit = async () => {
-    if (!data.description.value || cleanString(data.description.value) === '') {
-      if (data.description.value !== listingModalData.description) {
+    const key = propData === 'productDescription' ? 'about' : 'description'
+    const fieldValue = cleanString(data?.[key]?.value || '')
+
+    if (!fieldValue || fieldValue === '') {
+      if (fieldValue !== listingModalData[key]) {
         setSubmitBtnLoading(true)
         const { err, res } = await updateListing(listingModalData._id, {
-          description: cleanString(data.description.value),
+          [key]: fieldValue,
         })
         setSubmitBtnLoading(false)
         if (err) return console.log(err)
@@ -145,7 +165,7 @@ const ListingAboutEditModal: React.FC<Props> = ({
     } else {
       setSubmitBtnLoading(true)
       const { err, res } = await updateListing(listingModalData._id, {
-        description: data.description.value.trim(),
+        [key]: fieldValue.trim(),
       })
       setSubmitBtnLoading(false)
       if (err) return console.log(err)
@@ -164,10 +184,12 @@ const ListingAboutEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        if(event?.srcElement?.tagName === "svg"){
-          return;
-        }
-        else if (typeof event?.srcElement?.className?.includes === "function" && event?.srcElement?.className?.includes('ql-editor')) {
+        if (event?.srcElement?.tagName === 'svg') {
+          return
+        } else if (
+          typeof event?.srcElement?.className?.includes === 'function' &&
+          event?.srcElement?.className?.includes('ql-editor')
+        ) {
           return
         } else {
           nextButtonRef.current?.click()
@@ -184,15 +206,19 @@ const ListingAboutEditModal: React.FC<Props> = ({
   }, [])
 
   useEffect(() => {
+    const key: 'about' | 'description' =
+      propData === 'productDescription' ? 'about' : 'description'
+
     setData((prev) => {
       return {
-        description: {
-          ...prev.description,
-          value: listingModalData.description as string,
+        ...prev,
+        [key]: {
+          ...prev[key],
+          value: listingModalData?.[key] || '',
         },
       }
     })
-  }, [user])
+  }, [user, propData, listingModalData])
 
   useEffect(() => {
     if (isEmpty(data.description.value)) {
@@ -201,12 +227,14 @@ const ListingAboutEditModal: React.FC<Props> = ({
       setNextDisabled(false)
     }
   }, [data])
-
   const HandleSaveError = async () => {
+    const key: 'about' | 'description' =
+      propData === 'productDescription' ? 'about' : 'description'
+
     if (
-      !data.description.value ||
-      data.description.value === '' ||
-      data.description.value === '<p><br></p>'
+      !data[key]?.value ||
+      data[key]?.value === '' ||
+      data[key]?.value === '<p><br></p>'
     ) {
       setIsError(true)
     }
@@ -251,7 +279,9 @@ const ListingAboutEditModal: React.FC<Props> = ({
         />
         {/* Modal Header */}
         <header className={styles['header']}>
-          <h4 className={styles['heading']}>{'About'}</h4>
+          <h4 className={styles['heading']}>
+            {propData === 'productDescription' ? 'Description' : 'About'}
+          </h4>
         </header>
         <hr className={styles['modal-hr']} />
         <section className={styles['body']}>
@@ -260,14 +290,29 @@ const ListingAboutEditModal: React.FC<Props> = ({
             <input hidden required />
             {/* <CustomCKEditor value={data.description.value as string} onChange={handleInputChange} placeholder='Briefly describe your listing page' /> */}
             <AboutEditor
-              value={data.description.value as string}
+              value={
+                propData === 'productDescription'
+                  ? (data?.about?.value as string)
+                  : (data?.description?.value as string)
+              }
               onChange={handleInputChange}
               placeholder="Briefly describe your listing page"
-              error={data.description.error ? true : false}
+              error={
+                propData === 'productDescription'
+                  ? data?.about?.error
+                    ? true
+                    : false
+                  : data.description.error
+                  ? true
+                  : false
+              }
             />
-            {data.description.error && (
-              <p className={styles['error-msg']}>{data.description.error}</p>
-            )}
+            {data.description.error ||
+              (data?.about?.error && (
+                <p className={styles['error-msg']}>
+                  {data.description.error || data?.about?.error}
+                </p>
+              ))}
           </div>
         </section>
 

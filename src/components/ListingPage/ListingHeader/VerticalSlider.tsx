@@ -37,9 +37,8 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
     }
   }
   const handleImageChange = (e: any) => {
-    const images = [...e.target.files]
     const image = e.target.files[0]
-    handleImageUpload(image, false)
+    UploadProfileImg(e, 'array') // Use 'array' to distinguish this from 'profile'
   }
 
   const handleImageUpload = async (
@@ -56,7 +55,6 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
       console.log(res.data)
       const img = res.data.data.url
       updateListingPage(img)
-      // dispatch(closeModal())
     }
   }
   const updateListingPage = async (url: string) => {
@@ -77,7 +75,7 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
     dispatch(updateActiveProductImg({ idx, type: activetype }))
   }
 
-  const UploadProfileImg = (e: any, type: 'profile') => {
+  const UploadProfileImg = (e: any, type: 'profile' | 'array') => {
     e.preventDefault()
     let files = e.target.files
 
@@ -89,7 +87,10 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
         updatePhotoEditModalData({
           type,
           image: reader.result,
-          onComplete: type === 'profile' ? handleUserProfileUpload : '',
+          onComplete:
+            type === 'profile'
+              ? handleUserProfileUpload
+              : handleArrayImageUpload,
         }),
       )
       dispatch(
@@ -102,6 +103,20 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
     reader.readAsDataURL(files[0])
   }
 
+  const handleArrayImageUpload = async (image: any) => {
+    const response = await fetch(image)
+    const blob = await response.blob()
+
+    const formData = new FormData()
+    formData.append('post', blob)
+    const { err, res } = await uploadImage(formData)
+    if (err) return console.log(err)
+    if (res?.data.success) {
+      const img = res.data.data.url
+      updateListingPage(img)
+    }
+  }
+
   const handleUserProfileUpload = async (image: any) => {
     const response = await fetch(image)
     const blob = await response.blob()
@@ -112,7 +127,6 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
     if (err) return console.log(err)
     if (res?.data.success) {
       window.location.reload()
-      // dispatch(closeModal())
     }
   }
   const updatevideoThumbnail = async () => {
@@ -317,9 +331,7 @@ const VerticalSlider: React.FC<Props> = ({ data }) => {
               type="file"
               accept="image/png, image/gif, image/jpeg"
               className={styles.hidden}
-              onChange={(e) => {
-                handleImageChange(e)
-              }}
+              onChange={handleImageChange}
             />
             {uploadIcon}
             <p>Add Image</p>

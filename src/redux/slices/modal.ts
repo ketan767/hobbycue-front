@@ -111,7 +111,7 @@ export type ModalType =
           onModalClose?: () => void;
           onVerify?: () => void;
           imageurl?: string | undefined
-          propData?:object
+          propData?:any
           modalType?: any
           
         }>

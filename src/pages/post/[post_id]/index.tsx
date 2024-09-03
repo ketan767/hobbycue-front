@@ -26,8 +26,6 @@ type Props = {
 }
 
 const CommunityLayout: React.FC<Props> = ({ data }) => {
-  console.warn('dataaaaaaaaaaaaaaaaaaaaaadaata', data.metadata)
-  console.warn('postdata with contentttt', data.postsData?.content)
   const router = useRouter()
   const [postId, setPostId] = useState<string | null>(null)
 
@@ -97,7 +95,6 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
       }
     }
   }
-  console.warn('data.postdataaaaaaaaaaaaa', data.postsData)
 
   const post_descripton = convertHtmlToPlainText(data.postsData?.content)
 
@@ -125,15 +122,15 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
         />
 
         <meta property="og:image:alt" content="Profile picture" />
-        <title>{`${
-          data?.metadata?.data?.title
-            ? data?.metadata?.data?.title
-            : data.postsData?._author?.full_name +
-              ' - ' +
-              data.postsData?._hobby?.display +
-              ' at ' +
-              data?.postsData?.visibility
-        } `}</title>
+        <title>
+          {`${
+            data?.metadata?.data?.title
+              ? data.metadata.data.title
+              : data.postsData?._author?.title
+              ? data.postsData._author.title
+              : `${data.postsData?._author?.full_name} - ${data.postsData?._hobby?.display} at ${data.postsData?.visibility}`
+          }`}
+        </title>
       </Head>
       <CommunityPageLayout activeTab="posts" singlePostPage={true}>
         <main>
