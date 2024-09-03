@@ -53,10 +53,6 @@ type Props = {
   onStatusChange?: (isChanged: boolean) => void
 }
 
-type ListingAboutData = {
-  description: InputData<string>
-}
-
 const ProductCategoryModal: React.FC<Props> = ({
   onComplete,
   onBackBtnClick,
@@ -85,9 +81,7 @@ const ProductCategoryModal: React.FC<Props> = ({
   const [myPages, setMyPages] = useState<any[]>([])
   const [showDropdown, setShowDropdown] = useState(false)
   const dropdownRef: any = useRef()
-  const [data, setData] = useState<ListingAboutData>({
-    description: { value: '', error: null },
-  })
+
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   useOutsideAlerter(dropdownRef, () => setShowDropdown(false))
   const [initialData, setInitialData] = useState<any | null>(null)
@@ -105,7 +99,9 @@ const ProductCategoryModal: React.FC<Props> = ({
       seller: selectedPage,
       page_type: selectedCategory,
       type: 4,
+      cta_text: 'Buy Now',
     }
+
     setSubmitBtnLoading(true)
     const { err, res } = await createNewListing(jsonData)
     if (err) return console.log(err)
@@ -117,27 +113,11 @@ const ProductCategoryModal: React.FC<Props> = ({
     }
   }
 
-  // useEffect(() => {
-  //   if (listingModalData?.page_type) {
-  //     setSelectedCategory(listingModalData?.page_type)
-  //     setInitialData(listingModalData?.page_type)
-  //   }
-  //   if (listingModalData?.seller) {
-  //     setSelectedPage(listingModalData?.seller)
-  //   }
-  // }, [listingModalData?.page_type, listingModalData?.seller])
-
   useEffect(() => {
-    setData((prev) => {
-      return {
-        description: {
-          ...prev.description,
-          value: listingModalData?.description as string,
-        },
-      }
-    })
-  }, [user])
-
+    setSelectedCategory(listingModalData?.page_type?.[0])
+    setSelectedPage(listingModalData?.seller)
+  }, [])
+  console.warn('sellerrr', selectedPage)
   useEffect(() => {
     if (user?._id) {
       const getAllPages = async () => {
@@ -174,7 +154,6 @@ const ProductCategoryModal: React.FC<Props> = ({
   }
 
   const parentPage = myPages?.find((obj) => obj?._id === selectedPage)
-  console.warn('parentpage', parentPage)
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
   useEffect(() => {
@@ -275,7 +254,7 @@ const ProductCategoryModal: React.FC<Props> = ({
               >
                 <p
                   className={
-                    selectedCategory.length !== 0 ? styles['color-black'] : ''
+                    selectedCategory?.length !== 0 ? styles['color-black'] : ''
                   }
                 >
                   {' '}

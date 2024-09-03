@@ -1358,35 +1358,34 @@ const ListingHeader: React.FC<Props> = ({
               <div className={styles['varient-price-container']}>
                 <div className={styles['price-and-qunaitity']}>
                   <div className="">
-                    {listingLayoutMode === 'edit' && (
+                    {(listingLayoutMode === 'edit' ||
+                      VarientData?.variations) && (
                       <div
                         className={styles['flex-container']}
                         style={{ marginBottom: 20 }}
                       >
-                        {inpSelectValues && (
-                          <div style={{ width: '100%' }}>
-                            <InputSelect
-                              options={
-                                VarientData?.variations?.map(
-                                  (item) => item.name,
-                                ) || []
+                        <div style={{ width: '100%' }}>
+                          <InputSelect
+                            options={
+                              VarientData?.variations?.map(
+                                (item) => item.name,
+                              ) || []
+                            }
+                            value={inpSelectValues?.['name'] || ''}
+                            onChange={(selectedName: string) => {
+                              if (VarientData) {
+                                const selectedVariation =
+                                  VarientData?.variations?.find(
+                                    (item) => item.name === selectedName,
+                                  )
+                                setInpSelectValues({
+                                  name: selectedName,
+                                  value: selectedVariation?.value || '',
+                                })
                               }
-                              value={inpSelectValues?.['name'] || ''}
-                              onChange={(selectedName: string) => {
-                                if (VarientData) {
-                                  const selectedVariation =
-                                    VarientData?.variations?.find(
-                                      (item) => item.name === selectedName,
-                                    )
-                                  setInpSelectValues({
-                                    name: selectedName,
-                                    value: selectedVariation?.value || '',
-                                  })
-                                }
-                              }}
-                            />
-                          </div>
-                        )}
+                            }}
+                          />
+                        </div>
 
                         <Image
                           className={styles['edit-icon']}
@@ -1409,30 +1408,28 @@ const ListingHeader: React.FC<Props> = ({
                     </div>
                   </div>
                   <div className="">
-                    {inpSelectValues && (
-                      <div className={styles['flex-container']}>
-                        <label>Quantity:</label>
-                        <div className={styles['qunatity']}>
-                          <div className={styles['quantity']}>
-                            <button
-                              onClick={() => {
-                                decQuantity()
-                              }}
-                            >
-                              {minusIcon}
-                            </button>
-                            <p>{quantity}</p>
-                            <button
-                              onClick={() => {
-                                incQuantity()
-                              }}
-                            >
-                              {plusIcon}
-                            </button>
-                          </div>
+                    <div className={styles['flex-container']}>
+                      <label>Quantity:</label>
+                      <div className={styles['qunatity']}>
+                        <div className={styles['quantity']}>
+                          <button
+                            onClick={() => {
+                              decQuantity()
+                            }}
+                          >
+                            {minusIcon}
+                          </button>
+                          <p>{quantity}</p>
+                          <button
+                            onClick={() => {
+                              incQuantity()
+                            }}
+                          >
+                            {plusIcon}
+                          </button>
                         </div>
                       </div>
-                    )}
+                    </div>
                   </div>
                 </div>
               </div>
