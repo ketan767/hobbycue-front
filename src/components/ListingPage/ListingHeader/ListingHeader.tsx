@@ -1358,45 +1358,46 @@ const ListingHeader: React.FC<Props> = ({
               <div className={styles['varient-price-container']}>
                 <div className={styles['price-and-qunaitity']}>
                   <div className="">
-                    <div className={styles['flex-container']}>
-                      {inpSelectValues && (
-                        <div style={{ width: '100%' }}>
-                          <InputSelect
-                            options={
-                              VarientData?.variations?.map(
-                                (item) => item.name,
-                              ) || []
-                            }
-                            value={inpSelectValues?.['name'] || ''}
-                            onChange={(selectedName: string) => {
-                              if (VarientData) {
-                                const selectedVariation =
-                                  VarientData?.variations?.find(
-                                    (item) => item.name === selectedName,
-                                  )
-                                setInpSelectValues({
-                                  name: selectedName,
-                                  value: selectedVariation?.value || '',
-                                })
+                    {listingLayoutMode === 'edit' && (
+                      <div
+                        className={styles['flex-container']}
+                        style={{ marginBottom: 20 }}
+                      >
+                        {inpSelectValues && (
+                          <div style={{ width: '100%' }}>
+                            <InputSelect
+                              options={
+                                VarientData?.variations?.map(
+                                  (item) => item.name,
+                                ) || []
                               }
-                            }}
-                          />
-                        </div>
-                      )}
-                      {listingLayoutMode === 'edit' && (
+                              value={inpSelectValues?.['name'] || ''}
+                              onChange={(selectedName: string) => {
+                                if (VarientData) {
+                                  const selectedVariation =
+                                    VarientData?.variations?.find(
+                                      (item) => item.name === selectedName,
+                                    )
+                                  setInpSelectValues({
+                                    name: selectedName,
+                                    value: selectedVariation?.value || '',
+                                  })
+                                }
+                              }}
+                            />
+                          </div>
+                        )}
+
                         <Image
                           className={styles['edit-icon']}
                           src={EditIcon}
                           alt="edit"
                           onClick={OpenProductPurchaseModal}
                         />
-                      )}
-                    </div>
+                      </div>
+                    )}
 
-                    <div
-                      className={styles.varientpirce}
-                      style={{ marginTop: 20 }}
-                    >
+                    <div className={styles.varientpirce}>
                       {rupeesIcon}
                       {quantity !== 0
                         ? (
