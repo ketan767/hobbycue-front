@@ -175,16 +175,6 @@ const ListingPageMain: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    if (saleStates && typeof saleStates[data?._id] === 'boolean') {
-      setShowHobbies(saleStates[data?._id])
-    } else if (data._id) {
-      dispatch(updateSaleOpenStates({ [data._id]: showSale }))
-    }
-  }, [data._id, saleStates])
-
-  console.warn({ showHobbies })
-
-  useEffect(() => {
     if (hobbyStates && typeof hobbyStates[data?._id] === 'boolean') {
       setShowHobbies(hobbyStates[data?._id])
     } else if (data._id) {
@@ -353,7 +343,7 @@ const ListingPageMain: React.FC<Props> = ({
       setShowSocialMedia(expandAll)
     }
   }, [expandAll])
-  console.log('listingPagesRight', listingPagesRight)
+
   const openGoogleMaps = () => {
     let addressText = ''
     if (data?._address.street) {
@@ -379,11 +369,6 @@ const ListingPageMain: React.FC<Props> = ({
     window.open(mapsUrl, '_blank')
   }
 
-  const openModalHobbiesModal = () => {
-    if (window.innerWidth > 1100) {
-      setShowHobbies(true)
-    }
-  }
   const updateEventBadge = async () => {
     const response = await GetListingEvents(data?._id)
 
@@ -663,8 +648,8 @@ const ListingPageMain: React.FC<Props> = ({
                   openModal({ type: 'listing-hobby-edit', closable: true }),
                 )
               }
-              initialShowDropdown
               setDisplayData={(arg0: boolean) => {
+                setShowHobbies((prev) => !prev)
                 dispatch(updateHobbyOpenState({ [data._id]: !showHobbies }))
               }}
               expandData={showHobbies}
@@ -690,7 +675,7 @@ const ListingPageMain: React.FC<Props> = ({
                   hobbyStates?.[data?._id] ? ' ' + styles['display-mobile'] : ''
                 }`}
               >
-                {
+                {showHobbies && (
                   <ul className={styles['hobby-list']}>
                     {data?._hobbies?.map((item: any) => {
                       if (typeof item === 'string') return
@@ -708,7 +693,7 @@ const ListingPageMain: React.FC<Props> = ({
                       )
                     })}
                   </ul>
-                }
+                )}
               </div>
             </PageContentBox>
             {/* Tags */}
