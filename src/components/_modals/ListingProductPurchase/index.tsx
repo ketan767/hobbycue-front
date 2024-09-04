@@ -59,7 +59,7 @@ const ListingProductPurchase: React.FC<Props> = ({
   const { listingModalData } = useSelector((state: RootState) => state.site)
   const { user } = useSelector((state: RootState) => state.user)
   const [submitBtnTxt, setSubmitBtnTxt] = useState(
-    listingModalData.type === 4 ? 'Buy' : 'Register',
+    listingModalData.type === 4 ? 'Confirm' : 'Register',
   )
 
   const [showConfirmRegister, setshowConfirmRegister] = useState(false)
@@ -67,7 +67,7 @@ const ListingProductPurchase: React.FC<Props> = ({
   const [RegisterError, SetRegisterError] = useState<boolean>(false)
 
   const [backBtnLoading, setBackBtnLoading] = useState<boolean>(false)
-  console.log('listingModalData:', listingModalData)
+
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [showDays, setShowDays] = useState(true)
   const [data, setData] = useState<{
@@ -109,10 +109,7 @@ const ListingProductPurchase: React.FC<Props> = ({
   }, [propData])
 
   useEffect(() => {
-    if (
-      listingModalData.type == 4 &&
-      !listingModalData?.page_type?.includes('Online Access')
-    ) {
+    if (listingModalData.type == 4) {
       setshowConfirmRegister(true)
     }
   }, [])
@@ -559,7 +556,12 @@ const ListingProductPurchase: React.FC<Props> = ({
               <p
                 className={RegisterError ? styles['register-error'] : 'ignore'}
               >
-                Did you {listingModalData.type === 4 ? 'Buy' : 'register'}
+                Did you{' '}
+                {listingModalData?.page_type?.includes('Online Access')
+                  ? 'pay'
+                  : !listingModalData?.page_type?.includes('Online Access')
+                  ? 'buy'
+                  : 'Register'}
               </p>
               <div>
                 <span>

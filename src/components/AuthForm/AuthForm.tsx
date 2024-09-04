@@ -220,7 +220,11 @@ const AuthForm: React.FC<Props> = (props) => {
         dispatch(closeModal())
         const { err: error, res: response } = await getMyProfileDetail()
         if (response?.data?.data?.user?.is_onboarded) {
-          router.push('/community', undefined, { shallow: false })
+          if (router.pathname === '/') {
+            router.push('/community', undefined, { shallow: false })
+          } else {
+            window.location.reload()
+          }
         } else {
           dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
           router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
@@ -317,8 +321,11 @@ const AuthForm: React.FC<Props> = (props) => {
           router.push('/admin')
         }
         if (response?.data?.data?.user?.is_onboarded) {
-          console.warn('push to community')
-          router.push('/community')
+          if (router.pathname === '/') {
+            router.push('/community', undefined, { shallow: false })
+          } else {
+            window.location.reload()
+          }
         } else {
         }
       } else if (router.pathname !== '/') {
@@ -374,7 +381,11 @@ const AuthForm: React.FC<Props> = (props) => {
 
       const { err: error, res: response } = await getMyProfileDetail()
       if (response?.data?.data?.user?.is_onboarded) {
-        router.push('/community', undefined, { shallow: false })
+        if (router.pathname === '/') {
+          router.push('/community', undefined, { shallow: false })
+        } else {
+          window.location.reload()
+        }
       } else {
         dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
         router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
