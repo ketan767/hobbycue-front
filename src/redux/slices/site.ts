@@ -106,6 +106,9 @@ interface AuthState {
   AboutStates?: {
     [key:string]:boolean
   }
+  DescriptionStates?: {
+    [key:string]:boolean
+  }
   pagesStates?: {
     [key:string]:boolean
   }
@@ -179,6 +182,7 @@ const initialState: AuthState = {
   searchToggleRefresh: 0,
   hobbyStates:{},
   AboutStates: {},
+  DescriptionStates: {},
   pagesStates:{},
   locationStates:{},
   contactStates:{},
@@ -302,6 +306,14 @@ const siteSlice = createSlice({
       const objKey = Object.keys(payload);
       if(objKey[0] && state.AboutStates){
       state.AboutStates[objKey[0]] = payload[objKey[0]];
+      }
+    },
+    updateDescriptionOpenState: (state,{payload}:{payload:{
+      [key:string]:boolean
+    }})=>{
+      const objKey = Object.keys(payload);
+      if(objKey[0] && state.DescriptionStates){
+      state.DescriptionStates[objKey[0]] = payload[objKey[0]];
       }
     },
     updateHobbyOpenState: (state,{payload}:{payload:{
@@ -438,7 +450,8 @@ export const {
   updateEventFlow,
   updatePageDataForEvent,
   updateTotalEvents,
-  updateAboutOpenState
+  updateAboutOpenState,
+  updateDescriptionOpenState,
 } = siteSlice.actions
 
 export default siteSlice.reducer

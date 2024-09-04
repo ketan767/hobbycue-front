@@ -31,6 +31,7 @@ import {
   updateRelatedListingsOpenStates2,
   updateTotalEvents,
   updateAboutOpenState,
+  updateDescriptionOpenState,
 } from '@/redux/slices/site'
 import WhatsappIcon from '@/assets/svg/whatsapp.svg'
 import { listingTypes } from '@/constants/constant'
@@ -109,6 +110,7 @@ const ListingPageMain: React.FC<Props> = ({
     relatedListingsStates2,
     tagsStates,
     AboutStates,
+    DescriptionStates,
     workingHoursStates,
   } = useSelector((state: RootState) => state.site)
   const { isLoggedIn, isAuthenticated, user } = useSelector(
@@ -127,6 +129,7 @@ const ListingPageMain: React.FC<Props> = ({
 
   const [showHobbies, setShowHobbies] = useState(true)
   const [showAbout, setShowAbout] = useState(true)
+  const [showDescription, setShowDescription] = useState(true)
   const [showTags, setShowTags] = useState(false)
   const [showRelatedListing1, setShowRelatedListing1] = useState(false)
   const [showContact, setShowContact] = useState(false)
@@ -253,6 +256,17 @@ const ListingPageMain: React.FC<Props> = ({
 
   useEffect(() => {
     if (
+      DescriptionStates &&
+      typeof DescriptionStates[data?._id] === 'boolean'
+    ) {
+      setShowDescription(DescriptionStates[data?._id])
+    } else if (data._id) {
+      dispatch(updateDescriptionOpenState({ [data._id]: showDescription }))
+    }
+  }, [data._id, DescriptionStates])
+
+  useEffect(() => {
+    if (
       workingHoursStates &&
       typeof workingHoursStates[data?._id] === 'boolean'
     ) {
@@ -341,6 +355,7 @@ const ListingPageMain: React.FC<Props> = ({
       setShowWorkingHours(expandAll)
       setShowRelatedListing2(expandAll)
       setShowSocialMedia(expandAll)
+      setShowDescription(expandAll)
     }
   }, [expandAll])
 
@@ -607,7 +622,8 @@ const ListingPageMain: React.FC<Props> = ({
               <div className={`${styles['display-desktop']}`}></div>
             </PageContentBox> */}
             <div className={styles['display-mobile-initial']}>
-              {data?.description?.length > 0 && (
+              {(data?.description?.length > 0 ||
+                listingLayoutMode === 'edit') && (
                 <PageContentBox
                   showEditButton={listingLayoutMode === 'edit'}
                   onEditBtnClick={() =>
@@ -1306,173 +1322,6 @@ const ListingPageMain: React.FC<Props> = ({
                 </ul>
               </PageContentBox>
 
-              {/* Seller Details */}
-              {/* <PageContentBox
-              showEditButton={listingLayoutMode === 'edit'}
-              onEditBtnClick={() =>
-                dispatch(
-                  openModal({ type: 'listing-contact-edit', closable: true }),
-                )
-              }
-            >
-              <h4 className={styles['heading']}>Seller Information</h4>
-              <ul className={styles['seller-info-wrapper']}>
-     
-                <li>
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g clip-path="url(#clip0_173_56271)">
-                      <rect width="24" height="24" fill="#8064A2" />
-                      <path
-                        d="M10 12C12.21 12 14 10.21 14 8C14 5.79 12.21 4 10 4C7.79 4 6 5.79 6 8C6 10.21 7.79 12 10 12ZM10 6C11.1 6 12 6.9 12 8C12 9.1 11.1 10 10 10C8.9 10 8 9.1 8 8C8 6.9 8.9 6 10 6Z"
-                        fill="white"
-                      />
-                      <path
-                        d="M4 18.003C4.22 17.283 7.31 16.003 10 16.003C10 15.303 10.13 14.633 10.35 14.013C7.62 13.913 2 15.273 2 18.003V20.003H11.54C11.02 19.423 10.61 18.753 10.35 18.003H4Z"
-                        fill="white"
-                      />
-                      <path
-                        d="M19.43 18.02C19.79 17.43 20 16.74 20 16C20 13.79 18.21 12 16 12C13.79 12 12 13.79 12 16C12 18.21 13.79 20 16 20C16.74 20 17.43 19.78 18.02 19.43C18.95 20.36 19.64 21.05 20.59 22L22 20.59C20.5 19.09 21.21 19.79 19.43 18.02ZM16 18C14.9 18 14 17.1 14 16C14 14.9 14.9 14 16 14C17.1 14 18 14.9 18 16C18 17.1 17.1 18 16 18Z"
-                        fill="white"
-                      />
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_173_56271">
-                        <rect width="24" height="24" fill="white" />
-                      </clipPath>
-                    </defs>
-                  </svg>
-                  <p>KYC</p>
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect
-                      x="0.5"
-                      y="0.5"
-                      width="15"
-                      height="15"
-                      rx="1.5"
-                      fill="white"
-                      stroke="#8064A2"
-                    />
-                  </svg>
-                </li>
-
-          
-                <li>
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect width="24" height="24" fill="#8064A2" />
-                    <path
-                      d="M12.37 2.15375L21.37 5.75373C21.72 5.89373 22 6.31372 22 6.68372V10.0037C22 10.5537 21.55 11.0037 21 11.0037H3C2.45 11.0037 2 10.5537 2 10.0037V6.68372C2 6.31372 2.28 5.89373 2.63 5.75373L11.63 2.15375C11.83 2.07375 12.17 2.07375 12.37 2.15375Z"
-                      stroke="white"
-                      stroke-width="1.5"
-                      stroke-miterlimit="10"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <path
-                      d="M22 22H2V19C2 18.45 2.45 18 3 18H21C21.55 18 22 18.45 22 19V22Z"
-                      stroke="white"
-                      stroke-width="1.5"
-                      stroke-miterlimit="10"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <path
-                      d="M4 18V11"
-                      stroke="white"
-                      stroke-width="1.5"
-                      stroke-miterlimit="10"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <path
-                      d="M8 18V11"
-                      stroke="white"
-                      stroke-width="1.5"
-                      stroke-miterlimit="10"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <path
-                      d="M12 18V11"
-                      stroke="white"
-                      stroke-width="1.5"
-                      stroke-miterlimit="10"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <path
-                      d="M16 18V11"
-                      stroke="white"
-                      stroke-width="1.5"
-                      stroke-miterlimit="10"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <path
-                      d="M20 18V11"
-                      stroke="white"
-                      stroke-width="1.5"
-                      stroke-miterlimit="10"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <path
-                      d="M1 22H23"
-                      stroke="white"
-                      stroke-width="1.5"
-                      stroke-miterlimit="10"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <path
-                      d="M12 8.5C12.8284 8.5 13.5 7.82843 13.5 7C13.5 6.17157 12.8284 5.5 12 5.5C11.1716 5.5 10.5 6.17157 10.5 7C10.5 7.82843 11.1716 8.5 12 8.5Z"
-                      stroke="white"
-                      stroke-width="1.5"
-                      stroke-miterlimit="10"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-
-                  <p>Bank</p>
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect
-                      x="0.5"
-                      y="0.5"
-                      width="15"
-                      height="15"
-                      rx="1.5"
-                      fill="white"
-                      stroke="#8064A2"
-                    />
-                  </svg>
-                </li>
-              </ul>
-            </PageContentBox> */}
-
               {/* User Location Details */}
               {(listingLayoutMode === 'edit' || data?._address?.city) && (
                 <PageContentBox
@@ -1579,26 +1428,6 @@ const ListingPageMain: React.FC<Props> = ({
 
                               <span className={styles.textdefault}>
                                 {data?.wp_data?.location_str}
-                                {/* {`${
-                        data?._address.street ? data._address.street + ',' : ''
-                      }
-                      
-                      ${
-                        data?._address.society ? data._address.society + ',' : ''
-                      } 
-                      ${
-                        data?._address.locality
-                        ? data._address.locality + ','
-                        : ''
-                      } 
-                      ${data?._address.city ? data._address.city + ',' : ''} 
-                      ${data?._address.state ? data._address.state + ',' : ''} 
-                      ${data?._address.country ? data._address.country : ''}
-                      ${
-                        data?._address?.pin_code
-                        ? ' - ' + data?._address?.pin_code
-                        : ''
-                      }`} */}
                               </span>
                             </li>
                           )}
@@ -1895,6 +1724,52 @@ const ListingPageMain: React.FC<Props> = ({
               ) : (
                 <></>
               )}
+              <div className={styles['display-mobile-initial']}>
+                {data.type === 4 &&
+                  (data?.about?.length > 0 || listingLayoutMode === 'edit') && (
+                    <PageContentBox
+                      showEditButton={listingLayoutMode === 'edit'}
+                      onEditBtnClick={() =>
+                        dispatch(
+                          openModal({
+                            type: 'listing-about-edit',
+                            closable: true,
+                            propData: 'productDescription',
+                          }),
+                        )
+                      }
+                      setDisplayData={() => {
+                        setShowDescription((prev) => !prev)
+                        dispatch(
+                          updateDescriptionOpenState({
+                            [data._id]: !showDescription,
+                          }),
+                        )
+                      }}
+                      expandData={showDescription}
+                    >
+                      <div className={`${styles['location-heading']}`}>
+                        <h4 className={styles['heading']}>Description</h4>
+                        <ul
+                          className={`${styles['hobby-list']} ${
+                            styles['tags-list']
+                          } ${styles['display-desktop']}${
+                            showDescription
+                              ? ' ' + styles['display-mobile']
+                              : ''
+                          }`}
+                        ></ul>
+                      </div>
+                      {showDescription && (
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: data?.about,
+                          }}
+                        ></div>
+                      )}
+                    </PageContentBox>
+                  )}
+              </div>
             </div>
           </aside>
         )}
