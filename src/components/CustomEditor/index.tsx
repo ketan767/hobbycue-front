@@ -12,9 +12,6 @@ import quillEmoji from 'quill-emoji'
 import 'react-quill/dist/quill.snow.css'
 import 'quill-emoji/dist/quill-emoji.css'
 import Tooltip from '@/components/Tooltip/ToolTip'
-import PageLoader from '../PageLoader'
-import { useDispatch } from 'react-redux'
-import { setShowPageLoader } from '@/redux/slices/site'
 
 const { EmojiBlot, ShortNameEmoji, ToolbarEmoji, TextAreaEmoji } = quillEmoji
 
@@ -47,7 +44,7 @@ const CustomEditor: React.FC<Props> = ({
   error,
   hasLink,
 }) => {
-  const editorRef = useRef<ReactQuill>(null)
+  const editorRef = useRef(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const inputVideoRef = useRef<HTMLInputElement>(null)
   const [imageIconAdded, setImageIconAdded] = useState(false)
@@ -59,7 +56,6 @@ const CustomEditor: React.FC<Props> = ({
     },
     [onChange],
   )
-  const dispatch = useDispatch()
   const onReady = () => {
     if (image && !imageIconAdded) {
       const toolbar = document.querySelector('.ql-toolbar.ql-snow')
@@ -75,19 +71,6 @@ const CustomEditor: React.FC<Props> = ({
     onReady()
   }, [])
 
-  useEffect(() => {
-    if (editorRef.current) {
-      const quill = editorRef.current?.getEditor()
-      quill.root.addEventListener('paste', handleQuillPaste)
-    }
-
-    return () => {
-      if (editorRef.current) {
-        const quill = editorRef.current?.getEditor()
-        quill.root.removeEventListener('paste', handleQuillPaste)
-      }
-    }
-  }, [])
   const handleImageChange = (e: any) => {
     let images = [...e.target.files]
     // setData((prev: any) => ({ ...prev, media: [...prev.media, ...images] }))
@@ -100,71 +83,13 @@ const CustomEditor: React.FC<Props> = ({
     })
   }
 
-  const handleQuillPaste = async (e: ClipboardEvent) => {
-    const clipboardData = e.clipboardData
-    if (clipboardData && clipboardData.items) {
-      const images: File[] = []
-      for (let i = 0; i < clipboardData.items.length; i++) {
-        const item = clipboardData.items[i]
-        if (item.kind === 'file' && item.type.indexOf('image') !== -1) {
-          // Handle image files directly
-          const blob = item.getAsFile()
-          if (blob) {
-            const file = new File([blob], `pasted_image_${Date.now()}.jpeg`, {
-              type: 'image/jpeg',
-            })
-            images.push(file)
-          }
-        } else if (item.kind === 'string' && item.type === 'text/html') {
-          // Handle HTML content
-          const html = await new Promise<string>((resolve) => {
-            item.getAsString((data) => resolve(data))
-          })
-          const parser = new DOMParser()
-          const doc = parser.parseFromString(html, 'text/html')
-          const imgElements = doc.getElementsByTagName('img')
-          for (let j = 0; j < imgElements.length; j++) {
-            const src = imgElements[j].getAttribute('src')
-            if (
-              src &&
-              (src.startsWith('http://') || src.startsWith('https://'))
-            ) {
-              // Fetch the image and convert it to a File object
-              const response = await fetch(src)
-              const blob = await response.blob()
-              const file = new File([blob], `pasted_image_${Date.now()}.jpeg`, {
-                type: blob.type,
-              })
-              images.push(file)
-            }
-          }
-        }
-      }
-
-      if (images.length > 0) {
-        // Create a synthetic event object with the files
-        const syntheticEvent = {
-          target: {
-            files: images,
-          },
-        }
-
-        handleImageChange(syntheticEvent)
-
-        e.preventDefault()
-      }
-    }
-  }
-
   const handleImageUpload = async (image: any, isVideo: boolean) => {
-    dispatch(setShowPageLoader(true))
     const formData = new FormData()
     formData.append('post', image)
     console.log('formData', formData)
     const { err, res } = await uploadImage(formData)
     if (err) return console.log(err)
     if (res?.data.success) {
-      dispatch(setShowPageLoader(false))
       console.log(res.data)
       const img = res.data.data.url
       if (isVideo) {

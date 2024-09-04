@@ -774,6 +774,9 @@
     z-index: 1;
     order: 3;
   }
+  .qunatity {
+    padding-top: 9px;
+  }
 }
 
 /* Desktop only */

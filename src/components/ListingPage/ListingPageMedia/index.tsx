@@ -244,19 +244,17 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
           )}
         <div className={styles.videoAndImages}>
           <div className={styles.imagesContainer}>
-            {listingModalData.images?.map((item: any, idx) => {
-              return (
-                <div key={idx} className={styles.medias}>
-                  <div
-                    key={idx}
-                    className={styles.image}
-                    onClick={() => OpenMediaImage(item)}
-                  >
-                    <img src={item} />
+            {Array.isArray(listingModalData?.images) &&
+              listingModalData?.images[0] && (
+                <div className={styles.medias}>
+                  <div className={styles.image}>
+                    <img
+                      src={listingModalData?.images[0]}
+                      alt="Listing Image"
+                    />
                   </div>
                 </div>
-              )
-            })}
+              )}
           </div>
           <div className={styles.imagesContainer}>
             {listingModalData?.video_url ? (
@@ -273,6 +271,20 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
                 )}
               </div>
             ) : null}
+          </div>
+          <div className={styles.imagesContainer}>
+            {listingModalData.images?.slice(1).map((item: any, idx: any) => {
+              return (
+                <div key={idx} className={styles.medias}>
+                  <div
+                    className={styles.image}
+                    onClick={() => OpenMediaImage(item)}
+                  >
+                    <img src={item} />
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
 

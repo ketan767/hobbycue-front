@@ -1364,26 +1364,29 @@ const ListingHeader: React.FC<Props> = ({
                         style={{ marginBottom: 20 }}
                       >
                         <div style={{ width: '100%' }}>
-                          <InputSelect
-                            options={
-                              VarientData?.variations?.map(
-                                (item) => item.name,
-                              ) || []
-                            }
-                            value={inpSelectValues?.['name'] || ''}
-                            onChange={(selectedName: string) => {
-                              if (VarientData) {
-                                const selectedVariation =
-                                  VarientData?.variations?.find(
-                                    (item) => item.name === selectedName,
-                                  )
-                                setInpSelectValues({
-                                  name: selectedName,
-                                  value: selectedVariation?.value || '',
-                                })
+                          {(inpSelectValues?.['name'] !== 'No value' ||
+                            listingLayoutMode === 'edit') && (
+                            <InputSelect
+                              options={
+                                VarientData?.variations?.map(
+                                  (item) => item.name,
+                                ) || []
                               }
-                            }}
-                          />
+                              value={inpSelectValues?.['name'] || ''}
+                              onChange={(selectedName: string) => {
+                                if (VarientData) {
+                                  const selectedVariation =
+                                    VarientData?.variations?.find(
+                                      (item) => item.name === selectedName,
+                                    )
+                                  setInpSelectValues({
+                                    name: selectedName,
+                                    value: selectedVariation?.value || '',
+                                  })
+                                }
+                              }}
+                            />
+                          )}
                         </div>
                         {listingLayoutMode === 'edit' && (
                           <Image
@@ -1409,7 +1412,7 @@ const ListingHeader: React.FC<Props> = ({
                   </div>
                   <div className="">
                     <div className={styles['flex-container']}>
-                      <label>Quantity:</label>
+                      <label>{isMobile ? 'Qty:' : 'Quantity:'}</label>
                       <div className={styles['qunatity']}>
                         <div className={styles['quantity']}>
                           <button
