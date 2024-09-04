@@ -51,6 +51,7 @@ type Props = {
   setConfirmationModal?: any
   handleClose?: any
   onStatusChange?: (isChanged: boolean) => void
+  propData?: any
 }
 
 const ProductCategoryModal: React.FC<Props> = ({
@@ -60,6 +61,7 @@ const ProductCategoryModal: React.FC<Props> = ({
   setConfirmationModal,
   handleClose,
   onStatusChange,
+  propData,
 }) => {
   const dispatch = useDispatch()
   const router = useRouter()
@@ -114,10 +116,12 @@ const ProductCategoryModal: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    setSelectedCategory(listingModalData?.page_type?.[0])
-    setSelectedPage(listingModalData?.seller)
+    if (propData !== 'new') {
+      setSelectedCategory(listingModalData?.page_type?.[0])
+      setSelectedPage(listingModalData?.seller._id)
+    }
   }, [])
-  console.warn('sellerrr', selectedPage)
+
   useEffect(() => {
     if (user?._id) {
       const getAllPages = async () => {

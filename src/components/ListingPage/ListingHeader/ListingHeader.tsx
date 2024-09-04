@@ -1385,13 +1385,14 @@ const ListingHeader: React.FC<Props> = ({
                             }}
                           />
                         </div>
-
-                        <Image
-                          className={styles['edit-icon']}
-                          src={EditIcon}
-                          alt="edit"
-                          onClick={OpenProductPurchaseModal}
-                        />
+                        {listingLayoutMode === 'edit' && (
+                          <Image
+                            className={styles['edit-icon']}
+                            src={EditIcon}
+                            alt="edit"
+                            onClick={OpenProductPurchaseModal}
+                          />
+                        )}
                       </div>
                     )}
 
