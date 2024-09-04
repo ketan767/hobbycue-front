@@ -777,6 +777,9 @@
   .qunatity {
     padding-top: 9px;
   }
+  .product-name-container .name {
+    padding-top: 12px;
+  }
 }
 
 /* Desktop only */
