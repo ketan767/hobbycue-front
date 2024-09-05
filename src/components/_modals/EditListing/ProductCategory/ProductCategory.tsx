@@ -97,27 +97,44 @@ const ProductCategoryModal: React.FC<Props> = ({
       setSelectedPageError(true)
       return
     }
-    const jsonData = {
-      seller: selectedPage,
-      page_type: selectedCategory,
-      type: 4,
-      cta_text: 'Buy Now',
-    }
+    if (propData === 'new') {
+      const jsonData = {
+        seller: selectedPage,
+        page_type: selectedCategory,
+        type: 4,
+        cta_text: 'Buy Now',
+      }
 
-    setSubmitBtnLoading(true)
-    const { err, res } = await createNewListing(jsonData)
-    if (err) return console.log(err)
-    console.log('res', res?.data.data.listing)
-    if (onComplete) onComplete()
-    else {
-      window.location.href = `/product/${res?.data?.data?.listing?.page_url}`
-      dispatch(closeModal())
+      setSubmitBtnLoading(true)
+      const { err, res } = await createNewListing(jsonData)
+      if (err) return console.log(err)
+
+      if (onComplete) onComplete()
+      else {
+        window.location.href = `/product/${res?.data?.data?.listing?.page_url}`
+        dispatch(closeModal())
+      }
+    } else {
+      const jsonData = {
+        seller: selectedPage,
+        page_type: selectedCategory,
+      }
+
+      const { err, res } = await updateListing(listingModalData?._id, jsonData)
+      if (err) return console.log(err)
+      else {
+        router.reload()
+      }
     }
   }
 
   useEffect(() => {
     if (propData !== 'new') {
-      setSelectedCategory(listingModalData?.page_type?.[0])
+      if (listingModalData?.page_type?.length) {
+        setSelectedCategory(
+          selectedCategory.concat(listingModalData?.page_type),
+        )
+      }
       setSelectedPage(listingModalData?.seller._id)
     }
   }, [])
@@ -145,7 +162,13 @@ const ProductCategoryModal: React.FC<Props> = ({
   }, [selectedCategory, initialData, onStatusChange])
 
   const handleCategoryChange = (idToChange: any) => {
-    setSelectedCategory(idToChange)
+    if (!selectedCategory?.includes(idToChange)) {
+      setSelectedCategory([...selectedCategory, idToChange])
+    } else {
+      setSelectedCategory(
+        selectedCategory.filter((id: any) => id !== idToChange),
+      )
+    }
   }
 
   const handleAddListing = () => {
@@ -251,20 +274,38 @@ const ProductCategoryModal: React.FC<Props> = ({
           <div className={styles['input-box']}>
             <label>Product Category</label>
             <input hidden required />
+            <div className={styles['selected-values']}>
+              {selectedCategory.length > 0 &&
+                selectedCategory.map((el: any) => (
+                  <div key={el} className={styles['selected-value']}>
+                    <p>{el}</p>
+                    <Image
+                      src={CrossIcon}
+                      alt="cancel"
+                      onClick={() =>
+                        setSelectedCategory(
+                          selectedCategory.filter((item: any) => item !== el),
+                        )
+                      }
+                    />
+                  </div>
+                ))}
+            </div>
             <div className={styles['select-container']} ref={dropdownRef}>
               <div
                 className={styles['select-input']}
-                onClick={() => setShowDropdown(true)}
+                onClick={() => setShowDropdown(!showDropdown)}
               >
                 <p
                   className={
                     selectedCategory?.length !== 0 ? styles['color-black'] : ''
                   }
                 >
-                  {' '}
+                  {/* {' '}
                   {selectedCategory?.length === 0
                     ? 'Select Category'
-                    : selectedCategory}
+                    : selectedCategory} */}
+                  Select Category
                 </p>
                 <Image src={DownArrow} alt="down" />
               </div>
@@ -275,8 +316,8 @@ const ProductCategoryModal: React.FC<Props> = ({
                     return (
                       <div
                         className={`${styles['single-option']} ${
-                          selectedCategory === item.name
-                            ? styles['chosen-option']
+                          selectedCategory?.includes(item.name)
+                            ? `${styles['chosen-option']} ${styles['selcted-option']}`
                             : ''
                         }`}
                         key={idx}

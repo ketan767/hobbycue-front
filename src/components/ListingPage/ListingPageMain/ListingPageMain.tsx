@@ -32,6 +32,7 @@ import {
   updateTotalEvents,
   updateAboutOpenState,
   updateDescriptionOpenState,
+  updateListingModalData,
 } from '@/redux/slices/site'
 import WhatsappIcon from '@/assets/svg/whatsapp.svg'
 import { listingTypes } from '@/constants/constant'
@@ -545,8 +546,13 @@ const ListingPageMain: React.FC<Props> = ({
                 onEditBtnClick={() => {
                   if (data.type === 4) {
                     dispatch(
-                      openModal({ type: 'product-category', closable: true }),
+                      openModal({
+                        type: 'product-category',
+                        closable: true,
+                        propData: data,
+                      }),
                     )
+                    dispatch(updateListingModalData(data))
                   } else {
                     dispatch(
                       openModal({ type: 'listing-type-edit', closable: true }),

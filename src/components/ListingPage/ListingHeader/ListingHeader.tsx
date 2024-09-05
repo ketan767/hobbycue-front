@@ -1402,9 +1402,11 @@ const ListingHeader: React.FC<Props> = ({
                     <div className={styles.varientpirce}>
                       {rupeesIcon}
                       {quantity !== 0
-                        ? (
-                            inpSelectValues?.['value'] * quantity
-                          ).toLocaleString('en-IN') || 0
+                        ? inpSelectValues
+                          ? (
+                              inpSelectValues?.['value'] * quantity
+                            ).toLocaleString('en-IN')
+                          : 0
                         : quantity == 0
                         ? inpSelectValues?.['value']
                         : 0 || 0}
