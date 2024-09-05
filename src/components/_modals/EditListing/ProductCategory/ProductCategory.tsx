@@ -117,7 +117,11 @@ const ProductCategoryModal: React.FC<Props> = ({
 
   useEffect(() => {
     if (propData !== 'new') {
-      setSelectedCategory(listingModalData?.page_type?.[0])
+      if (listingModalData?.page_type?.length) {
+        setSelectedCategory(
+          selectedCategory.concat(listingModalData?.page_type),
+        )
+      }
       setSelectedPage(listingModalData?.seller._id)
     }
   }, [])
@@ -145,7 +149,13 @@ const ProductCategoryModal: React.FC<Props> = ({
   }, [selectedCategory, initialData, onStatusChange])
 
   const handleCategoryChange = (idToChange: any) => {
-    setSelectedCategory(idToChange)
+    if (!selectedCategory?.includes(idToChange)) {
+      setSelectedCategory([...selectedCategory, idToChange])
+    } else {
+      setSelectedCategory(
+        selectedCategory.filter((id: any) => id !== idToChange),
+      )
+    }
   }
 
   const handleAddListing = () => {
@@ -251,20 +261,38 @@ const ProductCategoryModal: React.FC<Props> = ({
           <div className={styles['input-box']}>
             <label>Product Category</label>
             <input hidden required />
+            <div className={styles['selected-values']}>
+              {selectedCategory.length > 0 &&
+                selectedCategory.map((el: any) => (
+                  <div key={el} className={styles['selected-value']}>
+                    <p>{el}</p>
+                    <Image
+                      src={CrossIcon}
+                      alt="cancel"
+                      onClick={() =>
+                        setSelectedCategory(
+                          selectedCategory.filter((item: any) => item !== el),
+                        )
+                      }
+                    />
+                  </div>
+                ))}
+            </div>
             <div className={styles['select-container']} ref={dropdownRef}>
               <div
                 className={styles['select-input']}
-                onClick={() => setShowDropdown(true)}
+                onClick={() => setShowDropdown(!showDropdown)}
               >
                 <p
                   className={
                     selectedCategory?.length !== 0 ? styles['color-black'] : ''
                   }
                 >
-                  {' '}
+                  {/* {' '}
                   {selectedCategory?.length === 0
                     ? 'Select Category'
-                    : selectedCategory}
+                    : selectedCategory} */}
+                  Select Category
                 </p>
                 <Image src={DownArrow} alt="down" />
               </div>
@@ -275,8 +303,8 @@ const ProductCategoryModal: React.FC<Props> = ({
                     return (
                       <div
                         className={`${styles['single-option']} ${
-                          selectedCategory === item.name
-                            ? styles['chosen-option']
+                          selectedCategory?.includes(item.name)
+                            ? `${styles['chosen-option']} ${styles['selcted-option']}`
                             : ''
                         }`}
                         key={idx}
