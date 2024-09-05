@@ -250,7 +250,9 @@ const PostCard: React.FC<Props> = (props) => {
     <>
       <div className={styles['post-card-wrapper']} onClick={handleCardClick}>
         {/* Card Header */}
-        {(!has_link || props.currentSection === 'posts') && (
+        {(!has_link ||
+          props.currentSection === 'posts' ||
+          router.pathname.startsWith('/post')) && (
           <header>
             <Link
               href={
@@ -442,7 +444,9 @@ const PostCard: React.FC<Props> = (props) => {
         {/* Card Body */}
 
         <section className={styles['body']}>
-          {(!has_link || props.currentSection === 'posts') && (
+          {(!has_link ||
+            props.currentSection === 'posts' ||
+            router.pathname.startsWith('/post')) && (
             <div
               className={styles['content'] + ' ql-editor'}
               dangerouslySetInnerHTML={{ __html: processedContent }}

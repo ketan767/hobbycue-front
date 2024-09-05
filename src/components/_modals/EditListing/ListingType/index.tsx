@@ -21,7 +21,10 @@ import store, { RootState } from '@/redux/store'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { updateListingModalData } from '@/redux/slices/site'
-import { getAllListingCategories, updateListing } from '@/services/listing.service'
+import {
+  getAllListingCategories,
+  updateListing,
+} from '@/services/listing.service'
 
 import DownArrow from '@/assets/svg/chevron-down.svg'
 import UpArrow from '@/assets/svg/chevron-up.svg'
@@ -53,11 +56,10 @@ const ListingTypeEditModal: React.FC<Props> = ({
 }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.user)
-  const { listingModalData, listingTypeModalMode, pageDataForEvent } = useSelector(
-    (state: RootState) => state.site,
-  )
+  const { listingModalData, listingTypeModalMode, pageDataForEvent } =
+    useSelector((state: RootState) => state.site)
   const [list, setList] = useState<{ name: string; description: string }[]>([])
-  const [pagedata,setPagedata] = useState<
+  const [pagedata, setPagedata] = useState<
     {
       Description: string
       Show: 'Y' | 'N' | ''
@@ -86,7 +88,8 @@ const ListingTypeEditModal: React.FC<Props> = ({
     if (!value || value === '' || value.length === 0) {
       return setError('Select a Category!')
     }
-    if (listingTypeModalMode === 'edit'||pageDataForEvent!==null) { // make this true with listingModalData automatic update will happen just page route change required
+    if (listingTypeModalMode === 'edit' || pageDataForEvent !== null) {
+      // make this true with listingModalData automatic update will happen just page route change required
       handleEdit()
     } else {
       dispatch(
@@ -97,17 +100,17 @@ const ListingTypeEditModal: React.FC<Props> = ({
   }
   const handleEdit = async () => {
     // setSubmitBtnLoading(true)
-      if(pageDataForEvent){
-        console.warn({pageDataForEvent})
-        const { err, res } = await updateListing(pageDataForEvent?._id, {
-          page_type: value,
-        })
-        if (err) return console.log(err)
-          if (res?.data.success) {
-          dispatch(updateListingModalData(res.data.data.listing))
-          dispatch(openModal({ type: 'listing-onboarding', closable: true }))
-        }
+    if (pageDataForEvent) {
+      console.warn({ pageDataForEvent })
+      const { err, res } = await updateListing(pageDataForEvent?._id, {
+        page_type: value,
+      })
+      if (err) return console.log(err)
+      if (res?.data.success) {
+        dispatch(updateListingModalData(res.data.data.listing))
+        dispatch(openModal({ type: 'listing-onboarding', closable: true }))
       }
+    }
     if (onComplete) {
       dispatch(
         updateListingModalData({ ...listingModalData, page_type: value }),
@@ -127,17 +130,20 @@ const ListingTypeEditModal: React.FC<Props> = ({
     }
   }
 
-  useEffect(()=>{
-    getAllListingCategories().then((result)=>{
-      const {res,err} = result;
-      if(err){
-        console.log({err})
-      }
-      else if(res?.data && res?.data?.data){
-        setPagedata(res.data.data);
-      }
-    }).catch(err=>{console.log({err})})
-  },[])
+  useEffect(() => {
+    getAllListingCategories()
+      .then((result) => {
+        const { res, err } = result
+        if (err) {
+          console.log({ err })
+        } else if (res?.data && res?.data?.data) {
+          setPagedata(res.data.data)
+        }
+      })
+      .catch((err) => {
+        console.log({ err })
+      })
+  }, [])
 
   const peoplePageTypeList: PeoplePageType = [
     {
@@ -306,16 +312,44 @@ const ListingTypeEditModal: React.FC<Props> = ({
   useEffect(() => {
     switch (listingModalData.type) {
       case 1:
-        setList(pagedata?.filter(obj=>obj.pageType==='People'&&obj.Show==='Y').map(obj=>({name:obj.listingCategory,description:obj.Description})));
+        setList(
+          pagedata
+            ?.filter((obj) => obj.pageType === 'People' && obj.Show === 'Y')
+            .map((obj) => ({
+              name: obj.listingCategory,
+              description: obj.Description,
+            })),
+        )
         break
       case 2:
-        setList(pagedata?.filter(obj=>obj.pageType==='Place'&&obj.Show==='Y').map(obj=>({name:obj.listingCategory,description:obj.Description})));
+        setList(
+          pagedata
+            ?.filter((obj) => obj.pageType === 'Place' && obj.Show === 'Y')
+            .map((obj) => ({
+              name: obj.listingCategory,
+              description: obj.Description,
+            })),
+        )
         break
       case 3:
-        setList(pagedata?.filter(obj=>obj.pageType==='Program'&&obj.Show==='Y').map(obj=>({name:obj.listingCategory,description:obj.Description})));
+        setList(
+          pagedata
+            ?.filter((obj) => obj.pageType === 'Program' && obj.Show === 'Y')
+            .map((obj) => ({
+              name: obj.listingCategory,
+              description: obj.Description,
+            })),
+        )
         break
       case 4:
-        setList(pagedata?.filter(obj=>obj.pageType==='Product'&&obj.Show==='Y').map(obj=>({name:obj.listingCategory,description:obj.Description})));
+        setList(
+          pagedata
+            ?.filter((obj) => obj.pageType === 'Product' && obj.Show === 'Y')
+            .map((obj) => ({
+              name: obj.listingCategory,
+              description: obj.Description,
+            })),
+        )
         break
       default:
         setList([])
@@ -323,7 +357,7 @@ const ListingTypeEditModal: React.FC<Props> = ({
     }
     setValue(listingModalData.page_type as string)
     setInitialData(listingModalData.page_type as string)
-  }, [listingModalData,pagedata])
+  }, [listingModalData, pagedata])
 
   const handleChange = (itemToChange: any) => {
     if (value?.includes(itemToChange)) {

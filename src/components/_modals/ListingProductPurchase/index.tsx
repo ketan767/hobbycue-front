@@ -91,7 +91,7 @@ const ListingProductPurchase: React.FC<Props> = ({
               setData({
                 ...result.res?.data?.data,
                 variations: result.res?.data?.data.variations.map(
-                  (obj: any) => ({ ...obj, quantity: 0 }),
+                  (obj: any) => ({ ...obj, quantity: 1 }),
                 ),
               })
             else {

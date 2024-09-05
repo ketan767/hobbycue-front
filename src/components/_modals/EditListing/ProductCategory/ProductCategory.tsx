@@ -97,21 +97,34 @@ const ProductCategoryModal: React.FC<Props> = ({
       setSelectedPageError(true)
       return
     }
-    const jsonData = {
-      seller: selectedPage,
-      page_type: selectedCategory,
-      type: 4,
-      cta_text: 'Buy Now',
-    }
+    if (propData === 'new') {
+      const jsonData = {
+        seller: selectedPage,
+        page_type: selectedCategory,
+        type: 4,
+        cta_text: 'Buy Now',
+      }
 
-    setSubmitBtnLoading(true)
-    const { err, res } = await createNewListing(jsonData)
-    if (err) return console.log(err)
-    console.log('res', res?.data.data.listing)
-    if (onComplete) onComplete()
-    else {
-      window.location.href = `/product/${res?.data?.data?.listing?.page_url}`
-      dispatch(closeModal())
+      setSubmitBtnLoading(true)
+      const { err, res } = await createNewListing(jsonData)
+      if (err) return console.log(err)
+
+      if (onComplete) onComplete()
+      else {
+        window.location.href = `/product/${res?.data?.data?.listing?.page_url}`
+        dispatch(closeModal())
+      }
+    } else {
+      const jsonData = {
+        seller: selectedPage,
+        page_type: selectedCategory,
+      }
+
+      const { err, res } = await updateListing(listingModalData?._id, jsonData)
+      if (err) return console.log(err)
+      else {
+        router.reload()
+      }
     }
   }
 
