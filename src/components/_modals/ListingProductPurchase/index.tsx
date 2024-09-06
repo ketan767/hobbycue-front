@@ -172,6 +172,7 @@ const ListingProductPurchase: React.FC<Props> = ({
         ...data,
       })
       if (err) {
+        setSubmitBtnLoading(false)
         return setSnackbar({
           display: true,
           type: 'warning',
@@ -187,6 +188,11 @@ const ListingProductPurchase: React.FC<Props> = ({
           type: 'success',
           message: 'Registered Successfully',
         })
+        setTimeout(() => {
+          dispatch(closeModal())
+        }, 2000)
+      }
+      if (listingModalData.type === 4) {
         setTimeout(() => {
           dispatch(closeModal())
         }, 2000)
