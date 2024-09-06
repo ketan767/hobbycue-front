@@ -24,24 +24,38 @@ import Blogs from '../../assets/svg/Search/blogs.svg'
 import Posts from '../../assets/svg/Search/Posts.svg'
 import styles from './styles.module.css'
 import { RootState } from '@/redux/store'
+import { useRouter } from 'next/router'
 
 const SearchPageFilter = () => {
   const dispatch = useDispatch()
+  const router = useRouter()
+  const { q, filter } = router.query
   const isExplore = useSelector((state: RootState) => state.search.explore)
   const [activeFilter, setActiveFilter] = useState('all')
-  const showAll = useSelector((state: any) => state.search.showAll)
-  const showAllUsers = useSelector((state: any) => state.search.showAllUsers)
-  const showAllHobbies = useSelector(
-    (state: any) => state.search.showAllHobbies,
-  )
-  const showAllPeople = useSelector((state: any) => state.search.showAllPeople)
-  const showAllPlace = useSelector((state: any) => state.search.showAllPlace)
-  const showAllEvent = useSelector((state: any) => state.search.showAllEvent)
-  const showAllProducts = useSelector(
-    (state: any) => state.search.showAllProducts,
-  )
-  const showAllPosts = useSelector((state: any) => state.search.showAllPosts)
-  const showAllBlogs = useSelector((state: any) => state.search.showAllBlogs)
+  // const showAll = useSelector((state: any) => state.search.showAll)
+  // const showAllUsers = useSelector((state: any) => state.search.showAllUsers)
+  // const showAllHobbies = useSelector(
+  //   (state: any) => state.search.showAllHobbies,
+  // )
+  // const showAllPeople = useSelector((state: any) => state.search.showAllPeople)
+  // const showAllPlace = useSelector((state: any) => state.search.showAllPlace)
+  // const showAllEvent = useSelector((state: any) => state.search.showAllEvent)
+  // const showAllProducts = useSelector(
+  //   (state: any) => state.search.showAllProducts,
+  // )
+  // const showAllPosts = useSelector((state: any) => state.search.showAllPosts)
+  // const showAllBlogs = useSelector((state: any) => state.search.showAllBlogs)
+
+  const showAll = filter === 'all'
+  const showAllUsers = filter === 'users'
+  const showAllPeople = filter === 'people'
+  const showAllPlace = filter === 'places'
+  const showAllEvent = filter === 'events'
+  const showAllProducts = filter === 'products'
+  const showAllPosts = filter === 'posts'
+  const showAllBlogs = filter === 'blogs'
+  const showAllHobbies = filter === 'hobby'
+
   useEffect(() => {
     if (showAll === true) {
       setActiveFilter('all')
@@ -78,6 +92,10 @@ const SearchPageFilter = () => {
     if (isExplore) return
     if (activeFilter === filterType) {
       setActiveFilter('all')
+      router.push({
+        pathname: '/search',
+        query: { ...router.query, filter: '' },
+      })
       dispatch(showAllTrue())
     } else {
       setActiveFilter(filterType)
@@ -112,6 +130,13 @@ const SearchPageFilter = () => {
         default:
           break
       }
+      router.push({
+        pathname: '/search',
+        query: {
+          ...router.query,
+          filter: filterType === 'all' ? '' : filterType,
+        },
+      })
     }
   }
 

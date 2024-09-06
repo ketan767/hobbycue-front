@@ -10,6 +10,8 @@ import {
   createListingPost,
   createUserPost,
   getMetadata,
+  updateListingPost,
+  updateUserPost,
   uploadImage,
 } from '@/services/post.service'
 import { closeModal } from '@/redux/slices/modal'
@@ -565,7 +567,9 @@ export const CreatePost: React.FC<Props> = ({
 
     if (data.type === 'listing') {
       jsonData.listingId = data.data._id
-      const { err, res } = await createListingPost(jsonData)
+      const { err, res } = editing
+        ? await updateListingPost(jsonData, propData._id)
+        : await createListingPost(jsonData)
       setSubmitBtnLoading(false)
       if (err) {
         return console.log(err)
@@ -589,13 +593,16 @@ export const CreatePost: React.FC<Props> = ({
       return
     }
 
-    const { err, res } = await createUserPost(jsonData)
+    const { err, res } = editing
+      ? await updateUserPost(jsonData, propData._id)
+      : await createUserPost(jsonData)
+
     setSubmitBtnLoading(false)
+
     if (err) {
       return console.log(err)
     }
     if (res.data.success) {
-      console.log('res', res)
       store.dispatch(
         setFilters({
           location: data.visibility !== '' ? data.visibility : null,

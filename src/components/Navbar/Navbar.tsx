@@ -156,6 +156,13 @@ export const Navbar: React.FC<Props> = ({}) => {
     setIsSearchInputVisible(false)
   }
 
+  const searchResult = () => {
+    const val = data.search.value.trim()
+    if (val) {
+      router.push({ pathname: '/search', query: { ...router.query, q: val } })
+    }
+  }
+
   useEffect(() => {
     const handleBackButton = () => {
       if (isSearchInputVisible) {
@@ -180,253 +187,258 @@ export const Navbar: React.FC<Props> = ({}) => {
     setMenuActive(!menuActive)
   }
 
-  const searchResult = async (page = 1) => {
-    dispatch(resetSearch())
-    dispatch(setExplore(false))
-    dispatch(setSearchString(data.search.value.trim()))
-    if (router.pathname !== '/search') {
-      dispatch(showAllTrue())
-      router.push('/search')
-    }
-    const searchValue = data.search.value.trim()
-    const taglineValue = ''
-    const cityValue = ''
-    const hobbyValue = ''
-    const titleValue = ''
+  // const searchResult = async (page = 1) => {
+  //   dispatch(resetSearch())
+  //   dispatch(setExplore(false))
+  //   dispatch(setSearchString(data.search.value.trim()))
+  //   if (router.pathname !== '/search') {
+  //     dispatch(showAllTrue())
+  //     // router.push('/search')
+  //   }
+  //   const searchValue = data.search.value.trim()
+  //   const taglineValue = ''
+  //   const cityValue = ''
+  //   const hobbyValue = ''
+  //   const titleValue = ''
 
-    if (!searchValue && !taglineValue && !cityValue && !hobbyValue) {
-      console.log('Search fields are empty.')
-      return
-    }
+  //   if (!searchValue && !taglineValue && !cityValue && !hobbyValue) {
+  //     console.log('Search fields are empty.')
+  //     return
+  //   }
 
-    let searchCriteria = {
-      full_name: searchValue,
-      tagline: taglineValue,
-      city: cityValue,
-      hobby: hobbyValue,
-      title: titleValue,
-    }
+  //   router.push({
+  //     pathname: `/search`,
+  //     query: { q: searchValue },
+  //   })
 
-    try {
-      dispatch(setSearchLoading(true))
-      const { res: userRes, err: userErr } = await searchUsers({
-        full_name: searchValue,
-      })
-      if (userErr) {
-      } else {
-        if (userRes?.length < 10) {
-          const { res: taglineRes, err: taglineErr } = await searchUsers({
-            tagline: searchValue,
-          })
-          if (!taglineErr) {
-            const combinedResults = userRes.concat(taglineRes)
-            dispatch(setUserSearchResults(combinedResults))
-          }
-        } else {
-          dispatch(setUserSearchResults(userRes))
-        }
-      }
-      // Search by title
-      dispatch(setShowPageLoader(true))
-      const { res: titleRes, err: titleErr } = await searchPages({
-        title: searchValue,
-      })
+  //   let searchCriteria = {
+  //     full_name: searchValue,
+  //     tagline: taglineValue,
+  //     city: cityValue,
+  //     hobby: hobbyValue,
+  //     title: titleValue,
+  //   }
 
-      if (titleErr) {
-        console.error('An error occurred during the title search:', titleErr)
-        dispatch(setSearchLoading(false))
-        return
-      }
+  //   try {
+  //     dispatch(setSearchLoading(true))
+  //     const { res: userRes, err: userErr } = await searchUsers({
+  //       full_name: searchValue,
+  //     })
+  //     if (userErr) {
+  //     } else {
+  //       if (userRes?.length < 10) {
+  //         const { res: taglineRes, err: taglineErr } = await searchUsers({
+  //           tagline: searchValue,
+  //         })
+  //         if (!taglineErr) {
+  //           const combinedResults = userRes.concat(taglineRes)
+  //           dispatch(setUserSearchResults(combinedResults))
+  //         }
+  //       } else {
+  //         dispatch(setUserSearchResults(userRes))
+  //       }
+  //     }
+  //     // Search by title
+  //     dispatch(setShowPageLoader(true))
+  //     const { res: titleRes, err: titleErr } = await searchPages({
+  //       title: searchValue,
+  //     })
 
-      const titlePages = titleRes.data.slice(0, 100) // Get title search results
+  //     if (titleErr) {
+  //       console.error('An error occurred during the title search:', titleErr)
+  //       dispatch(setSearchLoading(false))
+  //       return
+  //     }
 
-      // Function to fetch tagline search results and process unique pages
+  //     const titlePages = titleRes.data.slice(0, 100) // Get title search results
 
-      dispatch(setShowPageLoader(true))
-      const { res: taglineRes, err: taglineErr } = await searchPages({
-        tagline: searchValue,
-      })
+  //     // Function to fetch tagline search results and process unique pages
 
-      if (!taglineErr) {
-        const taglinePages = taglineRes.data.slice(0, 50) // Get tagline search results
+  //     dispatch(setShowPageLoader(true))
+  //     const { res: taglineRes, err: taglineErr } = await searchPages({
+  //       tagline: searchValue,
+  //     })
 
-        // Combine titlePages and taglinePages and filter out duplicate URLs
-        const uniqueUrls = new Set<string>()
-        const uniquePages: any[] = [] // Use 'any[]' if you prefer not to define a specific type
-        console.warn({ titlePages, taglinePages })
-        ;[...titlePages, ...taglinePages].forEach((page) => {
-          if (
-            page &&
-            page.page_url &&
-            typeof page.page_url === 'string' &&
-            !uniqueUrls.has(page.page_url)
-          ) {
-            uniqueUrls.add(page.page_url)
-            uniquePages.push(page)
-          }
-        })
-        const user_id = isLoggedIn ? user?._id : null
-        console.log('sto')
-        const { res, err } = await addSearchHistory({
-          user_id: user_id,
-          no_of_pages: uniquePages?.length,
-          search_input: searchValue,
-        })
+  //     if (!taglineErr) {
+  //       const taglinePages = taglineRes.data.slice(0, 50) // Get tagline search results
 
-        // Filter uniquePages by type and is_published
-        const typeResultOne = uniquePages.filter(
-          (page) => page.type === 1 && page.is_published,
-        )
-        const typeResultTwo = uniquePages.filter(
-          (page) => page.type === 2 && page.is_published,
-        )
-        const typeResultThree = uniquePages.filter(
-          (page) => page.type === 3 && page.is_published,
-        )
+  //       // Combine titlePages and taglinePages and filter out duplicate URLs
+  //       const uniqueUrls = new Set<string>()
+  //       const uniquePages: any[] = [] // Use 'any[]' if you prefer not to define a specific type
+  //       console.warn({ titlePages, taglinePages })
+  //       ;[...titlePages, ...taglinePages].forEach((page) => {
+  //         if (
+  //           page &&
+  //           page.page_url &&
+  //           typeof page.page_url === 'string' &&
+  //           !uniqueUrls.has(page.page_url)
+  //         ) {
+  //           uniqueUrls.add(page.page_url)
+  //           uniquePages.push(page)
+  //         }
+  //       })
+  //       const user_id = isLoggedIn ? user?._id : null
+  //       console.log('sto')
+  //       const { res, err } = await addSearchHistory({
+  //         user_id: user_id,
+  //         no_of_pages: uniquePages?.length,
+  //         search_input: searchValue,
+  //       })
 
-        const typeResultFour = uniquePages.filter(
-          (page) => page.type === 4 && page.is_published,
-        )
+  //       // Filter uniquePages by type and is_published
+  //       const typeResultOne = uniquePages.filter(
+  //         (page) => page.type === 1 && page.is_published,
+  //       )
+  //       const typeResultTwo = uniquePages.filter(
+  //         (page) => page.type === 2 && page.is_published,
+  //       )
+  //       const typeResultThree = uniquePages.filter(
+  //         (page) => page.type === 3 && page.is_published,
+  //       )
 
-        // Dispatch the unique results to the appropriate actions
-        dispatch(
-          setTypeResultOne({
-            data: typeResultOne,
-            message: 'Search completed successfully.',
-            success: true,
-          }),
-        )
-        dispatch(
-          setTypeResultTwo({
-            data: typeResultTwo,
-            message: 'Search completed successfully.',
-            success: true,
-          }),
-        )
-        dispatch(
-          setTypeResultThree({
-            data: typeResultThree,
-            message: 'Search completed successfully.',
-            success: true,
-          }),
-        )
+  //       const typeResultFour = uniquePages.filter(
+  //         (page) => page.type === 4 && page.is_published,
+  //       )
 
-        dispatch(
-          setTypeResultFour({
-            data: typeResultFour,
-            message: 'Search completed successfully.',
-            success: true,
-          }),
-        )
-      }
+  //       // Dispatch the unique results to the appropriate actions
+  //       dispatch(
+  //         setTypeResultOne({
+  //           data: typeResultOne,
+  //           message: 'Search completed successfully.',
+  //           success: true,
+  //         }),
+  //       )
+  //       dispatch(
+  //         setTypeResultTwo({
+  //           data: typeResultTwo,
+  //           message: 'Search completed successfully.',
+  //           success: true,
+  //         }),
+  //       )
+  //       dispatch(
+  //         setTypeResultThree({
+  //           data: typeResultThree,
+  //           message: 'Search completed successfully.',
+  //           success: true,
+  //         }),
+  //       )
 
-      dispatch(setShowPageLoader(false))
+  //       dispatch(
+  //         setTypeResultFour({
+  //           data: typeResultFour,
+  //           message: 'Search completed successfully.',
+  //           success: true,
+  //         }),
+  //       )
+  //     }
 
-      const query = `level=1&level=2&level=3&level=4&level=5&search=${searchValue}`
-      dispatch(setShowPageLoader(true))
-      const { res: hobbyRes, err: hobbyErr } = await getAllHobbies(query)
-      if (hobbyErr) {
-        console.error('An error occurred during the page search:', hobbyErr)
-      } else {
-        const sortedHobbies = hobbyRes.data.hobbies.sort((a: any, b: any) => {
-          const indexA = a.display
-            .toLowerCase()
-            .indexOf(searchValue.toLowerCase())
-          const indexB = b.display
-            .toLowerCase()
-            .indexOf(searchValue.toLowerCase())
+  //     dispatch(setShowPageLoader(false))
 
-          if (indexA === 0 && indexB !== 0) {
-            return -1
-          } else if (indexB === 0 && indexA !== 0) {
-            return 1
-          }
-          return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
-        })
-        dispatch(
-          setHobbiesSearchResult({
-            data: sortedHobbies,
-            message: 'Search completed successfully.',
-            success: true,
-          }),
-        )
-      }
+  //     const query = `level=1&level=2&level=3&level=4&level=5&search=${searchValue}`
+  //     dispatch(setShowPageLoader(true))
+  //     const { res: hobbyRes, err: hobbyErr } = await getAllHobbies(query)
+  //     if (hobbyErr) {
+  //       console.error('An error occurred during the page search:', hobbyErr)
+  //     } else {
+  //       const sortedHobbies = hobbyRes.data.hobbies.sort((a: any, b: any) => {
+  //         const indexA = a.display
+  //           .toLowerCase()
+  //           .indexOf(searchValue.toLowerCase())
+  //         const indexB = b.display
+  //           .toLowerCase()
+  //           .indexOf(searchValue.toLowerCase())
 
-      dispatch(setShowPageLoader(true))
-      const { res: blogRes, err: BlogErr } = await searchBlogs({
-        search: searchValue,
-      })
+  //         if (indexA === 0 && indexB !== 0) {
+  //           return -1
+  //         } else if (indexB === 0 && indexA !== 0) {
+  //           return 1
+  //         }
+  //         return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
+  //       })
+  //       dispatch(
+  //         setHobbiesSearchResult({
+  //           data: sortedHobbies,
+  //           message: 'Search completed successfully.',
+  //           success: true,
+  //         }),
+  //       )
+  //     }
 
-      if (BlogErr) {
-        console.error('An error occurred during the page search:', BlogErr)
-      } else {
-        const sortedBlog = blogRes?.data?.sort((a: any, b: any) => {
-          const titleA = a.title?.toLowerCase()
-          const titleB = b.title?.toLowerCase()
-          const indexA = titleA.indexOf(searchValue?.toLowerCase())
-          const indexB = titleB.indexOf(searchValue?.toLowerCase())
+  //     dispatch(setShowPageLoader(true))
+  //     const { res: blogRes, err: BlogErr } = await searchBlogs({
+  //       search: searchValue,
+  //     })
 
-          if (indexA === 0 && indexB !== 0) {
-            return -1
-          } else if (indexB === 0 && indexA !== 0) {
-            return 1
-          }
-          return titleA.localeCompare(titleB)
-        })
+  //     if (BlogErr) {
+  //       console.error('An error occurred during the page search:', BlogErr)
+  //     } else {
+  //       const sortedBlog = blogRes?.data?.sort((a: any, b: any) => {
+  //         const titleA = a.title?.toLowerCase()
+  //         const titleB = b.title?.toLowerCase()
+  //         const indexA = titleA.indexOf(searchValue?.toLowerCase())
+  //         const indexB = titleB.indexOf(searchValue?.toLowerCase())
 
-        console.log('blog search results:', sortedBlog)
-        dispatch(
-          setBlogsSearchResult({
-            data: sortedBlog,
-            message: 'Search completed successfully.',
-            success: true,
-          }),
-        )
-      }
-      // if (isLoggedIn) {
-      //   const { res: PostRes, err: PostErr } = await searchPosts({
-      //     content: searchValue,
-      //   })
-      //   if (PostErr) {
-      //     console.error('An error occurred during the page search:', PostErr)
-      //   } else {
-      //     const sortedposts = PostRes?.data?.sort((a: any, b: any) => {
-      //       const indexA = a?.content
-      //         .toLowerCase()
-      //         .indexOf(searchValue.toLowerCase())
-      //       const indexB = b?.content
-      //         .toLowerCase()
-      //         .indexOf(searchValue.toLowerCase())
+  //         if (indexA === 0 && indexB !== 0) {
+  //           return -1
+  //         } else if (indexB === 0 && indexA !== 0) {
+  //           return 1
+  //         }
+  //         return titleA.localeCompare(titleB)
+  //       })
 
-      //       if (indexA === 0 && indexB !== 0) {
-      //         return -1
-      //       } else if (indexB === 0 && indexA !== 0) {
-      //         return 1
-      //       }
-      //       return a?.content
-      //         ?.toLowerCase()
-      //         ?.localeCompare(b?.content?.toLowerCase())
-      //     })
-      //     console.warn('posts search results:', PostRes?.data)
-      //     dispatch(
-      //       setPostsSearchResult({
-      //         data: sortedposts,
-      //         message: 'Search completed successfully.',
-      //         success: true,
-      //       }),
-      //     )
-      //   }
-      // }
+  //       console.log('blog search results:', sortedBlog)
+  //       dispatch(
+  //         setBlogsSearchResult({
+  //           data: sortedBlog,
+  //           message: 'Search completed successfully.',
+  //           success: true,
+  //         }),
+  //       )
+  //     }
+  //     // if (isLoggedIn) {
+  //     //   const { res: PostRes, err: PostErr } = await searchPosts({
+  //     //     content: searchValue,
+  //     //   })
+  //     //   if (PostErr) {
+  //     //     console.error('An error occurred during the page search:', PostErr)
+  //     //   } else {
+  //     //     const sortedposts = PostRes?.data?.sort((a: any, b: any) => {
+  //     //       const indexA = a?.content
+  //     //         .toLowerCase()
+  //     //         .indexOf(searchValue.toLowerCase())
+  //     //       const indexB = b?.content
+  //     //         .toLowerCase()
+  //     //         .indexOf(searchValue.toLowerCase())
 
-      dispatch(setSearchLoading(false))
-      dispatch(setShowPageLoader(false))
-      dispatch(showAllTrue())
-    } catch (error) {
-      dispatch(setSearchLoading(false))
-      dispatch(setShowPageLoader(false))
-      console.error('An error occurred during the combined search:', error)
-    }
-  }
+  //     //       if (indexA === 0 && indexB !== 0) {
+  //     //         return -1
+  //     //       } else if (indexB === 0 && indexA !== 0) {
+  //     //         return 1
+  //     //       }
+  //     //       return a?.content
+  //     //         ?.toLowerCase()
+  //     //         ?.localeCompare(b?.content?.toLowerCase())
+  //     //     })
+  //     //     console.warn('posts search results:', PostRes?.data)
+  //     //     dispatch(
+  //     //       setPostsSearchResult({
+  //     //         data: sortedposts,
+  //     //         message: 'Search completed successfully.',
+  //     //         success: true,
+  //     //       }),
+  //     //     )
+  //     //   }
+  //     // }
+
+  //     dispatch(setSearchLoading(false))
+  //     dispatch(setShowPageLoader(false))
+  //     dispatch(showAllTrue())
+  //   } catch (error) {
+  //     dispatch(setSearchLoading(false))
+  //     dispatch(setShowPageLoader(false))
+  //     console.error('An error occurred during the combined search:', error)
+  //   }
+  // }
 
   const ExplorePeople = async () => {
     const { res: PeopleRes, err: PeopleErr } = await getListingPages(
@@ -802,7 +814,10 @@ export const Navbar: React.FC<Props> = ({}) => {
                             dispatch(toggleShowAllPeople())
                             dispatch(setExplore(true))
 
-                            router.push('/search')
+                            router.push({
+                              pathname: '/search',
+                              query: { filter: 'people' },
+                            })
                           }}
                         >
                           People - Expertise
@@ -835,7 +850,10 @@ export const Navbar: React.FC<Props> = ({}) => {
 
                             dispatch(toggleShowAllPlace())
                             dispatch(setExplore(true))
-                            router.push('/search')
+                            router.push({
+                              pathname: '/search',
+                              query: { filter: 'places' },
+                            })
                           }}
                         >
                           Places - Venues
@@ -862,7 +880,10 @@ export const Navbar: React.FC<Props> = ({}) => {
 
                             dispatch(toggleShowAllEvent())
                             dispatch(setExplore(true))
-                            router.push('/search')
+                            router.push({
+                              pathname: '/search',
+                              query: { filter: 'events' },
+                            })
                           }}
                         >
                           Programs - Events
@@ -890,7 +911,10 @@ export const Navbar: React.FC<Props> = ({}) => {
                             setShowDropdown(null)
                             dispatch(toggleShowAllProducts())
                             dispatch(setExplore(true))
-                            router.push('/search')
+                            router.push({
+                              pathname: '/search',
+                              query: { filter: 'products' },
+                            })
                           }}
                         >
                           Products - Store
@@ -916,7 +940,10 @@ export const Navbar: React.FC<Props> = ({}) => {
                             setShowDropdown(null)
                             dispatch(toggleShowAllBlogs())
                             dispatch(setExplore(true))
-                            router.push('/search')
+                            router.push({
+                              pathname: '/search',
+                              query: { filter: 'blogs' },
+                            })
                           }}
                         >
                           Perspectives - Blogs
@@ -949,7 +976,10 @@ export const Navbar: React.FC<Props> = ({}) => {
                             setShowDropdown(null)
                             dispatch(toggleShowAllPosts())
                             dispatch(setExplore(true))
-                            router.push('/search')
+                            router.push({
+                              pathname: '/search',
+                              query: { filter: 'posts' },
+                            })
                           }}
                         >
                           Posts - Community
