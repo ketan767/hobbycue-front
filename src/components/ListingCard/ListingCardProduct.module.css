@@ -3,7 +3,7 @@
   font-weight: 600;
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .cta_button {
@@ -13,7 +13,7 @@
   border-color: #8064a2;
   color: #8064a2;
   font-weight: 600;
-  font-size: 15px;
+  font-size: 13px;
 }
 .cta_button:hover {
   background-color: #8064a2;
@@ -43,7 +43,7 @@
 
 .contentHead {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   /* margin-bottom: 17px; */
 }
 .contentImageContainer {
@@ -61,7 +61,7 @@
 }
 
 .contentTitle {
-  padding: 8px 0;
+  padding: 8px 0 0 0;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -70,9 +70,7 @@
 
 .title {
   font-weight: 500;
-  line-height: 18px;
-  font-size: 18px;
-  margin-bottom: 12px;
+  font-size: 14px;
   text-overflow: ellipsis;
   overflow: hidden;
 }
@@ -88,16 +86,37 @@
   column-gap: 4px;
 }
 
+.soldBy {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: #6d747a;
+  white-space: normal;
+}
+
 .tagline {
   font-weight: 500;
   font-size: 12px;
   line-height: 18px;
   color: #6d747a;
-  margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .bottom {
   padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.bottomFooter {
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
 }
 
 .hobbies {

@@ -35,6 +35,7 @@ type Props = {
   calendarIcon?: JSX.Element
   clockIcon?: JSX.Element
   isMobile?: boolean
+  style?: React.CSSProperties
 }
 
 const ListingCardProduct: React.FC<Props> = ({
@@ -43,6 +44,7 @@ const ListingCardProduct: React.FC<Props> = ({
   calendarIcon,
   clockIcon,
   isMobile,
+  style,
 }) => {
   return (
     <>
@@ -50,6 +52,7 @@ const ListingCardProduct: React.FC<Props> = ({
         key={data?._id}
         href={`/${pageType(data?.type)}/${data?.page_url}`}
         className={styles.container}
+        style={style}
       >
         {itsMe ? (
           <div
@@ -82,24 +85,36 @@ const ListingCardProduct: React.FC<Props> = ({
                 className={`${styles['contentImageContainer']} default-product-listing-icon`}
               ></div>
             )}
-            <div className={styles.contentTitle}>
-              {data?.product_variant?.variations?.[0]?.value ? (
-                <p className={styles.price}>
-                  {rupeesIcon}
-                  {data?.product_variant?.variations?.[0]?.value}
+            <div
+              className={styles.contentTitle}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+              }}
+            >
+              <div className="">
+                {data?.product_variant?.variations?.[0]?.value ? (
+                  <p className={styles.price}>
+                    {rupeesIcon}
+                    {data?.product_variant?.variations?.[0]?.value}
+                  </p>
+                ) : (
+                  <p
+                    style={{
+                      whiteSpace: 'normal',
+                      marginBottom: '1rem',
+                    }}
+                  >
+                    Currently Unavailable
+                  </p>
+                )}
+                <p className={styles.soldBy}>
+                  <span style={{ color: 'black' }}>Sold by:</span>{' '}
+                  {data?.seller?.title}
                 </p>
-              ) : (
-                <p
-                  className={styles.price}
-                  style={{ fontSize: '14px', lineHeight: '36px' }}
-                >
-                  Currently Unavailable
-                </p>
-              )}
-              <p className={styles.tagline}>
-                <span style={{ color: 'black' }}>Sold by:</span>{' '}
-                {data?.seller?.title}
-              </p>
+                {/* Add cart icon here */}
+              </div>
               {/* <div className={styles['time-and-title']}>
                 <p
                   className={
@@ -169,15 +184,19 @@ const ListingCardProduct: React.FC<Props> = ({
                   ''
                 )}
               </div> */}
-              <button className={styles.cta_button}>{data?.cta_text}</button>
+              <div className="">
+                <button className={styles.cta_button}>{data?.cta_text}</button>
+              </div>
             </div>
           </div>
 
           <div className={styles.bottom}>
-            <p className={styles.title}>{data.title}</p>
-            <p className={styles.tagline}> {data?.tagline} </p>
+            <div className="">
+              <p className={styles.title}>{data.title}</p>
+              <p className={styles.tagline}> {data?.tagline} </p>
+            </div>
 
-            <div style={{ display: 'flex' }}>
+            <div className={styles.bottomFooter}>
               <Image src={HobbyIcon} width={16} height={16} alt="hobby" />
               <div className={styles.hobbies}>
                 {data?._hobbies?.map((item: any) => {

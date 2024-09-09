@@ -795,28 +795,13 @@ export const Navbar: React.FC<Props> = ({}) => {
                     <section className={styles['list']}>
                       <h4>
                         <Link
-                          href={'/search'}
+                          href={''}
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
-
-                            setData((prevData) => ({
-                              ...prevData,
-                              search: {
-                                ...prevData.search,
-                                value: '',
-                              },
-                            }))
-                            dispatch(resetSearch())
                             await ExplorePeople()
-                            setShowDropdown(null)
-
-                            dispatch(toggleShowAllPeople())
-                            dispatch(setExplore(true))
-
                             router.push({
-                              pathname: '/search',
-                              query: { filter: 'people' },
+                              pathname: '/explore/people',
                             })
                           }}
                         >
@@ -832,27 +817,13 @@ export const Navbar: React.FC<Props> = ({}) => {
                     <section className={styles['list']}>
                       <h4>
                         <Link
-                          href={'/search'}
+                          href={''}
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
-
-                            setData((prevData) => ({
-                              ...prevData,
-                              search: {
-                                ...prevData.search,
-                                value: '',
-                              },
-                            }))
-                            dispatch(resetSearch())
                             await ExplorePlaces()
-                            setShowDropdown(null)
-
-                            dispatch(toggleShowAllPlace())
-                            dispatch(setExplore(true))
                             router.push({
-                              pathname: '/search',
-                              query: { filter: 'places' },
+                              pathname: '/explore/places',
                             })
                           }}
                         >
@@ -863,26 +834,13 @@ export const Navbar: React.FC<Props> = ({}) => {
                     <section className={styles['list']}>
                       <h4>
                         <Link
-                          href={'/search'}
+                          href={''}
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
-                            setData((prevData) => ({
-                              ...prevData,
-                              search: {
-                                ...prevData.search,
-                                value: '',
-                              },
-                            }))
-                            dispatch(resetSearch())
                             await ExploreEvents()
-                            setShowDropdown(null)
-
-                            dispatch(toggleShowAllEvent())
-                            dispatch(setExplore(true))
                             router.push({
-                              pathname: '/search',
-                              query: { filter: 'events' },
+                              pathname: '/explore/programs',
                             })
                           }}
                         >
@@ -893,27 +851,13 @@ export const Navbar: React.FC<Props> = ({}) => {
                     <section className={styles['list']}>
                       <h4>
                         <Link
-                          href={'/search'}
+                          href={''}
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
-
-                            setData((prevData) => ({
-                              ...prevData,
-                              search: {
-                                ...prevData.search,
-                                value: '',
-                              },
-                            }))
-                            dispatch(resetSearch())
                             await ExploreProducts()
-
-                            setShowDropdown(null)
-                            dispatch(toggleShowAllProducts())
-                            dispatch(setExplore(true))
                             router.push({
-                              pathname: '/search',
-                              query: { filter: 'products' },
+                              pathname: '/explore/products',
                             })
                           }}
                         >
@@ -923,36 +867,25 @@ export const Navbar: React.FC<Props> = ({}) => {
                     </section>
                     <section className={styles['list']}>
                       <h4>
-                        <a
+                        <Link
+                          href=""
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
-
-                            setData((prevData) => ({
-                              ...prevData,
-                              search: {
-                                ...prevData.search,
-                                value: '',
-                              },
-                            }))
-                            dispatch(resetSearch())
                             await ExploreBlogs()
-                            setShowDropdown(null)
-                            dispatch(toggleShowAllBlogs())
-                            dispatch(setExplore(true))
                             router.push({
-                              pathname: '/search',
-                              query: { filter: 'blogs' },
+                              pathname: '/explore/blogs',
                             })
                           }}
                         >
                           Perspectives - Blogs
-                        </a>
+                        </Link>
                       </h4>
                     </section>
                     <section className={styles['list']}>
                       <h4>
-                        <a
+                        <Link
+                          href=""
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             if (!isLoggedIn) {
@@ -962,28 +895,14 @@ export const Navbar: React.FC<Props> = ({}) => {
                               return
                             }
                             e.preventDefault()
-
-                            setData((prevData) => ({
-                              ...prevData,
-                              search: {
-                                ...prevData.search,
-                                value: '',
-                              },
-                            }))
-
-                            dispatch(resetSearch())
                             await ExplorePosts()
-                            setShowDropdown(null)
-                            dispatch(toggleShowAllPosts())
-                            dispatch(setExplore(true))
                             router.push({
-                              pathname: '/search',
-                              query: { filter: 'posts' },
+                              pathname: '/explore/posts',
                             })
                           }}
                         >
                           Posts - Community
-                        </a>
+                        </Link>
                       </h4>
                     </section>
                   </div>
