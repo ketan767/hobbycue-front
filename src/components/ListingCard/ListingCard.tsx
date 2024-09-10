@@ -17,9 +17,10 @@ import ListingCardProduct from './ListingCardProduct'
 
 type Props = {
   data: any
+  style?: React.CSSProperties
 }
 
-const ListingCard: React.FC<Props> = ({ data }) => {
+const ListingCard: React.FC<Props> = ({ data, style }) => {
   const { user } = useSelector((state: RootState) => state.user)
   const type = getListingTypeName(data?.type)
 
@@ -126,6 +127,7 @@ const ListingCard: React.FC<Props> = ({ data }) => {
         calendarIcon={calendarIcon}
         clockIcon={clockIcon}
         isMobile={isMobile}
+        style={style}
       />
     )
   }
@@ -136,6 +138,7 @@ const ListingCard: React.FC<Props> = ({ data }) => {
         key={data?._id}
         href={`/${pageType(data?.type)}/${data?.page_url}`}
         className={styles.container}
+        style={style}
       >
         {itsMe ? (
           <div

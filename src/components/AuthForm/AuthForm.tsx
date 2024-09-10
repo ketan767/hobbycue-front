@@ -347,51 +347,57 @@ const AuthForm: React.FC<Props> = (props) => {
 
   const handleFacebookAuth = async (e: any) => {
     dispatch(setShowPageLoader(true))
-
-    const { err, res } = await facebookAuth({
-      accessToken: e.accessToken,
-      userId: e.userID,
-      name: e.name,
-      browser: deviceInfo?.browser,
-      device: deviceInfo.device,
-    })
-    dispatch(setShowPageLoader(false))
-    if (err) return console.log(err)
-    if (res.status === 200 && res.data.success) {
-      localStorage.setItem('token', res.data.data.token)
-      dispatch(updateIsLoggedIn(true))
-      dispatch(closeModal())
-      if (e.profileObj.imageUrl) {
-        const googleImageUrl = e.profileObj.imageUrl
-        try {
-          const imageBlob = await fetch(googleImageUrl).then((res) =>
-            res.blob(),
-          )
-          const formData = new FormData()
-          formData.append('user-profile', imageBlob)
-          const updateResponse = await updateUserProfile(formData)
-          console.log('Update Profile Image Response:', updateResponse)
-        } catch (uploadError) {
-          console.error('Error uploading profile image:', uploadError)
+    try {
+      const { err, res } = await facebookAuth({
+        accessToken: e.accessToken,
+        userId: e.userID,
+        name: e.name,
+        browser: deviceInfo?.browser,
+        device: deviceInfo.device,
+      })
+      dispatch(setShowPageLoader(false))
+      if (err) {
+        console.log(err)
+        throw new Error(err)
+      }
+      if (res.status === 200 && res.data.success) {
+        localStorage.setItem('token', res.data.data.token)
+        dispatch(updateIsLoggedIn(true))
+        dispatch(closeModal())
+        if (e.profileObj.imageUrl) {
+          const googleImageUrl = e.profileObj.imageUrl
+          try {
+            const imageBlob = await fetch(googleImageUrl).then((res) =>
+              res.blob(),
+            )
+            const formData = new FormData()
+            formData.append('user-profile', imageBlob)
+            const updateResponse = await updateUserProfile(formData)
+            console.log('Update Profile Image Response:', updateResponse)
+          } catch (uploadError) {
+            console.error('Error uploading profile image:', uploadError)
+          }
         }
-      }
-      if (res?.data?.message === 'User registered successfully') {
-        dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
-      }
+        if (res?.data?.message === 'User registered successfully') {
+          dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
+        }
 
-      const { err: error, res: response } = await getMyProfileDetail()
-      if (response?.data?.data?.user?.is_onboarded) {
-        if (router.pathname === '/') {
-          router.push('/community', undefined, { shallow: false })
+        const { err: error, res: response } = await getMyProfileDetail()
+        if (response?.data?.data?.user?.is_onboarded) {
+          if (router.pathname === '/') {
+            router.push('/community', undefined, { shallow: false })
+          } else {
+            window.location.reload()
+          }
         } else {
-          window.location.reload()
+          dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
+          router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
         }
-      } else {
-        dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
-        router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
-      }
 
-      console.log('user', user)
+        console.log('user', user)
+      }
+    } catch (err) {
+      console.log('asifs err', err)
     }
   }
   const getButtonText = () => {
