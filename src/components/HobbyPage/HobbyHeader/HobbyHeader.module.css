@@ -31,8 +31,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 142px;
-  height: 162px;
+  width: 144px;
+  height: 164px;
   clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
   z-index: -1;
 }

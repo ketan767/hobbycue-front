@@ -817,12 +817,14 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         <div className={styles.hobbyAvtar}>
                           {/* Render the image */}
                           {hobby.profile_image ? (
-                            <img
-                              src={hobby.profile_image}
-                              alt={`${hobby.display}'s `}
-                              width={64}
-                              height={64}
-                            />
+                            <div className={styles['border-div']}>
+                              <img
+                                src={hobby.profile_image}
+                                alt={`${hobby.display}'s `}
+                                width={64}
+                                height={64}
+                              />
+                            </div>
                           ) : (
                             <>
                               <div
