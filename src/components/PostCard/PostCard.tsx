@@ -740,7 +740,9 @@ const PostCard: React.FC<Props> = (props) => {
             </section>
 
             {/* Comments Section */}
-            {showComments && <PostComments data={postData} styles={styles} />}
+            {(showComments || router.pathname.startsWith('/post/')) && (
+              <PostComments data={postData} styles={styles} />
+            )}
           </footer>
         )}
       </div>

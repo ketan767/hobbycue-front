@@ -218,6 +218,9 @@ export const PostModal: React.FC<Props> = ({
                     activePost?._author?.page_url
                   }`
             }
+            onClick={() => {
+              dispatch(closeModal())
+            }}
           >
             <div className={`${styles['header-user']}`}>
               {activePost?._author?.profile_image ? (

@@ -133,7 +133,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
         </title>
       </Head>
       <CommunityPageLayout activeTab="posts" singlePostPage={true}>
-        <main>
+        <main style={{ paddingBottom: '3.5rem', minHeight: '100vh' }}>
           {!postData || isLoadingPosts ? (
             <>
               <PostCardSkeletonLoading />

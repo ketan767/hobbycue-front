@@ -163,7 +163,7 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
             )
           })}
         {isLoggedIn && unpinnnedPosts.length > 0 && (
-          <PostWrapper title="Recent Post">
+          <PostWrapper title="Recent Posts">
             {unpinnnedPosts.map((post: any) => {
               return (
                 <PostCard
