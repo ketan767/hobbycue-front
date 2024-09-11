@@ -707,9 +707,10 @@
     align-items: stretch;
     gap: 9px;
   }
-  .profile-img-wrapper .name-container,
-.tagline {
-
+  .profile-img-wrapper .name-container {
+    display: block;
+  }
+  .tagline {
     padding-top: 8px !important;
     margin-bottom: 24px !important;
     display: flex !important;
