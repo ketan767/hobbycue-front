@@ -20,6 +20,7 @@ import { useRouter } from 'next/router'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
 import { setShowPageLoader } from '@/redux/slices/site'
 import Head from 'next/head'
+import hobbycuelogo from '@/assets/image/logo-full.svg'
 
 type Props = {
   data: ListingPageData
@@ -91,7 +92,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
       if (data?.postsData?.media[0]) {
         return data?.postsData?.media[0]
       } else {
-        return ''
+        return hobbycuelogo
       }
     }
   }

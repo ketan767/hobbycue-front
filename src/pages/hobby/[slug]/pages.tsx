@@ -95,8 +95,6 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
     setExpandAll(value)
     dispatch(updateHobbyMenuExpandAll(value))
   }
-  console.log('hobby', data)
-  console.log('pages', pages)
 
   return (
     <>

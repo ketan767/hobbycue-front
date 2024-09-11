@@ -57,7 +57,7 @@
   color: #6D747A ;
 }
 .post-card-wrapper .body .content {
-  padding: var(--spacing-8) var(--spacing-12);
+  padding: 0 12px 8px 12px;
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;

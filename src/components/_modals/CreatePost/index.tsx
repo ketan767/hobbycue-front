@@ -11,6 +11,8 @@ import {
   createUserPost,
   getMetadata,
   uploadImage,
+  updateListingPost,
+  updateUserPost,
 } from '@/services/post.service'
 import { closeModal } from '@/redux/slices/modal'
 
@@ -80,7 +82,7 @@ export const CreatePost: React.FC<Props> = ({
   onStatusChange,
   propData,
 }) => {
-  console.warn({ propData })
+  console.warn('propsdata', propData)
   const router = useRouter()
   const { user, listing, activeProfile } = useSelector(
     (state: RootState) => state.user,
@@ -134,7 +136,7 @@ export const CreatePost: React.FC<Props> = ({
         dispatch(updateActiveProfile({ type: 'user', data: user }))
       }
     } else if (propData && propData._author !== 'User') {
-      dispatch(updateActiveProfile({ type: 'user', data: propData._author }))
+      dispatch(updateActiveProfile({ type: 'listing', data: propData._author }))
     }
   }, [propData])
 
@@ -565,7 +567,9 @@ export const CreatePost: React.FC<Props> = ({
 
     if (data.type === 'listing') {
       jsonData.listingId = data.data._id
-      const { err, res } = await createListingPost(jsonData)
+      const { err, res } = editing
+        ? await updateListingPost(jsonData, propData._id)
+        : await createListingPost(jsonData)
       setSubmitBtnLoading(false)
       if (err) {
         return console.log(err)
@@ -589,7 +593,9 @@ export const CreatePost: React.FC<Props> = ({
       return
     }
 
-    const { err, res } = await createUserPost(jsonData)
+    const { err, res } = editing
+      ? await updateUserPost(jsonData, propData?._id)
+      : await createUserPost(jsonData)
     setSubmitBtnLoading(false)
     if (err) {
       return console.log(err)
