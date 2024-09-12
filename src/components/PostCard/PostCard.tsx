@@ -40,7 +40,9 @@ const PostCard: React.FC<Props> = (props) => {
   // const [type, setType] = useState<'User' | 'Listing'>()
   // console.warn({props})
   const router = useRouter()
-  const { user, activeProfile } = useSelector((state: RootState) => state.user)
+  const { user, activeProfile, isLoggedIn } = useSelector(
+    (state: RootState) => state.user,
+  )
   const [has_link, setHas_link] = useState(props.postData.has_link)
   const [snackbar, setSnackbar] = useState({
     type: 'success',
@@ -392,8 +394,10 @@ const PostCard: React.FC<Props> = (props) => {
                 viewBox="0 0 24 24"
                 fill="none"
                 onClick={() => {
-                  if (fromProfile && postedByMe) {
+                  if (isLoggedIn && fromProfile && postedByMe) {
                     setOptionsActive(true)
+                  } else if (!isLoggedIn) {
+                    dispatch(openModal({ type: 'auth', closable: true }))
                   } else setOpenAction(true)
                 }}
               >

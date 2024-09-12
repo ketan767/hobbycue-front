@@ -84,7 +84,7 @@ export const CreatePost: React.FC<Props> = ({
 }) => {
   console.warn('propsdata', propData)
   const router = useRouter()
-  const { user, listing, activeProfile } = useSelector(
+  const { user, listing, activeProfile, isLoggedIn } = useSelector(
     (state: RootState) => state.user,
   )
   const dispatch = useDispatch()
@@ -639,7 +639,7 @@ export const CreatePost: React.FC<Props> = ({
   const handleAddressChange = (value: string) => {
     setData((prev: any) => ({ ...prev, visibility: value }))
   }
-  console.log({ hobbies })
+
   const isMobile = useMediaQuery('(max-width:1100px)')
   if (confirmationModal) {
     return (
