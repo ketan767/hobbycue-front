@@ -16,6 +16,7 @@ import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPag
 import styles from '@/styles/Page.module.css'
 import { useMediaQuery } from '@mui/material'
 import ListingRelatedTab from '@/components/ListingPage/ListingPageRelated/ListingRelatedTab'
+import { pageType } from '@/utils'
 
 type Props = { data: ListingPageData }
 
@@ -100,6 +101,12 @@ const ListingHome: React.FC<Props> = (props) => {
   return (
     <>
       <Head>
+        <link
+          rel="canonical"
+          href={`${process.env.NEXT_PUBLIC_BASE_URL}/${pageType(
+            props?.data?.pageData?.type,
+          )}/${props?.data?.pageData?.page_url}/related`}
+        />
         <meta
           property="og:image"
           content={`${props?.data?.pageData?.profile_image}`}

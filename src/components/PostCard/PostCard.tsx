@@ -230,7 +230,7 @@ const PostCard: React.FC<Props> = (props) => {
   const handleShowDelete = (postid: string) => {
     setDeleteData({ open: true, _id: postid })
   }
-  console.warn('postdataaaaaaaa', postData)
+
   const isMobile = useMediaQuery('(max-width:1100px)')
   const processedContent = postData.content
     .replace(/<img\b[^>]*>/g, '') // Remove all images

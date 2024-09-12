@@ -129,15 +129,6 @@ export const CreatePost: React.FC<Props> = ({
     if (propData && propData._id) {
       setEditing(true)
     }
-    if (propData && propData.author_type === 'User') {
-      if (activeProfile.type === 'user') {
-        return
-      } else {
-        dispatch(updateActiveProfile({ type: 'user', data: user }))
-      }
-    } else if (propData && propData._author !== 'User') {
-      dispatch(updateActiveProfile({ type: 'listing', data: propData._author }))
-    }
   }, [propData])
 
   useEffect(() => {
@@ -157,7 +148,6 @@ export const CreatePost: React.FC<Props> = ({
     })
     const updateFilters = () => {
       if (propData && propData._hobby) {
-        console.log(propData, 'hobby')
         setData((prev) => ({
           ...prev,
           hobby: propData._hobby as DropdownListItem,

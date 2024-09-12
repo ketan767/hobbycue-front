@@ -20,7 +20,7 @@ import { useRouter } from 'next/router'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
 import { setShowPageLoader } from '@/redux/slices/site'
 import Head from 'next/head'
-import hobbycuelogo from '@/assets/image/logo-full.svg'
+import hobbycuelogo from '@/assets/image/HobbyCue_v2.png'
 
 type Props = {
   data: ListingPageData
