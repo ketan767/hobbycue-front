@@ -776,7 +776,7 @@ const ListingPageMain: React.FC<Props> = ({
                 }}
                 expandData={showRelatedListing1}
               >
-                <h4 className={styles['heading']}>
+                <h4 className={`${styles['heading']}`}>
                   {' '}
                   {data?.related_listings_left.relation
                     ? data?.related_listings_left.relation
@@ -784,9 +784,7 @@ const ListingPageMain: React.FC<Props> = ({
                 </h4>
                 <div
                   className={`${styles['display-desktop']}${
-                    relatedListingsStates?.[data?._id]
-                      ? ' ' + styles['display-mobile']
-                      : ''
+                    showRelatedListing1 ? ' ' + styles['display-mobile'] : ''
                   }`}
                 >
                   {!listingPagesLeft || listingPagesLeft.length === 0 ? null : (
@@ -1215,9 +1213,7 @@ const ListingPageMain: React.FC<Props> = ({
                     <>
                       <div
                         className={`${styles['display-desktop']}${
-                          locationStates?.[data?._id]
-                            ? ' ' + styles['display-mobile']
-                            : ''
+                          showLocation ? ' ' + styles['display-mobile'] : ''
                         }`}
                       >
                         {listingLayoutMode === 'view' && (
