@@ -9,6 +9,7 @@ import {
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 
 type Props = {
   styles: any
@@ -158,6 +159,19 @@ const PostCommentVotes: React.FC<Props> = ({
     dispatch(showProfileError(true))
   }
 
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
+  const showFeatureUnderDevelopment = () => {
+    setSnackbar({
+      display: true,
+      type: 'warning',
+      message: 'This feature is under development',
+    })
+  }
+
   useEffect(() => {
     updateVoteStatus()
   }, [comment, activeProfile.data, activeProfile.type])
@@ -167,6 +181,7 @@ const PostCommentVotes: React.FC<Props> = ({
       <div className={styles['upvote-downvote']}>
         <div
           onClick={() => {
+            showFeatureUnderDevelopment()
             if (isLoggedIn) {
               if (user.is_onboarded) {
                 handleUpVote
@@ -196,6 +211,7 @@ const PostCommentVotes: React.FC<Props> = ({
         <span className={styles['divider']}></span>
         <svg
           onClick={() => {
+            showFeatureUnderDevelopment()
             if (isLoggedIn) {
               if (user.is_onboarded) {
                 handleDownVote
@@ -219,6 +235,16 @@ const PostCommentVotes: React.FC<Props> = ({
           />
         </svg>
       </div>
+      {
+        <CustomSnackbar
+          message={snackbar?.message}
+          triggerOpen={snackbar?.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

@@ -225,7 +225,11 @@ export const PostModal: React.FC<Props> = ({
             <div className={`${styles['header-user']}`}>
               {activePost?._author?.profile_image ? (
                 <img
-                  className={styles['profile-img']}
+                  className={
+                    activePost?.author_type === 'User'
+                      ? styles['profile-img']
+                      : styles['page-img']
+                  }
                   src={activePost._author.profile_image}
                   alt=""
                   width={40}
@@ -233,7 +237,11 @@ export const PostModal: React.FC<Props> = ({
                 />
               ) : (
                 <Image
-                  className={styles['profile-img']}
+                  className={
+                    activePost?.author_type === 'User'
+                      ? styles['profile-img']
+                      : styles['page-img']
+                  }
                   src={defaultUserImage}
                   alt=""
                   width={40}
