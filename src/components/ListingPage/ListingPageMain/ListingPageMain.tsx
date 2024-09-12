@@ -346,7 +346,7 @@ const ListingPageMain: React.FC<Props> = ({
     SetisRelatedLoading(false)
   }, [data?.related_listings_left?.listings])
   useEffect(() => {
-    if (expandAll !== undefined) {
+    if (expandAll !== undefined && isMobile) {
       setShowHobbies(expandAll)
       setShowAbout(expandAll)
       setShowTags(expandAll)
