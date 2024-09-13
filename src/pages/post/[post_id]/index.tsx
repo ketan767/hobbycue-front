@@ -69,35 +69,23 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
     // router.push('/community')
   }
 
-  const convertHtmlToPlainText = (htmlContent: string): string => {
-    if (typeof document === 'undefined') {
-      return htmlContent
-    }
-
-    const tempElement = document.createElement('div')
-    tempElement.innerHTML = htmlContent
-
-    // Get all anchor tags to preserve URLs
-    const links = tempElement.getElementsByTagName('a')
-    for (let i = 0; i < links.length; i++) {
-      links[i].innerText = links[i].href
-    }
-
-    return tempElement.innerText
+  const htmlToPlainText = (html: string) => {
+    const element = document.createElement('div')
+    element.innerHTML = html
+    return element.textContent || ''
   }
+
   const getPreviewimage = () => {
     if (data?.metadata?.data?.image) {
       return data?.metadata?.data?.image
     } else {
       if (data?.postsData?.media[0]) {
         return data?.postsData?.media[0]
-      } else {
-        return hobbycuelogo
       }
     }
   }
 
-  const post_descripton = convertHtmlToPlainText(data.postsData?.content)
+  const post_descripton = htmlToPlainText(data.postsData?.content)
 
   useEffect(() => {
     if (postId) {
@@ -108,8 +96,20 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
   return (
     <>
       <Head>
-        <meta property="og:image" content={getPreviewimage()} />
-        <meta property="og:image:secure_url" content={getPreviewimage()} />
+        <meta
+          property="og:image"
+          content={
+            getPreviewimage() ||
+            'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/user-profile-1716373617637'
+          }
+        />
+        <meta
+          property="og:image:secure_url"
+          content={
+            getPreviewimage() ||
+            'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/user-profile-1716373617637'
+          }
+        />
 
         <meta
           property="og:description"
