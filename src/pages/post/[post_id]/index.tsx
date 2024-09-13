@@ -70,10 +70,14 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
   }
 
   const htmlToPlainText = (html: string) => {
-    const element = document.createElement('div')
-    element.innerHTML = html
-    return element.textContent || ''
+    if (typeof window !== 'undefined') {
+      const element = document.createElement('div')
+      element.innerHTML = html
+      return element.textContent || ''
+    }
+    return ''
   }
+
   const getPreviewimage = () => {
     if (data?.metadata?.data?.image) {
       return data?.metadata?.data?.image
