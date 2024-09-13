@@ -74,14 +74,16 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
     element.innerHTML = html
     return element.textContent || ''
   }
-
   const getPreviewimage = () => {
     if (data?.metadata?.data?.image) {
       return data?.metadata?.data?.image
+    } else if (
+      data?.postsData?.media?.length > 0 &&
+      data?.postsData?.media[0]
+    ) {
+      return data?.postsData?.media[0]
     } else {
-      if (data?.postsData?.media[0]) {
-        return data?.postsData?.media[0]
-      }
+      return 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/user-profile-1716373617637'
     }
   }
 
@@ -96,20 +98,8 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
   return (
     <>
       <Head>
-        <meta
-          property="og:image"
-          content={
-            getPreviewimage() ||
-            'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/user-profile-1716373617637'
-          }
-        />
-        <meta
-          property="og:image:secure_url"
-          content={
-            getPreviewimage() ||
-            'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/user-profile-1716373617637'
-          }
-        />
+        <meta property="og:image" content={getPreviewimage()} />
+        <meta property="og:image:secure_url" content={getPreviewimage()} />
 
         <meta
           property="og:description"
