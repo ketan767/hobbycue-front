@@ -210,9 +210,13 @@
 }
 
 .userTagline {
+  max-width: 600px;
   font-size: 14px;
   color: #666;
   margin: 5px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .userLocation {

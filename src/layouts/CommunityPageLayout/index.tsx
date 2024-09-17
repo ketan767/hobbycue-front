@@ -1549,8 +1549,8 @@ const CommunityLayout: React.FC<Props> = ({
                                   className={styles.profileImage}
                                   src={hobby.profile_image}
                                   alt={`${hobby.display}'s `}
-                                  width={64}
-                                  height={64}
+                                  width={40}
+                                  height={40}
                                 />{' '}
                               </div>
                             ) : (

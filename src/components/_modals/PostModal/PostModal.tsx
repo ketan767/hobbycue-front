@@ -294,10 +294,10 @@ export const PostModal: React.FC<Props> = ({
         <div className={`${styles['body-wrapper']}`}>
           <div className={`${styles['body']}`}>
             <div
-              className={styles['post-content'] + ' ql-editor'}
+              className={styles['post-content']}
               dangerouslySetInnerHTML={{
                 __html: activePost?.content
-                  .replace(/<img\b[^>]*>/g, '') // deleted all images from here then did the link formatting
+                  .replace(/<img\b[^>]*>/g, '')
                   .replace(
                     /((https?:\/\/|ftp:\/\/|file:\/\/|www\.)[-A-Z0-9+&@#/%?=~_|!:,.;]*)/gi,
                     (match: any, url: string) => {

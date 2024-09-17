@@ -112,7 +112,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         dispatch(resetSearch())
         await ExplorePeople()
         dispatch(showAllPeopleTrue())
-        router.push('/search')
+        router.push('/explore/people')
         dispatch(setExplore(true))
         handleClose()
         break
@@ -121,7 +121,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         await ExplorePlaces()
         dispatch(showAllPlaceTrue())
         dispatch(setExplore(true))
-        router.push('/search')
+        router.push('/explore/places')
         handleClose()
         break
       case 'Programs - Events':
@@ -129,7 +129,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         await ExploreEvents()
         dispatch(showAllEventTrue())
         dispatch(setExplore(true))
-        router.push('/search')
+        router.push('/explore/programs')
         handleClose()
         break
       case 'Products - Store':
@@ -137,7 +137,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         await ExploreProducts()
         dispatch(showAllProductsTrue())
         dispatch(setExplore(true))
-        router.push('/search')
+        router.push('/explore/products')
         handleClose()
         break
       case 'Perspectives - Blogs':
@@ -145,7 +145,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         await ExploreBlogs()
         dispatch(showAllBlogsTrue())
         dispatch(setExplore(true))
-        router.push('/search')
+        router.push('/blog')
         handleClose()
         break
       case 'Posts - Community':
@@ -159,7 +159,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         await ExplorePosts()
         dispatch(showAllPostsTrue())
         dispatch(setExplore(true))
-        router.push('/search')
+        router.push('/community')
 
         handleClose()
         break
