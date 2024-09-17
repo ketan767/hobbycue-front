@@ -89,11 +89,17 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
         }
       }
 
-      if (observer.current) observer.current.disconnect()
+      if (observer.current) {
+        console.log('first disconnect')
+        observer.current.disconnect()
+      }
 
       observer.current = new IntersectionObserver(observerCallback)
 
-      if (node) observer.current.observe(node)
+      if (node) {
+        console.log('first observe')
+        observer.current.observe(node)
+      }
 
       return () => {
         if (observer.current) observer.current.disconnect()
@@ -101,9 +107,6 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
     },
     [loadingPosts, hasMore],
   )
-
-  console.log('asifs pageno', pageNo)
-  console.log('asifs hasMore', hasMore)
 
   const router = useRouter()
 

@@ -51,6 +51,7 @@ import PasswordAnalyzer from '../PasswordAnalyzer/PasswordAnalyzer'
 import { forgotPassword } from '@/services/auth.service'
 
 import { updateForgotPasswordEmail } from '@/redux/slices/modal'
+import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 interface Props {
   isModal?: boolean
 }
@@ -106,6 +107,11 @@ const AuthForm: React.FC<Props> = (props) => {
   const [deviceInfo, setDeviceInfo] = useState<any>({
     device: 'unknown',
     browser: 'unknown',
+  })
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
   })
 
   useEffect(() => {
@@ -343,9 +349,17 @@ const AuthForm: React.FC<Props> = (props) => {
     }
   }
 
-  const googleAuthFailure = (e: any) => console.log(e)
+  const googleAuthFailure = (e: any) => console.log('Error in google login', e)
 
   const handleFacebookAuth = async (e: any) => {
+    if (!e.email) {
+      return setSnackbar({
+        type: 'error',
+        display: true,
+        message:
+          "It seems your Facebook account doesn't have an email associated. Please provide your email to continue.",
+      })
+    }
     dispatch(setShowPageLoader(true))
     try {
       const { err, res } = await facebookAuth({
@@ -357,15 +371,15 @@ const AuthForm: React.FC<Props> = (props) => {
       })
       dispatch(setShowPageLoader(false))
       if (err) {
-        console.log(err)
         throw new Error(err)
       }
       if (res.status === 200 && res.data.success) {
         localStorage.setItem('token', res.data.data.token)
         dispatch(updateIsLoggedIn(true))
         dispatch(closeModal())
-        if (e.profileObj.imageUrl) {
-          const googleImageUrl = e.profileObj.imageUrl
+
+        if (e.picture.data.url) {
+          const googleImageUrl = e.picture.data.url
           try {
             const imageBlob = await fetch(googleImageUrl).then((res) =>
               res.blob(),
@@ -397,7 +411,7 @@ const AuthForm: React.FC<Props> = (props) => {
         console.log('user', user)
       }
     } catch (err) {
-      console.log('asifs err', err)
+      console.log('Error in facebook login', err)
     }
   }
   const getButtonText = () => {
@@ -489,6 +503,8 @@ const AuthForm: React.FC<Props> = (props) => {
             appId="1614660215286765"
             callback={handleFacebookAuth}
             redirectUri={redirectURI}
+            fields="name,email,picture"
+            onFailure={(err) => console.log('Error in facebook login', err)}
             render={(renderProps: any) => (
               <Button
                 className={`${styles['social-login-btn']} ${styles['facebook']}`}
@@ -697,6 +713,14 @@ const AuthForm: React.FC<Props> = (props) => {
           </OutlinedButton>
         </section>
       </div>
+      <CustomSnackbar
+        message={snackbar.message}
+        triggerOpen={snackbar.display}
+        type={snackbar.type === 'success' ? 'success' : 'error'}
+        closeSnackbar={() => {
+          setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+        }}
+      />
     </div>
   )
 }
