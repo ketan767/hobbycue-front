@@ -8,13 +8,16 @@ import { getAllEvents, getListingPages } from '@/services/listing.service'
 import { getAllPosts } from '@/services/post.service'
 import { getAllBlogs } from '@/services/blog.services'
 import ListingCard from '@/components/ListingCard/ListingCard'
+import { useRouter } from 'next/router'
+import BlogCard from '@/components/BlogCard/BlogCard'
 
 type Props = {
   data: any
 }
 
 const Explore: React.FC<Props> = ({ data }) => {
-  console.log('asifs props', data)
+  const router = useRouter()
+  const { type } = router.query
 
   return (
     <>
@@ -45,13 +48,17 @@ const Explore: React.FC<Props> = ({ data }) => {
         </div>
       </PageGridLayout> */}
       <div className={styles.gridContainer}>
-        {data?.map((el: any) => (
-          <ListingCard
-            key={el._id}
-            data={el}
-            style={{ minWidth: 271, maxWidth: 400 }}
-          />
-        ))}
+        {data?.map((el: any) =>
+          type === 'blogs' ? (
+            <BlogCard key={el._id} data={el} />
+          ) : (
+            <ListingCard
+              key={el._id}
+              data={el}
+              style={{ minWidth: 271, maxWidth: 400 }}
+            />
+          ),
+        )}
       </div>
     </>
   )
@@ -101,7 +108,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
   const exploreBlogs = async () => {
     const { res, err } = await getAllBlogs(
-      `sort=-createdAt&populate=author&status=Published`,
+      `sort=-createdAt&populate=author,_hobbies&status=Published`,
     )
     if (err) return { notFound: true }
     data = res?.data.data?.blog

@@ -440,101 +440,101 @@ export const Navbar: React.FC<Props> = ({}) => {
   //   }
   // }
 
-  const ExplorePeople = async () => {
-    const { res: PeopleRes, err: PeopleErr } = await getListingPages(
-      `type=1&sort=-createdAt&is_published=true`,
-    )
+  // const ExplorePeople = async () => {
+  //   const { res: PeopleRes, err: PeopleErr } = await getListingPages(
+  //     `type=1&sort=-createdAt&is_published=true`,
+  //   )
 
-    const PeoplePages = PeopleRes?.data.data?.listings
+  //   const PeoplePages = PeopleRes?.data.data?.listings
 
-    dispatch(
-      setTypeResultOne({
-        data: PeoplePages,
-        message: 'Search completed successfully.',
-        success: true,
-      }),
-    )
-  }
+  //   dispatch(
+  //     setTypeResultOne({
+  //       data: PeoplePages,
+  //       message: 'Search completed successfully.',
+  //       success: true,
+  //     }),
+  //   )
+  // }
 
-  const ExplorePlaces = async () => {
-    const { res: PlacesRes, err: PlacesErr } = await getListingPages(
-      `type=2&sort=-createdAt&is_published=true`,
-    )
+  // const ExplorePlaces = async () => {
+  //   const { res: PlacesRes, err: PlacesErr } = await getListingPages(
+  //     `type=2&sort=-createdAt&is_published=true`,
+  //   )
 
-    const PlacesPages = PlacesRes?.data.data?.listings
+  //   const PlacesPages = PlacesRes?.data.data?.listings
 
-    dispatch(
-      setTypeResultTwo({
-        data: PlacesPages,
-        message: 'Search completed successfully.',
-        success: true,
-      }),
-    )
-  }
+  //   dispatch(
+  //     setTypeResultTwo({
+  //       data: PlacesPages,
+  //       message: 'Search completed successfully.',
+  //       success: true,
+  //     }),
+  //   )
+  // }
 
-  const ExploreEvents = async () => {
-    const { res: EventRes, err: EventErr } = await getAllEvents()
+  // const ExploreEvents = async () => {
+  //   const { res: EventRes, err: EventErr } = await getAllEvents()
 
-    const EventPages = EventRes?.data?.data
+  //   const EventPages = EventRes?.data?.data
 
-    dispatch(
-      setTypeResultThree({
-        data: EventPages,
-        message: 'Search completed successfully.',
-        success: true,
-      }),
-    )
-  }
+  //   dispatch(
+  //     setTypeResultThree({
+  //       data: EventPages,
+  //       message: 'Search completed successfully.',
+  //       success: true,
+  //     }),
+  //   )
+  // }
 
-  const ExploreProducts = async () => {
-    const { res: ProductsRes, err: ProductsErr } = await getListingPages(
-      `type=4&sort=-createdAt&is_published=true`,
-    )
+  // const ExploreProducts = async () => {
+  //   const { res: ProductsRes, err: ProductsErr } = await getListingPages(
+  //     `type=4&sort=-createdAt&is_published=true`,
+  //   )
 
-    const ProductsPages = ProductsRes?.data.data?.listings
+  //   const ProductsPages = ProductsRes?.data.data?.listings
 
-    dispatch(
-      setTypeResultFour({
-        data: ProductsPages,
-        message: 'Search completed successfully.',
-        success: true,
-      }),
-    )
-  }
+  //   dispatch(
+  //     setTypeResultFour({
+  //       data: ProductsPages,
+  //       message: 'Search completed successfully.',
+  //       success: true,
+  //     }),
+  //   )
+  // }
 
-  const ExplorePosts = async () => {
-    dispatch(setShowPageLoader(true))
-    const { res: PostRes, err: PostErr } = await getAllPosts(
-      `sort=-createdAt&populate=_author,_hobby`,
-    )
+  // const ExplorePosts = async () => {
+  //   dispatch(setShowPageLoader(true))
+  //   const { res: PostRes, err: PostErr } = await getAllPosts(
+  //     `sort=-createdAt&populate=_author,_hobby`,
+  //   )
 
-    const PostsPages = PostRes?.data.data?.posts
+  //   const PostsPages = PostRes?.data.data?.posts
 
-    dispatch(
-      setPostsSearchResult({
-        data: PostsPages,
-        message: 'Search completed successfully.',
-        success: true,
-      }),
-    )
-    dispatch(setShowPageLoader(false))
-  }
+  //   dispatch(
+  //     setPostsSearchResult({
+  //       data: PostsPages,
+  //       message: 'Search completed successfully.',
+  //       success: true,
+  //     }),
+  //   )
+  //   dispatch(setShowPageLoader(false))
+  // }
 
-  const ExploreBlogs = async () => {
-    const { res: BlogRes, err: PostErr } = await getAllBlogs(
-      `sort=-createdAt&populate=author&status=Published`,
-    )
+  // const ExploreBlogs = async () => {
+  //   const { res: BlogRes, err: PostErr } = await getAllBlogs(
+  //     `sort=-createdAt&populate=author&status=Published`,
+  //   )
 
-    const BlogsPages = BlogRes?.data.data?.blog
+  //   const BlogsPages = BlogRes?.data.data?.blog
 
-    dispatch(
-      setBlogsSearchResult({
-        data: BlogsPages,
-        message: 'Search completed successfully.',
-        success: true,
-      }),
-    )
-  }
+  //   dispatch(
+  //     setBlogsSearchResult({
+  //       data: BlogsPages,
+  //       message: 'Search completed successfully.',
+  //       success: true,
+  //     }),
+  //   )
+  // }
 
   const handleOutsideClick = (event: MouseEvent) => {
     if (
@@ -799,7 +799,6 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
-                            await ExplorePeople()
                             router.push({
                               pathname: '/explore/people',
                             })
@@ -821,7 +820,6 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
-                            await ExplorePlaces()
                             router.push({
                               pathname: '/explore/places',
                             })
@@ -838,7 +836,6 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
-                            await ExploreEvents()
                             router.push({
                               pathname: '/explore/programs',
                             })
@@ -855,7 +852,6 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
-                            await ExploreProducts()
                             router.push({
                               pathname: '/explore/products',
                             })
@@ -872,7 +868,6 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
-                            await ExploreBlogs()
                             router.push({
                               pathname: '/explore/blogs',
                             })
@@ -895,9 +890,8 @@ export const Navbar: React.FC<Props> = ({}) => {
                               return
                             }
                             e.preventDefault()
-                            await ExplorePosts()
                             router.push({
-                              pathname: '/explore/posts',
+                              pathname: '/community',
                             })
                           }}
                         >
