@@ -357,7 +357,7 @@ const AuthForm: React.FC<Props> = (props) => {
         type: 'error',
         display: true,
         message:
-          "It seems your Facebook account doesn't have an email associated. Please provide your email to continue.",
+          'HobbyCue did not receive an E-mail ID.  Please enter the same to proceed.',
       })
     }
     dispatch(setShowPageLoader(true))
