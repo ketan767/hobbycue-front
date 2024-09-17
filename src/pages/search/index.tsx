@@ -17,6 +17,15 @@ import {
   appendHobbiesSearchResult,
   setCurrentPage,
   setHasMore,
+  resetSearch,
+  setExplore,
+  setSearchString,
+  setUserSearchResults,
+  setTypeResultOne,
+  setTypeResultTwo,
+  setTypeResultThree,
+  setTypeResultFour,
+  setBlogsSearchResult,
 } from '@/redux/slices/search'
 import { RootState } from '@/redux/store'
 import { MenuItem, Select, useMediaQuery } from '@mui/material'
@@ -30,7 +39,7 @@ import { SetLinkviaAuth } from '@/redux/slices/user'
 import Link from 'next/link'
 import SearchLoader from '@/components/SearchLoader'
 
-import { searchUsers } from '@/services/user.service'
+import { addSearchHistory, searchUsers } from '@/services/user.service'
 import { getAllHobbies } from '@/services/hobby.service'
 
 import {
@@ -40,6 +49,9 @@ import {
   formatDateTimeThree,
   formatDateTimeTwo,
 } from '@/utils'
+import { setShowPageLoader } from '@/redux/slices/site'
+import { searchPages } from '@/services/listing.service'
+import { searchBlogs } from '@/services/blog.services'
 
 type Props = {
   data?: any
@@ -148,32 +160,32 @@ const MainContent: React.FC<SearchResultsProps> = ({
   PostsResults,
   BlogsResults,
 }) => {
-  const showAll = useSelector((state: RootState) => state.search.showAll)
-  const showAllUsers = useSelector(
-    (state: RootState) => state.search.showAllUsers,
-  )
-  const showAllPeople = useSelector(
-    (state: RootState) => state.search.showAllPeople,
-  )
-  const showAllPlace = useSelector(
-    (state: RootState) => state.search.showAllPlace,
-  )
-  const showAllEvent = useSelector(
-    (state: RootState) => state.search.showAllEvent,
-  )
-  const showAllProducts = useSelector(
-    (state: RootState) => state.search.showAllProducts,
-  )
-  const showAllPosts = useSelector(
-    (state: RootState) => state.search.showAllPosts,
-  )
-  const showAllBlogs = useSelector(
-    (state: RootState) => state.search.showAllBlogs,
-  )
+  // const showAll = useSelector((state: RootState) => state.search.showAll)
+  // const showAllUsers = useSelector(
+  //   (state: RootState) => state.search.showAllUsers,
+  // )
+  // const showAllPeople = useSelector(
+  //   (state: RootState) => state.search.showAllPeople,
+  // )
+  // const showAllPlace = useSelector(
+  //   (state: RootState) => state.search.showAllPlace,
+  // )
+  // const showAllEvent = useSelector(
+  //   (state: RootState) => state.search.showAllEvent,
+  // )
+  // const showAllProducts = useSelector(
+  //   (state: RootState) => state.search.showAllProducts,
+  // )
+  // const showAllPosts = useSelector(
+  //   (state: RootState) => state.search.showAllPosts,
+  // )
+  // const showAllBlogs = useSelector(
+  //   (state: RootState) => state.search.showAllBlogs,
+  // )
 
-  const showAllhobbies = useSelector(
-    (state: RootState) => state.search.showAllHobbies,
-  )
+  // const showAllhobbies = useSelector(
+  //   (state: RootState) => state.search.showAllHobbies,
+  // )
   const searchString = useSelector(
     (state: RootState) => state.search.searchString,
   )
@@ -198,6 +210,20 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const [page, setPage] = useState(1)
 
   const router = useRouter()
+
+  const { q, filter } = router.query
+  
+  const queryString = Array.isArray(q) ? q[0] : q || ''
+
+  const showAll = filter ? filter === '' : true
+  const showAllUsers = filter === 'users'
+  const showAllPeople = filter === 'people'
+  const showAllPlace = filter === 'places'
+  const showAllEvent = filter === 'events'
+  const showAllProducts = filter === 'products'
+  const showAllPosts = filter === 'posts'
+  const showAllBlogs = filter === 'blogs'
+  const showAllhobbies = filter === 'hobby'
 
   const observer = useRef<IntersectionObserver | null>(null)
 
@@ -363,34 +389,325 @@ const MainContent: React.FC<SearchResultsProps> = ({
     showAllPosts,
   ])
 
+  useEffect(() => {
+    const searchResult = async (page = 1) => {
+      dispatch(resetSearch())
+      dispatch(setExplore(false))
+      dispatch(setSearchString(queryString))
+      // if (router.pathname !== '/search') {
+      //   dispatch(showAllTrue())
+      //   // router.push('/search')
+      // }
+      const searchValue = queryString || ''
+      const taglineValue = ''
+      const cityValue = ''
+      const hobbyValue = ''
+      const titleValue = ''
+
+      if (
+        !searchValue &&
+        !taglineValue &&
+        !cityValue &&
+        !hobbyValue &&
+        !filter
+      ) {
+        console.log('Search fields are empty.')
+        return
+      }
+
+      let searchCriteria = {
+        full_name: searchValue,
+        tagline: taglineValue,
+        city: cityValue,
+        hobby: hobbyValue,
+        title: titleValue,
+      }
+
+      try {
+        dispatch(setSearchLoading(true))
+        const { res: userRes, err: userErr } = await searchUsers({
+          full_name: searchValue,
+        })
+        if (userErr) {
+        } else {
+          if (userRes?.length < 10) {
+            const { res: taglineRes, err: taglineErr } = await searchUsers({
+              tagline: searchValue,
+            })
+            if (!taglineErr) {
+              const combinedResults = userRes.concat(taglineRes)
+              dispatch(setUserSearchResults(combinedResults))
+            }
+          } else {
+            dispatch(setUserSearchResults(userRes))
+          }
+        }
+        // Search by title
+        dispatch(setShowPageLoader(true))
+        const { res: titleRes, err: titleErr } = await searchPages({
+          title: searchValue,
+        })
+
+        if (titleErr) {
+          console.error('An error occurred during the title search:', titleErr)
+          dispatch(setSearchLoading(false))
+          return
+        }
+
+        const titlePages = titleRes.data.slice(0, 100) // Get title search results
+
+        // Function to fetch tagline search results and process unique pages
+
+        dispatch(setShowPageLoader(true))
+        const { res: taglineRes, err: taglineErr } = await searchPages({
+          tagline: searchValue,
+        })
+
+        if (!taglineErr) {
+          const taglinePages = taglineRes.data.slice(0, 50) // Get tagline search results
+
+          // Combine titlePages and taglinePages and filter out duplicate URLs
+          const uniqueUrls = new Set<string>()
+          const uniquePages: any[] = [] // Use 'any[]' if you prefer not to define a specific type
+
+          ;[...titlePages, ...taglinePages].forEach((page) => {
+            if (
+              page &&
+              page.page_url &&
+              typeof page.page_url === 'string' &&
+              !uniqueUrls.has(page.page_url)
+            ) {
+              uniqueUrls.add(page.page_url)
+              uniquePages.push(page)
+            }
+          })
+          const user_id = isLoggedIn ? user?._id : null
+          console.log('sto')
+          const { res, err } = await addSearchHistory({
+            user_id: user_id,
+            no_of_pages: uniquePages?.length,
+            search_input: searchValue,
+          })
+
+          // Filter uniquePages by type and is_published
+          const typeResultOne = uniquePages.filter(
+            (page) => page.type === 1 && page.is_published,
+          )
+          const typeResultTwo = uniquePages.filter(
+            (page) => page.type === 2 && page.is_published,
+          )
+          const typeResultThree = uniquePages.filter(
+            (page) => page.type === 3 && page.is_published,
+          )
+
+          const typeResultFour = uniquePages.filter(
+            (page) => page.type === 4 && page.is_published,
+          )
+
+          // Dispatch the unique results to the appropriate actions
+          dispatch(
+            setTypeResultOne({
+              data: typeResultOne,
+              message: 'Search completed successfully.',
+              success: true,
+            }),
+          )
+          dispatch(
+            setTypeResultTwo({
+              data: typeResultTwo,
+              message: 'Search completed successfully.',
+              success: true,
+            }),
+          )
+          dispatch(
+            setTypeResultThree({
+              data: typeResultThree,
+              message: 'Search completed successfully.',
+              success: true,
+            }),
+          )
+
+          dispatch(
+            setTypeResultFour({
+              data: typeResultFour,
+              message: 'Search completed successfully.',
+              success: true,
+            }),
+          )
+        }
+
+        dispatch(setShowPageLoader(false))
+
+        const query = `level=1&level=2&level=3&level=4&level=5&search=${searchValue}`
+        dispatch(setShowPageLoader(true))
+        const { res: hobbyRes, err: hobbyErr } = await getAllHobbies(query)
+        if (hobbyErr) {
+          console.error('An error occurred during the page search:', hobbyErr)
+        } else {
+          const sortedHobbies = hobbyRes.data.hobbies.sort((a: any, b: any) => {
+            const indexA = a.display
+              .toLowerCase()
+              .indexOf(searchValue.toLowerCase())
+            const indexB = b.display
+              .toLowerCase()
+              .indexOf(searchValue.toLowerCase())
+
+            if (indexA === 0 && indexB !== 0) {
+              return -1
+            } else if (indexB === 0 && indexA !== 0) {
+              return 1
+            }
+            return a.display
+              .toLowerCase()
+              .localeCompare(b.display.toLowerCase())
+          })
+          dispatch(
+            setHobbiesSearchResult({
+              data: sortedHobbies,
+              message: 'Search completed successfully.',
+              success: true,
+            }),
+          )
+        }
+
+        dispatch(setShowPageLoader(true))
+        const { res: blogRes, err: BlogErr } = await searchBlogs({
+          search: searchValue,
+        })
+
+        if (BlogErr) {
+          console.error('An error occurred during the page search:', BlogErr)
+        } else {
+          const sortedBlog = blogRes?.data?.sort((a: any, b: any) => {
+            const titleA = a.title?.toLowerCase()
+            const titleB = b.title?.toLowerCase()
+            const indexA = titleA.indexOf(searchValue?.toLowerCase())
+            const indexB = titleB.indexOf(searchValue?.toLowerCase())
+
+            if (indexA === 0 && indexB !== 0) {
+              return -1
+            } else if (indexB === 0 && indexA !== 0) {
+              return 1
+            }
+            return titleA.localeCompare(titleB)
+          })
+
+          console.log('blog search results:', sortedBlog)
+          dispatch(
+            setBlogsSearchResult({
+              data: sortedBlog,
+              message: 'Search completed successfully.',
+              success: true,
+            }),
+          )
+        }
+        // if (isLoggedIn) {
+        //   const { res: PostRes, err: PostErr } = await searchPosts({
+        //     content: searchValue,
+        //   })
+        //   if (PostErr) {
+        //     console.error('An error occurred during the page search:', PostErr)
+        //   } else {
+        //     const sortedposts = PostRes?.data?.sort((a: any, b: any) => {
+        //       const indexA = a?.content
+        //         .toLowerCase()
+        //         .indexOf(searchValue.toLowerCase())
+        //       const indexB = b?.content
+        //         .toLowerCase()
+        //         .indexOf(searchValue.toLowerCase())
+
+        //       if (indexA === 0 && indexB !== 0) {
+        //         return -1
+        //       } else if (indexB === 0 && indexA !== 0) {
+        //         return 1
+        //       }
+        //       return a?.content
+        //         ?.toLowerCase()
+        //         ?.localeCompare(b?.content?.toLowerCase())
+        //     })
+        //     console.warn('posts search results:', PostRes?.data)
+        //     dispatch(
+        //       setPostsSearchResult({
+        //         data: sortedposts,
+        //         message: 'Search completed successfully.',
+        //         success: true,
+        //       }),
+        //     )
+        //   }
+        // }
+
+        dispatch(setSearchLoading(false))
+        dispatch(setShowPageLoader(false))
+        dispatch(showAllTrue())
+      } catch (error) {
+        dispatch(setSearchLoading(false))
+        dispatch(setShowPageLoader(false))
+        console.error('An error occurred during the combined search:', error)
+      }
+    }
+    searchResult()
+  }, [queryString, filter])
+
   const toggleShowAllusers = () => {
     dispatch(toggleShowAllUsers())
+    router.push({
+      pathname: '/search',
+      query: { ...router.query, filter: 'users' },
+    })
   }
 
   const toggleShowAllhobbies = () => {
     dispatch(toggleShowAllHobbies())
+    router.push({
+      pathname: '/search',
+      query: { ...router.query, filter: 'hobby' },
+    })
   }
 
   const toggleShowAllpeople = () => {
     dispatch(toggleShowAllPeople())
+    router.push({
+      pathname: '/search',
+      query: { ...router.query, filter: 'people' },
+    })
   }
 
   const toggleShowAllplace = () => {
     dispatch(toggleShowAllPlace())
+    router.push({
+      pathname: '/search',
+      query: { ...router.query, filter: 'places' },
+    })
   }
 
   const toggleShowAllevent = () => {
     dispatch(toggleShowAllEvent())
+    router.push({
+      pathname: '/search',
+      query: { ...router.query, filter: 'events' },
+    })
   }
 
   const toggleShowAllproducts = () => {
     dispatch(toggleShowAllProducts())
+    router.push({
+      pathname: '/search',
+      query: { ...router.query, filter: 'products' },
+    })
   }
   const toggleShowAllblogs = () => {
     dispatch(toggleShowAllBlogs())
+    router.push({
+      pathname: '/search',
+      query: { ...router.query, filter: 'blogs' },
+    })
   }
   const toggleShowAllposts = () => {
     dispatch(toggleShowAllPosts())
+    router.push({
+      pathname: '/search',
+      query: { ...router.query, filter: 'posts' },
+    })
   }
 
   const navigateToHobby = (slug: string) => {
@@ -450,7 +767,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
     <main className={styles.searchResults}>
       {noResultsFound ? (
         <div className={styles['no-results-wrapper']}>
-          {searchString === '' ? (
+          {queryString === '' ? (
             <p>
               Use the <strong> Search box</strong> at the top to look for
               anything on your hobbies. If you feel we are missing a listing,
@@ -460,7 +777,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
             </p>
           ) : (
             <p>
-              {`No results for "${searchString}". `}Try shorter or alternate
+              {`No results for "${queryString}". `}Try shorter or alternate
               keywords. Or <Link href={'/contact'}>contact us</Link> if you feel
               we are missing something. For further help,{' '}
               <Link href={'/help'}>click here</Link>.
@@ -500,12 +817,14 @@ const MainContent: React.FC<SearchResultsProps> = ({
                         <div className={styles.hobbyAvtar}>
                           {/* Render the image */}
                           {hobby.profile_image ? (
-                            <img
-                              src={hobby.profile_image}
-                              alt={`${hobby.display}'s `}
-                              width={64}
-                              height={64}
-                            />
+                            <div className={styles['border-div']}>
+                              <img
+                                src={hobby.profile_image}
+                                alt={`${hobby.display}'s `}
+                                width={64}
+                                height={64}
+                              />
+                            </div>
                           ) : (
                             <>
                               <div

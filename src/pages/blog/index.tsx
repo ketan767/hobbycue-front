@@ -1,6 +1,6 @@
 import { withAuth } from '@/navigation/withAuth'
 import React from 'react'
-import styles from './[type]/explore.module.css'
+import styles from './styles.module.css'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import { GetServerSideProps } from 'next'
@@ -12,7 +12,7 @@ import { useRouter } from 'next/router'
 import BlogCard from '@/components/BlogCard/BlogCard'
 
 type Props = {
-  data?: any
+  data: any
   isBlog: boolean
 }
 
@@ -24,11 +24,7 @@ const Explore: React.FC<Props> = ({ data }) => {
     <>
       <div className={styles.gridContainer}>
         {data?.map((el: any) => (
-          <ListingCard
-            key={el._id}
-            data={el}
-            style={{ minWidth: 271, maxWidth: 700 }}
-          />
+          <BlogCard key={el._id} data={el} />
         ))}
       </div>
     </>
@@ -39,14 +35,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   let data = {}
   let isBlog = false
 
-  const { res, err } = await getListingPages(
-    `&sort=-createdAt&is_published=true&populate=_hobbies,_address`,
+  const { res, err } = await getAllBlogs(
+    `sort=-createdAt&populate=author,_hobbies&status=Published`,
   )
   if (err) return { notFound: true }
-  data = res?.data?.data?.listings
-
-  if (err) return { notFound: true }
-  data = res?.data?.data?.listings
+  data = res?.data.data?.blog
+  isBlog = true
 
   return {
     props: {

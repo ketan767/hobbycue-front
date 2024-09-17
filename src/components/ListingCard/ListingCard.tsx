@@ -13,15 +13,14 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { Height } from '@mui/icons-material'
 import { updateListingLayoutMode } from '@/redux/slices/site'
+import ListingCardProduct from './ListingCardProduct'
 
 type Props = {
   data: any
+  style?: React.CSSProperties
 }
 
-const ListingCard: React.FC<Props> = ({ data }) => {
-  // console.log('🚀 ~ file: ListingCard.tsx:13 ~ data:', data)
-  // console.log('Carddata', data)
-
+const ListingCard: React.FC<Props> = ({ data, style }) => {
   const { user } = useSelector((state: RootState) => state.user)
   const type = getListingTypeName(data?.type)
 
@@ -120,12 +119,26 @@ const ListingCard: React.FC<Props> = ({ data }) => {
   const itsMe = data?.admin === user?._id
   const isMobile = useMediaQuery('(max-width:1100px)')
 
+  if (data.type === 4) {
+    return (
+      <ListingCardProduct
+        data={data}
+        itsMe={itsMe}
+        calendarIcon={calendarIcon}
+        clockIcon={clockIcon}
+        isMobile={isMobile}
+        style={style}
+      />
+    )
+  }
+
   return (
     <>
       <Link
         key={data?._id}
         href={`/${pageType(data?.type)}/${data?.page_url}`}
         className={styles.container}
+        style={style}
       >
         {itsMe ? (
           <div

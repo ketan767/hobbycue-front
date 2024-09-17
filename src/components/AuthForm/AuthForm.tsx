@@ -51,6 +51,7 @@ import PasswordAnalyzer from '../PasswordAnalyzer/PasswordAnalyzer'
 import { forgotPassword } from '@/services/auth.service'
 
 import { updateForgotPasswordEmail } from '@/redux/slices/modal'
+import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 interface Props {
   isModal?: boolean
 }
@@ -106,6 +107,11 @@ const AuthForm: React.FC<Props> = (props) => {
   const [deviceInfo, setDeviceInfo] = useState<any>({
     device: 'unknown',
     browser: 'unknown',
+  })
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
   })
 
   useEffect(() => {
@@ -343,55 +349,69 @@ const AuthForm: React.FC<Props> = (props) => {
     }
   }
 
-  const googleAuthFailure = (e: any) => console.log(e)
+  const googleAuthFailure = (e: any) => console.log('Error in google login', e)
 
   const handleFacebookAuth = async (e: any) => {
+    if (!e.email) {
+      return setSnackbar({
+        type: 'error',
+        display: true,
+        message:
+          'HobbyCue did not receive an E-mail ID.  Please enter the same to proceed.',
+      })
+    }
     dispatch(setShowPageLoader(true))
+    try {
+      const { err, res } = await facebookAuth({
+        accessToken: e.accessToken,
+        userId: e.userID,
+        name: e.name,
+        browser: deviceInfo?.browser,
+        device: deviceInfo.device,
+      })
+      dispatch(setShowPageLoader(false))
+      if (err) {
+        throw new Error(err)
+      }
+      if (res.status === 200 && res.data.success) {
+        localStorage.setItem('token', res.data.data.token)
+        dispatch(updateIsLoggedIn(true))
+        dispatch(closeModal())
 
-    const { err, res } = await facebookAuth({
-      accessToken: e.accessToken,
-      userId: e.userID,
-      name: e.name,
-      browser: deviceInfo?.browser,
-      device: deviceInfo.device,
-    })
-    dispatch(setShowPageLoader(false))
-    if (err) return console.log(err)
-    if (res.status === 200 && res.data.success) {
-      localStorage.setItem('token', res.data.data.token)
-      dispatch(updateIsLoggedIn(true))
-      dispatch(closeModal())
-      if (e.profileObj.imageUrl) {
-        const googleImageUrl = e.profileObj.imageUrl
-        try {
-          const imageBlob = await fetch(googleImageUrl).then((res) =>
-            res.blob(),
-          )
-          const formData = new FormData()
-          formData.append('user-profile', imageBlob)
-          const updateResponse = await updateUserProfile(formData)
-          console.log('Update Profile Image Response:', updateResponse)
-        } catch (uploadError) {
-          console.error('Error uploading profile image:', uploadError)
+        if (e.picture.data.url) {
+          const googleImageUrl = e.picture.data.url
+          try {
+            const imageBlob = await fetch(googleImageUrl).then((res) =>
+              res.blob(),
+            )
+            const formData = new FormData()
+            formData.append('user-profile', imageBlob)
+            const updateResponse = await updateUserProfile(formData)
+            console.log('Update Profile Image Response:', updateResponse)
+          } catch (uploadError) {
+            console.error('Error uploading profile image:', uploadError)
+          }
         }
-      }
-      if (res?.data?.message === 'User registered successfully') {
-        dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
-      }
+        if (res?.data?.message === 'User registered successfully') {
+          dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
+        }
 
-      const { err: error, res: response } = await getMyProfileDetail()
-      if (response?.data?.data?.user?.is_onboarded) {
-        if (router.pathname === '/') {
-          router.push('/community', undefined, { shallow: false })
+        const { err: error, res: response } = await getMyProfileDetail()
+        if (response?.data?.data?.user?.is_onboarded) {
+          if (router.pathname === '/') {
+            router.push('/community', undefined, { shallow: false })
+          } else {
+            window.location.reload()
+          }
         } else {
-          window.location.reload()
+          dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
+          router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
         }
-      } else {
-        dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
-        router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
-      }
 
-      console.log('user', user)
+        console.log('user', user)
+      }
+    } catch (err) {
+      console.log('Error in facebook login', err)
     }
   }
   const getButtonText = () => {
@@ -483,6 +503,8 @@ const AuthForm: React.FC<Props> = (props) => {
             appId="1614660215286765"
             callback={handleFacebookAuth}
             redirectUri={redirectURI}
+            fields="name,email,picture"
+            onFailure={(err) => console.log('Error in facebook login', err)}
             render={(renderProps: any) => (
               <Button
                 className={`${styles['social-login-btn']} ${styles['facebook']}`}
@@ -691,6 +713,14 @@ const AuthForm: React.FC<Props> = (props) => {
           </OutlinedButton>
         </section>
       </div>
+      <CustomSnackbar
+        message={snackbar.message}
+        triggerOpen={snackbar.display}
+        type={snackbar.type === 'success' ? 'success' : 'error'}
+        closeSnackbar={() => {
+          setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+        }}
+      />
     </div>
   )
 }

@@ -1,7 +1,6 @@
 import axiosInstance, { operation } from './_axios'
 
 export const getAllPosts = async (query: string): Promise<ApiReturnObject> => {
-
   try {
     const res = await axiosInstance.get(`/post/?${query}`)
     return { res: res, err: null }
@@ -12,12 +11,16 @@ export const getAllPosts = async (query: string): Promise<ApiReturnObject> => {
 }
 
 /** Gets all User Posts with Comments data `GET: /api/post/with-comments/` */
-export const getAllPostsWithComments = async (query: string): Promise<ApiReturnObject> => {
+export const getAllPostsWithComments = async (
+  query: string,
+): Promise<ApiReturnObject> => {
   const token = localStorage.getItem('token')
   const headers = { Authorization: `Bearer ${token}` }
 
   try {
-    const res = await axiosInstance.get(`/post/with-comments/?${query}`, { headers })
+    const res = await axiosInstance.get(`/post/with-comments/?${query}`, {
+      headers,
+    })
     return { res: res, err: null }
   } catch (error) {
     console.error(error)
@@ -46,7 +49,33 @@ export const createUserPost = async (data: {
   }
 }
 
-/** Create a User Post `POST: /api/post/listing/` */
+/** Update a User Post `POST: /api/post/user/update/:postId` */
+export const updateUserPost = async (
+  data: {
+    hobbyId: string
+    genreId: string | undefined
+    content: string
+    visibility: string
+    media: []
+    hasLink: Boolean
+  },
+  postId: string,
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(`/post/user/update/${postId}`, data, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
+/** Create a Listing Page Post `POST: /api/post/listing/` */
 export const createListingPost = async (data: {
   listingId: string
   hobbyId: string
@@ -65,6 +94,32 @@ export const createListingPost = async (data: {
     return { err: error, res: null }
   }
 }
+
+/** Update a Listing Page Post `POST: /api/post/listing/update/:postId` */
+export const updateListingPost = async (
+  data: {
+    listingId: string
+    hobbyId: string
+    genreId: string | undefined
+    content: string
+    visibility: string
+  },
+  postId: string,
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(`/post/listing/update/${postId}`, data, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+
 
 /** UpVote Post `PATCH: /api/post/upvote/:postId` */
 export const upvotePost = async (
@@ -133,12 +188,9 @@ export const uploadImage = async (formData: FormData) => {
 }
 
 export const getMetadata = async (url: string): Promise<ApiReturnObject> => {
-  
   const body = { url }
   try {
-    const res = await axiosInstance.post(`/post/get-metadata`, body, {
- 
-    })
+    const res = await axiosInstance.post(`/post/get-metadata`, body, {})
     return { res: res, err: null }
   } catch (error) {
     console.error(error)
@@ -304,18 +356,19 @@ export const deletePost = async (post_id: string): Promise<ApiReturnObject> => {
   }
 }
 
-export const searchPosts = async (searchCriteria:any) => {
+export const searchPosts = async (searchCriteria: any) => {
   try {
-    const queryParams = new URLSearchParams();
+    const queryParams = new URLSearchParams()
     for (const key in searchCriteria) {
-      queryParams.append(key, searchCriteria[key]);
+      queryParams.append(key, searchCriteria[key])
     }
-    const response = await axiosInstance.get(`/post/post-search?${queryParams}`);
-    return { res: response.data, err: null };
+    const response = await axiosInstance.get(`/post/post-search?${queryParams}`)
+    return { res: response.data, err: null }
   } catch (error) {
-    console.error('Error searching for pages:', error);
-    return { res: null, err: error };
+    console.error('Error searching for pages:', error)
+    return { res: null, err: error }
   }
+
 };
 
 /** Update a User Post `POST: /api/post/user/update/:postId` */
@@ -368,3 +421,4 @@ export const updateListingPost = async (
     return { err: error, res: null }
   }
 }
+

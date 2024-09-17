@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { GetServerSideProps } from 'next'
 
 import styles from '@/styles/HobbyDetail.module.css'
@@ -43,11 +43,16 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
   }, [isMobile])
 
   const [loadingPosts, setLoadingPosts] = useState(false)
-  const [pages, setPages] = useState([])
+  const [pages, setPages] = useState<any[]>([])
+  const [pageNo, setPageNo] = useState(1)
+  const [hasMore, setHasMore] = useState(true)
+  const observer = useRef<IntersectionObserver | null>(null)
 
-  const getPost = async () => {
+  const getPost = async (p = 1) => {
     setLoadingPosts(true)
-    const { err, res } = await getHobbyPages(`${data.display}`)
+    const { err, res } = await getHobbyPages(
+      `display=${data.display}&limit=10&page=${p}`,
+    )
 
     if (err) {
       setLoadingPosts(false)
@@ -55,14 +60,53 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
     }
     if (res.data.success) {
       setLoadingPosts(false)
-      console.log('pages', res.data.data)
-      setPages(res.data.data)
+      res.data.data.length < 10 ? setHasMore(false) : setHasMore(true)
+      setPages((prev: any[]) => {
+        let merged = [...prev]
+        res.data.data?.forEach((post: any) => {
+          if (!merged.some((p: any) => p._id === post._id)) merged.push(post)
+        })
+        return merged
+      })
     }
   }
 
   useEffect(() => {
     getPost()
   }, [])
+
+  const lastPostElementRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (loadingPosts || !hasMore) return
+
+      const observerCallback = (entries: IntersectionObserverEntry[]) => {
+        if (entries[0].isIntersecting && hasMore && !loadingPosts) {
+          setPageNo((prevPageNo) => {
+            const nextPage = prevPageNo + 1
+            getPost(nextPage)
+            return nextPage
+          })
+        }
+      }
+
+      if (observer.current) {
+        console.log('first disconnect')
+        observer.current.disconnect()
+      }
+
+      observer.current = new IntersectionObserver(observerCallback)
+
+      if (node) {
+        console.log('first observe')
+        observer.current.observe(node)
+      }
+
+      return () => {
+        if (observer.current) observer.current.disconnect()
+      }
+    },
+    [loadingPosts, hasMore],
+  )
 
   const router = useRouter()
 
@@ -112,15 +156,23 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
       >
         <main className={``}>
           <section className={styles['pages-container']}>
-            {loadingPosts && (
-              <>
-                <PagesLoader /> <PagesLoader /> <PagesLoader /> <PagesLoader />{' '}
-              </>
-            )}
             {pages.length !== 0 &&
               pages.map((post: any, idx: number) => {
-                return <ListingCard key={idx} data={post} />
+                return idx === pages.length - 1 ? (
+                  <div ref={lastPostElementRef} className={`page-with-ref`}>
+                    <ListingCard key={idx} data={post} />
+                  </div>
+                ) : (
+                  <div className={`page-${idx + 1}`}>
+                    <ListingCard key={idx} data={post} />
+                  </div>
+                )
               })}
+            {loadingPosts && (
+              <>
+                <PagesLoader /> <PagesLoader /> <PagesLoader /> <PagesLoader />
+              </>
+            )}
           </section>
           {pages.length === 0 && !loadingPosts && (
             <div className={styles['dual-section-wrapper']}>

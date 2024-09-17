@@ -416,7 +416,6 @@ const CommunityLayout: React.FC<Props> = ({
   }, [filters.genre, filters.hobby, activeProfile])
   const fetchTrendingHobbies = async () => {
     const { err, res } = await TrendingHobbiesByUser()
-    console.warn('trendinghpbbiessssss', res?.data?.data)
 
     if (err) {
       return console.log('err', err)
@@ -1544,15 +1543,16 @@ const CommunityLayout: React.FC<Props> = ({
                       return (
                         <li key={hobby._id}>
                           <Link href={`/hobby/${hobby.slug}`}>
-                            {/* <div className={styles['default-img']}></div> */}
                             {hobby?.profile_image ? (
-                              <img
-                                className={styles.profileImage}
-                                src={hobby.profile_image}
-                                alt={`${hobby.display}'s `}
-                                width={64}
-                                height={64}
-                              />
+                              <div className={styles['border-div']}>
+                                <img
+                                  className={styles.profileImage}
+                                  src={hobby.profile_image}
+                                  alt={`${hobby.display}'s `}
+                                  width={64}
+                                  height={64}
+                                />{' '}
+                              </div>
                             ) : (
                               <svg
                                 className={styles.polygonOverlay}

@@ -484,7 +484,7 @@ const ListingProductPurchase: React.FC<Props> = ({
               )}
             </div>
             {listingModalData?.page_type?.includes('Online Access') ? (
-              <Image src={bhaskarQr} alt="Qr" />
+              <Image src={bhaskarQr} alt="Qr" width={330} />
             ) : (
               <div className={styles['variations']}>
                 <div className={styles['variations-list']}>
@@ -560,7 +560,8 @@ const ListingProductPurchase: React.FC<Props> = ({
           {showConfirmRegister && (
             <div className={styles['register-confirmation-wrapper']}>
               <p
-                className={RegisterError ? styles['register-error'] : 'ignore'}
+                className={RegisterError ? styles['register-error'] : ''}
+                style={{ width: 'content-fit' }}
               >
                 Did you{' '}
                 {listingModalData?.page_type?.includes('Online Access')

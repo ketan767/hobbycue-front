@@ -20,12 +20,17 @@ import { openModal } from '@/redux/slices/modal'
 import { updateHobbyMenuExpandAll } from '@/redux/slices/site'
 import { useMediaQuery } from '@mui/material'
 import Head from 'next/head'
+import { getListingPages } from '@/services/listing.service'
+import ListingCard from '@/components/ListingCard/ListingCard'
+import PagesLoader from '@/components/PagesLoader/PagesLoader'
 
 type Props = { data: { hobbyData: any } }
 
 const HobbyStorePage: React.FC<Props> = (props) => {
   const data = props.data.hobbyData
 
+  const [loadingPosts, setLoadingPosts] = useState(false)
+  const [products, setProducts] = useState([])
   const { hobby } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(hobby)
   const dispatch = useDispatch()
@@ -65,6 +70,29 @@ const HobbyStorePage: React.FC<Props> = (props) => {
     }
   }, [])
 
+  useEffect(() => {
+    ;(async () => {
+      setLoadingPosts(true)
+      const { err, res } = await getListingPages(
+        `type=4&populate=_hobbies,product_variant,seller&is_published=true`,
+      )
+
+      if (err) {
+        setLoadingPosts(false)
+        return console.log(err)
+      }
+      if (res?.data?.success) {
+        const tempArr = res?.data?.data?.listings?.filter((el: any) =>
+          el?._hobbies?.some(
+            (el2: any) => el2?.hobby?.display === data?.display,
+          ),
+        )
+        setLoadingPosts(false)
+        setProducts(tempArr)
+      }
+    })()
+  }, [])
+
   const handleExpandAll: (value: boolean) => void = (value) => {
     setExpandAll(value)
     dispatch(updateHobbyMenuExpandAll(value))
@@ -84,28 +112,31 @@ const HobbyStorePage: React.FC<Props> = (props) => {
         expandAll={expandAll}
         setExpandAll={handleExpandAll}
       >
-        <main className={`${styles['dual-section-wrapper']}`}>
-          <div className={styles['no-posts-container']}>
-            <p>
-              This feature is under development. Come back soon to view this
-            </p>
-          </div>
-          {isMobile ? null : (
-            <>
-              {' '}
-              <div className={styles['no-posts-container']}></div>
-              <div className={styles['no-posts-container']}></div>
-            </>
+        <main className={``}>
+          <section className={styles['pages-container']}>
+            {loadingPosts && (
+              <>
+                <PagesLoader /> <PagesLoader /> <PagesLoader /> <PagesLoader />{' '}
+              </>
+            )}
+            {!loadingPosts &&
+              products.length !== 0 &&
+              products?.map((product: any) => (
+                <ListingCard data={product} key={product?.id} />
+              ))}
+          </section>
+          {!loadingPosts && products.length === 0 && (
+            <div className={styles['dual-section-wrapper']}>
+              <div className={styles['no-posts-container']}>
+                <p>No products available</p>
+              </div>
+              {!isMobile && (
+                <div className={styles['no-posts-container']}></div>
+              )}
+            </div>
           )}
         </main>
       </HobbyPageLayout>
-      {/* <main className={`${styles['display-mobile']}`}>
-        <div className={styles['no-posts-container']}>
-          <p>This feature is under development. Come back soon to view this</p>
-        </div>
-        <div className={styles['no-posts-container']}></div>
-        <div className={styles['no-posts-container']}></div>
-      </main> */}
     </>
   )
 }

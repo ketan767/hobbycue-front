@@ -96,8 +96,6 @@ const ListingHome: React.FC<Props> = (props) => {
     return <ErrorPage restricted />
   }
 
-  console.log('asifs', props?.data?.pageData)
-
   return (
     <>
       <Head>

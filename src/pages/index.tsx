@@ -138,68 +138,6 @@ const Home: React.FC<PropTypes> = function () {
     }
   }, [])
 
-  const ExplorePeople = async () => {
-    const { res: PeopleRes, err: PeopleErr } = await getListingPages(
-      `type=1&sort=-createdAt&is_published=true`,
-    )
-
-    const PeoplePages = PeopleRes?.data.data?.listings
-
-    dispatch(
-      setTypeResultOne({
-        data: PeoplePages,
-        message: 'Search completed successfully.',
-        success: true,
-      }),
-    )
-  }
-
-  const ExplorePlaces = async () => {
-    const { res: PlacesRes, err: PlacesErr } = await getListingPages(
-      `type=2&sort=-createdAt&is_published=true`,
-    )
-
-    const PlacesPages = PlacesRes?.data.data?.listings
-
-    dispatch(
-      setTypeResultTwo({
-        data: PlacesPages,
-        message: 'Search completed successfully.',
-        success: true,
-      }),
-    )
-  }
-
-  const ExploreEvents = async () => {
-    const { res: EventRes, err: EventErr } = await getAllEvents()
-
-    const EventPages = EventRes?.data?.data
-
-    dispatch(
-      setTypeResultThree({
-        data: EventPages,
-        message: 'Search completed successfully.',
-        success: true,
-      }),
-    )
-  }
-
-  const ExploreProducts = async () => {
-    const { res: ProductsRes, err: ProductsErr } = await getListingPages(
-      `type=4&sort=-createdAt&is_published=true`,
-    )
-
-    const ProductsPages = ProductsRes?.data.data?.listings
-
-    dispatch(
-      setTypeResultFour({
-        data: ProductsPages,
-        message: 'Search completed successfully.',
-        success: true,
-      }),
-    )
-  }
-
   const audioRef = useRef<HTMLAudioElement>(null)
 
   const togglePlay = () => {
@@ -294,14 +232,7 @@ const Home: React.FC<PropTypes> = function () {
               className={styles['card-btn']}
               onClick={async (e: any) => {
                 e.preventDefault()
-
-                dispatch(resetSearch())
-                await ExplorePeople()
-
-                dispatch(toggleShowAllPeople())
-                dispatch(setExplore(true))
-
-                router.push('/search')
+                router.push('/explore/people')
               }}
             >
               Connect
@@ -329,13 +260,7 @@ const Home: React.FC<PropTypes> = function () {
               className={styles['card-btn']}
               onClick={async (e: any) => {
                 e.preventDefault()
-
-                dispatch(resetSearch())
-                await ExplorePlaces()
-
-                dispatch(toggleShowAllPlace())
-                dispatch(setExplore(true))
-                router.push('/search')
+                router.push('/explore/places')
               }}
             >
               Meet up
@@ -376,13 +301,7 @@ const Home: React.FC<PropTypes> = function () {
               className={styles['card-btn']}
               onClick={async (e: any) => {
                 e.preventDefault()
-
-                dispatch(resetSearch())
-                await ExploreProducts()
-
-                dispatch(toggleShowAllProducts())
-                dispatch(setExplore(true))
-                router.push('/search')
+                router.push('/explore/products')
               }}
             >
               Get it
@@ -419,13 +338,7 @@ const Home: React.FC<PropTypes> = function () {
               className={styles['card-btn']}
               onClick={async (e: any) => {
                 e.preventDefault()
-
-                dispatch(resetSearch())
-                await ExploreEvents()
-
-                dispatch(toggleShowAllEvent())
-                dispatch(setExplore(true))
-                router.push('/search')
+                router.push('/explore/programs')
               }}
             >
               Attend

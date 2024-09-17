@@ -31,11 +31,13 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 10px;
 }
 
 .register-confirmation-wrapper div{
   display: flex;
   flex-direction: row;
+  gap: 8px;
   width: 100%;
 }
 
@@ -54,7 +56,6 @@ width: 115%;
 }
 
 .register-confirmation-wrapper div span {
-  padding: 0 8px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -583,7 +584,8 @@ line-height: 16px;
   .register-confirmation-wrapper {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    gap: 0;
+    align-items: flex-start;
   }
   .footer-submit-mob {
     display: block;

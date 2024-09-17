@@ -149,3 +149,21 @@ padding: 12px 16px;
 gap: 24px;
 }
 }
+
+
+.gridContainer {
+  margin: 12px auto;
+  max-width: 1296px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  row-gap: 12px;
+  column-gap: 24px;
+  
+}
+
+@media (max-width: 1100px) {
+  .gridContainer {
+    row-gap: 8px;
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
