@@ -335,7 +335,7 @@ const HobbyPageLayout: React.FC<Props> = ({
         {/* {!hideLastColumn && ( */}
         {(isMobile || !hideLastColumn) && (
           <>
-            {activeTab === 'home' && (
+            {(activeTab === 'home' || activeTab === 'posts') && (
               <aside>
                 <div className={styles['members']}>
                   <div className={styles['heading']}>

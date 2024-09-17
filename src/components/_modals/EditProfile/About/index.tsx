@@ -81,6 +81,7 @@ const ProfileAboutEditModal: React.FC<Props> = ({
   }, [user])
 
   const handleInputChange = (value: string) => {
+    console.warn('handleinputtt', value)
     setData((prev) => ({ ...prev, about: value }))
     setInputErrs({ about: null })
 
@@ -281,9 +282,9 @@ const ProfileAboutEditModal: React.FC<Props> = ({
           onComplete?.()
           return
         } else if (
-          typeof event?.srcElement?.className?.includes === 'function' &&
-          event?.srcElement?.className?.includes('ql-editor') ||
-          event?.srcElement?.tagName === "svg"
+          (typeof event?.srcElement?.className?.includes === 'function' &&
+            event?.srcElement?.className?.includes('ql-editor')) ||
+          event?.srcElement?.tagName === 'svg'
         ) {
           return
         } else {

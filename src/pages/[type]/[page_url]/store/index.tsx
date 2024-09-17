@@ -18,6 +18,7 @@ import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPag
 import ListingStoreTab from '@/components/ListingPage/ListingPageStore/ListingPageStore'
 import ErrorPage from '@/components/ErrorPage'
 import { useMediaQuery } from '@mui/material'
+import { pageType } from '@/utils'
 
 type Props = { data: ListingPageData }
 
@@ -79,6 +80,12 @@ const ListingStore: React.FC<Props> = (props) => {
   return (
     <>
       <Head>
+        <link
+          rel="canonical"
+          href={`${process.env.NEXT_PUBLIC_BASE_URL}/${pageType(
+            props?.data?.pageData?.type,
+          )}/${props?.data?.pageData?.page_url}/store`}
+        />
         <meta
           property="og:image"
           content={`${props?.data?.pageData?.profile_image}`}

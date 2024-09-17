@@ -721,6 +721,15 @@ const CommunityLayout: React.FC<Props> = ({
     })
   }
 
+  useEffect(() => {
+    if (!isLoggedIn)
+      dispatch(
+        setFilters({
+          location: 'All Locations',
+        }),
+      )
+  }, [])
+
   const handleStartPost = () => {
     if (!user.is_onboarded) {
       router.push(`/profile/${user.profile_url}`)

@@ -18,6 +18,7 @@ import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPag
 import ListingOrdersTab from '@/components/ListingPage/ListingOrdersTab/ListingOrdersTab'
 import styles from '@/styles/Page.module.css'
 import { useMediaQuery } from '@mui/material'
+import { pageType } from '@/utils'
 
 type Props = { data: ListingPageData }
 
@@ -100,6 +101,12 @@ const ListingHome: React.FC<Props> = (props) => {
   return (
     <>
       <Head>
+        <link
+          rel="canonical"
+          href={`${process.env.NEXT_PUBLIC_BASE_URL}/${pageType(
+            props?.data?.pageData?.type,
+          )}/${props?.data?.pageData?.page_url}/orders`}
+        />
         <meta
           property="og:image"
           content={`${props?.data?.pageData?.profile_image}`}

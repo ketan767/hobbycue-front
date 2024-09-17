@@ -20,6 +20,7 @@ import ListingPostsTab from '@/components/ListingPage/ListingPagePosts/ListingPa
 import ListingMediaTab from '@/components/ListingPage/ListingPageMedia'
 import ErrorPage from '@/components/ErrorPage'
 import { useMediaQuery } from '@mui/material'
+import { pageType } from '@/utils'
 
 type Props = { data: ListingPageData }
 
@@ -79,6 +80,12 @@ const ListingMedia: React.FC<Props> = (props) => {
   return (
     <>
       <Head>
+        <link
+          rel="canonical"
+          href={`${process.env.NEXT_PUBLIC_BASE_URL}/${pageType(
+            props?.data?.pageData?.type,
+          )}/${props?.data?.pageData?.page_url}/media`}
+        />
         <meta
           property="og:image"
           content={`${props?.data?.pageData?.profile_image}`}

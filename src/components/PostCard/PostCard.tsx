@@ -40,7 +40,9 @@ const PostCard: React.FC<Props> = (props) => {
   // const [type, setType] = useState<'User' | 'Listing'>()
   // console.warn({props})
   const router = useRouter()
-  const { user } = useSelector((state: RootState) => state.user)
+  const { user, activeProfile, isLoggedIn } = useSelector(
+    (state: RootState) => state.user,
+  )
   const [has_link, setHas_link] = useState(props.postData.has_link)
   const [snackbar, setSnackbar] = useState({
     type: 'success',
@@ -114,7 +116,6 @@ const PostCard: React.FC<Props> = (props) => {
     }
   }, [])
 
-  console.warn('postdataaaaaaaaaaa', postData)
   const updatePost = async () => {
     const { err, res } = await getAllPosts(
       `_id=${postData._id}&populate=_author,_genre,_hobby`,
@@ -173,7 +174,7 @@ const PostCard: React.FC<Props> = (props) => {
     (postData.author_type === 'User' &&
       postData?._author?.email === user?.email) ||
     (postData?.author_type === 'Listing' &&
-      postData?._author.admin === user._id)
+      activeProfile?.data?.admin === user?._id)
   const showFeatureUnderDevelopment = () => {
     setSnackbar({
       display: true,
@@ -252,7 +253,8 @@ const PostCard: React.FC<Props> = (props) => {
         {/* Card Header */}
         {(!has_link ||
           props.currentSection === 'posts' ||
-          router.pathname.startsWith('/post')) && (
+          router.pathname.startsWith('/post') ||
+          router.pathname.endsWith('/posts')) && (
           <header>
             <Link
               href={
@@ -392,8 +394,10 @@ const PostCard: React.FC<Props> = (props) => {
                 viewBox="0 0 24 24"
                 fill="none"
                 onClick={() => {
-                  if (fromProfile && postedByMe) {
+                  if (isLoggedIn && fromProfile && postedByMe) {
                     setOptionsActive(true)
+                  } else if (!isLoggedIn) {
+                    dispatch(openModal({ type: 'auth', closable: true }))
                   } else setOpenAction(true)
                 }}
               >
@@ -446,7 +450,8 @@ const PostCard: React.FC<Props> = (props) => {
         <section className={styles['body']}>
           {(!has_link ||
             props.currentSection === 'posts' ||
-            router.pathname.startsWith('/post')) && (
+            router.pathname.startsWith('/post') ||
+            router.pathname.endsWith('/posts')) && (
             <div
               className={styles['content'] + ' ql-editor'}
               dangerouslySetInnerHTML={{ __html: processedContent }}
@@ -739,7 +744,9 @@ const PostCard: React.FC<Props> = (props) => {
             </section>
 
             {/* Comments Section */}
-            {showComments && <PostComments data={postData} styles={styles} />}
+            {(showComments || router.pathname.startsWith('/post/')) && (
+              <PostComments data={postData} styles={styles} />
+            )}
           </footer>
         )}
       </div>
