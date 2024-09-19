@@ -113,13 +113,14 @@ const HobbyPageHeaderSmall = ({ activeTab, data }: Props) => {
           className={`site-container ${styles['header']} ${styles['small']}`}
         >
           {data?.profile_image ? (
+            <div className={styles['border-div-small']}>
             <img
               className={styles['profile-img-small']}
               src={data.profile_image}
               alt=""
               width={160}
               height={160}
-            />
+            /></div>
           ) : (
             <div className={`${styles['profile-img']}`}>
               <Image

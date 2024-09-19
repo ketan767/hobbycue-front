@@ -212,7 +212,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const router = useRouter()
 
   const { q, filter } = router.query
-  
+
   const queryString = Array.isArray(q) ? q[0] : q || ''
 
   const showAll = filter ? filter === '' : true
@@ -821,8 +821,6 @@ const MainContent: React.FC<SearchResultsProps> = ({
                               <img
                                 src={hobby.profile_image}
                                 alt={`${hobby.display}'s `}
-                                width={64}
-                                height={64}
                               />
                             </div>
                           ) : (

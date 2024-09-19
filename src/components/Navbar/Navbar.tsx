@@ -159,7 +159,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   const searchResult = () => {
     const val = data.search.value.trim()
     if (val) {
-      router.push({ pathname: '/search', query: { ...router.query, q: val } })
+      router.push({ pathname: '/search', query: { q: val } })
     }
   }
 

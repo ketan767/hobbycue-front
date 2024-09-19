@@ -27,7 +27,7 @@ const CommunityBlogs: React.FC<Props> = ({}) => {
 
   const getPost = async () => {
     const params = new URLSearchParams(
-      `populate=_hobbies,_address&is_published=true&type=4`,
+      `populate=_hobbies,_address,product_variant&is_published=true&type=4`,
     )
 
     if (
