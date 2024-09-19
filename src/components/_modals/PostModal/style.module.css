@@ -49,7 +49,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 12px;
+  padding: 12px 12px 5px 12px;
   gap: 8px;
 }
 .header-user > .title > p:first-child {
@@ -72,6 +72,7 @@
 }
 .post-content {
   padding: 12px;
+  padding-top: 0;
   color: #08090a;
   font-size: 14px;
   font-weight: 400;
@@ -243,7 +244,7 @@
   position: relative;
   width: 100%;
   display: flex;
-  padding-bottom: 10px;
+
 }
 .comment-input-wrapper form {
   display: flex;
@@ -251,7 +252,7 @@
 }
 .comment-input-wrapper .submit-btn {
   position: absolute;
-  top: 42%;
+  top: 49%;
   right: 8px;
   transform: translateY(-50%);
   border: none;

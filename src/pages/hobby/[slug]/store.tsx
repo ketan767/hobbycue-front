@@ -113,7 +113,7 @@ const HobbyStorePage: React.FC<Props> = (props) => {
         setExpandAll={handleExpandAll}
       >
         <main className={``}>
-          <section className={styles['pages-container']}>
+          <section className={styles['store-container']}>
             {loadingPosts && (
               <>
                 <PagesLoader /> <PagesLoader /> <PagesLoader /> <PagesLoader />{' '}
@@ -122,7 +122,11 @@ const HobbyStorePage: React.FC<Props> = (props) => {
             {!loadingPosts &&
               products.length !== 0 &&
               products?.map((product: any) => (
-                <ListingCard data={product} key={product?.id} />
+                <ListingCard
+                  data={product}
+                  key={product?.id}
+                  style={{ minWidth: 271, maxWidth: 700 }}
+                />
               ))}
           </section>
           {!loadingPosts && products.length === 0 && (

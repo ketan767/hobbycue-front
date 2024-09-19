@@ -23,7 +23,7 @@ import Calendar from '@/assets/svg/calendar-light.svg'
 import MailIcon from '@/assets/svg/mailicon.svg'
 import Time from '@/assets/svg/clock-light.svg'
 import EditIcon from '@/assets/svg/edit-colored.svg'
-import ShareIcon from '@/assets/svg/share-outlined.svg'
+import ShareIcon from '../../../assets/icons/ShareIcon'
 import ListingGeneralEditModal from '@/components/_modals/EditListing/ListingGeneral'
 import FilledButton from '@/components/_buttons/FilledButton'
 import CoverPhotoLayout from '@/layouts/CoverPhotoLayout/CoverPhotoLayout'
@@ -741,7 +741,7 @@ const ListingHeaderSmall: React.FC<Props> = ({ data, activeTab }) => {
                 onClick={(e) => handleShare()}
                 className={styles['action-btn']}
               >
-                <Image src={ShareIcon} alt="share" />
+                <ShareIcon />
               </div>
             </Tooltip>
 

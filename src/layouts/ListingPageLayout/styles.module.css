@@ -121,6 +121,7 @@
   margin: 12px 16px;
 }
 
+
 .about-text {
   margin: 0;
 }
@@ -193,7 +194,10 @@
   .expand-all-page-type-wrapper {
     margin-bottom: 12px;
   }
-
+  .gapabovehome {
+    height: 8px;
+    background-color: #ebedf0;
+  }
   .nav {
     display: none;
   }

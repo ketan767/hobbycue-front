@@ -40,6 +40,7 @@ import {
   toggleShowAllEvent,
   toggleShowAllPlace,
   toggleShowAllPeople,
+  toggleShowAll,
 } from '@/redux/slices/search'
 import LogoFull from '@/assets/image/logo-full.svg'
 import LogoSmall from '@/assets/image/logo-small.png'
@@ -869,7 +870,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           onClick={async (e) => {
                             e.preventDefault()
                             router.push({
-                              pathname: '/explore/blogs',
+                              pathname: '/blog',
                             })
                           }}
                         >

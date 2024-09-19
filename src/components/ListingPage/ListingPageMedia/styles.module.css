@@ -25,7 +25,7 @@
 .uploadContainer {
   display: grid;
   gap: 24px;
-  grid-template-columns: 50% 50%;
+  grid-template-columns: 1fr 1fr;
   
 }
 
@@ -169,7 +169,7 @@
 }
 
 .videos {
-  height: 100%;
+aspect-ratio: 16/9;
   border-radius: 8px;
 }
 
@@ -212,9 +212,13 @@
 }
 
 .medias{
+  height: 100%;
   width: 100%;
-
   border-radius: 0px 0px 8px 8px;
+}
+
+.mediavideo {
+  width: 100%;
 
 }
 
@@ -223,8 +227,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    /* height: 100%; */
-    aspect-ratio: 16 / 9;
+
     border-radius: 0;
     background: transparent;
   }
@@ -263,11 +266,15 @@
     margin-top: 8px;
   }
 
+  .uploadContainer > div {
+    margin-bottom: 0;
+  }
+
   .videoAndImages{
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-top: 12px;
+    gap: 8px;
+    margin-top: 8px;
   }
 
   .uploadButtonDescktop {

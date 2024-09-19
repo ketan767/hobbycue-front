@@ -10,8 +10,6 @@ import {
   createListingPost,
   createUserPost,
   getMetadata,
-  updateListingPost,
-  updateUserPost,
   uploadImage,
   updateListingPost,
   updateUserPost,
@@ -586,8 +584,6 @@ export const CreatePost: React.FC<Props> = ({
     }
 
     const { err, res } = editing
-
-
       ? await updateUserPost(jsonData, propData?._id)
       : await createUserPost(jsonData)
 

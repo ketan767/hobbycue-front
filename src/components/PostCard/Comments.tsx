@@ -69,6 +69,7 @@ const PostComments = ({
   }
 
   const addComment = async (event: any) => {
+    event.preventDefault()
     if (isLoggedIn) {
       event.preventDefault()
       if (user.is_onboarded === false) {
@@ -161,8 +162,8 @@ const PostComments = ({
               className={styles['inputAuthorImage']}
               src={activeProfile?.data?.profile_image}
               alt="Author Profile"
-              width={40}
-              height={40}
+              width={32}
+              height={32}
             />
           ) : (
             <div
@@ -175,7 +176,7 @@ const PostComments = ({
           )}
 
           <div className={styles['comment-input-wrapper']}>
-            <div>
+            <form onSubmit={addComment}>
               <TextareaAutosize
                 value={inputValue}
                 className={styles['input']}
@@ -190,6 +191,7 @@ const PostComments = ({
                 maxRows={5}
               />
               <button
+                type="submit"
                 className={styles['submit-btn']}
                 disabled={loading}
                 onClick={addComment}
@@ -208,7 +210,7 @@ const PostComments = ({
                   />
                 </svg>
               </button>
-            </div>
+            </form>
           </div>
         </section>
 

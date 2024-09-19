@@ -298,7 +298,16 @@
 .pages-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-16);
+  column-gap: 24px;
+  row-gap: 12px; 
+}
+
+.store-container {
+  display: grid;
+  width:calc(100% - 0px);
+  grid-template-columns: 1fr 1fr 1fr; /* Two equal-width columns */
+  column-gap: 24px;
+  row-gap: 12px; /* Gap between grid items */
 }
 
 .blogs-container {
@@ -432,6 +441,13 @@ line-height: 20px;
 }
 
 @media screen and (max-width: 1100px) {
+  .store-container {
+    display: grid;
+    width:calc(100% - 0px);
+    grid-template-columns: 1fr;
+
+    row-gap: 8px; 
+  }
   .hobby-left-aside {
     position: relative !important;
     top: 0;

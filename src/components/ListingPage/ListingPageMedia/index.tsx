@@ -19,6 +19,7 @@ import { uploadImage } from '@/services/post.service'
 import ReactPlayer from 'react-player'
 import { useMediaQuery } from '@mui/material'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
 
 interface Props {
   data: ListingPageData['pageData']
@@ -242,25 +243,36 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
               {!isMobile && <div className={styles['no-posts-div']}></div>}
             </section>
           )}
-        <div className={styles.videoAndImages}>
-          <div className={styles.imagesContainer}>
-            {Array.isArray(listingModalData?.images) &&
-              listingModalData?.images[0] && (
-                <div className={styles.medias}>
-                  <div className={styles.image}>
-                    <img
-                      src={listingModalData?.images[0]}
-                      alt="Listing Image"
-                    />
+        {listingModalData ? (
+          <ResponsiveMasonry
+            columnsCountBreakPoints={{ 0: 1, 600: 2, 1100: 2 }}
+          >
+            <Masonry
+              gutter={isMobile ? '8px' : '12px'}
+              style={{ columnGap: '24px', rowGap: '12px' }}
+            >
+              {/* Main Image */}
+              {Array.isArray(listingModalData?.images) &&
+                listingModalData?.images[0] && (
+                  <div className={styles.medias}>
+                    <div
+                      onClick={() =>
+                        OpenMediaImage(listingModalData?.images[0])
+                      }
+                      className={styles.image}
+                    >
+                      <img
+                        src={listingModalData?.images[0]}
+                        alt="Listing Image"
+                      />
+                    </div>
                   </div>
-                </div>
-              )}
-          </div>
-          <div className={styles.imagesContainer}>
-            {listingModalData?.video_url ? (
-              <div className={styles.medias}>
-                {listingModalData?.video_url && (
-                  <div className={styles['videos']}>
+                )}
+
+              {/* Video */}
+              {listingModalData?.video_url && (
+                <div className={styles.mediavideo}>
+                  <div className={styles.videos}>
                     <ReactPlayer
                       width="100%"
                       height="100%"
@@ -268,25 +280,23 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
                       controls={true}
                     />
                   </div>
-                )}
-              </div>
-            ) : null}
-          </div>
-          <div className={styles.imagesContainer}>
-            {listingModalData.images?.slice(1).map((item: any, idx: any) => {
-              return (
+                </div>
+              )}
+
+              {/* Other Images */}
+              {listingModalData.images?.slice(1).map((item: any, idx: any) => (
                 <div key={idx} className={styles.medias}>
                   <div
                     className={styles.image}
                     onClick={() => OpenMediaImage(item)}
                   >
-                    <img src={item} />
+                    <img src={item} alt={`Listing Image ${idx + 1}`} />
                   </div>
                 </div>
-              )
-            })}
-          </div>
-        </div>
+              ))}
+            </Masonry>
+          </ResponsiveMasonry>
+        ) : null}
 
         {/* User Information */}
         {

@@ -87,7 +87,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
     ) {
       return data?.postsData?.media[0]
     } else {
-      return 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/user-profile-1716373617637'
+      return 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/HobbyCue+Logo+Banner+2+ML.png'
     }
   }
 
@@ -108,23 +108,17 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
         <meta
           property="og:description"
           content={`${
-            data.metadata?.data?.description
-              ? data.metadata?.data?.description
-              : data.postsData?.content
+            data.postsData?.content
               ? post_descripton
-              : ''
+              : data.metadata?.data?.description
+              ? data.metadata?.data?.description
+              : 'View this post on hobbycue.com'
           }`}
         />
 
         <meta property="og:image:alt" content="Profile picture" />
         <title>
-          {`${
-            data?.metadata?.data?.title
-              ? data.metadata.data.title
-              : data.postsData?._author?.title
-              ? data.postsData._author.title
-              : `${data.postsData?._author?.full_name} - ${data.postsData?._hobby?.display} at ${data.postsData?.visibility}`
-          }`}
+          {`${`${data.postsData?._author?.full_name} - ${data.postsData?._hobby?.display} at ${data.postsData?.visibility}`}`}
         </title>
       </Head>
       <CommunityPageLayout activeTab="posts" singlePostPage={true}>

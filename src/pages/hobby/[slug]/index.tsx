@@ -200,7 +200,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
             // setDisplayData={setShowKeywords}
             >
               <div className={styles['keyword-container']}>
-                <h4 className={styles['keyword-text']}>Keyword :</h4>
+                <h4 className={styles['keyword-text']}>Keywords :</h4>
                 <ul className={`${styles['keyword-list']}`}>
                   {data?.keywords?.map((item: any, idx: number) => (
                     <li key={idx}>
