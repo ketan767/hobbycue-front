@@ -160,7 +160,7 @@ line-height: 16px; /* 114.286% */
     padding-top: 8px;
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-16);
+    gap: 8px;
   }
   .no-data-div {
     width: 100%;
