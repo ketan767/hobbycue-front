@@ -492,7 +492,7 @@ const ListingPageLayout: React.FC<Props> = ({
           LocationErr,
         })}
       </main>
-      <div style={{ backgroundColor: '#f8f9fa' }}>
+      <div style={{ backgroundColor: '#EBEDF0' }}>
         <div className={styles['display-mobile-main']}>
           {activeTab === 'home' && (
             <div className={styles['display-mobile']}>

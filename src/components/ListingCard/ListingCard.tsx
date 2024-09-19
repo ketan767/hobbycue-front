@@ -14,16 +14,18 @@ import { RootState } from '@/redux/store'
 import { Height } from '@mui/icons-material'
 import { updateListingLayoutMode } from '@/redux/slices/site'
 import ListingCardProduct from './ListingCardProduct'
+import { useRouter } from 'next/router'
 
 type Props = {
   data: any
+  column?: any
   style?: React.CSSProperties
 }
 
-const ListingCard: React.FC<Props> = ({ data, style }) => {
+const ListingCard: React.FC<Props> = ({ data, style, column }) => {
   const { user } = useSelector((state: RootState) => state.user)
   const type = getListingTypeName(data?.type)
-
+  const router = useRouter()
   console.warn({ data })
   function formatDateRange(prop: {
     from_date: string
@@ -140,7 +142,7 @@ const ListingCard: React.FC<Props> = ({ data, style }) => {
         className={styles.container}
         style={style}
       >
-        {itsMe ? (
+        {itsMe && router.pathname.endsWith('/pages') ? (
           <div
             className={`${
               data.is_published
@@ -158,7 +160,9 @@ const ListingCard: React.FC<Props> = ({ data, style }) => {
           {data?.cover_image ? (
             <>
               <div
-                className={styles['background']}
+                className={
+                  column === 4 ? styles.backgroundtwo : styles['background']
+                }
                 style={{ backgroundImage: `url(${data?.cover_image})` }}
               ></div>
               <img
@@ -166,7 +170,9 @@ const ListingCard: React.FC<Props> = ({ data, style }) => {
                 width={300}
                 height={100}
                 alt="cover"
-                className={styles.coverImage}
+                className={
+                  column === 4 ? styles.coverImageTwo : styles.coverImage
+                }
                 style={{ marginBottom: '-7px' }}
               />
               <div
@@ -181,14 +187,24 @@ const ListingCard: React.FC<Props> = ({ data, style }) => {
             <div
               className={
                 data?.type == 1
-                  ? `${styles['coverImage']} default-people-listing-cover`
+                  ? `${
+                      column === 4 ? styles.coverImageTwo : styles.coverImage
+                    } default-people-listing-cover`
                   : data?.type == 2
-                  ? `${styles['coverImage']} default-place-listing-cover`
+                  ? `${
+                      column === 4 ? styles.coverImageTwo : styles.coverImage
+                    } default-place-listing-cover`
                   : data?.type == 3
-                  ? `${styles['coverImage']} default-program-listing-cover`
+                  ? `${
+                      column === 4 ? styles.coverImageTwo : styles.coverImage
+                    } default-program-listing-cover`
                   : data?.type == 4
-                  ? `${styles['coverImage']} default-product-listing-cover`
-                  : `${styles['coverImage']} default-people-listing-cover`
+                  ? `${
+                      column === 4 ? styles.coverImageTwo : styles.coverImage
+                    } default-product-listing-cover`
+                  : `${
+                      column === 4 ? styles.coverImageTwo : styles.coverImage
+                    } default-people-listing-cover`
               }
             >
               <div

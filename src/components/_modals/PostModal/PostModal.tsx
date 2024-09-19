@@ -199,6 +199,28 @@ export const PostModal: React.FC<Props> = ({
     )
   }
 
+  const processedContent = activePost?.content
+
+    .replace(/<img\b[^>]*>/g, '')
+
+    .replace(/(https?:\/\/[^\s<]+)(?![^<]*<\/a>)/gi, (url: string) => {
+      const href =
+        url.startsWith('http://') || url.startsWith('https://')
+          ? url
+          : `https://${url}`
+      return `<a href="${href}" class="${pageUrlClass}" target="_blank" style="color: rgb(128, 100, 162);">${url}</a>`
+    })
+
+  const finalContent = processedContent.replace(
+    /<a\b([^>]*)>/gi,
+    (match: any) => {
+      if (!match.includes('style=')) {
+        return match.replace('<a', '<a style="color: rgb(128, 100, 162);"')
+      }
+      return match
+    },
+  )
+
   return (
     <>
       <div className={`${styles['modal-wrapper']}`}>
@@ -296,18 +318,7 @@ export const PostModal: React.FC<Props> = ({
             <div
               className={styles['post-content']}
               dangerouslySetInnerHTML={{
-                __html: activePost?.content
-                  .replace(/<img\b[^>]*>/g, '')
-                  .replace(
-                    /((https?:\/\/|ftp:\/\/|file:\/\/|www\.)[-A-Z0-9+&@#/%?=~_|!:,.;]*)/gi,
-                    (match: any, url: string) => {
-                      const href =
-                        url.startsWith('http://') || url.startsWith('https://')
-                          ? url
-                          : `http://${url}`
-                      return `<a href="${href}" class="${pageUrlClass}" target="_blank">${url}</a>`
-                    },
-                  ),
+                __html: finalContent,
               }}
             ></div>
             {activePost?.media?.length > 0 && (

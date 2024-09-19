@@ -30,6 +30,7 @@
     margin-bottom: 0px;
   }
   .posts-container {
+    background-color: #EBEDF0;
     gap: 8px;
   }
   .wrapper {

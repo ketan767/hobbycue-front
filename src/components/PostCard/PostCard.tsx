@@ -256,8 +256,6 @@ const PostCard: React.FC<Props> = (props) => {
     },
   )
 
-  console.warn('processed contettttt', processedContent)
-
   return (
     <>
       <div className={styles['post-card-wrapper']} onClick={handleCardClick}>
