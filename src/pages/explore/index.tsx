@@ -24,7 +24,7 @@ const Explore: React.FC<Props> = ({ data: initialData }) => {
     if (loading || !hasMore) return
     setLoading(true)
     const { res, err } = await getListingPages(
-      `&sort=createdAt&is_published=true&populate=_hobbies,_address&page=${
+      `&sort=createdAt&is_published=true&populate=_hobbies,_address,product_variant,seller&page=${
         page + 1
       }&limit=20`,
     )
@@ -81,7 +81,7 @@ const Explore: React.FC<Props> = ({ data: initialData }) => {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const { res, err } = await getListingPages(
-    `&sort=-createdAt&is_published=true&populate=_hobbies,_address&page=1&limit=20`,
+    `&sort=-createdAt&is_published=true&populate=_hobbies,_address,product_variant,seller&page=1&limit=20`,
   )
 
   if (err) return { notFound: true }
