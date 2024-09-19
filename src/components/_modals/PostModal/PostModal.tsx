@@ -328,6 +328,15 @@ export const PostModal: React.FC<Props> = ({
                     src={activePost?.media[0]}
                     className={styles['post-image']}
                     alt=""
+                    onClick={() => {
+                      dispatch(
+                        openModal({
+                          type: 'View-Image-Modal',
+                          closable: false,
+                          imageurl: activePost?.media[0],
+                        }),
+                      )
+                    }}
                   />
                 ) : (
                   <Slider

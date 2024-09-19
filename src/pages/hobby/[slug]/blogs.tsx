@@ -105,8 +105,10 @@ const HobbyBlogsPage: React.FC<Props> = (props) => {
         expandAll={expandAll}
         setExpandAll={handleExpandAll}
       >
-        <main>
-          <section className={styles['blogs-container']}>
+
+        <main className={`${styles['dual-section-wrapper']}`}>
+          <section className={styles['store-container']}>
+
             {loadingPosts && (
               <>
                 <BlogLoader /> <BlogLoader /> <BlogLoader />{' '}

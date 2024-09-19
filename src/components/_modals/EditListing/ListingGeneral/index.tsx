@@ -98,13 +98,21 @@ const ListingGeneralEditModal: React.FC<Props> = ({
     inputRef?.current?.focus()
   }, [])
   const handleInputChange = (event: any) => {
-    setData((prev) => {
-      return {
-        ...prev,
-        [event.target.name]: { value: event.target.value, error: null },
+    const { name, value } = event.target
+
+    if (name === 'tagline') {
+      const limitedValue = value.slice(0, 81)
+
+      if (limitedValue.length > 80) {
+        return
       }
-    })
+    }
+    setData((prev) => ({
+      ...prev,
+      [name]: { value: value, error: null },
+    }))
   }
+
   const Backsave = async () => {
     if (!data.title.value || data.title.value === '') {
       if (onBackBtnClick) onBackBtnClick()

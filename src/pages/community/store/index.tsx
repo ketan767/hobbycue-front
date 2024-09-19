@@ -27,7 +27,9 @@ const CommunityBlogs: React.FC<Props> = ({}) => {
 
   const getPost = async () => {
     const params = new URLSearchParams(
-      `populate=_hobbies,_address,product_variant&is_published=true&type=4`,
+
+      `populate=_hobbies,_address,product_variant,seller&is_published=true&type=4`,
+
     )
 
     if (
@@ -72,7 +74,7 @@ const CommunityBlogs: React.FC<Props> = ({}) => {
   return (
     <>
       <CommunityPageLayout activeTab="store">
-        <section className={styles['pages-container']}>
+        <section className={styles['store-container']}>
           {pagesLoading ? (
             <>
               <PagesLoader />
@@ -105,7 +107,13 @@ const CommunityBlogs: React.FC<Props> = ({}) => {
             </>
           ) : (
             allPages.map((post: any) => {
-              return <ListingCard key={post._id} data={post} />
+              return (
+                <ListingCard
+                  key={post._id}
+                  data={post}
+                  style={{ minWidth: 271, maxWidth: 700 }}
+                />
+              )
             })
           )}
         </section>

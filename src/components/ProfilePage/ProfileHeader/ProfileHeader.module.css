@@ -377,7 +377,7 @@
   }
   .actions-container-mobile {
     display: flex;
-    margin: 10px 16px;
+    margin: 10px 0;
   }
 
   .action-btn-wrapper {
@@ -388,7 +388,7 @@
     width: 100%;
     height: auto;
     margin: 0 0 10px 0;
-    padding: 8px;
+    padding: 6px 16px;
     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.12);
   }
 
