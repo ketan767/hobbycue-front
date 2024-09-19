@@ -14,7 +14,7 @@
 }
 .profile-img {
   border-radius: 8px;
-  width: 140px;
+  width: 138.56px;
   height: 160px;
   filter: drop-shadow(0px 2px 12px rgba(0, 0, 0, 0.08));
   object-fit: cover;
@@ -31,12 +31,22 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 144px;
+  width: 142.02px;
   height: 164px;
   clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
   z-index: -1;
 }
 
+.border-div-small{
+  background-color: #8064a2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 62px;
+  height: 70.78px;
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  z-index: -1;
+}
 .profile-img-small {
   border-radius: 8px;
   width: 60px;

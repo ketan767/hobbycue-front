@@ -105,8 +105,10 @@ const HobbyBlogsPage: React.FC<Props> = (props) => {
         expandAll={expandAll}
         setExpandAll={handleExpandAll}
       >
+
         <main className={`${styles['dual-section-wrapper']}`}>
           <section className={styles['store-container']}>
+
             {loadingPosts && (
               <>
                 <BlogLoader /> <BlogLoader /> <BlogLoader />{' '}
@@ -123,7 +125,10 @@ const HobbyBlogsPage: React.FC<Props> = (props) => {
                 <p>No Blogs available</p>
               </div>
               {!isMobile && (
-                <div className={styles['no-posts-container']}></div>
+                <>
+                  <div className={styles['no-posts-container']}></div>
+                  <div className={styles['no-posts-container']}></div>
+                </>
               )}
             </div>
           )}

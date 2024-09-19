@@ -110,7 +110,7 @@ const HobbyPageLayout: React.FC<Props> = ({
     window.addEventListener('scroll', checkScroll)
     getMembers()
     // return window.removeEventListener('scroll', checkScroll)
-  }, [])
+  }, [data, router.asPath ])
 
   useEffect(() => {
     if (hobbyStates && typeof hobbyStates[data?._id] === 'boolean') {
