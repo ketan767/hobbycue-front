@@ -294,17 +294,20 @@
     grid-template-columns: 1fr;
     width: unset;
     position: relative;
-    top: 10px;
+    top: 8px;
+    row-gap: 8px;
   }
   .blog-container {
     grid-template-columns: 1fr;
     width: unset;
+    row-gap: 8px;
+    top: 8px;
   }
   .posts-container {
     margin-top: 8px;
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-12);
+    gap: 8px;
   }
   .display-desktop {
     display: none !important;
