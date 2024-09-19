@@ -112,7 +112,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         dispatch(resetSearch())
         await ExplorePeople()
         dispatch(showAllPeopleTrue())
-        router.push('/explore/people')
+        router.push('/explore/peoples')
         dispatch(setExplore(true))
         handleClose()
         break

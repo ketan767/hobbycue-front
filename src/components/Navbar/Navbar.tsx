@@ -801,7 +801,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           onClick={async (e) => {
                             e.preventDefault()
                             router.push({
-                              pathname: '/explore/people',
+                              pathname: '/explore/peoples',
                             })
                           }}
                         >

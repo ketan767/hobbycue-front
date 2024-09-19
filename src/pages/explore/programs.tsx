@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import styles from './explore.module.css'
 import ListingCard from '@/components/ListingCard/ListingCard'
 import { useRouter } from 'next/router'
-import { getListingPages } from '@/services/listing.service'
+import { getAllEvents, getListingPages } from '@/services/listing.service'
 import { GetServerSideProps } from 'next'
 import PagesLoader from '@/components/PagesLoader/PagesLoader'
 
@@ -16,23 +16,19 @@ const Explore: React.FC<Props> = ({ data: initialData }) => {
   const { type } = router.query
 
   const [data, setData] = useState(initialData || [])
-  const [page, setPage] = useState(1) // Tracks the current page
-  const [loading, setLoading] = useState(false) // Indicates if more data is being loaded
-  const [hasMore, setHasMore] = useState(true) // Tracks if there are more listings to load
+  const [page, setPage] = useState(1)
+  const [loading, setLoading] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
 
   const fetchMoreData = useCallback(async () => {
     if (loading || !hasMore) return
     setLoading(true)
-    const { res, err } = await getListingPages(
-      `&sort=createdAt&is_published=true&populate=_hobbies,_address&page=${
-        page + 1
-      }&limit=20`,
-    )
+    const { res, err } = await getAllEvents()
 
-    if (err || !res?.data?.data?.listings?.length) {
+    if (err || !res?.data?.data?.length) {
       setHasMore(false)
     } else {
-      setData((prevData: any) => [...prevData, ...res.data.data.listings])
+      setData((prevData: any) => [...prevData, ...res.data.data])
       setPage(page + 1)
     }
     setLoading(false)
@@ -80,12 +76,10 @@ const Explore: React.FC<Props> = ({ data: initialData }) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const { res, err } = await getListingPages(
-    `&sort=-createdAt&is_published=true&populate=_hobbies,_address&page=1&limit=20`,
-  )
+  const { res, err } = await getAllEvents()
 
   if (err) return { notFound: true }
-  const data = res?.data?.data?.listings || []
+  const data = res?.data?.data || []
 
   return {
     props: {
