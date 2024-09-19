@@ -7,6 +7,12 @@ import Image from 'next/image'
 import defaultUserImage from '@/assets/svg/default-images/default-user-icon.svg'
 import Link from 'next/link'
 import Head from 'next/head'
+import UpvoteIcon from '@/assets/icons/UpvoteIcon'
+import BookmarkIcon from '@/assets/icons/BookmarkIcon'
+import ShareIcon from '@/assets/icons/ShareIcon'
+import OptionsIcon from '@/assets/icons/OptionsIcon'
+import { useState } from 'react'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 type Props = {
   data: {
@@ -16,6 +22,19 @@ type Props = {
 
 const BlogPage: React.FC<Props> = ({ data }) => {
   const blogUrl = data?.blog_url?.url || ''
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
+
+  const handleClick = () => {
+    setSnackbar({
+      type: 'warning',
+      message: 'This feature is under development.',
+      display: true,
+    })
+  }
 
   console.warn('blogdataaaaaaaa', data)
   return (
@@ -33,6 +52,59 @@ const BlogPage: React.FC<Props> = ({ data }) => {
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${data?.blog_url?.title} | HobbyCue`}</title>
       </Head>
+      <div className={styles['container']}>
+        <h1 className={styles['blog-title']}>{data?.blog_url?.title}</h1>
+        <h1 className={styles['blog-desc']}>{data?.blog_url?.description}</h1>
+        <div className={styles['cover-image']}>
+          <img src={data?.blog_url?.cover_pic} alt="cover image" />
+        </div>
+        {/* Author */}
+        <div className={styles['author-wrapper']}>
+          {/* pic */}
+          <div className={styles['author-profile-image']}>
+            <img
+              src={data?.blog_url?.author?.profile_image}
+              alt="profile image"
+            />
+          </div>
+          {/* details */}
+          <div className={styles['author-details']}>
+            <p>{data?.blog_url?.author?.full_name}</p>
+            <div className={styles['date-and-hobbies']}>
+              <p>
+                {dateFormatwithYear?.format(
+                  new Date(data?.blog_url?.createdAt),
+                )}
+              </p>
+              &#183;
+              <div className="">
+                {data?.blog_url?._hobbies?.map((hobby: any, idx: any) => (
+                  <span>
+                    {hobby?.hobby?.display}
+                    {idx !== data?.blog_url?._hobbies?.length - 1 ? ', ' : ''}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+          {/* actions */}
+          <div className={styles['actions']}>
+            <button onClick={handleClick}>
+              <UpvoteIcon />
+            </button>
+            <button onClick={handleClick}>
+              <BookmarkIcon />
+            </button>
+            <button onClick={handleClick}>
+              <ShareIcon />
+            </button>
+            <button onClick={handleClick}>
+              <OptionsIcon />
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div className={styles['iframe-container']}>
         <iframe
           className={styles['iframe']}
@@ -132,6 +204,14 @@ const BlogPage: React.FC<Props> = ({ data }) => {
           <BlogComments data={data.blog_url} />
         </div>
       </div>
+      <CustomSnackbar
+        message={snackbar.message}
+        triggerOpen={snackbar.display}
+        type={snackbar.type === 'success' ? 'success' : 'error'}
+        closeSnackbar={() => {
+          setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+        }}
+      />
     </>
   )
 }

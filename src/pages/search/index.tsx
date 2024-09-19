@@ -818,8 +818,6 @@ const MainContent: React.FC<SearchResultsProps> = ({
                               <img
                                 src={hobby.profile_image}
                                 alt={`${hobby.display}'s `}
-                                width={64}
-                                height={64}
                               />
                             </div>
                           ) : (
