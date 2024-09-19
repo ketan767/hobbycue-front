@@ -263,11 +263,15 @@
     margin-top: 8px;
   }
 
+  .uploadContainer > div {
+    margin-bottom: 0;
+  }
+
   .videoAndImages{
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-top: 12px;
+    gap: 8px;
+    margin-top: 8px;
   }
 
   .uploadButtonDescktop {
