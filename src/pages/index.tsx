@@ -232,7 +232,7 @@ const Home: React.FC<PropTypes> = function () {
               className={styles['card-btn']}
               onClick={async (e: any) => {
                 e.preventDefault()
-                router.push('/explore/people')
+                router.push('/explore/peoples')
               }}
             >
               Connect
