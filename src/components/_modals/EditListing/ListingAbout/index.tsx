@@ -92,6 +92,7 @@ const ListingAboutEditModal: React.FC<Props> = ({
   }, [listingModalData.description, listingModalData.about, propData])
 
   const handleInputChange = (value: string) => {
+    console.warn('handleinputtt', value)
     setData((prev) => ({
       ...prev,
       [propData === 'productDescription' ? 'about' : 'description']: {
@@ -142,7 +143,7 @@ const ListingAboutEditModal: React.FC<Props> = ({
 
   const handleSubmit = async () => {
     const key = propData === 'productDescription' ? 'about' : 'description'
-    const fieldValue = cleanString(data?.[key]?.value || '')
+    const fieldValue = data?.[key]?.value || ''
 
     if (!fieldValue || fieldValue === '') {
       if (fieldValue !== listingModalData[key]) {

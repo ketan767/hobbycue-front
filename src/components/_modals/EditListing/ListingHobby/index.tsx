@@ -717,7 +717,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
             if (res?.data.success) {
               setShowAddHobbyModal(false)
               setErrorOrmsg(
-                'Your request has been sent.  You can add the hobby once it is approved.',
+                `${hobbyInputValue} has been requested.  You can add it later if approved.`,
               )
               setHobbyInputValue('')
               setGenreInputValue('')
@@ -766,7 +766,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
             if (res?.data.success) {
               setShowAddGenreModal(false)
               setErrorOrmsg(
-                'Your request has been sent.  You can add the genre/style once it is approved.',
+                `${genreInputValue} has been requested. You can add it later if approved.`,
               )
               setHobbyInputValue('')
               setGenreInputValue('')

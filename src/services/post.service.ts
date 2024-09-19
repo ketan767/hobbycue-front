@@ -49,31 +49,7 @@ export const createUserPost = async (data: {
   }
 }
 
-/** Update a User Post `POST: /api/post/user/update/:postId` */
-export const updateUserPost = async (
-  data: {
-    hobbyId: string
-    genreId: string | undefined
-    content: string
-    visibility: string
-    media: []
-    hasLink: Boolean
-  },
-  postId: string,
-): Promise<ApiReturnObject> => {
-  const token = localStorage.getItem('token')
-  const headers = { Authorization: `Bearer ${token}` }
 
-  try {
-    const res = await axiosInstance.post(`/post/user/update/${postId}`, data, {
-      headers,
-    })
-    return { res: res, err: null }
-  } catch (error) {
-    console.error(error)
-    return { err: error, res: null }
-  }
-}
 
 /** Create a Listing Page Post `POST: /api/post/listing/` */
 export const createListingPost = async (data: {
@@ -95,30 +71,6 @@ export const createListingPost = async (data: {
   }
 }
 
-/** Update a Listing Page Post `POST: /api/post/listing/update/:postId` */
-export const updateListingPost = async (
-  data: {
-    listingId: string
-    hobbyId: string
-    genreId: string | undefined
-    content: string
-    visibility: string
-  },
-  postId: string,
-): Promise<ApiReturnObject> => {
-  const token = localStorage.getItem('token')
-  const headers = { Authorization: `Bearer ${token}` }
-
-  try {
-    const res = await axiosInstance.post(`/post/listing/update/${postId}`, data, {
-      headers,
-    })
-    return { res: res, err: null }
-  } catch (error) {
-    console.error(error)
-    return { err: error, res: null }
-  }
-}
 
 
 /** UpVote Post `PATCH: /api/post/upvote/:postId` */
@@ -368,4 +320,57 @@ export const searchPosts = async (searchCriteria: any) => {
     console.error('Error searching for pages:', error)
     return { res: null, err: error }
   }
+
+};
+
+/** Update a User Post `POST: /api/post/user/update/:postId` */
+export const updateUserPost = async (
+  data: {
+    hobbyId: string
+    genreId: string | undefined
+    content: string
+    visibility: string
+    media: []
+    hasLink: Boolean
+  },
+  postId: string,
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(`/post/user/update/${postId}`, data, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
 }
+
+/** Update a Listing Page Post `POST: /api/post/listing/update/:postId` */
+export const updateListingPost = async (
+  data: {
+    listingId: string
+    hobbyId: string
+    genreId: string | undefined
+    content: string
+    visibility: string
+  },
+  postId: string,
+): Promise<ApiReturnObject> => {
+  const token = localStorage.getItem('token')
+  const headers = { Authorization: `Bearer ${token}` }
+
+  try {
+    const res = await axiosInstance.post(`/post/listing/update/${postId}`, data, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (error) {
+    console.error(error)
+    return { err: error, res: null }
+  }
+}
+

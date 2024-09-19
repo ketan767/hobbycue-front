@@ -10,9 +10,9 @@ import {
   createListingPost,
   createUserPost,
   getMetadata,
+  uploadImage,
   updateListingPost,
   updateUserPost,
-  uploadImage,
 } from '@/services/post.service'
 import { closeModal } from '@/redux/slices/modal'
 
@@ -82,9 +82,9 @@ export const CreatePost: React.FC<Props> = ({
   onStatusChange,
   propData,
 }) => {
-  console.warn({ propData })
+  console.warn('propsdata', propData)
   const router = useRouter()
-  const { user, listing, activeProfile } = useSelector(
+  const { user, listing, activeProfile, isLoggedIn } = useSelector(
     (state: RootState) => state.user,
   )
   const dispatch = useDispatch()
@@ -129,15 +129,6 @@ export const CreatePost: React.FC<Props> = ({
     if (propData && propData._id) {
       setEditing(true)
     }
-    if (propData && propData.author_type === 'User') {
-      if (activeProfile.type === 'user') {
-        return
-      } else {
-        dispatch(updateActiveProfile({ type: 'user', data: user }))
-      }
-    } else if (propData && propData._author !== 'User') {
-      dispatch(updateActiveProfile({ type: 'user', data: propData._author }))
-    }
   }, [propData])
 
   useEffect(() => {
@@ -157,7 +148,6 @@ export const CreatePost: React.FC<Props> = ({
     })
     const updateFilters = () => {
       if (propData && propData._hobby) {
-        console.log(propData, 'hobby')
         setData((prev) => ({
           ...prev,
           hobby: propData._hobby as DropdownListItem,
@@ -594,7 +584,7 @@ export const CreatePost: React.FC<Props> = ({
     }
 
     const { err, res } = editing
-      ? await updateUserPost(jsonData, propData._id)
+      ? await updateUserPost(jsonData, propData?._id)
       : await createUserPost(jsonData)
 
     setSubmitBtnLoading(false)
@@ -650,7 +640,7 @@ export const CreatePost: React.FC<Props> = ({
   const handleAddressChange = (value: string) => {
     setData((prev: any) => ({ ...prev, visibility: value }))
   }
-  console.log({ hobbies })
+
   const isMobile = useMediaQuery('(max-width:1100px)')
   if (confirmationModal) {
     return (

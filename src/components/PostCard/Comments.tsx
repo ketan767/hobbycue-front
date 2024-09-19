@@ -166,12 +166,16 @@ const PostComments = ({
             />
           ) : (
             <div
-              className={`default-user-icon ${styles['inputAuthorImage']}`}
+              className={`default-user-icon ${
+                activeProfile?.data?.author_type === 'User'
+                  ? styles['inputAuthorImage']
+                  : styles['page-img-comments']
+              }`}
             ></div>
           )}
 
           <div className={styles['comment-input-wrapper']}>
-            <form onSubmit={addComment}>
+            <div>
               <TextareaAutosize
                 value={inputValue}
                 className={styles['input']}
@@ -186,9 +190,9 @@ const PostComments = ({
                 maxRows={5}
               />
               <button
-                type="submit"
                 className={styles['submit-btn']}
                 disabled={loading}
+                onClick={addComment}
               >
                 <svg
                   className={styles['submit-btn-svg']}
@@ -204,7 +208,7 @@ const PostComments = ({
                   />
                 </svg>
               </button>
-            </form>
+            </div>
           </div>
         </section>
 
@@ -219,7 +223,11 @@ const PostComments = ({
                     <>
                       {comment?._author?.profile_image ? (
                         <img
-                          className={styles['inputAuthorImage']}
+                          className={
+                            comment?.author_type === 'User'
+                              ? styles['inputAuthorImage']
+                              : styles['page-img-comments']
+                          }
                           src={comment?._author?.profile_image}
                           alt="Author Profile"
                           width={40}
@@ -231,7 +239,11 @@ const PostComments = ({
                             comment?.author_type === 'Listing'
                               ? 'default-people-listing-icon'
                               : 'default-user-icon'
-                          }  ${styles['inputAuthorImage']}`}
+                          }  ${
+                            comment?.author_type === 'User'
+                              ? styles['inputAuthorImage']
+                              : styles['page-img-comments']
+                          }`}
                         ></div>
                       )}
                     </>
@@ -272,6 +284,7 @@ const PostComments = ({
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
                           onClick={() => {
+                            showFeatureUnderDevelopment()
                             if (postedByMe) {
                               setOpenAction(true)
                             }
@@ -351,7 +364,11 @@ const PostComments = ({
                   <>
                     {comments?.[0]?._author?.profile_image ? (
                       <img
-                        className={styles['inputAuthorImage']}
+                        className={
+                          comments?.[0]?.author_type === 'User'
+                            ? styles['inputAuthorImage']
+                            : styles['page-img-comments']
+                        }
                         src={comments?.[0]?._author?.profile_image}
                         alt="Author Profile"
                         width={40}
@@ -363,7 +380,11 @@ const PostComments = ({
                           comments?.[0]?.author_type === 'Listing'
                             ? 'default-people-listing-icon'
                             : 'default-user-icon'
-                        }  ${styles['inputAuthorImage']}`}
+                        }  ${
+                          comments?.[0]?.author_type === 'User'
+                            ? styles['inputAuthorImage']
+                            : styles['page-img-comments']
+                        }`}
                       ></div>
                     )}
                   </>
@@ -406,6 +427,7 @@ const PostComments = ({
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
                         onClick={() => {
+                          showFeatureUnderDevelopment()
                           if (postedByMe) {
                             setOptionsActive(true)
                           } else setOpenAction(true)

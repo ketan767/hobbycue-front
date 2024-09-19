@@ -56,6 +56,8 @@ const CommunityHome: React.FC<Props> = ({}) => {
     [loading, hasMore, currentPage, dispatch],
   )
 
+  console.warn('activeprofile', activeProfile.data)
+
   useEffect(() => {
     dispatch(UpdatePostCount(1) as any)
   }, [dispatch])

@@ -98,11 +98,21 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     return currentYear - year
   }
 
-  const handleInputChange = (event: any) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
-    if (name === 'profile_url') {
-      // Only apply this modification for the profile_url field
-      // Replace special characters with '-'
+
+    if (name === 'tagline') {
+      const limitedValue = value.slice(0, 70)
+
+      setData((prev) => ({ ...prev, [name]: limitedValue }))
+      setInputErrs((prev) => ({
+        ...prev,
+        [name]:
+          limitedValue.length > 100
+            ? 'Tagline cannot exceed 100 characters'
+            : null,
+      }))
+    } else if (name === 'profile_url') {
       const modifiedValue = value.replace(/[^a-zA-Z0-9-]/g, '-')
       setData((prev) => ({ ...prev, [name]: modifiedValue }))
       setInputErrs((prev) => ({ ...prev, [name]: null }))
@@ -111,7 +121,7 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
       setInputErrs((prev) => ({ ...prev, [name]: null }))
     }
 
-    // Compare current data with initial data to check for changes
+    // Check for changes
     const currentData = { ...data, [name]: value }
     const hasChanges =
       JSON.stringify(currentData) !== JSON.stringify(initialData)
@@ -357,8 +367,8 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        if(event?.srcElement?.tagName === "svg"){
-          return;
+        if (event?.srcElement?.tagName === 'svg') {
+          return
         }
         nextButtonRef.current?.click()
       }

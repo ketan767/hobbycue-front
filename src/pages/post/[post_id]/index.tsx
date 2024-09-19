@@ -20,6 +20,7 @@ import { useRouter } from 'next/router'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
 import { setShowPageLoader } from '@/redux/slices/site'
 import Head from 'next/head'
+import hobbycuelogo from '@/assets/image/HobbyCue_v2.png'
 
 type Props = {
   data: ListingPageData
@@ -68,35 +69,29 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
     // router.push('/community')
   }
 
-  const convertHtmlToPlainText = (htmlContent: string): string => {
-    if (typeof document === 'undefined') {
-      return htmlContent
+  const htmlToPlainText = (html: string) => {
+    if (typeof window !== 'undefined') {
+      const element = document.createElement('div')
+      element.innerHTML = html
+      return element.textContent || ''
     }
-
-    const tempElement = document.createElement('div')
-    tempElement.innerHTML = htmlContent
-
-    // Get all anchor tags to preserve URLs
-    const links = tempElement.getElementsByTagName('a')
-    for (let i = 0; i < links.length; i++) {
-      links[i].innerText = links[i].href
-    }
-
-    return tempElement.innerText
+    return ''
   }
+
   const getPreviewimage = () => {
     if (data?.metadata?.data?.image) {
       return data?.metadata?.data?.image
+    } else if (
+      data?.postsData?.media?.length > 0 &&
+      data?.postsData?.media[0]
+    ) {
+      return data?.postsData?.media[0]
     } else {
-      if (data?.postsData?.media[0]) {
-        return data?.postsData?.media[0]
-      } else {
-        return ''
-      }
+      return 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/HobbyCue+Logo+Banner+2+ML.png'
     }
   }
 
-  const post_descripton = convertHtmlToPlainText(data.postsData?.content)
+  const post_descripton = htmlToPlainText(data.postsData?.content)
 
   useEffect(() => {
     if (postId) {
@@ -133,7 +128,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
         </title>
       </Head>
       <CommunityPageLayout activeTab="posts" singlePostPage={true}>
-        <main>
+        <main style={{ paddingBottom: '3.5rem', minHeight: '100vh' }}>
           {!postData || isLoadingPosts ? (
             <>
               <PostCardSkeletonLoading />

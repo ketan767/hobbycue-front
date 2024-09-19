@@ -28,6 +28,7 @@ import { updateProfileMenuExpandAll } from '@/redux/slices/site'
 import ErrorPage from '@/components/ErrorPage'
 import { useMediaQuery } from '@mui/material'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
 
 interface Props {
   data: ProfilePageData['pageData']
@@ -366,27 +367,31 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
                   {!isMobile && <div className={styles['no-posts-div']}></div>}
                 </section>
               )}
-            <div className={styles.videoAndImages}>
-              <div className={styles.imagesContainer}>
-                {data.pageData.images?.map((item: any, idx: number) => {
-                  return (
+
+            {data.pageData ? (
+              <ResponsiveMasonry
+                columnsCountBreakPoints={{ 0: 1, 600: 2, 1100: 2 }}
+              >
+                <Masonry
+                  gutter="12px"
+                  style={{ columnGap: '24px', rowGap: '12px' }}
+                >
+                  {/* Images */}
+                  {data.pageData.images?.map((item: any, idx: number) => (
                     <div key={idx} className={styles.medias}>
                       <div
-                        key={idx}
                         className={styles.image}
                         onClick={() => OpenMediaImage(item)}
                       >
-                        <img src={item} />
+                        <img src={item} alt={`Image ${idx + 1}`} />
                       </div>
                     </div>
-                  )
-                })}
-              </div>
-              <div className={styles.imagesContainer}>
-                {data.pageData?.video_url ? (
-                  <div className={styles.medias}>
-                    {data.pageData?.video_url && (
-                      <div className={styles['videos']}>
+                  ))}
+
+                  {/* Video */}
+                  {data.pageData?.video_url && (
+                    <div className={styles.medias}>
+                      <div className={styles.videos}>
                         <ReactPlayer
                           width="100%"
                           height="100%"
@@ -394,11 +399,11 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
                           controls={true}
                         />
                       </div>
-                    )}
-                  </div>
-                ) : null}
-              </div>
-            </div>
+                    </div>
+                  )}
+                </Masonry>
+              </ResponsiveMasonry>
+            ) : null}
           </div>
         </PageGridLayout>
       </ProfileLayout>

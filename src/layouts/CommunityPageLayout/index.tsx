@@ -721,6 +721,15 @@ const CommunityLayout: React.FC<Props> = ({
     })
   }
 
+  useEffect(() => {
+    if (!isLoggedIn)
+      dispatch(
+        setFilters({
+          location: 'All Locations',
+        }),
+      )
+  }, [])
+
   const handleStartPost = () => {
     if (!user.is_onboarded) {
       router.push(`/profile/${user.profile_url}`)
@@ -1540,8 +1549,8 @@ const CommunityLayout: React.FC<Props> = ({
                                   className={styles.profileImage}
                                   src={hobby.profile_image}
                                   alt={`${hobby.display}'s `}
-                                  width={64}
-                                  height={64}
+                                  width={40}
+                                  height={40}
                                 />{' '}
                               </div>
                             ) : (

@@ -869,7 +869,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           onClick={async (e) => {
                             e.preventDefault()
                             router.push({
-                              pathname: '/explore/blogs',
+                              pathname: '/blog',
                             })
                           }}
                         >

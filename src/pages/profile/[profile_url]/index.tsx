@@ -520,10 +520,12 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                 }
               >
                 <h4>About</h4>
-                <div
-                  className={`${styles['color-light']} ${styles['about-text']} ${styles['about-text-mobile']}`}
-                  dangerouslySetInnerHTML={{ __html: pageData?.about }}
-                ></div>
+                {pageData?.about && (
+                  <div
+                    className={`${styles['color-light']} ${styles['about-text']} ${styles['about-text-mobile']}`}
+                    dangerouslySetInnerHTML={{ __html: pageData?.about }}
+                  ></div>
+                )}
               </PageContentBox>
             </div>
 

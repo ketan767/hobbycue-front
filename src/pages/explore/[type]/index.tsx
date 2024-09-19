@@ -13,6 +13,7 @@ import BlogCard from '@/components/BlogCard/BlogCard'
 
 type Props = {
   data: any
+  isBlog: boolean
 }
 
 const Explore: React.FC<Props> = ({ data }) => {
@@ -47,18 +48,20 @@ const Explore: React.FC<Props> = ({ data }) => {
           </div>
         </div>
       </PageGridLayout> */}
-      <div className={styles.gridContainer}>
-        {data?.map((el: any) =>
-          type === 'blogs' ? (
-            <BlogCard key={el._id} data={el} />
-          ) : (
-            <ListingCard
-              key={el._id}
-              data={el}
-              style={{ minWidth: 271, maxWidth: 400 }}
-            />
-          ),
-        )}
+      <div className={styles.container}>
+        <div className={styles.gridContainer}>
+          {data?.map((el: any) =>
+            type === 'blogs' ? (
+              <BlogCard key={el._id} data={el} />
+            ) : (
+              <ListingCard
+                key={el._id}
+                data={el}
+                style={{ minWidth: 271, maxWidth: 400 }}
+              />
+            ),
+          )}
+        </div>
       </div>
     </>
   )
@@ -67,6 +70,7 @@ const Explore: React.FC<Props> = ({ data }) => {
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const { type } = params!
   let data = {}
+  let isBlog = false
 
   const explorePeople = async () => {
     const { res, err } = await getListingPages(
@@ -106,14 +110,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     data = res?.data?.data?.posts
   }
 
-  const exploreBlogs = async () => {
-    const { res, err } = await getAllBlogs(
-      `sort=-createdAt&populate=author,_hobbies&status=Published`,
-    )
-    if (err) return { notFound: true }
-    data = res?.data.data?.blog
-  }
-
   switch (type) {
     case 'people':
       await explorePeople()
@@ -130,9 +126,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     case 'posts':
       await explorePosts()
       break
-    case 'blogs':
-      await exploreBlogs()
-      break
+
     default:
       return { notFound: true }
   }
@@ -140,6 +134,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   return {
     props: {
       data: data,
+      isBlog,
     },
   }
 }

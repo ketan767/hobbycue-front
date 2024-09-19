@@ -82,8 +82,10 @@ const ListingPageLayout: React.FC<Props> = ({
 
   function checkScroll() {
     const scrollValue = window.scrollY || document.documentElement.scrollTop
-
-    if (scrollValue >= 308) setShowSmallHeader(true)
+    if (data.pageData.type === 4 && scrollValue >= 410) {
+      setShowSmallHeader(true)
+    } else if (data.pageData.type !== 4 && scrollValue >= 308)
+      setShowSmallHeader(true)
     else setShowSmallHeader(false)
   }
   const navigationTabs = (tab: any) => {

@@ -218,11 +218,18 @@ export const PostModal: React.FC<Props> = ({
                     activePost?._author?.page_url
                   }`
             }
+            onClick={() => {
+              dispatch(closeModal())
+            }}
           >
             <div className={`${styles['header-user']}`}>
               {activePost?._author?.profile_image ? (
                 <img
-                  className={styles['profile-img']}
+                  className={
+                    activePost?.author_type === 'User'
+                      ? styles['profile-img']
+                      : styles['page-img']
+                  }
                   src={activePost._author.profile_image}
                   alt=""
                   width={40}
@@ -230,7 +237,11 @@ export const PostModal: React.FC<Props> = ({
                 />
               ) : (
                 <Image
-                  className={styles['profile-img']}
+                  className={
+                    activePost?.author_type === 'User'
+                      ? styles['profile-img']
+                      : styles['page-img']
+                  }
                   src={defaultUserImage}
                   alt=""
                   width={40}
@@ -283,10 +294,10 @@ export const PostModal: React.FC<Props> = ({
         <div className={`${styles['body-wrapper']}`}>
           <div className={`${styles['body']}`}>
             <div
-              className={styles['post-content'] + ' ql-editor'}
+              className={styles['post-content']}
               dangerouslySetInnerHTML={{
                 __html: activePost?.content
-                  .replace(/<img\b[^>]*>/g, '') // deleted all images from here then did the link formatting
+                  .replace(/<img\b[^>]*>/g, '')
                   .replace(
                     /((https?:\/\/|ftp:\/\/|file:\/\/|www\.)[-A-Z0-9+&@#/%?=~_|!:,.;]*)/gi,
                     (match: any, url: string) => {

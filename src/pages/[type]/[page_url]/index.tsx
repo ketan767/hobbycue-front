@@ -17,6 +17,7 @@ import ListingHomeTab from '@/components/ListingPage/ListingHomeTab/ListingHomeT
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
 
 import { useMediaQuery } from '@mui/material'
+import { pageType } from '@/utils'
 
 type Props = { data: ListingPageData }
 
@@ -61,7 +62,7 @@ const ListingHome: React.FC<Props> = (props) => {
     setExpandAll(value)
     dispatch(updateListingMenuExpandAll(value))
   }
-
+  console.warn('pageDData', props)
   useEffect(() => {
     const handleRouteChange = () => {
       sessionStorage.setItem('scrollPositionlisting', window.scrollY.toString())
@@ -94,6 +95,12 @@ const ListingHome: React.FC<Props> = (props) => {
   return (
     <>
       <Head>
+        <link
+          rel="canonical"
+          href={`${process.env.NEXT_PUBLIC_BASE_URL}/${pageType(
+            props?.data?.pageData?.type,
+          )}/${props?.data?.pageData?.page_url}`}
+        />
         <meta
           property="og:image"
           content={`${props?.data?.pageData?.profile_image}`}
