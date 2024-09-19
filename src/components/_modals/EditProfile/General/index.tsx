@@ -102,13 +102,13 @@ const ProfileGeneralEditModal: React.FC<Props> = ({
     const { name, value } = event.target
 
     if (name === 'tagline') {
-      const limitedValue = value.slice(0, 70)
+      const limitedValue = value.slice(0, 81)
 
       setData((prev) => ({ ...prev, [name]: limitedValue }))
       setInputErrs((prev) => ({
         ...prev,
         [name]:
-          limitedValue.length > 100
+          limitedValue.length > 80
             ? 'Tagline cannot exceed 100 characters'
             : null,
       }))

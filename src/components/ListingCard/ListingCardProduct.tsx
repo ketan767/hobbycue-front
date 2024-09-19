@@ -123,14 +123,7 @@ const ListingCardProduct: React.FC<Props> = ({
                     {data?.product_variant?.variations?.[0]?.value}
                   </p>
                 ) : (
-                  <p
-                    style={{
-                      whiteSpace: 'normal',
-                      marginBottom: '1rem',
-                    }}
-                  >
-                    Currently Unavailable
-                  </p>
+                  <p className={styles.price}>{rupeesIcon}0</p>
                 )}
                 <p className={styles.soldBy}>
                   <span style={{ color: 'black' }}>Sold by:</span>{' '}

@@ -81,7 +81,7 @@ const Explore: React.FC<Props> = ({ data: initialData }) => {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const { res, err } = await getListingPages(
-    `&sort=createdAt&is_published=true&populate=_hobbies,_address&page=1&limit=20`,
+    `&sort=-createdAt&is_published=true&populate=_hobbies,_address&page=1&limit=20`,
   )
 
   if (err) return { notFound: true }

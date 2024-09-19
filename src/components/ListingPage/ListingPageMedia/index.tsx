@@ -255,7 +255,12 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
               {Array.isArray(listingModalData?.images) &&
                 listingModalData?.images[0] && (
                   <div className={styles.medias}>
-                    <div className={styles.image}>
+                    <div
+                      onClick={() =>
+                        OpenMediaImage(listingModalData?.images[0])
+                      }
+                      className={styles.image}
+                    >
                       <img
                         src={listingModalData?.images[0]}
                         alt="Listing Image"

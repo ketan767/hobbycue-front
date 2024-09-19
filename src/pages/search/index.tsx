@@ -212,7 +212,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
   const router = useRouter()
 
   const { q, filter } = router.query
-  
+
   const queryString = Array.isArray(q) ? q[0] : q || ''
 
   const showAll = filter ? filter === '' : true
@@ -394,10 +394,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
       dispatch(resetSearch())
       dispatch(setExplore(false))
       dispatch(setSearchString(queryString))
-      // if (router.pathname !== '/search') {
-      //   dispatch(showAllTrue())
-      //   // router.push('/search')
-      // }
+
       const searchValue = queryString || ''
       const taglineValue = ''
       const cityValue = ''
@@ -1168,7 +1165,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
               <section className={styles.userSection}>
                 <div className={styles.peopleItemsContainer}>
                   {!isExplore && (
-                    <div className={styles.resultHeading}>products</div>
+                    <div className={styles.resultHeading}>Products</div>
                   )}
                   {ProductResults.slice(0, showAllProducts ? undefined : 3).map(
                     (page, index) => (

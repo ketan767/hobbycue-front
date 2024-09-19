@@ -300,7 +300,7 @@ const HobbyPageLayout: React.FC<Props> = ({
                 expandData={showkeywords}
               >
                 <h4 className={styles['heading']}>
-                  {'keywords'}
+                  {'Keywords'}
                   {user?.is_admin && (
                     <Image
                       className={styles['pencil-edit']}

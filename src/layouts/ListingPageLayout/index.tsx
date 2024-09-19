@@ -407,79 +407,82 @@ const ListingPageLayout: React.FC<Props> = ({
         </div>
       </nav>
       {activeTab === 'home' && (
-        <div
-          className={`${styles['expand-all-page-type-wrapper']} ${styles['display-flex-mobile']}`}
-        >
+        <>
+          <div className={styles.gapabovehome}></div>
           <div
-            className={`${styles['display-flex-mobile']} ${styles['listing-page-type-wrapper']}`}
-            onClick={() => {
-              if (listingLayoutMode === 'edit') {
-                dispatch(
-                  openModal({ type: 'listing-type-edit', closable: true }),
-                )
-                dispatch(updateListingTypeModalMode({ mode: 'edit' }))
-              }
-            }}
+            className={`${styles['expand-all-page-type-wrapper']} ${styles['display-flex-mobile']}`}
           >
-            <div>
-              <img
-                width={20}
-                height={20}
-                src={
-                  data.pageData.type === 1
-                    ? peopleSvg.src
-                    : data.pageData.type === 2
-                    ? placeSvg.src
-                    : data.pageData.type === 3
-                    ? programSvg.src
-                    : data.pageData.type === 4
-                    ? productIcon.src
-                    : peopleSvg.src
+            <div
+              className={`${styles['display-flex-mobile']} ${styles['listing-page-type-wrapper']}`}
+              onClick={() => {
+                if (listingLayoutMode === 'edit') {
+                  dispatch(
+                    openModal({ type: 'listing-type-edit', closable: true }),
+                  )
+                  dispatch(updateListingTypeModalMode({ mode: 'edit' }))
                 }
+              }}
+            >
+              <div>
+                <img
+                  width={20}
+                  height={20}
+                  src={
+                    data.pageData.type === 1
+                      ? peopleSvg.src
+                      : data.pageData.type === 2
+                      ? placeSvg.src
+                      : data.pageData.type === 3
+                      ? programSvg.src
+                      : data.pageData.type === 4
+                      ? productIcon.src
+                      : peopleSvg.src
+                  }
+                />
+              </div>
+              {data.pageData.page_type.map((type: any, idx: any) => {
+                return (
+                  <p
+                    className={
+                      data.pageData.type === 1
+                        ? styles.peopleColor
+                        : data.pageData.type === 2
+                        ? styles.placeColor
+                        : data.pageData.type === 3
+                        ? styles.programColor
+                        : data.pageData.type === 4
+                        ? styles.ProductColor
+                        : ''
+                    }
+                    key={idx}
+                  >
+                    {type}
+                  </p>
+                )
+              })}
+              {listingLayoutMode === 'edit' && <Image src={EditIcon} alt="" />}
+            </div>
+
+            <div
+              onClick={() => {
+                if (setExpandAll !== undefined) setExpandAll(!expandAll)
+              }}
+              className={styles['expand-all']}
+            >
+              <p>{expandAll ? 'See less' : 'See more'}</p>
+              <Image
+                width={15}
+                height={15}
+                src={DoubleChevron}
+                style={{ transition: 'all 0.3s ease' }}
+                className={`${
+                  expandAll ? styles['rotate-180'] : styles['rotate-0']
+                }`}
+                alt=""
               />
             </div>
-            {data.pageData.page_type.map((type: any, idx: any) => {
-              return (
-                <p
-                  className={
-                    data.pageData.type === 1
-                      ? styles.peopleColor
-                      : data.pageData.type === 2
-                      ? styles.placeColor
-                      : data.pageData.type === 3
-                      ? styles.programColor
-                      : data.pageData.type === 4
-                      ? styles.ProductColor
-                      : ''
-                  }
-                  key={idx}
-                >
-                  {type}
-                </p>
-              )
-            })}
-            {listingLayoutMode === 'edit' && <Image src={EditIcon} alt="" />}
           </div>
-
-          <div
-            onClick={() => {
-              if (setExpandAll !== undefined) setExpandAll(!expandAll)
-            }}
-            className={styles['expand-all']}
-          >
-            <p>{expandAll ? 'See less' : 'See more'}</p>
-            <Image
-              width={15}
-              height={15}
-              src={DoubleChevron}
-              style={{ transition: 'all 0.3s ease' }}
-              className={`${
-                expandAll ? styles['rotate-180'] : styles['rotate-0']
-              }`}
-              alt=""
-            />
-          </div>
-        </div>
+        </>
       )}
 
       {/* Profile Page Body, where all contents of different tabs appears. */}
