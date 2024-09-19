@@ -5,6 +5,7 @@ import {
   TrendingHobbiesByUser,
   addUserAddress,
   addUserHobbies,
+  addUserHobby,
   getMyProfileDetail,
   updateMyProfileDetail,
   updateUserAddress,
@@ -332,20 +333,32 @@ const SimpleOnboarding: React.FC<Props> = ({
     (window.location.port ? ':' + window.location.port : '')
 
   const handleSubmit = async () => {
+    let inputhobby = null
     let hasErrors = false
-    setIsError(false)
-    if (selectedHobbies.length === 0) {
-      if (hobbyInputValue) {
-        const matchedHobby = hobbyDropdownList.find(
-          (hobby) =>
-            hobby.display.toLowerCase() === hobbyInputValue.toLowerCase(),
-        )
-        if (!matchedHobby) {
-          setShowAddHobbyModal(true)
-          return
-        }
+    setErrorOrmsg('')
+    setInputErrs((prev) => {
+      return {
+        ...prev,
+        hobbies: '',
+        location: '',
+        full_name: '',
+        public_email: '',
       }
-
+    })
+    setIsError(false)
+    if (hobbyInputValue) {
+      const matchedHobby = hobbyDropdownList.find(
+        (hobby) =>
+          hobby.display.toLowerCase() === hobbyInputValue.toLowerCase(),
+      )
+      if (!matchedHobby) {
+        setShowAddHobbyModal(true)
+        return
+      } else if (matchedHobby) {
+        inputhobby = matchedHobby
+      }
+    }
+    if (selectedHobbies.length === 0 && !hobbyInputValue) {
       hobbysearchref?.current?.focus()
       setInputErrs((prev) => {
         return { ...prev, hobbies: 'This field is required!' }
@@ -441,14 +454,29 @@ const SimpleOnboarding: React.FC<Props> = ({
       }
     })
 
+    if (inputhobby) {
+      console.warn('inputthobby', inputhobby)
+      let hobby = {
+        hobby: inputhobby?._id,
+        genre: inputhobby?.genreId,
+        level: 1,
+      }
+
+      await addUserHobby(hobby, (err, res) => {
+        if (err) {
+          console.log(err)
+        }
+      })
+    }
+
     const { err: error, res: response } = await getMyProfileDetail()
     setSubmitBtnLoading(false)
     if (error) return console.log(error)
     if (response?.data.success) {
       dispatch(updateUser(response?.data.data.user))
 
-      window.location.href = '/community'
-      dispatch(closeModal())
+      // window.location.href = '/community'
+      // dispatch(closeModal())
     }
   }
   console.warn('selectedhobiessssss', selectedHobbies)
@@ -965,8 +993,6 @@ const SimpleOnboarding: React.FC<Props> = ({
     fetchTrendingHobbies()
   }, [])
 
-  console.warn('hobbydrodopwnlisttttt', hobbyDropdownList)
-
   const isMobile = useMediaQuery('(max-width:1100px)')
 
   const [input, setInput] = useState('')
@@ -1020,7 +1046,7 @@ const SimpleOnboarding: React.FC<Props> = ({
             if (res?.data.success) {
               setShowAddHobbyModal(false)
               setErrorOrmsg(
-                'Your request has been sent.  You can add the hobby once it is approved.',
+                `${hobbyInputValue} has been requested. You can add it later if approved.`,
               )
               setHobbyInputValue('')
             } else if (err) {
@@ -1295,7 +1321,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                 )}
               </div>
             </div>
-            <label className={styles['label']}>Trending</label>
+            <label className={styles['label']}>Trending - click to add</label>
 
             <ul
               className={`${styles['hobby-list']} ${styles['trending-hobbies-list']}`}

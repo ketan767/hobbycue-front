@@ -235,17 +235,28 @@ const PostCard: React.FC<Props> = (props) => {
 
   const isMobile = useMediaQuery('(max-width:1100px)')
   const processedContent = postData.content
-    .replace(/<img\b[^>]*>/g, '') // Remove all images
-    .replace(
-      /((https?:\/\/|ftp:\/\/|file:\/\/|www\.)[-A-Z0-9+&@#/%?=~_|!:,.;]*)/gi,
-      (match: any, url: string) => {
-        const href =
-          url.startsWith('http://') || url.startsWith('https://')
-            ? url
-            : `http://${url}`
-        return `<a href="${href}" class="${pageUrlClass}" target="_blank">${url}</a>`
-      },
-    )
+
+    .replace(/<img\b[^>]*>/g, '')
+
+    .replace(/(https?:\/\/[^\s<]+)(?![^<]*<\/a>)/gi, (url: string) => {
+      const href =
+        url.startsWith('http://') || url.startsWith('https://')
+          ? url
+          : `https://${url}`
+      return `<a href="${href}" class="${pageUrlClass}" target="_blank" style="color: rgb(128, 100, 162);">${url}</a>`
+    })
+
+  const finalContent = processedContent.replace(
+    /<a\b([^>]*)>/gi,
+    (match: any) => {
+      if (!match.includes('style=')) {
+        return match.replace('<a', '<a style="color: rgb(128, 100, 162);"')
+      }
+      return match
+    },
+  )
+
+  console.warn('processed contettttt', processedContent)
 
   return (
     <>
@@ -454,7 +465,7 @@ const PostCard: React.FC<Props> = (props) => {
             router.pathname.endsWith('/posts')) && (
             <div
               className={styles['content'] + ' ql-editor'}
-              dangerouslySetInnerHTML={{ __html: processedContent }}
+              dangerouslySetInnerHTML={{ __html: finalContent }}
             ></div>
           )}
           {postData.video_url && (
@@ -716,8 +727,8 @@ const PostCard: React.FC<Props> = (props) => {
                 onClick={showFeatureUnderDevelopment}
                 className={styles['bookmark-icon']}
                 xmlns="http://www.w3.org/2000/svg"
-                width="28"
-                height="28"
+                width="24"
+                height="24"
                 viewBox="0 0 24 24"
                 fill="none"
               >

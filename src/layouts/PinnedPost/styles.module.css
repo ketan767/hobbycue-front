@@ -7,14 +7,18 @@
 
 }
 .title {
-  margin-bottom: 16px;
+
+  background-color: white;
+  border-radius: 8px 8px 0 0 ;
+  border: 1px solid #ebedf0;
+  padding: 16px;
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 600;
   font-size: 14px;
   line-height: 20px;
   color: #000000;
-  padding: 0 var(--spacing-12);
+ 
 }
 .posts-container{
   display: flex;

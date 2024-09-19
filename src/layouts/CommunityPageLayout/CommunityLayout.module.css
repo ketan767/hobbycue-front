@@ -3,8 +3,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 40px;
-  height: 40px;
+  width: 28.75px;
+  height: 33px;
   clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
 }
 
@@ -747,8 +747,8 @@
 }
 
 .profileImage {
-  width: 36px;
-  height: 40px;
+  width: 26.75px;
+  height: 31px;
   position: relative;
   clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
   filter: drop-shadow(0px 2px 12px rgba(0, 0, 0, 0.08));

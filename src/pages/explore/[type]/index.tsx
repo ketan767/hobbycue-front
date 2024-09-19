@@ -48,18 +48,20 @@ const Explore: React.FC<Props> = ({ data }) => {
           </div>
         </div>
       </PageGridLayout> */}
-      <div className={styles.gridContainer}>
-        {data?.map((el: any) =>
-          type === 'blogs' ? (
-            <BlogCard key={el._id} data={el} />
-          ) : (
-            <ListingCard
-              key={el._id}
-              data={el}
-              style={{ minWidth: 271, maxWidth: 400 }}
-            />
-          ),
-        )}
+      <div className={styles.container}>
+        <div className={styles.gridContainer}>
+          {data?.map((el: any) =>
+            type === 'blogs' ? (
+              <BlogCard key={el._id} data={el} />
+            ) : (
+              <ListingCard
+                key={el._id}
+                data={el}
+                style={{ minWidth: 271, maxWidth: 400 }}
+              />
+            ),
+          )}
+        </div>
       </div>
     </>
   )
