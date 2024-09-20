@@ -6,7 +6,7 @@
 
 .blog-header {
   max-width: 872px;
-  margin: 0 auto;
+  margin: 0 16px 0 16px;
   padding-top: 48px;
   padding-bottom: 24px;
 }

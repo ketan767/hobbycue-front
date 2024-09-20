@@ -12,6 +12,8 @@ import styles from './styles.module.css'
 import Image from 'next/image'
 import { closeModal, openModal } from '@/redux/slices/modal'
 import { getMyProfileDetail } from '@/services/user.service'
+import { isMobile } from '@/utils'
+import { useMediaQuery } from '@mui/material'
 type Props = {
   activeTab: ProfilePageTabs
   data: ProfilePageData
@@ -35,7 +37,7 @@ const ProfileLayout: React.FC<Props> = ({
 }) => {
   const router = useRouter()
   const dispatch = useDispatch()
-
+  const isMobile = useMediaQuery('(max-width:1100px)')
   const { isLoggedIn, isAuthenticated, user, activeProfile } = useSelector(
     (state: RootState) => state.user,
   )
@@ -105,22 +107,27 @@ const ProfileLayout: React.FC<Props> = ({
         />
       </div>
       {activeTab === 'home' && (
-        <div
-          onClick={() => {
-            if (setExpandAll !== undefined) setExpandAll(!expandAll)
-          }}
-          className={styles['expand-all']}
-        >
-          {expandAll ? <p>See less</p> : <p>See more</p>}
-          <Image
-            src={ChevronDown}
-            className={`${
-              expandAll ? styles['rotate-180'] : styles['rotate-0']
-            }`}
-            style={{ transition: 'all 0.3s ease' }}
-            alt=""
-          />
-        </div>
+        <>
+          {isMobile && (
+            <div style={{ height: '8px', background: '#EBEDF0' }}></div>
+          )}
+          <div
+            onClick={() => {
+              if (setExpandAll !== undefined) setExpandAll(!expandAll)
+            }}
+            className={styles['expand-all']}
+          >
+            {expandAll ? <p>See less</p> : <p>See more</p>}
+            <Image
+              src={ChevronDown}
+              className={`${
+                expandAll ? styles['rotate-180'] : styles['rotate-0']
+              }`}
+              style={{ transition: 'all 0.3s ease' }}
+              alt=""
+            />
+          </div>
+        </>
       )}
       {/* Profile Page Body, where all contents of different tabs appears. */}
       <main>{React.cloneElement(children, { expandAll })}</main>

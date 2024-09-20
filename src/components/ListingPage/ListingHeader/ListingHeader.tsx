@@ -73,6 +73,8 @@ const ListingHeader: React.FC<Props> = ({
     display: false,
     message: '',
   })
+  const [showFullTagline, setShowFullTagline] = useState(false)
+
   const { listingLayoutMode } = useSelector((state: any) => state.site)
   const [showDays, setShowDays] = useState(false)
   const [quantity, setQuantity] = useState(1)
@@ -1029,7 +1031,27 @@ const ListingHeader: React.FC<Props> = ({
                   )}
                 </h1>
                 {data?.tagline ? (
-                  <p className={styles['tagline']}>{data?.tagline}</p>
+                  <div className={styles['tagline-container']}>
+                    <p
+                      className={`${styles['tagline']} ${
+                        showFullTagline ? styles['full'] : ''
+                      }`}
+                    >
+                      {data?.tagline}
+                    </p>
+                    {isMobile && data.tagline.length > 50 && (
+                      <span
+                        className={styles['dropdown-icon']}
+                        onClick={() => setShowFullTagline((prev) => !prev)}
+                      >
+                        {showFullTagline ? 'Less' : 'More'}
+                        <div className={styles['dropdown-svg']}>
+                          {' '}
+                          {dropdownIcon}
+                        </div>
+                      </span>
+                    )}
+                  </div>
                 ) : (
                   <p className={styles['tagline']}>&nbsp;</p>
                 )}
