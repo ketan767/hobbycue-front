@@ -247,7 +247,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   if (!user) return { notFound: true }
 
   const { err: error, res: response } = await getListingPages(
-    `populate=_hobbies,_address&admin=${user._id}`,
+    `populate=_hobbies,seller,product_variant,_address&admin=${user._id}`,
   )
 
   // if (response?.data.success && response.data.data.no_of_listings === 0) return { notFound: true }
