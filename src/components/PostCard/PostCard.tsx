@@ -663,7 +663,7 @@ const PostCard: React.FC<Props> = (props) => {
             <Link href={url} target="_blank">
               {url}
             </Link>
-            {showComments && <PostComments data={postData} styles={styles} />}
+            {showComments && <PostComments data={postData} />}
           </div>
         ) : (
           <footer>
@@ -754,7 +754,7 @@ const PostCard: React.FC<Props> = (props) => {
 
             {/* Comments Section */}
             {(showComments || router.pathname.startsWith('/post/')) && (
-              <PostComments data={postData} styles={styles} />
+              <PostComments data={postData} />
             )}
           </footer>
         )}

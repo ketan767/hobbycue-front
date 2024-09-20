@@ -14,9 +14,10 @@ import { closeModal, openModal } from '@/redux/slices/modal'
 import { setActivePost } from '@/redux/slices/post'
 import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import { showProfileError } from '@/redux/slices/user'
+import styles from './PostCard.module.css'
 
 type Props = {
-  styles: any
+  // styles: any
   data: any
   onMoreComments?: () => void
   showAllComments?: boolean
@@ -26,7 +27,7 @@ type Props = {
 
 const PostComments = ({
   data,
-  styles,
+  // styles,
   onMoreComments,
   showAllComments,
   getInput,
@@ -107,29 +108,36 @@ const PostComments = ({
     }
   }
   const editReportDeleteRef: any = useRef(null)
-  useEffect(() => {
-    function handleClickOutside(event: Event) {
-      if (
-        editReportDeleteRef.current &&
-        !editReportDeleteRef.current.contains(event.target)
-      ) {
-        setOpenAction(false)
-      }
-    }
+  // useEffect(() => {
+  //   function handleClickOutside(event: Event) {
+  //     if (
+  //       editReportDeleteRef.current &&
+  //       !editReportDeleteRef.current.contains(event.target)
+  //     ) {
+  //       setOpenAction(false)
+  //     }
+  //   }
 
-    // Bind the event listener
-    document.addEventListener('click', handleClickOutside)
+  //   // Bind the event listener
+  //   document.addEventListener('click', handleClickOutside)
 
-    // Unbind the event listener on cleanup
-    return () => {
-      document.removeEventListener('click', handleClickOutside)
-    }
-  }, [])
+  //   // Unbind the event listener on cleanup
+  //   return () => {
+  //     document.removeEventListener('click', handleClickOutside)
+  //   }
+  // }, [])
 
   console.warn('comments ddataaa', data)
-  const postedByMe =
-    (data.author_type === 'User' && data?._author?.email === user?.email) ||
-    (data?.author_type === 'Listing' && data?._author.admin === user._id)
+  const postedByMe = (comment: any) => {
+    console.log('asifs comment', comment)
+    const toReturn =
+      (comment?.author_type === 'User' &&
+        comment?._author?.email === user?.email) ||
+      (comment?.author_type === 'Listing' &&
+        comment?._author?.admin === user._id)
+    console.log('asifs return', toReturn)
+    return toReturn
+  }
   const handleShowDelete = (postid: string) => {
     setDeleteData({ open: true, _id: postid })
   }
@@ -286,12 +294,13 @@ const PostComments = ({
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
                           onClick={() => {
-                            showFeatureUnderDevelopment()
-                            if (postedByMe) {
-                              setOpenAction(true)
+                            // showFeatureUnderDevelopment()
+                            if (postedByMe(comment)) {
+                              setOpenAction(!openAction)
                             }
                           }}
                           cursor={'pointer'}
+                          style={{ marginLeft: 'auto' }}
                         >
                           <g clip-path="url(#clip0_173_72884)">
                             <path
@@ -311,7 +320,7 @@ const PostComments = ({
                         >
                           {openAction === true && (
                             <div className={styles.editReportDelete}>
-                              {postedByMe && (
+                              {postedByMe(comment) && (
                                 <>
                                   <button
                                     onClick={() => {
@@ -429,8 +438,8 @@ const PostComments = ({
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
                         onClick={() => {
-                          showFeatureUnderDevelopment()
-                          if (postedByMe) {
+                          // showFeatureUnderDevelopment()
+                          if (postedByMe(comments[0])) {
                             setOptionsActive(true)
                           } else setOpenAction(true)
                         }}
