@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { Height } from '@mui/icons-material'
 import { updateListingLayoutMode } from '@/redux/slices/site'
+import { useRouter } from 'next/router'
 
 export const rupeesIcon = (
   <svg
@@ -69,6 +70,10 @@ const ListingCardProduct: React.FC<Props> = ({
   isMobile,
   style,
 }) => {
+  const router = useRouter()
+  const { user } = useSelector((state: RootState) => state.user)
+  console.warn('profilurrlll', `/${user?.profile_url}/pages`)
+  console.warn('pathnameeeeee', router.pathname)
   return (
     <>
       <Link
@@ -77,7 +82,7 @@ const ListingCardProduct: React.FC<Props> = ({
         className={styles.container}
         style={style}
       >
-        {itsMe ? (
+        {itsMe && router.pathname.endsWith(`/[profile_url]/pages`) ? (
           <div
             className={`${
               data.is_published

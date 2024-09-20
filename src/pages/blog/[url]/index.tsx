@@ -13,6 +13,8 @@ import ShareIcon from '@/assets/icons/ShareIcon'
 import OptionsIcon from '@/assets/icons/OptionsIcon'
 import { useState } from 'react'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import { useRouteError } from 'react-router-dom'
+import { useRouter } from 'next/router'
 
 type Props = {
   data: {
@@ -27,6 +29,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     display: false,
     message: '',
   })
+  const router = useRouter()
 
   const handleClick = () => {
     setSnackbar({
@@ -52,7 +55,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${data?.blog_url?.title} | HobbyCue`}</title>
       </Head>
-      <div className={styles['container']}>
+      <div className={styles['blog-header']}>
         <h1 className={styles['blog-title']}>{data?.blog_url?.title}</h1>
         <h1 className={styles['blog-desc']}>{data?.blog_url?.description}</h1>
         <div className={styles['cover-image']}>
@@ -61,15 +64,25 @@ const BlogPage: React.FC<Props> = ({ data }) => {
         {/* Author */}
         <div className={styles['author-wrapper']}>
           {/* pic */}
-          <div className={styles['author-profile-image']}>
-            <img
-              src={data?.blog_url?.author?.profile_image}
-              alt="profile image"
-            />
-          </div>
+          <Link href={`/profile/${data?.blog_url?.author?.profile_url}`}>
+            <div className={styles['author-profile-image']}>
+              {data?.blog_url?.author?.profile_image ? (
+                <img
+                  src={
+                    data?.blog_url?.author?.profile_image || defaultUserImage
+                  }
+                  alt="profile image"
+                />
+              ) : (
+                <Image src={defaultUserImage} alt="profile image" />
+              )}
+            </div>
+          </Link>
           {/* details */}
           <div className={styles['author-details']}>
-            <p>{data?.blog_url?.author?.full_name}</p>
+            <Link href={`/profile/${data?.blog_url?.author?.profile_url}`}>
+              <p>{data?.blog_url?.author?.full_name}</p>
+            </Link>
             <div className={styles['date-and-hobbies']}>
               <p>
                 {dateFormatwithYear?.format(

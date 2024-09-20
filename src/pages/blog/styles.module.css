@@ -4,6 +4,13 @@
   padding-top: 48px;
 }
 
+.blog-header {
+  max-width: 872px;
+  margin: 0 auto;
+  padding-top: 48px;
+  padding-bottom: 24px;
+}
+
 .blog-title {
   font-family: Poppins;
   font-size: 40px;

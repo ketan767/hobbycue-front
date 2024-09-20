@@ -283,45 +283,41 @@ const ListingCard: React.FC<Props> = ({ data, style, column }) => {
                     })}{' '}
                   </span>
                 </p>
-                {data?.event_date_time ? (
-                  <div className={styles['date-time']}>
-                    {data?.event_date_time.length !== 0 && (
-                      <section>
-                        {calendarIcon}{' '}
-                        <p>{formatDateRange(data?.event_date_time[0])}</p>
-                      </section>
-                    )}
-                    {!isMobile && (
-                      <>
-                        {data?.event_date_time.length !== 0 && (
-                          <section>
-                            {clockIcon}{' '}
-                            <p>
-                              {data?.event_date_time[0]?.from_time + ' - '}
-                              {data?.event_weekdays?.length > 0 ? (
-                                <>
-                                  ...
-                                  <span className={styles['purpleText']}>
-                                    more
-                                  </span>
-                                </>
-                              ) : (
-                                data?.event_date_time[0]?.to_time
-                              )}
-                            </p>
-                          </section>
-                        )}
-                      </>
-                    )}
-                  </div>
-                ) : (
-                  ''
-                )}
               </div>
             </div>
           </div>
-
-          <p className={styles.tagline}> {data?.tagline} </p>
+          {data.type === 3 && data?.event_date_time ? (
+            <div className={styles['date-time']}>
+              {data?.event_date_time.length !== 0 && (
+                <section>
+                  {calendarIcon}{' '}
+                  <p>{formatDateRange(data?.event_date_time[0])}</p>
+                </section>
+              )}
+              {!isMobile && (
+                <>
+                  {data?.event_date_time.length !== 0 && (
+                    <section>
+                      {clockIcon}{' '}
+                      <p>
+                        {data?.event_date_time[0]?.from_time + ' - '}
+                        {data?.event_weekdays?.length > 0 ? (
+                          <>
+                            ...
+                            <span className={styles['purpleText']}>more</span>
+                          </>
+                        ) : (
+                          data?.event_date_time[0]?.to_time
+                        )}
+                      </p>
+                    </section>
+                  )}
+                </>
+              )}
+            </div>
+          ) : (
+            <p className={styles.tagline}> {data?.tagline} </p>
+          )}
 
           <div className={styles.bottom}>
             <Image src={LocationIcon} width={16} height={16} alt="location" />

@@ -97,7 +97,7 @@
 
 .date-time{
   display: flex;
-justify-content: center;
+
 align-items: center;
 gap: 16px;
 color: var(--Grey-Darker, #6D747A);
@@ -238,6 +238,7 @@ z-index: 2;
     height: auto;
     aspect-ratio: 508 / 170;
   }
+
 }
 
 .purpleText{
