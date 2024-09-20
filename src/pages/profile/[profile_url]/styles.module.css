@@ -355,6 +355,7 @@ width: 100%;
 
   }
   .three-column-grid {
+    margin-top: 8px;
     grid-template-columns: 1fr ;
     row-gap: 8px;
   }

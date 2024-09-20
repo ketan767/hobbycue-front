@@ -1,7 +1,7 @@
 .posts-container {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-16);
+  
 }
 
 /*  */
@@ -87,9 +87,11 @@
     display: none;
   }
   .start-post-btn-container-mobile {
+    margin-top: 8px;
     display: initial;
     padding: 8px 16px;
     background-color: #ffffff;
+    margin-bottom: 8px;
   }
   .posts-container {
     display: none;
