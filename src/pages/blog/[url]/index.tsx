@@ -10,7 +10,7 @@ import Head from 'next/head'
 import UpvoteIcon from '@/assets/icons/UpvoteIcon'
 import BookmarkIcon from '@/assets/icons/BookmarkIcon'
 import ShareIcon from '@/assets/icons/ShareIcon'
-import OptionsIcon from '@/assets/icons/OptionsIcon'
+import MenuIcon from '@/assets/icons/MenuIcon'
 import { useState } from 'react'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { useRouteError } from 'react-router-dom'
@@ -112,7 +112,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
               <ShareIcon />
             </button>
             <button onClick={handleClick}>
-              <OptionsIcon />
+              <MenuIcon />
             </button>
           </div>
         </div>
