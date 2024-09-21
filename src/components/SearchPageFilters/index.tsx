@@ -46,7 +46,7 @@ const SearchPageFilter = () => {
   // const showAllPosts = useSelector((state: any) => state.search.showAllPosts)
   // const showAllBlogs = useSelector((state: any) => state.search.showAllBlogs)
 
-  const showAll = filter === 'all'
+  const showAll = filter === 'all' || filter === undefined || filter === ''
   const showAllUsers = filter === 'users'
   const showAllPeople = filter === 'people'
   const showAllPlace = filter === 'places'

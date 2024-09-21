@@ -10,6 +10,7 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
+import styles from './PostCard.module.css'
 
 type Props = {
   styles: any
@@ -181,10 +182,10 @@ const PostCommentVotes: React.FC<Props> = ({
       <div className={styles['upvote-downvote']}>
         <div
           onClick={() => {
-            showFeatureUnderDevelopment()
+            // showFeatureUnderDevelopment()
             if (isLoggedIn) {
               if (user.is_onboarded) {
-                handleUpVote
+                handleUpVote()
               } else HandleNotOnboard()
             } else {
               dispatch(openModal({ type: 'auth', closable: true }))
@@ -211,10 +212,10 @@ const PostCommentVotes: React.FC<Props> = ({
         <span className={styles['divider']}></span>
         <svg
           onClick={() => {
-            showFeatureUnderDevelopment()
+            // showFeatureUnderDevelopment()
             if (isLoggedIn) {
               if (user.is_onboarded) {
-                handleDownVote
+                handleDownVote()
               } else HandleNotOnboard()
             } else {
               dispatch(openModal({ type: 'auth', closable: true }))

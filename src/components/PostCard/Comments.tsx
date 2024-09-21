@@ -14,9 +14,11 @@ import { closeModal, openModal } from '@/redux/slices/modal'
 import { setActivePost } from '@/redux/slices/post'
 import CustomSnackbar from '../CustomSnackbar/CustomSnackbar'
 import { showProfileError } from '@/redux/slices/user'
+import styles from './PostCard.module.css'
+import Comment from './Comment'
 
 type Props = {
-  styles: any
+  // styles: any
   data: any
   onMoreComments?: () => void
   showAllComments?: boolean
@@ -26,7 +28,7 @@ type Props = {
 
 const PostComments = ({
   data,
-  styles,
+  // styles,
   onMoreComments,
   showAllComments,
   getInput,
@@ -107,34 +109,31 @@ const PostComments = ({
     }
   }
   const editReportDeleteRef: any = useRef(null)
-  useEffect(() => {
-    function handleClickOutside(event: Event) {
-      if (
-        editReportDeleteRef.current &&
-        !editReportDeleteRef.current.contains(event.target)
-      ) {
-        setOpenAction(false)
-      }
-    }
+  // useEffect(() => {
+  //   function handleClickOutside(event: Event) {
+  //     if (
+  //       editReportDeleteRef.current &&
+  //       !editReportDeleteRef.current.contains(event.target)
+  //     ) {
+  //       setOpenAction(false)
+  //     }
+  //   }
 
-    // Bind the event listener
-    document.addEventListener('click', handleClickOutside)
+  //   // Bind the event listener
+  //   document.addEventListener('click', handleClickOutside)
 
-    // Unbind the event listener on cleanup
-    return () => {
-      document.removeEventListener('click', handleClickOutside)
-    }
-  }, [])
+  //   // Unbind the event listener on cleanup
+  //   return () => {
+  //     document.removeEventListener('click', handleClickOutside)
+  //   }
+  // }, [])
 
   console.warn('comments ddataaa', data)
-  const postedByMe =
-    (data.author_type === 'User' && data?._author?.email === user?.email) ||
-    (data?.author_type === 'Listing' && data?._author.admin === user._id)
+
   const handleShowDelete = (postid: string) => {
     setDeleteData({ open: true, _id: postid })
   }
 
-  const postUrl = `${window.location.origin}/post/${data?._id}`
   const showFeatureUnderDevelopment = () => {
     setSnackbar({
       display: true,
@@ -219,145 +218,7 @@ const PostComments = ({
           <section className={styles['all-comment-container']}>
             {router.pathname === '/post/[post_id]' || displayMoreComments ? (
               comments.map((comment: any, idx: number) => {
-                return (
-                  <div key={comment._id} className={styles['comment']}>
-                    {/* Profile Image */}
-                    <>
-                      {comment?._author?.profile_image ? (
-                        <img
-                          className={
-                            comment?.author_type === 'User'
-                              ? styles['inputAuthorImage']
-                              : styles['page-img-comments']
-                          }
-                          src={comment?._author?.profile_image}
-                          alt="Author Profile"
-                          width={40}
-                          height={40}
-                        />
-                      ) : (
-                        <div
-                          className={` ${
-                            comment?.author_type === 'Listing'
-                              ? 'default-people-listing-icon'
-                              : 'default-user-icon'
-                          }  ${
-                            comment?.author_type === 'User'
-                              ? styles['inputAuthorImage']
-                              : styles['page-img-comments']
-                          }`}
-                        ></div>
-                      )}
-                    </>
-                    {/* All Content  */}
-                    <section className={styles['content-wrapper']}>
-                      {/* Header */}
-                      <header>
-                        <p className={styles['author-name']}>
-                          {comment?.author_type === 'Listing'
-                            ? comment?._author?.title
-                            : comment?._author?.full_name}
-                        </p>
-                        <p className={styles['date']}>
-                          {comment?.date && format(new Date(comment.date))}
-                        </p>
-                      </header>
-
-                      {/* Content */}
-                      <CommentCheckWithUrl>
-                        {comment.content}
-                      </CommentCheckWithUrl>
-
-                      {/* Footer */}
-                      <footer>
-                        {/* Upvote and Downvote */}
-                        <PostCommentVotes
-                          comment={comment}
-                          postData={data}
-                          styles={styles}
-                          updateComments={fetchComments}
-                        />
-
-                        {/* More Action Button */}
-                        <svg
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          onClick={() => {
-                            showFeatureUnderDevelopment()
-                            if (postedByMe) {
-                              setOpenAction(true)
-                            }
-                          }}
-                          cursor={'pointer'}
-                        >
-                          <g clip-path="url(#clip0_173_72884)">
-                            <path
-                              d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z"
-                              fill="#6D747A"
-                            />
-                          </g>
-                          <defs>
-                            <clipPath id="clip0_173_72884">
-                              <rect width="24" height="24" fill="white" />
-                            </clipPath>
-                          </defs>
-                        </svg>
-                        <div
-                          ref={editReportDeleteRef}
-                          className={styles.actionIcon}
-                        >
-                          {openAction === true && (
-                            <div className={styles.editReportDelete}>
-                              {postedByMe && (
-                                <>
-                                  <button
-                                    onClick={() => {
-                                      dispatch(
-                                        openModal({
-                                          type: 'update-post',
-                                          closable: true,
-                                          propData: data,
-                                        }),
-                                      )
-                                      setOpenAction(false)
-                                    }}
-                                  >
-                                    Edit
-                                  </button>
-                                  <button
-                                    onClick={() => {
-                                      handleShowDelete(data?._id)
-                                      setOpenAction(false)
-                                    }}
-                                  >
-                                    Delete
-                                  </button>
-                                </>
-                              )}
-                              <button
-                                onClick={() => {
-                                  dispatch(
-                                    openModal({
-                                      type: 'PostReportModal',
-                                      closable: true,
-                                      propData: { reported_url: postUrl },
-                                    }),
-                                  )
-                                  setOpenAction(false)
-                                }}
-                              >
-                                Report
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      </footer>
-                    </section>
-                  </div>
-                )
+                return <Comment comment={comment} data={data} fetchComments={fetchComments} key={idx} />
               })
             ) : (
               <>
@@ -429,10 +290,10 @@ const PostComments = ({
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
                         onClick={() => {
-                          showFeatureUnderDevelopment()
-                          if (postedByMe) {
-                            setOptionsActive(true)
-                          } else setOpenAction(true)
+                          // showFeatureUnderDevelopment()
+                          // if (postedByMe(comments[0])) {
+                          //   setOptionsActive(true)
+                          // } else setOpenAction(true)
                         }}
                         cursor={'pointer'}
                       >
