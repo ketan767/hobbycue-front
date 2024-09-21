@@ -151,7 +151,7 @@ left: 12px;
     padding-top: 8px;
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-16);
+    gap: 8px;
   }
   .no-data-div{
     border-radius: 0;
