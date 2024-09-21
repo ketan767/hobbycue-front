@@ -122,7 +122,7 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
 
           {/* More Action Button */}
 
-          <div
+          {postedByMe && <div
             //   ref={editReportDeleteRef}
             className={styles.actionIcon}
             onClick={(e) => e.stopPropagation()}
@@ -198,7 +198,7 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
                 </button> */}
               </div>
             )}
-          </div>
+          </div>}
         </footer>
       </section>
       {showDelModal && (
