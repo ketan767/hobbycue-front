@@ -24,6 +24,7 @@
   border-radius: 50%;
   border: 1px solid #8064a2;
   object-fit: contain;
+  overflow: hidden;
 }
 .post-card-wrapper header .author-listing,
 .post-card-wrapper header .default-people-listing-icon {
