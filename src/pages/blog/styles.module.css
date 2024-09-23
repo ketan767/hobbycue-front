@@ -6,7 +6,7 @@
 
 .blog-header {
   max-width: 872px;
-  margin: 0 16px 0 16px;
+  margin: 0 auto;
   padding-top: 48px;
   padding-bottom: 24px;
 }
@@ -278,5 +278,8 @@ margin-right: auto;
   }
   .author-wrapper {
     display: block;
+  }
+  .blog-header{
+    margin: 0 16px 0 16px;
   }
 }
