@@ -1,10 +1,11 @@
 .container {
-  max-width: 872px;
+  max-width: 1296px;
   margin: 0 auto;
-  padding-top: 48px;
-  background-color: #f2f0f5;
 }
 
+.main-container {
+  background-color: #f2f0f5;
+}
 .blog-header {
   max-width: 872px;
   margin: 0 auto;

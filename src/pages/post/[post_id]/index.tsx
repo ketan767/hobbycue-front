@@ -118,7 +118,13 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
 
         <meta property="og:image:alt" content="Profile picture" />
         <title>
-          {`${`${data.postsData?._author?.full_name} - ${data.postsData?._hobby?.display} at ${data.postsData?.visibility}`}`}
+          {`${`${
+            data?.postsData?.author_type === 'User'
+              ? data.postsData?._author?.full_name
+              : data.postsData?._author?.title
+          } - ${data.postsData?._hobby?.display} at ${
+            data.postsData?.visibility
+          }`}`}
         </title>
       </Head>
       <CommunityPageLayout activeTab="posts" singlePostPage={true}>

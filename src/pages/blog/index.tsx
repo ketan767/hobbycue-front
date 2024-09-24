@@ -22,11 +22,13 @@ const Explore: React.FC<Props> = ({ data }) => {
 
   return (
     <>
-      <div className={styles.container}>
-        <div className={styles.gridContainer}>
-          {data?.map((el: any) => (
-            <BlogCard key={el._id} data={el} />
-          ))}
+      <div className={styles['main-container ']}>
+        <div className={styles.container}>
+          <div className={styles.gridContainer}>
+            {data?.map((el: any) => (
+              <BlogCard key={el._id} data={el} />
+            ))}
+          </div>
         </div>
       </div>
     </>
