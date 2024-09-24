@@ -16,15 +16,15 @@ const Explore: React.FC<Props> = ({ data: initialData }) => {
   const { type } = router.query
 
   const [data, setData] = useState(initialData || [])
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(2)
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
 
   const fetchMoreData = useCallback(async () => {
     if (loading || !hasMore) return
     setLoading(true)
-    const { res, err } = await await getListingPages(
-      `type=4&sort=-createdAt&is_published=true&populate=_hobbies,_address&page=1&limit=20`,
+    const { res, err } = await getListingPages(
+      `type=4&sort=-createdAt&is_published=true&populate=_hobbies,_address&page=${page}&limit=20`,
     )
 
     if (err || !res?.data?.data?.listings?.length) {

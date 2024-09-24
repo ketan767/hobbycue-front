@@ -192,93 +192,91 @@ const ListingReviewsTab: FC<{ pageData: any }> = ({ pageData }) => {
                   {plusSvg}
                 </div>
               )}
-              {reviews?.map((review: any, i: any) => (
-                <div key={i} className={styles['review-container']}>
-                  <img
-                    src={review?.user_id?.profile_image ?? defaultUserImage.src}
-                    alt={review?.user_id?.full_name}
-                  />
-                  <div className={styles['review-content']}>
-                    <div className={styles['review-content-top']}>
-                      <div className={styles['review-name-status']}>
-                        <p className={styles['review-username']}>
-                          {review.user_id?.full_name}{' '}
-                        </p>
-                        <p className={styles['review-status']}>
-                          {listingLayoutMode === 'edit'
-                            ? review.is_published
-                              ? 'Published'
-                              : 'Unpublished'
-                            : ''}
+              {reviews.length !== 0 ? (
+                reviews?.map((review: any, i: any) => (
+                  <div key={i} className={styles['review-container']}>
+                    <img
+                      src={
+                        review?.user_id?.profile_image ?? defaultUserImage.src
+                      }
+                      alt={review?.user_id?.full_name}
+                    />
+                    <div className={styles['review-content']}>
+                      <div className={styles['review-content-top']}>
+                        <div className={styles['review-name-status']}>
+                          <p className={styles['review-username']}>
+                            {review.user_id?.full_name}{' '}
+                          </p>
+                          <p className={styles['review-status']}>
+                            {listingLayoutMode === 'edit'
+                              ? review.is_published
+                                ? 'Published'
+                                : 'Unpublished'
+                              : ''}
+                          </p>
+                        </div>
+                        <p className={styles['review-date']}>
+                          {formatDate(review.createdAt)}
                         </p>
                       </div>
-                      <p className={styles['review-date']}>
-                        {formatDate(review.createdAt)}
-                      </p>
+                      <p className={styles['review']}>{review.text}</p>
                     </div>
-                    <p className={styles['review']}>{review.text}</p>
-                  </div>
-                  {iamAdmin && (
-                    <svg
-                      ref={optionRef}
-                      className={styles['more-actions-icon']}
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      onClick={() =>
-                        setActiveReview(activeReview === i ? null : i)
-                      }
-                    >
-                      <g clip-path="url(#clip0_173_72891)">
-                        <path
-                          d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z"
-                          fill="#8064A2"
-                        />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_173_72891">
-                          <rect width="24" height="24" fill="white" />
-                        </clipPath>
-                      </defs>
-                    </svg>
-                  )}
-                  <div>
-                    {activeReview === i && iamAdmin && (
-                      <ul className={styles.optionsContainer}>
-                        <li
-                          onClick={() => {
-                            handlePublish(review._id, !review?.is_published)
-                            setActiveReview(null)
-                          }}
-                        >
-                          {review?.is_published ? 'Unpublish' : 'Publish'}
-                        </li>
-                        <li
-                          onClick={() => {
-                            handleDelete(review._id)
-                            setActiveReview(null)
-                          }}
-                        >
-                          Delete
-                        </li>
-                      </ul>
+                    {iamAdmin && (
+                      <svg
+                        ref={optionRef}
+                        className={styles['more-actions-icon']}
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        onClick={() =>
+                          setActiveReview(activeReview === i ? null : i)
+                        }
+                      >
+                        <g clip-path="url(#clip0_173_72891)">
+                          <path
+                            d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z"
+                            fill="#8064A2"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_173_72891">
+                            <rect width="24" height="24" fill="white" />
+                          </clipPath>
+                        </defs>
+                      </svg>
                     )}
+                    <div>
+                      {activeReview === i && iamAdmin && (
+                        <ul className={styles.optionsContainer}>
+                          <li
+                            onClick={() => {
+                              handlePublish(review._id, !review?.is_published)
+                              setActiveReview(null)
+                            }}
+                          >
+                            {review?.is_published ? 'Unpublish' : 'Publish'}
+                          </li>
+                          <li
+                            onClick={() => {
+                              handleDelete(review._id)
+                              setActiveReview(null)
+                            }}
+                          >
+                            Delete
+                          </li>
+                        </ul>
+                      )}
+                    </div>
                   </div>
+                ))
+              ) : (
+                <div className={styles['no-data-div']}>
+                  <p className={styles['no-data-text']}>No reviews</p>
                 </div>
-              ))}
+              )}
             </Masonry>
           </ResponsiveMasonry>
-
-          {pageData?._reviews.length == 0 && (
-            <>
-              <div className={styles['no-data-div']}>
-                <p className={styles['no-data-text']}>No reviews</p>
-              </div>
-
-              {!isMobile && <div className={styles['no-data-div']}></div>}
-            </>
-          )}
         </section>
       </main>
       {

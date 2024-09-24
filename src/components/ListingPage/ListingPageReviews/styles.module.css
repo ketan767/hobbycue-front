@@ -39,7 +39,7 @@
 } */
 
 .no-data-div {
-  width: calc(50% - 12px);
+  width: calc(100%);
   height: 10rem;
   background-color: #ffffff;
   padding: var(--spacing-12) var(--spacing-16);

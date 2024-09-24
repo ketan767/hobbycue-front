@@ -23,7 +23,7 @@ import { useMediaQuery } from '@mui/material'
 import PagesLoader from '@/components/PagesLoader/PagesLoader'
 import Head from 'next/head'
 
-type Props = { data: { hobbyData: any } }
+type Props = { data: { hobbyData: any; pageData: any } }
 
 const HobbyPostsPage: React.FC<Props> = (props) => {
   const data = props.data.hobbyData
@@ -43,72 +43,52 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
   }, [isMobile])
 
   const [loadingPosts, setLoadingPosts] = useState(false)
-  const [pages, setPages] = useState<any[]>([])
-  const [pageNo, setPageNo] = useState(1)
+  const [pages, setPages] = useState(props?.data?.pageData || [])
+  const [page, setPage] = useState(2)
+  const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
   const observer = useRef<IntersectionObserver | null>(null)
 
-  const getPost = async (p = 1) => {
-    setLoadingPosts(true)
-    const { err, res } = await getHobbyPages(
-      `display=${data.display}&limit=10&page=${p}`,
+  const router = useRouter()
+  const fetchMoreData = useCallback(async () => {
+    if (loading || !hasMore) return
+    setLoading(true)
+    const { res, err } = await getHobbyPages(
+      `display=${data.display}&limit=10&page=${page}`,
     )
 
-    if (err) {
-      setLoadingPosts(false)
-      return console.log(err)
+    if (err || !res?.data?.data?.length) {
+      setHasMore(false)
+    } else {
+      setPages((prevData: any) => [...prevData, ...res.data.data])
+      setPage(page + 1)
     }
-    if (res.data.success) {
-      setLoadingPosts(false)
-      res.data.data.length < 10 ? setHasMore(false) : setHasMore(true)
-      setPages((prev: any[]) => {
-        let merged = [...prev]
-        res.data.data?.forEach((post: any) => {
-          if (!merged.some((p: any) => p._id === post._id)) merged.push(post)
-        })
-        return merged
-      })
-    }
-  }
+    setLoading(false)
+  }, [page, loading, hasMore])
 
   useEffect(() => {
-    getPost()
-  }, [])
+    let scrollTimeout: NodeJS.Timeout | null = null
 
-  const lastPostElementRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (loadingPosts || !hasMore) return
+    const handleScroll = () => {
+      if (scrollTimeout) clearTimeout(scrollTimeout)
 
-      const observerCallback = (entries: IntersectionObserverEntry[]) => {
-        if (entries[0].isIntersecting && hasMore && !loadingPosts) {
-          setPageNo((prevPageNo) => {
-            const nextPage = prevPageNo + 1
-            getPost(nextPage)
-            return nextPage
-          })
+      scrollTimeout = setTimeout(() => {
+        if (
+          window.innerHeight + document.documentElement.scrollTop >=
+          document.documentElement.offsetHeight - 100
+        ) {
+          fetchMoreData()
         }
-      }
+      }, 200)
+    }
 
-      if (observer.current) {
-        console.log('first disconnect')
-        observer.current.disconnect()
-      }
+    window.addEventListener('scroll', handleScroll)
 
-      observer.current = new IntersectionObserver(observerCallback)
-
-      if (node) {
-        console.log('first observe')
-        observer.current.observe(node)
-      }
-
-      return () => {
-        if (observer.current) observer.current.disconnect()
-      }
-    },
-    [loadingPosts, hasMore],
-  )
-
-  const router = useRouter()
+    return () => {
+      if (scrollTimeout) clearTimeout(scrollTimeout)
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [fetchMoreData])
 
   useEffect(() => {
     // Save scroll position when navigating away from the page
@@ -159,22 +139,18 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
             {pages.length !== 0 &&
               pages.map((post: any, idx: number) => {
                 return idx === pages.length - 1 ? (
-                  <div ref={lastPostElementRef} className={`page-with-ref`}>
-                    <ListingCard key={idx} data={post} />
-                  </div>
+                  <ListingCard key={idx} data={post} />
                 ) : (
-                  <div className={`page-${idx + 1}`}>
-                    <ListingCard key={idx} data={post} />
-                  </div>
+                  <ListingCard key={idx} data={post} />
                 )
               })}
-            {loadingPosts && (
+            {loading && (
               <>
                 <PagesLoader /> <PagesLoader /> <PagesLoader /> <PagesLoader />
               </>
             )}
           </section>
-          {pages.length === 0 && !loadingPosts && (
+          {pages.length === 0 && !loading && (
             <div className={styles['dual-section-wrapper']}>
               <div className={styles['no-posts-container']}>
                 <p>No pages available</p>
@@ -204,10 +180,14 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 
   if (res?.data.success && res.data.no_of_hobbies === 0)
     return { notFound: true }
-
+  const { res: hobbypageRes, err: HobbyPageErr } = await getHobbyPages(
+    `display=${res.data?.hobbies?.[0]?.display}&limit=10&page=1`,
+  )
   const data = {
     hobbyData: res.data?.hobbies?.[0],
+    pageData: hobbypageRes?.data?.data,
   }
+
   return {
     props: {
       data,

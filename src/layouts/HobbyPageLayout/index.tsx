@@ -110,7 +110,7 @@ const HobbyPageLayout: React.FC<Props> = ({
     window.addEventListener('scroll', checkScroll)
     getMembers()
     // return window.removeEventListener('scroll', checkScroll)
-  }, [data, router.asPath ])
+  }, [data, router.asPath])
 
   useEffect(() => {
     if (hobbyStates && typeof hobbyStates[data?._id] === 'boolean') {
@@ -335,7 +335,7 @@ const HobbyPageLayout: React.FC<Props> = ({
         {/* {!hideLastColumn && ( */}
         {(isMobile || !hideLastColumn) && (
           <>
-            {(activeTab === 'home' || activeTab === 'posts') && (
+            {(activeTab === 'home' || activeTab === 'posts') && !isMobile && (
               <aside>
                 <div className={styles['members']}>
                   <div className={styles['heading']}>
