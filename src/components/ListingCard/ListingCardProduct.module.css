@@ -1,9 +1,12 @@
 .price {
-  font-size: 24px;
-  font-weight: 600;
   display: flex;
   align-items: center;
   margin-bottom: 8px;
+  color: var(--Grey-Darkest, #08090a);
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
 }
 
 .cta_button {
@@ -49,7 +52,8 @@
 .contentImageContainer {
   /* width: 48px;
     height: 48px; */
-    border: 1px solid #8064a2;
+  border: 1px solid #8064a2;
+  border-top-left-radius: 8px;
   border-bottom-right-radius: 8px;
   height: 161px;
   min-width: 161px;
@@ -89,10 +93,26 @@
 
 .soldBy {
   font-weight: 500;
-  font-size: 12px;
-  line-height: 18px;
   color: #6d747a;
   white-space: normal;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-bottom: 16px;
+}
+
+.pageType {
+  color: var(--Red1, #c0504d);
+  font-family: Poppins;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 16px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 16px;
 }
 
 .tagline {
@@ -206,16 +226,14 @@
     aspect-ratio: 508 / 170;
   }
   .contentImageContainer {
- 
     border-bottom-right-radius: 8px;
     height: 180px;
     min-width: 180px;
     overflow: hidden;
   }
   .contentHead {
-  margin: 12px 0px 0 12px;
-  gap: 12px;
-
+    margin: 12px 0px 0 12px;
+    gap: 12px;
   }
 }
 
