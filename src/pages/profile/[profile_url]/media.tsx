@@ -373,7 +373,7 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
                 columnsCountBreakPoints={{ 0: 1, 600: 2, 1100: 2 }}
               >
                 <Masonry
-                  gutter="12px"
+                  gutter={isMobile ? '8px' : '12px'}
                   style={{ columnGap: '24px', rowGap: '12px' }}
                 >
                   {/* Images */}

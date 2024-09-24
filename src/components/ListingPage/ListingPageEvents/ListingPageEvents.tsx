@@ -148,7 +148,7 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
         {eventData?.res ? (
           <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 1100: 2 }}>
             <Masonry
-              gutter="12px"
+              gutter={isMobile ? '8px' : '12px'}
               style={{ columnGap: '24px', rowGap: '12px' }}
             >
               <div onClick={handleAddEvent} className={styles['add-event']}>

@@ -198,6 +198,7 @@ ul.contact-wrapper svg {
   .add-event{ 
     margin-top: 8px;
     height: 88px;
+    border-radius: 0;
   }
   .display-none-responsive {
     display: none !important;

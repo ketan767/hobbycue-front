@@ -32,6 +32,7 @@ width: 100%;
 .videos {
   height: 100%;
   border-radius: 8px;
+  width: 100%;
 }
 
 .image {
@@ -285,6 +286,10 @@ width: 100%;
  }
 
 @media screen and (max-width: 1100px) {
+  .main-media {
+    margin-top: 8px;
+    gap: 8px;
+  }
   .medias {
     display: flex;
     flex-direction: column;
@@ -350,9 +355,8 @@ width: 100%;
   }
   .uploadContainer {
     display: flex;
-    gap: 24px;
+    gap: 8px;
     flex-direction: column;
-
   }
   .three-column-grid {
     margin-top: 8px;
