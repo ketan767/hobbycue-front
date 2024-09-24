@@ -98,7 +98,8 @@
   }
   .posts-container-mobile {
     display: block;
-    height: 90vh;
+    margin-bottom: 50px;
+    /* height: 90vh; */
     /* min-height: calc(100vh - 107px - 56px); */
   }
   .nav-mobile {

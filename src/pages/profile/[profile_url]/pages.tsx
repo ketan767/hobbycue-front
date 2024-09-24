@@ -148,7 +148,7 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
               </div>
             </aside>
 
-            <main>
+            <main style={{ marginBottom: '50px' }}>
               {data.listingsData.length !== 0 && mounted ? (
                 // <div className={styles['card-container']}>
                 <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 1100: 2 }}>

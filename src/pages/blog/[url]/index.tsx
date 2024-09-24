@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next'
 import { getAllBlogs } from '@/services/blog.services'
 import styles from './../styles.module.css'
 import BlogComments from './Comments'
-import { dateFormat, dateFormatwithYear } from '@/utils'
+import { dateFormat, dateFormatwithYear, isMobile } from '@/utils'
 import Image from 'next/image'
 import defaultUserImage from '@/assets/svg/default-images/default-user-icon.svg'
 import Link from 'next/link'
@@ -11,10 +11,12 @@ import UpvoteIcon from '@/assets/icons/UpvoteIcon'
 import BookmarkIcon from '@/assets/icons/BookmarkIcon'
 import ShareIcon from '@/assets/icons/ShareIcon'
 import MenuIcon from '@/assets/icons/MenuIcon'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { useRouteError } from 'react-router-dom'
 import { useRouter } from 'next/router'
+import { useDispatch } from 'react-redux'
+import { openModal, updateShareUrl } from '@/redux/slices/modal'
 
 type Props = {
   data: {
@@ -23,6 +25,7 @@ type Props = {
 }
 
 const BlogPage: React.FC<Props> = ({ data }) => {
+  const [showMenu, setShowMenu] = useState(false)
   const blogUrl = data?.blog_url?.url || ''
   const [snackbar, setSnackbar] = useState({
     type: 'success',
@@ -30,14 +33,33 @@ const BlogPage: React.FC<Props> = ({ data }) => {
     message: '',
   })
   const router = useRouter()
+  const dispatch = useDispatch()
 
-  const handleClick = () => {
+  const showFeatUnderDev = () => {
     setSnackbar({
       type: 'warning',
       message: 'This feature is under development.',
       display: true,
     })
   }
+
+  const handleShare = () => {
+    dispatch(
+      updateShareUrl(`${window.location.origin}/blog/${data?.blog_url?.url}`),
+    )
+    dispatch(openModal({ type: 'social-media-share', closable: true }))
+  }
+
+  const handleActions = () => {
+    setShowMenu(!showMenu)
+  }
+
+  useEffect(() => {
+    window.addEventListener('click', () => setShowMenu(false))
+    return window.removeEventListener('click', () => setShowMenu(false))
+  }, [])
+
+  const isMobileScreen = isMobile()
 
   console.warn('blogdataaaaaaaa', data)
   return (
@@ -62,58 +84,93 @@ const BlogPage: React.FC<Props> = ({ data }) => {
           <img src={data?.blog_url?.cover_pic} alt="cover image" />
         </div>
         {/* Author */}
-        <div className={styles['author-wrapper']}>
-          {/* pic */}
-          <Link href={`/profile/${data?.blog_url?.author?.profile_url}`}>
-            <div className={styles['author-profile-image']}>
-              {data?.blog_url?.author?.profile_image ? (
-                <img
-                  src={
-                    data?.blog_url?.author?.profile_image || defaultUserImage
-                  }
-                  alt="profile image"
-                />
-              ) : (
-                <Image src={defaultUserImage} alt="profile image" />
-              )}
-            </div>
-          </Link>
-          {/* details */}
-          <div className={styles['author-details']}>
+        <div className={styles['flex-container']}>
+          <div className={styles['author-wrapper']}>
+            {/* pic */}
             <Link href={`/profile/${data?.blog_url?.author?.profile_url}`}>
-              <p>{data?.blog_url?.author?.full_name}</p>
-            </Link>
-            <div className={styles['date-and-hobbies']}>
-              <p>
-                {dateFormatwithYear?.format(
-                  new Date(data?.blog_url?.createdAt),
+              <div className={styles['author-profile-image']}>
+                {data?.blog_url?.author?.profile_image ? (
+                  <img
+                    src={
+                      data?.blog_url?.author?.profile_image || defaultUserImage
+                    }
+                    alt="profile image"
+                  />
+                ) : (
+                  <Image src={defaultUserImage} alt="profile image" />
                 )}
-              </p>
-              &#183;
-              <div className="">
-                {data?.blog_url?._hobbies?.map((hobby: any, idx: any) => (
-                  <span>
-                    {hobby?.hobby?.display}
-                    {idx !== data?.blog_url?._hobbies?.length - 1 ? ', ' : ''}
-                  </span>
-                ))}
+              </div>
+            </Link>
+            {/* details */}
+            <div className={styles['author-details']}>
+              <Link href={`/profile/${data?.blog_url?.author?.profile_url}`}>
+                <p className={`${styles['author-name']}`}>
+                  {data?.blog_url?.author?.full_name}
+                </p>
+              </Link>
+              <div className={styles['date-and-hobbies']}>
+                <p>
+                  {dateFormatwithYear?.format(
+                    new Date(data?.blog_url?.createdAt),
+                  )}
+                </p>
+                {!isMobileScreen && (
+                  <>
+                    &#183;
+                    {data?.blog_url?._hobbies?.map((hobby: any, idx: any) => (
+                      <span>
+                        {hobby?.hobby?.display}
+                        {idx !== data?.blog_url?._hobbies?.length - 1
+                          ? ', '
+                          : ''}
+                      </span>
+                    ))}
+                  </>
+                )}
               </div>
             </div>
           </div>
+          {isMobileScreen && (
+            // add hexagon here
+            <div className={`${styles['date-and-hobbies']} ${styles.res}`}>
+              {data?.blog_url?._hobbies?.map((hobby: any, idx: any) => (
+                <span>
+                  {hobby?.hobby?.display}
+                  {idx !== data?.blog_url?._hobbies?.length - 1 ? ', ' : ''}
+                </span>
+              ))}
+            </div>
+          )}
           {/* actions */}
-          <div className={styles['actions']}>
-            <button onClick={handleClick}>
+          <div
+            className={styles['actions']}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button onClick={showFeatUnderDev}>
               <UpvoteIcon />
             </button>
-            <button onClick={handleClick}>
+            <button onClick={showFeatUnderDev}>
               <BookmarkIcon />
             </button>
-            <button onClick={handleClick}>
+            <button onClick={handleShare}>
               <ShareIcon />
             </button>
-            <button onClick={handleClick}>
+            <button onClick={handleActions} style={{ position: 'relative' }}>
               <MenuIcon />
+              {showMenu && (
+                <div className={`${styles.menu}`}>
+                  <button onClick={showFeatUnderDev}>ReShare</button>
+                  <button onClick={showFeatUnderDev}>Comment</button>
+                  <button onClick={showFeatUnderDev}>Report</button>
+                  <button onClick={showFeatUnderDev}>Downvote</button>
+                </div>
+              )}
             </button>
+            {isMobileScreen && (
+              <a href="#comments" className={styles.comment_button}>
+                Comment
+              </a>
+            )}
           </div>
         </div>
       </div>
@@ -213,7 +270,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
       </div>
 
       <div className={styles['comment-container']}>
-        <div className={styles['comment']}>
+        <div className={styles['comment']} id="comments">
           <BlogComments data={data.blog_url} />
         </div>
       </div>

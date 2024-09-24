@@ -212,6 +212,7 @@ ul.seller-info-wrapper li svg:last-child {
 }
 
 .working-hours-wrapper {
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
   color: #939ca3;

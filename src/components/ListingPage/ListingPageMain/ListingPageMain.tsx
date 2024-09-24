@@ -1301,7 +1301,7 @@ const ListingPageMain: React.FC<Props> = ({
                   <div
                     className={`${styles['working-hours-wrapper']} ${
                       styles['display-desktop']
-                    }${
+                    } ${
                       workingHoursStates?.[data?._id]
                         ? ' ' + styles['display-mobile']
                         : ''

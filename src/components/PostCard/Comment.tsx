@@ -48,6 +48,14 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
       comment?._author?.email === user?.email) ||
     (comment?.author_type === 'Listing' && comment?._author?.admin === user._id)
 
+  const showFeatUnderDev = () => {
+    setSnackbar({
+      type: 'error',
+      display: true,
+      message: 'Feature Under Development',
+    })
+  }
+
   const handleDeleteComment = async () => {
     const { res, err } = await deletePostComment(comment._id)
     if (err) {
@@ -122,7 +130,7 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
 
           {/* More Action Button */}
 
-          {postedByMe && <div
+          <div
             //   ref={editReportDeleteRef}
             className={styles.actionIcon}
             onClick={(e) => e.stopPropagation()}
@@ -135,9 +143,7 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
               xmlns="http://www.w3.org/2000/svg"
               onClick={() => {
                 // showFeatureUnderDevelopment()
-                if (postedByMe) {
-                  setOpenAction(!openAction)
-                }
+                setOpenAction(!openAction)
               }}
               cursor={'pointer'}
             >
@@ -182,23 +188,12 @@ const Comment: React.FC<Props> = ({ comment, data, fetchComments }) => {
                     </button>
                   </>
                 )}
-                {/* <button
-                  onClick={() => {
-                    dispatch(
-                      openModal({
-                        type: 'PostReportModal',
-                        closable: true,
-                        propData: { reported_url: postUrl },
-                      }),
-                    )
-                    setOpenAction(false)
-                  }}
-                >
-                  Report
-                </button> */}
+                {!postedByMe && (
+                  <button onClick={showFeatUnderDev}>Report</button>
+                )}
               </div>
             )}
-          </div>}
+          </div>
         </footer>
       </section>
       {showDelModal && (

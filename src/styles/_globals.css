@@ -1,3 +1,7 @@
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
   --max-width: 81rem; /* 1200px */
 
@@ -5,14 +9,14 @@
 
   /* Primary - Purple */
   --primary-100-rgb: 127, 99, 161; /* #7f63a1  */
-  --primary-50-rgb: 128,100,162; /* #8064A2  */
+  --primary-50-rgb: 128, 100, 162; /* #8064A2  */
   --primary-10-rgb: 247, 245, 249; /* #F7F5F9  */
 
   /* Secondary - Sky Blue */
   --secondary-rgb: 0, 150, 200; /* #0096c8 */
 
   --bg-rgb: 248, 249, 250; /* #F8F9FA */
-  --border-rgb: 235,237,240;
+  --border-rgb: 235, 237, 240;
   --black-rgb: 0, 0, 0; /* #000 */
   --white-rgb: 255, 255, 255; /* #fff */
   --gray-100-rgb: 108, 115, 122; /* #939ca3 */
@@ -42,7 +46,6 @@
     overflow-y: auto;
   }
 }
-
 
 @media screen and (max-width: 1100px) {
   :root {
@@ -176,10 +179,10 @@ select:-webkit-autofill {
   border: 1px solid rgba(var(--primary-100-rgb));
   position: relative;
 }
-.modal-footer-btn.cancel:focus-visible{
+.modal-footer-btn.cancel:focus-visible {
   outline: none;
 }
-.modal-footer-btn.cancel:focus-visible::before{
+.modal-footer-btn.cancel:focus-visible::before {
   content: '';
   position: absolute;
   top: -3px;
@@ -254,7 +257,7 @@ select:-webkit-autofill {
 }
 .ql-toolbar.ql-snow .ql-formats button:hover {
   border-radius: 4px;
-  background: var(--Grey-Hover, #F8F9FA);
+  background: var(--Grey-Hover, #f8f9fa);
 }
 .ql-toolbar.ql-snow .ql-formats button {
   opacity: 0.8;
@@ -379,7 +382,7 @@ select:-webkit-autofill {
 .btnOutlinePurple button:active svg rect,
 .btnOutlinePurple button:target svg rect,
 .btnOutlinePurple button:visited svg rect,
-.btnOutlinePurple button:focus-visible svg rect{
+.btnOutlinePurple button:focus-visible svg rect {
   fill: #8064a2 !important;
 }
 
@@ -467,7 +470,7 @@ select:-webkit-autofill {
     display: block;
   }
 
-  .settings-title{
+  .settings-title {
     padding: var(--spacing-16);
     display: flex;
     justify-content: space-between;
@@ -482,7 +485,7 @@ select:-webkit-autofill {
     font-weight: 500;
     line-height: 16px;
   }
-  .settings-container{
+  .settings-container {
     margin-top: var(--spacing-12);
   }
 }
@@ -499,7 +502,6 @@ select:-webkit-autofill {
 
 .custom-scrollbar-two {
   transition: 0.6s;
- 
 }
 .custom-scrollbar-two::-webkit-scrollbar {
   width: 6px;
@@ -513,7 +515,6 @@ select:-webkit-autofill {
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 5px;
 }
-
 
 .custom-scrollbar {
   transition: 0.6s;
@@ -544,81 +545,81 @@ select:-webkit-autofill {
   background-color: rgba(0, 0, 0, 0.4);
 }
 
-.textFieldClass>div{
+.textFieldClass > div {
   border-radius: 8px;
 }
 
-.textFieldClass>div>input{
+.textFieldClass > div > input {
   padding: 12px 16px;
 }
 
-.textFieldClass:hover{
+.textFieldClass:hover {
   border: none;
   outline: none;
 }
-.textFieldClass:focus-visible{
+.textFieldClass:focus-visible {
   border: none;
   outline: none;
 }
-.textFieldClass>div:hover{
+.textFieldClass > div:hover {
   outline: none;
   outline: none;
 }
-.textFieldClass>div:focus-visible{
+.textFieldClass > div:focus-visible {
   outline: none;
   border: none;
 }
 
-.textFieldClass:hover fieldset{
+.textFieldClass:hover fieldset {
   border: 1px solid #8064a2;
   outline: none;
 }
 
-.textFieldClass>div:hover>fieldset{
-border: 1px solid #8064a2 !important;
+.textFieldClass > div:hover > fieldset {
+  border: 1px solid #8064a2 !important;
   outline: none;
 }
 
-.static-position{
+.static-position {
   position: static;
 }
 
-.cursor-pointer{
+.cursor-pointer {
   cursor: pointer;
 }
 
-@media screen and (max-width:1100px) {
-  .margin-bottom-55vh{
+@media screen and (max-width: 1100px) {
+  .margin-bottom-55vh {
     margin-bottom: 55vh;
   }
-  .margin-bottom-50vh{
+  .margin-bottom-50vh {
     margin-bottom: 50vh;
   }
-  .margin-bottom-52vh{
+  .margin-bottom-52vh {
     margin-bottom: 52vh;
   }
-  .margin-bottom-68vh{
+  .margin-bottom-68vh {
     margin-bottom: 68vh;
   }
-  .margin-bottom-40vh{
+  .margin-bottom-40vh {
     margin-bottom: 40vh;
   }
-  .margin-bottom-43vh{
+  .margin-bottom-43vh {
     margin-bottom: 43vh;
   }
-  .margin-bottom-65vh{
+  .margin-bottom-65vh {
     margin-bottom: 65vh;
-}
-.ql-toolbar.ql-snow + .ql-container.ql-snow {
-  border: none !important;
-}
-.ql-toolbar.ql-snow{
-border-radius: 0;
-position: relative;
-overflow: hidden;
-}
-/* not working because overflow hidden is there, and without overflow hidden you will face scrollbar */
-/* .ql-toolbar.ql-snow::after{
+  }
+  .ql-toolbar.ql-snow + .ql-container.ql-snow {
+    border: none !important;
+  }
+  .ql-toolbar.ql-snow {
+    border-radius: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  /* not working because overflow hidden is there, and without overflow hidden you will face scrollbar */
+  /* .ql-toolbar.ql-snow::after{
   content: ' ';
   position: absolute;
   display: block;
@@ -631,18 +632,18 @@ overflow: hidden;
 } */
 }
 
-.font-italic{
+.font-italic {
   font-style: italic;
 }
 
-.font-medium{
+.font-medium {
   font-weight: 500;
 }
 
-.font-semibold{
+.font-semibold {
   font-weight: 600;
 }
 
-.font-bold{
+.font-bold {
   font-weight: 700;
 }

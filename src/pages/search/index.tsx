@@ -213,13 +213,13 @@ const MainContent: React.FC<SearchResultsProps> = ({
 
   const { q, filter } = router.query
 
-  const queryString = Array.isArray(q) ? q[0] : q || ''
+  const queryString = q?.toString() || ''
 
   const showAll = filter ? filter === '' : true
   const showAllUsers = filter === 'users'
   const showAllPeople = filter === 'people'
   const showAllPlace = filter === 'places'
-  const showAllEvent = filter === 'events'
+  const showAllEvent = filter === 'programs'
   const showAllProducts = filter === 'products'
   const showAllPosts = filter === 'posts'
   const showAllBlogs = filter === 'blogs'
@@ -774,9 +774,10 @@ const MainContent: React.FC<SearchResultsProps> = ({
             </p>
           ) : (
             <p>
-              {`No results for "${queryString}". `}Try shorter or alternate
-              keywords. Or <Link href={'/contact'}>contact us</Link> if you feel
-              we are missing something. For further help,{' '}
+              {`No results for query "${queryString}" and filter "${filter}". `}
+              Try shorter or alternate keywords. Or{' '}
+              <Link href={'/contact'}>contact us</Link> if you feel we are
+              missing something. For further help,{' '}
               <Link href={'/help'}>click here</Link>.
             </p>
           )}
