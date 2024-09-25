@@ -71,7 +71,7 @@ const HobbyStorePage: React.FC<Props> = (props) => {
   }, [])
 
   useEffect(() => {
-    ;(async () => {
+    const fetchPages = async () => {
       setLoadingPosts(true)
       const { err, res } = await getListingPages(
         `type=4&populate=_hobbies,product_variant,seller&is_published=true`,
@@ -79,9 +79,19 @@ const HobbyStorePage: React.FC<Props> = (props) => {
 
       if (err) {
         setLoadingPosts(false)
-        return console.log(err)
+        console.log(err)
+        return
       }
-      if (res?.data?.success) {
+
+      if (data.level === 5) {
+        const tempArr = res?.data?.data?.listings?.filter((el: any) =>
+          el?._hobbies?.some(
+            (el2: any) => el2?.genre?.display === data?.display,
+          ),
+        )
+        setLoadingPosts(false)
+        setProducts(tempArr)
+      } else {
         const tempArr = res?.data?.data?.listings?.filter((el: any) =>
           el?._hobbies?.some(
             (el2: any) => el2?.hobby?.display === data?.display,
@@ -90,8 +100,10 @@ const HobbyStorePage: React.FC<Props> = (props) => {
         setLoadingPosts(false)
         setProducts(tempArr)
       }
-    })()
-  }, [])
+    }
+
+    fetchPages()
+  }, [data])
 
   const handleExpandAll: (value: boolean) => void = (value) => {
     setExpandAll(value)

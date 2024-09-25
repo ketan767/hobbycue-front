@@ -140,6 +140,12 @@ left: 12px;
 
 
 @media screen and (max-width:1100px) {
+  .uploadContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+  }
   .display-desktop {
     display: none !important;
   }

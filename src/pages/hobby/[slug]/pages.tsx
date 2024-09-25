@@ -54,7 +54,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
     if (loading || !hasMore) return
     setLoading(true)
     const { res, err } = await getHobbyPages(
-      `display=${data.display}&limit=10&page=${page}`,
+      `display=${data.display}&limit=10&page=${page}&populate=_hobbies`,
     )
 
     if (err || !res?.data?.data?.length) {

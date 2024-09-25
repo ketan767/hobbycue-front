@@ -105,10 +105,8 @@ const HobbyBlogsPage: React.FC<Props> = (props) => {
         expandAll={expandAll}
         setExpandAll={handleExpandAll}
       >
-
         <main className={`${styles['dual-section-wrapper']}`}>
           <section className={styles['store-container']}>
-
             {loadingPosts && (
               <>
                 <BlogLoader /> <BlogLoader /> <BlogLoader />{' '}
@@ -118,20 +116,24 @@ const HobbyBlogsPage: React.FC<Props> = (props) => {
               blogs.map((post: any, idx: number) => {
                 return <BlogCard key={idx} data={post} />
               })}
+            {blogs.length === 0 && !loadingPosts && (
+              <>
+                <div className={styles['no-posts-container']}>
+                  <p>No Blogs available</p>
+                </div>
+                {!isMobile && (
+                  <>
+                    <div className={styles['no-posts-container']}>
+                      <p></p>
+                    </div>
+                    <div className={styles['no-posts-container']}>
+                      <p></p>
+                    </div>
+                  </>
+                )}
+              </>
+            )}
           </section>
-          {blogs.length === 0 && !loadingPosts && (
-            <div className={styles['dual-section-wrapper']}>
-              <div className={styles['no-posts-container']}>
-                <p>No Blogs available</p>
-              </div>
-              {!isMobile && (
-                <>
-                  <div className={styles['no-posts-container']}></div>
-                  <div className={styles['no-posts-container']}></div>
-                </>
-              )}
-            </div>
-          )}
         </main>
       </HobbyPageLayout>
     </>

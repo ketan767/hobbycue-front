@@ -145,36 +145,37 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
   return (
     <>
       <main>
-        {eventData?.res ? (
-          <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 1100: 2 }}>
-            <Masonry
-              gutter={isMobile ? '8px' : '12px'}
-              style={{ columnGap: '24px', rowGap: '12px' }}
-            >
+        <div className={styles.uploadContainer}>
+          {eventData?.res ? (
+            <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 1100: 2 }}>
+              <Masonry
+                gutter={isMobile ? '8px' : '12px'}
+                style={{ columnGap: '24px', rowGap: '12px' }}
+              >
+                <div onClick={handleAddEvent} className={styles['add-event']}>
+                  <div className={styles['new-tag']}>ADD NEW</div>
+                  <button>{plusIcon}</button>
+                </div>
+
+                {sortedListings.map((listing: any) => {
+                  return <ListingCard key={listing._id} data={listing} />
+                })}
+              </Masonry>
+            </ResponsiveMasonry>
+          ) : (
+            <section className={styles['data-container']}>
               <div onClick={handleAddEvent} className={styles['add-event']}>
                 <div className={styles['new-tag']}>ADD NEW</div>
                 <button>{plusIcon}</button>
               </div>
 
-              {sortedListings.map((listing: any) => {
-                return <ListingCard key={listing._id} data={listing} />
-              })}
-            </Masonry>
-          </ResponsiveMasonry>
-        ) : (
-          <section className={styles['data-container']}>
-            <div onClick={handleAddEvent} className={styles['add-event']}>
-              <div className={styles['new-tag']}>ADD NEW</div>
-              <button>{plusIcon}</button>
-            </div>
+              <div className={styles['no-data-div']}>
+                <p className={styles['no-data-text']}>No events available</p>
+              </div>
+            </section>
+          )}
 
-            <div className={styles['no-data-div']}>
-              <p className={styles['no-data-text']}>No events available</p>
-            </div>
-          </section>
-        )}
-
-        {/* //   (
+          {/* //   (
         //   <div className={styles['card-container']}>
         //     <div onClick={handleAddEvent} className={styles['add-event']}>
         //       <div className={styles['new-tag']}>ADD NEW</div>
@@ -187,6 +188,7 @@ const ListingEventsTab: React.FC<Props> = ({ data }) => {
         //     ))}
         //   </div>
         // )}  */}
+        </div>
       </main>
     </>
   )
