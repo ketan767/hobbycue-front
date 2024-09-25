@@ -95,7 +95,7 @@ const CustomBackdrop: React.FC = () => {
   const { activeModal } = useSelector((state: RootState) => state.modal)
 
   // Always return a valid React element
-  if (activeModal !== 'auth') {
+  if (activeModal !== 'auth' && activeModal !== 'social-media-share') {
     return <div className={styles['custom-backdrop']}></div>
   } else {
     return <div className={styles['custom-backdrop-full']}></div>
@@ -200,7 +200,7 @@ const ModalManager: React.FC = () => {
       to: user?.public_email,
       name: user.full_name,
     }
-    console.log('activeprofileeeeeeeeeeee', user)
+
     const { err: error, res: response } = await getMyProfileDetail()
 
     if (response?.data?.data?.user?.completed_onboarding_steps.length === 3) {
@@ -405,6 +405,7 @@ const ModalManager: React.FC = () => {
                 activeModal !== 'user-onboarding-welcome' &&
                 activeModal !== 'add-event' &&
                 activeModal !== 'auth' &&
+                activeModal !== 'social-media-share' &&
                 activeModal !== 'user-onboarding' && (
                   <>
                     <header className={styles['header']}>
@@ -591,6 +592,7 @@ const ModalManager: React.FC = () => {
               {/* Modal Close Icon */}
               {closable &&
                 activeModal !== 'auth' &&
+                activeModal !== 'social-media-share' &&
                 activeModal !== 'user-onboarding-welcome' &&
                 activeModal !== 'add-event' &&
                 !showAddGenreModal &&
