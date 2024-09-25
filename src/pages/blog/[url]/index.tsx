@@ -17,6 +17,7 @@ import { useRouteError } from 'react-router-dom'
 import { useRouter } from 'next/router'
 import { useDispatch } from 'react-redux'
 import { openModal, updateShareUrl } from '@/redux/slices/modal'
+import HobbyIconHexagon from '@/assets/icons/HobbyIconHexagon'
 
 type Props = {
   data: {
@@ -81,7 +82,16 @@ const BlogPage: React.FC<Props> = ({ data }) => {
         <h1 className={styles['blog-title']}>{data?.blog_url?.title}</h1>
         <h1 className={styles['blog-desc']}>{data?.blog_url?.description}</h1>
         <div className={styles['cover-image']}>
-          <img src={data?.blog_url?.cover_pic} alt="cover image" />
+          <img
+            src={data?.blog_url?.cover_pic}
+            className={styles.coverBlur}
+            alt="cover image"
+          />
+          <img
+            src={data?.blog_url?.cover_pic}
+            className={styles.coverPic}
+            alt="cover image"
+          />
         </div>
         {/* Author */}
         <div className={styles['flex-container']}>
@@ -131,14 +141,18 @@ const BlogPage: React.FC<Props> = ({ data }) => {
             </div>
           </div>
           {isMobileScreen && (
-            // add hexagon here
-            <div className={`${styles['date-and-hobbies']} ${styles.res}`}>
-              {data?.blog_url?._hobbies?.map((hobby: any, idx: any) => (
-                <span>
-                  {hobby?.hobby?.display}
-                  {idx !== data?.blog_url?._hobbies?.length - 1 ? ', ' : ''}
-                </span>
-              ))}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <span style={{ display: 'flex', alignItems: 'center' }}>
+                <HobbyIconHexagon />
+              </span>
+              <div className={`${styles['date-and-hobbies']} ${styles.res}`}>
+                {data?.blog_url?._hobbies?.map((hobby: any, idx: any) => (
+                  <span>
+                    {hobby?.hobby?.display}
+                    {idx !== data?.blog_url?._hobbies?.length - 1 ? ', ' : ''}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
           {/* actions */}

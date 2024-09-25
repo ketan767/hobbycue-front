@@ -15,6 +15,7 @@ import { Height } from '@mui/icons-material'
 import { updateListingLayoutMode } from '@/redux/slices/site'
 import { useRouter } from 'next/router'
 import RedCartIcon from '@/assets/icons/RedCartIcon'
+import HobbyIconHexagon from '@/assets/icons/HobbyIconHexagon'
 
 export const rupeesIcon = (
   <svg
@@ -121,6 +122,7 @@ const ListingCardProduct: React.FC<Props> = ({
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
+                paddingRight: 8,
               }}
             >
               <div className="">
@@ -227,7 +229,9 @@ const ListingCardProduct: React.FC<Props> = ({
             </div>
 
             <div className={styles.bottomFooter}>
-              <Image src={HobbyIcon} width={16} height={16} alt="hobby" />
+              <span>
+                <HobbyIconHexagon />
+              </span>
               <div className={styles.hobbies}>
                 {data?._hobbies?.map((item: any) => {
                   return (
