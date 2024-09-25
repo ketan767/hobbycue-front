@@ -461,13 +461,15 @@
     margin: 0;
     justify-content: flex-start;
     flex-shrink: 0;
+    min-height: auto;
   }
   .navigation-tabs > a {
     flex-shrink: 0;
   }
   .navigation-tabs a {
     font-size: 12px;
-    padding: 10px 0;
+    line-height: 18px;
+    padding: 8px 0;
     min-width: 50px;
   }
   .container:has(.header).small {
