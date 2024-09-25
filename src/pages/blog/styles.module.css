@@ -5,6 +5,7 @@
 
 .main-container {
   background-color: #f2f0f5;
+  padding-top: 12px;
 }
 .blog-header {
   max-width: 872px;
@@ -41,24 +42,23 @@
   position: relative;
 }
 
-.cover-image::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.089);
-  filter: blur(10px);
-  z-index: 1;
-}
-
-.cover-image img {
+.coverPic {
   width: 100%;
   height: 100%;
   object-fit: contain;
   position: relative;
   z-index: 2;
+}
+
+.coverBlur {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  filter: blur(10px);
 }
 
 .flex-container {
@@ -328,9 +328,9 @@
     margin-right: auto;
   }
 
-  .comment {
-    /* margin: 0 16px; */
-  }
+  /* .comment {
+    margin: 0 16px;
+  } */
 
   .header-user {
     display: flex;
@@ -342,7 +342,7 @@
 }
 
 .gridContainer {
-  margin: 12px auto;
+  margin: 0 auto;
   max-width: 1296px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);

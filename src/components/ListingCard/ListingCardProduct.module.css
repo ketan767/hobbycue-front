@@ -3,6 +3,7 @@
   align-items: center;
   margin-bottom: 8px;
   color: var(--Grey-Darkest, #08090a);
+  /* font-family: 'Inter'; */
   font-size: 18px;
   font-style: normal;
   font-weight: 500;
@@ -13,7 +14,7 @@
   background-color: transparent;
   padding: 2px 20px;
   border-radius: 8px;
-  border-color: #8064a2;
+  border: 1px solid #8064a2;
   color: #8064a2;
   font-weight: 600;
   font-size: 13px;
@@ -122,6 +123,7 @@
   color: #6d747a;
   display: -webkit-box;
   -webkit-line-clamp: 1;
+  line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -138,6 +140,11 @@
   display: flex;
   align-items: center;
   margin-top: 12px;
+}
+
+.bottomFooter > span {
+  display: flex;
+  align-items: center;
 }
 
 .hobbies {
