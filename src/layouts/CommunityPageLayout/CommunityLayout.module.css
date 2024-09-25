@@ -1010,6 +1010,7 @@
 
   .start-post-btn-container {
     padding: 6px 0px;
+    border-radius: 0;
   }
   .navigation-links {
     right: 8px;

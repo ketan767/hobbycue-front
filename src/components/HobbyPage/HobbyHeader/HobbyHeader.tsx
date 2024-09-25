@@ -4,7 +4,7 @@ import styles from './HobbyHeader.module.css'
 import Image from 'next/image'
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded'
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded'
-import ShareIcon from '@/assets/svg/share-outlined.svg'
+import ShareIcon from '@/assets/icons/ShareIcon'
 import DefaultProfile from '@/assets/svg/default-images/default-hobbies.svg'
 import MailIcon from '@/assets/svg/mailicon.svg'
 import { useDispatch, useSelector } from 'react-redux'
@@ -378,7 +378,7 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
           {/* Share Button */}
           <Tooltip title="Share">
             <div onClick={handleShare} className={styles['action-btn']}>
-              <Image src={ShareIcon} alt="share" />
+              <ShareIcon />
             </div>
           </Tooltip>
 
@@ -410,8 +410,8 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
         </div>
 
         {/* Share Button */}
-        <div onClick={(e) => console.log(e)} className={styles['action-btn']}>
-          <Image src={ShareIcon} alt="share" onClick={handleShare} />
+        <div onClick={handleShare} className={styles['action-btn']}>
+          <ShareIcon />
         </div>
 
         {/* More Options Button */}

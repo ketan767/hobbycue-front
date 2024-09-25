@@ -41,5 +41,6 @@
 
   .title {
     padding: var(--spacing-12);
+    border-radius: 0;
   }
 }

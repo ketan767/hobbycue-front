@@ -373,8 +373,9 @@
     width: 100%;
     height: auto;
     margin: 0 0 10px 0;
-    padding: 16px;
+    padding: 6px 16px;
     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.12);
+    border-radius: 0;
   }
 
   .add-mine {

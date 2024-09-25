@@ -239,7 +239,7 @@ aspect-ratio: 16/9;
   .data-container {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-16);
+    gap: 8px;
   }
 
   .uploadButtonDescktop {
@@ -263,7 +263,7 @@ aspect-ratio: 16/9;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    margin-top: 8px;
+    /* margin-top: 8px; */
   }
 
   .uploadContainer > div {

@@ -695,6 +695,7 @@
     margin: 0 0 8px 0;
     padding: 5.6px 16px;
     box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.08);
+    border-radius: 0;
   }
 
   .contactBtn {
@@ -707,6 +708,7 @@
     line-height: 0;
     padding: 0px 12px;
     height: 40px;
+    min-width: 104px;
   }
   .name-container .name {
     font-weight: 600;
@@ -756,7 +758,7 @@
   .header .profile-img-wrapper {
     order: 2;
     display: flex;
-    align-items: center;
+    align-items: start;
     column-gap: 12px;
   }
   .profile-img-wrapper .img {
