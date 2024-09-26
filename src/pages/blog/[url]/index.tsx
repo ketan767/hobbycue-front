@@ -82,7 +82,18 @@ const BlogPage: React.FC<Props> = ({ data }) => {
       <div className={styles['blog-header']}>
         <h1 className={styles['blog-title']}>{data?.blog_url?.title}</h1>
         <h1 className={styles['blog-desc']}>{data?.blog_url?.description}</h1>
-        <div className={styles['cover-image']}>
+        <div
+          onClick={() => {
+            dispatch(
+              openModal({
+                type: 'View-Image-Modal',
+                closable: false,
+                imageurl: data?.blog_url?.cover_pic,
+              }),
+            )
+          }}
+          className={styles['cover-image']}
+        >
           <img
             src={data?.blog_url?.cover_pic}
             className={styles.coverBlur}

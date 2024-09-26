@@ -60,6 +60,7 @@ const BlogComments = ({
   }
 
   const addComment = async (event: any) => {
+    event.preventDefault()
     if (isLoggedIn) {
       event.preventDefault()
       if (user.is_onboarded === false) {
