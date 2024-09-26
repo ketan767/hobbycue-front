@@ -125,6 +125,7 @@ const HobbyPageLayout: React.FC<Props> = ({
       setShowAbout(expandAll)
       setShowHobbiesClassification(expandAll)
       setShowMembers(expandAll)
+      setShowKeywords(expandAll)
     }
   }, [expandAll])
 
@@ -320,7 +321,7 @@ const HobbyPageLayout: React.FC<Props> = ({
                   <ul className={styles['classification-items']}>
                     {data?.keywords &&
                       data?.keywords.map((tag: any, idx: number) => {
-                        return tag.slug ? <li>{tag.display}</li> : null
+                        return tag ? <li>{tag}</li> : null
                       })}
                     <li className={styles['active']}></li>
                   </ul>

@@ -74,7 +74,6 @@ const ListingCardProduct: React.FC<Props> = ({
 }) => {
   const router = useRouter()
   const { user } = useSelector((state: RootState) => state.user)
-  console.log('asifs productt', data)
   console.log('router', router.pathname)
 
   return (
