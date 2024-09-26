@@ -134,13 +134,6 @@ const PostComments = ({
     setDeleteData({ open: true, _id: postid })
   }
 
-  const showFeatureUnderDevelopment = () => {
-    setSnackbar({
-      display: true,
-      type: 'warning',
-      message: 'This feature is under development',
-    })
-  }
   useEffect(() => {
     if (showAllComments !== null && showAllComments !== undefined) {
       setDisplayMoreComments(showAllComments)

@@ -142,7 +142,7 @@ const ListingCard: React.FC<Props> = ({ data, style, column }) => {
         className={styles.container}
         style={style}
       >
-        {itsMe && router.pathname.endsWith('/pages') ? (
+        {itsMe && router.pathname.endsWith(`/[profile_url]/pages`) ? (
           <div
             className={`${
               data.is_published
