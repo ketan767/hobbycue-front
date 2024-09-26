@@ -96,7 +96,7 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
 
   return (
     <>
-      <main style={{marginTop: 8}}>
+      <main>
         {/* Posts */}
         {listingLayoutMode === 'edit' && (
           <section

@@ -144,7 +144,7 @@ left: 12px;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    margin-top: 8px;
+    /* margin-top: 8px; */
   }
   .display-desktop {
     display: none !important;
@@ -154,7 +154,7 @@ left: 12px;
     gap: 0;
   }
   .data-container {
-    padding-top: 8px;
+    /* padding-top: 8px; */
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -167,8 +167,10 @@ left: 12px;
     grid-template-columns: 1fr
   }
   .add-event{
-
+    border-radius: 0;
     height: 88px;
   }
-
+  .no-posts-container {
+    border-radius: 0;
+  }
 }

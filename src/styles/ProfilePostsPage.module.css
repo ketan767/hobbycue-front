@@ -87,11 +87,12 @@
     display: none;
   }
   .start-post-btn-container-mobile {
-    margin-top: 8px;
+    /* margin-top: 8px; */
     display: initial;
     padding: 8px 16px;
     background-color: #ffffff;
     margin-bottom: 8px;
+    border-radius: 0;
   }
   .posts-container {
     display: none;
@@ -120,5 +121,8 @@
   }
   .display-none-responsive {
     display: none !important;
+  }
+  .no-posts-container {
+    border-radius: 0;
   }
 }

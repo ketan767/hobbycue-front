@@ -632,6 +632,7 @@ background: rgba(128, 100, 162, 0.25);
   }
   .post-card-wrapper {
     max-width: 1017px;
+    border-radius: 0;
   }
   .post-card-wrapper header .post-other-info {
     font-size: 10px;
