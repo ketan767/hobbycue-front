@@ -74,7 +74,7 @@ const HobbyStorePage: React.FC<Props> = (props) => {
     const fetchPages = async () => {
       setLoadingPosts(true)
       const { err, res } = await getListingPages(
-        `type=4&populate=_hobbies,product_variant,seller&is_published=true`,
+        `type=4&populate=_hobbies,product_variant,seller&is_published=true&sort=-createdAt`,
       )
 
       if (err) {

@@ -7,6 +7,11 @@
   display: flex;
   flex-direction: column;
 }
+
+.product-model-wrapper {
+  width: 44.93rem !important;
+}
+
 .modal-close-icon {
   position: absolute;
   top: var(--spacing-12);

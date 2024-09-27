@@ -271,7 +271,11 @@ const ListingAboutEditModal: React.FC<Props> = ({
 
   return (
     <>
-      <div className={styles['modal-wrapper']}>
+      <div
+        className={`${styles['modal-wrapper']} ${
+          propData === 'productDescription' && styles['product-model-wrapper']
+        }`}
+      >
         <CloseIcon
           className={styles['modal-close-icon']}
           onClick={() =>
