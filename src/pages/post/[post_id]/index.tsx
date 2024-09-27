@@ -87,7 +87,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
     ) {
       return data?.postsData?.media[0]
     } else {
-      return '/hobbycuecom.png'
+      return '/HobbyCue-FB-4Ps.png'
     }
   }
 
