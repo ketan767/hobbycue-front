@@ -302,13 +302,11 @@ const ListingCard: React.FC<Props> = ({ data, style, column }) => {
                       {clockIcon}{' '}
                       <p>
                         {data?.event_date_time[0]?.from_time + ' - '}
-                        {data?.event_weekdays?.length > 0 ? (
+                        {data?.event_date_time && (
                           <>
                             ...
                             <span className={styles['purpleText']}>more</span>
                           </>
-                        ) : (
-                          data?.event_date_time[0]?.to_time
                         )}
                       </p>
                     </section>

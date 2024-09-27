@@ -6,6 +6,7 @@ type Props = {
   column: 2 | 3
   responsive?: boolean
   customStyles?: string
+  activeTab?: string
 }
 
 const PageGridLayout: React.FC<Props> = ({
@@ -13,14 +14,19 @@ const PageGridLayout: React.FC<Props> = ({
   column,
   responsive,
   customStyles,
+  activeTab,
 }) => {
   return (
-    <section className={` ${styles['container']}`}>
+    <section
+      className={` ${styles['container']} ${
+        activeTab == 'home' && styles['no-gap']
+      }`}
+    >
       <div
         data-column={column}
-        className={`site-container ${styles['grid-container']} ${styles['minheight100vh']}  ${
-          responsive ? 'responsive' : ''
-        } ${customStyles || ''}`}
+        className={`site-container ${styles['grid-container']} ${
+          styles['minheight100vh']
+        }  ${responsive ? 'responsive' : ''} ${customStyles || ''}`}
       >
         {children}
       </div>

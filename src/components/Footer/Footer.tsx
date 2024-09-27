@@ -150,15 +150,11 @@ const Footer: React.FC = () => {
       title: 'Quick Links',
 
       values: [
-        { title: 'Listing Pages', link: '/search' },
-        { title: 'Blog Posts', link: 'http://blog.hobbycue.com' },
+        { title: 'Listing Pages', link: '/explore' },
+        { title: 'Blog Posts', link: '/blog' },
         {
           title: 'Shop / Store',
-          link: '/search',
-          func: () => {
-            dispatch(showAllProductsTrue())
-            router.push('/search')
-          },
+          link: '/explore/products',
         },
         {
           title: 'Community',

@@ -307,7 +307,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
         noDataChecker={noDataChecker}
       >
         {data?.pageData && (
-          <PageGridLayout column={3}>
+          <PageGridLayout activeTab="home" column={3}>
             <aside
               className={`custom-scrollbar ${styles['profile-left-aside']} ${
                 expandAll ? '' : styles['display-none-responsive']

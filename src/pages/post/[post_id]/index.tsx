@@ -87,7 +87,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
     ) {
       return data?.postsData?.media[0]
     } else {
-      return 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/HobbyCue+Logo+Banner+2+ML.png'
+      return '/hobbycuecom.png'
     }
   }
 

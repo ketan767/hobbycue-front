@@ -525,6 +525,7 @@ const ListingPageMain: React.FC<Props> = ({
   return (
     <>
       <PageGridLayout
+        activeTab={activeTab}
         column={activeTab === 'home' || activeTab === 'posts' ? 3 : 2}
       >
         {isMobile && activeTab !== 'home' ? (
