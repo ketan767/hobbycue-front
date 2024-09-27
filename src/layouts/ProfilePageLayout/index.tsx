@@ -84,7 +84,7 @@ const ProfileLayout: React.FC<Props> = ({
   }, [])
 
   return (
-    <>
+    <div style={{ marginBottom: 60 }}>
       {/* Profile Page Header - Profile and Cover Image with Action Buttons */}
       <ProfileHeader
         noDataChecker={noDataChecker}
@@ -131,7 +131,7 @@ const ProfileLayout: React.FC<Props> = ({
       )}
       {/* Profile Page Body, where all contents of different tabs appears. */}
       <main>{React.cloneElement(children, { expandAll })}</main>
-    </>
+    </div>
   )
 }
 

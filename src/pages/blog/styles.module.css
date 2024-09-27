@@ -355,7 +355,14 @@
     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.12);
     margin: 0;
     padding: 6px;
-    border-radius: 8px;
+    margin-bottom: 12px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .cover-image {
+    height: 109.33px;
+    margin-bottom: 8px;
   }
 
   .gridContainer {
@@ -375,6 +382,8 @@
   .blog-header {
     margin: 0 16px 0 16px;
     padding-top: 10px;
+    padding-bottom: 0;
+    margin-bottom: 5px;
   }
 
   .blog-title {
@@ -383,12 +392,12 @@
     font-weight: 500;
     line-height: 23.12px;
     text-align: center;
-    margin-bottom: 5px;
+    /* margin-bottom: 5px; */
   }
 
   .blog-desc {
     font-family: Poppins;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 500;
     line-height: 13.21px;
     text-align: center;
@@ -398,6 +407,7 @@
   .res {
     margin-top: 12px;
     margin-bottom: 12px;
+    display: block;
   }
 
   .comment_button {

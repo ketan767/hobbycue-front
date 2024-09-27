@@ -200,6 +200,7 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
     }
   }
   console.warn('hobby page data', data)
+  
 
   return (
     <>

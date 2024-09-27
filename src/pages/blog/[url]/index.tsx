@@ -78,6 +78,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${data?.blog_url?.title} | HobbyCue`}</title>
       </Head>
+
       <div className={styles['blog-header']}>
         <h1 className={styles['blog-title']}>{data?.blog_url?.title}</h1>
         <h1 className={styles['blog-desc']}>{data?.blog_url?.description}</h1>
@@ -155,39 +156,66 @@ const BlogPage: React.FC<Props> = ({ data }) => {
               </div>
             </div>
           )}
-          {/* actions */}
-          <div
-            className={styles['actions']}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button onClick={showFeatUnderDev}>
-              <UpvoteIcon />
-            </button>
-            <button onClick={showFeatUnderDev}>
-              <BookmarkIcon />
-            </button>
-            <button onClick={handleShare}>
-              <ShareIcon />
-            </button>
-            <button onClick={handleActions} style={{ position: 'relative' }}>
-              <MenuIcon />
-              {showMenu && (
-                <div className={`${styles.menu}`}>
-                  <button onClick={showFeatUnderDev}>ReShare</button>
-                  <button onClick={showFeatUnderDev}>Comment</button>
-                  <button onClick={showFeatUnderDev}>Report</button>
-                  <button onClick={showFeatUnderDev}>Downvote</button>
-                </div>
-              )}
-            </button>
-            {isMobileScreen && (
-              <a href="#comments" className={styles.comment_button}>
-                Comment
-              </a>
-            )}
-          </div>
+          {/* actions for desktop */}
+          {!isMobileScreen && (
+            <div
+              className={styles.actions}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button onClick={showFeatUnderDev}>
+                <UpvoteIcon />
+              </button>
+              <button onClick={showFeatUnderDev}>
+                <BookmarkIcon />
+              </button>
+              <button onClick={handleShare}>
+                <ShareIcon />
+              </button>
+              <button onClick={handleActions} style={{ position: 'relative' }}>
+                <MenuIcon />
+                {showMenu && (
+                  <div className={`${styles.menu}`}>
+                    <button onClick={showFeatUnderDev}>ReShare</button>
+                    <button onClick={showFeatUnderDev}>Comment</button>
+                    <button onClick={showFeatUnderDev}>Report</button>
+                    <button onClick={showFeatUnderDev}>Downvote</button>
+                  </div>
+                )}
+              </button>
+            </div>
+          )}
         </div>
       </div>
+      {/* actions for mobile */}
+      {isMobileScreen && (
+        <div className={styles.actions} onClick={(e) => e.stopPropagation()}>
+          <button onClick={showFeatUnderDev}>
+            <UpvoteIcon />
+          </button>
+          <button onClick={showFeatUnderDev}>
+            <BookmarkIcon />
+          </button>
+          <button onClick={handleShare}>
+            <ShareIcon />
+          </button>
+          <button onClick={handleActions} style={{ position: 'relative' }}>
+            <MenuIcon />
+            {showMenu && (
+              <div className={`${styles.menu}`}>
+                <button onClick={showFeatUnderDev}>ReShare</button>
+                <button onClick={showFeatUnderDev}>Comment</button>
+                <button onClick={showFeatUnderDev}>Report</button>
+                <button onClick={showFeatUnderDev}>Downvote</button>
+              </div>
+            )}
+          </button>
+          {isMobileScreen && (
+            <a href="#comments" className={styles.comment_button}>
+              Comments
+            </a>
+          )}
+        </div>
+      )}
 
       <div className={styles['iframe-container']}>
         <iframe

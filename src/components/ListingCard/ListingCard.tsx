@@ -15,6 +15,7 @@ import { Height } from '@mui/icons-material'
 import { updateListingLayoutMode } from '@/redux/slices/site'
 import ListingCardProduct from './ListingCardProduct'
 import { useRouter } from 'next/router'
+import HobbyIconHexagon from '@/assets/icons/HobbyIconHexagon'
 
 type Props = {
   data: any
@@ -329,7 +330,10 @@ const ListingCard: React.FC<Props> = ({ data, style, column }) => {
             </p>
           </div>
           <div className={styles.bottom}>
-            <Image src={HobbyIcon} width={16} height={16} alt="hobby" />
+            {/* <Image src={HobbyIcon} width={16} height={16} alt="hobby" /> */}
+            <span style={{ display: 'flex', alignItems: 'center' }}>
+              <HobbyIconHexagon />
+            </span>
             <div className={styles.location}>
               {data?._hobbies?.map((item: any) => {
                 return (
