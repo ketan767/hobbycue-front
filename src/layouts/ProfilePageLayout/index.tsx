@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 
 import ProfileHeader from '../../components/ProfilePage/ProfileHeader/ProfileHeader'
-import ChevronDown from '@/assets/svg/chevron-down.svg'
+import DoubleChevron from '@/assets/svg/doubble_chevron.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
@@ -119,12 +119,14 @@ const ProfileLayout: React.FC<Props> = ({
           >
             {expandAll ? <p>See less</p> : <p>See more</p>}
             <Image
-              src={ChevronDown}
+              src={DoubleChevron}
               className={`${
                 expandAll ? styles['rotate-180'] : styles['rotate-0']
               }`}
               style={{ transition: 'all 0.3s ease' }}
               alt=""
+              height={15}
+              width={15}
             />
           </div>
         </>

@@ -162,27 +162,27 @@ const ListingCard: React.FC<Props> = ({ data, style, column }) => {
             <>
               <div
                 className={
-                  column === 4 ? styles.backgroundtwo : styles['background']
+                  column === 4 ? styles.backgroundtwo : styles.background
                 }
-                style={{ backgroundImage: `url(${data?.cover_image})` }}
-              ></div>
-              <img
-                src={data?.cover_image}
-                width={300}
-                height={100}
-                alt="cover"
-                className={
-                  column === 4 ? styles.coverImageTwo : styles.coverImage
-                }
-                style={{ marginBottom: '-7px' }}
-              />
-              <div
+              >
+                <img
+                  src={data?.cover_image}
+                  alt=""
+                  className={styles.bgImage}
+                />
+                <img
+                  src={data?.cover_image}
+                  alt="cover"
+                  className={styles.coverImageWithImage}
+                />
+              </div>
+              {/* <div
                 style={{
                   width: '100%',
                   height: '1px',
                   background: '#939ca3',
                 }}
-              ></div>
+              ></div> */}
             </>
           ) : (
             <div

@@ -1595,6 +1595,7 @@ const ListingPageMain: React.FC<Props> = ({
                           dangerouslySetInnerHTML={{
                             __html: data?.about,
                           }}
+                          style={{ marginTop: '12px' }}
                         ></div>
                       )}
                     </PageContentBox>
