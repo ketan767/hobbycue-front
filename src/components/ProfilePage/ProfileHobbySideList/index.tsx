@@ -74,26 +74,28 @@ const ProfileHobbySideList = ({ data, expandData, hobbyError }: Props) => {
             At least one hobby is mandatory
           </p>
         )}
-        <ul
-          className={`${styles['hobby-list']} ${
-            hobbyStates?.[data?._id] && styles['display-mobile-flex']
-          }`}
-        >
-          {data._hobbies.map((item: any) => {
-            if (typeof item === 'string') return
-            return (
-              <Link
-                href={`/hobby/${item?.genre?.slug ?? item?.hobby?.slug}`}
-                key={item._id}
-              >
-                <li>
-                  {item?.hobby?.display}
-                  {item?.genre && ` - ${item?.genre?.display} `}
-                </li>
-              </Link>
-            )
-          })}
-        </ul>
+        {displayData && (
+          <ul
+            className={`${styles['hobby-list']} ${
+              hobbyStates?.[data?._id] && styles['display-mobile-flex']
+            }`}
+          >
+            {data._hobbies.map((item: any) => {
+              if (typeof item === 'string') return
+              return (
+                <Link
+                  href={`/hobby/${item?.genre?.slug ?? item?.hobby?.slug}`}
+                  key={item._id}
+                >
+                  <li>
+                    {item?.hobby?.display}
+                    {item?.genre && ` - ${item?.genre?.display} `}
+                  </li>
+                </Link>
+              )
+            })}
+          </ul>
+        )}
       </PageContentBox>
     </>
   )
