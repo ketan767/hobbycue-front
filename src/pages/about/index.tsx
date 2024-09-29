@@ -1,9 +1,16 @@
 import Link from 'next/link';
 import styles from './styles.module.css';
 import Footer from '@/components/Footer/Footer';
+import Head from 'next/head';
 
 export default function index() {
   return (<>
+    <Head>
+        <meta property="og:image" content="/HobbyCue-FB-4Ps.png" />
+        <meta property="og:image:secure_url" content="/HobbyCue-FB-4Ps.png" />
+
+        <title>HobbyCue - About</title>
+    </Head>
     <div className={styles.container}>
         <div className={styles.dataSection}>
             <div className={styles.about}>

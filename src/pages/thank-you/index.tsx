@@ -2,11 +2,19 @@ import { FC } from 'react'
 import styles from '@/styles/faq.module.css'
 
 import thankyouimg from '@/assets/image/thankyou.jpg'
+import Head from 'next/head'
 
 interface indexProps {}
 
 const index: FC<indexProps> = ({}) => {
   return (
+    <>
+    <Head>
+        <meta property="og:image" content="/HobbyCue-FB-4Ps.png" />
+        <meta property="og:image:secure_url" content="/HobbyCue-FB-4Ps.png" />
+
+        <title>HobbyCue - Thank You</title>
+    </Head>
     <main className={styles['main']}>
       <div className={styles['container']}>
         <section className={styles['white-container']}>
@@ -253,6 +261,7 @@ const index: FC<indexProps> = ({}) => {
         </section>
       </div>
     </main>
+    </>
   )
 }
 

@@ -4,6 +4,7 @@ import myStyles from './styles.module.css'
 
 import thankyouimg from "@/assets/image/thankyou.jpg";
 import Link from 'next/link';
+import Head from 'next/head';
 
 
 interface indexProps {
@@ -13,6 +14,13 @@ interface indexProps {
 
 const index: FC<indexProps> = ({}) => {
   return (
+  <>
+  <Head>
+    <meta property="og:image" content="/HobbyCue-FB-4Ps.png" />
+    <meta property="og:image:secure_url" content="/HobbyCue-FB-4Ps.png" />
+
+    <title>HobbyCue - Returns</title>
+  </Head>
   <main className={styles['main']}>
   <div className={styles['container']}>
     <section className={styles['white-container']}>
@@ -70,7 +78,8 @@ const index: FC<indexProps> = ({}) => {
         <br />
         <p>For general terms of use, refer to <Link href={'/terms'}><strong>/terms</strong></Link>. For privacy policy, refer to <Link href={'/privacy'}><strong>/privacy</strong></Link>. For further questions related to refunds and returns, contact us at <Link href={'mailto:help@hobbycue.com'}>help@hobbycue.com</Link>.</p></div>
     </section>
-  </div></main>)
+  </div></main>
+  </>)
 }
 
 export default index

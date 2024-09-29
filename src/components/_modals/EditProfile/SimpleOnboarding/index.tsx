@@ -333,6 +333,23 @@ const SimpleOnboarding: React.FC<Props> = ({
     (window.location.port ? ':' + window.location.port : '')
 
   const handleSubmit = async () => {
+    if (
+      hobbyInputValue.includes(',') ||
+      hobbyInputValue.includes('.') ||
+      hobbyInputValue.length > 25
+    ) {
+      setInputErrs((prev) => ({
+        ...prev,
+        hobbies:
+          'Please Type and Select hobbies individually.  Added ones will appear below the Hobbies* label',
+      }))
+      return
+    } else {
+      setInputErrs((prev) => ({
+        ...prev,
+        hobbies: null,
+      }))
+    }
     let inputhobby = null
     let hasErrors = false
     setErrorOrmsg('')
@@ -871,6 +888,22 @@ const SimpleOnboarding: React.FC<Props> = ({
   }
 
   const handleHobbyInputChange = async (e: any) => {
+    if (
+      e.target.value.includes(',') ||
+      e.target.value.includes('.') ||
+      e.target.value.length > 25
+    ) {
+      setInputErrs((prev) => ({
+        ...prev,
+        hobbies:
+          'Please Type and Select hobbies individually.  Added ones will appear below the Hobbies* label',
+      }))
+    } else {
+      setInputErrs((prev) => ({
+        ...prev,
+        hobbies: null,
+      }))
+    }
     setShowHobbyDowpdown(true)
     setHobbyInputValue(e.target.value)
     setHobbyError(false)

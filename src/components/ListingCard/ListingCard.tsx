@@ -290,26 +290,27 @@ const ListingCard: React.FC<Props> = ({ data, style, column }) => {
           {data.type === 3 && data?.event_date_time ? (
             <div className={styles['date-time']}>
               {data?.event_date_time.length !== 0 && (
-                <section>
-                  {calendarIcon}{' '}
-                  <p>{formatDateRange(data?.event_date_time[0])}</p>
-                </section>
-              )}
+                <>
+                  <span className={styles.calendarIcon}>{calendarIcon} </span>
+                  <span>{formatDateRange(data?.event_date_time[0])}</span>
+                </>
+              )}{' '}
               {!isMobile && (
                 <>
                   {data?.event_date_time.length !== 0 && (
-                    <section>
-                      {clockIcon}{' '}
-                      <p>
-                        {data?.event_date_time[0]?.from_time + ' - '}
-                        {data?.event_date_time && (
+                    <>
+                      <span className={styles.clockIcon}>{clockIcon} </span>
+                      <span>
+                        {data?.event_date_time[0]?.from_time} -{' '}
+                        {data?.event_date_time[0]?.to_time}
+                        {/* {data?.event_date_time && (
                           <>
                             ...
                             <span className={styles['purpleText']}>more</span>
                           </>
-                        )}
-                      </p>
-                    </section>
+                        )} */}
+                      </span>
+                    </>
                   )}
                 </>
               )}

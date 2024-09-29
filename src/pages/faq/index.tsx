@@ -8,6 +8,7 @@ import squashImg from "@/assets/image/squash.jpg";
 import musicImg from "@/assets/image/music.jpg";
 import literaryImg from "@/assets/image/literary.jpg";
 import Image from 'next/image';
+import Head from 'next/head';
 
 
 interface indexProps {
@@ -29,6 +30,13 @@ const cardsData = [
 
 const index: FC<indexProps> = ({}) => {
   return (
+  <>
+  <Head>
+    <meta property="og:image" content="/HobbyCue-FB-4Ps.png" />
+    <meta property="og:image:secure_url" content="/HobbyCue-FB-4Ps.png" />
+
+    <title>HobbyCue - FAQ</title>
+  </Head>
   <main className={styles['main']}>
   <div className={styles['container']}>
     <section className={styles['white-container']}>
@@ -98,7 +106,9 @@ const index: FC<indexProps> = ({}) => {
             <p>For any further queries, please reach out to info@hobbycue.com</p>
         </div>
     </section>
-  </div></main>)
+  </div></main>
+  </>
+  )
 }
 
 export default index

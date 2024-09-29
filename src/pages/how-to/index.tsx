@@ -298,6 +298,7 @@ const data = [
 
 import React from 'react'
 import Footer from '@/components/Footer/Footer'
+import Head from 'next/head'
 
 const index: FC<indexProps> = ({}) => {
   const whiteParaChecker = (CARD:any) => {
@@ -308,6 +309,13 @@ const index: FC<indexProps> = ({}) => {
     }
   }
   return (
+    <>
+    <Head>
+        <meta property="og:image" content="/HobbyCue-FB-4Ps.png" />
+        <meta property="og:image:secure_url" content="/HobbyCue-FB-4Ps.png" />
+
+        <title>HobbyCue - How to</title>
+      </Head>
     <main className={styles['main']}>
       <section className={styles['container']}>
         {data.map((obj, i) => (
@@ -364,6 +372,7 @@ const index: FC<indexProps> = ({}) => {
       </section>
       <Footer/>
     </main>
+    </>
   )
 }
 

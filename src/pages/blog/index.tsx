@@ -10,6 +10,7 @@ import { getAllBlogs } from '@/services/blog.services'
 import ListingCard from '@/components/ListingCard/ListingCard'
 import { useRouter } from 'next/router'
 import BlogCard from '@/components/BlogCard/BlogCard'
+import Head from 'next/head'
 
 type Props = {
   data: any
@@ -22,6 +23,12 @@ const Explore: React.FC<Props> = ({ data }) => {
 
   return (
     <>
+      <Head>
+        <meta property="og:image" content="/HobbyCue-FB-4Ps.png" />
+        <meta property="og:image:secure_url" content="/HobbyCue-FB-4Ps.png" />
+
+        <title>HobbyCue - Blog</title>
+      </Head>
       <div className={styles['main-container']}>
         <div className={styles.container}>
           <div className={styles.gridContainer}>
