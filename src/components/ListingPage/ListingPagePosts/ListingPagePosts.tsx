@@ -133,7 +133,9 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
         {isLoggedIn &&
           pinnedPosts.length === 0 &&
           unpinnnedPosts.length === 0 && (
-            <div className={styles['no-posts-container']}>
+            <div
+              className={`${styles['no-posts-container']} ${styles['responsive-margin']}`}
+            >
               <p>No posts available</p>
             </div>
           )}

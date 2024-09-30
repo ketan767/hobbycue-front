@@ -116,49 +116,45 @@ const Footer: React.FC = () => {
     {
       title: 'HobbyCue',
       values: [
-        { title: 'About Us', link: 'https://hobbycue.com/about/' },
-        { title: 'Our Services', link: 'https://hobbycue.com/services/' },
-        { title: 'Work with Us', link: 'https://hobbycue.com/work/' },
-        { title: 'FAQ', link: 'https://hobbycue.com/faq/' },
+        { title: 'About Us', link: '/about/' },
+        { title: 'Our Services', link: '/services/' },
+        { title: 'Work with Us', link: '/work/' },
+        { title: 'FAQ', link: '/faq/' },
         { title: 'Contact Us', link: '/contact/' },
       ],
     },
     {
       title: 'How do I',
       values: [
-        { title: 'Sign Up', link: 'https://hobbycue.com/how-to/' },
+        { title: 'Sign Up', link: '/how-to/' },
         {
           title: 'Add a Listing',
           link: '/add-listing',
         },
         {
           title: 'Claim Listing',
-          link: 'https://hobbycue.com/how-to/#claim-listing/',
+          link: '/how-to/#claim-listing/',
         },
         {
           title: 'Post a Query',
-          link: 'https://hobbycue.com/how-to/#post-query/',
+          link: '/how-to/#post-query/',
         },
         {
           title: 'Add a Blog Post',
-          link: 'https://hobbycue.com/how-to/#blog-post/',
+          link: '/how-to/#blog-post/',
         },
-        { title: 'Other Queries', link: 'https://hobbycue.com/how-to/' },
+        { title: 'Other Queries', link: '/how-to/' },
       ],
     },
     {
       title: 'Quick Links',
 
       values: [
-        { title: 'Listing Pages', link: '/search' },
-        { title: 'Blog Posts', link: 'http://blog.hobbycue.com' },
+        { title: 'Listing Pages', link: '/explore' },
+        { title: 'Blog Posts', link: '/blog' },
         {
           title: 'Shop / Store',
-          link: '/search',
-          func: () => {
-            dispatch(showAllProductsTrue())
-            router.push('/search')
-          },
+          link: '/explore/products',
         },
         {
           title: 'Community',

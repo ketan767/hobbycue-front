@@ -39,7 +39,7 @@ import peopleSvg from '@/assets/svg/People.svg'
 import placeSvg from '@/assets/svg/Place.svg'
 import programSvg from '@/assets/svg/Program.svg'
 import productIcon from '@/assets/svg/Cart.svg'
-import { pageType } from '@/utils'
+import { isMobile, pageType } from '@/utils'
 
 interface Props {
   activeTab: ListingPageTabs
@@ -79,6 +79,8 @@ const ListingPageLayout: React.FC<Props> = ({
   const { listingModalData, listingLayoutMode, totalEvents } = useSelector(
     (state: RootState) => state.site,
   )
+
+  const mobile = isMobile()
 
   function checkScroll() {
     const scrollValue = window.scrollY || document.documentElement.scrollTop

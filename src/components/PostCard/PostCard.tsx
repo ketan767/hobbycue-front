@@ -299,13 +299,19 @@ const PostCard: React.FC<Props> = (props) => {
                   ></div>
                 )
               ) : postData?._author?.profile_image ? (
-                <img
-                  className={styles['author-profile']}
-                  src={postData?._author?.profile_image}
-                  alt="Author Profile"
-                  width={40}
-                  height={40}
-                />
+                <div className={styles['author-profile']}>
+                  <img
+                    src={postData?._author?.profile_image}
+                    alt="Author Profile"
+                    width={40}
+                    height={40}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                    }}
+                  />
+                </div>
               ) : (
                 <div
                   className={`${styles['author-profile']} default-user-icon`}
@@ -663,7 +669,7 @@ const PostCard: React.FC<Props> = (props) => {
             <Link href={url} target="_blank">
               {url}
             </Link>
-            {showComments && <PostComments data={postData} styles={styles} />}
+            {showComments && <PostComments data={postData} />}
           </div>
         ) : (
           <footer>
@@ -754,7 +760,7 @@ const PostCard: React.FC<Props> = (props) => {
 
             {/* Comments Section */}
             {(showComments || router.pathname.startsWith('/post/')) && (
-              <PostComments data={postData} styles={styles} />
+              <PostComments data={postData} />
             )}
           </footer>
         )}

@@ -1,16 +1,20 @@
 .price {
-  font-size: 24px;
-  font-weight: 600;
   display: flex;
   align-items: center;
   margin-bottom: 8px;
+  color: var(--Grey-Darkest, #08090a);
+  /* font-family: 'Inter'; */
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
 }
 
 .cta_button {
   background-color: transparent;
   padding: 2px 20px;
   border-radius: 8px;
-  border-color: #8064a2;
+  border: 1px solid #8064a2;
   color: #8064a2;
   font-weight: 600;
   font-size: 13px;
@@ -49,6 +53,8 @@
 .contentImageContainer {
   /* width: 48px;
     height: 48px; */
+  border: 1px solid #8064a2;
+  border-top-left-radius: 8px;
   border-bottom-right-radius: 8px;
   height: 161px;
   min-width: 161px;
@@ -88,10 +94,26 @@
 
 .soldBy {
   font-weight: 500;
-  font-size: 12px;
-  line-height: 18px;
   color: #6d747a;
   white-space: normal;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-bottom: 16px;
+}
+
+.pageType {
+  color: var(--Red1, #c0504d);
+  font-family: Poppins;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 16px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 16px;
 }
 
 .tagline {
@@ -100,7 +122,8 @@
   line-height: 18px;
   color: #6d747a;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -117,6 +140,11 @@
   display: flex;
   align-items: center;
   margin-top: 12px;
+}
+
+.bottomFooter > span {
+  display: flex;
+  align-items: center;
 }
 
 .hobbies {
@@ -160,8 +188,8 @@
   line-height: 18px; /* 150% */
   text-transform: capitalize;
   position: absolute;
-  top: 14px;
-  left: 12px;
+  top: 22px;
+  left: 20px;
   z-index: 2;
 }
 
@@ -190,6 +218,7 @@
 @media screen and (max-width: 1100px) {
   .container {
     min-width: auto;
+    border-radius: 0;
   }
   .imgContainer {
     width: 100%;
@@ -202,6 +231,16 @@
     width: 100%;
     height: auto;
     aspect-ratio: 508 / 170;
+  }
+  .contentImageContainer {
+    border-bottom-right-radius: 8px;
+    height: 180px;
+    min-width: 180px;
+    overflow: hidden;
+  }
+  .contentHead {
+    margin: 12px 0px 0 12px;
+    gap: 12px;
   }
 }
 

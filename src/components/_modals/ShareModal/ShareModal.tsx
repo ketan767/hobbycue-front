@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './ShareModal.module.css'
 import Image from 'next/image'
 import {
@@ -35,6 +35,8 @@ import Copy from '@/assets/svg/share/copy.svg'
 import { closeModal } from '@/redux/slices/modal'
 import { useDispatch } from 'react-redux'
 import { SnackbarState } from '../ModalManager'
+import CloseIcon from '@/assets/icons/CloseIcon'
+import CloseIconWhite from '@/assets/icons/CloseIconWhite'
 
 type Props = {
   triggerSnackbar: (data: SnackbarState) => void
@@ -55,51 +57,78 @@ const ShareModal: React.FC<Props> = ({ triggerSnackbar }) => {
     triggerSnackbar?.({
       show: true,
       message: 'Link Copied',
-      type:'success',
+      type: 'success',
     })
   }
+  const initialInnerWidth = () => {
+    let width = window.innerWidth
+    if (width) {
+      return width
+    } else return 0
+  }
+  const [screenWidth, setScreenWidth] = useState(initialInnerWidth)
+  useEffect(() => {
+    const updateScreenWidth = () => {
+      let width = window.innerWidth
+      setScreenWidth(width)
+    }
+    window.addEventListener('resize', updateScreenWidth)
+    return () => {
+      window.removeEventListener('resize', updateScreenWidth)
+    }
+  }, [window.innerWidth])
 
   return (
-    <div className={styles['modal-wrapper']}>
-      <section className={styles['body']}>
-        <FacebookShareButton url={shareUrl}>
-          <Image src={Facebook} alt="Facebook" />
-          Facebook
-        </FacebookShareButton>
-        <TwitterShareButton url={shareUrl}>
-          <Image src={Twitter} alt="Twitter" />
-          Twitter
-        </TwitterShareButton>
-        <WhatsappShareButton url={shareUrl}>
-          <Image src={Whatsapp} alt="Whatsapp" />
-          WhatsApp
-        </WhatsappShareButton>
-        <TelegramShareButton url={shareUrl}>
-          <Image src={Telegram} alt="Telegram" />
-          Telegram
-        </TelegramShareButton>
+    <>
+      <header className={styles['header']}>
+        {screenWidth <= 1100 && (
+          <CloseIconWhite
+            className={styles['modal-close-icon']}
+            onClick={() => dispatch(closeModal())}
+          />
+        )}
+      </header>
+      <div className={styles['modal-wrapper']}>
+        <section className={styles['body']}>
+          <FacebookShareButton url={shareUrl}>
+            <Image src={Facebook} alt="Facebook" />
+            Facebook
+          </FacebookShareButton>
+          <TwitterShareButton url={shareUrl}>
+            <Image src={Twitter} alt="Twitter" />
+            Twitter
+          </TwitterShareButton>
+          <WhatsappShareButton url={shareUrl}>
+            <Image src={Whatsapp} alt="Whatsapp" />
+            WhatsApp
+          </WhatsappShareButton>
+          <TelegramShareButton url={shareUrl}>
+            <Image src={Telegram} alt="Telegram" />
+            Telegram
+          </TelegramShareButton>
 
-        <LinkedinShareButton url={shareUrl}>
-          <Image src={Linkedin} alt="Linkedin" />
-          LinkedIn
-        </LinkedinShareButton>
+          <LinkedinShareButton url={shareUrl}>
+            <Image src={Linkedin} alt="Linkedin" />
+            LinkedIn
+          </LinkedinShareButton>
 
-        <button onClick={handleInstagramShare}>
-          <Image src={Instagram} alt="Instagram" />
-          Instagram
-        </button>
+          <button onClick={handleInstagramShare}>
+            <Image src={Instagram} alt="Instagram" />
+            Instagram
+          </button>
 
-        <EmailShareButton url={shareUrl}>
-          <Image src={Mail} alt="Mail" />
-          Mail
-        </EmailShareButton>
+          <EmailShareButton url={shareUrl}>
+            <Image src={Mail} alt="Mail" />
+            Mail
+          </EmailShareButton>
 
-        <button onClick={handleModalClose}>
-          <Image src={Copy} alt="Copy" />
-          Copy Link
-        </button>
-      </section>
-    </div>
+          <button onClick={handleModalClose}>
+            <Image src={Copy} alt="Copy" />
+            Copy Link
+          </button>
+        </section>
+      </div>
+    </>
   )
 }
 

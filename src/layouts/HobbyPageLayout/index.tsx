@@ -110,7 +110,7 @@ const HobbyPageLayout: React.FC<Props> = ({
     window.addEventListener('scroll', checkScroll)
     getMembers()
     // return window.removeEventListener('scroll', checkScroll)
-  }, [data, router.asPath ])
+  }, [data, router.asPath])
 
   useEffect(() => {
     if (hobbyStates && typeof hobbyStates[data?._id] === 'boolean') {
@@ -125,6 +125,7 @@ const HobbyPageLayout: React.FC<Props> = ({
       setShowAbout(expandAll)
       setShowHobbiesClassification(expandAll)
       setShowMembers(expandAll)
+      setShowKeywords(expandAll)
     }
   }, [expandAll])
 
@@ -168,26 +169,6 @@ const HobbyPageLayout: React.FC<Props> = ({
       <div className={`${styles['display-mobile']}`}>
         <HobbyNavigationLinks activeTab={activeTab} />
       </div>
-      {activeTab === 'home' && (
-        <>
-          <div
-            onClick={() => {
-              if (setExpandAll !== undefined) setExpandAll(!expandAll)
-            }}
-            className={styles['expand-all']}
-          >
-            {expandAll ? <p>See less</p> : <p>See more</p>}
-            <Image
-              width={15}
-              height={15}
-              src={DoubleChevron}
-              className={`${expandAll ? styles['rotate-180'] : ''}`}
-              style={{ transition: 'all 0.3s ease' }}
-              alt=""
-            />
-          </div>
-        </>
-      )}
 
       <PageGridLayout column={!hideLastColumn ? 3 : 2}>
         {activeTab === activeTab && (
@@ -196,6 +177,26 @@ const HobbyPageLayout: React.FC<Props> = ({
             
           `}
           >
+            {activeTab === 'home' && (
+              <>
+                <div
+                  onClick={() => {
+                    if (setExpandAll !== undefined) setExpandAll(!expandAll)
+                  }}
+                  className={styles['expand-all']}
+                >
+                  {expandAll ? <p>See less</p> : <p>See more</p>}
+                  <Image
+                    width={15}
+                    height={15}
+                    src={DoubleChevron}
+                    className={`${expandAll ? styles['rotate-180'] : ''}`}
+                    style={{ transition: 'all 0.3s ease' }}
+                    alt=""
+                  />
+                </div>
+              </>
+            )}
             <div className={styles['display-mobile']}>
               {activeTab == 'home' && data?.description?.length > 0 && (
                 <PageContentBox
@@ -320,7 +321,7 @@ const HobbyPageLayout: React.FC<Props> = ({
                   <ul className={styles['classification-items']}>
                     {data?.keywords &&
                       data?.keywords.map((tag: any, idx: number) => {
-                        return tag.slug ? <li>{tag.display}</li> : null
+                        return tag ? <li>{tag}</li> : null
                       })}
                     <li className={styles['active']}></li>
                   </ul>
@@ -335,7 +336,7 @@ const HobbyPageLayout: React.FC<Props> = ({
         {/* {!hideLastColumn && ( */}
         {(isMobile || !hideLastColumn) && (
           <>
-            {(activeTab === 'home' || activeTab === 'posts') && (
+            {(activeTab === 'home' || activeTab === 'posts') && !isMobile && (
               <aside>
                 <div className={styles['members']}>
                   <div className={styles['heading']}>

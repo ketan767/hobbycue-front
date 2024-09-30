@@ -116,10 +116,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
               <section
                 className={`${styles['dual-section-wrapper']} ${styles['mob-min-height']} ${styles['mob-h-auto']}`}
               >
-                <div
-                  style={{ marginTop: '8px' }}
-                  className={styles['no-posts-div']}
-                >
+                <div className={styles['no-posts-div']}>
                   <p className={styles['no-posts-text']}>No Blogs Available</p>
                 </div>
                 {isMobile ? null : (

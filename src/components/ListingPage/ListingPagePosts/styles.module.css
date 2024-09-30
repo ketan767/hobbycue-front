@@ -169,7 +169,15 @@
   .start-post-btn-container{
     background-color: #ffffff;
     padding: 8px 16px;
+    /* margin-top: 8px; */
+    margin-bottom: 8px;
+    border-radius: 0;
+  }
+  .responsive-margin {
     margin-top: 8px;
-    margin-bottom: 0;
+  }
+  .no-posts-container {
+    border-radius: 0;
+    margin-top: 0;
   }
 }

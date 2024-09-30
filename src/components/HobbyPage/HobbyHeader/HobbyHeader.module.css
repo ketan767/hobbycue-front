@@ -358,7 +358,8 @@
     justify-content: flex-start;
     margin-top: 0;
     margin-left: 16px;
-    margin-bottom: 10px;
+    margin-right: 16px;
+    min-height: auto;
   }
   .actions-container {
     display: none;
@@ -372,8 +373,9 @@
     width: 100%;
     height: auto;
     margin: 0 0 10px 0;
-    padding: 16px;
+    padding: 6px 16px;
     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.12);
+    border-radius: 0;
   }
 
   .add-mine {
@@ -426,7 +428,8 @@
   .navigation-links a {
     min-width: 50px;
     font-size: 12px;
-    padding: 10px 0;
+    line-height: 18px;
+    padding: 8px 0;
   }
   .profile-img {
     width: 60px;

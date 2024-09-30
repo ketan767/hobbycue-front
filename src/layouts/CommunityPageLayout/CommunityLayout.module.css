@@ -766,7 +766,7 @@
     display: none;
   }
   .community-header {
-    top: 10px;
+    top: 8px;
     border-radius: 0;
   }
   .community-group-container {
@@ -973,6 +973,7 @@
   }
   .navigation-links a {
     font-size: 12px;
+    line-height: 18px;
   }
   .navigation-links ul {
     justify-content: flex-start;
@@ -983,6 +984,7 @@
     min-width: 60px !important;
     max-width: 30px !important;
     width: 100%;
+    height: auto;
   }
   .navigation-links ul li:first-of-type {
     margin-left: 0;
@@ -1008,6 +1010,7 @@
 
   .start-post-btn-container {
     padding: 6px 0px;
+    border-radius: 0;
   }
   .navigation-links {
     right: 8px;

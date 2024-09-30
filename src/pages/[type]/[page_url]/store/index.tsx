@@ -113,8 +113,8 @@ const ListingStore: React.FC<Props> = (props) => {
           expandAll={expandAll}
           activeTab={'store'}
         >
-          <div className={styles['display-desktop']}>
-            <ListingStoreTab />
+          <div>
+            <ListingStoreTab data={props?.data?.storeData} />
           </div>
         </ListingPageMain>
       </ListingPageLayout>
@@ -157,6 +157,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     }
   }
 
+  const { err: storeErr, res: StoreRes } = await getListingPages(
+    `seller=${res?.data?.data?.listings[0]._id}&populate=_hobbies,_address,seller,product_variant`,
+  )
+
   if (res?.data.data.listings[0]?.type !== typeId) {
     return {
       notFound: true,
@@ -169,7 +173,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     mediaData: null,
     reviewsData: null,
     eventsData: null,
-    storeData: null,
+    storeData: StoreRes?.data?.data?.listings,
   }
   return {
     props: {

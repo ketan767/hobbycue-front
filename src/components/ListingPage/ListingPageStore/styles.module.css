@@ -1,7 +1,7 @@
 .data-container {
-  display: flex;
-  flex-direction: row;
-  gap:24px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
 }
 
 .no-data-div {
@@ -19,15 +19,15 @@
   color: #6d747a;
 }
 
-
 @media screen and (max-width: 1100px) {
   .data-container {
-    padding-top: 8px;
+    /* padding-top: 8px; */
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-16);
+    gap: 8px;
   }
-  .no-data-div{
+
+  .no-data-div {
     border-radius: 0;
   }
 }

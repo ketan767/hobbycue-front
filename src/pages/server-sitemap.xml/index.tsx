@@ -76,10 +76,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       lastmod: new Date().toISOString(),
       loc: `${baseUrl}/contact`,
     },
-    {
-      lastmod: new Date().toISOString(),
-      loc: `${baseUrl}/explore`,
-    },
+
     {
       lastmod: new Date().toISOString(),
       loc: `${baseUrl}/hobby`,
@@ -101,39 +98,46 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       lastmod: new Date().toISOString(),
       loc: `${baseUrl}/privacy`,
     },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://hobbycue.com/explore',
+      name: `https://hobbycue.com/explore`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://hobbycue.com/explore/people',
+      name: `https://hobbycue.com/explore/people`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://hobbycue.com/explore/places',
+      name: `https://hobbycue.com/explore/places`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://hobbycue.com/explore/programs',
+      name: `https://hobbycue.com/explore/programs`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: 'https://hobbycue.com/explore/products',
+      name: `https://hobbycue.com/explore/products`,
+    },
+    {
+      lastmod: new Date().toISOString(),
+      loc: `https://hobbycue.com/search`,
+      name: `https://hobbycue.com/search`,
+    },
 
     {
       lastmod: new Date().toISOString(),
-      loc: `${baseUrl}/search`,
+      loc: `https://hobbycue.com/terms`,
+      name: `https://hobbycue.com/terms`,
     },
     {
       lastmod: new Date().toISOString(),
-      loc: `${baseUrl}/settings`,
-    },
-    {
-      lastmod: new Date().toISOString(),
-      loc: `${baseUrl}/settings/account-data`,
-    },
-    {
-      lastmod: new Date().toISOString(),
-      loc: `${baseUrl}/settings/localization-payments`,
-    },
-    {
-      lastmod: new Date().toISOString(),
-      loc: `${baseUrl}/settings/login-security`,
-    },
-    {
-      lastmod: new Date().toISOString(),
-      loc: `${baseUrl}/settings/visibility-notification`,
-    },
-    {
-      lastmod: new Date().toISOString(),
-      loc: `${baseUrl}/terms`,
-    },
-    {
-      lastmod: new Date().toISOString(),
-      loc: 'https://blog.hobbycue.com',
-      name: `https://blog.hobbycue.com`,
+      loc: 'https://hobbycue.com/blog',
+      name: `https://hobbycue.com/blog`,
     },
     {
       lastmod: new Date().toISOString(),

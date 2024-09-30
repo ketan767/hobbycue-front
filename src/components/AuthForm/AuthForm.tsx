@@ -232,7 +232,13 @@ const AuthForm: React.FC<Props> = (props) => {
             window.location.reload()
           }
         } else {
-          dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
+          dispatch(
+            openModal({
+              type: 'SimpleOnboarding',
+              closable: true,
+              propData: { showError: true },
+            }),
+          )
           router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
         }
       }
@@ -339,7 +345,13 @@ const AuthForm: React.FC<Props> = (props) => {
           router.push(linkviaAuth)
           dispatch(SetLinkviaAuth(''))
         } else if (!response?.data?.data?.user?.is_onboarded) {
-          dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
+          dispatch(
+            openModal({
+              type: 'SimpleOnboarding',
+              closable: true,
+              propData: { showError: true },
+            }),
+          )
           router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
           dispatch(showProfileError(true))
         }
@@ -353,12 +365,7 @@ const AuthForm: React.FC<Props> = (props) => {
 
   const handleFacebookAuth = async (e: any) => {
     if (!e.email) {
-      return setSnackbar({
-        type: 'error',
-        display: true,
-        message:
-          'HobbyCue did not receive an E-mail ID.  Please enter the same to proceed.',
-      })
+      return dispatch(openModal({ type: 'FBNoEmail', closable: true }))
     }
     dispatch(setShowPageLoader(true))
     try {
@@ -404,7 +411,13 @@ const AuthForm: React.FC<Props> = (props) => {
             window.location.reload()
           }
         } else {
-          dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
+          dispatch(
+            openModal({
+              type: 'SimpleOnboarding',
+              closable: true,
+              propData: { showError: true },
+            }),
+          )
           router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
         }
 

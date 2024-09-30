@@ -62,11 +62,12 @@ const exploreOptions = [
     text: 'Places - Venues',
   },
   {
-    text: 'Programs - Events',
-  },
-  {
     text: 'Products - Store',
   },
+  {
+    text: 'Programs - Events',
+  },
+
   {
     text: 'Perspectives - Blogs',
   },
@@ -112,7 +113,7 @@ const SideMenu: React.FC<Props> = ({ handleClose }) => {
         dispatch(resetSearch())
         await ExplorePeople()
         dispatch(showAllPeopleTrue())
-        router.push('/explore/peoples')
+        router.push('/explore/people')
         dispatch(setExplore(true))
         handleClose()
         break

@@ -46,11 +46,11 @@ const SearchPageFilter = () => {
   // const showAllPosts = useSelector((state: any) => state.search.showAllPosts)
   // const showAllBlogs = useSelector((state: any) => state.search.showAllBlogs)
 
-  const showAll = filter === 'all'
+  const showAll = filter === 'all' || filter === undefined || filter === ''
   const showAllUsers = filter === 'users'
   const showAllPeople = filter === 'people'
   const showAllPlace = filter === 'places'
-  const showAllEvent = filter === 'events'
+  const showAllEvent = filter === 'programs'
   const showAllProducts = filter === 'products'
   const showAllPosts = filter === 'posts'
   const showAllBlogs = filter === 'blogs'
@@ -115,7 +115,7 @@ const SearchPageFilter = () => {
         case 'places':
           dispatch(toggleShowAllPlace())
           break
-        case 'events':
+        case 'programs':
           dispatch(toggleShowAllEvent())
           break
         case 'products':
@@ -196,7 +196,7 @@ const SearchPageFilter = () => {
           </div>
           <div
             className={getFilterItemClass('events')}
-            onClick={() => handleFilterClick('events')}
+            onClick={() => handleFilterClick('programs')}
           >
             <Image src={Program} alt="Program" />
             Programs

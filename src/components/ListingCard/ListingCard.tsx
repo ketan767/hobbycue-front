@@ -15,6 +15,7 @@ import { Height } from '@mui/icons-material'
 import { updateListingLayoutMode } from '@/redux/slices/site'
 import ListingCardProduct from './ListingCardProduct'
 import { useRouter } from 'next/router'
+import HobbyIconHexagon from '@/assets/icons/HobbyIconHexagon'
 
 type Props = {
   data: any
@@ -142,7 +143,7 @@ const ListingCard: React.FC<Props> = ({ data, style, column }) => {
         className={styles.container}
         style={style}
       >
-        {itsMe && router.pathname.endsWith('/pages') ? (
+        {itsMe && router.pathname.endsWith(`/[profile_url]/pages`) ? (
           <div
             className={`${
               data.is_published
@@ -161,27 +162,27 @@ const ListingCard: React.FC<Props> = ({ data, style, column }) => {
             <>
               <div
                 className={
-                  column === 4 ? styles.backgroundtwo : styles['background']
+                  column === 4 ? styles.backgroundtwo : styles.background
                 }
-                style={{ backgroundImage: `url(${data?.cover_image})` }}
-              ></div>
-              <img
-                src={data?.cover_image}
-                width={300}
-                height={100}
-                alt="cover"
-                className={
-                  column === 4 ? styles.coverImageTwo : styles.coverImage
-                }
-                style={{ marginBottom: '-7px' }}
-              />
-              <div
+              >
+                <img
+                  src={data?.cover_image}
+                  alt=""
+                  className={styles.bgImage}
+                />
+                <img
+                  src={data?.cover_image}
+                  alt="cover"
+                  className={styles.coverImageWithImage}
+                />
+              </div>
+              {/* <div
                 style={{
                   width: '100%',
                   height: '1px',
                   background: '#939ca3',
                 }}
-              ></div>
+              ></div> */}
             </>
           ) : (
             <div
@@ -283,45 +284,40 @@ const ListingCard: React.FC<Props> = ({ data, style, column }) => {
                     })}{' '}
                   </span>
                 </p>
-                {data?.event_date_time ? (
-                  <div className={styles['date-time']}>
-                    {data?.event_date_time.length !== 0 && (
-                      <section>
-                        {calendarIcon}{' '}
-                        <p>{formatDateRange(data?.event_date_time[0])}</p>
-                      </section>
-                    )}
-                    {!isMobile && (
-                      <>
-                        {data?.event_date_time.length !== 0 && (
-                          <section>
-                            {clockIcon}{' '}
-                            <p>
-                              {data?.event_date_time[0]?.from_time + ' - '}
-                              {data?.event_weekdays?.length > 0 ? (
-                                <>
-                                  ...
-                                  <span className={styles['purpleText']}>
-                                    more
-                                  </span>
-                                </>
-                              ) : (
-                                data?.event_date_time[0]?.to_time
-                              )}
-                            </p>
-                          </section>
-                        )}
-                      </>
-                    )}
-                  </div>
-                ) : (
-                  ''
-                )}
               </div>
             </div>
           </div>
-
-          <p className={styles.tagline}> {data?.tagline} </p>
+          {data.type === 3 && data?.event_date_time ? (
+            <div className={styles['date-time']}>
+              {data?.event_date_time.length !== 0 && (
+                <>
+                  <span className={styles.calendarIcon}>{calendarIcon} </span>
+                  <span>{formatDateRange(data?.event_date_time[0])}</span>
+                </>
+              )}{' '}
+              {!isMobile && (
+                <>
+                  {data?.event_date_time.length !== 0 && (
+                    <>
+                      <span className={styles.clockIcon}>{clockIcon} </span>
+                      <span>
+                        {data?.event_date_time[0]?.from_time} -{' '}
+                        {data?.event_date_time[0]?.to_time}
+                        {/* {data?.event_date_time && (
+                          <>
+                            ...
+                            <span className={styles['purpleText']}>more</span>
+                          </>
+                        )} */}
+                      </span>
+                    </>
+                  )}
+                </>
+              )}
+            </div>
+          ) : (
+            <p className={styles.tagline}> {data?.tagline} </p>
+          )}
 
           <div className={styles.bottom}>
             <Image src={LocationIcon} width={16} height={16} alt="location" />
@@ -333,7 +329,10 @@ const ListingCard: React.FC<Props> = ({ data, style, column }) => {
             </p>
           </div>
           <div className={styles.bottom}>
-            <Image src={HobbyIcon} width={16} height={16} alt="hobby" />
+            {/* <Image src={HobbyIcon} width={16} height={16} alt="hobby" /> */}
+            <span style={{ display: 'flex', alignItems: 'center' }}>
+              <HobbyIconHexagon />
+            </span>
             <div className={styles.location}>
               {data?._hobbies?.map((item: any) => {
                 return (

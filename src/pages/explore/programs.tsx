@@ -16,7 +16,7 @@ const Explore: React.FC<Props> = ({ data: initialData }) => {
   const { type } = router.query
 
   const [data, setData] = useState(initialData || [])
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(2)
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
 

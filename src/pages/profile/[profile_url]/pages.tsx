@@ -148,7 +148,7 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
               </div>
             </aside>
 
-            <main>
+            <main style={{ marginBottom: isMobile ? '' : '50px' }}>
               {data.listingsData.length !== 0 && mounted ? (
                 // <div className={styles['card-container']}>
                 <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 1100: 2 }}>
@@ -249,8 +249,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   const { err: error, res: response } = await getListingPages(
     `populate=_hobbies,seller,product_variant,_address&admin=${user._id}`,
   )
-
-  // if (response?.data.success && response.data.data.no_of_listings === 0) return { notFound: true }
 
   const data = {
     pageData: user,

@@ -24,6 +24,7 @@
   border-radius: 50%;
   border: 1px solid #8064a2;
   object-fit: contain;
+  overflow: hidden;
 }
 .post-card-wrapper header .author-listing,
 .post-card-wrapper header .default-people-listing-icon {
@@ -631,6 +632,7 @@ background: rgba(128, 100, 162, 0.25);
   }
   .post-card-wrapper {
     max-width: 1017px;
+    border-radius: 0;
   }
   .post-card-wrapper header .post-other-info {
     font-size: 10px;

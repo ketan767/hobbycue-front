@@ -1,3 +1,4 @@
+import { headers } from 'next/headers'
 import axiosInstance, { operation } from './_axios'
 
 export const getAllPosts = async (query: string): Promise<ApiReturnObject> => {
@@ -49,8 +50,6 @@ export const createUserPost = async (data: {
   }
 }
 
-
-
 /** Create a Listing Page Post `POST: /api/post/listing/` */
 export const createListingPost = async (data: {
   listingId: string
@@ -70,8 +69,6 @@ export const createListingPost = async (data: {
     return { err: error, res: null }
   }
 }
-
-
 
 /** UpVote Post `PATCH: /api/post/upvote/:postId` */
 export const upvotePost = async (
@@ -264,6 +261,19 @@ export const removevotePostComment = async (
   }
 }
 
+export const deletePostComment = async (commentId: string) => {
+  const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  try {
+    const res = await axiosInstance.post(`/post/comment/delete/${commentId}`, {
+      headers,
+    })
+    return { res: res, err: null }
+  } catch (err) {
+    console.log('Error in deletePostComment: ', err)
+    return { err: err, res: null }
+  }
+}
+
 /** DownVote Post `PATCH: /api/post/remove-upvote/:postId` */
 export const removeVote = async (
   postId: string,
@@ -320,8 +330,7 @@ export const searchPosts = async (searchCriteria: any) => {
     console.error('Error searching for pages:', error)
     return { res: null, err: error }
   }
-
-};
+}
 
 /** Update a User Post `POST: /api/post/user/update/:postId` */
 export const updateUserPost = async (
@@ -364,13 +373,16 @@ export const updateListingPost = async (
   const headers = { Authorization: `Bearer ${token}` }
 
   try {
-    const res = await axiosInstance.post(`/post/listing/update/${postId}`, data, {
-      headers,
-    })
+    const res = await axiosInstance.post(
+      `/post/listing/update/${postId}`,
+      data,
+      {
+        headers,
+      },
+    )
     return { res: res, err: null }
   } catch (error) {
     console.error(error)
     return { err: error, res: null }
   }
 }
-

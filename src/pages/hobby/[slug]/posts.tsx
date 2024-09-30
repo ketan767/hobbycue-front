@@ -44,9 +44,12 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
 
   const getPost = async () => {
     setLoadingPosts(true)
-    const { err, res } = await getAllPosts(
-      `_hobby=${data._id}&populate=_author,_genre,_hobby`,
-    )
+    const queryParam =
+      data?.level === 5
+        ? `_genre=${data._id}&populate=_author,_genre,_hobby`
+        : `_hobby=${data._id}&populate=_author,_genre,_hobby`
+
+    const { err, res } = await getAllPosts(queryParam)
 
     if (err) return console.log(err)
     if (res.data.success) {
@@ -167,10 +170,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
             </section>
           </main>
           <main className={`${styles['display-mobile']}`}>
-            <section
-              style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}
-              className={`${styles['posts-container']}}`}
-            >
+            <section className={`${styles['posts-container']}`}>
               {loadingPosts ? (
                 <>
                   <PostCardSkeletonLoading />

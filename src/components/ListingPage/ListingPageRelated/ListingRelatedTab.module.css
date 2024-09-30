@@ -36,8 +36,13 @@
 @media (max-width: 600px) {
   .main {
     display: block;
+    /* margin-top: 8px; */
+    margin-bottom: 50px;
   }
   .card {
-    margin-bottom: 20px;
+    margin-bottom: 8px;
+  }
+  .no-posts-container {
+    border-radius: 0;
   }
 }

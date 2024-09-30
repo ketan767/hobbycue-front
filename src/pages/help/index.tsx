@@ -2,6 +2,7 @@ import { FC } from 'react'
 import styles from '@/styles/Help.module.css'
 import Footer from '@/components/Footer/Footer'
 import Link from 'next/link'
+import Head from 'next/head'
 
 interface indexProps {}
 
@@ -31,6 +32,12 @@ const index: FC<indexProps> = ({}) => {
   }
   return (
     <>
+      <Head>
+        <meta property="og:image" content="/HobbyCue-FB-4Ps.png" />
+        <meta property="og:image:secure_url" content="/HobbyCue-FB-4Ps.png" />
+
+        <title>HobbyCue - Help</title>
+      </Head>
       <section className={styles['container']}>
         <div className={styles['cards-container']}>
           <h1>{data.title}</h1>

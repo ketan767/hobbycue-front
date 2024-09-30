@@ -525,6 +525,7 @@ const ListingPageMain: React.FC<Props> = ({
   return (
     <>
       <PageGridLayout
+        activeTab={activeTab}
         column={activeTab === 'home' || activeTab === 'posts' ? 3 : 2}
       >
         {isMobile && activeTab !== 'home' ? (
@@ -1301,7 +1302,7 @@ const ListingPageMain: React.FC<Props> = ({
                   <div
                     className={`${styles['working-hours-wrapper']} ${
                       styles['display-desktop']
-                    }${
+                    } ${
                       workingHoursStates?.[data?._id]
                         ? ' ' + styles['display-mobile']
                         : ''
@@ -1594,6 +1595,7 @@ const ListingPageMain: React.FC<Props> = ({
                           dangerouslySetInnerHTML={{
                             __html: data?.about,
                           }}
+                          style={{ marginTop: '12px' }}
                         ></div>
                       )}
                     </PageContentBox>

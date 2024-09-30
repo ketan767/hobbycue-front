@@ -177,42 +177,44 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
           </aside>
           <main className={styles['middle-section']}>
             {profileLayoutMode === 'edit' && (
-              <section
-                className={`content-box-wrapper ${styles['start-post-btn-container']}`}
-              >
-                <button
-                  onClick={() => {
-                    if (user.is_onboarded)
-                      dispatch(
-                        openModal({ type: 'create-post', closable: true }),
-                      )
-                    else HandleNotOnboard()
-                  }}
-                  className={styles['start-post-btn']}
+              <>
+                <section
+                  className={`content-box-wrapper ${styles['start-post-btn-container']}`}
                 >
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
+                  <button
+                    onClick={() => {
+                      if (user.is_onboarded)
+                        dispatch(
+                          openModal({ type: 'create-post', closable: true }),
+                        )
+                      else HandleNotOnboard()
+                    }}
+                    className={styles['start-post-btn']}
                   >
-                    <g clip-path="url(#clip0_704_44049)">
-                      <path
-                        d="M13.1429 8.85714H8.85714V13.1429C8.85714 13.6143 8.47143 14 8 14C7.52857 14 7.14286 13.6143 7.14286 13.1429V8.85714H2.85714C2.38571 8.85714 2 8.47143 2 8C2 7.52857 2.38571 7.14286 2.85714 7.14286H7.14286V2.85714C7.14286 2.38571 7.52857 2 8 2C8.47143 2 8.85714 2.38571 8.85714 2.85714V7.14286H13.1429C13.6143 7.14286 14 7.52857 14 8C14 8.47143 13.6143 8.85714 13.1429 8.85714Z"
-                        fill="#8064A2"
-                      />
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_704_44049">
-                        <rect width="16" height="16" fill="white" />
-                      </clipPath>
-                    </defs>
-                  </svg>
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g clip-path="url(#clip0_704_44049)">
+                        <path
+                          d="M13.1429 8.85714H8.85714V13.1429C8.85714 13.6143 8.47143 14 8 14C7.52857 14 7.14286 13.6143 7.14286 13.1429V8.85714H2.85714C2.38571 8.85714 2 8.47143 2 8C2 7.52857 2.38571 7.14286 2.85714 7.14286H7.14286V2.85714C7.14286 2.38571 7.52857 2 8 2C8.47143 2 8.85714 2.38571 8.85714 2.85714V7.14286H13.1429C13.6143 7.14286 14 7.52857 14 8C14 8.47143 13.6143 8.85714 13.1429 8.85714Z"
+                          fill="#8064A2"
+                        />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_704_44049">
+                          <rect width="16" height="16" fill="white" />
+                        </clipPath>
+                      </defs>
+                    </svg>
 
-                  <span>Start a post</span>
-                </button>
-              </section>
+                    <span>Start a post</span>
+                  </button>
+                </section>
+              </>
             )}
             {isLoggedIn ? (
               <section className={styles['posts-container']}>
@@ -283,42 +285,48 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
             {/*User Social Media visible only for mobile view */}
             <ProfileSocialMediaSide data={data.pageData} />
           </aside>
-
-          <section
-            className={`content-box-wrapper ${styles['start-post-btn-container-mobile']}`}
-          >
-            <button
-              onClick={() => {
-                if (user.is_onboarded)
-                  dispatch(openModal({ type: 'create-post', closable: true }))
-                else HandleNotOnboard()
-              }}
-              className={styles['start-post-btn']}
+          {isMobile && (
+            <div style={{ height: '8px', background: '#EBEDF0' }}></div>
+          )}
+          {profileLayoutMode == 'edit' && (
+            <section
+              className={`content-box-wrapper ${styles['start-post-btn-container-mobile']}`}
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+              <button
+                onClick={() => {
+                  if (user.is_onboarded)
+                    dispatch(openModal({ type: 'create-post', closable: true }))
+                  else HandleNotOnboard()
+                }}
+                className={styles['start-post-btn']}
               >
-                <g clip-path="url(#clip0_704_44049)">
-                  <path
-                    d="M13.1429 8.85714H8.85714V13.1429C8.85714 13.6143 8.47143 14 8 14C7.52857 14 7.14286 13.6143 7.14286 13.1429V8.85714H2.85714C2.38571 8.85714 2 8.47143 2 8C2 7.52857 2.38571 7.14286 2.85714 7.14286H7.14286V2.85714C7.14286 2.38571 7.52857 2 8 2C8.47143 2 8.85714 2.38571 8.85714 2.85714V7.14286H13.1429C13.6143 7.14286 14 7.52857 14 8C14 8.47143 13.6143 8.85714 13.1429 8.85714Z"
-                    fill="#8064A2"
-                  />
-                </g>
-                <defs>
-                  <clipPath id="clip0_704_44049">
-                    <rect width="16" height="16" fill="white" />
-                  </clipPath>
-                </defs>
-              </svg>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g clip-path="url(#clip0_704_44049)">
+                    <path
+                      d="M13.1429 8.85714H8.85714V13.1429C8.85714 13.6143 8.47143 14 8 14C7.52857 14 7.14286 13.6143 7.14286 13.1429V8.85714H2.85714C2.38571 8.85714 2 8.47143 2 8C2 7.52857 2.38571 7.14286 2.85714 7.14286H7.14286V2.85714C7.14286 2.38571 7.52857 2 8 2C8.47143 2 8.85714 2.38571 8.85714 2.85714V7.14286H13.1429C13.6143 7.14286 14 7.52857 14 8C14 8.47143 13.6143 8.85714 13.1429 8.85714Z"
+                      fill="#8064A2"
+                    />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_704_44049">
+                      <rect width="16" height="16" fill="white" />
+                    </clipPath>
+                  </defs>
+                </svg>
 
-              <span>Start a post</span>
-            </button>
-          </section>
-
+                <span>Start a post</span>
+              </button>
+            </section>
+          )}
+          {isMobile && (
+            <div style={{ height: '8px', background: '#EBEDF0' }}></div>
+          )}
           <section className={styles['posts-container-mobile']}>
             {loadingPosts ? (
               <PostCardSkeletonLoading />

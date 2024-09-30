@@ -1,7 +1,7 @@
 .posts-container {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-16);
+  
 }
 
 /*  */
@@ -87,16 +87,20 @@
     display: none;
   }
   .start-post-btn-container-mobile {
+    /* margin-top: 8px; */
     display: initial;
     padding: 8px 16px;
     background-color: #ffffff;
+    margin-bottom: 8px;
+    border-radius: 0;
   }
   .posts-container {
     display: none;
   }
   .posts-container-mobile {
     display: block;
-    height: 90vh;
+    margin-bottom: 50px;
+    /* height: 90vh; */
     /* min-height: calc(100vh - 107px - 56px); */
   }
   .nav-mobile {
@@ -117,5 +121,8 @@
   }
   .display-none-responsive {
     display: none !important;
+  }
+  .no-posts-container {
+    border-radius: 0;
   }
 }

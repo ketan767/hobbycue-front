@@ -238,7 +238,13 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
     let hasError = false
 
     if (profileLayoutMode === 'edit') {
-      dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
+      dispatch(
+        openModal({
+          type: 'SimpleOnboarding',
+          closable: true,
+          propData: { showError: true },
+        }),
+      )
       setHobbyError(false)
       setLocationError(false)
       setTitleError(false)
@@ -307,7 +313,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
         noDataChecker={noDataChecker}
       >
         {data?.pageData && (
-          <PageGridLayout column={3}>
+          <PageGridLayout activeTab="home" column={3}>
             <aside
               className={`custom-scrollbar ${styles['profile-left-aside']} ${
                 expandAll ? '' : styles['display-none-responsive']
@@ -356,7 +362,11 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                 )}
               </div>
               {/* User Hobbies */}
-              <ProfileHobbySideList hobbyError={hobbyError} data={pageData} />
+              <ProfileHobbySideList
+                hobbyError={hobbyError}
+                data={pageData}
+                expandData={expandAll}
+              />
               <ProfilePagesList data={data} />
 
               <div className={styles['display-mobile']}>
@@ -364,6 +374,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                 <ProfileAddressSide
                   addressError={locationError}
                   data={pageData}
+                  expandData={expandAll}
                 />
 
                 {/* User Contact Details */}
@@ -508,26 +519,28 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
             </aside>
 
             {/* About for mobile view */}
-            <div
-              className={`${styles['display-mobile']} ${styles['mob-min-height']}`}
-            >
-              <PageContentBox
-                showEditButton={profileLayoutMode === 'edit'}
-                onEditBtnClick={() =>
-                  dispatch(
-                    openModal({ type: 'profile-about-edit', closable: true }),
-                  )
-                }
+            {pageData?.about && (
+              <div
+                className={`${styles['display-mobile']} ${styles['mob-min-height']}`}
               >
-                <h4>About</h4>
-                {pageData?.about && (
-                  <div
-                    className={`${styles['color-light']} ${styles['about-text']} ${styles['about-text-mobile']}`}
-                    dangerouslySetInnerHTML={{ __html: pageData?.about }}
-                  ></div>
-                )}
-              </PageContentBox>
-            </div>
+                <PageContentBox
+                  showEditButton={profileLayoutMode === 'edit'}
+                  onEditBtnClick={() =>
+                    dispatch(
+                      openModal({ type: 'profile-about-edit', closable: true }),
+                    )
+                  }
+                >
+                  <h4>About</h4>
+                  {pageData?.about && (
+                    <div
+                      className={`${styles['color-light']} ${styles['about-text']} ${styles['about-text-mobile']}`}
+                      dangerouslySetInnerHTML={{ __html: pageData?.about }}
+                    ></div>
+                  )}
+                </PageContentBox>
+              </div>
+            )}
 
             {/* User Information for mobile view */}
             <div

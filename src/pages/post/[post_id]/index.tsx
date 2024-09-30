@@ -87,7 +87,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
     ) {
       return data?.postsData?.media[0]
     } else {
-      return 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/HobbyCue+Logo+Banner+2+ML.png'
+      return '/HobbyCue-FB-4Ps.png'
     }
   }
 
@@ -118,7 +118,13 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
 
         <meta property="og:image:alt" content="Profile picture" />
         <title>
-          {`${`${data.postsData?._author?.full_name} - ${data.postsData?._hobby?.display} at ${data.postsData?.visibility}`}`}
+          {`${`${
+            data?.postsData?.author_type === 'User'
+              ? data.postsData?._author?.full_name
+              : data.postsData?._author?.title
+          } - ${data.postsData?._hobby?.display} at ${
+            data.postsData?.visibility
+          }`}`}
         </title>
       </Head>
       <CommunityPageLayout activeTab="posts" singlePostPage={true}>

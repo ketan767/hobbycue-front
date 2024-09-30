@@ -801,7 +801,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                           onClick={async (e) => {
                             e.preventDefault()
                             router.push({
-                              pathname: '/explore/peoples',
+                              pathname: '/explore/people',
                             })
                           }}
                         >
@@ -838,11 +838,11 @@ export const Navbar: React.FC<Props> = ({}) => {
                           onClick={async (e) => {
                             e.preventDefault()
                             router.push({
-                              pathname: '/explore/programs',
+                              pathname: '/explore/products',
                             })
                           }}
                         >
-                          Programs - Events
+                          Products - Store
                         </Link>
                       </h4>
                     </section>
@@ -854,14 +854,15 @@ export const Navbar: React.FC<Props> = ({}) => {
                           onClick={async (e) => {
                             e.preventDefault()
                             router.push({
-                              pathname: '/explore/products',
+                              pathname: '/explore/programs',
                             })
                           }}
                         >
-                          Products - Store
+                          Programs - Events
                         </Link>
                       </h4>
                     </section>
+
                     <section className={styles['list']}>
                       <h4>
                         <Link

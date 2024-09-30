@@ -200,6 +200,7 @@ ul.seller-info-wrapper li svg:last-child {
   letter-spacing: 0.04em;
   color: #939ca3;
   word-break: break-word;
+  width: fit-content;
 }
 
 .textdefault {
@@ -212,6 +213,7 @@ ul.seller-info-wrapper li svg:last-child {
 }
 
 .working-hours-wrapper {
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
   color: #939ca3;

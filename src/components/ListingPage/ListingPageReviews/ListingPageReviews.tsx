@@ -1,4 +1,3 @@
-'use client'
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './styles.module.css'
 import { useMediaQuery } from '@mui/material'
@@ -15,6 +14,16 @@ import {
 } from '@/services/listing.service'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { useRouter } from 'next/router'
+import dynamic from 'next/dynamic'
+// import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
+const ResponsiveMasonry = dynamic(
+  () => import('react-responsive-masonry').then((mod) => mod.ResponsiveMasonry),
+  { ssr: false },
+)
+const Masonry = dynamic(
+  () => import('react-responsive-masonry').then((Masonry) => Masonry),
+  { ssr: false },
+)
 
 const ListingReviewsTab: FC<{ pageData: any }> = ({ pageData }) => {
   const isMobile = useMediaQuery('(max-width:1100px)')
@@ -64,25 +73,26 @@ const ListingReviewsTab: FC<{ pageData: any }> = ({ pageData }) => {
 
   const plusSvg = (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="17"
-      height="17"
-      viewBox="0 0 17 17"
+      width="64"
+      height="64"
+      viewBox="0 0 64 64"
       fill="none"
+      xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_13885_12079)">
+      <circle cx="32" cy="32" r="31.5" fill="white" stroke="#8064A2" />
+      <g clip-path="url(#clip0_13842_168936)">
         <path
-          d="M13.6565 9.60714H9.37081V13.8929C9.37081 14.3643 8.9851 14.75 8.51367 14.75C8.04224 14.75 7.65653 14.3643 7.65653 13.8929V9.60714H3.37081C2.89939 9.60714 2.51367 9.22143 2.51367 8.75C2.51367 8.27857 2.89939 7.89286 3.37081 7.89286H7.65653V3.60714C7.65653 3.13571 8.04224 2.75 8.51367 2.75C8.9851 2.75 9.37081 3.13571 9.37081 3.60714V7.89286H13.6565C14.128 7.89286 14.5137 8.27857 14.5137 8.75C14.5137 9.22143 14.128 9.60714 13.6565 9.60714Z"
+          d="M42.2857 33.7148H33.7143V42.2862C33.7143 43.2291 32.9429 44.0005 32 44.0005C31.0571 44.0005 30.2857 43.2291 30.2857 42.2862V33.7148H21.7143C20.7714 33.7148 20 32.9433 20 32.0005C20 31.0576 20.7714 30.2862 21.7143 30.2862H30.2857V21.7148C30.2857 20.7719 31.0571 20.0005 32 20.0005C32.9429 20.0005 33.7143 20.7719 33.7143 21.7148V30.2862H42.2857C43.2286 30.2862 44 31.0576 44 32.0005C44 32.9433 43.2286 33.7148 42.2857 33.7148Z"
           fill="#8064A2"
         />
       </g>
       <defs>
-        <clipPath id="clip0_13885_12079">
+        <clipPath id="clip0_13842_168936">
           <rect
-            width="16"
-            height="16"
+            width="32"
+            height="32"
             fill="white"
-            transform="translate(0.513672 0.75)"
+            transform="translate(16 16)"
           />
         </clipPath>
       </defs>
@@ -116,6 +126,9 @@ const ListingReviewsTab: FC<{ pageData: any }> = ({ pageData }) => {
     display: false,
     message: '',
   })
+  useEffect(() => {
+    reviewList()
+  }, [])
   const handlePublish = async (reviewId: any, pub_status: any) => {
     let jsonData = { is_published: pub_status }
     const { err, res } = await editListingReview(reviewId, jsonData)
@@ -165,99 +178,105 @@ const ListingReviewsTab: FC<{ pageData: any }> = ({ pageData }) => {
     <>
       <main>
         <section className={styles['data-container']}>
-          {listingLayoutMode === 'view' && (
-            <div onClick={addReview} className={styles['add-review-btn']}>
-              {plusSvg}
-              <p>Add Review</p>
-            </div>
-          )}
-          {pageData?._reviews.length == 0 ? (
-            <>
-              <div className={styles['no-data-div']}>
-                <p className={styles['no-data-text']}>No reviews</p>
-              </div>
-
-              {!isMobile && <div className={styles['no-data-div']}></div>}
-            </>
-          ) : (
-            <>
-              {reviews?.map((review: any, i: any) => (
-                <div key={i} className={styles['review-container']}>
-                  <img
-                    src={review?.user_id?.profile_image ?? defaultUserImage.src}
-                    alt={review?.user_id?.full_name}
-                  />
-                  <div className={styles['review-content']}>
-                    <div className={styles['review-content-top']}>
-                      <div className={styles['review-name-status']}>
-                        <p className={styles['review-username']}>
-                          {review.user_id?.full_name}{' '}
-                        </p>
-                        <p className={styles['review-status']}>
-                          {listingLayoutMode === 'edit'
-                            ? review.is_published
-                              ? 'Published'
-                              : 'Unpublished'
-                            : ''}
+          <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 1100: 2 }}>
+            <Masonry
+              gutter={isMobile ? '8px' : '12px'}
+              style={{ columnGap: '24px', rowGap: isMobile ? '8px' : '12px' }}
+            >
+              {listingLayoutMode === 'view' && (
+                <div
+                  onClick={addReview}
+                  className={styles.uploadButtonDescktop}
+                >
+                  <div className={styles.newTag}>ADD NEW</div>
+                  {plusSvg}
+                </div>
+              )}
+              {reviews.length !== 0 ? (
+                reviews?.map((review: any, i: any) => (
+                  <div key={i} className={styles['review-container']}>
+                    <img
+                      src={
+                        review?.user_id?.profile_image ?? defaultUserImage.src
+                      }
+                      alt={review?.user_id?.full_name}
+                    />
+                    <div className={styles['review-content']}>
+                      <div className={styles['review-content-top']}>
+                        <div className={styles['review-name-status']}>
+                          <p className={styles['review-username']}>
+                            {review.user_id?.full_name}{' '}
+                          </p>
+                          <p className={styles['review-status']}>
+                            {listingLayoutMode === 'edit'
+                              ? review.is_published
+                                ? 'Published'
+                                : 'Unpublished'
+                              : ''}
+                          </p>
+                        </div>
+                        <p className={styles['review-date']}>
+                          {formatDate(review.createdAt)}
                         </p>
                       </div>
-                      <p className={styles['review-date']}>
-                        {formatDate(review.createdAt)}
-                      </p>
+                      <p className={styles['review']}>{review.text}</p>
                     </div>
-                    <p className={styles['review']}>{review.text}</p>
-                  </div>
-                  {iamAdmin && (
-                    <svg
-                      ref={optionRef}
-                      className={styles['more-actions-icon']}
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      onClick={() =>
-                        setActiveReview(activeReview === i ? null : i)
-                      }
-                    >
-                      <g clip-path="url(#clip0_173_72891)">
-                        <path
-                          d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z"
-                          fill="#8064A2"
-                        />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_173_72891">
-                          <rect width="24" height="24" fill="white" />
-                        </clipPath>
-                      </defs>
-                    </svg>
-                  )}
-                  <div>
-                    {activeReview === i && iamAdmin && (
-                      <ul className={styles.optionsContainer}>
-                        <li
-                          onClick={() => {
-                            handlePublish(review._id, !review?.is_published)
-                            setActiveReview(null)
-                          }}
-                        >
-                          {review?.is_published ? 'Unpublish' : 'Publish'}
-                        </li>
-                        <li
-                          onClick={() => {
-                            handleDelete(review._id)
-                            setActiveReview(null)
-                          }}
-                        >
-                          Delete
-                        </li>
-                      </ul>
+                    {iamAdmin && (
+                      <svg
+                        ref={optionRef}
+                        className={styles['more-actions-icon']}
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        onClick={() =>
+                          setActiveReview(activeReview === i ? null : i)
+                        }
+                      >
+                        <g clip-path="url(#clip0_173_72891)">
+                          <path
+                            d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z"
+                            fill="#8064A2"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_173_72891">
+                            <rect width="24" height="24" fill="white" />
+                          </clipPath>
+                        </defs>
+                      </svg>
                     )}
+                    <div>
+                      {activeReview === i && iamAdmin && (
+                        <ul className={styles.optionsContainer}>
+                          <li
+                            onClick={() => {
+                              handlePublish(review._id, !review?.is_published)
+                              setActiveReview(null)
+                            }}
+                          >
+                            {review?.is_published ? 'Unpublish' : 'Publish'}
+                          </li>
+                          <li
+                            onClick={() => {
+                              handleDelete(review._id)
+                              setActiveReview(null)
+                            }}
+                          >
+                            Delete
+                          </li>
+                        </ul>
+                      )}
+                    </div>
                   </div>
+                ))
+              ) : (
+                <div className={styles['no-data-div']}>
+                  <p className={styles['no-data-text']}>No reviews</p>
                 </div>
-              ))}
-            </>
-          )}
+              )}
+            </Masonry>
+          </ResponsiveMasonry>
         </section>
       </main>
       {

@@ -85,7 +85,7 @@ const HobbyDetail: React.FC<Props> = (props) => {
     if (query) {
       fetchAndUpdateNextLevels(`fields=display,slug&sort=level&${query}`)
     }
-  }, [data.level, data.slug, data.tags])
+  }, [data.level, data.slug, data.tags, router.asPath])
 
   const displayDescMeta = () => {
     if (data?.level === 0) {
@@ -132,6 +132,14 @@ const HobbyDetail: React.FC<Props> = (props) => {
       router.events.off('routeChangeComplete', handleScrollRestoration)
     }
   }, [])
+
+  useEffect(() => {
+    if (expandAll !== undefined) {
+      setShowHobby(expandAll)
+      setShowKeywords(expandAll)
+    }
+  }, [expandAll])
+
   const isMobile = useMediaQuery('(max-width:1100px)')
   console.log('hobbydata', data)
   return (
