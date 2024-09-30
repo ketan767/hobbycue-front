@@ -238,7 +238,13 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
     let hasError = false
 
     if (profileLayoutMode === 'edit') {
-      dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
+      dispatch(
+        openModal({
+          type: 'SimpleOnboarding',
+          closable: true,
+          propData: { showError: true },
+        }),
+      )
       setHobbyError(false)
       setLocationError(false)
       setTitleError(false)
@@ -356,7 +362,11 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                 )}
               </div>
               {/* User Hobbies */}
-              <ProfileHobbySideList hobbyError={hobbyError} data={pageData} expandData={expandAll} />
+              <ProfileHobbySideList
+                hobbyError={hobbyError}
+                data={pageData}
+                expandData={expandAll}
+              />
               <ProfilePagesList data={data} />
 
               <div className={styles['display-mobile']}>

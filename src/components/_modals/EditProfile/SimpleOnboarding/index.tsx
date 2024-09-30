@@ -64,6 +64,7 @@ type Props = {
       level: number
       show: boolean
     }
+    showError?: boolean
   }
 }
 
@@ -326,11 +327,9 @@ const SimpleOnboarding: React.FC<Props> = ({
     }
   }
 
-  const baseURL =
-    window.location.protocol +
-    '//' +
-    window.location.hostname +
-    (window.location.port ? ':' + window.location.port : '')
+  useEffect(() => {
+    if (propData?.showError) handleSubmit()
+  }, [])
 
   const handleSubmit = async () => {
     if (

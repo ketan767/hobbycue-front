@@ -232,7 +232,13 @@ const AuthForm: React.FC<Props> = (props) => {
             window.location.reload()
           }
         } else {
-          dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
+          dispatch(
+            openModal({
+              type: 'SimpleOnboarding',
+              closable: true,
+              propData: { showError: true },
+            }),
+          )
           router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
         }
       }
@@ -339,7 +345,13 @@ const AuthForm: React.FC<Props> = (props) => {
           router.push(linkviaAuth)
           dispatch(SetLinkviaAuth(''))
         } else if (!response?.data?.data?.user?.is_onboarded) {
-          dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
+          dispatch(
+            openModal({
+              type: 'SimpleOnboarding',
+              closable: true,
+              propData: { showError: true },
+            }),
+          )
           router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
           dispatch(showProfileError(true))
         }
@@ -399,7 +411,13 @@ const AuthForm: React.FC<Props> = (props) => {
             window.location.reload()
           }
         } else {
-          dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
+          dispatch(
+            openModal({
+              type: 'SimpleOnboarding',
+              closable: true,
+              propData: { showError: true },
+            }),
+          )
           router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
         }
 
