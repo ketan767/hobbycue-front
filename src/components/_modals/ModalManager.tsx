@@ -90,6 +90,7 @@ import ListingAddEvent from './EditListing/ListingAddEvent'
 import SimpleOnboarding from './EditProfile/SimpleOnboarding'
 import ProductCategoryModal from './EditListing/ProductCategory/ProductCategory'
 import HobbyAboutEditModal from './EditHobby/About'
+import FBNoEmail from './FBNoEmail'
 
 const CustomBackdrop: React.FC = () => {
   const { activeModal } = useSelector((state: RootState) => state.modal)
@@ -424,7 +425,7 @@ const ModalManager: React.FC = () => {
                     </header>
                   </>
                 )}
-
+              {activeModal === 'FBNoEmail' && <FBNoEmail />}
               {activeModal === 'auth' && <AuthModal />}
               {activeModal === 'email-verify' && <VerifyEmailModal />}
               {activeModal === 'post' && <PostModal {...props} />}

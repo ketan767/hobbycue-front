@@ -353,12 +353,7 @@ const AuthForm: React.FC<Props> = (props) => {
 
   const handleFacebookAuth = async (e: any) => {
     if (!e.email) {
-      return setSnackbar({
-        type: 'error',
-        display: true,
-        message:
-          'HobbyCue did not receive an E-mail ID.  Please enter the same to proceed.',
-      })
+      return dispatch(openModal({ type: 'FBNoEmail', closable: true }))
     }
     dispatch(setShowPageLoader(true))
     try {

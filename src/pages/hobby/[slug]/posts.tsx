@@ -46,8 +46,8 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
     setLoadingPosts(true)
     const queryParam =
       data?.level === 5
-        ? `_genre=${data._id}&populate=_author,_genre,_hobby&has_link=true`
-        : `_hobby=${data._id}&populate=_author,_genre,_hobby&has_link=true`
+        ? `_genre=${data._id}&populate=_author,_genre,_hobby`
+        : `_hobby=${data._id}&populate=_author,_genre,_hobby`
 
     const { err, res } = await getAllPosts(queryParam)
 

@@ -84,14 +84,13 @@
 .content {
   padding: 12px;
   font-family: 'Poppins';
-
 }
 
 .contentHead {
   display: flex;
   margin-bottom: 17px;
 }
-.contentImageContainer{
+.contentImageContainer {
   width: 48px;
   height: 48px;
 }
@@ -106,36 +105,64 @@
 .contentTitle {
   padding: 0px 8px;
   white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
 }
 
-.time-and-title{
+.time-and-title {
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.date-time{
+.date-time {
   display: flex;
-
-align-items: center;
-gap: 16px;
-color: var(--Grey-Darker, #6D747A);
-font-family: 'Poppins';
-font-size: 12px;
-font-style: normal;
-font-weight: 500;
-line-height: normal;
+  align-items: center;
+  /* gap: 16px; */
+  color: var(--Grey-Darker, #6d747a);
+  font-family: 'Poppins';
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.date-time section{
+.date-time span:nth-last-child(1) {
+  /* display: flex;
+  align-items: center; */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.calendarIcon {
+  margin-right: 8px;
   display: flex;
+  align-items: center;
+}
+
+.clockIcon {
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
+  margin-left: 16px;
+}
+
+/* .date-time section{
+  display: flex;
+  display: inline-flex;
 align-items: center;
 gap: 8px;
-}
+} */
+
+/* .date-time section:nth-child(2) {
+  margin-left: 16px;
+} */
 
 .title {
   font-weight: 500;
@@ -183,8 +210,8 @@ gap: 8px;
   color: #6d747a;
   margin-left: 10px;
   white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .hobby {
@@ -200,16 +227,16 @@ gap: 8px;
   margin-right: 8px;
 }
 
-.unpublished-mark{
+.unpublished-mark {
   display: inline-flex;
   height: 26px;
   padding: 4px 10px;
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
-  border: 2px solid var(--mandatory, #C0504D);
-  background: rgba(255, 255, 255, 0.70);
-  color: var(--mandatory, #C0504D);
+  border: 2px solid var(--mandatory, #c0504d);
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--mandatory, #c0504d);
   font-family: 'Poppins';
   font-size: 12px;
   font-style: normal;
@@ -222,30 +249,30 @@ gap: 8px;
   z-index: 2;
 }
 
-.published-mark{
+.published-mark {
   display: inline-flex;
-height: 26px;
-padding: 4px 10px;
-align-items: center;
-gap: 10px;
-flex-shrink: 0;
-  border: 2px solid #177B1B;
-background: rgba(255, 255, 255, 0.70);
-color: #177B1B;
-font-family: 'Poppins';
-font-size: 12px;
-font-style: normal;
-font-weight: 600;
-line-height: 18px; /* 150% */
-text-transform: capitalize;
-position: absolute;
-top: 14px;
-left: 12px;
-z-index: 2;
+  height: 26px;
+  padding: 4px 10px;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  border: 2px solid #177b1b;
+  background: rgba(255, 255, 255, 0.7);
+  color: #177b1b;
+  font-family: 'Poppins';
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 18px; /* 150% */
+  text-transform: capitalize;
+  position: absolute;
+  top: 14px;
+  left: 12px;
+  z-index: 2;
 }
 
 @media screen and (max-width: 1100px) {
-  .container{
+  .container {
     min-width: auto;
     border-radius: 0;
   }
@@ -255,7 +282,6 @@ z-index: 2;
     position: relative;
     overflow: hidden;
   }
-  
 
   .coverImage {
     width: 100%;
@@ -268,17 +294,16 @@ z-index: 2;
     height: auto;
     aspect-ratio: 508 / 170;
   }
-
 }
 
-.purpleText{
+.purpleText {
   color: #8064a2 !important;
 }
 
-.greenText{
+.greenText {
   color: #77933c !important;
 }
 
-.blueText{
+.blueText {
   color: #0096c8 !important;
 }

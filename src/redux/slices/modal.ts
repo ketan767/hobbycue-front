@@ -66,6 +66,7 @@ export type ModalType =
   | 'product-category'
   | 'Hobby-about-edit'
   | 'PostReportModal'
+  | "FBNoEmail"
 
 
   interface ModalState {

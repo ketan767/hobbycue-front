@@ -13,6 +13,7 @@ import { RootState } from '@/redux/store'
 import { useRouter } from 'next/router'
 import { showProfileError } from '@/redux/slices/user'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import Head from 'next/head';
 
 export default function Index() {
     const { user, isLoggedIn } = useSelector((state: RootState) => state.user)
@@ -48,6 +49,12 @@ export default function Index() {
       dispatch(showProfileError(true))
     }
   return (<>
+    <Head>
+        <meta property="og:image" content="/HobbyCue-FB-4Ps.png" />
+        <meta property="og:image:secure_url" content="/HobbyCue-FB-4Ps.png" />
+
+        <title>HobbyCue - Services</title>
+    </Head>
     <div className={styles.container}>
         <div className={styles.dataSection}>
             <div className={styles.about}>
