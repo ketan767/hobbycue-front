@@ -93,14 +93,45 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
     setExpandAll(value)
     dispatch(updateHobbyMenuExpandAll(value))
   }
-
+  const displayDescMeta = () => {
+    if (data?.level === 0) {
+      return 'Category'
+    } else if (data?.level === 1) {
+      return 'Sub-Category'
+    } else if (data?.level === 2) {
+      return 'Hobby Tag'
+    } else if (data?.level === 3) {
+      return 'Hobby'
+    } else if (data?.level === 5) {
+      return 'Genre/Style'
+    } else {
+      return data?.about ?? ''
+    }
+  }
   return (
     <>
       <Head>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-        />
+        {data?.profile_image ? (
+          <>
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+            />
+
+            <meta property="og:image" content={`${data?.profile_image}`} />
+
+            <meta
+              property="og:image:secure_url"
+              content={`${data?.profile_image}`}
+            />
+
+            <meta property="og:image:alt" content="Profile picture" />
+          </>
+        ) : (
+          ''
+        )}
+        <meta property="og:description" content={displayDescMeta()} />
+        <title>{`${data?.display} | HobbyCue`}</title>
       </Head>
       <div>
         <HobbyPageLayout
