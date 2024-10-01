@@ -60,7 +60,7 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
     if (err || !res?.data?.data?.length) {
       setHasMore(false)
     } else {
-      setPages((prevData: any) => [...prevData, ...res.data.data])
+      setPages((prevData: any) => [...prevData, ...res?.data?.data])
       setPage(page + 1)
     }
     setLoading(false)
@@ -168,8 +168,8 @@ const HobbyPostsPage: React.FC<Props> = (props) => {
       >
         <main className={``}>
           <section className={styles['pages-container']}>
-            {pages.length !== 0 &&
-              pages.map((post: any, idx: number) => {
+            {pages?.length !== 0 &&
+              pages?.map((post: any, idx: number) => {
                 return idx === pages.length - 1 ? (
                   <ListingCard key={idx} data={post} />
                 ) : (
@@ -213,11 +213,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   if (res?.data.success && res.data.no_of_hobbies === 0)
     return { notFound: true }
   const { res: hobbypageRes, err: HobbyPageErr } = await getHobbyPages(
-    `display=${res.data?.hobbies?.[0]?.display}&limit=10&page=1`,
+    `display=${res?.data?.hobbies?.[0]?.display}&limit=10&page=1`,
   )
   const data = {
-    hobbyData: res.data?.hobbies?.[0],
-    pageData: hobbypageRes?.data?.data,
+    hobbyData: res?.data?.hobbies?.[0],
+    pageData: hobbypageRes?.data?.data || [],
   }
 
   return {
