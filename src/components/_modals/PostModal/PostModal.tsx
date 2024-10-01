@@ -284,7 +284,9 @@ export const PostModal: React.FC<Props> = ({
                     {' | '}
                   </span>
                   <span>
-                    {activePost?._hobby?.display}
+                    {activePost?._hobby?.display}{' '}
+                    {activePost?._genre?.display &&
+                      ` - ` + activePost?._genre.display}
                     {' | '}
                   </span>
                   <span>{activePost?.visibility}</span>
