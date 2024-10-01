@@ -434,6 +434,10 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
         />
+        <meta property="og:image" content="/HobbyCue-FB-4Ps.png" />
+        <meta property="og:image:secure_url" content="/HobbyCue-FB-4Ps.png" />
+
+        <title>HobbyCue - Hobby</title>
       </Head>
       <div className={styles['all-hobby-wrapper']}>
         <div className={`site-container ${styles['page-container']}`}>
