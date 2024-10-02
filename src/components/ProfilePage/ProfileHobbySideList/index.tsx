@@ -18,7 +18,7 @@ const ProfileHobbySideList = ({ data, expandData, hobbyError }: Props) => {
     (state: RootState) => state.site,
   )
   const [displayData, setDisplayData] = useState(true)
-  console.log('data', { data })
+
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -39,11 +39,6 @@ const ProfileHobbySideList = ({ data, expandData, hobbyError }: Props) => {
       setDisplayData(true)
     }
   }
-  useEffect(() => {
-    // openModalHobbiesModal();
-    // window.addEventListener("resize",openModalHobbiesModal);
-    // return window.removeEventListener("resize",openModalHobbiesModal)
-  }, [])
 
   return (
     <>

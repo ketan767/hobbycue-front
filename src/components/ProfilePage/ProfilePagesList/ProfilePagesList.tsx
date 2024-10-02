@@ -53,9 +53,6 @@ const ProfilePagesList = ({ data, expandData }: Props) => {
     if (expandData !== undefined) setDisplayData(expandData)
   }, [expandData])
 
-  console.log('listingAdminid', data.listingsData)
-  console.log('user_id', user._id)
-
   return (
     <PageContentBox
       setDisplayData={(arg0: boolean) => {
@@ -67,15 +64,45 @@ const ProfilePagesList = ({ data, expandData }: Props) => {
       expandData={displayData}
     >
       <h4 className={styles['heading']}>Pages</h4>
-      <ul
-        className={`${styles['pages-list']} ${
-          pagesStates?.[data?._id] && styles['display-mobile-flex']
-        } `}
-      >
-        {profileLayoutMode !== 'edit'
-          ? data.listingsData
-              ?.filter((item: any) => item?.is_published)
-              .map((item: any) => {
+      {displayData && (
+        <ul
+          className={`${styles['pages-list']} ${
+            displayData && styles['display-mobile-flex']
+          } `}
+        >
+          {profileLayoutMode !== 'edit'
+            ? data.listingsData
+                ?.filter((item: any) => item?.is_published)
+                .map((item: any) => {
+                  if (typeof item === 'string') return
+                  return (
+                    <li
+                      key={item._id}
+                      onClick={() =>
+                        router.push(`/${pageType(item?.type)}/${item.page_url}`)
+                      }
+                    >
+                      {item.profile_image ? (
+                        <div className={styles.listingIcon}>
+                          <img
+                            alt="PageIcon"
+                            height={32}
+                            width={32}
+                            src={item.profile_image}
+                          />
+                        </div>
+                      ) : (
+                        <div
+                          className={`${styles.defaultImg} ${getClassName(
+                            item.type,
+                          )}`}
+                        ></div>
+                      )}
+                      <p>{item?.title}</p>
+                    </li>
+                  )
+                })
+            : data.listingsData?.map((item: any) => {
                 if (typeof item === 'string') return
                 return (
                   <li
@@ -100,53 +127,26 @@ const ProfilePagesList = ({ data, expandData }: Props) => {
                         )}`}
                       ></div>
                     )}
-                    <p>{item?.title}</p>
+                    <p
+                      className={`${
+                        item?.admin !== user?._id &&
+                        profileLayoutMode === 'edit'
+                          ? styles['unclaimed-page']
+                          : styles['']
+                      }`}
+                    >
+                      {item?.title}
+                    </p>
                   </li>
                 )
-              })
-          : data.listingsData?.map((item: any) => {
-              if (typeof item === 'string') return
-              return (
-                <li
-                  key={item._id}
-                  onClick={() =>
-                    router.push(`/${pageType(item?.type)}/${item.page_url}`)
-                  }
-                >
-                  {item.profile_image ? (
-                    <div className={styles.listingIcon}>
-                      <img
-                        alt="PageIcon"
-                        height={32}
-                        width={32}
-                        src={item.profile_image}
-                      />
-                    </div>
-                  ) : (
-                    <div
-                      className={`${styles.defaultImg} ${getClassName(
-                        item.type,
-                      )}`}
-                    ></div>
-                  )}
-                  <p
-                    className={`${
-                      item?.admin !== user?._id && profileLayoutMode === 'edit'
-                        ? styles['unclaimed-page']
-                        : styles['']
-                    }`}
-                  >
-                    {item?.title}
-                  </p>
-                </li>
-              )
-            })}
-        {!data?.listingsData || data?.listingsData.length == 0 ? (
-          <p className={styles['color-light']}></p>
-        ) : (
-          <></>
-        )}
-      </ul>
+              })}
+          {!data?.listingsData || data?.listingsData.length == 0 ? (
+            <p className={styles['color-light']}></p>
+          ) : (
+            <></>
+          )}
+        </ul>
+      )}
     </PageContentBox>
   )
 }

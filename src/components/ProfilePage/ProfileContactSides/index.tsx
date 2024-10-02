@@ -69,7 +69,7 @@ const ProfileContactSide = ({ data, expandData, contactError }: Props) => {
         <h4 className={styles['heading']}>Contact Information</h4>
         <ul
           className={`${styles['contact-wrapper']} ${
-            contactStates?.[data?._id] && styles['display-mobile-flex']
+            displayData && styles['display-mobile-flex']
           }`}
         >
           {/* Phone */}

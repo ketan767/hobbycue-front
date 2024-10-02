@@ -367,7 +367,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                 data={pageData}
                 expandData={expandAll}
               />
-              <ProfilePagesList data={data} />
+              <ProfilePagesList expandData={expandAll} data={data} />
 
               <div className={styles['display-mobile']}>
                 {/* User Locations */}
@@ -381,8 +381,12 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
                 <ProfileContactSide
                   contactError={contactError}
                   data={pageData}
+                  expandData={expandAll}
                 />
-                <ProfileSocialMediaSide data={pageData} />
+                <ProfileSocialMediaSide
+                  expandData={expandAll}
+                  data={pageData}
+                />
               </div>
             </aside>
 
@@ -551,6 +555,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
               } ${' margin-bottom-52vh'}`}
             >
               <PageContentBox
+                expandData={expandAll}
                 showEditButton={profileLayoutMode === 'edit'}
                 onEditBtnClick={() =>
                   dispatch(

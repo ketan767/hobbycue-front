@@ -78,7 +78,7 @@ const ProfileAddressSide = ({ data, expandData, addressError }: Props) => {
         )}
         <ul
           className={`${styles['location-wrapper']} ${
-            locationStates?.[data?._id] && styles['display-mobile-flex']
+            displayData && styles['display-mobile-flex']
           }`}
         >
           <li>

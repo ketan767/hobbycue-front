@@ -107,7 +107,7 @@ const ProfileBlogsPage: React.FC<Props> = ({ data }) => {
 
           <main>
             {data?.blogsData.length !== 0 ? (
-              <div className={styles['three-column-grid']}>
+              <div className={styles['three-column-grid-blogs']}>
                 {data?.blogsData.map((blog: any) => {
                   return <BlogCard key={blog._id} data={blog} />
                 })}
