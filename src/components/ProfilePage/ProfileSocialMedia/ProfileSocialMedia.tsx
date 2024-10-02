@@ -143,7 +143,7 @@ const ProfileSocialMediaSide = ({ data, expandData }: Props) => {
           <h4 className={styles['heading']}>Social Media</h4>
           <ul
             className={`${styles['contact-wrapper']} ${
-              socialMediaStates?.[data?._id] && styles['display-mobile-flex']
+              displayData && styles['display-mobile-flex']
             }`}
           >
             {data?.social_media_urls && (

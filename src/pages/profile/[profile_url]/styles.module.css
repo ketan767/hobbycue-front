@@ -281,6 +281,12 @@ width: 100%;
   row-gap: var(--spacing-12);
   column-gap: 24px;
 }
+.three-column-grid-blogs {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  row-gap: var(--spacing-12);
+  column-gap: 24px;
+}
 .display-mobile-initial {
   display: none !important;
  }
@@ -360,6 +366,11 @@ width: 100%;
   }
   .three-column-grid {
     margin-top: 8px;
+    grid-template-columns: 1fr ;
+    row-gap: 8px;
+  }
+  .three-column-grid-blogs {
+   
     grid-template-columns: 1fr ;
     row-gap: 8px;
   }
