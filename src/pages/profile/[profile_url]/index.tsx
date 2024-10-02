@@ -523,7 +523,7 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
             </aside>
 
             {/* About for mobile view */}
-            {pageData?.about && (
+            {(pageData?.about || profileLayoutMode == 'edit') && (
               <div
                 className={`${styles['display-mobile']} ${styles['mob-min-height']}`}
               >
