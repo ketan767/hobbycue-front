@@ -491,8 +491,8 @@ const SimpleOnboarding: React.FC<Props> = ({
     if (response?.data.success) {
       dispatch(updateUser(response?.data.data.user))
 
-      // window.location.href = '/community'
-      // dispatch(closeModal())
+      window.location.href = '/community'
+      dispatch(closeModal())
     }
   }
   console.warn('selectedhobiessssss', selectedHobbies)
