@@ -1174,7 +1174,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                               <input
                                 type="text"
                                 placeholder="Search hobby..."
-                                autoComplete="name"
+                                autoComplete="off"
                                 required
                                 value={hobbyInputValue}
                                 onFocus={() => setShowHobbyDowpdown(true)}
@@ -1222,10 +1222,10 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                           <div className={styles['dropdown-wrapper']}>
                             <div className={styles['input-box']}>
                               <input
+                                autoComplete="off"
                                 ref={genreInputRef}
                                 type="text"
                                 placeholder="Genre/Style"
-                                autoComplete="name"
                                 required
                                 value={genreInputValue}
                                 onFocus={() => {

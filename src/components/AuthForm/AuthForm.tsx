@@ -328,6 +328,7 @@ const AuthForm: React.FC<Props> = (props) => {
         dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
       }
       const { err: error, res: response } = await getMyProfileDetail()
+
       if (router.pathname === '/') {
         if (response?.data?.data?.user.is_admin) {
           router.push('/admin')
@@ -339,6 +340,13 @@ const AuthForm: React.FC<Props> = (props) => {
             window.location.reload()
           }
         } else {
+          dispatch(
+            openModal({
+              type: 'SimpleOnboarding',
+              closable: true,
+              propData: { showError: true },
+            }),
+          )
         }
       } else if (router.pathname !== '/') {
         if (linkviaAuth && response?.data?.data?.user?.is_onboarded) {
