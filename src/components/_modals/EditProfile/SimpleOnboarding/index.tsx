@@ -327,10 +327,6 @@ const SimpleOnboarding: React.FC<Props> = ({
     }
   }
 
-  useEffect(() => {
-    if (propData?.showError) handleSubmit()
-  }, [])
-
   const handleSubmit = async () => {
     if (
       hobbyInputValue.includes(',') ||
@@ -635,8 +631,9 @@ const SimpleOnboarding: React.FC<Props> = ({
     setInitialData(initialProfileData)
     setData(initialProfileData)
   }, [user])
-
-  console.warn('SelectedAddresssssssssss', selectedAddress)
+  useEffect(() => {
+    if (propData?.showError) handleSubmit()
+  }, [initialData])
 
   useEffect(() => {
     fullNameRef?.current?.focus()
@@ -1204,6 +1201,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                   name="street"
                   ref={AddressRef}
                   onChange={handleInputChangeAddress}
+                  autoComplete="off"
                 />
                 <Image
                   src={LocationIcon}
