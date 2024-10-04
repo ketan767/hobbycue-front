@@ -231,7 +231,7 @@ const BlogPage: React.FC<Props> = ({ data }) => {
       <div className={styles['iframe-container']}>
         <iframe
           className={styles['iframe']}
-          src={`https://blog.hobbycue.com/blog/${blogUrl}`}
+          src={`https://hobbycue.com/blog/${blogUrl}`}
         ></iframe>
       </div>
       {/* <div className={styles['iframe-container']}>
