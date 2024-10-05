@@ -1298,7 +1298,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                 <input
                   type="text"
                   placeholder="Type and select..."
-                  autoComplete="name"
+                  autoComplete="off"
                   required
                   value={hobbyInputValue}
                   onFocus={() => setShowHobbyDowpdown(true)}
