@@ -76,7 +76,8 @@ const CustomEditor: React.FC<Props> = ({
     // setData((prev: any) => ({ ...prev, media: [...prev.media, ...images] }))
     if (data.video_url !== '')
       return alert('Only video or image can be uploaded')
-    if (data.media.length >= 3) return alert('Maximum 3 images can be uploaded')
+    if (data.media && data.media.length >= 3)
+      return alert('Maximum 3 images can be uploaded')
     if (images.length > 3) return alert('Maximum 3 images can be uploaded')
     images.forEach((item: any) => {
       handleImageUpload(item, false)
@@ -95,7 +96,11 @@ const CustomEditor: React.FC<Props> = ({
       if (isVideo) {
         setData((prev: any) => ({ ...prev, video_url: img }))
       } else {
-        setData((prev: any) => ({ ...prev, media: [...prev.media, img] }))
+        if (data.media) {
+          setData((prev: any) => ({ ...prev, media: [...prev.media, img] }))
+        } else {
+          setData((prev: any) => ({ ...prev, media: [img] }))
+        }
       }
       // window.location.reload()
       // dispatch(closeModal())
