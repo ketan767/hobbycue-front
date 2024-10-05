@@ -259,11 +259,6 @@ line-height: 16px; /* 114.286% */
   align-items: stretch;
   max-width: calc(100vw - 2rem);
   overflow: auto;
-  
-}
-
-.editor-container::-webkit-scrollbar {
-  width: 5px !important; 
 }
 
 .editor-container::-webkit-scrollbar-track {
