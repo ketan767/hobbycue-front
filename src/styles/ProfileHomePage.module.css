@@ -42,7 +42,7 @@
 
 .about-text ol,
 .about-text ul {
-  padding-left: 1rem;
+  padding-left: 42px;
 }
 
 .profile-left-aside {
@@ -100,7 +100,7 @@
   .display-mobile {
     display: initial !important;
   }
-  .mob-min-height{
+  .mob-min-height {
     /* min-height: calc(100vh - 107px); */
   }
 
