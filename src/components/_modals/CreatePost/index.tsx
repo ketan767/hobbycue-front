@@ -104,6 +104,7 @@ export const CreatePost: React.FC<Props> = ({
     video_url: '',
   })
   const [showMetaData, setShowMetaData] = useState(true)
+  const editBoxRef = useRef<HTMLDivElement | null>(null)
   useEffect(() => {
     if (propData && propData._hobby) {
       setData((prev) => ({
@@ -524,6 +525,9 @@ export const CreatePost: React.FC<Props> = ({
   const handleSubmit = async () => {
     if (data.content === '' || data.content === '<p><br></p>') {
       console.log(data.content)
+      if (editBoxRef.current) {
+        editBoxRef.current.scrollTo(0, 0)
+      }
       return setErrors({
         ...errors,
         content: 'This field is required',
@@ -834,6 +838,7 @@ export const CreatePost: React.FC<Props> = ({
             </div>
             <section
               className={styles['editor-container'] + ' btnOutlinePurple'}
+              ref={editBoxRef}
             >
               <CustomEditor
                 value={data?.content}

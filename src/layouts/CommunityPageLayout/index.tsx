@@ -59,6 +59,11 @@ type Props = {
   children: React.ReactNode
   singlePostPage?: boolean
 }
+type singlePostProps = {
+  hobbyMembers: any[]
+  whatsNew: any[]
+  trendingHobbies: any[]
+}
 
 interface Hobby {
   _id: string
@@ -137,6 +142,11 @@ const CommunityLayout: React.FC<Props> = ({
   const [hobbyMembers, setHobbymembers] = useState([])
   const [whatsNew, setWhatsNew] = useState([])
   const [SeeMorewhatsNew, setSeeMoreWhatsNew] = useState(true)
+  const [childData, setChildData] = useState<singlePostProps | null>({
+    hobbyMembers: [],
+    whatsNew: [],
+    trendingHobbies: [],
+  })
 
   const hideThirdColumnTabs = ['pages', 'links', 'store', 'blogs']
   const { showPageLoader } = useSelector((state: RootState) => state.site)
@@ -393,6 +403,11 @@ const CommunityLayout: React.FC<Props> = ({
       const { res, err } = await getHobbyMembersCommunity(url)
       if (res.data) {
         setHobbymembers(res.data.users)
+        setChildData((prev) => ({
+          hobbyMembers: res.data.users,
+          whatsNew: prev ? prev.whatsNew : [],
+          trendingHobbies: prev ? prev.trendingHobbies : [],
+        }))
       }
     } catch (error) {
       console.error('Fetch error:', error)
@@ -406,6 +421,11 @@ const CommunityLayout: React.FC<Props> = ({
     )
     if (res?.data) {
       setWhatsNew(res.data.data.listings)
+      setChildData((prev) => ({
+        hobbyMembers: prev ? prev.hobbyMembers : [],
+        whatsNew: res.data.data.listings,
+        trendingHobbies: prev ? prev.trendingHobbies : [],
+      }))
     }
   }
 
@@ -421,6 +441,11 @@ const CommunityLayout: React.FC<Props> = ({
       return console.log('err', err)
     }
     setTrendingHobbies(res.data?.data)
+    setChildData((prev) => ({
+      hobbyMembers: prev ? prev.hobbyMembers : [],
+      whatsNew: prev ? prev.whatsNew : [],
+      trendingHobbies: res.data.data ? res.data.data : [],
+    }))
   }
 
   useEffect(() => {
@@ -1381,7 +1406,14 @@ const CommunityLayout: React.FC<Props> = ({
               singlePostPage ? styles['single-post-children-wrapper'] : ''
             } `}
           >
-            {children}
+            {/* {children} */}
+            {React.Children.map(children, (child) =>
+              React.cloneElement(child as React.ReactElement<singlePostProps>, {
+                hobbyMembers: childData?.hobbyMembers,
+                whatsNew: childData?.whatsNew,
+                trendingHobbies: childData?.trendingHobbies,
+              }),
+            )}
           </section>
         </main>
 
