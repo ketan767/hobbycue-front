@@ -257,6 +257,10 @@
   display: flex;
   gap: 12px;
 }
+.about-text ol,
+.about-text ul {
+  padding-left: 42px;
+}
 .default-text {
   color: #939ca3;
 }
