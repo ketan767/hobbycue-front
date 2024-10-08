@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { getAllEvents, getListingPages } from '@/services/listing.service'
 import { GetServerSideProps } from 'next'
 import PagesLoader from '@/components/PagesLoader/PagesLoader'
+import Head from 'next/head'
 
 type Props = {
   data?: any
@@ -50,6 +51,16 @@ const Explore: React.FC<Props> = ({ data: initialData }) => {
 
   return (
     <>
+      <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
+        <meta property="og:image" content="/HobbyCue-FB-4Ps.png" />
+        <meta property="og:image:secure_url" content="/HobbyCue-FB-4Ps.png" />
+
+        <title>HobbyCue - Programs</title>
+      </Head>
       <div className={styles.container}>
         <div className={styles.gridContainer}>
           {data?.map((el: any) => (
