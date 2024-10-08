@@ -266,7 +266,7 @@ const CommunityLayout: React.FC<Props> = ({
 
     if (activeProfile?.data?._hobbies.length === 0) {
       dispatch(setShowPageLoader(true))
-      store.dispatch(updatePosts(''))
+
       dispatch(setShowPageLoader(false))
       return
     }
