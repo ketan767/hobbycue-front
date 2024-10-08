@@ -14,7 +14,7 @@ import { useRouter } from 'next/router'
 import { showProfileError } from '@/redux/slices/user'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import Head from 'next/head'
-import hobbycue4p from '@/assets/hobbycue_4p.png'
+import hobbycue4p from '@/assets/image/hobbycue_4p.png'
 
 export default function Index() {
   const { user, isLoggedIn } = useSelector((state: RootState) => state.user)
