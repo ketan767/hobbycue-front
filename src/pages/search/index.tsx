@@ -52,6 +52,7 @@ import {
 import { setShowPageLoader } from '@/redux/slices/site'
 import { searchPages } from '@/services/listing.service'
 import { searchBlogs } from '@/services/blog.services'
+import Head from 'next/head'
 
 type Props = {
   data?: any
@@ -1563,31 +1564,43 @@ const Search: React.FC<Props> = ({ data, children }) => {
   }, [])
 
   return (
-    <PageGridLayout column={3} customStyles={styles['pageGridSearch']}>
-      {isMobile ? (
-        <aside className={`custom-scrollbar ${styles['profile-left-aside']}`}>
-          <FilterDropdown />
-        </aside>
-      ) : (
-        <SearchPageFilter />
-      )}
-      <main className={styles['search-result']}>
-        <MainContent
-          searchResults={userSearchResults || []}
-          peopleResults={PeopleSearch || []}
-          placeResults={PlaceSearch || []}
-          EventResults={EventSearch || []}
-          hobbyResults={hobbySearchResults || []}
-          ProductResults={ProductSearch || []}
-          PostsResults={PostsSearch || []}
-          BlogsResults={BlogsSearch || []}
+    <>
+      <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
         />
-      </main>
-      <aside className={styles['aside-two']}>
-        {' '}
-        <ExploreSidebar />
-      </aside>
-    </PageGridLayout>
+        <meta property="og:image" content="/HobbyCue-FB-4Ps.png" />
+        <meta property="og:image:secure_url" content="/HobbyCue-FB-4Ps.png" />
+
+        <title>HobbyCue - Search</title>
+      </Head>
+      <PageGridLayout column={3} customStyles={styles['pageGridSearch']}>
+        {isMobile ? (
+          <aside className={`custom-scrollbar ${styles['profile-left-aside']}`}>
+            <FilterDropdown />
+          </aside>
+        ) : (
+          <SearchPageFilter />
+        )}
+        <main className={styles['search-result']}>
+          <MainContent
+            searchResults={userSearchResults || []}
+            peopleResults={PeopleSearch || []}
+            placeResults={PlaceSearch || []}
+            EventResults={EventSearch || []}
+            hobbyResults={hobbySearchResults || []}
+            ProductResults={ProductSearch || []}
+            PostsResults={PostsSearch || []}
+            BlogsResults={BlogsSearch || []}
+          />
+        </main>
+        <aside className={styles['aside-two']}>
+          {' '}
+          <ExploreSidebar />
+        </aside>
+      </PageGridLayout>
+    </>
   )
 }
 

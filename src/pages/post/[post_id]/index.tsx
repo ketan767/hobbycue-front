@@ -124,6 +124,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
   }
 
   const post_descripton = htmlToPlainText(data.postsData?.content)
+  console.warn('postdesccc', post_descripton)
 
   useEffect(() => {
     if (postId) {
@@ -357,7 +358,9 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
                       ))}
                     </CommunityTopDropdown>
 
-                    <div className={stylesCommunity.hobbyDropDownOption}>in</div>
+                    <div className={stylesCommunity.hobbyDropDownOption}>
+                      in
+                    </div>
 
                     {visibilityData?.length > 0 && (
                       <CommunityTopDropdown
@@ -464,7 +467,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
         <meta
           property="og:description"
           content={`${
-            data.postsData?.content
+            post_descripton
               ? post_descripton
               : data.metadata?.data?.description
               ? data.metadata?.data?.description
