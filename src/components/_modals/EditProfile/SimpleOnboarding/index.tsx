@@ -327,37 +327,80 @@ const SimpleOnboarding: React.FC<Props> = ({
     }
   }
 
-  const handleSubmit = async () => {
-    if (
-      hobbyInputValue.includes(',') ||
-      hobbyInputValue.includes('.') ||
-      hobbyInputValue.length > 25
-    ) {
-      setInputErrs((prev) => ({
-        ...prev,
-        hobbies:
-          'Please Type and Select hobbies individually.  Added ones will appear below the Hobbies* label',
-      }))
-      return
-    } else {
-      setInputErrs((prev) => ({
-        ...prev,
-        hobbies: null,
-      }))
-    }
+  const handleSubmit = async (checkErrors: boolean) => {
     let inputhobby = null
     let hasErrors = false
-    setErrorOrmsg('')
-    setInputErrs((prev) => {
-      return {
-        ...prev,
-        hobbies: '',
-        location: '',
-        full_name: '',
-        public_email: '',
+    if (checkErrors) {
+      if (
+        hobbyInputValue.includes(',') ||
+        hobbyInputValue.includes('.') ||
+        hobbyInputValue.length > 25
+      ) {
+        setInputErrs((prev) => ({
+          ...prev,
+          hobbies:
+            'Please Type and Select hobbies individually.  Added ones will appear below the Hobbies* label',
+        }))
+        return
+      } else {
+        setInputErrs((prev) => ({
+          ...prev,
+          hobbies: null,
+        }))
       }
-    })
-    setIsError(false)
+
+      setErrorOrmsg('')
+      setInputErrs((prev) => {
+        return {
+          ...prev,
+          hobbies: '',
+          location: '',
+          full_name: '',
+          public_email: '',
+        }
+      })
+      setIsError(false)
+
+      if (selectedHobbies.length === 0 && !hobbyInputValue) {
+        hobbysearchref?.current?.focus()
+        setInputErrs((prev) => {
+          return { ...prev, hobbies: 'This field is required!' }
+        })
+        setIsError(true)
+        hasErrors = true
+      }
+
+      if (isEmptyField(data.public_email) || !data.public_email) {
+        emailRef.current?.focus()
+        setInputErrs((prev) => {
+          return { ...prev, public_email: 'This field is required' }
+        })
+        hasErrors = true
+        setIsError(true)
+      }
+
+      if (isEmptyField(Addressdata.street) || !Addressdata.street) {
+        AddressRef?.current?.focus()
+        setInputErrs((prev) => {
+          return { ...prev, location: 'This field is required!' }
+        })
+        hasErrors = true
+        setIsError(true)
+      }
+      if (isEmptyField(data.full_name) || !data.full_name) {
+        fullNameRef.current?.focus()
+        setInputErrs((prev) => {
+          return { ...prev, full_name: 'This field is required!' }
+        })
+        hasErrors = true
+        setIsError(true)
+      }
+
+      if (hasErrors === true) {
+        if (confirmationModal) setConfirmationModal(false)
+        return
+      }
+    }
     if (hobbyInputValue) {
       const matchedHobby = hobbyDropdownList.find(
         (hobby) =>
@@ -370,50 +413,17 @@ const SimpleOnboarding: React.FC<Props> = ({
         inputhobby = matchedHobby
       }
     }
-    if (selectedHobbies.length === 0 && !hobbyInputValue) {
-      hobbysearchref?.current?.focus()
-      setInputErrs((prev) => {
-        return { ...prev, hobbies: 'This field is required!' }
-      })
-      setIsError(true)
-      hasErrors = true
-    }
-
-    if (isEmptyField(data.public_email) || !data.public_email) {
-      emailRef.current?.focus()
-      setInputErrs((prev) => {
-        return { ...prev, public_email: 'This field is required' }
-      })
-      hasErrors = true
-      setIsError(true)
-    }
-
-    if (isEmptyField(Addressdata.street) || !Addressdata.street) {
-      AddressRef?.current?.focus()
-      setInputErrs((prev) => {
-        return { ...prev, location: 'This field is required!' }
-      })
-      hasErrors = true
-      setIsError(true)
-    }
-    if (isEmptyField(data.full_name) || !data.full_name) {
-      fullNameRef.current?.focus()
-      setInputErrs((prev) => {
-        return { ...prev, full_name: 'This field is required!' }
-      })
-      hasErrors = true
-      setIsError(true)
-    }
-
-    if (hasErrors === true) {
-      if (confirmationModal) setConfirmationModal(false)
-      return
-    }
 
     setSubmitBtnLoading(true)
+    let onboarded = false
+    if (checkErrors) {
+      onboarded = true
+    } else {
+      onboarded = false
+    }
     const { err, res } = await updateMyProfileDetail({
       ...data,
-      is_onboarded: true,
+      is_onboarded: onboarded,
     })
     if (err) {
       setSubmitBtnLoading(false)
@@ -491,7 +501,7 @@ const SimpleOnboarding: React.FC<Props> = ({
       dispatch(closeModal())
     }
   }
-  console.warn('selectedhobiessssss', selectedHobbies)
+
   useEffect(() => {
     if (
       isEmpty(data.full_name) ||
@@ -632,7 +642,7 @@ const SimpleOnboarding: React.FC<Props> = ({
     setData(initialProfileData)
   }, [user])
   useEffect(() => {
-    if (propData?.showError) handleSubmit()
+    if (propData?.showError) handleSubmit(true)
   }, [initialData])
 
   useEffect(() => {
@@ -889,11 +899,6 @@ const SimpleOnboarding: React.FC<Props> = ({
       e.target.value.includes('.') ||
       e.target.value.length > 25
     ) {
-      setInputErrs((prev) => ({
-        ...prev,
-        hobbies:
-          'Please Type and Select hobbies individually.  Added ones will appear below the Hobbies* label',
-      }))
     } else {
       setInputErrs((prev) => ({
         ...prev,
@@ -1117,7 +1122,7 @@ const SimpleOnboarding: React.FC<Props> = ({
     return (
       <SaveModal
         handleClose={handleClose}
-        handleSubmit={handleSubmit}
+        handleSubmit={() => handleSubmit(false)}
         setConfirmationModal={setConfirmationModal}
         isError={isError}
       />
@@ -1426,7 +1431,7 @@ const SimpleOnboarding: React.FC<Props> = ({
           <button
             ref={nextButtonRef}
             className="modal-footer-btn submit"
-            onClick={handleSubmit}
+            onClick={() => handleSubmit(true)}
             disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
           >
             {submitBtnLoading ? (
@@ -1439,7 +1444,7 @@ const SimpleOnboarding: React.FC<Props> = ({
           </button>
           {/* SVG Button for Mobile */}
           {onComplete ? (
-            <div onClick={handleSubmit}>
+            <div onClick={() => handleSubmit(true)}>
               <Image
                 src={NextIcon}
                 alt="next"
@@ -1450,7 +1455,7 @@ const SimpleOnboarding: React.FC<Props> = ({
             <button
               ref={nextButtonRef}
               className="modal-mob-btn-save"
-              onClick={handleSubmit}
+              onClick={() => handleSubmit(true)}
               disabled={submitBtnLoading ? submitBtnLoading : nextDisabled}
             >
               {submitBtnLoading ? (
