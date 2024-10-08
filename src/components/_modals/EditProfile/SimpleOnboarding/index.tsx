@@ -361,7 +361,7 @@ const SimpleOnboarding: React.FC<Props> = ({
       })
       setIsError(false)
 
-      if (selectedHobbies.length === 0 && !hobbyInputValue) {
+      if (selectedHobbies?.length === 0 && !hobbyInputValue) {
         hobbysearchref?.current?.focus()
         setInputErrs((prev) => {
           return { ...prev, hobbies: 'This field is required!' }
@@ -1213,7 +1213,7 @@ const SimpleOnboarding: React.FC<Props> = ({
               >
                 <input
                   type="text"
-                  placeholder={`Enter address or click on GPS icon to the right`}
+                  placeholder={`Type in your Society, Locality, or City`}
                   required
                   value={Addressdata.street}
                   name="street"

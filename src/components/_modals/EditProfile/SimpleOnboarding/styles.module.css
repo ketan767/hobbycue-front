@@ -86,7 +86,7 @@
   /* font-family: 'Poppins'; */
   /* font-style: normal; */
   font-weight: 400;
-  font-size: 10px;
+  font-size: 11px;
   line-height: 16px;
   color: #c0504d;
 }
@@ -360,6 +360,10 @@ outline: none;
   }
   .two-column-grid {
     grid-template-columns: 1fr;
+    gap: 0;
   }
-
+  .input-box {
+    margin-bottom: 24px;
+  }
+  
 }
