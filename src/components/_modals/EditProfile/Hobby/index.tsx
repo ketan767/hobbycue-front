@@ -51,6 +51,7 @@ type Props = {
       display: string
       level: number
       show: boolean
+      sub_category: any
     }
   }
 }
@@ -890,10 +891,17 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     //   }
     //   return {...prev}
     // })
+
+    console.warn('selectedhobbyto add', selectedHobbyToAdd)
     if (selectedHobbyToAdd && selectedHobbyToAdd?.level >= 5) {
       if (selectedHobbyToAdd.show === true) {
         setData((prev) => ({ ...prev, genre: selectedHobbyToAdd }))
+        setData((prev) => ({
+          ...prev,
+          hobby: selectedHobbyToAdd?.sub_category,
+        }))
       }
+      setHobbyInputValue(selectedHobbyToAdd?.sub_category?.display)
       setGenreInputValue(selectedHobbyToAdd.display)
     } else if (selectedHobbyToAdd && selectedHobbyToAdd?.level < 5) {
       if (selectedHobbyToAdd.show === true) {

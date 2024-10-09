@@ -748,6 +748,7 @@
 }
 
 .profileImage {
+  object-fit: contain;
   width: 28.58px;
   height: 33px;
   position: relative;

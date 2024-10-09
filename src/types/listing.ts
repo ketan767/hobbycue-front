@@ -46,4 +46,5 @@ type ListingPageData = {
   eventsData: any //{ [key: string]: any }
   storeData: any //{ [key: string]: any }
   metadata?: any
+  postcontent?:any
 }
