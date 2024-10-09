@@ -1124,6 +1124,19 @@ const SimpleOnboarding: React.FC<Props> = ({
     )
   }
 
+  const handleOutsideClick = (e:any) => {
+    if (hobbyDropdownRef.current && !hobbyDropdownRef.current.contains(e.target)) {
+      setShowHobbyDowpdown(false)
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleOutsideClick)
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick)
+    }
+  }, [])
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -1302,11 +1315,11 @@ const SimpleOnboarding: React.FC<Props> = ({
                   required
                   value={hobbyInputValue}
                   onFocus={() => setShowHobbyDowpdown(true)}
-                  onBlur={() =>
-                    setTimeout(() => {
-                      if (!isMobile) setShowHobbyDowpdown(false)
-                    }, 300)
-                  }
+                  // onBlur={() =>
+                  //   setTimeout(() => {
+                  //     if (!isMobile) setShowHobbyDowpdown(false)
+                  //   }, 300)
+                  // }
                   ref={hobbysearchref}
                   onChange={handleHobbyInputChange}
                   onKeyDown={handleHobbyKeyDown}
