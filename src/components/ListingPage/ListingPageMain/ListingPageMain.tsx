@@ -347,6 +347,7 @@ const ListingPageMain: React.FC<Props> = ({
   }, [data?.related_listings_left?.listings])
   useEffect(() => {
     if (expandAll !== undefined && isMobile) {
+      dispatch(updateSocialMediaOpenStates({ [data._id]: !showSocialMedia }))
       setShowHobbies(expandAll)
       setShowAbout(expandAll)
       setShowTags(expandAll)
@@ -731,6 +732,7 @@ const ListingPageMain: React.FC<Props> = ({
                   )
                 }
                 setDisplayData={(arg0: boolean) => {
+                  setShowTags((prev) => !prev)
                   dispatch(updateTagsOpenStates({ [data._id]: !showTags }))
                 }}
                 expandData={showTags}
@@ -769,6 +771,7 @@ const ListingPageMain: React.FC<Props> = ({
                   )
                 }
                 setDisplayData={(arg0: boolean) => {
+                  setShowRelatedListing1((prev) => !prev)
                   dispatch(
                     updateRelatedListingsOpenStates({
                       [data._id]: !showRelatedListing1,
@@ -850,6 +853,7 @@ const ListingPageMain: React.FC<Props> = ({
                   }
                 }}
                 setDisplayData={(arg0: boolean) => {
+                  setShowContact((prev) => !prev)
                   dispatch(
                     updateContactOpenStates({ [data._id]: !showContact }),
                   )
@@ -1167,7 +1171,8 @@ const ListingPageMain: React.FC<Props> = ({
                       }),
                     )
                   }
-                  setDisplayData={(arg0: boolean) => {
+                  setDisplayData={() => {
+                    setShowLocation((prev) => !prev)
                     dispatch(
                       updateLocationOpenStates({ [data._id]: !showLocation }),
                     )
@@ -1429,6 +1434,7 @@ const ListingPageMain: React.FC<Props> = ({
                     )
                   }
                   setDisplayData={(arg0: boolean) => {
+                    setShowSocialMedia((prev) => !prev)
                     dispatch(
                       updateSocialMediaOpenStates({
                         [data._id]: !showSocialMedia,
@@ -1448,9 +1454,9 @@ const ListingPageMain: React.FC<Props> = ({
                         : ''
                     }`}
                   >
-                    {data?.social_media_urls && (
+                    {showSocialMedia && (
                       <>
-                        {Object.entries(data.social_media_urls).map(
+                        {Object.entries(data?.social_media_urls).map(
                           ([key, url]) => {
                             let socialMediaName = ''
                             let socialMediaIcon = null
@@ -2169,7 +2175,12 @@ const ListingPageMain: React.FC<Props> = ({
                   openModal({ type: 'listing-address-edit', closable: true }),
                 )
               }
-              setDisplayData={setShowLocation}
+              setDisplayData={() => {
+                setShowLocation((prev) => !prev)
+                dispatch(
+                  updateLocationOpenStates({ [data._id]: !showLocation }),
+                )
+              }}
             >
               <div className={`${styles['location-heading']} `}>
                 <h4>Location</h4>
@@ -2335,6 +2346,7 @@ const ListingPageMain: React.FC<Props> = ({
                 )
               }
               setDisplayData={(arg0: boolean) => {
+                setShowRelatedListing2((prev) => !prev)
                 dispatch(
                   updateRelatedListingsOpenStates2({
                     [data._id]: !showRelatedListing2,
@@ -2407,7 +2419,13 @@ const ListingPageMain: React.FC<Props> = ({
                   }),
                 )
               }
-              setDisplayData={setShowSocialMedia}
+              setDisplayData={(arg0: boolean) => {
+                setShowSocialMedia((prev) => !prev)
+                dispatch(
+                  updateSocialMediaOpenStates({ [data._id]: !showSocialMedia }),
+                )
+              }}
+              expandData={showSocialMedia}
             >
               <h4 className={styles['heading']}>Social Media</h4>
 
@@ -2416,9 +2434,9 @@ const ListingPageMain: React.FC<Props> = ({
                   styles['display-desktop']
                 }${showSocialMedia ? ' ' + styles['display-mobile'] : ''}`}
               >
-                {data.social_media_urls && (
+                {showSocialMedia && (
                   <>
-                    {Object.entries(data.social_media_urls).map(
+                    {Object.entries(data?.social_media_urls).map(
                       ([key, url]) => {
                         let socialMediaName = ''
                         let socialMediaIcon = null

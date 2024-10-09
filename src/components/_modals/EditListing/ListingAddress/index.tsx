@@ -400,9 +400,10 @@ const ListingAddressEditModal: React.FC<Props> = ({
     const handleClickOutside = (event: any) => {
       if (streetRef.current && !streetRef.current.contains(event.target)) {
         setShowDropdown(false)
+        setShowAutoAddress(false)
       }
     }
-    if (ShowDropdown) {
+    if (ShowDropdown || ShowAutoAddress) {
       window.addEventListener('click', handleClickOutside)
     }
 
