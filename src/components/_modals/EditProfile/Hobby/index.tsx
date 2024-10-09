@@ -52,6 +52,7 @@ type Props = {
       level: number
       show: boolean
       sub_category: any
+      genre: any
     }
   }
 }
@@ -891,24 +892,41 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     //   }
     //   return {...prev}
     // })
+    const AddToMine = async () => {
+      if (selectedHobbyToAdd && selectedHobbyToAdd?.level >= 5) {
+        if (selectedHobbyToAdd.show === true) {
+          setData((prev) => ({ ...prev, genre: selectedHobbyToAdd }))
+          setData((prev) => ({
+            ...prev,
+            hobby: selectedHobbyToAdd?.sub_category,
+          }))
+        }
+        if (
+          selectedHobbyToAdd &&
+          selectedHobbyToAdd.genre &&
+          selectedHobbyToAdd.genre.length > 0
+        ) {
+          setGenreId(selectedHobbyToAdd.genre[0])
 
-    console.warn('selectedhobbyto add', selectedHobbyToAdd)
-    if (selectedHobbyToAdd && selectedHobbyToAdd?.level >= 5) {
-      if (selectedHobbyToAdd.show === true) {
-        setData((prev) => ({ ...prev, genre: selectedHobbyToAdd }))
-        setData((prev) => ({
-          ...prev,
-          hobby: selectedHobbyToAdd?.sub_category,
-        }))
+          const query = `fields=display&show=true&genre=${selectedHobbyToAdd.genre[0]}&level=5`
+          const { err, res } = await getAllHobbies(query)
+
+          if (!err) {
+            setGenreDropdownList(res.data.hobbies)
+          }
+        }
+
+        setHobbyInputValue(selectedHobbyToAdd?.sub_category?.display)
+        setGenreInputValue(selectedHobbyToAdd.display)
+        handleGenreInputChange
+      } else if (selectedHobbyToAdd && selectedHobbyToAdd?.level < 5) {
+        if (selectedHobbyToAdd.show === true) {
+          setData((prev) => ({ ...prev, hobby: selectedHobbyToAdd }))
+        }
+        setHobbyInputValue(selectedHobbyToAdd.display)
       }
-      setHobbyInputValue(selectedHobbyToAdd?.sub_category?.display)
-      setGenreInputValue(selectedHobbyToAdd.display)
-    } else if (selectedHobbyToAdd && selectedHobbyToAdd?.level < 5) {
-      if (selectedHobbyToAdd.show === true) {
-        setData((prev) => ({ ...prev, hobby: selectedHobbyToAdd }))
-      }
-      setHobbyInputValue(selectedHobbyToAdd.display)
     }
+    AddToMine()
   }, [selectedHobbyToAdd])
 
   useEffect(() => {
