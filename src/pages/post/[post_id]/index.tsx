@@ -42,6 +42,15 @@ type singlePostProps = {
   trendingHobbies: any[]
 }
 
+const htmlToPlainText = (html: string) => {
+  if (typeof window !== 'undefined') {
+    const element = document.createElement('div')
+    element.innerHTML = html
+    return element.textContent || ''
+  }
+  return ''
+}
+
 const CommunityLayout: React.FC<Props> = ({ data }) => {
   const router = useRouter()
   const [postId, setPostId] = useState<string | null>(null)
@@ -101,15 +110,6 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
     // router.push('/community')
   }
 
-  const htmlToPlainText = (html: string) => {
-    if (typeof window !== 'undefined') {
-      const element = document.createElement('div')
-      element.innerHTML = html
-      return element.textContent || ''
-    }
-    return ''
-  }
-
   const getPreviewimage = () => {
     if (data?.metadata?.data?.image) {
       return data?.metadata?.data?.image
@@ -122,9 +122,6 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
       return '/HobbyCue-FB-4Ps.png'
     }
   }
-
-  const post_descripton = htmlToPlainText(data.postsData?.content)
-  console.warn('postdesccc', post_descripton)
 
   useEffect(() => {
     if (postId) {
@@ -457,7 +454,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
       </main>
     )
   }
-
+  console.warn('posrcontenttttttttttttttttttttttttttttt', data.postcontent)
   return (
     <>
       <Head>
@@ -467,8 +464,8 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
         <meta
           property="og:description"
           content={`${
-            post_descripton
-              ? post_descripton
+            data?.postsData?.postcontent?.length > 0
+              ? data.postsData.postcontent
               : data.metadata?.data?.description
               ? data.metadata?.data?.description
               : 'View this post on hobbycue.com'
@@ -514,8 +511,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   const { err, res } = await getAllPosts(queryParams.toString())
 
   let metadata = null
+  let postsData = null // Initialize postsData with null to avoid undefined issues
+
   if (res?.data?.data.posts) {
     const post = res?.data?.data?.posts[0]
+    postsData = post || null // Ensure it's either the post or null
 
     const regex =
       /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
@@ -523,26 +523,31 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 
     if (urlMatch) {
       const url = urlMatch[0]
-
       try {
         const response = await getMetadata(url)
-        metadata = response?.res?.data?.data
+        metadata = response?.res?.data?.data || null
       } catch (error) {
         console.error('Failed to fetch metadata', error)
       }
     }
   }
 
+  let postContentPlain = ''
+  if (res?.data?.data.posts?.length) {
+    postContentPlain = htmlToPlainText(res.data.data.posts[0].content)
+  }
+
   return {
     props: {
       data: {
         pageData: null,
-        postsData: res?.data?.data?.posts[0],
+        postsData, // This will now be null instead of undefined if no posts are found
         mediaData: null,
         reviewsData: null,
         eventsData: null,
         storeData: null,
-        metadata: metadata,
+        metadata,
+        postcontent: postContentPlain,
       },
     },
   }

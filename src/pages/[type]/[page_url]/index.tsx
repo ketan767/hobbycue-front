@@ -38,6 +38,7 @@ const ListingHome: React.FC<Props> = (props) => {
   useEffect(() => {
     dispatch(updateListingPageData(props.data.pageData))
     dispatch(updateListingModalData(props.data.pageData))
+    setExpandAll(false)
   }, [])
 
   const [isDataLoaded, setIsDataLoaded] = useState(false)
