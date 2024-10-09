@@ -656,16 +656,21 @@ export const CreatePost: React.FC<Props> = ({
       />
     )
   }
+  console.log('asifs media', data.media)
 
   return (
     <>
       <div
         className={`${styles['modal-wrapper']} ${
           confirmationModal ? styles['ins-active'] : ''
-        }  `}
+        } ${data.media.length && !isMobile ? styles['changedWidth'] : ''}`}
       >
         {/* Modal Header */}
-        <div className={styles['modal-wrapper']}>
+        <div
+          className={`${styles['modal-wrapper']} ${
+            data.media.length && !isMobile ? styles['changedWidth'] : ''
+          }`}
+        >
           <h3 className={styles['modal-heading']}>
             {editing ? 'Update Post' : 'Create Post'}
           </h3>

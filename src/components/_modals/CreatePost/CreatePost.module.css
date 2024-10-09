@@ -8,6 +8,10 @@
   height: calc(100vh - 6rem);
 }
 
+.changedWidth {
+  width: 789px;
+}
+
 .modal-heading {
   padding: var(--spacing-16) var(--spacing-24);
   font-weight: 600;
@@ -23,6 +27,7 @@
   flex-direction: column;
   gap: 16px;
   padding: 0 var(--spacing-24);
+  width: 100%;
 }
 
 .create-post-modal>section {
