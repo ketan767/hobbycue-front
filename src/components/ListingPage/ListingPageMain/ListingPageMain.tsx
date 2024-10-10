@@ -975,7 +975,11 @@ const ListingPageMain: React.FC<Props> = ({
 
                       {/* Website */}
                       {data?.seller?.website && (
-                        <Link href={data?.seller?.website}>
+                        <Link
+                          href={data?.seller?.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           <svg
                             width="24"
                             height="24"
@@ -1807,7 +1811,11 @@ const ListingPageMain: React.FC<Props> = ({
 
                   {/* Website */}
                   {data?.seller?.website && (
-                    <Link href={data?.seller?.website}>
+                    <Link
+                      href={data?.seller?.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <svg
                         width="24"
                         height="24"
