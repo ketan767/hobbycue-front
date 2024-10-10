@@ -464,8 +464,8 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
         <meta
           property="og:description"
           content={`${
-            data?.postsData?.postcontent?.length > 0
-              ? data.postsData.postcontent
+            data?.postsData?.content?.length > 0
+              ? data.postsData.content
               : data.metadata?.data?.description
               ? data.metadata?.data?.description
               : 'View this post on hobbycue.com'
