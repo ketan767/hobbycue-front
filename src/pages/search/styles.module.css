@@ -139,8 +139,8 @@
 }
 
 .hobbyAvtar img {
-
-  width: 58px;
+object-fit: contain;
+  width: 55.42px;
   height: 64px;
   position: relative; 
   clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
@@ -195,7 +195,7 @@
   height: 64px;
   border-radius: 4px;
   border: 1px solid #8064a2;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .userDetails {

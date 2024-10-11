@@ -13,7 +13,6 @@ import {
   updateListingModalData,
   updateListingPageData,
 } from '@/redux/slices/site'
-
 import ListingHomeTab from '@/components/ListingPage/ListingHomeTab/ListingHomeTab'
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
 import ListingPostsTab from '@/components/ListingPage/ListingPagePosts/ListingPagePosts'
@@ -21,6 +20,7 @@ import ListingMediaTab from '@/components/ListingPage/ListingPageMedia'
 import ErrorPage from '@/components/ErrorPage'
 import { useMediaQuery } from '@mui/material'
 import { pageType } from '@/utils'
+import dynamic from 'next/dynamic'
 
 type Props = { data: ListingPageData }
 
@@ -32,13 +32,13 @@ const ListingMedia: React.FC<Props> = (props) => {
     (state: RootState) => state.user,
   )
   const isMobile = useMediaQuery('(max-width:1100px)')
+
   useEffect(() => {
     if (isMobile) {
       setExpandAll(false)
     }
   }, [isMobile])
-  // const { listingPageData } = useSelector((state: RootState) => state.site)
-  console.log('posts data', props.data)
+
   useEffect(() => {
     dispatch(updateListingPageData(props.data.pageData))
     dispatch(updateListingModalData(props.data.pageData))
@@ -48,35 +48,43 @@ const ListingMedia: React.FC<Props> = (props) => {
     setExpandAll(value)
     dispatch(updateListingMenuExpandAll(value))
   }
-  const router = useRouter()
-  useEffect(() => {
-    const handleRouteChange = () => {
-      sessionStorage.setItem('scrollPositionlisting', window.scrollY.toString())
-    }
 
-    // Restore scroll position when navigating back to the page
-    const handleScrollRestoration = () => {
-      const scrollPosition = sessionStorage.getItem('scrollPositionlisting')
-      if (scrollPosition) {
-        window.scrollTo(0, parseInt(scrollPosition, 10))
-        sessionStorage.removeItem('scrollPositionlisting')
+  const router = useRouter()
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const handleRouteChange = () => {
+        sessionStorage.setItem(
+          'scrollPositionlisting',
+          window.scrollY.toString(),
+        )
+      }
+
+      const handleScrollRestoration = () => {
+        const scrollPosition = sessionStorage.getItem('scrollPositionlisting')
+        if (scrollPosition) {
+          window.scrollTo(0, parseInt(scrollPosition, 10))
+          sessionStorage.removeItem('scrollPositionlisting')
+        }
+      }
+
+      router.events.on('routeChangeStart', handleRouteChange)
+      router.events.on('routeChangeComplete', handleScrollRestoration)
+
+      return () => {
+        router.events.off('routeChangeStart', handleRouteChange)
+        router.events.off('routeChangeComplete', handleScrollRestoration)
       }
     }
+  }, [])
 
-    router.events.on('routeChangeStart', handleRouteChange)
-    router.events.on('routeChangeComplete', handleScrollRestoration)
-
-    return () => {
-      router.events.off('routeChangeStart', handleRouteChange)
-      router.events.off('routeChangeComplete', handleScrollRestoration)
-    }
-  }, [router.events])
   if (
     props?.data?.pageData?.admin !== user?._id &&
     props?.data?.pageData?.is_published !== true
   ) {
     return <ErrorPage restricted />
   }
+
   return (
     <>
       <Head>
@@ -126,7 +134,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   context,
 ) => {
   const { query } = context
-
   const { page_url, type } = query
 
   let typeId
@@ -171,6 +178,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     eventsData: null,
     storeData: null,
   }
+
   return {
     props: {
       data,

@@ -14,13 +14,13 @@ const index: FC<indexProps> = ({}) => {
         title: 'First timer',
         desc: 'Check our Frequently Asked Questions to know about HobbyCue',
         link: 'FAQ',
-        href: 'https://blog.hobbycue.com/faq',
+        href: 'https://hobbycue.com/faq',
       },
       {
         title: 'How to',
         desc: 'Figure out how to navigate through various features of HobbyCue',
         link: 'How to',
-        href: 'https://blog.hobbycue.com/how-to',
+        href: 'https://hobbycue.com/how-to',
       },
       {
         title: 'Contact us',

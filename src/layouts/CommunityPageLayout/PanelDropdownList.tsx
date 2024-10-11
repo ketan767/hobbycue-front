@@ -140,22 +140,50 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
             }
           >
             {type !== 'members' &&
-              options.map((obj: any, idx: number) => (
-                <div key={idx} className={styles['option']}>
-                  {/* For Hobbies */}
-                  {obj?.display ? (
-                    <div
-                      onClick={() => {
-                        router.push(`/hobby/${obj?.slug}`)
-                      }}
-                      className={styles['hobby-option']}
-                    >
-                      {hobbyIcon}
-                      <p>{obj?.display}</p>
-                    </div>
-                  ) : null}
-                </div>
-              ))}
+              options
+                .slice(0, seeMore ? 3 : options.length)
+                .map((obj: any, idx: number) => (
+                  <div key={idx} className={styles['option']}>
+                    {/* For Hobbies */}
+                    {obj?.display ? (
+                      <div
+                        onClick={() => {
+                          router.push(`/hobby/${obj?.slug}`)
+                        }}
+                        className={styles['hobby-option']}
+                      >
+                        {obj?.profile_image ? (
+                          <div className={styles['border-div']}>
+                            <img
+                              className={styles.profileImage}
+                              src={obj?.profile_image}
+                            ></img>
+                          </div>
+                        ) : (
+                          <svg
+                            className={styles.polygonOverlay}
+                            width={40}
+                            viewBox="0 0 160 160"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M80 0L149.282 40V120L80 160L10.718 120V40L80 0Z"
+                              fill="#969696"
+                              fillOpacity="0.5"
+                            />
+                            <path
+                              d="M79.6206 46.1372C79.7422 45.7727 80.2578 45.7727 80.3794 46.1372L87.9122 68.7141C87.9663 68.8763 88.1176 68.9861 88.2885 68.9875L112.088 69.175C112.472 69.178 112.632 69.6684 112.323 69.8967L93.1785 84.0374C93.041 84.139 92.9833 84.3168 93.0348 84.4798L100.211 107.173C100.327 107.539 99.9097 107.842 99.5971 107.619L80.2326 93.7812C80.0935 93.6818 79.9065 93.6818 79.7674 93.7812L60.4029 107.619C60.0903 107.842 59.6731 107.539 59.789 107.173L66.9652 84.4798C67.0167 84.3168 66.959 84.139 66.8215 84.0374L47.6773 69.8967C47.3682 69.6684 47.5276 69.178 47.9118 69.175L71.7115 68.9875C71.8824 68.9861 72.0337 68.8763 72.0878 68.7141L79.6206 46.1372Z"
+                              fill="white"
+                            />
+                          </svg>
+                        )}
+
+                        <p>{obj?.display}</p>
+                      </div>
+                    ) : null}
+                  </div>
+                ))}
             {type === 'members' &&
               options
                 .slice(0, seeMore ? 3 : options.length)
@@ -220,21 +248,20 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                     </div>
                   </div>
                 ))}
-            {(type === 'members' || type === 'user members') &&
-              options.length > 3 && (
-                <div className={styles['option'] + ` ${styles['mb-15']}`}>
-                  <div className={styles['member-container']}>
-                    <p
-                      onClick={() => {
-                        setSeeMore((prev) => !prev)
-                      }}
-                      className={styles['see-more']}
-                    >
-                      {seeMore ? 'See more' : 'See less'}
-                    </p>
-                  </div>
+            {options.length > 3 && (
+              <div className={styles['option'] + ` ${styles['mb-15']}`}>
+                <div className={styles['member-container']}>
+                  <p
+                    onClick={() => {
+                      setSeeMore((prev) => !prev)
+                    }}
+                    className={styles['see-more']}
+                  >
+                    {seeMore ? 'See more' : 'See less'}
+                  </p>
                 </div>
-              )}
+              </div>
+            )}
           </div>
         </>
       )}

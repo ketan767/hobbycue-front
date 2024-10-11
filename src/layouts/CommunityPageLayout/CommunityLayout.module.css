@@ -80,6 +80,7 @@
   height: 32px;
   border-radius: 4px;
   border: 1px solid #8064a2;
+  object-fit: contain;
 }
 
 .img-name-listing p {
@@ -747,6 +748,7 @@
 }
 
 .profileImage {
+  object-fit: contain;
   width: 28.58px;
   height: 33px;
   position: relative;
@@ -1074,6 +1076,10 @@
     height: 40px;
     border-radius: 4px;
     border: 1px solid rgb(var(--primary-100-rgb));
+  }
+  .hobby-img-trend-responsive {
+    width: 28px;
+    height: 35px;
   }
 }
 

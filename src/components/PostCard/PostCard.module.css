@@ -609,12 +609,18 @@ background: rgba(128, 100, 162, 0.25);
   cursor: pointer;
 }
 
-.post-card-wrapper .body .content ol li{
-  margin-left: 1.5rem;
+.post-image {
+  height: 100%;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+  transition: 0.3s ease-in-out;
+  position: relative; 
+  background-color: #1e1e1e;
+  top: 0;
+  left: 0;
 }
-.post-card-wrapper .body .content ul{
-  margin-left: 2rem;
-}
+
 @media screen and (max-width: 1100px) {
   .metaImgContainer {
     

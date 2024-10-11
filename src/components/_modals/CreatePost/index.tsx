@@ -104,6 +104,7 @@ export const CreatePost: React.FC<Props> = ({
     video_url: '',
   })
   const [showMetaData, setShowMetaData] = useState(true)
+  const editBoxRef = useRef<HTMLDivElement | null>(null)
   useEffect(() => {
     if (propData && propData._hobby) {
       setData((prev) => ({
@@ -524,6 +525,9 @@ export const CreatePost: React.FC<Props> = ({
   const handleSubmit = async () => {
     if (data.content === '' || data.content === '<p><br></p>') {
       console.log(data.content)
+      if (editBoxRef.current) {
+        editBoxRef.current.scrollTo(0, 0)
+      }
       return setErrors({
         ...errors,
         content: 'This field is required',
@@ -652,16 +656,21 @@ export const CreatePost: React.FC<Props> = ({
       />
     )
   }
+  console.log('asifs media', data.media)
 
   return (
     <>
       <div
         className={`${styles['modal-wrapper']} ${
           confirmationModal ? styles['ins-active'] : ''
-        }  `}
+        } ${data.media.length && !isMobile ? styles['changedWidth'] : ''}`}
       >
         {/* Modal Header */}
-        <div className={styles['modal-wrapper']}>
+        <div
+          className={`${styles['modal-wrapper']} ${
+            data.media.length && !isMobile ? styles['changedWidth'] : ''
+          }`}
+        >
           <h3 className={styles['modal-heading']}>
             {editing ? 'Update Post' : 'Create Post'}
           </h3>
@@ -834,6 +843,7 @@ export const CreatePost: React.FC<Props> = ({
             </div>
             <section
               className={styles['editor-container'] + ' btnOutlinePurple'}
+              ref={editBoxRef}
             >
               <CustomEditor
                 value={data?.content}

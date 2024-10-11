@@ -19,7 +19,16 @@ import { uploadImage } from '@/services/post.service'
 import ReactPlayer from 'react-player'
 import { useMediaQuery } from '@mui/material'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
-import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
+
+import dynamic from 'next/dynamic'
+
+const Masonry = dynamic(() => import('react-responsive-masonry'), {
+  ssr: false,
+})
+const ResponsiveMasonry = dynamic(
+  () => import('react-responsive-masonry').then((mod) => mod.ResponsiveMasonry),
+  { ssr: false },
+)
 
 interface Props {
   data: ListingPageData['pageData']

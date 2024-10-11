@@ -51,6 +51,8 @@ type Props = {
       display: string
       level: number
       show: boolean
+      sub_category: any
+      genre: any
     }
   }
 }
@@ -859,12 +861,19 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
   const isMobile = useMediaQuery('(max-width:1100px)')
 
   const hobbyDropDownWrapperRef = useRef<HTMLDivElement>(null)
+  const genreDropDownWrapperRef = useRef<HTMLDivElement>(null)
   const handleOutsideClick = (event: MouseEvent) => {
     if (
       hobbyDropDownWrapperRef.current &&
       !hobbyDropDownWrapperRef.current.contains(event.target as Node)
     ) {
       setShowHobbyDowpdown(false)
+    }
+    if (
+      genreDropDownWrapperRef.current &&
+      !genreDropDownWrapperRef.current.contains(event.target as Node)
+    ) {
+      setShowGenreDowpdown(false)
     }
   }
   useEffect(() => {
@@ -883,17 +892,41 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
     //   }
     //   return {...prev}
     // })
-    if (selectedHobbyToAdd && selectedHobbyToAdd?.level >= 5) {
-      if (selectedHobbyToAdd.show === true) {
-        setData((prev) => ({ ...prev, genre: selectedHobbyToAdd }))
+    const AddToMine = async () => {
+      if (selectedHobbyToAdd && selectedHobbyToAdd?.level >= 5) {
+        if (selectedHobbyToAdd.show === true) {
+          setData((prev) => ({ ...prev, genre: selectedHobbyToAdd }))
+          setData((prev) => ({
+            ...prev,
+            hobby: selectedHobbyToAdd?.sub_category,
+          }))
+        }
+        if (
+          selectedHobbyToAdd &&
+          selectedHobbyToAdd.genre &&
+          selectedHobbyToAdd.genre.length > 0
+        ) {
+          setGenreId(selectedHobbyToAdd.genre[0])
+
+          const query = `fields=display&show=true&genre=${selectedHobbyToAdd.genre[0]}&level=5`
+          const { err, res } = await getAllHobbies(query)
+
+          if (!err) {
+            setGenreDropdownList(res.data.hobbies)
+          }
+        }
+
+        setHobbyInputValue(selectedHobbyToAdd?.sub_category?.display)
+        setGenreInputValue(selectedHobbyToAdd.display)
+        handleGenreInputChange
+      } else if (selectedHobbyToAdd && selectedHobbyToAdd?.level < 5) {
+        if (selectedHobbyToAdd.show === true) {
+          setData((prev) => ({ ...prev, hobby: selectedHobbyToAdd }))
+        }
+        setHobbyInputValue(selectedHobbyToAdd.display)
       }
-      setGenreInputValue(selectedHobbyToAdd.display)
-    } else if (selectedHobbyToAdd && selectedHobbyToAdd?.level < 5) {
-      if (selectedHobbyToAdd.show === true) {
-        setData((prev) => ({ ...prev, hobby: selectedHobbyToAdd }))
-      }
-      setHobbyInputValue(selectedHobbyToAdd.display)
     }
+    AddToMine()
   }, [selectedHobbyToAdd])
 
   useEffect(() => {
@@ -1178,11 +1211,11 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                                 required
                                 value={hobbyInputValue}
                                 onFocus={() => setShowHobbyDowpdown(true)}
-                                onBlur={() =>
-                                  setTimeout(() => {
-                                    if (!isMobile) setShowHobbyDowpdown(false)
-                                  }, 300)
-                                }
+                                // onBlur={() =>
+                                //   setTimeout(() => {
+                                //     if (!isMobile) setShowHobbyDowpdown(false)
+                                //   }, 300)
+                                // }
                                 ref={searchref}
                                 onChange={handleHobbyInputChange}
                                 onKeyDown={handleHobbyKeyDown}
@@ -1219,7 +1252,10 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                               )}
                           </div>
 
-                          <div className={styles['dropdown-wrapper']}>
+                          <div
+                            className={styles['dropdown-wrapper']}
+                            ref={genreDropDownWrapperRef}
+                          >
                             <div className={styles['input-box']}>
                               <input
                                 autoComplete="off"
@@ -1238,12 +1274,12 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                                     handleGenreInputFocus()
                                   }
                                 }}
-                                onBlur={() =>
-                                  setTimeout(() => {
-                                    handleGenreSelection()
-                                    setShowGenreDowpdown(false)
-                                  }, 300)
-                                }
+                                // onBlur={() =>
+                                //   setTimeout(() => {
+                                //     handleGenreSelection()
+                                //     setShowGenreDowpdown(false)
+                                //   }, 300)
+                                // }
                                 onChange={handleGenreInputChange}
                                 onKeyDown={handleGenreKeyDown}
                               />

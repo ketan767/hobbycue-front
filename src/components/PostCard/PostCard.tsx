@@ -478,81 +478,101 @@ const PostCard: React.FC<Props> = (props) => {
             </video>
           )}
           {postData.media?.length > 0 && props.currentSection !== 'links' ? (
-            <Slider
-              setActiveIdx={setActiveIdx}
-              activeIdx={activeIdx}
-              images={postData.media}
-              sameImgLinkInMeta={metaData.image}
-            ></Slider>
-          ) : (
-            <></>
-          )}
-          {has_link && props.currentSection !== 'links' && (
-            <div
-              className={
-                isVideoLink(url)
-                  ? styles['post-video-link']
-                  : styles['posts-meta-parent']
-              }
-            >
-              {linkLoading ? (
-                <LinkPreviewLoader />
+            <>
+              {postData?.media?.length === 1 ? (
+                <img
+                  src={postData?.media[0]}
+                  className={styles['post-image']}
+                  alt=""
+                  onClick={() => {
+                    dispatch(
+                      openModal({
+                        type: 'View-Image-Modal',
+                        closable: false,
+                        imageurl: postData?.media[0],
+                      }),
+                    )
+                  }}
+                />
               ) : (
-                <>
-                  {isVideoLink(url) ? (
-                    <div className={styles.videoPlayer}>
-                      <ReactPlayer
-                        className={styles.reactplayer}
-                        width="100%"
-                        height="410px"
-                        url={url}
-                        controls={true}
-                      />
-                    </div>
+                <Slider
+                  setActiveIdx={setActiveIdx}
+                  activeIdx={activeIdx}
+                  images={postData.media}
+                  sameImgLinkInMeta={metaData.image}
+                ></Slider>
+              )}
+            </>
+          ) : (
+            <>
+              {has_link && props.currentSection !== 'links' && (
+                <div
+                  className={
+                    isVideoLink(url)
+                      ? styles['post-video-link']
+                      : styles['posts-meta-parent']
+                  }
+                >
+                  {linkLoading ? (
+                    <LinkPreviewLoader />
                   ) : (
                     <>
-                      <div className={styles['posts-meta-data-container']}>
-                        <a
-                          href={url}
-                          target="_blank"
-                          className={styles['posts-meta-img']}
-                        >
-                          <img
-                            src={
-                              (typeof metaData?.image === 'string' &&
-                                metaData.image) ||
-                              (typeof metaData?.icon === 'string' &&
-                                metaData.icon) ||
-                              defaultImg
-                            }
-                            alt="link-image"
-                            width={80}
-                            height={80}
+                      {isVideoLink(url) ? (
+                        <div className={styles.videoPlayer}>
+                          <ReactPlayer
+                            className={styles.reactplayer}
+                            width="100%"
+                            height="410px"
+                            url={url}
+                            controls={true}
                           />
-                        </a>
-                        <div className={styles['posts-meta-content']}>
-                          <a
-                            href={url}
-                            target="_blank"
-                            className={styles.contentHead}
-                          >
-                            {metaData?.title}
-                          </a>
-
-                          <a
-                            href={url}
-                            target="_blank"
-                            className={styles.contentUrl}
-                          >
-                            {metaData?.description}
-                          </a>
                         </div>
-                      </div>
+                      ) : (
+                        <>
+                          <div className={styles['posts-meta-data-container']}>
+                            <a
+                              href={url}
+                              target="_blank"
+                              className={styles['posts-meta-img']}
+                            >
+                              <img
+                                src={
+                                  (typeof metaData?.image === 'string' &&
+                                    metaData.image) ||
+                                  (typeof metaData?.icon === 'string' &&
+                                    metaData.icon) ||
+                                  defaultImg
+                                }
+                                alt="link-image"
+                                width={80}
+                                height={80}
+                              />
+                            </a>
+                            <div className={styles['posts-meta-content']}>
+                              <a
+                                href={url}
+                                target="_blank"
+                                className={styles.contentHead}
+                              >
+                                {metaData?.title}
+                              </a>
+
+                              <a
+                                href={url}
+                                target="_blank"
+                                className={styles.contentUrl}
+                              >
+                                {metaData?.description}
+                              </a>
+                            </div>
+                          </div>
+                        </>
+                      )}
                     </>
                   )}
-                </>
+                </div>
               )}
-            </div>
+            </>
           )}
 
           {has_link && props.currentSection === 'links' && (

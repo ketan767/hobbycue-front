@@ -8,6 +8,10 @@
   height: calc(100vh - 6rem);
 }
 
+.changedWidth {
+  width: 789px;
+}
+
 .modal-heading {
   padding: var(--spacing-16) var(--spacing-24);
   font-weight: 600;
@@ -23,6 +27,7 @@
   flex-direction: column;
   gap: 16px;
   padding: 0 var(--spacing-24);
+  width: 100%;
 }
 
 .create-post-modal>section {
@@ -259,11 +264,6 @@ line-height: 16px; /* 114.286% */
   align-items: stretch;
   max-width: calc(100vw - 2rem);
   overflow: auto;
-  
-}
-
-.editor-container::-webkit-scrollbar {
-  width: 5px !important; 
 }
 
 .editor-container::-webkit-scrollbar-track {

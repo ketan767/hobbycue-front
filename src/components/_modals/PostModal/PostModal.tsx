@@ -350,7 +350,7 @@ export const PostModal: React.FC<Props> = ({
                 )}
               </div>
             )}
-            {activePost?.has_link && (
+            {activePost?.has_link && activePost?.media.length == 0 && (
               <div
                 className={
                   isVideoLink(url)
