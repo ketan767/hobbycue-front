@@ -32,7 +32,7 @@ export default function index() {
             </p>
             <div className={styles.imgContent}>
               <img
-                src="http://hobbycue.com/wp-content/uploads/2018/06/Purnima-Pic.png"
+                src="http://blog.hobbycue.com/wp-content/uploads/2018/06/Purnima-Pic.png"
                 alt="Purnima Sambasivan, Co-Founder"
               />
               <div>
@@ -63,7 +63,7 @@ export default function index() {
             </p>
             <div className={styles.imgContent}>
               <img
-                src="http://hobbycue.com/wp-content/uploads/2018/06/Bhaskar-Pic.png"
+                src="http://blog.hobbycue.com/wp-content/uploads/2018/06/Bhaskar-Pic.png"
                 alt="Bhaskar Subramanian, Co-Founder"
               />
               <div>
@@ -98,7 +98,7 @@ export default function index() {
               through his blog on hobbycue.com.
             </p>
             <img
-              src="https://hobbycue.com/wp-content/uploads/2019/07/Team-hobbycue-600x400.jpg"
+              src="https://blog.hobbycue.com/wp-content/uploads/2019/07/Team-hobbycue-600x400.jpg"
               alt="Purnima and Bhaskar"
             />
           </div>

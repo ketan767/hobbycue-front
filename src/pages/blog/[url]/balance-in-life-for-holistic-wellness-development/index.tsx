@@ -35,14 +35,14 @@ export default function Index() {
             </ul>
           </div>
           <img
-            src="https://hobbycue.com/wp-content/uploads/2021/09/2021-09-11-10-Copy-1024x332.png"
+            src="https://blog.hobbycue.com/wp-content/uploads/2021/09/2021-09-11-10-Copy-1024x332.png"
             alt=""
           />
         </section>
         <section className={styles['content']}>
           <h2>A few Frameworks for Reference</h2>
           <img
-            src="https://hobbycue.com/wp-content/uploads/2021/09/2021-09-11-10-Copy-1536x497.png"
+            src="https://blog.hobbycue.com/wp-content/uploads/2021/09/2021-09-11-10-Copy-1536x497.png"
             alt=""
           />
           <p>
@@ -58,7 +58,7 @@ export default function Index() {
           <br />
           <p>The closest framework was the Wellness Wheel</p>
           <img
-            src="https://hobbycue.com/wp-content/uploads/2021/09/WW-descriptions_341161_25240_v2.jpg"
+            src="https://blog.hobbycue.com/wp-content/uploads/2021/09/WW-descriptions_341161_25240_v2.jpg"
             alt=""
           />
           <br />
@@ -102,7 +102,7 @@ export default function Index() {
               href="https://medium.com/r/?url=https%3A%2F%2Fthewheelofwellness.wordpress.com%2Fwellness-wheel%2F"
             >
               <img
-                src="https://hobbycue.com/wp-content/uploads/2021/09/good-life-balance-wheel-template-1.jpg"
+                src="https://blog.hobbycue.com/wp-content/uploads/2021/09/good-life-balance-wheel-template-1.jpg"
                 alt=""
               />
             </a>
@@ -116,7 +116,7 @@ export default function Index() {
               href="https://medium.com/r/?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DUADbDgpeP7Y"
             >
               <img
-                src="https://hobbycue.com/wp-content/uploads/2021/09/Picture3.png"
+                src="https://blog.hobbycue.com/wp-content/uploads/2021/09/Picture3.png"
                 alt=""
               />
             </a>
@@ -179,7 +179,7 @@ export default function Index() {
               href="https://medium.com/r/?url=https%3A%2F%2Fichi.pro%2Fikigai-no-jissen-gaido-anata-ga-sonzaisuru-riyu-13720319897157"
             >
               <img
-                src="https://hobbycue.com/wp-content/uploads/2021/09/Picture1-1.jpg"
+                src="https://blog.hobbycue.com/wp-content/uploads/2021/09/Picture1-1.jpg"
                 alt=""
               />
             </a>
@@ -193,7 +193,7 @@ export default function Index() {
               href="https://medium.com/r/?url=https%3A%2F%2Fwww.kennethmd.com%2Fbody-mind-spirit-biopsychosocial-spiritual-model-of-health%2F"
             >
               <img
-                src="https://hobbycue.com/wp-content/uploads/2021/09/Picture2.png"
+                src="https://blog.hobbycue.com/wp-content/uploads/2021/09/Picture2.png"
                 alt=""
               />
             </a>
@@ -235,7 +235,7 @@ export default function Index() {
               href="https://medium.com/r/?url=https%3A%2F%2Faromaticstudies.com%2Fthe-wellness-wheel-by-heidi-nielsen%2F"
             >
               <img
-                src="https://hobbycue.com/wp-content/uploads/2021/09/Wellness-Wheel.jpg"
+                src="https://blog.hobbycue.com/wp-content/uploads/2021/09/Wellness-Wheel.jpg"
                 alt=""
               />
             </a>
