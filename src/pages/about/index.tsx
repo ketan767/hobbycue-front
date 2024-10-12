@@ -65,15 +65,15 @@ export default function index() {
               </Link>
             </p>
             <img
-              src="https://hobbycue.com/wp-content/uploads/2018/08/CWE-Logo.png"
+              src="https://blog.hobbycue.com/wp-content/uploads/2018/08/CWE-Logo.png"
               alt="CWE"
             />
             <img
-              src="https://hobbycue.com/wp-content/uploads/2018/08/nascomm-10000startups-600x346.jpg"
+              src="https://blog.hobbycue.com/wp-content/uploads/2018/08/nascomm-10000startups-600x346.jpg"
               alt="Nascomm 10000 Startups"
             />
             <img
-              src="https://hobbycue.com/wp-content/uploads/2018/08/KarnatakaGovtLogo.png"
+              src="https://blog.hobbycue.com/wp-content/uploads/2018/08/KarnatakaGovtLogo.png"
               alt="Karnataka Government Logo"
             />
             <p>
