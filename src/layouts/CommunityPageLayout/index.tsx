@@ -3,7 +3,7 @@ import PageContentBox from '@/layouts/PageContentBox'
 import PageGridLayout from '@/layouts/PageGridLayout'
 import { withAuth } from '@/navigation/withAuth'
 import styles from './CommunityLayout.module.css'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/router'
 import Image from 'next/image'
 import { useDispatch, useSelector } from 'react-redux'
 import store, { RootState } from '@/redux/store'
@@ -110,9 +110,13 @@ const CommunityLayout: React.FC<Props> = ({
   })
   const [locations, setLocations] = useState([])
   const [email, setEmail] = useState('')
-  const [selectedHobby, setSelectedHobby] = useState('All Hobbies')
-  const [selectedGenre, setSelectedGenre] = useState<string | undefined>('')
-  const [selectedLocation, setSelectedLocation] = useState('')
+  const [selectedHobby, setSelectedHobby] = useState(filters.hobby)
+  const [selectedGenre, setSelectedGenre] = useState<string | undefined>(
+    filters.genre,
+  )
+  const [selectedLocation, setSelectedLocation] = useState(
+    filters.location || 'All Locations',
+  )
 
   const [snackbar, setSnackbar] = useState({
     type: 'success',
@@ -184,12 +188,13 @@ const CommunityLayout: React.FC<Props> = ({
       if (genreId !== 'undefined' && genreId !== '') {
         params.append('_genre', genreId)
       }
+      !router.pathname?.includes('/community') && router.push('/community')
       dispatch(updateLoading(true))
 
       dispatch(updateLoading(false))
     } else {
       dispatch(setFilters({ genre: '', hobby: '' }))
-      setSelectedHobby('')
+      setSelectedHobby('All Hobbies')
       setSelectedGenre('')
       // fetchPosts()
     }
@@ -722,10 +727,10 @@ const CommunityLayout: React.FC<Props> = ({
   }, [activeProfile])
   console.warn('activveprofileeeee', activeProfile.type)
 
-  useEffect(() => {
-    setSelectedHobby('All Hobbies')
-    setSelectedGenre('')
-  }, [activeProfile])
+  // useEffect(() => {
+  // setSelectedHobby('All Hobbies')
+  // setSelectedGenre('')
+  // }, [activeProfile])
 
   const updateFilterLocation = (val: any) => {
     if (!isLoggedIn) {
@@ -744,6 +749,7 @@ const CommunityLayout: React.FC<Props> = ({
         return val
       }
     })
+    !router.pathname?.includes('/community') && router.push('/community')
   }
 
   useEffect(() => {
