@@ -117,7 +117,7 @@ export default function index() {
               <option value={undefined}>Select Category</option>
               <option
                 className="level-0"
-                value="https://hobbycue.com/blog/category/activity/"
+                value="https://blog.hobbycue.com/blog/category/activity/"
               >
                 Activity&nbsp;&nbsp;(26)
               </option>
@@ -129,139 +129,139 @@ export default function index() {
               </option>
               <option
                 className="level-1"
-                value="https://hobbycue.com/blog/category/activity/nature"
+                value="https://blog.hobbycue.com/blog/category/activity/nature"
               >
                 &nbsp;&nbsp;&nbsp;Nature&nbsp;&nbsp;(11)
               </option>
               <option
                 className="level-1"
-                value="https://hobbycue.com/blog/category/activity/travel"
+                value="https://blog.hobbycue.com/blog/category/activity/travel"
               >
                 &nbsp;&nbsp;&nbsp;Travel&nbsp;&nbsp;(20)
               </option>
               <option
                 className="level-1"
-                value="https://hobbycue.com/blog/category/activity/wellness"
+                value="https://blog.hobbycue.com/blog/category/activity/wellness"
               >
                 &nbsp;&nbsp;&nbsp;Wellness&nbsp;&nbsp;(4)
               </option>
               <option
                 className="level-0"
-                value="https://hobbycue.com/blog/category/arts/"
+                value="https://blog.hobbycue.com/blog/category/arts/"
               >
                 Arts&nbsp;&nbsp;(26)
               </option>
               <option
                 className="level-1"
-                value="https://hobbycue.com/blog/category/arts/artwork"
+                value="https://blog.hobbycue.com/blog/category/arts/artwork"
               >
                 &nbsp;&nbsp;&nbsp;Artwork&nbsp;&nbsp;(3)
               </option>
               <option
                 className="level-1"
-                value="https://hobbycue.com/blog/category/arts/dance"
+                value="https://blog.hobbycue.com/blog/category/arts/dance"
               >
                 &nbsp;&nbsp;&nbsp;Dance&nbsp;&nbsp;(4)
               </option>
               <option
                 className="level-1"
-                value="https://hobbycue.com/blog/category/arts/literary"
+                value="https://blog.hobbycue.com/blog/category/arts/literary"
               >
                 &nbsp;&nbsp;&nbsp;Literary&nbsp;&nbsp;(5)
               </option>
               <option
                 className="level-1"
-                value="https://hobbycue.com/blog/category/arts/music"
+                value="https://blog.hobbycue.com/blog/category/arts/music"
               >
                 &nbsp;&nbsp;&nbsp;Music&nbsp;&nbsp;(9)
               </option>
               <option
                 className="level-1"
-                value="https://hobbycue.com/blog/category/arts/photography"
+                value="https://blog.hobbycue.com/blog/category/arts/photography"
               >
                 &nbsp;&nbsp;&nbsp;Photography&nbsp;&nbsp;(4)
               </option>
               <option
                 className="level-1"
-                value="https://hobbycue.com/blog/category/arts/theatre"
+                value="https://blog.hobbycue.com/blog/category/arts/theatre"
               >
                 &nbsp;&nbsp;&nbsp;Theatre&nbsp;&nbsp;(2)
               </option>
               <option
                 className="level-1"
-                value="https://hobbycue.com/blog/category/arts/visual"
+                value="https://blog.hobbycue.com/blog/category/arts/visual"
               >
                 &nbsp;&nbsp;&nbsp;Visual&nbsp;&nbsp;(2)
               </option>
               <option
                 className="level-0"
-                value="https://hobbycue.com/blog/category/collect/"
+                value="https://blog.hobbycue.com/blog/category/collect/"
               >
                 Collect&nbsp;&nbsp;(8)
               </option>
               <option
                 className="level-1"
-                value="https://hobbycue.com/blog/category/collect-items/"
+                value="https://blog.hobbycue.com/blog/category/collect-items/"
               >
                 &nbsp;&nbsp;&nbsp;Collect Items&nbsp;&nbsp;(1)
               </option>
               <option
                 className="level-0"
-                value="https://hobbycue.com/blog/category/making/"
+                value="https://blog.hobbycue.com/blog/category/making/"
               >
                 Making&nbsp;&nbsp;(14)
               </option>
               <option
                 className="level-1"
-                value="https://hobbycue.com/blog/category/making/cooking"
+                value="https://blog.hobbycue.com/blog/category/making/cooking"
               >
                 &nbsp;&nbsp;&nbsp;Cooking&nbsp;&nbsp;(2)
               </option>
               <option
                 className="level-1"
-                value="https://hobbycue.com/blog/category/making/gardening"
+                value="https://blog.hobbycue.com/blog/category/making/gardening"
               >
                 &nbsp;&nbsp;&nbsp;Gardening&nbsp;&nbsp;(4)
               </option>
               <option
                 className="level-1"
-                value="https://hobbycue.com/blog/category/making/utility"
+                value="https://blog.hobbycue.com/blog/category/making/utility"
               >
                 &nbsp;&nbsp;&nbsp;Utility&nbsp;&nbsp;(4)
               </option>
               <option
                 className="level-0"
-                value="https://hobbycue.com/blog/category/other/"
+                value="https://blog.hobbycue.com/blog/category/other/"
               >
                 Other&nbsp;&nbsp;(8)
               </option>
               <option
                 className="level-0"
-                value="https://hobbycue.com/blog/category/perform/"
+                value="https://blog.hobbycue.com/blog/category/perform/"
               >
                 Perform&nbsp;&nbsp;(2)
               </option>
               <option
                 className="level-0"
-                value="https://hobbycue.com/blog/category/play/"
+                value="https://blog.hobbycue.com/blog/category/play/"
               >
                 Play&nbsp;&nbsp;(3)
               </option>
               <option
                 className="level-1"
-                value="https://hobbycue.com/blog/category/play/games"
+                value="https://blog.hobbycue.com/blog/category/play/games"
               >
                 &nbsp;&nbsp;&nbsp;Games&nbsp;&nbsp;(1)
               </option>
               <option
                 className="level-1"
-                value="https://hobbycue.com/blog/category/play/sports"
+                value="https://blog.hobbycue.com/blog/category/play/sports"
               >
                 &nbsp;&nbsp;&nbsp;Sports&nbsp;&nbsp;(3)
               </option>
               <option
                 className="level-0"
-                value="https://hobbycue.com/blog/category/uncategorized/"
+                value="https://blog.hobbycue.com/blog/category/uncategorized/"
               >
                 Uncategorized&nbsp;&nbsp;(13)
               </option>
@@ -315,41 +315,6 @@ export default function index() {
             >
               Balance in Life for Holistic Wellness & Development
             </Link>
-            <div className={styles.myLinks}>
-              <Link target="_blank" href={'https://hobbycue.com/dashboard/'}>
-                Home
-              </Link>
-              <Link
-                target="_blank"
-                href={'https://hobbycue.com/members/me/profile/edit'}
-              >
-                My Profile
-              </Link>
-              <Link target="_blank" href={'https://hobbycue.com/community/'}>
-                My Community
-              </Link>
-              <Link
-                target="_blank"
-                href={'https://hobbycue.com/my-account/my-listings/'}
-              >
-                My Listings
-              </Link>
-              <Link
-                target="_blank"
-                href={'https://hobbycue.com/my-account/edit-account'}
-              >
-                My Account
-              </Link>
-              <Link
-                target="_blank"
-                href={'https://hobbycue.com/wp-admin/edit.php'}
-              >
-                My Blog Posts
-              </Link>
-              <Link target="_blank" href={'https://hobbycue.com/shop/'}>
-                Store
-              </Link>
-            </div>
           </div>
         </div>
       </div>
