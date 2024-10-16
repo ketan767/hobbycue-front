@@ -114,6 +114,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                 <input
                   placeholder=""
                   type="text"
+                  autoComplete="new"
                   name=""
                   id=""
                   className={inviteError !== '' ? styles['error-input'] : ''}

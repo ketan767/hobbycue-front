@@ -526,11 +526,11 @@ const ProfileContactEditModal: React.FC<Props> = ({
                 <label>Email ID</label>
                 <input
                   type="text"
+                  autoComplete="new"
                   placeholder={`Email ID`}
                   value={data.public_email.value}
                   ref={inputRef}
                   name="public_email"
-                  autoComplete="email"
                   onChange={handleInputChange}
                 />
                 <p className={styles['helper-text']}>
@@ -563,10 +563,10 @@ const ProfileContactEditModal: React.FC<Props> = ({
                   />
                   <input
                     type="text"
+                    autoComplete="new"
                     placeholder={`Phone Number`}
                     value={data.phone.number}
                     name="phone"
-                    autoComplete="phone"
                     onChange={handleInputChange}
                     ref={phoneRef}
                     className={styles['phone-input']}
@@ -617,8 +617,8 @@ const ProfileContactEditModal: React.FC<Props> = ({
                         }}
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
-                            e.preventDefault();
-                            e.stopPropagation();
+                            e.preventDefault()
+                            e.stopPropagation()
                             if (tick === true) {
                               setData((prev) => {
                                 return {
@@ -666,9 +666,9 @@ const ProfileContactEditModal: React.FC<Props> = ({
                   />
                   <input
                     type="text"
+                    autoComplete="new"
                     placeholder={`WhatsApp Number`}
                     value={data.whatsapp_number.number}
-                    autoComplete="phone"
                     name="whatsapp_number"
                     onChange={handleInputChange}
                     ref={WhtphoneRef}
@@ -690,10 +690,10 @@ const ProfileContactEditModal: React.FC<Props> = ({
               <label>Website</label>
               <input
                 type="text"
+                autoComplete="new"
                 placeholder={`URL`}
                 value={data.website.value}
                 name="website"
-                autoComplete="website"
                 ref={websiteRef}
                 onChange={handleInputChange}
               />

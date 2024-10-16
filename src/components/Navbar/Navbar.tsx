@@ -1351,7 +1351,11 @@ export const Navbar: React.FC<Props> = ({}) => {
                     }
                   >
                     {data.search.value.length > 0 && (
-                      <input type="text" value={data.search.value} />
+                      <input
+                        type="text"
+                        autoComplete="new"
+                        value={data.search.value}
+                      />
                     )}
                     <div
                       onClick={() => {

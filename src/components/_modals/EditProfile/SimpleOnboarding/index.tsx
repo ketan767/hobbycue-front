@@ -1166,8 +1166,8 @@ const SimpleOnboarding: React.FC<Props> = ({
                 <label className={styles['label-required']}>Full Name</label>
                 <input
                   type="text"
+                  autoComplete="new"
                   placeholder=""
-                  autoComplete="name"
                   required
                   value={data.full_name}
                   name="full_name"
@@ -1184,12 +1184,12 @@ const SimpleOnboarding: React.FC<Props> = ({
                 <label className={styles['label-required']}>Email ID</label>
                 <input
                   type="text"
+                  autoComplete="new"
                   required
                   placeholder=""
                   value={data.public_email}
                   ref={emailRef}
                   name="public_email"
-                  autoComplete="email"
                   onChange={handleInputChange}
                 />
                 <p className={styles['helper-text']}>
@@ -1208,13 +1208,13 @@ const SimpleOnboarding: React.FC<Props> = ({
               >
                 <input
                   type="text"
+                  autoComplete="new"
                   placeholder={`Type in your Society, Locality, or City`}
                   required
                   value={Addressdata.street}
                   name="street"
                   ref={AddressRef}
                   onChange={handleInputChangeAddress}
-                  autoComplete="off"
                 />
                 <Image
                   src={LocationIcon}
@@ -1310,8 +1310,8 @@ const SimpleOnboarding: React.FC<Props> = ({
                 </ul>
                 <input
                   type="text"
+                  autoComplete="new"
                   placeholder="Type and select..."
-                  autoComplete="off"
                   required
                   value={hobbyInputValue}
                   onFocus={() => setShowHobbyDowpdown(true)}

@@ -493,6 +493,7 @@ const Contact: React.FC<Props> = ({}) => {
                     <input hidden required />
                     <input
                       type="text"
+                      autoComplete="new"
                       placeholder={`Name`}
                       value={data.name.value}
                       ref={inputRef}
@@ -513,6 +514,7 @@ const Contact: React.FC<Props> = ({}) => {
                     <label>Email ID</label>
                     <input
                       type="text"
+                      autoComplete="new"
                       placeholder={`Email ID`}
                       value={data.public_email.value}
                       ref={inputEmailRef}
@@ -553,6 +555,7 @@ const Contact: React.FC<Props> = ({}) => {
                     />
                     <input
                       type="text"
+                      autoComplete="new"
                       placeholder={`Phone Number`}
                       value={data.phone.number}
                       name="phone"
@@ -661,6 +664,7 @@ const Contact: React.FC<Props> = ({}) => {
                     />
                     <input
                       type="text"
+                      autoComplete="new"
                       placeholder={`WhatsApp Number`}
                       value={data.whatsapp_number.number}
                       autoComplete="phone"
@@ -902,7 +906,7 @@ const Contact: React.FC<Props> = ({}) => {
               {/* Message */}
               <div className={`${styles['input-box']}`}>
                 <label>Message</label>
-                    <input hidden required />
+                <input hidden required />
                 <div className={styles['street-input-container']}>
                   <textarea
                     ref={messageRef}

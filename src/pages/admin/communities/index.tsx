@@ -254,6 +254,7 @@ const AdminCommunities: React.FC = () => {
             <form onSubmit={handleSearch} className={styles.searchForm}>
               <input
                 type="text"
+                autoComplete="new"
                 value={data.search.value}
                 onChange={handleInputChange}
                 placeholder="Search users..."

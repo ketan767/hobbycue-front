@@ -170,6 +170,7 @@ const Index: FC<IndexProps> = ({}) => {
               <label>Title</label>
               <input
                 type="text"
+                autoComplete="new"
                 value={page?.title}
                 onChange={
                   (e) => setPage({ ...page, title: e.target.value }) // Fixed property name to 'title'
@@ -180,6 +181,7 @@ const Index: FC<IndexProps> = ({}) => {
               <label>Tagline</label>
               <input
                 type="text"
+                autoComplete="new"
                 value={page?.tagline}
                 onChange={(e) => setPage({ ...page, tagline: e.target.value })}
               />
@@ -197,6 +199,7 @@ const Index: FC<IndexProps> = ({}) => {
               <label>Page Url</label>
               <input
                 type="text"
+                autoComplete="new"
                 value={page?.page_url}
                 onChange={
                   (e) => setPage({ ...page, page_url: e.target.value }) // Fixed property name to 'page_url'
@@ -207,6 +210,7 @@ const Index: FC<IndexProps> = ({}) => {
               <label>Public Email</label>
               <input
                 type="text"
+                autoComplete="new"
                 value={page?.public_email}
                 onChange={(e) =>
                   setPage({ ...page, public_email: e.target.value })
@@ -219,6 +223,7 @@ const Index: FC<IndexProps> = ({}) => {
                 <input
                   className={styles.prefix}
                   type="text"
+                  autoComplete="new"
                   value={page?.phone?.prefix}
                   onChange={(e) =>
                     setPage({
@@ -229,6 +234,7 @@ const Index: FC<IndexProps> = ({}) => {
                 />
                 <input
                   type="text"
+                  autoComplete="new"
                   value={page?.phone?.number}
                   onChange={(e) =>
                     setPage({
@@ -245,6 +251,7 @@ const Index: FC<IndexProps> = ({}) => {
                 <input
                   className={styles.prefix}
                   type="text"
+                  autoComplete="new"
                   value={page?.whatsapp_number?.prefix}
                   onChange={(e) =>
                     setPage({
@@ -258,6 +265,7 @@ const Index: FC<IndexProps> = ({}) => {
                 />
                 <input
                   type="text"
+                  autoComplete="new"
                   value={page?.whatsapp_number?.number}
                   onChange={(e) =>
                     setPage({
@@ -275,6 +283,7 @@ const Index: FC<IndexProps> = ({}) => {
               <label>Year of Birth</label>
               <input
                 type="text"
+                autoComplete="new"
                 value={page?.year_of_birth}
                 onChange={(e) =>
                   setPage({ ...page, year_of_birth: e.target.value })
@@ -285,6 +294,7 @@ const Index: FC<IndexProps> = ({}) => {
               <label>Website</label>
               <input
                 type="text"
+                autoComplete="new"
                 value={page?.website}
                 onChange={(e) => setPage({ ...page, website: e.target.value })}
               />
@@ -295,6 +305,7 @@ const Index: FC<IndexProps> = ({}) => {
                 <label>Street</label>
                 <input
                   type="text"
+                  autoComplete="new"
                   value={page?._address?.street}
                   onChange={(e) =>
                     setPage({
@@ -309,6 +320,7 @@ const Index: FC<IndexProps> = ({}) => {
                   <label>Society</label>
                   <input
                     type="text"
+                    autoComplete="new"
                     value={page?._address?.society}
                     onChange={(e) =>
                       setPage({
@@ -322,6 +334,7 @@ const Index: FC<IndexProps> = ({}) => {
                   <label>Locality</label>
                   <input
                     type="text"
+                    autoComplete="new"
                     value={page?._address?.locality}
                     onChange={(e) =>
                       setPage({
@@ -340,6 +353,7 @@ const Index: FC<IndexProps> = ({}) => {
                   <label>City</label>
                   <input
                     type="text"
+                    autoComplete="new"
                     value={page?._address?.city}
                     onChange={(e) =>
                       setPage({
@@ -353,6 +367,7 @@ const Index: FC<IndexProps> = ({}) => {
                   <label>Pin code</label>
                   <input
                     type="text"
+                    autoComplete="new"
                     value={page?._address?.pin_code}
                     onChange={(e) =>
                       setPage({
@@ -371,6 +386,7 @@ const Index: FC<IndexProps> = ({}) => {
                   <label>State</label>
                   <input
                     type="text"
+                    autoComplete="new"
                     value={page?._address?.state}
                     onChange={(e) =>
                       setPage({
@@ -384,6 +400,7 @@ const Index: FC<IndexProps> = ({}) => {
                   <label>Country</label>
                   <input
                     type="text"
+                    autoComplete="new"
                     value={page?._address?.country}
                     onChange={(e) =>
                       setPage({
@@ -399,6 +416,7 @@ const Index: FC<IndexProps> = ({}) => {
                   <label>Latitude</label>
                   <input
                     type="text"
+                    autoComplete="new"
                     value={page?._address?.latitude}
                     onChange={(e) =>
                       setPage({
@@ -415,6 +433,7 @@ const Index: FC<IndexProps> = ({}) => {
                   <label>Longitude</label>
                   <input
                     type="text"
+                    autoComplete="new"
                     value={page?._address?.longitude}
                     onChange={(e) =>
                       setPage({
