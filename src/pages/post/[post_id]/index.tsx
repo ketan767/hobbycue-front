@@ -42,13 +42,17 @@ type singlePostProps = {
   trendingHobbies: any[]
 }
 
-const htmlToPlainText = (html: string) => {
-  if (typeof window !== 'undefined') {
-    const element = document.createElement('div')
-    element.innerHTML = html
-    return element.textContent || ''
-  }
-  return ''
+// const htmlToPlainText = (html: string) => {
+//   if (typeof window !== 'undefined') {
+//     const element = document.createElement('div')
+//     element.innerHTML = html
+//     return element.textContent || ''
+//   }
+//   return ''
+// }
+
+function htmlToPlainText(html: string): string {
+  return html.replace(/<\/?[^>]+(>|$)/g, '')
 }
 
 const CommunityLayout: React.FC<Props> = ({ data }) => {
@@ -454,7 +458,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
       </main>
     )
   }
-  console.warn('posrcontenttttttttttttttttttttttttttttt', data.postcontent)
+  console.warn('postcontentttttttttttttttttt', data.postcontent)
   return (
     <>
       <Head>
@@ -463,13 +467,14 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
 
         <meta
           property="og:description"
-          content={`${
-            data?.postsData?.content?.length > 0
-              ? data.postsData.content
-              : data.metadata?.data?.description
-              ? data.metadata?.data?.description
-              : 'View this post on hobbycue.com'
-          }`}
+          // content={`${
+          //   data?.postsData?.content?.length > 0
+          //     ? data.postsData.content
+          //     : data.metadata?.data?.description
+          //     ? data.metadata?.data?.description
+          //     : 'View this post on hobbycue.com'
+          // }`}
+          content={data?.postcontent || 'View this post on hobbycue.com'}
         />
 
         <meta property="og:image:alt" content="Profile picture" />
@@ -495,20 +500,22 @@ export default CommunityLayout
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context,
 ) => {
-  const { params, req } = context
+  const { query, req } = context
 
-  const protocol = req.headers['x-forwarded-proto'] || 'http'
-  const host = req.headers['host']
-  const url = `${protocol}://${host}${req.url}`
+  // const protocol = req.headers['x-forwarded-proto'] || 'http'
+  // const host = req.headers['host']
+  // const url = `${protocol}://${host}${req.url}`
 
-  console.log('Current URL:', url)
+  // console.log('Current URL:', url)
 
   // Extract postId and query parameters
-  const postId = new URL(url).pathname.split('/').pop()
+  // const postId = new URL(url).pathname.split('/').pop()
+  const { post_id } = query
   const queryParams = new URLSearchParams(
-    `populate=_author,_genre,_hobby&_id=${postId}`,
+    `populate=_author,_genre,_hobby&_id=${post_id}`,
   )
   const { err, res } = await getAllPosts(queryParams.toString())
+  console.log('asifs res', res?.data?.data?.posts[0]?.content)
 
   let metadata = null
   let postsData = null // Initialize postsData with null to avoid undefined issues
@@ -532,10 +539,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     }
   }
 
-  let postContentPlain = ''
-  if (res?.data?.data.posts?.length) {
-    postContentPlain = htmlToPlainText(res.data.data.posts[0].content)
-  }
+  // let postContentPlain = ''
+  // if (res?.data?.data.posts?.length) {
+  //   postContentPlain = htmlToPlainText(res.data.data.posts[0].content)
+  // }
+  let postContentPlain = htmlToPlainText(res?.data?.data?.posts[0]?.content)
+  console.log('asifs postContentPlain', postContentPlain)
 
   return {
     props: {

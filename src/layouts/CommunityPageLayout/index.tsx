@@ -110,7 +110,7 @@ const CommunityLayout: React.FC<Props> = ({
   })
   const [locations, setLocations] = useState([])
   const [email, setEmail] = useState('')
-  const [selectedHobby, setSelectedHobby] = useState(filters.hobby)
+  const [selectedHobby, setSelectedHobby] = useState(filters.hobby || "All Hobbies")
   const [selectedGenre, setSelectedGenre] = useState<string | undefined>(
     filters.genre,
   )
