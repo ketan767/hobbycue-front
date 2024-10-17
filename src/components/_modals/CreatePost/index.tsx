@@ -656,7 +656,6 @@ export const CreatePost: React.FC<Props> = ({
       />
     )
   }
-  console.log('asifs media', data.media)
 
   return (
     <>

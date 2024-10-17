@@ -515,7 +515,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     `populate=_author,_genre,_hobby&_id=${post_id}`,
   )
   const { err, res } = await getAllPosts(queryParams.toString())
-  console.log('asifs res', res?.data?.data?.posts[0]?.content)
 
   let metadata = null
   let postsData = null // Initialize postsData with null to avoid undefined issues
@@ -544,7 +543,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   //   postContentPlain = htmlToPlainText(res.data.data.posts[0].content)
   // }
   let postContentPlain = htmlToPlainText(res?.data?.data?.posts[0]?.content)
-  console.log('asifs postContentPlain', postContentPlain)
 
   return {
     props: {
