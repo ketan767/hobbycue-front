@@ -114,7 +114,7 @@ export const Navbar: React.FC<Props> = ({}) => {
     if (router.asPath === '/search') {
       return
     } else {
-      setData((prev) => ({ ...prev, search: { value: '', error: null } }))
+      setData((prev) => ({ ...prev, search: { value: data.search.value, error: null } }))
     }
   }, [router.asPath])
 
@@ -697,7 +697,7 @@ export const Navbar: React.FC<Props> = ({}) => {
             <TextField
               inputRef={searchInputRef}
               variant="outlined"
-              placeholder="Search for anything on your hobbies..."
+              placeholder="Search for anything on your ..."
               size="small"
               className={styles.inputField}
               onFocus={() => {
