@@ -1398,7 +1398,7 @@ const CommunityLayout: React.FC<Props> = ({
                     </header>
                     {/* <span className={styles['divider']}></span> */}
                     <section>
-                      <input type="text" name="" id="" />
+                      <input type="text" autoComplete="new" name="" id="" />
                       <FilledButton>Invite</FilledButton>
                     </section>
                   </section>

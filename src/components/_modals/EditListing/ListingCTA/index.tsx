@@ -328,6 +328,7 @@ const ListingCTAModal: React.FC<Props> = ({
                   setUrl(e.target.value)
                 }}
                 type="text"
+                autoComplete="new"
               />
             </div>
           )}

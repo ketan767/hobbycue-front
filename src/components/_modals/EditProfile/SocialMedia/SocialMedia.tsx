@@ -504,18 +504,21 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
     }
   }, [mediaData, initialData])
 
-  useEffect(()=>{
-    getSocialNetworks().then((result)=>{
-      const {res,err} = result;
-      if(err){
-        console.log({err})
-      }
-      else if(res?.data&&res?.data?.data){
-        setAllOptions(res.data.data)
-        console.log({d:res.data.data})
-      }
-    }).catch(err=>{console.log({err})})
-  },[])
+  useEffect(() => {
+    getSocialNetworks()
+      .then((result) => {
+        const { res, err } = result
+        if (err) {
+          console.log({ err })
+        } else if (res?.data && res?.data?.data) {
+          setAllOptions(res.data.data)
+          console.log({ d: res.data.data })
+        }
+      })
+      .catch((err) => {
+        console.log({ err })
+      })
+  }, [])
 
   const isMobile = useMediaQuery('(max-width:1100px)')
 
@@ -583,31 +586,38 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
                 className={styles.dropdown}
                 inputProps={{ 'aria-label': 'Without label' }}
               >
-                {allOptions.filter(obj=>obj.Show==='Y').map((option,i) => {
-                  return (
-                    <MenuItem key={i} value={option.socialMedia}>
-                      <div className={styles['menu-item']}>
-                        <img
-                          src={socialMediaIcons[option.socialMedia as SocialMediaOption]}
-                          alt={option.socialMedia}
-                          width={24}
-                          height={24}
-                        />
-                        <p
-                          className={styles.iconText}
-                          style={{ marginLeft: '8px' }}
-                        >
-                          {option.socialMedia}
-                        </p>
-                      </div>
-                    </MenuItem>
-                  )
-                })}
+                {allOptions
+                  .filter((obj) => obj.Show === 'Y')
+                  .map((option, i) => {
+                    return (
+                      <MenuItem key={i} value={option.socialMedia}>
+                        <div className={styles['menu-item']}>
+                          <img
+                            src={
+                              socialMediaIcons[
+                                option.socialMedia as SocialMediaOption
+                              ]
+                            }
+                            alt={option.socialMedia}
+                            width={24}
+                            height={24}
+                          />
+                          <p
+                            className={styles.iconText}
+                            style={{ marginLeft: '8px' }}
+                          >
+                            {option.socialMedia}
+                          </p>
+                        </div>
+                      </MenuItem>
+                    )
+                  })}
               </Select>
 
               <div className={styles['input-box']}>
                 <input
                   type="text"
+                  autoComplete="new"
                   placeholder={`URL`}
                   value={item.url}
                   name="url"

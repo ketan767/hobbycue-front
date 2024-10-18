@@ -1206,6 +1206,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                             >
                               <input
                                 type="text"
+                                autoComplete="new"
                                 placeholder="Search hobby..."
                                 autoComplete="off"
                                 required
@@ -1261,6 +1262,7 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                                 autoComplete="off"
                                 ref={genreInputRef}
                                 type="text"
+                                autoComplete="new"
                                 placeholder="Genre/Style"
                                 required
                                 value={genreInputValue}

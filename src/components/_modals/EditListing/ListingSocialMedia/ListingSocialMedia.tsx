@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styles from './styles.module.css'
-import { CircularProgress, MenuItem, Select, useMediaQuery } from '@mui/material'
+import {
+  CircularProgress,
+  MenuItem,
+  Select,
+  useMediaQuery,
+} from '@mui/material'
 import DeleteIcon from '@/assets/svg/trash-icon-colored.svg'
 import AddIcon from '@/assets/svg/add.svg'
 import Image from 'next/image'
@@ -65,26 +70,43 @@ type SocialMediaOption =
   | 'BGG'
   | 'Others'
 
-  const socialMediaIcons: Record<SocialMediaOption, any> = {
-    Facebook: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/facebook.svg',
-    Twitter: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/twitter.svg',
-    Instagram: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/instagram.svg',
-    YouTube: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/youtube.svg',
-    SoundCloud: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/soundcloud.svg',
-    Pinterest: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/pinterest.svg',
-    Medium: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/MediumWeb.svg',
-    Telegram: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/Telegram.svg',
-    TripAdvisor: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/tripadvisor.svg',
-    'Ultimate Guitar': 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/Ultimate-Guitar.svg',
-    Strava: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/strava.svg',
-    DeviantArt: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/DeviantArt.svg',
-    Behance: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/behance.svg',
-    GoodReads: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/GoodReads.svg',
-    Smule: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/smule.svg',
-    'Chess.com': 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/chess.com.svg',
-    BGG: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/bgg.svg',
-    Others: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/other.svg',
-  }
+const socialMediaIcons: Record<SocialMediaOption, any> = {
+  Facebook:
+    'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/facebook.svg',
+  Twitter:
+    'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/twitter.svg',
+  Instagram:
+    'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/instagram.svg',
+  YouTube:
+    'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/youtube.svg',
+  SoundCloud:
+    'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/soundcloud.svg',
+  Pinterest:
+    'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/pinterest.svg',
+  Medium:
+    'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/MediumWeb.svg',
+  Telegram:
+    'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/Telegram.svg',
+  TripAdvisor:
+    'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/tripadvisor.svg',
+  'Ultimate Guitar':
+    'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/Ultimate-Guitar.svg',
+  Strava:
+    'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/strava.svg',
+  DeviantArt:
+    'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/DeviantArt.svg',
+  Behance:
+    'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/behance.svg',
+  GoodReads:
+    'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/GoodReads.svg',
+  Smule:
+    'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/smule.svg',
+  'Chess.com':
+    'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/chess.com.svg',
+  BGG: 'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/bgg.svg',
+  Others:
+    'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/other.svg',
+}
 
 const defaultSocialMediaURLs: Record<SocialMediaOption, string> = {
   Facebook: 'https://facebook.com/',
@@ -476,20 +498,23 @@ const ListingSocialMediaEditModal = ({
     }
   }, [mediaData, initialData])
 
-  useEffect(()=>{
-    getSocialNetworks().then((result)=>{
-      const {res,err} = result;
-      if(err){
-        console.log({err})
-      }
-      else if(res?.data&&res?.data?.data){
-        setAllOptions(res.data.data)
-        console.log({d:res.data.data})
-      }
-    }).catch(err=>{console.log({err})})
-  },[])
+  useEffect(() => {
+    getSocialNetworks()
+      .then((result) => {
+        const { res, err } = result
+        if (err) {
+          console.log({ err })
+        } else if (res?.data && res?.data?.data) {
+          setAllOptions(res.data.data)
+          console.log({ d: res.data.data })
+        }
+      })
+      .catch((err) => {
+        console.log({ err })
+      })
+  }, [])
 
-  const isMobile = useMediaQuery('(max-width:1100px)');
+  const isMobile = useMediaQuery('(max-width:1100px)')
 
   if (confirmationModal) {
     return (
@@ -506,31 +531,35 @@ const ListingSocialMediaEditModal = ({
       {/* Modal Header */}
       <header className={styles['header']}>
         <h4 className={styles['heading']}>{'Social Media'}</h4>
-        {isMobile&&<div className={styles['header-add-new']} onClick={addSocialMedia}>
-          <Image
-            src={AddIcon}
-            alt="add"
-            width={12}
-            height={12}
-            className={styles.deleteIcon}
-          />
-          <p>Add New</p> 
-        </div>}
+        {isMobile && (
+          <div className={styles['header-add-new']} onClick={addSocialMedia}>
+            <Image
+              src={AddIcon}
+              alt="add"
+              width={12}
+              height={12}
+              className={styles.deleteIcon}
+            />
+            <p>Add New</p>
+          </div>
+        )}
       </header>
 
       <hr className={styles['modal-hr']} />
 
       <section className={styles['body']}>
-      {!isMobile&&<div className={styles['body-header']} onClick={addSocialMedia}>
-          <Image
-            src={AddIcon}
-            alt="add"
-            width={12}
-            height={12}
-            className={styles.deleteIcon}
-          />
-          Add New
-        </div>}
+        {!isMobile && (
+          <div className={styles['body-header']} onClick={addSocialMedia}>
+            <Image
+              src={AddIcon}
+              alt="add"
+              width={12}
+              height={12}
+              className={styles.deleteIcon}
+            />
+            Add New
+          </div>
+        )}
         {mediaData.map((item: any, idx: any) => {
           return (
             <div className={styles.inputContainer} key={idx}>
@@ -552,30 +581,38 @@ const ListingSocialMediaEditModal = ({
                 className={styles.dropdown}
                 inputProps={{ 'aria-label': 'Without label' }}
               >
-                {allOptions.filter(obj=>obj.Show==='Y').map((option,i) => {
-                  return (
-                    <MenuItem key={i} value={option.socialMedia}>
-                      <div className={styles['menu-item']}>
-                        <img
-                          src={socialMediaIcons[option.socialMedia as SocialMediaOption]}
-                          alt={option.socialMedia}
-                          width={24}
-                          height={24}
-                        />
-                        <p style={{ marginLeft: '8px' }}>{option.socialMedia}</p>
-                      </div>
-                    </MenuItem>
-                  )
-                })}
+                {allOptions
+                  .filter((obj) => obj.Show === 'Y')
+                  .map((option, i) => {
+                    return (
+                      <MenuItem key={i} value={option.socialMedia}>
+                        <div className={styles['menu-item']}>
+                          <img
+                            src={
+                              socialMediaIcons[
+                                option.socialMedia as SocialMediaOption
+                              ]
+                            }
+                            alt={option.socialMedia}
+                            width={24}
+                            height={24}
+                          />
+                          <p style={{ marginLeft: '8px' }}>
+                            {option.socialMedia}
+                          </p>
+                        </div>
+                      </MenuItem>
+                    )
+                  })}
               </Select>
 
               <div className={styles['input-box']}>
                 <input
                   type="text"
+                  autoComplete="new"
                   placeholder={`URL`}
                   value={item.url}
                   name="url"
-                  autoComplete="url"
                   onChange={(e) => {
                     let val = e.target.value
                     onChange(idx, 'url', val)
@@ -613,10 +650,10 @@ const ListingSocialMediaEditModal = ({
           onClick={handleSubmit}
         >
           {submitBtnLoading ? (
-                <CircularProgress color="inherit" size={'14px'} />
-              ) : (
-                'Save'
-              )}
+            <CircularProgress color="inherit" size={'14px'} />
+          ) : (
+            'Save'
+          )}
         </button>
       </footer>
     </div>

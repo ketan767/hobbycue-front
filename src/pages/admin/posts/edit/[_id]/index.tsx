@@ -33,8 +33,8 @@ const EditUserPage: React.FC = () => {
     display: false,
     message: '',
   })
-console.log({genres});
-console.log({post})
+  console.log({ genres })
+  console.log({ post })
   useEffect(() => {
     const fetchPostData = async () => {
       const { err, res } = await getAllPosts(
@@ -122,6 +122,7 @@ console.log({post})
               <label>Visibility</label>
               <input
                 type="text"
+                autoComplete="new"
                 value={post?.visibility}
                 onChange={(e) =>
                   setPost({ ...post, visibility: e.target.value })
@@ -151,7 +152,7 @@ console.log({post})
                   setGenres([])
                   const chosenHobby = hobbies.find(
                     (obj) => obj._id === e.target.value,
-                  );
+                  )
                   setPost({
                     ...post,
                     _hobby: chosenHobby,

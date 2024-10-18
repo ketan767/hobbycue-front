@@ -46,7 +46,7 @@ const SearchPageFilter = () => {
   // const showAllPosts = useSelector((state: any) => state.search.showAllPosts)
   // const showAllBlogs = useSelector((state: any) => state.search.showAllBlogs)
 
-  const showAll = filter === 'all' || filter === undefined || filter === ''
+  const showAll = filter === 'all'
   const showAllUsers = filter === 'users'
   const showAllPeople = filter === 'people'
   const showAllPlace = filter === 'places'
@@ -130,13 +130,23 @@ const SearchPageFilter = () => {
         default:
           break
       }
-      router.push({
-        pathname: '/search',
-        query: {
-          ...router.query,
-          filter: filterType === 'all' ? '' : filterType,
-        },
-      })
+      if (filterType === 'all') {
+        const { filter, ...rest } = router.query
+        router.push({
+          pathname: '/search',
+          query: {
+            ...rest,
+          },
+        })
+      } else {
+        router.push({
+          pathname: '/search',
+          query: {
+            ...router.query,
+            filter: filterType,
+          },
+        })
+      }
     }
   }
 

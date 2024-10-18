@@ -221,7 +221,12 @@ const DropdownMenu: React.FC<Props> = ({
       >
         {search === true && (
           <>
-            <input type="text" placeholder="Search..." value={inputValue} />
+            <input
+              type="text"
+              autoComplete="new"
+              placeholder="Search..."
+              value={inputValue}
+            />
             <hr className={styles['modal-hr']} />
           </>
         )}

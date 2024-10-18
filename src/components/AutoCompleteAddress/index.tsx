@@ -40,6 +40,7 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
       <Autocomplete onLoad={handleLoad} onPlaceChanged={handlePlaceChanged}>
         <input
           type="text"
+          autoComplete="new"
           placeholder="Enter a location"
           value={inputValue}
           onChange={onInputChange}

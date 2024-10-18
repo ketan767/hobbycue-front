@@ -369,8 +369,8 @@ const RelatedListingRightEditModal: React.FC<Props> = ({
               <label>Listing Page</label>
               <input
                 type="text"
+                autoComplete="new"
                 placeholder="Search user profile..."
-                autoComplete="name"
                 required
                 value={pageInputValue}
                 onClick={() => setShowDropdown(true)}

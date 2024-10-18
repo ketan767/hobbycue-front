@@ -1058,7 +1058,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               <label className={styles['label-required']}>Address Label</label>
               <div className={styles['street-input-container']}>
                 <input
-                  type="text"
+                  type="text" autoComplete="new"
+
                   placeholder={`Eg: Home, Office`}
                   required
                   value={addressLabel}
@@ -1081,7 +1082,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               <label>Street Address</label>
               <div className={styles['street-input-container']}>
                 <input
-                  type="text"
+                  type="text" autoComplete="new"
+
                   placeholder={`Enter address or click on GPS icon to the right`}
                   required
                   value={data.street}
@@ -1166,7 +1168,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                   </CustomizedTooltips2>
                 </label>
                 <input
-                  type="text"
+                  type="text" autoComplete="new"
+
                   placeholder={`Building Name`}
                   value={data.society}
                   name="society"
@@ -1177,7 +1180,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               <div className={styles['input-box']}>
                 <label>Locality</label>
                 <input
-                  type="text"
+                  type="text" autoComplete="new"
+
                   placeholder={`Locality`}
                   value={data.locality}
                   name="locality"
@@ -1194,7 +1198,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               >
                 <label className={styles['label-required']}>City</label>
                 <input
-                  type="text"
+                  type="text" autoComplete="new"
+
                   placeholder={`City Name`}
                   required
                   value={data.city}
@@ -1209,7 +1214,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                 <div className={styles['input-box']}>
                   <label> Postal code</label>
                   <input
-                    type="text"
+                    type="text" autoComplete="new"
+
                     placeholder={`Postal Code`}
                     required
                     value={data.post_code}
@@ -1237,7 +1243,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
                     </CustomizedTooltips2>
                   </label>
                   <input
-                    type="text"
+                    type="text" autoComplete="new"
+
                     placeholder={`PIN Code`}
                     required
                     value={data.pin_code}
@@ -1256,7 +1263,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               >
                 <label className={styles['label-required']}>State</label>
                 <input
-                  type="text"
+                  type="text" autoComplete="new"
+
                   placeholder={`State Name`}
                   // required
                   value={data.state}
@@ -1273,7 +1281,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               >
                 <label className={styles['label-required']}>Country</label>
                 <input
-                  type="text"
+                  type="text" autoComplete="new"
+
                   placeholder={`Country Name`}
                   // required
                   value={data.country}
@@ -1290,7 +1299,8 @@ const ProfileAddressEditModal: React.FC<Props> = ({
               <input
                 className={styles['temp-input-box']}
                 disabled
-                type="text"
+                type="text" autoComplete="new"
+
                 placeholder={`This feature is under development. Come back soon to view this`}
               />
             </div>
