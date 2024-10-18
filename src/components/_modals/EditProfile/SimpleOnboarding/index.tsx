@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import styles from './styles.module.css'
 import { Button, CircularProgress, useMediaQuery } from '@mui/material'
 import {
@@ -45,6 +45,7 @@ import {
 import { useRouter } from 'next/router'
 import AddHobby from '../../AddHobby/AddHobbyModal'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
+import TrendingHobbyItem from './TrendingHobbyItem'
 
 type Props = {
   onComplete?: () => void
@@ -132,7 +133,7 @@ const SimpleOnboarding: React.FC<Props> = ({
   const dispatch = useDispatch()
   const router = useRouter()
   const selectedHobbyToAdd = propData && propData?.selectedHobbyToAdd
-  const { user } = useSelector((state: RootState) => state.user)
+  const { user, isLoggedIn } = useSelector((state: RootState) => state.user)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [SubmitAddress, setSubmitAddress] = useState<boolean>(false)
   const [selectedAddress, setSelectedAddress] = useState('')
@@ -140,6 +141,7 @@ const SimpleOnboarding: React.FC<Props> = ({
   const [isError, setIsError] = useState(false)
   const [HobbyError, setHobbyError] = useState(false)
   const [focusedHobbyIndex, setFocusedHobbyIndex] = useState<number>(-1)
+  const [focusedLocationIdx, setFocusedLocationIdx] = useState<number>(-1)
   const [hobbyInputValue, setHobbyInputValue] = useState('')
   const [selectedHobbies, setselectedHobbies] = useState<
     DropdownListItemHobby[]
@@ -155,6 +157,7 @@ const SimpleOnboarding: React.FC<Props> = ({
   const hobbyDropDownWrapperRef = useRef<HTMLDivElement>(null)
   const [userHobbies, setUserHobbies]: any = useState([])
   const hobbyDropdownRef = useRef<HTMLDivElement>(null)
+  const locationDropdownRef = useRef<HTMLDivElement>(null)
   const [urlSpanLength, setUrlSpanLength] = useState<number>(0)
   const [dropdownList, setShowDropdownList] = useState<DropdownListItem[]>([])
   const urlSpanRef = useRef<HTMLSpanElement>(null)
@@ -163,7 +166,9 @@ const SimpleOnboarding: React.FC<Props> = ({
   const [ShowAutoAddress, setShowAutoAddress] = useState<boolean>(false)
   const [showHobbyDowpdown, setShowHobbyDowpdown] = useState<boolean>(false)
   const [errorOrmsg, setErrorOrmsg] = useState<string | null>(null)
-  const [trendingHobbies, setTrendingHobbies] = useState([])
+  const [trendingHobbies, setTrendingHobbies] = useState<
+    DropdownListItemHobby[]
+  >([])
   const [Addressdata, setAddressData] = useState<ProfileAddressPayload>({
     street: '',
     society: '',
@@ -200,7 +205,7 @@ const SimpleOnboarding: React.FC<Props> = ({
   const [showSnackbar, setShowSnackbar] = useState<Snackbar>({
     triggerOpen: false,
     message: '',
-    type: 'success' || 'error',
+    type: 'success',
   })
 
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
@@ -209,6 +214,7 @@ const SimpleOnboarding: React.FC<Props> = ({
 
   const handleInputChangeAddress = async (event: any) => {
     setShowDropdown(false)
+    setFocusedLocationIdx(-1)
     const { name, value } = event.target
     setAddressData((prev) => ({ ...prev, [name]: value }))
     setInputErrs((prev) => ({ ...prev, [name]: null }))
@@ -295,7 +301,7 @@ const SimpleOnboarding: React.FC<Props> = ({
 
   const updateStreet = async () => {
     const detail: any = {}
-    const terms = selectedAddress.split(',').map((term) => term.trim())
+    const terms = selectedAddress?.split(',')?.map((term) => term.trim())
 
     if (terms.length >= 1) detail.country = terms[terms.length - 1]
     if (terms.length >= 2) detail.state = terms[terms.length - 2]
@@ -346,9 +352,14 @@ const SimpleOnboarding: React.FC<Props> = ({
       ) {
         setInputErrs((prev) => ({
           ...prev,
-          hobbies:
-            'Please Type and Select hobbies individually. Added ones will appear below the Hobbies* label',
+          hobbies: 'no-error-text',
         }))
+        setShowSnackbar({
+          triggerOpen: true,
+          message:
+            'Please Type and Select hobbies individually. Added ones will appear below the Hobbies* label',
+          type: 'error',
+        })
         return
       } else {
         setInputErrs((prev) => ({
@@ -665,22 +676,37 @@ const SimpleOnboarding: React.FC<Props> = ({
   }, [isError])
 
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
-  useEffect(() => {
-    const handleKeyPress = (event: any) => {
-      if (event.key === 'Enter') {
-        if (event?.srcElement?.tagName === 'svg') {
-          return
-        }
-        nextButtonRef.current?.click()
+
+  const handleKeyboardClose = useCallback(
+    (e: any) => {
+      console.log('asifs inner')
+      console.log('asifs showHobbyDowpdown', showHobbyDowpdown)
+
+      switch (e.key) {
+        case 'Escape':
+          if (showHobbyDowpdown || ShowAutoAddress) {
+            e.stopPropagation() // keydown event will not propagate (bubble) to the parent
+            setShowAutoAddress(false)
+            setShowHobbyDowpdown(false)
+          }
+          break
+        case 'Tab':
+          setShowAutoAddress(false)
+          setShowHobbyDowpdown(false)
+          break
+        default:
+          break
       }
-    }
+    },
+    [showHobbyDowpdown, ShowAutoAddress, isChanged], // these changes are to be tracked, so in dependency array
+  )
 
-    window.addEventListener('keydown', handleKeyPress)
-
+  useEffect(() => {
+    document.body.addEventListener('keydown', handleKeyboardClose) // had to make it child of document (body) to take advantage of the flow
     return () => {
-      window.removeEventListener('keydown', handleKeyPress)
+      document.body.removeEventListener('keydown', handleKeyboardClose)
     }
-  }, [])
+  }, [showHobbyDowpdown, ShowAutoAddress, isChanged]) // these changes are to be tracked, so in dependency array
 
   const handleGeocode = (lat: any, long: any) => {
     setShowDropdown(true)
@@ -974,7 +1000,68 @@ const SimpleOnboarding: React.FC<Props> = ({
     setFocusedHobbyIndex(-1)
   }
 
+  const handleLocationKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    console.log('asifs key', e.key)
+    console.log('asifs focusedLocationIdx', focusedLocationIdx)
+
+    switch (e.key) {
+      case 'ArrowDown':
+        setFocusedLocationIdx((prevIndex) =>
+          prevIndex < suggestions.length - 1 ? prevIndex + 1 : prevIndex,
+        )
+        break
+      case 'ArrowUp':
+        setFocusedLocationIdx((prevIndex) =>
+          prevIndex > 0 ? prevIndex - 1 : prevIndex,
+        )
+        break
+      case 'Enter':
+        if (Addressdata.street.trim().length !== 0 && !ShowAutoAddress) {
+        } else if (focusedLocationIdx !== -1 && ShowAutoAddress) {
+          handleSelectAddressTwo(
+            suggestions[focusedLocationIdx]?.description,
+            suggestions[focusedLocationIdx]?.place_id,
+          )
+          setSelectedAddress(suggestions[focusedHobbyIndex]?.description)
+        } else if (
+          focusedLocationIdx === -1 &&
+          Addressdata.street.trim().length !== 0
+        ) {
+          setShowAutoAddress(false)
+        }
+        break
+      default:
+        break
+    }
+
+    // Scroll into view logic
+    const container = locationDropdownRef.current
+    const selectedItem = container?.children[focusedHobbyIndex] as HTMLElement
+
+    if (selectedItem && container) {
+      const containerRect = container.getBoundingClientRect()
+      const itemRect = selectedItem.getBoundingClientRect()
+      console.log('asifs top', containerRect.top)
+      console.log('asifs top 2', itemRect.top)
+
+      // Check if the item is out of view and adjust the scroll position
+      if (itemRect.bottom + selectedItem.offsetHeight >= containerRect.bottom) {
+        container.scrollTop +=
+          itemRect.bottom - containerRect.bottom + selectedItem.offsetHeight + 5
+      } else if (
+        itemRect.top <=
+        containerRect.top + selectedItem.offsetHeight
+      ) {
+        container.scrollTop -=
+          containerRect.top - itemRect.top + selectedItem.offsetHeight + 5
+      }
+    }
+  }
+
   const handleHobbyKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    console.log('asifs key', e.key)
+    console.log('asifs focusedHobbyIndex', focusedHobbyIndex)
+
     switch (e.key) {
       case 'ArrowDown':
         setFocusedHobbyIndex((prevIndex) =>
@@ -1003,7 +1090,31 @@ const SimpleOnboarding: React.FC<Props> = ({
       default:
         break
     }
+
+    // Scroll into view logic
+    const container = hobbyDropdownRef.current
+    const selectedItem = container?.children[focusedHobbyIndex] as HTMLElement
+
+    if (selectedItem && container) {
+      const containerRect = container.getBoundingClientRect()
+      const itemRect = selectedItem.getBoundingClientRect()
+      console.log('asifs top', containerRect.top)
+      console.log('asifs top 2', itemRect.top)
+
+      // Check if the item is out of view and adjust the scroll position
+      if (itemRect.bottom + selectedItem.offsetHeight >= containerRect.bottom) {
+        container.scrollTop +=
+          itemRect.bottom - containerRect.bottom + selectedItem.offsetHeight + 5
+      } else if (
+        itemRect.top <=
+        containerRect.top + selectedItem.offsetHeight
+      ) {
+        container.scrollTop -=
+          containerRect.top - itemRect.top + selectedItem.offsetHeight + 5
+      }
+    }
   }
+
   const fetchTrendingHobbies = async () => {
     const { err, res } = await TrendingHobbiesByUser()
 
@@ -1088,9 +1199,14 @@ const SimpleOnboarding: React.FC<Props> = ({
             const { err, res } = await SendHobbyRequest(jsonData)
             if (res?.data.success) {
               setShowAddHobbyModal(false)
-              setErrorOrmsg(
-                `${hobbyInputValue} has been requested. You can add it later if approved.`,
-              )
+              // setErrorOrmsg(
+              //   `${hobbyInputValue} has been requested. You can add it later if approved.`,
+              // )
+              setShowSnackbar({
+                triggerOpen: true,
+                type: 'success',
+                message: `${hobbyInputValue} has been requested. You can add it later if approved.`,
+              })
               setHobbyInputValue('')
             } else if (err) {
               setShowSnackbar({
@@ -1136,6 +1252,32 @@ const SimpleOnboarding: React.FC<Props> = ({
         isError={isError}
       />
     )
+  }
+
+  const handleTrendingClick = (item: any) => {
+    // if (isAlreadySelected) {
+    //   setInputErrs((prev) => ({
+    //     ...prev,
+    //     hobbies: 'Hobby already exists in your list',
+    //   }))
+    // } else {
+    //   setselectedHobbies((prev) => [...prev, item])
+    //   setInputErrs((prev) => ({
+    //     ...prev,
+    //     hobbies: null,
+    //   }))
+    //   setIsChanged(true)
+    //   dispatch(setHasChanges(true))
+    // }
+    setselectedHobbies((prev) =>
+      prev.some((el) => el.display === item.display) ? prev : [...prev, item],
+    )
+    setInputErrs((prev) => ({
+      ...prev,
+      hobbies: null,
+    }))
+    setIsChanged(true)
+    dispatch(setHasChanges(true))
   }
 
   return (
@@ -1210,11 +1352,12 @@ const SimpleOnboarding: React.FC<Props> = ({
                   type="text"
                   placeholder={`Type in your Society, Locality, or City`}
                   required
-                  value={Addressdata.street}
+                  value={Addressdata.street.trim()}
                   name="street"
                   ref={AddressRef}
                   onChange={handleInputChangeAddress}
                   autoComplete="off"
+                  onKeyDown={handleLocationKeyDown}
                 />
                 <Image
                   src={LocationIcon}
@@ -1239,7 +1382,7 @@ const SimpleOnboarding: React.FC<Props> = ({
               </div>
               <div>
                 {ShowAutoAddress && (
-                  <div className={styles['dropdown']}>
+                  <div className={styles['dropdown']} ref={locationDropdownRef}>
                     {suggestions.map((suggestion, index) => (
                       <p
                         onClick={() => {
@@ -1250,6 +1393,11 @@ const SimpleOnboarding: React.FC<Props> = ({
                           setSelectedAddress(suggestion.description)
                         }}
                         key={index}
+                        className={
+                          index === focusedLocationIdx
+                            ? styles['dropdown-option-focus']
+                            : ''
+                        }
                       >
                         {suggestion.description}
                       </p>
@@ -1287,44 +1435,56 @@ const SimpleOnboarding: React.FC<Props> = ({
                 }`}
               >
                 <label className={styles['label-required']}>Hobbies</label>
-                <ul className={`${styles['hobby-list']}`}>
+
+                <div className={styles.hobbyInput}>
+                  {/* <ul className={`${styles['selected-hobby-list']}`}> */}
                   {selectedHobbies?.map((item: any) => {
                     if (typeof item === 'string') return
                     return (
-                      <div key={item._id}>
+                      <button
+                        key={item.display}
+                        onClick={() => removeSelectedHobby(item)}
+                        style={{
+                          cursor: 'pointer',
+                          borderRadius: 24,
+                          border: 'none',
+                        }}
+                      >
                         <li>
                           {item?.display}
 
                           <Image
                             src={CrossIcon}
-                            style={{ cursor: 'pointer' }}
                             width={18}
                             height={18}
                             alt="cancel"
-                            onClick={() => removeSelectedHobby(item)}
                           />
                         </li>
-                      </div>
+                      </button>
                     )
                   })}
-                </ul>
-                <input
-                  type="text"
-                  placeholder="Type and select..."
-                  autoComplete="off"
-                  required
-                  value={hobbyInputValue}
-                  onFocus={() => setShowHobbyDowpdown(true)}
-                  // onBlur={() =>
-                  //   setTimeout(() => {
-                  //     if (!isMobile) setShowHobbyDowpdown(false)
-                  //   }, 300)
-                  // }
-                  ref={hobbysearchref}
-                  onChange={handleHobbyInputChange}
-                  onKeyDown={handleHobbyKeyDown}
-                />
-                {inputErrs.hobbies || errorOrmsg ? (
+
+                  <input
+                    type="text"
+                    placeholder="Type and select..."
+                    autoComplete="off"
+                    required
+                    value={hobbyInputValue}
+                    onFocus={() => setShowHobbyDowpdown(true)}
+                    // onBlur={() =>
+                    //   setTimeout(() => {
+                    //     if (!isMobile) setShowHobbyDowpdown(false)
+                    //   }, 300)
+                    // }
+                    ref={hobbysearchref}
+                    onChange={handleHobbyInputChange}
+                    onKeyDown={handleHobbyKeyDown}
+                  />
+                  {/* </ul> */}
+                </div>
+
+                {(inputErrs.hobbies && inputErrs.hobbies !== 'no-error-text') ||
+                errorOrmsg ? (
                   <p
                     className={
                       inputErrs.hobbies
@@ -1364,46 +1524,21 @@ const SimpleOnboarding: React.FC<Props> = ({
                 )}
               </div>
             </div>
-            <label className={styles['label']}>Trending - click to add</label>
 
             <ul
               className={`${styles['hobby-list']} ${styles['trending-hobbies-list']}`}
             >
+              <label className={styles['label']}>Click to add : </label>
               {trendingHobbies?.map((item: any) => {
                 if (typeof item === 'string') return
 
-                const isAlreadySelected = selectedHobbies?.some(
-                  (hobby) => hobby?._id === item?._id,
-                )
-
-                const handleClick = () => {
-                  if (isAlreadySelected) {
-                    setInputErrs((prev) => ({
-                      ...prev,
-                      hobbies: 'Hobby already exists in your list',
-                    }))
-                  } else {
-                    setselectedHobbies((prev) => [...prev, item])
-                    setInputErrs((prev) => ({
-                      ...prev,
-                      hobbies: null,
-                    }))
-                    setIsChanged(true)
-                    dispatch(setHasChanges(true))
-                  }
-                }
-
                 return (
-                  <div
-                    className={styles.trendingHobby}
-                    onClick={handleClick}
-                    key={item._id}
-                  >
-                    <li>
-                      {item?.display}
-                      {item?.genre && ` - ${item?.genre?.display} `}
-                    </li>
-                  </div>
+                  <TrendingHobbyItem
+                    item={item}
+                    key={item?.slug}
+                    handleTrendingClick={handleTrendingClick}
+                    selectedHobbies={selectedHobbies}
+                  />
                 )
               })}
             </ul>
@@ -1462,6 +1597,17 @@ const SimpleOnboarding: React.FC<Props> = ({
           )}
         </footer>
       </div>
+      <CustomSnackbar
+        message={showSnackbar.message}
+        type={showSnackbar.type}
+        triggerOpen={showSnackbar.triggerOpen}
+        closeSnackbar={() => {
+          setShowSnackbar({
+            ...showSnackbar,
+            triggerOpen: false,
+          })
+        }}
+      />
     </>
   )
 }
