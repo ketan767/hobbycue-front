@@ -319,9 +319,9 @@ const ModalManager: React.FC = () => {
   )
 
   useEffect(() => {
-    document.addEventListener('keydown', escFunction, { capture: true })
+    document.addEventListener('keydown', escFunction)
     return () => {
-      document.removeEventListener('keydown', escFunction, { capture: true })
+      document.removeEventListener('keydown', escFunction)
     }
   }, [escFunction])
 
