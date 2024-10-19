@@ -1436,34 +1436,61 @@ const SimpleOnboarding: React.FC<Props> = ({
                 }`}
               >
                 <label className={styles['label-required']}>Hobbies</label>
-
                 <div className={styles.hobbyInput}>
-                  {/* <ul className={`${styles['selected-hobby-list']}`}> */}
-                  {selectedHobbies?.map((item: any) => {
-                    if (typeof item === 'string') return
-                    return (
-                      <button
-                        key={item.display}
-                        onClick={() => removeSelectedHobby(item)}
-                        style={{
-                          cursor: 'pointer',
-                          borderRadius: 24,
-                          border: 'none',
-                        }}
-                      >
-                        <li>
-                          {item?.display}
+                  {
+                    selectedHobbies.length > 0 &&
+                      // <ul className={styles.selectedHobbies}>
+                      selectedHobbies?.map((item: any) => {
+                        if (typeof item === 'string') return
+                        return (
+                          <button
+                            key={item.display}
+                            onClick={() => removeSelectedHobby(item)}
+                            style={{
+                              cursor: 'pointer',
+                              borderRadius: 24,
+                              border: 'none',
+                            }}
+                          >
+                            <li>
+                              {item?.display}
 
-                          <Image
-                            src={CrossIcon}
-                            width={18}
-                            height={18}
-                            alt="cancel"
-                          />
-                        </li>
-                      </button>
-                    )
-                  })}
+                              <Image
+                                src={CrossIcon}
+                                width={18}
+                                height={18}
+                                alt="cancel"
+                              />
+                            </li>
+                          </button>
+                        )
+                      })
+                    // </ul>
+                  }
+
+
+                  <input
+                    type="text"
+                    placeholder="Type and select..."
+                    autoComplete="off"
+                    className={`${styles.inputDefault} ${
+                      selectedHobbies.length > 0
+                        ? styles.inputShort
+                        : styles.inputLong
+                    }`}
+                    required
+                    value={hobbyInputValue}
+                    onFocus={() => setShowHobbyDowpdown(true)}
+                    // onBlur={() =>
+                    //   setTimeout(() => {
+                    //     if (!isMobile) setShowHobbyDowpdown(false)
+                    //   }, 300)
+                    // }
+                    ref={hobbysearchref}
+                    onChange={handleHobbyInputChange}
+                    onKeyDown={handleHobbyKeyDown}
+                  />
+
 
                 </div>
                 <input

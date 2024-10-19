@@ -16,13 +16,13 @@ const TrendingHobbyItem: React.FC<PropsTypeTrendingHobbyItem> = ({
   const [show, setShow] = useState<boolean>(true)
 
   useEffect(() => {
-    setShow(!selectedHobbies.some((el) => el?.display === item?.display))
+    setShow(!selectedHobbies?.some((el) => el?.display === item?.display))
   }, [selectedHobbies])
 
   return show ? (
     <button
       className={styles.trendingHobby}
-      onClick={() => handleTrendingClick(item)}
+      onClick={() => handleTrendingClick?.(item)}
     >
       <li>
         {item?.display}

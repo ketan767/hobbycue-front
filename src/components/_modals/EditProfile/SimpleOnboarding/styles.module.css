@@ -107,7 +107,7 @@
   column-gap: var(--spacing-8);
   animation: fadeDown 0.3s ease forwards;
 }
-.hobbyInput input {
+.inputDefault {
   height: 26.5px;
   background: #f8f9fa;
   border: none;
@@ -115,7 +115,12 @@
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
-  min-width: 40%;
+}
+.inputLong {
+  width: 100%;
+}
+.inputShort {
+  width: 100px;
 }
 .hobbyInput li {
   list-style: none;
