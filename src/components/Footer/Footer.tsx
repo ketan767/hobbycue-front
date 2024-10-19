@@ -274,6 +274,7 @@ const Footer: React.FC = () => {
               <div className={styles['input-box']}>
                 <input
                   type="text"
+                  autoComplete="new"
                   placeholder={`Email ID`}
                   value={email}
                   name="society"

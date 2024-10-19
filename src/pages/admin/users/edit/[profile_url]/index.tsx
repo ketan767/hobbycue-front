@@ -87,6 +87,7 @@ const EditUserPage: React.FC = () => {
               <label>Full Name</label>
               <input
                 type="text"
+                autoComplete="new"
                 value={user?.full_name}
                 onChange={(e) =>
                   setUser({ ...user, full_name: e.target.value })
@@ -97,6 +98,7 @@ const EditUserPage: React.FC = () => {
               <label>Tagline</label>
               <input
                 type="text"
+                autoComplete="new"
                 value={user?.tagline}
                 onChange={(e) => setUser({ ...user, tagline: e.target.value })}
               />
@@ -105,6 +107,7 @@ const EditUserPage: React.FC = () => {
               <label>Display Name</label>
               <input
                 type="text"
+                autoComplete="new"
                 value={user?.display}
                 onChange={(e) => setUser({ ...user, display: e.target.value })}
               />
@@ -113,6 +116,7 @@ const EditUserPage: React.FC = () => {
               <label>Profile Url</label>
               <input
                 type="text"
+                autoComplete="new"
                 value={user?.profile_url}
                 onChange={(e) =>
                   setUser({ ...user, profile_url: e.target.value })
@@ -123,6 +127,7 @@ const EditUserPage: React.FC = () => {
               <label>Email</label>
               <input
                 type="text"
+                autoComplete="new"
                 value={user?.email}
                 onChange={(e) => setUser({ ...user, email: e.target.value })}
               />
@@ -131,6 +136,7 @@ const EditUserPage: React.FC = () => {
               <label>Public Email</label>
               <input
                 type="text"
+                autoComplete="new"
                 value={user?.public_email}
                 onChange={(e) =>
                   setUser({ ...user, public_email: e.target.value })
@@ -143,11 +149,13 @@ const EditUserPage: React.FC = () => {
                 <input
                   className={styles.prefix}
                   type="text"
+                  autoComplete="new"
                   value={user?.phone.prefix}
                   onChange={(e) => setUser({ ...user, prefix: e.target.value })}
                 />
                 <input
                   type="text"
+                  autoComplete="new"
                   value={user?.phone.number}
                   onChange={(e) => setUser({ ...user, number: e.target.value })}
                 />
@@ -159,11 +167,13 @@ const EditUserPage: React.FC = () => {
                 <input
                   className={styles.prefix}
                   type="text"
+                  autoComplete="new"
                   value={user?.whatsapp_number.prefix}
                   onChange={(e) => setUser({ ...user, prefix: e.target.value })}
                 />
                 <input
                   type="text"
+                  autoComplete="new"
                   value={user?.whatsapp_number.number}
                   onChange={(e) => setUser({ ...user, number: e.target.value })}
                 />
@@ -173,6 +183,7 @@ const EditUserPage: React.FC = () => {
               <label>Year of Birth</label>
               <input
                 type="text"
+                autoComplete="new"
                 value={user?.year_of_birth}
                 onChange={(e) =>
                   setUser({ ...user, year_of_birth: e.target.value })
@@ -190,6 +201,7 @@ const EditUserPage: React.FC = () => {
               <label>Website</label>
               <input
                 type="text"
+                autoComplete="new"
                 value={user?.website}
                 onChange={(e) => setUser({ ...user, website: e.target.value })}
               />
@@ -201,6 +213,7 @@ const EditUserPage: React.FC = () => {
                 <label>Street</label>
                 <input
                   type="text"
+                  autoComplete="new"
                   value={user?.primary_address?.street}
                   onChange={(e) => setUser({ ...user, Street: e.target.value })}
                 />
@@ -210,6 +223,7 @@ const EditUserPage: React.FC = () => {
                   <label>Society</label>
                   <input
                     type="text"
+                    autoComplete="new"
                     value={user?.primary_address?.society}
                     onChange={(e) =>
                       setUser({ ...user, website: e.target.value })
@@ -220,6 +234,7 @@ const EditUserPage: React.FC = () => {
                   <label>Locality</label>
                   <input
                     type="text"
+                    autoComplete="new"
                     value={user?.primary_address?.locality}
                     onChange={(e) =>
                       setUser({ ...user, website: e.target.value })
@@ -232,6 +247,7 @@ const EditUserPage: React.FC = () => {
                   <label>City</label>
                   <input
                     type="text"
+                    autoComplete="new"
                     value={user?.primary_address?.city}
                     onChange={(e) =>
                       setUser({ ...user, website: e.target.value })
@@ -242,6 +258,7 @@ const EditUserPage: React.FC = () => {
                   <label>Pin code</label>
                   <input
                     type="text"
+                    autoComplete="new"
                     value={user?.primary_address?.pin_code}
                     onChange={(e) =>
                       setUser({ ...user, website: e.target.value })
@@ -254,6 +271,7 @@ const EditUserPage: React.FC = () => {
                   <label>State</label>
                   <input
                     type="text"
+                    autoComplete="new"
                     value={user?.primary_address?.state}
                     onChange={(e) =>
                       setUser({ ...user, website: e.target.value })
@@ -264,6 +282,7 @@ const EditUserPage: React.FC = () => {
                   <label>Country</label>
                   <input
                     type="text"
+                    autoComplete="new"
                     value={user?.primary_address?.country}
                     onChange={(e) =>
                       setUser({ ...user, website: e.target.value })

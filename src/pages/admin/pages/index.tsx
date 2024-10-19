@@ -261,6 +261,7 @@ const AdminPages: React.FC = () => {
             >
               <input
                 type="text"
+                autoComplete="new"
                 value={data.search.value}
                 onChange={handleInputChange}
                 placeholder="Search users..."

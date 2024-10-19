@@ -763,7 +763,7 @@ const MainContent: React.FC<SearchResultsProps> = ({
 
   return (
     <main className={styles.searchResults}>
-      {noResultsFound ? (
+      {noResultsFound && searchLoading === false ? (
         <div className={styles['no-results-wrapper']}>
           {queryString === '' ? (
             <p>
@@ -775,7 +775,9 @@ const MainContent: React.FC<SearchResultsProps> = ({
             </p>
           ) : (
             <p>
-              {`No results for query "${queryString}" and filter "${filter}". `}
+              {`No results for query "${queryString}" ${
+                filter ? `and filter "${filter}"` : ''
+              }. `}
               Try shorter or alternate keywords. Or{' '}
               <Link href={'/contact'}>contact us</Link> if you feel we are
               missing something. For further help,{' '}

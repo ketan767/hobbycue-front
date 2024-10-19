@@ -186,6 +186,7 @@ const ClaimModal = (props: Props) => {
             <div className={styles['street-input-container']}>
               <input
                 type="text"
+                autoComplete="new"
                 required
                 name="profileName"
                 value={formData.profileName}
@@ -201,6 +202,7 @@ const ClaimModal = (props: Props) => {
               <div className={styles['street-input-container']}>
                 <input
                   type="text"
+                  autoComplete="new"
                   required
                   name="email"
                   onChange={handleInputChange}
@@ -232,10 +234,10 @@ const ClaimModal = (props: Props) => {
                 />
                 <input
                   type="text"
+                  autoComplete="new"
                   placeholder={`Phone number`}
                   value={formData?.phonenumber}
                   name="phone"
-                  autoComplete="phone"
                   required
                   ref={phoneRef}
                   onChange={handleInputChange}
@@ -249,6 +251,7 @@ const ClaimModal = (props: Props) => {
             <div className={styles['street-input-container']}>
               <input
                 type="text"
+                autoComplete="new"
                 required
                 name="pageUrl"
                 onChange={handleInputChange}
@@ -285,6 +288,7 @@ const ClaimModal = (props: Props) => {
             <div className={styles['street-input-container']}>
               <input
                 type="text"
+                autoComplete="new"
                 required
                 name="websiteLink"
                 onChange={handleInputChange}

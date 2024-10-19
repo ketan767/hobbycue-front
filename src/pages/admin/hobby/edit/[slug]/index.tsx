@@ -128,6 +128,7 @@ const EditUserPage: React.FC = () => {
               <label>Display</label>
               <input
                 type="text"
+                autoComplete="new"
                 value={user?.display}
                 onChange={(e) => setUser({ ...user, display: e.target.value })}
               />
@@ -136,6 +137,7 @@ const EditUserPage: React.FC = () => {
               <label>Category</label>
               <input
                 type="text"
+                autoComplete="new"
                 value={user?.category?.display || user?.category}
                 onChange={(e) => setUser({ ...user, category: e.target.value })}
               />
@@ -144,6 +146,7 @@ const EditUserPage: React.FC = () => {
               <label>Sub Category</label>
               <input
                 type="text"
+                autoComplete="new"
                 value={user?.sub_category?.display || user?.sub_category}
                 onChange={(e) =>
                   setUser({ ...user, sub_category: e.target.value })
@@ -154,6 +157,7 @@ const EditUserPage: React.FC = () => {
               <label>Hobby url</label>
               <input
                 type="text"
+                autoComplete="new"
                 value={user?.slug}
                 onChange={(e) => setUser({ ...user, slug: e.target.value })}
               />
@@ -193,6 +197,7 @@ const EditUserPage: React.FC = () => {
               </ul>
               <input
                 type="text"
+                autoComplete="new"
                 value={searchKey}
                 onChange={(e) => setSearchKey(e.target.value)}
               />
@@ -214,6 +219,7 @@ const EditUserPage: React.FC = () => {
               </ul>
               <input
                 type="text"
+                autoComplete="new"
                 value={tag}
                 onChange={(e) => setTag(e.target.value)}
               />

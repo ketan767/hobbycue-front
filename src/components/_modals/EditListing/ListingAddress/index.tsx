@@ -822,6 +822,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                 >
                   <input
                     type="text"
+                    autoComplete="new"
                     placeholder={`Zoom, YouTube Live, Facebook Live, etc.`}
                     value={data.url.value}
                     name="url"
@@ -864,6 +865,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                 >
                   <input
                     type="text"
+                    autoComplete="new"
                     placeholder={`Enter address or click on GPS icon to the right`}
                     value={data.street.value}
                     name="street"
@@ -954,6 +956,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
 
                   <input
                     type="text"
+                    autoComplete="new"
                     placeholder={`Building Name`}
                     value={data.society.value}
                     required={listingModalData.type === listingTypes.PLACE}
@@ -971,6 +974,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   <label>Locality</label>
                   <input
                     type="text"
+                    autoComplete="new"
                     placeholder={`Locality`}
                     value={data.locality.value}
                     required={listingModalData.type === listingTypes.PLACE}
@@ -990,6 +994,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   <label>City</label>
                   <input
                     type="text"
+                    autoComplete="new"
                     placeholder={`City Name`}
                     required
                     value={data.city.value}
@@ -1005,6 +1010,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                     <label>Postal Code</label>
                     <input
                       type="text"
+                      autoComplete="new"
                       placeholder={`Postal Code`}
                       value={data.post_code.value}
                       required={listingModalData.type === listingTypes.PLACE}
@@ -1036,6 +1042,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                     </label>
                     <input
                       type="text"
+                      autoComplete="new"
                       placeholder={`GPS PIN Code`}
                       value={data.pin_code.value}
                       required={listingModalData.type === listingTypes.PLACE}
@@ -1058,6 +1065,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   <label>State</label>
                   <input
                     type="text"
+                    autoComplete="new"
                     placeholder={`State Name`}
                     required
                     value={data.state.value}
@@ -1075,6 +1083,7 @@ const ListingAddressEditModal: React.FC<Props> = ({
                   <label>Country</label>
                   <input
                     type="text"
+                    autoComplete="new"
                     placeholder={`Country Name`}
                     required
                     value={data.country.value}
