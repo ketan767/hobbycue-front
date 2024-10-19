@@ -648,7 +648,7 @@ const ListingGeneralEditModal: React.FC<Props> = ({
               <textarea
                 className={styles['long-input-box']}
                 placeholder="This information is visible only to Admins of this Page"
-                autoComplete="nickname"
+                autoComplete="new"
                 value={data.admin_note.value}
                 name="admin_note"
                 onChange={handleInputChange}

@@ -519,7 +519,6 @@ const Contact: React.FC<Props> = ({}) => {
                       value={data.public_email.value}
                       ref={inputEmailRef}
                       name="public_email"
-                      autoComplete="email"
                       onChange={handleInputChange}
                     />
                     <p className={styles['helper-text']}>
@@ -559,7 +558,6 @@ const Contact: React.FC<Props> = ({}) => {
                       placeholder={`Phone Number`}
                       value={data.phone.number}
                       name="phone"
-                      autoComplete="phone"
                       onChange={handleInputChange}
                       ref={phoneRef}
                       className={styles['phone-input']}
@@ -667,7 +665,6 @@ const Contact: React.FC<Props> = ({}) => {
                       autoComplete="new"
                       placeholder={`WhatsApp Number`}
                       value={data.whatsapp_number.number}
-                      autoComplete="phone"
                       name="whatsapp_number"
                       onChange={handleInputChange}
                       ref={WhtphoneRef}

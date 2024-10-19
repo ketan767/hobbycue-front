@@ -1208,7 +1208,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                                 type="text"
                                 autoComplete="new"
                                 placeholder="Search hobby..."
-                                autoComplete="off"
                                 required
                                 value={hobbyInputValue}
                                 onFocus={() => setShowHobbyDowpdown(true)}
@@ -1259,7 +1258,6 @@ const ProfileHobbyEditModal: React.FC<Props> = ({
                           >
                             <div className={styles['input-box']}>
                               <input
-                                autoComplete="off"
                                 ref={genreInputRef}
                                 type="text"
                                 autoComplete="new"
