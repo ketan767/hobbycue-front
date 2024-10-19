@@ -265,7 +265,6 @@ const ListingContactToOwner: React.FC<Props> = ({
               type="text"
               autoComplete="new"
               placeholder="Purpose"
-              autoComplete="name"
               required
               value={data.sub}
               name="full_name"

@@ -621,7 +621,6 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
                   placeholder={`URL`}
                   value={item.url}
                   name="url"
-                  autoComplete="url"
                   onChange={(e) => {
                     let val = e.target.value
                     onChange(idx, 'url', val)

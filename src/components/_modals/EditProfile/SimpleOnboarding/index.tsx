@@ -1357,8 +1357,6 @@ const SimpleOnboarding: React.FC<Props> = ({
                   name="street"
                   ref={AddressRef}
                   onChange={handleInputChangeAddress}
-
-                  autoComplete="off"
                   onKeyDown={handleLocationKeyDown}
 
                 />
@@ -1467,7 +1465,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                     )
                   })}
 
-                </ul>
+                </div>
                 <input
                   type="text"
                   autoComplete="new"
