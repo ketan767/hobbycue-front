@@ -81,9 +81,10 @@
   display: none;
 }
 @media screen and (max-width: 1100px) {
-  .custom-backdrop{
+  /* 💥 asifs can cause problem  */
+  /* .custom-backdrop{
     top: 48px;
-  }
+  } */
 
   .modal-wrapper {
     display: grid;
@@ -134,6 +135,12 @@
 
   .self-centre{
     width: 96vw;
+  }
+
+  .responsive-popup {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 

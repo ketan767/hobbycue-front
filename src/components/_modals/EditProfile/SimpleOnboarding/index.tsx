@@ -303,12 +303,12 @@ const SimpleOnboarding: React.FC<Props> = ({
     const detail: any = {}
     const terms = selectedAddress?.split(',')?.map((term) => term.trim())
 
-    if (terms.length >= 1) detail.country = terms[terms.length - 1]
-    if (terms.length >= 2) detail.state = terms[terms.length - 2]
-    if (terms.length >= 3) detail.city = terms[terms.length - 3]
-    if (terms.length >= 4) detail.locality = terms[terms.length - 4]
-    if (terms.length >= 5) detail.society = terms[terms.length - 5]
-    if (terms.length >= 6)
+    if (terms?.length >= 1) detail.country = terms[terms.length - 1]
+    if (terms?.length >= 2) detail.state = terms[terms.length - 2]
+    if (terms?.length >= 3) detail.city = terms[terms.length - 3]
+    if (terms?.length >= 4) detail.locality = terms[terms.length - 4]
+    if (terms?.length >= 5) detail.society = terms[terms.length - 5]
+    if (terms?.length >= 6)
       detail.street = terms.slice(0, terms.length - 5).join(', ')
 
     setAddressData((prev) => ({
@@ -495,7 +495,7 @@ const SimpleOnboarding: React.FC<Props> = ({
     if (error || !response?.data?.success) return
 
     dispatch(updateUser(response?.data?.data?.user))
-    window.location.href = '/community'
+    // window.location.href = '/community'
     dispatch(closeModal())
   }
 
@@ -678,10 +678,7 @@ const SimpleOnboarding: React.FC<Props> = ({
   const nextButtonRef = useRef<HTMLButtonElement | null>(null)
 
   const handleKeyboardClose = useCallback(
-    (e: any) => {
-      console.log('asifs inner')
-      console.log('asifs showHobbyDowpdown', showHobbyDowpdown)
-
+    (e: KeyboardEvent) => {
       switch (e.key) {
         case 'Escape':
           if (showHobbyDowpdown || ShowAutoAddress) {
@@ -693,6 +690,9 @@ const SimpleOnboarding: React.FC<Props> = ({
         case 'Tab':
           setShowAutoAddress(false)
           setShowHobbyDowpdown(false)
+          break
+        case 'Enter':
+          nextButtonRef?.current?.click()
           break
         default:
           break
@@ -875,7 +875,7 @@ const SimpleOnboarding: React.FC<Props> = ({
   }
 
   const handleHobbySelection = async (selectedHobby: DropdownListItemHobby) => {
-    const isAlreadySelected = selectedHobbies.some(
+    const isAlreadySelected = selectedHobbies?.some(
       (hobby) => hobby?.display === selectedHobby?.display,
     )
 
@@ -1001,9 +1001,6 @@ const SimpleOnboarding: React.FC<Props> = ({
   }
 
   const handleLocationKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    console.log('asifs key', e.key)
-    console.log('asifs focusedLocationIdx', focusedLocationIdx)
-
     switch (e.key) {
       case 'ArrowDown':
         setFocusedLocationIdx((prevIndex) =>
@@ -1016,6 +1013,8 @@ const SimpleOnboarding: React.FC<Props> = ({
         )
         break
       case 'Enter':
+        e.preventDefault()
+        e.stopPropagation()
         if (Addressdata.street.trim().length !== 0 && !ShowAutoAddress) {
         } else if (focusedLocationIdx !== -1 && ShowAutoAddress) {
           handleSelectAddressTwo(
@@ -1029,6 +1028,7 @@ const SimpleOnboarding: React.FC<Props> = ({
         ) {
           setShowAutoAddress(false)
         }
+        e.stopPropagation()
         break
       default:
         break
@@ -1041,8 +1041,6 @@ const SimpleOnboarding: React.FC<Props> = ({
     if (selectedItem && container) {
       const containerRect = container.getBoundingClientRect()
       const itemRect = selectedItem.getBoundingClientRect()
-      console.log('asifs top', containerRect.top)
-      console.log('asifs top 2', itemRect.top)
 
       // Check if the item is out of view and adjust the scroll position
       if (itemRect.bottom + selectedItem.offsetHeight >= containerRect.bottom) {
@@ -1059,9 +1057,6 @@ const SimpleOnboarding: React.FC<Props> = ({
   }
 
   const handleHobbyKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    console.log('asifs key', e.key)
-    console.log('asifs focusedHobbyIndex', focusedHobbyIndex)
-
     switch (e.key) {
       case 'ArrowDown':
         setFocusedHobbyIndex((prevIndex) =>
@@ -1073,7 +1068,10 @@ const SimpleOnboarding: React.FC<Props> = ({
           prevIndex > 0 ? prevIndex - 1 : prevIndex,
         )
         break
+      case 'Backspace':
+        setselectedHobbies((prev) => (prev.length ? prev.slice(0, -1) : prev))
       case 'Enter':
+        e.stopPropagation()
         if (hobbyInputValue.length !== 0 && !showHobbyDowpdown) {
           //AddButtonRef.current?.click()
         } else if (focusedHobbyIndex !== -1 && showHobbyDowpdown) {
@@ -1098,8 +1096,6 @@ const SimpleOnboarding: React.FC<Props> = ({
     if (selectedItem && container) {
       const containerRect = container.getBoundingClientRect()
       const itemRect = selectedItem.getBoundingClientRect()
-      console.log('asifs top', containerRect.top)
-      console.log('asifs top 2', itemRect.top)
 
       // Check if the item is out of view and adjust the scroll position
       if (itemRect.bottom + selectedItem.offsetHeight >= containerRect.bottom) {
@@ -1435,15 +1431,18 @@ const SimpleOnboarding: React.FC<Props> = ({
                 }`}
               >
                 <label className={styles['label-required']}>Hobbies</label>
-                <div className={styles.hobbyInput}>
+                <div
+                  className={styles.hobbyInput}
+                  onClick={() => hobbysearchref?.current?.focus()}
+                >
                   {
-                    selectedHobbies.length > 0 &&
+                    selectedHobbies?.length > 0 &&
                       // <ul className={styles.selectedHobbies}>
                       selectedHobbies?.map((item: any) => {
                         if (typeof item === 'string') return
                         return (
                           <button
-                            key={item.display}
+                            key={item?.display}
                             onClick={() => removeSelectedHobby(item)}
                             style={{
                               cursor: 'pointer',
@@ -1472,7 +1471,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                     placeholder="Type and select..."
                     autoComplete="off"
                     className={`${styles.inputDefault} ${
-                      selectedHobbies.length > 0
+                      selectedHobbies?.length > 0
                         ? styles.inputShort
                         : styles.inputLong
                     }`}

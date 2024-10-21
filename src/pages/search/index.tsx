@@ -53,6 +53,10 @@ import { setShowPageLoader } from '@/redux/slices/site'
 import { searchPages } from '@/services/listing.service'
 import { searchBlogs } from '@/services/blog.services'
 import Head from 'next/head'
+import NoResult from './NoResult'
+import ExploreIcon from '@/assets/icons/ExploreIcon'
+import QuestionIcon from '@/assets/icons/QuestionIcon'
+import InterestedDiv from './InterestedDiv'
 
 type Props = {
   data?: any
@@ -141,12 +145,25 @@ type SearchResultsProps = {
   PostsResults: PostData[]
 }
 
-const ExploreSidebar = () => {
+type PropsExploreSidebarBtn = {
+  href: string
+  text: string
+  icon?: React.ReactNode
+}
+
+const ExploreSidebarBtn: React.FC<PropsExploreSidebarBtn> = ({
+  href,
+  text,
+  icon,
+}) => {
   return (
     <div className={styles['explore-sidebar']}>
-      <button disabled className="modal-footer-btn">
-        Explore More
-      </button>
+      <Link href={href}>
+        <button className="modal-footer-btn">
+          {icon}
+          {text}
+        </button>
+      </Link>
     </div>
   )
 }
@@ -764,27 +781,28 @@ const MainContent: React.FC<SearchResultsProps> = ({
   return (
     <main className={styles.searchResults}>
       {noResultsFound && searchLoading === false ? (
-        <div className={styles['no-results-wrapper']}>
-          {queryString === '' ? (
-            <p>
-              Use the <strong> Search box</strong> at the top to look for
-              anything on your hobbies. If you feel we are missing a listing,
-              you may choose <strong>Add Listing Page</strong> from the menu at
-              the top right corner. If you need further help, visit the Help
-              Centre from the above menu.
-            </p>
-          ) : (
-            <p>
-              {`No results for query "${queryString}" ${
-                filter ? `and filter "${filter}"` : ''
-              }. `}
-              Try shorter or alternate keywords. Or{' '}
-              <Link href={'/contact'}>contact us</Link> if you feel we are
-              missing something. For further help,{' '}
-              <Link href={'/help'}>click here</Link>.
-            </p>
-          )}
-        </div>
+        // <div className={styles['no-results-wrapper']}>
+        //   {queryString === '' ? (
+        //     <p>
+        //       Use the <strong> Search box</strong> at the top to look for
+        //       anything on your hobbies. If you feel we are missing a listing,
+        //       you may choose <strong>Add Listing Page</strong> from the menu at
+        //       the top right corner. If you need further help, visit the Help
+        //       Centre from the above menu.
+        //     </p>
+        //   ) : (
+        //     <p>
+        //       {`No results for query "${queryString}" ${
+        //         filter ? `and filter "${filter}"` : ''
+        //       }. `}
+        //       Try shorter or alternate keywords. Or{' '}
+        //       <Link href={'/contact'}>contact us</Link> if you feel we are
+        //       missing something. For further help,{' '}
+        //       <Link href={'/help'}>click here</Link>.
+        //     </p>
+        //   )}
+        // </div>
+        <NoResult />
       ) : (
         <div>
           {searchLoading === true && (
@@ -1598,8 +1616,17 @@ const Search: React.FC<Props> = ({ data, children }) => {
           />
         </main>
         <aside className={styles['aside-two']}>
-          {' '}
-          <ExploreSidebar />
+          <ExploreSidebarBtn
+            text="Explore More"
+            href="/explore"
+            icon={<ExploreIcon />}
+          />
+          <InterestedDiv />
+          <ExploreSidebarBtn
+            text="Help Center"
+            href="/help"
+            icon={<QuestionIcon />}
+          />
         </aside>
       </PageGridLayout>
     </>

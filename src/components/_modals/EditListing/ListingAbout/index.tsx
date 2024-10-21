@@ -89,7 +89,7 @@ const ListingAboutEditModal: React.FC<Props> = ({
         error: null,
       },
     }))
-  }, [listingModalData.description, listingModalData.about, propData])
+  }, [listingModalData?.description, listingModalData?.about, propData])
 
   const handleInputChange = (value: string) => {
     console.warn('handleinputtt', value)
@@ -116,7 +116,7 @@ const ListingAboutEditModal: React.FC<Props> = ({
     }
 
     setBackBtnLoading(true)
-    const { err, res } = await updateListing(listingModalData._id, {
+    const { err, res } = await updateListing(listingModalData?._id, {
       [key]: fieldValue,
     })
     setBackBtnLoading(false)
@@ -146,9 +146,9 @@ const ListingAboutEditModal: React.FC<Props> = ({
     const fieldValue = data?.[key]?.value || ''
 
     if (!fieldValue || fieldValue === '') {
-      if (fieldValue !== listingModalData[key]) {
+      if (fieldValue !== listingModalData?.[key]) {
         setSubmitBtnLoading(true)
-        const { err, res } = await updateListing(listingModalData._id, {
+        const { err, res } = await updateListing(listingModalData?._id, {
           [key]: fieldValue,
         })
         setSubmitBtnLoading(false)
@@ -161,11 +161,11 @@ const ListingAboutEditModal: React.FC<Props> = ({
             dispatch(closeModal())
           }
         }
-      } else if (listingModalData.is_onboarded) dispatch(closeModal())
+      } else if (listingModalData?.is_onboarded) dispatch(closeModal())
       else if (onComplete) onComplete()
     } else {
       setSubmitBtnLoading(true)
-      const { err, res } = await updateListing(listingModalData._id, {
+      const { err, res } = await updateListing(listingModalData?._id, {
         [key]: fieldValue.trim(),
       })
       setSubmitBtnLoading(false)

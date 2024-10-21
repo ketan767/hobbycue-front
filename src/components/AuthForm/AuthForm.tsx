@@ -239,7 +239,7 @@ const AuthForm: React.FC<Props> = (props) => {
               propData: { showError: true },
             }),
           )
-          router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
+          // router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
         }
       }
     }
@@ -360,7 +360,7 @@ const AuthForm: React.FC<Props> = (props) => {
               propData: { showError: true },
             }),
           )
-          router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
+          // router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
           dispatch(showProfileError(true))
         }
       } else {
@@ -426,7 +426,7 @@ const AuthForm: React.FC<Props> = (props) => {
               propData: { showError: true },
             }),
           )
-          router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
+          // router.push(`/profile/${response?.data?.data?.user?.profile_url}`)
         }
 
         console.log('user', user)

@@ -398,11 +398,21 @@ const ModalManager: React.FC = () => {
                 ` ${
                   (activeModal === 'add-event' || activeModal === 'auth') &&
                   styles['self-centre']
+                } ${
+                  (activeModal === 'Verify-ActionModal' ||
+                    activeModal === 'email-verify' ||
+                    activeModal === 'Set-PasswordModal' ||
+                    activeModal === 'change-password') &&
+                  styles['responsive-popup']
                 }`
               }
               ref={mainRef}
             >
-              {activeModal !== 'listing-onboarding' &&
+              {activeModal !== 'Verify-ActionModal' &&
+                activeModal !== 'email-verify' &&
+                activeModal !== 'Set-PasswordModal' &&
+                activeModal !== 'change-password' &&
+                activeModal !== 'listing-onboarding' &&
                 activeModal !== 'user-onboarding-welcome' &&
                 activeModal !== 'add-event' &&
                 activeModal !== 'auth' &&

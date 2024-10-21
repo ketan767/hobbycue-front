@@ -114,7 +114,10 @@ export const Navbar: React.FC<Props> = ({}) => {
     if (router.asPath === '/search') {
       return
     } else {
-      setData((prev) => ({ ...prev, search: { value: data.search.value, error: null } }))
+      setData((prev) => ({
+        ...prev,
+        search: { value: data.search.value, error: null },
+      }))
     }
   }, [router.asPath])
 
@@ -128,6 +131,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   }
 
   const searchInputRef = useRef<HTMLInputElement>(null)
+  const mobileSearchInputRef = useRef<HTMLInputElement>(null)
   const mobileSearchRef = useRef<HTMLFormElement>(null)
   const [isSearchInputVisible, setIsSearchInputVisible] = useState(false)
 
@@ -138,6 +142,7 @@ export const Navbar: React.FC<Props> = ({}) => {
       setTimeout(() => searchInputRef.current?.focus(), 0)
     }
   }
+
   const [snackbar, setSnackbar] = useState({
     type: 'success',
     display: false,
@@ -566,6 +571,13 @@ export const Navbar: React.FC<Props> = ({}) => {
 
   const isMobile = useMediaQuery('(max-width:1100px)')
 
+  useEffect(() => {
+    if (router.asPath === '/search') {
+      searchInputRef.current?.focus()
+      if (isMobile) toggleSearchInput()
+    }
+  }, [router.asPath])
+
   const searchCloseIcon = (
     <svg
       onClick={toggleSearchInput}
@@ -697,7 +709,7 @@ export const Navbar: React.FC<Props> = ({}) => {
             <TextField
               inputRef={searchInputRef}
               variant="outlined"
-              placeholder="Search for anything on your ..."
+              placeholder="Search for anything on your hobbies..."
               size="small"
               className={styles.inputField}
               onFocus={() => {
@@ -1288,8 +1300,10 @@ export const Navbar: React.FC<Props> = ({}) => {
                     </header>
                     <div className={styles['mobile-search-container']}>
                       <TextField
+                        ref={mobileSearchInputRef}
+                        type="search"
                         variant="outlined"
-                        placeholder="Search here..."
+                        placeholder="Search for anything on your hobbies..."
                         size="small"
                         autoFocus
                         onFocus={() => {
@@ -1311,7 +1325,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                             },
                           },
                           '& .MuiInputBase-input': {
-                            fontSize: '15px',
+                            fontSize: '15px'
                           },
                           '& .MuiInputBase-input::placeholder': {
                             fontSize: '12px',
