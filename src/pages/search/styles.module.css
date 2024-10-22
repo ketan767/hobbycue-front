@@ -474,7 +474,7 @@ object-fit: contain;
   display: flex;
   flex-direction: column;
   gap: 15.5px;
-  padding: 16px;
+  /* padding: 16px; */
   border-radius: 8px;
 }
 
@@ -485,12 +485,26 @@ object-fit: contain;
   font-weight: 600;
   line-height: 18px;
   letter-spacing: 0.005em;
+
+  padding: 15px 16px;
+}
+
+.interestDiv .mainContent {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.memberParent {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
 }
 
 .member {
   display: flex;
   width: 100%;
-  padding: 7px 16px;
+  padding: 0 16px;
   align-items: center;
   justify-content: space-between;
 }
@@ -605,6 +619,9 @@ object-fit: contain;
 
   .profile-left-aside {
     order: 0;
+    display: flex;
+    gap: 16px;
+    align-items: center;
   }
 
   .search-result {

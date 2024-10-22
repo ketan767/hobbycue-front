@@ -25,18 +25,18 @@ const InterestedDiv = () => {
     }
   }
 
-  useEffect(() => {
-    if (whatsNewContainerRef.current) {
-      const requiredHeight = whatsNew.length * 46 + 84
-      if (whatsNew.length <= 2) {
-        whatsNewContainerRef.current.style.height = 'auto'
-      } else if (SeeMorewhatsNew) {
-        whatsNewContainerRef.current.style.height = '225px'
-      } else {
-        whatsNewContainerRef.current.style.height = requiredHeight + 'px'
-      }
-    }
-  }, [SeeMorewhatsNew, whatsNew])
+  // useEffect(() => {
+  // if (whatsNewContainerRef.current) {
+  //   const requiredHeight = whatsNew.length * 46 + 84
+  //   if (whatsNew.length <= 2) {
+  //     whatsNewContainerRef.current.style.height = 'auto'
+  //   } else if (SeeMorewhatsNew) {
+  //     whatsNewContainerRef.current.style.height = '225px'
+  //   } else {
+  //     whatsNewContainerRef.current.style.height = requiredHeight + 'px'
+  //   }
+  // }
+  // }, [SeeMorewhatsNew, whatsNew])
 
   const fetchWhatsNew = async () => {
     const { res, err } = await getListingPages(
@@ -44,6 +44,7 @@ const InterestedDiv = () => {
     )
     if (res?.data) {
       setWhatsNew(res.data.data.listings)
+      setSeeMoreWhatsNew(res.data.data.listings?.length > 3 ? true : false)
     }
   }
 
@@ -58,38 +59,44 @@ const InterestedDiv = () => {
       //   className={styles['desktop-members-conatiner']}
     >
       <h1 className="">You may be interested in</h1>
-      {whatsNew
-        ?.slice(0, SeeMorewhatsNew ? 3 : whatsNew.length)
-        .map((obj: any, idx) => (
-          <div key={idx} className={styles['member']}>
-            <Link
-              href={`/${pageType(obj?.type)}/${obj.page_url}`}
-              className={styles['img-name-listing']}
-            >
-              {obj?.profile_image ? (
-                <img src={obj.profile_image} />
-              ) : (
-                <div
-                  className={
-                    getClassName(obj?.type) + ` ${styles['defaultImg']}`
-                  }
-                ></div>
-              )}
+      <div className={styles.mainContent}>
+        <div className={styles.memberParent}>
+          {whatsNew
+            ?.slice(0, SeeMorewhatsNew ? 3 : whatsNew.length)
+            .map((obj: any, idx) => (
+              <div key={idx} className={styles['member']}>
+                <Link
+                  href={`/${pageType(obj?.type)}/${obj.page_url}`}
+                  className={styles['img-name-listing']}
+                >
+                  {obj?.profile_image ? (
+                    <img src={obj.profile_image} />
+                  ) : (
+                    <div
+                      className={
+                        getClassName(obj?.type) + ` ${styles['defaultImg']}`
+                      }
+                    ></div>
+                  )}
 
-              <p>{obj?.title}</p>
-            </Link>
-          </div>
-        ))}
-      {whatsNew.length > 3 && (
-        <div
-          onClick={() => {
-            setSeeMoreWhatsNew((prev) => !prev)
-          }}
-          className={styles['see-all']}
-        >
-          <p>{SeeMorewhatsNew ? 'See more' : 'See less'}</p>
+                  <p>{obj?.title}</p>
+                </Link>
+              </div>
+            ))}
         </div>
-      )}
+        <div className="">
+          {whatsNew.length > 3 && (
+            <div
+              onClick={() => {
+                setSeeMoreWhatsNew((prev) => !prev)
+              }}
+              className={styles['see-all']}
+            >
+              <p>{SeeMorewhatsNew ? 'See more' : 'See less'}</p>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   )
 }

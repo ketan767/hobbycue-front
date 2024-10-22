@@ -57,6 +57,7 @@ import NoResult from './NoResult'
 import ExploreIcon from '@/assets/icons/ExploreIcon'
 import QuestionIcon from '@/assets/icons/QuestionIcon'
 import InterestedDiv from './InterestedDiv'
+import DoubleDownArrow from '@/assets/icons/DoubleDownArrow'
 
 type Props = {
   data?: any
@@ -1510,7 +1511,16 @@ const FilterDropdown: React.FC<Props> = () => {
       className={styles.filterDropdown}
       value={activeFilter}
     >
-      <MenuItem onClick={() => handleFilterClick('all')} value="all">
+      <MenuItem
+        onClick={() => handleFilterClick('all')}
+        value="all"
+        // style={{ display: 'flex', alignItems: 'center', gap: 16 }}
+      >
+        {/* <img
+          src="/HobbyCueLogoFilter.png"
+          alt=""
+          style={{ width: 22, height: 22 }}
+        /> */}
         All of HobbyCue
       </MenuItem>
       <MenuItem onClick={() => handleFilterClick('users')} value="users">
@@ -1599,6 +1609,7 @@ const Search: React.FC<Props> = ({ data, children }) => {
         {isMobile ? (
           <aside className={`custom-scrollbar ${styles['profile-left-aside']}`}>
             <FilterDropdown />
+            <DoubleDownArrow />
           </aside>
         ) : (
           <SearchPageFilter />
