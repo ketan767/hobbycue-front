@@ -17,7 +17,8 @@
     /* max-width: 1100px;
     height: 100%;
     width: 100%; */
-    width: 328px;
+    width: 91%;
+    margin: auto;
     border-radius: 8px;
     overflow: hidden;
     padding: var(--spacing-24);

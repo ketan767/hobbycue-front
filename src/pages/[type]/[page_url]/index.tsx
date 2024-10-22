@@ -19,7 +19,7 @@ import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPag
 import { useMediaQuery } from '@mui/material'
 import { pageType } from '@/utils'
 
-type Props = { data: ListingPageData }
+type Props = { data: ListingPageData; unformattedAbout?: string }
 
 const ListingHome: React.FC<Props> = (props) => {
   console.warn({ props })
@@ -112,7 +112,14 @@ const ListingHome: React.FC<Props> = (props) => {
         />
         <meta
           property="og:description"
-          content={`${props?.data?.pageData?.tagline ?? ''}`}
+          // content={`${props?.data?.pageData?.tagline ?? ''}`}
+          content={`${
+            (props?.data?.pageData?.tagline || '') +
+            (props.data?.pageData?.tagline && props?.unformattedAbout
+              ? ' | '
+              : '') +
+            (props?.unformattedAbout || '')
+          }`}
         />
 
         <meta property="og:image:alt" content="Profile picture" />
@@ -187,9 +194,13 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     eventsData: null,
     storeData: null,
   }
+  const unformattedAbout =
+    res?.data.data.listings[0]?.description?.replace(/<[^>]*>/g, '') || ''
+
   return {
     props: {
       data,
+      unformattedAbout,
     },
   }
 }

@@ -1,4 +1,4 @@
-import styles from '../404/styles.module.css'
+import styles from './styles.module.css'
 import img503 from '@/assets/image/_503.png'
 import { useRouter } from 'next/navigation'
 import { useDispatch, useSelector } from 'react-redux'

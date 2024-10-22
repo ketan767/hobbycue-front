@@ -41,9 +41,10 @@ import { useMediaQuery } from '@mui/material'
 
 interface Props {
   data: ProfilePageData
+  unformattedAbout?: string
 }
 
-const ProfileHome: React.FC<Props> = ({ data }) => {
+const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
   console.warn({ data })
   const dispatch = useDispatch()
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
@@ -297,7 +298,11 @@ const ProfileHome: React.FC<Props> = ({ data }) => {
         />
         <meta
           property="og:description"
-          content={`${data?.pageData?.tagline ?? ''}`}
+          content={`${
+            (data?.pageData?.tagline || '') +
+            (data?.pageData?.tagline && unformattedAbout ? ' | ' : '') +
+            (unformattedAbout || '')
+          }`}
         />
         <meta property="og:image:alt" content="Profile picture" />
         <title>{`${data.pageData.full_name} | HobbyCue`}</title>
@@ -693,9 +698,14 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     listingsData: uniqueListingsData,
     blogsData: null,
   }
+
+  const unformattedAbout =
+    res.data.data.users[0]?.about?.replace(/<[^>]*>/g, '') || ''
+
   return {
     props: {
       data,
+      unformattedAbout,
     },
   }
 }

@@ -115,13 +115,10 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
   }
 
   const getPreviewimage = () => {
-    if (data?.metadata?.data?.image) {
-      return data?.metadata?.data?.image
-    } else if (
-      data?.postsData?.media?.length > 0 &&
-      data?.postsData?.media[0]
-    ) {
+    if (data?.postsData?.media?.length > 0 && data?.postsData?.media[0]) {
       return data?.postsData?.media[0]
+    } else if (data?.metadata?.data?.image) {
+      return data?.metadata?.data?.image
     } else {
       return '/HobbyCue-FB-4Ps.png'
     }
