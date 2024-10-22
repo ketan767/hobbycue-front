@@ -75,7 +75,7 @@ const socialMediaIcons: Record<SocialMediaOption, any> = {
   Facebook:
     'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/facebook.svg',
   Twitter:
-    'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/twitter.svg',
+    'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/X.png',
   Instagram:
     'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/instagram.svg',
   YouTube:
@@ -91,7 +91,7 @@ const socialMediaIcons: Record<SocialMediaOption, any> = {
   TripAdvisor:
     'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/tripadvisor.svg',
   'Ultimate Guitar':
-    'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/Ultimate-Guitar.svg',
+    'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/Ultimate+Guitar.png',
   Strava:
     'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/strava.svg',
   DeviantArt:
@@ -504,18 +504,21 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
     }
   }, [mediaData, initialData])
 
-  useEffect(()=>{
-    getSocialNetworks().then((result)=>{
-      const {res,err} = result;
-      if(err){
-        console.log({err})
-      }
-      else if(res?.data&&res?.data?.data){
-        setAllOptions(res.data.data)
-        console.log({d:res.data.data})
-      }
-    }).catch(err=>{console.log({err})})
-  },[])
+  useEffect(() => {
+    getSocialNetworks()
+      .then((result) => {
+        const { res, err } = result
+        if (err) {
+          console.log({ err })
+        } else if (res?.data && res?.data?.data) {
+          setAllOptions(res.data.data)
+          console.log({ d: res.data.data })
+        }
+      })
+      .catch((err) => {
+        console.log({ err })
+      })
+  }, [])
 
   const isMobile = useMediaQuery('(max-width:1100px)')
 
@@ -583,26 +586,32 @@ const ListingSocialMediaEditModal: React.FC<Props> = ({
                 className={styles.dropdown}
                 inputProps={{ 'aria-label': 'Without label' }}
               >
-                {allOptions.filter(obj=>obj.Show==='Y').map((option,i) => {
-                  return (
-                    <MenuItem key={i} value={option.socialMedia}>
-                      <div className={styles['menu-item']}>
-                        <img
-                          src={socialMediaIcons[option.socialMedia as SocialMediaOption]}
-                          alt={option.socialMedia}
-                          width={24}
-                          height={24}
-                        />
-                        <p
-                          className={styles.iconText}
-                          style={{ marginLeft: '8px' }}
-                        >
-                          {option.socialMedia}
-                        </p>
-                      </div>
-                    </MenuItem>
-                  )
-                })}
+                {allOptions
+                  .filter((obj) => obj.Show === 'Y')
+                  .map((option, i) => {
+                    return (
+                      <MenuItem key={i} value={option.socialMedia}>
+                        <div className={styles['menu-item']}>
+                          <img
+                            src={
+                              socialMediaIcons[
+                                option.socialMedia as SocialMediaOption
+                              ]
+                            }
+                            alt={option.socialMedia}
+                            width={24}
+                            height={24}
+                          />
+                          <p
+                            className={styles.iconText}
+                            style={{ marginLeft: '8px' }}
+                          >
+                            {option.socialMedia}
+                          </p>
+                        </div>
+                      </MenuItem>
+                    )
+                  })}
               </Select>
 
               <div className={styles['input-box']}>
