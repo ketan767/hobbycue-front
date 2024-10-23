@@ -680,6 +680,13 @@ const SimpleOnboarding: React.FC<Props> = ({
 
   const handleKeyboardClose = useCallback(
     (e: KeyboardEvent) => {
+      if (
+        e.target instanceof HTMLButtonElement ||
+        e.target instanceof HTMLDivElement
+      ) {
+        return
+      }
+
       switch (e.key) {
         case 'Escape':
           if (showHobbyDowpdown || ShowAutoAddress) {
