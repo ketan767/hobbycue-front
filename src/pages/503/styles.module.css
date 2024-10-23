@@ -98,10 +98,10 @@
 }
 
 /* .btnSecondary:hover {
-    background-color: #8064a2;
-    color: white;
-    cursor: pointer;
-  } */
+  background-color: #8064a2;
+  color: white;
+  cursor: pointer;
+} */
 
 .btnPrimary {
   width: 150px;
@@ -120,11 +120,11 @@
 }
 
 /* .btnPrimary:hover {
-    background-color: white;
-    color: #8064a2;
-    cursor: pointer;
-    border: 1px solid #8064a2;
-  } */
+  background-color: white;
+  color: #8064a2;
+  cursor: pointer;
+  border: 1px solid #8064a2;
+} */
 
 @media screen and (max-width: 1100px) {
   .heroImg {

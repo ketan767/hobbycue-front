@@ -80,15 +80,15 @@ const ShareModal: React.FC<Props> = ({ triggerSnackbar }) => {
 
   return (
     <>
-      <header className={styles['header']}>
-        {screenWidth <= 1100 && (
-          <CloseIconWhite
-            className={styles['modal-close-icon']}
-            onClick={() => dispatch(closeModal())}
-          />
-        )}
-      </header>
       <div className={styles['modal-wrapper']}>
+        {screenWidth <= 1100 && (
+          <header className={styles['header']}>
+            <CloseIconWhite
+              className={styles['modal-close-icon']}
+              onClick={() => dispatch(closeModal())}
+            />
+          </header>
+        )}
         <section className={styles['body']}>
           <FacebookShareButton url={shareUrl}>
             <Image src={Facebook} alt="Facebook" />

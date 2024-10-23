@@ -168,25 +168,48 @@ line-height: 22px; /* 157.143% */
 
 @media screen and (max-width: 1100px) {
   .modal-wrapper {
-    max-width: 1100px;
+    /* max-width: 1100px;
     width: 100%;
     max-height: none;
     height: 92.5%;
-    margin: -5px 0 5rem 0;
+    margin: -5px 0 5rem 0; */
+    width: 91%;
+    margin: auto;
+    height: 526px;
     padding: 5px 0 0 0;
+    overflow: hidden;
+  }
+  .heading {
+    padding: 0 16px;
+  }
+  .modal-wrapper .header {
+    border: none;
+  }
+  .modal-wrapper .header h1 {
+    text-align: center;
   }
   .modal-wrapper .body {
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-inline: 16px;
+    overflow: scroll;
+  }
+  .modal-wrapper .body h2 {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 24px;
   }
   .modal-wrapper .footer {
     background: var(--Base-White, #fff);
     padding: var(--spacing-16) var(--spacing-16);
-    box-shadow: 0px -6px 15px 0px rgba(0, 0, 0, 0.06);
-    position: fixed;
+    /* box-shadow: 0px -6px 15px 0px rgba(0, 0, 0, 0.06); */
+    /* position: fixed; */
     bottom: 0;
-    width: 100%;
+    /* width: 100%; */
     z-index: 1000;
+  }
+  .modal-wrapper .footer button {
+    border: none;
   }
   .modal-hr{
     display: none;

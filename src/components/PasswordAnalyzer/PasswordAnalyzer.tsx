@@ -8,7 +8,7 @@ const PasswordAnalyzer: React.FC<Props> = ({ strength }) => {
   return (
     <div
       className={`${styles['container']} ${
-        strength <= 1
+        strength > 0 && strength <= 1
           ? styles['strength-1']
           : strength === 2
           ? `${styles['strength-2']} ${styles['strength-1']}`

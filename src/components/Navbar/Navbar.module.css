@@ -506,6 +506,10 @@
     padding-right: 72px;
   }
 
+  .inputField input::-webkit-search-cancel-button {
+    display: none;
+  }
+
 
   .mobile-search-input-visible {
     opacity: 1;
