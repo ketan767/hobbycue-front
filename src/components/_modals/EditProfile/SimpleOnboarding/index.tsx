@@ -1358,7 +1358,6 @@ const SimpleOnboarding: React.FC<Props> = ({
                   ref={AddressRef}
                   onChange={handleInputChangeAddress}
                   onKeyDown={handleLocationKeyDown}
-
                 />
                 <Image
                   src={LocationIcon}
@@ -1406,7 +1405,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                   </div>
                 )}
               </div>
-              {ShowDropdown && dropdownList.length !== 0 && (
+              {/* {ShowDropdown && dropdownList.length !== 0 && (
                 <div className={styles['dropdown']}>
                   {dropdownList.map((location) => {
                     return location.formatted_address ? (
@@ -1421,7 +1420,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                     ) : null
                   })}
                 </div>
-              )}
+              )} */}
               <p className={styles['helper-text']}>{inputErrs.location}</p>
             </div>
 
@@ -1468,7 +1467,6 @@ const SimpleOnboarding: React.FC<Props> = ({
                     // </ul>
                   }
 
-
                   <input
                     type="text"
                     placeholder="Type and select..."
@@ -1490,8 +1488,6 @@ const SimpleOnboarding: React.FC<Props> = ({
                     onChange={handleHobbyInputChange}
                     onKeyDown={handleHobbyKeyDown}
                   />
-
-
                 </div>
                 <input
                   type="text"
@@ -1510,7 +1506,6 @@ const SimpleOnboarding: React.FC<Props> = ({
                   onKeyDown={handleHobbyKeyDown}
                 />
                 {inputErrs.hobbies || errorOrmsg ? (
-
                   <p
                     className={
                       inputErrs.hobbies

@@ -58,6 +58,7 @@ const ALlHobbies: React.FC<Props> = ({ data }) => {
   const [filtercategories, setFilterCategories] = useState([])
   const [filtersubCategories, setFilterSubCategories] = useState([])
   const [filterhobbyData, setFilterHobbyData] = useState([])
+
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     ExtendedDropdownListItem[]
   >([])
