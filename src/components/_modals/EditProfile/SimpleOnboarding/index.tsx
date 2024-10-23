@@ -1402,7 +1402,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                   </div>
                 )}
               </div>
-              {ShowDropdown && dropdownList.length !== 0 && (
+              {/* {ShowDropdown && dropdownList.length !== 0 && (
                 <div className={styles['dropdown']}>
                   {dropdownList.map((location) => {
                     return location.formatted_address ? (
@@ -1417,7 +1417,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                     ) : null
                   })}
                 </div>
-              )}
+              )} */}
               <p className={styles['helper-text']}>{inputErrs.location}</p>
             </div>
 
@@ -1489,7 +1489,6 @@ const SimpleOnboarding: React.FC<Props> = ({
                     onKeyDown={handleHobbyKeyDown}
                   />
                 </div>
-
                 {(inputErrs.hobbies && inputErrs.hobbies !== 'no-error-text') ||
                 errorOrmsg ? (
                   <p
