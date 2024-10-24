@@ -1,10 +1,6 @@
 .dropdown {
-  border-bottom: 1px solid grey;
   width: 160px;
-  height: 22px;
-  display: flex;
-  /* align-items: center; */
-  justify-content: space-between;
+  /* height: 22px; */
   position: relative;
   margin-top: 8px;
 }
@@ -65,12 +61,33 @@
 .productOpened {
   color: #c0504d;
 }
-.categoryName{
+.categoryName {
   padding-right: 50px;
 }
+.searchIcon {
+  position: absolute;
+  margin-top: 30px;
+}
+.categorySuggestion {
+  position: relative;
+  margin-top: -24px;
+}
+.arrow {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  cursor: pointer;
+  transition: all 300ms ease-in-out;
+}
+.arrowRotated {
+  transform: rotate(180deg);
+}
 
-@media screen and (max-width:1100px){
-  .dropdown{
-    width: 144px;
+@media screen and (max-width: 1100px) {
+  .dropdown {
+    width: 100%;
+  }
+  .categorySuggestion{
+    width: 100%;
   }
 }

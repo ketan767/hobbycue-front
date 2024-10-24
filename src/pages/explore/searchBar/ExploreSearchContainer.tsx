@@ -109,6 +109,7 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
     longitude: '',
     set_as_primary: true,
   })
+
   const dispatch = useDispatch()
 
   const handleHobbyInputChange = async (e: any) => {
@@ -357,47 +358,71 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
           </div>
         </div>
         <div className={styles.inputsContainer}>
-          <TextField
-            autoComplete="off"
-            inputRef={searchInputRef}
-            variant="standard"
-            placeholder="Keywords"
-            size="small"
-            name="search"
-            className={styles.keywords}
-            onFocus={() => {
-              setIsWriting(true)
-            }}
-            onChange={handleInputChange}
-            value={data.search.value}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                searchResult()
-              }
-            }}
-            // style={{ width: '220px' }}
-            InputLabelProps={{ shrink: false }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Image
-                    src={SearchIcon}
-                    width={16}
-                    height={16}
-                    alt="SearchIcon"
-                  />
-                </InputAdornment>
-              ),
-            }}
-          />
+          <div className={styles.searchBox}>
+            <Image
+              src={SearchIcon}
+              width={16}
+              height={16}
+              alt="SearchIcon"
+              className={styles.searchIconKeyword}
+            />
+            <TextField
+              autoComplete="off"
+              inputRef={searchInputRef}
+              variant="standard"
+              label="Keywords"
+              size="small"
+              name="search"
+              className={styles.keywords}
+              onFocus={() => {
+                setIsWriting(true)
+              }}
+              onChange={handleInputChange}
+              value={data.search.value}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  searchResult()
+                }
+              }}
+              sx={{
+                '& label': {
+                  fontSize: '16px',
+                  paddingLeft: '24px',
+                },
+                '& label.Mui-focused': {
+                  fontSize: '12px',
+                  marginLeft: '-16px',
+                },
+                '& .MuiInputLabel-shrink': {
+                  fontSize: '12px',
+                  marginLeft: '-16px',
+                },
+                '& .MuiInput-underline:hover:before': {
+                  borderBottomColor: '#7F63A1',
+                },
+              }}
+              InputProps={{
+                sx: {
+                  paddingLeft: '24px',
+                },
+              }}
+            />
+          </div>
 
           <div className={styles.flexRow}>
             <div className={styles.hobbySuggestion}>
+              <Image
+                src={SearchIcon}
+                width={16}
+                height={16}
+                alt="SearchIcon"
+                className={styles.searchIcon}
+              />
               <TextField
                 autoComplete="off"
                 inputRef={searchHobbyRef}
                 variant="standard"
-                placeholder="Hobby"
+                label="Hobby"
                 size="small"
                 name="hobby"
                 className={styles.hobbySearch}
@@ -405,8 +430,6 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
                   setIsWriting(true)
                   setShowHobbyDropdown(true)
                 }}
-                // onChange={handleInputChange}
-                // value={data.hobby.value}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     setShowHobbyDropdown(false)
@@ -420,29 +443,26 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
                   }, 300)
                 }
                 onChange={handleHobbyInputChange}
-                style={{ width: '160px' }}
-                InputLabelProps={{ shrink: false }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Image
-                        src={SearchIcon}
-                        width={16}
-                        height={16}
-                        alt="SearchIcon"
-                      />
-                    </InputAdornment>
-                  ),
-                }}
                 sx={{
                   '& label': {
                     fontSize: '16px',
+                    paddingLeft: '24px',
                   },
                   '& label.Mui-focused': {
                     fontSize: '12px',
+                    marginLeft: '-16px',
                   },
                   '& .MuiInputLabel-shrink': {
                     fontSize: '12px',
+                    marginLeft: '-16px',
+                  },
+                  '& .MuiInput-underline:hover:before': {
+                    borderBottomColor: '#7F63A1',
+                  },
+                }}
+                InputProps={{
+                  sx: {
+                    paddingLeft: '24px',
                   },
                 }}
               />
@@ -487,6 +507,13 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
               />
             </div>
             <div className={styles.hobbySuggestion}>
+              <Image
+                src={SearchIcon}
+                width={16}
+                height={16}
+                alt="SearchIcon"
+                className={styles.searchIcon}
+              />
               <TextField
                 label="Location"
                 autoComplete="off"
@@ -509,19 +536,28 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
                 }}
                 sx={{
                   '& label': {
-                    fontSize: '16px', // Default label size
+                    fontSize: '16px',
+                    paddingLeft: '24px',
                   },
                   '& label.Mui-focused': {
-                    fontSize: '12px', // Shrunk label size when focused
+                    fontSize: '12px',
+                    marginLeft: '-16px',
                   },
                   '& .MuiInputLabel-shrink': {
-                    fontSize: '12px', // Shrunk label size when not focused but has value
+                    fontSize: '12px',
+                    marginLeft: '-16px',
                   },
-                  // '& .MuiInputBase-root': {
-                  //   height: 24, // Set custom height here
-                  // },
+                  '& .MuiInput-underline:hover:before': {
+                    borderBottomColor: '#7F63A1',
+                  },
+                }}
+                InputProps={{
+                  sx: {
+                    paddingLeft: '24px',
+                  },
                 }}
               />
+
               {ShowAutoAddress && (
                 <div className={styles['dropdown']} ref={locationDropdownRef}>
                   {suggestions.map((suggestion, index) => (

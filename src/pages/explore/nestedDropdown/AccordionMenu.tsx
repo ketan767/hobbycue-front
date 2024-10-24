@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import {
   Menu,
   MenuItem,
@@ -19,6 +19,7 @@ import ProgramIcon from '@/assets/svg/Program.svg'
 import ProductIcon from '@/assets/svg/Search/Product2.svg'
 import Image from 'next/image'
 import styles from './AccordianMenu.module.css'
+import { getAllListingPageTypes } from '@/services/listing.service'
 
 interface AccordianMenuProps {
   value: string
@@ -42,11 +43,17 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
   const [isPlaceOpened, setIsPlaceOpened] = useState(false)
   const [isProgramOpened, setIsProgramOpened] = useState(false)
   const [isProductOpened, setIsProductOpened] = useState(false)
+  const [categoryValue, setCategoryValue] = useState('')
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
+  const [isCategoryBoxOpened, setIsCategoryBoxOpened] = useState(false)
+
   // const [subCategory, setSubCategory] = useState('')
+  const searchCategoryRef = useRef()
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     setAnchorEl(event.currentTarget)
     setOpenMenu(true)
+    setIsCategoryBoxOpened(!isCategoryBoxOpened)
   }
 
   const handleClose = () => {
@@ -70,13 +77,141 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
       // alert(name)
     }
   }
+  const handleCategoryInputChange = async (e: any) => {}
+  // const handleCategoryInputChange = async (e: any) => {
+  //   setCategoryValue(e.target.value)
+  //   if (e.target.value === '') {
+  //     setFilterData((prev) => ({ ...prev, hobby: '' }))
+  //   }
+  //   if (isEmptyField(e.target.value)) return setHobbyDropdownList([])
 
+  //   const query = `fields=display,genre&level=5&level=3&level=2&search=${e.target.value}`
+  //   const { err, res } = await getAllListingPageTypes(query)
+
+  //   if (err) return console.log(err)
+
+  //   // Modify the sorting logic to prioritize items where the search keyword appears at the beginning
+  //   const sortedHobbies = res.data.hobbies.sort((a: any, b: any) => {
+  //     const indexA = a.display
+  //       .toLowerCase()
+  //       .indexOf(e.target.value.toLowerCase())
+  //     const indexB = b.display
+  //       .toLowerCase()
+  //       .indexOf(e.target.value.toLowerCase())
+
+  //     if (indexA === 0 && indexB !== 0) {
+  //       return -1
+  //     } else if (indexB === 0 && indexA !== 0) {
+  //       return 1
+  //     }
+
+  //     return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
+  //   })
+  //   // setData((prev) => {
+  //   //   return { ...prev, hobby: null }
+  //   // })
+  //   setHobbyDropdownList(sortedHobbies)
+  // }
   return (
     <div className={styles.relative}>
-      <div className={styles.dropdown} onClick={handleClick}>
-        <Image src={SearchIcon} width={16} height={16} alt="SearchIcon" />
-        <span className={styles.value}>{value ? value : subCategory}</span>
-        <Image src={Dropdown} width={16} height={16} alt="Dropdown" />
+      <div className={styles.relative}>
+        {/* <Image src={SearchIcon} width={16} height={16} alt="SearchIcon" /> */}
+        {/* <span className={styles.value}>{value ? value : subCategory}</span> */}
+        <div className={styles.categorySuggestion}>
+          <Image
+            src={SearchIcon}
+            width={16}
+            height={16}
+            alt="SearchIcon"
+            className={styles.searchIcon}
+          />
+          <TextField
+            autoComplete="off"
+            inputRef={searchCategoryRef}
+            variant="standard"
+            label="Category"
+            size="small"
+            name="Category"
+            className={styles.dropdown}
+            onFocus={() => {
+              setShowCategoryDropdown(true)
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                setShowCategoryDropdown(false)
+                searchResult()
+              }
+            }}
+            value={categoryValue}
+            onBlur={() =>
+              setTimeout(() => {
+                setShowCategoryDropdown(false)
+              }, 300)
+            }
+            onChange={handleCategoryInputChange}
+            sx={{
+              '& label': {
+                fontSize: '16px',
+                paddingLeft: '24px',
+              },
+              '& label.Mui-focused': {
+                fontSize: '12px',
+                marginLeft: '-16px',
+              },
+              '& .MuiInputLabel-shrink': {
+                fontSize: '12px',
+                marginLeft: '-16px',
+              },
+              '& .MuiInput-underline:hover:before': {
+                borderBottomColor: '#7F63A1',
+              },
+            }}
+            InputProps={{
+              sx: {
+                paddingLeft: '24px',
+              },
+            }}
+          />
+          <Image
+            src={Dropdown}
+            width={16}
+            height={16}
+            alt="Dropdown"
+            onClick={handleClick}
+            className={`${styles.arrow} ${
+              openMenu ? `${styles.arrowRotated}` : ''
+            }`}
+          />
+
+          {/* {showCategoryDropdown && hobbyDropdownList.length !== 0 && (
+          <div className={styles.dropdownHobby}>
+            {hobbyDropdownList.map((hobby) => {
+              return (
+                <p
+                  key={hobby._id}
+                  onClick={() => {
+                    setData((prev) => ({
+                      ...prev,
+                      hobby: { value: hobby.display, error: null },
+                    }))
+
+                    console.warn({ hobby })
+                    setHobbyInputValue(hobby.display)
+                    setFilterData((prev) => ({
+                      category: hobby.category?._id ?? prev.category,
+                      subCategory: hobby.sub_category?._id ?? prev.subCategory,
+                      hobby: hobby._id,
+                    }))
+                    searchResult(undefined, hobby.display)
+                  }}
+                >
+                  {hobby.display}
+                </p>
+              )
+            })}
+          </div>
+        )} */}
+        </div>
       </div>
 
       <Menu
@@ -89,18 +224,19 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
           margin: '0',
           padding: '0',
           position: 'absolute',
-          top: '0px',
+          top: '8px',
+          left: '-144px',
         }}
       >
         {/* Regular Menu Item */}
-        <MenuItem
+        {/* <MenuItem
           onClick={() => {
             handleClose()
             handleValueChange('All')
           }}
         >
           All
-        </MenuItem>
+        </MenuItem> */}
 
         {/* Accordion Inside Menu */}
         <Accordion
