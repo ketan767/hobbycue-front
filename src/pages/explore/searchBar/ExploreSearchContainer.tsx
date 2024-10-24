@@ -447,7 +447,7 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
                 }}
               />
               {showHobbyDropdown && hobbyDropdownList.length !== 0 && (
-                <div className={styles.dropdown}>
+                <div className={styles.dropdownHobby}>
                   {hobbyDropdownList.map((hobby) => {
                     return (
                       <p
