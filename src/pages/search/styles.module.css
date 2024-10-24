@@ -44,7 +44,7 @@
 }
 
 .filter-item:hover {
-  background-color: #DFD8E7;
+  background-color: #dfd8e7;
 }
 .filter-sidebar {
   color: var(--grey-darkest, #08090a);
@@ -105,7 +105,6 @@
   border-bottom: 1px solid var(--grey-light, #ced4da);
   align-items: center;
   cursor: pointer;
-
 }
 
 .userAvatar {
@@ -114,7 +113,6 @@
   border-radius: 50% #8064a2;
   border: 50%;
   color: white;
-
 }
 
 .hobbyAvtar {
@@ -125,7 +123,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
 
 .border-div {
@@ -139,16 +136,14 @@
 }
 
 .hobbyAvtar img {
-object-fit: contain;
+  object-fit: contain;
   width: 55.42px;
   height: 64px;
-  position: relative; 
+  position: relative;
   clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
   filter: drop-shadow(0px 2px 12px rgba(0, 0, 0, 0.08));
   background-color: white;
-
 }
-
 
 .img-polygon {
   width: 58px;
@@ -161,7 +156,6 @@ object-fit: contain;
   left: 0;
   width: 100%;
   height: 100%;
-  
 }
 .view-more-btn-container {
   padding: var(--spacing-16) var(--spacing-24);
@@ -228,8 +222,6 @@ object-fit: contain;
   word-break: break-word;
   font-size: 14px;
   color: #666;
-  
-  
 }
 
 .hobbydescription {
@@ -239,7 +231,6 @@ object-fit: contain;
   white-space: nowrap;
   text-overflow: ellipsis;
   max-width: 590px;
-  
 }
 
 .view-more-btn {
@@ -250,7 +241,7 @@ object-fit: contain;
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
- 
+
   display: block;
   width: 100%;
   text-align: center;
@@ -298,10 +289,10 @@ object-fit: contain;
   line-height: 16px;
 }
 
-.no-results-wrapper{
+.no-results-wrapper {
   background-color: #ffffff;
   border: 2px solid rgb(242, 242, 242);
-  padding: 32px;
+  padding: 32px 0;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -326,6 +317,7 @@ object-fit: contain;
   flex-direction: column;
   align-items: center;
   gap: 24px;
+  width: 100%;
 }
 
 .main h1 {
@@ -343,7 +335,7 @@ object-fit: contain;
   font-weight: 500;
   line-height: 21px;
   text-align: center;
-  color: #6D747A;
+  color: #6d747a;
 }
 
 .main span {
@@ -352,7 +344,7 @@ object-fit: contain;
   font-weight: 700;
   line-height: 21px;
   text-align: center;
-  color: #6D747A;
+  color: #6d747a;
 }
 
 .wrapperFooter {
@@ -363,7 +355,7 @@ object-fit: contain;
 }
 
 .wrapperFooter p {
-  color: #6D747A;
+  color: #6d747a;
   font-family: Poppins;
   font-size: 14px;
   font-weight: 500;
@@ -390,41 +382,51 @@ object-fit: contain;
   opacity: 0.9;
 }
 
+.filterParent {
+  height: 62px;
+  padding: 0 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  box-shadow: 0px -8px 12px rgba(147, 156, 163, 0.12),
+    0px 8px 12px rgba(147, 156, 163, 0.12);
+}
+
 .filter {
   display: flex;
   gap: 24px;
-  align-items: end;
+  align-items: center;
 }
 
 .filter > div {
   display: flex;
   gap: 24px;
-  align-items: end;
+  align-items: center;
 }
 
 .inputDiv {
   position: relative;
-  height: 22px;
 }
 
 .inputDiv svg:nth-child(1) {
   position: absolute;
   left: 0;
-  top: 2px;
+  top: 7px;
 }
 
 .inputDiv svg:nth-last-child(1) {
   position: absolute;
   right: 0;
-  top: 2px;
+  top: 7px;
 }
 
 .filter input {
   border: none;
   outline: none;
-  border-bottom: 2px solid #EBEDF0;
+  border-bottom: 2px solid #ebedf0;
   padding-left: 20px;
-  height: 22px;
+  height: 32px;
   display: flex;
   align-items: center;
 
@@ -433,7 +435,7 @@ object-fit: contain;
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
-  color: #6D747A;
+  color: #6d747a;
 }
 
 /* .no-results-wrapper p{
@@ -457,7 +459,7 @@ object-fit: contain;
   align-items: center;
 }
 
-.loaders{
+.loaders {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -479,7 +481,7 @@ object-fit: contain;
 }
 
 .interestDiv h1 {
-  color: #08090A;
+  color: #08090a;
   font-family: Poppins;
   font-size: 14px;
   font-weight: 600;
@@ -583,10 +585,30 @@ object-fit: contain;
 }
 
 @media screen and (max-width: 1100px) {
+  .doubleArrowDown {
+    rotate: -180deg;
+    transition: all 0.5s;
+  }
+  .doubleArrowUp {
+    rotate: 0;
+    transition: all 0.5s;
+  }
+
+  .visible {
+    height: fit-content;
+    transition: height 0.3s ease-in-out;
+  }
+  .not-visible {
+    height: 0;
+    transition: height 0.3s ease-in-out;
+  }
+
   .no-results-wrapper {
-    padding: 16px;
+    padding: 16px 0 0 0;
+    gap: 16px;
     padding-bottom: 72.7px;
     margin: 0;
+    border-radius: 0;
   }
 
   .imageDiv {
@@ -594,17 +616,23 @@ object-fit: contain;
     height: 155.3px;
   }
 
+  .main {
+    max-width: 100%;
+    gap: 17px;
+  }
+
   .main h1 {
     font-family: Poppins;
     font-size: 18px;
     font-weight: 500;
-    line-height: 16px;
+    line-height: 25px;
   }
 
   .main p {
-    font-family: Poppins;
-    font-size: 14px;
+    font-family: 'Poppins';
+    font-style: normal;
     font-weight: 500;
+    font-size: 14px;
     line-height: 21px;
     text-align: center;
   }
@@ -630,17 +658,45 @@ object-fit: contain;
 
   .aside-two {
     height: auto;
-    background: #FFF;
+    background: #fff;
     margin: 0 0 12px;
     padding: 0 16px 16px;
     order: 1;
   }
+
+  .filterParent {
+    padding: 10px 16px;
+    height: auto;
+  }
+
+  .filter {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .filter > div {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .filter input {
+    max-width: 160px;
+  }
+
+  .filter a {
+    margin-left: auto;
+  }
+
+  .filter button {
+    width: 114px !important;
+  }
+
   .profile-left-aside {
     height: auto;
-    background: #FFF;
+    background: #fff;
     padding: 16px;
   }
- 
+
   .filterDropdown {
     width: 100%;
     height: 44px;
@@ -652,7 +708,6 @@ object-fit: contain;
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
-    
   }
 
   .peopleItemsContainer {
@@ -668,7 +723,7 @@ object-fit: contain;
   .view-more-btn {
     width: 100%;
   }
- 
+
   .peopleItem {
     padding: 8px 16px 8px 16px;
   }
@@ -677,7 +732,6 @@ object-fit: contain;
   }
   .userLocation {
     font-size: 12px;
-
   }
   .hobbydescription {
     white-space: nowrap;
@@ -685,5 +739,4 @@ object-fit: contain;
     text-overflow: ellipsis;
     max-width: calc(100vw - 9rem);
   }
-
 }

@@ -1,13 +1,22 @@
 import { useEffect, useRef, useState } from 'react'
 import styles from './styles.module.css'
-import { pageType } from '@/utils'
+import { isMobile, pageType } from '@/utils'
 import Link from 'next/link'
 import { getListingPages } from '@/services/listing.service'
 
-const InterestedDiv = () => {
+type PropsInterestedDiv = {
+  seeMoreWhatsNew: boolean
+  setSeeMoreWhatsNew: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const InterestedDiv: React.FC<PropsInterestedDiv> = ({
+  seeMoreWhatsNew,
+  setSeeMoreWhatsNew,
+}) => {
   const whatsNewContainerRef = useRef<HTMLDivElement>(null)
   const [whatsNew, setWhatsNew] = useState([])
-  const [SeeMorewhatsNew, setSeeMoreWhatsNew] = useState(true)
+  // const [seeMoreWhatsNew, setSeeMoreWhatsNew] = useState(true)
+  const isMob = isMobile()
 
   function getClassName(type: any) {
     if (type === 'user') {
@@ -24,19 +33,6 @@ const InterestedDiv = () => {
       return 'default-people-listing-icon'
     }
   }
-
-  // useEffect(() => {
-  // if (whatsNewContainerRef.current) {
-  //   const requiredHeight = whatsNew.length * 46 + 84
-  //   if (whatsNew.length <= 2) {
-  //     whatsNewContainerRef.current.style.height = 'auto'
-  //   } else if (SeeMorewhatsNew) {
-  //     whatsNewContainerRef.current.style.height = '225px'
-  //   } else {
-  //     whatsNewContainerRef.current.style.height = requiredHeight + 'px'
-  //   }
-  // }
-  // }, [SeeMorewhatsNew, whatsNew])
 
   const fetchWhatsNew = async () => {
     const { res, err } = await getListingPages(
@@ -62,7 +58,7 @@ const InterestedDiv = () => {
       <div className={styles.mainContent}>
         <div className={styles.memberParent}>
           {whatsNew
-            ?.slice(0, SeeMorewhatsNew ? 3 : whatsNew.length)
+            ?.slice(0, seeMoreWhatsNew ? 3 : whatsNew.length)
             .map((obj: any, idx) => (
               <div key={idx} className={styles['member']}>
                 <Link
@@ -92,7 +88,7 @@ const InterestedDiv = () => {
               }}
               className={styles['see-all']}
             >
-              <p>{SeeMorewhatsNew ? 'See more' : 'See less'}</p>
+              <p>{seeMoreWhatsNew ? 'See more' : 'See less'}</p>
             </div>
           )}
         </div>

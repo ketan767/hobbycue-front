@@ -52,21 +52,23 @@ const NoResult = () => {
         ) : (
           <p>Alternately, you can Explore Pages using the below.</p>
         )}
-        <div className={styles.filter}>
-          <div className="">
-            <FilterInput placeholder="Hobby" />
-            <FilterInput placeholder="Category" />
-          </div>
-          <div className="">
-            <FilterInput placeholder="Location" />
-            <Link href="/explore">
-              <button
-                className="modal-footer-btn"
-                style={{ width: 71, height: 32 }}
-              >
-                Explore
-              </button>
-            </Link>
+        <div className={styles.filterParent}>
+          <div className={styles.filter}>
+            <div className="">
+              <FilterInput placeholder="Hobby" />
+              <FilterInput placeholder="Category" />
+            </div>
+            <div className="">
+              <FilterInput placeholder="Location" />
+              <Link href="/explore">
+                <button
+                  className="modal-footer-btn"
+                  style={{ width: 71, height: 32 }}
+                >
+                  Explore
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
