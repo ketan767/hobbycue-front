@@ -119,11 +119,11 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
           }}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<ExpandMoreIcon style={{ fontSize: '16px' }} />}
             aria-controls="panel1a-content"
             id="panel1a-header"
             tabIndex={-1}
-            sx={{ margin: 0, padding: 0 }}
+            sx={{ margin: 0, padding: '0 10px 0 0' }}
           >
             <Typography sx={{ marginLeft: '16px' }}>
               <div className={styles.pContainer}>
@@ -134,7 +134,9 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                   alt="PeopleIcon"
                 />
                 <span
-                  className={isPeopleOpened ? `${styles.peopleOpened}` : ''}
+                  className={`${styles.categoryName} ${
+                    isPeopleOpened ? `${styles.peopleOpened}` : ''
+                  }`}
                   onClick={(e) => {
                     e.stopPropagation()
                     handleValueChange('People')
@@ -261,11 +263,11 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
           }}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<ExpandMoreIcon style={{ fontSize: '16px' }} />}
             aria-controls="panel2a-content"
             id="panel2a-header"
             tabIndex={-1}
-            sx={{ margin: 0, padding: 0 }}
+            sx={{ margin: 0, padding: '0 10px 0 0' }}
           >
             <Typography sx={{ marginLeft: '16px' }}>
               <div className={styles.pContainer}>
@@ -315,11 +317,11 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
           }}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<ExpandMoreIcon style={{ fontSize: '16px' }} />}
             aria-controls="panel3a-content"
             id="panel3a-header"
             tabIndex={-1}
-            sx={{ margin: 0, padding: 0 }}
+            sx={{ margin: 0, padding: '0 10px 0 0' }}
           >
             <Typography sx={{ marginLeft: '16px' }}>
               <div className={styles.pContainer}>
@@ -374,11 +376,11 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
           }}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<ExpandMoreIcon style={{ fontSize: '16px' }} />}
             aria-controls="panel2a-content"
             id="panel2a-header"
             tabIndex={-1}
-            sx={{ margin: 0, padding: 0 }}
+            sx={{ margin: 0, padding: '0 10px 0 0' }}
           >
             <Typography sx={{ marginLeft: '16px' }}>
               <div className={styles.pContainer}>

@@ -66,12 +66,16 @@ type LocationProps = {
   locationDropdownRef: React.RefObject<HTMLDivElement>
   ShowAutoAddress: boolean
   setShowAutoAddress: (show: boolean) => void
+  showHobbyDropdown: boolean
+  setShowHobbyDropdown: (show: boolean) => void
 }
 
 const ExploreSearchContainer: React.FC<LocationProps> = ({
   locationDropdownRef,
   ShowAutoAddress,
   setShowAutoAddress,
+  showHobbyDropdown,
+  setShowHobbyDropdown,
 }) => {
   const router = useRouter()
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -81,7 +85,6 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
   const [isWriting, setIsWriting] = useState(false)
   const [isChanged, setIsChanged] = useState(false)
 
-  const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     ExtendedDropdownListItem[]
   >([])
@@ -406,6 +409,7 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
                 // value={data.hobby.value}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
+                    setShowHobbyDropdown(false)
                     searchResult()
                   }
                 }}
@@ -443,7 +447,7 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
                 }}
               />
               {showHobbyDropdown && hobbyDropdownList.length !== 0 && (
-                <div className={styles.dropdown}>
+                <div className={styles.dropdownHobby}>
                   {hobbyDropdownList.map((hobby) => {
                     return (
                       <p
@@ -499,6 +503,7 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                   handleLocationKeyDown(e)
                   if (e.key === 'Enter') {
+                    setShowAutoAddress(false)
                     searchResult()
                   }
                 }}
