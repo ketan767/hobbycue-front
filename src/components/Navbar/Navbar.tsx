@@ -812,8 +812,11 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
+
+                            const query = { category: 'People' }
                             router.push({
                               pathname: '/explore/people',
+                              query: query,
                             })
                           }}
                         >
@@ -833,8 +836,10 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
+                            const query = { category: 'Place' }
                             router.push({
                               pathname: '/explore/places',
+                              query: query,
                             })
                           }}
                         >
@@ -849,8 +854,10 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
+                            const query = { category: 'Product' }
                             router.push({
                               pathname: '/explore/products',
+                              query: query,
                             })
                           }}
                         >
@@ -865,8 +872,10 @@ export const Navbar: React.FC<Props> = ({}) => {
                           className={styles['hobbiescategory']}
                           onClick={async (e) => {
                             e.preventDefault()
+                            const query = { category: 'Program' }
                             router.push({
                               pathname: '/explore/programs',
+                              query: query,
                             })
                           }}
                         >
@@ -1325,7 +1334,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                             },
                           },
                           '& .MuiInputBase-input': {
-                            fontSize: '15px'
+                            fontSize: '15px',
                           },
                           '& .MuiInputBase-input::placeholder': {
                             fontSize: '12px',

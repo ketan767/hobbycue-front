@@ -190,7 +190,7 @@
 }
 .searchIconKeyword {
   position: absolute;
-  margin-bottom: 3px;
+  margin-top: 4px;
 }
 .searchIconHobby {
   position: absolute;
@@ -268,7 +268,7 @@
     width: 100%;
   }
   .searchIconKeyword {
-    top: 33px;
+    top: 29px;
   }
   .searchBox {
     margin-top: -24px;

@@ -51,7 +51,9 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
   const [isPlaceOpened, setIsPlaceOpened] = useState(false)
   const [isProgramOpened, setIsProgramOpened] = useState(false)
   const [isProductOpened, setIsProductOpened] = useState(false)
-  const [categoryValue, setCategoryValue] = useState('')
+  const [categoryValue, setCategoryValue] = useState(
+    value === 'All' ? '' : value,
+  )
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
   const [isCategoryBoxOpened, setIsCategoryBoxOpened] = useState(false)
   const [categoryDropdownList, setCategoryDropdownList] = useState<
@@ -80,6 +82,9 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
     setAnchorEl(null)
     setOpenMenu(false)
     setIsPeopleOpened(false)
+    setIsPlaceOpened(false)
+    setIsProgramOpened(false)
+    setIsProductOpened(false)
   }
 
   const handleValueChange = (
@@ -145,8 +150,6 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
   return (
     <div className={styles.relative}>
       <div className={styles.relative}>
-        {/* <Image src={SearchIcon} width={16} height={16} alt="SearchIcon" /> */}
-        {/* <span className={styles.value}>{value ? value : subCategory}</span> */}
         <div className={styles.categorySuggestion}>
           <Image
             src={SearchIcon}
@@ -251,17 +254,6 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
           left: '-144px',
         }}
       >
-        {/* Regular Menu Item */}
-        {/* <MenuItem
-          onClick={() => {
-            handleClose()
-            handleValueChange('All')
-          }}
-        >
-          All
-        </MenuItem> */}
-
-        {/* Accordion Inside Menu */}
         <Accordion
           disableGutters
           elevation={0}
@@ -316,6 +308,10 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                     <>
                       <MenuItem
                         onClick={() => {
+                          setIsPeopleOpened(false)
+                          setIsPlaceOpened(false)
+                          setIsProgramOpened(false)
+                          setIsProductOpened(false)
                           setCategoryValue(subcategory.listingCategory)
                           handleClose()
                           handleValueChange(
@@ -338,6 +334,10 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                   <>
                     <MenuItem
                       onClick={() => {
+                        setIsPeopleOpened(false)
+                        setIsPlaceOpened(false)
+                        setIsProgramOpened(false)
+                        setIsProductOpened(false)
                         setCategoryValue(subcategory.listingCategory)
                         handleClose()
                         handleValueChange(
@@ -405,6 +405,10 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                     <>
                       <MenuItem
                         onClick={() => {
+                          setIsPeopleOpened(false)
+                          setIsPlaceOpened(false)
+                          setIsProgramOpened(false)
+                          setIsProductOpened(false)
                           setCategoryValue(subcategory.listingCategory)
                           handleClose()
                           handleValueChange(
@@ -427,6 +431,10 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                   <>
                     <MenuItem
                       onClick={() => {
+                        setIsPeopleOpened(false)
+                        setIsPlaceOpened(false)
+                        setIsProgramOpened(false)
+                        setIsProductOpened(false)
                         setCategoryValue(subcategory.listingCategory)
                         handleClose()
                         handleValueChange(
@@ -499,8 +507,13 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                     <>
                       <MenuItem
                         onClick={() => {
+                          setIsPeopleOpened(false)
+                          setIsPlaceOpened(false)
+                          setIsProgramOpened(false)
+                          setIsProductOpened(false)
                           setCategoryValue(subcategory.listingCategory)
                           handleClose()
+
                           handleValueChange(
                             undefined,
                             subcategory.listingCategory,
@@ -521,6 +534,10 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                   <>
                     <MenuItem
                       onClick={() => {
+                        setIsPeopleOpened(false)
+                        setIsPlaceOpened(false)
+                        setIsProgramOpened(false)
+                        setIsProductOpened(false)
                         setCategoryValue(subcategory.listingCategory)
                         handleClose()
                         handleValueChange(
@@ -593,6 +610,10 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                     <>
                       <MenuItem
                         onClick={() => {
+                          setIsPeopleOpened(false)
+                          setIsPlaceOpened(false)
+                          setIsProgramOpened(false)
+                          setIsProductOpened(false)
                           setCategoryValue(subcategory.listingCategory)
                           handleClose()
                           handleValueChange(
@@ -615,6 +636,10 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                   <>
                     <MenuItem
                       onClick={() => {
+                        setIsPeopleOpened(false)
+                        setIsPlaceOpened(false)
+                        setIsProgramOpened(false)
+                        setIsProductOpened(false)
                         setCategoryValue(subcategory.listingCategory)
                         handleClose()
                         handleValueChange(

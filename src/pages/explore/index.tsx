@@ -140,6 +140,7 @@ const Explore: React.FC<Props> = ({ data: initialData }) => {
         <title>HobbyCue - Explore</title>
       </Head>
       <ExploreSearchContainer
+        defaultCategory=""
         locationDropdownRef={locationDropdownRef}
         ShowAutoAddress={ShowAutoAddress}
         setShowAutoAddress={setShowAutoAddress}

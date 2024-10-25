@@ -63,6 +63,7 @@ type ExtendedDropdownListItem = DropdownListItem & {
 }
 
 type LocationProps = {
+  defaultCategory?: string
   locationDropdownRef: React.RefObject<HTMLDivElement>
   ShowAutoAddress: boolean
   setShowAutoAddress: (show: boolean) => void
@@ -71,6 +72,7 @@ type LocationProps = {
 }
 
 const ExploreSearchContainer: React.FC<LocationProps> = ({
+  defaultCategory,
   locationDropdownRef,
   ShowAutoAddress,
   setShowAutoAddress,
@@ -148,7 +150,7 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
   }
 
   const [currentCategory, setCurrentCategory] = useState({
-    value: 'All',
+    value: defaultCategory || 'All',
     error: null,
   })
   const [subCategory, setSubCategory] = useState({
@@ -340,7 +342,10 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
       {
         // alert('Searching.....')
 
-        router.push({ pathname: '/explore', query: query })
+        router.push({
+          pathname: `/explore/${defaultCategory?.toLowerCase()}`,
+          query: query,
+        })
       }
     }
   }
