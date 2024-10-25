@@ -31,7 +31,13 @@ import { RootState } from '@/redux/store'
 import { MenuItem, Select, useMediaQuery } from '@mui/material'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, {
+  ReactElement,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import User from '../../assets/svg/Search/User.svg'
 import styles from './styles.module.css'
@@ -1553,6 +1559,20 @@ const FilterDropdown: React.FC<Props> = () => {
 
 const Search: React.FC<Props> = ({ data, children }) => {
   const [isMobile, setIsMobile] = useState(false)
+  const [showExploreMoreMobile, setShowExploreMoreMobile] = useState(false)
+  const [seeMoreWhatsNew, setSeeMoreWhatsNew] = useState(true)
+  const exploreMoreRef = useRef<HTMLDivElement | null>(null)
+  const mainContentRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    if (exploreMoreRef.current && mainContentRef.current) {
+      if (showExploreMoreMobile) {
+        exploreMoreRef.current.style.height = `${mainContentRef.current.scrollHeight}px`
+      } else {
+        exploreMoreRef.current.style.height = '0px'
+      }
+    }
+  }, [showExploreMoreMobile, seeMoreWhatsNew])
 
   const userSearchResults = useSelector(
     (state: RootState) => state.search.userSearchResults.data,
@@ -1593,6 +1613,43 @@ const Search: React.FC<Props> = ({ data, children }) => {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  const searchLoading = useSelector((state: RootState) => state.search.loading)
+
+  const router = useRouter()
+
+  const { q, filter } = router.query
+
+  const queryString = q?.toString() || ''
+
+  const showAll = filter ? filter === '' : true
+  const showAllUsers = filter === 'users'
+  const showAllPeople = filter === 'people'
+  const showAllPlace = filter === 'places'
+  const showAllEvent = filter === 'programs'
+  const showAllProducts = filter === 'products'
+  const showAllPosts = filter === 'posts'
+  const showAllBlogs = filter === 'blogs'
+  const showAllHobbies = filter === 'hobby'
+
+  const noResultsFound =
+    (userSearchResults.length === 0 &&
+      hobbySearchResults.length === 0 &&
+      PeopleSearch.length === 0 &&
+      PlaceSearch.length === 0 &&
+      EventSearch.length === 0 &&
+      ProductSearch.length === 0 &&
+      PostsSearch.length === 0 &&
+      BlogsSearch.length === 0 &&
+      showAll) ||
+    (userSearchResults.length === 0 && showAllUsers) ||
+    (hobbySearchResults.length === 0 && showAllHobbies) ||
+    (PeopleSearch.length === 0 && showAllPeople) ||
+    (PlaceSearch.length === 0 && showAllPlace) ||
+    (EventSearch.length === 0 && showAllEvent) ||
+    (ProductSearch.length === 0 && showAllProducts) ||
+    (PostsSearch.length === 0 && showAllPosts) ||
+    (BlogsSearch.length === 0 && showAllBlogs && searchLoading === false)
+
   return (
     <>
       <Head>
@@ -1609,7 +1666,17 @@ const Search: React.FC<Props> = ({ data, children }) => {
         {isMobile ? (
           <aside className={`custom-scrollbar ${styles['profile-left-aside']}`}>
             <FilterDropdown />
-            <DoubleDownArrow />
+            <span
+              style={{ display: 'flex' }}
+              onClick={() => setShowExploreMoreMobile(!showExploreMoreMobile)}
+              className={
+                showExploreMoreMobile
+                  ? styles.doubleArrowUp
+                  : styles.doubleArrowDown
+              }
+            >
+              {noResultsFound && <DoubleDownArrow />}
+            </span>
           </aside>
         ) : (
           <SearchPageFilter />
@@ -1626,19 +1693,48 @@ const Search: React.FC<Props> = ({ data, children }) => {
             BlogsResults={BlogsSearch || []}
           />
         </main>
-        <aside className={styles['aside-two']}>
-          <ExploreSidebarBtn
-            text="Explore More"
-            href="/explore"
-            icon={<ExploreIcon />}
-          />
-          <InterestedDiv />
-          <ExploreSidebarBtn
-            text="Help Center"
-            href="/help"
-            icon={<QuestionIcon />}
-          />
-        </aside>
+        {isMobile ? (
+          <div
+            className={
+              showExploreMoreMobile ? styles['visible'] : styles['not-visible']
+            }
+            ref={exploreMoreRef}
+          >
+            <aside className={styles['aside-two']} ref={mainContentRef}>
+              <ExploreSidebarBtn
+                text="Explore More"
+                href="/explore"
+                icon={<ExploreIcon />}
+              />
+              <InterestedDiv
+                seeMoreWhatsNew={seeMoreWhatsNew}
+                setSeeMoreWhatsNew={setSeeMoreWhatsNew}
+              />
+              <ExploreSidebarBtn
+                text="Help Center"
+                href="/help"
+                icon={<QuestionIcon />}
+              />
+            </aside>
+          </div>
+        ) : (
+          <aside className={styles['aside-two']}>
+            <ExploreSidebarBtn
+              text="Explore More"
+              href="/explore"
+              icon={<ExploreIcon />}
+            />
+            <InterestedDiv
+              seeMoreWhatsNew={seeMoreWhatsNew}
+              setSeeMoreWhatsNew={setSeeMoreWhatsNew}
+            />
+            <ExploreSidebarBtn
+              text="Help Center"
+              href="/help"
+              icon={<QuestionIcon />}
+            />
+          </aside>
+        )}
       </PageGridLayout>
     </>
   )
