@@ -1291,73 +1291,79 @@ const ListingPageMain: React.FC<Props> = ({
                   )}
                 </PageContentBox>
               )}
-              {data?.type === listingTypes.PLACE && (
-                <PageContentBox
-                  showEditButton={listingLayoutMode === 'edit'}
-                  onEditBtnClick={() =>
-                    dispatch(
-                      openModal({
-                        type: 'listing-working-hours-edit',
-                        closable: true,
-                      }),
-                    )
-                  }
-                  setDisplayData={(arg0: boolean) => {
-                    dispatch(
-                      updateWorkingHoursOpenStates({
-                        [data._id]: !showWorkingHours,
-                      }),
-                    )
-                  }}
-                  expandData={showWorkingHours}
-                >
-                  <h4 className={styles['heading']}>Working Hours</h4>
-                  <div
-                    className={`${styles['working-hours-wrapper']} ${
-                      styles['display-desktop']
-                    } ${
-                      workingHoursStates?.[data?._id]
-                        ? ' ' + styles['display-mobile']
-                        : ''
-                    }`}
+              {data?.type === listingTypes.PLACE &&
+                (data?.work_hours.length > 0 ||
+                  listingLayoutMode === 'edit') && (
+                  <PageContentBox
+                    showEditButton={listingLayoutMode === 'edit'}
+                    onEditBtnClick={() =>
+                      dispatch(
+                        openModal({
+                          type: 'listing-working-hours-edit',
+                          closable: true,
+                        }),
+                      )
+                    }
+                    setDisplayData={(arg0: boolean) => {
+                      dispatch(
+                        updateWorkingHoursOpenStates({
+                          [data._id]: !showWorkingHours,
+                        }),
+                      )
+                    }}
+                    expandData={showWorkingHours}
                   >
-                    {/* Working Hours  */}
-                    {data?.work_hours && (
-                      <ul>
-                        {data?.work_hours.map((item: any, idx: number) => {
-                          return (
-                            <li key={idx} className={styles.workingListItem}>
-                              <svg
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <g clip-path="url(#clip0_173_56222)">
-                                  <path
-                                    d="M12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2ZM15.55 15.8L11.47 13.29C11.17 13.11 10.99 12.79 10.99 12.44V7.75C11 7.34 11.34 7 11.75 7C12.16 7 12.5 7.34 12.5 7.75V12.2L16.34 14.51C16.7 14.73 16.82 15.2 16.6 15.56C16.38 15.91 15.91 16.02 15.55 15.8Z"
-                                    fill="#8064A2"
-                                  />
-                                </g>
-                                <defs>
-                                  <clipPath id="clip0_173_56222">
-                                    <rect width="24" height="24" fill="white" />
-                                  </clipPath>
-                                </defs>
-                              </svg>
-                              <p className={styles.workingHour}>
-                                {item.from_day} - {item.to_day},{' '}
-                                {item.from_time} - {item.to_time}
-                              </p>
-                            </li>
-                          )
-                        })}
-                      </ul>
-                    )}
-                  </div>
-                </PageContentBox>
-              )}
+                    <h4 className={styles['heading']}>Working Hours</h4>
+                    <div
+                      className={`${styles['working-hours-wrapper']} ${
+                        styles['display-desktop']
+                      } ${
+                        workingHoursStates?.[data?._id]
+                          ? ' ' + styles['display-mobile']
+                          : ''
+                      }`}
+                    >
+                      {/* Working Hours  */}
+                      {data?.work_hours && (
+                        <ul>
+                          {data?.work_hours.map((item: any, idx: number) => {
+                            return (
+                              <li key={idx} className={styles.workingListItem}>
+                                <svg
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <g clip-path="url(#clip0_173_56222)">
+                                    <path
+                                      d="M12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2ZM15.55 15.8L11.47 13.29C11.17 13.11 10.99 12.79 10.99 12.44V7.75C11 7.34 11.34 7 11.75 7C12.16 7 12.5 7.34 12.5 7.75V12.2L16.34 14.51C16.7 14.73 16.82 15.2 16.6 15.56C16.38 15.91 15.91 16.02 15.55 15.8Z"
+                                      fill="#8064A2"
+                                    />
+                                  </g>
+                                  <defs>
+                                    <clipPath id="clip0_173_56222">
+                                      <rect
+                                        width="24"
+                                        height="24"
+                                        fill="white"
+                                      />
+                                    </clipPath>
+                                  </defs>
+                                </svg>
+                                <p className={styles.workingHour}>
+                                  {item.from_day} - {item.to_day},{' '}
+                                  {item.from_time} - {item.to_time}
+                                </p>
+                              </li>
+                            )
+                          })}
+                        </ul>
+                      )}
+                    </div>
+                  </PageContentBox>
+                )}
 
               {/* Related Listing */}
               {listingLayoutMode !== 'edit' &&
@@ -1464,103 +1470,109 @@ const ListingPageMain: React.FC<Props> = ({
                   >
                     {showSocialMedia && (
                       <>
-                        {Object.entries(data?.social_media_urls).map(
-                          ([key, url]) => {
-                            let socialMediaName = ''
-                            let socialMediaIcon = null
+                        {data?.social_media_urls &&
+                          Object?.entries(data?.social_media_urls).map(
+                            ([key, url]) => {
+                              let socialMediaName = ''
+                              let socialMediaIcon = null
 
-                            switch (true) {
-                              case key.startsWith('facebook'):
-                                socialMediaName = 'Facebook'
-                                socialMediaIcon = socialMediaIcons['Facebook']
-                                break
-                              case key.startsWith('twitter'):
-                                socialMediaName = 'Twitter'
-                                socialMediaIcon = socialMediaIcons['Twitter']
-                                break
-                              case key.startsWith('instagram'):
-                                socialMediaName = 'Instagram'
-                                socialMediaIcon = socialMediaIcons['Instagram']
-                                break
-                              case key.startsWith('behance'):
-                                socialMediaName = 'Behance'
-                                socialMediaIcon = socialMediaIcons['Behance']
-                                break
-                              case key.startsWith('bgg'):
-                                socialMediaName = 'BoardGameGeek'
-                                socialMediaIcon = socialMediaIcons['BGG']
-                                break
-                              case key.startsWith('chess'):
-                                socialMediaName = 'Chess'
-                                socialMediaIcon = socialMediaIcons['Chess.com']
-                                break
-                              case key.startsWith('deviantarts'):
-                                socialMediaName = 'DeviantArt'
-                                socialMediaIcon =
-                                  socialMediaIcons['DeviantArts']
-                                break
-                              case key.startsWith('goodreads'):
-                                socialMediaName = 'Goodreads'
-                                socialMediaIcon = socialMediaIcons['GoodReads']
-                                break
-                              case key.startsWith('pinterest'):
-                                socialMediaName = 'Pinterest'
-                                socialMediaIcon = socialMediaIcons['Pinterest']
-                                break
-                              case key.startsWith('smule'):
-                                socialMediaName = 'Smule'
-                                socialMediaIcon = socialMediaIcons['Smule']
-                                break
-                              case key.startsWith('soundcloud'):
-                                socialMediaName = 'SoundCloud'
-                                socialMediaIcon = socialMediaIcons['SoundCloud']
-                                break
-                              case key.startsWith('strava'):
-                                socialMediaName = 'Strava'
-                                socialMediaIcon = socialMediaIcons['Strava']
-                                break
-                              case key.startsWith('tripadvisor'):
-                                socialMediaName = 'TripAdvisor'
-                                socialMediaIcon =
-                                  socialMediaIcons['TripAdvisor']
-                                break
-                              case key.startsWith('telegram'):
-                                socialMediaName = 'Telegram'
-                                socialMediaIcon = socialMediaIcons['Telegram']
-                                break
-                              case key.startsWith('medium'):
-                                socialMediaName = 'Medium'
-                                socialMediaIcon = socialMediaIcons['Medium']
-                                break
-                              case key.startsWith('ultimate_guitar'):
-                                socialMediaName = 'Ultimate Guitar'
-                                socialMediaIcon =
-                                  socialMediaIcons['Ultimate Guitar']
-                                break
-                              case key.startsWith('youtube'):
-                                socialMediaName = 'YouTube'
-                                socialMediaIcon = socialMediaIcons['Youtube']
-                                break
-                              case key.startsWith('others'):
-                                socialMediaName = extractDomainName(url)
-                                socialMediaIcon = socialMediaIcons['Others']
-                                break
-                              // Add cases for other social media URLs as needed
-                              default:
-                                break
-                            }
+                              switch (true) {
+                                case key.startsWith('facebook'):
+                                  socialMediaName = 'Facebook'
+                                  socialMediaIcon = socialMediaIcons['Facebook']
+                                  break
+                                case key.startsWith('twitter'):
+                                  socialMediaName = 'Twitter'
+                                  socialMediaIcon = socialMediaIcons['Twitter']
+                                  break
+                                case key.startsWith('instagram'):
+                                  socialMediaName = 'Instagram'
+                                  socialMediaIcon =
+                                    socialMediaIcons['Instagram']
+                                  break
+                                case key.startsWith('behance'):
+                                  socialMediaName = 'Behance'
+                                  socialMediaIcon = socialMediaIcons['Behance']
+                                  break
+                                case key.startsWith('bgg'):
+                                  socialMediaName = 'BoardGameGeek'
+                                  socialMediaIcon = socialMediaIcons['BGG']
+                                  break
+                                case key.startsWith('chess'):
+                                  socialMediaName = 'Chess'
+                                  socialMediaIcon =
+                                    socialMediaIcons['Chess.com']
+                                  break
+                                case key.startsWith('deviantarts'):
+                                  socialMediaName = 'DeviantArt'
+                                  socialMediaIcon =
+                                    socialMediaIcons['DeviantArts']
+                                  break
+                                case key.startsWith('goodreads'):
+                                  socialMediaName = 'Goodreads'
+                                  socialMediaIcon =
+                                    socialMediaIcons['GoodReads']
+                                  break
+                                case key.startsWith('pinterest'):
+                                  socialMediaName = 'Pinterest'
+                                  socialMediaIcon =
+                                    socialMediaIcons['Pinterest']
+                                  break
+                                case key.startsWith('smule'):
+                                  socialMediaName = 'Smule'
+                                  socialMediaIcon = socialMediaIcons['Smule']
+                                  break
+                                case key.startsWith('soundcloud'):
+                                  socialMediaName = 'SoundCloud'
+                                  socialMediaIcon =
+                                    socialMediaIcons['SoundCloud']
+                                  break
+                                case key.startsWith('strava'):
+                                  socialMediaName = 'Strava'
+                                  socialMediaIcon = socialMediaIcons['Strava']
+                                  break
+                                case key.startsWith('tripadvisor'):
+                                  socialMediaName = 'TripAdvisor'
+                                  socialMediaIcon =
+                                    socialMediaIcons['TripAdvisor']
+                                  break
+                                case key.startsWith('telegram'):
+                                  socialMediaName = 'Telegram'
+                                  socialMediaIcon = socialMediaIcons['Telegram']
+                                  break
+                                case key.startsWith('medium'):
+                                  socialMediaName = 'Medium'
+                                  socialMediaIcon = socialMediaIcons['Medium']
+                                  break
+                                case key.startsWith('ultimate_guitar'):
+                                  socialMediaName = 'Ultimate Guitar'
+                                  socialMediaIcon =
+                                    socialMediaIcons['Ultimate Guitar']
+                                  break
+                                case key.startsWith('youtube'):
+                                  socialMediaName = 'YouTube'
+                                  socialMediaIcon = socialMediaIcons['Youtube']
+                                  break
+                                case key.startsWith('others'):
+                                  socialMediaName = extractDomainName(url)
+                                  socialMediaIcon = socialMediaIcons['Others']
+                                  break
+                                // Add cases for other social media URLs as needed
+                                default:
+                                  break
+                              }
 
-                            if (socialMediaIcon && socialMediaName) {
-                              return renderSocialLink(
-                                url,
-                                socialMediaIcon,
-                                socialMediaName,
-                              )
-                            }
+                              if (socialMediaIcon && socialMediaName) {
+                                return renderSocialLink(
+                                  url,
+                                  socialMediaIcon,
+                                  socialMediaName,
+                                )
+                              }
 
-                            return null // If no matching social media key is found, return null
-                          },
-                        )}
+                              return null // If no matching social media key is found, return null
+                            },
+                          )}
                       </>
                     )}
                   </ul>
@@ -2291,62 +2303,63 @@ const ListingPageMain: React.FC<Props> = ({
               )}
             </PageContentBox>
           )}
-          {data?.type === listingTypes.PLACE && (
-            <PageContentBox
-              showEditButton={listingLayoutMode === 'edit'}
-              onEditBtnClick={() =>
-                dispatch(
-                  openModal({
-                    type: 'listing-working-hours-edit',
-                    closable: true,
-                  }),
-                )
-              }
-              setDisplayData={setShowWorkingHours}
-            >
-              <h4 className={styles['heading']}>Working Hours</h4>
-              <div
-                className={`${styles['working-hours-wrapper']} ${
-                  styles['display-desktop']
-                }${showWorkingHours ? ' ' + styles['display-mobile'] : ''}`}
+          {data?.type === listingTypes.PLACE &&
+            (data?.work_hours.length > 0 || listingLayoutMode === 'edit') && (
+              <PageContentBox
+                showEditButton={listingLayoutMode === 'edit'}
+                onEditBtnClick={() =>
+                  dispatch(
+                    openModal({
+                      type: 'listing-working-hours-edit',
+                      closable: true,
+                    }),
+                  )
+                }
+                setDisplayData={setShowWorkingHours}
               >
-                {/* Working Hours  */}
-                {data?.work_hours && (
-                  <ul>
-                    {data?.work_hours.map((item: any, idx: number) => {
-                      return (
-                        <li key={idx} className={styles.workingListItem}>
-                          <svg
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <g clip-path="url(#clip0_173_56222)">
-                              <path
-                                d="M12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2ZM15.55 15.8L11.47 13.29C11.17 13.11 10.99 12.79 10.99 12.44V7.75C11 7.34 11.34 7 11.75 7C12.16 7 12.5 7.34 12.5 7.75V12.2L16.34 14.51C16.7 14.73 16.82 15.2 16.6 15.56C16.38 15.91 15.91 16.02 15.55 15.8Z"
-                                fill="#8064A2"
-                              />
-                            </g>
-                            <defs>
-                              <clipPath id="clip0_173_56222">
-                                <rect width="24" height="24" fill="white" />
-                              </clipPath>
-                            </defs>
-                          </svg>
-                          <p className={styles.workingHour}>
-                            {item.from_day} - {item.to_day}, {item.from_time} -{' '}
-                            {item.to_time}
-                          </p>
-                        </li>
-                      )
-                    })}
-                  </ul>
-                )}
-              </div>
-            </PageContentBox>
-          )}
+                <h4 className={styles['heading']}>Working Hours</h4>
+                <div
+                  className={`${styles['working-hours-wrapper']} ${
+                    styles['display-desktop']
+                  }${showWorkingHours ? ' ' + styles['display-mobile'] : ''}`}
+                >
+                  {/* Working Hours  */}
+                  {data?.work_hours && (
+                    <ul>
+                      {data?.work_hours.map((item: any, idx: number) => {
+                        return (
+                          <li key={idx} className={styles.workingListItem}>
+                            <svg
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <g clip-path="url(#clip0_173_56222)">
+                                <path
+                                  d="M12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2ZM15.55 15.8L11.47 13.29C11.17 13.11 10.99 12.79 10.99 12.44V7.75C11 7.34 11.34 7 11.75 7C12.16 7 12.5 7.34 12.5 7.75V12.2L16.34 14.51C16.7 14.73 16.82 15.2 16.6 15.56C16.38 15.91 15.91 16.02 15.55 15.8Z"
+                                  fill="#8064A2"
+                                />
+                              </g>
+                              <defs>
+                                <clipPath id="clip0_173_56222">
+                                  <rect width="24" height="24" fill="white" />
+                                </clipPath>
+                              </defs>
+                            </svg>
+                            <p className={styles.workingHour}>
+                              {item.from_day} - {item.to_day}, {item.from_time}{' '}
+                              - {item.to_time}
+                            </p>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  )}
+                </div>
+              </PageContentBox>
+            )}
 
           {/* Related Listing */}
           {listingLayoutMode !== 'edit' &&
@@ -2450,7 +2463,7 @@ const ListingPageMain: React.FC<Props> = ({
                   styles['display-desktop']
                 }${showSocialMedia ? ' ' + styles['display-mobile'] : ''}`}
               >
-                {showSocialMedia && (
+                {data?.social_media_urls && (
                   <>
                     {Object.entries(data?.social_media_urls).map(
                       ([key, url]) => {
