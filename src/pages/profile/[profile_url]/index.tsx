@@ -38,6 +38,7 @@ import {
 import ErrorPage from '@/components/ErrorPage'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { useMediaQuery } from '@mui/material'
+import { htmlToPlainTextAdv } from '@/utils'
 
 interface Props {
   data: ProfilePageData
@@ -699,8 +700,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     blogsData: null,
   }
 
-  const unformattedAbout =
-    res.data.data.users[0]?.about?.replace(/<[^>]*>/g, '') || ''
+  const unformattedAbout = htmlToPlainTextAdv(res.data.data.users[0]?.about)
 
   return {
     props: {

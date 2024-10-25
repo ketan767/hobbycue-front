@@ -1,5 +1,31 @@
 import { useMediaQuery } from '@mui/material';
 
+export function htmlToPlainTextAdv(html:string) {
+  if (!html || html?.length === 0) return ''
+
+  // Add a space after each closing tag to separate text content
+  html = html.replace(/<\/[^>]+>/g, '$& ');
+  
+  // Convert numbered lists to "1. [content] 2. [content] ..." in a single line
+  html = html.replace(/<ol>(.*?)<\/ol>/gi, (match: string, content: string) => {
+    let index = 1;
+    return content.replace(/<li>(.*?)<\/li>/gi, (_, listItemContent: string) => `${index++}. ${listItemContent} `).trim();
+  });
+
+  // Convert bulleted lists to "* [content] * [content] ..." in a single line
+  html = html.replace(/<ul>(.*?)<\/ul>/gi, (match: string, content: string) => {
+    return content.replace(/<li>(.*?)<\/li>/gi, (_, listItemContent: string) => {
+      return `* ${listItemContent} `;
+    }).trim();
+  });
+
+  // Remove all other HTML tags
+  html = html.replace(/<[^>]+>/g, '');
+
+  // Convert any remaining newlines to a single space
+  return html.replace(/\s+/g, ' ').trim();
+}
+
 export const validateEmail = (email: string) => {
   let a = String(email)
     .toLowerCase()
