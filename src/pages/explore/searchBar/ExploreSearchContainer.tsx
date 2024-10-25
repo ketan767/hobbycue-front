@@ -123,7 +123,7 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
     const { err, res } = await getAllHobbies(query)
 
     if (err) return console.log(err)
-
+    console.log(res.data)
     // Modify the sorting logic to prioritize items where the search keyword appears at the beginning
     const sortedHobbies = res.data.hobbies.sort((a: any, b: any) => {
       const indexA = a.display
