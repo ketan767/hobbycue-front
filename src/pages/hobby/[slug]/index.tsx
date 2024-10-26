@@ -18,6 +18,7 @@ import { getAllUserDetail } from '@/services/user.service'
 import EditIcon from '@/assets/svg/edit-colored.svg'
 import { useMediaQuery } from '@mui/material'
 import { openModal } from '@/redux/slices/modal'
+import { htmlToPlainTextAdv } from '@/utils'
 
 type Props = { data: { hobbyData: any }; unformattedAbout?: string }
 
@@ -388,8 +389,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     blogsData: null,
     hobbyData: res.data?.hobbies?.[0] ?? [],
   }
-  const unformattedAbout =
-    res.data?.hobbies?.[0]?.description?.replace(/<[^>]*>/g, '') || ''
+  const unformattedAbout = htmlToPlainTextAdv(
+    res.data?.hobbies?.[0]?.description,
+  )
 
   return {
     props: {

@@ -38,7 +38,9 @@
   .img{
     height: 100%;
     width: 100%;
+    object-fit: contain;
   }
+
   .header {
     display: flex;
     padding: var(--spacing-16) var(--spacing-16);
@@ -54,7 +56,26 @@
     z-index: 10;
   }
   @media screen and (max-width: 1100px) {
-  .modal-close-icon {
+  .header {
+    padding: 0;
+    display: block;
+  }
+
+  .modalHeaderMobile {
+    background-color: white;
+    border-radius: 8px 8px 0 0;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+  }
+
+  .modalHeaderMobile svg {
+    margin-left: auto;
+    height: 20px;
+    width: 20px;
+  }
+
+  /* .modal-close-icon {
     position: fixed;
     top: 10px;
     right: 12px;
@@ -62,5 +83,9 @@
     border-radius: 100%;
 
     z-index: 10001;
+  } */
+
+  .imageModalContent {
+    width: 100%;
   }
 }
