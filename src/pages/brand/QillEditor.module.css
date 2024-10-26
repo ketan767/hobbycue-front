@@ -1,0 +1,28 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+.quill {
+  width: 100%;
+}
+.ql-blank {
+  width: 100%;
+}
+.ql-toolbar {
+  width: 100%;
+}
+
+.hidden {
+  display: none;
+}
+.quill {
+  display: flex;
+  flex-direction: column-reverse;
+  flex: 1;
+}
+.quill .ql-container {
+  border-top: 1px solid #ccc;
+}
