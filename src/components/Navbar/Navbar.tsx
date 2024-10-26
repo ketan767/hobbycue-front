@@ -839,7 +839,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                             e.preventDefault()
                             const query = { category: 'Place' }
                             router.push({
-                              pathname: '/explore/places',
+                              pathname: '/explore/place',
                               query: query,
                             })
                           }}
@@ -857,7 +857,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                             e.preventDefault()
                             const query = { category: 'Product' }
                             router.push({
-                              pathname: '/explore/products',
+                              pathname: '/explore/product',
                               query: query,
                             })
                           }}
@@ -875,7 +875,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                             e.preventDefault()
                             const query = { category: 'Program' }
                             router.push({
-                              pathname: '/explore/programs',
+                              pathname: '/explore/program',
                               query: query,
                             })
                           }}
