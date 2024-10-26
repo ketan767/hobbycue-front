@@ -84,6 +84,14 @@ const AboutEditor: React.FC<Props> = ({
           },
         }}
       />
+      <style>
+        {`
+        .ql-editor ul, 
+        .ql-editor ol {
+          padding-left: 4px;  
+        }
+        `}
+      </style>
     </div>
   )
 }

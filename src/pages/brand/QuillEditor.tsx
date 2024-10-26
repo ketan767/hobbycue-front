@@ -28,7 +28,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
       ['header', 'bold', 'italic', 'underline', 'strike'],
       [{ color: [] }, { background: [] }],
       [{ align: [] }],
-      ['image'],
+      ['image', 'link'],
     ],
   }
 
