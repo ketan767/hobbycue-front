@@ -27,6 +27,8 @@ const Explore: React.FC<Props> = ({ data: initialData }) => {
   const [loading, setLoading] = useState(false) // Indicates if more data is being loaded
   const [hasMore, setHasMore] = useState(true) // Tracks if there are more listings to load
   const [ShowAutoAddress, setShowAutoAddress] = useState<boolean>(false)
+  const [showHobbyDropdown, setShowHobbyDropdown] = useState<boolean>(false)
+
   const locationDropdownRef = useRef<HTMLDivElement>(null)
 
   const fetchMoreData = useCallback(async () => {
@@ -34,7 +36,6 @@ const Explore: React.FC<Props> = ({ data: initialData }) => {
     let queryString = `sort=-createdAt&is_published=true&populate=_hobbies,_address,product_variant,seller&page=${
       page + 1
     }&limit=20`
-
     if (category && category !== 'All') {
       let type = 1
       if (category === 'Place') {
@@ -63,10 +64,11 @@ const Explore: React.FC<Props> = ({ data: initialData }) => {
       queryString =
         `city=${encodeURIComponent(location.toString())}&` + queryString
     }
+    // console.log('Query', queryString)
 
-    // alert('Loading:' + loading + '...' + 'HasMore' + hasMore)
     if (loading || !hasMore) return
-    // alert('Fetching more data')
+    // alert('Searching more...Page' + page)
+    // console.log('Query', queryString)
 
     setLoading(true)
     try {
@@ -87,14 +89,17 @@ const Explore: React.FC<Props> = ({ data: initialData }) => {
   }, [page, loading, hasMore, keyword, category, hobby, location, sub_category])
 
   useEffect(() => {
+    setPage(1)
+    setShowHobbyDropdown(false)
+    setShowAutoAddress(false)
     setData(initialData)
   }, [keyword, category, hobby, location, sub_category])
 
   useEffect(() => {
     const handleScroll = () => {
       if (
-        window.innerHeight + document.documentElement.scrollTop + 50 >=
-        document.documentElement.offsetHeight
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight - 100
       ) {
         setHasMore(true)
         fetchMoreData()
@@ -135,9 +140,12 @@ const Explore: React.FC<Props> = ({ data: initialData }) => {
         <title>HobbyCue - Explore</title>
       </Head>
       <ExploreSearchContainer
+        defaultCategory=""
         locationDropdownRef={locationDropdownRef}
         ShowAutoAddress={ShowAutoAddress}
         setShowAutoAddress={setShowAutoAddress}
+        showHobbyDropdown={showHobbyDropdown}
+        setShowHobbyDropdown={setShowHobbyDropdown}
       />
       <div className={styles.container}>
         <div className={styles.gridContainer}>

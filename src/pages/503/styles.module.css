@@ -138,6 +138,7 @@
     min-height: calc(100vh - 48px);
     padding-inline: 16px;
     padding-top: 12px;
+    gap: 12px;
   }
   .notfoundImg {
     width: 328px;
@@ -169,6 +170,8 @@
   .flexRowContainer {
     flex-direction: column;
     width: 100%;
+    gap: 16px;
+    margin-top: calc(65px - 12px);
   }
   .btnSecondary,
   .btnPrimary {

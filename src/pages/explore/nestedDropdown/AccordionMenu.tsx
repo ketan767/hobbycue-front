@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   Menu,
   MenuItem,
@@ -19,6 +19,8 @@ import ProgramIcon from '@/assets/svg/Program.svg'
 import ProductIcon from '@/assets/svg/Search/Product2.svg'
 import Image from 'next/image'
 import styles from './AccordianMenu.module.css'
+import { getAllListingCategories } from '@/services/listing.service'
+import { isEmptyField } from '@/utils'
 
 interface AccordianMenuProps {
   value: string
@@ -28,6 +30,13 @@ interface AccordianMenuProps {
     React.SetStateAction<{ value: string; error: null }>
   >
   searchResult: Function
+}
+type DropdownListItem = {
+  _id: string
+  Description: string
+  Show: string
+  pageType: string
+  listingCategory: string
 }
 const AccordionMenu: React.FC<AccordianMenuProps> = ({
   value,
@@ -42,17 +51,40 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
   const [isPlaceOpened, setIsPlaceOpened] = useState(false)
   const [isProgramOpened, setIsProgramOpened] = useState(false)
   const [isProductOpened, setIsProductOpened] = useState(false)
+  const [categoryValue, setCategoryValue] = useState(
+    value === 'All' ? '' : value,
+  )
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
+  const [isCategoryBoxOpened, setIsCategoryBoxOpened] = useState(false)
+  const [categoryDropdownList, setCategoryDropdownList] = useState<
+    DropdownListItem[]
+  >([])
+  const [filteredDropdownList, setFilteredDropdownList] =
+    useState<DropdownListItem[]>(categoryDropdownList)
+  const [peopleSubcategory, setPeopleSubcategory] =
+    useState<DropdownListItem[]>(categoryDropdownList)
+  const [placeSubcategory, setPlaceSubcategory] =
+    useState<DropdownListItem[]>(categoryDropdownList)
+  const [programSubcategory, setProgramSubcategory] =
+    useState<DropdownListItem[]>(categoryDropdownList)
+  const [productSubcategory, setProductSubcategory] =
+    useState<DropdownListItem[]>(categoryDropdownList)
   // const [subCategory, setSubCategory] = useState('')
+  const searchCategoryRef = useRef()
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     setAnchorEl(event.currentTarget)
     setOpenMenu(true)
+    setIsCategoryBoxOpened(!isCategoryBoxOpened)
   }
 
   const handleClose = () => {
     setAnchorEl(null)
     setOpenMenu(false)
     setIsPeopleOpened(false)
+    setIsPlaceOpened(false)
+    setIsProgramOpened(false)
+    setIsProductOpened(false)
   }
 
   const handleValueChange = (
@@ -67,16 +99,145 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
       setSubCategory({ value: '', error: null })
       setValue({ value: name, error: null })
       searchResult(name)
-      // alert(name)
     }
   }
+  const handleCategoryInputChange = (e: any) => {
+    setCategoryValue(e.target.value)
+    if (isEmptyField(e.target.value))
+      return setFilteredDropdownList(categoryDropdownList)
 
+    const filteredCategories = categoryDropdownList.filter(
+      (category) =>
+        category.listingCategory
+          .toLowerCase()
+          .indexOf(e.target.value.toLowerCase()) !== -1,
+    )
+    setFilteredDropdownList(filteredCategories)
+  }
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const { err, res } = await getAllListingCategories()
+
+      if (err) return console.log(err)
+
+      const sortedCategories = res.data.data.sort((a: any, b: any) => {
+        return a.listingCategory
+          .toLowerCase()
+          .localeCompare(b.listingCategory.toLowerCase())
+      })
+
+      const peoplesSubCat = sortedCategories.filter(
+        (category: DropdownListItem) => category.pageType === 'People',
+      )
+      const placeSubCat = sortedCategories.filter(
+        (category: DropdownListItem) => category.pageType === 'Place',
+      )
+      const programSubCat = sortedCategories.filter(
+        (category: DropdownListItem) => category.pageType === 'Program',
+      )
+      const productSubCat = sortedCategories.filter(
+        (category: DropdownListItem) => category.pageType === 'Product',
+      )
+      setPeopleSubcategory(peoplesSubCat)
+      setPlaceSubcategory(placeSubCat)
+      setProgramSubcategory(programSubCat)
+      setProductSubcategory(productSubCat)
+      setCategoryDropdownList(sortedCategories)
+    }
+    fetchCategories()
+  }, [])
   return (
     <div className={styles.relative}>
-      <div className={styles.dropdown} onClick={handleClick}>
-        <Image src={SearchIcon} width={16} height={16} alt="SearchIcon" />
-        <span className={styles.value}>{value ? value : subCategory}</span>
-        <Image src={Dropdown} width={16} height={16} alt="Dropdown" />
+      <div className={styles.relative}>
+        <div className={styles.categorySuggestion}>
+          <Image
+            src={SearchIcon}
+            width={16}
+            height={16}
+            alt="SearchIcon"
+            className={styles.searchIcon}
+          />
+          <TextField
+            autoComplete="off"
+            inputRef={searchCategoryRef}
+            variant="standard"
+            label="Category"
+            size="small"
+            name="Category"
+            className={styles.dropdown}
+            onFocus={() => {
+              setShowCategoryDropdown(true)
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                setShowCategoryDropdown(false)
+                searchResult()
+              }
+            }}
+            value={categoryValue}
+            onBlur={() =>
+              setTimeout(() => {
+                setShowCategoryDropdown(false)
+              }, 300)
+            }
+            onChange={handleCategoryInputChange}
+            sx={{
+              '& label': {
+                fontSize: '16px',
+                paddingLeft: '24px',
+              },
+              '& label.Mui-focused': {
+                fontSize: '12px',
+                marginLeft: '-16px',
+              },
+              '& .MuiInputLabel-shrink': {
+                fontSize: '12px',
+                marginLeft: '-16px',
+              },
+              '& .MuiInput-underline:hover:before': {
+                borderBottomColor: '#7F63A1',
+              },
+            }}
+            InputProps={{
+              sx: {
+                paddingLeft: '24px',
+              },
+            }}
+          />
+          <Image
+            src={Dropdown}
+            width={16}
+            height={16}
+            alt="Dropdown"
+            onClick={handleClick}
+            className={`${styles.arrow} ${
+              openMenu ? `${styles.arrowRotated}` : ''
+            }`}
+          />
+
+          {showCategoryDropdown && filteredDropdownList.length !== 0 && (
+            <div className={styles.dropdownCategory}>
+              {filteredDropdownList.map((category) => {
+                return (
+                  <p
+                    key={category._id}
+                    onClick={() => {
+                      setCategoryValue(category.listingCategory)
+                      searchResult(
+                        undefined,
+                        undefined,
+                        category.listingCategory,
+                      )
+                    }}
+                  >
+                    {category.listingCategory}
+                  </p>
+                )
+              })}
+            </div>
+          )}
+        </div>
       </div>
 
       <Menu
@@ -89,20 +250,10 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
           margin: '0',
           padding: '0',
           position: 'absolute',
-          top: '0px',
+          top: '8px',
+          left: '-144px',
         }}
       >
-        {/* Regular Menu Item */}
-        <MenuItem
-          onClick={() => {
-            handleClose()
-            handleValueChange('All')
-          }}
-        >
-          All
-        </MenuItem>
-
-        {/* Accordion Inside Menu */}
         <Accordion
           disableGutters
           elevation={0}
@@ -119,11 +270,11 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
           }}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<ExpandMoreIcon style={{ fontSize: '16px' }} />}
             aria-controls="panel1a-content"
             id="panel1a-header"
             tabIndex={-1}
-            sx={{ margin: 0, padding: 0 }}
+            sx={{ margin: 0, padding: '0 10px 0 0' }}
           >
             <Typography sx={{ marginLeft: '16px' }}>
               <div className={styles.pContainer}>
@@ -134,7 +285,9 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                   alt="PeopleIcon"
                 />
                 <span
-                  className={isPeopleOpened ? `${styles.peopleOpened}` : ''}
+                  className={`${styles.categoryName} ${
+                    isPeopleOpened ? `${styles.peopleOpened}` : ''
+                  }`}
                   onClick={(e) => {
                     e.stopPropagation()
                     handleValueChange('People')
@@ -147,102 +300,62 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <MenuItem
-              onClick={() => {
-                handleClose()
-                handleValueChange(undefined, 'Teacher')
-              }}
-              sx={{
-                marginLeft: '-16px',
-                marginBottom: '11px',
-              }}
-              className={styles.pOptions}
-            >
-              Teacher
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                handleClose()
-                handleValueChange(undefined, 'Coach')
-              }}
-              sx={{
-                marginLeft: '-16px',
-                marginTop: '11px',
-                marginBottom: '11px',
-              }}
-              className={styles.pOptions}
-            >
-              Coach
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                handleClose()
-                handleValueChange(undefined, 'Artist')
-              }}
-              sx={{
-                marginLeft: '-16px',
-                marginTop: '11px',
-                marginBottom: '11px',
-              }}
-              className={styles.pOptions}
-            >
-              Artist
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                handleClose()
-                handleValueChange(undefined, 'Expert')
-              }}
-              sx={{
-                marginLeft: '-16px',
-                marginTop: '11px',
-                marginBottom: '11px',
-              }}
-              className={styles.pOptions}
-            >
-              Expert
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                handleClose()
-                handleValueChange(undefined, 'Collaborator')
-              }}
-              sx={{
-                marginLeft: '-16px',
-                marginTop: '11px',
-                marginBottom: '11px',
-              }}
-              className={styles.pOptions}
-            >
-              Collaborator
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                handleClose()
-                handleValueChange(undefined, 'Organisation')
-              }}
-              sx={{
-                marginLeft: '-16px',
-                marginTop: '11px',
-                marginBottom: '11px',
-              }}
-              className={styles.pOptions}
-            >
-              Organisation
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                handleClose()
-                handleValueChange(undefined, 'Association')
-              }}
-              sx={{
-                marginLeft: '-16px',
-                marginTop: '11px',
-              }}
-              className={styles.pOptions}
-            >
-              Association
-            </MenuItem>
+            {peopleSubcategory &&
+              peopleSubcategory.length > 0 &&
+              peopleSubcategory.map((subcategory, index) => {
+                if (index === peopleSubcategory.length - 1) {
+                  return (
+                    <>
+                      <MenuItem
+                        onClick={() => {
+                          setIsPeopleOpened(false)
+                          setIsPlaceOpened(false)
+                          setIsProgramOpened(false)
+                          setIsProductOpened(false)
+                          setCategoryValue(subcategory.listingCategory)
+                          handleClose()
+                          handleValueChange(
+                            undefined,
+                            subcategory.listingCategory,
+                          )
+                        }}
+                        sx={{
+                          marginLeft: '-16px',
+                          marginBottom: '-11px',
+                        }}
+                        className={styles.pOptions}
+                      >
+                        {subcategory.listingCategory}
+                      </MenuItem>
+                    </>
+                  )
+                }
+                return (
+                  <>
+                    <MenuItem
+                      onClick={() => {
+                        setIsPeopleOpened(false)
+                        setIsPlaceOpened(false)
+                        setIsProgramOpened(false)
+                        setIsProductOpened(false)
+                        setCategoryValue(subcategory.listingCategory)
+                        handleClose()
+                        handleValueChange(
+                          undefined,
+                          subcategory.listingCategory,
+                        )
+                      }}
+                      sx={{
+                        marginLeft: '-16px',
+                        marginBottom: '11px',
+                      }}
+                      className={styles.pOptions}
+                    >
+                      {subcategory.listingCategory}
+                    </MenuItem>
+                  </>
+                )
+              })}
           </AccordionDetails>
         </Accordion>
         <Accordion
@@ -261,11 +374,11 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
           }}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<ExpandMoreIcon style={{ fontSize: '16px' }} />}
             aria-controls="panel2a-content"
             id="panel2a-header"
             tabIndex={-1}
-            sx={{ margin: 0, padding: 0 }}
+            sx={{ margin: 0, padding: '0 10px 0 0' }}
           >
             <Typography sx={{ marginLeft: '16px' }}>
               <div className={styles.pContainer}>
@@ -284,19 +397,62 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <MenuItem
-              onClick={() => {
-                handleClose()
-                handleValueChange('Teacher')
-              }}
-              sx={{
-                marginLeft: '-16px',
-                marginBottom: '11px',
-              }}
-              className={styles.pOptions}
-            >
-              Teacher
-            </MenuItem>
+            {placeSubcategory &&
+              placeSubcategory.length > 0 &&
+              placeSubcategory.map((subcategory, index) => {
+                if (index === placeSubcategory.length - 1) {
+                  return (
+                    <>
+                      <MenuItem
+                        onClick={() => {
+                          setIsPeopleOpened(false)
+                          setIsPlaceOpened(false)
+                          setIsProgramOpened(false)
+                          setIsProductOpened(false)
+                          setCategoryValue(subcategory.listingCategory)
+                          handleClose()
+                          handleValueChange(
+                            undefined,
+                            subcategory.listingCategory,
+                          )
+                        }}
+                        sx={{
+                          marginLeft: '-16px',
+                          marginBottom: '-11px',
+                        }}
+                        className={styles.pOptions}
+                      >
+                        {subcategory.listingCategory}
+                      </MenuItem>
+                    </>
+                  )
+                }
+                return (
+                  <>
+                    <MenuItem
+                      onClick={() => {
+                        setIsPeopleOpened(false)
+                        setIsPlaceOpened(false)
+                        setIsProgramOpened(false)
+                        setIsProductOpened(false)
+                        setCategoryValue(subcategory.listingCategory)
+                        handleClose()
+                        handleValueChange(
+                          undefined,
+                          subcategory.listingCategory,
+                        )
+                      }}
+                      sx={{
+                        marginLeft: '-16px',
+                        marginBottom: '11px',
+                      }}
+                      className={styles.pOptions}
+                    >
+                      {subcategory.listingCategory}
+                    </MenuItem>
+                  </>
+                )
+              })}
           </AccordionDetails>
         </Accordion>
         <Accordion
@@ -315,11 +471,11 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
           }}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<ExpandMoreIcon style={{ fontSize: '16px' }} />}
             aria-controls="panel3a-content"
             id="panel3a-header"
             tabIndex={-1}
-            sx={{ margin: 0, padding: 0 }}
+            sx={{ margin: 0, padding: '0 10px 0 0' }}
           >
             <Typography sx={{ marginLeft: '16px' }}>
               <div className={styles.pContainer}>
@@ -343,19 +499,63 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <MenuItem
-              onClick={() => {
-                handleClose()
-                handleValueChange('Teacher')
-              }}
-              sx={{
-                marginLeft: '-16px',
-                marginBottom: '11px',
-              }}
-              className={styles.pOptions}
-            >
-              Teacher
-            </MenuItem>
+            {programSubcategory &&
+              programSubcategory.length > 0 &&
+              programSubcategory.map((subcategory, index) => {
+                if (index === programSubcategory.length - 1) {
+                  return (
+                    <>
+                      <MenuItem
+                        onClick={() => {
+                          setIsPeopleOpened(false)
+                          setIsPlaceOpened(false)
+                          setIsProgramOpened(false)
+                          setIsProductOpened(false)
+                          setCategoryValue(subcategory.listingCategory)
+                          handleClose()
+
+                          handleValueChange(
+                            undefined,
+                            subcategory.listingCategory,
+                          )
+                        }}
+                        sx={{
+                          marginLeft: '-16px',
+                          marginBottom: '-11px',
+                        }}
+                        className={styles.pOptions}
+                      >
+                        {subcategory.listingCategory}
+                      </MenuItem>
+                    </>
+                  )
+                }
+                return (
+                  <>
+                    <MenuItem
+                      onClick={() => {
+                        setIsPeopleOpened(false)
+                        setIsPlaceOpened(false)
+                        setIsProgramOpened(false)
+                        setIsProductOpened(false)
+                        setCategoryValue(subcategory.listingCategory)
+                        handleClose()
+                        handleValueChange(
+                          undefined,
+                          subcategory.listingCategory,
+                        )
+                      }}
+                      sx={{
+                        marginLeft: '-16px',
+                        marginBottom: '11px',
+                      }}
+                      className={styles.pOptions}
+                    >
+                      {subcategory.listingCategory}
+                    </MenuItem>
+                  </>
+                )
+              })}
           </AccordionDetails>
         </Accordion>
         <Accordion
@@ -374,11 +574,11 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
           }}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<ExpandMoreIcon style={{ fontSize: '16px' }} />}
             aria-controls="panel2a-content"
             id="panel2a-header"
             tabIndex={-1}
-            sx={{ margin: 0, padding: 0 }}
+            sx={{ margin: 0, padding: '0 10px 0 0' }}
           >
             <Typography sx={{ marginLeft: '16px' }}>
               <div className={styles.pContainer}>
@@ -402,19 +602,62 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <MenuItem
-              onClick={() => {
-                handleClose()
-                handleValueChange('Teacher')
-              }}
-              sx={{
-                marginLeft: '-16px',
-                marginBottom: '11px',
-              }}
-              className={styles.pOptions}
-            >
-              Teacher
-            </MenuItem>
+            {productSubcategory &&
+              productSubcategory.length > 0 &&
+              productSubcategory.map((subcategory, index) => {
+                if (index === productSubcategory.length - 1) {
+                  return (
+                    <>
+                      <MenuItem
+                        onClick={() => {
+                          setIsPeopleOpened(false)
+                          setIsPlaceOpened(false)
+                          setIsProgramOpened(false)
+                          setIsProductOpened(false)
+                          setCategoryValue(subcategory.listingCategory)
+                          handleClose()
+                          handleValueChange(
+                            undefined,
+                            subcategory.listingCategory,
+                          )
+                        }}
+                        sx={{
+                          marginLeft: '-16px',
+                          marginBottom: '-11px',
+                        }}
+                        className={styles.pOptions}
+                      >
+                        {subcategory.listingCategory}
+                      </MenuItem>
+                    </>
+                  )
+                }
+                return (
+                  <>
+                    <MenuItem
+                      onClick={() => {
+                        setIsPeopleOpened(false)
+                        setIsPlaceOpened(false)
+                        setIsProgramOpened(false)
+                        setIsProductOpened(false)
+                        setCategoryValue(subcategory.listingCategory)
+                        handleClose()
+                        handleValueChange(
+                          undefined,
+                          subcategory.listingCategory,
+                        )
+                      }}
+                      sx={{
+                        marginLeft: '-16px',
+                        marginBottom: '11px',
+                      }}
+                      className={styles.pOptions}
+                    >
+                      {subcategory.listingCategory}
+                    </MenuItem>
+                  </>
+                )
+              })}
           </AccordionDetails>
         </Accordion>
       </Menu>
