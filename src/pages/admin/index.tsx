@@ -118,6 +118,7 @@ const Admin = () => {
         <div className={styles['input-box']}>
           <label>Email:</label>
           <input
+            autoComplete="new"
             type="email"
             id="username"
             value={email}
@@ -127,6 +128,7 @@ const Admin = () => {
         <div className={styles['input-box']}>
           <label>Password:</label>
           <input
+            autoComplete="new"
             type="password"
             id="password"
             value={password}

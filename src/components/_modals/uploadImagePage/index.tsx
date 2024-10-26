@@ -71,6 +71,7 @@ const UploadImagePage: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
           <label className={styles.label}>URL</label>
           <div className={styles['input-box']}>
             <input
+              autoComplete="new"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               className={styles.input}

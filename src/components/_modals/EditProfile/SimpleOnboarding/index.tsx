@@ -1335,7 +1335,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                   value={data.public_email}
                   ref={emailRef}
                   name="public_email"
-                  autoComplete="email"
+                  autoComplete="new"
                   onChange={handleInputChange}
                 />
                 <p className={styles['helper-text']}>
@@ -1360,7 +1360,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                   name="street"
                   ref={AddressRef}
                   onChange={handleInputChangeAddress}
-                  autoComplete="off"
+                  autoComplete="new"
                   onKeyDown={handleLocationKeyDown}
                 />
                 <Image
@@ -1477,7 +1477,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                   <input
                     type="text"
                     placeholder="Type and select..."
-                    autoComplete="off"
+                    autoComplete="new"
                     className={`${styles.inputDefault} ${
                       selectedHobbies?.length > 0
                         ? styles.inputShort

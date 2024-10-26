@@ -707,6 +707,7 @@ export const Navbar: React.FC<Props> = ({}) => {
             </Link>
 
             <TextField
+              autoComplete="off"
               inputRef={searchInputRef}
               variant="outlined"
               placeholder="Search for anything on your hobbies..."
@@ -1309,6 +1310,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                     </header>
                     <div className={styles['mobile-search-container']}>
                       <TextField
+                        autoComplete="off"
                         ref={mobileSearchInputRef}
                         type="search"
                         variant="outlined"

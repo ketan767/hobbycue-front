@@ -110,7 +110,9 @@ const CommunityLayout: React.FC<Props> = ({
   })
   const [locations, setLocations] = useState([])
   const [email, setEmail] = useState('')
-  const [selectedHobby, setSelectedHobby] = useState(filters.hobby || "All Hobbies")
+  const [selectedHobby, setSelectedHobby] = useState(
+    filters.hobby || 'All Hobbies',
+  )
   const [selectedGenre, setSelectedGenre] = useState<string | undefined>(
     filters.genre,
   )
@@ -1456,6 +1458,7 @@ const CommunityLayout: React.FC<Props> = ({
               {/* <span className={styles['divider']}></span> */}
               <section>
                 <input
+                  autoComplete="new"
                   value={email}
                   placeholder="Email"
                   name="society"

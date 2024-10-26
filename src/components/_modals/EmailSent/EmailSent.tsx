@@ -90,6 +90,7 @@ const EmailSentModal: React.FC<Props> = ({}) => {
               }`}
             >
               <input
+                autoComplete="new"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 className={styles.input}
@@ -106,6 +107,7 @@ const EmailSentModal: React.FC<Props> = ({}) => {
               }`}
             >
               <input
+                autoComplete="new"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 className={styles.input}
@@ -122,6 +124,7 @@ const EmailSentModal: React.FC<Props> = ({}) => {
               }`}
             >
               <input
+                autoComplete="new"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className={styles.input}
@@ -146,11 +149,11 @@ const EmailSentModal: React.FC<Props> = ({}) => {
             )}
           </button>
           <button className="modal-mob-btn-save" onClick={handleSubmit}>
-          {submitBtnLoading ? (
-                <CircularProgress color="inherit" size={'14px'} />
-              ) : (
-                'Save'
-              )}
+            {submitBtnLoading ? (
+              <CircularProgress color="inherit" size={'14px'} />
+            ) : (
+              'Save'
+            )}
           </button>
           <OutlinedButton>Cancel</OutlinedButton>
         </footer>

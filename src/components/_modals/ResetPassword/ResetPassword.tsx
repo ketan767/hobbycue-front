@@ -257,6 +257,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
               }`}
             >
               <input
+                autoComplete="new"
                 ref={otpRef}
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
@@ -274,6 +275,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
               }`}
             >
               <TextField
+                autoComplete="off"
                 className={styles['input-password'] + ' textFieldClass'}
                 fullWidth
                 required
@@ -359,6 +361,7 @@ const ResetPasswordModal: React.FC<Props> = ({}) => {
               }`}
             >
               <TextField
+                autoComplete="off"
                 className={styles['input-password'] + ' textFieldClass'}
                 fullWidth
                 required
