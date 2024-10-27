@@ -771,8 +771,9 @@ const CommunityLayout: React.FC<Props> = ({
       return
     }
     if (!user.is_onboarded) {
-      router.push(`/profile/${user.profile_url}`)
-      dispatch(showProfileError(true))
+      // router.push(`/profile/${user.profile_url}`)
+      // dispatch(showProfileError(true))
+      dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
     } else {
       dispatch(openModal({ type: 'create-post', closable: true }))
     }

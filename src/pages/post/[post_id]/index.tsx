@@ -51,9 +51,9 @@ type singlePostProps = {
 //   return ''
 // }
 
-function htmlToPlainText(html: string): string {
-  return html.replace(/<\/?[^>]+(>|$)/g, '')
-}
+// function htmlToPlainText(html: string): string {
+//   return html.replace(/<\/?[^>]+(>|$)/g, '')
+// }
 
 const CommunityLayout: React.FC<Props> = ({ data }) => {
   const router = useRouter()

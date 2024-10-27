@@ -130,8 +130,9 @@ const ProfilePostsPage: React.FC<Props> = ({ data }) => {
   }
 
   const HandleNotOnboard = () => {
-    router.push(`/profile/${user.profile_url}`)
-    dispatch(showProfileError(true))
+    // router.push(`/profile/${user.profile_url}`)
+    // dispatch(showProfileError(true))
+    dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
   }
 
   useEffect(() => {

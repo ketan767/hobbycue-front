@@ -214,11 +214,12 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
           `/profile/${router.query.profile_url}/${tab !== 'home' ? tab : ''}`,
         )
       } else {
-        setSnackbar({
-          display: true,
-          type: 'warning',
-          message: 'Fill up the mandatory fields.',
-        })
+        // setSnackbar({
+        //   display: true,
+        //   type: 'warning',
+        //   message: 'Fill up the mandatory fields.',
+        // })
+        dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
       }
     } else {
       router.push(
@@ -240,13 +241,6 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
     let hasError = false
 
     if (profileLayoutMode === 'edit') {
-      dispatch(
-        openModal({
-          type: 'SimpleOnboarding',
-          closable: true,
-          propData: { showError: true },
-        }),
-      )
       setHobbyError(false)
       setLocationError(false)
       setTitleError(false)
@@ -274,12 +268,26 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
       //   setContactError(true)
       //   hasError = true
       // }
+      updateMyProfileDetail({
+        ...data,
+        is_onboarded: !hasError,
+      }).then(({ res, err }) => {
+        if (!err && res?.data?.success)
+          dispatch(updateUser(res?.data?.data?.user))
+      })
       if (hasError) {
-        setSnackbar({
-          display: true,
-          type: 'warning',
-          message: 'Fill up the mandatory fields.',
-        })
+        // setSnackbar({
+        //   display: true,
+        //   type: 'warning',
+        //   message: 'Fill up the mandatory fields.',
+        // })
+        dispatch(
+          openModal({
+            type: 'SimpleOnboarding',
+            closable: true,
+            propData: { showError: true },
+          }),
+        )
       }
     }
     return hasError
