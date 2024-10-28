@@ -468,7 +468,7 @@ const PostCard: React.FC<Props> = (props) => {
             router.pathname.startsWith('/post') ||
             router.pathname.endsWith('/posts')) && (
             <div
-              className={styles['content'] + ' ql-editor'}
+              className={styles['content'] + ''}
               dangerouslySetInnerHTML={{ __html: finalContent }}
             ></div>
           )}

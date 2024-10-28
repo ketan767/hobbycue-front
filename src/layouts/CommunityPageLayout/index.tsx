@@ -1472,6 +1472,7 @@ const CommunityLayout: React.FC<Props> = ({
               {/* <span className={styles['divider']}></span> */}
               <section>
                 <input
+                  autoComplete="new"
                   value={email}
                   placeholder="Email"
                   name="society"

@@ -231,6 +231,7 @@ const ExpiredPassword: React.FC<Props> = ({}) => {
                 placeholder="OTP"
               /> */}
               <TextField
+                autoComplete="off"
                 className={'textFieldClass'}
                 required
                 ref={otpRef}
@@ -254,6 +255,7 @@ const ExpiredPassword: React.FC<Props> = ({}) => {
               }`}
             >
               <TextField
+                autoComplete="off"
                 className={'textFieldClass'}
                 required
                 ref={newPasswordRef}
@@ -340,6 +342,7 @@ const ExpiredPassword: React.FC<Props> = ({}) => {
               }`}
             >
               <TextField
+                autoComplete="off"
                 className={'textFieldClass'}
                 required
                 placeholder="Confirm Password"

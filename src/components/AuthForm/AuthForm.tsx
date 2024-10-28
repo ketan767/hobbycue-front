@@ -546,6 +546,7 @@ const AuthForm: React.FC<Props> = (props) => {
         <FormControl className={styles['form-body']}>
           <div className={styles['email-field']}>
             <TextField
+              autoComplete="off"
               inputRef={emailRef}
               fullWidth
               label="Email"

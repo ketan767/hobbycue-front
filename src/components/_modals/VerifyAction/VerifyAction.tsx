@@ -35,8 +35,8 @@ const VerifyActionModal: React.FC<Props> = ({}) => {
   const passwordRef = useRef<HTMLDivElement>(null)
   const submitRef = useRef<HTMLButtonElement>(null)
 
-  const { user } = useSelector((state: RootState) => state.user);
-  const { onVerify } = useSelector((state: RootState) => state.modal);
+  const { user } = useSelector((state: RootState) => state.user)
+  const { onVerify } = useSelector((state: RootState) => state.modal)
   const [nextDisabled, setNextDisabled] = useState(false)
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
   const [email, setEmail] = useState('')
@@ -55,14 +55,14 @@ const VerifyActionModal: React.FC<Props> = ({}) => {
   }
 
   const handleSubmit = async () => {
-    setSubmitBtnLoading(true);
-    if(currentPassword.length===0){
+    setSubmitBtnLoading(true)
+    if (currentPassword.length === 0) {
       setErrors({
         ...errors,
         currentPassword: 'This field should not be empty!',
       })
-      setSubmitBtnLoading(false);
-      return;
+      setSubmitBtnLoading(false)
+      return
     }
     const { err: error, res: response } = await getMyProfileDetail()
     console.warn('ispass', user?.is_password)
@@ -93,7 +93,13 @@ const VerifyActionModal: React.FC<Props> = ({}) => {
 
   const handleOpenCreatePassword = async () => {
     const email = user.email
-    dispatch(openModal({ type: 'Set-PasswordModal', closable: true, onVerify:onVerify?onVerify:undefined }))
+    dispatch(
+      openModal({
+        type: 'Set-PasswordModal',
+        closable: true,
+        onVerify: onVerify ? onVerify : undefined,
+      }),
+    )
     const { err, res } = await passwordRequest({
       email,
     })
@@ -107,7 +113,7 @@ const VerifyActionModal: React.FC<Props> = ({}) => {
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       if (event.key === 'Enter') {
-        submitRef.current?.click();
+        submitRef.current?.click()
       }
     }
     window.addEventListener('keydown', handleKeyPress)
@@ -151,6 +157,7 @@ const VerifyActionModal: React.FC<Props> = ({}) => {
               }`}
             >
               <TextField
+                autoComplete="off"
                 ref={passwordRef}
                 fullWidth
                 required

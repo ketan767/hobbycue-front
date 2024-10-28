@@ -427,7 +427,7 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
                 >
                   <h4>About</h4>
                   <div
-                    className={`${styles['color-light']} ${styles['about-text']}`}
+                    className={`${styles['color-light']} ${styles['about-text']} `}
                     dangerouslySetInnerHTML={{ __html: pageData?.about }}
                   ></div>
                 </PageContentBox>

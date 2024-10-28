@@ -48,6 +48,9 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
   const [loadingPosts, setLoadingPosts] = useState(false)
   const [posts, setPosts] = useState([])
   const [media, setMedia] = useState([])
+  const [images, setImages] = useState<string[]>([])
+  const [video, setVideo] = useState('')
+  const [allData, setAllData] = useState(data)
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
 
   const { profile } = useSelector((state: RootState) => state?.site.expandMenu)
@@ -58,6 +61,10 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
     display: false,
     message: '',
   })
+  const router = useRouter()
+  const { query } = router
+  const { profile_url } = query
+
   const isMobile = useMediaQuery('(max-width:1100px)')
   useEffect(() => {
     if (isMobile) {
@@ -66,49 +73,113 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
   }, [isMobile])
   const dispatch = useDispatch()
 
+  // const getPost = async () => {
+  //   setLoadingPosts(true)
+  //   const { err, res } = await getAllPosts(
+  //     `author_type=User&_author=${data.pageData._id}&populate=_author,_genre,_hobby`,
+  //   )
+  //   setLoadingPosts(false)
+  //   if (err) return console.log(err)
+  //   if (res.data.success) {
+  //     setPosts(res.data.data.posts)
+  //     const allposts = res.data.data.posts
+  //     let tempMedia: any = []
+  //     console.log('allposts', allposts)
+  //     allposts.forEach((post: any) => {
+  //       if (post.media) {
+  //         if (post.video_url) {
+  //           tempMedia.push({
+  //             type: 'video',
+  //             src: post.video_url,
+  //           })
+  //         } else {
+  //           post.media.forEach((singleMedia: any) => {
+  //             tempMedia.push({
+  //               type: 'image',
+  //               src: singleMedia,
+  //             })
+  //           })
+  //         }
+  //       }
+  //     })
+  //     setMedia(tempMedia)
+  //     console.log('tempMedia', tempMedia)
+  //   }
+  // }
+
   const getPost = async () => {
-    setLoadingPosts(true)
-    const { err, res } = await getAllPosts(
-      `author_type=User&_author=${data.pageData._id}&populate=_author,_genre,_hobby`,
+    if (!profile_url) return
+    const { err, res } = await getAllUserDetail(
+      `profile_url=${encodeURIComponent(
+        profile_url.toString(),
+      )}&populate=_hobbies,_addresses,primary_address,_listings`,
     )
-    setLoadingPosts(false)
-    if (err) return console.log(err)
-    if (res.data.success) {
-      setPosts(res.data.data.posts)
-      const allposts = res.data.data.posts
-      let tempMedia: any = []
-      allposts.forEach((post: any) => {
-        if (post.media) {
-          if (post.video_url) {
-            tempMedia.push({
-              type: 'video',
-              src: post.video_url,
-            })
-          } else {
-            post.media.forEach((singleMedia: any) => {
-              tempMedia.push({
-                type: 'image',
-                src: singleMedia,
-              })
-            })
-          }
-        }
-      })
-      setMedia(tempMedia)
+    const user = res?.data?.data?.users[0]
+
+    if (err) return { notFound: true }
+    const { err: error, res: response } = await getListingPages(
+      `populate=_hobbies,_address&admin=${user._id}`,
+    )
+
+    if (res?.data.success && res.data.data.no_of_users === 0)
+      return { notFound: true }
+
+    const data = {
+      pageData: res.data.data.users[0],
+      postsData: null,
+      mediaData: null,
+      listingsData: response?.data.data.listings,
+      blogsData: null,
     }
+    console.log('video_url:===> ' + data.pageData.video_url)
+    console.log('images:===> ' + data.pageData.images)
+    setImages([...data.pageData.images])
+    setVideo(data.pageData.video_url)
+    const imagess = [...data.pageData.images]
+    console.log('[...data.pageData.video_url]', imagess)
+    setAllData(setAllData)
   }
 
   useEffect(() => {
     getPost()
   }, [])
 
+  // const refetchData = async () => {
+  //   const { query } = context
+
+  //   const { err, res } = await getAllUserDetail(
+  //     `profile_url=${query['profile_url']}&populate=_hobbies,_addresses,primary_address,_listings`,
+  //   )
+  //   const user = res?.data?.data?.users[0]
+
+  //   if (err) return { notFound: true }
+  //   const { err: error, res: response } = await getListingPages(
+  //     `populate=_hobbies,_address&admin=${user._id}`,
+  //   )
+
+  //   if (res?.data.success && res.data.data.no_of_users === 0)
+  //     return { notFound: true }
+
+  //   const data = {
+  //     pageData: res.data.data.users[0],
+  //     postsData: null,
+  //     mediaData: null,
+  //     listingsData: response?.data.data.listings,
+  //     blogsData: null,
+  //   }
+
+  // }
+  // useEffect(() => {
+  //   getPost()
+  // }, [isMediaUpdated])
+
   const handleImageChange = (e: any) => {
     const images = [...e.target.files]
     const image = e.target.files[0]
-    handleImageUpload(image, false)
+    handleImageUpload(e, image, false)
   }
 
-  const handleImageUpload = async (image: any, isVideo: boolean) => {
+  const handleImageUpload = async (e: any, image: any, isVideo: boolean) => {
     const fileTobeUploaded = image
     if (fileTobeUploaded) {
       const fileSize = fileTobeUploaded.size
@@ -131,21 +202,27 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
       console.log(res.data)
       const img = res.data.data.url
       updateUser(img)
+      setSnackbar({
+        display: true,
+        type: 'success',
+        message: 'Image uploaded successfully',
+      })
       // dispatch(closeModal())
     }
   }
 
   const updateUser = async (url: string) => {
     let arr: any = []
-    if (user?.images) {
-      arr = user.images
+    if (images) {
+      arr = images
     }
     const { err, res } = await updateMyProfileDetail({
       images: [...arr, url],
     })
     if (err) return console.log(err)
     console.log(res)
-    window.location.reload()
+    getPost()
+    // window.location.reload()
   }
 
   const OpenMediaImage = (image: string) => {
@@ -165,7 +242,6 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
     dispatch(updateProfileMenuExpandAll(value))
   }
 
-  const router = useRouter()
   useEffect(() => {
     // Save scroll position when navigating away from the page
     const handleRouteChange = () => {
@@ -386,30 +462,56 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
                   style={{ columnGap: '24px', rowGap: '12px' }}
                 >
                   {/* Images */}
-                  {data.pageData.images?.map((item: any, idx: number) => (
-                    <div key={idx} className={styles.medias}>
-                      <div
-                        className={styles.image}
-                        onClick={() => OpenMediaImage(item)}
-                      >
-                        <img src={item} alt={`Image ${idx + 1}`} />
-                      </div>
+                  {images && images.length === 0 && (
+                    <div className={styles.medias}>
+                      <div className={styles.image}></div>
                     </div>
-                  ))}
+                  )}
+                  {images &&
+                    images.length > 0 &&
+                    images?.map((item: any, idx: number) => {
+                      if (idx !== 0) return
+                      return (
+                        <div key={idx} className={styles.medias}>
+                          <div
+                            className={styles.image}
+                            onClick={() => OpenMediaImage(item)}
+                          >
+                            <img src={item} alt={`Image ${idx + 1}`} />
+                          </div>
+                        </div>
+                      )
+                    })}
 
                   {/* Video */}
-                  {data.pageData?.video_url && (
+                  {video && (
                     <div className={styles.medias}>
                       <div className={styles.videos}>
                         <ReactPlayer
                           width="100%"
                           height="100%"
-                          url={data.pageData?.video_url}
+                          url={video}
                           controls={true}
                         />
                       </div>
                     </div>
                   )}
+
+                  {images &&
+                    images.length > 0 &&
+                    images.map((item: any, idx: number) => {
+                      if (idx === 0) return
+                      return (
+                        <div key={idx} className={styles.medias}>
+                          <div
+                            className={styles.image}
+                            onClick={() => OpenMediaImage(item)}
+                          >
+                            <img src={item} alt={`Image ${idx + 1}`} />
+                          </div>
+                        </div>
+                      )
+                    })}
                 </Masonry>
               </ResponsiveMasonry>
             ) : null}
@@ -454,6 +556,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     listingsData: response?.data.data.listings,
     blogsData: null,
   }
+  console.log('data:===> ' + data)
   return {
     props: {
       data,

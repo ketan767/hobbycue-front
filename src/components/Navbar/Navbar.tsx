@@ -707,6 +707,7 @@ export const Navbar: React.FC<Props> = ({}) => {
             </Link>
 
             <TextField
+              autoComplete="off"
               inputRef={searchInputRef}
               variant="outlined"
               placeholder="Search for anything on your hobbies..."
@@ -838,7 +839,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                             e.preventDefault()
                             const query = { category: 'Place' }
                             router.push({
-                              pathname: '/explore/places',
+                              pathname: '/explore/place',
                               query: query,
                             })
                           }}
@@ -856,7 +857,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                             e.preventDefault()
                             const query = { category: 'Product' }
                             router.push({
-                              pathname: '/explore/products',
+                              pathname: '/explore/product',
                               query: query,
                             })
                           }}
@@ -874,7 +875,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                             e.preventDefault()
                             const query = { category: 'Program' }
                             router.push({
-                              pathname: '/explore/programs',
+                              pathname: '/explore/program',
                               query: query,
                             })
                           }}
@@ -1309,6 +1310,7 @@ export const Navbar: React.FC<Props> = ({}) => {
                     </header>
                     <div className={styles['mobile-search-container']}>
                       <TextField
+                        autoComplete="off"
                         ref={mobileSearchInputRef}
                         type="search"
                         variant="outlined"

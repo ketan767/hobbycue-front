@@ -171,6 +171,12 @@ const CustomEditor: React.FC<Props> = ({
       />
 
       {error && <p className={styles['error-text']}>{error}</p>}
+      <style>{`
+          .ql-editor ul, 
+          .ql-editor ol {
+            padding-left: 4px;  
+          }
+      `}</style>
     </>
   )
 }

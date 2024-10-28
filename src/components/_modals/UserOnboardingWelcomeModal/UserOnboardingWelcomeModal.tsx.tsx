@@ -288,6 +288,7 @@ const UserOnboardingWelcomeModal = () => {
           >
             {/* <div className={styles['search']}> */}
             <TextField
+              autoComplete="off"
               variant="outlined"
               placeholder="Search for anything on your hobbies..."
               size="small"
