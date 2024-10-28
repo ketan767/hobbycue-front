@@ -303,7 +303,9 @@ const SimpleOnboarding: React.FC<Props> = ({
     const formattedSociety = details.society?.trim() || ''
     const formattedLocality = details.locality?.trim() || ''
 
-    setAddressDataString(terms.join(', ').trim()) /** setting the input value to the selected value */
+    setAddressDataString(
+      terms.join(', ').trim(),
+    ) /** setting the input value to the selected value */
 
     setAddressData((prev) => ({
       ...prev,
@@ -563,7 +565,7 @@ const SimpleOnboarding: React.FC<Props> = ({
     dispatch(updateUser(response?.data?.data?.user))
     // window.location.href = '/community'
     dispatch(closeModal())
-    // router.reload()
+    router.reload()
   }
 
   useEffect(() => {

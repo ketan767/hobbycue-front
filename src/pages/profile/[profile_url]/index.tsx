@@ -334,7 +334,7 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
               }`}
             >
               <div className={styles['display-mobile-initial']}>
-                {data?.pageData?.description?.length > 0 && (
+                {data?.pageData?.description?.trim()?.length > 0 && (
                   <PageContentBox
                     showEditButton={profileLayoutMode === 'edit'}
                     onEditBtnClick={() =>
