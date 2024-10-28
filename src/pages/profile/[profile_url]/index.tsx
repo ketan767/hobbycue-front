@@ -38,6 +38,7 @@ import {
 import ErrorPage from '@/components/ErrorPage'
 import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 import { useMediaQuery } from '@mui/material'
+import { htmlToPlainTextAdv } from '@/utils'
 
 interface Props {
   data: ProfilePageData
@@ -213,11 +214,12 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
           `/profile/${router.query.profile_url}/${tab !== 'home' ? tab : ''}`,
         )
       } else {
-        setSnackbar({
-          display: true,
-          type: 'warning',
-          message: 'Fill up the mandatory fields.',
-        })
+        // setSnackbar({
+        //   display: true,
+        //   type: 'warning',
+        //   message: 'Fill up the mandatory fields.',
+        // })
+        dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
       }
     } else {
       router.push(
@@ -239,13 +241,6 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
     let hasError = false
 
     if (profileLayoutMode === 'edit') {
-      dispatch(
-        openModal({
-          type: 'SimpleOnboarding',
-          closable: true,
-          propData: { showError: true },
-        }),
-      )
       setHobbyError(false)
       setLocationError(false)
       setTitleError(false)
@@ -273,12 +268,26 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
       //   setContactError(true)
       //   hasError = true
       // }
+      updateMyProfileDetail({
+        ...data,
+        is_onboarded: !hasError,
+      }).then(({ res, err }) => {
+        if (!err && res?.data?.success)
+          dispatch(updateUser(res?.data?.data?.user))
+      })
       if (hasError) {
-        setSnackbar({
-          display: true,
-          type: 'warning',
-          message: 'Fill up the mandatory fields.',
-        })
+        // setSnackbar({
+        //   display: true,
+        //   type: 'warning',
+        //   message: 'Fill up the mandatory fields.',
+        // })
+        dispatch(
+          openModal({
+            type: 'SimpleOnboarding',
+            closable: true,
+            propData: { showError: true },
+          }),
+        )
       }
     }
     return hasError
@@ -325,7 +334,7 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
               }`}
             >
               <div className={styles['display-mobile-initial']}>
-                {data?.pageData?.description?.length > 0 && (
+                {data?.pageData?.description?.trim()?.length > 0 && (
                   <PageContentBox
                     showEditButton={profileLayoutMode === 'edit'}
                     onEditBtnClick={() =>
@@ -699,8 +708,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     blogsData: null,
   }
 
-  const unformattedAbout =
-    res.data.data.users[0]?.about?.replace(/<[^>]*>/g, '') || ''
+  const unformattedAbout = htmlToPlainTextAdv(res.data.data.users[0]?.about)
 
   return {
     props: {

@@ -768,7 +768,7 @@
     display: none;
   }
   .community-header {
-    top: 8px;
+    /* top: 8px; */
     border-radius: 0;
   }
   .community-group-container {
@@ -884,7 +884,7 @@
   }
 
   .dropdowns-panel .parent-list .no-gap {
-    gap: 0;
+    gap: 16px;
   }
   .dropdowns-panel .parent-list .no-padding {
     padding: 0;
@@ -905,6 +905,7 @@
     font-weight: 600;
     line-height: 18px; /* 128.571% */
     letter-spacing: 0.07px;
+    margin: auto;
   }
   .dropdowns-panel .parent-list .options-parent .member-container .admin-btn {
     border-radius: 2px;
@@ -996,12 +997,12 @@
   } */
 
   .community-header {
-    border-radius: var(--spacing-8);
+    /* border-radius: var(--spacing-8); */
     transform: translateY(calc(0 * var(--navbar-height-desktop)));
     z-index: 2;
     background-color: white;
     padding: 8px 16px;
-    position: relative;
+    /* position: relative; */
   }
   .community-header .top-margin-card {
     height: 0;

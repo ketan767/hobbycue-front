@@ -17,7 +17,7 @@ import ListingHomeTab from '@/components/ListingPage/ListingHomeTab/ListingHomeT
 import ListingPageMain from '@/components/ListingPage/ListingPageMain/ListingPageMain'
 
 import { useMediaQuery } from '@mui/material'
-import { pageType } from '@/utils'
+import { htmlToPlainTextAdv, pageType } from '@/utils'
 
 type Props = { data: ListingPageData; unformattedAbout?: string }
 
@@ -194,8 +194,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     eventsData: null,
     storeData: null,
   }
-  const unformattedAbout =
-    res?.data.data.listings[0]?.description?.replace(/<[^>]*>/g, '') || ''
+  const unformattedAbout = htmlToPlainTextAdv(
+    res?.data.data.listings[0]?.description,
+  )
 
   return {
     props: {
