@@ -16,7 +16,7 @@
 @media (max-width: 1100px) {
   .container {
     background-color: #ebedf0;
-    padding: 12px 0 50px 0;
+    padding: 8px 0 50px 0;
   }
   .gridContainer {
     row-gap: 8px;

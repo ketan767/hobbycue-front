@@ -94,6 +94,8 @@ export const Navbar: React.FC<Props> = ({}) => {
   const router = useRouter()
   const [menuActive, setMenuActive] = useState(false)
   const [isWriting, setIsWriting] = useState(false)
+  const [hasShadow, setHasShadow] = useState(true)
+
   const pathname = usePathname()
 
   const { isLoggedIn, isAuthenticated, user } = useSelector(
@@ -120,6 +122,14 @@ export const Navbar: React.FC<Props> = ({}) => {
       }))
     }
   }, [router.asPath])
+
+  useEffect(() => {
+    if (router.pathname.includes('explore')) {
+      setHasShadow(false)
+    } else {
+      setHasShadow(true)
+    }
+  }, [router.pathname])
 
   const handleLogout = () => {
     logout()
@@ -635,7 +645,11 @@ export const Navbar: React.FC<Props> = ({}) => {
 
   return (
     <>
-      <header className={`${styles['navbar-wrappper']}`}>
+      <header
+        className={`${styles['navbar-wrappper']} ${
+          hasShadow ? `${styles['showShadow']}` : ''
+        }`}
+      >
         <nav className={`site-container `}>
           <section className={styles['navbar-left']}>
             <Link
