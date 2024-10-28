@@ -48,8 +48,6 @@ const ProfileContactSide = ({ data, expandData, contactError }: Props) => {
 
   const itsMe = data?.public_email === user?.public_email
 
-  console.warn({ data })
-
   return (
     <>
       {data?.website || profileLayoutMode === 'edit' ? (
