@@ -282,7 +282,7 @@ const ModalManager: React.FC = () => {
           }
 
           if (
-            ['View-Image-Modal', 'CopyProfileDataModal'].includes(
+            ['View-Image-Modal', 'CopyProfileDataModal', 'Add'].includes(
               String(activeModal),
             )
           ) {
@@ -301,6 +301,7 @@ const ModalManager: React.FC = () => {
       } else {
         if (
           activeModal === 'listing-hobby-edit' ||
+          activeModal === 'SimpleOnboarding' ||
           activeModal === 'profile-hobby-edit'
         ) {
           setShowAddHobbyModal(false)

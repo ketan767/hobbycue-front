@@ -44,7 +44,14 @@ const PostComments = ({
   const [optionsActive, setOptionsActive] = useState(false)
   const [comments, setComments] = useState<any>([])
   const [loading, setLoading] = useState(false)
-  const [inputValue, setInputValue] = useState('')
+  const [inputValue, setInputValue] = useState(() => {
+    const storedVal = sessionStorage.getItem('commentDraft')
+    if (storedVal) {
+      const parsed = JSON.parse(storedVal)
+      return parsed.id === data._id ? parsed.content : ''
+    }
+    return ''
+  })
   const [displayMoreComments, setDisplayMoreComments] = useState(false)
   const [isChanged, setIsChanged] = useState(false)
   const [snackbar, setSnackbar] = useState({
@@ -75,9 +82,16 @@ const PostComments = ({
     if (isLoggedIn) {
       event.preventDefault()
       if (user.is_onboarded === false) {
-        router.push(`/profile/${user.profile_url}`)
-        dispatch(showProfileError(true))
-        dispatch(closeModal())
+        // router.push(`/profile/${user.profile_url}`)
+        // dispatch(showProfileError(true))
+        // dispatch(closeModal())
+        dispatch(
+          openModal({
+            type: 'SimpleOnboarding',
+            closable: true,
+            propData: { showError: true },
+          }),
+        )
         return
       }
       if (isEmptyField(inputValue.trim())) return
@@ -103,6 +117,7 @@ const PostComments = ({
       }
       await fetchComments()
       setInputValue('')
+      sessionStorage.removeItem('commentDraft')
       setLoading(false)
     } else {
       dispatch(openModal({ type: 'auth', closable: true }))
@@ -178,6 +193,10 @@ const PostComments = ({
                     getInput(e.target.value)
                   }
                   setInputValue(e.target.value)
+                  sessionStorage.setItem(
+                    'commentDraft',
+                    JSON.stringify({ id: data?._id, content: e.target.value }),
+                  )
                 }}
                 ref={inputRef}
                 maxRows={5}

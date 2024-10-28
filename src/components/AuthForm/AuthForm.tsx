@@ -229,7 +229,7 @@ const AuthForm: React.FC<Props> = (props) => {
           if (router.pathname === '/') {
             router.push('/community', undefined, { shallow: false })
           } else {
-            window.location.reload()
+            // window.location.reload()
           }
         } else {
           dispatch(
