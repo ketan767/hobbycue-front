@@ -600,6 +600,7 @@
   }
   .not-visible {
     height: 0;
+    overflow: hidden;
     transition: height 0.3s ease-in-out;
   }
 
@@ -639,6 +640,7 @@
 
   .wrapperFooter {
     gap: 20px;
+    padding-inline: 16px;
   }
 
   .wrapperFooter p {
