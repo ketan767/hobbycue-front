@@ -1151,9 +1151,10 @@ const SimpleOnboarding: React.FC<Props> = ({
           setselectedHobbies((prev) => (prev.length ? prev.slice(0, -1) : prev))
       case 'Enter':
         e.stopPropagation()
-        if (hobbyInputValue.length !== 0 && !showHobbyDowpdown) {
-          //AddButtonRef.current?.click()
-        } else if (focusedHobbyIndex !== -1 && showHobbyDowpdown) {
+        // if (hobbyInputValue.length !== 0 && !showHobbyDowpdown) {
+        //   //AddButtonRef.current?.click()
+        // } else
+        if (focusedHobbyIndex !== -1 && showHobbyDowpdown) {
           handleHobbySelection(hobbyDropdownList[focusedHobbyIndex]).finally(
             () => {
               setShowHobbyDowpdown(false)
