@@ -1671,11 +1671,11 @@ const Search: React.FC<Props> = ({ data, children }) => {
               onClick={() => setShowExploreMoreMobile(!showExploreMoreMobile)}
               className={
                 showExploreMoreMobile
-                  ? styles.doubleArrowUp
-                  : styles.doubleArrowDown
+                  ? styles.doubleArrowDown
+                  : styles.doubleArrowUp
               }
             >
-              {noResultsFound && <DoubleDownArrow />}
+              <DoubleDownArrow />
             </span>
           </aside>
         ) : (

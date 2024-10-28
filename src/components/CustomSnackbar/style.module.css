@@ -48,5 +48,6 @@
   .errorSnackbarContent {
     padding: 0 8px;
     flex: none;
+    max-width: 95%;
   }
 }
