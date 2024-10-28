@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
-import styles from './explore.module.css'
+import styles from '../explore.module.css'
 import ListingCard from '@/components/ListingCard/ListingCard'
 import { useRouter } from 'next/router'
 import { getListingSearch } from '@/services/listing.service'
 import { GetServerSideProps } from 'next'
 import PagesLoader from '@/components/PagesLoader/PagesLoader'
 import Head from 'next/head'
-import ExploreSearchContainer from './searchBar/ExploreSearchContainer'
+import ExploreSearchContainer from '../searchBar/ExploreSearchContainer'
 
 type Props = {
   data?: any
   isBlog: boolean
 }
 
-const Explore: React.FC<Props> = ({ data: initialData }) => {
+const People: React.FC<Props> = ({ data: initialData }) => {
   const router = useRouter()
   const { query } = router
   const { keyword } = query
@@ -140,7 +140,7 @@ const Explore: React.FC<Props> = ({ data: initialData }) => {
         <title>HobbyCue - Explore</title>
       </Head>
       <ExploreSearchContainer
-        defaultCategory="Product"
+        defaultCategory="People"
         locationDropdownRef={locationDropdownRef}
         ShowAutoAddress={ShowAutoAddress}
         setShowAutoAddress={setShowAutoAddress}
@@ -226,4 +226,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 }
 
-export default Explore
+export default People

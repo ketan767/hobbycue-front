@@ -98,6 +98,7 @@ const FilterInput = ({
     <div className={styles.inputDiv}>
       <SearchIcon />
       <input
+        autoComplete="new"
         type="text"
         placeholder={placeholder}
         // value={value} onChange={handleChange} onFocus={handleFocus}

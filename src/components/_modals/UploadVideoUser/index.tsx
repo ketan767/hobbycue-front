@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { Button, CircularProgress } from '@mui/material'
 
@@ -36,6 +36,7 @@ const UploadVideoUser: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
   const { listingModalData } = useSelector((state: RootState) => state.site)
   const [url, setUrl] = useState('')
   const [nextDisabled, setNextDisabled] = useState(false)
+  const urlRef = useRef<HTMLInputElement>(null)
 
   const [submitBtnLoading, setSubmitBtnLoading] = useState<boolean>(false)
 
@@ -56,6 +57,12 @@ const UploadVideoUser: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
   }
   console.log('user', user)
 
+  useEffect(() => {
+    if (urlRef.current) {
+      urlRef.current.focus()
+    }
+  }, [])
+
   return (
     <>
       <div className={styles['modal-wrapper']}>
@@ -69,9 +76,16 @@ const UploadVideoUser: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
           <label className={styles.label}>URL</label>
           <div className={styles['input-box']}>
             <input
+              ref={urlRef}
+              autoComplete="new"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               className={styles.input}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleSubmit()
+                }
+              }}
             />
           </div>
         </section>

@@ -212,6 +212,7 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
               }`}
             >
               <TextField
+                autoComplete="off"
                 className={`textFieldClass`}
                 inputRef={currentPasswordRef}
                 fullWidth
@@ -258,6 +259,7 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
               }`}
             >
               <TextField
+                autoComplete="off"
                 className={`textFieldClass`}
                 fullWidth
                 required
@@ -346,6 +348,7 @@ const ChangePasswordModal: React.FC<Props> = ({}) => {
               }`}
             >
               <TextField
+                autoComplete="off"
                 className={`textFieldClass`}
                 value={confirmPassword}
                 type={'password'}

@@ -115,6 +115,7 @@ const ConfirmEmail: React.FC<Props> = ({}) => {
               }`}
             >
               <input
+                autoComplete="new"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className={styles.input}

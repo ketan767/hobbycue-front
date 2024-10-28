@@ -258,6 +258,7 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
               }`}
             >
               <input
+                autoComplete="new"
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
                 className={styles.input}
@@ -275,6 +276,7 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
               }`}
             >
               <TextField
+                autoComplete="off"
                 className={'textFieldClass'}
                 fullWidth
                 required
@@ -357,6 +359,7 @@ const SetPasswordModal: React.FC<Props> = ({}) => {
               }`}
             >
               <input
+                autoComplete="new"
                 value={confirmPassword}
                 ref={confirmPasswordRef}
                 onChange={(e) => setConfirmPassword(e.target.value)}

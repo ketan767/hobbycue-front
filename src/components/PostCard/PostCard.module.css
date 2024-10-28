@@ -68,6 +68,10 @@
 .post-card-wrapper .body .content img {
   max-width: 100%;
 }
+.content ul,
+.content ol{
+  padding-left: 30px;
+}
 
 .postUrl{
   color: #8064A2 !important;

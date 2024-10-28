@@ -19,8 +19,8 @@ import HobbyIconHexagon from '@/assets/icons/HobbyIconHexagon'
 
 export const rupeesIcon = (
   <svg
-    width="16"
-    height="16"
+    width="14"
+    height="14"
     viewBox="0 0 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -137,11 +137,11 @@ const ListingCardProduct: React.FC<Props> = ({
 
                 {data?.product_variant?.variations?.[0]?.value ? (
                   <p className={styles.price}>
-                    {rupeesIcon}
+                    ₹
                     {data?.product_variant?.variations?.[0]?.value}
                   </p>
                 ) : (
-                  <p className={styles.price}>{rupeesIcon}0</p>
+                  <p className={styles.price}>₹ 0</p>
                 )}
 
                 {/* Add cart icon here */}
