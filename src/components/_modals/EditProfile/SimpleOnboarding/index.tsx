@@ -303,7 +303,9 @@ const SimpleOnboarding: React.FC<Props> = ({
     const formattedSociety = details.society?.trim() || ''
     const formattedLocality = details.locality?.trim() || ''
 
-    setAddressDataString(terms.join(', ').trim()) /** setting the input value to the selected value */
+    setAddressDataString(
+      terms.join(', ').trim(),
+    ) /** setting the input value to the selected value */
 
     setAddressData((prev) => ({
       ...prev,
@@ -1278,7 +1280,7 @@ const SimpleOnboarding: React.FC<Props> = ({
               setShowSnackbar({
                 triggerOpen: true,
                 type: 'success',
-                message: `${hobbyInputValue} has been requested. You can add it later if approved.`,
+                message: `"${hobbyInputValue}" has been requested. You can add it later if approved.`,
               })
               setHobbyInputValue('')
             } else if (err) {
