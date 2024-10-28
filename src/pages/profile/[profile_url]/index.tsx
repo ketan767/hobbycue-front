@@ -219,7 +219,13 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
         //   type: 'warning',
         //   message: 'Fill up the mandatory fields.',
         // })
-        dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
+        dispatch(
+          openModal({
+            type: 'SimpleOnboarding',
+            closable: true,
+            propData: { showError: true },
+          }),
+        )
       }
     } else {
       router.push(
@@ -268,19 +274,22 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
       //   setContactError(true)
       //   hasError = true
       // }
-      updateMyProfileDetail({
-        ...data,
-        is_onboarded: !hasError,
-      }).then(({ res, err }) => {
-        if (!err && res?.data?.success)
-          dispatch(updateUser(res?.data?.data?.user))
-      })
+
+      /** ⬆️ UPDATE THE ONBOARDING STATUS IN DB */
+      // updateMyProfileDetail({
+      //   ...data.pageData,
+      //   is_onboarded: !hasError,
+      // })
+      //   .then(({ res, err }) => {
+      //     console.log('asifs res', res)
+      //     if (!err && res?.data?.success) {
+      //       return getMyProfileDetail()
+      //     }
+      //   })
+      //   .then((response) => {
+      //     dispatch(updateUser(response?.res?.data.data.user))
+      //   })
       if (hasError) {
-        // setSnackbar({
-        //   display: true,
-        //   type: 'warning',
-        //   message: 'Fill up the mandatory fields.',
-        // })
         dispatch(
           openModal({
             type: 'SimpleOnboarding',

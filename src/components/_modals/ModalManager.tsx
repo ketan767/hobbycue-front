@@ -265,8 +265,8 @@ const ModalManager: React.FC = () => {
 
   const escFunction = useCallback(
     (event: KeyboardEvent) => {
-      if (!showAddGenreModal && !showAddHobbyModal) {
-        if (event.key === 'Escape') {
+      if (event.key === 'Escape') {
+        if (!showAddGenreModal && !showAddHobbyModal) {
           if (activeModal === 'user-onboarding-welcome') {
             localStorage.setItem('modal-shown-after-login', 'true')
             dispatch(closeModal())
@@ -297,15 +297,15 @@ const ModalManager: React.FC = () => {
           } else {
             dispatch(closeModal())
           }
-        }
-      } else {
-        if (
-          activeModal === 'listing-hobby-edit' ||
-          activeModal === 'SimpleOnboarding' ||
-          activeModal === 'profile-hobby-edit'
-        ) {
-          setShowAddHobbyModal(false)
-          setShowAddGenreModal(false)
+        } else {
+          if (
+            activeModal === 'listing-hobby-edit' ||
+            activeModal === 'SimpleOnboarding' ||
+            activeModal === 'profile-hobby-edit'
+          ) {
+            setShowAddHobbyModal(false)
+            setShowAddGenreModal(false)
+          }
         }
       }
     },

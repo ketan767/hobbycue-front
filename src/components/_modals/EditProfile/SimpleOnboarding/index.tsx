@@ -386,7 +386,7 @@ const SimpleOnboarding: React.FC<Props> = ({
     }
   }
 
-  const handleSubmit = async (checkErrors: boolean) => {
+  const handleSubmit = async (checkErrors = true) => {
     let inputhobby = null
     let hasErrors = false
 
@@ -403,7 +403,7 @@ const SimpleOnboarding: React.FC<Props> = ({
         setShowSnackbar({
           triggerOpen: true,
           message:
-            'Please Type and Select hobbies individually. Added ones will appear below the Hobbies* label',
+            'Please Type and Select hobbies individually. Added ones will appear in the Hobbies box.',
           type: 'error',
         })
         return
@@ -438,7 +438,7 @@ const SimpleOnboarding: React.FC<Props> = ({
         emailRef?.current?.focus()
         setInputErrs((prev) => ({
           ...prev,
-          public_email: 'This field is required',
+          public_email: 'This field is required!',
         }))
         hasErrors = true
         setIsError(true)
@@ -472,6 +472,7 @@ const SimpleOnboarding: React.FC<Props> = ({
 
       /** show error if user does not select, instead writes manually */
       if (!selectedAddress) {
+        AddressRef.current?.focus()
         setShowSnackbar({
           message:
             'Please select your Location from the list, at least till City.',
@@ -769,7 +770,7 @@ const SimpleOnboarding: React.FC<Props> = ({
           setShowHobbyDowpdown(false)
           break
         case 'Enter':
-          if (selectedAddress) nextButtonRef?.current?.click()
+          nextButtonRef?.current?.click()
           break
         default:
           break
@@ -1151,18 +1152,20 @@ const SimpleOnboarding: React.FC<Props> = ({
           setselectedHobbies((prev) => (prev.length ? prev.slice(0, -1) : prev))
       case 'Enter':
         e.stopPropagation()
-        if (hobbyInputValue.length !== 0 && !showHobbyDowpdown) {
-          //AddButtonRef.current?.click()
-        } else if (focusedHobbyIndex !== -1 && showHobbyDowpdown) {
+        // if (hobbyInputValue.length !== 0 && !showHobbyDowpdown) {
+        //   //AddButtonRef.current?.click()
+        // } else
+        if (focusedHobbyIndex !== -1 && showHobbyDowpdown) {
           handleHobbySelection(hobbyDropdownList[focusedHobbyIndex]).finally(
             () => {
               setShowHobbyDowpdown(false)
             },
           )
-        } else if (focusedHobbyIndex === -1 && hobbyInputValue.length !== 0) {
-          setShowHobbyDowpdown(false)
-          // handleGenreInputFocus();
         }
+        //  else if (focusedHobbyIndex === -1 && hobbyInputValue.length !== 0) {
+        //   setShowHobbyDowpdown(false)
+        //   // handleGenreInputFocus();
+        // }
         break
       default:
         break
@@ -1280,7 +1283,7 @@ const SimpleOnboarding: React.FC<Props> = ({
               setShowSnackbar({
                 triggerOpen: true,
                 type: 'success',
-                message: `${hobbyInputValue} has been requested. You can add it later if approved.`,
+                message: `"${hobbyInputValue}" has been requested. You can add it later if approved.`,
               })
               setHobbyInputValue('')
             } else if (err) {
@@ -1385,7 +1388,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                 <input
                   type="text"
                   placeholder=""
-                  autoComplete="name"
+                  autoComplete="off"
                   required
                   value={data.full_name}
                   name="full_name"
@@ -1407,7 +1410,7 @@ const SimpleOnboarding: React.FC<Props> = ({
                   value={data.public_email}
                   ref={emailRef}
                   name="public_email"
-                  autoComplete="email"
+                  autoComplete="off"
                   onChange={handleInputChange}
                 />
                 <p className={styles['helper-text']}>
