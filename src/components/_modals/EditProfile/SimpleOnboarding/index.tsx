@@ -182,6 +182,7 @@ const SimpleOnboarding: React.FC<Props> = ({
     longitude: '',
     set_as_primary: true,
   })
+  const [addressDataString, setAddressDataString] = useState<string>('')
 
   const [data, setData] = useState<ProfileGeneralData>({
     full_name: '',
@@ -213,16 +214,38 @@ const SimpleOnboarding: React.FC<Props> = ({
   >([])
 
   const handleInputChangeAddress = async (event: any) => {
+    /** Clear the selected address value when typing to prevent inconsistency between selectedAddress and Addressdata.
+     * We are not submitting if there's no selectedAddress from the dropdown.
+     */
+    setSelectedAddress('')
+    setAddressData({
+      street: '',
+      society: '',
+      locality: '',
+      city: '',
+      pin_code: '',
+      post_code: '',
+      state: '',
+      country: '',
+      latitude: '',
+      longitude: '',
+      set_as_primary: true,
+    })
+
+    setInputErrs((prev) => ({ ...prev, location: '' }))
     setShowDropdown(false)
     setFocusedLocationIdx(-1)
     const { name, value } = event.target
-    setAddressData((prev) => ({ ...prev, [name]: value }))
+    // setAddressData((prev) => ({ ...prev, [name]: value }))
+    setAddressDataString(value)
     setInputErrs((prev) => ({ ...prev, [name]: null }))
-    if (Addressdata.street?.length > 1) {
+    // if (Addressdata.street?.length > 1) {
+    if (addressDataString?.length > 1) {
       setShowAutoAddress(true)
       try {
         const { res, err } = await getAutocompleteAddressFromGoogle(
-          Addressdata.street,
+          // Addressdata.street,
+          addressDataString,
         )
         const data = res.data
 
@@ -243,6 +266,7 @@ const SimpleOnboarding: React.FC<Props> = ({
     } else {
       setSuggestions([])
     }
+    /** The logic below is doubtful. State 'initialData' doesn't contain any address field */
     const { set_as_primary: set_as_primary, ...currentData } = {
       ...Addressdata,
       [name]: value,
@@ -279,13 +303,18 @@ const SimpleOnboarding: React.FC<Props> = ({
     const formattedSociety = details.society?.trim() || ''
     const formattedLocality = details.locality?.trim() || ''
 
+    setAddressDataString(
+      terms.join(', ').trim(),
+    ) /** setting the input value to the selected value */
+
     setAddressData((prev) => ({
       ...prev,
-      street: `${formattedStreet ? formattedStreet + ',' : ''} ${
-        formattedSociety ? formattedSociety + ',' : ''
-      } ${formattedLocality ? formattedLocality + ',' : ''} ${
-        details.city ? details.city + ',' : ''
-      } ${details.state ? details.state + ',' : ''} ${details.country}`,
+      // street: `${formattedStreet ? formattedStreet + ',' : ''} ${
+      //   formattedSociety ? formattedSociety + ',' : ''
+      // } ${formattedLocality ? formattedLocality + ',' : ''} ${
+      //   details.city ? details.city + ',' : ''
+      // } ${details.state ? details.state + ',' : ''} ${details.country}`,
+      street: formattedStreet || '',
       locality: formattedLocality || '',
       city: details.city || '',
       state: details.state || '',
@@ -299,8 +328,23 @@ const SimpleOnboarding: React.FC<Props> = ({
     setShowAutoAddress(false)
   }
 
-  const updateStreet = async () => {
-    const detail: any = {}
+  const updateStreet = () => {
+    if (!selectedAddress) return null
+
+    const detail: ProfileAddressPayload = {
+      street: '',
+      society: '',
+      locality: '',
+      city: '',
+      pin_code: '',
+      post_code: '',
+      state: '',
+      country: '',
+      latitude: '',
+      longitude: '',
+      set_as_primary: true,
+    }
+
     const terms = selectedAddress?.split(',')?.map((term) => term.trim())
 
     if (terms?.length >= 1) detail.country = terms[terms.length - 1]
@@ -315,6 +359,8 @@ const SimpleOnboarding: React.FC<Props> = ({
       ...prev,
       street: detail.street?.trimStart() || '',
     }))
+
+    return detail
   }
 
   const handleInputChange = (event: any) => {
@@ -398,7 +444,8 @@ const SimpleOnboarding: React.FC<Props> = ({
         setIsError(true)
       }
 
-      if (isEmptyField(Addressdata?.street)) {
+      // if (isEmptyField(Addressdata?.street)) {
+      if (isEmptyField(addressDataString)) {
         AddressRef?.current?.focus()
         setInputErrs((prev) => ({
           ...prev,
@@ -420,6 +467,25 @@ const SimpleOnboarding: React.FC<Props> = ({
 
       if (hasErrors) {
         if (confirmationModal) setConfirmationModal(false)
+        return
+      }
+
+      /** show error if user does not select, instead writes manually */
+      if (!selectedAddress) {
+        setShowSnackbar({
+          message:
+            'Please select your Location from the list, at least till City.',
+          triggerOpen: true,
+          type: 'error',
+        })
+
+        setInputErrs((prev) => ({
+          ...prev,
+          location:
+            'Please select your Location from the list, at least till City.',
+        }))
+
+        setSubmitBtnLoading(false)
         return
       }
     }
@@ -450,9 +516,11 @@ const SimpleOnboarding: React.FC<Props> = ({
       return
     }
 
-    await updateStreet()
+    // updateStreet()
 
     let reqBody: any = { ...Addressdata }
+    // let reqBody: any = updateStreet()
+
     if (!user?._addresses?.length && reqBody?.label === '') {
       reqBody.label = 'Default'
     }
@@ -624,9 +692,10 @@ const SimpleOnboarding: React.FC<Props> = ({
       addressText += `${user?.primary_address?.country} `
     }
     setSelectedAddress(addressText)
+    setAddressDataString(addressText)
     setAddressData({
       ...Addressdata,
-      street: addressText,
+      street: user?.primary_address?.street,
       society: user?.primary_address?.society,
       locality: user?.primary_address?.locality,
       city: user?.primary_address?.city,
@@ -700,7 +769,7 @@ const SimpleOnboarding: React.FC<Props> = ({
           setShowHobbyDowpdown(false)
           break
         case 'Enter':
-          nextButtonRef?.current?.click()
+          if (selectedAddress) nextButtonRef?.current?.click()
           break
         default:
           break
@@ -1023,13 +1092,14 @@ const SimpleOnboarding: React.FC<Props> = ({
       case 'Enter':
         e.preventDefault()
         e.stopPropagation()
-        if (Addressdata.street.trim().length !== 0 && !ShowAutoAddress) {
-        } else if (focusedLocationIdx !== -1 && ShowAutoAddress) {
+        // if (Addressdata.street.trim().length !== 0 && !ShowAutoAddress) {
+        // } else
+        if (focusedLocationIdx !== -1 && ShowAutoAddress) {
           handleSelectAddressTwo(
             suggestions[focusedLocationIdx]?.description,
             suggestions[focusedLocationIdx]?.place_id,
           )
-          setSelectedAddress(suggestions[focusedHobbyIndex]?.description)
+          setSelectedAddress(suggestions[focusedLocationIdx]?.description)
         } else if (
           focusedLocationIdx === -1 &&
           Addressdata.street.trim().length !== 0
@@ -1077,7 +1147,8 @@ const SimpleOnboarding: React.FC<Props> = ({
         )
         break
       case 'Backspace':
-        setselectedHobbies((prev) => (prev.length ? prev.slice(0, -1) : prev))
+        if (!hobbyInputValue)
+          setselectedHobbies((prev) => (prev.length ? prev.slice(0, -1) : prev))
       case 'Enter':
         e.stopPropagation()
         if (hobbyInputValue.length !== 0 && !showHobbyDowpdown) {
@@ -1282,6 +1353,7 @@ const SimpleOnboarding: React.FC<Props> = ({
     }))
     setIsChanged(true)
     dispatch(setHasChanges(true))
+    hobbysearchref.current?.focus()
   }
 
   return (
@@ -1356,7 +1428,8 @@ const SimpleOnboarding: React.FC<Props> = ({
                   type="text"
                   placeholder={`Type in your Society, Locality, or City`}
                   required
-                  value={Addressdata.street.trim()}
+                  // value={Addressdata.street.trimStart()}
+                  value={addressDataString}
                   name="street"
                   ref={AddressRef}
                   onChange={handleInputChangeAddress}
@@ -1384,31 +1457,31 @@ const SimpleOnboarding: React.FC<Props> = ({
                   }}
                 />
               </div>
-              <div>
-                {ShowAutoAddress && (
-                  <div className={styles['dropdown']} ref={locationDropdownRef}>
-                    {suggestions.map((suggestion, index) => (
-                      <p
-                        onClick={() => {
-                          handleSelectAddressTwo(
-                            suggestion.description,
-                            suggestion.place_id,
-                          )
-                          setSelectedAddress(suggestion.description)
-                        }}
-                        key={index}
-                        className={
-                          index === focusedLocationIdx
-                            ? styles['dropdown-option-focus']
-                            : ''
-                        }
-                      >
-                        {suggestion.description}
-                      </p>
-                    ))}
-                  </div>
-                )}
-              </div>
+              {/* <div> */}
+              {ShowAutoAddress && (
+                <div className={styles['dropdown']} ref={locationDropdownRef}>
+                  {suggestions.map((suggestion, index) => (
+                    <p
+                      onClick={() => {
+                        handleSelectAddressTwo(
+                          suggestion.description,
+                          suggestion.place_id,
+                        )
+                        setSelectedAddress(suggestion.description)
+                      }}
+                      key={index}
+                      className={
+                        index === focusedLocationIdx
+                          ? styles['dropdown-option-focus']
+                          : ''
+                      }
+                    >
+                      {suggestion.description}
+                    </p>
+                  ))}
+                </div>
+              )}
+              {/* </div> */}
               {/* {ShowDropdown && dropdownList.length !== 0 && (
                 <div className={styles['dropdown']}>
                   {dropdownList.map((location) => {

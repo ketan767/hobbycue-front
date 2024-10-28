@@ -58,6 +58,7 @@ type Props = {
   activeTab: CommunityPageTabs
   children: React.ReactNode
   singlePostPage?: boolean
+  hide?: boolean
 }
 type singlePostProps = {
   hobbyMembers: any[]
@@ -91,6 +92,7 @@ const CommunityLayout: React.FC<Props> = ({
   children,
   activeTab,
   singlePostPage,
+  hide = false,
 }) => {
   const dispatch = useDispatch()
   const membersContainerRef = useRef<HTMLElement>(null)
@@ -110,7 +112,9 @@ const CommunityLayout: React.FC<Props> = ({
   })
   const [locations, setLocations] = useState([])
   const [email, setEmail] = useState('')
-  const [selectedHobby, setSelectedHobby] = useState(filters.hobby || "All Hobbies")
+  const [selectedHobby, setSelectedHobby] = useState(
+    filters.hobby || 'All Hobbies',
+  )
   const [selectedGenre, setSelectedGenre] = useState<string | undefined>(
     filters.genre,
   )
@@ -762,9 +766,14 @@ const CommunityLayout: React.FC<Props> = ({
   }, [])
 
   const handleStartPost = () => {
+    if (!isLoggedIn) {
+      dispatch(openModal({ type: 'auth', closable: true }))
+      return
+    }
     if (!user.is_onboarded) {
-      router.push(`/profile/${user.profile_url}`)
-      dispatch(showProfileError(true))
+      // router.push(`/profile/${user.profile_url}`)
+      // dispatch(showProfileError(true))
+      dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
     } else {
       dispatch(openModal({ type: 'create-post', closable: true }))
     }
@@ -1149,6 +1158,11 @@ const CommunityLayout: React.FC<Props> = ({
                   )} */}
                 <section
                   className={`content-box-wrapper ${styles['start-post-btn-container']}`}
+                  // style={{
+                  //   borderBottomRightRadius: hide ? 8 : 0,
+                  //   borderBottomLeftRadius: hide ? 8 : 0,
+                  //   paddingTop: hide ? 12 : 20,
+                  // }}
                 >
                   {activeProfile.type === 'user' ? (
                     <>
@@ -1346,6 +1360,7 @@ const CommunityLayout: React.FC<Props> = ({
                     )}
                   </section>
                 )}
+                {/* {!hide && ( */}
                 <section
                   className={`content-box-wrapper ${styles['navigation-links']}`}
                 >
@@ -1367,6 +1382,7 @@ const CommunityLayout: React.FC<Props> = ({
                     })}
                   </ul>
                 </section>
+                {/* )} */}
               </div>
               {hideThirdColumnTabs.includes(activeTab) && (
                 <div className={styles['invite-container-main']}>

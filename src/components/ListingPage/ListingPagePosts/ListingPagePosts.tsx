@@ -78,8 +78,9 @@ const ListingPostsTab: React.FC<Props> = ({ data, hideStartPost }) => {
       if (user.is_onboarded) {
         dispatch(openModal({ type: 'create-post', closable: true }))
       } else {
-        router.push(`/profile/${user.profile_url}`)
-        dispatch(showProfileError(true))
+        // router.push(`/profile/${user.profile_url}`)
+        // dispatch(showProfileError(true))
+        dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
       }
     } else {
       dispatch(

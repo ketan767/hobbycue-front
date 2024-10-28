@@ -20,7 +20,7 @@ import post, {
 import PostCard from '@/components/PostCard/PostCard'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
-import { checkIfUrlExists, validateEmail } from '@/utils'
+import { checkIfUrlExists, htmlToPlainTextAdv, isMobile, validateEmail } from '@/utils'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
@@ -51,9 +51,9 @@ type singlePostProps = {
 //   return ''
 // }
 
-function htmlToPlainText(html: string): string {
-  return html.replace(/<\/?[^>]+(>|$)/g, '')
-}
+// function htmlToPlainText(html: string): string {
+//   return html.replace(/<\/?[^>]+(>|$)/g, '')
+// }
 
 const CommunityLayout: React.FC<Props> = ({ data }) => {
   const router = useRouter()
@@ -110,6 +110,13 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
     if (res.data.success) {
       setPostData(res.data.data.posts?.[0])
     }
+
+    /*
+    💥 asifs : if we set the postData making it a SSR rather than calling it in the frontend again,
+    the loading UI will not be there but things will become smoother
+    */
+    // setPostData(data?.postsData)
+
     setIsLoadingPosts(false)
     // router.push('/community')
   }
@@ -299,20 +306,28 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
     }
   }
 
+  const isMob = isMobile()
+
   const Children: React.FC<singlePostProps> = ({
     hobbyMembers,
     whatsNew,
     trendingHobbies,
   }) => {
     return (
-      <main style={{ paddingBottom: '3.5rem', minHeight: '100vh' }}>
+      <main
+        style={{
+          paddingBottom: '3.5rem',
+          minHeight: '100vh',
+          marginTop: isMob ? 8 : 12,
+        }}
+      >
         {!postData || isLoadingPosts ? (
           <>
             <PostCardSkeletonLoading />
           </>
         ) : (
           <>
-            <header
+            {/* <header
               className={`${stylesCommunity['community-header']} ${stylesCommunity['community-header-small']}`}
             >
               <div className={stylesCommunity['community-header-left']}>
@@ -448,7 +463,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
                   </section>
                 )}
               </div>
-            </header>
+            </header> */}
             <PostCard postData={postData} />
           </>
         )}
@@ -485,7 +500,7 @@ const CommunityLayout: React.FC<Props> = ({ data }) => {
           }`}`}
         </title>
       </Head>
-      <CommunityPageLayout activeTab="posts" singlePostPage={true}>
+      <CommunityPageLayout activeTab="posts" singlePostPage={false} hide={true}>
         <Children hobbyMembers={[]} whatsNew={[]} trendingHobbies={[]} />
       </CommunityPageLayout>
     </>
@@ -539,7 +554,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   // if (res?.data?.data.posts?.length) {
   //   postContentPlain = htmlToPlainText(res.data.data.posts[0].content)
   // }
-  let postContentPlain = htmlToPlainText(res?.data?.data?.posts[0]?.content)
+  let postContentPlain = htmlToPlainTextAdv(res?.data?.data?.posts[0]?.content)
 
   return {
     props: {

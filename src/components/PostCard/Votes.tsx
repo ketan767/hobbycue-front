@@ -133,7 +133,13 @@ const PostVotes: React.FC<Props> = ({
   const HandleNotOnboard = () => {
     // router.push(`/profile/${user.profile_url}`)
     dispatch(showProfileError(true))
-    dispatch(openModal({ type: 'SimpleOnboarding', closable: true }))
+    dispatch(
+      openModal({
+        type: 'SimpleOnboarding',
+        closable: true,
+        propData: { showError: true },
+      }),
+    )
   }
 
   return (

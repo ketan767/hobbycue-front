@@ -41,37 +41,40 @@ const ViewImageModal: React.FC<Props> = ({ isOpen, onClose, handleClose }) => {
   }, [window.innerWidth])
   return (
     <>
-      <header className={styles['header']}>
-        {screenWidth <= 1100 ? (
-          <CloseIcon
-            className={styles['modal-close-icon']}
-            onClick={handleClose}
-          />
-        ) : screenWidth >= 1100 ? (
-          <CloseIconWhite
-            className={styles['modal-close-icon']}
-            onClick={handleClose}
-          />
-        ) : (
-          ''
-        )}
-      </header>
       <div className={styles.imageModalContent}>
+        <header className={styles['header']}>
+          {screenWidth <= 1100 ? (
+            <div className={styles.modalHeaderMobile}>
+              <CloseIcon
+                // className={styles['modal-close-icon']}
+                onClick={handleClose}
+              />
+            </div>
+          ) : screenWidth >= 1100 ? (
+            <CloseIconWhite
+              className={styles['modal-close-icon']}
+              onClick={handleClose}
+            />
+          ) : (
+            ''
+          )}
+        </header>
+
         {imageUrl ? (
           <img
             className={styles['img']}
             src={imageUrl || ''}
             alt=""
-            height={296}
-            width={1000}
+            // height={296}
+            // width={1000}
           />
         ) : (
           <Image
             className={styles['img']}
             src={''}
             alt=""
-            height={296}
-            width={1000}
+            // height={296}
+            // width={1000}
           />
         )}
       </div>
