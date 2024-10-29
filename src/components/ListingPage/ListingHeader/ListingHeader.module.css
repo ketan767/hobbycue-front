@@ -482,6 +482,8 @@
   font-weight: 600;
   display: flex;
   gap: 8px;
+  overflow-wrap: anywhere;
+  width: 100%;
 }
 .product-name-container .tagline {
   padding-top: 12px;
@@ -739,13 +741,21 @@
     font-size: 12px;
    
     gap: 12px !important;
-    display: inline-block !important;
-    -webkit-line-clamp: 1; 
+    /* display: inline-block !important;
+    -webkit-line-clamp: 2; 
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    max-width: 64vw; */
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
     max-width: 64vw;
+    margin-top: 2px;
   
   }
   .tagline.full {

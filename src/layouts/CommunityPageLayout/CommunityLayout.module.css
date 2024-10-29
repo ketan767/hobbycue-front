@@ -749,6 +749,7 @@
 
 .profileImage {
   object-fit: contain;
+  background-color: white;
   width: 28.58px;
   height: 33px;
   position: relative;
@@ -814,6 +815,10 @@
     align-items: flex-start;
     margin: 0 -16px; /* Added this to override parent's padding of 16px and adding full length border */
     animation: fadeDown 0.3s ease forwards;
+  }
+
+  .dropdowns-panel input {
+    
   }
 
   .dropdowns-panel .parent-list {
@@ -942,6 +947,7 @@
   .dropdowns-panel .parent-list .options-parent .member-container a img {
     border-radius: 4px;
     border: 1px solid #8064a2;
+    object-fit: contain;
   }
 
   .dropdowns-panel .parent-list .options-parent .option {
