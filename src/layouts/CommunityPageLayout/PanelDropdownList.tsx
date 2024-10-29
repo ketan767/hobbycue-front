@@ -6,12 +6,13 @@ import defaultUserIcon from '@/assets/svg/default-images/default-user-icon.svg'
 import Link from 'next/link'
 import Image from 'next/image'
 import { pageType } from '@/utils'
+import { CircularProgress } from '@mui/material'
 interface PanelDropdownListProps {
   name: string
   options: any[]
   type?: string
   invite?: boolean
-  inviteFunction?: () => Promise<void>
+  inviteFunction: () => Promise<void>
   inviteError?: string
   inviteTextChangeFunc?: (arg0: any) => void
   inviteText?: string
@@ -33,6 +34,10 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
   const router = useRouter()
   const [seeMore, setSeeMore] = useState(true)
   const membersContainerRef = useRef<HTMLDivElement>(null)
+  // const [email, setEmail] = useState('')
+  // const [errorMessage, setErrorMessage] = useState('')
+  // const inviteBtnRef = useRef<HTMLButtonElement>(null)
+  // const [inviteBtnLoader, setInviteBtnLoader] = useState(false)
 
   useEffect(() => {
     if (type === 'members') {
