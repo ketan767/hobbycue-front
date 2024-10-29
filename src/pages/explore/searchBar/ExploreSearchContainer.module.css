@@ -58,7 +58,6 @@
   width: 114px;
   height: 38px;
   border-radius: 8px;
-  opacity: 0px;
   background-color: #f7f5f9;
   border: none;
   font-family: Poppins;
@@ -122,6 +121,7 @@
 .dropdown p {
   box-sizing: border-box;
 }
+
 .dropdownHobby {
   top: 30px;
   max-width: 210px;

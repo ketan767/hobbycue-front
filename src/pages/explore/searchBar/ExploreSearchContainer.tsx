@@ -87,6 +87,12 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
   setShowHobbyDropdown,
 }) => {
   const router = useRouter()
+  const { query } = router
+  const { keyword } = query
+  const { hobby } = query
+  const { category } = query
+  const { location } = query
+  const { sub_category } = query
   const searchInputRef = useRef<HTMLInputElement>(null)
   const searchHobbyRef = useRef<HTMLInputElement>(null)
   const searchPageRef = useRef<HTMLInputElement>(null)
@@ -97,7 +103,9 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     ExtendedDropdownListItem[]
   >([])
-  const [hobbyInputValue, setHobbyInputValue] = useState('')
+  const [hobbyInputValue, setHobbyInputValue] = useState(
+    hobby ? hobby.toString() : '',
+  )
   // const [ShowAutoAddress, setShowAutoAddress] = useState<boolean>(false)
   const [suggestions, setSuggestions] = useState<
     { description: string; place_id: string }[]
@@ -109,7 +117,7 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
     DropdownListItemHobby[]
   >([])
   const [Addressdata, setAddressData] = useState<ProfileAddressPayload>({
-    street: '',
+    street: location ? location.toString() : '',
     society: '',
     locality: '',
     city: '',
@@ -155,11 +163,11 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
   }
 
   const [currentCategory, setCurrentCategory] = useState({
-    value: defaultCategory || 'All',
+    value: defaultCategory ? (category ? category.toString() : '') : 'All',
     error: null,
   })
   const [subCategory, setSubCategory] = useState({
-    value: '',
+    value: sub_category ? sub_category.toString() : '',
     error: null,
   })
   const [data, setData] = useState<SearchInput>({
@@ -466,7 +474,7 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
                   marginLeft: '-16px',
                 },
                 '& .MuiInput-underline:hover:before': {
-                  borderBottomColor: '#7F63A1',
+                  borderBottomColor: '#7F63A1 !important',
                 },
               }}
               InputProps={{
@@ -529,7 +537,7 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
                     marginLeft: '-16px',
                   },
                   '& .MuiInput-underline:hover:before': {
-                    borderBottomColor: '#7F63A1',
+                    borderBottomColor: '#7F63A1 !important',
                   },
                 }}
                 InputProps={{
@@ -626,7 +634,7 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
                     marginLeft: '-16px',
                   },
                   '& .MuiInput-underline:hover:before': {
-                    borderBottomColor: '#7F63A1',
+                    borderBottomColor: '#7F63A1 !important',
                   },
                 }}
                 InputProps={{

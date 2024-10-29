@@ -18,19 +18,16 @@ import PlaceIcon from '@/assets/svg/Place.svg'
 import ProgramIcon from '@/assets/svg/Program.svg'
 import ProductIcon from '@/assets/svg/Search/Product2.svg'
 import Image from 'next/image'
-import styles from './AccordianMenu.module.css'
+import styles from './AccordianMenuNoResult.module.css'
 import { getAllListingCategories } from '@/services/listing.service'
 import { isEmptyField } from '@/utils'
-import { useRouter } from 'next/router'
 
 interface AccordianMenuProps {
   value: string
-  setValue: React.Dispatch<React.SetStateAction<{ value: string; error: null }>>
+  setValue: React.Dispatch<React.SetStateAction<string>>
   subCategory: string
-  setSubCategory: React.Dispatch<
-    React.SetStateAction<{ value: string; error: null }>
-  >
-  searchResult: Function
+  setSubCategory: React.Dispatch<React.SetStateAction<string>>
+  // searchResult: Function
 }
 type DropdownListItem = {
   _id: string
@@ -39,16 +36,13 @@ type DropdownListItem = {
   pageType: string
   listingCategory: string
 }
-const AccordionMenu: React.FC<AccordianMenuProps> = ({
+const AccordianMenuNoResult: React.FC<AccordianMenuProps> = ({
   value,
   setValue,
   subCategory,
   setSubCategory,
-  searchResult,
+  // searchResult,
 }) => {
-  const router = useRouter()
-  const { query } = router
-  const { sub_category } = query
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [openMenu, setOpenMenu] = useState(false)
   const [isPeopleOpened, setIsPeopleOpened] = useState(false)
@@ -56,7 +50,7 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
   const [isProgramOpened, setIsProgramOpened] = useState(false)
   const [isProductOpened, setIsProductOpened] = useState(false)
   const [categoryValue, setCategoryValue] = useState(
-    value === 'All' ? (sub_category ? sub_category.toString() : '') : value,
+    value === 'All' ? '' : value,
   )
   const [categoryIndex, setCategoryIndex] = useState<number>(-1)
 
@@ -98,18 +92,22 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
     subCategory?: string | undefined,
   ) => {
     if (subCategory) {
-      setSubCategory({ value: subCategory, error: null })
-      setValue({ value: '', error: null })
-      searchResult(undefined, undefined, subCategory)
+      setSubCategory(subCategory)
+      setValue('')
+      // searchResult(undefined, undefined, subCategory)
     } else if (name) {
-      setSubCategory({ value: '', error: null })
-      setValue({ value: name, error: null })
-      searchResult(name)
+      setSubCategory('')
+      setValue(name)
+      setCategoryValue(name)
+      // searchResult(name)
     }
   }
   const handleCategoryInputChange = (e: any) => {
     setCategoryIndex(-1)
     setCategoryValue(e.target.value)
+    setValue('')
+    setSubCategory('')
+    // alert(value)
     if (isEmptyField(e.target.value))
       return setFilteredDropdownList(categoryDropdownList)
 
@@ -143,11 +141,11 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
           setShowCategoryDropdown(false)
 
           setCategoryValue(filteredDropdownList[categoryIndex].listingCategory)
-          searchResult(
-            undefined,
-            undefined,
-            filteredDropdownList[categoryIndex].listingCategory,
-          )
+          // searchResult(
+          //   undefined,
+          //   undefined,
+          //   filteredDropdownList[categoryIndex].listingCategory,
+          // )
         } else if (categoryIndex === -1 && categoryValue.length !== 0) {
           setShowCategoryDropdown(false)
           // handleGenreInputFocus();
@@ -250,6 +248,9 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
             }
             onChange={handleCategoryInputChange}
             sx={{
+              '& .MuiInput-underline:hover:before': {
+                borderBottomColor: '#7F63A1 !important',
+              },
               '& label': {
                 fontSize: '16px',
                 paddingLeft: '24px',
@@ -262,9 +263,6 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                 marginTop: '3px',
                 fontSize: '14px',
                 marginLeft: '-16px',
-              },
-              '& .MuiInput-underline:hover:before': {
-                borderBottomColor: '#7F63A1 !important',
               },
             }}
             InputProps={{
@@ -283,7 +281,6 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
               openMenu ? `${styles.arrowRotated}` : ''
             }`}
           />
-
           {showCategoryDropdown && filteredDropdownList.length !== 0 && (
             <div className={styles.dropdownCategory} ref={searchCategoryRef}>
               {filteredDropdownList.map((category, index) => {
@@ -292,11 +289,7 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                     key={category._id}
                     onClick={() => {
                       setCategoryValue(category.listingCategory)
-                      searchResult(
-                        undefined,
-                        undefined,
-                        category.listingCategory,
-                      )
+                      handleValueChange(undefined, category.listingCategory)
                     }}
                     className={
                       index === categoryIndex
@@ -312,71 +305,305 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
           )}
         </div>
       </div>
+      <div className={styles.relative}>
+        <Menu
+          anchorEl={anchorEl}
+          open={openMenu}
+          onClose={handleClose}
+          sx={{
+            '&:before': { display: 'none' },
+            width: '300px',
+            margin: '0',
+            padding: '0',
+            position: 'absolute',
+            top: '-250px',
+            left: '-642px',
+            transition: 'none',
+            height: '500px',
+          }}
+          disablePortal={true}
+        >
+          <Accordion
+            disableGutters
+            elevation={0}
+            square
+            sx={{
+              '&:before': { display: 'none' },
+              width: '100%',
+              margin: '0',
+              padding: '0',
+            }}
+            expanded={isPeopleOpened}
+            onChange={() => {
+              setIsPeopleOpened(!isPeopleOpened)
+            }}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon style={{ fontSize: '16px' }} />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+              tabIndex={-1}
+              sx={{ margin: 0, padding: '0 10px 0 0' }}
+            >
+              <Typography sx={{ marginLeft: '16px' }}>
+                <div className={styles.pContainer}>
+                  <Image
+                    src={PeopleIcon}
+                    width={16}
+                    height={16}
+                    alt="PeopleIcon"
+                  />
+                  <span
+                    className={`${styles.categoryName} ${
+                      isPeopleOpened ? `${styles.peopleOpened}` : ''
+                    }`}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleValueChange('People')
+                      handleClose()
+                    }}
+                  >
+                    People
+                  </span>
+                </div>
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              {peopleSubcategory &&
+                peopleSubcategory.length > 0 &&
+                peopleSubcategory.map((subcategory, index) => {
+                  if (index === peopleSubcategory.length - 1) {
+                    return (
+                      <>
+                        <MenuItem
+                          onClick={() => {
+                            setIsPeopleOpened(false)
+                            setIsPlaceOpened(false)
+                            setIsProgramOpened(false)
+                            setIsProductOpened(false)
+                            setCategoryValue(subcategory.listingCategory)
+                            handleClose()
+                            handleValueChange(
+                              undefined,
+                              subcategory.listingCategory,
+                            )
+                          }}
+                          sx={{
+                            marginLeft: '-16px',
+                            marginBottom: '-11px',
+                          }}
+                          className={styles.pOptions}
+                        >
+                          {subcategory.listingCategory}
+                        </MenuItem>
+                      </>
+                    )
+                  }
+                  return (
+                    <>
+                      <MenuItem
+                        onClick={() => {
+                          setIsPeopleOpened(false)
+                          setIsPlaceOpened(false)
+                          setIsProgramOpened(false)
+                          setIsProductOpened(false)
+                          setCategoryValue(subcategory.listingCategory)
+                          handleClose()
+                          handleValueChange(
+                            undefined,
+                            subcategory.listingCategory,
+                          )
+                        }}
+                        sx={{
+                          marginLeft: '-16px',
+                          marginBottom: '11px',
+                        }}
+                        className={styles.pOptions}
+                      >
+                        {subcategory.listingCategory}
+                      </MenuItem>
+                    </>
+                  )
+                })}
+            </AccordionDetails>
+          </Accordion>
+          <Accordion
+            disableGutters
+            elevation={0}
+            square
+            sx={{
+              '&:before': { display: 'none' },
+              width: '100%',
+              margin: '0',
+              padding: '0',
+            }}
+            expanded={isPlaceOpened}
+            onChange={() => {
+              setIsPlaceOpened(!isPlaceOpened)
+            }}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon style={{ fontSize: '16px' }} />}
+              aria-controls="panel2a-content"
+              id="panel2a-header"
+              tabIndex={-1}
+              sx={{ margin: 0, padding: '0 10px 0 0' }}
+            >
+              <Typography sx={{ marginLeft: '16px' }}>
+                <div className={styles.pContainer}>
+                  <Image
+                    src={PlaceIcon}
+                    width={16}
+                    height={16}
+                    alt="PlaceIcon"
+                  />
+                  <span
+                    className={isPlaceOpened ? `${styles.placeOpened}` : ''}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleValueChange('Place')
+                      handleClose()
+                    }}
+                  >
+                    Place
+                  </span>
+                </div>
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              {placeSubcategory &&
+                placeSubcategory.length > 0 &&
+                placeSubcategory.map((subcategory, index) => {
+                  if (index === placeSubcategory.length - 1) {
+                    return (
+                      <>
+                        <MenuItem
+                          onClick={() => {
+                            setIsPeopleOpened(false)
+                            setIsPlaceOpened(false)
+                            setIsProgramOpened(false)
+                            setIsProductOpened(false)
+                            setCategoryValue(subcategory.listingCategory)
+                            handleClose()
+                            handleValueChange(
+                              undefined,
+                              subcategory.listingCategory,
+                            )
+                          }}
+                          sx={{
+                            marginLeft: '-16px',
+                            marginBottom: '-11px',
+                          }}
+                          className={styles.pOptions}
+                        >
+                          {subcategory.listingCategory}
+                        </MenuItem>
+                      </>
+                    )
+                  }
+                  return (
+                    <>
+                      <MenuItem
+                        onClick={() => {
+                          setIsPeopleOpened(false)
+                          setIsPlaceOpened(false)
+                          setIsProgramOpened(false)
+                          setIsProductOpened(false)
+                          setCategoryValue(subcategory.listingCategory)
+                          handleClose()
+                          handleValueChange(
+                            undefined,
+                            subcategory.listingCategory,
+                          )
+                        }}
+                        sx={{
+                          marginLeft: '-16px',
+                          marginBottom: '11px',
+                        }}
+                        className={styles.pOptions}
+                      >
+                        {subcategory.listingCategory}
+                      </MenuItem>
+                    </>
+                  )
+                })}
+            </AccordionDetails>
+          </Accordion>
+          <Accordion
+            disableGutters
+            elevation={0}
+            square
+            sx={{
+              '&:before': { display: 'none' },
+              width: '100%',
+              margin: '0',
+              padding: '0',
+            }}
+            expanded={isProgramOpened}
+            onChange={() => {
+              setIsProgramOpened(!isProgramOpened)
+            }}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon style={{ fontSize: '16px' }} />}
+              aria-controls="panel3a-content"
+              id="panel3a-header"
+              tabIndex={-1}
+              sx={{ margin: 0, padding: '0 10px 0 0' }}
+            >
+              <Typography sx={{ marginLeft: '16px' }}>
+                <div className={styles.pContainer}>
+                  <Image
+                    src={ProgramIcon}
+                    width={16}
+                    height={16}
+                    alt="ProgramIcon"
+                  />
+                  <span
+                    className={isProgramOpened ? `${styles.programOpened}` : ''}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleValueChange('Program')
+                      handleClose()
+                    }}
+                  >
+                    Program
+                  </span>
+                </div>
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              {programSubcategory &&
+                programSubcategory.length > 0 &&
+                programSubcategory.map((subcategory, index) => {
+                  if (index === programSubcategory.length - 1) {
+                    return (
+                      <>
+                        <MenuItem
+                          onClick={() => {
+                            setIsPeopleOpened(false)
+                            setIsPlaceOpened(false)
+                            setIsProgramOpened(false)
+                            setIsProductOpened(false)
+                            setCategoryValue(subcategory.listingCategory)
+                            handleClose()
 
-      <Menu
-        anchorEl={anchorEl}
-        open={openMenu}
-        onClose={handleClose}
-        sx={{
-          '&:before': { display: 'none' },
-          width: '300px',
-          margin: '0',
-          padding: '0',
-          position: 'absolute',
-          top: '8px',
-          left: '-144px',
-        }}
-      >
-        <Accordion
-          disableGutters
-          elevation={0}
-          square
-          sx={{
-            '&:before': { display: 'none' },
-            width: '100%',
-            margin: '0',
-            padding: '0',
-          }}
-          expanded={isPeopleOpened}
-          onChange={() => {
-            setIsPeopleOpened(!isPeopleOpened)
-          }}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon style={{ fontSize: '16px' }} />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-            tabIndex={-1}
-            sx={{ margin: 0, padding: '0 10px 0 0' }}
-          >
-            <Typography sx={{ marginLeft: '16px' }}>
-              <div className={styles.pContainer}>
-                <Image
-                  src={PeopleIcon}
-                  width={16}
-                  height={16}
-                  alt="PeopleIcon"
-                />
-                <span
-                  className={`${styles.categoryName} ${
-                    isPeopleOpened ? `${styles.peopleOpened}` : ''
-                  }`}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleValueChange('People')
-                    handleClose()
-                  }}
-                >
-                  People
-                </span>
-              </div>
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            {peopleSubcategory &&
-              peopleSubcategory.length > 0 &&
-              peopleSubcategory.map((subcategory, index) => {
-                if (index === peopleSubcategory.length - 1) {
+                            handleValueChange(
+                              undefined,
+                              subcategory.listingCategory,
+                            )
+                          }}
+                          sx={{
+                            marginLeft: '-16px',
+                            marginBottom: '-11px',
+                          }}
+                          className={styles.pOptions}
+                        >
+                          {subcategory.listingCategory}
+                        </MenuItem>
+                      </>
+                    )
+                  }
                   return (
                     <>
                       <MenuItem
@@ -394,7 +621,7 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                         }}
                         sx={{
                           marginLeft: '-16px',
-                          marginBottom: '-11px',
+                          marginBottom: '11px',
                         }}
                         className={styles.pOptions}
                       >
@@ -402,78 +629,83 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                       </MenuItem>
                     </>
                   )
-                }
-                return (
-                  <>
-                    <MenuItem
-                      onClick={() => {
-                        setIsPeopleOpened(false)
-                        setIsPlaceOpened(false)
-                        setIsProgramOpened(false)
-                        setIsProductOpened(false)
-                        setCategoryValue(subcategory.listingCategory)
-                        handleClose()
-                        handleValueChange(
-                          undefined,
-                          subcategory.listingCategory,
-                        )
-                      }}
-                      sx={{
-                        marginLeft: '-16px',
-                        marginBottom: '11px',
-                      }}
-                      className={styles.pOptions}
-                    >
-                      {subcategory.listingCategory}
-                    </MenuItem>
-                  </>
-                )
-              })}
-          </AccordionDetails>
-        </Accordion>
-        <Accordion
-          disableGutters
-          elevation={0}
-          square
-          sx={{
-            '&:before': { display: 'none' },
-            width: '100%',
-            margin: '0',
-            padding: '0',
-          }}
-          expanded={isPlaceOpened}
-          onChange={() => {
-            setIsPlaceOpened(!isPlaceOpened)
-          }}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon style={{ fontSize: '16px' }} />}
-            aria-controls="panel2a-content"
-            id="panel2a-header"
-            tabIndex={-1}
-            sx={{ margin: 0, padding: '0 10px 0 0' }}
+                })}
+            </AccordionDetails>
+          </Accordion>
+          <Accordion
+            disableGutters
+            elevation={0}
+            square
+            sx={{
+              '&:before': { display: 'none' },
+              width: '100%',
+              margin: '0',
+              padding: '0',
+            }}
+            expanded={isProductOpened}
+            onChange={() => {
+              setIsProductOpened(!isProductOpened)
+            }}
           >
-            <Typography sx={{ marginLeft: '16px' }}>
-              <div className={styles.pContainer}>
-                <Image src={PlaceIcon} width={16} height={16} alt="PlaceIcon" />
-                <span
-                  className={isPlaceOpened ? `${styles.placeOpened}` : ''}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleValueChange('Place')
-                    handleClose()
-                  }}
-                >
-                  Place
-                </span>
-              </div>
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            {placeSubcategory &&
-              placeSubcategory.length > 0 &&
-              placeSubcategory.map((subcategory, index) => {
-                if (index === placeSubcategory.length - 1) {
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon style={{ fontSize: '16px' }} />}
+              aria-controls="panel2a-content"
+              id="panel2a-header"
+              tabIndex={-1}
+              sx={{ margin: 0, padding: '0 10px 0 0' }}
+            >
+              <Typography sx={{ marginLeft: '16px' }}>
+                <div className={styles.pContainer}>
+                  <Image
+                    src={ProductIcon}
+                    width={16}
+                    height={16}
+                    alt="ProductIcon"
+                  />
+                  <span
+                    className={isProductOpened ? `${styles.productOpened}` : ''}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleValueChange('Product')
+                      handleClose()
+                    }}
+                  >
+                    Product
+                  </span>
+                </div>
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              {productSubcategory &&
+                productSubcategory.length > 0 &&
+                productSubcategory.map((subcategory, index) => {
+                  if (index === productSubcategory.length - 1) {
+                    return (
+                      <>
+                        <MenuItem
+                          onClick={() => {
+                            setIsPeopleOpened(false)
+                            setIsPlaceOpened(false)
+                            setIsProgramOpened(false)
+                            setIsProductOpened(false)
+                            setCategoryValue(subcategory.listingCategory)
+                            handleClose()
+                            handleValueChange(
+                              undefined,
+                              subcategory.listingCategory,
+                            )
+                          }}
+                          sx={{
+                            marginLeft: '-16px',
+                            marginBottom: '-11px',
+                          }}
+                          className={styles.pOptions}
+                        >
+                          {subcategory.listingCategory}
+                        </MenuItem>
+                      </>
+                    )
+                  }
                   return (
                     <>
                       <MenuItem
@@ -491,7 +723,7 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                         }}
                         sx={{
                           marginLeft: '-16px',
-                          marginBottom: '-11px',
+                          marginBottom: '11px',
                         }}
                         className={styles.pOptions}
                       >
@@ -499,243 +731,13 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                       </MenuItem>
                     </>
                   )
-                }
-                return (
-                  <>
-                    <MenuItem
-                      onClick={() => {
-                        setIsPeopleOpened(false)
-                        setIsPlaceOpened(false)
-                        setIsProgramOpened(false)
-                        setIsProductOpened(false)
-                        setCategoryValue(subcategory.listingCategory)
-                        handleClose()
-                        handleValueChange(
-                          undefined,
-                          subcategory.listingCategory,
-                        )
-                      }}
-                      sx={{
-                        marginLeft: '-16px',
-                        marginBottom: '11px',
-                      }}
-                      className={styles.pOptions}
-                    >
-                      {subcategory.listingCategory}
-                    </MenuItem>
-                  </>
-                )
-              })}
-          </AccordionDetails>
-        </Accordion>
-        <Accordion
-          disableGutters
-          elevation={0}
-          square
-          sx={{
-            '&:before': { display: 'none' },
-            width: '100%',
-            margin: '0',
-            padding: '0',
-          }}
-          expanded={isProgramOpened}
-          onChange={() => {
-            setIsProgramOpened(!isProgramOpened)
-          }}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon style={{ fontSize: '16px' }} />}
-            aria-controls="panel3a-content"
-            id="panel3a-header"
-            tabIndex={-1}
-            sx={{ margin: 0, padding: '0 10px 0 0' }}
-          >
-            <Typography sx={{ marginLeft: '16px' }}>
-              <div className={styles.pContainer}>
-                <Image
-                  src={ProgramIcon}
-                  width={16}
-                  height={16}
-                  alt="ProgramIcon"
-                />
-                <span
-                  className={isProgramOpened ? `${styles.programOpened}` : ''}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleValueChange('Program')
-                    handleClose()
-                  }}
-                >
-                  Program
-                </span>
-              </div>
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            {programSubcategory &&
-              programSubcategory.length > 0 &&
-              programSubcategory.map((subcategory, index) => {
-                if (index === programSubcategory.length - 1) {
-                  return (
-                    <>
-                      <MenuItem
-                        onClick={() => {
-                          setIsPeopleOpened(false)
-                          setIsPlaceOpened(false)
-                          setIsProgramOpened(false)
-                          setIsProductOpened(false)
-                          setCategoryValue(subcategory.listingCategory)
-                          handleClose()
-
-                          handleValueChange(
-                            undefined,
-                            subcategory.listingCategory,
-                          )
-                        }}
-                        sx={{
-                          marginLeft: '-16px',
-                          marginBottom: '-11px',
-                        }}
-                        className={styles.pOptions}
-                      >
-                        {subcategory.listingCategory}
-                      </MenuItem>
-                    </>
-                  )
-                }
-                return (
-                  <>
-                    <MenuItem
-                      onClick={() => {
-                        setIsPeopleOpened(false)
-                        setIsPlaceOpened(false)
-                        setIsProgramOpened(false)
-                        setIsProductOpened(false)
-                        setCategoryValue(subcategory.listingCategory)
-                        handleClose()
-                        handleValueChange(
-                          undefined,
-                          subcategory.listingCategory,
-                        )
-                      }}
-                      sx={{
-                        marginLeft: '-16px',
-                        marginBottom: '11px',
-                      }}
-                      className={styles.pOptions}
-                    >
-                      {subcategory.listingCategory}
-                    </MenuItem>
-                  </>
-                )
-              })}
-          </AccordionDetails>
-        </Accordion>
-        <Accordion
-          disableGutters
-          elevation={0}
-          square
-          sx={{
-            '&:before': { display: 'none' },
-            width: '100%',
-            margin: '0',
-            padding: '0',
-          }}
-          expanded={isProductOpened}
-          onChange={() => {
-            setIsProductOpened(!isProductOpened)
-          }}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon style={{ fontSize: '16px' }} />}
-            aria-controls="panel2a-content"
-            id="panel2a-header"
-            tabIndex={-1}
-            sx={{ margin: 0, padding: '0 10px 0 0' }}
-          >
-            <Typography sx={{ marginLeft: '16px' }}>
-              <div className={styles.pContainer}>
-                <Image
-                  src={ProductIcon}
-                  width={16}
-                  height={16}
-                  alt="ProductIcon"
-                />
-                <span
-                  className={isProductOpened ? `${styles.productOpened}` : ''}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleValueChange('Product')
-                    handleClose()
-                  }}
-                >
-                  Product
-                </span>
-              </div>
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            {productSubcategory &&
-              productSubcategory.length > 0 &&
-              productSubcategory.map((subcategory, index) => {
-                if (index === productSubcategory.length - 1) {
-                  return (
-                    <>
-                      <MenuItem
-                        onClick={() => {
-                          setIsPeopleOpened(false)
-                          setIsPlaceOpened(false)
-                          setIsProgramOpened(false)
-                          setIsProductOpened(false)
-                          setCategoryValue(subcategory.listingCategory)
-                          handleClose()
-                          handleValueChange(
-                            undefined,
-                            subcategory.listingCategory,
-                          )
-                        }}
-                        sx={{
-                          marginLeft: '-16px',
-                          marginBottom: '-11px',
-                        }}
-                        className={styles.pOptions}
-                      >
-                        {subcategory.listingCategory}
-                      </MenuItem>
-                    </>
-                  )
-                }
-                return (
-                  <>
-                    <MenuItem
-                      onClick={() => {
-                        setIsPeopleOpened(false)
-                        setIsPlaceOpened(false)
-                        setIsProgramOpened(false)
-                        setIsProductOpened(false)
-                        setCategoryValue(subcategory.listingCategory)
-                        handleClose()
-                        handleValueChange(
-                          undefined,
-                          subcategory.listingCategory,
-                        )
-                      }}
-                      sx={{
-                        marginLeft: '-16px',
-                        marginBottom: '11px',
-                      }}
-                      className={styles.pOptions}
-                    >
-                      {subcategory.listingCategory}
-                    </MenuItem>
-                  </>
-                )
-              })}
-          </AccordionDetails>
-        </Accordion>
-      </Menu>
+                })}
+            </AccordionDetails>
+          </Accordion>
+        </Menu>
+      </div>
     </div>
   )
 }
 
-export default AccordionMenu
+export default AccordianMenuNoResult
