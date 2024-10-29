@@ -98,7 +98,6 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
   const searchPageRef = useRef<HTMLInputElement>(null)
   const locationDropdownArrowRef = useRef<HTMLDivElement>(null)
   const [isWriting, setIsWriting] = useState(false)
-  const [isChanged, setIsChanged] = useState(false)
 
   const [hobbyDropdownList, setHobbyDropdownList] = useState<
     ExtendedDropdownListItem[]

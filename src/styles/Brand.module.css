@@ -156,6 +156,45 @@
   margin-top: 3px;
   cursor: pointer;
 }
+.button {
+  margin-top: 6px;
+  padding: 6px 36px;
+  background-color: #8064a2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.button:hover {
+  background-color: #603397;
+}
+.buttonContainer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ql-toolbar.ql-snow {
+  width: 100%;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+}
+.ql-container.ql-snow {
+  width: 87vw;
+  border: none;
+}
+.ql-editor {
+  border: none !important;
+  width: 87vw;
+  border-top: 1px solid #ccc;
+}
+.ql-editor.ql-indent-1 {
+  padding-left: 4px;
+}
+.ql-editor ul,
+.ql-editor ol {
+  padding-left: 4px;
+}
 
 @media screen and (max-width: 1100px) {
   .white-container {

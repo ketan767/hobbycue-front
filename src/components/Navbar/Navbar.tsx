@@ -113,15 +113,27 @@ export const Navbar: React.FC<Props> = ({}) => {
     'user-menu' | 'hobby-list' | 'explore-list' | null
   >(null)
   useEffect(() => {
-    if (router.asPath === '/search') {
-      return
+    if (!router.pathname.includes('search')) {
+      setData((prev) => ({
+        ...prev,
+        search: { value: '', error: null },
+      }))
     } else {
       setData((prev) => ({
         ...prev,
         search: { value: data.search.value, error: null },
       }))
     }
-  }, [router.asPath])
+  }, [router.pathname])
+
+  // useEffect(() => {
+  //   if (!(router.asPath === '/explore')) {
+  //     setData((prev) => ({
+  //       ...prev,
+  //       search: { value: '', error: null },
+  //     }))
+  //   }
+  // }, [router.asPath])
 
   useEffect(() => {
     if (router.pathname.includes('explore')) {
