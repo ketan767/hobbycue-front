@@ -54,6 +54,8 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
   const [categoryValue, setCategoryValue] = useState(
     value === 'All' ? '' : value,
   )
+  const [categoryIndex, setCategoryIndex] = useState<number>(-1)
+
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
   const [isCategoryBoxOpened, setIsCategoryBoxOpened] = useState(false)
   const [categoryDropdownList, setCategoryDropdownList] = useState<
@@ -70,7 +72,7 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
   const [productSubcategory, setProductSubcategory] =
     useState<DropdownListItem[]>(categoryDropdownList)
   // const [subCategory, setSubCategory] = useState('')
-  const searchCategoryRef = useRef()
+  const searchCategoryRef = useRef<HTMLDivElement>(null)
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     setAnchorEl(event.currentTarget)
@@ -102,6 +104,7 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
     }
   }
   const handleCategoryInputChange = (e: any) => {
+    setCategoryIndex(-1)
     setCategoryValue(e.target.value)
     if (isEmptyField(e.target.value))
       return setFilteredDropdownList(categoryDropdownList)
@@ -113,6 +116,63 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
           .indexOf(e.target.value.toLowerCase()) !== -1,
     )
     setFilteredDropdownList(filteredCategories)
+  }
+  const handleCategoryKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    switch (e.key) {
+      case 'ArrowDown':
+        setCategoryIndex((prevIndex) =>
+          prevIndex < filteredDropdownList.length - 1
+            ? prevIndex + 1
+            : prevIndex,
+        )
+        break
+      case 'ArrowUp':
+        setCategoryIndex((prevIndex) =>
+          prevIndex > 0 ? prevIndex - 1 : prevIndex,
+        )
+        break
+      case 'Enter':
+        e.stopPropagation()
+        if (categoryValue.length !== 0 && !showCategoryDropdown) {
+          //AddButtonRef.current?.click()
+        } else if (categoryIndex !== -1 && showCategoryDropdown) {
+          setShowCategoryDropdown(false)
+
+          setCategoryValue(filteredDropdownList[categoryIndex].listingCategory)
+          searchResult(
+            undefined,
+            undefined,
+            filteredDropdownList[categoryIndex].listingCategory,
+          )
+        } else if (categoryIndex === -1 && categoryValue.length !== 0) {
+          setShowCategoryDropdown(false)
+          // handleGenreInputFocus();
+        }
+        break
+      default:
+        break
+    }
+
+    // Scroll into view logic
+    const container = searchCategoryRef.current
+    const selectedItem = container?.children[categoryIndex] as HTMLElement
+
+    if (selectedItem && container) {
+      const containerRect = container.getBoundingClientRect()
+      const itemRect = selectedItem.getBoundingClientRect()
+
+      // Check if the item is out of view and adjust the scroll position
+      if (itemRect.bottom + selectedItem.offsetHeight >= containerRect.bottom) {
+        container.scrollTop +=
+          itemRect.bottom - containerRect.bottom + selectedItem.offsetHeight + 5
+      } else if (
+        itemRect.top <=
+        containerRect.top + selectedItem.offsetHeight
+      ) {
+        container.scrollTop -=
+          containerRect.top - itemRect.top + selectedItem.offsetHeight + 5
+      }
+    }
   }
 
   useEffect(() => {
@@ -169,11 +229,14 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
             onFocus={() => {
               setShowCategoryDropdown(true)
             }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                setShowCategoryDropdown(false)
-                searchResult()
-              }
+            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+              setShowCategoryDropdown(true)
+
+              handleCategoryKeyDown(e)
+              // if (e.key === 'Enter') {
+              //   setShowCategoryDropdown(false)
+              //   searchResult()
+              // }
             }}
             value={categoryValue}
             onBlur={() =>
@@ -188,11 +251,12 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                 paddingLeft: '24px',
               },
               '& label.Mui-focused': {
-                fontSize: '12px',
+                fontSize: '14px',
                 marginLeft: '-16px',
               },
               '& .MuiInputLabel-shrink': {
-                fontSize: '12px',
+                marginTop: '3px',
+                fontSize: '14px',
                 marginLeft: '-16px',
               },
               '& .MuiInput-underline:hover:before': {
@@ -217,8 +281,8 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
           />
 
           {showCategoryDropdown && filteredDropdownList.length !== 0 && (
-            <div className={styles.dropdownCategory}>
-              {filteredDropdownList.map((category) => {
+            <div className={styles.dropdownCategory} ref={searchCategoryRef}>
+              {filteredDropdownList.map((category, index) => {
                 return (
                   <p
                     key={category._id}
@@ -230,6 +294,11 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
                         category.listingCategory,
                       )
                     }}
+                    className={
+                      index === categoryIndex
+                        ? styles['dropdown-option-focus']
+                        : ''
+                    }
                   >
                     {category.listingCategory}
                   </p>

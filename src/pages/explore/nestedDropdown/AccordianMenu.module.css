@@ -26,6 +26,10 @@
   width: 160px;
   border-radius: 10px;
 } */
+.dropdown-option-focus {
+  background: #f7f5f9;
+  color: #8064a2;
+}
 .pContainer {
   font-family: Poppins;
   font-size: 14px;

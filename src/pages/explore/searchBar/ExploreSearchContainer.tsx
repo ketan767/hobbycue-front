@@ -70,6 +70,13 @@ type LocationProps = {
   showHobbyDropdown: boolean
   setShowHobbyDropdown: (show: boolean) => void
 }
+type DropdownListItemHobby = {
+  _id: string
+  display: string
+  sub_category?: string
+  genre?: any
+  genreId?: any
+}
 
 const ExploreSearchContainer: React.FC<LocationProps> = ({
   defaultCategory,
@@ -83,7 +90,7 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
   const searchInputRef = useRef<HTMLInputElement>(null)
   const searchHobbyRef = useRef<HTMLInputElement>(null)
   const searchPageRef = useRef<HTMLInputElement>(null)
-  // const locationDropdownRef = useRef<HTMLDivElement>(null)
+  const locationDropdownArrowRef = useRef<HTMLDivElement>(null)
   const [isWriting, setIsWriting] = useState(false)
   const [isChanged, setIsChanged] = useState(false)
 
@@ -97,7 +104,10 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
   >([])
   const [selectedAddress, setSelectedAddress] = useState('')
   const [focusedLocationIdx, setFocusedLocationIdx] = useState<number>(-1)
-
+  const [focusedHobbyIndex, setFocusedHobbyIndex] = useState<number>(-1)
+  const [selectedHobbies, setselectedHobbies] = useState<
+    DropdownListItemHobby[]
+  >([])
   const [Addressdata, setAddressData] = useState<ProfileAddressPayload>({
     street: '',
     society: '',
@@ -112,10 +122,9 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
     set_as_primary: true,
   })
 
-  const dispatch = useDispatch()
-
   const handleHobbyInputChange = async (e: any) => {
     setHobbyInputValue(e.target.value)
+    setFocusedHobbyIndex(-1)
     if (e.target.value === '') {
       setFilterData((prev) => ({ ...prev, hobby: '' }))
     }
@@ -125,7 +134,6 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
     const { err, res } = await getAllHobbies(query)
 
     if (err) return console.log(err)
-    console.log(res.data)
     // Modify the sorting logic to prioritize items where the search keyword appears at the beginning
     const sortedHobbies = res.data.hobbies.sort((a: any, b: any) => {
       const indexA = a.display
@@ -143,9 +151,6 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
 
       return a.display.toLowerCase().localeCompare(b.display.toLowerCase())
     })
-    // setData((prev) => {
-    //   return { ...prev, hobby: null }
-    // })
     setHobbyDropdownList(sortedHobbies)
   }
 
@@ -297,6 +302,63 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
       }
     }
   }
+  const handleHobbyKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    switch (e.key) {
+      case 'ArrowDown':
+        setFocusedHobbyIndex((prevIndex) =>
+          prevIndex < hobbyDropdownList.length - 1 ? prevIndex + 1 : prevIndex,
+        )
+        break
+      case 'ArrowUp':
+        setFocusedHobbyIndex((prevIndex) =>
+          prevIndex > 0 ? prevIndex - 1 : prevIndex,
+        )
+        break
+
+      case 'Enter':
+        e.stopPropagation()
+        if (hobbyInputValue.length !== 0 && !showHobbyDropdown) {
+          //AddButtonRef.current?.click()
+        } else if (focusedHobbyIndex !== -1 && showHobbyDropdown) {
+          setShowHobbyDropdown(false)
+          const val =
+            hobbyDropdownList[focusedHobbyIndex]?.display || hobbyInputValue
+          if (val) {
+            setHobbyInputValue(val)
+          }
+
+          searchResult(undefined, val, undefined)
+          console.log('hobbyDropdownList', hobbyDropdownList)
+        } else if (focusedHobbyIndex === -1 && hobbyInputValue.length !== 0) {
+          setShowHobbyDropdown(false)
+          // handleGenreInputFocus();
+        }
+        break
+      default:
+        break
+    }
+
+    // Scroll into view logic
+    const container = searchHobbyRef.current
+    const selectedItem = container?.children[focusedHobbyIndex] as HTMLElement
+
+    if (selectedItem && container) {
+      const containerRect = container.getBoundingClientRect()
+      const itemRect = selectedItem.getBoundingClientRect()
+
+      // Check if the item is out of view and adjust the scroll position
+      if (itemRect.bottom + selectedItem.offsetHeight >= containerRect.bottom) {
+        container.scrollTop +=
+          itemRect.bottom - containerRect.bottom + selectedItem.offsetHeight + 5
+      } else if (
+        itemRect.top <=
+        containerRect.top + selectedItem.offsetHeight
+      ) {
+        container.scrollTop -=
+          containerRect.top - itemRect.top + selectedItem.offsetHeight + 5
+      }
+    }
+  }
 
   const searchResult = (
     category?: string,
@@ -395,11 +457,12 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
                   paddingLeft: '24px',
                 },
                 '& label.Mui-focused': {
-                  fontSize: '12px',
+                  fontSize: '14px',
                   marginLeft: '-16px',
                 },
                 '& .MuiInputLabel-shrink': {
-                  fontSize: '12px',
+                  marginTop: '3px',
+                  fontSize: '14px',
                   marginLeft: '-16px',
                 },
                 '& .MuiInput-underline:hover:before': {
@@ -435,11 +498,14 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
                   setIsWriting(true)
                   setShowHobbyDropdown(true)
                 }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    setShowHobbyDropdown(false)
-                    searchResult()
-                  }
+                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                  setShowHobbyDropdown(true)
+
+                  handleHobbyKeyDown(e)
+                  // if (e.key === 'Enter') {
+                  //   setShowHobbyDropdown(false)
+                  //   searchResult()
+                  // }
                 }}
                 value={hobbyInputValue}
                 onBlur={() =>
@@ -454,11 +520,12 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
                     paddingLeft: '24px',
                   },
                   '& label.Mui-focused': {
-                    fontSize: '12px',
+                    fontSize: '14px',
                     marginLeft: '-16px',
                   },
                   '& .MuiInputLabel-shrink': {
-                    fontSize: '12px',
+                    marginTop: '3px',
+                    fontSize: '14px',
                     marginLeft: '-16px',
                   },
                   '& .MuiInput-underline:hover:before': {
@@ -472,8 +539,8 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
                 }}
               />
               {showHobbyDropdown && hobbyDropdownList.length !== 0 && (
-                <div className={styles.dropdownHobby}>
-                  {hobbyDropdownList.map((hobby) => {
+                <div className={styles.dropdownHobby} ref={searchHobbyRef}>
+                  {hobbyDropdownList.map((hobby, index) => {
                     return (
                       <p
                         key={hobby._id}
@@ -493,6 +560,11 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
                           }))
                           searchResult(undefined, hobby.display)
                         }}
+                        className={
+                          index === focusedHobbyIndex
+                            ? styles['dropdown-option-focus']
+                            : ''
+                        }
                       >
                         {hobby.display}
                       </p>
@@ -545,11 +617,12 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
                     paddingLeft: '24px',
                   },
                   '& label.Mui-focused': {
-                    fontSize: '12px',
+                    fontSize: '14px',
                     marginLeft: '-16px',
                   },
                   '& .MuiInputLabel-shrink': {
-                    fontSize: '12px',
+                    marginTop: '3px',
+                    fontSize: '14px',
                     marginLeft: '-16px',
                   },
                   '& .MuiInput-underline:hover:before': {
@@ -598,13 +671,14 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
                 searchResult={searchResult}
               />
             </div>
-
-            <button
-              onClick={() => searchResult()}
-              className={styles.searchButton}
-            >
-              Search
-            </button>
+            <div>
+              <button
+                onClick={() => searchResult()}
+                className={styles.searchButton}
+              >
+                Search
+              </button>
+            </div>
           </div>
         </div>
         <div className={styles.mapContainer}>
