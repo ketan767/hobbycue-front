@@ -74,7 +74,10 @@
 }
 .categorySuggestion {
   position: relative;
-  margin-top: -24px;
+  margin-top: -19px;
+}
+.relative {
+  position: relative;
 }
 .arrow {
   position: absolute;
@@ -104,6 +107,7 @@
 }
 
 .dropdownCategory p {
+  text-align: left;
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 400;
@@ -125,7 +129,9 @@
 .dropdownCategory p {
   box-sizing: border-box;
 }
-
+.text-left {
+  text-align: left;
+}
 @media screen and (max-width: 1100px) {
   .dropdown {
     width: 100%;
@@ -138,5 +144,8 @@
     position: absolute;
     top: 54px;
     z-index: 500;
+  }
+  .dropdownCategory p {
+    text-align: left;
   }
 }

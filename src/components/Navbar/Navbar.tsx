@@ -94,6 +94,8 @@ export const Navbar: React.FC<Props> = ({}) => {
   const router = useRouter()
   const [menuActive, setMenuActive] = useState(false)
   const [isWriting, setIsWriting] = useState(false)
+  const [hasShadow, setHasShadow] = useState(true)
+
   const pathname = usePathname()
 
   const { isLoggedIn, isAuthenticated, user } = useSelector(
@@ -111,15 +113,35 @@ export const Navbar: React.FC<Props> = ({}) => {
     'user-menu' | 'hobby-list' | 'explore-list' | null
   >(null)
   useEffect(() => {
-    if (router.asPath === '/search') {
-      return
+    if (!router.pathname.includes('search')) {
+      setData((prev) => ({
+        ...prev,
+        search: { value: '', error: null },
+      }))
     } else {
       setData((prev) => ({
         ...prev,
         search: { value: data.search.value, error: null },
       }))
     }
-  }, [router.asPath])
+  }, [router.pathname])
+
+  // useEffect(() => {
+  //   if (!(router.asPath === '/explore')) {
+  //     setData((prev) => ({
+  //       ...prev,
+  //       search: { value: '', error: null },
+  //     }))
+  //   }
+  // }, [router.asPath])
+
+  useEffect(() => {
+    if (router.pathname.includes('explore')) {
+      setHasShadow(false)
+    } else {
+      setHasShadow(true)
+    }
+  }, [router.pathname])
 
   const handleLogout = () => {
     logout()
@@ -635,7 +657,11 @@ export const Navbar: React.FC<Props> = ({}) => {
 
   return (
     <>
-      <header className={`${styles['navbar-wrappper']}`}>
+      <header
+        className={`${styles['navbar-wrappper']} ${
+          hasShadow ? `${styles['showShadow']}` : ''
+        }`}
+      >
         <nav className={`site-container `}>
           <section className={styles['navbar-left']}>
             <Link

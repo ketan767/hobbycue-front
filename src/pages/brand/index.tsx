@@ -5,6 +5,8 @@ import Head from 'next/head'
 import QuillEditor from './QuillEditor'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
+import { getBrand, updateBrand } from '@/services/admin.service'
+import CustomSnackbar from '@/components/CustomSnackbar/CustomSnackbar'
 
 interface indexProps {}
 
@@ -12,17 +14,44 @@ const index: FC<indexProps> = ({}) => {
   const [isEditing, setIsEditing] = useState(false)
   const [content, setContent] = useState('')
   const { user } = useSelector((state: RootState) => state.user)
+  const [id, setId] = useState('')
+  const [isUpdating, setIsUpdating] = useState(false)
+  const [snackbar, setSnackbar] = useState({
+    type: 'success',
+    display: false,
+    message: '',
+  })
 
   const handleValueChange = (value: string) => {
     setContent(value)
   }
-  const handleSave = () => {
-    setIsEditing(false)
+  const handleSave = async (e: any) => {
+    setIsUpdating(true)
+    try {
+      const formData = {
+        content: content,
+      }
+      const data = await updateBrand(id, formData)
+      // console.log('data=================>', data)
+      if (data.res.status === 200) {
+        setSnackbar({
+          display: true,
+          type: 'success',
+          message: 'Brand updated successfully',
+        })
+        setIsEditing(false)
+      }
+    } catch (error) {
+      setSnackbar({
+        display: true,
+        type: 'warning',
+        message: 'Unable to update data',
+      })
+      console.log('error', error)
+    } finally {
+      setIsUpdating(false)
+    }
   }
-  useEffect(() => {
-    if (!user) return
-    console.log('user', user)
-  }, [user])
 
   const toggleEditing = () => {
     setIsEditing(!isEditing)
@@ -48,6 +77,17 @@ const index: FC<indexProps> = ({}) => {
       </defs>
     </svg>
   )
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      const result = await getBrand()
+      // console.log('result------>', result.res.data[0])
+      // console.log('id------>', result.res.data[0]._id)
+      setContent(result.res.data[0].content)
+      setId(result.res.data[0]._id)
+    }
+    fetchBrands()
+  }, [])
   return (
     <>
       <Head>
@@ -56,46 +96,85 @@ const index: FC<indexProps> = ({}) => {
       <main className={styles['main']}>
         <div className={styles['container']}>
           <section className={styles['white-container']}>
-            {!isEditing ? (
-              <>
-                <div className={styles['heading-container']}>
-                  <span className={styles['heading']}>BRAND </span>
-                  {/* {user.is_admin && <div className={styles['pencil']} onClick={toggleEditing}>{pencilIconSvg}</div>} */}
-                  {
-                    <div className={styles['pencil']} onClick={toggleEditing}>
-                      {pencilIconSvg}
-                    </div>
-                  }
+            <div className={styles['heading-container']}>
+              <span className={styles['heading']}>BRAND </span>
+              {user.is_admin && (
+                <div className={styles['pencil']} onClick={toggleEditing}>
+                  {pencilIconSvg}
                 </div>
-                <div className={styles['list-container']}>
-                  <div>
-                    <div
-                      className={`ql-editor`}
-                      dangerouslySetInnerHTML={{ __html: content }}
-                    />
-                  </div>
+              )}
+              {/* {
+                <div className={styles['pencil']} onClick={toggleEditing}>
+                  {pencilIconSvg}
                 </div>
-              </>
-            ) : (
-              <>
-                {/* <CustomEditor value={content} onChange={handleValueChange} /> */}
+              } */}
+            </div>
+            <div className={styles['list-container']}>
+              <div>
+                <style>
+                  {`
+                        .ql-toolbar.ql-snow {
+                          width: 100%;
+                          border-left:none;
+                          border-right:none;
+                          border-bottom:none;
+                        }
+                        .ql-container.ql-snow {
+                          width: 87vw;
+                          border:none;
+                        }
+                        .ql-editor{
+                          border: none !important;
+                          width: 87vw;
+                          border-top:1px solid #ccc;
+
+                        }
+                        .ql-editor.ql-indent-1{
+                          padding-left:4px;
+                        }
+                        .ql-editor ul, 
+                        .ql-editor ol {
+                          padding-left: 4px;  
+                        }
+
+                        .ql-editor a {
+                          color: rgb(128, 100, 162);  
+                          text-decoration: none !important;
+                        }
+                        
+                      `}
+                </style>
                 <div className="ql-snow">
-                  <h2 className={styles['heading']}>Editor Output:</h2>
                   <div
                     className={`ql-editor`}
                     dangerouslySetInnerHTML={{ __html: content }}
                   />
-                  {/* {content} */}
                 </div>
-                <QuillEditor value={content} onChange={handleValueChange} />
-                <div>
-                  <button onClick={handleSave}>Save</button>
-                </div>
-              </>
-            )}
+                {isEditing && (
+                  <>
+                    <QuillEditor value={content} onChange={handleValueChange} />
+                    <div className={styles.buttonContainer}>
+                      <button className={styles.button} onClick={handleSave}>
+                        {!isUpdating ? 'Save' : 'Saving...'}
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
           </section>
         </div>
       </main>
+      {
+        <CustomSnackbar
+          message={snackbar.message}
+          triggerOpen={snackbar.display}
+          type={snackbar.type === 'success' ? 'success' : 'error'}
+          closeSnackbar={() => {
+            setSnackbar((prevValue) => ({ ...prevValue, display: false }))
+          }}
+        />
+      }
     </>
   )
 }

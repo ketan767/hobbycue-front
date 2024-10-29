@@ -149,7 +149,7 @@ const ProfileListingsPage: React.FC<Props> = ({ data }) => {
             </aside>
 
             <main style={{ marginBottom: isMobile ? '' : '50px' }}>
-              {data.listingsData.length !== 0 && mounted && !isMobile ? (
+              {data.listingsData.length !== 0 && mounted ? (
                 // <div className={styles['card-container']}>
                 <ResponsiveMasonry columnsCountBreakPoints={{ 0: 1, 1100: 2 }}>
                   <Masonry
