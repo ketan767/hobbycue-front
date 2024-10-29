@@ -100,12 +100,13 @@ const ListingGeneralEditModal: React.FC<Props> = ({
   const handleInputChange = (event: any) => {
     const { name, value } = event.target
 
-    if (name === 'tagline') {
-      const limitedValue = value.slice(0, 81)
+    if (name === 'tagline' || name === 'title') {
+      // const limitedValue = value.slice(0, 81)
 
-      if (limitedValue.length > 80) {
-        return
-      }
+      // if (limitedValue.length > 80) {
+      //   return
+      // }
+      if (value.length > 100) return
     }
     setData((prev) => ({
       ...prev,
