@@ -52,6 +52,10 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
   const [video, setVideo] = useState('')
   const [allData, setAllData] = useState(data)
   const { profileLayoutMode } = useSelector((state: RootState) => state.site)
+  const [isVideoModOpen, setIsVideoModOpen] = useState(false)
+  const { verified: videoUploaded } = useSelector(
+    (state: RootState) => state.modal,
+  )
 
   const { profile } = useSelector((state: RootState) => state?.site.expandMenu)
   const [expandAll, setExpandAll] = useState(profile)
@@ -273,6 +277,18 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
       if (!userIsAuthorized) router.push('/404')
     }
   }, [user._id, data.pageData, router])
+
+  useEffect(() => {
+    if (!videoUploaded) return
+    getPost()
+    setIsVideoModOpen(false)
+    setSnackbar({
+      display: true,
+      type: 'success',
+      message: 'Video link updated successfully',
+    })
+  }, [videoUploaded])
+
   const plusIconSvg = (
     <svg
       width="64"
@@ -379,9 +395,10 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
                     <p>Video</p>
                     <div
                       onClick={() => {
+                        setIsVideoModOpen(true)
                         dispatch(
                           openModal({
-                            type: 'upload-video-page',
+                            type: 'upload-video-user',
                             closable: true,
                           }),
                         )
@@ -392,6 +409,7 @@ const ProfileMediaPage: React.FC<Props> = ({ data }) => {
                   </div>
                   <div
                     onClick={() => {
+                      setIsVideoModOpen(true)
                       dispatch(
                         openModal({
                           type: 'upload-video-user',

@@ -80,16 +80,39 @@ const AboutEditor: React.FC<Props> = ({
                 { list: 'bullet' },
               ],
               //   [{ list: 'ordered' }, { list: 'bullet' }],
+              ['link'],
             ],
           },
         }}
       />
       <style>
         {`
-        .ql-editor ul, 
-        .ql-editor ol {
-          padding-left: 4px;  
-        }
+         .ql-editor.ql-indent-1{
+                          padding-left:4px;
+                        }
+                        .ql-editor ul, 
+                        .ql-editor ol {
+                        font-family:'Poppins';
+
+                          padding-left: 4px; 
+                          font-size:14px;
+                          text-align:justify; 
+                        }
+
+                        .ql-editor a {
+                        font-family:'Poppins';
+
+                          color: rgb(128, 100, 162);  
+                          text-decoration: none !important;
+                          font-size:14px;
+                          text-align:justify;
+                        }
+                        .ql-editor p {
+                        font-family:'Poppins';
+                          font-size:14px;
+                          text-align:justify;
+                        }
+                        
         `}
       </style>
     </div>

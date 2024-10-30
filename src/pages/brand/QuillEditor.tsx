@@ -57,7 +57,6 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
             border: none !important;
             width: 87vw;
             border-top:1px solid #ccc;
-
           }
           .ql-editor.ql-indent-1{
             padding-left:4px;
@@ -65,11 +64,16 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
           .ql-editor ul, 
           .ql-editor ol {
             padding-left: 4px;  
+            text-align:justify; 
           }
 
           .ql-editor a {
             color: rgb(128, 100, 162);  
-             text-decoration: none !important;
+            text-decoration: none !important;
+            text-align:justify;
+          }
+          .ql-editor p {
+            text-align:justify;
           }
           
         `}

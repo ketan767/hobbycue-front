@@ -3,7 +3,8 @@
   border-radius: var(--spacing-8);
   max-width: 50rem;
   height: 93.5%;
-  width: 680px;
+  width: 740px;
+  width: 758px;
   display: flex;
   flex-direction: column;
 }

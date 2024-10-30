@@ -44,6 +44,7 @@ import { uploadImage } from '@/services/post.service'
 import ReactPlayer from 'react-player'
 import InputSelect from '@/components/InputSelect/inputSelect'
 import ProductImageSlider from './ProductImageSlider'
+import { Inter } from 'next/font/google'
 
 type Props = {
   data: ListingPageData['pageData']
@@ -55,6 +56,11 @@ type Props = {
   setLocationErr?: React.Dispatch<React.SetStateAction<boolean>>
   setTitleError?: React.Dispatch<React.SetStateAction<boolean>>
 }
+
+const inter = Inter({
+  subsets: ['latin'], // Choose subsets like 'latin' or others as per your needs
+  weight: ['400', '500', '600', '700'], // Select the weights you want to use (optional)
+})
 
 const ListingHeader: React.FC<Props> = ({
   data,
@@ -1352,9 +1358,40 @@ const ListingHeader: React.FC<Props> = ({
                   // )
                 }
                 <div className={styles['edit-field-wrapper']}>
+                  <style>
+                    {`
+                        .ql-editor.ql-indent-1{
+                          padding-left:4px;
+                        }
+                        .ql-editor ul, 
+                        .ql-editor ol {
+                          font-family:'Poppins';
+                          padding-left: 4px; 
+                          font-size:14px;
+                          text-align:justify; 
+                        }
+
+                        .ql-editor a {
+                          font-family:'Poppins';
+                          color: rgb(128, 100, 162);  
+                          text-decoration: none !important;
+                          font-size:14px;
+                          text-align:justify;
+                        }
+                        .ql-editor p {
+                        font-family:'Poppins';
+                          font-size:14px;
+                          text-align:justify;
+                        }
+                        .ql-editor{
+                          padding-inline:4px;
+                        }
+                      `}
+                  </style>
                   {data?.description ? (
-                    <div className={styles['about-text']}>
+                    <div className={'ql-snow'}>
                       <div
+                        className={`ql-editor`}
                         dangerouslySetInnerHTML={{ __html: data?.description }}
                       />
                     </div>
@@ -1366,182 +1403,197 @@ const ListingHeader: React.FC<Props> = ({
                   ) : (
                     ''
                   )}
-                  {listingLayoutMode === 'edit' && (
-                    <Image
-                      className={styles['edit-icon']}
-                      src={EditIcon}
-                      alt="edit"
-                      onClick={openAboutEditModal}
-                    />
+                  <div className={styles.aboutEditIcon}>
+                    {listingLayoutMode === 'edit' && (
+                      <Image
+                        className={styles['edit-icon']}
+                        src={EditIcon}
+                        alt="edit"
+                        onClick={openAboutEditModal}
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className={styles['publish-laptop']}>
+                <div className={styles['price-laptop']}>
+                  <div className={styles['varient-price-container']}>
+                    <div className={styles['price-and-qunaitity']}>
+                      <div className="">
+                        {(listingLayoutMode === 'edit' ||
+                          VarientData?.variations) && (
+                          <div
+                            className={styles['flex-container']}
+                            style={{ marginBottom: 20 }}
+                          >
+                            <div style={{ width: '100%' }}>
+                              {(inpSelectValues?.['name'] !== 'No value' ||
+                                listingLayoutMode === 'edit') && (
+                                <InputSelect
+                                  options={
+                                    VarientData?.variations?.map(
+                                      (item) => item.name,
+                                    ) || []
+                                  }
+                                  value={inpSelectValues?.['name'] || ''}
+                                  onChange={(selectedName: string) => {
+                                    if (VarientData) {
+                                      const selectedVariation =
+                                        VarientData?.variations?.find(
+                                          (item) => item.name === selectedName,
+                                        )
+                                      setInpSelectValues({
+                                        name: selectedName,
+                                        value: selectedVariation?.value || '',
+                                      })
+                                    }
+                                  }}
+                                />
+                              )}
+                            </div>
+                            {listingLayoutMode === 'edit' && (
+                              <Image
+                                className={styles['edit-icon']}
+                                src={EditIcon}
+                                alt="edit"
+                                onClick={OpenProductPurchaseModal}
+                              />
+                            )}
+                          </div>
+                        )}
+
+                        <div className={styles.varientpirce}>
+                          {rupeesIcon}
+                          <span
+                            className={`${inter.className} ${styles.rupeeSymbol}`}
+                          ></span>
+                          {quantity !== 0
+                            ? inpSelectValues
+                              ? (
+                                  inpSelectValues?.['value'] * quantity
+                                ).toLocaleString('en-IN')
+                              : 0
+                            : quantity == 0
+                            ? inpSelectValues?.['value']
+                            : 0 || 0}
+                        </div>
+                      </div>
+                      <div className="">
+                        <div className={styles['flex-container']}>
+                          <label>{isMobile ? 'Qty:' : 'Quantity:'}</label>
+                          <div className={styles['qunatity']}>
+                            <div className={styles['quantity']}>
+                              <button
+                                onClick={() => {
+                                  decQuantity()
+                                }}
+                              >
+                                {minusIcon}
+                              </button>
+                              <p>{quantity}</p>
+                              <button
+                                onClick={() => {
+                                  incQuantity()
+                                }}
+                              >
+                                {plusIcon}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {!isMobile && (
+                    <div className={styles['cta-product-btn']}>{button}</div>
                   )}
                 </div>
-              </div>
-              <div className={styles['varient-price-container']}>
-                <div className={styles['price-and-qunaitity']}>
-                  <div className="">
-                    {(listingLayoutMode === 'edit' ||
-                      VarientData?.variations) && (
+                <div className={styles['actions-container-desktop']}>
+                  {listingLayoutMode === 'edit' && (
+                    <FilledButton
+                      className={
+                        data.is_published
+                          ? styles.unpublishBtn
+                          : styles.publishBtn
+                      }
+                      onClick={handlePublish}
+                    >
+                      {data.is_published ? 'Unpublish' : 'Publish'}
+                    </FilledButton>
+                  )}
+                  {/* Action Buttons */}
+                  <div className={styles['action-btn-wrapper']}>
+                    {/* Send Email Button  */}
+                    <div onClick={handleRepost}>
+                      <CustomTooltip title="Repost">
+                        <div
+                          onClick={(e) => console.log(e)}
+                          className={styles['action-btn']}
+                        >
+                          <RepostIcon />
+                        </div>
+                      </CustomTooltip>
+                    </div>
+
+                    {/* Bookmark Button */}
+                    <CustomTooltip title="Bookmark">
                       <div
-                        className={styles['flex-container']}
-                        style={{ marginBottom: 20 }}
+                        onClick={showFeatureUnderDevelopment}
+                        className={styles['action-btn']}
                       >
-                        <div style={{ width: '100%' }}>
-                          {(inpSelectValues?.['name'] !== 'No value' ||
-                            listingLayoutMode === 'edit') && (
-                            <InputSelect
-                              options={
-                                VarientData?.variations?.map(
-                                  (item) => item.name,
-                                ) || []
+                        <BookmarkBorderRoundedIcon color="primary" />
+                      </div>
+                    </CustomTooltip>
+
+                    {/* Share Button */}
+                    <CustomTooltip title="Share">
+                      <div
+                        onClick={(e) => handleShare()}
+                        className={styles['action-btn']}
+                      >
+                        <ShareIcon />
+                      </div>
+                    </CustomTooltip>
+
+                    {/* More Options Button */}
+                    <div
+                      className={styles['action-btn-dropdown-wrapper']}
+                      ref={Dropdownref}
+                    >
+                      <CustomTooltip title="Click to view options">
+                        <div
+                          onClick={(e) => handleDropdown()}
+                          className={styles['action-btn']}
+                        >
+                          <MoreHorizRoundedIcon color="primary" />
+                        </div>
+                      </CustomTooltip>
+                      {listingLayoutMode === 'edit'
+                        ? open && (
+                            <Dropdown
+                              userType={'edit'}
+                              handleClose={handleDropdown}
+                              showFeatureUnderDevelopment={
+                                showFeatureUnderDevelopment
                               }
-                              value={inpSelectValues?.['name'] || ''}
-                              onChange={(selectedName: string) => {
-                                if (VarientData) {
-                                  const selectedVariation =
-                                    VarientData?.variations?.find(
-                                      (item) => item.name === selectedName,
-                                    )
-                                  setInpSelectValues({
-                                    name: selectedName,
-                                    value: selectedVariation?.value || '',
-                                  })
-                                }
-                              }}
+                            />
+                          )
+                        : open && (
+                            <Dropdown
+                              userType={'anonymous'}
+                              handleClose={handleDropdown}
+                              showFeatureUnderDevelopment={
+                                showFeatureUnderDevelopment
+                              }
                             />
                           )}
-                        </div>
-                        {listingLayoutMode === 'edit' && (
-                          <Image
-                            className={styles['edit-icon']}
-                            src={EditIcon}
-                            alt="edit"
-                            onClick={OpenProductPurchaseModal}
-                          />
-                        )}
-                      </div>
-                    )}
-
-                    <div className={styles.varientpirce}>
-                      {rupeesIcon}
-                      {quantity !== 0
-                        ? inpSelectValues
-                          ? (
-                              inpSelectValues?.['value'] * quantity
-                            ).toLocaleString('en-IN')
-                          : 0
-                        : quantity == 0
-                        ? inpSelectValues?.['value']
-                        : 0 || 0}
-                    </div>
-                  </div>
-                  <div className="">
-                    <div className={styles['flex-container']}>
-                      <label>{isMobile ? 'Qty:' : 'Quantity:'}</label>
-                      <div className={styles['qunatity']}>
-                        <div className={styles['quantity']}>
-                          <button
-                            onClick={() => {
-                              decQuantity()
-                            }}
-                          >
-                            {minusIcon}
-                          </button>
-                          <p>{quantity}</p>
-                          <button
-                            onClick={() => {
-                              incQuantity()
-                            }}
-                          >
-                            {plusIcon}
-                          </button>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              {!isMobile && (
-                <div className={styles['cta-product-btn']}>{button}</div>
-              )}
             </div>
           </section>
         )}
-        <div className={styles['actions-container-desktop']}>
-          {listingLayoutMode === 'edit' && (
-            <FilledButton
-              className={
-                data.is_published ? styles.unpublishBtn : styles.publishBtn
-              }
-              onClick={handlePublish}
-            >
-              {data.is_published ? 'Unpublish' : 'Publish'}
-            </FilledButton>
-          )}
-          {/* Action Buttons */}
-          <div className={styles['action-btn-wrapper']}>
-            {/* Send Email Button  */}
-            <div onClick={handleRepost}>
-              <CustomTooltip title="Repost">
-                <div
-                  onClick={(e) => console.log(e)}
-                  className={styles['action-btn']}
-                >
-                  <RepostIcon />
-                </div>
-              </CustomTooltip>
-            </div>
-
-            {/* Bookmark Button */}
-            <CustomTooltip title="Bookmark">
-              <div
-                onClick={showFeatureUnderDevelopment}
-                className={styles['action-btn']}
-              >
-                <BookmarkBorderRoundedIcon color="primary" />
-              </div>
-            </CustomTooltip>
-
-            {/* Share Button */}
-            <CustomTooltip title="Share">
-              <div
-                onClick={(e) => handleShare()}
-                className={styles['action-btn']}
-              >
-                <ShareIcon />
-              </div>
-            </CustomTooltip>
-
-            {/* More Options Button */}
-            <div
-              className={styles['action-btn-dropdown-wrapper']}
-              ref={Dropdownref}
-            >
-              <CustomTooltip title="Click to view options">
-                <div
-                  onClick={(e) => handleDropdown()}
-                  className={styles['action-btn']}
-                >
-                  <MoreHorizRoundedIcon color="primary" />
-                </div>
-              </CustomTooltip>
-              {listingLayoutMode === 'edit'
-                ? open && (
-                    <Dropdown
-                      userType={'edit'}
-                      handleClose={handleDropdown}
-                      showFeatureUnderDevelopment={showFeatureUnderDevelopment}
-                    />
-                  )
-                : open && (
-                    <Dropdown
-                      userType={'anonymous'}
-                      handleClose={handleDropdown}
-                      showFeatureUnderDevelopment={showFeatureUnderDevelopment}
-                    />
-                  )}
-            </div>
-          </div>
-        </div>
       </header>
       <div className={styles['actions-container-mobile']}>
         {listingLayoutMode === 'edit' && (

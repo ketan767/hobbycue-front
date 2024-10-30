@@ -463,14 +463,41 @@ const PostCard: React.FC<Props> = (props) => {
         {/* Card Body */}
 
         <section className={styles['body']}>
+          <style>{`
+          .ql-editor.ql-indent-1{
+            padding-left:4px;
+          }
+          .ql-editor ul, 
+          .ql-editor ol {
+            font-family:'Poppins';
+            padding-left: 4px; 
+            font-size:14px;
+            text-align:justify; 
+          }
+
+          .ql-editor a {
+            font-family:'Poppins';
+            color: rgb(128, 100, 162);  
+            text-decoration: none !important;
+            font-size:14px;
+            text-align:justify;
+          }
+          .ql-editor p {
+            font-family:'Poppins';
+            font-size:14px;
+            text-align:justify;
+          }
+      `}</style>
           {(!has_link ||
             props.currentSection === 'posts' ||
             router.pathname.startsWith('/post') ||
             router.pathname.endsWith('/posts')) && (
-            <div
-              className={styles['content'] + ''}
-              dangerouslySetInnerHTML={{ __html: finalContent }}
-            ></div>
+            <div className="ql-snow">
+              <div
+                className={`ql-editor`}
+                dangerouslySetInnerHTML={{ __html: finalContent }}
+              ></div>
+            </div>
           )}
           {postData.video_url && (
             <video width="320" height="240" controls className={styles.video}>
