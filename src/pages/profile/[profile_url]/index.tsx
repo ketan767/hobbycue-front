@@ -301,8 +301,7 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
     }
     return hasError
   }
-  console.log({ pageData: data.pageData })
-  // if(!user.is_onboarded && pageData?.email!==user?.email) {return(<ErrorPage/>)}
+
   return (
     <>
       <Head>
@@ -343,7 +342,8 @@ const ProfileHome: React.FC<Props> = ({ data, unformattedAbout }) => {
               }`}
             >
               <div className={styles['display-mobile-initial']}>
-                {data?.pageData?.description?.trim()?.length > 0 && (
+                {htmlToPlainTextAdv(data?.pageData?.description).trim().length >
+                  0 && (
                   <PageContentBox
                     showEditButton={profileLayoutMode === 'edit'}
                     onEditBtnClick={() =>
