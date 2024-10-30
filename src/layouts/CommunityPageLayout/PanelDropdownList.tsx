@@ -42,11 +42,11 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
   useEffect(() => {
     if (type === 'members') {
       if (membersContainerRef.current) {
-        const requiredHeight = options.length * 38 + 47
+        const requiredHeight = options.length * (38 + 16) + 47
         if (options.length <= 2) {
           membersContainerRef.current.style.height = 'auto'
         } else if (seeMore) {
-          membersContainerRef.current.style.height = '161px'
+          membersContainerRef.current.style.height = '208px'
         } else {
           membersContainerRef.current.style.height = requiredHeight + 'px'
         }
