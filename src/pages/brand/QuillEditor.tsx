@@ -66,6 +66,11 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
           .ql-editor ol {
             padding-left: 4px;  
           }
+
+          .ql-editor a {
+            color: rgb(128, 100, 162);  
+             text-decoration: none !important;
+          }
           
         `}
       </style>
