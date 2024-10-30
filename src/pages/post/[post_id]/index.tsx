@@ -20,7 +20,12 @@ import post, {
 import PostCard from '@/components/PostCard/PostCard'
 import ProfileSwitcher from '@/components/ProfileSwitcher/ProfileSwitcher'
 import PostCardSkeletonLoading from '@/components/PostCardSkeletonLoading'
-import { checkIfUrlExists, htmlToPlainTextAdv, isMobile, validateEmail } from '@/utils'
+import {
+  checkIfUrlExists,
+  htmlToPlainTextAdv,
+  isMobile,
+  validateEmail,
+} from '@/utils'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import CommunityPageLayout from '@/layouts/CommunityPageLayout'
