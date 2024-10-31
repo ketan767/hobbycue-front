@@ -110,8 +110,11 @@
   max-width: 650px;
 }
 .text-ellipsis-mobile {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  white-space: nowrap;
   text-overflow: ellipsis;
 }
 
@@ -410,7 +413,7 @@
   }
 
   .header {
-    padding: 8px 16px 8px 16px;
+    padding: 8px 16px 2px 16px;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -500,10 +503,10 @@
   .tagline {
     /* word-break: break-all; */
     line-height: 20px;
-    white-space: nowrap;
+    /* white-space: nowrap; */
     width: 240px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    /* overflow: hidden; */
+    /* text-overflow: ellipsis; */
     font-size: 12px;
   }
   .name-container {

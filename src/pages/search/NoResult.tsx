@@ -527,14 +527,17 @@ const NoResult = () => {
                 </div>
               )}
             </div>
-            <Link href={`${getLink()}`}>
-              <button
-                className="modal-footer-btn"
-                style={{ width: 71, height: 32 }}
-              >
-                Explore
-              </button>
-            </Link>
+            <button
+              className="modal-footer-btn"
+              style={{
+                width: isMob ? '100%' : 71,
+                height: 32,
+                marginLeft: 'auto',
+              }}
+              onClick={() => router.push(`${getLink()}`)}
+            >
+              Explore
+            </button>
             {/* </div> */}
           </div>
         </div>
