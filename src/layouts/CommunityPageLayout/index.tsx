@@ -29,6 +29,7 @@ import { checkIfUrlExists, pageType, validateEmail } from '@/utils'
 import Link from 'next/link'
 import {
   getAllHobbies,
+  getHobbyMembers,
   getHobbyMembersCommunity,
   getTrendingHobbies,
 } from '@/services/hobby.service'
@@ -374,7 +375,7 @@ const CommunityLayout: React.FC<Props> = ({
 
   useEffect(() => {
     fetchPosts(post_pagination)
-  }, [post_pagination])
+  }, [post_pagination, router.asPath])
 
   const fetchHobbyMembers = async (hobbies?: HobbyEntry[]) => {
     try {
@@ -409,9 +410,12 @@ const CommunityLayout: React.FC<Props> = ({
         url += `?genreId=${genreId}`
       }
 
-      const { res, err } = await getHobbyMembersCommunity(url)
+      console.log('asifs url', url)
+
+      const { res, err } = await getHobbyMembers(url)
+      console.log('asifs res', res)
       if (res.data) {
-        setHobbymembers(res.data.users)
+        setHobbymembers(res.data.users?.slice(0, 20))
         setChildData((prev) => ({
           hobbyMembers: res.data.users,
           whatsNew: prev ? prev.whatsNew : [],
@@ -1519,11 +1523,11 @@ const CommunityLayout: React.FC<Props> = ({
                 .map((obj: any, idx) => (
                   <div key={idx} className={styles['member']}>
                     <Link
-                      href={`/profile/${obj.profile_url}`}
+                      href={`/profile/${obj?.profile_url}`}
                       className={styles['img-name']}
                     >
                       {obj?.profile_image ? (
-                        <img src={obj.profile_image} />
+                        <img src={obj?.profile_image} />
                       ) : (
                         <Image src={defaultUserIcon} alt="" />
                       )}

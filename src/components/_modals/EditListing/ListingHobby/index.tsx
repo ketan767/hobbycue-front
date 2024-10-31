@@ -106,7 +106,7 @@ const ListingHobbyEditModal: React.FC<Props> = ({
   const [showSnackbar, setShowSnackbar] = useState<Snackbar>({
     triggerOpen: false,
     message: '',
-    type: 'success' || 'error',
+    type: 'success',
   })
   const bodyRef = useRef<HTMLElement>(null)
   const [hobbyDropdownList, setHobbyDropdownList] = useState<

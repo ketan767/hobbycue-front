@@ -48,6 +48,7 @@ import LinkPreviewLoader from '@/components/LinkPreviewLoader'
 import { setShowPageLoader } from '@/redux/slices/site'
 import ReactPlayer from 'react-player'
 import ShareIcon from '@/assets/icons/ShareIcon'
+import { useRouter } from 'next/router'
 
 type Props = {
   confirmationModal?: boolean
@@ -222,6 +223,9 @@ export const PostModal: React.FC<Props> = ({
     },
   )
 
+  const { isLoggedIn } = useSelector((state: RootState) => state.user)
+  const router = useRouter()
+
   return (
     <>
       <div className={`${styles['modal-wrapper']}`}>
@@ -241,8 +245,20 @@ export const PostModal: React.FC<Props> = ({
                     activePost?._author?.page_url
                   }`
             }
-            onClick={() => {
-              dispatch(closeModal())
+            onClick={(e) => {
+              e.preventDefault()
+              if (isLoggedIn) {
+                dispatch(closeModal())
+                router.push(
+                  `${
+                    activePost?.author_type === 'User'
+                      ? `/profile/${activePost?._author?.profile_url}`
+                      : `/${pageType(activePost?._author.type)}/${
+                          activePost?._author?.page_url
+                        }`
+                  }`,
+                )
+              } else dispatch(openModal({ type: 'auth', closable: true }))
             }}
           >
             <div className={`${styles['header-user']}`}>
