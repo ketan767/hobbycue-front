@@ -135,11 +135,18 @@ const index: FC<indexProps> = ({}) => {
                         .ql-editor ul, 
                         .ql-editor ol {
                           padding-left: 4px;  
+                                        text-align:justify; 
+
                         }
 
                         .ql-editor a {
                           color: rgb(128, 100, 162);  
                           text-decoration: none !important;
+                                        text-align:justify;
+
+                        }
+                        .ql-editor p {
+                          text-align:justify;
                         }
                         
                       `}

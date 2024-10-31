@@ -16,7 +16,7 @@ import { updateListingLayoutMode } from '@/redux/slices/site'
 import { useRouter } from 'next/router'
 import RedCartIcon from '@/assets/icons/RedCartIcon'
 import HobbyIconHexagon from '@/assets/icons/HobbyIconHexagon'
-
+import { Inter } from 'next/font/google'
 export const rupeesIcon = (
   <svg
     width="14"
@@ -63,6 +63,10 @@ type Props = {
   isMobile?: boolean
   style?: React.CSSProperties
 }
+const inter = Inter({
+  subsets: ['latin'], // Choose subsets like 'latin' or others as per your needs
+  weight: ['400','500','600', '700'], // Select the weights you want to use (optional)
+})
 
 const ListingCardProduct: React.FC<Props> = ({
   data,
@@ -137,11 +141,22 @@ const ListingCardProduct: React.FC<Props> = ({
 
                 {data?.product_variant?.variations?.[0]?.value ? (
                   <p className={styles.price}>
-                    ₹
+                    <span
+                      className={`${inter.className} ${styles.rupeeSymbol}`}
+                    >
+                      ₹
+                    </span>
                     {data?.product_variant?.variations?.[0]?.value}
                   </p>
                 ) : (
-                  <p className={styles.price}>₹ 0</p>
+                  <p className={styles.price}>
+                    <span
+                      className={`${inter.className} ${styles.rupeeSymbol}`}
+                    >
+                      ₹
+                    </span>
+                    0
+                  </p>
                 )}
 
                 {/* Add cart icon here */}

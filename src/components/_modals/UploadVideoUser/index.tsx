@@ -11,7 +11,7 @@ import styles from './styles.module.css'
 import { isEmpty, isEmptyField } from '@/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
-import { closeModal } from '@/redux/slices/modal'
+import { closeModal, setVerified } from '@/redux/slices/modal'
 import { updateUser } from '@/redux/slices/user'
 import { updateListing } from '@/services/listing.service'
 import { updateListingModalData } from '@/redux/slices/site'
@@ -42,17 +42,22 @@ const UploadVideoUser: React.FC<Props> = ({ onComplete, onBackBtnClick }) => {
 
   const handleSubmit = async () => {
     setSubmitBtnLoading(true)
-    const { err, res } = await updateMyProfileDetail({
-      video_url: url,
-    })
-    setSubmitBtnLoading(false)
-    if (err) return console.log(err)
-    if (res?.data.success) {
-      if (onComplete) onComplete()
-      else {
-        window.location.reload()
-        dispatch(closeModal())
+    try {
+      const { err, res } = await updateMyProfileDetail({
+        video_url: url,
+      })
+      setSubmitBtnLoading(false)
+      if (err) return console.log(err)
+      if (res?.data.success) {
+        if (onComplete) onComplete()
+        else {
+          // window.location.reload()
+          dispatch(setVerified(true))
+          dispatch(closeModal())
+        }
       }
+    } catch (error) {
+      console.log(error)
     }
   }
   console.log('user', user)
