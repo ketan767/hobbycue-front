@@ -1,10 +1,12 @@
 .errorSnackbar {
   border-radius: 8px;
   border: 1px solid var(--red-lighter, #ffbec0);
+  width: 100%;
 }
 .successSnackbar {
   border-radius: 8px;
   border: 1px solid #9fdfbe;
+  width: 100%;
 }
 .errorSnackbarContent {
   background-color: #ffd6e0;
