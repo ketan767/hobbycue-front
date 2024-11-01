@@ -13,7 +13,7 @@ type Props = {
   isBlog: boolean
 }
 
-const Place: React.FC<Props> = ({ data: initialData }) => {
+const Places: React.FC<Props> = ({ data: initialData }) => {
   const router = useRouter()
   const { query } = router
   const { keyword } = query
@@ -226,4 +226,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 }
 
-export default Place
+export default Places

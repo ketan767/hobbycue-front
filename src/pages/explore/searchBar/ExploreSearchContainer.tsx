@@ -169,6 +169,15 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
     value: sub_category ? sub_category.toString() : '',
     error: null,
   })
+  const [categoryValue, setCategoryValue] = useState(
+    currentCategory.value === 'All'
+      ? sub_category
+        ? sub_category.toString()
+        : category
+        ? category.toString()
+        : ''
+      : currentCategory.value,
+  )
   const [data, setData] = useState<SearchInput>({
     search: { value: '', error: null },
     hobby: { value: '', error: null },
@@ -336,7 +345,7 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
 
           searchResult(undefined, val, undefined)
           console.log('hobbyDropdownList', hobbyDropdownList)
-        } else if (focusedHobbyIndex === -1 && hobbyInputValue.length !== 0) {
+        } else if (focusedHobbyIndex === -1 && hobbyInputValue.length == 0) {
           setShowHobbyDropdown(false)
           // handleGenreInputFocus();
         }
@@ -367,6 +376,14 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
     }
   }
 
+  const containsFourPs = (categoryValue: string) => {
+    return (
+      categoryValue === 'People' ||
+      categoryValue === 'Place' ||
+      categoryValue === 'Product' ||
+      categoryValue === 'Program'
+    )
+  }
   const searchResult = (
     category?: string,
     hobby?: string,
@@ -375,13 +392,21 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
     const keyword = data.search.value.trim()
     // const hobby = hobby.value.trim()
     let cate = currentCategory.value
+    if (containsFourPs(categoryValue)) {
+      cate = categoryValue
+    }
     if (category) {
       cate = category
     }
     let subCate = subCategory.value
     if (sub_category) {
       subCate = sub_category
+    } else if (categoryValue.length > 0 && !containsFourPs(categoryValue)) {
+      subCate = categoryValue
     }
+    // alert(
+    //   'Cate:' + cate + ' sub:' + subCate + ' categoryValue:' + categoryValue,
+    // )
 
     let hobb = hobbyInputValue
     if (hobby) {
@@ -398,24 +423,38 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
     if (Addressdata.street) {
       query = { ...query, location: Addressdata.street.trim() }
     }
-    if (subCate && subCate !== '') {
+    if ((sub_category && subCate !== '') || (subCate && subCate !== '')) {
       // alert('sub.....'+subCate)
-
+      if (category) {
+        // alert('category....'+cate)
+        query = {
+          ...query,
+          category: cate,
+        }
+      } else {
+        query = { ...query, sub_category: subCate }
+      }
+    } else if (cate === categoryValue && subCate && subCate !== '') {
       query = { ...query, sub_category: subCate }
-    } else if (cate && cate !== 'All') {
+    } else if (cate && cate !== 'All' && cate !== 'Empty') {
       // alert('all.....')
       query = { ...query, category: cate }
     }
 
-    if (keyword || hobby || cate || subCate) {
-      {
-        // alert('Searching.....')
-
-        router.push({
-          pathname: `/explore/${defaultCategory?.toLowerCase()}`,
-          query: query,
-        })
-      }
+    // alert(
+    //   'Cate:' + cate + ' sub:' + subCate + ' categoryValue:' + categoryValue,
+    // )
+    // if (keyword || hobby || cate || subCate) {
+    if (defaultCategory && defaultCategory !== 'People') {
+      router.push({
+        pathname: `/explore/${defaultCategory?.toLowerCase() + 's'}`,
+        query: query,
+      })
+    } else {
+      router.push({
+        pathname: `/explore/${defaultCategory?.toLowerCase()}`,
+        query: query,
+      })
     }
   }
   return (
@@ -509,10 +548,10 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
                   setShowHobbyDropdown(true)
 
                   handleHobbyKeyDown(e)
-                  // if (e.key === 'Enter') {
-                  //   setShowHobbyDropdown(false)
-                  //   searchResult()
-                  // }
+                  if (e.key === 'Enter') {
+                    setShowHobbyDropdown(false)
+                    searchResult()
+                  }
                 }}
                 value={hobbyInputValue}
                 onBlur={() =>
@@ -588,6 +627,8 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
                 subCategory={subCategory.value}
                 setSubCategory={setSubCategory}
                 searchResult={searchResult}
+                categoryValue={categoryValue}
+                setCategoryValue={setCategoryValue}
               />
             </div>
             <div className={styles.hobbySuggestion}>
@@ -676,6 +717,8 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
                 subCategory={subCategory.value}
                 setSubCategory={setSubCategory}
                 searchResult={searchResult}
+                categoryValue={categoryValue}
+                setCategoryValue={setCategoryValue}
               />
             </div>
             <div>
