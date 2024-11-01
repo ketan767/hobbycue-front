@@ -410,12 +410,11 @@ const CommunityLayout: React.FC<Props> = ({
         url += `?genreId=${genreId}`
       }
 
-      console.log('asifs url', url)
-
       const { res, err } = await getHobbyMembers(url)
-      console.log('asifs res', res)
       if (res.data) {
-        setHobbymembers(res.data.users?.slice(0, 20))
+        const sliceIdx =
+          res.data.users?.length > 20 ? 20 : res.data.users?.length
+        setHobbymembers(res.data.users?.slice(0, sliceIdx))
         setChildData((prev) => ({
           hobbyMembers: res.data.users,
           whatsNew: prev ? prev.whatsNew : [],

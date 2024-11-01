@@ -817,9 +817,9 @@
     animation: fadeDown 0.3s ease forwards;
   }
 
-  .dropdowns-panel input {
+  /* .dropdowns-panel input {
     
-  }
+  } */
 
   .dropdowns-panel .parent-list {
     display: flex;
