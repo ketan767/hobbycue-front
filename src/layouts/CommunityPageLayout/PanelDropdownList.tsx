@@ -103,7 +103,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
   return (
     <div className={styles['parent-list']}>
       <div className={styles['list']}>
-        <p>{name}</p>
+        <p className={!open ? styles.activeP : ''}>{name}</p>
         <ArrowSvg rotate={open} />
       </div>
       {open && (
@@ -146,6 +146,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
             }
           >
             {type !== 'members' &&
+              type !== 'user members' &&
               options
                 .slice(0, seeMore ? 3 : options.length)
                 .map((obj: any, idx: number) => (
@@ -190,6 +191,7 @@ const PanelDropdownList: FC<PanelDropdownListProps> = ({
                     ) : null}
                   </div>
                 ))}
+
             {type === 'members' &&
               options
                 .slice(0, seeMore ? 3 : options.length)

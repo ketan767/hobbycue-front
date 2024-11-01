@@ -273,6 +273,20 @@ const PostCard: React.FC<Props> = (props) => {
                       postData?._author?.page_url
                     }`
               }
+              onClick={(e) => {
+                e.preventDefault()
+                isLoggedIn
+                  ? router.push(
+                      `${
+                        postData?.author_type === 'User'
+                          ? `/profile/${postData?._author?.profile_url}`
+                          : `/${pageType(postData?._author.type)}/${
+                              postData?._author?.page_url
+                            }`
+                      }`,
+                    )
+                  : dispatch(openModal({ type: 'auth', closable: true }))
+              }}
             >
               {postData?.author_type === 'Listing' ? (
                 postData?._author?.profile_image ? (
@@ -327,6 +341,20 @@ const PostCard: React.FC<Props> = (props) => {
                         postData?._author?.page_url
                       }`
                 }
+                onClick={(e) => {
+                  e.preventDefault()
+                  isLoggedIn
+                    ? router.push(
+                        `${
+                          postData?.author_type === 'User'
+                            ? `/profile/${postData?._author?.profile_url}`
+                            : `/${pageType(postData?._author.type)}/${
+                                postData?._author?.page_url
+                              }`
+                        }`,
+                      )
+                    : dispatch(openModal({ type: 'auth', closable: true }))
+                }}
               >
                 <p className={styles['author-name']}>
                   {postData?.author_type === 'User'
