@@ -56,9 +56,8 @@ const CommunityHome: React.FC<Props> = ({}) => {
     [loading, hasMore, currentPage, dispatch],
   )
 
-  console.warn('all postssssssssssssssss', allPosts)
-
   useEffect(() => {
+    dispatch(updateLoading(true))
     dispatch(UpdatePostCount(1) as any)
   }, [dispatch])
 
@@ -84,7 +83,7 @@ const CommunityHome: React.FC<Props> = ({}) => {
                 </div>
               )
             })
-          ) : allPosts.length === 0 ? (
+          ) : allPosts?.length === 0 ? (
             <div className={styles['no-posts-div']}>
               <p className={styles['no-posts-text']}>
                 There were no posts for the hobby and the location you have

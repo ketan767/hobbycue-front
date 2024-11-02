@@ -143,8 +143,6 @@ const PostComments = ({
   //   }
   // }, [])
 
-  console.warn('comments ddataaa', data)
-
   const handleShowDelete = (postid: string) => {
     setDeleteData({ open: true, _id: postid })
   }
