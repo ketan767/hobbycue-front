@@ -46,6 +46,7 @@ const NoResult = () => {
   const locationDropdownRef = useRef<HTMLInputElement>(null)
   const [showHobbyDropdown, setShowHobbyDropdown] = useState(false)
   const [showAutoAddress, setShowAutoAddress] = useState<boolean>(false)
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
 
   const [focusedHobbyIndex, setFocusedHobbyIndex] = useState<number>(-1)
   const [focusedLocationIdx, setFocusedLocationIdx] = useState<number>(-1)
@@ -334,6 +335,17 @@ const NoResult = () => {
 
     return link
   }
+
+  function handleSubmit(keyboardSubmit = false) {
+    if (
+      keyboardSubmit &&
+      (showHobbyDropdown || showAutoAddress || showCategoryDropdown)
+    ) {
+      return
+    }
+    router.push(`${getLink()}`)
+  }
+
   return (
     <div className={styles['no-results-wrapper']}>
       {q !== '' && (
@@ -390,6 +402,7 @@ const NoResult = () => {
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                   setShowHobbyDropdown(true)
                   handleHobbyKeyDown(e)
+                  handleSubmit(true)
                 }}
                 value={hobby}
                 onBlur={() =>
@@ -451,6 +464,9 @@ const NoResult = () => {
                 setValue={setCategory}
                 subCategory={subCategory}
                 setSubCategory={setSubCategory}
+                handleSubmit={handleSubmit}
+                setShowCategoryDropdown={setShowCategoryDropdown}
+                showCategoryDropdown={showCategoryDropdown}
               />
             </div>
             <div className={styles.categorySuggestion}>
@@ -476,6 +492,9 @@ const NoResult = () => {
                   if (e.key === 'Enter') {
                     setShowAutoAddress(false)
                     // searchResult()
+                    if (e.key === 'Enter') {
+                      handleSubmit(true)
+                    }
                   }
                 }}
                 sx={{
@@ -534,7 +553,7 @@ const NoResult = () => {
                 height: 32,
                 marginLeft: 'auto',
               }}
-              onClick={() => router.push(`${getLink()}`)}
+              onClick={() => handleSubmit()}
             >
               Explore
             </button>
