@@ -38,6 +38,14 @@ import DownloadInMobile from '@/components/DownloadInMobile'
 import InstallPopup from '@/components/InstallPopup/InstallPopup'
 import { getMyProfileDetail } from '@/services/user.service'
 import { getAllEvents, getListingPages } from '@/services/listing.service'
+import {
+  setCategory,
+  setHobby,
+  setKeyword,
+  setLocation,
+  setSearching,
+  setSub_category,
+} from '@/redux/slices/explore'
 
 const Home: React.FC<PropTypes> = function () {
   const [isPlaying, setIsPlaying] = useState(false)
@@ -232,7 +240,16 @@ const Home: React.FC<PropTypes> = function () {
               className={styles['card-btn']}
               onClick={async (e: any) => {
                 e.preventDefault()
-                router.push('/explore/people')
+                dispatch(setCategory('People'))
+                dispatch(setSearching(true))
+                dispatch(setSub_category(''))
+                dispatch(setKeyword(''))
+                dispatch(setHobby(''))
+                dispatch(setLocation(''))
+                router.push({
+                  pathname: '/explore/people',
+                  query: { category: 'People' },
+                })
               }}
             >
               Connect
@@ -260,7 +277,16 @@ const Home: React.FC<PropTypes> = function () {
               className={styles['card-btn']}
               onClick={async (e: any) => {
                 e.preventDefault()
-                router.push('/explore/places')
+                dispatch(setCategory('Place'))
+                dispatch(setSearching(true))
+                dispatch(setSub_category(''))
+                dispatch(setKeyword(''))
+                dispatch(setHobby(''))
+                dispatch(setLocation(''))
+                router.push({
+                  pathname: '/explore/places',
+                  query: { category: 'Place' },
+                })
               }}
             >
               Meet up
@@ -301,7 +327,16 @@ const Home: React.FC<PropTypes> = function () {
               className={styles['card-btn']}
               onClick={async (e: any) => {
                 e.preventDefault()
-                router.push('/explore/products')
+                dispatch(setCategory('Product'))
+                dispatch(setSearching(true))
+                dispatch(setSub_category(''))
+                dispatch(setKeyword(''))
+                dispatch(setHobby(''))
+                dispatch(setLocation(''))
+                router.push({
+                  pathname: '/explore/products',
+                  query: { category: 'Product' },
+                })
               }}
             >
               Get it
@@ -338,7 +373,16 @@ const Home: React.FC<PropTypes> = function () {
               className={styles['card-btn']}
               onClick={async (e: any) => {
                 e.preventDefault()
-                router.push('/explore/programs')
+                dispatch(setCategory('Program'))
+                dispatch(setSearching(true))
+                dispatch(setSub_category(''))
+                dispatch(setKeyword(''))
+                dispatch(setHobby(''))
+                dispatch(setLocation(''))
+                router.push({
+                  pathname: '/explore/programs',
+                  query: { category: 'Program' },
+                })
               }}
             >
               Attend
