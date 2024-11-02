@@ -235,7 +235,7 @@ const ListingMediaTab: React.FC<Props> = ({ data }) => {
                   }}
                   className={styles.addvidText}
                 >
-                  Add video URL to embedded the video
+                  Add video URL to embedded the 
                 </div>
               </div>
             </>
