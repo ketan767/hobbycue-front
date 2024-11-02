@@ -374,7 +374,7 @@ const CommunityLayout: React.FC<Props> = ({
   }
 
   useEffect(() => {
-    fetchPosts(post_pagination)
+    if (post_pagination !== 1) fetchPosts(post_pagination)
   }, [post_pagination, router.asPath])
 
   const fetchHobbyMembers = async (hobbies?: HobbyEntry[]) => {
@@ -383,7 +383,7 @@ const CommunityLayout: React.FC<Props> = ({
         console.error('No hobbies provided')
         return
       }
-
+      console.warn('filtersss', filters)
       const hobbyIdsSet = new Set<string>()
       let genreId: string | null = null
 
@@ -396,7 +396,7 @@ const CommunityLayout: React.FC<Props> = ({
             hobbyIdsSet.add(entry.hobby._id)
           }
           if (entry.genre?._id) {
-            genreId = entry.genre._id // Assume there's only one genre ID
+            genreId = entry.genre._id
           }
         })
       }
@@ -404,18 +404,32 @@ const CommunityLayout: React.FC<Props> = ({
       const hobbyIds = Array.from(hobbyIdsSet)
 
       let url = `${hobbyIds.join(',')}`
+      let ids = ''
+      if (url === 'All Hobbies') {
+        ids = ''
+      } else if (url === 'My Hobbies') {
+        const hobbyIdsSetTwo = new Set()
+        hobbies.forEach((entry) => {
+          if (entry.hobby?._id) {
+            hobbyIdsSetTwo.add(entry.hobby._id)
+          }
+          ids = Array.from(hobbyIdsSetTwo).join(',')
+        })
+      } else {
+        ids = url
+      }
 
-      // Append genreId as query parameter if it exists
       if (genreId) {
         url += `?genreId=${genreId}`
       }
 
-      console.log('asifs url', url)
 
-      const { res, err } = await getHobbyMembers(url)
-      console.log('asifs res', res)
+      const { res, err } = await getHobbyMembers(ids)
+
       if (res.data) {
-        setHobbymembers(res.data.users?.slice(0, 20))
+        const sliceIdx =
+          res.data.users?.length > 20 ? 20 : res.data.users?.length
+        setHobbymembers(res.data.users?.slice(0, sliceIdx))
         setChildData((prev) => ({
           hobbyMembers: res.data.users,
           whatsNew: prev ? prev.whatsNew : [],
@@ -446,7 +460,7 @@ const CommunityLayout: React.FC<Props> = ({
     if (activeProfile?.data?._hobbies) {
       fetchHobbyMembers(activeProfile?.data?._hobbies)
     }
-  }, [filters.genre, filters.hobby, activeProfile])
+  }, [selectedHobby, activeProfile])
   const fetchTrendingHobbies = async () => {
     const { err, res } = await TrendingHobbiesByUser()
 
@@ -517,25 +531,23 @@ const CommunityLayout: React.FC<Props> = ({
   // }
 
   useEffect(() => {
-    if (activeTab === 'posts' || activeTab === 'links') {
+    if (
+      activeProfile.data !== null &&
+      (activeTab === 'links' || activeTab === 'posts')
+    ) {
       if (selectedLocation !== '') {
+        console.warn('Fetching POSTTTTTTTTTTTTTTTTTTTTTTT', activeProfile.data)
         fetchPosts()
       }
     }
-  }, [
-    selectedHobby,
-    selectedLocation,
-    activeProfile,
-    selectedGenre,
-    refreshNum,
-  ])
+  }, [selectedHobby, selectedLocation, activeProfile?.type, refreshNum])
 
   useEffect(() => {
     if (selectedHobby !== '' && selectedLocation !== '') {
       fetchHobby()
     }
   }, [selectedHobby, selectedLocation])
-  console.warn('selectedhobbyyy', selectedHobby)
+
   const fetchHobby = async () => {
     // const query = `fields=display,sub_category&show=true&search=${selectedHobby}`
     const params = new URLSearchParams()
@@ -553,7 +565,6 @@ const CommunityLayout: React.FC<Props> = ({
       }
     }
   }
-  console.warn('filterrr hobby', filters.hobby)
 
   useEffect(() => {
     setSelectedGenre(filters.genre !== '' ? filters.genre : undefined)
@@ -733,7 +744,6 @@ const CommunityLayout: React.FC<Props> = ({
       }
     }
   }, [activeProfile])
-  console.warn('activveprofileeeee', activeProfile.type)
 
   // useEffect(() => {
   // setSelectedHobby('All Hobbies')

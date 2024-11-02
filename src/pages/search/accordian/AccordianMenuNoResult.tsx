@@ -27,6 +27,9 @@ interface AccordianMenuProps {
   setValue: React.Dispatch<React.SetStateAction<string>>
   subCategory: string
   setSubCategory: React.Dispatch<React.SetStateAction<string>>
+  handleSubmit?: (arg: boolean) => void
+  setShowCategoryDropdown: React.Dispatch<React.SetStateAction<boolean>>
+  showCategoryDropdown: boolean
   // searchResult: Function
 }
 type DropdownListItem = {
@@ -41,7 +44,9 @@ const AccordianMenuNoResult: React.FC<AccordianMenuProps> = ({
   setValue,
   subCategory,
   setSubCategory,
-  // searchResult,
+  handleSubmit,
+  showCategoryDropdown,
+  setShowCategoryDropdown,
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [openMenu, setOpenMenu] = useState(false)
@@ -54,7 +59,7 @@ const AccordianMenuNoResult: React.FC<AccordianMenuProps> = ({
   )
   const [categoryIndex, setCategoryIndex] = useState<number>(-1)
 
-  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
+  // const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
   const [isCategoryBoxOpened, setIsCategoryBoxOpened] = useState(false)
   const [categoryDropdownList, setCategoryDropdownList] = useState<
     DropdownListItem[]
@@ -239,6 +244,9 @@ const AccordianMenuNoResult: React.FC<AccordianMenuProps> = ({
               //   setShowCategoryDropdown(false)
               //   searchResult()
               // }
+              if (e.key === 'Enter') {
+                handleSubmit?.(true)
+              }
             }}
             value={categoryValue}
             onBlur={() =>
