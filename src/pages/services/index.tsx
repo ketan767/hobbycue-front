@@ -67,7 +67,7 @@ export default function Index() {
             </p>
             <div className={addListingStyles['cards-wrapper']}>
               <section
-                onClick={() => router.push('/explore/people')}
+                onClick={() => router.push('/explore/people?category=People')}
                 className={`${addListingStyles['card']} ${addListingStyles['people']}`}
               >
                 <h3>
@@ -91,7 +91,7 @@ export default function Index() {
                 </p>
               </section>
               <section
-                onClick={() => router.push('/explore/places')}
+                onClick={() => router.push('/explore/places?category=Place')}
                 className={`${addListingStyles['card']} ${addListingStyles['place']}`}
               >
                 <h3>
@@ -115,7 +115,7 @@ export default function Index() {
                 </p>
               </section>
               <section
-                onClick={() => router.push('/explore/products')}
+                onClick={() => router.push('/explore/products?category=Product')}
                 className={`${addListingStyles['card']} ${addListingStyles['product']}`}
               >
                 <h3>
@@ -148,7 +148,7 @@ export default function Index() {
                 </p>
               </section>
               <section
-                onClick={() => router.push('/explore/programs')}
+                onClick={() => router.push('/explore/programs?category=Program')}
                 className={`${addListingStyles['card']} ${addListingStyles['program']}`}
               >
                 <h3>

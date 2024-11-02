@@ -13,7 +13,7 @@ type Props = {
   isBlog: boolean
 }
 
-const Program: React.FC<Props> = ({ data: initialData }) => {
+const Products: React.FC<Props> = ({ data: initialData }) => {
   const router = useRouter()
   const { query } = router
   const { keyword } = query
@@ -140,7 +140,7 @@ const Program: React.FC<Props> = ({ data: initialData }) => {
         <title>HobbyCue - Explore</title>
       </Head>
       <ExploreSearchContainer
-        defaultCategory="Program"
+        defaultCategory="Product"
         locationDropdownRef={locationDropdownRef}
         ShowAutoAddress={ShowAutoAddress}
         setShowAutoAddress={setShowAutoAddress}
@@ -226,4 +226,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 }
 
-export default Program
+export default Products
