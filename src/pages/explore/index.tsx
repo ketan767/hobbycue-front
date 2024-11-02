@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react'
 import styles from './explore.module.css'
 import ListingCard from '@/components/ListingCard/ListingCard'
 import { useRouter } from 'next/router'
-import { getListingSearch } from '@/services/listing.service'
+import { getListingPages, getListingSearch } from '@/services/listing.service'
 import { GetServerSideProps } from 'next'
 import PagesLoader from '@/components/PagesLoader/PagesLoader'
 import Head from 'next/head'
@@ -71,6 +71,24 @@ const Explore: React.FC<Props> = ({ data: initialData }) => {
     // console.log('Query', queryString)
 
     setLoading(true)
+
+    // try {
+    //   // const { res, err } = await getListingPages(queryString)
+    //   const { res, err } = await getListingSearch(queryString)
+    //   const data = res?.data?.data?.listings || []
+    //   if (err) {
+    //     setHasMore(false)
+    //     return { notFound: true }
+    //   } else {
+    //     setData((prevData: any) => [...prevData, ...data])
+    //     setPage((prevPage) => prevPage + 1)
+    //   }
+    // } catch (error) {
+    //   console.error('Error fetching data:', error)
+    //   setHasMore(false)
+    // } finally {
+    //   setLoading(false)
+    // }
     try {
       const { res, err } = await getListingSearch(queryString)
 
@@ -172,6 +190,58 @@ const Explore: React.FC<Props> = ({ data: initialData }) => {
   )
 }
 
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   let queryString = `sort=-createdAt&is_published=true&populate=_hobbies,_address,product_variant,seller&page=1&limit=20`
+//   const { query } = context
+//   console.log('query==>', query)
+//   if (query.category && query.category !== 'All') {
+//     let type = 1
+//     if (query.category === 'Place') {
+//       type = 2
+//     } else if (query.category === 'Program') {
+//       type = 3
+//     } else if (query.category === 'Product') {
+//       type = 4
+//     }
+//     queryString = `type=${encodeURIComponent(type.toString())}&` + queryString
+//   } else if (query.sub_category) {
+//     queryString =
+//       `page_type=${encodeURIComponent(query.sub_category.toString())}&` +
+//       queryString
+//   }
+//   if (query.keyword) {
+//     queryString =
+//       `title=${encodeURIComponent(query.keyword.toString())}&` + queryString
+//   }
+//   if (query.hobby) {
+//     queryString =
+//       `hobby=${encodeURIComponent(query.hobby.toString())}&` + queryString
+//   }
+//   if (query.location) {
+//     queryString =
+//       `city=${encodeURIComponent(query.location.toString())}&` + queryString
+//   }
+
+//   console.log('titleContext', query.keyword)
+//   console.log('query.category', query.category)
+//   console.log('query.sub_category', query.sub_category)
+//   console.log('query.hobby', query.hobby)
+//   console.log('query.location', query.location)
+
+//   // const { res, err } = await getListingPages(queryString)
+//   const { res, err } = await getListingSearch(queryString)
+//   console.log('queryString===>', queryString)
+
+//   if (err) return { notFound: true }
+//   const data = res?.data?.data?.listings || []
+//   // console.log('Data===>', data)
+//   return {
+//     props: {
+//       data: data,
+//       isBlog: false,
+//     },
+//   }
+// }
 export const getServerSideProps: GetServerSideProps = async (context) => {
   let queryString = `sort=-createdAt&is_published=true&populate=_hobbies,_address,product_variant,seller&page=1&limit=20`
   const { query } = context
@@ -225,5 +295,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   }
 }
+// export const getServerSideProps: GetServerSideProps = async () => {
+//   const { res, err } = await getListingPages(
+//     `&sort=-createdAt&is_published=true&populate=_hobbies,_address,product_variant,seller&page=1&limit=20`,
+//   )
+//   if (err) return { notFound: true }
+//   const data = res?.data?.data?.listings || []
+//   return {
+//     props: {
+//       data: data,
+//       isBlog: false,
+//     },
+//   }
+// }
 
 export default Explore
