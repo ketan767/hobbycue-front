@@ -124,7 +124,7 @@ const HobbyPageHeader = ({ activeTab, data }: Props) => {
   }
 
   const OpenProfileImage = () => {
-    console.log('pro', data.profile_image)
+    console.log('asifs pfp', data.profile_image)
     dispatch(updateImageUrl(data?.profile_image))
     dispatch(
       openModal({

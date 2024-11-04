@@ -49,7 +49,7 @@ const ConfirmEmail: React.FC<Props> = ({}) => {
   })
   const router = useRouter()
 
-  const is503Page = router.asPath.includes('/503')
+  const is5XXPage = /^\/5\d{2}$/.test(router.asPath);
 
   const [errors, setErrors] = useState({
     email: '',
@@ -68,7 +68,7 @@ const ConfirmEmail: React.FC<Props> = ({}) => {
       elementRef.current?.focus()
       return
     }
-    if (is503Page) {
+    if (is5XXPage) {
       setSubmitBtnLoading(false)
       setShowSnackbar({
         message: "You will receive an e-mail as soon as we're back",
@@ -135,7 +135,7 @@ const ConfirmEmail: React.FC<Props> = ({}) => {
         <section className={styles['body']}>
           <div className={styles.inputField}>
             <label className={styles.label}>
-              {is503Page
+              {is5XXPage
                 ? `Enter your email address, and we will notify you as soon as we are back.`
                 : `Enter the email address of the account, and we will send you a
               verification code to set a password.`}
