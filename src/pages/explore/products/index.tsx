@@ -244,6 +244,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   const data = result.res && result.res.data ? result.res.data.data || [] : []
+  console.log(data)
   return {
     props: {
       data: data,

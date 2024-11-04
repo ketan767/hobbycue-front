@@ -11,11 +11,16 @@ import DownArrow from '@/assets/icons/DownArrow'
 import Image from 'next/image'
 import { TextField } from '@mui/material'
 import { getAllHobbies } from '@/services/hobby.service'
+import AccordianMenu from '../explore/nestedDropdown/AccordionMenu'
 import AccordianMenuNoResult from './accordian/AccordianMenuNoResult'
 import {
   getAutocompleteAddressFromGoogle,
   getLatLongFromPlaceID,
 } from '@/services/auth.service'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
+import { setHobby, setKeyword, setLocation } from '@/redux/slices/explore'
+import AccordionMenu2 from '../explore/nestedDropdown/AccordionMenu2'
 type DropdownListItem = {
   _id: string
   display: string
@@ -38,15 +43,25 @@ const NoResult = () => {
     blogs: 'Blogs',
   }
   const isMob = isMobile()
-  const [hobby, setHobby] = useState('')
-  const [category, setCategory] = useState('')
-  const [subCategory, setSubCategory] = useState('')
-  const [location, setLocation] = useState('')
+  const { query } = router
+  // const { hobby, category, subCategory, location } = query
+  const {
+    keyword,
+    hobby,
+    category,
+    sub_category,
+    location: currLocation,
+  } = useSelector((state: RootState) => state.explore)
+  const dispatch = useDispatch()
+  // const [hobby, setHobby] = useState('')
+  // const [category, setCategory] = useState('')
+  // const [subCategory, setSubCategory] = useState('')
+  // const [location, setLocation] = useState('')
   const searchHobbyRef = useRef<HTMLInputElement>(null)
   const locationDropdownRef = useRef<HTMLInputElement>(null)
   const [showHobbyDropdown, setShowHobbyDropdown] = useState(false)
   const [showAutoAddress, setShowAutoAddress] = useState<boolean>(false)
-  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
+  // const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
 
   const [focusedHobbyIndex, setFocusedHobbyIndex] = useState<number>(-1)
   const [focusedLocationIdx, setFocusedLocationIdx] = useState<number>(-1)
@@ -57,6 +72,14 @@ const NoResult = () => {
   const [suggestions, setSuggestions] = useState<
     { description: string; place_id: string }[]
   >([])
+
+  const [categoryValue, setCategoryValue] = useState(
+    sub_category
+      ? sub_category.toString()
+      : category
+      ? category.toString()
+      : '',
+  )
 
   const [Addressdata, setAddressData] = useState<ProfileAddressPayload>({
     street: '',
@@ -73,7 +96,8 @@ const NoResult = () => {
   })
 
   const handleHobbyInputChange = async (e: any) => {
-    setHobby(e.target.value)
+    // setHobby(e.target.value)
+    dispatch(setHobby(e.target.value))
     setFocusedHobbyIndex(-1)
 
     if (isEmptyField(e.target.value)) return setHobbyDropdownList([])
@@ -116,15 +140,17 @@ const NoResult = () => {
 
       case 'Enter':
         e.stopPropagation()
-        if (hobby.length !== 0 && !showHobbyDropdown) {
+        if (hobby.length !== 0 && focusedHobbyIndex === -1) {
           //AddButtonRef.current?.click()
+          handleSubmit()
         } else if (focusedHobbyIndex !== -1 && showHobbyDropdown) {
           setShowHobbyDropdown(false)
           const val = hobbyDropdownList[focusedHobbyIndex]?.display || hobby
-          if (val) {
-            setHobby(val)
-          }
-
+          // if (val) {
+          //   setHobby(val)
+          // }
+          dispatch(setHobby(val))
+          handleSubmit()
           // searchResult(undefined, val, undefined)
           console.log('hobbyDropdownList', hobbyDropdownList)
         } else if (focusedHobbyIndex === -1 && hobby.length !== 0) {
@@ -161,7 +187,8 @@ const NoResult = () => {
     setFocusedLocationIdx(-1)
     const { name, value } = event.target
     setAddressData((prev) => ({ ...prev, [name]: value }))
-    setLocation(value)
+    // alert(value)
+    dispatch(setLocation(value))
     if (Addressdata.street?.length > 1) {
       setShowAutoAddress(true)
       try {
@@ -302,21 +329,21 @@ const NoResult = () => {
   const getLink = () => {
     let link = '/explore'
     if (category) {
-      if (category === 'Place') {
-        link += '/place?'
-      } else if (category === 'People') {
+      if (category === 'Place' || category === 'place') {
+        link += '/places?'
+      } else if (category === 'People' || category === 'people') {
         link += '/people?'
-      } else if (category === 'Program') {
-        link += '/program?'
-      } else if (category === 'Product') {
-        link += '/product?'
+      } else if (category === 'Program' || category === 'program') {
+        link += '/programs?'
+      } else if (category === 'Product' || category === 'product') {
+        link += '/products?'
       }
       link += `category=${category}`
-    } else if (subCategory) {
-      link += `?sub_category=${subCategory}`
+    } else if (sub_category) {
+      link += `?sub_category=${sub_category}`
     }
     if (hobby) {
-      if (category || subCategory) {
+      if (category || sub_category) {
         link += '&'
       } else {
         link += '?'
@@ -324,27 +351,38 @@ const NoResult = () => {
       link += `hobby=${hobby}`
     }
 
-    if (location) {
-      if (hobby || category || subCategory) {
+    if (currLocation) {
+      if (hobby || category || sub_category) {
         link += '&'
       } else {
         link += '?'
       }
-      link += `location=${location}`
+      link += `location=${currLocation}`
+    }
+    if (keyword) {
+      if (hobby || category || sub_category || currLocation) {
+        link += '&'
+      } else {
+        link += '?'
+      }
+      link += `keyword=${keyword}`
     }
 
     return link
   }
 
-  function handleSubmit(keyboardSubmit = false) {
-    if (
-      keyboardSubmit &&
-      (showHobbyDropdown || showAutoAddress || showCategoryDropdown)
-    ) {
-      return
-    }
+  function handleSubmit() {
+    // if (keyboardSubmit && (showHobbyDropdown || showAutoAddress)) {
+    //   return
+    // }
     router.push(`${getLink()}`)
   }
+
+  useEffect(() => {
+    if (q) {
+      dispatch(setKeyword(encodeURIComponent(q.toString())))
+    }
+  }, [])
 
   return (
     <div className={styles['no-results-wrapper']}>
@@ -402,7 +440,7 @@ const NoResult = () => {
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                   setShowHobbyDropdown(true)
                   handleHobbyKeyDown(e)
-                  handleSubmit(true)
+                  // handleSubmit(true)
                 }}
                 value={hobby}
                 onBlur={() =>
@@ -442,8 +480,9 @@ const NoResult = () => {
                       <p
                         key={hobby._id}
                         onClick={() => {
-                          setHobby(hobby.display)
+                          // setHobby(hobby.display)
                           // searchResult(undefined, hobby.display)
+                          dispatch(setHobby(hobby.display))
                         }}
                         className={
                           index === focusedHobbyIndex
@@ -459,7 +498,7 @@ const NoResult = () => {
               )}
             </div>
             <div className={styles.locationHiddenMobile}>
-              <AccordianMenuNoResult
+              {/* <AccordianMenuNoResult
                 value={category}
                 setValue={setCategory}
                 subCategory={subCategory}
@@ -467,6 +506,10 @@ const NoResult = () => {
                 handleSubmit={handleSubmit}
                 setShowCategoryDropdown={setShowCategoryDropdown}
                 showCategoryDropdown={showCategoryDropdown}
+              /> */}
+              <AccordionMenu2
+                categoryValue={categoryValue}
+                handleSubmit={handleSubmit}
               />
             </div>
             <div className={styles.categorySuggestion}>
@@ -486,14 +529,14 @@ const NoResult = () => {
                 size="small"
                 className={styles.locationSearch}
                 onChange={handleInputChangeAddress}
-                value={Addressdata.street.trim()}
+                value={currLocation}
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                   handleLocationKeyDown(e)
                   if (e.key === 'Enter') {
                     setShowAutoAddress(false)
                     // searchResult()
                     if (e.key === 'Enter') {
-                      handleSubmit(true)
+                      handleSubmit()
                     }
                   }
                 }}

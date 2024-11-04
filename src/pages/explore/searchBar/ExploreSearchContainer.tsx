@@ -26,10 +26,12 @@ import {
 } from '@/services/auth.service'
 import { setHasChanges } from '@/redux/slices/modal'
 import {
+  setCategory,
   setHobby,
   setKeyword,
   setLocation,
   setSearching,
+  setSub_category,
 } from '@/redux/slices/explore'
 import { ParsedUrlQueryInput } from 'querystring'
 
@@ -592,26 +594,31 @@ const ExploreSearchContainer: React.FC<LocationProps> = ({
   //   }
   // }
 
+  // useEffect(() => {
+  //   // Set up a debounce timeout
+  //   const timer = setTimeout(() => {
+  //     searchResult()
+  //   }, 500)
+
+  //   // Clear the timeout if dependencies change before the delay is over
+  //   return () => clearTimeout(timer)
+  // }, [currKeyword, currHobby, currLocation, currCategory, currSub_category])
   useEffect(() => {
-    // const isSearchActive =
-    //   currKeyword ||
-    //   currHobby ||
-    //   currLocation ||
-    //   currCategory ||
-    //   currSub_category
-
-    // if (!isSearchActive) {
-    //   return
-    // }
-
-    // Set up a debounce timeout
-    const timer = setTimeout(() => {
-      searchResult()
-    }, 500)
-
-    // Clear the timeout if dependencies change before the delay is over
-    return () => clearTimeout(timer)
-  }, [currKeyword, currHobby, currLocation, currCategory, currSub_category])
+    if (keyword) {
+      dispatch(setKeyword(encodeURIComponent(keyword.toString())))
+    }
+    if (hobby) {
+      dispatch(setHobby(encodeURIComponent(hobby.toString())))
+    }
+    if (category) {
+      dispatch(setCategory(encodeURIComponent(category.toString())))
+    } else if (sub_category) {
+      dispatch(setSub_category(encodeURIComponent(sub_category.toString())))
+    }
+    if (location) {
+      dispatch(setLocation(encodeURIComponent(location.toString())))
+    }
+  }, [])
 
   return (
     <div className={`${styles.searchContainer}`}>

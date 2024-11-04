@@ -157,6 +157,10 @@ type PropsExploreSidebarBtn = {
   text: string
   icon?: React.ReactNode
 }
+type PropsExploreMoreBtn = {
+  text: string
+  icon?: React.ReactNode
+}
 
 const ExploreSidebarBtn: React.FC<PropsExploreSidebarBtn> = ({
   href,
@@ -171,6 +175,72 @@ const ExploreSidebarBtn: React.FC<PropsExploreSidebarBtn> = ({
           {text}
         </button>
       </Link>
+    </div>
+  )
+}
+const ExploreMoreBtn: React.FC<PropsExploreMoreBtn> = ({ text, icon }) => {
+  const router = useRouter()
+  const {
+    keyword,
+    hobby,
+    category,
+    sub_category,
+    location: currLocation,
+  } = useSelector((state: RootState) => state.explore)
+
+  const getLink = () => {
+    let link = '/explore'
+    if (category) {
+      if (category === 'Place' || category === 'place') {
+        link += '/places?'
+      } else if (category === 'People' || category === 'people') {
+        link += '/people?'
+      } else if (category === 'Program' || category === 'program') {
+        link += '/programs?'
+      } else if (category === 'Product' || category === 'product') {
+        link += '/products?'
+      }
+      link += `category=${category}`
+    } else if (sub_category) {
+      link += `?sub_category=${sub_category}`
+    }
+    if (hobby) {
+      if (category || sub_category) {
+        link += '&'
+      } else {
+        link += '?'
+      }
+      link += `hobby=${hobby}`
+    }
+
+    if (currLocation) {
+      if (hobby || category || sub_category) {
+        link += '&'
+      } else {
+        link += '?'
+      }
+      link += `location=${currLocation}`
+    }
+    if (keyword) {
+      if (hobby || category || sub_category || currLocation) {
+        link += '&'
+      } else {
+        link += '?'
+      }
+      link += `keyword=${keyword}`
+    }
+
+    return link
+  }
+  const handleExploreMore = () => {
+    router.push(`${getLink()}`)
+  }
+  return (
+    <div className={styles['explore-sidebar']}>
+      <button onClick={handleExploreMore} className="modal-footer-btn">
+        {icon}
+        {text}
+      </button>
     </div>
   )
 }
@@ -1719,11 +1789,7 @@ const Search: React.FC<Props> = ({ data, children }) => {
           </div>
         ) : (
           <aside className={styles['aside-two']}>
-            <ExploreSidebarBtn
-              text="Explore More"
-              href="/explore"
-              icon={<ExploreIcon />}
-            />
+            <ExploreMoreBtn text="Explore More" icon={<ExploreIcon />} />
             <InterestedDiv
               seeMoreWhatsNew={seeMoreWhatsNew}
               setSeeMoreWhatsNew={setSeeMoreWhatsNew}
