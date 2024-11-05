@@ -242,16 +242,20 @@ const AccordionMenu: React.FC<AccordianMenuProps> = ({
       })
 
       const peoplesSubCat = sortedCategories.filter(
-        (category: DropdownListItem) => category.pageType === 'People',
+        (category: DropdownListItem) =>
+          category.pageType === 'People' && category.Show === 'Y',
       )
       const placeSubCat = sortedCategories.filter(
-        (category: DropdownListItem) => category.pageType === 'Place',
+        (category: DropdownListItem) =>
+          category.pageType === 'Place' && category.Show === 'Y',
       )
       const programSubCat = sortedCategories.filter(
-        (category: DropdownListItem) => category.pageType === 'Program',
+        (category: DropdownListItem) =>
+          category.pageType === 'Program' && category.Show === 'Y',
       )
       const productSubCat = sortedCategories.filter(
-        (category: DropdownListItem) => category.pageType === 'Product',
+        (category: DropdownListItem) =>
+          category.pageType === 'Product' && category.Show === 'Y',
       )
       setPeopleSubcategory(peoplesSubCat)
       setPlaceSubcategory(placeSubCat)
