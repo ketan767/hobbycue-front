@@ -474,14 +474,20 @@
   padding-left: 24px;
   /* width: 500px; */
   width: 712px;
+  justify-content: space-between;
 }
 .publish-laptop {
   display: flex;
   gap: 8px;
   justify-content: space-between;
 }
+.p-relative {
+}
 .price-laptop {
   width: 100%;
+  align-self: flex-end;
+  /* position: absolute;
+  bottom: 0; */
 }
 .aboutEditIcon {
   position: absolute;
