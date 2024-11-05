@@ -231,7 +231,7 @@ const ListingCardProduct: React.FC<Props> = ({
                 )}
               </div> */}
               <div className="">
-                <button className={styles.cta_button}>{data?.cta_text}</button>
+                <button className={styles.cta_button}>{data?.cta_text || "Buy Now"}</button>
               </div>
             </div>
           </div>

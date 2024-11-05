@@ -158,6 +158,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     setData((prev) => ({ ...prev, search: { value, error: null } }))
+    dispatch(setKeyword(value))
   }
 
   const searchInputRef = useRef<HTMLInputElement>(null)
