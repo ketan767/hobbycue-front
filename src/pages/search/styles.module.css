@@ -207,7 +207,7 @@
   font-size: 14px;
   color: #666;
   margin: 5px 0;
-  white-space: nowrap;
+  /* white-space: nowrap; */
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -578,6 +578,7 @@
 .categorySuggestion {
   position: relative;
   margin-top: -12px;
+  width: 160px;
 }
 .hobbySearch {
   margin-top: -12px;
@@ -744,6 +745,7 @@
     font-size: 18px;
     font-weight: 500;
     line-height: 25px;
+    padding-inline: 16px;
   }
 
   .main p {
@@ -753,6 +755,7 @@
     font-size: 14px;
     line-height: 21px;
     text-align: center;
+    padding-inline: 16px;
   }
 
   .wrapperFooter {
