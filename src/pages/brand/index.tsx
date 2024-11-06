@@ -94,25 +94,19 @@ const index: FC<indexProps> = ({}) => {
         <title>HobbyCue - Brand</title>
       </Head>
       <main className={styles['main']}>
-        <div className={styles['container']}>
-          <section className={styles['white-container']}>
-            <div className={styles['heading-container']}>
-              <span className={styles['heading']}>BRAND </span>
-              {user.is_admin && (
-                <div className={styles['pencil']} onClick={toggleEditing}>
-                  {pencilIconSvg}
-                </div>
-              )}
-              {/* {
-                <div className={styles['pencil']} onClick={toggleEditing}>
-                  {pencilIconSvg}
-                </div>
-              } */}
-            </div>
-            <div className={styles['list-container']}>
-              <div>
-                <style>
-                  {`
+        <section className={styles['white-container']}>
+          <div className={styles['heading-container']}>
+            {/* <span className={styles['heading']}>BRAND </span> */}
+            {user.is_admin && (
+              <div className={styles['pencil']} onClick={toggleEditing}>
+                {pencilIconSvg}
+              </div>
+            )}
+          </div>
+          <div className={styles['list-container']}>
+            <div className={styles['max-w-1296px']}>
+              <style>
+                {`
                         .ql-toolbar.ql-snow {
                           width: 100%;
                           border-left:none;
@@ -120,14 +114,15 @@ const index: FC<indexProps> = ({}) => {
                           border-bottom:none;
                         }
                         .ql-container.ql-snow {
-                          width: 87vw;
+                          width: 100%;
                           border:none;
                         }
                         .ql-editor{
                           border: none !important;
-                          width: 87vw;
+                          width: 100%;
                           border-top:1px solid #ccc;
-
+                          padding-right:16px;
+                          margin-inline: auto;
                         }
                         .ql-editor.ql-indent-1{
                           padding-left:4px;
@@ -148,29 +143,35 @@ const index: FC<indexProps> = ({}) => {
                         .ql-editor p {
                           text-align:justify;
                         }
+                         @media screen and (max-width:1100px) {
+                          .ql-editor{
+                          
+                            width: 114vw;
+                          
+                          }
+                        }
                         
                       `}
-                </style>
-                <div className="ql-snow">
-                  <div
-                    className={`ql-editor`}
-                    dangerouslySetInnerHTML={{ __html: content }}
-                  />
-                </div>
-                {isEditing && (
-                  <>
-                    <QuillEditor value={content} onChange={handleValueChange} />
-                    <div className={styles.buttonContainer}>
-                      <button className={styles.button} onClick={handleSave}>
-                        {!isUpdating ? 'Save' : 'Saving...'}
-                      </button>
-                    </div>
-                  </>
-                )}
+              </style>
+              <div className={`ql-snow ${styles['max-w-1296px']}`}>
+                <div
+                  className={`ql-editor ${styles['max-w-full']}`}
+                  dangerouslySetInnerHTML={{ __html: content }}
+                />
               </div>
+              {isEditing && (
+                <>
+                  <QuillEditor value={content} onChange={handleValueChange} />
+                  <div className={styles.buttonContainer}>
+                    <button className={styles.button} onClick={handleSave}>
+                      {!isUpdating ? 'Save' : 'Saving...'}
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
-          </section>
-        </div>
+          </div>
+        </section>
       </main>
       {
         <CustomSnackbar
