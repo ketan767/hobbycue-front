@@ -401,7 +401,7 @@ const ListingPageMain: React.FC<Props> = ({
     Facebook:
       'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/facebook.svg',
     Twitter:
-      'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/twitter.svg',
+      'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/X.png',
     Instagram:
       'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/instagram.svg',
     Youtube:
@@ -417,7 +417,7 @@ const ListingPageMain: React.FC<Props> = ({
     TripAdvisor:
       'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/tripadvisor.svg',
     'Ultimate Guitar':
-      'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/Ultimate-Guitar.svg',
+      'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/Ultimate+Guitar.png',
     Strava:
       'https://s3.ap-south-1.amazonaws.com/app-data-prod-hobbycue.com/strava.svg',
     DeviantArts:
