@@ -44,6 +44,9 @@
 .about-text ul {
   padding-left: 30px;
 }
+.no-margin {
+  margin: 0 !important;
+}
 
 .profile-left-aside {
   position: -webkit-sticky;

@@ -646,7 +646,7 @@ const ListingPageMain: React.FC<Props> = ({
                   expandData={showAbout}
                 >
                   <div className={`${styles['location-heading']}`}>
-                    <h4 className={styles['heading']}>About</h4>
+                    <h4 className={`${styles['heading']} `}>About</h4>
                     <ul
                       className={`${styles['hobby-list']} ${
                         styles['tags-list']

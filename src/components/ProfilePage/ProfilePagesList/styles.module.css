@@ -14,7 +14,7 @@
   display: flex;
   flex-direction: column;
   row-gap: 8px;
-  padding: 8px 0;
+  padding: 12px 0;
   animation: fadeDown 0.3s ease forwards;
 }
 .pages-list li {
